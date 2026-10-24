@@ -4,6 +4,15 @@
 
 游戏在浏览器本地运行，无运行时依赖，不需要账号或后端。源代码由 GitHub 管理，最终托管目标为 **Cloudflare Workers Static Assets**。实际发布结果以 [部署记录](docs/DEPLOYMENT.md) 中的证据为准。
 
+## 源码与当前状态
+
+- 源码仓库：[ct1150/wending](https://github.com/ct1150/wending)，分支 `main`。
+- 首次验证：[GitHub Actions 40050257913](https://github.com/ct1150/wending/actions/runs/40050257913) **成功**，已生成静态站点与离线版构建产物。
+- 首次游戏源码提交：[`6698dbb`](https://github.com/ct1150/wending/commit/6698dbbca4b452466ad461070250c6ea7deeb87c)。
+- Cloudflare **尚未连接、尚未部署，当前没有线上游戏 URL**。Actions 的 `deploy` 任务因发布开关未启用而跳过。
+
+下一步推荐在目标 Cloudflare 账号连接该 GitHub 仓库，步骤见 [部署说明](docs/DEPLOYMENT.md)。
+
 ## 本地运行
 
 使用 Node.js 24（最低要求 Node.js 22）。不需要执行 `npm install`。
@@ -57,6 +66,8 @@ docs/                    产品、接口、进展与部署说明
 
 ## 发布
 
-GitHub Actions 对每次 push、pull request 和手动运行执行测试、语法检查与构建。Cloudflare 发布仅在 `main` 分支、验证通过、仓库变量 `ENABLE_CF_DEPLOY=true` 且凭据齐全时执行。未启用时会明确记录“未发布”，不会把成功构建当作成功上线。
+推荐由 **Cloudflare 原生 GitHub 集成**连接 `ct1150/wending` 的 `main`：Worker 名称 `baishi-wending`，根目录留空，构建命令 `npm run release`，部署命令 `npx wrangler deploy`；Node 24 自动读取 `.node-version`。
 
-首版验收和已知边界见 [验收记录](docs/QA_REPORT.md)。完整步骤、Cloudflare 原生 Git 集成的替代方式和官方参考见 [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md)。产品规则见 [docs/PRODUCT_SPEC.md](docs/PRODUCT_SPEC.md)，模块边界见 [docs/ENGINE_CONTRACT.md](docs/ENGINE_CONTRACT.md)。
+GitHub Actions 保留每次 push、pull request 和手动运行的测试、语法检查与构建。仓库也提供 Actions 发布备选，只有 `main` 验证通过、`ENABLE_CF_DEPLOY=true` 且凭据齐全才会部署。使用 Cloudflare 原生集成时保持该开关未启用，避免双路发布。
+
+首版验收和已知边界见 [验收记录](docs/QA_REPORT.md)。完整接入步骤、Actions 发布备选和官方参考见 [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md)。产品规则见 [docs/PRODUCT_SPEC.md](docs/PRODUCT_SPEC.md)，模块边界见 [docs/ENGINE_CONTRACT.md](docs/ENGINE_CONTRACT.md)。

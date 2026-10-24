@@ -54,8 +54,22 @@
 
 这些模拟证明指定路径及回归性质，不代表玩家平均成功率或真实游玩时长。首版没有多人、云存档、付费或排行榜。
 
-## 上线状态
+## GitHub CI 与上线状态
 
-发布配置可供执行：`main` → 自动测试／构建 → Cloudflare Workers Static Assets。Cloudflare 原生 GitHub 集成的替代配置也已记录，两者只需选择一个生产发布入口。
+游戏源码已上传至公开仓库 [ct1150/wending](https://github.com/ct1150/wending) 的 `main` 分支。首次游戏源码提交为 [`6698dbbca4b452466ad461070250c6ea7deeb87c`](https://github.com/ct1150/wending/commit/6698dbbca4b452466ad461070250c6ea7deeb87c)，源码树 `ea6040b9d180197af1b7503efc837a8d3be6070d` 与上传时本地 `HEAD^{tree}` 完全一致，30 个远端文件的 blob SHA 已逐项核对一致。
 
-GitHub 创建独立仓库及 Cloudflare 控制台当前均处于登录页，因此尚无实际仓库 URL、成功发布记录或生产地址。授权后仍须推送、观察构建／发布成功并访问真实 HTTPS 地址，再填写 `docs/DEPLOYMENT.md`。
+| 远程证据 | 结果 |
+| --- | --- |
+| [GitHub Actions 40050257913](https://github.com/ct1150/wending/actions/runs/40050257913) | `success` |
+| [validate 任务 120741133981](https://github.com/ct1150/wending/actions/runs/40050257913/job/120741133981) | 全部步骤成功；46/46 测试通过、0 失败；13 个 JavaScript 文件语法检查通过；离线 HTML 185751 字节 |
+| [构建产物 12541989829](https://github.com/ct1150/wending/actions/runs/40050257913/artifacts/12541989829) | 已生成静态站点与离线版 |
+| 远程测试日志 | tests 46 / pass 46 / fail 0 |
+| 远程语法检查日志 | Syntax checked 13 JavaScript files |
+| 远程构建日志 | 离线 HTML 185751 字节；压缩构建产物 184805 字节 |
+| deploy 任务 | `skipped`；`ENABLE_CF_DEPLOY` 未启用 |
+| Cloudflare 连接与部署 | 尚未连接，尚未部署 |
+| 真实线上游戏 URL／线上验收 | 尚无 URL，待实际部署后执行 |
+
+推荐下一步在目标 Cloudflare 账号使用原生 GitHub 集成连接 `ct1150/wending` 的 `main`：Worker 名称 `baishi-wending`，根目录留空，构建命令 `npm run release`，部署命令 `npx wrangler deploy`，自动读取 `.node-version` 的 Node 24。此方式无需在 GitHub 添加 Cloudflare secrets，并应保持 `ENABLE_CF_DEPLOY` 未启用。具体步骤与 Actions 发布备选见 [部署说明](DEPLOYMENT.md)。
+
+成功的 GitHub CI 证明远程验证与构建通过，不能当作 Cloudflare 上线或真实 HTTPS 站点验收的证据。
