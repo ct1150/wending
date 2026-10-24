@@ -2,32 +2,54 @@
 
 更新日期：2026-10-24。
 
-## 最终方案与当前状态
+## 当前发行方式与上线状态
 
-源代码已上传至独立 GitHub 仓库 [ct1150/wending](https://github.com/ct1150/wending) 的 `main` 分支，最终站点目标为 **Cloudflare Workers Static Assets**。此方案依据用户最新要求，替代早期文档中的 GitHub Pages 最终托管方案。
+源代码位于 [ct1150/wending](https://github.com/ct1150/wending) 的 `main` 分支。**Cloudflare API MCP 已实际发布 Worker `baishi-wending`**，生产地址为 [https://baishi-wending.ct1150.workers.dev/](https://baishi-wending.ct1150.workers.dev/)。当前是普通 Worker 返回内嵌离线 HTML 的发行方式，尚未使用 `dist/` 的 Static Assets 路由。原有 `wrangler.jsonc` 保留作后续 Static Assets 迁移使用。
 
-GitHub 源码上传与首次 CI 验证已完成：[Actions 运行](https://github.com/ct1150/wending/actions/runs/40050257913) 的 `validate` 任务全部成功并生成构建产物。`deploy` 因 `ENABLE_CF_DEPLOY` 未启用而跳过。**Cloudflare 尚未连接、尚未部署，当前没有线上游戏 URL。** 下一步推荐在目标 Cloudflare 账号使用下述原生 GitHub 集成。不得复用或修改无关的既有项目。
+当前线上发行源码提交为 [`355f7956a4c31d9e3a19f1f567c4b1146942a5e9`](https://github.com/ct1150/wending/commit/355f7956a4c31d9e3a19f1f567c4b1146942a5e9)；[对应 GitHub Actions](https://github.com/ct1150/wending/actions/runs/40053805256) 已成功，48 个测试、15 个 JavaScript 文件语法检查和构建全部通过。后续仅修改文档的提交不会改动此线上发行标识。
 
-| 项目 | 配置 |
+**GitHub → Cloudflare 自动发布仍未接通。** Cloudflare GitHub App 尚未授权，仓库连接 API 返回 `404 / 8000008 Git account disconnected`，构建 Token 列表为空。GitHub Actions 的 `deploy` 也因 `ENABLE_CF_DEPLOY` 未启用而跳过；当前成功发布来自 Cloudflare API MCP，不能描述为 GitHub 自动部署。
+
+| 项目 | 当前结果 |
 | --- | --- |
-| Cloudflare 产品 | Workers Static Assets |
-| Worker 名称 | `baishi-wending`，首次发布前确认该名称属于本项目 |
-| GitHub 仓库 | [ct1150/wending](https://github.com/ct1150/wending) |
-| 源码生产分支 | `main` |
-| Node.js | 24，见 `.node-version` |
-| 验证及构建 | `npm run release` |
-| 静态资源目录 | `dist/` |
-| 部署命令 | `npx wrangler deploy` |
-| 路由 | 静态 HTML 路由；不存在的资源返回 404，不使用 SPA 回退 |
-| 后端、数据库、运行密钥 | 本游戏不需要 |
+| 生产 URL | [https://baishi-wending.ct1150.workers.dev/](https://baishi-wending.ct1150.workers.dev/) |
+| Cloudflare 发行方式 | 普通 Worker 内嵌 HTML，由 `fetch` 返回页面 |
+| Worker 名称／账号子域 | `baishi-wending` / `ct1150` |
+| Worker tag | `d4ceaa79ca7d4ca48954b1117458297f` |
+| Deployment ID | `f9dd9fc8df55437e8123bbca3e119a59` |
+| 部署创建时间 | `2026-10-24T02:21:43Z`，上海时间 2026-10-24 10:21:43 |
+| workers.dev | 已启用；preview URL 未启用 |
+| HTML 大小／SHA-256 | 185751 字节 / `060befb94513ebd04bd23eac7127e28073b782b1bf02e443627cda5eaddf6e63` |
+| 游戏运行服务 | 不需要游戏后端、数据库或玩家账号 |
 
-Workers 支持直接部署目录中的静态资源，无须为了托管本游戏额外编写请求处理 Worker。这里选择 Workers 是为了沿用一份 Wrangler 配置和 Cloudflare 当前的静态资源工作流；Cloudflare Pages 也可以托管这类静态站点，但对应的是独立的 Pages 项目与部署命令，不应将两者混用。此选择不构成价格、额度或未来服务条款的保证。参考：[Workers Static Assets](https://developers.cloudflare.com/workers/static-assets/)、[静态站点入门](https://developers.cloudflare.com/workers/static-assets/get-started/)、[Pages 与 Workers 迁移说明](https://developers.cloudflare.com/workers/static-assets/migration-guides/migrate-from-pages/)（查阅：2026-10-24）。
+当前页面请求执行普通 Worker，**计入 Workers 请求额度**；具体限额与收费以目标账号套餐为准，不能沿用 Static Assets 免费资源请求的描述。官方参考：[Workers 计费](https://developers.cloudflare.com/workers/platform/pricing/)（查阅：2026-10-24）。
 
-## 方式 A：Cloudflare 原生 GitHub 集成（推荐）
+## 当前 Worker 发行模块的打包与发布
+
+常规构建后，将已验收离线 HTML 和 `assets/seal.svg` 打包为 `release/worker.mjs`：
+
+```sh
+npm run release
+npm run build:worker -- --source-commit 355f7956a4c31d9e3a19f1f567c4b1146942a5e9
+```
+
+`SOURCE_COMMIT` 环境变量也受支持，必须是完整 40 位 Git SHA。`build:worker` 应放在常规构建之后，因为正常 `build` 会重建整个 `release/`。CI 自动用 `github.sha` 提供该值，并在 Actions 构建产物中保存 `dist/`、离线 HTML、`release.json` 及 `worker.mjs`。产物保留期限为工作流配置的 14 天。
+
+发行模块内嵌原离线 HTML，正文保持逐字一致。`GET` / `HEAD` 支持 `/`、`/index.html`、`/baishi-wending-offline.html`、`/favicon.svg`、`/favicon.ico` 和 `/healthz`；下载路径提供附件文件名。其他路径为 404，其他方法为 405，HEAD 无响应正文。`/healthz` 返回源码提交和 HTML SHA-256，不包含凭据。
+
+首次已通过 Cloudflare API MCP 的标准 Worker multipart 上传接口实际发布：`PUT /accounts/{account_id}/workers/scripts/baishi-wending`，metadata 指定 ESM 入口与兼容日期，模块正文来自上述构建产物。该步骤使用当前已授权的 Cloudflare 连接；凭据未写入源码。上线结果见本页证据表。此为手动发行，源码继续保留于 GitHub。
+
+## 未来 Static Assets 迁移与自动发布
+
+`wrangler.jsonc` 仍指向 `assets.directory: "./dist"`，`workers_dev: true`，HTML 使用 `auto-trailing-slash`，找不到资源时返回 404。后续执行 Wrangler 或启用下述两条发布路径，将把同名 Worker 迁移为 Static Assets 发行模式，应在完整构建后执行并重新验收。不要将当前内嵌 HTML 发行模块与尚未接通的原生 Git 构建混为一谈。
+
+Workers 支持直接托管静态资源；Cloudflare Pages 使用独立项目与部署命令。本项目保留 Workers Static Assets 迁移配置，不切换至其他服务。官方参考：[Workers Static Assets](https://developers.cloudflare.com/workers/static-assets/)、[静态站点入门](https://developers.cloudflare.com/workers/static-assets/get-started/)（查阅：2026-10-24）。
+
+## 未来方式 A：Cloudflare 原生 GitHub 集成（推荐）
 
 一次性连接步骤：
 
-1. 登录目标 Cloudflare 账号，在 **Workers & Pages → Create application → GitHub** 导入仓库并创建 Worker。
+1. 在当前 Cloudflare 账号的 **Workers & Pages** 选择已有 Worker **`baishi-wending`**，进入 **Settings → Builds → Connect → GitHub**；无需另建同名或无关 Worker。
 2. 连接 GitHub，选择 **`ct1150/wending`**。首次如需授权，安装 **Cloudflare Workers and Pages** GitHub App，并只选择此仓库；这与 ChatGPT 的 GitHub 插件授权独立。
 3. 按下表设置。Worker 名称必须为 **`baishi-wending`**，与仓库 `wrangler.jsonc.name` 一致；不要沿用仓库名 `wending`。然后选择 **Deploy**。
 4. 等待 Cloudflare 生产部署成功，复制实际提供的完整 `workers.dev` URL，再执行本页的上线验证。后续 `main` 推送由 Cloudflare 自动构建与发布。
@@ -50,7 +72,7 @@ Cloudflare 官方支持读取 `.node-version`，并为 Workers Builds 自动创�
 
 官方说明：[Workers Builds 配置](https://developers.cloudflare.com/workers/ci-cd/builds/configuration/)、[Workers GitHub 集成](https://developers.cloudflare.com/workers/ci-cd/builds/git-integration/github-integration/)（查阅：2026-10-24）。
 
-## 方式 B：GitHub Actions 发布（备选）
+## 未来方式 B：GitHub Actions 发布（备选）
 
 工作流文件：`.github/workflows/validate-deploy.yml`。
 
@@ -92,17 +114,20 @@ npm run release
 
 | 证据 | 当前记录 |
 | --- | --- |
-| GitHub 仓库 URL | [ct1150/wending](https://github.com/ct1150/wending)，公开仓库，生产分支 `main` |
-| 首次游戏源码提交 | [`6698dbbca4b452466ad461070250c6ea7deeb87c`](https://github.com/ct1150/wending/commit/6698dbbca4b452466ad461070250c6ea7deeb87c) |
-| 游戏源码树 | `ea6040b9d180197af1b7503efc837a8d3be6070d`；与上传时本地 `HEAD^{tree}` 完全一致，30 个远端 blob SHA 逐项匹配 |
-| 首次 GitHub Actions 运行 | [40050257913](https://github.com/ct1150/wending/actions/runs/40050257913)：`success` |
-| 验证任务 | [120741133981](https://github.com/ct1150/wending/actions/runs/40050257913/job/120741133981)：全部步骤 `success` |
-| 构建产物 | [12541989829](https://github.com/ct1150/wending/actions/runs/40050257913/artifacts/12541989829)：已生成，压缩产物 184805 字节，包含静态站点与离线版 |
-| 远程验证日志 | 46 个测试全部通过、0 失败；13 个 JavaScript 文件语法检查通过；离线 HTML 185751 字节 |
-| GitHub 部署任务 | `skipped`；`ENABLE_CF_DEPLOY` 未启用 |
-| Cloudflare Git 连接 | 尚未连接 |
-| Cloudflare Build／Wrangler 发布结果 | 尚未实际部署，无成功记录 |
-| 真实线上游戏 URL | 尚无 |
-| 线上验证结果 | 待 Cloudflare 实际部署后验证 |
+| 源码仓库 | [ct1150/wending](https://github.com/ct1150/wending)，公开仓库，`main` |
+| 当前发行源码提交 | [`355f7956a4c31d9e3a19f1f567c4b1146942a5e9`](https://github.com/ct1150/wending/commit/355f7956a4c31d9e3a19f1f567c4b1146942a5e9) |
+| 当前发行 CI | [40053805256](https://github.com/ct1150/wending/actions/runs/40053805256)：`success`，48 个测试通过、15 个 JS 文件语法检查通过 |
+| 当前 CI 产物 | [12544925440](https://github.com/ct1150/wending/actions/runs/40053805256/artifacts/12544925440)，压缩包 247611 字节，含静态站点、离线 HTML 与 189712 字节 `release/worker.mjs` |
+| 首次游戏源码与历史 CI | [`6698dbb`](https://github.com/ct1150/wending/commit/6698dbbca4b452466ad461070250c6ea7deeb87c) / [40050257913](https://github.com/ct1150/wending/actions/runs/40050257913)，历史 46 测试通过 |
+| Cloudflare 实际发布 | API MCP 标准 Worker 上传成功；deployment `f9dd9fc8df55437e8123bbca3e119a59` |
+| 生产 URL | [https://baishi-wending.ct1150.workers.dev/](https://baishi-wending.ct1150.workers.dev/) |
+| 真实浏览器已验证 | 开局、修炼、探索事件、选择结果、刷新存档与日志恢复、healthz、离线下载哈希、移动布局 |
+| 线上健康接口 | 浏览器返回 `status: ok`、上述源码提交及 HTML SHA-256 |
+| 真实下载 | 从游戏设置点“下载游戏”取得 185751 字节文件，SHA-256 与构建产物完全一致 |
+| 移动端 | 390px iframe 载入真实公网游戏，可用宽 375 CSS px；html/body 的 scrollWidth = clientWidth = 375，顶部修为和底部五项导航可见 |
+| 其余协议边界 | 公网 HEAD／404／405 尚未取得线上响应证据；本地 Worker handler 测试已覆盖且通过 |
+| GitHub 自动发布 | 尚未接通；Cloudflare GitHub App 未授权，API `8000008`；Actions deploy 未启用 |
 
-维护者应根据实际执行结果更新本表，保留失败或阻塞原因，不填入推测地址。
+真实浏览器验收记录：创建“云归”时 16 岁；修炼后 19 岁、13 修为、81 余寿、29 灵石；探索至 21 岁遇到“渡口最后一船”，选择“帮他装船”后 22 岁、78 余寿、41 灵石。刷新后上述数值和日志恢复。
+
+公网页面 GET、healthz、实际下载及移动端均已有真实浏览器证据。本执行环境的脚本请求得到过 403，未反复重试；该通路结果不能代替浏览器成功结果或用于推断全站故障。只有公网 HEAD／404／405 仍缺少独立线上证据，本地测试不作替代。

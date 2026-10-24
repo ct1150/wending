@@ -1,6 +1,6 @@
 # 百世问鼎 · 首版验收记录
 
-日期：2026-10-24。范围：单机网页版、离线单文件版、GitHub → Cloudflare 发布配置。
+日期：2026-10-24。范围：单机网页版、离线单文件版、GitHub CI、Cloudflare 普通 Worker 首发与后续 Static Assets 发布配置。
 
 ## 交付内容
 
@@ -17,7 +17,7 @@
 
 ## 自动化验收
 
-最终执行 `npm run release`，退出码为 0。包括完整测试、语法检查和生产构建。
+当前发行源码提交 `355f7956a4c31d9e3a19f1f567c4b1146942a5e9` 的 [GitHub Actions 40053805256](https://github.com/ct1150/wending/actions/runs/40053805256) 已成功执行验证与构建。常规 `release` 后另执行 `build:worker`，生成用于 MCP 直接发布的 Worker 模块。
 
 | 测试文件 | 注册的行为用例 | 主要风险 |
 | --- | ---: | --- |
@@ -26,13 +26,14 @@
 | engine.test.js | 23 | 时间与寿元、事件、战斗、装备、奖励来源、转世、存档校验 |
 | history.test.js | 5 | 前世日志、传承保存、兼容迁移、损坏拒绝、历史大小上限 |
 | simulation.test.js | 7 | 三流派合法通关、三流派初始装备直冲失败、守势实际影响 |
-| 合计 | 46 | 五个测试文件全部通过 |
+| worker.test.js | 2 | 逐字 HTML、无导入副作用、GET／HEAD、下载／图标／健康接口、404／405、提交参数校验 |
+| 合计 | 48 | 六个测试文件全部通过 |
 
-语法检查覆盖 13 个 JavaScript 文件。构建生成 `dist/` 和 185751 字节的自包含 HTML；SHA-256 见 `release/release.json`。构建器的离线脚本没有运行时模块加载或外部样式／图像依赖。
+最新语法检查覆盖 15 个 JavaScript 文件。构建生成 `dist/` 和 185751 字节的自包含 HTML；SHA-256 见 `release/release.json`。构建器的离线脚本没有运行时模块加载或外部样式／图像依赖。
 
 独立代码审查额外执行过 90 个种子、三流派合计 18,000 次合法随机操作，逐步检查不可变输入与存档往返。这次随机检查发生于最终平衡及历史增强之前；最终版本以完整回归套件和浏览器验收为准。
 
-## 浏览器验收
+## 本地预览与离线浏览器验收
 
 使用真实浏览器操作，不通过注入游戏状态跳过流程：
 
@@ -54,22 +55,36 @@
 
 这些模拟证明指定路径及回归性质，不代表玩家平均成功率或真实游玩时长。首版没有多人、云存档、付费或排行榜。
 
-## GitHub CI 与上线状态
+## GitHub CI 与实际上线状态
 
-游戏源码已上传至公开仓库 [ct1150/wending](https://github.com/ct1150/wending) 的 `main` 分支。首次游戏源码提交为 [`6698dbbca4b452466ad461070250c6ea7deeb87c`](https://github.com/ct1150/wending/commit/6698dbbca4b452466ad461070250c6ea7deeb87c)，源码树 `ea6040b9d180197af1b7503efc837a8d3be6070d` 与上传时本地 `HEAD^{tree}` 完全一致，30 个远端文件的 blob SHA 已逐项核对一致。
+源码位于 [ct1150/wending](https://github.com/ct1150/wending) 的 `main`。当前发行源码提交为 [`355f7956a4c31d9e3a19f1f567c4b1146942a5e9`](https://github.com/ct1150/wending/commit/355f7956a4c31d9e3a19f1f567c4b1146942a5e9)；此前游戏首传提交 `6698dbbca4b452466ad461070250c6ea7deeb87c` 的 30 个 blob SHA 曾逐项核对一致。
 
-| 远程证据 | 结果 |
+| 证据 | 结果 |
 | --- | --- |
-| [GitHub Actions 40050257913](https://github.com/ct1150/wending/actions/runs/40050257913) | `success` |
-| [validate 任务 120741133981](https://github.com/ct1150/wending/actions/runs/40050257913/job/120741133981) | 全部步骤成功；46/46 测试通过、0 失败；13 个 JavaScript 文件语法检查通过；离线 HTML 185751 字节 |
-| [构建产物 12541989829](https://github.com/ct1150/wending/actions/runs/40050257913/artifacts/12541989829) | 已生成静态站点与离线版 |
-| 远程测试日志 | tests 46 / pass 46 / fail 0 |
-| 远程语法检查日志 | Syntax checked 13 JavaScript files |
-| 远程构建日志 | 离线 HTML 185751 字节；压缩构建产物 184805 字节 |
-| deploy 任务 | `skipped`；`ENABLE_CF_DEPLOY` 未启用 |
-| Cloudflare 连接与部署 | 尚未连接，尚未部署 |
-| 真实线上游戏 URL／线上验收 | 尚无 URL，待实际部署后执行 |
+| [当前 GitHub Actions 40053805256](https://github.com/ct1150/wending/actions/runs/40053805256) | `success`；48/48 测试通过，15 个 JavaScript 文件语法检查通过 |
+| 当前 CI 构建产物 | [12544925440](https://github.com/ct1150/wending/actions/runs/40053805256/artifacts/12544925440)，247611 字节压缩包；含静态站点、185751 字节离线 HTML、189712 字节 Worker |
+| GitHub Actions deploy | `skipped`；`ENABLE_CF_DEPLOY` 未启用 |
+| Cloudflare 实际发布 | API MCP 上传普通 Worker 成功，2026-10-24 02:21:43 UTC（上海 10:21:43） |
+| Worker／deployment | `baishi-wending` / `f9dd9fc8df55437e8123bbca3e119a59` |
+| 真实生产 URL | [https://baishi-wending.ct1150.workers.dev/](https://baishi-wending.ct1150.workers.dev/) |
+| GitHub → Cloudflare 自动发布 | 尚未接通；Cloudflare GitHub App 未授权，仓库连接 API `8000008 Git account disconnected` |
 
-推荐下一步在目标 Cloudflare 账号使用原生 GitHub 集成连接 `ct1150/wending` 的 `main`：Worker 名称 `baishi-wending`，根目录留空，构建命令 `npm run release`，部署命令 `npx wrangler deploy`，自动读取 `.node-version` 的 Node 24。此方式无需在 GitHub 添加 Cloudflare secrets，并应保持 `ENABLE_CF_DEPLOY` 未启用。具体步骤与 Actions 发布备选见 [部署说明](DEPLOYMENT.md)。
+当前由普通 Worker 返回内嵌 HTML，会计入 Workers 请求额度。它没有使用保留的 Static Assets 配置；原生 Git／Actions 自动发布应在以后明确迁移和验证，不能将成功的手动 MCP 发布描述成自动化已接通。
 
-成功的 GitHub CI 证明远程验证与构建通过，不能当作 Cloudflare 上线或真实 HTTPS 站点验收的证据。
+### 真实线上浏览器验收
+
+- 新建“云归”，初始 16 岁。
+- 修炼后 19 岁、13 修为、81 余寿、29 灵石。
+- 探索至 21 岁出现“渡口最后一船”；选“帮他装船”后为 22 岁、78 余寿、41 灵石。
+- 刷新后上述状态与日志恢复，确认实际生产域名下的游戏交互和存档生效。
+- 浏览器打开 `/healthz`，返回 `status: ok`、源码提交 `355f7956a4c31d9e3a19f1f567c4b1146942a5e9` 与 HTML SHA-256 `060befb94513ebd04bd23eac7127e28073b782b1bf02e443627cda5eaddf6e63`。
+- 在游戏设置点击“下载游戏”，真实下载文件为 185751 字节；SHA-256 为 `060befb94513ebd04bd23eac7127e28073b782b1bf02e443627cda5eaddf6e63`，与构建产物完全匹配。
+- 390px iframe 加载真实公网游戏，可用内容宽 375 CSS px；html/body 的 scrollWidth 与 clientWidth 均为 375，无横向溢出。手机顶部修为进度和底部五项导航可见，开局正常。
+
+### 协议验证与边界
+
+本地生成 Worker 的两项行为测试已通过，覆盖 HTML 逐字保持、模块导入无网络／写文件副作用、GET／HEAD、下载／favicon／healthz、404／405 和源码提交校验。
+
+公网根页面 GET、健康接口、真实下载与移动布局已取得上述浏览器证据。脚本式检查在本执行环境先受 sandbox 限制，批准后得到 403 非游戏正文，已停止重试；该通路结果不能用于否定真实浏览器的成功验收，也不能以阻断页哈希代替游戏哈希。
+
+**尚未单独取得公网 HEAD／404／405 的响应证据。** 这三项已由本地 Worker handler 测试验证，不将其写成线上通过。部署创建、健康接口和下载内容的证据明确区分记录。具体部署、打包与未来自动接入步骤见 [部署说明](DEPLOYMENT.md)。

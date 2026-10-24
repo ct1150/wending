@@ -2,16 +2,17 @@
 
 一款围绕寿元、际遇与跨世因果的单机文字修仙游戏。每一世从十六岁启程，在剑修、体修、丹修中选择道路，修炼、历练、突破与迎战；寿尽后将真正挣得的传承与世界因果留给后来者。取得三界道证，再向三界共主之位发起挑战。
 
-游戏在浏览器本地运行，无运行时依赖，不需要账号或后端。源代码由 GitHub 管理，最终托管目标为 **Cloudflare Workers Static Assets**。实际发布结果以 [部署记录](docs/DEPLOYMENT.md) 中的证据为准。
+游戏在浏览器本地运行，无运行时依赖，不需要玩家账号或游戏后端。源代码由 GitHub 管理，当前已发布到 **Cloudflare Workers**：[开始游玩](https://baishi-wending.ct1150.workers.dev/)。当前发行方式由普通 Worker 返回内嵌的离线 HTML；原定 Static Assets 配置保留作后续迁移使用。
 
 ## 源码与当前状态
 
-- 源码仓库：[ct1150/wending](https://github.com/ct1150/wending)，分支 `main`。
-- 首次验证：[GitHub Actions 40050257913](https://github.com/ct1150/wending/actions/runs/40050257913) **成功**，已生成静态站点与离线版构建产物。
-- 首次游戏源码提交：[`6698dbb`](https://github.com/ct1150/wending/commit/6698dbbca4b452466ad461070250c6ea7deeb87c)。
-- Cloudflare **尚未连接、尚未部署，当前没有线上游戏 URL**。Actions 的 `deploy` 任务因发布开关未启用而跳过。
+- 线上游戏：[baishi-wending.ct1150.workers.dev](https://baishi-wending.ct1150.workers.dev/)。
+- 源码仓库：[ct1150/wending](https://github.com/ct1150/wending)，分支 `main`；当前发行源码提交 [`355f795`](https://github.com/ct1150/wending/commit/355f7956a4c31d9e3a19f1f567c4b1146942a5e9)。
+- 发行版本验证：[GitHub Actions 40053805256](https://github.com/ct1150/wending/actions/runs/40053805256) **成功**：48 个测试全部通过、15 个 JavaScript 文件语法检查通过，并打包 `release/worker.mjs`。
+- 真实线上浏览器已验证开局、修炼、事件选择、刷新存档恢复、健康接口、离线下载哈希与移动端布局。
+- **GitHub → Cloudflare 自动发布尚未接通**：Cloudflare GitHub App 未授权，仓库连接 API 返回 `8000008 Git account disconnected`；当前版本通过已授权的 Cloudflare API MCP 手动发布。
 
-下一步推荐在目标 Cloudflare 账号连接该 GitHub 仓库，步骤见 [部署说明](docs/DEPLOYMENT.md)。
+当前普通 Worker 发行方式会计入 Workers 请求额度；具体额度与计费以 Cloudflare 账号套餐为准。发布证据及未来自动发布接入步骤见 [部署说明](docs/DEPLOYMENT.md)。
 
 ## 本地运行
 
@@ -38,8 +39,18 @@ npm run build
 | `dist/` | 可部署的静态站点，保留原生 ES 模块与相对资源路径 |
 | `release/baishi-wending-offline.html` | 内嵌脚本、样式和本地 SVG 的单文件离线版 |
 | `release/release.json` | 版本、构建时间、离线文件大小和 SHA-256 摘要 |
+| `release/worker.mjs` | 额外运行 `build:worker` 生成的普通 Worker 发行模块，当前线上使用此格式 |
 
 离线文件也复制到 `dist/baishi-wending-offline.html`，可与线上版本一起提供下载。构建不会改写源文件。开发版使用 ES 模块，应通过开发服务器打开；单文件离线版可以直接打开。
+
+普通 Worker 打包须在常规构建之后执行，并提供所发行源码的完整 Git SHA：
+
+```sh
+npm run release
+npm run build:worker -- --source-commit 355f7956a4c31d9e3a19f1f567c4b1146942a5e9
+```
+
+也可通过 `SOURCE_COMMIT` 环境变量提供提交。常规构建会重新创建 `release/`，因此 `build:worker` 放在最后。CI 已自动使用当前 GitHub SHA 执行该步骤并将 Worker 模块与静态站点一起保存为构建产物。
 
 ## 玩法与存档
 
@@ -66,7 +77,7 @@ docs/                    产品、接口、进展与部署说明
 
 ## 发布
 
-推荐由 **Cloudflare 原生 GitHub 集成**连接 `ct1150/wending` 的 `main`：Worker 名称 `baishi-wending`，根目录留空，构建命令 `npm run release`，部署命令 `npx wrangler deploy`；Node 24 自动读取 `.node-version`。
+当前通过 Cloudflare API MCP 发布普通 Worker；该流程没有建立推送即部署的自动化。后续推荐迁移到 **Cloudflare 原生 GitHub 集成**连接 `ct1150/wending` 的 `main`：Worker 名称 `baishi-wending`，根目录留空，构建命令 `npm run release`，部署命令 `npx wrangler deploy`；Node 24 自动读取 `.node-version`。
 
 GitHub Actions 保留每次 push、pull request 和手动运行的测试、语法检查与构建。仓库也提供 Actions 发布备选，只有 `main` 验证通过、`ENABLE_CF_DEPLOY=true` 且凭据齐全才会部署。使用 Cloudflare 原生集成时保持该开关未启用，避免双路发布。
 
