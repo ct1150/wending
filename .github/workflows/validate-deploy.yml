@@ -26,6 +26,10 @@ jobs:
           package-manager-cache: false
       - name: Test, syntax check, and build
         run: npm run release
+      - name: Package standalone Worker for MCP deployment
+        env:
+          SOURCE_COMMIT: ${{ github.sha }}
+        run: npm run build:worker
       - name: Preserve static site and offline release
         uses: actions/upload-artifact@v7
         with:
