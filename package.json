@@ -1,9 +1,9 @@
 {
   "name": "baishi-wending",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "private": true,
   "type": "module",
-  "description": "百世问鼎 — 寿元、际遇与跨世因果构成的文字修仙肉鸽",
+  "description": "百世问鼎 — 药谷旧火、调查抉择与同一世界的轮回因果",
   "engines": { "node": ">=22" },
   "scripts": {
     "dev": "node scripts/dev.js",

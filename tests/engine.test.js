@@ -80,7 +80,7 @@ test('save roundtrip preserves random state and rejects incomplete or unknown da
     s => { s.meta.proofs.push('fake'); },
     s => { s.run.loadout.skills.push(s.run.loadout.skills[0]); },
     s => { s.run.selectedLegacies.push('sword-heart'); },
-    s => { s.version = 2; },
+    s => { s.version = 3; },
     s => { s.unexpected = true; },
   ]) {
     const corrupt = structuredClone(state); mutate(corrupt);

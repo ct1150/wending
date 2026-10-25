@@ -1,14 +1,16 @@
 # GitHub → Cloudflare 部署
 
-更新日期：2026-10-24。
+文档更新：2026-10-25（上海）。当前远端配置与部署核实记录日期：2026-10-24。1.1.0仍为本地候选；本页没有将本地构建写成已经上线。
 
-## 当前发行方式与上线状态
+## 当前生产：旧版源码与发行方式
 
 源代码位于 [ct1150/wending](https://github.com/ct1150/wending) 的 `main` 分支。**Cloudflare API MCP 已实际发布 Worker `baishi-wending`**，生产地址为 [https://baishi-wending.ct1150.workers.dev/](https://baishi-wending.ct1150.workers.dev/)。当前是普通 Worker 返回内嵌离线 HTML 的发行方式，尚未使用 `dist/` 的 Static Assets 路由。原有 `wrangler.jsonc` 保留作后续 Static Assets 迁移使用。
 
 当前线上发行源码提交为 [`355f7956a4c31d9e3a19f1f567c4b1146942a5e9`](https://github.com/ct1150/wending/commit/355f7956a4c31d9e3a19f1f567c4b1146942a5e9)；[对应 GitHub Actions](https://github.com/ct1150/wending/actions/runs/40053805256) 已成功，48 个测试、15 个 JavaScript 文件语法检查和构建全部通过。后续仅修改文档的提交不会改动此线上发行标识。
 
-**GitHub → Cloudflare 自动发布仍未接通。** Cloudflare GitHub App 尚未授权，仓库连接 API 返回 `404 / 8000008 Git account disconnected`，构建 Token 列表为空。GitHub Actions 的 `deploy` 也因 `ENABLE_CF_DEPLOY` 未启用而跳过；当前成功发布来自 Cloudflare API MCP，不能描述为 GitHub 自动部署。
+**GitHub → Cloudflare 自动发布仍未配置。** 最近只读核实中，此Worker的原生Builds配置查询为 `404 / 12040`（No build configuration associated with that script tag），triggers为空，builds为空且total_count=0。最新观察的 [GitHub Actions 40054261258](https://github.com/ct1150/wending/actions/runs/40054261258) 在main提交 `e719b569deeb5010d4977c799b434b60d640223a` 验证成功、deploy跳过，不能据此说main已上线。
+
+首发时连接仓库曾返回 `404 / 8000008 Git account disconnected`，当时无build token。这是历史失败记录；本轮没有重做会修改连接的PUT，repo autofill的404也不足以证明GitHub App现在仍未安装。当前可证明的是此Worker没有自动构建配置，不能声称App从未安装。成功生产发行来自Cloudflare API MCP。
 
 | 项目 | 当前结果 |
 | --- | --- |
@@ -16,15 +18,32 @@
 | Cloudflare 发行方式 | 普通 Worker 内嵌 HTML，由 `fetch` 返回页面 |
 | Worker 名称／账号子域 | `baishi-wending` / `ct1150` |
 | Worker tag | `d4ceaa79ca7d4ca48954b1117458297f` |
-| Deployment ID | `f9dd9fc8df55437e8123bbca3e119a59` |
-| 部署创建时间 | `2026-10-24T02:21:43Z`，上海时间 2026-10-24 10:21:43 |
+| Deployment ID | `48af217d-8b0f-428a-94ab-d868fdf55ca3` |
+| Worker version ID／流量 | `f9dd9fc8-df55-437e-8123-bbca3e119a59`／100% |
+| 部署创建时间 | `2026-10-24T02:21:43.28736Z`，上海时间 2026-10-24 10:21:43 |
 | workers.dev | 已启用；preview URL 未启用 |
 | HTML 大小／SHA-256 | 185751 字节 / `060befb94513ebd04bd23eac7127e28073b782b1bf02e443627cda5eaddf6e63` |
 | 游戏运行服务 | 不需要游戏后端、数据库或玩家账号 |
 
 当前页面请求执行普通 Worker，**计入 Workers 请求额度**；具体限额与收费以目标账号套餐为准，不能沿用 Static Assets 免费资源请求的描述。官方参考：[Workers 计费](https://developers.cloudflare.com/workers/platform/pricing/)（查阅：2026-10-24）。
 
-## 当前 Worker 发行模块的打包与发布
+## 1.1.0候选与本轮正式发行门槛
+
+1.1.0已在本地完成叙事引擎／UI与对应检查，详细本地行为、浏览器和离线证据见 [QA记录](QA_REPORT.md)。候选312059字节离线HTML的SHA-256为 `379eef692acd6e5b043ed11a364a2ddf4bf761a1b842e482f6037fa32dee0c46`，release.json版本1.1.0。它不是上表生产文件的哈希；尚未取得1.1.0实际生产deployment、version或GitHub CI成功证据。
+
+最终修复轮的82项行为、8个测试文件、20JS语法检查、离线文件首选项／刷新，以及本地焦点／截止／短战／旅行／旧存档路径已通过；五项评审发现的具体修复与边界见QA。候选尚待限定复核；提交后本地Worker一致性记录仅证明本地打包，不能替代真实GitHubSHA的重新打包和公网验收。
+
+本轮由控制方完成：
+
+1. 发布可审查GitHub分支／PR，核对当时main并完成整分支评审及CI；本地synthetic snapshot基线不冒充上游提交。
+2. 从实际GitHub发行完整SHA执行 `npm run release`，之后 `npm run build:worker -- --source-commit <实际40位SHA>`；核对离线大小／哈希和Worker本地health的sourceCommit。正常build会重建release，所以Worker打包最后执行。
+3. 沿用已授权的标准API multipart模块上传，更新**已有** `baishi-wending`，不新建Worker、不执行Wrangler／Static Assets迁移、不更改自动发布设置。
+4. 上传后读取实际deployments，分别记录deployment ID与100% version ID；访问生产 `/healthz`，核对实际GitHubSHA及同一离线哈希。
+5. 实际公网打开新游戏剧情，完成一个选项、刷新恢复，并核对下载与窄屏；再将观察到的结果写回文档。CI成功、API上传成功和页面可玩是三个不同门槛。
+
+本地打包的sourceCommit只证明指定候选的元数据，不证明该SHA已在GitHub或生产存在。发布后若有仅文档的审计提交，生产health继续指向真正构建／上传的源码SHA，不能随文档HEAD自行改写。
+
+## 当前 Worker 发行模块的打包与发布（首发示例）
 
 常规构建后，将已验收离线 HTML 和 `assets/seal.svg` 打包为 `release/worker.mjs`：
 
@@ -110,23 +129,23 @@ npm run release
 - 下载并打开 `baishi-wending-offline.html`，确认可开局与操作。
 - 记录提交、运行链接、最终 URL、验证日期与结论。自定义域名配置完成前，只报告已经验证的 `workers.dev` URL。
 
-## GitHub 验证与实际发布记录
+## 首版GitHub验证与当前生产证据
 
-| 证据 | 当前记录 |
+| 证据 | 首版记录／当前生产依据 |
 | --- | --- |
 | 源码仓库 | [ct1150/wending](https://github.com/ct1150/wending)，公开仓库，`main` |
 | 当前发行源码提交 | [`355f7956a4c31d9e3a19f1f567c4b1146942a5e9`](https://github.com/ct1150/wending/commit/355f7956a4c31d9e3a19f1f567c4b1146942a5e9) |
-| 当前发行 CI | [40053805256](https://github.com/ct1150/wending/actions/runs/40053805256)：`success`，48 个测试通过、15 个 JS 文件语法检查通过 |
-| 当前 CI 产物 | [12544925440](https://github.com/ct1150/wending/actions/runs/40053805256/artifacts/12544925440)，压缩包 247611 字节，含静态站点、离线 HTML 与 189712 字节 `release/worker.mjs` |
+| 当前生产源码对应CI | [40053805256](https://github.com/ct1150/wending/actions/runs/40053805256)：`success`，48 个测试通过、15 个 JS 文件语法检查通过 |
+| 当前生产源码的历史CI产物 | [12544925440](https://github.com/ct1150/wending/actions/runs/40053805256/artifacts/12544925440)，压缩包 247611 字节，含静态站点、离线 HTML 与 189712 字节 `release/worker.mjs` |
 | 首次游戏源码与历史 CI | [`6698dbb`](https://github.com/ct1150/wending/commit/6698dbbca4b452466ad461070250c6ea7deeb87c) / [40050257913](https://github.com/ct1150/wending/actions/runs/40050257913)，历史 46 测试通过 |
-| Cloudflare 实际发布 | API MCP 标准 Worker 上传成功；deployment `f9dd9fc8df55437e8123bbca3e119a59` |
+| Cloudflare 实际发布 | API MCP标准Worker上传成功；deployment `48af217d-8b0f-428a-94ab-d868fdf55ca3`，100% version `f9dd9fc8-df55-437e-8123-bbca3e119a59` |
 | 生产 URL | [https://baishi-wending.ct1150.workers.dev/](https://baishi-wending.ct1150.workers.dev/) |
 | 真实浏览器已验证 | 开局、修炼、探索事件、选择结果、刷新存档与日志恢复、healthz、离线下载哈希、移动布局 |
 | 线上健康接口 | 浏览器返回 `status: ok`、上述源码提交及 HTML SHA-256 |
 | 真实下载 | 从游戏设置点“下载游戏”取得 185751 字节文件，SHA-256 与构建产物完全一致 |
 | 移动端 | 390px iframe 载入真实公网游戏，可用宽 375 CSS px；html/body 的 scrollWidth = clientWidth = 375，顶部修为和底部五项导航可见 |
 | 其余协议边界 | 公网 HEAD／404／405 尚未取得线上响应证据；本地 Worker handler 测试已覆盖且通过 |
-| GitHub 自动发布 | 尚未接通；Cloudflare GitHub App 未授权，API `8000008`；Actions deploy 未启用 |
+| GitHub自动发布 | 此Worker无原生Builds配置404／12040、无triggers／builds；最近观察CI deploy跳过；不推断App安装状态 |
 
 真实浏览器验收记录：创建“云归”时 16 岁；修炼后 19 岁、13 修为、81 余寿、29 灵石；探索至 21 岁遇到“渡口最后一船”，选择“帮他装船”后 22 岁、78 余寿、41 灵石。刷新后上述数值和日志恢复。
 

@@ -1,6 +1,8 @@
 # Implementation ledger
 
-Plan: docs/superpowers/plans/2026-10-24-first-release.md
+Plans: [first release](superpowers/plans/2026-10-24-first-release.md) · [1.1.0 narrative upgrade](superpowers/plans/2026-10-25-narrative-adventure.md)
+
+Current documentation date: 2026-10-25 (Shanghai). The 1.1.0 branch is a local candidate; publication is recorded separately from implementation and CI. Earlier entries below are historical checkpoints.
 
 - 2026-10-24: Approved conversation design captured in PRODUCT_SPEC; no additional design approval required because user explicitly requested implementation and deployment.
 - Ruling: use native JS and static hosting — offline single-player requirements need no server or runtime dependency.
@@ -29,15 +31,34 @@ Plan: docs/superpowers/plans/2026-10-24-first-release.md
 - Original next step at that checkpoint: connect `ct1150/wending` / `main` in the intended Cloudflare account. Worker `baishi-wending`, repository root left blank, build `npm run release`, deploy `npx wrangler deploy`, Node 24 read automatically from `.node-version`. Keep the GitHub deployment switch disabled when using this native integration. See [deployment instructions](DEPLOYMENT.md).
 
 
-## Current Cloudflare publication checkpoint — 2026-10-24
+## Historical first publication / current old-production checkpoint — 2026-10-24
 
-- Cloudflare API MCP authenticated successfully. Native Git setup could not proceed: repository connection returned `404 / 8000008 Git account disconnected`, and no build tokens existed. The Cloudflare GitHub App remains unauthorized; GitHub push-to-Cloudflare deployment is not connected.
+- Cloudflare API MCP authenticated successfully. Native Git setup could not proceed: repository connection returned `404 / 8000008 Git account disconnected`, and no build tokens existed. That failure records the state observed during first publication, not proof that the GitHub App is still uninstalled. Current absence of Worker Builds configuration is recorded below.
 - To deliver a working first release, the verified offline HTML was embedded in an ordinary Worker response. This mode counts toward Workers request allowances. The original Static Assets `wrangler.jsonc` is retained for future migration.
 - Added `scripts/build-worker.js`, two Worker behavior tests and `build:worker`. CI runs it after the regular build with `SOURCE_COMMIT=github.sha`, preserving `release/worker.mjs` in its artifact. Source commit [`355f7956a4c31d9e3a19f1f567c4b1146942a5e9`](https://github.com/ct1150/wending/commit/355f7956a4c31d9e3a19f1f567c4b1146942a5e9); [CI 40053805256](https://github.com/ct1150/wending/actions/runs/40053805256) succeeded with 48 tests and 15 JavaScript syntax checks.
-- Actual MCP deployment succeeded: Worker `baishi-wending`, tag `d4ceaa79ca7d4ca48954b1117458297f`, deployment `f9dd9fc8df55437e8123bbca3e119a59`, created `2026-10-24T02:21:43Z` (Shanghai 10:21:43). `workers.dev` enabled; previews disabled.
+- Actual MCP deployment succeeded: Worker `baishi-wending`, tag `d4ceaa79ca7d4ca48954b1117458297f`, deployment `48af217d-8b0f-428a-94ab-d868fdf55ca3`, 100% version `f9dd9fc8-df55-437e-8123-bbca3e119a59`, created `2026-10-24T02:21:43Z` (Shanghai 10:21:43). `workers.dev` enabled; previews disabled.
 - Production URL: [https://baishi-wending.ct1150.workers.dev/](https://baishi-wending.ct1150.workers.dev/). HTML SHA-256: `060befb94513ebd04bd23eac7127e28073b782b1bf02e443627cda5eaddf6e63`; expected health source commit `355f7956a4c31d9e3a19f1f567c4b1146942a5e9`.
 - Actual production browser verification passed: new character 云归 age 16; training reached age 19 / cultivation 13 / remaining life 81 / spirit 29; exploration showed 渡口最后一船 at age 21, and 帮他装船 produced age 22 / remaining life 78 / spirit 41. Reload restored state and logs.
 - This executor's direct HTTP verification was network-limited, then returned a 403 non-game body via the approved network path; healthz was not JSON. Retrying stopped. This is a verification-path limitation, not evidence that the whole site is down; the production browser loaded and played successfully.
 - Production browser healthz returned status ok, source commit `355f7956a4c31d9e3a19f1f567c4b1146942a5e9` and the expected HTML hash. The actual in-game download was 185751 bytes with matching SHA-256 `060befb94513ebd04bd23eac7127e28073b782b1bf02e443627cda5eaddf6e63`. A 390px iframe loaded the real production URL at 375 CSS px usable width: html/body scrollWidth and clientWidth were all 375, with top cultivation progress and all five bottom navigation items visible.
 - Public HEAD/404/405 have no independent live-response evidence; local Worker handler tests passed 2/2. Production GET, healthz, download and mobile checks have actual browser evidence.
 - Final CI logs confirm 48 tests / 48 passed / 0 failed, 15 JavaScript syntax checks and a 189712-byte Worker. Artifact [12544925440](https://github.com/ct1150/wending/actions/runs/40053805256/artifacts/12544925440) is 247611 bytes.
+
+
+## Read-only publication reconciliation — 2026-10-24
+
+- Observed GitHub main was `e719b569deeb5010d4977c799b434b60d640223a`, with [CI40054261258](https://github.com/ct1150/wending/actions/runs/40054261258) validate success and deploy skipped. This main commit did not replace the old production source `355f7956a4c31d9e3a19f1f567c4b1146942a5e9`.
+- Worker API listed deployment `48af217d-8b0f-428a-94ab-d868fdf55ca3` and version `f9dd9fc8-df55-437e-8123-bbca3e119a59`. Earlier docs mislabeled the version as a deployment; corrected here and in QA/DEPLOYMENT.
+- Native Builds returned404/code12040 with no configuration, triggers or build history. No connection-mutating request was repeated; current GitHub App installation status cannot be inferred from the old8000008 failure.
+- The accepted current release path remains GitHub review/CI → exact-source offline/Worker build → API update to the existing ordinary Worker. Static Assets and native automatic Builds are future migration work.
+
+## Narrative adventure 1.1.0 candidate — 2026-10-25 (Shanghai)
+
+- Approved direction: a continuous authored main story with finite random branches, meaningful choices and playable next-life consequences in one continuing world. Twenty-to-thirty minutes remains a design target without human timing evidence.
+- Preserved approved pre-upgrade research in `docs/research/2026-10-24-wending-reference-research.md` and original authored story in `docs/story/valley-fire.md`. Provenance wrappers distinguish dated research/design costs from current implementation. The implementation plan now uses a portable source link.
+- Task1 added separate native story data/runtime, strict v2 migration under the original storage key, three outcomes with distinct five-scene sequels, shared time/cost/death transactions, finite side opportunities and once-only settlement. Fix-round review added replayed side continuations, facts derived from retained trace/preceding snapshots, and successor wording at actual chronology. Engine fix re-review approved.
+- Task2 added narrative-first desktop/mobile UI, persistent results/records, visible costs, interruption return paths, truthful old-life guidance and sequel-aware life recap. Real browser desktop/390px common-clinic → sequel, refresh/import/export, resource-gate, event/combat-flee and old-save paths passed. Initial UI review passed with observations for whole-branch review; the details/focus and mobile cultivation findings are now addressed in the final fix wave below.
+- Task3 base `286314cfb1b29ebb8bd37f3945cabfdaa96cbd04`; only package/docs/source-artifact files changed, version1.1.0. Fresh individual test run80/80; required `npm run release` passed8/8 test files,20JS syntax checks,309314-byte offline build. npm unknown-http-proxy config warning is environmental.
+- Final-candidate local offline SHA-256 `379eef692acd6e5b043ed11a364a2ddf4bf761a1b842e482f6037fa32dee0c46`; 312059 bytes; release metadata version1.1.0. Real Chrome156 opened the rebuilt final file itself at390px, started a new game, chose enter_ask intoYG02 and refreshed with identical save/result; zero external runtime requests, failed requests or page/console errors. Full local evidence and limits are in QA_REPORT.
+- Final whole-branch fix wave from `d1c19000225d88613d1add05744f6d54eae5485d`: corrected fatal deadline/settlement ordering without relaxing failed-trace validation; two accepted-save boundary regressions observed RED then GREEN. Restored ordinary/combat focus and supporting disclosure continuity, current/required mobile cultivation, neutral zero-relationship records and stable old-fire wording. New bounded browser checks passed36 transition/focus/visibility assertions plus strict-v1 restored keyboard actions; no errors/overflow. Final individual suite82/82, required release8/8 files,20JS checks and rebuilt offline smoke all passed. Evidence uses final-* filenames; npm environment warning remains unchanged.
+- Pending controller gates: scoped final-fix re-review; publish exact source to GitHub and pass CI; rebuild Worker with that actual source SHA; update existing Worker via API; record live health/hash/deployment/version and new-story choice/reload evidence. No1.1.0 production success or future CI IDs are claimed by this candidate.

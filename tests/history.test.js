@@ -3,7 +3,10 @@ import assert from 'node:assert/strict';
 import { createGame, act, chooseEvent, getEventChoices, combatAction, getStats, selectLegacy, reincarnate, serialize, deserialize } from '../src/game/engine.js';
 
 function completedLife() {
-  let state = createGame({ name: '种药人', pathId: 'sword', seed: '5' });
+  const legacy = createGame({ name: '种药人', pathId: 'sword', seed: '5' });
+  legacy.version = 1; delete legacy.story; delete legacy.meta.storyWorld;
+  let state = deserialize(JSON.stringify(legacy));
+  assert.equal(state.story, null, 'the legacy history fixture follows the migrated old adventure');
   state = act(state, { type: 'explore' });
   assert.equal(state.eventId, 'mortal-seed');
   state = chooseEvent(state, 'plant');
@@ -36,13 +39,14 @@ test('older version-one backups import without historical journal fields and pre
   const reborn = reincarnate(selected);
   for (const [source, expectedSelection] of [[selected, 'realm-memory'], [reborn, null]]) {
     const old = JSON.parse(serialize(source));
+    old.version = 1; delete old.story; delete old.meta.storyWorld;
     for (const history of old.meta.history) {
       delete history.log;
       delete history.selectedLegacyId;
     }
     const raw = JSON.stringify(old);
     const migrated = deserialize(raw);
-    assert.equal(migrated.version, 1);
+    assert.equal(migrated.version, 2);
     assert.deepEqual(migrated.meta.history[0].log, []);
     assert.equal(migrated.meta.history[0].selectedLegacyId, expectedSelection);
     assert.equal(JSON.stringify(old), raw, 'migration does not change the source backup');
