@@ -1,9 +1,10 @@
 import { assertSaveSize } from './save-size.js';
 import { serialize, deserialize } from './engine.js';
 import { validateJourney } from './journey/validation.js';
+import { validateCultivation } from './cultivation/validation.js';
 
 function unsupportedVersion() {
-  throw new Error('存档版本不受支持，请导入有效的第 1、2 或 3 版备份。');
+  throw new Error('存档版本不受支持，请导入有效的百世问鼎备份。');
 }
 
 export function serializeGame(state) {
@@ -15,6 +16,9 @@ export function serializeGame(state) {
       return assertSaveSize(serialize(state));
     case 3:
       validateJourney(state);
+      return assertSaveSize(JSON.stringify(state));
+    case 4:
+      validateCultivation(state);
       return assertSaveSize(JSON.stringify(state));
     default:
       return unsupportedVersion();
@@ -37,6 +41,10 @@ export function deserializeGame(raw) {
     }
     case 3:
       validateJourney(state);
+      assertSaveSize(JSON.stringify(state));
+      return state;
+    case 4:
+      validateCultivation(state);
       assertSaveSize(JSON.stringify(state));
       return state;
     default:

@@ -40,8 +40,8 @@ test('chosen action and consequence remain in same-page history; unavailable cho
   assert.match(renderJourney(disabled), /disabled/); assert.match(renderJourney(disabled), /&lt;缺少证物&gt;/);
 });
 
-test('actual app starts v3, submits the rendered command once, focuses consequence and reloads unchanged', async () => {
-  const app = await startApp();
+test('actual app continues v3, submits the rendered command once, focuses consequence and reloads unchanged', async () => {
+  const app = await startApp({ raw: serializeGame(createJourney({ seed: 20261025 })) });
   let state = deserializeGame(app.storage.raw);
   assert.equal(state.version, 3); assert.equal(state.revision, 0);
   assert.match(app.html, /data-journey-choice/); assert.match(app.html, /data-more/);
@@ -127,7 +127,7 @@ test('malformed imports and blocked startup preserve exact original data until e
 });
 
 test('the authored ending stays readable and offers a real direct new-life choice', async () => {
-  const app = await startApp();
+  const app = await startApp({ raw: serializeGame(createJourney({ seed: 20261025 })) });
   for (const id of ['catch-child', 'take-medicine', 'continue-road', 'pledge-truth', 'route-channel', 'retreat-marks', 'go-confront', 'record-limits', 'evacuate-wounded', 'choose-ash', 'handoff-record', 'keep-watch']) {
     const state = deserializeGame(app.storage.raw);
     clickChoice(app, state, id);
