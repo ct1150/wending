@@ -3,8 +3,13 @@ import assert from 'node:assert/strict';
 import { createGame, act, getStats, getEventChoices, chooseEvent, equipItem, combatAction, serialize, deserialize } from '../src/game/engine.js';
 import { CHALLENGES, ITEMS, PATHS } from '../src/game/content.js';
 
-function campaign(pathId, seed, prepared, tactics = true) {
+function campaign(pathId, seed, prepared, tactics = true, legacy = false) {
   let state = createGame({ name: '百世行者', originId: pathId === 'alchemy' ? 'herbalist' : 'village', pathId, seed });
+  if (legacy) {
+    const old = structuredClone(state); old.version = 1; delete old.story; delete old.meta.storyWorld;
+    state = deserialize(JSON.stringify(old));
+    assert.equal(state.story, null, 'the fixed-seed tactical comparison preserves the migrated legacy event pool');
+  }
   const counts = { actions: 0, train: 0, explore: 0, events: 0, gear: 0, guard: 0, burn: 0, strike: 0 };
   const checkpoints = [];
   const score = item => {
@@ -115,8 +120,8 @@ for (const path of PATHS) {
 }
 
 test('prepared alchemy benefits from guarding visible heavy turns instead of burning every round', () => {
-  const tactical = campaign('alchemy', 'prepared-2026', true, true);
-  const reckless = campaign('alchemy', 'prepared-2026', true, false);
+  const tactical = campaign('alchemy', 'prepared-2026', true, true, true);
+  const reckless = campaign('alchemy', 'prepared-2026', true, false, true);
   assert.equal(tactical.state.phase, 'victory');
   assert.equal(reckless.state.phase, 'ended');
   assert.equal(reckless.state.summary.cause, 'battle');

@@ -1,30 +1,42 @@
 # 百世问鼎
 
-一款围绕寿元、际遇与跨世因果的单机文字修仙游戏。每一世从十六岁启程，在剑修、体修、丹修中选择道路，修炼、历练、突破与迎战；寿尽后将真正挣得的传承与世界因果留给后来者。取得三界道证，再向三界共主之位发起挑战。
+**1.1.0 · 药谷旧火**：一款剧情与探索主导的单机文字修仙游戏。你从十六岁入道，走入即将封闭的药谷，结识医者沈芷、封谷执事陆槐与旧掌闸人温渡。在证词、账册和地脉之间选择调查路线，付出药材、灵石、气血或寿元，决定最后一枚灵种和谷民的去向。下一世仍是同一个向前走的世界：医谷的规矩、宗门的药庄，或迁民的新药园，会成为后来人真正可玩的任务。
 
-游戏在浏览器本地运行，无运行时依赖，不需要玩家账号或游戏后端。源代码由 GitHub 管理，当前已发布到 **Cloudflare Workers**：[开始游玩](https://baishi-wending.ct1150.workers.dev/)。当前发行方式由普通 Worker 返回内嵌的离线 HTML；原定 Static Assets 配置保留作后续迁移使用。
+## 开始游玩
 
-## 源码与当前状态
+- [线上游戏](https://baishi-wending.ct1150.workers.dev/)：当前核实的生产站仍为旧版，**本分支 1.1.0 尚待发布**。实际发行源码与上线证据见 [部署记录](docs/DEPLOYMENT.md)。
+- 体验本分支 1.1.0：下载源码后运行 `npm run dev`，或完成构建后打开 `release/baishi-wending-offline.html`。
+- [源码仓库](https://github.com/ct1150/wending) · [玩法说明](docs/PRODUCT_SPEC.md) · [验收与限制](docs/QA_REPORT.md)。
 
-- 线上游戏：[baishi-wending.ct1150.workers.dev](https://baishi-wending.ct1150.workers.dev/)。
-- 源码仓库：[ct1150/wending](https://github.com/ct1150/wending)，分支 `main`；当前发行源码提交 [`355f795`](https://github.com/ct1150/wending/commit/355f7956a4c31d9e3a19f1f567c4b1146942a5e9)。
-- 发行版本验证：[GitHub Actions 40053805256](https://github.com/ct1150/wending/actions/runs/40053805256) **成功**：48 个测试全部通过、15 个 JavaScript 文件语法检查通过，并打包 `release/worker.mjs`。
-- 真实线上浏览器已验证开局、修炼、事件选择、刷新存档恢复、健康接口、离线下载哈希与移动端布局。
-- **GitHub → Cloudflare 自动发布尚未接通**：Cloudflare GitHub App 未授权，仓库连接 API 返回 `8000008 Git account disconnected`；当前版本通过已授权的 Cloudflare API MCP 手动发布。
-
-当前普通 Worker 发行方式会计入 Workers 请求额度；具体额度与计费以 Cloudflare 账号套餐为准。发布证据及未来自动发布接入步骤见 [部署说明](docs/DEPLOYMENT.md)。
-
-## 本地运行
-
-使用 Node.js 24（最低要求 Node.js 22）。不需要执行 `npm install`。
+游戏在浏览器本地运行，无运行时依赖、玩家账号或游戏后端，不上传存档。使用 Node.js 24 开发，最低 Node.js 22；不需要执行 `npm install`。
 
 ```sh
 npm run dev
 ```
 
-打开终端显示的地址，默认端口为 `5173`。开发服务器绑定 `0.0.0.0`，支持 `PORT=8080 npm run dev`，也支持 `npm run dev -- --port 8080`。
+打开终端显示的地址，默认端口 `5173`。开发服务器绑定 `0.0.0.0`，支持 `PORT=8080 npm run dev` 和 `npm run dev -- --port 8080`。
 
-## 检查与构建
+## 这一版怎么玩
+
+主阅读区始终显示当前位置、当下目标、剧情正文、选择成本和最近一次后果。“剧情手记”“药谷人物”“已知线索”可以回看；选择的结果会保留，普通修炼、切页或刷新不会把它变成一闪而过的通知。
+
+- **连续主线与有限支线**：首篇分三章，内容表有 YG01–YG16 十六个核心节点，单次游玩因分支看到不同子集。证人、账册、地脉三线最多追查两条；三种旁支中由种子确定两次机会，不靠重复抽取才能继续主线。
+- **三种主要收束**：医谷共守、宗门接管、焚种迁民。轮回后分别进入医馆分诊、药庄契约、迁民药园的五场景后续任务，各有真实选择和结果。提前寿尽、战败或归隐也留下未竟记录。
+- **可解释的取舍**：剑修、体修、丹修有不同调查和过门方法，存在不战斗完成主线的路线。可选剧情短战最多三回合，胜利、撤退和死亡均有后续。
+- **共享时间与世界**：调查有八年封谷期限。普通修炼、休养和旅行也推进世界年份，可能错过调查；到期仍有应急退路。燃寿损耗个人余寿，普通战斗回合不让世界逐年跳动。人物随世界年老去，已故者由继任者承接职责，旧事仍留在记录中。
+- **继续修行与问鼎**：辅助行动收在“暂歇修行”；装备、随机际遇、人间／幽冥／天界、三道证与最终挑战继续可用。身在其他世界或处理中断时，先按提示返回人间或完成际遇／战斗，再续主线。
+
+寿元与命损、两次有限延寿、真实经历产生的传承候选仍沿用原规则。每世结算最多解锁一项新传承，新一世最多携带两项；资源与境界重来，已挣得的传承、道证、世界结果和生平保留。
+
+**20–30 分钟是一世的设计目标，尚未经真人计时验证。** 后世是三类有限任务，后续世代会继续对应谷地类别的任务；本版不提供无限新篇或完整 NPC 家谱模拟。
+
+## 存档与旧版继续
+
+自动存档仍使用原浏览器存储键 `baishi-wending-save-v1`，内容升级为 **version 2**。合法 v1 备份先严格验证再迁移：保留当世阶段、资源、战斗、随机状态与生平，**本世继续旧途，下一世进入新篇**，不会给旧人物补造药谷经历。v2 缺失必需字段、矛盾事实或非法进度会被拒绝。
+
+请使用游戏内导出备份。换浏览器、域名或线上／离线版本时，可通过导入继续；浏览器对 `file:` 本地存储的政策可能不同。升级后的 v2 存档不能交给旧版程序读取；切换版本前先导出。
+
+## 检查、构建与离线版
 
 ```sh
 npm test
@@ -36,49 +48,39 @@ npm run build
 
 | 输出 | 用途 |
 | --- | --- |
-| `dist/` | 可部署的静态站点，保留原生 ES 模块与相对资源路径 |
-| `release/baishi-wending-offline.html` | 内嵌脚本、样式和本地 SVG 的单文件离线版 |
-| `release/release.json` | 版本、构建时间、离线文件大小和 SHA-256 摘要 |
-| `release/worker.mjs` | 额外运行 `build:worker` 生成的普通 Worker 发行模块，当前线上使用此格式 |
+| `dist/` | 静态站点，保留原生 ES 模块与相对资源路径 |
+| `release/baishi-wending-offline.html` | 内嵌脚本、样式及本地 SVG 的单文件版，可直接打开 |
+| `release/release.json` | 版本、UTC 构建时间、离线大小和 SHA-256 |
+| `release/worker.mjs` | 常规构建后另行运行 `build:worker` 生成的普通 Worker 模块 |
 
-离线文件也复制到 `dist/baishi-wending-offline.html`，可与线上版本一起提供下载。构建不会改写源文件。开发版使用 ES 模块，应通过开发服务器打开；单文件离线版可以直接打开。
+离线 HTML 同时复制到 `dist/baishi-wending-offline.html`。构建不改写源码。开发模块版应通过服务器打开，单文件版无需外部运行资源。
 
-普通 Worker 打包须在常规构建之后执行，并提供所发行源码的完整 Git SHA：
+Worker 打包需提供完整 40 位源码 SHA。在已核实的源码检出中，可对本地候选执行：
 
 ```sh
 npm run release
-npm run build:worker -- --source-commit 355f7956a4c31d9e3a19f1f567c4b1146942a5e9
+npm run build:worker -- --source-commit "$(git rev-parse HEAD)"
 ```
 
-也可通过 `SOURCE_COMMIT` 环境变量提供提交。常规构建会重新创建 `release/`，因此 `build:worker` 放在最后。CI 已自动使用当前 GitHub SHA 执行该步骤并将 Worker 模块与静态站点一起保存为构建产物。
+此命令只打包，不发布。常规构建会重建 `release/`，所以 `build:worker` 放在最后。正式发布必须改用实际 GitHub 发行提交构建并核对健康元数据，不能把本地候选 SHA 当作已上线证明。
 
-## 玩法与存档
-
-寿元是行动预算。修炼、探索、休养、炼丹、突破与跨界游历会推进时间；战斗燃寿增加个人命损，不让世界按回合跨年。行动成本与战斗意图在作出选择前显示。
-
-每次结算只从本世真实经历产生的候选传承中选择一项解锁。已解锁传承、三界道证、世界因果和历代生平跨世保留；新一世最多带入两项传承。一般资源与角色境界重新开始。
-
-自动存档保存在当前浏览器的本地存储中。请使用游戏内导出功能保留自己的存档文件；换浏览器、换域名或使用离线文件时，可通过导入继续。游戏不会上传存档到服务器。浏览器对本地文件存储的行为可能不同，离线使用时也应定期导出备份。
-
-## 项目结构
+## 项目与内容
 
 ```text
-index.html               页面入口
-src/app.js               界面与交互
-src/game/content.js      境界、流派、事件、敌人与传承数据
-src/game/engine.js       确定性纯函数规则引擎
-src/game/persistence.js  版本化本地存档
-src/ui/icons.js          本地 SVG 图标
-assets/                  原创静态视觉资源
-scripts/                 开发服务器、检查与构建
-tests/                   内容、规则与构建行为测试
-docs/                    产品、接口、进展与部署说明
+src/app.js                界面与交互
+src/game/engine.js        确定性纯函数引擎与严格存档边界
+src/game/content.js       原有修行、际遇、装备、敌人与传承
+src/game/story-content.js 药谷正文、人物、场景、选择与结果数据
+src/game/story.js         剧情状态、视图、条件、结算与验证
+src/game/persistence.js   浏览器存储适配
+src/ui/story.js           纯剧情标记渲染
+scripts/                  开发、检查、静态／离线／Worker 打包
+tests/                    内容、引擎、存档与打包行为验证
+docs/                     产品、接口、研究、作者稿与发行证据
 ```
 
-## 发布
+[参考项目研究](docs/research/2026-10-24-wending-reference-research.md) 是升级前的设计研究；[药谷作者稿](docs/story/valley-fire.md) 保留内容设计。精确成本和存档结构以实现及 [引擎契约](docs/ENGINE_CONTRACT.md) 为准。
 
-当前通过 Cloudflare API MCP 发布普通 Worker；该流程没有建立推送即部署的自动化。后续推荐迁移到 **Cloudflare 原生 GitHub 集成**连接 `ct1150/wending` 的 `main`：Worker 名称 `baishi-wending`，根目录留空，构建命令 `npm run release`，部署命令 `npx wrangler deploy`；Node 24 自动读取 `.node-version`。
+## 发布状态
 
-GitHub Actions 保留每次 push、pull request 和手动运行的测试、语法检查与构建。仓库也提供 Actions 发布备选，只有 `main` 验证通过、`ENABLE_CF_DEPLOY=true` 且凭据齐全才会部署。使用 Cloudflare 原生集成时保持该开关未启用，避免双路发布。
-
-首版验收和已知边界见 [验收记录](docs/QA_REPORT.md)。完整接入步骤、Actions 发布备选和官方参考见 [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md)。产品规则见 [docs/PRODUCT_SPEC.md](docs/PRODUCT_SPEC.md)，模块边界见 [docs/ENGINE_CONTRACT.md](docs/ENGINE_CONTRACT.md)。
+现有生产站由普通 Cloudflare Worker 返回内嵌离线 HTML，计入 Workers 请求额度；具体额度以账号套餐为准。当前没有已配置的 GitHub → Cloudflare 自动发布。本轮沿用 GitHub 验证后由控制方通过 API 更新现有 `baishi-wending` Worker 的方式。`wrangler.jsonc` 中的 Static Assets 配置仅供以后单独迁移，不是本轮发布步骤。历史与本轮候选的区别、CI 和实际部署证据见 [部署说明](docs/DEPLOYMENT.md)。

@@ -60,6 +60,7 @@ export const ITEMS = [
 ];
 
 export const LEGACIES = [
+  { id: 'plain-medicine', name: '朴药手记', description: '迁民的凡药经验留下三份药材与六点气血。不会使灰谷灵种复生。', source: '与迁民共建并维护凡药共同园', effects: { herbs: 3, hp: 6 } },
   { id: 'valley-seed', name: '药谷种籽', description: '来世起身时，行囊中多六份药材与一卷青谷丹书。', source: '重续药谷百年之约', effects: { herbs: 6, itemId: 'valley-canon' } },
   { id: 'sword-echo', name: '剑宗回响', description: '后世弟子仍在传剑。来世获得无名剑令。', source: '听过后世剑宗的晨课', effects: { itemId: 'sword-token', spirit: 12 } },
   { id: 'tomb-lantern', name: '归途灯火', description: '守墓人的后人替你留下灯。来世获得守墓灯。', source: '偿清古墓的托付', effects: { itemId: 'tomb-lamp' } },
@@ -297,6 +298,7 @@ export const EVENTS = [
 ];
 
 export const ENEMIES = [
+  { id: 'valley-sentinel', name: '旧炉守阵甲傀', worldId: 'mortal', intent: '封禁阵器，最多交锋三回合；第三回合强击，撤退可从塌口入炉，无普通掉落。', hp: 54, attack: 13, defense: 2 },
   { id: 'reed-bandit', name: '苇荡劫修', description: '躲在荒渡的散修，第三回合会以蓄力劈斩压人。', hp: 95, attack: 19, defense: 3, intent: '蓄力劈斩', worldId: 'mortal' },
   { id: 'stone-wolf', name: '石脊妖狼', description: '以石甲护背的妖兽，冲锋前会明显压低身形。', hp: 120, attack: 22, defense: 5, intent: '伏身扑击', worldId: 'mortal' },
   { id: 'mortal-warden', name: '镇岳守道人', description: '他不拦人飞升，只试来者能否守住脚下之土。胜者获人间道证。', hp: 240, attack: 32, defense: 8, intent: '镇岳重掌', worldId: 'mortal' },

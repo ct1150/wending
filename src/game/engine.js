@@ -1,3 +1,4 @@
+import { createStoryWorld, createStory, syncStoryClock, ageStoryWorld, storyChoices, advanceStory, resumeStoryCombat, settleStory, storyView, validateStoryWorld, validateStory } from './story.js';
 import { REALMS, PATHS, ORIGINS, WORLDS, ITEMS, LEGACIES, EVENTS, ENEMIES, CHALLENGES, WORLD_FLAGS } from './content.js';
 
 const find = (rows, id) => rows.find(row => row.id === id);
@@ -43,6 +44,7 @@ function historyLog(state) {
 }
 function endLife(state, cause, text) {
   if (state.phase === 'ended' || state.phase === 'victory') return state;
+  settleNarrative(state, true);
   milestones(state);
   state.phase = 'ended'; state.eventId = null; state.combat = null;
   const options = state.run.legacyCandidates.filter(id => !state.meta.legacyIds.includes(id));
@@ -59,6 +61,10 @@ function checkLife(state) {
 }
 function spendYears(state, years) {
   state.run.age += years; state.meta.worldYear += years;
+  state.meta.storyWorld = ageStoryWorld(state.meta.storyWorld, state.meta.worldYear);
+  // Elapsed time remains a fact when its cost ends the life. Synchronize before
+  // settlement so failed-story replay sees the same deadline transition.
+  state.story = syncStoryClock(state.story, state.meta.worldYear);
   return checkLife(state);
 }
 function requirePhase(state, phase = 'adventure') {
@@ -93,7 +99,9 @@ export function createGame(options = {}, previousMeta = null) {
   for (const id of legacyIds) if (!find(LEGACIES, id) || !previousMeta?.legacyIds.includes(id)) fail('只能携带已经解锁的传承。');
   const meta = previousMeta ? { ...copy(previousMeta), generation: previousMeta.generation + 1, worldYear: previousMeta.worldYear + 16 } : { generation: 1, worldYear: 1000, legacyIds: [], proofs: [], worldFlags: [], history: [], victories: 0 };
   const run = { name: name.trim(), originId, pathId, age: 16, realmIndex: 0, worldId: 'mortal', cultivation: 0, hp: 1, spirit: origin.spirit, herbs: origin.herbs, merit: 0, renown: 0, lifeBonus: 0, lifeDamage: 0, elixirsUsed: 0, turn: 0, attackBonus: 0, defenseBonus: 0, hpBonus: origin.hpBonus, breakthroughFailures: 0, items: unique([path.starterArt, path.starterSkill]), loadout: { art: path.starterArt, skills: [path.starterSkill], artifact: null }, flags: [], visitedEvents: [], legacyCandidates: [], selectedLegacies: [...legacyIds], deeds: [], log: [] };
-  const state = { version: 1, rng: hashSeed(seed), phase: 'adventure', run, meta, eventId: null, combat: null, summary: null, lastMessage: '' };
+  if (!previousMeta) meta.storyWorld = createStoryWorld(meta);
+  meta.storyWorld = ageStoryWorld(meta.storyWorld, meta.worldYear);
+  const state = { version: 2, rng: hashSeed(seed), phase: 'adventure', run, meta, eventId: null, combat: null, summary: null, lastMessage: '', story: null };
   for (const id of legacyIds) {
     const effects = find(LEGACIES, id).effects;
     for (const key of ['spirit', 'herbs', 'cultivation']) run[key] += effects[key] ?? 0;
@@ -102,8 +110,59 @@ export function createGame(options = {}, previousMeta = null) {
     if (effects.flag) run.flags = unique([...run.flags, effects.flag]);
   }
   run.hp = getStats(state).maxHp;
+  state.story = createStory(state);
   log(state, '灵台初醒', `${meta.worldYear} 年，${run.name}于十六岁踏上${path.name}之途。`, 'birth');
   return state;
+}
+function settleNarrative(state, interrupted = false) {
+  const result = settleStory(state.story, state.meta.storyWorld, state.meta.generation, state.meta.worldYear, interrupted);
+  if (!result) return;
+  state.story = result.story; state.meta.storyWorld = result.world;
+  if (result.world.valleyOutcome === 'open_clinic') state.meta.worldFlags = unique([...state.meta.worldFlags, 'medicine-valley']);
+  else state.meta.worldFlags = state.meta.worldFlags.filter(id => id !== 'medicine-valley');
+  if (!interrupted) {
+    if (['open_clinic', 'clinic_open_council'].includes(state.story.outcomeId)) {
+      state.run.items = unique([...state.run.items, 'valley-canon']); candidate(state, 'valley-seed');
+    }
+    if (state.story.outcomeId === 'sect_estate') state.run.spirit += 20;
+    const gains = ['open_clinic', 'clinic_open_council'].includes(state.story.outcomeId) ? ['获得青谷丹书', '药谷种籽列为本世传承候选'] : state.story.outcomeId === 'sect_estate' ? ['安置协助补偿：灵石+20（仅一次）'] : state.story.outcomeId === 'refuge_common_medicine' ? ['朴药手记列为本世传承候选'] : [];
+    if (state.story.lastResult) state.story.lastResult.changes.push(...gains);
+    if (state.story.outcomeId === 'refuge_common_medicine') candidate(state, 'plain-medicine');
+    state.run.deeds = unique([...state.run.deeds, result.outcome.title]);
+  }
+  const change = interrupted && state.story.arc !== 'old-fire' ? '后世任务未竟，保留既定谷地与灵种事实，未执行的选项不发奖励。' : result.outcome.worldChange;
+  log(state, result.outcome.title, change, 'world');
+}
+export function getStoryView(state) {
+  return storyView({ ...state, remainingLife: getStats(state).remainingLife });
+}
+export function chooseStory(state, choiceId) {
+  requirePhase(state);
+  if (!state.story) fail('本世没有剧情选项；下一世进入新篇。');
+  const choice = storyChoices({ ...state, remainingLife: getStats(state).remainingLife }).find(row => row.id === choiceId);
+  if (!choice) fail('没有这个剧情选项。');
+  if (!choice.enabled) fail(choice.reason);
+  const next = copy(state), cost = choice.cost, originalScene = state.story.sceneId;
+  next.run.turn++;
+  if (choice.restOfLife) {
+    const text = `你用余下${cost.years}年守望既定的药谷生活，从${next.run.age}岁走到${next.run.age + cost.years}岁。没有免费破境，药簿与在世者继续老去，世界也会真实经过这段岁月。`;
+    next.story.lastResult = { title: '守望余生', text, changes: [`经过${cost.years}年`] };
+    next.story.journal.push({ title: '守望余生', text, year: next.meta.worldYear });
+    log(next, '守望余生', text, 'event');
+  }
+  next.run.spirit -= cost.spirit ?? 0; next.run.herbs -= cost.herbs ?? 0; next.run.hp -= cost.hp ?? 0;
+  next.run.lifeDamage += cost.lifeDamage ?? 0;
+  if (!spendYears(next, cost.years ?? 0)) return next;
+  if (next.story.sceneId !== originalScene) {
+    log(next, next.story.lastResult.title, next.story.lastResult.text, 'event');
+    return next;
+  }
+  next.story = advanceStory(next.story, choice, next.meta.worldYear, next.meta.storyWorld);
+  applyEffects(next, choice.effects);
+  log(next, next.story.lastResult.title, next.story.lastResult.text, 'event');
+  if (choice.combat) beginCombat(next, find(ENEMIES, choice.combat), null);
+  settleNarrative(next);
+  return next;
 }
 export function getActionInfo(state, type) {
   if (!Object.hasOwn(ACTIONS, type)) fail('未知行动。');
@@ -165,14 +224,14 @@ function meets(state, requires = {}) {
     && (!requires.notWorldFlag || !state.meta.worldFlags.includes(requires.notWorldFlag));
 }
 function explore(state) {
-  const enemies = ENEMIES.filter(enemy => enemy.worldId === state.run.worldId && !CHALLENGES.some(challenge => challenge.enemyId === enemy.id));
+  const enemies = ENEMIES.filter(enemy => enemy.id !== 'valley-sentinel' && enemy.worldId === state.run.worldId && !CHALLENGES.some(challenge => challenge.enemyId === enemy.id));
   if (state.run.visitedEvents.length > 0 && enemies.length && random(state) < 0.15) {
     const enemy = enemies[Math.floor(random(state) * enemies.length)];
     beginCombat(state, enemy, null);
     log(state, '道途遇敌', `历练途中遭遇${enemy.name}。敌意已现，可战亦可退。`, 'combat');
     return;
   }
-  const pool = EVENTS.filter(event => event.worldId === state.run.worldId && !state.run.visitedEvents.includes(event.id) && meets(state, event.requires));
+  const pool = EVENTS.filter(event => !(state.story && ['mortal-seed', 'mortal-valley-heirs'].includes(event.id)) && event.worldId === state.run.worldId && !state.run.visitedEvents.includes(event.id) && meets(state, event.requires));
   if (!pool.length) {
     state.run.spirit += 8; state.run.herbs += 2;
     log(state, '山川静行', '此地暂无线索。你采得 2 份药材，寻得 8 枚灵石，平安归来。');
@@ -207,6 +266,11 @@ function applyEffects(state, effects = {}) {
   if (effects.flag) run.flags = unique([...run.flags, effects.flag]);
   if (effects.worldFlag && !state.meta.worldFlags.includes(effects.worldFlag)) {
     state.meta.worldFlags.push(effects.worldFlag);
+    if (effects.worldFlag === 'medicine-valley' && state.story === null) {
+      // A migrated character may still earn the original valley fact this life.
+      // Preserve that real act, without inventing the new case or NPC meetings.
+      Object.assign(state.meta.storyWorld, { valleyOutcome: 'open_clinic', resolvedYear: state.meta.worldYear, resolvedGeneration: state.meta.generation, seedCustodian: 'clinic' });
+    }
     const text = `世界因果「${WORLD_FLAGS[effects.worldFlag].name}」已留存，后世将见其回响。`;
     run.deeds = unique([...run.deeds, `留下因果：${WORLD_FLAGS[effects.worldFlag].name}`]);
     log(state, '因果留痕', text, 'world');
@@ -268,6 +332,12 @@ function startChallenge(state, action) {
   return next;
 }
 function winCombat(state) {
+  if (state.story?.pendingCombat) {
+    state.phase = 'adventure'; state.combat = null;
+    state.story = resumeStoryCombat(state.story, 'win', state.meta.worldYear);
+    log(state, state.story.lastResult.title, state.story.lastResult.text, 'event');
+    return state;
+  }
   const enemy = find(ENEMIES, state.combat.enemyId);
   const challenge = find(CHALLENGES, state.combat.challengeId);
   state.phase = 'adventure'; state.combat = null;
@@ -296,6 +366,7 @@ export function combatAction(state, action) {
     const lost = Math.ceil(run.spirit * 0.2); run.spirit -= lost; run.herbs = Math.max(0, run.herbs - 1);
     next.phase = 'adventure'; next.combat = null;
     if (!spendYears(next, 2)) return next;
+    if (next.story?.pendingCombat) next.story = resumeStoryCombat(next.story, 'flee', next.meta.worldYear);
     log(next, '撤出战局', `绕道两年摆脱追击，损失 ${lost} 灵石和至多 1 药材。`, 'combat');
     return next;
   }
@@ -323,7 +394,13 @@ export function combatAction(state, action) {
   lines.push(`${enemy.name}${heavy ? '施展强击' : '反击'}，你损失 ${damage} 气血。`);
   combat.round++; combat.log = [...combat.log, ...lines].slice(-100);
   log(next, `交锋 ${combat.round - 1}`, lines.join(''), 'combat');
-  checkLife(next);
+  if (checkLife(next) && next.story?.pendingCombat && combat.round > 3) {
+    const lost = Math.min(6, run.spirit); run.spirit -= lost;
+    next.phase = 'adventure'; next.combat = null;
+    next.story = resumeStoryCombat(next.story, 'retreat', next.meta.worldYear);
+    next.story.lastResult.changes = [`损失${lost}灵石`, '证据原件保留'];
+    log(next, next.story.lastResult.title, next.story.lastResult.text, 'event');
+  }
   return next;
 }
 export function selectLegacy(state, legacyId) {
@@ -339,7 +416,7 @@ export function selectLegacy(state, legacyId) {
 }
 
 // Save files are untrusted input. Validate every persisted field before exposing it to UI or rules.
-function invalid(path, detail) { fail(`存档无效：${path}${detail ? `（${detail}）` : ''}。请导入有效的第 1 版备份。`); }
+function invalid(path, detail) { fail(`存档无效：${path}${detail ? `（${detail}）` : ''}。请导入有效的第 1 或第 2 版备份。`); }
 function object(value, path, keys) {
   if (!value || typeof value !== 'object' || Array.isArray(value) || Object.getPrototypeOf(value) !== Object.prototype) invalid(path, '应为对象');
   if (Object.keys(value).length !== keys.length || keys.some(key => !Object.hasOwn(value, key)) || Object.keys(value).some(key => !keys.includes(key))) invalid(path, '字段缺失或包含未知字段');
@@ -365,8 +442,8 @@ function validateLog(entries, path, max, worldYear, age) {
   });
   for (let i = 1; i < entries.length; i++) if (entries[i].id <= entries[i - 1].id || entries[i].year < entries[i - 1].year || entries[i].age < entries[i - 1].age) invalid(path, '日志顺序错误');
 }
-function validateMeta(meta) {
-  object(meta, 'meta', ['generation', 'worldYear', 'legacyIds', 'proofs', 'worldFlags', 'history', 'victories']);
+function validateMeta(meta, version = 2) {
+  object(meta, 'meta', ['generation', 'worldYear', 'legacyIds', 'proofs', 'worldFlags', 'history', 'victories', ...(version === 2 ? ['storyWorld'] : [])]);
   integer(meta.generation, 'meta.generation', 1);
   integer(meta.worldYear, 'meta.worldYear', 1000);
   integer(meta.victories, 'meta.victories', 0, meta.generation);
@@ -385,6 +462,7 @@ function validateMeta(meta) {
     if (entry.selectedLegacyId && !meta.legacyIds.includes(entry.selectedLegacyId)) invalid(`${path}.selectedLegacyId`, '此传承尚未解锁');
   });
   for (let i = 1; i < meta.history.length; i++) if (meta.history[i].generation <= meta.history[i - 1].generation) invalid('meta.history', '轮回序号须递增');
+  if (version === 2) validateStoryWorld(meta.storyWorld, meta, { object, integer, string, array, invalid });
 }
 function localFlagIds() {
   const ids = [];
@@ -395,12 +473,12 @@ function localFlagIds() {
   for (const legacy of LEGACIES) ids.push(legacy.effects.flag);
   return unique(ids.filter(Boolean));
 }
-function validateState(state) {
-  object(state, '根对象', ['version', 'rng', 'phase', 'run', 'meta', 'eventId', 'combat', 'summary', 'lastMessage']);
-  if (state.version !== 1) invalid('version', '不兼容的存档版本');
+function validateState(state, version = 2) {
+  object(state, '根对象', ['version', 'rng', 'phase', 'run', 'meta', 'eventId', 'combat', 'summary', 'lastMessage', ...(version === 2 ? ['story'] : [])]);
+  if (state.version !== version) invalid('version', '不兼容的存档版本');
   integer(state.rng, 'rng', 1, 4294967295);
   if (!['adventure', 'event', 'combat', 'ended', 'victory'].includes(state.phase)) invalid('phase', '未知阶段');
-  string(state.lastMessage, 'lastMessage'); validateMeta(state.meta);
+  string(state.lastMessage, 'lastMessage'); validateMeta(state.meta, version);
   const r = state.run;
   object(r, 'run', ['name', 'originId', 'pathId', 'age', 'realmIndex', 'worldId', 'cultivation', 'hp', 'spirit', 'herbs', 'merit', 'renown', 'lifeBonus', 'lifeDamage', 'elixirsUsed', 'turn', 'attackBonus', 'defenseBonus', 'hpBonus', 'breakthroughFailures', 'items', 'loadout', 'flags', 'visitedEvents', 'legacyCandidates', 'selectedLegacies', 'deeds', 'log']);
   string(r.name, 'run.name', 24, 1);
@@ -444,6 +522,7 @@ function validateState(state) {
     const combat = state.combat;
     object(combat, 'combat', ['enemyId', 'enemyHp', 'enemyMaxHp', 'round', 'focus', 'challengeId', 'log']);
     known(combat.enemyId, 'combat.enemyId', ENEMIES);
+    if (version === 1 && combat.enemyId === 'valley-sentinel') invalid('combat.enemyId', '第1版没有剧情战斗');
     const enemy = find(ENEMIES, combat.enemyId);
     integer(combat.enemyMaxHp, 'combat.enemyMaxHp', enemy.hp, enemy.hp); integer(combat.enemyHp, 'combat.enemyHp', 1, enemy.hp);
     integer(combat.round, 'combat.round', 1); integer(combat.focus, 'combat.focus', 0, 2);
@@ -481,6 +560,12 @@ function validateState(state) {
     if (state.summary !== null) invalid('summary', '未结算时必须为空');
     if (state.meta.history.at(-1)?.generation === state.meta.generation) invalid('meta.history', '当世尚未结算');
   }
+  if (version === 1 && [
+    ...state.meta.legacyIds, ...r.legacyCandidates, ...r.selectedLegacies,
+    ...state.meta.history.map(entry => entry.selectedLegacyId),
+    ...(state.summary?.legacyOptions ?? []), state.summary?.selectedLegacyId,
+  ].includes('plain-medicine')) invalid('legacy', '第1版没有朴药手记');
+  if (version === 2) validateStory(state.story, state, { object, integer, string, array, invalid });
   return state;
 }
 export function serialize(state) { validateState(state); return JSON.stringify(state); }
@@ -499,6 +584,11 @@ export function deserialize(raw) {
         entry.selectedLegacyId = currentEnding ? state.summary?.selectedLegacyId ?? null : null;
       }
     }
+  }
+  if (state?.version === 1) {
+    validateState(state, 1);
+    state.version = 2; state.story = null; state.meta.storyWorld = createStoryWorld(state.meta);
+    state.meta.storyWorld = ageStoryWorld(state.meta.storyWorld, state.meta.worldYear);
   }
   return validateState(state);
 }
