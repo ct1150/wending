@@ -1,12 +1,37 @@
 # GitHub → Cloudflare 部署
 
-文档更新：2026-10-25（上海）。1.2.0 纸页界面已通过 API 更新现有普通 Worker，完成下述生产验收。1.1.0 与首发信息保留为历史记录；自动发布配置的只读记录仍为 2026-10-24 的观测。
+文档更新：2026-10-25（上海）。**2.0.0 为本地发行候选，尚未发布；当前生产仍为 1.2.0。** 下列旧生产证据保留其版本与日期，不用于证明新旅程验收；自动发布配置的只读记录仍为 2026-10-24 观测。
+
+## 2.0.0 候选与控制方发行门禁
+
+本地实现含完整药谷、幽冥、天界、问鼎与轮回／旧档交接。发行准备只完成源码、测试、离线构建与真实文档；精确本地产物见 [QA](QA_REPORT.md)。本轮没有远端修改、浏览器、localhost/headless/CDP 或替代预览。
+
+| 2.0.0 证据 | 当前状态 |
+| --- | --- |
+| 本地候选与验证 | 见 QA 当前候选记录；不是已上线源码 |
+| 独立整分支复核 | 控制方待完成 |
+| 真实远端树、PR、CI、合并 SHA | 控制方待取得并记录；不借用旧 PR／CI |
+| 实际合并源码构建的 Worker／部署 ID／version ID | 待完成；未生成替代生产标识 |
+| 生产 health、源码 SHA、实际版本、下载大小／hash | 待完成；以下 1.2.0 数据仍是生产记录 |
+| 新阅读流实际 UI、320px／浅深色、键盘焦点 | 待获准生产观察；Node harness 不作为视觉验收 |
+| 真人 20–30 分钟、寿元压力、物理手机、读屏 | 未测 |
+
+控制方发布顺序：
+
+1. 读取当时 GitHub 实际 `main` 与 tree；本地历史是合成快照，**禁止直接 push 本地分支**。已记录的远端基线会过时，发行时必须重新读取。
+2. 用 Git Data API 以真实远端父提交重建审阅后的变更，排除 `.superpowers/` 等内部资料，比较精确文件树；走独立 PR、CI 与合并。
+3. 从真实合并后的运行时代码 SHA 检出并重新运行 `npm run release`，再执行 `npm run build:worker -- --source-commit ACTUAL_MERGED_40_CHARACTER_SHA`（占位值换为完整真实 SHA）。本地准备产物不冒充此步骤。
+4. 通过已有授权更新现有 `baishi-wending` 普通 Worker；沿用账号、tag、兼容日期与发布方式，不配置自动发布或迁移托管。分别记录真实 deployment ID、version ID、流量、UTC 时间及发行版本。
+5. 核对生产 health 源码 SHA／HTML hash、实际页面版本与游戏内下载的字节／hash；完成获准环境 UI 验收，再将本文生产表更新为 2.0.0。失败保留候选并报告，不称上线。
+
+部署前控制方已从现有 **1.2.0** 实际生产 UI 导出一次备份；这是保护旧进度的观察，不是 2.0.0 导出／恢复验收。私人原始存档不进入源码树。
+
 
 ## 当前生产：1.2.0 纸页界面
 
 [线上游戏](https://baishi-wending.ct1150.workers.dev/) 已运行 **1.2.0 Paper**。实际发行源码为 [`90bb910840e7c2b22c59e0421f111c4c1a7cb7c8`](https://github.com/ct1150/wending/commit/90bb910840e7c2b22c59e0421f111c4c1a7cb7c8)，[PR #2](https://github.com/ct1150/wending/pull/2) 已合并。发行 tree `ec460fa26506ce0946a0a5edf9f5222ed5e8ab65` 与已评审本地 `0d015eb82554c840a9bbcfd774a07d4f57dc25ba` 的 tree 相同；本地合成 git 历史未直接推送。
 
-[PR CI 40163973639](https://github.com/ct1150/wending/actions/runs/40163973639) 与 [main CI 40164006388](https://github.com/ct1150/wending/actions/runs/40164006388) 均为 success；validate job `121081217915` success，deploy job `121081258031` skipped。实际部署由 API 手动上传现有普通 Worker 完成，GitHub → Cloudflare 自动发布未启用，也没有迁移 Static Assets。最终本地 `npm run release` 已通过 11/11 个测试文件和 25 个 JavaScript 语法检查；本次文档审计不重跑构建或测试。
+[PR CI 40163973639](https://github.com/ct1150/wending/actions/runs/40163973639) 与 [main CI 40164006388](https://github.com/ct1150/wending/actions/runs/40164006388) 均为 success；validate job `121081217915` success，deploy job `121081258031` skipped。实际部署由 API 手动上传现有普通 Worker 完成，GitHub → Cloudflare 自动发布未启用，也没有迁移 Static Assets。最终本地 `npm run release` 已通过 11/11 个测试文件和 25 个 JavaScript 语法检查；该1.2.0历史文档审计未重跑构建或测试；2.0.0候选的新门禁见QA。
 
 | 项目 | 当前 1.2.0 实际结果 |
 | --- | --- |
@@ -103,7 +128,7 @@ npm run build:worker -- --source-commit 355f7956a4c31d9e3a19f1f567c4b1146942a5e9
 
 Workers 支持直接托管静态资源；Cloudflare Pages 使用独立项目与部署命令。本项目保留 Workers Static Assets 迁移配置，不切换至其他服务。官方参考：[Workers Static Assets](https://developers.cloudflare.com/workers/static-assets/)、[静态站点入门](https://developers.cloudflare.com/workers/static-assets/get-started/)（查阅：2026-10-24）。
 
-## 未来方式 A：Cloudflare 原生 GitHub 集成（推荐）
+## 另行迁移方案 A：Cloudflare 原生 GitHub 集成（非本轮流程）
 
 一次性连接步骤：
 
@@ -130,7 +155,7 @@ Cloudflare 官方支持读取 `.node-version`，并为 Workers Builds 自动创�
 
 官方说明：[Workers Builds 配置](https://developers.cloudflare.com/workers/ci-cd/builds/configuration/)、[Workers GitHub 集成](https://developers.cloudflare.com/workers/ci-cd/builds/git-integration/github-integration/)（查阅：2026-10-24）。
 
-## 未来方式 B：GitHub Actions 发布（备选）
+## 另行迁移方案 B：GitHub Actions 发布（非本轮流程）
 
 工作流文件：`.github/workflows/validate-deploy.yml`。
 
@@ -159,14 +184,18 @@ npm run release
 
 `release/release.json` 记录版本、UTC 构建时间、离线文件字节数和 SHA-256。同一源码重复构建的离线 HTML 应一致；元数据中的构建时间会随构建变化。离线版没有 ES 模块或外部样式请求，可以直接打开；其自动存储受浏览器对本地文件的策略影响，存档导出／导入是跨浏览器、跨域名和线上／离线迁移的方式。
 
-## 发布后的最小验证
+## 2.0.0 发布后的最小验证（待实际执行）
 
-- 从真实 HTTPS URL 打开页面，确认图像、样式和全部模块成功加载。
-- 新建角色，执行修炼、历练和一个事件选项；刷新后确认进度恢复。
-- 在移动宽度验证操作按钮、文本与页面宽度。
-- 访问不存在的资源，确认 404 而非返回 HTML。
-- 下载并打开 `baishi-wending-offline.html`，确认可开局与操作。
-- 记录提交、运行链接、最终 URL、验证日期与结论。自定义域名配置完成前，只报告已经验证的 `workers.dev` URL。
+Node／handler 与离线文件检查：记录完整 release 结果、实际版本和 HTML 字节／hash；使用真正合并 SHA 构建 Worker；核对 root／下载正文一致、health 元数据及 HEAD／404／405。功能 harness 不能证明实际浏览器效果。
+
+获准生产 UI 检查：
+
+- 从真实 HTTPS URL 进入无档首局，选择到一次冲突，观察当前成本、后果与阅读焦点。
+- 走一次明确死亡与直接新生，核对世界推进、历史及没有重复奖励；保留既有备份。
+- 合法旧档继续旧当世，结算后显式奖励／v3 交接；刷新恢复，并通过真实 UI 导出与导入。
+- 键盘选择、帮助／更多返回焦点；320px 不横向溢出、44px 触控、浅色与深色可读。
+- 下载实际离线文件并核对字节／hash 与版本。若实际离线打开不在获准环境内，明确保留此项未验收，不能换本地或替代预览绕过。
+- 分别记录实际 URL、日期、视口、错误及观察边界。物理手机、读屏与真人时长须独立观察，不能从桌面或 Node 推断。
 
 ## 历史首版GitHub验证与生产证据
 

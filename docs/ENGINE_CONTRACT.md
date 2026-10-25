@@ -1,144 +1,83 @@
-# Shared implementation contract
+# Shared implementation contract — dialogue journey
 
-Version: 1.1.0. Updated: 2026-10-25 (Shanghai).
+Product target **2.0.0**, save **v3**, content version **1**. Updated 2026-10-25. These versions are independent. This describes the local implementation; production remains 1.2.0 pending publication and actual acceptance. The complete old API and schema remain in [v1/v2 compatibility contract](ENGINE_CONTRACT_V2.md), for valid old current lives. Historical numeric tables in that contract are not v3 configuration.
 
-All product files are browser-native ES modules, extension `.js`, package `type: module`, with no runtime dependency. `app.js` owns interaction, `ui/story.js` renders the public story view, `engine.js` owns public state transitions and save validation, `story.js` owns narrative state/conditions/views/settlement, and the content modules own authored data. The dependency direction is UI → engine → story runtime → story content; story runtime never imports engine. Keep relative static named imports/exports, no module cycles and no dynamic runtime loading; the offline bundler intentionally supports a bounded module syntax (see [deployment/build documentation](DEPLOYMENT.md)).
+## Modules and dependency boundary
 
-## Content exports
+Browser-native ES modules, `.js`, `type: module`, no runtime dependencies. `src/app.js` dispatches by validated version. `src/ui/journey.js` consumes the public journey view and emits choice identifiers, never internal mutations. `src/game/journey/engine.js` owns pure state transitions; `content.js` and `chapters/{mortal,nether,celestial,later}.js` own finite author data and resolution. `validation.js` owns v3/save/content consistency; `migration.js` bridges a validated terminal old life. `save-format.js` dispatches v1/v2/v3; `persistence.js` and `ui/session.js` own recoverable storage commits.
 
-Export arrays `REALMS`, `PATHS`, `ORIGINS`, `WORLDS`, `ITEMS`, `LEGACIES`, `EVENTS`, `ENEMIES`, `CHALLENGES` and object `WORLD_FLAGS`.
+Old `engine.js`, `story.js`, `content.js` and old renderers remain for v1/v2 current-life compatibility. Journey does not add new HP, cultivation, equipment or generic currency rules. Keep static relative named imports/exports and no cycles; the bounded offline bundler syntax is documented in [DEPLOYMENT](DEPLOYMENT.md).
 
-- REALMS: `{id,name,lifeCap,trainYears,trainGain,need,breakYears,hp,attack,defense}`. Six entries; index 0 炼气 starts lifeCap 100, trainYears 3, trainGain 12, need 36, breakYears 3, hp 100, attack 14, defense 3. Life caps are 100/160/260/380/520/560; training years 3/6/10/16/24/24; breakthrough years 3/6/10/16/24/0. Subsequent need 70/110/160/220/0; final need=0. Content tables are the authoritative numeric values.
-- PATHS: IDs `sword`, `body`, `alchemy`. `{id,name,subtitle,description,icon,bonuses:{attack,defense,hp,training},starterArt,starterSkill}`. Attack/defense/hp are additive; training is additive training gain.
-- ORIGINS: IDs `village`, `heir`, `herbalist`. `{id,name,description,icon,spirit,herbs,hpBonus}`.
-- WORLDS: IDs `mortal`, `nether`, `celestial`. `{id,name,location,subtitle,description,minRealm,accent}`. minRealm 0/2/4.
-- ITEMS: `{id,name,kind:'art'|'skill'|'artifact',pathId:'sword'|'body'|'alchemy'|'any',rarity:'common'|'rare'|'epic',description,stats:{attack?,defense?,hp?,training?,burn?,healing?}}`. stats additive, burn/healing integer bonus to specific action. At least 24 unique items; starter IDs in PATHS must exist. Engine supports off-path items (slots still apply).
-- LEGACIES: `{id,name,description,source,effects:{spirit?,herbs?,attack?,defense?,hp?,cultivation?,itemId?,flag?}}`. Finite earned entries, including `plain-medicine` from the shared refugee medicine garden. Each selected legacy takes one slot, cap=2. Unlocked IDs are permanent. Event legacyId adds an eligible candidate this life, not instantly unlocks everything.
-- WORLD_FLAGS: map ID to `{name,description}`. Required keys `medicine-valley`, `sword-sect`, `old-tomb`, `soul-debt`, `saved-city`. More allowed with follow-up events.
-- EVENTS: `{id,worldId,title,tag,body,requires?:{minRealm?,maxRealm?,pathId?,flag?,notFlag?,worldFlag?,notWorldFlag?},choices:[{id,label,description,cost?:{years?,spirit?,herbs?,hp?,lifeDamage?},requires?:{minRealm?,pathId?,flag?,notFlag?,worldFlag?,notWorldFlag?},chance?:number,result:string,effects?:{cultivation?,spirit?,herbs?,hp?,lifeDamage?,merit?,renown?,itemId?,flag?,worldFlag?,removeWorldFlag?,legacyId?},failure?:{text,effects}}]}`. chance in [0,1]; all extra costs visible. No arbitrary code/functions. At least 45 events, include minimum three explicit cross-life follow-up chains. One occurrence per life; fallback repeatable benign exploration when eligible unseen pool empty. Event costs are in addition to exploration time. Every event has an always-available nonlethal leave/free option. Unknown IDs rejected in content tests.
-- ENEMIES: `{id,name,description,hp,attack,defense,intent,worldId}`; regular enemies/world and bosses. `valley-sentinel` is an explicit story-only enemy (54HP/13 attack/2 defense), excluded from the random pool. Narrative choices and outcomes live in `story-content.js`, not in `EVENTS`. The old `mortal-seed` / `mortal-valley-heirs` definitions remain import-compatible but cannot override a new story's valley outcome.
-- CHALLENGES: `{id,name,description,worldId,minRealm,enemyId,proofId,final?}`. proof IDs `mortal`, `nether`, `celestial`. One per world plus `{id:'finale',final:true,proofId:null,minRealm:5,worldId:'celestial'}`.
-
-## Engine state
-
-`{version:2,rng:number,story:null|Story,phase:'adventure'|'event'|'combat'|'ended'|'victory',run,meta,eventId:null|string,combat:null|Combat,summary:null|Summary,lastMessage:string}`.
-
-run: `{name,originId,pathId,age,realmIndex,worldId,cultivation,hp,spirit,herbs,merit,renown,lifeBonus,lifeDamage,elixirsUsed,turn,attackBonus,defenseBonus,hpBonus,breakthroughFailures,items:string[],loadout:{art:string|null,skills:string[],artifact:string|null},flags:string[],visitedEvents:string[],legacyCandidates:string[],selectedLegacies:string[],deeds:string[],log:[{id:number,year:number,age:number,title:string,text:string,kind:string}]}`.
-
-meta: `{generation:number,worldYear:number,legacyIds:string[],proofs:string[],worldFlags:string[],storyWorld:StoryWorld,history:Array<{generation,name,age,realmIndex,cause,deeds:string[],log:LogEntry[],selectedLegacyId:null|string}>,victories:number}`. First generation 1; first year 1000; initial age16. Histories capped at50, current log200.
-
-`LogEntry` is `{id:number,year:number,age:number,title:string,text:string,kind:string}`, identical to a current-life journal entry. Each completed life retains at most40 recent key entries: birth, events, failures, world consequences, milestones (including elixirs), ending, and legacy selection. Routine training/rest and individual combat rounds are omitted; victories also remain in `deeds`. Historical log entries have strictly increasing IDs and nondecreasing years/ages; fields, bounds and known kinds are validated before UI access. `history[].selectedLegacyId` records the one legacy unlocked at that settlement, or `null`; selecting a legacy updates the matching current history entry and its journal.
-
-### Save version and strict migration
-
-`serialize` emits version 2. The storage adapter keeps key `baishi-wending-save-v1`; the key name is not the JSON version. Import accepts valid v1 and v2 only. Raw input is limited to 1,000,000 JavaScript string characters; object keys, bounded integers/strings/arrays, known IDs and phase dependencies are validated. UI file-size prechecks are not a replacement for the engine bound.
-
-For v1 only, early history entries genuinely missing `log` receive `[]`, and those missing `selectedLegacyId` receive `null` (the current ended/victorious life's existing summary selection can restore its missing historical selection). Malformed explicit values remain errors. Then the complete old structure is validated with exact v1 keys and old content restrictions, before changing to version 2, adding `story=null` and a canonical `meta.storyWorld`, and validating v2. v1 cannot carry the new story enemy or `plain-medicine` IDs. No missing mandatory resource or phase field is synthesized.
-
-Migration preserves current run, phase, event/combat/summary, RNG, earned items/legacies/proofs and historical facts. That current life keeps `story=null`; only a later reincarnation creates a narrative. A genuine old `medicine-valley` flag establishes an existing clinic valley, with unknown old-case/person/evidence facts left unknown. A migrated life that actually plants the old valley later bridges that real event into the next-life clinic arc. It never invents an old interview or public trial.
-
-v2 must supply both new fields; missing/extra fields, malformed narrative structures and inconsistent trace/world facts are rejected. Migration acts on the parsed copy and does not mutate the source backup. Upgraded v2 saves are not readable by the old program. These checks enforce consistency with retained chronological evidence, not cryptographic authenticity against an author who rewrites an entire mutually consistent history.
-
-### Persisted narrative state
-
-`Story` has exactly:
+## Journey state
 
 ```js
 {
-  arc, sceneId, startYear, deadlineYear,
-  flags, met, relationships, clues, routes, investigations,
-  visited, choices, journal, lastResult, pendingCombat,
-  status, outcomeId, settled, sideIds, sideIndex, returnSceneId
+  version: 3, mode: 'dialogue', contentVersion: 1,
+  revision, rng, phase: 'playing' | 'ended' | 'victory',
+  world: { year, generation, facts, people, proofs, legacies,
+           completedTasks, biography, legacyArchive? },
+  life: { name, age, lifeLimit, lifeDamage, realm, injury,
+          abilities, learnedOpportunities, items, legacyId, facts },
+  scene: { chapterId, nodeId, opportunities },
+  transcript, summary
 }
 ```
 
-- `arc` is `old-fire`, `clinic`, `estate` or `refuge`. First scenes are YG01 / G2A01 / G2B01 / G2C01. `startYear` is the real world year; persisted `deadlineYear=startYear+8` is active as a deadline only in `old-fire`.
-- Flags are finite narrative enums separate from `run.flags` and `meta.worldFlags`. `met` uses `shen_zhi`, `lu_huai`, `wen_du`; `relationships` has those exact keys and integer values −2…2. Real treatment/promise/rescue facts remain distinct from relationship values.
-- `clues` has exactly `testimony`, `ledger`, `channel`, each `none|partial|full`. `routes` has at most two distinct route IDs; `investigations` equals its length. Evidence cannot exist for an unvisited route.
-- `visited` contains legal current-arc scene IDs. `choices` has at most80 unique `{sceneId,choiceId,year}` entries in nondecreasing year order. `journal` has at most80 `{title,text,year}` entries. `lastResult` is null or `{title,text,changes:string[]}`; it persists through ordinary actions and reload until another narrative choice or actual deadline/settlement changes it.
-- `sideIds` has two distinct values from0/1/2, derived from the seed without advancing the old RNG. `sideIndex` is0…2. An active side scene must carry its legal `returnSceneId`; replay validates the actual route-specific continuation.
-- `pendingCombat` is null or `{sceneId:'YG12',enemyId:'valley-sentinel'}`. It must match current scene, the recorded `short_fight`, actual combat phase, enemy, null challengeId and round≤3. Ordinary combat cannot impersonate it.
-- `status` is `active|resolved|failed`; nonactive states have `settled=true` and a valid outcome. Failures use `unfinished`. An ended/victorious life cannot retain active story state.
+`revision` is a nonnegative command token, monotonically increasing across birth. Saved RNG is a nonzero uint32. Seed is finite numeric or at most 200-character text. First life: 云归, age16, year1000, generation1, mortal lifeLimit80. Realms mortal/foundation/golden/nascent have lifeLimit80/160/240/320. Growth uses `max(oldLimit,newLimit)` and keeps damage. Injury is `well|hurt|severe`; items use finite authored IDs and nonnegative quantities.
 
-`StoryWorld` has exactly:
+`world.facts` retains institutions, losses and completed results; `life.facts` holds current consent, inquiry, learning and duties. World facts are not automatic present inventory or permission. Original people carry real `birthYear/deathYear`; elapsed world time ages them. Dead characters cannot revive, and old unknown death dates are not fabricated. Current source testimony/consent cannot be inferred from inherited proof or a person's historical friendship.
 
-```js
-{
-  valleyOutcome, resolvedYear, resolvedGeneration, publicTruth,
-  survivorLine, seedCustodian, unpaidPromise, evidence,
-  supplyDebt, graveMoved, npcBirthYears, npcDeathYears, records
-}
-```
+`completedTasks[]` has `{episodeId,outcomeId,generation,sequence}`. Sequence increases; different chapters may settle during the same generation. A stable episode cannot settle again across generations. `world.legacies` is all genuinely earned v3 history, not active equipment: real lessons earn `*-memory`, substantive council/common-garden achievements earn their authored legacy. `life.legacyId` activates at most one method. Ten original old IDs retain distinct names/source even where methods coincide.
 
-`valleyOutcome` is null / `open_clinic` / `sect_estate` / `ash_refuge`; matching seed custody is `unknown|clinic|sect|destroyed`. Survivor line is `unknown|safe|injured`; an unpaid protection promise requires an injured family line. `evidence` holds up to three distinct route IDs; public truth, supply debt and grave movement are booleans. Unsettled worlds cannot inject outcome facts.
+Persistent transcript entries have stable IDs, sceneId, kind and text; chosen actions carry choiceId. `life.facts['transcript-start']` is a validated bounded offset identifying this life's prose. Biographies store that life's full prose and facts, not recursive copies of all earlier lives. `legacyArchive` is the fully revalidated old terminal state, preserving old run/meta/story/summary/history schemas. Exact original bytes are stored by the session protocol, not injected into journey state.
 
-NPC birth/death maps use the three fixed IDs. Initial ages32/76/57 and natural lifespans86/160/90 determine death years as world time passes. New scene/choice/result wording resolves living successors using the actual action completion year; genuine earlier journal/result memories retain their original participants. Outcome text uses settlement time, not the later reader's year.
+## Public gameplay interface
 
-`records` retains at most50 `{generation,year,arc,outcomeId,facts}` snapshots. Generations strictly increase, years never decrease, and the latest facts match current facts. Validation reconstructs current narrative progression and permitted settlement facts from retained choices and the preceding generation's snapshot. A sequel may change only its own permitted facts; it cannot rewrite prior public truth or revive a destroyed seed. The migrated clinic's first sequel is allowed its genuine default historical baseline without invented pre-v1 records. Older snapshots whose original trace is no longer retained form the historical validation boundary.
-
-
-Combat: `{enemyId,enemyHp,enemyMaxHp,round,focus,challengeId:null|string,log:string[]}`. Enemy heavy intent on every third turn, visible in UI. Summary: `{cause,title,text,age,realmIndex,legacyOptions:string[],selectedLegacyId:null|string,deeds:string[],worldChanges:string[]}`. No unearned death reward.
-
-## Engine public API (stable)
-
-- `createGame({name,originId,pathId,seed,legacyIds=[]}, previousMeta=null)` creates fresh state; if previousMeta supplied generation increments and worldYear advances16; validates selected legacy IDs and max2. Seed string or number, deterministic hash. Valid defaults if arguments omitted.
-- `getStats(state)` => `{maxHp,attack,defense,training,remainingLife,lifeLimit,realm,nextRealm,need,breakthroughChance,burnBonus,healingBonus}`. lifeLimit=realm.lifeCap+run.lifeBonus; remainingLife=lifeLimit-age-lifeDamage.
-- `getActionInfo(state,type)` => `{type,label,years,enabled,reason,costText}`; types `train`,`explore`,`rest`,`alchemy`,`breakthrough`,`retire`.
-- `act(state,{type,worldId?,challengeId?})` => NEW state; above types plus `travel`,`challenge`,`finale`. Illegal operations throw user-friendly Error and never mutate input. Train grants growth, first explore selects unseen eligible event; subsequent explore has 15% chance of a same-world non-boss combat, otherwise event, rest heals, alchemy consumes3herbs/15spirit and raises lifeBonus by 2 current trainYears (max2 per life), breakthrough requires need and time; failure chance public with pity. Retire finishes current life. Challenge validates area+realm+unique proof; finale all3 proofs+realm5+celestial. World travel has visible two-year cost and minRealm check.
-- `getEventChoices(state)` => array of content choices spread plus `{enabled,reason}`. Cost affordability checked before mutation. `chooseEvent(state,choiceId)` returns new state; records paid results, item rewards, world changes and eligible legacies. Ordinary events may fail but display chance.
-- `combatAction(state,action)` action `strike`,`guard`,`burn`,`flee`; no world years per round; burn adds5命损, not age. Guard reduces incoming damage and adds focus for next attack; flee loses resources and advances2years. Victory grants proof once and ends finale with victory. Combat losses end life. Guard cannot stall indefinitely (rage or finite healing).
-- `equipItem(state,itemId,slot=0)` checks ownership+kind; art/artifact replace; skills slot0/1, cannot duplicate. Cannot change equipment in combat/event/ended.
-- `selectLegacy(state,legacyId)` only ended/victory, candidate and not already chosen; adds one permanent ID and updates the current completed life's `selectedLegacyId` and bounded journal. If no new eligible candidates selection may be skipped.
-- `reincarnate(state,options)` only ended/victory; requires selection if candidates exist; wraps createGame with meta, retains proofs/world/history and resets character.
-- `serialize(state)` string; `deserialize(raw)` state or throws descriptive Error. Validate complete state and known content IDs, bounded integers/strings/arrays, active phase dependencies. Preserve deterministic RNG. `src/game/persistence.js` exports `saveToStorage(state,storage)`, `loadFromStorage(storage)` returning null for missing data, throws on corrupt. Key `baishi-wending-save-v1`. UI catches storage errors and does not overwrite corrupt data until explicit user action.
-
-## Narrative public API and UI boundary
-
-- `getStoryView(state)` returns null when `state.story===null`; otherwise returns the model below. Reading is pure and consumes no RNG or time.
-- `chooseStory(state, choiceId)` returns a cloned next state. It validates phase, current scene, mortal-world location, path/trace/evidence gates and actual costs before mutation. Errors are readable Chinese. UI must use the supplied choices and cannot write internal narrative fields or recreate availability logic.
-
-```js
-{
-  id, title, chapter, chapterIndex, chapterCount,
-  sceneId, sceneTitle, location, objective, paragraphs: [],
-  choices: [{ id, label, description, costText, enabled, reason }],
-  journal: [{ title, text, year }],
-  people: [{ id, name, role, status, relationship }],
-  clues: [{ id, title, text }],
-  lastResult: null | { title, text, changes: [] },
-  status: 'active' | 'resolved' | 'failed',
-  outcome: null | { id, title, paragraphs: [], worldChange },
-  progress: { completed, total },
-  deadlineYear: number | null, yearsRemaining: number | null,
-  investigations: number, maxInvestigations: 2, paused: boolean
-}
-```
-
-`id` identifies the arc. `chapterIndex` is1-based; there are three chapter headings. Progress totals16 first-arc core nodes or5 sequel nodes and fills at resolution/failure; it is presentation progress, not elapsed minutes. First choices are `enter_help` / `enter_ask`; there is no generic `continue` choice. Always read IDs from the view.
-
-The five global phases remain unchanged. Event/combat/ending controls take priority in UI; event/combat pause narrative choice actions, and a non-mortal location disables them with a return explanation. `paused` expresses this. Story combat uses existing `combatAction`, not `chooseStory`. A resolved first arc can still have valid YG15/YG16 reading and life choices; do not hide them based on status alone. A completed sequel has `choices=[]` and ordinary cultivation/retirement stays available. UI dispatch uses `data-story-choice` separately from event and combat datasets and escapes player-authored text.
-
-### Narrative transaction, battle and settlement
-
-`chooseStory` pays spirit/herbs/HP/life damage, advances elapsed years through the common clock, and checks death before awarding any evidence, relationship, benefit, battle or positive world outcome. The eight-year deadline can interrupt a multi-year investigation: already-paid costs stay paid, unfinished evidence is not granted. Nonlethal HP costs preserve1HP; active stabilizing life-damage costs require survival, while ordinary battle burn remains lethal.
-
-The optional sentinel fight grants no normal loot. Victory and surviving flee return to YG13. Flee keeps ordinary costs: ceil20% spirit, at most one herb and two actual years; survival is checked before continuing. After a third surviving unsuccessful round, retreat costs at most6 spirit. Battle death, burning death and flight lifespan exhaustion clear pending combat and settle unfinished narrative before summary/history capture.
-
-Settlement is once-only: continued reading, refresh, retirement and natural death cannot pay it again. `open_clinic` earns 青谷丹书 and a real 药谷种籽 candidate; `sect_estate` pays20 spirit once; destroyed seed is never awarded. `refuge_common_medicine` earns the new 朴药手记 candidate (next-life3 herbs and6HP), subject to the same one-unlock/two-carried legacy rules. Common-clinic sequel public council can also earn the clinic reward when legitimately reached. Ordinary old-world APIs, equipment slots, proof acquisition and three-realm finale remain intact.
-
-First outcomes: `open_clinic`, `sect_estate`, `ash_refuge`; interruption: `unfinished`. Sequel outcomes:
-
-| Arc | Outcome IDs |
+| Export | Contract |
 | --- | --- |
-| clinic | `clinic_open_council`, `clinic_keeper_rule`, `clinic_sect_debt`, `clinic_rationed` |
-| estate | `estate_shared_supply`, `estate_grave_access`, `estate_unchanged` |
-| refuge | `refuge_common_medicine`, `refuge_family_medicine`, `refuge_small_plot`, `refuge_unchanged` |
+| `createJourney({seed} = {})` | New validated first-life state; no choice, cost or time committed by creation |
+| `getJourneyView(state)` | Pure cloned view; no mutation, RNG draw, time or reward |
+| `chooseJourney(state,{revision,sceneId,choiceId})` | Validates state; returns `{kind:'applied'|'stale'|'unavailable',state,message}`; never mutates input |
+| `validateJourney(state)` | Validates exact schema, bounded values, finite IDs, phase/record/fact consistency; returns state or throws |
+| `validateJourneyContent(chapters)` | Validates condition/effect vocabulary, IDs, ≤3 choices and authored successors/terminal exits |
+| `resolveJourneyScene(state)` | First matching authored variant, never random selection; content boundary, not a substitute for full state validation |
 
-## Core invariants
+The view contains `revision,sceneId,phase,title,location,blocks,choices,summary`. Choices expose `{id,label,detail,enabled,reason?}`. Detail includes actual required/held item quantities and remaining life for time/terminal actions. Summary contains name/age/year/generation, remainingLife/lifeLimit/lifeDamage/realm/injury, named abilities/items/active legacy, ending, biography, priorTranscript, legacyArchive and full legacyCollection. UI uses view choices; it does not rebuild affordability or trim long menus. Existing prose and actual results stay in the flow; previous-life text is expandable.
 
-1. Pure functions; effects do not mutate prior save.
-2. Pay elapsed time before effects; if time exhausts life, finish before breakthrough/reward. Fuel use cannot resurrect a dead character.
-3. Burn never advances world years. Travel and reincarnation do.
-4. No arbitrary rewards for retry/retire. Candidate legacies come from events, meaningful realm/path milestones or world deeds.
-5. All resources finite/nonnegative; hp clamped to derived max. Action budget cannot go negative to buy a reward.
-6. At least one legal progression path to final victory under normal rules. A seeded simulation may establish this, not fabricated test data.
+Stale revision or wrong scene returns original state with `stale`. A missing or unaffordable action, or one whose complete resulting save would exceed the shared character limit, returns `unavailable` and original state. Neither draws RNG nor deducts or rewards. After an applied command, repeating the old token is stale, including after save restore and birth.
+
+## Atomic costs, opportunities and content
+
+All costs and life conditions are checked before cloning/commit. Real years increase both age and world year; lifeDamage only reduces personal remaining life. Nonterminal actions require `remainingLife > years + lifeDamage` before any realm growth/reward. Costs are paid once, chronology updated, then authored effects/settlement applied and successor entered. Explicit fatal choices do not carry ordinary effects; burning consumes all remaining life without world time. Retirement advances all remaining real years. There is no hidden roll after a player commits a choice.
+
+At first entry to each chapter's opportunity scene, candidates are filtered against actual inherited/learned methods, drawn once and stored in `scene.opportunities`. Later reads/restores reuse that ID. Each chapter has at most one lesson, each life at most three new methods plus one carry. Refusal is free. Ordinary herbalism lesson costs **one elapsed year**; lesson plus labor-paid actual medicine pack costs **two elapsed years**. There is no extra soul-inquiry-window flag or fictional refusal benefit.
+
+Conditions are serializable finite `proof, ability, item, person, life-fact, world-fact, opportunity, injury-not, remaining-life`. Proof conditions support `held:false`; ability includes the single active inheritance. Effects cover finite item counts, real learning, realm, injury, life/world facts, people, proof and unique settlement; no arbitrary callbacks or runtime prose generation. Full authored costs, combinations, episode/outcome IDs and loss boundaries live in [dialogue author contract](story/dialogue-journey.md).
+
+## Terminal and next-life behavior
+
+`campaign-victory` is living `victory`, summary `{cause:'victory',generation,age,title:'三界问鼎',outcomeId:'bounded-victory'}` with remainingLife>0 and no current-generation biography yet. Its direct birth action explicitly passes remaining real years, records one victory biography and then adds16 world years/new generation. It does not reward the finale twice. Old v2 victory already has its own biography; conversion does not append another.
+
+Real `ended` is `retired|burned`, with age+damage=limit and one biography. Both terminal phases expose one to three direct new-life choices via `chooseJourney`: existing carry plus at most2 real replacements; no carry up to3 true candidates; no candidates one `new-life`. Candidates derive from actual learned/achieved/reawakened sources, not death count or an arbitrary historical collection picker.
+
+Birth resets current body/items/abilities/opportunities/consent/duties, preserves full historical collection/proofs/world/biographies/transcript, adds one generation and16 world years, and activates one chosen legacy. A held original is archived rather than given to the newborn. Matching finite sequel is offered only if incomplete; all11 sequel outcomes have finite onward routes. Existing proofs are honored, current personal agreement remains necessary, native completed finale routes to a truthful recap. Old combat victory retains old provenance and uses its own recap; it never fabricates native `ding-complete` or bounded institutional agreement.
+
+## Unified saves and strict compatibility
+
+`serializeGame(state)` emits v3 JSON after v3 validation and the shared 1,000,000-JavaScript-character size check; v2 uses old serialize, v1 passes through old strict deserialize before v2 output. `deserializeGame(raw)` accepts JSON versions1/2/3, at most1,000,000 JavaScript string characters. v1/v2 use the original complete old validator and established v1→v2 rules; normalized v1 output must also fit the same character boundary; v3 uses journey validation. The file chooser pre-read byte guard is derived as three UTF-8 bytes per permitted JavaScript code unit (3,000,000 bytes), so valid Chinese exports are not rejected by a smaller upload limit; parsed character length remains authoritative. Errors remain readable and corrupt data is not replaced. This validates retained consistency, not cryptographic authenticity against a wholly rewritten internally consistent save.
+
+Key remains `baishi-wending-save-v1` (key name is not JSON version). `saveToStorage/loadFromStorage` use unified formats. Session bootstrap loads before creating; app explicitly supplies `createJourney` for missing saves. Blocked reads/bad JSON stay blocked with readable raw backup where available. Ordinary storage write failure leaves in-memory export available. Native choices, including terminal birth, check the complete candidate size before returning applied; the app also checks unified serialization before adopting an old-life action. A size rejection preserves the original state/token/cost/RNG/history and explains that the action was not committed. Current valid progress remains exportable/importable, but continued play at this finite history capacity is not guaranteed. Direct persistence rejects oversized output before either current or backup writes and reports failure without offering that invalid candidate as an importable export. Historic maximum input/history limits are unchanged; oversized conversions fail before replacement rather than truncate evidence.
+
+### Legacy bridge and recovery transaction
+
+`getLegacyBridgeChoices(validLegacyState)` returns `[]` until old phase ended/victory and any outstanding old reward is explicitly selected. Then it exposes the old selected carries plus the actually chosen reward, deduplicated by original ID, up to3; no candidates gives memory-only birth. Unselected old candidates are not owned history. `migrateLegacyLife(state,{choiceId,seed})` is pure, validates old state/choice, constructs exactly one v3 birth, preserves complete old archive and history, maps only equivalent facts, and calls no old death/reward/finale logic.
+
+`baishi-wending-save-v1-legacy-handoff` contains exact `originalRaw`, `previousRaw`, `currentRaw`, and paired nullable `checkpointRaw/preparedRaw`. Original bytes are captured on valid old load/import before normalization and retained. Normal old progress backs up and verifies before replacing current. Terminal bridge validates target, records current terminal checkpoint and one seeded prepared target, verifies backup readback, then writes current. App adopts the already-saved target without another ordinary persist.
+
+Backup/current failure keeps exportable source/checkpoint/prepared data. Refresh recognizes prepared handoff and reuses exactly that target on retry, with no extra seed, generation or year increment. A newer ordinary `currentRaw` after failed current write exposes `pendingLegacyRaw`: gameplay/migration are blocked until explicit `recoverLegacySession` restores it, without replay. Explicit recovery/bridge retries reread transient backup errors; malformed backups remain unchanged and blocked. More/old ending expose original, newer checkpoint and prepared target separately.
+
+## Compatibility appendix and verification limits
+
+See [complete old engine/story API](ENGINE_CONTRACT_V2.md) for createGame, act, chooseStory, combatAction, selectLegacy, old v2 fields and old migration. Those functions continue a valid old life. The 2.0.0 app uses the terminal bridge instead of launching another old reincarnate flow.
+
+Behavior evidence and exact commands/counts are in [QA](QA_REPORT.md). Finite resolver matrices cover authored applicability; bounded real public actions establish reachable successor/save/stale invariants. They are not exhaustive traversal or human pacing evidence. Node renderer/controller focus checks do not prove native DOM focus, screen-reader behavior or visual layout. Actual 320px/light-dark/device/production acceptance remains pending as documented.

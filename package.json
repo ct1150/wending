@@ -1,9 +1,9 @@
 {
   "name": "baishi-wending",
-  "version": "1.2.0",
+  "version": "2.0.0",
   "private": true,
   "type": "module",
-  "description": "百世问鼎 — 药谷旧火、调查抉择与同一世界的轮回因果",
+  "description": "百世问鼎 — 对话选择、三界责任与同一世界的轮回因果",
   "engines": { "node": ">=22" },
   "scripts": {
     "dev": "node scripts/dev.js",
