@@ -2,7 +2,7 @@
 
 Plans: [first release](superpowers/plans/2026-10-24-first-release.md) · [1.1.0 narrative upgrade](superpowers/plans/2026-10-25-narrative-adventure.md)
 
-Current documentation date: 2026-10-25 (Shanghai). The 1.1.0 branch is a local candidate; publication is recorded separately from implementation and CI. Earlier entries below are historical checkpoints.
+Current documentation date: 2026-10-25 (Shanghai). Version 1.1.0 is published; local implementation, GitHub CI and actual production acceptance are recorded separately. Earlier entries below are historical checkpoints.
 
 - 2026-10-24: Approved conversation design captured in PRODUCT_SPEC; no additional design approval required because user explicitly requested implementation and deployment.
 - Ruling: use native JS and static hosting — offline single-player requirements need no server or runtime dependency.
@@ -31,7 +31,7 @@ Current documentation date: 2026-10-25 (Shanghai). The 1.1.0 branch is a local c
 - Original next step at that checkpoint: connect `ct1150/wending` / `main` in the intended Cloudflare account. Worker `baishi-wending`, repository root left blank, build `npm run release`, deploy `npx wrangler deploy`, Node 24 read automatically from `.node-version`. Keep the GitHub deployment switch disabled when using this native integration. See [deployment instructions](DEPLOYMENT.md).
 
 
-## Historical first publication / current old-production checkpoint — 2026-10-24
+## Historical first publication checkpoint — 2026-10-24
 
 - Cloudflare API MCP authenticated successfully. Native Git setup could not proceed: repository connection returned `404 / 8000008 Git account disconnected`, and no build tokens existed. That failure records the state observed during first publication, not proof that the GitHub App is still uninstalled. Current absence of Worker Builds configuration is recorded below.
 - To deliver a working first release, the verified offline HTML was embedded in an ordinary Worker response. This mode counts toward Workers request allowances. The original Static Assets `wrangler.jsonc` is retained for future migration.
@@ -52,7 +52,7 @@ Current documentation date: 2026-10-25 (Shanghai). The 1.1.0 branch is a local c
 - Native Builds returned404/code12040 with no configuration, triggers or build history. No connection-mutating request was repeated; current GitHub App installation status cannot be inferred from the old8000008 failure.
 - The accepted current release path remains GitHub review/CI → exact-source offline/Worker build → API update to the existing ordinary Worker. Static Assets and native automatic Builds are future migration work.
 
-## Narrative adventure 1.1.0 candidate — 2026-10-25 (Shanghai)
+## Narrative adventure 1.1.0 implementation and local validation — 2026-10-25 (Shanghai)
 
 - Approved direction: a continuous authored main story with finite random branches, meaningful choices and playable next-life consequences in one continuing world. Twenty-to-thirty minutes remains a design target without human timing evidence.
 - Preserved approved pre-upgrade research in `docs/research/2026-10-24-wending-reference-research.md` and original authored story in `docs/story/valley-fire.md`. Provenance wrappers distinguish dated research/design costs from current implementation. The implementation plan now uses a portable source link.
@@ -61,4 +61,13 @@ Current documentation date: 2026-10-25 (Shanghai). The 1.1.0 branch is a local c
 - Task3 base `286314cfb1b29ebb8bd37f3945cabfdaa96cbd04`; only package/docs/source-artifact files changed, version1.1.0. Fresh individual test run80/80; required `npm run release` passed8/8 test files,20JS syntax checks,309314-byte offline build. npm unknown-http-proxy config warning is environmental.
 - Final-candidate local offline SHA-256 `379eef692acd6e5b043ed11a364a2ddf4bf761a1b842e482f6037fa32dee0c46`; 312059 bytes; release metadata version1.1.0. Real Chrome156 opened the rebuilt final file itself at390px, started a new game, chose enter_ask intoYG02 and refreshed with identical save/result; zero external runtime requests, failed requests or page/console errors. Full local evidence and limits are in QA_REPORT.
 - Final whole-branch fix wave from `d1c19000225d88613d1add05744f6d54eae5485d`: corrected fatal deadline/settlement ordering without relaxing failed-trace validation; two accepted-save boundary regressions observed RED then GREEN. Restored ordinary/combat focus and supporting disclosure continuity, current/required mobile cultivation, neutral zero-relationship records and stable old-fire wording. New bounded browser checks passed36 transition/focus/visibility assertions plus strict-v1 restored keyboard actions; no errors/overflow. Final individual suite82/82, required release8/8 files,20JS checks and rebuilt offline smoke all passed. Evidence uses final-* filenames; npm environment warning remains unchanged.
-- Pending controller gates: scoped final-fix re-review; publish exact source to GitHub and pass CI; rebuild Worker with that actual source SHA; update existing Worker via API; record live health/hash/deployment/version and new-story choice/reload evidence. No1.1.0 production success or future CI IDs are claimed by this candidate.
+- All five final findings passed the scoped fix re-review before publication. Actual GitHub and production completion is recorded below, separately from these local checks.
+
+## Narrative adventure 1.1.0 publication and live acceptance — 2026-10-25
+
+- [PR #1](https://github.com/ct1150/wending/pull/1) merged at `2026-10-25T01:10:05Z`. Actual release source is [`4d3834be1bcd2ffd636c7fe32bde5c111195f353`](https://github.com/ct1150/wending/commit/4d3834be1bcd2ffd636c7fe32bde5c111195f353); tree `42831e16b6832eb3207916a1b2668beec49d5375` matches reviewed local `d7e7b05fa70d830686b14bbcd4789f0adadea514`.
+- main [CI 40149561196](https://github.com/ct1150/wending/actions/runs/40149561196) completed with success; validate success, deploy skipped. Automatic GitHub→Cloudflare publishing remains disabled; the following deployment used the existing Worker API path.
+- Rebuilt Worker with the actual release SHA at `2026-10-25T01:10:11.898096+00:00`: offline HTML 312059 bytes/SHA-256 `379eef692acd6e5b043ed11a364a2ddf4bf761a1b842e482f6037fa32dee0c46`, Worker 317795 bytes. API deployment `a79b0351-d05d-4ca4-875b-bd8a5048f91f`, version `ca6bdda3-9739-4a09-a4a9-0f0f39085c45` at 100%, created `2026-10-25T01:10:47.185111Z`.
+- Actual production health returned status ok, source `4d3834be1bcd2ffd636c7fe32bde5c111195f353` and the exact HTML hash. Real UI opened “灰里还有人”, chose “先问封谷令为何下来” and reached “不肯烧掉的药簿”; refresh preserved the full main content and settings/back worked. Actual game download 312059 bytes and hash exactly match the tested artifact.
+- Live viewport 1363×936, pageWidth 1348, no horizontal overflow; application errors 0. Browser extension emitted 21 metadata messages, recorded separately from game errors. Production smoke covers this opening only; full desktop/mobile clinic-sequel playthrough remains local evidence. No human pacing, physical-device or screen-reader measurement.
+- This publication audit changes documentation only. Production source remains `4d3834be1bcd2ffd636c7fe32bde5c111195f353` and must differ from the later documentation-only commit; health metadata must continue naming the source actually built/uploaded. First-release history and future Static Assets/automatic-publishing instructions remain preserved.

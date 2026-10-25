@@ -1,6 +1,6 @@
 # 百世问鼎 · 1.1.0 验收记录
 
-实施与验收日期：2026-10-25（上海）。范围：药谷叙事升级、旧规则回归、严格v2存档、桌面／手机宽度UI，以及静态／离线／普通Worker发行路径。**本页1.1.0结果为本地候选验证，不代表GitHub CI或生产已发布。** 现有生产仍为下文列出的旧源码。最终修复起点为 `d1c19000225d88613d1add05744f6d54eae5485d`；整分支评审的两项Important与三项Minor已在本地候选修复，等待限定复核与控制方发布。
+实施与验收日期：2026-10-25（上海）。范围：药谷叙事升级、旧规则回归、严格v2存档、桌面／手机宽度UI，以及静态／离线／普通Worker发行路径。**1.1.0已发布；本文分别记录本地完整验证与生产开局烟测，覆盖范围不同。** 最终修复起点为 `d1c19000225d88613d1add05744f6d54eae5485d`；整分支两项Important与三项Minor完成修复和限定复核。实际生产源码为 [`4d3834be1bcd2ffd636c7fe32bde5c111195f353`](https://github.com/ct1150/wending/commit/4d3834be1bcd2ffd636c7fe32bde5c111195f353)，不随后续仅文档审计提交变化。
 
 ## 交付范围
 
@@ -42,7 +42,7 @@
 | 运行依赖 | `0` |
 | 静态副本 | `dist/baishi-wending-offline.html`，与release副本相同 |
 
-构建时间会随后续构建变化。正式发行由控制方从实际GitHub源码SHA重建Worker；候选元数据不冒充生产元数据。Worker现有行为测试覆盖HTML逐字保持、导入无网络／写文件副作用、GET／HEAD、下载／图标／healthz、404／405和40位源码提交参数。实际本地候选Worker打包及health一致性核对在提交后进行，由任务报告记录；生产健康结果须另行取得。
+上表为本地候选构建；实际GitHub源码的发行构建时间与生产证据见下文，HTML字节／哈希保持一致。Worker现有行为测试覆盖HTML逐字保持、导入无网络／写文件副作用、GET／HEAD、下载／图标／healthz、404／405和40位源码提交参数。提交后的本地Worker打包与handler一致性已记录于任务报告；生产health与真实下载另有下文实际证据。
 
 ## 真实浏览器证据与覆盖边界
 
@@ -58,7 +58,7 @@
 
 ### 整分支评审后的最终修复与新鲜证据
 
-五项发现均已在本地候选处理，尚待限定复核：
+五项发现均已修复并通过限定复核：
 
 - 致命行动跨截止时，先同步已经流逝的世界时钟，再检查死亡与结算；选项奖励仍在存活检查之后。未削弱failed-story选择轨迹校验。两个公开API回归均先从serialize/deserialize接受的道历1006、余寿2年的刻意边界夹具开始，分别以休息和两年测绘致命跨到1008；验证末态可往返、没有治疗／证据／奖励、成本只付一次、世界与生平各结算一次，且伪造失败场景仍被拒绝。夹具不宣称是自然游戏路线。RED两例失败，GREEN两例通过；随后剧情／存档34项全通过。
 - 手机RED实测普通修炼将焦点送到未变的story-result-title并关闭辅助区。修复后按公开view的结果／场景、phase和地点实际变化选焦点；重复操作保留可用按钮，新的际遇／战斗、截止结果、剧情回流与终局有对应标题。辅助展开状态在普通重绘和切页间保留；固定栏的滚动间距保护焦点。
@@ -79,7 +79,7 @@
 - 外部script／stylesheet引用均为0。390px页面scrollWidth=390，无横向溢出。
 - 本地截图 `test-results/final-offline-refresh.png` 和机器记录 `final-offline-results.json` 已保存并查看；中文正常、剧情和两项新选择可读。
 
-此检查证明当前单文件发布路径可执行及本浏览器的file存储恢复，不概括为所有浏览器file政策。本轮待发行Worker将内嵌同一份离线HTML，仍需在实际发布后另做公网验收。
+此检查证明当前单文件发布路径可执行及本浏览器的file存储恢复，不概括为所有浏览器file政策。本轮发行Worker内嵌相同离线HTML，另已完成下述生产开局验收。
 
 ## 已知限制与评审后续
 
@@ -90,24 +90,42 @@
 5. 原辅助details／焦点、手机修为数字及人物关系零值文案观察已在最终修复轮处理；不再作为延期项目。限于本地Chrome自动化宽度验收，未扩大为真实设备或读屏软件结论。
 6. 三流派胜利／直冲失败回归继续用新篇开局；固定种子丹修守势对照通过严格迁移旧途保持旧事件池，不能把其结论扩展为所有新故事序列。首版具体动作数与年龄见产品说明中的历史表。
 
-## 历史首版与目前生产证据
+## 1.1.0 GitHub发行与生产验收
+
+[PR #1](https://github.com/ct1150/wending/pull/1) 于 `2026-10-25T01:10:05Z` 合并，源码 [`4d3834be1bcd2ffd636c7fe32bde5c111195f353`](https://github.com/ct1150/wending/commit/4d3834be1bcd2ffd636c7fe32bde5c111195f353)，tree `42831e16b6832eb3207916a1b2668beec49d5375` 与已评审本地 `d7e7b05fa70d830686b14bbcd4789f0adadea514` 完全一致。main CI [40149561196](https://github.com/ct1150/wending/actions/runs/40149561196) 结论success、validate success、deploy skipped；API上线另行完成，没有启用自动发布。
+
+| 项目 | 2026-10-25实际结果 |
+| --- | --- |
+| 发行构建UTC | `2026-10-25T01:10:11.898096+00:00`，Worker 317795字节 |
+| Deployment ID | `a79b0351-d05d-4ca4-875b-bd8a5048f91f` |
+| 100% Worker version ID | `ca6bdda3-9739-4a09-a4a9-0f0f39085c45`，与deployment ID不同 |
+| 部署创建UTC | `2026-10-25T01:10:47.185111Z` |
+| 生产health | [healthz](https://baishi-wending.ct1150.workers.dev/healthz)：status ok，sourceCommit为 `4d3834be1bcd2ffd636c7fe32bde5c111195f353`，HTML SHA-256为 `379eef692acd6e5b043ed11a364a2ddf4bf761a1b842e482f6037fa32dee0c46` |
+| 真实开局 | start → “灰里还有人” → 选择“先问封谷令为何下来” → “不肯烧掉的药簿” |
+| 恢复与导航 | 刷新后完整主内容保留，设置及返回正常 |
+| 游戏内实际下载 | 312059字节，SHA-256 `379eef692acd6e5b043ed11a364a2ddf4bf761a1b842e482f6037fa32dee0c46`，与已测产物完全一致 |
+| 视口与错误 | 1363×936，pageWidth 1348，无横向溢出；应用错误0；另记录21条浏览器扩展metadata消息，不计为游戏错误 |
+
+本轮公网烟测只证明开局路径、刷新、设置回流、health和实际下载。桌面／手机完整共守后世通路仍是本地证据，不扩大为生产全结局、真实手机或读屏软件验证；真人20–30分钟节奏仍未计时。部署／版本／流量证据详见 [部署说明](DEPLOYMENT.md)。**线上health指向实际发行源码 `4d3834be1bcd2ffd636c7fe32bde5c111195f353`，不指向后续仅文档提交。**
+
+## 历史首版生产证据
 
 以下为2026-10-24首版证据，不是1.1.0线上验收：
 
-| 项目 | 历史／当前核实记录 |
+| 项目 | 2026-10-24首版历史记录 |
 | --- | --- |
 | 生产URL | [baishi-wending.ct1150.workers.dev](https://baishi-wending.ct1150.workers.dev/) |
-| 实际生产源码 | [`355f7956a4c31d9e3a19f1f567c4b1146942a5e9`](https://github.com/ct1150/wending/commit/355f7956a4c31d9e3a19f1f567c4b1146942a5e9) |
+| 首版生产源码 | [`355f7956a4c31d9e3a19f1f567c4b1146942a5e9`](https://github.com/ct1150/wending/commit/355f7956a4c31d9e3a19f1f567c4b1146942a5e9) |
 | 对应该源码的CI | [40053805256](https://github.com/ct1150/wending/actions/runs/40053805256)，48测试／15JS检查通过 |
 | 历史CI产物 | [12544925440](https://github.com/ct1150/wending/actions/runs/40053805256/artifacts/12544925440)，压缩包247611字节；离线185751字节，Worker189712字节 |
 | 实际Deployment ID | `48af217d-8b0f-428a-94ab-d868fdf55ca3` |
 | 100% Worker version ID | `f9dd9fc8-df55-437e-8123-bbca3e119a59`，不是deployment ID |
 | 创建UTC时间 | `2026-10-24T02:21:43.28736Z`，通过API发行普通Worker |
-| 生产离线SHA-256 | `060befb94513ebd04bd23eac7127e28073b782b1bf02e443627cda5eaddf6e63` |
+| 首版生产离线SHA-256 | `060befb94513ebd04bd23eac7127e28073b782b1bf02e443627cda5eaddf6e63` |
 | 后续main验证 | [`e719b569deeb5010d4977c799b434b60d640223a`](https://github.com/ct1150/wending/commit/e719b569deeb5010d4977c799b434b60d640223a)，[CI40054261258](https://github.com/ct1150/wending/actions/runs/40054261258)成功，deploy跳过；未改变生产源码 |
 
 首版实际公网浏览器曾验证创建“云归”16岁、修炼至19岁／修为13／余寿81／灵石29，探索并完成“渡口最后一船”后22岁／余寿78／灵石41，刷新恢复；healthz返回上述生产提交与哈希，游戏内实际下载的185751字节匹配哈希。390px iframe可用宽375CSS px，scrollWidth=clientWidth=375。原本地首版浏览器还覆盖装备、突破、道证、归隐、传承、重生、历史与导入导出；这些是历史验收，不冒充本轮新剧情证据。
 
 直接脚本公网请求曾受网络限制／得到403非游戏正文；该通路失败不推翻真实浏览器证据，也不能用阻断页哈希替代游戏哈希。公网HEAD／404／405尚无独立live响应证据；本地handler测试不作替代。
 
-当前Workers Builds查询为无配置404／12040，triggers／builds为空；最新观测CI deploy跳过。因此自动发布未建立。旧连接曾返回8000008，不能据此推断现在GitHub App从未安装或仍未安装。具体来源与后续发布门槛见 [部署说明](DEPLOYMENT.md)。**1.1.0尚待控制方GitHub发布、CI、整分支评审及生产更新／验收，没有预填成功ID。**
+2026-10-24的Workers Builds只读查询为无配置404／12040，triggers／builds为空；本轮main CI deploy也跳过。因此自动发布未建立。旧连接曾返回8000008，不能据此推断现在GitHub App从未安装或仍未安装。具体来源与后续发布门槛见 [部署说明](DEPLOYMENT.md)。**1.1.0的实际GitHub、API部署与公网验收已分别记录于上文；CI成功不等同于自动发布。**

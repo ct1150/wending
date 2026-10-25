@@ -4,7 +4,7 @@
 
 ## 开始游玩
 
-- [线上游戏](https://baishi-wending.ct1150.workers.dev/)：当前核实的生产站仍为旧版，**本分支 1.1.0 尚待发布**。实际发行源码与上线证据见 [部署记录](docs/DEPLOYMENT.md)。
+- [线上游戏](https://baishi-wending.ct1150.workers.dev/)：**1.1.0 药谷旧火已上线**，已核实剧情开局、选择与刷新恢复。实际发行源码与上线证据见 [部署记录](docs/DEPLOYMENT.md)。
 - 体验本分支 1.1.0：下载源码后运行 `npm run dev`，或完成构建后打开 `release/baishi-wending-offline.html`。
 - [源码仓库](https://github.com/ct1150/wending) · [玩法说明](docs/PRODUCT_SPEC.md) · [验收与限制](docs/QA_REPORT.md)。
 
@@ -83,4 +83,4 @@ docs/                     产品、接口、研究、作者稿与发行证据
 
 ## 发布状态
 
-现有生产站由普通 Cloudflare Worker 返回内嵌离线 HTML，计入 Workers 请求额度；具体额度以账号套餐为准。当前没有已配置的 GitHub → Cloudflare 自动发布。本轮沿用 GitHub 验证后由控制方通过 API 更新现有 `baishi-wending` Worker 的方式。`wrangler.jsonc` 中的 Static Assets 配置仅供以后单独迁移，不是本轮发布步骤。历史与本轮候选的区别、CI 和实际部署证据见 [部署说明](docs/DEPLOYMENT.md)。
+现有生产站由普通 Cloudflare Worker 返回内嵌离线 HTML，计入 Workers 请求额度；具体额度以账号套餐为准。当前没有已配置的 GitHub → Cloudflare 自动发布。本轮沿用 GitHub 验证后由控制方通过 API 更新现有 `baishi-wending` Worker 的方式。`wrangler.jsonc` 中的 Static Assets 配置仅供以后单独迁移，不是本轮发布步骤。历史与本轮发行的区别、CI 和实际部署证据见 [部署说明](docs/DEPLOYMENT.md)。
