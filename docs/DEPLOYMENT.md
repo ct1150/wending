@@ -1,8 +1,43 @@
 # GitHub → Cloudflare 部署
 
-文档更新：2026-10-25（上海）。1.1.0已于2026-10-25通过API更新现有Worker，并完成下述生产验收。自动发布配置的只读记录仍为2026-10-24的观测。
+文档更新：2026-10-25（上海）。1.2.0 纸页界面已通过 API 更新现有普通 Worker，完成下述生产验收。1.1.0 与首发信息保留为历史记录；自动发布配置的只读记录仍为 2026-10-24 的观测。
 
-## 当前生产：1.1.0源码与发行方式
+## 当前生产：1.2.0 纸页界面
+
+[线上游戏](https://baishi-wending.ct1150.workers.dev/) 已运行 **1.2.0 Paper**。实际发行源码为 [`90bb910840e7c2b22c59e0421f111c4c1a7cb7c8`](https://github.com/ct1150/wending/commit/90bb910840e7c2b22c59e0421f111c4c1a7cb7c8)，[PR #2](https://github.com/ct1150/wending/pull/2) 已合并。发行 tree `ec460fa26506ce0946a0a5edf9f5222ed5e8ab65` 与已评审本地 `0d015eb82554c840a9bbcfd774a07d4f57dc25ba` 的 tree 相同；本地合成 git 历史未直接推送。
+
+[PR CI 40163973639](https://github.com/ct1150/wending/actions/runs/40163973639) 与 [main CI 40164006388](https://github.com/ct1150/wending/actions/runs/40164006388) 均为 success；validate job `121081217915` success，deploy job `121081258031` skipped。实际部署由 API 手动上传现有普通 Worker 完成，GitHub → Cloudflare 自动发布未启用，也没有迁移 Static Assets。最终本地 `npm run release` 已通过 11/11 个测试文件和 25 个 JavaScript 语法检查；本次文档审计不重跑构建或测试。
+
+| 项目 | 当前 1.2.0 实际结果 |
+| --- | --- |
+| 生产 URL | [baishi-wending.ct1150.workers.dev](https://baishi-wending.ct1150.workers.dev/) |
+| 发行方式 | 现有普通 Worker 内嵌离线 HTML，通过 API 手动上传 |
+| Worker 名称／tag | `baishi-wending` / `d4ceaa79ca7d4ca48954b1117458297f` |
+| 实际 Deployment ID | `e890d80a-dbda-475b-a1c9-c32589b29803` |
+| Worker version ID／流量 | `1c5deb80-2930-4a53-9c8c-956fe7c712e3` / 100% |
+| 部署创建 UTC | `2026-10-25T05:02:16.128157Z` |
+| HTML 大小／SHA-256 | 322726 字节 / `709ee3db3d1378f2b954c17de3e513ec56a6648f5ebe0ec1ac63288b751ba3d7` |
+| Worker 模块大小 | 328691 字节 |
+| 本地精确源码 handler 检查时间 | `2026-10-25T05:01:40.998Z`；检查时间，不是构建时间 |
+| 保持不变的配置 | compatibility date `2026-10-24`，usage model `standard`，bindings 0 |
+| 生产 health | [healthz](https://baishi-wending.ct1150.workers.dev/healthz) 实际返回 status ok、上述发行源码与 HTML 哈希 |
+| 实际游戏内下载 | 经设置下载 322726 字节，与精确源码 HTML 逐字相同且 SHA-256 一致 |
+
+Deployment ID 以上述 deployments endpoint 的记录为准；上传响应中名为 `deployment_id` 的字段实际上是无连字符的 version ID，不可将两者混用。当前仍由普通 Worker 返回 HTML，计入 Workers 请求额度；`wrangler.jsonc` 的 Static Assets 配置供未来迁移。
+
+### 1.2.0 生产 UI 验收与限制
+
+实际浏览器恢复先前 1.1.0 的 YG02“不肯烧掉的药簿”存档：云归／剑修、16 岁、余寿 84、气血 120/120、灵石 24、药材 3、距封谷 8 年及上次选择均保留。键盘 Enter 选择“答应先查真相，再谈灵种”进入 YG03，药材 +2；再“申请公开查档”到“灯下选下一条路”，灵石 24→16、药材 5。展开状态与修行后，键盘 Enter 闭关经过 3 年，得到年龄 19、余寿 81、修为 13/36、灵石 21、药材 5、距封谷 5 年；最新结果为“闭关修行”，焦点落在 `story-result-title`，两个辅助区在重绘后仍展开。
+
+刷新保留完整 `main-content.textContent`，辅助区在重载后自然折叠；设置返回聚焦 `story-scene-title`。帮助打开原生 dialog 并聚焦关闭，Escape 返回帮助按钮，实际帮助目标为 44×44px。实际 viewport 1363×936，pageWidth 1348，此桌面视口无横向溢出，浅色 body 背景 `rgb(250, 248, 242)`。已观察日志只有 chrome-extension metadata 错误，没有应用 warn/error；不宣称完整捕获所有 pageerror。
+
+未测 320px 与深色实际外观、真实手机、辅助技术／读屏、真人 20–30 分钟节奏、全部结局生产全通。此次未重置全新首世浏览器会话，Node 的 8 项启动用例覆盖首启，生产检查覆盖已有存档继续。没有本地／原型浏览器检查或绕过方案；历史 1.1.0 浏览器验收不证明 1.2.0。完整证据与边界见 [QA 记录](QA_REPORT.md)。
+
+**后续文档提交不改变生产源码 `90bb910840e7c2b22c59e0421f111c4c1a7cb7c8` 或实际 health 元数据；线上始终标记真正构建并上传的源码。**
+
+## 历史 1.1.0：当时的生产源码与发行方式
+
+以下至“Worker 发行模块的打包与发布”前为 1.1.0 历史记录，其中“当前”“本轮”均指当时的检查点，已由上面的 1.2.0 发行取代。
 
 源代码位于 [ct1150/wending](https://github.com/ct1150/wending) 的 `main` 分支。**Cloudflare API MCP 已实际发布 Worker `baishi-wending`**，生产地址为 [https://baishi-wending.ct1150.workers.dev/](https://baishi-wending.ct1150.workers.dev/)。当前是普通 Worker 返回内嵌离线 HTML 的发行方式，尚未使用 `dist/` 的 Static Assets 路由。原有 `wrangler.jsonc` 保留作后续 Static Assets 迁移使用。
 
@@ -28,7 +63,7 @@
 
 当前页面请求执行普通 Worker，**计入 Workers 请求额度**；具体限额与收费以目标账号套餐为准，不能沿用 Static Assets 免费资源请求的描述。官方参考：[Workers 计费](https://developers.cloudflare.com/workers/platform/pricing/)（查阅：2026-10-24）。
 
-## 1.1.0正式发行与生产验收
+## 历史 1.1.0正式发行与生产验收
 
 本地最终候选的82项行为、8个测试文件、20JS语法检查、离线首选项／刷新及焦点／截止／短战／旅行／旧存档路径已通过；整分支五项发现完成修复及限定复核。详细本地证据与覆盖边界见 [QA记录](QA_REPORT.md)。本轮生产验证如下：
 

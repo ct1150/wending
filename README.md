@@ -1,11 +1,11 @@
 # 百世问鼎
 
-**1.2.0 候选 · 纸页界面**：一款剧情与探索主导的单机文字修仙游戏。你从十六岁入道，走入即将封闭的药谷，结识医者沈芷、封谷执事陆槐与旧掌闸人温渡。在证词、账册和地脉之间选择调查路线，付出药材、灵石、气血或寿元，决定最后一枚灵种和谷民的去向。下一世仍是同一个向前走的世界：医谷的规矩、宗门的药庄，或迁民的新药园，会成为后来人真正可玩的任务。
+**1.2.0 已上线 · 纸页界面**：一款剧情与探索主导的单机文字修仙游戏。你从十六岁入道，走入即将封闭的药谷，结识医者沈芷、封谷执事陆槐与旧掌闸人温渡。在证词、账册和地脉之间选择调查路线，付出药材、灵石、气血或寿元，决定最后一枚灵种和谷民的去向。下一世仍是同一个向前走的世界：医谷的规矩、宗门的药庄，或迁民的新药园，会成为后来人真正可玩的任务。
 
 ## 开始游玩
 
-- [线上游戏](https://baishi-wending.ct1150.workers.dev/)：**1.1.0 药谷旧火已上线**，已核实剧情开局、选择与刷新恢复。实际发行源码与上线证据见 [部署记录](docs/DEPLOYMENT.md)。
-- 体验本分支 **1.2.0 候选**（尚未发布，浏览器视觉与交互验收待完成）：下载源码后运行 `npm run dev`，或完成构建后打开 `release/baishi-wending-offline.html`。
+- [线上游戏](https://baishi-wending.ct1150.workers.dev/)：**1.2.0 纸页界面已上线**，已核实旧存档恢复、剧情选择、键盘修行、刷新、设置与帮助焦点，以及实际离线下载。发行源码与上线证据见 [部署记录](docs/DEPLOYMENT.md)。
+- 本地游玩：下载源码后运行 `npm run dev`，或完成构建后打开 `release/baishi-wending-offline.html`。
 - [源码仓库](https://github.com/ct1150/wending) · [玩法说明](docs/PRODUCT_SPEC.md) · [验收与限制](docs/QA_REPORT.md)。
 
 游戏在浏览器本地运行，无运行时依赖、玩家账号或游戏后端，不上传存档。使用 Node.js 24 开发，最低 Node.js 22；不需要执行 `npm install`。
@@ -98,4 +98,6 @@ docs/                     产品、接口、研究、作者稿与发行证据
 
 ## 发布状态
 
-**本分支为1.2.0纸页候选；现有线上站仍为1.1.0药谷旧火。** 本轮仅完成源码／Node检查与本地打包，尚无1.2.0浏览器视觉、键盘交互或生产验收证据。现有生产站由普通 Cloudflare Worker 返回内嵌离线 HTML，计入 Workers 请求额度；具体额度以账号套餐为准。当前没有已配置的 GitHub → Cloudflare 自动发布。本轮沿用 GitHub 验证后由控制方通过 API 更新现有 `baishi-wending` Worker 的方式。`wrangler.jsonc` 中的 Static Assets 配置仅供以后单独迁移，不是本轮发布步骤。历史与本轮发行的区别、CI 和实际部署证据见 [部署说明](docs/DEPLOYMENT.md)。
+**1.2.0 纸页界面已正式上线。** [PR #2](https://github.com/ct1150/wending/pull/2) 已合并，实际生产源码为 [`90bb910840e7c2b22c59e0421f111c4c1a7cb7c8`](https://github.com/ct1150/wending/commit/90bb910840e7c2b22c59e0421f111c4c1a7cb7c8)。PR 与 main CI 成功后，通过 API 手动更新现有 `baishi-wending` 普通 Worker；生产 health 与游戏内下载均匹配精确源码产物。生产桌面验收覆盖旧存档继续、剧情与修行结果、键盘焦点和刷新恢复；320px、深色实际外观、真实手机、辅助技术和真人 20–30 分钟节奏仍未验收。
+
+现有生产站由普通 Cloudflare Worker 返回内嵌离线 HTML，计入 Workers 请求额度；具体额度以账号套餐为准。GitHub → Cloudflare 自动发布未配置，`wrangler.jsonc` 中的 Static Assets 配置供以后单独迁移。历史与本轮发行的区别、CI、实际部署和覆盖边界见 [部署说明](docs/DEPLOYMENT.md) 与 [验收记录](docs/QA_REPORT.md)。后续文档提交不改变生产源码或 health 元数据。
