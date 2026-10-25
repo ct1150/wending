@@ -2,9 +2,18 @@
 
 Plans: [first release](superpowers/plans/2026-10-24-first-release.md) · [1.1.0 narrative upgrade](superpowers/plans/2026-10-25-narrative-adventure.md)
 
-Current documentation date: 2026-10-25 (Shanghai). **2.0.0 dialogue journey is deployed**, with actual runtime source `4dadfd046f1e1413e721a5679745272ef22e07fb`. Final review, fresh release gate, GitHub PR/CI/merge, exact-source Worker publication, production HTTP and the desktop UI paths below are verified. Remaining unsupported/unobserved acceptance is explicit in [QA](QA_REPORT.md). See [design](superpowers/specs/2026-10-25-dialogue-only-design.md), [implementation plan](superpowers/plans/2026-10-25-dialogue-only.md) and [current spec](PRODUCT_SPEC.md).
+Current documentation date: 2026-10-25. **3.0.0 human cultivation chapter is in release validation.** The user accepted the source-grounded diagnosis and asked to continue implementation. See [current design](superpowers/specs/2026-10-25-cultivation-design.md), [implementation plan](superpowers/plans/2026-10-25-cultivation.md) and [current spec](PRODUCT_SPEC.md). Results below are versioned; prior releases do not certify v4.
 
-## Current production: Dialogue 2.0.0 publication — 2026-10-25 (Shanghai)
+## 3.0.0 human cultivation chapter — 2026-10-25
+
+- Real remote base: `4119a9a5780b5d5478f320b69d44670428cab1cb`; all 79 source blobs verified before editing. Local git history is a synthetic review snapshot and must never be pushed directly.
+- Scope: a complete repeatable mortal → qi → foundation → ending → rebirth chapter, with meaningful preparation, explicit risk and elapsed time. The higher-realm remake remains future work.
+- Fresh games use v4 cultivation. Existing v1/v2/v3 saves retain their own engines and explicit restart offers the new chapter. No automatic cross-story rewriting.
+- Implementation separates authored content, engine/time model, strict save validation and minimal narrative UI. All 53 scenes are complete; three expeditions, two foundation methods, meaningful failure and new-life progression use the actual public state machine.
+- Final local `npm run release` passed 23 test files, 55 JavaScript syntax checks and the 634374-byte offline build at UTC 15:26:23.116. Focused v4 run passed 50 behavioral cases. Independent review traversed 240 complete lives / 5606 choices / all 53 scenes and separately checked two-life irreversible ruins plus third-life startup. Explicit red→green regressions cover the discovered dead end, deadline feedback, heavy injury and zero-time healing; details and limits are in QA.
+- Publication remains separately verified: use the real remote parent/tree, PR and CI, then package against the actual merged source SHA. Browser acceptance and live deployment evidence do not follow merely from local tests.
+
+## Historical production: Dialogue 2.0.0 publication — 2026-10-25 (Shanghai)
 
 - Final independent review blockers were corrected: unknown legacy valley finale provenance, a shared 1,000,000-character save boundary with atomic action/rebirth rejection and derived UTF-8 file guard, plus preconfirmation rejection of noncanonical near-limit v3 imports. Scoped re-review is clear. Valid complete history is preserved; full capacity may block further history growth rather than truncate it.
 - Controller's final fresh `npm run release` passed 20/20 test files and 48 JavaScript syntax checks; offline HTML is 477041 bytes, SHA-256 `4d02474e6b6313e845ba995794f0c6e9d2fcce090450393125d6ca101ed7fcd0`, metadata UTC `2026-10-25T12:21:24.209Z` / Shanghai20:21:24.209. File count is not behavioral-case count.

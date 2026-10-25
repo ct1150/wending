@@ -35,9 +35,9 @@ export function readLegacyBackup(storage) {
  let record;
  try { record=JSON.parse(raw); } catch { throw new Error('旧存档备份无法解析，请先导出备份。'); }
  if(!record || typeof record.originalRaw!=='string' || typeof record.currentRaw!=='string' || typeof record.previousRaw!=='string' || (record.checkpointRaw!==null && typeof record.checkpointRaw!=='string') || (record.preparedRaw!==null && typeof record.preparedRaw!=='string'))throw new Error('旧存档备份结构无效，请先导出。');
- if(deserializeGame(record.currentRaw).version===3 || deserializeGame(record.previousRaw).version===3)throw new Error('较新旧人生备份无效。');
- if(deserializeGame(record.originalRaw).version===3)throw new Error('旧存档备份来源无效。');
- if(record.checkpointRaw && deserializeGame(record.checkpointRaw).version===3)throw new Error('旧人生交接检查点无效。');
+ if(![1,2].includes(deserializeGame(record.currentRaw).version) || ![1,2].includes(deserializeGame(record.previousRaw).version))throw new Error('较新旧人生备份无效。');
+ if(![1,2].includes(deserializeGame(record.originalRaw).version))throw new Error('旧存档备份来源无效。');
+ if(record.checkpointRaw && ![1,2].includes(deserializeGame(record.checkpointRaw).version))throw new Error('旧人生交接检查点无效。');
  if(Boolean(record.checkpointRaw)!==Boolean(record.preparedRaw))throw new Error('交接备份缺少旧人生或新人生。');
  if(record.preparedRaw){
   const target=deserializeGame(record.preparedRaw),checkpoint=deserializeGame(record.checkpointRaw);

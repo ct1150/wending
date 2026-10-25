@@ -238,15 +238,17 @@ dialog .button:hover:not(:disabled) { background: var(--paper-hover); box-shadow
 }
 
 /* The dialogue life is one continuous page, with only the current actions. */
-.journey { max-width: 38em; margin-inline: auto; }
+.journey { min-width: 0; max-width: 38em; margin-inline: auto; }
 .journey-identity, .journey-location { color: var(--muted); font-size: 13px; }
-.journey-identity { margin-bottom: 26px; }
+.journey-identity { margin-bottom: 26px; line-height: 1.8; font-variant-numeric: tabular-nums; }
+.journey-current .journey-identity { margin-bottom: 9px; }
 .journey-block { font: 18px/2.05 var(--serif); margin: 0 0 24px; white-space: pre-line; scroll-margin-top: 24px; }
 .journey-voice { display: block; color: var(--muted); font: 13px/1.8 var(--sans); margin-bottom: 5px; }
 .journey-action { border-inline-start: 2px solid var(--line2); padding-inline-start: 16px; }
 .journey-result { color: var(--text); }
 .journey-history { padding-bottom: 8px; margin-bottom: 34px; border-bottom: 1px solid var(--line); }
 .journey-current h2 { font: 28px/1.6 var(--serif); margin: 8px 0 26px; scroll-margin-top: 24px; }
+.journey-goal { color: var(--muted); font-size: 14px; line-height: 1.8; margin: -12px 0 26px; }
 .journey-choices { display: grid; grid-template-columns: minmax(0, 1fr); gap: 14px; margin-top: 30px; }
 .journey-choice { display: block; min-width: 0; width: 100%; min-height: 44px; text-align: left; white-space: normal; padding: 16px 18px; border: 1px solid var(--line2); border-radius: 4px; background: transparent; color: var(--text); line-height: 1.7; overflow-wrap: anywhere; }
 .journey-choice:hover:not(:disabled) { background: var(--paper-hover); border-color: var(--jade); }
@@ -255,6 +257,8 @@ dialog .button:hover:not(:disabled) { background: var(--paper-hover); box-shadow
 .journey-choice-detail { font-size: 13px; color: var(--muted); margin-top: 6px; }
 .journey-choice-reason { font-size: 13px; color: var(--red); margin-top: 6px; }
 .journey-ending { font: 18px/2 var(--serif); margin-block: 28px; }
+.journey-ending h3 { font: inherit; margin-bottom: 10px; }
+.journey-ending p + p { margin-top: 12px; }
 @media (max-width: 460px) {
   .journey-block { font-size: 17px; }
   .journey-current h2 { font-size: 25px; }

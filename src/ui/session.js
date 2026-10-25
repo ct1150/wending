@@ -3,6 +3,8 @@ import { loadFromStorage, saveToStorage, readLegacyBackup, writeLegacyBackup } f
 import { serializeGame, deserializeGame } from '../game/save-format.js';
 import { migrateLegacyLife } from '../game/journey/migration.js';
 
+const isLegacyLife = state => state?.version === 1 || state?.version === 2;
+
 export function bootstrapSession(storage, options = {}) {
  let rawCorruptSave=null;
  try {
@@ -11,7 +13,7 @@ export function bootstrapSession(storage, options = {}) {
   const loaded=loadFromStorage(captured);
   if(loaded){
    const session={status:'loaded',state:loaded,rawCorruptSave:null,error:'',saved:true,storageRaw:rawCorruptSave};
-   if(loaded.version!==3){
+   if(isLegacyLife(loaded)){
     session.originalLegacyRaw=rawCorruptSave;
     return inspectLegacyBackup(session,source);
    }
@@ -39,7 +41,7 @@ function inspectLegacyBackup(session,storage){
 // An explicit recovery restores already-committed choices; it never replays an
 // action, chooses a reward, advances RNG or migrates the life automatically.
 export function recoverLegacySession(session,storage){
- if(session.status==='blocked'||!session.state||session.state.version===3)return session;
+ if(session.status==='blocked'||!isLegacyLife(session.state))return session;
  let next=session.backupError?inspectLegacyBackup(session,storage):{...session};
  if(next.backupError)return next;
  if(!next.pendingLegacyRaw)return {...next,error:next.legacyBackup?.preparedRaw?next.error:'',saved:next.legacyBackup?.preparedRaw?false:serializeGame(next.state)===serializeGame(deserializeGame(next.storageRaw))};
@@ -55,11 +57,11 @@ function backupFor(session,currentRaw){
 export function persistSession(session,storage){
  if(session.status==='blocked'||!session.state||session.pendingLegacyRaw)return session;
  // A prepared handoff must use its explicit retry, never an ordinary autosave.
- if(session.legacyBackup?.preparedRaw && session.state.version!==3)return session;
+ if(session.legacyBackup?.preparedRaw && isLegacyLife(session.state))return session;
  let next={...session};
  try{
   const raw=serializeGame(session.state);
-  if(session.state.version!==3 && session.originalLegacyRaw){
+  if(isLegacyLife(session.state) && session.originalLegacyRaw){
    if(session.backupError)throw new Error(session.backupError);
    next.legacyBackup=backupFor(session,raw);
    writeLegacyBackup(next.legacyBackup,storage);
@@ -69,7 +71,7 @@ export function persistSession(session,storage){
  }catch(error){return {...next,error:error.code==='SAVE_SIZE_LIMIT'?`${error.message} 当前存档与备份均未替换，请恢复已有的有效存档。`:`自动保存暂不可用：${error.message}。请导出存档备份。`,saved:false};}
 }
 export function migrateSession(session,command,storage){
- if(session.status==='blocked'||!session.state||session.state.version===3)return session;
+ if(session.status==='blocked'||!isLegacyLife(session.state))return session;
  let next=session.backupError?inspectLegacyBackup(session,storage):{...session};
  if(next.pendingLegacyRaw)return next;
  try{
