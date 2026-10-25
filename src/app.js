@@ -1,6 +1,12 @@
+import { readLegacyBackup } from './game/persistence.js';
 import { REALMS, PATHS, ORIGINS, WORLDS, ITEMS, LEGACIES, EVENTS, ENEMIES, CHALLENGES, WORLD_FLAGS } from './game/content.js';
-import { createGame, getStats, getActionInfo, act, getEventChoices, chooseEvent, combatAction, equipItem, selectLegacy, reincarnate, serialize, deserialize, getStoryView, chooseStory } from './game/engine.js';
-import { bootstrapSession, persistSession } from './ui/session.js';
+import { getStats, getActionInfo, act, getEventChoices, chooseEvent, combatAction, equipItem, selectLegacy, getStoryView, chooseStory } from './game/engine.js';
+import { createJourney, getJourneyView, chooseJourney } from './game/journey/engine.js';
+import { serializeGame, deserializeGame } from './game/save-format.js';
+import { MAX_SAVE_FILE_BYTES } from './game/save-size.js';
+import { getLegacyBridgeChoices } from './game/journey/migration.js';
+import { renderJourney } from './ui/journey.js';
+import { bootstrapSession, persistSession, migrateSession, recoverLegacySession } from './ui/session.js';
 import { icon } from './ui/icons.js';
 import { renderCombatActions } from './ui/combat.js';
 import { getPrimaryResult, renderStoryScene, renderStoryRecords, renderStoryOutcome, renderStoryInterruption } from './ui/story.js';
@@ -20,7 +26,7 @@ const storage = {
 function newSeed() {
   return window.crypto?.getRandomValues ? String(window.crypto.getRandomValues(new Uint32Array(1))[0]) : String(Date.now());
 }
-let session = bootstrapSession(storage, { seed: newSeed() });
+let session = bootstrapSession(storage, { seed: newSeed(), createFresh: createJourney });
 let state = session.state;
 let view = 'adventure';
 let preparingLife = false;
@@ -29,6 +35,7 @@ let lastSaved = session.saved;
 let toastTimer;
 let dialogConfirm = null;
 const openPanels = new Map();
+const isJourney = game => game?.version === 3;
 let setup = { name: '云归', originId: 'village', pathId: 'sword', legacyIds: [] };
 
 function notify(message, error = false) {
@@ -45,24 +52,44 @@ function persist() {
   saveError = session.error;
 }
 
-function replaceSession(next) {
-  session = { status: 'fresh', state: next, rawCorruptSave: null, error: '', saved: false };
+function replaceSession(next, originalRaw = null) {
+  session = { status: 'fresh', state: next, rawCorruptSave: null, error: '', saved: false, storageRaw: originalRaw, ...(next.version !== 3 && originalRaw !== null ? { originalLegacyRaw: originalRaw } : {}) };
   openPanels.clear();
   preparingLife = false;
   view = 'adventure';
-  update(next, { message: false, focusStory: true, resetSupport: true });
+  update(next, { message: false, focusStory: true, resetSupport: true, currentContext: true });
 }
 
 function beginRecommendedLife() {
-  replaceSession(createGame({ name: '云归', originId: 'village', pathId: 'sword', legacyIds: [], seed: newSeed() }));
-  $('#story-scene-title')?.focus({ preventScroll: true });
+  replaceSession(createJourney({ seed: newSeed() }));
+  $('#journey-current-title')?.focus({ preventScroll: true });
   window.scrollTo({ top: 0, behavior: 'instant' });
 }
 
 function update(next, options = {}) {
+  // Reject an unimportable candidate before adopting it, including old-life
+  // actions. Ordinary storage failures still retain exportable in-memory play.
+  try { serializeGame(next); }
+  catch (error) {
+    if (error.code !== 'SAVE_SIZE_LIMIT') throw error;
+    notify(`${error.message} 本次行动未提交，原有进度与完整历史保持不变；可导出当前存档备份。`, true);
+    return;
+  }
   const previous = state;
-  const beforeStory = previous && getStoryView(previous);
-  const beforeResult = getPrimaryResult(beforeStory, previous?.run.log || []);
+  if (isJourney(next)) {
+    const beforeIds = new Set(isJourney(previous) ? getJourneyView(previous).blocks.map(block => block.id) : []);
+    const journey = getJourneyView(next);
+    const consequence = journey.blocks.find(block => block.kind === 'result' && !beforeIds.has(block.id));
+    state = next;
+    if (!options.alreadyPersisted) persist();
+    if (options.goAdventure) view = 'adventure';
+    render({ resetSupport: options.resetSupport });
+    if (view === 'adventure') focusAdventure(!options.currentContext && consequence ? document.getElementById(`journey-block-${consequence.id}`) : $('#journey-current-title'));
+    if (options.message === false) { clearTimeout(toastTimer); $('#toast').classList.remove('show'); }
+    return;
+  }
+  const beforeStory = previous && !isJourney(previous) && getStoryView(previous);
+  const beforeResult = getPrimaryResult(beforeStory, previous?.run?.log || []);
   const afterStory = getStoryView(next);
   const active = document.activeElement;
   const controlAttribute = ['data-action', 'data-combat', 'data-reward', 'data-equip'].find(name => active?.hasAttribute(name));
@@ -71,12 +98,12 @@ function update(next, options = {}) {
   state = next;
   persist();
   if (options.goAdventure) view = 'adventure';
-  render({ resetSupport: options.resetSupport || previous?.meta.generation !== next.meta.generation });
+  render({ resetSupport: options.resetSupport || previous?.meta?.generation !== next.meta.generation });
   if (view === 'adventure') {
     const resultChanged = JSON.stringify(beforeResult) !== JSON.stringify(getPrimaryResult(afterStory, next.run.log));
     const sceneChanged = beforeStory?.sceneId !== afterStory?.sceneId;
     const phaseChanged = previous?.phase !== next.phase;
-    const locationChanged = previous?.run.worldId !== next.run.worldId;
+    const locationChanged = previous?.run?.worldId !== next.run.worldId;
     const control = controlAttribute && $(`[${controlAttribute}="${controlValue}"]${controlSlot !== null ? `[data-slot="${controlSlot}"]` : ''}:not(:disabled)`);
     let target;
     if (['ended', 'victory'].includes(next.phase)) target = phaseChanged ? $('#ending-title') : control || $('#selected-reward') || $('[data-rebirth]:not(:disabled)') || $('#ending-title');
@@ -104,8 +131,9 @@ function attempt(callback, options) {
 
 function openDialog(title, body, actions = '') {
   const dialog = $('#dialog');
-  dialog.innerHTML = `<header class="dialog-header"><h2 id="dialog-title">${esc(title)}</h2><button class="icon-button" data-close-dialog aria-label="关闭">${icon('close')}</button></header><div class="dialog-body">${body}</div>${actions ? `<footer class="dialog-actions">${actions}</footer>` : ''}`;
+  dialog.innerHTML = `<header class="dialog-header"><h2 id="dialog-title" tabindex="-1">${esc(title)}</h2><button class="icon-button" data-close-dialog aria-label="关闭">${icon('close')}</button></header><div class="dialog-body">${body}</div>${actions ? `<footer class="dialog-actions">${actions}</footer>` : ''}`;
   if (!dialog.open) dialog.showModal();
+  $('#dialog-title')?.focus({ preventScroll: true });
 }
 
 function confirmAction(title, body, callback, label = '确认继续') {
@@ -113,22 +141,28 @@ function confirmAction(title, body, callback, label = '确认继续') {
   openDialog(title, body, `<button class="button ghost" data-close-dialog>再想一想</button><button class="button primary" data-confirm>${esc(label)}</button>`);
 }
 
+function showMore() {
+  openDialog('更多', '<p>岁月只在落下一项选择时前行。阅读和查看存档不会推进故事。</p>', '<button class="button" data-help>入世须知</button><button class="button" data-view="settings">存档与设置</button>');
+}
+
 function showHelp() {
-  openDialog('入世须知', `<p>你的这一世，从药谷旧火开始。相逢、调查与取舍，会改变谷地，也改变后来人要面对的事。</p><div class="help-tip"><strong>先看眼前之事，再落下一念。</strong><br>场景与目标指明眼前方向；选项会列出所需岁月、灵石、药材、气血或命损。无法选择的缘由也会写明。选择的后果会留在正文中，手记、人物、线索与生平都在页面下方「回看」中。资源、修为和自身余寿在「状态」中。</div><div class="help-tip"><strong>调查有取舍，岁月只有一条河。</strong><br>药谷旧火的三条调查线最多追查两条。修炼、外出和旅行也推进世界年份，可能令最后一夜提前到来；阅读、看手记与换装不耗时。倒计时按游戏中的年计算。</div><div class="help-tip"><strong>修行是此生的另一条路。</strong><br>在页面下方「修行」中闭关、休息、炼丹或自由历练。修为满足条件后可尝试破境，突破提高寿限。主线结果确定后，仍可继续修行、问道三界，或归隐转世。</div><div class="help-tip"><strong>功法与法器要亲自装配。</strong><br>从「修行 → 功法与法器」中选择一门本命功法、两个神通与一件法器，再返回当前剧情。身在幽冥或天界时，可回看药谷故事；回到人间才能继续作出谷中的选择。</div><div class="help-tip"><strong>留意余寿和气血。</strong><br>燃寿强攻损耗寿元，延寿丹每世最多服用两次。战斗需先分胜负或遁走，才能继续剧情。</div><div class="help-tip"><strong>转世，走进自己改变的世界。</strong><br>医谷共守、宗门接管与焚种迁民，会通向不同的后世事务。人物随世界年份老去，新的你也有新的身份。寿尽、陨落或归隐后，从真实经历产生的候选中选一项传承；下世最多携带两项已得传承。世界因果与三界道证自动延续。</div><div class="help-tip"><strong>问鼎三界。</strong><br>取得人间、幽冥、天界的三枚道证，修至登仙，在天界挑战三界共主。可随时从「修行 → 三界山河」查看长远目标。</div><p>旧存档的当世沿旧途继续，结束此生并转世后进入新篇，不会补写未曾经历的药谷往事。进度自动保存在当前浏览器；更换设备前，请在页首「存档与设置」中导出备份。</p>`, '<button class="button primary" data-close-dialog>我已明了</button>');
+  if (isJourney(state)) return openDialog('入世须知', '<p>先读眼前的处境，再选择自己的做法。每项行动会写明要付出的代价；不能行动时，也会说明缘由。</p><p>选择后，承担和后果会留在正文里。向上阅读就能回看已经发生的事。阅读、打开帮助和刷新页面不会消耗岁月，也不会重抽机会。</p><p>进度自动保存在当前浏览器。更换设备或离线游玩前，请从「更多 → 存档与设置」导出备份；导入存档会先检查内容，再请你确认替换。</p>', '<button class="button primary" data-close-dialog>继续阅读</button>');
+  openDialog('入世须知', `<p>你的这一世，从药谷旧火开始。相逢、调查与取舍，会改变谷地，也改变后来人要面对的事。</p><div class="help-tip"><strong>先看眼前之事，再落下一念。</strong><br>场景与目标指明眼前方向；选项会列出所需岁月、灵石、药材、气血或命损。无法选择的缘由也会写明。选择的后果会留在正文中，手记、人物、线索与生平都在页面下方「回看」中。资源、修为和自身余寿在「状态」中。</div><div class="help-tip"><strong>调查有取舍，岁月只有一条河。</strong><br>药谷旧火的三条调查线最多追查两条。修炼、外出和旅行也推进世界年份，可能令最后一夜提前到来；阅读、看手记与换装不耗时。倒计时按游戏中的年计算。</div><div class="help-tip"><strong>修行是此生的另一条路。</strong><br>在页面下方「修行」中闭关、休息、炼丹或自由历练。修为满足条件后可尝试破境，突破提高寿限。主线结果确定后，仍可继续修行、问道三界，或归隐转世。</div><div class="help-tip"><strong>功法与法器要亲自装配。</strong><br>从「修行 → 功法与法器」中选择一门本命功法、两个神通与一件法器，再返回当前剧情。身在幽冥或天界时，可回看药谷故事；回到人间才能继续作出谷中的选择。</div><div class="help-tip"><strong>留意余寿和气血。</strong><br>燃寿强攻损耗寿元，延寿丹每世最多服用两次。战斗需先分胜负或遁走，才能继续剧情。</div><div class="help-tip"><strong>转世，走进自己改变的世界。</strong><br>医谷共守、宗门接管与焚种迁民，会通向不同的后世事务。人物随世界年份老去，新的你也有新的身份。寿尽、陨落或归隐后，先从真实经历产生的候选中明确选择一项旧途奖励，再按提示交接进入对话新人生；下一世只沿用一项情境方法，已得传承历史、世界因果与三界道证保留。</div><div class="help-tip"><strong>问鼎三界。</strong><br>取得人间、幽冥、天界的三枚道证，修至登仙，在天界挑战三界共主。可随时从「修行 → 三界山河」查看长远目标。</div><p>旧存档的当世沿旧途继续，结束此生并转世后进入新篇，不会补写未曾经历的药谷往事。进度自动保存在当前浏览器；更换设备前，请在页首「更多 → 存档与设置」中导出备份。</p>`, '<button class="button primary" data-close-dialog>我已明了</button>');
 }
 
 function render({ resetSupport = false, focusSelector = null } = {}) {
   if (resetSupport) openPanels.clear();
   else document.querySelectorAll('details[data-panel-key]').forEach(panel => openPanels.set(panel.dataset.panelKey, panel.open));
-  const story = state && getStoryView(state);
+  const journey = isJourney(state) ? getJourneyView(state) : null;
+  const story = state && !journey && getStoryView(state);
   const timed = story?.id === 'old-fire' && story.status === 'active' && story.deadlineYear !== null;
-  const clock = timed ? `距封谷 ${num(Math.max(0, story.yearsRemaining))} 年` : state ? `第 ${num(state.meta.generation)} 世 · ${num(state.run.age)} 岁` : '旧存档待恢复';
+  const clock = journey ? `道历 ${num(journey.summary.year)} 年` : timed ? `距封谷 ${num(Math.max(0, story.yearsRemaining))} 年` : state ? `第 ${num(state.meta.generation)} 世 · ${num(state.run.age)} 岁` : '旧存档待恢复';
   const standalone = view !== 'adventure';
   const returnLabel = state?.phase === 'combat' ? '返回未完成战斗' : state?.phase === 'event' ? '返回未完成际遇' : preparingLife ? '返回转世选择' : '返回当前剧情';
-  $('#app').innerHTML = `<div class="paper-page"><header class="paper-top"><div><h1>百世问鼎</h1><p class="paper-clock">${esc(clock)}</p></div><nav class="paper-tools" aria-label="帮助与设置"><button data-help>帮助</button><button data-view="settings" ${view === 'settings' ? 'aria-current="page"' : ''}>存档与设置</button></nav></header>
-    <main id="main-content" class="paper-main" tabindex="-1">${saveError ? `<div class="notice error" role="alert"><p>${esc(saveError)}${session.status === 'blocked' ? ' 原存档未被覆盖，自动保存已暂停。' : ''}</p>${session.rawCorruptSave !== null ? '<button data-export-corrupt class="button">备份原存档</button>' : ''}${state ? '<button data-export class="button">导出当前进度</button>' : ''}</div>` : ''}
+  $('#app').innerHTML = `<div class="paper-page"><header class="paper-top"><div><h1>百世问鼎</h1><p class="paper-clock">${esc(clock)}</p></div><nav class="paper-tools" aria-label="帮助与存档"><button data-more>更多</button></nav></header>
+    <main id="main-content" class="paper-main" tabindex="-1">${saveError ? `<div class="notice error" role="alert"><p>${esc(saveError)}${session.status === 'blocked' ? ' 原存档未被覆盖，自动保存已暂停。' : ''}</p>${session.rawCorruptSave !== null ? '<button data-export-corrupt class="button">备份原存档</button>' : ''}${state ? '<button data-export class="button">导出当前进度</button>' : ''}${session.pendingLegacyRaw || session.backupError ? '<button data-recover-legacy class="button">恢复较新旧人生／重试读取备份</button><button data-export-legacy class="button">导出较新旧人生备份</button>' : ''}</div>` : ''}
     ${standalone ? `<div class="paper-return"><button class="small-button" data-view="adventure">${icon('arrow', 14)}${esc(returnLabel)}</button></div>` : ''}
-    ${view === 'settings' ? renderSettings() : session.status === 'blocked' ? renderRecovery() : preparingLife ? renderSetup() : renderView()}
+    ${view === 'settings' ? renderSettings() : session.status === 'blocked' ? renderRecovery() : journey ? renderJourney(journey) : preparingLife ? renderSetup() : renderView()}
     </main><footer class="paper-footer">${lastSaved && !saveError ? '进度已自动保存' : state ? '请及时导出备份' : '岁月只在落子时前行'}</footer></div>`;
   document.querySelectorAll('details[data-panel-key]').forEach(panel => {
     if (openPanels.has(panel.dataset.panelKey)) panel.open = openPanels.get(panel.dataset.panelKey);
@@ -198,7 +232,7 @@ function renderAdventure() {
     const latest = state.run.log.at(-1);
     content = `<section class="paper-free"><p class="story-location">${esc(row(WORLDS, state.run.worldId).location)}</p><h2>此生沿旧途继续</h2><p>你的经历、资源与因果完整保留。可在下方「修行」继续历练；结束此生并转世后进入新篇。</p>${latest ? `<section class="paper-feedback" role="status"><h3 id="latest-log-title" tabindex="-1">${esc(latest.title)}</h3><p>${esc(latest.text)}</p></section>` : ''}</section>`;
   }
-  return `${content}${renderUtilities(story)}`;
+  return `<p class="legacy-rule-note">此生沿旧规继续；结束后直接交接到对话新人生。备份与重新开始仍在「更多」中。</p>${content}${renderUtilities(story)}`;
 }
 
 function renderLog(limit = 5) {
@@ -236,7 +270,7 @@ function renderEnding() {
   const summary = state.summary;
   const victory = state.phase === 'victory';
   const options = summary.legacyOptions.filter(id => row(LEGACIES, id));
-  return `<section class="ending"><span class="eyebrow">${victory ? '三界归一 · 万世有终' : '一世因果，皆有回响'}</span><div class="ending-symbol" aria-hidden="true">${victory ? '鼎' : '归'}</div><h2 id="ending-title" tabindex="-1">${victory ? '你已问鼎三界' : esc(summary.title)}</h2><p>${esc(summary.text)}</p>${renderStoryOutcome(getStoryView(state))}<div class="ending-stats"><div><b>${num(summary.age)}</b><span>此生岁月</span></div><div><b>${esc(REALMS[summary.realmIndex].name)}</b><span>最终境界</span></div><div><b>${state.meta.proofs.length} / 3</b><span>三界道证</span></div></div>${summary.deeds.length ? `<div class="deeds">${summary.deeds.slice(-8).map(deed => `<span class="deed">${esc(deed)}</span>`).join('')}</div>` : ''}${summary.worldChanges.length ? `<p class="tiny muted">${esc(summary.worldChanges.slice(-2).join(' '))}</p>` : ''}${summary.selectedLegacyId ? `<div id="selected-reward" class="selected-reward" tabindex="-1">${icon('check', 16)} 已将「${esc(row(LEGACIES, summary.selectedLegacyId).name)}」记入神魂传承。</div>` : options.length ? `<div class="selection-title">${icon('lotus', 15)}选择一项此生传承</div><div class="legacy-select-grid">${options.map(id => { const legacy = row(LEGACIES, id); return `<button class="select-card" data-reward="${id}"><h3>${esc(legacy.name)}</h3><p>${esc(legacy.description)}</p><p class="text-gold">${esc(legacy.source)}</p></button>`; }).join('')}</div>` : '<p class="tiny muted">此生暂无新的神魂传承。已获得的道证与世界因果会继续保留。</p>'}${victory ? '<p>每一世未竟的心愿，都汇入了此刻。旧日天规由你重写，轮回的故事仍可继续。</p>' : ''}<div class="ending-button-row"><button class="button primary large" data-rebirth ${options.length && !summary.selectedLegacyId ? 'disabled' : ''}>${icon('refresh', 17)} ${victory ? '再启一世，续写传说' : '携此因果，再入轮回'}</button><button class="button ghost" data-export>${icon('download', 16)}备份此刻</button></div></section>`;
+  return `<section class="ending"><span class="eyebrow">${victory ? '三界归一 · 万世有终' : '一世因果，皆有回响'}</span><div class="ending-symbol" aria-hidden="true">${victory ? '鼎' : '归'}</div><h2 id="ending-title" tabindex="-1">${victory ? '你已问鼎三界' : esc(summary.title)}</h2><p>${esc(summary.text)}</p>${renderStoryOutcome(getStoryView(state))}<p>此生先按旧规择定一项真实传承。下一世只沿用一项情境方法，收藏、道证、因果与生平全部保留；交接前会先保存可恢复的旧档备份。</p><div class="ending-stats"><div><b>${num(summary.age)}</b><span>此生岁月</span></div><div><b>${esc(REALMS[summary.realmIndex].name)}</b><span>最终境界</span></div><div><b>${state.meta.proofs.length} / 3</b><span>三界道证</span></div></div>${summary.deeds.length ? `<div class="deeds">${summary.deeds.slice(-8).map(deed => `<span class="deed">${esc(deed)}</span>`).join('')}</div>` : ''}${summary.worldChanges.length ? `<p class="tiny muted">${esc(summary.worldChanges.slice(-2).join(' '))}</p>` : ''}${summary.selectedLegacyId ? `<div id="selected-reward" class="selected-reward" tabindex="-1">${icon('check', 16)} 已将「${esc(row(LEGACIES, summary.selectedLegacyId).name)}」记入神魂传承。</div>` : options.length ? `<div class="selection-title">${icon('lotus', 15)}选择一项此生传承</div><div class="legacy-select-grid">${options.map(id => { const legacy = row(LEGACIES, id); return `<button class="select-card" data-reward="${id}"><h3>${esc(legacy.name)}</h3><p>${esc(legacy.description)}</p><p class="text-gold">${esc(legacy.source)}</p></button>`; }).join('')}</div>` : '<p class="tiny muted">此生暂无新的神魂传承。已获得的道证与世界因果会继续保留。</p>'}${victory ? '<p>每一世未竟的心愿，都汇入了此刻。旧日天规由你重写，轮回的故事仍可继续。</p>' : ''}<div class="ending-button-row">${getLegacyBridgeChoices(state).map(choice => `<button class="button primary large" data-legacy-bridge="${esc(choice.id)}">${esc(choice.label)}<span class="tiny">${esc(choice.detail)}</span></button>`).join('')}<button class="button ghost" data-export-legacy>导出旧原档与交接备份</button><button class="button ghost" data-export>${icon('download', 16)}备份此刻</button></div></section>`;
 }
 
 function renderWorlds() {
@@ -284,7 +318,7 @@ function renderPastLife(life) {
 }
 
 function renderSettings() {
-  return `${heading('存档与设置', '将这一刻的修行妥善收藏，待下一次回来继续。')}<div class="settings-grid"><section class="settings-row"><div><h3>导出修行存档</h3><p>下载包含当前人生、传承、世界因果和随机状态的备份，可导入到另一台设备。</p></div><button class="button primary" data-export ${state ? '' : 'disabled'}>${icon('download', 16)}导出存档</button></section><section class="settings-row"><div><h3>导入已有存档</h3><p>选择之前导出的 JSON 文件。通过完整校验后，再确认替换当前修行进度。</p></div><button class="button" data-import>${icon('upload', 16)}选择存档</button></section>${window.location.protocol !== 'file:' ? '<section class="settings-row"><div><h3>下载离线版</h3><p>保存为一个 HTML 文件，断网也能继续修行。将当前存档一并导出，再在离线版中导入。</p></div><a class="button" href="./baishi-wending-offline.html" download="百世问鼎-离线版.html">' + icon('download', 16) + '下载游戏</a></section>' : ''}<section class="settings-row"><div><h3>入世指南</h3><p>了解药谷主线、调查取舍、共同岁月与转世后的故事，也可查看修行、装备与三界规则。</p></div><button class="button" data-help>${icon('help', 16)}查看指南</button></section><section class="settings-row"><div><h3>重启所有轮回</h3><p>替换这台设备上的当前存档，重新开始第一世。建议先导出备份。</p></div><button class="button danger" data-reset>${icon('refresh', 16)}重新开始第一世</button></section></div><p class="save-info">药谷旧火 · 单机本地存档<br>存档不会上传至服务器。不同浏览器、域名或离线文件的存储彼此独立，请用导出与导入迁移。隐私模式或禁用本地存储时，请在离开前手动备份。</p>`;
+  return `${heading('存档与设置', '将这一刻的修行妥善收藏，待下一次回来继续。')}<button class="button" data-export-legacy>导出旧原档与交接备份</button><div class="settings-grid"><section class="settings-row"><div><h3>导出修行存档</h3><p>下载包含当前人生、传承、世界因果和随机状态的备份，可导入到另一台设备。</p></div><button class="button primary" data-export ${state ? '' : 'disabled'}>${icon('download', 16)}导出存档</button></section><section class="settings-row"><div><h3>导入已有存档</h3><p>选择之前导出的 JSON 文件。通过完整校验后，再确认替换当前修行进度。</p></div><button class="button" data-import>${icon('upload', 16)}选择存档</button></section>${window.location.protocol !== 'file:' ? '<section class="settings-row"><div><h3>下载离线版</h3><p>保存为一个 HTML 文件，断网也能继续修行。将当前存档一并导出，再在离线版中导入。</p></div><a class="button" href="./baishi-wending-offline.html" download="百世问鼎-离线版.html">' + icon('download', 16) + '下载游戏</a></section>' : ''}<section class="settings-row"><div><h3>入世指南</h3><p>${isJourney(state) ? '了解当前行动、选择的后果与进度保存。' : '了解药谷主线、调查取舍、共同岁月与转世后的故事，也可查看修行、装备与三界规则。'}</p></div><button class="button" data-help>${icon('help', 16)}查看指南</button></section><section class="settings-row"><div><h3>重启所有轮回</h3><p>替换这台设备上的当前存档，重新开始第一世。建议先导出备份。</p></div><button class="button danger" data-reset>${icon('refresh', 16)}重新开始第一世</button></section></div><p class="save-info">药谷旧火 · 单机本地存档<br>存档不会上传至服务器。不同浏览器、域名或离线文件的存储彼此独立，请用导出与导入迁移。隐私模式或禁用本地存储时，请在离开前手动备份。</p>`;
 }
 
 function downloadText(filename, text, mime = 'application/json;charset=utf-8') {
@@ -296,18 +330,13 @@ function downloadText(filename, text, mime = 'application/json;charset=utf-8') {
 
 function exportGame() {
   if (!state) return notify('尚无修行进度可导出。', true);
-  try { downloadText(`百世问鼎-第${state.meta.generation}世-${state.run.age}岁.json`, serialize(state)); notify('存档已导出，请妥善保存。'); }
-  catch (error) { notify(`导出失败：${error.message}`, true); }
-}
-
-function startGame() {
-  if (!preparingLife || !state || !['ended', 'victory'].includes(state.phase)) return;
   try {
-    const options = { ...setup, name: setup.name.trim() || '云归', seed: newSeed() };
-    replaceSession(reincarnate(state, options));
-    $('#main-content')?.focus({ preventScroll: true });
-    window.scrollTo({ top: 0, behavior: 'instant' });
-  } catch (error) { notify(error.message, true); }
+    const generation = isJourney(state) ? state.world.generation : state.meta.generation;
+    const age = isJourney(state) ? state.life.age : state.run.age;
+    downloadText(`百世问鼎-第${generation}世-${age}岁.json`, serializeGame(state));
+    notify('存档已导出，请妥善保存。');
+  }
+  catch (error) { notify(`导出失败：${error.message}`, true); }
 }
 
 document.addEventListener('input', event => { if (event.target.id === 'dao-name') setup.name = event.target.value; });
@@ -318,43 +347,77 @@ document.addEventListener('click', event => {
   const data = button.dataset;
   if ('closeDialog' in data) { $('#dialog').close(); dialogConfirm = null; return; }
   if ('confirm' in data) { const callback = dialogConfirm; dialogConfirm = null; $('#dialog').close(); callback?.(); return; }
+  if ('more' in data) return showMore();
   if ('help' in data) return showHelp();
   if ('view' in data) {
-    view = data.view; render();
-    if (view === 'adventure' && state && !preparingLife) focusAdventure($('#ending-title') || $('#combat-title') || $('#event-title') || $('#story-scene-title') || $('#main-content'));
+    $('#dialog').close(); dialogConfirm = null;
+    view = isJourney(state) && data.view !== 'settings' ? 'adventure' : data.view; render();
+    if (view === 'adventure' && state && !preparingLife) focusAdventure($('#journey-current-title') || $('#ending-title') || $('#combat-title') || $('#event-title') || $('#story-scene-title') || $('#main-content'));
     else { $('#main-content')?.focus({ preventScroll: true }); window.scrollTo({ top: 0, behavior: 'instant' }); }
     return;
   }
-  if ('path' in data && preparingLife) { setup.pathId = data.path; render({ focusSelector: `[data-path="${data.path}"]` }); return; }
-  if ('origin' in data && preparingLife) { setup.originId = data.origin; render({ focusSelector: `[data-origin="${data.origin}"]` }); return; }
-  if ('carry' in data && preparingLife) {
-    if (setup.legacyIds.includes(data.carry)) setup.legacyIds = setup.legacyIds.filter(id => id !== data.carry);
-    else if (setup.legacyIds.length >= 2) return notify('每一世最多携带两项传承，请先取消一项。', true);
-    else setup.legacyIds.push(data.carry);
-    render({ focusSelector: `[data-carry="${data.carry}"]` }); return;
+  if ('recoverLegacy' in data) {
+    session=recoverLegacySession({...session,state},storage);state=session.state;
+    lastSaved=session.saved;saveError=session.error;render();focusAdventure($('#ending-title') || $('#story-scene-title') || $('#main-content'));
+    if(session.error)notify(session.error,true);
+    return;
   }
-  if ('start' in data) return startGame();
-  if ('cancelSetup' in data) { preparingLife = false; render({ focusSelector: '#ending-title' }); return; }
-  if ('action' in data && state) {
-    const info = getActionInfo(state, data.action);
-    const runAction = () => attempt(() => act(state, { type: data.action }), { goAdventure: true, focusStory: true });
-    if (data.action === 'retire') return confirmAction('此生归隐', getStoryView(state) ? '结束这一世并结算已经完成的经历。尚未完成的谷中事务会留下未竟结果；已经确定的谷地结果不会被抹去。归隐本身不会发放奖励，已有的传承候选、世界因果和道证会保留。' : '结束这一世并结算已经完成的经历。旧途的真实经历、传承候选、世界因果和道证会保留，转世后进入新篇。归隐本身不会发放奖励。', runAction, '归隐并结算');
-    if (info.years >= getStats(state).remainingLife) return confirmAction('岁月将尽', `这次行动需要 ${info.years} 年，但你只剩 ${Math.max(0, getStats(state).remainingLife)} 年余寿。你会在完成前寿尽，无法获得本次收益。`, runAction, '走完此生');
-    runAction(); return;
+  if(session.pendingLegacyRaw && ['action','storyChoice','choice','combat','reward','equip','travel','challenge','finale','legacyBridge'].some(key=>key in data))return notify('请先恢复或导出较新的旧人生；它尚未替换当前档。',true);
+  if ('journeyChoice' in data && isJourney(state)) {
+    try {
+      const result = chooseJourney(state, { revision: Number(data.revision), sceneId: data.sceneId, choiceId: data.journeyChoice });
+      if (result.kind !== 'applied') return notify(result.message);
+      update(result.state, { goAdventure: true, message: false });
+    } catch (error) { notify(error.message || '这一步暂时无法进行。', true); }
+    return;
   }
-  if ('storyChoice' in data && state) return attempt(() => chooseStory(state, data.storyChoice), { goAdventure: true, focusStory: true, message: false });
-  if ('choice' in data && state) return attempt(() => chooseEvent(state, data.choice), { goAdventure: true, focusStory: true });
-  if ('combat' in data && state) return attempt(() => combatAction(state, data.combat), { goAdventure: true, focusStory: true });
-  if ('equip' in data && state) return attempt(() => equipItem(state, data.equip, Number(data.slot || 0)));
-  if ('reward' in data && state) return attempt(() => selectLegacy(state, data.reward), { goAdventure: true });
-  if ('rebirth' in data && state) { setup = { name: state.run.name, originId: state.run.originId, pathId: state.run.pathId, legacyIds: state.meta.legacyIds.slice(-2) }; preparingLife = true; view = 'adventure'; render({ focusSelector: '#dao-name' }); window.scrollTo({ top: 0, behavior: 'instant' }); return; }
-  if ('travel' in data && state) {
-    const go = () => attempt(() => act(state, { type: 'travel', worldId: data.travel }), { goAdventure: true });
-    if (getStats(state).remainingLife <= 2) return confirmAction('余寿不足', '游历两年将耗尽余寿，无法抵达目的地。仍要踏上这最后一程吗？', go, '踏上最后一程');
-    go(); return;
+  if (!isJourney(state)) {
+    if ('path' in data && preparingLife) { setup.pathId = data.path; render({ focusSelector: `[data-path="${data.path}"]` }); return; }
+    if ('origin' in data && preparingLife) { setup.originId = data.origin; render({ focusSelector: `[data-origin="${data.origin}"]` }); return; }
+    if ('carry' in data && preparingLife) {
+      if (setup.legacyIds.includes(data.carry)) setup.legacyIds = setup.legacyIds.filter(id => id !== data.carry);
+      else if (setup.legacyIds.length >= 2) return notify('每一世最多携带两项传承，请先取消一项。', true);
+      else setup.legacyIds.push(data.carry);
+      render({ focusSelector: `[data-carry="${data.carry}"]` }); return;
+    }
+    if ('cancelSetup' in data) { preparingLife = false; render({ focusSelector: '#ending-title' }); return; }
+    if ('action' in data && state) {
+      const info = getActionInfo(state, data.action);
+      const runAction = () => attempt(() => act(state, { type: data.action }), { goAdventure: true, focusStory: true });
+      if (data.action === 'retire') return confirmAction('此生归隐', getStoryView(state) ? '结束这一世并结算已经完成的经历。尚未完成的谷中事务会留下未竟结果；已经确定的谷地结果不会被抹去。归隐本身不会发放奖励，已有的传承候选、世界因果和道证会保留。' : '结束这一世并结算已经完成的经历。旧途的真实经历、传承候选、世界因果和道证会保留，转世后进入新篇。归隐本身不会发放奖励。', runAction, '归隐并结算');
+      if (info.years >= getStats(state).remainingLife) return confirmAction('岁月将尽', `这次行动需要 ${info.years} 年，但你只剩 ${Math.max(0, getStats(state).remainingLife)} 年余寿。你会在完成前寿尽，无法获得本次收益。`, runAction, '走完此生');
+      runAction(); return;
+    }
+    if ('storyChoice' in data && state) return attempt(() => chooseStory(state, data.storyChoice), { goAdventure: true, focusStory: true, message: false });
+    if ('choice' in data && state) return attempt(() => chooseEvent(state, data.choice), { goAdventure: true, focusStory: true });
+    if ('combat' in data && state) return attempt(() => combatAction(state, data.combat), { goAdventure: true, focusStory: true });
+    if ('equip' in data && state) return attempt(() => equipItem(state, data.equip, Number(data.slot || 0)));
+    if ('reward' in data && state) return attempt(() => selectLegacy(state, data.reward), { goAdventure: true });
+    if ('legacyBridge' in data && state) {
+      session=migrateSession({...session,state},{choiceId:data.legacyBridge,seed:newSeed()},storage);
+      lastSaved=session.saved;saveError=session.error;
+      if(session.state.version===3){openPanels.clear();preparingLife=false;view='adventure';update(session.state,{message:false,currentContext:true,resetSupport:true,alreadyPersisted:true});}
+      else {state=session.state;render();notify(session.error,true);}
+      return;
+    }
+    if ('travel' in data && state) {
+      const go = () => attempt(() => act(state, { type: 'travel', worldId: data.travel }), { goAdventure: true });
+      if (getStats(state).remainingLife <= 2) return confirmAction('余寿不足', '游历两年将耗尽余寿，无法抵达目的地。仍要踏上这最后一程吗？', go, '踏上最后一程');
+      go(); return;
+    }
+    if ('challenge' in data && state) return attempt(() => act(state, { type: 'challenge', challengeId: data.challenge }), { goAdventure: true });
+    if ('finale' in data && state) return confirmAction('最后的问鼎', '你将向三界共主发起决战。请确认气血充足、功法与法器已装配妥当。', () => attempt(() => act(state, { type: 'finale' }), { goAdventure: true }), '执此一念，问鼎三界');
   }
-  if ('challenge' in data && state) return attempt(() => act(state, { type: 'challenge', challengeId: data.challenge }), { goAdventure: true });
-  if ('finale' in data && state) return confirmAction('最后的问鼎', '你将向三界共主发起决战。请确认气血充足、功法与法器已装配妥当。', () => attempt(() => act(state, { type: 'finale' }), { goAdventure: true }), '执此一念，问鼎三界');
+  if ('exportLegacy' in data) {
+    let backup=session.legacyBackup;
+    if(!backup) { try { backup=readLegacyBackup(storage); } catch(error) { notify(error.message,true); } }
+    if(session.originalLegacyRaw ?? backup?.originalRaw) downloadText('百世问鼎-旧原档.json',session.originalLegacyRaw ?? backup.originalRaw);
+    if(!backup?.checkpointRaw && backup?.currentRaw && backup.currentRaw!==session.storageRaw)downloadText('百世问鼎-较新旧人生.json',backup.currentRaw);
+    if(backup?.checkpointRaw)downloadText('百世问鼎-交接旧人生.json',backup.checkpointRaw);
+    if(backup?.preparedRaw)downloadText('百世问鼎-准备的新人生.json',backup.preparedRaw);
+    if(!backup?.checkpointRaw && state && !isJourney(state))downloadText('百世问鼎-当前旧人生.json',serializeGame(state));
+    return;
+  }
   if ('export' in data) return exportGame();
   if ('exportCorrupt' in data && session.rawCorruptSave !== null) { downloadText('百世问鼎-原存档备份.txt', session.rawCorruptSave, 'text/plain;charset=utf-8'); return; }
   if ('import' in data) { $('#import-file').click(); return; }
@@ -364,11 +427,13 @@ document.addEventListener('click', event => {
 $('#import-file').addEventListener('change', async event => {
   const file = event.target.files?.[0]; event.target.value = '';
   if (!file) return;
-  if (file.size > 2 * 1024 * 1024) return notify('存档文件超过 2 MB，请选择有效的游戏存档。', true);
+  if (file.size > MAX_SAVE_FILE_BYTES) return notify('存档文件超过字符上限可容纳的 UTF-8 大小，请选择有效的游戏存档。', true);
   try {
-    const imported = deserialize(await file.text());
-    confirmAction('导入修行存档', `将恢复「${esc(imported.run.name)}」的第 ${imported.meta.generation} 世（${imported.run.age} 岁，${esc(REALMS[imported.run.realmIndex].name)}境）。${state ? '当前进度将被替换；如需保留，请先取消并导出备份。' : ''}`, () => {
-      replaceSession(imported); notify('存档已恢复，仙途继续。');
+    const originalRaw = await file.text();
+    const imported = deserializeGame(originalRaw);
+    const identity = isJourney(imported) ? { name: imported.life.name, generation: imported.world.generation, age: imported.life.age, realm: '' } : { name: imported.run.name, generation: imported.meta.generation, age: imported.run.age, realm: `，${REALMS[imported.run.realmIndex].name}境` };
+    confirmAction('导入修行存档', `将恢复「${esc(identity.name)}」的第 ${identity.generation} 世（${identity.age} 岁${esc(identity.realm)}）。${state ? '当前进度将被替换；如需保留，请先取消并导出备份。' : ''}`, () => {
+      replaceSession(imported, originalRaw); notify(lastSaved ? '存档已恢复，仙途继续。' : saveError, !lastSaved);
     }, '确认恢复');
   } catch (error) { notify(error.message || '无法读取这个存档文件。', true); }
 });

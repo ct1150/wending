@@ -236,3 +236,34 @@ dialog .button:hover:not(:disabled) { background: var(--paper-hover); box-shadow
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
 }
+
+/* The dialogue life is one continuous page, with only the current actions. */
+.journey { max-width: 38em; margin-inline: auto; }
+.journey-identity, .journey-location { color: var(--muted); font-size: 13px; }
+.journey-identity { margin-bottom: 26px; }
+.journey-block { font: 18px/2.05 var(--serif); margin: 0 0 24px; white-space: pre-line; scroll-margin-top: 24px; }
+.journey-voice { display: block; color: var(--muted); font: 13px/1.8 var(--sans); margin-bottom: 5px; }
+.journey-action { border-inline-start: 2px solid var(--line2); padding-inline-start: 16px; }
+.journey-result { color: var(--text); }
+.journey-history { padding-bottom: 8px; margin-bottom: 34px; border-bottom: 1px solid var(--line); }
+.journey-current h2 { font: 28px/1.6 var(--serif); margin: 8px 0 26px; scroll-margin-top: 24px; }
+.journey-choices { display: grid; grid-template-columns: minmax(0, 1fr); gap: 14px; margin-top: 30px; }
+.journey-choice { display: block; min-width: 0; width: 100%; min-height: 44px; text-align: left; white-space: normal; padding: 16px 18px; border: 1px solid var(--line2); border-radius: 4px; background: transparent; color: var(--text); line-height: 1.7; overflow-wrap: anywhere; }
+.journey-choice:hover:not(:disabled) { background: var(--paper-hover); border-color: var(--jade); }
+.journey-choice-label, .journey-choice-detail, .journey-choice-reason { display: block; }
+.journey-choice-label { font-size: 16px; }
+.journey-choice-detail { font-size: 13px; color: var(--muted); margin-top: 6px; }
+.journey-choice-reason { font-size: 13px; color: var(--red); margin-top: 6px; }
+.journey-ending { font: 18px/2 var(--serif); margin-block: 28px; }
+@media (max-width: 460px) {
+  .journey-block { font-size: 17px; }
+  .journey-current h2 { font-size: 25px; }
+  .journey-choice { padding: 14px; }
+}
+
+.journey-records { margin-block: 1.5rem; }
+.journey-records summary { min-height: 44px; padding-block: .75rem; cursor: pointer; }
+.journey-records pre { white-space: pre-wrap; overflow-wrap: anywhere; font: inherit; max-width: 100%; }
+.legacy-rule-note { color: var(--muted); line-height: 1.7; }
+[data-legacy-bridge] { white-space: normal; min-height: 44px; }
+[data-legacy-bridge] .tiny { display: block; }

@@ -95,3 +95,11 @@ test('development offline download falls back to dist without bypassing root fil
   await rm(path.join(dist, filename)); await symlink('/etc/passwd', path.join(dist, filename));
   assert.equal((await get(handler, '/' + filename)).status, 403);
 });
+
+test('production app and journey renderer bundle through the offline named-module graph', async () => {
+  const code = await bundleModules(process.cwd(), './src/app.js');
+  assert.doesNotThrow(() => new vm.Script(code));
+  const { startApp } = await import('./helpers/app-harness.js');
+  const app = await startApp();
+  assert.match(app.html, /data-journey-choice/);
+});

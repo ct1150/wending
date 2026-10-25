@@ -2,7 +2,28 @@
 
 Plans: [first release](superpowers/plans/2026-10-24-first-release.md) · [1.1.0 narrative upgrade](superpowers/plans/2026-10-25-narrative-adventure.md)
 
-Current documentation date: 2026-10-25 (Shanghai). Version 1.2.0 Paper is live from source `90bb910840e7c2b22c59e0421f111c4c1a7cb7c8`, after PR #2, successful CI and a manual API update to the existing ordinary Worker. Production health, exact download and bounded desktop UI acceptance are recorded below. Earlier first-release, 1.1.0 and candidate entries remain historical checkpoints.
+Current documentation date: 2026-10-25 (Shanghai). **2.0.0 dialogue journey is a local release candidate; production remains 1.2.0** from `90bb910840e7c2b22c59e0421f111c4c1a7cb7c8`. Local implementation is separate from pending remote PR/CI/merge, exact-source Worker publication and actual UI acceptance. See [design](superpowers/specs/2026-10-25-dialogue-only-design.md), [implementation plan](superpowers/plans/2026-10-25-dialogue-only.md), [current spec](PRODUCT_SPEC.md) and [QA](QA_REPORT.md).
+
+## 2.0.0 implementation and local release preparation — 2026-10-25 (Shanghai)
+
+| Task | Local implementation / review checkpoint |
+| --- | --- |
+| 1 | `343ca57`: pure v3 engine, deterministic opening, author/content validation; scoped review complete |
+| 2 | `f373fb1`: strict unified saves and non-overwriting recovery; scoped review complete |
+| 3 | `81afa6a`: actual default single reading flow, latest response/history/costs and module packaging; scoped review complete; visual acceptance deferred |
+| 4 | `a239331`: three real valley outcomes and living departure; two-investigation window replaces old eight-year deadline; scoped review complete |
+| 5 | `aec774f`: actual Nether/Celestial/finale, six opportunities, three combinations and two first-life zero-ability victories; scoped review complete with carried corrections |
+| 6 | `0e28d12` → `0a44fe1`: lifecycle, all11 sequel outcomes, ten old mappings and recoverable handoff; three Important provenance/recovery findings and adjacent transient-retry Minor addressed, scoped review clean |
+| 7 | Local 2.0.0 packaging/docs and real herbalism1/2-year correction prepared; final gate evidence in QA. Task review, whole-branch review and publication belong to controller |
+
+- Herbalism lesson takes one elapsed year; lesson plus one service year takes two and pays one actual medicine pack. Refusal free; no fictional soul-inquiry-window cost. Focused campaign16 cases pass, including actual public herbalism+burn combination and insufficient-life fallback.
+- Bounded release checks:50 scenes/190 authored variants through2892 resolver fixtures;168 actual public prefixes/374 one-step actions on two complete zero-ability victory methods across seeds0/1/7. Resolver facts are not asserted legal reachable saves, and one-step branches are not a whole-history DFS.
+- One accidentally tracked ignored orchestration report was removed from the index while preserving its working evidence. Internal reports/private saves are not publication content.
+- No new browser or remote mutation in local preparation. Existing1.2.0 pre-deploy backup/export is old-version protection only. Actual new UI/320px/light-dark, physical devices, screen reader, human20–30-minute pacing and life-pressure remain unobserved.
+- Final `env -u npm_config_http_proxy -u NPM_CONFIG_HTTP_PROXY npm run release` exited0:20/20 test files (not cases),46 JS syntax checks,offline473871 bytes, SHA-256 `5b49bde3dc1841aed0bc065505cc273109053ca49514f1d86dd093e7cd09e7fd`, built Shanghai2026-10-25 19:47:46.304 (metadata UTC11:47:46.304Z). No npm proxy warning. No candidate SHA, old build size or historic browser assertion substitutes for actual2.0.0 production evidence.
+
+## Historical first-release implementation — 2026-10-24
+
 
 - 2026-10-24: Approved conversation design captured in PRODUCT_SPEC; no additional design approval required because user explicitly requested implementation and deployment.
 - Ruling: use native JS and static hosting — offline single-player requirements need no server or runtime dependency.
@@ -52,7 +73,7 @@ Current documentation date: 2026-10-25 (Shanghai). Version 1.2.0 Paper is live f
 - Native Builds returned404/code12040 with no configuration, triggers or build history. No connection-mutating request was repeated; current GitHub App installation status cannot be inferred from the old8000008 failure.
 - The accepted current release path remains GitHub review/CI → exact-source offline/Worker build → API update to the existing ordinary Worker. Static Assets and native automatic Builds are future migration work.
 
-## Narrative adventure 1.1.0 implementation and local validation — 2026-10-25 (Shanghai)
+## Historical narrative adventure 1.1.0 implementation and local validation — 2026-10-25 (Shanghai)
 
 - Approved direction: a continuous authored main story with finite random branches, meaningful choices and playable next-life consequences in one continuing world. Twenty-to-thirty minutes remains a design target without human timing evidence.
 - Preserved approved pre-upgrade research in `docs/research/2026-10-24-wending-reference-research.md` and original authored story in `docs/story/valley-fire.md`. Provenance wrappers distinguish dated research/design costs from current implementation. The implementation plan now uses a portable source link.
@@ -90,7 +111,7 @@ Current documentation date: 2026-10-25 (Shanghai). Version 1.2.0 Paper is live f
 - Fresh controller release after all runtime edits passed11 test files and25 JavaScript syntax checks. Final offlineHTML322726bytes, SHA-256 `709ee3db3d1378f2b954c17de3e513ec56a6648f5ebe0ec1ac63288b751ba3d7`, builtUTC `2026-10-25T04:42:03.769Z`. Earlier321678-byte candidate above is superseded. No engine/content/schema/runtime dependency change.
 - Local scratch review reports remain local. Public evidence lives in this ledger and QA_REPORT. Publication must reconstruct the reviewed tree on actual GitHub main, not push the synthetic local snapshot history. At that historical checkpoint, remote main was `05c6351a836e89d84aaeac309b7bc0aed6b035db` and production was 1.1.0; publication and live verification are completed below.
 
-## Paper 1.2.0 publication and live acceptance — 2026-10-25
+## Current production: Paper 1.2.0 publication and live acceptance — 2026-10-25
 
 - [PR #2](https://github.com/ct1150/wending/pull/2) merged with actual release source [`90bb910840e7c2b22c59e0421f111c4c1a7cb7c8`](https://github.com/ct1150/wending/commit/90bb910840e7c2b22c59e0421f111c4c1a7cb7c8). Tree `ec460fa26506ce0946a0a5edf9f5222ed5e8ab65` equals reviewed local `0d015eb82554c840a9bbcfd774a07d4f57dc25ba`; synthetic local history was never directly pushed.
 - [PR CI 40163973639](https://github.com/ct1150/wending/actions/runs/40163973639) and [main CI 40164006388](https://github.com/ct1150/wending/actions/runs/40164006388) succeeded; validate job `121081217915` succeeded, deploy job `121081258031` was skipped. Final local release passed 11/11 test files and 25 JavaScript syntax checks, with focused startup 8 / renderer 9 / combat 8 cases. These are prior controller results; this documentation audit did not rerun builds or suites.
