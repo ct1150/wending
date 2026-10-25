@@ -1,0 +1,389 @@
+<!--
+  THROWAWAY UI PROTOTYPE · 百世问鼎 · 2026-10-25
+  Question: can a first-time player read one short scene and immediately make a meaningful choice?
+  Unvalidated proposals: deferred identity setup, progressive disclosure, and three interface structures.
+  Accepted direction: narrative/world responsibility drives progress; endings express different values;
+  evaluate three successive lives without forcing death. This excerpt does not simulate those endings.
+  Production entry points, game rules, saves and deployment are unaffected. State exists only in memory.
+-->
+<div id="wd-minimal-prototype">
+  <p class="wd-prototype-note">界面原型 · 演示片段 <span>调查流程压缩，费用取自现有规则</span></p>
+  <div class="viz-carousel viz-dotted-background" aria-label="百世问鼎的三种极简界面" data-previous-label="上一种" data-next-label="下一种">
+    <section class="wd-stage" data-variant="纸页" aria-label="纸页界面">
+      <p class="wd-direction">纸页 · 推荐 <span>一页，一件眼前事</span></p>
+      <article class="wd-product wd-paper" id="wd-paper">
+        <header class="wd-header"><span class="wd-brand">百世问鼎</span><p class="wd-clock">距封谷 <strong data-clock>8年</strong></p></header>
+        <main class="wd-play">
+          <p class="wd-feedback" data-feedback role="status" aria-live="polite" aria-atomic="true" hidden></p>
+          <div data-scene>
+            <p class="wd-place">药谷 · 谷口</p>
+            <h2>灰里还有人</h2>
+            <p class="wd-prose">你十六岁，第一次走到药谷。封谷令已至，八年后宗门将封山收种；眼前的七户病人，还无处可去。</p>
+            <p class="wd-quote">“我是谷中医者沈芷。能先帮我把病人搬到避风处吗？”<span>沈芷</span></p>
+            <div class="wd-choices" aria-label="你的选择">
+              <button class="wd-choice cursor-interaction" type="button" data-action="help"><span class="wd-choice-label">先替她搬病人</span><span class="wd-choice-cost">气血 当前120 · 消耗6；不耗年</span></button>
+              <button class="wd-choice cursor-interaction" type="button" data-action="ask"><span class="wd-choice-label">先问封谷令为何下来</span><span class="wd-choice-cost">不消耗资源 · 不耗年</span></button>
+            </div>
+          </div>
+        </main>
+        <footer class="wd-utilities" aria-label="辅助查看"><button class="cursor-interaction" id="wd-paper-practice-button" type="button" data-utility="practice" aria-expanded="false" aria-controls="wd-paper-practice">状态</button><button class="cursor-interaction" id="wd-paper-history-button" type="button" data-utility="history" aria-expanded="false" aria-controls="wd-paper-history">回看</button></footer>
+        <section class="wd-panel" id="wd-paper-practice" data-panel="practice" aria-labelledby="wd-paper-practice-button" hidden></section>
+        <section class="wd-panel" id="wd-paper-history" data-panel="history" aria-labelledby="wd-paper-history-button" hidden></section>
+      </article>
+    </section>
+    <section class="wd-stage" data-variant="对话" aria-label="对话界面" hidden>
+      <p class="wd-direction">对话 <span>从一句回应开始</span></p>
+      <article class="wd-product wd-dialogue" id="wd-dialogue">
+        <header class="wd-header"><span class="wd-brand">百世问鼎</span><p class="wd-clock">距封谷 <strong data-clock>8年</strong></p></header>
+        <main class="wd-play">
+          <div class="wd-message wd-own-message" data-last-reply hidden></div>
+          <p class="wd-feedback" data-feedback role="status" aria-live="polite" aria-atomic="true" hidden></p>
+          <div data-scene>
+            <h2 class="wd-conversation-place">谷口</h2>
+            <p class="wd-narration">你十六岁，第一次走到药谷。封谷令已至，八年后宗门将封山收种；眼前的七户病人，还无处可去。</p>
+            <div class="wd-message"><span class="wd-speaker">沈芷</span><p>我是谷中医者沈芷。能先帮我把病人搬到避风处吗？</p></div>
+            <div class="wd-choices" aria-label="你的回应">
+              <button class="wd-choice cursor-interaction" type="button" data-action="help"><span class="wd-choice-label">我来搬，您继续照看病人。</span><span class="wd-choice-cost">气血 当前120 · 消耗6；不耗年</span></button>
+              <button class="wd-choice cursor-interaction" type="button" data-action="ask"><span class="wd-choice-label">封谷令为什么会下来？</span><span class="wd-choice-cost">不消耗资源 · 不耗年</span></button>
+            </div>
+          </div>
+        </main>
+        <footer class="wd-utilities" aria-label="辅助查看"><button class="cursor-interaction" id="wd-dialogue-practice-button" type="button" data-utility="practice" aria-expanded="false" aria-controls="wd-dialogue-practice">状态</button><button class="cursor-interaction" id="wd-dialogue-history-button" type="button" data-utility="history" aria-expanded="false" aria-controls="wd-dialogue-history">回看</button></footer>
+        <section class="wd-panel" id="wd-dialogue-practice" data-panel="practice" aria-labelledby="wd-dialogue-practice-button" hidden></section>
+        <section class="wd-panel" id="wd-dialogue-history" data-panel="history" aria-labelledby="wd-dialogue-history-button" hidden></section>
+      </article>
+    </section>
+    <section class="wd-stage" data-variant="行旅" aria-label="行旅界面" hidden>
+      <p class="wd-direction">行旅 <span>看清当前一步</span></p>
+      <article class="wd-product wd-journey" id="wd-journey">
+        <header class="wd-header"><span class="wd-brand">百世问鼎</span><p class="wd-clock">距封谷 <strong data-clock>8年</strong></p></header>
+        <main class="wd-play">
+          <ol class="wd-steps" data-progress aria-label="片段行程"><li aria-current="step">谷口</li><li>药簿</li><li>陆槐</li><li>调查</li></ol>
+          <p class="wd-feedback" data-feedback role="status" aria-live="polite" aria-atomic="true" hidden></p>
+          <div data-scene>
+            <p class="wd-task-label">眼下这一步</p>
+            <h2>回应谷口的医者</h2>
+            <p class="wd-prose">你十六岁，第一次走到药谷。封谷令已至，八年后宗门将封山收种；眼前的七户病人，还无处可去。</p>
+            <p class="wd-journey-quote">沈芷：“我是谷中医者沈芷。能先帮我把病人搬到避风处吗？”</p>
+            <div class="wd-choices" aria-label="可以做的事">
+              <button class="wd-choice cursor-interaction" type="button" data-action="help"><span><span class="wd-choice-label">先替她搬病人</span><span class="wd-choice-cost">气血 当前120 · 消耗6；不耗年</span></span><span class="wd-next" aria-hidden="true">→</span></button>
+              <button class="wd-choice cursor-interaction" type="button" data-action="ask"><span><span class="wd-choice-label">先问封谷令为何下来</span><span class="wd-choice-cost">不消耗资源 · 不耗年</span></span><span class="wd-next" aria-hidden="true">→</span></button>
+            </div>
+          </div>
+        </main>
+        <footer class="wd-utilities" aria-label="辅助查看"><button class="cursor-interaction" id="wd-journey-practice-button" type="button" data-utility="practice" aria-expanded="false" aria-controls="wd-journey-practice">状态</button><button class="cursor-interaction" id="wd-journey-history-button" type="button" data-utility="history" aria-expanded="false" aria-controls="wd-journey-history">回看</button></footer>
+        <section class="wd-panel" id="wd-journey-practice" data-panel="practice" aria-labelledby="wd-journey-practice-button" hidden></section>
+        <section class="wd-panel" id="wd-journey-history" data-panel="history" aria-labelledby="wd-journey-history-button" hidden></section>
+      </article>
+    </section>
+  </div>
+</div>
+<style>
+  #wd-minimal-prototype {
+    --wd-paper: light-dark(#faf8f2, #1d201c);
+    --wd-ink: light-dark(#272e27, #ecefe6);
+    --wd-muted: light-dark(#616b5e, #b8c1b3);
+    --wd-line: light-dark(#d4d9ce, #454e40);
+    --wd-wash: light-dark(#ecefe6, #2a3227);
+    --wd-own: light-dark(#e0e7da, #384332);
+    --wd-hover: light-dark(#e8ecdf, #34402e);
+    --wd-accent: light-dark(#385942, #c2d6b8);
+    color: var(--wd-ink);
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    font-size: 15px;
+    line-height: 1.65;
+    width: 100%;
+  }
+  #wd-minimal-prototype *, #wd-minimal-prototype *::before, #wd-minimal-prototype *::after { box-sizing: border-box; }
+  #wd-minimal-prototype .wd-prototype-note { margin: 0 0 20px; padding-right: 92px; font-size: 12px; color: var(--wd-muted); }
+  #wd-minimal-prototype .wd-prototype-note span { display: block; }
+  #wd-minimal-prototype .wd-stage { min-height: 760px; }
+  #wd-minimal-prototype .wd-direction { max-width: 656px; margin: 0 auto 12px; font-size: 13px; color: var(--wd-ink); }
+  #wd-minimal-prototype .wd-direction span { margin-left: 12px; color: var(--wd-muted); }
+  #wd-minimal-prototype .wd-product { width: 100%; max-width: 656px; margin: 0 auto; padding: 26px 34px 20px; background: var(--wd-paper); border: 1px solid var(--wd-line); }
+  #wd-minimal-prototype .wd-product [hidden] { display: none; }
+  #wd-minimal-prototype .wd-header { display: flex; align-items: center; justify-content: space-between; gap: 14px; padding-bottom: 20px; border-bottom: 1px solid var(--wd-line); }
+  #wd-minimal-prototype .wd-brand { font-family: "Songti SC", "STSong", "Noto Serif CJK SC", serif; font-size: 20px; font-weight: 500; letter-spacing: 0.12em; }
+  #wd-minimal-prototype .wd-clock { margin: 0; font-size: 13px; color: var(--wd-muted); white-space: nowrap; }
+  #wd-minimal-prototype .wd-clock strong { margin-left: 7px; color: var(--wd-ink); font-size: 16px; font-weight: 500; font-variant-numeric: tabular-nums; }
+  #wd-minimal-prototype .wd-play { margin-top: 30px; }
+  #wd-minimal-prototype h2 { margin: 0 0 18px; color: var(--wd-ink); font-family: "Songti SC", "STSong", "Noto Serif CJK SC", serif; font-size: 27px; line-height: 1.4; font-weight: 500; }
+  #wd-minimal-prototype .wd-place, #wd-minimal-prototype .wd-task-label { margin: 0 0 8px; font-size: 12px; color: var(--wd-muted); }
+  #wd-minimal-prototype .wd-prose { margin: 0 0 18px; font-family: "Songti SC", "STSong", "Noto Serif CJK SC", serif; font-size: 17px; line-height: 1.95; }
+  #wd-minimal-prototype .wd-quote { margin: 22px 0 28px; padding-left: 16px; border-left: 2px solid var(--wd-line); font-family: "Songti SC", "STSong", "Noto Serif CJK SC", serif; font-size: 17px; line-height: 1.9; }
+  #wd-minimal-prototype .wd-quote span { display: block; margin-top: 6px; color: var(--wd-muted); font-family: system-ui, sans-serif; font-size: 12px; }
+  #wd-minimal-prototype .wd-feedback { margin: 0 0 22px; padding: 10px 13px; background: var(--wd-wash); color: var(--wd-ink); font-size: 13px; line-height: 1.7; }
+  #wd-minimal-prototype .wd-choices { display: flex; flex-direction: column; gap: 6px; margin-top: 22px; }
+  #wd-minimal-prototype .wd-choice { width: 100%; min-height: 64px; padding: 15px 2px; border: 0; border-bottom: 1px solid var(--wd-line); border-radius: 0; background: var(--wd-paper); color: var(--wd-ink); text-align: left; font-family: inherit; font-size: 15px; line-height: 1.65; }
+  #wd-minimal-prototype .wd-choice-label { display: block; font-weight: 500; }
+  #wd-minimal-prototype .wd-choice-cost { display: block; margin-top: 5px; font-size: 12px; color: var(--wd-muted); font-weight: 400; font-variant-numeric: tabular-nums; }
+  #wd-minimal-prototype .wd-choice:not(:disabled):hover { background: var(--wd-hover); }
+  #wd-minimal-prototype .wd-choice:disabled { color: var(--wd-muted); }
+  #wd-minimal-prototype .wd-choice:disabled .wd-choice-label { font-weight: 400; }
+  #wd-minimal-prototype .wd-utilities { display: flex; justify-content: flex-end; gap: 10px; margin-top: 18px; }
+  #wd-minimal-prototype .wd-utilities button { min-width: 52px; min-height: 44px; padding: 8px 6px; background: var(--wd-paper); color: var(--wd-muted); border: 0; font: inherit; font-size: 13px; text-decoration: underline; text-underline-offset: 5px; }
+  #wd-minimal-prototype .wd-utilities button[aria-expanded="true"] { color: var(--wd-ink); background: var(--wd-wash); }
+  #wd-minimal-prototype .wd-panel { margin-top: 12px; padding: 20px 0 2px; border-top: 1px solid var(--wd-line); background: var(--wd-paper); }
+  #wd-minimal-prototype .wd-panel h3 { margin: 0 0 12px; font-size: 15px; line-height: 1.5; font-weight: 500; }
+  #wd-minimal-prototype .wd-panel p { margin: 7px 0; font-size: 13px; }
+  #wd-minimal-prototype .wd-panel .wd-panel-note { color: var(--wd-muted); font-size: 12px; }
+  #wd-minimal-prototype .wd-state-list { margin: 0; font-size: 13px; }
+  #wd-minimal-prototype .wd-state-list div { display: flex; justify-content: space-between; gap: 20px; padding: 7px 0; }
+  #wd-minimal-prototype .wd-state-list dt { color: var(--wd-muted); }
+  #wd-minimal-prototype .wd-state-list dd { margin: 0; text-align: right; font-variant-numeric: tabular-nums; }
+  #wd-minimal-prototype .wd-history { margin: 14px 0 0; padding-left: 22px; }
+  #wd-minimal-prototype .wd-history li { margin: 0 0 18px; padding-left: 3px; }
+  #wd-minimal-prototype .wd-history strong { font-size: 13px; font-weight: 500; }
+  #wd-minimal-prototype .wd-history small { color: var(--wd-muted); font-size: 12px; }
+  #wd-minimal-prototype .wd-paper { border-radius: 3px; }
+  #wd-minimal-prototype .wd-dialogue { border-radius: 18px; }
+  #wd-minimal-prototype .wd-dialogue .wd-header { border-bottom: 0; padding-bottom: 2px; }
+  #wd-minimal-prototype .wd-dialogue .wd-play { margin-top: 23px; }
+  #wd-minimal-prototype .wd-conversation-place { text-align: center; font-family: inherit; font-size: 13px; color: var(--wd-muted); font-weight: 400; margin-bottom: 15px; }
+  #wd-minimal-prototype .wd-narration { max-width: 94%; margin: 0 auto 22px; font-size: 14px; line-height: 1.85; color: var(--wd-muted); }
+  #wd-minimal-prototype .wd-message { max-width: 88%; width: fit-content; padding: 14px 18px; border-radius: 15px 15px 15px 3px; background: var(--wd-wash); color: var(--wd-ink); margin-bottom: 20px; }
+  #wd-minimal-prototype .wd-speaker { display: block; margin-bottom: 5px; color: var(--wd-muted); font-size: 12px; }
+  #wd-minimal-prototype .wd-message p { margin: 0; font-size: 16px; line-height: 1.85; }
+  #wd-minimal-prototype .wd-own-message { margin-left: auto; border-radius: 15px 15px 3px 15px; background: var(--wd-own); }
+  #wd-minimal-prototype .wd-own-message p { font-size: 14px; }
+  #wd-minimal-prototype .wd-dialogue .wd-feedback { max-width: 94%; margin-left: auto; margin-right: auto; padding: 0; background: var(--wd-paper); color: var(--wd-muted); }
+  #wd-minimal-prototype .wd-dialogue .wd-choices { align-items: flex-end; gap: 11px; margin-top: 24px; }
+  #wd-minimal-prototype .wd-dialogue .wd-choice { width: 88%; padding: 12px 16px; border: 1px solid var(--wd-line); border-radius: 15px 15px 3px 15px; }
+  #wd-minimal-prototype .wd-journey { border-radius: 12px; }
+  #wd-minimal-prototype .wd-journey .wd-header { border-bottom: 0; padding-bottom: 1px; }
+  #wd-minimal-prototype .wd-journey .wd-play { margin-top: 20px; }
+  #wd-minimal-prototype .wd-steps { display: flex; gap: 8px; list-style: none; padding: 0; margin: 0 0 30px; }
+  #wd-minimal-prototype .wd-steps li { flex: 1; padding: 8px 0; text-align: center; color: var(--wd-muted); border-bottom: 1px solid var(--wd-line); font-size: 12px; }
+  #wd-minimal-prototype .wd-steps li[aria-current="step"] { color: var(--wd-ink); border-bottom: 2px solid var(--wd-accent); font-weight: 500; }
+  #wd-minimal-prototype .wd-journey h2 { font-family: inherit; font-size: 23px; }
+  #wd-minimal-prototype .wd-journey .wd-prose { font-family: inherit; font-size: 15px; line-height: 1.85; }
+  #wd-minimal-prototype .wd-journey-quote { margin: 16px 0 24px; color: var(--wd-muted); font-size: 14px; line-height: 1.85; }
+  #wd-minimal-prototype .wd-journey .wd-choices { gap: 10px; }
+  #wd-minimal-prototype .wd-journey .wd-choice { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 14px 15px; border: 1px solid var(--wd-line); border-radius: 5px; }
+  #wd-minimal-prototype .wd-next { color: var(--wd-muted); flex: 0 0 auto; font-size: 18px; }
+  @media (max-width: 520px) {
+    #wd-minimal-prototype .wd-stage { min-height: 880px; }
+    #wd-minimal-prototype .wd-product { padding: 22px 19px 16px; }
+    #wd-minimal-prototype .wd-prototype-note { padding-right: 74px; }
+    #wd-minimal-prototype .wd-brand { font-size: 18px; }
+    #wd-minimal-prototype h2 { font-size: 24px; }
+    #wd-minimal-prototype .wd-play { margin-top: 25px; }
+    #wd-minimal-prototype .wd-prose, #wd-minimal-prototype .wd-quote { font-size: 16px; }
+    #wd-minimal-prototype .wd-dialogue .wd-choice, #wd-minimal-prototype .wd-message { max-width: 94%; width: 94%; }
+    #wd-minimal-prototype .wd-message { padding: 12px 14px; }
+    #wd-minimal-prototype .wd-state-list div { gap: 12px; }
+  }
+  @media (pointer: coarse) {
+    #wd-minimal-prototype .wd-product button { min-height: 44px; }
+  }
+</style>
+<script>
+(() => {
+  "use strict";
+  const root = document.getElementById("wd-minimal-prototype");
+  if (!root) return;
+  const routeNames = { testimony: "证词", ledger: "账册", channel: "地脉" };
+  const escape = (value) => String(value).replace(/[&<>"']/g, (char) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[char]));
+
+  function initialState() {
+    return {
+      scene: "valley", hp: 120, spirit: 24, herbs: 3, age: 16, life: 84, deadline: 8,
+      trust: 0, intent: "尚未许诺", permission: false, route: null,
+      chosen: [], clues: {}, feedback: "", lastReply: "", utility: null,
+      history: [{ place: "入谷", action: "十六岁，第一次来到药谷", result: "封谷期限还剩8年；你自身的余寿是84年。", next: "谷口" }]
+    };
+  }
+
+  function costText(s, cost = {}) {
+    const parts = [];
+    if (cost.hp) parts.push(`气血 当前${s.hp} · 消耗${cost.hp}`);
+    if (cost.spirit) parts.push(`灵石 当前${s.spirit} · 消耗${cost.spirit}`);
+    if (cost.herbs) parts.push(`药材 当前${s.herbs} · 消耗${cost.herbs}`);
+    if (!parts.length) parts.push("不消耗资源");
+    parts.push(cost.years ? `耗时${cost.years}年` : "不耗年");
+    return parts.join("；");
+  }
+
+  function sceneFor(s) {
+    const choice = (id, label, reply, cost, note) => ({ id, label, reply: reply || label, cost: cost || {}, detail: note || costText(s, cost) });
+    if (s.scene === "valley") return {
+      step: 0, place: "药谷 · 谷口", short: "谷口", title: "灰里还有人", task: "回应谷口的医者",
+      body: "你十六岁，第一次走到药谷。封谷令已至，八年后宗门将封山收种；眼前的七户病人，还无处可去。",
+      speaker: "沈芷", quote: "我是谷中医者沈芷。能先帮我把病人搬到避风处吗？",
+      choices: [choice("help", "先替她搬病人", "我来搬，您继续照看病人。", { hp: 6 }), choice("ask", "先问封谷令为何下来", "封谷令为什么会下来？")]
+    };
+    if (s.scene === "book") return {
+      step: 1, place: "药谷 · 药棚", short: "药簿", title: "不肯烧掉的药簿", task: "决定要许下什么承诺",
+      body: "沈芷取出一本焦黑药簿。她的母亲沈蘅死于旧火，官文却将起火的罪归在沈蘅身上。簿上留下的，是送出谷的病人姓名。",
+      speaker: "沈芷", quote: "请替我找一条能核对的证据。若找不到，也告诉我实话。",
+      choices: [choice("truth", "先查真相，再谈灵种", "我会先查清真相，再谈灵种。", {}, "获得药材2份 · 不耗年"), choice("people", "只承诺把活人带出去", "我先答应把活人带出去。", {}, "获得药材2份 · 不耗年")]
+    };
+    if (s.scene === "lu") return {
+      step: 2, place: "药谷 · 驿亭", short: "陆槐", title: "执事手中的路引", task: "决定如何开始查证",
+      body: "封谷执事陆槐正在改撤离名册。他可以给你正式查档的路引，也提醒你：旧案牵连着尚在人世的人。",
+      speaker: "陆槐", quote: "若查出是我的错，带证据回来。八年之期，不会为你延后。",
+      choices: [choice("permission", "申请公开查档", "请给我正式查档的路引。", { spirit: 8 }), choice("independent", "说明将独立查证", "我会独立核对，再回来谈。")]
+    };
+    if (s.scene === "routes") {
+      const choices = [
+        choice("route:testimony", "找证人 · 先调治温渡", "去南坡石屋，先治温渡的旧伤。", { years: 1, herbs: 3 }),
+        choice("route:ledger", s.permission ? "查账册 · 持路引勘验" : "查账册 · 等换封旁查副簿", s.permission ? "拿着路引，去旧库核对。" : "等换封时，我去旁查副簿。", { years: s.permission ? 1 : 2 }),
+        choice("route:channel", "探地脉 · 从上游测绘", "从上游慢慢测，带回完整的图。", { years: 2, spirit: 4 })
+      ].map((item) => {
+        const id = item.id.split(":")[1];
+        return s.chosen.includes(id) ? { ...item, disabled: true, detail: "已调查 · 不可重复" } : item;
+      });
+      return {
+        step: 3, place: "药谷 · 灯下", short: "调查方向", title: "灯下选下一条路", task: s.chosen.length ? "再核对一条独立线索" : "选一条路，开始查证",
+        body: s.chosen.length ? "你已经走过一条调查线，还能再查一条。已走过的路不会重复开启。" : "眼前有证词、账册、地脉三条调查线，最多深入两条。先选一条，回来后再决定是否继续。",
+        speaker: "沈芷", quote: "知道一件，不等于知道全部。可七户人，也不能一直等下去。", choices
+      };
+    }
+    if (s.scene === "testimony") return {
+      step: 3, place: "南坡 · 石屋", short: "温渡的证词", title: "那夜先开的不是药窖", task: "决定如何留下这份证词",
+      body: "温渡的旧伤缓下来。他在灰里画出水路：东闸先响，火折回住人的地方。下令的是陆槐，开闸的是他。",
+      speaker: "温渡", quote: "名字可以写。可我开口之后，家里的人怎么办？",
+      choices: [choice("named", "具名作证，承诺护送家属", "请留下姓名。我答应护送你的家人。", { spirit: 8 }, `灵石 当前${s.spirit} · 消耗8；家属路费，护送仍待兑现`), choice("anonymous", "只录路线，不写姓名", "先记下路线，不写你的姓名。", {}, "保留半份证词 · 不消耗资源，不耗年")]
+    };
+    if (s.scene === "ledger") return {
+      step: 3, place: "归衡 · 旧库", short: "旧库药账", title: "一张账里两种人命", task: "决定带走怎样的记录",
+      body: "原账显示：旧图失效后，宗门仍下令开闸。沈蘅打开药窖的记录反而晚了半个时辰。签令人的名字与无关弟子的住址，都在纸上。",
+      speaker: "陆槐", quote: "签令的人里有我。送药的小辈，却未必知道地脉会裂。",
+      choices: [s.permission ? choice("copy", "留决策签印，遮无关住址", "签印留下，无关住址遮去。", { spirit: 6 }) : choice("original", "带走原卷，自行保管", "原卷由我保管，我会承担这份责任。"), choice("partial", "只留日期与药窖记录", "先留下能核对沈蘅责任的部分。", {}, "保留半份账册 · 不消耗资源，不耗年")]
+    };
+    if (s.scene === "result") {
+      const data = {
+        testimony: { title: s.clues.testimony === "full" ? "温渡留下了名字" : "一份没有姓名的证词", body: s.clues.testimony === "full" ? "你收好证词与家属路费。温渡愿意具名作证；你许下的护送承诺，还需要在后面的救援中兑现。" : "你记下东闸的路线，没有留下温渡的姓名。这是半份证词，尚不能将所有责任查清。" },
+        ledger: { title: s.clues.ledger === "full" ? "账上的先后次序" : "留下能确认的部分", body: s.clues.ledger === "full" ? "完整药账保留下来：旧图失效、开闸令在先，沈蘅开药窖在后。怎样公开这些记录，仍是接下来的责任。" : "你留下日期与药窖记录，足以纠正沈蘅的首责；尚未带回的部分，仍限制着追责。" },
+        channel: { title: "旧图之外的药渠", body: "测绳越过旧图的边界。新渠刻着“勿再引火”，你把改道处一笔笔留在图上，带回完整地脉证据。" }
+      }[s.route];
+      return {
+        step: 3, place: `药谷 · ${routeNames[s.route]}归来`, short: "调查归来", title: data.title, task: "看看这次调查留下了什么", body: data.body,
+        choices: s.chosen.length < 2 ? [choice("more", "再查一条线索", "再核对一条独立的线索。", {}, "还可调查1条 · 先查看方向"), choice("finish", "先看到这里", "我先整理手里的记录。", {}, "结束这段演示")] : [choice("finish", "结束这段演示", "两条调查已走过，先整理记录。", {}, "已调查2条 · 后续情节暂未展开")]
+      };
+    }
+    return {
+      step: 3, place: "演示片段 · 到此为止", short: "演示结束", title: "此演示段已结束", task: "此演示段已结束",
+      body: `你走过了${s.chosen.length}条调查线，距封谷还剩${s.deadline}年。七户病人的去向与药谷的未来，仍待后续抉择。你可以在“回看”中查看刚才的选择。`,
+      choices: [choice("restart", "重新体验这一版", "重新体验这一版", {}, "从谷口开始")]
+    };
+  }
+
+  function applyCost(s, cost) {
+    const before = { hp: s.hp, spirit: s.spirit, herbs: s.herbs, deadline: s.deadline, age: s.age, life: s.life };
+    if ((cost.hp || 0) >= s.hp || (cost.spirit || 0) > s.spirit || (cost.herbs || 0) > s.herbs || (cost.years || 0) > s.deadline) return null;
+    s.hp -= cost.hp || 0;
+    s.spirit -= cost.spirit || 0;
+    s.herbs -= cost.herbs || 0;
+    s.age += cost.years || 0;
+    s.life -= cost.years || 0;
+    s.deadline -= cost.years || 0;
+    const changes = [];
+    if (cost.hp) changes.push(`气血${before.hp}→${s.hp}`);
+    if (cost.spirit) changes.push(`灵石${before.spirit}→${s.spirit}`);
+    if (cost.herbs) changes.push(`药材${before.herbs}→${s.herbs}`);
+    if (cost.years) changes.push(`耗时${cost.years}年，距封谷${before.deadline}→${s.deadline}年`);
+    return { short: changes.join("；"), years: cost.years ? `年龄${before.age}→${s.age}岁，余寿${before.life}→${s.life}年。` : "" };
+  }
+
+  function advance(s, item, current) {
+    if (item.id === "restart") return initialState();
+    const cost = applyCost(s, item.cost);
+    if (!cost) return s;
+    let result = "";
+    switch (item.id) {
+      case "help": s.trust += 1; s.scene = "book"; result = "病人移到避风处，沈芷更信任你了。"; break;
+      case "ask": s.scene = "book"; result = "你先听清封谷的缘由，沈芷递来一本药簿。"; break;
+      case "truth": s.herbs += 2; s.trust += 1; s.intent = "先查真相，再谈灵种"; s.scene = "lu"; result = "药材3→5。你许诺先查清真相。"; break;
+      case "people": s.herbs += 2; s.intent = "先把活人带出去"; s.scene = "lu"; result = "药材3→5。你的承诺落在活人身上。"; break;
+      case "permission": s.permission = true; s.scene = "routes"; result = "你拿到了正式查档的路引。"; break;
+      case "independent": s.scene = "routes"; result = "你选择独立查证，三条调查仍可前往。"; break;
+      case "named": s.clues.testimony = "full"; s.scene = "result"; result = "获得完整证词；你许下护送承诺，尚未履行。"; break;
+      case "anonymous": s.clues.testimony = "partial"; s.scene = "result"; result = "获得半份证词，温渡的姓名没有写入。"; break;
+      case "copy": s.clues.ledger = "full"; s.scene = "result"; result = "获得完整药账，陆槐愿意担保。"; break;
+      case "original": s.clues.ledger = "full"; s.scene = "result"; result = "获得完整药账；陆槐对带走原卷不满。"; break;
+      case "partial": s.clues.ledger = "partial"; s.scene = "result"; result = "获得半份药账，未确认之处仍留白。"; break;
+      case "more": s.scene = "routes"; result = "你决定再核对一条独立线索。"; break;
+      case "finish": s.scene = "complete"; result = "你的选择已留在本次回看中。"; break;
+      default: {
+        const id = item.id.split(":")[1];
+        s.route = id;
+        s.chosen.push(id);
+        s.scene = id === "channel" ? "result" : id;
+        if (id === "channel") { s.clues.channel = "full"; result = "你带回完整地脉图。"; }
+        else if (id === "testimony") result = "温渡的旧伤缓下来，愿意说起那夜。";
+        else result = s.permission ? "你依路引逐册勘验，找到了原账。" : "换封之时，你从副簿核对到了原账。";
+      }
+    }
+    s.feedback = `${cost.short ? `${cost.short}。` : ""}${result}`;
+    s.lastReply = item.reply;
+    s.history.push({ place: current.short, action: item.label, result: s.feedback + cost.years, next: sceneFor(s).short });
+    return s;
+  }
+
+  function choicesMarkup(scene, mode) {
+    return `<div class="wd-choices" aria-label="${mode === "dialogue" ? "你的回应" : "你的选择"}">${scene.choices.map((item) => {
+      const content = `<span class="wd-choice-label">${escape(mode === "dialogue" ? item.reply : item.label)}</span><span class="wd-choice-cost">${escape(item.detail)}</span>`;
+      return `<button class="wd-choice cursor-interaction" type="button" data-action="${escape(item.id)}"${item.disabled ? " disabled" : ""}>${mode === "journey" ? `<span>${content}</span><span class="wd-next" aria-hidden="true">→</span>` : content}</button>`;
+    }).join("")}</div>`;
+  }
+
+  function sceneMarkup(scene, mode) {
+    if (mode === "dialogue") return `<h2 class="wd-conversation-place">${escape(scene.short)}</h2><p class="wd-narration">${escape(scene.body)}</p>${scene.quote ? `<div class="wd-message"><span class="wd-speaker">${escape(scene.speaker)}</span><p>${escape(scene.quote)}</p></div>` : ""}${choicesMarkup(scene, mode)}`;
+    if (mode === "journey") return `<p class="wd-task-label">眼下这一步</p><h2>${escape(scene.task)}</h2><p class="wd-prose">${escape(scene.body)}</p>${scene.quote ? `<p class="wd-journey-quote">${escape(scene.speaker)}：“${escape(scene.quote)}”</p>` : ""}${choicesMarkup(scene, mode)}`;
+    return `<p class="wd-place">${escape(scene.place)}</p><h2>${escape(scene.title)}</h2><p class="wd-prose">${escape(scene.body)}</p>${scene.quote ? `<p class="wd-quote">“${escape(scene.quote)}”<span>${escape(scene.speaker)}</span></p>` : ""}${choicesMarkup(scene, mode)}`;
+  }
+
+  function renderUtility(view, s) {
+    view.querySelectorAll("[data-utility]").forEach((button) => button.setAttribute("aria-expanded", String(button.dataset.utility === s.utility)));
+    view.querySelectorAll("[data-panel]").forEach((panel) => {
+      panel.hidden = panel.dataset.panel !== s.utility;
+      if (panel.hidden) return;
+      if (s.utility === "practice") {
+        panel.innerHTML = `<h3>此刻的你</h3><dl class="wd-state-list"><div><dt>年龄 · 自身余寿</dt><dd>${s.age}岁 · ${s.life}年</dd></div><div><dt>气血（身体状态）</dt><dd>${s.hp} / 120</dd></div><div><dt>灵石</dt><dd>${s.spirit}</dd></div><div><dt>药材</dt><dd>${s.herbs}份</dd></div><div><dt>距离封谷</dt><dd>${s.deadline}年</dd></div></dl><p class="wd-panel-note">封谷期限与自身余寿分别计算。</p><p class="wd-panel-note">本片段仅查看状态，修炼与休养暂未展开。</p>`;
+      } else {
+        const clues = Object.entries(s.clues).map(([key, quality]) => `${routeNames[key]}（${quality === "full" ? "完整" : "半份"}）`).join("、") || "还未取得";
+        panel.innerHTML = `<h3>当前 · ${escape(sceneFor(s).short)}</h3><p>你的承诺：${escape(s.intent)}</p><p>手中证据：${escape(clues)}</p><p>查档路引：${s.permission ? "已取得" : "尚未取得"}；沈芷：${s.trust ? "更愿意信任你" : "正在听你的回应"}</p><ol class="wd-history">${s.history.map((entry) => `<li><strong>${escape(entry.place)} · ${escape(entry.action)}</strong><p>${escape(entry.result)}</p><small>接下来：${escape(entry.next)}</small></li>`).join("")}</ol>`;
+      }
+    });
+  }
+
+  function render(view, s, mode) {
+    const scene = sceneFor(s);
+    view.querySelector("[data-clock]").textContent = `${s.deadline}年`;
+    const feedback = view.querySelector("[data-feedback]");
+    feedback.hidden = !s.feedback;
+    if (feedback.textContent !== s.feedback) feedback.textContent = s.feedback;
+    const reply = view.querySelector("[data-last-reply]");
+    if (reply) {
+      reply.hidden = !s.lastReply;
+      reply.innerHTML = s.lastReply ? `<span class="wd-speaker">你</span><p>${escape(s.lastReply)}</p>` : "";
+    }
+    const progress = view.querySelector("[data-progress]");
+    if (progress) progress.innerHTML = ["谷口", "药簿", "陆槐", "调查"].map((label, index) => `<li${scene.step === index ? ' aria-current="step"' : ""}>${label}${index < scene.step ? " · 已过" : ""}</li>`).join("");
+    view.querySelector("[data-scene]").innerHTML = sceneMarkup(scene, mode);
+    renderUtility(view, s);
+  }
+
+  ["paper", "dialogue", "journey"].forEach((mode) => {
+    const view = root.querySelector(`#wd-${mode}`);
+    if (!view) return;
+    let state = initialState();
+    render(view, state, mode);
+    view.addEventListener("click", (event) => {
+      const button = event.target.closest("button");
+      if (!button || !view.contains(button) || button.disabled || event.detail > 1) return;
+      if (button.dataset.utility) {
+        state.utility = state.utility === button.dataset.utility ? null : button.dataset.utility;
+        renderUtility(view, state);
+        return;
+      }
+      const current = sceneFor(state);
+      const item = current.choices.find((candidate) => candidate.id === button.dataset.action && !candidate.disabled);
+      if (!item) return;
+      state = advance(state, item, current);
+      render(view, state, mode);
+    });
+  });
+})();
+</script>
