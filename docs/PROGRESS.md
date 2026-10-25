@@ -2,7 +2,7 @@
 
 Plans: [first release](superpowers/plans/2026-10-24-first-release.md) · [1.1.0 narrative upgrade](superpowers/plans/2026-10-25-narrative-adventure.md)
 
-Current documentation date: 2026-10-25 (Shanghai). Version 1.1.0 is published; local implementation, GitHub CI and actual production acceptance are recorded separately. Earlier entries below are historical checkpoints.
+Current documentation date: 2026-10-25 (Shanghai). Version 1.2.0 Paper is a local source candidate; production remains the recorded 1.1.0 release. Source/Node/packaging evidence does not establish browser acceptance or publication. Current candidate evidence is appended below; earlier entries remain historical checkpoints.
 
 - 2026-10-24: Approved conversation design captured in PRODUCT_SPEC; no additional design approval required because user explicitly requested implementation and deployment.
 - Ruling: use native JS and static hosting — offline single-player requirements need no server or runtime dependency.
@@ -71,3 +71,21 @@ Current documentation date: 2026-10-25 (Shanghai). Version 1.1.0 is published; l
 - Actual production health returned status ok, source `4d3834be1bcd2ffd636c7fe32bde5c111195f353` and the exact HTML hash. Real UI opened “灰里还有人”, chose “先问封谷令为何下来” and reached “不肯烧掉的药簿”; refresh preserved the full main content and settings/back worked. Actual game download 312059 bytes and hash exactly match the tested artifact.
 - Live viewport 1363×936, pageWidth 1348, no horizontal overflow; application errors 0. Browser extension emitted 21 metadata messages, recorded separately from game errors. Production smoke covers this opening only; full desktop/mobile clinic-sequel playthrough remains local evidence. No human pacing, physical-device or screen-reader measurement.
 - This publication audit changes documentation only. Production source remains `4d3834be1bcd2ffd636c7fe32bde5c111195f353` and must differ from the later documentation-only commit; health metadata must continue naming the source actually built/uploaded. First-release history and future Static Assets/automatic-publishing instructions remain preserved.
+
+
+## Paper interface 1.2.0 candidate and local packaging — 2026-10-25
+
+- Approved spec: [Paper interface](superpowers/specs/2026-10-25-paper-interface-design.md). Task1 connected the actual game to the single Paper reading view with direct recommended startup (云归 / village / sword), safe save recovery, 状态 / 回看 / 修行, settings/help, and complete next-life customization. No engine/schema/content change or runtime dependency was introduced.
+- Task1 fix `bcad3b3245f58854ed18137e051514ba3f230eed` addresses both Important source findings: primary feedback follows the latest actual action, and reward/setup/equipment redraws have surviving focus targets. Scoped source re-review passed. Accepted focused Node evidence is startup8 and renderer9 passing cases; actual DOM focus remains unverified.
+- Task2 changes only package.json, README, QA_REPORT and this ledger; package version is1.2.0. README describes actual first-life defaults, full next-life choices, auxiliary controls and recovery. Historical release and browser records above remain intact.
+- Fresh `npm run release` passed10 test files (file-level runner results,0 failures/skips/cancellations),23 JavaScript syntax checks and a321678-byte offline build. Environment-only npm unknown-http-proxy warning remains nonfatal. No tests were added or the full suite repeated for these docs/config edits.
+- Local build metadata: version1.2.0, UTC `2026-10-25T04:28:13.023Z`, offline SHA-256 `7aa67d0d51e6d41f9e2b29017f6ad786af247e7837fd732d931d50c844aa16d1`, runtime dependencies0. Worker packaging produced327617 bytes using full current local HEAD `bcad3b3245f58854ed18137e051514ba3f230eed` as **validation-only** sourceCommit. Metadata edits were uncommitted at packaging: this is a validation parameter, not an exact release commit or publication claim.
+- Node package inspection confirmed inlined Paper CSS/session module, exact static module/CSS copies, matching offline copies, no external script/stylesheet tags, local Worker health/source/hash, identical root/download bodies and HEAD/404/405. An initial inspection used the wrong CSS path and failedENOENT; correcting it to src/ui/paper.css passed. Full details are in QA_REPORT.
+- **Production remains the recorded1.1.0 release.** No GitHub push/PR, Cloudflare deployment or DEPLOYMENT edit occurred. The controller must build from actual merged/source SHA and record publication/health/download evidence.
+- No browser/headless/CDP/preview workaround was used. Paper320px layout, light/dark appearance, native keyboard/DOM and dialog focus, screen-reader announcements and visual parity remain pending. No physical-device or human20–30-minute pacing acceptance is claimed; historical1.1.0 browser checks do not validate1.2.0.
+
+## Paper 1.2.0 final candidate review — 2026-10-25
+
+- Whole-branch review found one Important and two Minor issues: missing exact flee costs, tooltip-only burn unavailability, and Help target width. One bounded fix wave added the actual combat action renderer with eight real-engine/markup cases and fixed all three. Scoped independent re-review addressed every finding with no new breakage.
+- Fresh controller release after all runtime edits passed11 test files and25 JavaScript syntax checks. Final offlineHTML322726bytes, SHA-256 `709ee3db3d1378f2b954c17de3e513ec56a6648f5ebe0ec1ac63288b751ba3d7`, builtUTC `2026-10-25T04:42:03.769Z`. Earlier321678-byte candidate above is superseded. No engine/content/schema/runtime dependency change.
+- Local scratch review reports remain local. Public evidence lives in this ledger and QA_REPORT. Publication must reconstruct the reviewed tree on actual GitHub main, not push the synthetic local snapshot history. Current remote main remains `05c6351a836e89d84aaeac309b7bc0aed6b035db`; existing production remains1.1.0 until actual API publication and live verification below.
