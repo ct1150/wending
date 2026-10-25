@@ -1,10 +1,58 @@
 # GitHub → Cloudflare 部署
 
-文档更新：2026-10-25。**3.0.0 人间求仙篇正在验收，尚未宣布部署**。发布沿用现有 `baishi-wending` Worker，完整门禁、真实远端源码、CI 与生产响应分别核对。当前已确认的生产基线仍为下方 2.0.0 记录，后续更新以实际部署结果为准。
+文档更新：2026-10-25（UTC）。**3.0.0 人间求仙篇已发布**，沿用现有 `baishi-wending` 普通 Worker。当前生产为四处文字修订后的实际合并源码；CI、API 部署、health、真实下载和第二世重载已核对。首发完整浏览器路线及下方 2.0.0 等旧版证据分别保留。
 
-## 3.0.0 发行核对
+## 当前生产：3.0.0 四处文字修订版
 
-源码从真实 GitHub `4119a9a5780b5d5478f320b69d44670428cab1cb` 开始。先完成独立审查与 `npm run release`，通过 Git Data API 在真实远端父提交上建立 PR，核对精确树与 CI；合并后使用实际运行时 SHA 打包 Worker，并核实生产 health、主页、离线文件与实际浏览器操作。不得将本地合成 git 历史直接推送，也不得把候选产物当作已上线。
+首发浏览器检查后，修正徒手救援的绳索假设、村医结果的受伤假设、一年准备的护商措辞，以及筑基岁月的御剑假设。四处均只修改文字，选择编号、条件、成本、效果和存档结构不变；定向复核无遗留发现，控制方重新完成完整发行门禁。
+
+| 最终发行证据 | 实际结果 |
+| --- | --- |
+| 真实合并源码 | [PR #7](https://github.com/ct1150/wending/pull/7) 已合并；当前运行时 [`568d53915cde8b25fd742403d3f8d8075dcdc7a8`](https://github.com/ct1150/wending/commit/568d53915cde8b25fd742403d3f8d8075dcdc7a8) |
+| 发行时精确树 | `f1ab4b30084b50f74437dff18961ab347e290ccf`，与已审本地 `acb4356` 的树一致 |
+| 修订后完整门禁 | 新鲜 `npm run release` 成功；23/23 测试文件、55 个 JavaScript 语法检查通过，离线构建成功 |
+| GitHub CI | [main CI 40210351905](https://github.com/ct1150/wending/actions/runs/40210351905) success；[validate 121220054228](https://github.com/ct1150/wending/actions/runs/40210351905/job/121220054228) success；[deploy 121220131018](https://github.com/ct1150/wending/actions/runs/40210351905/job/121220131018) skipped |
+| 正式构建 UTC | `2026-10-25T16:07:13.386Z` |
+| 正式 HTML | 634455 字节；SHA-256 `045b0248657daee13f73a9d6014809c2daf1e0674d3c5292d84bb9e4c2b4e49f` |
+| 实际源码标记 Worker | 643167 字节；SHA-256 `ae781bf7329dca05aba9de54b4212d859dfd56da17299f47ecb5a75229e65b90`；`sourceCommit` 为上述当前运行时 SHA |
+| 实际部署 | 现有 `baishi-wending` Worker，API HTTP 200；deployment `0a6db68e-e98c-4e78-8ea3-610fd029df42` |
+| 实际 version／流量 | `9e56498f-e322-4e84-b844-433a169ecaa2`／100% |
+| 部署 UTC | `2026-10-25T16:10:48.567616Z` |
+| 生产身份 | 实际浏览器 [healthz](https://baishi-wending.ct1150.workers.dev/healthz) 核对当前源码 SHA 与正式 HTML 哈希 |
+| 最终实际下载 | 游戏内下载 634455 字节，与本地正式 HTML 逐字相同且 SHA-256 一致；文件包含全部四处文字修订 |
+| 新部署后的旧进度 | 浏览器重载仍保留第二世、16 岁凡人、道历 1180、已携“辨药”以及前世义药铺事实 |
+
+生产地址：[线上游戏](https://baishi-wending.ct1150.workers.dev/)。实际发布仍由 API 完成，自动部署任务跳过，没有切换托管方式。**后续仅文档提交不改变实际部署源码 `568d53915cde8b25fd742403d3f8d8075dcdc7a8` 或 health 元数据。** 首发完整路线与截图在下方保留；最终文字版的独立观察是 health、实际下载与现有第二世重载。
+
+## 3.0.0 首次发行检查点（UTC 15:59）
+
+源码从真实 GitHub `4119a9a5780b5d5478f320b69d44670428cab1cb` 开始。独立审查与完整发行门禁通过后，通过 Git Data API 在真实远端父提交上建立并合并 PR；发行 tree 与已审树一致，本地合成 git 历史未直接推送。合并后以实际运行时 SHA 打包，再通过 API 更新已有 Worker。
+
+| 3.0.0 首发证据 | 实际结果 |
+| --- | --- |
+| 独立审查与本地门禁 | 最终审查 READY；`npm run release` 成功，23/23 测试文件、55 个 JavaScript 语法检查通过；定向 v4 用例 50/50，范围见 [QA](QA_REPORT.md) |
+| 真实合并源码 | [PR #6](https://github.com/ct1150/wending/pull/6) 已合并；实际运行时 [`526928723f06a00d1f9f6d3be1b80b5987ee26b0`](https://github.com/ct1150/wending/commit/526928723f06a00d1f9f6d3be1b80b5987ee26b0) |
+| 发行时精确树 | `6fc2840dbe6c1d74f10b8c4a94f6d8909c7fde2d`，与已审本地快照 `5c81a67` 的树一致 |
+| GitHub CI | [main CI 40209419960](https://github.com/ct1150/wending/actions/runs/40209419960) success；[validate 121217269362](https://github.com/ct1150/wending/actions/runs/40209419960/job/121217269362) success；自动 deploy job skipped |
+| 正式构建时间 | `2026-10-25T15:58:16.810Z`（UTC） |
+| 正式 HTML | 634374 字节；SHA-256 `7955ae64b7e531cbe682bb9ef25e207f2fad1444d7db286a5f9aff08361e0e80` |
+| 实际源码标记 Worker | 643086 字节；SHA-256 `3d1e8b318f38e756b15f9c5fa4b2f2c0a6f804bb8981970dc71bb5dc47af8b90`；`sourceCommit` 为上述真实运行时 SHA |
+| 实际部署 | 现有 Worker `baishi-wending`，API HTTP 200；deployment `494ff07b-2d8f-41b7-bdec-324496ce7f51` |
+| 实际 version／流量 | `358e494c-3bb6-4ab8-8020-50d8805bb84b`／100% |
+| 部署 UTC | `2026-10-25T15:59:10.732421Z` |
+| 生产地址与身份 | [线上游戏](https://baishi-wending.ct1150.workers.dev/)；实际浏览器访问 [healthz](https://baishi-wending.ct1150.workers.dev/healthz)，已核对运行时源码 SHA 与正式 HTML 哈希 |
+
+本轮 CI 的自动部署任务仍跳过；实际上线由 API 完成，没有启用 GitHub → Cloudflare 自动发布或迁移托管。**本检查点的实际运行时源码为 `526928723f06a00d1f9f6d3be1b80b5987ee26b0`；后续仅文档提交不改写该次部署的源码或 health 元数据。** 后续运行时修订应另记实际构建与部署身份。
+
+### 3.0.0 生产 UI 验收
+
+首发生产浏览器重载后，已有 v3 第二世存档仍可继续；经过明确重新开始确认后，进入 v4 人间求仙篇新开局。键盘 Return 可执行准备绳索的选择；真实 UI 导出 9657 字节 v4 JSON，推进四年后经实际文件选择器导入，恢复到 20 岁／道历 1004／“会一点法术以后”，显示“存档已恢复”。实际游戏下载 634374 字节，SHA-256 与上述首发 HTML 一致。
+
+实际继续护商路线，在 36 岁／道历 1020 筑基，余寿 143 年 176 日。归乡开药铺后，179 岁只留最后一年，180 岁／道历 1164 寿终。选择记住“辨药”，再过 16 个世界年，进入道历 1180 的第二世：16 岁、凡人、余寿 56 年，药铺学徒开场，前世义药铺保留且无人认识新的身体。
+
+桌面视口 1363×936，页面 `clientWidth = scrollWidth = 1348`，该视口未见横向溢出；首屏三项按钮均约 570×89.28 CSS px。[首发开局](evidence/cultivation-3.0.0-opening.jpg)、[筑基](evidence/cultivation-3.0.0-foundation.jpg) 和 [第二世](evidence/cultivation-3.0.0-rebirth.jpg) 截图均为已检查的 JPEG 1348×926，文件字节与哈希见 [QA 的生产 UI 验收](QA_REPORT.md#生产-ui-验收)。四处纯文字修订后的最终身份与独立观察见上方当前生产记录，首发截图继续保留拍摄时的版本归属。
+
+本版未声称完成物理手机、320px 实际布局、深色、读屏或真人每世 20–30 分钟节奏验收。下方旧版的桌面或移动观察不替代本版证据。
 
 ## 历史生产：2.0.0 对话与选项版
 
@@ -213,7 +261,7 @@ npm run release
 
 `release/release.json` 记录版本、UTC 构建时间、离线文件字节数和 SHA-256。同一源码重复构建的离线 HTML 应一致；元数据中的构建时间会随构建变化。离线版没有 ES 模块或外部样式请求，可以直接打开；其自动存储受浏览器对本地文件的策略影响，存档导出／导入是跨浏览器、跨域名和线上／离线迁移的方式。
 
-## 2.0.0 发布后的验证范围与未观察矩阵
+## 历史 2.0.0 发布后的验证范围与未观察矩阵
 
 最终完整 release、实际版本／HTML 字节／hash、真正合并 SHA 标记的 Worker、Cloudflare deployment／version／100% 流量，以及真实 root／下载端点／health 已完成，见上方生产表。公网 HEAD／404／405 没有本轮独立响应证据。功能 harness 和 HTTP 不能证明实际浏览器效果。
 

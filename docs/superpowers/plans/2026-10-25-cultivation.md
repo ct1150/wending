@@ -7,10 +7,14 @@
 **Tech Stack:** Native ES modules, Node >=22, node:test, static/offline HTML, existing Cloudflare Worker.
 **Spec:** docs/superpowers/specs/2026-10-25-cultivation-design.md
 
+**Release status:** 3.0.0 is deployed. After initial [PR #6](https://github.com/ct1150/wending/pull/6), [PR #7](https://github.com/ct1150/wending/pull/7) merged four wording corrections as current runtime `568d53915cde8b25fd742403d3f8d8075dcdc7a8`; [main CI](https://github.com/ct1150/wending/actions/runs/40210351905) succeeded. The final Worker deployment, exact health identity, matching actual download and preserved second-life reload are recorded in [DEPLOYMENT](../../DEPLOYMENT.md). The first release's real save restoration and observed caravan → foundation → lifespan ending → herbalism rebirth route remain separately documented in [QA](../../QA_REPORT.md#生产-ui-验收).
+
 ## Global Constraints
+
 All fixed schemas and behavior in the spec bind every task. No runtime dependencies. No copied novel characters or iconic items. No hidden success dice. No existing save deletion. 2–3 choices per normal scene. No claim of full three-world remake.
 
 ## Review Focus
+
 - A valid old save continues instead of being overwritten by a fresh v4.
 - A malformed v4 cannot introduce executable/unknown scene or impossible cost state.
 - Low resources/short lifespan produce visible, explained outcomes instead of empty scenes.
@@ -18,34 +22,45 @@ All fixed schemas and behavior in the spec bind every task. No runtime dependenc
 - Every new life contains a playable adventure consistent with permanent world facts.
 
 ### Task 1: State and public commands (root)
+
 Files: create model.js, engine.js; test cultivation-engine.test.js.
+
 - [x] Start with failing public-interface test for coherent mortal opening; implement seeded state.
 - [x] Add transactional choice, actual day/year costs, conditions, injury and realm gates.
 - [x] Add earned-skill inheritance and real end-of-life summaries.
 - [x] Verify first cultivation, preparation-sensitive breakthrough, death/senescence, no RNG on reads, stale requests.
 
 ### Task 2: Authored human journey (content agent)
+
 Files: create cultivation/content.js only.
+
 - [x] Read fixed content contract; write full personal-motive opening and original branching scenes.
 - [x] Include finite different opportunity arcs, gains linked to costs, visible risk and era-aware rebirth.
 - [x] Return route IDs for successful and failed lives; root verifies via public API.
 
 ### Task 3: Safe state boundary (validation agent)
+
 Files: create cultivation/validation.js; test cultivation-validation.test.js only.
+
 - [x] Write failing shape/unsafe key/invalid values test, implement strict finite validated state.
 - [x] Check save sizes, history shape and safe optional fields without cyclic dependency on engine.
 - [x] Test malformed and restored genuine command-produced states.
 
 ### Task 4: UI, save dispatch and prior lives (integration agent)
+
 Files: app.js, save-format.js, session.js, ui/journey.js, ui/paper.css; test cultivation-ui.test.js.
+
 - [x] Test absent save selects v4; old v1/v2/v3 still load and continue.
 - [x] Dispatch v3/v4 to their public API; show identity/realm/goal and actual costs.
 - [x] Make fresh-start confirmation describe new human chapter and preserve export route.
 - [x] Verify import/export, failed storage, keyboard choices and old-session recovery behavior.
 
 ### Task 5: Integrate, review, release (root)
+
 - [x] Update version/build documentation and source manifests if needed.
 - [x] Run relevant tests and whole release gate.
 - [x] Obtain independent narrative/spec and code/compatibility review; fix important findings.
-- [ ] Use GitHub connector to create reviewed branch/PR against actual remote base, verify CI, merge under existing authorization.
-- [ ] Build exact merged source Worker, deploy via existing Cloudflare connector, verify production identity and one live new life.
+- [x] Use GitHub connector to create reviewed branch/PR against actual remote base, verify CI, merge under existing authorization.
+- [x] Build exact merged source Worker, deploy via existing Cloudflare connector, verify production identity and one live new life.
+- [x] Record the actual production route through foundation, a lifespan ending and herbalism rebirth, plus real export/import, game download and inspected screenshots. Physical phones, screen readers and human pacing remain unverified.
+- [x] Record the four wording corrections' final merged source, build, deployment, exact production identity, matching game download and preserved second-life reload.
