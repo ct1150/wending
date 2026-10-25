@@ -116,7 +116,7 @@ definitions['valley-rescue'] = s => {
   ], [
     choice('rescue-rope', '用借来的绳索卸开木梁', '准备好的绳索能分担重量，保住伤药，也能避免你自己受伤。', 'valley-escape', `你把绳子绕过老树，一寸寸吊起木梁。${keeper(s)}爬上岸，将干燥的功法交给了你。山谷深处，药窖终于塌进水中。`, { requires: [needFact('valley-rope'), before(2)], costs: { days: 1 }, effects: saved }),
     choice('rescue-medicine', '先止住她的血，再一起挪梁', '用掉随身的伤药，换她清醒配合；这是最稳妥的徒手办法。', 'valley-escape', `药粉压住了血。你们趁水流间歇合力移开木梁。${keeper(s)}活着上了岸，药窖却已救不回来。`, { requires: [before(2)], costs: { days: 1, items: { medicine: 1 } }, effects: saved }),
-    choice('rescue-barehands', '拿自己的肩背顶住木梁', '一定会受伤。你没有绳索，也不肯舍药，只能拿身体承受重量。', 'valley-escape', `木刺划开肩背，你仍撑到了她脱身。${keeper(s)}把功法塞进你衣内，说这不是恩赏，是她欠你的报酬。药窖的灯已经灭了。`, { requires: [before(2), injuryAtMost(1)], costs: { days: 1 }, effects: { ...saved, injury: hurt(s) } }),
+    choice('rescue-barehands', '拿自己的肩背顶住木梁', '一定会受伤。不用绳索、不用伤药，便要拿身体承受木梁的重量。', 'valley-escape', `木刺划开肩背，你仍撑到了她脱身。${keeper(s)}把功法塞进你衣内，说这不是恩赏，是她欠你的报酬。药窖的灯已经灭了。`, { requires: [before(2), injuryAtMost(1)], costs: { days: 1 }, effects: { ...saved, injury: hurt(s) } }),
   ]);
 };
 
@@ -138,7 +138,7 @@ definitions['valley-escape'] = s => scene('valley-escape', '雨里下山', '药�
   narration(fact(s, 'valley-rescued') ? `${keeper(s)}扶着你的肩，走几步就要歇一歇。她不是什么能挥手治伤的高人，只是比你早学了几年引气。泥水一样会冻僵她的手。` : '药谷的人已各自散去。背上的书和药都有分量，你第一次明白，拿到机缘以后，还得有命把它带出山。'),
   narration('山脚升起了炊烟。再往前走，就离开这场以天计的危险；往后的修行，却要以年去熬。'),
 ], [
-  choice('escape-long-path', '走山民指过的高坡', '危险的谷道已经在身后。再花一天走山外高坡，伤者和行囊都能保住。', 'valley-aftermath', '你沿着山外高坡又走了一日，终于看见村口的灯。热粥很稀，你却喝得一滴不剩。村医替你包好伤，另留了一包药。', { costs: { days: 1 }, effects: { items: { medicine: 1 }, lifeFacts: { 'valley-safe-exit': true } } }),
+  choice('escape-long-path', '走山民指过的高坡', '危险的谷道已经在身后。再花一天走山外高坡，伤者和行囊都能保住。', 'valley-aftermath', '你沿着山外高坡又走了一日，终于看见村口的灯。热粥很稀，你却喝得一滴不剩。村医查看过你的身体，另留了一包药以备不时之需。', { costs: { days: 1 }, effects: { items: { medicine: 1 }, lifeFacts: { 'valley-safe-exit': true } } }),
   choice('escape-short-path', s.life.injury >= 2 ? '从急流中抄近道（必死）' : '涉过急流抄近道（会受伤）', s.life.injury >= 2 ? '伤势已让你站不稳；这个水深下去，就没有力气回来。' : '不用再在山中过夜，但石底暗流一定会让你添伤，背上的药也会湿掉。', s.life.injury >= 2 ? 'ended' : 'valley-aftermath', s.life.injury >= 2 ? '水撞在腿上时，你已来不及抓住岸边。油布里的功法没有散，人却再没走出药谷。' : '你拖着湿透的衣衫爬上岸，腿上又添一道口子。捷径确实近，只是并不便宜。', s.life.injury >= 2 ? { ending: 'battle', endingTitle: '急流带走的少年', achievement: '曾摸到入门的机会，却没能带它走出药谷。', lesson: '伤重时，准备好的安全路比抢半日更重要。' } : { effects: { injury: hurt(s) } }),
 ]);
 
@@ -301,7 +301,7 @@ definitions['mountain-pass'] = s => {
     narration(s.scene.fate.pressure === 'storm' ? '这一季雨水异常，桥、洞顶和山坡都比平日危险。出发前，消息已经说得很清楚。' : s.scene.fate.pressure === 'scarcity' ? '近来药价很高，路上的人都在省粮。带够普通材料，往往比一句勇敢更有用。' : '附近的散修也听见了消息。有人想合作，有人想独占，你不会是唯一来求机缘的人。'),
   ], [
     choice('pass-go-adventure', '带着现有行装出发', '先看清当地情况，再决定要药引还是只取普通材料。重伤时不宜赶路。', target, '你把消息和自己的本事对照一遍，踏上下一段路。', { requires: [injuryAtMost(2)], costs: { days: 20 } }),
-    choice('pass-prepare-adventure', '用一年治伤、换药，再出发', '花一块灵石换伤药和安稳休养；消息所指的是整片产地，不是一件等人捡的宝物。', target, '一年里你养好伤，补齐药，又打听过当季的路况。真正出发时，你已经知道自己缺什么。', { costs: { years: 1, items: { stones: 1 } }, effects: { heal: 3, items: { medicine: 1 } } }),
+    choice('pass-prepare-adventure', '用一年治伤、换药，再出发', '花一块灵石换伤药和安稳休养；等来年身体养好，再打听新一季的采药、探山或护货机会。', target, '一年里你养好伤，补齐药，又打听过当季的路况。真正出发时，你已经知道自己缺什么。', { costs: { years: 1, items: { stones: 1 } }, effects: { heal: 3, items: { medicine: 1 } } }),
     choice('pass-decline-adventure', '不去争这一次，回乡谋生', '保住现有修为和手艺，将余生用在自己能掌握的事上。', 'qi-old-age', '你把那张路线图送给别人，转身走向有炊烟的地方。', {}),
   ]);
 };
@@ -597,7 +597,7 @@ definitions['foundation-duty'] = s => {
 };
 
 definitions['foundation-years'] = s => scene('foundation-years', '年岁渐长，山还在远处', '已经住惯的地方', '决定继续远行，还是把余生放在已经拥有的生活里', [
-  narration('筑基以后，最不习惯的并不是剑飞得更远，而是与你说话的人换得比自己快。曾经同桌的人开始让孩子替自己跑腿，曾经喊你名字的人，也渐渐少了。'),
+  narration('筑基以后，你能搬动从前搬不动的石块，寿命也更长了。渐渐让你不习惯的，是与你说话的人换得比自己快。曾经同桌的人开始让孩子替自己跑腿，曾经喊你名字的人，也渐渐少了。'),
   narration(world(s, 'ruins-core') === 'broken' ? '石城寄来一摞新拓片。旧中枢仍是废墟，先生们只想弄明白还留在外墙上的草木与运气图，不再等那座静室复原。' : '石城的先生寄来几张旧墙拓片，想请你把认得的草木和运气图说清楚。那些字不会让人一步登天，至少能让后来者少把同一种毒草认错。'),
   narration('另一封信来自更远的外山。写信人说，沿途有新的药地，也有连筑基修士都过不去的封山雷带。你读了两遍，仍然想亲眼看看。'),
 ], [
