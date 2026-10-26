@@ -13,6 +13,10 @@ export const BIRTH_TALENTS = {
   'herb-affinity': { id: 'herb-affinity', name: '草木缘', description: '入世时多带一把灵草；辨药本领仍须亲自学习。' },
   focused: { id: 'focused', name: '心静', description: '首次成功引气入体时额外积累一点修为，修为最高为六；功法与修炼年月照常需要。' },
   restful: { id: 'restful', name: '善调息', description: '本来就能疗伤的行动额外恢复一级伤势，最多恢复至无碍。' },
+  'keen-memory': { id: 'keen-memory', name: '过目成诵', description: '首次成功引气时额外获得一点修为；读懂功法仍须修炼年月。' },
+  'sensitive-breath': { id: 'sensitive-breath', name: '听息敏锐', description: '入世多携一张护身符，遇险时多一分退路。' },
+  'flash-wisdom': { id: 'flash-wisdom', name: '刹那慧心', description: '首次引气额外获得两点修为，但入世便折损三年寿元。' },
+  'fortunate-burden': { id: 'fortunate-burden', name: '福祸相依', description: '入世多得三块灵石，但也带着一处轻伤。' },
 };
 
 export function normalizeCultivationName(value) {
