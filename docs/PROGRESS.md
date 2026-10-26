@@ -2,7 +2,18 @@
 
 Plans: [first release](superpowers/plans/2026-10-24-first-release.md) · [1.1.0 narrative upgrade](superpowers/plans/2026-10-25-narrative-adventure.md)
 
-Current documentation date: 2026-10-25 UTC. **3.0.0 human cultivation chapter is released.** Current production runs the four wording corrections from `568d53915cde8b25fd742403d3f8d8075dcdc7a8`, with actual health, matching game download and second-life reload verified. The first release's full caravan/foundation/ending/rebirth route and screenshots remain separately recorded below. See [current design](superpowers/specs/2026-10-25-cultivation-design.md), [implementation plan](superpowers/plans/2026-10-25-cultivation.md) and [current spec](PRODUCT_SPEC.md). Results below are versioned; prior releases do not certify v4.
+Current documentation date: 2026-10-26 (Shanghai). **3.1.0 immersive reading and dice creation is released.** Current production is `ffe37add4d9194566f327667f0a1a9d7b3ee7394`. Older evidence below is versioned; it does not certify this update's new UI.
+
+## 3.1.0 immersive reading and dice creation — 2026-10-26
+
+- Four requested changes implemented: natural choices with known risk, sticky compact character bar and details drawer, Chinese dialogue punctuation, persistent name/dice creation, and full history in a separate drawer.
+- CV2 creation/reroll/start and rebirth are revision-guarded. CV1/v1/v2/v3 lives continue their original random progression. Attribute/talent effects preserve authored costs and death rules.
+- Scoped engine review, UI/controller review and whole-branch final review approved. Raw-control, first-life false-history and phase-bypass findings were reproduced and fixed. No parked code findings.
+- Final local release passed 26 test files, 59 syntax checks and the 667310-byte offline build. New test files contain 33 behavior cases. Actual PR and main CI succeeded; deployment job skipped as before.
+- [PR #9](https://github.com/ct1150/wending/pull/9) merged true source `ffe37add4d9194566f327667f0a1a9d7b3ee7394` / tree `486a966b6206aa59eb21806e816814a1d1e18a66`, identical to reviewed local `349dd4417e9ec334e2f63ebc1a492e6b2ccf33f9`. No synthetic local history was pushed.
+- Existing ordinary Worker API deployment `b441125c-2294-4ad0-a1c1-47d914b537d3` routes 100% to version `3e52706f-cb79-47b7-9d22-e3adcb5563a8` at UTC `2026-10-26T01:32:24.75492Z`. Actual health and game download match the source and HTML hash.
+- Actual browser verified unchanged CV1 export, custom name 林照, explicit reroll, refresh, Enter, starter medicine/stones, full history/current separation, both drawers, Escape focus return, internal scrolling and sticky header during page scrolling. A real file chooser restored the unstarted dice profile; starting again did not duplicate supplies or reroll. Details, four screenshots and remaining device limits are recorded in [QA](QA_REPORT.md).
+- These documentation and screenshot updates do not replace the deployed runtime SHA. Local file navigation was unavailable; actual downloaded file bytes were verified. Narrow viewport/physical phone/native IME/screen-reader evidence is not claimed.
 
 ## 3.0.0 human cultivation chapter — 2026-10-25
 
