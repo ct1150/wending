@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { renderJourney } from '../src/ui/journey.js';
+import { renderJourney, renderJourneyHistory } from '../src/ui/journey.js';
+import { renderIdentityBar, renderCharacterDetails } from '../src/ui/character.js';
 import { serializeGame, deserializeGame } from '../src/game/save-format.js';
 import { createJourney } from '../src/game/journey/engine.js';
 import { createCultivation, getCultivationView, chooseCultivation } from '../src/game/cultivation/engine.js';
@@ -82,32 +83,35 @@ test('a cultivation session reads and writes its own save without touching an ol
   assert.deepEqual(keys, [SAVE_KEY, SAVE_KEY]);
 });
 
-test('cultivation reader presents personal age, realm, remaining life and current goal alongside choices', () => {
+test('cultivation separates compact identity from current goal and natural choices', () => {
   const view = displayView(), before = structuredClone(view), html = renderJourney(view);
-  const identity = html.match(/<p class="journey-identity"[^>]*>([\s\S]*?)<\/p>/)?.[1];
+  const identity = renderIdentityBar(view.summary);
   assert.match(identity, /云归/);
   assert.match(identity, /16 岁零 2 天/);
   assert.match(identity, /凡人/);
   assert.match(identity, /余寿.*55 年 358 天/);
   assert.ok(html.includes('先找到愿意授你入门功法的人。'));
   assert.ok(html.indexOf('先找到愿意授你入门功法的人。') < html.indexOf('data-journey-choice'));
-  assert.match(html, /丹药 1 枚（当前 1 枚）/);
+  assert.doesNotMatch(html, /丹药 1 枚（当前 1 枚）/);
   assert.equal((html.match(/data-journey-choice=/g) ?? []).length, 2);
   assert.doesNotMatch(html, /resource-strip|select-card|data-action|data-equip|data-path|data-origin/);
   assert.deepEqual(view, before);
 });
 
-test('the actual fresh application opens the cultivation life and saves its prepared fate once', async () => {
+test('the actual fresh application opens character creation and saves its prepared fate once', async () => {
   const app = await startApp(), state = deserializeGame(app.storage.raw);
   assert.equal(state.version, 4);
   assert.equal(state.mode, 'cultivation');
+  assert.equal(state.contentVersion, 2);
+  assert.equal(state.phase, 'creating');
   assert.equal(state.revision, 0);
   assert.equal(state.scene.nodeId, 'arrival');
   assert.equal(state.life.realm, 'mortal');
   assert.equal(state.life.ageDays, 5760);
   assert.equal(app.storage.writes, 1);
-  assert.match(app.html, /云归.*16\s*岁.*凡人.*余寿/);
-  assert.match(app.html, /data-journey-choice/);
+  assert.match(app.html, /id="birth-name"[^>]*value="云归"/);
+  assert.match(app.html, /data-birth-start/);
+  assert.doesNotMatch(app.html, /data-journey-choice/);
   assert.doesNotMatch(app.html, /data-action|data-equip|data-rebirth|dao-name/);
   const restored = await startApp({ raw: app.storage.raw });
   assert.equal(restored.storage.writes, 0);
@@ -124,12 +128,13 @@ test('the cultivation ending explains its achievement and lesson and keeps each 
   const html = renderJourney(view);
   assert.ok(html.includes(ending.achievement));
   assert.ok(html.includes(ending.lesson));
-  assert.ok(html.includes('救下山中的采药人。'));
+  assert.ok(!html.includes('救下山中的采药人。'));
+  assert.ok(renderJourneyHistory(view).includes('救下山中的采药人。'));
   assert.match(html, /data-journey-choice="new-life"/);
   view.goal = '<img src=x onerror=bad()>';
   view.summary.realmName = '<script>bad()</script>';
   view.summary.ending.lesson = '<svg onload=bad()>';
-  const escaped = renderJourney(view);
+  const escaped = renderJourney(view) + renderIdentityBar(view.summary) + renderCharacterDetails(view.summary);
   assert.doesNotMatch(escaped, /<img|<script|<svg/);
   assert.match(escaped, /&lt;img/);
   assert.match(escaped, /&lt;script/);
@@ -162,7 +167,7 @@ test('an existing journey offers explicit new-chapter confirmation with an expor
 });
 
 test('cultivation choices apply once, focus the consequence and stay unchanged after reload or an old click', async () => {
-  const app = await startApp(), before = deserializeGame(app.storage.raw), command = currentCommand(before);
+  const app = await startApp({ raw: serializeGame(createCultivation({ seed: 'existing-cultivation-choice' })) }), before = deserializeGame(app.storage.raw), command = currentCommand(before);
   const button = app.html.match(new RegExp(`<button[^>]*data-journey-choice="${command.choiceId}"[^>]*>`))?.[0];
   assert.ok(button);
   const renderedCommand = {

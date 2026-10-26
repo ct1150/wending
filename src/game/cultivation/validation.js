@@ -1,5 +1,6 @@
 import { assertSaveSize, MAX_SAVE_CHARACTERS } from '../save-size.js';
 import { ITEMS, SKILLS, REALMS, NODES } from './content.js';
+import { BIRTH_ATTRIBUTES, BIRTH_TALENTS, validCultivationName } from './model.js';
 
 const forbiddenKeys = new Set(['__proto__', 'constructor', 'prototype']);
 const summaryFields = ['cause', 'title', 'generation', 'age', 'realm', 'achievement', 'lesson'];
@@ -95,11 +96,28 @@ function validateTranscript(transcript) {
   }
 }
 
+function validateBirth(birth) {
+  record(birth, '先天资质', ['attributes', 'talentId', 'rollCount']);
+  const attributes = record(birth.attributes, '先天属性', Object.keys(BIRTH_ATTRIBUTES));
+  if (attributes.some(id => !integer(birth.attributes[id], 1, 6)) || !known(BIRTH_TALENTS, birth.talentId) || !integer(birth.rollCount, 1)) fail('先天属性、天赋或掷骰次数无效。');
+}
+
+function validateCreation(state) {
+  const { life, world, scene } = state;
+  if (scene.nodeId !== 'arrival' || scene.visited.length || life.ageDays !== 16 * 360 || life.startDay !== world.day || life.realm !== 'mortal' || life.cultivation !== 0 || life.injury !== 0 || life.lifeDamageDays !== 0 || state.summary !== null) fail('尚未入世的身体、时间或场景已经发生变化。');
+  if (Object.keys(life.items).length !== 2 || life.items.medicine !== 1 || life.items.stones !== 0) fail('尚未入世时不能提前领取行装。');
+  const inherited = life.legacyId === null ? [] : [life.legacyId];
+  if (life.skills.length !== inherited.length || inherited.some(id => !life.skills.includes(id))) fail('尚未入世时只能记住已选的前世法门。');
+  if (Object.keys(life.facts).some(key => key !== 'transcript-start') || (life.facts['transcript-start'] ?? 0) !== state.transcript.length) fail('尚未入世时不能已有当世经历或正文。');
+  if (world.generation === 1 && state.transcript.length !== 0) fail('第一世入世之前不能已有前世正文。');
+  if (world.biography.at(-1)?.generation === world.generation) fail('尚未入世的人生不能已有结算。');
+}
+
 export function validateCultivation(state) {
   record(state, '修行记录', ['version', 'mode', 'contentVersion', 'revision', 'rng', 'phase', 'world', 'life', 'scene', 'transcript', 'summary']);
-  if (state.version !== 4 || state.mode !== 'cultivation' || state.contentVersion !== 1) fail('不支持的格式，请使用第四版人间求仙篇存档。');
+  if (state.version !== 4 || state.mode !== 'cultivation' || ![1, 2].includes(state.contentVersion)) fail('不支持的格式，请使用第四版人间求仙篇存档。');
   if (!integer(state.revision) || !integer(state.rng, 1, 4294967295)) fail('记录修订数或随机状态无效。');
-  if (!['playing', 'ended'].includes(state.phase)) fail('人生阶段无效。');
+  if (!(state.contentVersion === 2 ? ['creating', 'playing', 'ended'] : ['playing', 'ended']).includes(state.phase)) fail('人生阶段无效。');
 
   const { world, life, scene } = state;
   record(world, '世界', ['day', 'generation', 'facts', 'legacies', 'biography']);
@@ -108,8 +126,12 @@ export function validateCultivation(state) {
   skills(world.legacies, '累计传承');
   validateBiography(world);
 
-  record(life, '当世', ['name', 'ageDays', 'lifeLimit', 'lifeDamageDays', 'realm', 'cultivation', 'injury', 'skills', 'items', 'legacyId', 'facts', 'startDay']);
+  record(life, '当世', ['name', 'ageDays', 'lifeLimit', 'lifeDamageDays', 'realm', 'cultivation', 'injury', 'skills', 'items', 'legacyId', 'facts', 'startDay', ...(state.contentVersion === 2 ? ['birth'] : [])]);
   if (!text(life.name, 1) || !integer(life.ageDays, 16 * 360) || !known(REALMS, life.realm) || life.lifeLimit !== REALMS[life.realm].lifeLimit) fail('当世姓名、年龄、境界或寿限无效。');
+  if (state.contentVersion === 2) {
+    if (!validCultivationName(life.name)) fail('当世姓名须为1至24字，且不能含有首尾空白、控制符或换行。');
+    validateBirth(life.birth);
+  }
   if (!integer(life.lifeDamageDays, 0, life.lifeLimit * 360) || !integer(life.cultivation, 0, 6) || !integer(life.injury, 0, 3)) fail('寿元折损、修为或伤势超出范围。');
   if (!integer(life.startDay, 0, world.day) || life.ageDays !== 16 * 360 + (world.day - life.startDay)) fail('当世年龄与实际经过的世界日期不一致。');
   skills(life.skills, '当世法门');
@@ -131,10 +153,16 @@ export function validateCultivation(state) {
 
   validateTranscript(state.transcript);
   if (Object.hasOwn(life.facts, 'transcript-start') && !integer(life.facts['transcript-start'], 0, state.transcript.length)) fail('当世正文起点超出实际记录。');
+  if (state.contentVersion === 2 && state.phase !== 'creating') {
+    const opening = state.transcript[life.facts['transcript-start'] ?? 0];
+    if (scene.visited[0] !== 'arrival' || opening?.sceneId !== 'arrival') fail('已经入世的人生缺少当世开场记录。');
+  }
 
   const lastLife = world.biography.at(-1);
   const exhausted = life.ageDays >= life.lifeLimit * 360 - life.lifeDamageDays;
-  if (state.phase === 'playing') {
+  if (state.phase === 'creating') {
+    validateCreation(state);
+  } else if (state.phase === 'playing') {
     if (scene.nodeId === 'ended' || exhausted || state.summary !== null || lastLife?.generation === world.generation) fail('尚在进行的人生与余寿、结算或生平记录不一致。');
   } else {
     record(state.summary, '人生结算', summaryFields);

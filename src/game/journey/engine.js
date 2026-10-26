@@ -87,7 +87,11 @@ export function getJourneyView(state) {
     const hasLifeCost = choice.ending || choice.costs?.years || choice.costs?.lifeDamage;
     const heldItems = Object.entries(choice.costs?.items ?? {}).map(([id, count]) => `${JOURNEY_ITEMS[id]}需 ${count}，现有 ${state.life.items[id] ?? 0}`);
     const detail = choice.detail + (heldItems.length ? ` 当前物品：${heldItems.join('；')}。` : '') + (hasLifeCost ? ` 当前余寿：${state.life.lifeLimit - state.life.age - state.life.lifeDamage} 年。` : '');
-    return { id: choice.id, label: choice.label, detail, enabled: !reason, ...(reason ? { reason } : {}) };
+    const warnings = [];
+    if (choice.costs?.lifeDamage) warnings.push(`会折损 ${choice.costs.lifeDamage} 年寿元。`);
+    if (['hurt', 'severe'].includes(choice.effects?.injury)) warnings.push(choice.effects.injury === 'severe' ? '会留下重伤。' : '此举会受伤。');
+    if (choice.ending === 'burned') warnings.push('此举必死，将结束这一生。');
+    return { id: choice.id, label: choice.label, detail, enabled: !reason, ...(reason ? { reason } : {}), ...(warnings.length ? { warning: warnings.join(' ') } : {}) };
   }) : inheritanceChoices(state);
   return copy({
     revision: state.revision, sceneId: scene.id, phase: state.phase, title: scene.title, location: scene.location,

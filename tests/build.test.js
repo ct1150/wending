@@ -101,5 +101,7 @@ test('production app and journey renderer bundle through the offline named-modul
   assert.doesNotThrow(() => new vm.Script(code));
   const { startApp } = await import('./helpers/app-harness.js');
   const app = await startApp();
+  assert.match(app.html, /data-birth-start/);
+  app.clickRendered('[data-birth-start]');
   assert.match(app.html, /data-journey-choice/);
 });
