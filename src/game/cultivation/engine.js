@@ -1,7 +1,7 @@
 import { assertSaveSize } from '../save-size.js';
 import { ITEMS, SKILLS, REALMS, NODES, resolveCultivationScene } from './content.js';
 import { validateCultivation } from './validation.js';
-import { DAYS_PER_YEAR, remainingDays, durationText, matchesCultivationConditions } from './model.js';
+import { DAYS_PER_YEAR, BIRTH_ATTRIBUTES, BIRTH_TALENTS, normalizeCultivationName, remainingDays, durationText, matchesCultivationConditions } from './model.js';
 
 const copy = value => structuredClone(value);
 const own = (object, key) => Object.hasOwn(object, key);
@@ -31,6 +31,33 @@ function nextFate(state) {
   };
 }
 
+function rollBirth(state, rollCount = 1) {
+  const faces = [1, 2, 3, 4, 5, 6];
+  return {
+    attributes: {
+      constitution: draw(state, faces),
+      insight: draw(state, faces),
+      fortune: draw(state, faces),
+    },
+    talentId: draw(state, Object.keys(BIRTH_TALENTS)),
+    rollCount,
+  };
+}
+
+function birthView(state) {
+  if (state.contentVersion !== 2) return { attributes: [], talents: [] };
+  const { attributes, talentId } = state.life.birth;
+  const descriptions = {
+    constitution: '本来就能疗伤的行动额外恢复' + Math.floor(attributes.constitution / 3) + '级伤势，最多恢复至无碍。',
+    insight: '首次成功引气入体时额外积累' + Math.floor(attributes.insight / 3) + '点修为，修为最高为六；功法与修炼年月照常需要。',
+    fortune: '入世时额外携带' + Math.floor(attributes.fortune / 3) + '块灵石。',
+  };
+  return {
+    attributes: Object.entries(BIRTH_ATTRIBUTES).map(([id, name]) => ({ id, name, value: attributes[id], description: descriptions[id] })),
+    talents: [{ ...BIRTH_TALENTS[talentId] }],
+  };
+}
+
 function append(state, block) {
   state.transcript.push({ id: 'cultivation-' + (state.transcript.length + 1), sceneId: state.scene.nodeId, ...block });
 }
@@ -57,15 +84,19 @@ export function createCultivation(options = {}) {
   if (!options || typeof options !== 'object' || Array.isArray(options)) throw new Error('开局选项须为对象。');
   const { seed } = options;
   if (seed != null && !((typeof seed === 'number' && Number.isFinite(seed)) || (typeof seed === 'string' && seed.length <= 200))) throw new Error('随机种子须为有限数字或至多200字的文字。');
+  const creating = options.characterCreation === true;
+  const name = creating ? normalizeCultivationName(options.name === undefined ? '云归' : options.name) : '云归';
+  if (name === null) throw new Error('姓名须为1至24字，且不能含有控制符或换行。');
   const world = { day: 1000 * DAYS_PER_YEAR, generation: 1, facts: {}, legacies: [], biography: [] };
   const state = {
-    version: 4, mode: 'cultivation', contentVersion: 1, revision: 0,
-    rng: seedHash(seed), phase: 'playing', world,
-    life: newLife(world, null), scene: { nodeId: 'arrival', fate: {}, visited: [] },
+    version: 4, mode: 'cultivation', contentVersion: creating ? 2 : 1, revision: 0,
+    rng: seedHash(seed), phase: creating ? 'creating' : 'playing', world,
+    life: newLife(world, null, name), scene: { nodeId: 'arrival', fate: {}, visited: [] },
     transcript: [], summary: null,
   };
   state.scene.fate = nextFate(state);
-  enterScene(state, 'arrival');
+  if (creating) state.life.birth = rollBirth(state);
+  else enterScene(state, 'arrival');
   return validateCultivation(state);
 }
 
@@ -145,20 +176,30 @@ function choiceView(state, choice) {
     detail.push('余寿' + durationText(Math.max(0, remainingDays(state))) + '。');
     if (duration + damage >= remainingDays(state)) detail.push('余寿已不足以完成：继续将寿尽于途中，得不到这次修行成果。');
   }
-  return { id: choice.id, label: choice.label, detail: detail.join(' '), enabled: !reason, ...(reason ? { reason } : {}) };
+  const warnings = [];
+  if ((duration || damage) && duration + damage >= remainingDays(state)) warnings.push('余寿不足以完成，继续将在途中寿尽，无法得到这次修行成果。');
+  if (choice.ending === 'battle') warnings.push('此举必死，将结束这一生。');
+  if (damage) warnings.push('会折损寿元' + durationText(damage) + '。');
+  if (choice.effects?.lifeFacts?.['foundation-failed'] || /必定失败/.test(choice.label)) warnings.push('强行催动会使冲关失败。');
+  if ((choice.effects?.injury || 0) > 0) warnings.push(state.life.injury + choice.effects.injury >= 3 ? '会留下重伤。' : '此举会受伤。');
+  return { id: choice.id, label: choice.label, detail: detail.join(' '), enabled: !reason, ...(reason ? { reason } : {}), ...(warnings.length ? { warning: warnings.join(' ') } : {}) };
 }
 
 export function getCultivationView(state) {
   validateCultivation(state);
-  const scene = resolveCultivationScene(state);
+  const creating = state.phase === 'creating';
+  const scene = creating ? { title: '为此生落笔', location: '入世之前', goal: '定下姓名，看看此生的资质与天赋', choices: [] } : resolveCultivationScene(state);
   const remaining = Math.max(0, remainingDays(state));
   const age = Math.floor(state.life.ageDays / DAYS_PER_YEAR);
   const year = Math.floor(state.world.day / DAYS_PER_YEAR);
+  const transcriptStart = state.life.facts['transcript-start'] ?? 0;
+  const traits = birthView(state);
   return copy({
     revision: state.revision, sceneId: state.scene.nodeId, phase: state.phase,
     title: scene.title, location: scene.location, goal: scene.goal,
-    blocks: state.transcript.slice(state.life.facts['transcript-start'] || 0),
+    blocks: state.transcript.slice(transcriptStart),
     choices: state.phase === 'ended' ? inheritanceChoices(state) : scene.choices.map(choice => choiceView(state, choice)),
+    ...(creating ? { creation: { name: state.life.name, ...traits, rollCount: state.life.birth.rollCount } } : {}),
     summary: {
       name: state.life.name, age, ageText: age + '岁', year, generation: state.world.generation,
       remainingLife: Math.floor(remaining / DAYS_PER_YEAR), remainingLifeText: durationText(remaining),
@@ -168,8 +209,9 @@ export function getCultivationView(state) {
       abilities: state.life.skills.map(id => ({ ...SKILLS[id] })),
       legacy: state.life.legacyId ? skillView(state.life.legacyId) : null,
       items: Object.entries(state.life.items).filter(([, count]) => count > 0).map(([id, count]) => ({ id, name: ITEMS[id].name, count })),
-      ending: state.summary, biography: state.world.biography, priorTranscript: [], legacyArchive: null,
+      ending: state.summary, biography: state.world.biography, priorTranscript: state.transcript.slice(0, transcriptStart), legacyArchive: null,
       legacyCollection: state.world.legacies.map(skillView),
+      ...traits,
     },
   });
 }
@@ -195,8 +237,13 @@ function applyEffects(state, effects = {}) {
     if (!own(SKILLS, effects.legacy)) throw new Error('传承法门不存在。');
     state.world.legacies.push(effects.legacy);
   }
-  state.life.cultivation = Math.max(0, Math.min(6, state.life.cultivation + (effects.cultivation || 0)));
-  state.life.injury = Math.max(0, Math.min(3, state.life.injury + (effects.injury || 0) - (effects.heal || 0)));
+  const birth = state.contentVersion === 2 ? state.life.birth : null;
+  const qiBonus = birth && state.life.realm === 'mortal' && effects.realm === 'qi'
+    ? Math.floor(birth.attributes.insight / 3) + (birth.talentId === 'focused' ? 1 : 0) : 0;
+  const healBonus = birth && (effects.heal || 0) > 0
+    ? Math.floor(birth.attributes.constitution / 3) + (birth.talentId === 'restful' ? 1 : 0) : 0;
+  state.life.cultivation = Math.max(0, Math.min(6, state.life.cultivation + (effects.cultivation || 0) + qiBonus));
+  state.life.injury = Math.max(0, Math.min(3, state.life.injury + (effects.injury || 0) - (effects.heal || 0) - healBonus));
   Object.assign(state.life.facts, effects.lifeFacts);
   Object.assign(state.world.facts, effects.worldFacts);
   if (effects.realm) {
@@ -238,9 +285,33 @@ function commit(previous, next, message) {
   }
 }
 
+function chooseBirth(state, command) {
+  if (!['birth-name', 'birth-reroll', 'birth-start'].includes(command.choiceId)) return { kind: 'unavailable', state, message: '请先定下此生姓名与资质，再踏入故事。' };
+  const needsName = command.choiceId === 'birth-name' || (command.choiceId === 'birth-start' && own(command, 'name'));
+  const name = needsName ? normalizeCultivationName(command.name) : state.life.name;
+  if (name === null) return { kind: 'unavailable', state, message: '姓名须为1至24字，且不能含有控制符或换行。' };
+  const next = copy(state);
+  next.life.name = name;
+  let message = '此生姓名已记下。';
+  if (command.choiceId === 'birth-reroll') {
+    next.life.birth = rollBirth(next, next.life.birth.rollCount + 1);
+    message = '骰子落定，此生的资质与天赋已记下。';
+  } else if (command.choiceId === 'birth-start') {
+    next.life.items.stones += Math.floor(next.life.birth.attributes.fortune / 3);
+    if (next.life.birth.talentId === 'prepared') next.life.items.medicine++;
+    if (next.life.birth.talentId === 'herb-affinity') next.life.items.herb = 1;
+    next.phase = 'playing';
+    enterScene(next, 'arrival');
+    message = name + '，此生的求仙路从这里开始。';
+  }
+  next.revision++;
+  return commit(state, next, message);
+}
+
 export function chooseCultivation(state, command) {
   validateCultivation(state);
   if (!command || command.revision !== state.revision || command.sceneId !== state.scene.nodeId) return { kind: 'stale', state, message: '眼前的故事已经变化，请按当前选项继续。' };
+  if (state.phase === 'creating') return chooseBirth(state, command);
   if (state.phase === 'ended') {
     const choice = inheritanceChoices(state).find(row => row.id === command.choiceId);
     if (!choice) return { kind: 'unavailable', state, message: '此生没有留下这项传承。' };
@@ -253,10 +324,11 @@ export function chooseCultivation(state, command) {
     next.life.facts['transcript-start'] = next.transcript.length;
     next.scene = { nodeId: 'arrival', fate: nextFate(next), visited: [] };
     next.summary = null;
-    next.phase = 'playing';
+    next.phase = next.contentVersion === 2 ? 'creating' : 'playing';
+    if (next.phase === 'creating') next.life.birth = rollBirth(next);
     next.revision++;
-    enterScene(next, 'arrival');
-    return commit(state, next, '十六年后，你再一次踏上求仙之路。');
+    if (next.phase === 'playing') enterScene(next, 'arrival');
+    return commit(state, next, next.phase === 'creating' ? '十六年后，再为此生落笔定名。' : '十六年后，你再一次踏上求仙之路。');
   }
   const scene = resolveCultivationScene(state);
   const choice = scene.choices.find(row => row.id === command.choiceId);

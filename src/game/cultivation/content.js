@@ -67,9 +67,10 @@ const definitions = {};
 
 definitions.arrival = s => {
   const opening = s.scene.fate.opening;
+  const rebornBody = s.contentVersion === 2 ? `此生名为${s.life.name}，又是一副十六岁的身体。` : '又是一副十六岁的身体。';
   const memory = s.world.generation > 1
-    ? narration(s.life.legacyId ? `又是一副十六岁的身体。旧生的人与物都不在身边，只有${SKILLS[s.life.legacyId].name}的练法仍记得清楚；真要用得熟，还得靠这一世的手脚。` : '又是一副十六岁的身体。你记得走过的弯路，手里却只有一包寻常伤药。旧日相识未必还在，即使仍在，也不认识眼前这个少年。新的人生要重新谋生。')
-    : narration('你叫云归，十六岁，住在山脚的芦村。两年前父亲死于山中落石，母亲的咳嗽每到冬天便重一分。家里能变卖的东西，已经不多了。');
+    ? narration(s.life.legacyId ? `${rebornBody}旧生的人与物都不在身边，只有${SKILLS[s.life.legacyId].name}的练法仍记得清楚；真要用得熟，还得靠这一世的手脚。` : `${rebornBody}你记得走过的弯路，手里${s.contentVersion === 2 ? '带着为今生备下的行装' : '却只有一包寻常伤药'}。旧日相识未必还在，即使仍在，也不认识眼前这个少年。新的人生要重新谋生。`)
+    : narration(`你叫${s.life.name}，十六岁，住在山脚的芦村。两年前父亲死于山中落石，母亲的咳嗽每到冬天便重一分。家里能变卖的东西，已经不多了。`);
   if (opening === 'market') return scene('arrival', '十六岁的药铺学徒', '青石镇', '挣到一部完整功法，给自己争一个不同的活法', [
     memory,
     narration('这一世，你生在镇外的佃户家。去年旱灾后，你被送来药铺做杂工。掌柜肯给饭吃，却不肯教认药。今日集市上有修士招人：报酬不多，胜在能接触真正的入门书。'),

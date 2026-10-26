@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { createJourney, getJourneyView, chooseJourney } from '../src/game/journey/engine.js';
 import { validateJourney } from '../src/game/journey/validation.js';
-import { renderJourney } from '../src/ui/journey.js';
+import { renderJourneyHistory } from '../src/ui/journey.js';
 import { route, pick, clinic, evidenceVictory, limitedVictory } from './helpers/journey-routes.js';
 
 const rebirth = s => pick(s, getJourneyView(s).choices[0]?.id);
@@ -16,7 +16,7 @@ test('ended life offers direct rebirth without a reward and preserves full histo
  assert.equal(next.revision,ended.revision+1); assert.deepEqual(next.world.biography,ended.world.biography);
  assert.equal(next.scene.nodeId,'later-clinic'); assert.equal(next.life.legacyId,null);
  assert.ok(next.world.biography[0].transcript.length > 20);
- assert.match(renderJourney(getJourneyView(next)),/生平|旧人生/);
+ assert.match(renderJourneyHistory(getJourneyView(next)),/生平|旧人生/);
  assert.equal(chooseJourney(next,{revision:0,sceneId:next.scene.nodeId,choiceId:'triage-severity'}).kind,'stale');
 });
 test('living victory explicitly waits remaining years then births once without replaying finale', () => {
