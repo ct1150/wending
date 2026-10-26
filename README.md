@@ -1,6 +1,6 @@
 # 百世问鼎 · 人间求仙篇
 
-**3.1.0：取名掷骰与沉浸阅读。** 从十六岁的山村少年开始，为一部完整功法走进修仙世界。争取机缘、谨慎历险、准备筑基，携一世所得再入轮回。
+**3.1.0 已发布：取名掷骰与沉浸阅读。** 从十六岁的山村少年开始，为一部完整功法走进修仙世界。争取机缘、谨慎历险、准备筑基，携一世所得再入轮回。
 
 本版完成“凡人入门—炼气历险—筑基取舍—此生归宿—下一世”的可重玩闭环。新篇尚未实现更高境界与三界远征，旧三界版本存档仍可继续。实际发布证据见 [部署记录](docs/DEPLOYMENT.md)。
 
@@ -46,7 +46,9 @@ npm test、npm run check、npm run build分别执行行为验证、语法检查�
 
 Worker打包命令为 npm run build:worker -- --source-commit ACTUAL_MERGED_40_CHARACTER_SHA，须把占位符替换为真实远端完整SHA。发布沿用现有Cloudflare Worker，本轮不改变部署架构或配置自动发布。
 
-上一版 3.0.0 经 [PR #6](https://github.com/ct1150/wending/pull/6) 首次发行，再由 [PR #7](https://github.com/ct1150/wending/pull/7) 修正四处条件叙述。3.0.0 最终运行时源码为 [`568d53915cde8b25fd742403d3f8d8075dcdc7a8`](https://github.com/ct1150/wending/commit/568d53915cde8b25fd742403d3f8d8075dcdc7a8)，[main CI](https://github.com/ct1150/wending/actions/runs/40210351905) 成功，于 UTC `2026-10-25T16:10:48.567616Z` 通过 API 更新现有 Worker。真实浏览器已走通护商筑基、寿终与携辨药的新生，验证旧 v3 继续、存档恢复和实际游戏下载；最终文字修订版的生产身份、下载文件与第二世重载也已核对。精确产物和观察范围见 [部署记录](docs/DEPLOYMENT.md) 与 [验收记录](docs/QA_REPORT.md)。后续文档提交不改变线上实际源码标记。
+3.1.0 由 [PR #9](https://github.com/ct1150/wending/pull/9) 合并发布，实际运行时源码为 [`ffe37add4d9194566f327667f0a1a9d7b3ee7394`](https://github.com/ct1150/wending/commit/ffe37add4d9194566f327667f0a1a9d7b3ee7394)，[main CI](https://github.com/ct1150/wending/actions/runs/40254622457) 成功。现有 Worker 于上海 2026-10-26 09:32:24 更新。真实网页已验证取名掷骰、刷新与导入恢复、实际初始物资、干净当前剧情、人物与历史抽屉、固定状态栏和键盘焦点；实际游戏下载与发行包完全一致。详细证据及设备范围见 [部署记录](docs/DEPLOYMENT.md) 与 [验收记录](docs/QA_REPORT.md)。后续文档提交不改变线上源码标记。
+
+上一版 3.0.0 的护商筑基、寿终与第二世路线证据保留在验收记录中。
 
 ## 源码
 
