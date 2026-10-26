@@ -25,7 +25,7 @@ function nextFate(state) {
   // Resolve the whole life's opportunities at birth; reading cannot reroll them.
   const opening = draw(state, ['valley', 'market', 'ferry']);
   return {
-    opening: state.world.generation === 1 ? 'valley' : opening,
+    opening,
     opportunity: draw(state, ['marsh', 'ruins', 'caravan']),
     pressure: draw(state, ['rival', 'scarcity', 'storm']),
   };
