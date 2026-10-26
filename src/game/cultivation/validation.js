@@ -147,7 +147,7 @@ export function validateCultivation(state) {
   record(scene, '当前场景', ['nodeId', 'fate', 'visited']);
   if (!nodeIds.has(scene.nodeId)) fail('当前场景不存在。');
   record(scene.fate, '当世机缘', ['opening', 'opportunity', 'pressure']);
-  if (!['valley', 'market', 'ferry'].includes(scene.fate.opening) || !['marsh', 'ruins', 'caravan'].includes(scene.fate.opportunity) || !['rival', 'scarcity', 'storm'].includes(scene.fate.pressure) || (world.generation === 1 && scene.fate.opening !== 'valley')) fail('当世机缘或开场无效。');
+  if (!['valley', 'market', 'ferry'].includes(scene.fate.opening) || !['marsh', 'ruins', 'caravan'].includes(scene.fate.opportunity) || !['rival', 'scarcity', 'storm'].includes(scene.fate.pressure)) fail('当世机缘或开场无效。');
   list(scene.visited, '已到场景', 300);
   if (scene.visited.some(id => !nodeIds.has(id))) fail('已到场景中有未知地点。');
 
