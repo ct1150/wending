@@ -239,7 +239,7 @@ function applyEffects(state, effects = {}) {
   }
   const birth = state.contentVersion === 2 ? state.life.birth : null;
   const qiBonus = birth && state.life.realm === 'mortal' && effects.realm === 'qi'
-    ? Math.floor(birth.attributes.insight / 3) + (birth.talentId === 'focused' ? 1 : 0) : 0;
+    ? Math.floor(birth.attributes.insight / 3) + (['focused', 'keen-memory'].includes(birth.talentId) ? 1 : birth.talentId === 'flash-wisdom' ? 2 : 0) : 0;
   const healBonus = birth && (effects.heal || 0) > 0
     ? Math.floor(birth.attributes.constitution / 3) + (birth.talentId === 'restful' ? 1 : 0) : 0;
   state.life.cultivation = Math.max(0, Math.min(6, state.life.cultivation + (effects.cultivation || 0) + qiBonus));
@@ -300,6 +300,9 @@ function chooseBirth(state, command) {
     next.life.items.stones += Math.floor(next.life.birth.attributes.fortune / 3);
     if (next.life.birth.talentId === 'prepared') next.life.items.medicine++;
     if (next.life.birth.talentId === 'herb-affinity') next.life.items.herb = 1;
+    if (next.life.birth.talentId === 'sensitive-breath') next.life.items.talisman = 1;
+    if (next.life.birth.talentId === 'flash-wisdom') next.life.lifeDamageDays += 3 * DAYS_PER_YEAR;
+    if (next.life.birth.talentId === 'fortunate-burden') { next.life.items.stones += 3; next.life.injury = 1; }
     next.phase = 'playing';
     enterScene(next, 'arrival');
     message = name + '，此生的求仙路从这里开始。';
