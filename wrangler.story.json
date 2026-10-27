@@ -1,0 +1,15 @@
+{
+  "$schema": "https://raw.githubusercontent.com/cloudflare/workers-sdk/main/packages/wrangler/config-schema.json",
+  "name": "baishi-wending",
+  "main": "release/backend/entry.mjs",
+  "compatibility_date": "2026-07-30",
+  "workers_dev": true,
+  "no_bundle": true,
+  "find_additional_modules": true,
+  "rules": [{ "type": "ESModule", "globs": ["**/*.js", "**/*.mjs"], "fallthrough": true }],
+  "ai": { "binding": "AI" },
+  "durable_objects": {
+    "bindings": [{ "name": "STORY_BUDGET", "class_name": "StoryBudget" }]
+  },
+  "migrations": [{ "tag": "story-budget-v1", "new_sqlite_classes": ["StoryBudget"] }]
+}

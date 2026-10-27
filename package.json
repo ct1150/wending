@@ -19,6 +19,8 @@
     "release": "npm test && npm run check && npm run build"
   },
   "devDependencies": {
+    "acorn": "8.19.0",
+    "miniflare": "4.20260730.0",
     "playwright": "1.62.1"
   }
 }

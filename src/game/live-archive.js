@@ -51,7 +51,30 @@ function transaction(db,mode,body) {
  });
 }
 export async function openLiveArchive({name='wending-live-v1'}={}) {
- const db=await new Promise((resolve,reject)=>{const req=indexedDB.open(name,1);req.onupgradeneeded=()=>{const db=req.result;db.createObjectStore('runs',{keyPath:'archiveId'});db.createObjectStore('pending',{keyPath:'archiveId'});db.createObjectStore('history',{keyPath:['archiveId','index']});const m=db.createObjectStore('memory',{keyPath:['archiveId','id','version']});m.createIndex('entity','entityKey');m.createIndex('status','statusKey');m.createIndex('recent','recentKey');};req.onsuccess=()=>resolve(req.result);req.onerror=()=>reject(req.error);req.onblocked=()=>reject(new Error('ARCHIVE_OPEN_BLOCKED'));});
+ const db=await new Promise((resolve,reject)=>{
+  const req=indexedDB.open(name,2);
+  req.onupgradeneeded=()=>{
+   const db=req.result;
+   if(!db.objectStoreNames.contains('runs')) {
+    db.createObjectStore('runs',{keyPath:'archiveId'});
+    db.createObjectStore('pending',{keyPath:'archiveId'});
+    db.createObjectStore('history',{keyPath:['archiveId','index']});
+    const memory=db.createObjectStore('memory',{keyPath:['archiveId','id','version']});
+    memory.createIndex('entity','entityKey');
+    memory.createIndex('status','statusKey');
+    memory.createIndex('recent','recentKey');
+   }
+   // Native IndexedDB populates this additive index from existing v1 records.
+   // Version -1 selects only current statuses, never an obsolete open version.
+   const memory=req.transaction.objectStore('memory');
+   if(!memory.indexNames.contains('storyEntityOpen')) {
+    memory.createIndex('storyEntityOpen',['archiveId','version','record.entityId','record.status','id']);
+   }
+  };
+  req.onsuccess=()=>resolve(req.result);
+  req.onerror=()=>reject(req.error);
+  req.onblocked=()=>reject(new Error('ARCHIVE_OPEN_BLOCKED'));
+ });
  db.onversionchange=()=>db.close();return new Archive(db);
 }
 class Archive {
@@ -96,6 +119,89 @@ class Archive {
    if(includeOpen)tasks.push(scan('status',[c.run.archiveId,'open']));
    let fetchedEntities=false;
    const next=()=>{if(tasks.length){tasks.shift()();return;}if(!fetchedEntities){fetchedEntities=true;for(const id of entities)tasks.push(()=>get(s.memory,[c.run.archiveId,'e:'+sha256(id).slice(0,40),-1],row=>{add(row);next();}));next();return;}done([...records.values()]);};next();
+  });
+ }
+ // Prompt retrieval is a bounded view over permanent indexes. All obligations
+ // remain available to readRelated/export; count does not materialize their rows.
+ async readStoryRecords(runId,{entityIds=[]}={}) {
+  check(Array.isArray(entityIds)&&entityIds.length<=25,'ARCHIVE_INVALID_QUERY');
+  entityIds.forEach(ident);
+  const currentIds=[...new Set(entityIds)].sort();
+  const c=await this._capture(runId);
+  if(!c)return {records:[],openTotal:0};
+  return transaction(this.db,'readonly',(stores,get,done,guard)=>{
+   const records=new Map(),entities=new Set(currentIds),tasks=[];
+   let openTotal=0,totalBytes=0,fetchedEntities=false;
+   const add=row=>{
+    if(!row||records.has(row.id))return;
+    totalBytes+=encodedBytes(row.record);
+    check(records.size<256&&totalBytes<=CHUNK_BYTES,'MEMORY_RETRIEVAL_TOO_LARGE');
+    records.set(row.id,row.record);
+    if(row.record.entityId)entities.add(row.record.entityId);
+   };
+   const next=()=>{
+    if(tasks.length) { tasks.shift()(); return; }
+    if(!fetchedEntities) {
+     fetchedEntities=true;
+     for(const entityId of [...entities].sort()) {
+      tasks.push(()=>get(stores.memory,[c.run.archiveId,'e:'+sha256(entityId).slice(0,40),-1],row=>{add(row);next();}));
+     }
+     next();
+     return;
+    }
+    done({records:[...records.values()],openTotal});
+   };
+   // Rotation depends on the committed turn only: a retry selects exactly the
+   // same rows, while later turns can revisit obligations outside this window.
+   const openWindow=(index,range,limit,global=false)=>()=>{
+    const source=stores.memory.index(index),count=source.count(range);
+    count.onsuccess=guard(()=>{
+     const total=count.result;
+     if(global)openTotal=total;
+     if(!total) { next(); return; }
+     const offset=c.run.state.turnId%total;
+     let visited=0,wrapped=false;
+     const scan=skip=>{
+      let first=true;
+      const request=source.openCursor(range);
+      request.onsuccess=guard(()=>{
+       const cursor=request.result;
+       if(!cursor) {
+        if(!wrapped&&offset&&visited<Math.min(limit,total)) { wrapped=true;scan(0); }
+        else next();
+        return;
+       }
+       if(first&&skip) { first=false;cursor.advance(skip);return; }
+       first=false;
+       add(cursor.value);
+       visited++;
+       if(visited>=Math.min(limit,total))next();
+       else cursor.continue();
+      });
+     };
+     scan(offset);
+    });
+   };
+   for(const entityId of currentIds) {
+    const prefix=[c.run.archiveId,-1,entityId,'open'];
+    tasks.push(openWindow('storyEntityOpen',IDBKeyRange.bound(prefix,[...prefix,[]]),2));
+    tasks.push(()=>{
+     let selected=0,visited=0;
+     const range=IDBKeyRange.bound([c.run.archiveId,entityId,0],[c.run.archiveId,entityId,Number.MAX_SAFE_INTEGER,[]]);
+     const request=stores.memory.index('recent').openCursor(range,'prev');
+     request.onsuccess=guard(()=>{
+      const cursor=request.result;
+      if(!cursor||selected>=2||visited++>=8) { next();return; }
+      if(cursor.value.record.kind!=='entity'&&cursor.value.record.status!=='open') { add(cursor.value);selected++; }
+      cursor.continue();
+     });
+    });
+   }
+   tasks.push(openWindow('status',IDBKeyRange.only([c.run.archiveId,'open']),12,true));
+   get(stores.runs,c.run.archiveId,run=>{
+    check(run&&run.hash===c.run.hash);
+    next();
+   });
   });
  }
  async _derived(c,scene,memoryDelta) {

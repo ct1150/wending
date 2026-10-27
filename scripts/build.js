@@ -185,6 +185,7 @@ async function inlineSvgReferences(source, file, root) {
 export async function bundleModules(root, entry) {
   const modules = new Map(); const visiting = new Set(); const order = [];
   async function visit(file) {
+    if (file === path.resolve(root, 'src/worker') || file.startsWith(path.resolve(root, 'src/worker') + path.sep)) throw new Error('Server worker modules cannot enter browser outputs');
     if (visiting.has(file)) throw new Error(`Circular imports are unsupported: ${path.relative(root, file)}`);
     if (modules.has(file)) return;
     visiting.add(file);
@@ -245,7 +246,7 @@ export async function build(root = projectRoot) {
   await rm(dist, { recursive: true, force: true }); await rm(release, { recursive: true, force: true });
   await mkdir(dist, { recursive: true }); await mkdir(release, { recursive: true });
   await cp(htmlFile, path.join(dist, 'index.html'));
-  for (const directory of ['src', 'assets']) await cp(path.join(root, directory), path.join(dist, directory), { recursive: true });
+  for (const directory of ['src', 'assets']) await cp(path.join(root, directory), path.join(dist, directory), { recursive: true, filter: source => source !== path.join(root, 'src/worker') });
   await writeFile(path.join(dist, '.nojekyll'), '');
   const filename = 'baishi-wending-offline.html';
   await writeFile(path.join(release, filename), html); await writeFile(path.join(dist, filename), html);

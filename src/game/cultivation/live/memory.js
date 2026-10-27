@@ -69,10 +69,14 @@ function latestRecords(records,state) {
     if(!old||old.turnId<row.turnId)rows.set(row.id,copy(row));
   }
   for(const row of rows.values())if(row.kind==='summary'&&row.references.some(id=>!rows.has(id)))fail('MEMORY_REFERENCE_MISSING');
-  return [...rows.values()].sort((a,b)=>b.turnId-a.turnId||a.id.localeCompare(b.id));
+  return [...rows.values()].sort((a,b)=>b.turnId-a.turnId||(a.id<b.id?-1:a.id>b.id?1:0));
 }
 
-export function buildStoryContext(state,pending,relatedRecords=[]) {
+export function buildStoryContext(state,pending,relatedRecords=[],options={}) {
+  inspect(options);
+  exactKeys(options,[],['selection','openTotal']);
+  const selecting=options.selection==='relevance-v1';
+  if(Object.keys(options).length && (!selecting || !Number.isSafeInteger(options.openTotal) || options.openTotal<0))fail('STORY_CONTEXT_INVALID');
   inspect(state);inspect(pending);inspect(relatedRecords,256*1024);
   if(!Array.isArray(relatedRecords)||relatedRecords.length>256)fail('MEMORY_RETRIEVAL_TOO_LARGE');
   let fixed;
@@ -92,14 +96,19 @@ export function buildStoryContext(state,pending,relatedRecords=[]) {
   for(const row of records)if(row.kind==='death'){
     const entity=entities.get(row.entityId);if(!entity||entity.kind!=='person')fail('MEMORY_REFERENCE_MISSING');entity.status='dead';
   }
-  if(entities.size>24)fail('MEMORY_CONTEXT_TOO_LARGE');
+  if(!selecting&&entities.size>24)fail('MEMORY_CONTEXT_TOO_LARGE');
   for(const row of records)if(Object.hasOwn(row,'entityId')&&!entities.has(row.entityId))fail('MEMORY_REFERENCE_MISSING');
   const facts=records.filter(r=>['receipt','fact','relationship','death'].includes(r.kind));
   const promises=records.filter(r=>r.kind==='promise'),clues=records.filter(r=>r.kind==='clue');
   // Caller has already retrieved relevant permanent records. Refuse rather than
   // silently dropping obligations/facts when that relevant set cannot fit.
-  if(facts.length>16||promises.length>12||clues.length>12)fail('MEMORY_CONTEXT_TOO_LARGE');
+  if(!selecting&&(facts.length>16||promises.length>12||clues.length>12))fail('MEMORY_CONTEXT_TOO_LARGE');
   const result={schemaVersion:1,phase:fixed.kind,identity:copy(fixed.identity),namespace:namespace(state.runId),receipt:copy(fixed.receipt),life:copy(fixed.nextLife),entities:[...entities.values()],memory:{facts,promises,clues,recent:records.filter(r=>r.kind==='turn').slice(0,4),summaries:records.filter(r=>r.kind==='summary').slice(0,2)},references:[],previousScene:state.currentScene?{id:state.currentScene.id,blocksHash:sha256(canonicalStringify(state.currentScene.blocks))}:null};
+  if(selecting) {
+    selectRelevantMemory(result,records,state,entities,options.openTotal);
+    validateStoryContext(result);
+    return freeze(result);
+  }
   const updateReferences=()=>{result.references=[...new Set(Object.values(result.memory).flat().map(r=>r.id))];};
   updateReferences();
   while(bytes(result)>7000&&(result.memory.summaries.length||result.memory.recent.length)){
@@ -110,11 +119,56 @@ export function buildStoryContext(state,pending,relatedRecords=[]) {
   return freeze(result);
 }
 
+// Selection changes only prompt coverage. Immutable rows and unresolved statuses
+// remain in the archive; the same fixed action and candidates give the same DTO.
+function selectRelevantMemory(result,records,state,entities,openTotal) {
+  const currentIds=new Set(state.relatedEntities.map(entity=>entity.id));
+  const openCandidates=records.filter(row=>['promise','clue'].includes(row.kind)&&row.status==='open');
+  if(openCandidates.length>openTotal)fail('STORY_CONTEXT_INVALID');
+  result.entities=[...entities.values()].filter(entity=>currentIds.has(entity.id));
+  result.memory={facts:[],promises:[],clues:[],recent:[],summaries:[]};
+  result.coverage={policy:'relevance-v1',openTotal,openIncluded:0,openOmitted:openTotal};
+  const refresh=()=>{
+    result.references=Object.values(result.memory).flat().map(row=>row.id);
+    const included=[...result.memory.promises,...result.memory.clues].filter(row=>row.status==='open').length;
+    result.coverage.openIncluded=included;
+    result.coverage.openOmitted=openTotal-included;
+  };
+  refresh();
+  // The context is itself serialized as a user-message string. Account for
+  // that second JSON escaping layer, leaving room for fixed system/schema data.
+  const fits=()=>result.entities.length<=24&&bytes(result)<=7000&&bytes(JSON.stringify(result))<=7000;
+  if(!fits())fail('MEMORY_CONTEXT_TOO_LARGE');
+  const target=result.receipt.action?.targetId;
+  const relevance=row=>row.entityId===target?0:currentIds.has(row.entityId)?1:2;
+  const priority=row=>['promise','clue'].includes(row.kind)&&row.status==='open'?0:row.kind==='death'?1:['fact','relationship','receipt'].includes(row.kind)?2:3;
+  const ordered=[...records].sort((a,b)=>priority(a)-priority(b)||relevance(a)-relevance(b)||b.turnId-a.turnId||(a.id<b.id?-1:a.id>b.id?1:0));
+  const groups={receipt:'facts',fact:'facts',relationship:'facts',death:'facts',promise:'promises',clue:'clues',turn:'recent',summary:'summaries'};
+  const limits={facts:16,promises:12,clues:12,recent:4,summaries:2};
+  for(const row of ordered) {
+    const group=groups[row.kind];
+    if(!group||result.memory[group].length>=limits[group])continue;
+    if(row.kind==='summary'&&row.references.some(id=>!result.references.includes(id)))continue;
+    const previousEntities=result.entities;
+    const required=row.entityId?[row.entityId]:row.kind==='turn'?row.entityIds:[];
+    const missing=required.filter(id=>!result.entities.some(entity=>entity.id===id));
+    if(missing.some(id=>!entities.has(id)))continue;
+    result.entities=[...result.entities,...missing.map(id=>entities.get(id))];
+    result.memory[group].push(row);
+    refresh();
+    if(!fits()) {
+      result.memory[group].pop();
+      result.entities=previousEntities;
+      refresh();
+    }
+  }
+}
+
 // Public context is untrusted portable JSON at the HTTP boundary. The local
 // builder re-derives pending; this checks consistency, not account authentication.
 export function validateStoryContext(c) {
   inspect(c,7000);
-  exactKeys(c,['schemaVersion','phase','identity','namespace','receipt','life','entities','memory','references','previousScene']);
+  exactKeys(c,['schemaVersion','phase','identity','namespace','receipt','life','entities','memory','references','previousScene'],['coverage']);
   if(c.schemaVersion!==1||!['opening','choice'].includes(c.phase))fail('STORY_CONTEXT_INVALID');
   exactKeys(c.identity,['runId','turnId','baseRevision','stateHash','choiceId','rulesVersion','promptVersion','requestId']);
   idField(c.identity.runId);idField(c.identity.requestId);whole(c.identity.turnId,1);whole(c.identity.baseRevision);
@@ -140,6 +194,13 @@ export function validateStoryContext(c) {
       if(entity.kind!=='person'||entity.status!=='dead')fail('ENTITY_DEATH_CONFLICT');
     }
     if(row.kind==='summary'&&row.references.some(id=>!c.references.includes(id)))fail('MEMORY_REFERENCE_MISSING');
+  }
+  if(c.coverage!==undefined) {
+    exactKeys(c.coverage,['policy','openTotal','openIncluded','openOmitted']);
+    if(c.coverage.policy!=='relevance-v1')fail('STORY_CONTEXT_INVALID');
+    for(const key of ['openTotal','openIncluded','openOmitted'])whole(c.coverage[key]);
+    const included=[...c.memory.promises,...c.memory.clues].filter(row=>row.status==='open').length;
+    if(c.coverage.openIncluded!==included || c.coverage.openTotal<included || c.coverage.openOmitted!==c.coverage.openTotal-included)fail('STORY_CONTEXT_INVALID');
   }
   if(c.previousScene!==null){exactKeys(c.previousScene,['id','blocksHash']);idField(c.previousScene.id);if(!/^[a-f0-9]{64}$/.test(c.previousScene.blocksHash))fail('STORY_CONTEXT_INVALID');}
   return c;

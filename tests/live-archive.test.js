@@ -56,3 +56,73 @@ test('injected storage permission denial fails without replacing existing archiv
 test('late response from an older attempt cannot commit after an explicit retry is durable',async t=>{
  const {page}=await liveBrowser(t);const r=await page.evaluate(async()=>{const a=await open('archive-late-attempt');await born(a);let l=await a.load();const first={id:'attempt-first',sessionRef:'session-first',retryOf:null};await a.setAttempt({runId:l.state.runId,requestId:'opening',expectedAttemptId:null,attempt:first});const second={id:'attempt-retry',sessionRef:'session-next',retryOf:{attemptId:first.id,sessionRef:first.sessionRef}};await a.setAttempt({runId:l.state.runId,requestId:'opening',expectedAttemptId:first.id,attempt:second});const before=await a.load(),scene=fixture(l.state),args={expectedRevision:0,nextState:engine.commitTurn(l.state,l.pending,scene),scene,memoryDelta:memory.buildMemoryDelta(l.pending.receipt,scene),requestId:'opening'};let rejected=false;try{await a.commit({...args,expectedAttemptId:first.id});}catch{rejected=true;}const after=await a.load();if(rejected)await a.commit({...args,expectedAttemptId:second.id});return {rejected,before,after,final:await a.load()};});assert.equal(r.rejected,true);assert.deepEqual(r.after,r.before);assert.equal(r.final.state.revision,1);
 });
+
+test('bounded story retrieval preserves 17 facts, 13 large obligations and dead identities across retry and export',async t=>{
+ const {page}=await liveBrowser(t);
+ const result=await page.evaluate(async()=>{
+  const archive=await open('archive-selected-memory');await born(archive);
+  const initial=await archive.load(),first=fixture(initial.state,0);
+  const actor={id:first.id.replace('s:local','e:guide'),name:'渡者',kind:'person',status:'alive'};
+  const dead={id:first.id.replace('s:local','e:departed'),name:'故人',kind:'person',status:'dead'};
+  const place={id:first.id.replace('s:local','e:bank'),name:'河岸',kind:'place'};
+  async function commit(scene){const row=await archive.load(),pending=row.pending??engine.prepareChoice(row.state,{requestId:'memory-'+row.state.turnId,choiceId:row.state.currentScene.choices[0].id});if(!row.pending)await archive.prepare(pending);return archive.commit({expectedRevision:row.state.revision,nextState:engine.commitTurn(row.state,pending,scene),scene,memoryDelta:memory.buildMemoryDelta(pending.receipt,scene),requestId:pending.identity.requestId});}
+  first.entities=[actor,dead,place];first.memoryDeltas=[{kind:'death',entityId:dead.id,text:'故人已亡。'},...Array.from({length:9},(_,i)=>({kind:'fact',entityId:actor.id,text:'往事'+i+'山'.repeat(200)})),...Array.from({length:6},(_,i)=>({kind:'promise',entityId:place.id,text:'河岸旧约'+i+'约'.repeat(300)}))];await commit(first);
+  let row=await archive.load();const second=fixture(row.state,1);second.entities=[actor,dead,place];second.memoryDeltas=[...Array.from({length:8},(_,i)=>({kind:'fact',entityId:actor.id,text:'往事'+(9+i)+'山'.repeat(200)})),...Array.from({length:7},(_,i)=>({kind:'promise',entityId:place.id,text:'河岸旧约'+(6+i)+'约'.repeat(300)}))];await commit(second);
+  row=await archive.load();const pending=engine.prepareChoice(row.state,{requestId:'fixed-selection',choiceId:row.state.currentScene.choices[0].id});await archive.prepare(pending);
+  const selection=await archive.readStoryRecords(row.state.runId,{entityIds:[actor.id,dead.id,place.id]});
+  const context=memory.buildStoryContext(row.state,pending,selection.records,{selection:'relevance-v1',openTotal:selection.openTotal});
+  const repeated=await archive.readStoryRecords(row.state.runId,{entityIds:[place.id,actor.id,dead.id]});
+  const retried=memory.buildStoryContext(row.state,pending,repeated.records,{selection:'relevance-v1',openTotal:repeated.openTotal});
+  const {createLiveSession}=await import('/src/ui/live-session.js');let sent;
+  const session=createLiveSession({archive,client:{capabilities:async()=>({available:true}),createSession:async()=>({sessionRef:'memory-session'}),requestTurn:async(p,c,a)=>{sent=c;const scene=fixture(row.state,2);scene.entities=[actor,dead,place];return {status:'ready',requestId:p.identity.requestId,attemptId:a.id,sessionRef:a.sessionRef,scene};}}});
+  await session.retry();
+  const {exportLiveArchive,importLiveArchive}=await import('/src/game/live-save-format.js');
+  const restored=await open('archive-selected-restored');await importLiveArchive(exportLiveArchive(archive),restored);
+  const rows=await restored.readRelated(row.state.runId,{entityIds:[actor.id,dead.id,place.id],includeOpen:true,factsPerEntity:16});
+  const history=await restored.readHistory(row.state.runId,null,128);
+  const cachedBase=await restored.load();
+  const cachedPending=engine.prepareChoice(cachedBase.state,{requestId:'cached-closure',choiceId:cachedBase.state.currentScene.choices[0].id});
+  await restored.prepare(cachedPending);
+  const attempt={id:'cached-attempt',sessionRef:'prior-session',retryOf:null};
+  await restored.setAttempt({runId:row.state.runId,requestId:'cached-closure',expectedAttemptId:null,attempt});
+  const omitted=rows.find(record=>record.kind==='promise'&&!context.references.includes(record.id));
+  const cachedScene=fixture(cachedBase.state,3);cachedScene.entities=[actor,dead,place];
+  cachedScene.memoryDeltas=[{kind:'promise',entityId:omitted.entityId,text:omitted.text,referenceId:omitted.id,status:'resolved'}];
+  const cachedSession=createLiveSession({archive:restored,client:{getTurn:async()=>({status:'ready',requestId:'cached-closure',attemptId:attempt.id,sessionRef:attempt.sessionRef,scene:cachedScene})}});
+  await cachedSession.resume();
+  const closureRows=await restored.readRelated(row.state.runId,{referenceIds:[omitted.id],includeOpen:true});
+  return {selection,context,retried,sent,after:await archive.load(),pending,rows,historyCount:history.entries.length,historyFactCount:history.entries.flatMap(entry=>entry.scene?.memoryDeltas??[]).filter(delta=>delta.kind==='fact').length,cached:cachedSession.view(),closureRows,closedId:omitted.id};
+ });
+ assert.equal(result.selection.openTotal,13);
+ assert.deepEqual(result.context,result.retried);
+ assert.deepEqual(result.sent.receipt,result.pending.receipt);
+ assert.equal(result.after.state.revision,3);assert.equal(result.after.pending,null);
+ assert.ok(result.context.coverage.openOmitted>0);
+ assert.ok(new TextEncoder().encode(JSON.stringify(result.context)).length<=7000);
+ assert.ok(result.context.entities.some(entity=>entity.status==='dead'));
+ assert.equal(result.rows.filter(row=>row.kind==='promise'&&row.status==='open').length,13);
+ assert.equal(result.historyCount,3);assert.equal(result.historyFactCount,17);
+ assert.equal(result.cached.state.revision,4);assert.equal(result.cached.pending,null);
+ assert.equal(result.closureRows.find(row=>row.id===result.closedId).status,'resolved');
+ assert.equal(result.closureRows.filter(row=>row.kind==='promise'&&row.status==='open').length,12);
+ // readRelated's factual window stays bounded; full history retains all 17.
+ assert.equal(result.rows.filter(row=>row.kind==='fact').length,16);
+});
+
+test('native v1 database upgrades additively without changing active run, pending, history or memory',async t=>{
+ const {page}=await liveBrowser(t);
+ const result=await page.evaluate(async()=>{
+  const source=await open('upgrade-source');await born(source);
+  const opening=await source.load(),scene=fixture(opening.state),entity={id:scene.id.replace('s:local','e:upgrade'),name:'旧渡者',kind:'person'};
+  scene.entities=[entity];scene.memoryDeltas=[{kind:'promise',entityId:entity.id,text:'升级前已承诺守住渡口。'}];
+  await source.commit({expectedRevision:0,nextState:engine.commitTurn(opening.state,opening.pending,scene),scene,memoryDelta:memory.buildMemoryDelta(opening.pending.receipt,scene),requestId:opening.pending.identity.requestId});
+  let row=await source.load();const pending=engine.prepareChoice(row.state,{requestId:'upgrade-pending',choiceId:row.state.currentScene.choices[0].id});await source.prepare(pending);await source.setAttempt({runId:row.state.runId,requestId:pending.identity.requestId,expectedAttemptId:null,attempt:{id:'upgrade-attempt',sessionRef:'old-session',retryOf:null}});
+  const dump=archive=>new Promise((resolve,reject)=>{const names=['runs','pending','history','memory'],tx=archive.db.transaction(names),data={};for(const name of names){const req=tx.objectStore(name).getAll();req.onsuccess=()=>data[name]=req.result;}tx.oncomplete=()=>resolve(data);tx.onabort=()=>reject(tx.error);});
+  const before=await dump(source),loaded=await source.load();source.close();
+  const db=await new Promise((resolve,reject)=>{const req=indexedDB.open('native-v1-upgrade',1);req.onupgradeneeded=()=>{const db=req.result;db.createObjectStore('runs',{keyPath:'archiveId'});db.createObjectStore('pending',{keyPath:'archiveId'});db.createObjectStore('history',{keyPath:['archiveId','index']});const memory=db.createObjectStore('memory',{keyPath:['archiveId','id','version']});memory.createIndex('entity','entityKey');memory.createIndex('status','statusKey');memory.createIndex('recent','recentKey');};req.onsuccess=()=>resolve(req.result);req.onerror=()=>reject(req.error);});
+  await new Promise((resolve,reject)=>{const tx=db.transaction(Object.keys(before),'readwrite');for(const [name,rows] of Object.entries(before))for(const item of rows)tx.objectStore(name).put(item);tx.oncomplete=resolve;tx.onabort=()=>reject(tx.error);});db.close();
+  const upgraded=await open('native-v1-upgrade');
+  return {before,after:await dump(upgraded),loaded,restored:await upgraded.load(),version:upgraded.db.version,selection:await upgraded.readStoryRecords(loaded.state.runId,{entityIds:[entity.id]})};
+ });
+ assert.equal(result.version,2);assert.deepEqual(result.after,result.before);assert.deepEqual(result.restored,result.loaded);assert.equal(result.selection.openTotal,1);assert.equal(result.selection.records.filter(row=>row.kind==='promise'&&row.status==='open').length,1);
+});

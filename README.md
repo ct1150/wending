@@ -6,11 +6,11 @@
 - [待办与交付账本](docs/ROADMAP.md) · [玩法规格](docs/PRODUCT_SPEC.md) · [验收证据](docs/QA_REPORT.md) · [部署记录](docs/DEPLOYMENT.md)
 - 当前4.0使用原生 JavaScript，浏览器本地运行，无账号、游戏后端和运行时外部依赖，存档不会上传。
 
-## 下一阶段：选择驱动的实时人生（规划中）
+## 下一阶段：选择驱动的实时人生（本地实现，尚未启用）
 
 取消“每世20—30分钟”目标。新模式将根据肉鸽选择，通过 Cloudflare Workers AI 在免费额度内实时生成剧情；登仙、问鼎只是阶段，人物仍活着就继续，实际死亡才结算。不设固定章节数或通关步数。选择的时间、资源、风险与死亡由规则结算，模型生成事件、对话和行动提案。
 
-这轮新增功能**尚未实现或上线**，8项待办见 [当前路线图](docs/ROADMAP.md) 与 [实施计划](docs/superpowers/plans/2026-10-27-realtime-workers-ai.md)。免费额度耗尽时保存进度、暂停生成，不自动付费；完整历史使用分页档案。新模式需要发送最小剧情上下文到Cloudflare，旧4.0离线玩法继续保留。下文描述当前可玩的4.0。
+这轮已实现独立V5/CV4规则、剧情契约、同源API、长期档案与实时界面，并完成受控后端打包和本地workerd/SQLite检查；**真实Workers AI、严格免费账号边界与生产闭环尚未验收，生产推理保持关闭**。长线验证、整分支复核与最终发行状态见 [当前路线图](docs/ROADMAP.md) 与 [实施计划](docs/superpowers/plans/2026-10-27-realtime-workers-ai.md)。免费额度耗尽时保存进度、暂停生成，不自动付费；完整历史使用分页档案。新模式需要发送最小剧情上下文到Cloudflare，旧4.0离线玩法继续保留。下文描述当前可玩的4.0。
 
 ## 开始游玩
 
@@ -31,9 +31,11 @@
 
 ## 开发与离线版
 
-Node.js >=22，项目使用 Node 24；无需 `npm install`。
+Node.js >=22，项目使用 Node 24。测试依赖固定版本的Playwright和Miniflare，仅用于开发与验收；浏览器发行包没有这些运行时依赖。
 
 ```bash
+npm ci --ignore-scripts
+npx playwright install chromium
 npm run dev
 npm run release
 ```
@@ -45,13 +47,19 @@ npm run release
 | `dist/` | 静态站点 |
 | `release/baishi-wending-offline.html` | 含脚本、样式、图片的单文件离线游戏 |
 | `release/release.json` | 版本、构建时间、字节数与 SHA-256 |
-| `release/gateway.mjs` | 另行运行 `build:gateway` 生成、携带回退游戏的 Cloudflare 发行网关 |
+| `release/gateway.mjs` | 原单模块静态网关；保留旧上传/回退合同，不含实时API |
+| `release/backend/` | `build:gateway` 在浏览器构建后生成的完整ESM后端及模块摘要清单；默认关闭推理 |
+| `wrangler.story.json` | 单独审查的后端入口、AI与SQLite DO绑定/首次迁移配置；CI不执行部署 |
 
-网页中可下载离线版。在线和离线存储相互独立，迁移进度时请同时导出、导入存档。
+网页中可下载离线版。在线和离线存储相互独立，迁移进度时请同时导出、导入存档。静态开发服务器、file页面、旧网关、协议不兼容或服务暂停时均不能开始联网生成；已有实时历史可读取和导出。
+
+`npm run release` 会重建并清空 `release/`，后端须随后执行 `SOURCE_COMMIT=完整40位提交 npm run build:gateway`。它只生成产物，不访问Cloudflare。受控部署顺序与尚未解除的免费门禁见 [部署说明](docs/DEPLOYMENT.md)。
 
 ## 存档兼容
 
-新版为 JSON `version:4 / contentVersion:3`，存储键仍是 `baishi-wending-save-v1`。CV1/CV2 与 v1/v2/v3 旧人生继续原规则，只有明确新开局才进入新版。
+实时模式独立使用 `version:5 / mode:cultivation / contentVersion:4`、IndexedDB和流式 `.wending.jsonl` 档案，按128回合或256KiB封块；旧1M总量限制不作为新人生终点。出生与待续事务先保存，失败暂停，明确重试仅创建新的调用attempt，不重复结算选择。
+
+已上线4.0为 JSON `version:4 / contentVersion:3`，存储键仍是 `baishi-wending-save-v1`。CV1/CV2 与 v1/v2/v3 旧人生继续原规则，只有明确新开局才进入新版。
 
 损坏 JSON、无效存档和读取失败不会被新人生覆盖；保存失败时仍可导出内存进度。总量上限 1,000,000 个 JavaScript 字符，超限行动不提交、不扣费、不推进随机，也不截断已有历史。
 

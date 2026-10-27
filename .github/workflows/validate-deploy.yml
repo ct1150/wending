@@ -32,10 +32,12 @@ jobs:
         run: npx playwright install --with-deps chromium
       - name: Test, syntax check, and build
         run: npm run release
-      - name: Package verified release gateway
+      - name: Package static gateway and disabled compatible story backend
         env:
           SOURCE_COMMIT: ${{ github.sha }}
-        run: npm run build:gateway
+        run: |
+          npm run build:gateway
+          test -f release/backend/deployment.json
       - name: Preserve static site and offline release
         uses: actions/upload-artifact@v7
         with:
@@ -43,6 +45,8 @@ jobs:
           path: |
             dist/
             release/
+            wrangler.story.json
+            config/story-deployment.json
           if-no-files-found: error
           retention-days: 14
   publish:
@@ -72,4 +76,4 @@ jobs:
         run: |
           npm run publish:release | tee release/publication-result.txt
           cat release/publication-result.txt >> "$GITHUB_STEP_SUMMARY"
-          echo 'The existing Cloudflare gateway refreshes the verified game from release-channel. Its /healthz reports the version actually being served; publication is not a claim of worldwide propagation.' >> "$GITHUB_STEP_SUMMARY"
+          echo 'The existing Cloudflare gateway refreshes the verified game from release-channel. Its /healthz reports the frontend version actually being served. The story backend artifact is disabled and is not deployed by this workflow; HTML publication does not verify AI, account billing, bindings, or worldwide propagation.' >> "$GITHUB_STEP_SUMMARY"

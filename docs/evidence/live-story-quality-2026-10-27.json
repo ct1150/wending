@@ -1,0 +1,501 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-10-27",
+  "status": "FIXTURE_ACCEPTANCE_PASS_REAL_QUALITY_BLOCKED",
+  "sampleKind": "fixture",
+  "provenance": {
+    "description": "Deterministic local JavaScript fixture providers; native Chromium IndexedDB and public live-session API. No real AI or cloud operations.",
+    "runId": "legal-long-life",
+    "seed": 42,
+    "birthState": "unmodified createLiveGame output",
+    "browserExecutable": "/tmp/wending-browser/chrome-headless-shell-linux64/chrome-headless-shell",
+    "realInferenceCalls": 0,
+    "actualNeurons": null
+  },
+  "workersAi": {
+    "sampleKind": "workers-ai",
+    "status": "NOT_RUN",
+    "blocked": true,
+    "reason": "Root account evidence: OAuth Billing Read 403; Free plan/hard free boundary not confirmed. Production inference remains disabled.",
+    "actualCalls": 0,
+    "modelId": null,
+    "usage": null,
+    "actualNeurons": null,
+    "latencyMs": null,
+    "structureSuccessRate": null,
+    "narrativeQuality": null
+  },
+  "commands": [
+    {
+      "command": "WENDING_BROWSER_EXECUTABLE=/tmp/wending-browser/chrome-headless-shell-linux64/chrome-headless-shell node --test tests/live-long-run.test.js",
+      "revision": "pre-policy-fix, before fourth regression was appended",
+      "tests": 3,
+      "passed": 3,
+      "failed": 0,
+      "durationMs": 39222.035959,
+      "environment": "approved local loopback/Chromium execution; output recovered after exec-server outage"
+    },
+    {
+      "command": "WENDING_BROWSER_EXECUTABLE=/tmp/wending-browser/chrome-headless-shell-linux64/chrome-headless-shell node --test --test-name-pattern='unresolved narrative' tests/live-long-run.test.js",
+      "revision": "pre-policy-fix",
+      "tests": 1,
+      "passed": 0,
+      "failed": 1,
+      "durationMs": 1030.790563
+    },
+    {
+      "command": "WENDING_BROWSER_EXECUTABLE=/tmp/wending-browser/chrome-headless-shell-linux64/chrome-headless-shell node --test --test-name-pattern='unresolved narrative' tests/live-long-run.test.js",
+      "revision": "owner local policy fix",
+      "tests": 1,
+      "passed": 1,
+      "failed": 0,
+      "durationMs": 1066.627066
+    },
+    {
+      "command": "WENDING_BROWSER_EXECUTABLE=/tmp/wending-browser/chrome-headless-shell-linux64/chrome-headless-shell node --test tests/live-long-run.test.js",
+      "revision": "settled owner relevance-v1 policy fix",
+      "tests": 4,
+      "passed": 4,
+      "failed": 0,
+      "durationMs": 40438.524623,
+      "exitCode": 0
+    }
+  ],
+  "longRun": {
+    "calls": 1000,
+    "realms": [
+      "mortal",
+      "qi",
+      "foundation",
+      "golden",
+      "nascent",
+      "spirit",
+      "immortal"
+    ],
+    "immortalAt": 36,
+    "birthUnchanged": true,
+    "maxContextBytes": 1547,
+    "maxSnapshotBytes": 5667,
+    "chunks": [
+      {
+        "count": 52,
+        "bytes": 258955,
+        "hash": "343cd0c20912b20bebc227e549e798a399c6c33fdced96dafa2f5e3817521817",
+        "previousHash": "0000000000000000000000000000000000000000000000000000000000000000"
+      },
+      {
+        "count": 52,
+        "bytes": 258889,
+        "hash": "b1b0c48d5a6a6d8fb769056226e96fc6e8515b7ed5bb58f6b22ecaf60f2d1d06",
+        "previousHash": "343cd0c20912b20bebc227e549e798a399c6c33fdced96dafa2f5e3817521817"
+      },
+      {
+        "count": 52,
+        "bytes": 259308,
+        "hash": "8b0f32f634bef50cf95b09f28370aadaa76cf869db30dec9da8b45cd7e294d12",
+        "previousHash": "b1b0c48d5a6a6d8fb769056226e96fc6e8515b7ed5bb58f6b22ecaf60f2d1d06"
+      },
+      {
+        "count": 52,
+        "bytes": 259316,
+        "hash": "e2110332f1c022282b89f853995323dfc0b3b8670b33fb40e5827a9ec62ed319",
+        "previousHash": "8b0f32f634bef50cf95b09f28370aadaa76cf869db30dec9da8b45cd7e294d12"
+      },
+      {
+        "count": 52,
+        "bytes": 259315,
+        "hash": "948672209364417437bebb972ad6cb5e03186d1f446fd6898992b1cd0fb8adbb",
+        "previousHash": "e2110332f1c022282b89f853995323dfc0b3b8670b33fb40e5827a9ec62ed319"
+      },
+      {
+        "count": 52,
+        "bytes": 259316,
+        "hash": "be8a1ee6fb256cf6716ca0573247a3a29d5dd1d2b1080a9772fb2cd3007e7bdb",
+        "previousHash": "948672209364417437bebb972ad6cb5e03186d1f446fd6898992b1cd0fb8adbb"
+      },
+      {
+        "count": 52,
+        "bytes": 259329,
+        "hash": "a48095942a5716ff76a6e4077f3f650131b965a43e6fe76603cc8de5b99a64e7",
+        "previousHash": "be8a1ee6fb256cf6716ca0573247a3a29d5dd1d2b1080a9772fb2cd3007e7bdb"
+      },
+      {
+        "count": 52,
+        "bytes": 259322,
+        "hash": "2e71dba0205f7f2b8e17824b22389b5dd4241977894ff0f0cb0e5d1ee0ba1003",
+        "previousHash": "a48095942a5716ff76a6e4077f3f650131b965a43e6fe76603cc8de5b99a64e7"
+      },
+      {
+        "count": 52,
+        "bytes": 259316,
+        "hash": "26c18a92ce36c7bac8331df689c8f796cdfa7aa74488f9fedfbf7b7ccce92c08",
+        "previousHash": "2e71dba0205f7f2b8e17824b22389b5dd4241977894ff0f0cb0e5d1ee0ba1003"
+      },
+      {
+        "count": 52,
+        "bytes": 259320,
+        "hash": "8c25c88470fc400d58221c543bcfb89d3a04381b414dc6a330faea0b39b3430c",
+        "previousHash": "26c18a92ce36c7bac8331df689c8f796cdfa7aa74488f9fedfbf7b7ccce92c08"
+      },
+      {
+        "count": 52,
+        "bytes": 259303,
+        "hash": "e813b92f3a15f74db04f307410b6ce78a1a76c03a514dfd3ce1c150575edf00e",
+        "previousHash": "8c25c88470fc400d58221c543bcfb89d3a04381b414dc6a330faea0b39b3430c"
+      },
+      {
+        "count": 52,
+        "bytes": 259308,
+        "hash": "dbbc24b540d42c42cda57c994613880e18df31a99b392ef6946e25cbcc5695b1",
+        "previousHash": "e813b92f3a15f74db04f307410b6ce78a1a76c03a514dfd3ce1c150575edf00e"
+      },
+      {
+        "count": 52,
+        "bytes": 259320,
+        "hash": "df3cc6859d22ffd61f73987c7257841f015fcdd79d4de924d383726c8321a524",
+        "previousHash": "dbbc24b540d42c42cda57c994613880e18df31a99b392ef6946e25cbcc5695b1"
+      },
+      {
+        "count": 52,
+        "bytes": 259308,
+        "hash": "46fc3e870178958bce94a4feea5595889c12025e18d6f261cee7d8cffaa8fab2",
+        "previousHash": "df3cc6859d22ffd61f73987c7257841f015fcdd79d4de924d383726c8321a524"
+      },
+      {
+        "count": 52,
+        "bytes": 259323,
+        "hash": "e3d69ca4ebd6e689625220261a2f6dcef240eb7a890618f786330432cf7a8a52",
+        "previousHash": "46fc3e870178958bce94a4feea5595889c12025e18d6f261cee7d8cffaa8fab2"
+      },
+      {
+        "count": 52,
+        "bytes": 259310,
+        "hash": "33f804b9319807c641ed3ba1bb19e79ee5a041c565f946ab845e77089c7b972c",
+        "previousHash": "e3d69ca4ebd6e689625220261a2f6dcef240eb7a890618f786330432cf7a8a52"
+      },
+      {
+        "count": 52,
+        "bytes": 259309,
+        "hash": "2b93468c8311ca37eabcfda79d18b1cc85b46d12601080fbf494f49aafeb641d",
+        "previousHash": "33f804b9319807c641ed3ba1bb19e79ee5a041c565f946ab845e77089c7b972c"
+      },
+      {
+        "count": 52,
+        "bytes": 259333,
+        "hash": "a4b7d2c58bfe6dfe2e85b3448f5092eebddaff0884370b8751c7a95af28f7609",
+        "previousHash": "2b93468c8311ca37eabcfda79d18b1cc85b46d12601080fbf494f49aafeb641d"
+      },
+      {
+        "count": 52,
+        "bytes": 259300,
+        "hash": "afb5395b2c313c4dc2105323f397e276130abbb40350ab40a58dc532b50f10d2",
+        "previousHash": "a4b7d2c58bfe6dfe2e85b3448f5092eebddaff0884370b8751c7a95af28f7609"
+      },
+      {
+        "count": 12,
+        "bytes": 59986,
+        "hash": "462f1437ae7a0a3fd71d27a8ca44536fa2f5ff83b84f6d5966f6e0cb04bf76d8",
+        "previousHash": "afb5395b2c313c4dc2105323f397e276130abbb40350ab40a58dc532b50f10d2"
+      }
+    ],
+    "exportBytes": 4993683,
+    "before": {
+      "count": 1000,
+      "digest": "b89f27e57f07db7ae3f6bceabe4b3553fdc48a5ad4698efbe8ebaad5701fe93e",
+      "maxPageBytes": 184401,
+      "maxPageEntries": 37
+    },
+    "after": {
+      "count": 1000,
+      "digest": "b89f27e57f07db7ae3f6bceabe4b3553fdc48a5ad4698efbe8ebaad5701fe93e",
+      "maxPageBytes": 184401,
+      "maxPageEntries": 37
+    },
+    "sameState": true,
+    "final": {
+      "revision": 1000,
+      "turnId": 1000,
+      "phase": "active",
+      "ageDays": 61500,
+      "lifeLimit": 3000,
+      "realm": "immortal"
+    },
+    "postImmortalTurns": 964,
+    "repeatedBlocks": 0,
+    "samples": [
+      {
+        "sampleKind": "fixture",
+        "case": "opening",
+        "inputHash": "fd1127f4d5210c4af8d7c268bc2b1fb69fffe1610221fb845ef1b3347ae2bca3",
+        "modelId": null,
+        "usage": null,
+        "actualNeurons": null,
+        "accepted": true,
+        "reason": "context-aware schema and rule commit accepted",
+        "latencyMs": null,
+        "fixtureGenerationLatencyMs": 0.30000001192092896,
+        "review": {
+          "playerName": "云归",
+          "ageDays": 5760,
+          "realm": "mortal",
+          "location": "松溪",
+          "proseExcerpt": "松溪的山风吹过石阶，你继续这一程。记事1。松松松松松松松松松松松松松松松松松松松松松松松松松松松松松松松松松松松松松松松松松松松松松松松松松松松松松松松松松松松",
+          "paddingCharacters": 1200,
+          "elapsedDays": 0,
+          "action": null,
+          "relationships": "not exercised",
+          "suspense": "not exercised"
+        }
+      },
+      {
+        "sampleKind": "fixture",
+        "case": "continuous-choice",
+        "inputHash": "d06e7d11a21b33b603730d01336289be5941930c485e4e09bdcae7a4a62560fd",
+        "modelId": null,
+        "usage": null,
+        "actualNeurons": null,
+        "accepted": true,
+        "reason": "context-aware schema and rule commit accepted",
+        "latencyMs": null,
+        "fixtureGenerationLatencyMs": 0.3999999910593033,
+        "review": {
+          "playerName": "云归",
+          "ageDays": 6120,
+          "realm": "mortal",
+          "location": "松溪",
+          "proseExcerpt": "松溪的山风吹过石阶，你继续这一程。记事2。松松松松松松松松松松松松松松松松松松松松松松松松松松松松松松松松松松松松松松松松松松松松松松松松松松松松松松松松松松松",
+          "paddingCharacters": 1200,
+          "elapsedDays": 360,
+          "action": {
+            "id": "r:5948ea9389355512:t1:c:continue",
+            "label": "continue",
+            "intent": "practice",
+            "targetId": "self",
+            "stake": "low",
+            "approach": "steady"
+          },
+          "relationships": "not exercised",
+          "suspense": "not exercised"
+        }
+      }
+    ],
+    "craftedImmortalDeath": {
+      "provenance": "crafted from the legally reached turn-1000 immortal state; age moved to one day before lifespan",
+      "phase": "dead",
+      "cause": "lifespan",
+      "ageDays": 1080000
+    }
+  },
+  "deaths": [
+    {
+      "cause": "lifespan",
+      "phase": "dead",
+      "ageDays": 28800,
+      "injury": 0,
+      "turns": 65,
+      "historyEntries": 65,
+      "generationsAtDeath": 64,
+      "clientCallsAfterDeath": 0,
+      "deathRequestGenerated": false,
+      "stateUnchanged": true,
+      "terminalCause": "lifespan",
+      "terminalScene": null,
+      "pending": null
+    },
+    {
+      "cause": "injury",
+      "phase": "dead",
+      "ageDays": 5774,
+      "injury": 10,
+      "turns": 3,
+      "historyEntries": 3,
+      "generationsAtDeath": 2,
+      "clientCallsAfterDeath": 0,
+      "deathRequestGenerated": false,
+      "stateUnchanged": true,
+      "terminalCause": "injury",
+      "terminalScene": null,
+      "pending": null
+    }
+  ],
+  "causal": {
+    "samples": [
+      {
+        "sampleKind": "fixture",
+        "case": "counterfactual-practice",
+        "inputHash": "6ac23783b7e6a73c5888e22e0f219c9335be13efc042fb156f5e33bf36389324",
+        "modelId": null,
+        "usage": null,
+        "actualNeurons": null,
+        "accepted": true,
+        "reason": "exact rules receipt controls age and action cost",
+        "latencyMs": null,
+        "fixtureValidationLatencyMs": 2.3810840000005555,
+        "review": {
+          "playerName": "云归",
+          "ageDays": 6120,
+          "realm": "mortal",
+          "location": "松溪",
+          "blocks": [
+            {
+              "kind": "narration",
+              "text": "松溪的山风吹过石阶，你继续这一程。记事2。"
+            }
+          ],
+          "elapsedDays": 360,
+          "action": {
+            "id": "r:b93b90e38f95bf19:t1:c:continue",
+            "label": "continue",
+            "intent": "practice",
+            "targetId": "self",
+            "stake": "low",
+            "approach": "steady"
+          },
+          "relationships": "not exercised",
+          "suspense": "not exercised"
+        }
+      },
+      {
+        "sampleKind": "fixture",
+        "case": "counterfactual-rest",
+        "inputHash": "f3699e4e6eb47d893e7984aa34aa1d4c12412ae4c794d8e6af66028ec9c3c6fb",
+        "modelId": null,
+        "usage": null,
+        "actualNeurons": null,
+        "accepted": true,
+        "reason": "exact rules receipt controls age and action cost",
+        "latencyMs": null,
+        "fixtureValidationLatencyMs": 2.239185999998881,
+        "review": {
+          "playerName": "云归",
+          "ageDays": 5790,
+          "realm": "mortal",
+          "location": "松溪",
+          "blocks": [
+            {
+              "kind": "narration",
+              "text": "松溪的山风吹过石阶，你继续这一程。记事2。"
+            }
+          ],
+          "elapsedDays": 30,
+          "action": {
+            "id": "r:b93b90e38f95bf19:t1:c:alternative",
+            "label": "alternative",
+            "intent": "rest",
+            "targetId": "self",
+            "stake": "low",
+            "approach": "recover"
+          },
+          "relationships": "not exercised",
+          "suspense": "not exercised"
+        }
+      },
+      {
+        "sampleKind": "fixture",
+        "case": "repeated-blocks",
+        "inputHash": "6ac23783b7e6a73c5888e22e0f219c9335be13efc042fb156f5e33bf36389324",
+        "modelId": null,
+        "usage": null,
+        "actualNeurons": null,
+        "accepted": false,
+        "reason": "REPEATED_SCENE",
+        "latencyMs": null
+      },
+      {
+        "sampleKind": "fixture",
+        "case": "duplicate-action-tuple",
+        "inputHash": "6ac23783b7e6a73c5888e22e0f219c9335be13efc042fb156f5e33bf36389324",
+        "modelId": null,
+        "usage": null,
+        "actualNeurons": null,
+        "accepted": false,
+        "reason": "GENERATED_SCENE_INVALID",
+        "latencyMs": null
+      },
+      {
+        "sampleKind": "fixture",
+        "case": "explicit-age-conflict",
+        "inputHash": "6ac23783b7e6a73c5888e22e0f219c9335be13efc042fb156f5e33bf36389324",
+        "modelId": null,
+        "usage": null,
+        "actualNeurons": null,
+        "accepted": false,
+        "reason": "MECHANICAL_FACT_CONFLICT",
+        "latencyMs": null
+      },
+      {
+        "sampleKind": "fixture",
+        "case": "explicit-realm-conflict",
+        "inputHash": "6ac23783b7e6a73c5888e22e0f219c9335be13efc042fb156f5e33bf36389324",
+        "modelId": null,
+        "usage": null,
+        "actualNeurons": null,
+        "accepted": false,
+        "reason": "MECHANICAL_FACT_CONFLICT",
+        "latencyMs": null
+      }
+    ],
+    "modulesChecked": 7,
+    "realCalls": 0,
+    "actualNeurons": null
+  },
+  "blockingRegression": {
+    "status": "RESOLVED_AND_FINAL_ACCEPTANCE_GREEN",
+    "expectedRevision": 15,
+    "observed": {
+      "generated": 13,
+      "revision": 13,
+      "phase": "active",
+      "status": "paused",
+      "errorCode": "MEMORY_CONTEXT_TOO_LARGE",
+      "pending": true,
+      "openPromises": 13,
+      "pausedBeforeRetry": true
+    },
+    "owner": "Task6/root context policy; no Task7 production patch",
+    "finalReverification": "PASS_FULL_FOUR_TEST_RUN",
+    "postFix": {
+      "generated": 15,
+      "revision": 15,
+      "phase": "active",
+      "status": "ready",
+      "errorCode": null,
+      "pending": false,
+      "openPromises": 13,
+      "pausedBeforeRetry": false,
+      "maxContextBytes": 4456,
+      "lastCoverage": {
+        "policy": "relevance-v1",
+        "openTotal": 13,
+        "openIncluded": 12,
+        "openOmitted": 1
+      },
+      "lastIncludedPromises": 12
+    }
+  },
+  "qualityReview": {
+    "fixtureAcceptedScenes": 1000,
+    "exactBlockDuplicates": 0,
+    "repetitiveTemplate": true,
+    "repeatedSemanticEvents": "NOT_MEASURED: fixture intentionally uses the same mountain-stream template with turn marker",
+    "characterContinuity": "Only player receipt/birth identity is exercised over1000turns; rich NPC continuity not established by this path",
+    "ageAndRealm": "Computed entirely by rules; explicit contradictory age and realm fixture outputs rejected",
+    "location": "Synthetic scenes remain at Songxi; no geographic continuity claim",
+    "relationshipsAndSuspense": "Real narrative relationships, suspense and literary quality NOT_RUN",
+    "actionCosts": "Counterfactual practice360days vs rest30days from identical base state; rule results immutable",
+    "fixtureStructureAcceptanceRate": {
+      "accepted": 1000,
+      "attempted": 1000,
+      "rate": 1.0,
+      "provenance": "deterministically constructed legal fixtures; not a measured model success rate"
+    }
+  },
+  "limitations": [
+    "1000turns is an acceptance observation, never a product lifetime/scene cap.",
+    "The 3000year immortal lifespan death uses an explicitly crafted near-end state, not3000years of naturally played turns.",
+    "Every sample is a fixture, never a Workers AI response. Fixture validation durations do not measure real provider latency.",
+    "Zero exact repeated blocks does not mean zero repeated events or good writing.",
+    "Natural quota/device storage exhaustion and non-Chromium browsers are not established.",
+    "The13openpromise regression passes after owner selection-policy fix; provider context declares12included/1omitted while all13original obligations remain indexed."
+  ]
+}

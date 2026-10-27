@@ -113,3 +113,44 @@ test('fix1 supported entity and clue versions retain legal forward transitions',
     assert.equal(buildStoryContext(active,pending,reversed?clueRows.reverse():clueRows).memory.clues[0].status,'resolved');
   }
 });
+
+test('relevance selection fits 17 facts and 13 byte-heavy obligations without erasing dead identity or references',async t=>{
+  const born=createLiveGame({runId:'story-run',seed:42});
+  const first=scene();first.entities.push({id:prefix+'e:memorial',name:'故人',kind:'person',status:'dead'});
+  first.memoryDeltas=[{entityId:first.entities[1].id,kind:'death',text:'故人已亡。'}];
+  const active=commitTurn(born,prepareOpening(born,{requestId:'open'}),first);
+  const pending=prepareChoice(active,{requestId:'same-action',choiceId:first.choices[0].id});
+  const common={runId:'story-run',turnId:1,source:'narrative',entityId:first.entities[0].id};
+  const facts=Array.from({length:17},(_,i)=>({...common,id:'fact-'+i,kind:'fact',text:'往事'+i+'。'+'山'.repeat(200)}));
+  const promises=Array.from({length:13},(_,i)=>({...common,id:'promise-'+i,kind:'promise',status:'open',text:'旧约'+i+'。'+'约'.repeat(300)}));
+  const records=[...facts,...promises],before=structuredClone({records,pending,active});
+  const options={selection:'relevance-v1',openTotal:13};
+  const c=buildStoryContext(active,pending,records,options);
+  assert.ok(new TextEncoder().encode(JSON.stringify(c)).length<=7000);
+  assert.ok(c.coverage.openOmitted>0);assert.equal(c.coverage.openTotal,13);
+  assert.equal(c.coverage.openIncluded,c.memory.promises.length);assert.equal(c.coverage.openIncluded+c.coverage.openOmitted,13);
+  assert.equal(c.entities.find(e=>e.id===first.entities[1].id).status,'dead');
+  assert.deepEqual(buildStoryContext(active,pending,[...records].reverse(),options),c);
+  assert.deepEqual({records,pending,active},before);
+  assert.throws(()=>buildStoryContext(active,pending,records),e=>e.code==='MEMORY_CONTEXT_TOO_LARGE');
+  const chosen=c.memory.promises[0],nextPrefix=ns+':t2:';
+  const next={...scene(),id:nextPrefix+'s:closure',blocks:[{kind:'narration',text:'你按旧约将物件送回。'}],entities:[first.entities[0]],choices:[{...proposal('rest'),id:nextPrefix+'c:rest'},{...proposal('train','practice','self','steady'),id:nextPrefix+'c:train'}],memoryDeltas:[{kind:'promise',entityId:chosen.entityId,text:chosen.text,referenceId:chosen.id,status:'resolved'}]};
+  assert.deepEqual(validateGeneratedScene(next,c),next);
+  next.memoryDeltas[0].referenceId=promises.find(p=>!c.references.includes(p.id)).id;
+  assert.throws(()=>validateGeneratedScene(next,c));
+  for(const coverage of [{...c.coverage,openIncluded:999},{...c.coverage,openOmitted:-1},{...c.coverage,policy:'all-resolved'},{...c.coverage,openTotal:Number.MAX_SAFE_INTEGER+1}])assert.throws(()=>validateStoryContext({...c,coverage}));
+  let input;const responseScene={...next,memoryDeltas:[]};
+  const output=await generateScene({run:async(model,value)=>{input=value;return response(responseScene);}},profile(),c);
+  assert.equal(output.status,'ready');assert.match(input.messages[0].content,/openOmitted/);assert.match(input.messages[0].content,/未解决/);
+  const size=value=>new TextEncoder().encode(JSON.stringify(value)).length;
+  const overhead=size(input)-size(input.messages[1].content);
+  assert.ok(overhead+7000<=12288);
+  t.diagnostic(`Full provider input ${size(input)} bytes; encoded user content ${size(input.messages[1].content)} bytes; fixed system/schema/envelope overhead ${overhead} bytes.`);
+  const escaped=records.map(record=>({...record,text:'\\'.repeat(500)}));
+  const escapedContext=buildStoryContext(active,pending,escaped,options);
+  const escapedOutput=await generateScene({run:async(model,value)=>{input=value;return response(responseScene);}},profile(),escapedContext);
+  assert.equal(escapedOutput.status,'ready');
+  assert.ok(size(input.messages[1].content)<=7000);assert.ok(size(input)<=12288);
+  t.diagnostic(`Escape-heavy context ${size(escapedContext)} bytes; full provider input ${size(input)} bytes.`);
+
+});

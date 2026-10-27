@@ -2,11 +2,46 @@
 
 更新：2026-10-27（上海）。4.0.0 自动发行与生产切换已实际验收；下方保留 3.1.0 及更早版本的实际生产记录。
 
-## 下一阶段：实时AI后端（未部署）
+## 实时AI后端：本地产物已验证，尚未部署或启用
 
-用户要求在免费额度内用Cloudflare Workers AI实时生成剧情。当前生产Worker只提供静态发行服务，本次只读返回 `bindings: []`；没有AI binding和剧情API，套餐/余额也尚未确认。候选模型出现在目录不等于推理已通过，详见 [核查记录](evidence/2026-10-27-workers-ai-planning-recon.json)。
+生产已验收基线仍为静态4.0.0。最新只读现场记录返回 `bindings: []`；候选模型目录可读，但订阅接口403，账号settings中的standard和空entitlements不能证明Workers Free，也未验证账号剩余额度/存储免费边界。**真实Workers AI调用为0，没有新增生产绑定、credits、付费升级或后端部署。** [早期只读记录](evidence/2026-10-27-workers-ai-planning-recon.json) 与 [实施计划](superpowers/plans/2026-10-27-realtime-workers-ai.md) 不构成上线证明。
 
-[新实施计划](superpowers/plans/2026-10-27-realtime-workers-ai.md) 要求增加同源API、AI binding与SQLite Durable Object的共享预算/幂等存储；先核验零付费边界，再部署兼容后端，通过能力协商后启用前端。现有main→HTML自动发行不会自动创建这些绑定或完成后端迁移。本次没有修改生产Worker或触发模型推理。
+### 受控产物与身份
+
+先执行浏览器构建，再打包后端；浏览器构建会重新创建 `release/`：
+
+```bash
+npm run build
+SOURCE_COMMIT=完整40位已审提交 npm run build:gateway
+```
+
+| 产物/配置 | 作用 |
+| --- | --- |
+| `release/gateway.mjs` | 原有单模块静态网关。保留只包含release-gateway的测试/上传合同；不安装实时API或DO。 |
+| `release/backend/entry.mjs` | 多模块后端主入口，组合静态网关与真实 `createStoryWorker` 生产门禁，保留命名导出 `StoryBudget`。 |
+| `release/backend/src/**` | 完整、递归解析的服务器ESM依赖图。相对路径和模块字节保留，禁止越界/外部依赖/动态导入；仅允许必要的 `cloudflare:workers` 平台模块。 |
+| `release/backend/deployment.json` | 确定性模块上传描述：每个模块的名字、类型、字节和SHA-256，以及源码提交、前端HTML摘要、协议/规则/提示版本、候选模型未验证状态、绑定/迁移计划。它不是已部署版本ID，也不是直接可提交的Cloudflare multipart metadata。 |
+| `config/story-deployment.json` | `enabled:false`；协议1、规则1、提示1、存档5、内容4。当前构建拒绝启用、未知字段和不兼容版本，不能用vars或命令行开关跳过验收。 |
+| `wrangler.story.json` | 独立受控后端配置：入口、兼容日期2026-07-30、AI绑定、SQLite DO绑定与首次迁移。旧 `wrangler.jsonc` 仍只是静态Assets方案，不能代替它。 |
+
+静态 `dist/` 不再复制 `src/worker`，离线打包也拒绝从浏览器依赖图引用Worker模块。账号证明、发布凭据、AI调用权限只属于服务器/运维边界。候选模型不是生产白名单，`PRODUCTION_PROFILES` 仍为空；模型实际格式、停止原因、中文结构化输出、推理token上限与免费用量没有真实验收。后续启用必须先记录可信账号/模型证据，再独立审查代码与策略变更，不能填一份自称Free的JSON就解除门禁。
+
+### 绑定、SQLite迁移与发布次序
+
+1. 运维先核对真实绑定账号的Workers Free硬边界、账号内其他用量、存储免费额度与实时模型能力。当前403是阻塞条件，AI Gateway的延迟支出限制不作为零收费证明。保留已授权的实验总量/每项上限；Task8真实闭环建议最多2次，当前未使用。
+2. 受控配置声明 `AI` 绑定与 `STORY_BUDGET → StoryBudget`，迁移标签 `story-budget-v1` 使用 `new_sqlite_classes:["StoryBudget"]`。这是首次创建SQLite类的迁移；当前没有已部署旧剧情账本的升级迁移。旧本地预部署数据库不保证兼容，不能冒充生产迁移已验证。
+3. 所有流量必须指向同一既有Worker的同一DO namespace，以固定名 `story-budget-v1-global` 获取协调对象。固定名字本身不会跨不同namespace共享预算；多版本、测试域名或独立canary不得各建一份账本后同时消费同一账号额度。若采用原始API上传，先根据实际迁移取得namespace ID，再转换绑定metadata；上传所有清单模块并保留命名类导出，不能只上传entry或旧gateway。
+4. 在已审源码、实际账号与明确部署授权范围内，先部署兼容后端与关闭的免费门禁。先验证缺绑定/关闭门禁时capabilities暂停、旧页面和下载继续工作，再发布兼容HTML。GitHub CI只校验、保存产物和发布HTML，不持有Cloudflare部署凭据、不执行Worker部署、不自动启用AI。
+5. 账号与模型验收通过后，才可审查启用配置/白名单，并在预留预算内检查实际opening及一次choice→Workers AI→校验→保存→刷新续接。死亡与人为降低应用额度的暂停验证不另调用模型、不耗尽账号免费量。整分支release、旧版回归和独立审查也必须先通过。
+6. 最终记录前端源码SHA/HTML摘要、Cloudflare实际部署ID/版本/流量、backend清单摘要、协议/规则/提示版本、实际模型和免费用量证据。`/healthz`只证明当前HTML身份，不能替代后端部署和模型验收。当前这些生产新增证据仍未取得。
+
+### 本地验证与回滚
+
+固定开发依赖Miniflare `4.20260730.0`（Node>=22）和workerd `2026-07-30`；`node tests/backend-runtime.test.js`在真正本地workerd启动全部打包模块，使用 `useSQLite:true` 及临时持久化目录，重启后检查幂等重放和未知用量保守占用。测试拦截全部Worker出站请求：静态渠道返回302时保留内嵌HTML且不跟随重定向；不存在真实AI绑定、账户或远端调用。原单模块网关fixture仍通过。详细范围见 [QA](QA_REPORT.md)。
+
+**不要用带AI绑定的 `wrangler dev` 作为“纯本地AI测试”。** Cloudflare文档说明Workers AI模型在本地开发中仍使用远端推理；本项目只用上述无AI绑定的Miniflare harness。[官方本地开发说明](https://developers.cloudflare.com/workers/local-development/) · [Miniflare模块/SQLite/出站拦截API](https://github.com/cloudflare/workers-sdk/blob/main/packages/miniflare/README.md)
+
+回滚HTML仍走现有摘要校验发行链。回滚后端优先恢复最近兼容的**关闭推理**版本，并保留DO namespace、类与账本；不要通过删除类、重置迁移或换namespace来清除未知用量。纯静态网关回退只可用于停止新增生成：客户端将404/HTML/不兼容capabilities视为不可用，保留实时档案以便恢复后读取/导出/明确续接。旧HTML本身未必能显示V5档案，因此恢复兼容前端后再读取；不得让旧序列化器覆盖独立IndexedDB。退回静态代码时也必须保留原服务端账本和namespace，不把旧单文件上传方式当作安全删除DO绑定的依据。
 
 ## 4.0.0 自动发行方案
 
@@ -29,7 +64,7 @@
 
 - 游戏与剧情更新：合并通过检查的 PR 到 main，观察 `publish` 结果及线上 `/healthz`；失败时修复后重跑 main 工作流。
 - 回退游戏：将修复或回退源码提交到 main 并通过检查，走同一发行链；不要手改正文而保留旧摘要。
-- 更新网关：从已审实际源码构建游戏，再执行 `SOURCE_COMMIT=完整40位游戏源码提交 npm run build:gateway`，通过现有 API 上传 `release/gateway.mjs`。保留原 Worker 的域名和必要配置。
+- 更新旧静态网关：从已审实际源码构建游戏，再执行 `SOURCE_COMMIT=完整40位游戏源码提交 npm run build:gateway`，原静态渠道使用 `release/gateway.mjs`。实时后端须使用上文完整模块与绑定/迁移流程，不能将两种上传方式混用。保留原 Worker 的域名和必要配置。
 - 不再依赖未启用的 `ENABLE_CF_DEPLOY` 或缺失的 Cloudflare CI secrets。GitHub 使用本次 job 的仓库令牌，客户端不携带令牌。
 
 ### 4.0.0 实际发行记录
