@@ -4,7 +4,7 @@
 
 ## 实时AI后端：本地产物已验证，尚未部署或启用
 
-生产已验收基线仍为静态4.0.0。最新只读现场记录返回 `bindings: []`；候选模型目录可读，但订阅接口403，账号settings中的standard和空entitlements不能证明Workers Free，也未验证账号剩余额度/存储免费边界。**真实Workers AI调用为0，没有新增生产绑定、credits、付费升级或后端部署。** [早期只读记录](evidence/2026-10-27-workers-ai-planning-recon.json) 与 [实施计划](superpowers/plans/2026-10-27-realtime-workers-ai.md) 不构成上线证明。
+生产已验收基线仍为静态4.0.0。[草稿PR #14](https://github.com/ct1150/wending/pull/14) 未合并、未部署；本地完整release在 `4e44811` 为510项通过，之后 `0a5f0ab` HTTP整合修复专项及独立复核通过，最终提交CI/整分支审查仍待完成。实际构建SHA与摘要见 [QA](QA_REPORT.md)。最新只读现场记录返回 `bindings: []`；候选模型目录可读，但订阅接口403，账号settings中的standard和空entitlements不能证明Workers Free，也未验证账号剩余额度/存储免费边界。**真实Workers AI调用为0，没有新增生产绑定、credits、付费升级或后端部署。** [早期只读记录](evidence/2026-10-27-workers-ai-planning-recon.json) 与 [实施计划](superpowers/plans/2026-10-27-realtime-workers-ai.md) 不构成上线证明。
 
 ### 受控产物与身份
 
@@ -19,7 +19,7 @@ SOURCE_COMMIT=完整40位已审提交 npm run build:gateway
 | --- | --- |
 | `release/gateway.mjs` | 原有单模块静态网关。保留只包含release-gateway的测试/上传合同；不安装实时API或DO。 |
 | `release/backend/entry.mjs` | 多模块后端主入口，组合静态网关与真实 `createStoryWorker` 生产门禁，保留命名导出 `StoryBudget`。 |
-| `release/backend/src/**` | 完整、递归解析的服务器ESM依赖图。相对路径和模块字节保留，禁止越界/外部依赖/动态导入；仅允许必要的 `cloudflare:workers` 平台模块。 |
+| `release/backend/src/**` | 由开发依赖Acorn8.19.0解析的完整递归服务器ESM依赖图，支持跨行/注释/inline静态导入导出。相对路径和模块字节保留，禁止越界/外部依赖/动态导入；仅允许必要的 `cloudflare:workers` 平台模块。 |
 | `release/backend/deployment.json` | 确定性模块上传描述：每个模块的名字、类型、字节和SHA-256，以及源码提交、前端HTML摘要、协议/规则/提示版本、候选模型未验证状态、绑定/迁移计划。它不是已部署版本ID，也不是直接可提交的Cloudflare multipart metadata。 |
 | `config/story-deployment.json` | `enabled:false`；协议1、规则1、提示1、存档5、内容4。当前构建拒绝启用、未知字段和不兼容版本，不能用vars或命令行开关跳过验收。 |
 | `wrangler.story.json` | 独立受控后端配置：入口、兼容日期2026-07-30、AI绑定、SQLite DO绑定与首次迁移。旧 `wrangler.jsonc` 仍只是静态Assets方案，不能代替它。 |
@@ -37,11 +37,11 @@ SOURCE_COMMIT=完整40位已审提交 npm run build:gateway
 
 ### 本地验证与回滚
 
-固定开发依赖Miniflare `4.20260730.0`（Node>=22）和workerd `2026-07-30`；`node tests/backend-runtime.test.js`在真正本地workerd启动全部打包模块，使用 `useSQLite:true` 及临时持久化目录，重启后检查幂等重放和未知用量保守占用。测试拦截全部Worker出站请求：静态渠道返回302时保留内嵌HTML且不跟随重定向；不存在真实AI绑定、账户或远端调用。原单模块网关fixture仍通过。详细范围见 [QA](QA_REPORT.md)。
+固定开发依赖Miniflare `4.20260730.0`（Node>=22）和workerd `2026-07-30`；`node tests/backend-runtime.test.js`在真正本地workerd启动全部打包模块，使用 `useSQLite:true` 及临时持久化目录，重启后检查幂等重放和未知用量保守占用。测试拦截全部Worker出站请求：静态渠道返回302时保留内嵌HTML且不跟随重定向；不存在真实AI绑定、账户或远端调用。`0a5f0ab`本地构建包含13模块，具体清单与HTML摘要已记录，但尚无对应Cloudflare部署版本。原单模块网关fixture仍通过。详细范围见 [QA](QA_REPORT.md)。
 
 **不要用带AI绑定的 `wrangler dev` 作为“纯本地AI测试”。** Cloudflare文档说明Workers AI模型在本地开发中仍使用远端推理；本项目只用上述无AI绑定的Miniflare harness。[官方本地开发说明](https://developers.cloudflare.com/workers/local-development/) · [Miniflare模块/SQLite/出站拦截API](https://github.com/cloudflare/workers-sdk/blob/main/packages/miniflare/README.md)
 
-回滚HTML仍走现有摘要校验发行链。回滚后端优先恢复最近兼容的**关闭推理**版本，并保留DO namespace、类与账本；不要通过删除类、重置迁移或换namespace来清除未知用量。纯静态网关回退只可用于停止新增生成：客户端将404/HTML/不兼容capabilities视为不可用，保留实时档案以便恢复后读取/导出/明确续接。旧HTML本身未必能显示V5档案，因此恢复兼容前端后再读取；不得让旧序列化器覆盖独立IndexedDB。退回静态代码时也必须保留原服务端账本和namespace，不把旧单文件上传方式当作安全删除DO绑定的依据。
+回滚HTML仍走现有摘要校验发行链。回滚后端优先恢复最近兼容的**关闭推理**版本，并保留DO namespace、类与账本；不要通过删除类、重置迁移或换namespace来清除未知用量。纯静态网关回退只可用于停止新增生成：客户端将404/HTML/不兼容capabilities视为不可用，保留实时档案以便恢复后读取/导出/明确续接。当前实时数据库 `wending-live-v1` 已升级到结构版本2，新增索引并通过原生v1数据保留检查；明确打开结构v1的旧V5读取器不能打开已升级库。**所有可读取实时档案的回滚版本必须保留兼容v2的读取器**，不能降级数据库版本或删除数据库来恢复运行。旧HTML若不具备此读取器，只能停止生成，须恢复兼容前端才能读取/导出；旧v1—v4 localStorage不受结构升级影响，不得让旧序列化器覆盖独立IndexedDB。退回静态代码时也必须保留原服务端账本和namespace，不把旧单文件上传方式当作安全删除DO绑定的依据。
 
 ## 4.0.0 自动发行方案
 

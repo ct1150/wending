@@ -6,27 +6,65 @@
 
 固定“每世20—30分钟”目标已取消。新验收是持续选择、登仙/问鼎后继续、实际死亡才结算，以及连续记忆、完整长档案、免费预算与故障恢复。V5/CV4本地实现与已上线4.0严格分开；下表不能用来宣称真实Workers AI或生产发布已完成。
 
+### 本地完整验证与源码边界
+
+控制器在源码 `4e44811d5d67b18f80ed6cf406e8c463d1ac589e` 执行完整 `npm run release`，退出0：**510项测试通过、0失败、0取消、0跳过，117个JavaScript文件语法检查通过，构建964968字节离线HTML**；测试用时63.590秒。该次包括强制上下文续接检查之后的1000回合原生档案重跑。原始本地日志为 `/tmp/wending-roadmap-work/release-final-20261027.log`。
+
+此后 `0a5f0ab31e079fdfb9cd74e7eaf546441a74ee21` 仅修正HTTP对 `NEXT_CONTEXT_TOO_LARGE` 的保留及相应回归：API直接运行8/8通过，API/预算覆盖命令通过，独立专项复核通过。该修复让已完成的拒绝在原UTC日保留完整保守费用，次日不继续按“结果未知”占用；同日不退款，明确关联的次日重试才新增预留。**510项完整结果属于前一个明确SHA，不写成最新提交已全量重跑。** 最终提交CI和独立整分支审查仍待记录。
+
 ### 已观察的本地专项
 
 | 范围 | 实际验证与边界 |
 | --- | --- |
-| 后端模块/策略打包 | `node tests/backend-build.test.js` 3/3：递归ESM与命名DO导出、完整模块摘要、重建去除旧模块、关闭策略、版本/未知字段/缺模块/越界拒绝、缺预算绑定暂停、浏览器对静态回退/HTML响应/协议不兼容保持不可用。 |
-| 原静态发行合同 | `node tests/gateway-build.test.js` 1/1：仅一个静态实现文件的fixture仍能打包；导入无网络，首页/健康/下载摘要与内嵌字节一致。 |
-| 浏览器/服务器隔离 | `node tests/build.test.js` 8/8：先复现 `dist/src/worker` 泄露，再排除复制并拒绝浏览器导入服务器图；其他打包、作用域、资源、路径与真实app依赖图回归通过。 |
-| 真正本地workerd与SQLite | `node tests/backend-runtime.test.js` 2/2、0跳过，Miniflare4.20260730.0 / workerd2026-07-30。打包入口在原生runtime运行；出站302全部拦截且不跟随；精确静态回退、关闭能力与API、SQLite session/reserve/settle、实例重启后幂等重放、未知占用导致额度拒绝。未安装AI绑定，真实推理0。 |
-| 长期档案与恢复 | Task5原生Chromium/IndexedDB专项13/13：跨128回合/字节封块、超过1MiB、流式导出恢复、跨连接CAS、事务abort与刷新。自然容量错误未观察到；QuotaExceededError和SecurityError恢复测试显式注入，不是自然磁盘满证据。 |
-| 规则、契约与API | 本地规则、结构/事实收据、请求幂等和SQLite账本已有专项；确定性scene/provider用于行为检查，不能证明真实模型中文质量、停止原因、时延或计费。 |
+| 免费门禁/受控probe | 18项本地fixture行为在上述完整release日志中全部通过；包括可信证据、共享实验预留、缺binding、Paid/未知模型、跨日余额和持久证明重建。真实AI调用0，不是实际账号Free验证。 |
+| 后端模块/策略打包 | `node tests/backend-build.test.js` 15/15：完整ESM图、命名DO导出、模块摘要、重建去旧模块、关闭策略、版本/缺模块/越界拒绝、静态回退/协议暂停；10种跨行、注释、inline、默认/命名/namespace/star/副作用导入导出形式均包含依赖且能实际加载。Acorn8.19.0仅为开发依赖。 |
+| 原静态发行合同 | `node tests/gateway-build.test.js` 1/1：单个静态实现文件fixture仍能打包；导入无网络，首页/健康/下载与内嵌字节一致。 |
+| 浏览器/服务器隔离 | `node tests/build.test.js` 8/8：先复现静态目录泄露Worker代码，再排除复制并拒绝浏览器导入服务器图；其他打包、资源、路径与真实app依赖图回归通过。 |
+| 真正本地workerd与SQLite | `node tests/backend-runtime.test.js` 2/2、0跳过，Miniflare4.20260730.0 / workerd2026-07-30。完整模块在原生runtime启动；出站302全部拦截且不跟随；精确静态回退、关闭API、SQLite事务、重启后幂等重放与未知用量保守占用通过。无AI绑定、无远端推理。 |
+| 长期档案与恢复 | 原生Chromium/IndexedDB验证跨128回合/字节封块、超过旧1MiB总量、流式恢复、跨连接CAS、事务abort和刷新；数据库v1→v2索引升级保留活动档、pending、历史与承诺原记录。QuotaExceededError/SecurityError恢复测试显式注入，自然容量耗尽未实测。 |
+| 实时UI与旧档 | Chromium实际320、390、1280px无横向溢出，键盘选项/历史抽屉焦点、刷新、JSONL导入导出、16+2分页、迟到响应与明确重试通过；旧localStorage存档逐字保留。网络剧情全部为本地fixture拦截，不是已部署安全cookie验收。 |
+| 有界记忆与可继续选择 | 13个未解承诺继续到revision15，全部原文保留；相关提示明确12选入/1省略。另验证每个可执行且不导致规则死亡的下一选择，在providerready之前能容纳必需身份/收据与原始、编码上下文；超限候选拒绝、保留同一行动待续，不能形成已ready但永远无法继续的场景。 |
 
-这些测试范围有重叠，不能相加当全分支测试总数。后端运行在本地workerd，非已部署Cloudflare。受限沙箱阻止本地loopback时，专项使用获准的本地socket运行环境；所有Worker出站仍被拦截。
+这些专项互有重叠，不能相加当全分支测试总数。后端运行证据来自本地workerd，浏览器证据来自Chromium；均不能代替已部署Cloudflare、真实模型或任意设备验收。
 
-### 尚待整合/生产验收
+### 1000回合fixture与完整恢复
 
-- Task7已经进行1000回合确定性长线路径检查；额外未决承诺压力样本发现上下文容量暂停，正在整合修复与重新验证。在最终报告冻结前，不把该项标为最终通过；fixture存活与可恢复历史不等于AI连续叙事质量。
-- 实时界面整合修复、最终完整 `npm run release`、旧版本回归和独立整分支审查由交付控制器最终核对；本页不预填最终SHA、测试总数或HTML摘要。
-- 真实Worker/AI部署、opening+choice真实闭环、真实模型/停止原因/用量/叙事质量均未验收。订阅读取403，账号standard/空entitlements不是Free证明；账号共享用量及存储免费边界未确认。生产`enabled:false`、白名单为空，真实模型调用0，未升级/购买credits/使用付费fallback。
-- 完整响应校验只覆盖明确结构和规则事实，不能消除所有自然语言矛盾或隐含叙事幻觉；真实模型需另行审读。设备兼容仍限实际运行的浏览器环境，不宣称任意手机/屏幕阅读器。
+Task7最终专项 **4/4通过、0失败，40.4385秒**，已独立审查；来源及逐样本边界见 [结构化长线证据](evidence/live-story-quality-2026-10-27.json)。从未修改的出生状态与seed42开始，通过实际规则取得材料、修行、突破，使用原生IndexedDB和公开session接口：
 
-原本地4.0模型、固定路线与历史生产结果见下文，不能转用为实时AI证据。部署前置条件、SQLite迁移、产物身份与回滚合同见 [DEPLOYMENT](DEPLOYMENT.md)，任务状态见 [ROADMAP](ROADMAP.md)。
+| 观察项 | 实测结果 |
+| --- | --- |
+| 生存路线 | 1000个已提交回合；第36回合登仙后再继续964回合，最终仍active；不是产品回合上限 |
+| 最终人物 | 61500天（170年300天），登仙寿限3000年 |
+| 最大活动快照/上下文 | 5667字节 / 1547字节 |
+| 流式导出 | 4,993,683字节；20块，最大259333字节、52条记录 |
+| 完整恢复 | 1000条按序历史及最终状态完全恢复；所有记录滚动SHA-256 `b89f27e57f07db7ae3f6bceabe4b3553fdc48a5ad4698efbe8ebaad5701fe93e` 前后一致 |
+| 未解承诺压力样本 | 13项原文全部保留，继续至revision15；最大上下文4456字节，coverage为13总数/12选入/1省略 |
+| 原生规则寿尽/战死 | 凡人第65回合寿尽，64次fixture生成；战斗第3回合死亡，2次fixture生成；两者死亡后resume/retry/choose均0次client操作 |
+
+这里的“生成”是确定性JavaScript fixture。真实Workers AI字段为 `actualCalls:0`、`actualNeurons:null`、`latencyMs:null`、结构成功率和叙事质量均null；不把未测用量写成真实消耗0。fixture按回合附标记并重复使用机械文案，证明长程规则/存储/恢复，不能证明真人阅读质量、自然悬念或真实模型长期一致性。
+
+### 本地构建身份与远端检查点
+
+控制器对 `0a5f0ab31e079fdfb9cd74e7eaf546441a74ee21` 执行 `npm run build:gateway` 退出0：
+
+| 产物身份 | 本地结果，未部署 |
+| --- | --- |
+| 前端HTML SHA-256 | `2960c7bf9597a0a83b02732c53e1e06408a90593a5f685cb6a962b107d59c47c` |
+| 原静态gateway | 984691字节 |
+| 完整backend图 | 13模块；协议/规则/提示均1，V5/CV4，enabled=false |
+| backend清单 SHA-256 | `4d08ede29ceb9c27488bed4e6e9748119bd6dbfbc5e9a81ae8f86dcaca19810f` |
+
+[草稿PR #14](https://github.com/ct1150/wending/pull/14) 尚未合并或部署。[检查点4 CI 40540386244](https://github.com/ct1150/wending/actions/runs/40540386244) 已成功，但对应 `1e96aa74` 的检查点树，早于后续续接准入与HTTP修复。**CI以PR14最新提交检查为准，尚未取得本轮最终结果；独立整分支审查仍待完成**；本地摘要不是Cloudflare部署ID，不代表线上HTML已改变。
+
+### 尚未通过的门禁与验证范围
+
+- 账号Free硬边界、共享用量和存储免费证明仍BLOCKED：Billing Read403，standard/空entitlements不证明套餐。生产`enabled:false`、模型白名单为空；没有AI推理、credits、付费升级或收费fallback。
+- 真实模型中文/结构/停止原因/思考输出上限/实际Neurons/时延/连续叙事仍未验证；真实opening+choice→保存→刷新闭环、已部署同源安全cookie、实际AI/DO绑定与迁移也未验证。
+- 自然浏览器存储耗尽、磁盘满、驱逐恢复、Firefox/WebKit、物理手机、原生输入法和屏幕阅读器不因Chromium fixture通过而自动验收。已观察的事务abort及注入容量/权限错误只证明相应恢复路径。
+- 数据库已升至结构v2；明确打开v1的旧V5读取器不能打开它。回滚必须保留兼容v2读取器，不能声称任意旧HTML都能直接读取新档。旧v1—v4 localStorage另行保持原样。
+- 结构、引用、规则与续接检查不能消除所有自然语言矛盾；真实样本须另审。剩余操作按 [ROADMAP顺序待办](ROADMAP.md) 执行，未观察门禁不勾选。
+
+原本地4.0模型、固定路线与历史生产结果见下文，不能转用为实时AI证据。部署与回滚合同见 [DEPLOYMENT](DEPLOYMENT.md)。
 
 ## 4.0.0 已发布验收
 

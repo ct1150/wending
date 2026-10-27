@@ -272,8 +272,29 @@ export function validateGeneratedScene(raw,context) {
   for(const p of raw.choices)if(['negotiate','fight','evade'].includes(p.intent)&&isDead(p.targetId))fail('ENTITY_DEATH_CONFLICT');
   if(context.previousScene){const oldHash=context.previousScene.blocksHash??sha256(canonicalStringify(context.previousScene.blocks));if(sha256(canonicalStringify(raw.blocks))===oldHash)fail('REPEATED_SCENE');}
   const texts=[raw.title,raw.location,...raw.blocks.map(b=>b.text),...raw.memoryDeltas.map(m=>m.text)];texts.forEach(t=>checkMechanicalClaims(t,context));
-  try { if(!compileChoices(compilationState(context,raw),raw.choices).some(p=>p.enabled))fail('NO_EXECUTABLE_CHOICE'); }
-  catch(error){if(error.code==='NO_EXECUTABLE_CHOICE')throw error;fail('CHOICE_NOT_COMPILABLE');}
+  let prospective,choices;
+  try {
+    prospective=compilationState(context,raw);
+    choices=compileChoices(prospective,raw.choices);
+  } catch { fail('CHOICE_NOT_COMPILABLE'); }
+  const enabled=choices.filter(choice=>choice.enabled);
+  if(!enabled.length)fail('NO_EXECUTABLE_CHOICE');
+  for(const choice of enabled) {
+    const pending=prepareChoice(prospective,{choiceId:choice.id,requestId:'r'.repeat(80)});
+    if(pending.receipt.death)continue;
+    try {
+      // Admit the scene only if every living next action can carry its required
+      // identity/receipt data. Optional history remains independently selected.
+      // Reserve the largest request ID and coverage counters, not a fixed NPC cap.
+      buildStoryContext(prospective,pending,[],{
+        selection:'relevance-v1',
+        openTotal:Number.MAX_SAFE_INTEGER,
+      });
+    } catch(error) {
+      if(error.code==='MEMORY_CONTEXT_TOO_LARGE'||error.code==='STORY_DATA_TOO_LARGE')fail('NEXT_CONTEXT_TOO_LARGE');
+      throw error;
+    }
+  }
   return copy(raw);
 }
 

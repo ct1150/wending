@@ -154,3 +154,60 @@ test('relevance selection fits 17 facts and 13 byte-heavy obligations without er
   t.diagnostic(`Escape-heavy context ${size(escapedContext)} bytes; full provider input ${size(input)} bytes.`);
 
 });
+
+function continuationScene(nameLength=1,longIds=false) {
+  const value=scene();
+  value.entities=Array.from({length:24},(_,i)=>({id:prefix+'e:'+i+(longIds?'x'.repeat(48):''),name:String(i)+'名'.repeat(nameLength),kind:'person'}));
+  value.choices=[proposal('rest'),proposal('train','practice','self','steady')];
+  return value;
+}
+function nextContext(state,choice) {
+  const pending=prepareChoice(state,{requestId:'r'.repeat(80),choiceId:choice.id});
+  return pending.receipt.death?null:buildStoryContext(state,pending,[],{selection:'relevance-v1',openTotal:Number.MAX_SAFE_INTEGER});
+}
+test('continuation admission accepts fitting24 entities and rejects legal mandatory next-context overflow before ready',async()=>{
+  const born=createLiveGame({runId:'story-run',seed:42}),opening=prepareOpening(born,{requestId:'opening'}),c=buildStoryContext(born,opening);
+  const narrow=continuationScene();
+  assert.deepEqual(validateGeneratedScene(narrow,c),narrow);
+  const next=commitTurn(born,opening,narrow);
+  for(const choice of next.currentScene.choices)assert.ok(nextContext(next,choice));
+  const heavy=continuationScene(58,true);
+  assert.doesNotThrow(()=>validateSceneStructure(heavy));
+  assert.doesNotThrow(()=>commitTurn(born,opening,heavy));
+  assert.throws(()=>validateGeneratedScene(heavy,c),error=>error.code==='NEXT_CONTEXT_TOO_LARGE');
+  let calls=0;
+  const result=await generateScene({run:async()=>{calls++;return response(heavy);}},profile(),c);
+  assert.equal(calls,1);assert.equal(result.status,'rejected');assert.equal(result.errorCode,'NEXT_CONTEXT_TOO_LARGE');assert.ok(!Object.hasOwn(result,'scene'));
+});
+test('continuation admission checks every enabled choice including encoded labels and skips disabled alternatives',()=>{
+  const born=createLiveGame({runId:'story-run',seed:42}),opening=prepareOpening(born,{requestId:'opening'}),c=buildStoryContext(born,opening);
+  let candidate;
+  for(let length=1;length<=58;length++) {
+    const value=continuationScene(length);value.choices[1].label='\\'.repeat(120);
+    const next=commitTurn(born,opening,value);
+    let firstFits=false,secondFits=false;
+    try {nextContext(next,value.choices[0]);firstFits=true;}catch{}
+    try {nextContext(next,value.choices[1]);secondFits=true;}catch{}
+    if(firstFits&&!secondFits) {candidate=value;break;}
+  }
+  assert.ok(candidate,'fixture has one fitting enabled choice and one encoded overflow');
+  assert.throws(()=>validateGeneratedScene(candidate,c),error=>error.code==='NEXT_CONTEXT_TOO_LARGE');
+  const disabled={...candidate,choices:[candidate.choices[0],{...proposal('blocked','practice','qi','breakthrough'),label:'\\'.repeat(120)}]};
+  assert.deepEqual(validateGeneratedScene(disabled,c),disabled);
+});
+test('continuation admission permits heavy identities when all enabled next choices settle rules death locally',()=>{
+  const born=createLiveGame({runId:'story-run',seed:42}),opening=prepareOpening(born,{requestId:'opening'});
+  let active=commitTurn(born,opening,scene());
+  active=commitTurn(active,prepareChoice(active,{requestId:'step',choiceId:proposal('rest').id}),scene());
+  active.life.ageDays=active.life.lifeLimit*360-31;
+  active.lastReceipt.after.ageDays=active.life.ageDays;
+  active.lastReceipt.before.ageDays=active.life.ageDays-active.lastReceipt.elapsedDays;
+  const pending=prepareChoice(active,{requestId:'last-living-scene',choiceId:proposal('rest').id});
+  const c=buildStoryContext(active,pending),value=continuationScene(58,true),nextPrefix=ns+':t'+pending.identity.turnId+':';
+  value.id=nextPrefix+'s:farewell';value.blocks=[{kind:'narration',text:'你在岸边与众人道别。'}];
+  value.entities=value.entities.map((entity,i)=>({...entity,id:nextPrefix+'e:'+i+'x'.repeat(48)}));
+  value.choices=value.choices.map((choice,i)=>({...choice,id:nextPrefix+'c:'+i}));
+  assert.deepEqual(validateGeneratedScene(value,c),value);
+  const committed=commitTurn(active,pending,value);
+  for(const choice of committed.currentScene.choices)assert.equal(nextContext(committed,choice),null);
+});

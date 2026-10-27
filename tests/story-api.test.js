@@ -1,15 +1,17 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { DatabaseSync } from 'node:sqlite';
-import { createStoryApi } from '../src/worker/story-api.js';
+import { createStoryApi, TURN_RESERVATION_NEURONS } from '../src/worker/story-api.js';
 import { createStoryWorker } from '../src/worker/index.js';
 import { createBudgetCoordinator } from '../src/worker/story-budget.js';
+import { generateScene } from '../src/worker/story-provider.js';
+import { CANDIDATE_PROFILE } from '../src/worker/story-config.js';
 import { createLiveGame,prepareOpening } from '../src/game/cultivation/live/engine.js';
 import { buildStoryContext } from '../src/game/cultivation/live/memory.js';
 const origin='https://game.example';
 const context=()=>{const s=createLiveGame({runId:'api-run',seed:42});return buildStoryContext(s,prepareOpening(s,{requestId:'game-request'}));};
 const scene=c=>({id:c.namespace+':t1:s:opening',title:'山中来信',location:'山下',blocks:[{kind:'narration',text:'一位旅人留下了一封来信。'}],entities:[],choices:['a','b'].map(id=>({id:c.namespace+':t1:c:'+id,label:id,intent:id==='a'?'rest':'practice',targetId:'self',approach:id==='a'?'recover':'steady',stake:'normal'})),memoryDeltas:[]});
-function fixture(provider){const db=new DatabaseSync(':memory:');const storage={sql:{exec(q,...p){return {toArray:()=>db.prepare(q).all(...p)};}},transactionSync(fn){db.exec('BEGIN IMMEDIATE');try{const r=fn();db.exec('COMMIT');return r;}catch(e){db.exec('ROLLBACK');throw e;}}};let now=Date.parse('2026-10-27T10:00:00Z'),calls=0;const budget=createBudgetCoordinator({storage,now:()=>now});const api=createStoryApi({budget,config:{readiness:()=>({modelId:'fixture'}),now:()=>now},provider:async(...args)=>{calls++;return provider?provider(...args):{status:'ready',scene:scene(args[2]),actualNeurons:null,inferencePerformed:true};}});return {api,budget,db,setNow:v=>now=v,get calls(){return calls;}};}
+function fixture(provider,options={}){const db=new DatabaseSync(':memory:');const storage={sql:{exec(q,...p){return {toArray:()=>db.prepare(q).all(...p)};}},transactionSync(fn){db.exec('BEGIN IMMEDIATE');try{const r=fn();db.exec('COMMIT');return r;}catch(e){db.exec('ROLLBACK');throw e;}}};let now=Date.parse('2026-10-27T10:00:00Z'),calls=0;const budget=createBudgetCoordinator({storage,now:()=>now,limits:options.limits??{}});const api=createStoryApi({budget,config:{readiness:()=>options.profile??{modelId:'fixture'},now:()=>now},provider:async(...args)=>{calls++;return provider?provider(...args):{status:'ready',scene:scene(args[2]),actualNeurons:null,inferencePerformed:true};}});return {api,budget,db,setNow:v=>now=v,get calls(){return calls;}};}
 const req=(path,body,cookie,headers={})=>new Request(origin+path,{method:body===undefined?'GET':'POST',headers:{origin,'content-type':'application/json','cf-connecting-ip':'192.0.2.5',...(cookie?{cookie}:{}),...headers},...(body===undefined?{}:{body:typeof body==='string'?body:JSON.stringify(body)})});
 async function session(f){const r=await f.api.fetch(req('/api/story/session',{protocolVersion:1}));return {data:await r.json(),cookie:r.headers.get('set-cookie')?.split(';')[0],setCookie:r.headers.get('set-cookie')};}
 const body=(s,id='attempt-1',retryOf=null)=>({context:context(),attempt:{id,sessionRef:s.data.sessionRef,retryOf}});
@@ -35,4 +37,60 @@ test('HTTP retries cannot bypass current ready result and cache loss requires ex
   assert.equal((await (await f.api.fetch(req('/api/story/turn',foreign,s.cookie))).json()).errorCode,'RETRY_INVALID');assert.equal(f.calls,1);
   const linked=body(s,'attempt-2',{sessionRef:s.data.sessionRef,attemptId:'attempt-1'});
   assert.equal((await (await f.api.fetch(req('/api/story/turn',linked,s.cookie))).json()).status,'ready');assert.equal(f.calls,2);
+});
+
+test('actual provider continuation rejection stays typed through HTTP and completes the charged SQLite ledger',async t=>{
+  const f=fixture(generateScene,{
+    profile:{...CANDIDATE_PROFILE,validated:true,supportsStructuredOutput:true},
+    limits:{dailyNeurons:TURN_RESERVATION_NEURONS},
+  });
+  t.after(()=>f.db.close());
+  let inferences=0;
+  const sentContexts=[];
+  const env={AI:{run:async(model,input)=>{
+    inferences++;
+    assert.equal(model,CANDIDATE_PROFILE.modelId);
+    const c=JSON.parse(input.messages.find(message=>message.role==='user').content);
+    sentContexts.push(c);
+    const candidate=scene(c);
+    if(inferences===1) {
+      candidate.entities=Array.from({length:24},(_,i)=>({
+        id:c.namespace+':t1:e:'+i+'x'.repeat(48),
+        name:String(i)+'名'.repeat(58),kind:'person',
+      }));
+    }
+    return {model,choices:[{finish_reason:'stop',message:{content:JSON.stringify(candidate)}}],usage:{prompt_tokens:100,completion_tokens:80,total_tokens:180}};
+  }}};
+  const s=await session(f),firstBody=body(s);
+  const first=await (await f.api.fetch(req('/api/story/turn',firstBody,s.cookie),env)).json();
+  assert.equal(first.status,'rejected');
+  assert.equal(first.errorCode,'NEXT_CONTEXT_TOO_LARGE');
+  assert.equal(Object.hasOwn(first,'scene'),false);
+  assert.equal(inferences,1);
+  const ledger=()=>f.db.prepare('SELECT attempt_id,day,reserved,charge,status,actual,outcome,context_hash FROM ledger ORDER BY created,attempt_id').all();
+  const original=ledger()[0];
+  assert.equal(original.status,'complete');assert.equal(original.outcome,'rejected');
+  assert.equal(original.day,'2026-10-27');assert.equal(original.actual,null);
+  assert.equal(original.reserved,TURN_RESERVATION_NEURONS);assert.equal(original.charge,TURN_RESERVATION_NEURONS);
+  const replay=await (await f.api.fetch(req('/api/story/turn',firstBody,s.cookie),env)).json();
+  const lookup=await (await f.api.fetch(req('/api/story/turn/game-request?attemptId=attempt-1',undefined,s.cookie),env)).json();
+  assert.deepEqual(replay,first);assert.deepEqual(lookup,first);
+  assert.equal(inferences,1);assert.deepEqual(ledger(),[original]);
+  const linked=body(s,'attempt-2',{sessionRef:s.data.sessionRef,attemptId:'attempt-1'});
+  const sameDay=await (await f.api.fetch(req('/api/story/turn',linked,s.cookie),env)).json();
+  assert.equal(sameDay.errorCode,'DAILY_BUDGET_EXHAUSTED');
+  assert.equal(inferences,1);assert.deepEqual(ledger(),[original]);
+  f.setNow(Date.parse('2026-10-28T00:00:01Z'));
+  const nextDay=await (await f.api.fetch(req('/api/story/turn',linked,s.cookie),env)).json();
+  assert.equal(nextDay.status,'ready');assert.ok(nextDay.scene);
+  assert.equal(inferences,2);assert.equal(f.calls,2);
+  assert.deepEqual(sentContexts[1],sentContexts[0]);
+  assert.deepEqual(sentContexts[1].receipt,firstBody.context.receipt);
+  assert.equal(sentContexts[1].identity.requestId,firstBody.context.identity.requestId);
+  const rows=ledger();assert.equal(rows.length,2);assert.deepEqual(rows[0],original);
+  assert.equal(rows[1].day,'2026-10-28');assert.equal(rows[1].status,'complete');
+  assert.equal(rows[1].charge,TURN_RESERVATION_NEURONS);assert.equal(rows[1].actual,null);
+  assert.equal(rows[1].context_hash,original.context_hash);
+  const chargedToday=f.db.prepare("SELECT SUM(charge) AS amount FROM ledger WHERE day=? OR status IN ('reserved','unknown')").get('2026-10-28').amount;
+  assert.equal(chargedToday,TURN_RESERVATION_NEURONS);
 });

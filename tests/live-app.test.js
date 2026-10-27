@@ -71,3 +71,32 @@ test('client enforces negotiated smaller context and stream response limits',asy
   const limits={maxRequestBytes:32768,maxResponseBytes:65536,maxContextBytes:12,timeoutMs:30000};let calls=0;const c=clientModule.createStoryClient({location:{protocol:'https:'},fetch:async()=>{calls++;return new Response(JSON.stringify({protocolVersion:1,available:true,status:'ready',errorCode:null,limits}),{headers:{'content-type':'application/json'}});}});assert.equal((await c.capabilities()).available,true);await assert.rejects(c.requestTurn({}, {tooLong:'long bounded value'},{}),{code:'REQUEST_TOO_LARGE'});assert.equal(calls,1);
   const huge=clientModule.createStoryClient({location:{protocol:'https:'},fetch:async()=>new Response(' '.repeat(65537),{headers:{'content-type':'application/json'}})});assert.equal((await huge.capabilities()).errorCode,'RESPONSE_TOO_LARGE');
 });
+
+test('provider rejects an uncontinuable scene before ready; explicit retry preserves the original action and recovers',async()=>{
+  const {generateScene}=await import('../src/worker/story-provider.js');
+  const {CANDIDATE_PROFILE}=await import('../src/worker/story-config.js');
+  const f=fixture(),session=f.make(),attempts=[],contexts=[];let previous=null;
+  await session.start({runId:'continuation-retry',seed:42});
+  const committed=session.view().state;
+  f.client.getTurn=async()=>previous;
+  f.client.requestTurn=async(pending,context,attempt)=>{
+    attempts.push(copy(attempt));contexts.push(copy(context));
+    const value=scene(context);
+    if(attempts.length===1) {
+      const prefix=context.namespace+':t'+context.identity.turnId+':e:';
+      value.entities=Array.from({length:24},(_,i)=>({id:prefix+i+'x'.repeat(48),name:String(i)+'名'.repeat(58),kind:'person'}));
+    }
+    const provider=await generateScene({run:async()=>({model:CANDIDATE_PROFILE.modelId,choices:[{finish_reason:'stop',message:{content:JSON.stringify(value)}}],usage:{prompt_tokens:100,completion_tokens:80,total_tokens:180}})},{...CANDIDATE_PROFILE,validated:true,supportsStructuredOutput:true},context);
+    previous={...provider,requestId:pending.identity.requestId,attemptId:attempt.id,sessionRef:attempt.sessionRef};
+    return previous;
+  };
+  await session.choose({choiceId:committed.currentScene.choices[0].id,baseRevision:committed.revision,stateHash:stateHash(committed)});
+  assert.equal(previous.status,'rejected');assert.equal(previous.errorCode,'NEXT_CONTEXT_TOO_LARGE');
+  const original=await f.archive.load();assert.equal(original.state.revision,1);assert.ok(original.pending);assert.deepEqual(original.state,committed);
+  await session.retry();
+  assert.equal(session.view().state.revision,2);assert.equal(session.view().pending,null);assert.equal(attempts.length,2);
+  assert.equal(session.view().state.life.ageDays,committed.life.ageDays+original.pending.receipt.elapsedDays);
+  assert.deepEqual(contexts[1],contexts[0]);assert.equal(contexts[1].identity.requestId,original.pending.identity.requestId);assert.deepEqual(contexts[1].receipt,original.pending.receipt);
+  assert.deepEqual(attempts[1].retryOf,{attemptId:attempts[0].id,sessionRef:attempts[0].sessionRef});
+  assert.deepEqual(session.view().state.life.birth,original.state.life.birth);
+});
