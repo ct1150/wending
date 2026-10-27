@@ -102,7 +102,7 @@ test('the actual fresh application opens character creation and saves its prepar
   const app = await startApp(), state = deserializeGame(app.storage.raw);
   assert.equal(state.version, 4);
   assert.equal(state.mode, 'cultivation');
-  assert.equal(state.contentVersion, 2);
+  assert.equal(state.contentVersion, 3);
   assert.equal(state.phase, 'creating');
   assert.equal(state.revision, 0);
   assert.equal(state.scene.nodeId, 'arrival');
@@ -146,10 +146,10 @@ test('an existing journey offers explicit new-chapter confirmation with an expor
   const app = await startApp({ raw });
   assert.equal(app.storage.writes, 0);
   app.click({ view: 'settings' });
-  assert.match(app.html, /开始人间求仙篇/);
+  assert.match(app.html, /开始三界求仙篇/);
   app.click({ reset: '' });
   assert.equal(app.dialog.open, true);
-  assert.match(app.dialog.innerHTML, /人间求仙篇/);
+  assert.match(app.dialog.innerHTML, /三界求仙篇/);
   assert.match(app.dialog.innerHTML, /data-export/);
   assert.equal(app.storage.raw, raw);
   app.click({ export: '' });

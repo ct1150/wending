@@ -9,7 +9,7 @@ const birthCommand = (state, key) => ({ [key]: '', revision: String(state.revisi
 
 test('fresh application persists the unstarted dice profile and reloads it without drawing again', async () => {
   const app = await startApp(), before = saved(app);
-  assert.equal(before.contentVersion, 2);
+  assert.equal(before.contentVersion, 3);
   assert.equal(before.phase, 'creating');
   assert.equal(before.transcript.length, 0);
   assert.equal(before.life.birth.rollCount, 1);
@@ -62,7 +62,7 @@ test('empty names and composing text cannot start a life and an IME result is sa
   assert.equal(started.phase, 'playing');
   assert.equal(started.life.name, '山岚');
   assert.equal(started.rng, before.rng);
-  assert.ok(started.transcript.some(block => block.text.includes('你叫山岚')));
+  assert.ok(started.transcript.some(block => block.text.includes('山岚')));
   assert.match(app.html, /data-character/);
   assert.match(app.html, /data-history/);
   assert.doesNotMatch(app.html, /id="birth-name"/);

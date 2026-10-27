@@ -36,14 +36,14 @@
 
 ### Task 2: CV3 新规则、出身和双命格
 
-**Files:** `src/game/cultivation/{engine,validation,legacy-engine,legacy-validation}.js`；`src/game/cultivation/v3/{model,birth,engine,validation,contract}.js`；`src/ui/character.js`、`src/ui/paper.css`、`src/app.js`；`tests/campaign-birth.test.js`、`tests/campaign-save.test.js`、`tests/campaign-app.test.js`。
+**Files:** `src/game/cultivation/{engine,validation,legacy-engine,legacy-validation}.js`；`src/game/cultivation/v3/{model,birth,engine,validation}.js`；`src/ui/character.js`、`src/ui/paper.css`、`src/app.js`；`tests/campaign-birth.test.js`、`tests/campaign-save.test.js`、`tests/campaign-app.test.js`。
 
 **Interfaces:** 保留现有四个 cultivation 公共函数；`createCultivation({contentVersion:3,characterCreation:true,seed,name})` 创建新人生。命令保留 revision/sceneId/choiceId，并新增 originId/talentId。view 保留现有结构，creation 增加 origins/originId/lockedTalentId/attributeBudget，talents 为两项。
 
-- [ ] 先写四出身、总点数12、两项不同命格、锁定一项、失败原子性、持久化及旧 CV 回归测试，并观察失败。
-- [ ] 冻结内容契约；旧实现移动为 legacy 模块，仅改变导入路径；新模型/验证/引擎独立实现。
-- [ ] UI 展示身份钩子和双命格、锁定动作，资质放次级详情；接入新推荐开局，保留旧人生。
-- [ ] 运行定向测试与全套回归，独立审查并提交。
+- [x] 先写四出身、总点数12、两项不同命格、锁定一项、失败原子性、持久化及旧 CV 回归测试，并观察失败。
+- [x] 冻结内容契约；旧实现移动为 legacy 模块，仅改变导入路径；新模型/验证/引擎独立实现。
+- [x] UI 展示身份钩子和双命格、锁定动作，资质放次级详情；接入新推荐开局，保留旧人生。
+- [x] 运行定向测试与全套回归，独立审查并提交。
 
 ### Task 3: 非药谷主线、不同人生及高阶三界
 
@@ -51,10 +51,10 @@
 
 **Interfaces:** 使用 Task 2 目录、条件/效果契约，纯 `resolveCultivationScene(state)`；不能在内容解析中抽随机或修改状态。
 
-- [ ] 先写真实公共路径测试：四开局、八命格机会、组合后果、三条人间发展、逐级突破、三界成就、寿尽及再世，观察失败。
-- [ ] 写至少100个有实际选择的可达场景；正常问鼎路线至少55个选择；每个出身有独立人物冲突与两条策略。
-- [ ] 覆盖宗门、散修、遗址、异兽、海域、幽冥、天界与个人关系，去除药谷中心；关键前世后果改变后来行动。
-- [ ] 模拟多个种子、流派与后世，验证无软锁、可解释风险和路线差异；独立审查并提交。
+- [x] 先写真实公共路径测试：四开局、八命格机会、组合后果、三条人间发展、逐级突破、三界成就、寿尽及再世，观察失败。
+- [x] 写至少100个有实际选择的可达场景；正常问鼎路线至少55个选择；每个出身有独立人物冲突与两条策略。
+- [x] 覆盖宗门、散修、遗址、异兽、海域、幽冥、天界与个人关系，去除药谷中心；关键前世后果改变后来行动。
+- [x] 模拟多个种子、流派与后世，验证无软锁、可解释风险和路线差异；独立审查并提交。
 
 ### Task 4: 免费模型离线剧情创作工具
 
@@ -62,27 +62,27 @@
 
 **Interfaces:** `brief` 导出真实场景简报；`generate` 输出候选；`preview` 输出可读文字；`accept` 在再次校验后更新静态文字包。默认 Ollama；密钥仅来自环境变量。
 
-- [ ] 测试 JSON/字段/ID/长度/超时/截断/失败回退/接受原子写入，观察缺失功能失败。
-- [ ] 实现本地 Ollama 和可选兼容传输、严格文字 schema、预览和明确接受；引擎规则字段不可写。
-- [ ] 验证真实可用端点（环境允许时）、记录实际模型和结果；没有真实推理就保留明确未验证标记。
-- [ ] 构建离线包、确认无密钥/运行时请求；独立审查并提交。
+- [x] 测试 JSON/字段/ID/长度/超时/截断/失败回退/接受原子写入，观察缺失功能失败。
+- [x] 实现本地 Ollama 和可选兼容传输、严格文字 schema、预览和明确接受；引擎规则字段不可写。
+- [x] 验证真实可用端点（环境允许时）、记录实际模型和结果；没有真实推理就保留明确未验证标记。
+- [x] 构建离线包、确认无密钥/运行时请求；独立审查并提交。
 
 ### Task 5: 自动发布
 
-**Files:** `.github/workflows/validate-deploy.yml`、`scripts/publish-release.js`、`scripts/build-worker.js`、`tests/release-channel.test.js`、`tests/worker.test.js`、`docs/DEPLOYMENT.md`。
+**Files:** `.github/workflows/validate-deploy.yml`、`scripts/publish-release.js`、`scripts/build-gateway.js`、`src/worker/release-gateway.js`、`tests/{release-channel,publish-release,gateway-build}.test.js`、`docs/DEPLOYMENT.md`。
 
 **Interfaces:** manifest 含 version、sourceCommit、htmlSha256、字节数和同仓库不可变 artifact 路径；Worker `/healthz` 反映实际服务快照。
 
-- [ ] 确认可用授权路径；本轮采用已审方案，不能用不存在的凭据宣布接通。
-- [ ] 先测试 manifest/摘要/路径验证、切换原子性、远端不可用回退、health/HTML一致性。
-- [ ] 配置 main 检查成功后自动发布发行包；只在发布 job 赋予 contents:write；其他分支/PR不能发布。
+- [x] 确认可用授权路径；本轮采用已审方案，不能用不存在的凭据宣布接通。
+- [x] 先测试 manifest/摘要/路径验证、切换原子性、远端不可用回退、health/HTML一致性。
+- [x] 配置 main 检查成功后自动发布发行包；只在发布 job 赋予 contents:write；其他分支/PR不能发布。
 - [ ] 更新现有 Worker，真实执行一次 main→发行→线上更新，记录 SHA/摘要/流水线。
 
 ### Task 6: 整体发布验收
 
 **Files:** `README.md`、`docs/{ROADMAP,PROGRESS,QA_REPORT,PRODUCT_SPEC,DEPLOYMENT}.md`、package version。
 
-- [ ] 完整 release、旧版回归、独立整分支评审及必要修复。
-- [ ] 实际桌面/窄屏/键盘/存档/离线浏览器验证，记录具体范围。
+- [x] 完整 release、旧版回归、独立整分支评审及必要修复。
+- [x] 实际桌面/窄屏/键盘/存档/离线浏览器验证，记录具体范围。
 - [ ] 合并并核对 CI、线上 sourceCommit、下载摘要及实际新生/完整路线。
 - [ ] 回填每项完成证据；真人计时、物理设备或外部授权仍缺的项目明确标为未验收，不以估算冒充。

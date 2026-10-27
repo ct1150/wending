@@ -1,8 +1,36 @@
 # GitHub → Cloudflare 部署
 
-更新：2026-10-26（上海）。**3.1.0 已发布**，仍使用现有普通 Worker。
+更新：2026-10-27（上海）。4.0.0 自动发行方案正在验收；下方保留 3.1.0 及更早版本的实际生产记录。
 
-## 当前生产：3.1.0 取名掷骰与沉浸阅读
+## 4.0.0 自动发行方案
+
+本轮继续使用现有 `baishi-wending` Worker 与同一游戏地址。普通游戏内容的发布路径为：main 检查成功 → GitHub Actions 发布不可变 HTML 和清单 → Worker 校验并切换。网关程序自身升级另行通过现有 Cloudflare API 部署。
+
+### 发行契约
+
+1. `validate` 执行全部测试、语法检查和构建，保存本次运行的产物；PR 和其他分支只有读权限。
+2. 仅 main 的 `publish` job 获得 `contents:write`，下载同一次运行的验证产物，不从其他分支重建或取包。
+3. 发布脚本校验源码 HEAD、当前远端 main、HTML 字节数和 SHA-256。在临时独立工作树生成内容摘要命名的文件，再生成指向实际 artifact commit 的清单，以普通 fast-forward 推送到 `release-channel`。
+4. 发布前再次核对 main，过期任务返回 `superseded`；分支竞态不会 force push。认证推送从原 checkout 执行，避免 worktree 不匹配 checkout v6 的凭据范围。
+5. 网关只读取固定仓库与渠道，清单精确限定字段、40 位提交、64 位摘要、3 MB 包上限与固定路径。先下载完整文件、校验字节与 SHA-256，再原子替换正文与身份。
+6. `/healthz` 返回实际服务的 `version/sourceCommit/htmlSha256/htmlBytes/releaseSource` 及最近刷新结果。下载与首页使用同一已验证快照。
+
+活动实例每次请求检查是否已过 60 秒轮询间隔；GitHub 原始文件缓存与边缘实例彼此独立，因此不承诺一分钟内全球同时刷新。失败时继续使用该实例或边缘缓存中的已验证版本；冷边缘缓存缺失且 GitHub 不可用时使用网关内嵌的已验证回退版本。Cache API 是尽力缓存，不是永久存储。
+
+网络请求和完整响应体有超时与大小上限；缓存读写也有上限。解码保留 UTF-8 BOM，避免校验过的字节在响应中改变。无效清单、坏摘要、下载失败和缓存失败都有定向回归。
+
+### 运维
+
+- 游戏与剧情更新：合并通过检查的 PR 到 main，观察 `publish` 结果及线上 `/healthz`；失败时修复后重跑 main 工作流。
+- 回退游戏：将修复或回退源码提交到 main 并通过检查，走同一发行链；不要手改正文而保留旧摘要。
+- 更新网关：从已审实际源码构建游戏，再执行 `SOURCE_COMMIT=完整40位游戏源码提交 npm run build:gateway`，通过现有 API 上传 `release/gateway.mjs`。保留原 Worker 的域名和必要配置。
+- 不再依赖未启用的 `ENABLE_CF_DEPLOY` 或缺失的 Cloudflare CI secrets。GitHub 使用本次 job 的仓库令牌，客户端不携带令牌。
+
+当前模块审查和 10 项定向测试已通过；**真实 main 发布、生产切换和最终身份将在完成后记录于本节，不以本地测试代替上线证据。**
+
+接口依据：[GitHub checkout](https://github.com/actions/checkout)、[Artifacts](https://docs.github.com/en/actions/tutorials/store-and-share-data)、[Cloudflare Cache API](https://developers.cloudflare.com/workers/runtime-apis/cache/)、[Worker multipart metadata](https://developers.cloudflare.com/workers/configuration/multipart-upload-metadata/)。
+
+## 历史生产：3.1.0 取名掷骰与沉浸阅读
 
 [PR #9](https://github.com/ct1150/wending/pull/9) 完成固定人物简栏、人物与历史抽屉、当前剧情收拢、对话标点与 CV2 取名掷骰开局。源代码、独立复核、完整发行门禁、真实远端树与生产页面均已核对。
 

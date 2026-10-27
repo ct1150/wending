@@ -36,7 +36,21 @@ export async function startApp({ raw = null, denyWrite = false, denyRead = false
       dynamic.set(selector, element);
       return element;
     },
-    getElementById(id) { return this.querySelector(`#${id}`); }, querySelectorAll(selector) { return selector.split(',').map(value => this.querySelector(value.trim())).filter(Boolean); },
+    getElementById(id) { return this.querySelector(`#${id}`); },
+    querySelectorAll(selector) {
+      const result = [];
+      const markup = elements.get('#app').innerHTML + elements.get('#dialog').innerHTML;
+      for (const part of selector.split(',').map(value => value.trim())) {
+        const attribute = part.match(/^\[([^=\]]+)\]$/);
+        if (attribute) {
+          for (const match of markup.matchAll(/<[a-z][^>]*>/gi)) {
+            const value = match[0].match(new RegExp('\\s' + attribute[1] + '(?:="([^"]*)")?(?=[\\s>])'));
+            if (value) result.push(this.querySelector(value[1] ? `[${attribute[1]}="${value[1]}"]` : part));
+          }
+        } else result.push(this.querySelector(part));
+      }
+      return [...new Set(result.filter(Boolean))];
+    },
     addEventListener(type, callback) { listeners.set(type, callback); }, createElement() { const link = make('a'); link.click = () => downloads.push(link); return link; },
   };
   const code = await bundleModules(process.cwd(), './src/app.js');

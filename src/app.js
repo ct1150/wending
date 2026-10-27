@@ -28,7 +28,7 @@ const storage = {
 function newSeed() {
   return window.crypto?.getRandomValues ? String(window.crypto.getRandomValues(new Uint32Array(1))[0]) : String(Date.now());
 }
-const createRecommendedLife = options => createCultivation({ ...options, characterCreation: true });
+const createRecommendedLife = options => createCultivation({ ...options, characterCreation: true, contentVersion: 3 });
 let session = bootstrapSession(storage, { seed: newSeed(), createFresh: createRecommendedLife });
 let state = session.state;
 let view = 'adventure';
@@ -179,7 +179,8 @@ function showMore() {
 }
 
 function showHelp() {
-  if (isJourney(state)) return openDialog('入世须知', `${state.version === 4 ? '<p>你从十六岁的凡人开始求仙。先为这一世取名，掷骰查看根骨、悟性、气运与天赋，准备好后再入世。掷出的结果会保存，刷新页面不会重掷。</p><p>入世后，先读眼前处境与目标，再选择自己的做法。功法、修为、材料与安身之处，都要靠亲身经历取得；伤势也会影响能走的路。</p><p>药谷的危机按天推进，离谷后的修炼才会耗去数年，一年为三百六十天。普通变化随行动后果呈现；人物能够预知的重伤、燃寿和无法活着完成的危险，会在选择前提醒。</p><p>此生归宿会留下收获与教训。下一世重新求仙，可携一项真正学会的方法，也可只携记忆。留在世间的事不会因转世而消失。</p>' : '<p>先读眼前的处境，再选择自己的做法。不能行动时，会说明缺少的条件。</p><p>当前人生会继续原有的故事。若想取名掷骰、另从凡人入门，可在「存档与设置」中选择「开始人间求仙篇」，确认前请先导出当前人生。</p>'}<p>顶部简栏显示此身与余寿，点击可展开人物详情；「历史对话」保留已经发生的选择、后果与前世往事。阅读、打开抽屉和刷新页面都不会消耗岁月。</p><p>进度自动保存在当前浏览器。更换设备或离线游玩前，请从「更多 → 存档与设置」导出备份；导入存档会先检查内容，再请你确认替换。</p>`, '<button class="button" data-view="settings">存档与设置</button><button class="button primary" data-close-dialog>继续阅读</button>');
+  if (state?.version === 4 && state.contentVersion === 3) return openDialog('入世须知', '<p>先为此生取名，选择出身，再看两道命格。根骨、悟性与气运总计十二点；可以锁定一道命格后重新掷骰。入世之前的结果会保存，刷新不会重掷。</p><p>出身会带来不同的牵挂与行动，命格会在旅程中开启特殊机会。机缘也有代价；从凡人到登仙，都须取得真实功法、材料，经过修行与历险。已知的伤势、折寿或必死危险会在选择前提醒。</p><p>一年三百六十天。岁月只在落下一项选择时流逝，查看人物、历史和存档不会推进时间。余寿不足以完成修行时，无法预借下一境界的寿限。</p><p>一世终结后，可以带走一项亲自学会的法门。你留下的承诺与三界成就会继续影响世界，也可能解锁新的命格和出身。死亡次数本身不发奖励。</p><p>顶部简栏可展开人物详情；历史对话保留当世与前世的完整往事。更换设备或离线游玩前，请先导出存档备份。</p>', '<button class="button" data-view="settings">存档与设置</button><button class="button primary" data-close-dialog>继续阅读</button>');
+  if (isJourney(state)) return openDialog('入世须知', `${state.version === 4 ? '<p>你从十六岁的凡人开始求仙。先为这一世取名，掷骰查看根骨、悟性、气运与天赋，准备好后再入世。掷出的结果会保存，刷新页面不会重掷。</p><p>入世后，先读眼前处境与目标，再选择自己的做法。功法、修为、材料与安身之处，都要靠亲身经历取得；伤势也会影响能走的路。</p><p>药谷的危机按天推进，离谷后的修炼才会耗去数年，一年为三百六十天。普通变化随行动后果呈现；人物能够预知的重伤、燃寿和无法活着完成的危险，会在选择前提醒。</p><p>此生归宿会留下收获与教训。下一世重新求仙，可携一项真正学会的方法，也可只携记忆。留在世间的事不会因转世而消失。</p>' : '<p>先读眼前的处境，再选择自己的做法。不能行动时，会说明缺少的条件。</p><p>当前人生会继续原有的故事。若想取名掷骰、另从凡人入门，可在「存档与设置」中选择「开始三界求仙篇」，确认前请先导出当前人生。</p>'}<p>顶部简栏显示此身与余寿，点击可展开人物详情；「历史对话」保留已经发生的选择、后果与前世往事。阅读、打开抽屉和刷新页面都不会消耗岁月。</p><p>进度自动保存在当前浏览器。更换设备或离线游玩前，请从「更多 → 存档与设置」导出备份；导入存档会先检查内容，再请你确认替换。</p>`, '<button class="button" data-view="settings">存档与设置</button><button class="button primary" data-close-dialog>继续阅读</button>');
   openDialog('入世须知', `<p>你的这一世，从药谷旧火开始。相逢、调查与取舍，会改变谷地，也改变后来人要面对的事。</p><div class="help-tip"><strong>先看眼前之事，再落下一念。</strong><br>场景与目标指明眼前方向；选项会列出所需岁月、灵石、药材、气血或命损。无法选择的缘由也会写明。选择的后果会留在正文中，手记、人物、线索与生平都在页面下方「回看」中。资源、修为和自身余寿在「状态」中。</div><div class="help-tip"><strong>调查有取舍，岁月只有一条河。</strong><br>药谷旧火的三条调查线最多追查两条。修炼、外出和旅行也推进世界年份，可能令最后一夜提前到来；阅读、看手记与换装不耗时。倒计时按游戏中的年计算。</div><div class="help-tip"><strong>修行是此生的另一条路。</strong><br>在页面下方「修行」中闭关、休息、炼丹或自由历练。修为满足条件后可尝试破境，突破提高寿限。主线结果确定后，仍可继续修行、问道三界，或归隐转世。</div><div class="help-tip"><strong>功法与法器要亲自装配。</strong><br>从「修行 → 功法与法器」中选择一门本命功法、两个神通与一件法器，再返回当前剧情。身在幽冥或天界时，可回看药谷故事；回到人间才能继续作出谷中的选择。</div><div class="help-tip"><strong>留意余寿和气血。</strong><br>燃寿强攻损耗寿元，延寿丹每世最多服用两次。战斗需先分胜负或遁走，才能继续剧情。</div><div class="help-tip"><strong>转世，走进自己改变的世界。</strong><br>医谷共守、宗门接管与焚种迁民，会通向不同的后世事务。人物随世界年份老去，新的你也有新的身份。寿尽、陨落或归隐后，先从真实经历产生的候选中明确选择一项旧途奖励，再按提示交接进入对话新人生；下一世只沿用一项情境方法，已得传承历史、世界因果与三界道证保留。</div><div class="help-tip"><strong>问鼎三界。</strong><br>取得人间、幽冥、天界的三枚道证，修至登仙，在天界挑战三界共主。可随时从「修行 → 三界山河」查看长远目标。</div><p>旧存档的当世沿旧途继续，结束此生并转世后进入新篇，不会补写未曾经历的药谷往事。进度自动保存在当前浏览器；更换设备前，请在页首「更多 → 存档与设置」中导出备份。</p>`, '<button class="button primary" data-close-dialog>我已明了</button>');
 }
 
@@ -352,7 +353,7 @@ function renderPastLife(life) {
 }
 
 function renderSettings() {
-  return `${heading('存档与设置', '将这一刻的修行妥善收藏，待下一次回来继续。')}<button class="button" data-export-legacy>导出旧原档与交接备份</button><div class="settings-grid"><section class="settings-row"><div><h3>导出修行存档</h3><p>下载包含当前人生、传承、世界因果和随机状态的备份，可导入到另一台设备。</p></div><button class="button primary" data-export ${state ? '' : 'disabled'}>${icon('download', 16)}导出存档</button></section><section class="settings-row"><div><h3>导入已有存档</h3><p>选择之前导出的 JSON 文件。通过完整校验后，再确认替换当前修行进度。</p></div><button class="button" data-import>${icon('upload', 16)}选择存档</button></section>${window.location.protocol !== 'file:' ? '<section class="settings-row"><div><h3>下载离线版</h3><p>保存为一个 HTML 文件，断网也能继续修行。将当前存档一并导出，再在离线版中导入。</p></div><a class="button" href="./baishi-wending-offline.html" download="百世问鼎-离线版.html">' + icon('download', 16) + '下载游戏</a></section>' : ''}<section class="settings-row"><div><h3>入世指南</h3><p>${isJourney(state) ? '了解当前行动、选择的后果与进度保存。' : '了解药谷主线、调查取舍、共同岁月与转世后的故事，也可查看修行、装备与三界规则。'}</p></div><button class="button" data-help>${icon('help', 16)}查看指南</button></section><section class="settings-row"><div><h3>开始人间求仙篇</h3><p>${state && state.version !== 4 ? '现有人生可以照常继续；也可另开一局，取名、掷骰决定属性与天赋，寻找自己的求仙之路。' : '为十六岁的凡人取名，掷骰决定属性与天赋，再经历学艺、历险与此生归宿。'}确认后会替换这台设备上的人生与历史，请先导出备份。</p></div><button class="button danger" data-reset>${icon('refresh', 16)}开始人间求仙篇</button></section></div><p class="save-info">${state?.version === 4 ? '人间求仙篇' : '百世问鼎'} · 单机本地存档<br>存档不会上传至服务器。不同浏览器、域名或离线文件的存储彼此独立，请用导出与导入迁移。隐私模式或禁用本地存储时，请在离开前手动备份。</p>`;
+  return `${heading('存档与设置', '将这一刻的修行妥善收藏，待下一次回来继续。')}<button class="button" data-export-legacy>导出旧原档与交接备份</button><div class="settings-grid"><section class="settings-row"><div><h3>导出修行存档</h3><p>下载包含当前人生、传承、世界因果和随机状态的备份，可导入到另一台设备。</p></div><button class="button primary" data-export ${state ? '' : 'disabled'}>${icon('download', 16)}导出存档</button></section><section class="settings-row"><div><h3>导入已有存档</h3><p>选择之前导出的 JSON 文件。通过完整校验后，再确认替换当前修行进度。</p></div><button class="button" data-import>${icon('upload', 16)}选择存档</button></section>${window.location.protocol !== 'file:' ? '<section class="settings-row"><div><h3>下载离线版</h3><p>保存为一个 HTML 文件，断网也能继续修行。将当前存档一并导出，再在离线版中导入。</p></div><a class="button" href="./baishi-wending-offline.html" download="百世问鼎-离线版.html">' + icon('download', 16) + '下载游戏</a></section>' : ''}<section class="settings-row"><div><h3>入世指南</h3><p>${isJourney(state) ? '了解当前行动、选择的后果与进度保存。' : '了解药谷主线、调查取舍、共同岁月与转世后的故事，也可查看修行、装备与三界规则。'}</p></div><button class="button" data-help>${icon('help', 16)}查看指南</button></section><section class="settings-row"><div><h3>开始三界求仙篇</h3><p>${state && state.version !== 4 ? '现有人生可以照常继续；也可另开一局，选择来处与双重命格，寻找自己的求仙之路。' : '为十六岁的凡人取名，选择来处、掷取双重命格，从人间一步步修行至幽冥与天界。'}确认后会替换这台设备上的人生与历史，请先导出备份。</p></div><button class="button danger" data-reset>${icon('refresh', 16)}开始三界求仙篇</button></section></div><p class="save-info">${state?.version === 4 ? (state.contentVersion === 3 ? '三界求仙篇' : '人间求仙篇') : '百世问鼎'} · 单机本地存档<br>存档不会上传至服务器。不同浏览器、域名或离线文件的存储彼此独立，请用导出与导入迁移。隐私模式或禁用本地存储时，请在离开前手动备份。</p>`;
 }
 
 function downloadText(filename, text, mime = 'application/json;charset=utf-8') {
@@ -389,7 +390,7 @@ function saveBirthName() {
     const previousError = saveError;
     persist();
     showBirthNameError();
-    document.querySelectorAll('[data-birth-reroll], [data-birth-start]').forEach(button => { button.dataset.revision = String(state.revision); });
+    document.querySelectorAll('[data-birth-reroll], [data-birth-start], [data-birth-origin], [data-birth-lock]').forEach(button => { button.dataset.revision = String(state.revision); });
     const saveStatus = $('#save-status');
     if (saveStatus) saveStatus.textContent = lastSaved && !saveError ? '进度已自动保存' : '请及时导出备份';
     if (saveError && saveError !== previousError) notify(saveError, true);
@@ -399,12 +400,13 @@ function saveBirthName() {
 function chooseBirth(choiceId, data) {
   if (!isCreating(state) || birthComposing) return;
   try {
-    const result = chooseCultivation(state, { revision: Number(data.revision), sceneId: data.sceneId, choiceId, ...(choiceId === 'birth-start' ? { name: birthNameDraft } : {}) });
+    const result = chooseCultivation(state, { revision: Number(data.revision), sceneId: data.sceneId, choiceId, ...(choiceId === 'birth-start' ? { name: birthNameDraft } : {}), ...(choiceId === 'birth-origin' ? { originId: data.birthOrigin } : {}), ...(choiceId === 'birth-lock' ? { talentId: data.birthLock } : {}) });
     if (result.kind !== 'applied') {
       if (choiceId === 'birth-start') { showBirthNameError(result.message); $('#birth-name')?.focus({ preventScroll: true }); }
       return notify(result.message, true);
     }
-    update(result.state, { goAdventure: true, message: false, ...(choiceId === 'birth-reroll' ? { focusSelector: '[data-birth-reroll]' } : {}) });
+    const focusSelector = choiceId === 'birth-reroll' ? '[data-birth-reroll]' : choiceId === 'birth-origin' ? `[data-birth-origin="${data.birthOrigin}"]` : choiceId === 'birth-lock' ? `[data-birth-lock="${data.birthLock}"]` : null;
+    update(result.state, { goAdventure: true, message: false, ...(focusSelector ? { focusSelector } : {}) });
   } catch (error) { notify(error.message || '暂时无法准备这一世。', true); }
 }
 
@@ -434,7 +436,7 @@ document.addEventListener('click', event => {
   if ('confirm' in data) { const callback = dialogConfirm; closeDialog(false); callback?.(); return; }
   if ('character' in data) return showCharacter();
   if ('history' in data) return showHistory();
-  if ('birthReroll' in data || 'birthStart' in data) { event.preventDefault(); return chooseBirth('birthStart' in data ? 'birth-start' : 'birth-reroll', data); }
+  if ('birthReroll' in data || 'birthStart' in data || 'birthOrigin' in data || 'birthLock' in data) { event.preventDefault(); return chooseBirth('birthStart' in data ? 'birth-start' : 'birthOrigin' in data ? 'birth-origin' : 'birthLock' in data ? 'birth-lock' : 'birth-reroll', data); }
   if ('more' in data) return showMore();
   if ('help' in data) return showHelp();
   if ('view' in data) {
@@ -509,7 +511,7 @@ document.addEventListener('click', event => {
   if ('export' in data) return exportGame();
   if ('exportCorrupt' in data && session.rawCorruptSave !== null) { downloadText('百世问鼎-原存档备份.txt', session.rawCorruptSave, 'text/plain;charset=utf-8'); return; }
   if ('import' in data) { $('#import-file').click(); return; }
-  if ('newGame' in data || 'reset' in data) return confirmAction('开始人间求仙篇', `<p>将从十六岁的凡人开始第一世，先取名、掷骰决定属性与天赋，再踏上求仙之路。这会替换当前浏览器中的人生、传承与历史。</p><p>若要保留眼前的故事，请先导出备份；已经导出的文件仍可随时恢复。</p>${state ? '<button class="button" data-export>先导出当前人生</button>' : session.rawCorruptSave !== null ? '<button class="button" data-export-corrupt>先备份原存档</button>' : ''}`, beginRecommendedLife, '确认替换并取名');
+  if ('newGame' in data || 'reset' in data) return confirmAction('开始三界求仙篇', `<p>将从十六岁的凡人开始第一世，先取名、选择来处与双重命格，再踏上三界求仙之路。这会替换当前浏览器中的人生、传承与历史。</p><p>若要保留眼前的故事，请先导出备份；已经导出的文件仍可随时恢复。</p>${state ? '<button class="button" data-export>先导出当前人生</button>' : session.rawCorruptSave !== null ? '<button class="button" data-export-corrupt>先备份原存档</button>' : ''}`, beginRecommendedLife, '确认替换并取名');
 });
 
 $('#import-file').addEventListener('change', async event => {
