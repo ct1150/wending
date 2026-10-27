@@ -25,6 +25,8 @@ export function serializeGame(state) {
     case 4:
       validateCultivation(state);
       return assertSaveSize(JSON.stringify(state));
+    case 5:
+      throw new Error('V5 实时人生请使用完整 .wending.jsonl 归档（live-archive）。');
     default:
       return unsupportedVersion();
   }
@@ -52,6 +54,8 @@ export function deserializeGame(raw) {
       validateCultivation(state);
       assertSaveSize(JSON.stringify(state));
       return state;
+    case 5:
+      throw new Error('V5 实时人生请使用完整 .wending.jsonl 归档（live-archive）。');
     default:
       return unsupportedVersion();
   }
