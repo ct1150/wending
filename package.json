@@ -1,15 +1,18 @@
 {
   "name": "baishi-wending",
-  "version": "3.1.0",
+  "version": "4.0.0",
   "private": true,
   "type": "module",
-  "description": "百世问鼎 — 从凡人求仙到筑基取舍的文字肉鸽，一世修行与轮回因果",
+  "description": "百世问鼎 — 四种来处、双重命格，从凡人修行至三界问鼎的文字肉鸽",
   "engines": { "node": ">=22" },
   "scripts": {
     "dev": "node scripts/dev.js",
     "test": "node --test tests/*.test.js",
     "build": "node scripts/build.js",
     "build:worker": "node scripts/build-worker.js",
+    "build:gateway": "node scripts/build-gateway.js",
+    "publish:release": "node scripts/publish-release.js",
+    "story:author": "node scripts/story-author.js",
     "check": "node scripts/check.js",
     "release": "npm test && npm run check && npm run build"
   }

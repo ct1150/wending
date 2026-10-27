@@ -8,7 +8,12 @@ function unsupportedVersion() {
 }
 
 export function serializeGame(state) {
-  switch (state?.version) {
+  // Inspect the discriminator without executing an untrusted accessor. The
+  // selected version validator still owns every other state constraint.
+  if (!state || typeof state !== 'object' || Array.isArray(state) || ![Object.prototype, null].includes(Object.getPrototypeOf(state))) return unsupportedVersion();
+  const version = Object.getOwnPropertyDescriptor(state, 'version');
+  if (!version || !version.enumerable || !Object.hasOwn(version, 'value')) return unsupportedVersion();
+  switch (version.value) {
     case 1:
       // The old importer owns strict v1 validation and its established v2 upgrade.
       return assertSaveSize(serialize(deserialize(assertSaveSize(JSON.stringify(state)))));
