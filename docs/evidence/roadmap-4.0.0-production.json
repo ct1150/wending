@@ -1,0 +1,173 @@
+{
+  "version": "4.0.0",
+  "initialAutomaticActivation": {
+    "observedAt": "2026-10-27T13:19:26.624378+00:00",
+    "health": {
+      "status": "ok",
+      "version": "4.0.0",
+      "sourceCommit": "f2765e8a394f573f901e5cc8e42762fed74cb852",
+      "htmlSha256": "02b1248bd287b3f2ebc89aef6f22ab85d56364feef53d1b40d18f51a40ccf617",
+      "htmlBytes": 852849,
+      "releaseSource": "remote-fetch",
+      "lastAttemptAt": 1793107166250,
+      "lastSuccessAt": 1793107166284,
+      "lastError": ""
+    },
+    "downloadBytes": 852849,
+    "downloadSha256": "02b1248bd287b3f2ebc89aef6f22ab85d56364feef53d1b40d18f51a40ccf617",
+    "homeMatchesDownload": true
+  },
+  "productionBrowser": {
+    "url": "https://baishi-wending.ct1150.workers.dev/",
+    "browser": "131.0.6778.204",
+    "actions": 68,
+    "realms": [
+      "mortal",
+      "qi",
+      "foundation",
+      "golden",
+      "nascent",
+      "spirit",
+      "immortal"
+    ],
+    "ageYears": 140,
+    "proofs": [
+      "mortal",
+      "nether",
+      "celestial"
+    ],
+    "midlifeImportExact": true,
+    "victoryExport": {
+      "bytes": 79822,
+      "sha256": "1df7188785af0947c0d800766a21eae1102b9689d3e6244af6075b9d6c6d670c"
+    },
+    "rebirth": {
+      "origin": "wanderer",
+      "inherited": "inherit-bargaining",
+      "oldShelter": true
+    },
+    "drawersReadOnly": true,
+    "focusRestored": true,
+    "dimensions": [
+      {
+        "width": 1280,
+        "client": 1280,
+        "scroll": 1280,
+        "heights": [
+          61.1875,
+          61.1875,
+          61.1875,
+          61.1875
+        ]
+      },
+      {
+        "width": 390,
+        "client": 390,
+        "scroll": 390,
+        "heights": [
+          55.1875,
+          55.1875,
+          55.1875,
+          55.1875
+        ]
+      },
+      {
+        "width": 320,
+        "client": 320,
+        "scroll": 320,
+        "heights": [
+          55.1875,
+          55.1875,
+          55.1875,
+          55.1875
+        ]
+      }
+    ],
+    "errors": [],
+    "externalRequests": []
+  },
+  "legacySave": {
+    "mode": "after",
+    "health": {
+      "status": "ok",
+      "version": "4.0.0",
+      "sourceCommit": "f2765e8a394f573f901e5cc8e42762fed74cb852",
+      "htmlSha256": "02b1248bd287b3f2ebc89aef6f22ab85d56364feef53d1b40d18f51a40ccf617",
+      "htmlBytes": 852849,
+      "releaseSource": "remote-fetch",
+      "lastAttemptAt": 1793107166250,
+      "lastSuccessAt": 1793107166284,
+      "lastError": ""
+    },
+    "contentVersion": 2,
+    "phase": "playing",
+    "revision": 3,
+    "exportBytes": 2516,
+    "exportSha256": "b02ebf1f67424678c7e05541a4def861f63585c14ab4c050e579425ebf2b1f1a",
+    "errors": []
+  },
+  "redirectRuntime": {
+    "before": {
+      "alias": {
+        "name": "TypeError",
+        "message": "Invalid redirect value, must be one of \"follow\" or \"manual\" (\"error\" won't be implemented since it does not make sense at the edge; use \"manual\" and check the response status code).",
+        "stack": "TypeError: Invalid redirect value, must be one of \"follow\" or \"manual\" (\"error\" won't be implemented since it does not make sense at the edge; use \"manual\" and check the response status code).\n    at fetch.redirect (probe.mjs:1:213)\n    at Object.fetch (probe.mjs:1:416)"
+      },
+      "direct": {
+        "name": "TypeError",
+        "message": "Invalid redirect value, must be one of \"follow\" or \"manual\" (\"error\" won't be implemented since it does not make sense at the edge; use \"manual\" and check the response status code).",
+        "stack": "TypeError: Invalid redirect value, must be one of \"follow\" or \"manual\" (\"error\" won't be implemented since it does not make sense at the edge; use \"manual\" and check the response status code).\n    at probe.mjs:1:315\n    at Object.fetch (probe.mjs:1:416)"
+      },
+      "decoder": "A"
+    },
+    "after": {
+      "manifestStatus": 200,
+      "artifactStatus": 200,
+      "bytes": 852849,
+      "sha256": "02b1248bd287b3f2ebc89aef6f22ab85d56364feef53d1b40d18f51a40ccf617",
+      "sourceCommit": "f2765e8a394f573f901e5cc8e42762fed74cb852",
+      "matches": true,
+      "decoder": "A"
+    },
+    "temporaryProbeDeleted": true
+  },
+  "finalGateway": {
+    "sourceCommit": "2f7b97c05ab7f5324176c8148b3c21b0457eba40",
+    "bytes": 870985,
+    "sha256": "7261fe6966fcacb5479a5a1823b303ccf35e184d4a63c08d1ef379251e0b7311",
+    "deploymentId": "1d9dc614-5433-401f-a499-462c82679d71",
+    "versionId": "8b8c8120-f5c7-40de-8608-de6f0587f7ad",
+    "percentage": 100,
+    "deployedAt": "2026-10-27T13:21:47.066216Z"
+  },
+  "github": {
+    "implementationPr": 12,
+    "fixPr": 13,
+    "implementationMainRun": 40510114942,
+    "fixMainRun": 40511080206,
+    "tests": 361,
+    "failures": 0,
+    "skips": 0,
+    "syntaxFiles": 89,
+    "releaseCommit": "dd99cd2b1b39dcfbf0f5f5c2abe15dd39dfbb4ab"
+  },
+  "limitations": [
+    "No human reading-time measurement",
+    "No physical device, native IME or screen reader verification",
+    "Production Chromium ignored test-environment HTTPS certificate errors; TLS trust not covered by that browser test"
+  ],
+  "postFixAutomaticActivation": {
+    "observedAt": "2026-10-27T13:25:23.686555+00:00",
+    "health": {
+      "status": "ok",
+      "version": "4.0.0",
+      "sourceCommit": "2f7b97c05ab7f5324176c8148b3c21b0457eba40",
+      "htmlSha256": "02b1248bd287b3f2ebc89aef6f22ab85d56364feef53d1b40d18f51a40ccf617",
+      "htmlBytes": 852849,
+      "releaseSource": "remote-fetch",
+      "lastAttemptAt": 1793107499448,
+      "lastSuccessAt": 1793107499588,
+      "lastError": ""
+    }
+  }
+}

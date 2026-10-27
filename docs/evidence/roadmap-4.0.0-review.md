@@ -75,3 +75,7 @@ Release review found main-only post-validation publication from the same run's a
 - Root-owned desktop/narrow-screen, import/export, refresh and offline browser checks are not independently claimed here.
 - Human 20–30 minute reading experience, physical phones, native IME and screen-reader use are not established by route counts or automated fixtures. Current docs retain these boundaries rather than silently marking them complete.
 - This is a bounded review, not a proof over every possible saved history, altered save, device or future upstream failure. No open material finding remains within the reviewed implementation scope.
+
+## Actual Workers compatibility follow-up
+
+After the source review, real Cloudflare execution exposed that redirect:error is unsupported. Root reproduced it in an isolated Worker, added a failing regression, changed only the download redirect option to manual and retained non-2xx rejection. The independent reviewer inspected the two-file diff and approved; root observed11/11 targeted release checks, PR #13 CI success, real200 manifest/artifact downloads and then production remote-fetch4.0 activation. This later evidence supersedes the earlier local-only release boundary; human/device limits remain unchanged.

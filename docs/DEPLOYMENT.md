@@ -1,6 +1,6 @@
 # GitHub → Cloudflare 部署
 
-更新：2026-10-27（上海）。4.0.0 自动发行方案正在验收；下方保留 3.1.0 及更早版本的实际生产记录。
+更新：2026-10-27（上海）。4.0.0 自动发行与生产切换已实际验收；下方保留 3.1.0 及更早版本的实际生产记录。
 
 ## 4.0.0 自动发行方案
 
@@ -26,7 +26,28 @@
 - 更新网关：从已审实际源码构建游戏，再执行 `SOURCE_COMMIT=完整40位游戏源码提交 npm run build:gateway`，通过现有 API 上传 `release/gateway.mjs`。保留原 Worker 的域名和必要配置。
 - 不再依赖未启用的 `ENABLE_CF_DEPLOY` 或缺失的 Cloudflare CI secrets。GitHub 使用本次 job 的仓库令牌，客户端不携带令牌。
 
-当前模块审查和 10 项定向测试已通过；**真实 main 发布、生产切换和最终身份将在完成后记录于本节，不以本地测试代替上线证据。**
+### 4.0.0 实际发行记录
+
+| 证据 | 已观察结果 |
+| --- | --- |
+| 主实现 | [PR #12](https://github.com/ct1150/wending/pull/12)，合并 `f2765e8a394f573f901e5cc8e42762fed74cb852` |
+| 运行环境修复 | [PR #13](https://github.com/ct1150/wending/pull/13)，合并 `2f7b97c05ab7f5324176c8148b3c21b0457eba40`，源码树 `afeb57e883ede2c820a5a7e07a385b24cc72566b` |
+| 主实现 CI | [PR 40509851567](https://github.com/ct1150/wending/actions/runs/40509851567)、[main 40510114942](https://github.com/ct1150/wending/actions/runs/40510114942) success；main validate/publish 均成功 |
+| 修复后 CI | [PR 40510888981](https://github.com/ct1150/wending/actions/runs/40510888981)、[main 40511080206](https://github.com/ct1150/wending/actions/runs/40511080206) success；361项通过、0失败、0跳过，89个 JS 语法检查 |
+| 发行 HTML | 852849字节；SHA-256 `02b1248bd287b3f2ebc89aef6f22ab85d56364feef53d1b40d18f51a40ccf617` |
+| 首次自动切换 | UTC `2026-10-27T13:19:26.624378Z`，网关内嵌仍为原3.1，但实际 `version:4.0.0 / releaseSource:remote-fetch / sourceCommit:f2765e8a394f573f901e5cc8e42762fed74cb852`；首页与下载字节完全相同，lastError为空 |
+| 修复 main 的渠道提交 | `dd99cd2b1b39dcfbf0f5f5c2abe15dd39dfbb4ab`；清单 source `2f7b97c05ab7f5324176c8148b3c21b0457eba40`，不可变 artifact commit `fd969391e43c88ccd59ee242756ac69c7069e2be` |
+| 后续自动跟进 | 现场再次读取为 `sourceCommit:2f7b97c05ab7f5324176c8148b3c21b0457eba40 / releaseSource:remote-fetch`，lastError为空，游戏摘要不变 |
+| 最终网关 | 870985字节；SHA-256 `7261fe6966fcacb5479a5a1823b303ccf35e184d4a63c08d1ef379251e0b7311`；内嵌4.0回退来源为修复合并源码 `2f7b97c...` |
+| 最终 Cloudflare 部署 | `1d9dc614-5433-401f-a499-462c82679d71`；版本 `8b8c8120-f5c7-40de-8608-de6f0587f7ad`，100%流量，UTC `2026-10-27T13:21:47.066216Z` |
+
+这些是明确时点的现场记录。后续文档或代码提交会继续触发发布，健康状态的 sourceCommit 可前进；相同游戏字节的摘要保持不变。原始字段与浏览器证据见 [现场记录](evidence/roadmap-4.0.0-production.json)。
+
+### 本轮发现并处理的运行环境差异
+
+首次 main publish 成功后，网关仍保留旧版。临时隔离 Worker 证明 Cloudflare 拒绝 `redirect:error`，请求发出之前就抛出 TypeError。改为 `manual` 后，在解析正文之前用 `!response.ok` 拒绝所有3xx，仍然不跟随跳转。新增测试先失败、后通过；发行专项11/11与独立审查通过，真实 Worker 下载200、字节与摘要一致，随后在原生产地址完成自动4.0切换。
+
+保留旧3.1内嵌回退验证自动切换之后，才把最终网关的内嵌回退更新为4.0。临时诊断 Worker 已删除，没有为玩家增加模型或服务依赖。
 
 接口依据：[GitHub checkout](https://github.com/actions/checkout)、[Artifacts](https://docs.github.com/en/actions/tutorials/store-and-share-data)、[Cloudflare Cache API](https://developers.cloudflare.com/workers/runtime-apis/cache/)、[Worker multipart metadata](https://developers.cloudflare.com/workers/configuration/multipart-upload-metadata/)。
 

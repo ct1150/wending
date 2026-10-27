@@ -2,7 +2,7 @@
 
 Plans: [first release](superpowers/plans/2026-10-24-first-release.md) · [1.1.0 narrative upgrade](superpowers/plans/2026-10-25-narrative-adventure.md)
 
-Current documentation date: 2026-10-27 (Shanghai). This turn implements the ordered [roadmap](ROADMAP.md) in [PR #12](https://github.com/ct1150/wending/pull/12). 4.0.0 is undergoing final integration; historical publication claims below remain tied to their original versions.
+Current documentation date: 2026-10-27 (Shanghai). This turn implements the ordered [roadmap](ROADMAP.md) in [PR #12](https://github.com/ct1150/wending/pull/12). 4.0.0 technical delivery is complete and live; historical publication claims below remain tied to their original versions.
 
 ## 4.0.0 roadmap execution — 2026-10-27
 
@@ -10,8 +10,8 @@ Current documentation date: 2026-10-27 (Shanghai). This turn implements the orde
 - New CV3 engine/UI isolated from exact preserved CV1/CV2 implementations. Four origins, dual talents, twelve-point attributes and single-talent lock/reroll persist. First-ever creation cannot invent previous world achievements or legacy.
 - Final content has114 playable choice scenes plus ending; all115 nodes are reachable. Final tests cover36 standard origin/path/expedition combinations,6 alternative routes,8 talents,actual gates/materials,death,victory and earned rebirth. Specific pairs and personal rivals replace generic numeric variations.
 - Optional local authoring tool implemented; root independent review reproduced/fixed Ollama length termination and corrupted UTF-8 candidate gaps. 18/18 targeted tests pass including actual localhost HTTP. Real llama.cpp/Qwen3-0.6B output was generated, reviewed and accepted as atmosphere only.
-- Stable release gateway/publisher/workflow independently reviewed; BOM identity and unbounded cache findings fixed with regressions, 10/10 pass. Actual main publication and production switching still await final integration.
-- Real Chromium birth controls passed1280/390/320px, persisted through refresh and keyboard start, no page errors/overflow. Full actual UI run completed68 choices and earned immortal victory/all3 proofs; real export/import and earned rebirth pass. Independent offline file smoke passes withzero external requests. Final npm run release:360/360,89 JS syntax checks,852849-byte HTML. Independent source review: no open material blockers. Actual CI/main/production remain pending.
+- Stable release gateway/publisher/workflow independently reviewed; BOM identity and unbounded cache findings fixed with regressions, 10/10 pass. Real main publication succeeded. A Workers-only redirect:error incompatibility was reproduced, fixed by manual/no-follow in PR #13, independently reviewed and verified in the actual Worker. Final targeted release checks11/11; final main checks361/361.
+- Real Chromium birth controls passed1280/390/320px, persisted through refresh and keyboard start, no page errors/overflow. Full actual UI run completed68 choices and earned immortal victory/all3 proofs; real export/import and earned rebirth pass. Independent offline file smoke passes withzero external requests. Final npm run release:360/360,89 JS syntax checks,852849-byte HTML. Independent source review: no open material blockers. PR #12/#13 merged; CI/main publish succeeded. Production repeated the68-choice victory/import/export/rebirth flow and preserves actual old CV2 save bytes. Gateway automatically fetched4.0 while embedding3.1, then the fallback was upgraded to4.0. See DEPLOYMENT and QA for exact sources, hashes, deployments and human/device limits.
 
 
 ## 3.1.0 immersive reading and dice creation — 2026-10-26

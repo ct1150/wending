@@ -65,9 +65,9 @@ npm run build
 
 ## 自动发行
 
-仓库已配置 main 通过 GitHub Actions 全部验证后，使用仓库自己的 `GITHUB_TOKEN` 发布不可变游戏包与清单到 `release-channel`；只有发行任务获得写权限。Cloudflare 发行网关部署后会校验来源与摘要再切换，下载失败或清单无效时保留已验证版本。活动实例按请求检查，间隔至少 60 秒，不承诺全球同时刷新。
+仓库已配置 main 通过 GitHub Actions 全部验证后，使用仓库自己的 `GITHUB_TOKEN` 发布不可变游戏包与清单到 `release-channel`；只有发行任务获得写权限。现有 Cloudflare 发行网关会校验来源与摘要再切换，下载失败或清单无效时保留已验证版本。活动实例按请求检查，间隔至少 60 秒，不承诺全球同时刷新。
 
-网关程序自身变更需 `SOURCE_COMMIT=真实完整提交SHA npm run build:gateway` 并部署到现有 Worker。之后普通游戏与剧情变更可通过 main 自动发行。本说明描述当前仓库实现，不单凭代码合入宣称线上已更新；本轮实际部署与自动发行链路仍以核验记录为准。线上实际版本、来源和摘要以 [`/healthz`](https://baishi-wending.ct1150.workers.dev/healthz) 为准；本轮验收记录见 [部署记录](docs/DEPLOYMENT.md)。
+网关程序自身变更需 `SOURCE_COMMIT=真实完整提交SHA npm run build:gateway` 并部署到现有 Worker。之后普通游戏与剧情变更可通过 main 自动发行。本轮已实际验证 main→发行清单→网关读取→4.0 页面切换，最终 GitHub 检查361/361通过；线上完整通关、存档与离线验收已完成。线上实际版本、来源和摘要以 [`/healthz`](https://baishi-wending.ct1150.workers.dev/healthz) 为准；本轮验收记录见 [部署记录](docs/DEPLOYMENT.md)。
 
 ## 代码入口
 
