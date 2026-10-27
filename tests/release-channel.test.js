@@ -10,6 +10,29 @@ const manifest = { schemaVersion:1, version:'4.0.0', sourceCommit:'b'.repeat(40)
 const moduleReady = () => import('../src/worker/release-gateway.js');
 const request = (worker,path='/') => worker.fetch(new Request('https://example.workers.dev'+path));
 
+test('Workers-compatible manual redirect mode fetches releases and rejects redirects without following them', async () => {
+  const {createReleaseGateway}=await moduleReady();let time=100000,redirectAt=null;const calls=[];
+  const worker=createReleaseGateway({fallback,now:()=>time,fetchImpl:async (url,options)=>{
+    calls.push({url,redirect:options.redirect});
+    if(options.redirect==='error')throw new TypeError('Workers does not implement redirect:error');
+    assert.equal(options.redirect,'manual');
+    if(redirectAt && url.endsWith(redirectAt))return new Response(null,{status:302,headers:{Location:'https://untrusted.invalid/redirect'}});
+    return new Response(url.endsWith('manifest.json')?JSON.stringify(manifest):newHtml);
+  }});
+  assert.equal(await(await request(worker)).text(),newHtml,'supported runtime options must activate a valid release');
+  redirectAt='manifest.json';time+=60001;
+  assert.equal(await(await request(worker)).text(),newHtml);
+  assert.equal((await(await request(worker,'/healthz')).json()).lastError,'Release source returned an HTTP error');
+  assert.equal(calls.length,3);assert.ok(calls.every(call=>call.url.startsWith('https://raw.githubusercontent.com/ct1150/wending/')));
+  const coldCalls=[];
+  const cold=createReleaseGateway({fallback,fetchImpl:async(url,options)=>{
+    coldCalls.push(url);assert.equal(options.redirect,'manual');
+    return url.endsWith('manifest.json')?new Response(JSON.stringify(manifest)):new Response(null,{status:307,headers:{Location:'https://untrusted.invalid/artifact'}});
+  }});
+  assert.equal(await(await request(cold)).text(),oldHtml,'redirected artifacts preserve the embedded playable baseline');
+  assert.equal(coldCalls.length,2);assert.equal((await(await request(cold,'/healthz')).json()).sourceCommit,fallback.sourceCommit);
+});
+
 test('verified release activation changes HTML and health together and polls only after the interval', async () => {
   const {createReleaseGateway}=await moduleReady(); let time=100000, calls=0;
   const worker=createReleaseGateway({fallback,now:()=>time,fetchImpl:async url=>{calls++;return new Response(url.endsWith('manifest.json')?JSON.stringify(manifest):newHtml);}});
