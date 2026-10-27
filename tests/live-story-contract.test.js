@@ -6,6 +6,7 @@ import { generateScene } from '../src/worker/story-provider.js';
 import { CANDIDATE_PROFILE, assertProviderReady } from '../src/worker/story-config.js';
 import { sha256 } from '../src/game/cultivation/live/identity.js';
 import { createLiveGame, prepareOpening, prepareChoice, commitTurn } from '../src/game/cultivation/live/engine.js';
+import { validateGeneratedScene as validateSceneStructure } from '../src/game/cultivation/live/schema.js';
 const ns='r:'+sha256('story-run').slice(0,16), prefix=ns+':t1:';
 const proposal=(id,intent='rest',targetId='self',approach='recover')=>({id:prefix+'c:'+id,label:id,intent,targetId,approach,stake:'normal'});
 const scene=()=>({id:prefix+'s:bridge',title:'桥边来信',location:'河岸',blocks:[{kind:'narration',text:'旧桥下漂来一封未署名的信，远处船夫招手。'}],entities:[{id:prefix+'e:boatman',name:'渡者',kind:'person'}],choices:[proposal('rest'),proposal('talk','negotiate',prefix+'e:boatman','cooperate')],memoryDeltas:[]});
@@ -55,3 +56,60 @@ test('different ordinary player names change no rule authority or factual action
 test('provider treats an unknown memory closure as rejected scene data, preserving valid usage',async()=>{const s=scene();s.memoryDeltas=[{entityId:s.entities[0].id,kind:'clue',text:'已解线索',referenceId:'missing-clue',status:'resolved'}];const r=await generateScene({run:async()=>response(s)},profile(),context());assert.equal(r.status,'rejected');assert.equal(r.errorCode,'MEMORY_REFERENCE_CONFLICT');assert.deepEqual(r.usage,{promptTokens:100,completionTokens:80,totalTokens:180});});
 test('a consequential choice can leave an old relation offscreen without losing its permanent receipt',()=>{const born=createLiveGame({runId:'story-run',seed:42}),s=scene(),opening=prepareOpening(born,{requestId:'open'}),active=commitTurn(born,opening,s),pending=prepareChoice(active,{requestId:'talk',choiceId:proposal('talk').id}),c=buildStoryContext(active,pending),next={id:ns+':t2:s:mountain',title:'山中岔路',location:'远山',blocks:[{kind:'narration',text:'你循着渡者指出的山路来到石阶尽头，发现一处断碑。'}],entities:[],choices:[{...proposal('rest'),id:ns+':t2:c:rest'},{...proposal('train','practice','self','steady'),id:ns+':t2:c:train'}],memoryDeltas:[]};assert.deepEqual(validateGeneratedScene(next,c),next);assert.equal(c.receipt.relationChanges[s.entities[0].id],3);assert.equal(commitTurn(active,pending,next).phase,'active');});
 test('opening DTO cannot be replayed as a later phase or contain pre-action resources',()=>{for(const mutate of [c=>{c.identity.baseRevision=1;c.identity.turnId=2;},c=>{c.life.items.stones=99;}]){const c=context();mutate(c);assert.throws(()=>validateStoryContext(c));}const born=createLiveGame({runId:'story-run',seed:42}),opening=prepareOpening(born,{requestId:'open'}),active=commitTurn(born,opening,scene()),pending=prepareChoice(active,{requestId:'choice',choiceId:proposal('rest').id}),c=structuredClone(buildStoryContext(active,pending));c.identity.baseRevision=0;c.identity.turnId=1;assert.throws(()=>validateStoryContext(c));});
+
+test('fix1 permanent death rows require a deceased person in direct HTTP contexts and scenes',()=>{
+  const entity=scene().entities[0];
+  for(const [kind,status] of [['person','alive'],['person','unknown'],['place','unknown']]){
+    const c=context();c.entities=[{...entity,kind,status}];
+    c.memory.facts=[{id:'permanent-death',runId:'story-run',turnId:0,source:'narrative',kind:'death',entityId:entity.id,text:'渡者已亡。'}];c.references=['permanent-death'];
+    assert.throws(()=>validateStoryContext(c),undefined,`${kind}/${status} must contradict death`);
+    const alive=scene();alive.entities[0]={...entity,status:'alive'};alive.blocks.push({kind:'dialogue',speaker:entity.id,text:'一起上船。'});
+    assert.throws(()=>validateGeneratedScene(alive,c));
+  }
+  const valid=context();valid.entities=[{...entity,status:'dead'}];valid.memory.facts=[{id:'permanent-death',runId:'story-run',turnId:0,source:'narrative',kind:'death',entityId:entity.id,text:'渡者已亡。'}];valid.references=['permanent-death'];
+  assert.equal(validateStoryContext(valid),valid);
+  const memorial=scene();memorial.entities[0].status='dead';memorial.choices=[proposal('rest'),proposal('train','practice','self','steady')];
+  assert.deepEqual(validateGeneratedScene(memorial,valid),memorial);
+});
+
+test('fix1 resolved and broken promise states cannot rewrite each other in either input order',()=>{
+  const born=createLiveGame({runId:'story-run',seed:42}),active=commitTurn(born,prepareOpening(born,{requestId:'open'}),scene()),pending=prepareChoice(active,{requestId:'next',choiceId:proposal('rest').id});
+  const original={id:'old-obligation',runId:'story-run',source:'narrative',kind:'promise',entityId:scene().entities[0].id,text:'答应留住旧桨。'};
+  for(const [before,after] of [['resolved','broken'],['broken','resolved']])for(const reversed of [false,true]){
+    const records=[{...original,turnId:0,status:before},{...original,turnId:1,status:after}];
+    assert.throws(()=>buildStoryContext(active,pending,reversed?records.reverse():records));
+  }
+  for(const status of ['resolved','broken'])for(const reversed of [false,true]){
+    const records=[{...original,turnId:0,status:'open'},{...original,turnId:1,status}];
+    assert.equal(buildStoryContext(active,pending,reversed?records.reverse():records).memory.promises[0].status,status);
+  }
+});
+
+test('fix1 valid immutable historical receipts cannot be replaced under the same reference ID',()=>{
+  const born=createLiveGame({runId:'story-run',seed:42}),other=createLiveGame({runId:'story-run',seed:99}),active=commitTurn(born,prepareOpening(born,{requestId:'open'}),scene()),pending=prepareChoice(active,{requestId:'next',choiceId:proposal('rest').id});
+  const first={id:'birth-proof',runId:'story-run',turnId:0,source:'rules',kind:'receipt',receipt:born.birthReceipt};
+  const replacement={...first,turnId:1,receipt:other.birthReceipt};
+  assert.notDeepEqual(first.receipt,replacement.receipt);
+  for(const records of [[first,replacement],[replacement,first]])assert.throws(()=>buildStoryContext(active,pending,records));
+  const identical={...first,turnId:1};
+  for(const records of [[first,identical],[identical,first]])assert.deepEqual(buildStoryContext(active,pending,records).memory.facts[0].receipt,born.birthReceipt);
+});
+
+test('fix1 exact action tuples reject distinct IDs and labels while disabled distinct alternatives remain legal',()=>{
+  const duplicate=scene();duplicate.choices=[proposal('sit'),{...proposal('wait'),label:'换个说法歇息'}];
+  assert.throws(()=>validateSceneStructure(duplicate));
+  assert.throws(()=>validateGeneratedScene(duplicate,context()));
+  const distinct=scene();distinct.choices=[proposal('rest'),proposal('breakthrough','practice','qi','breakthrough')];
+  assert.deepEqual(validateGeneratedScene(distinct,context()),distinct);
+});
+
+test('fix1 supported entity and clue versions retain legal forward transitions',()=>{
+  const born=createLiveGame({runId:'story-run',seed:42}),active=commitTurn(born,prepareOpening(born,{requestId:'open'}),scene()),pending=prepareChoice(active,{requestId:'next',choiceId:proposal('rest').id}),entity=scene().entities[0];
+  const common={runId:'story-run',source:'narrative'};
+  for(const reversed of [false,true]){
+    const entityRows=[{...common,id:'known-entity',turnId:0,kind:'entity',entity,status:'alive'},{...common,id:'known-entity',turnId:1,kind:'entity',entity,status:'dead'}];
+    assert.equal(buildStoryContext(active,pending,reversed?entityRows.reverse():entityRows).entities[0].status,'dead');
+    const clueRows=[{...common,id:'known-clue',turnId:0,kind:'clue',entityId:entity.id,text:'旧桨上的刻痕',status:'open'},{...common,id:'known-clue',turnId:1,kind:'clue',entityId:entity.id,text:'旧桨上的刻痕',status:'resolved'}];
+    assert.equal(buildStoryContext(active,pending,reversed?clueRows.reverse():clueRows).memory.clues[0].status,'resolved');
+  }
+});

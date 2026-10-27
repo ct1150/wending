@@ -53,11 +53,17 @@ function latestRecords(records,state) {
   for(const row of records){validateRecord(row,state);const old=rows.get(row.id);
     if(old){
       if(old.kind!==row.kind||old.source!==row.source)fail('MEMORY_RECORD_CONFLICT');
+      // Only these record types have an explicit mutable payload. Re-indexing an
+      // identical immutable fact at another wrapper turn cannot replace its data.
+      if(!['entity','promise','clue','summary'].includes(row.kind)){
+        const payload=value=>Object.fromEntries(Object.entries(value).filter(([key])=>key!=='turnId'));
+        if(!equal(payload(old),payload(row)))fail('MEMORY_RECORD_CONFLICT');
+      }
       if(['clue','promise'].includes(row.kind)&&(old.entityId!==row.entityId||old.text!==row.text))fail('MEMORY_RECORD_CONFLICT');
       if(row.kind==='entity'&&!equal(old.entity,row.entity))fail('MEMORY_RECORD_CONFLICT');
       if(old.turnId===row.turnId&&!equal(old,row))fail('MEMORY_RECORD_CONFLICT');
       const earlier=old.turnId<row.turnId?old:row,later=old.turnId<row.turnId?row:old;
-      if(['clue','promise'].includes(row.kind)&&earlier.status!=='open'&&later.status==='open')fail('MEMORY_RECORD_CONFLICT');
+      if(['clue','promise'].includes(row.kind)&&earlier.status!=='open'&&later.status!==earlier.status)fail('MEMORY_RECORD_CONFLICT');
       if(row.kind==='entity'&&earlier.status==='dead'&&later.status!=='dead')fail('MEMORY_RECORD_CONFLICT');
     }
     if(!old||old.turnId<row.turnId)rows.set(row.id,copy(row));
@@ -104,8 +110,8 @@ export function buildStoryContext(state,pending,relatedRecords=[]) {
   return freeze(result);
 }
 
-// Public context is portable JSON. Rebuild it from verified state/pending at the
-// HTTP boundary. This validator checks consistency, not account authentication.
+// Public context is untrusted portable JSON at the HTTP boundary. The local
+// builder re-derives pending; this checks consistency, not account authentication.
 export function validateStoryContext(c) {
   inspect(c,7000);
   exactKeys(c,['schemaVersion','phase','identity','namespace','receipt','life','entities','memory','references','previousScene']);
@@ -129,6 +135,10 @@ export function validateStoryContext(c) {
   if(!Array.isArray(c.references)||c.references.length>48||new Set(ids).size!==ids.length||new Set(c.references).size!==c.references.length||!equal([...c.references].sort(),[...ids].sort()))fail('STORY_CONTEXT_INVALID');c.references.forEach(idField);
   for(const row of records){
     if(Object.hasOwn(row,'entityId')&&!seen.has(row.entityId))fail('MEMORY_REFERENCE_MISSING');
+    if(row.kind==='death'){
+      const entity=c.entities.find(e=>e.id===row.entityId);
+      if(entity.kind!=='person'||entity.status!=='dead')fail('ENTITY_DEATH_CONFLICT');
+    }
     if(row.kind==='summary'&&row.references.some(id=>!c.references.includes(id)))fail('MEMORY_REFERENCE_MISSING');
   }
   if(c.previousScene!==null){exactKeys(c.previousScene,['id','blocksHash']);idField(c.previousScene.id);if(!/^[a-f0-9]{64}$/.test(c.previousScene.blocksHash))fail('STORY_CONTEXT_INVALID');}

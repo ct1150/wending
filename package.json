@@ -4,7 +4,9 @@
   "private": true,
   "type": "module",
   "description": "百世问鼎 — 四种来处、双重命格，从凡人修行至三界问鼎的文字肉鸽",
-  "engines": { "node": ">=22" },
+  "engines": {
+    "node": ">=22"
+  },
   "scripts": {
     "dev": "node scripts/dev.js",
     "test": "node --test tests/*.test.js",
@@ -15,5 +17,8 @@
     "story:author": "node scripts/story-author.js",
     "check": "node scripts/check.js",
     "release": "npm test && npm run check && npm run build"
+  },
+  "devDependencies": {
+    "playwright": "1.62.1"
   }
 }

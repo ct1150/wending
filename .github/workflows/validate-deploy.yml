@@ -26,6 +26,10 @@ jobs:
         with:
           node-version-file: .node-version
           package-manager-cache: false
+      - name: Install test dependencies
+        run: npm ci --ignore-scripts
+      - name: Install native IndexedDB test browser
+        run: npx playwright install --with-deps chromium
       - name: Test, syntax check, and build
         run: npm run release
       - name: Package verified release gateway

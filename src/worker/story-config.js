@@ -93,3 +93,14 @@ export function settleExperiment(ledger, attemptId, { status = 'unknown', actual
   if (previous.actualNeurons !== null && (actualNeurons === null || actualNeurons < previous.actualNeurons)) fail('EXPERIMENT_ATTEMPT_INVALID');
   return { schemaVersion:1, attempts:ledger.attempts.map(entry => entry.attemptId === attemptId ? { ...entry, status, actualNeurons } : { ...entry }) };
 }
+
+// Reconstruct deployment proof only at a trusted server composition boundary.
+// The caller verifies currentPlan for the binding account; this is not evidence
+// obtained from a browser or a fresh account balance measurement. Preserve the
+// original checkedAt, and do not use this path to revive a stale probe snapshot.
+export function restoreFreeBoundaryEvidence(value,{bindingAccountId,currentPlan,now=Date.now()}={}) {
+  if(typeof bindingAccountId!=='string'||!bindingAccountId||value?.accountId!==bindingAccountId||currentPlan?.accountId!==bindingAccountId||currentPlan.source!=='operator-account-verification'||currentPlan.plan!=='workers-free'||!currentEvidence(value,now,false))fail('FREE_BOUNDARY_UNVERIFIED');
+  // Reuse the proof field validator at its original observation time, rather
+  // than pretending that reconstruction is another verification event.
+  return confirmFreeBoundaryEvidence(value,{now:Date.parse(value.checkedAt)});
+}

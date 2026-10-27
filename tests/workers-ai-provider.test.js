@@ -156,3 +156,13 @@ test('timeout and provider exhaustion never trigger retry or fallback', async ()
     assert.ok(!JSON.stringify(result).includes('sensitive'));
   }
 });
+
+test('persisted deployment proof restores only for exact binding account/current Free plan without refreshing snapshot time',()=>{
+  const persisted={...evidence(),accountId:'binding-account'},later=now+86400000;
+  const options={bindingAccountId:'binding-account',currentPlan:{accountId:'binding-account',plan:'workers-free',source:'operator-account-verification'},now:later};
+  const restored=config.restoreFreeBoundaryEvidence(persisted,options);
+  assert.equal(restored.checkedAt,persisted.checkedAt);
+  assert.throws(()=>assertProviderReady({enabled:true,env:{AI:{run(){}}},evidence:restored,now:later}),{code:'MODEL_UNVALIDATED'});
+  assert.throws(()=>assertProviderReady({enabled:true,env:{AI:{run(){}}},purpose:'probe',evidence:restored,now:later}),{code:'FREE_BOUNDARY_UNVERIFIED'});
+  for(const overrides of [{bindingAccountId:'other'},{currentPlan:null},{currentPlan:{...options.currentPlan,plan:'workers-paid'}},{currentPlan:{...options.currentPlan,accountId:'other'}}])assert.throws(()=>config.restoreFreeBoundaryEvidence(persisted,{...options,...overrides}),{code:'FREE_BOUNDARY_UNVERIFIED'});
+});
