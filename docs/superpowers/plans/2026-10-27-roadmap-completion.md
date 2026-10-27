@@ -1,5 +1,7 @@
 # 问鼎剩余规划实施计划
 
+> 历史计划：下列勾选仅代表已交付的4.0/CV3。固定20—30分钟目标现已取消，持续选择生成至死亡和Workers AI实时接入属于 [新的8项实施计划](2026-10-27-realtime-workers-ai.md)，全部保持待完成。
+
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox syntax for tracking.
 
 **Goal:** 完成审计中的新开局、不同人生与三界、免费模型创作及自动发布，并以证据回填待办。

@@ -2,6 +2,12 @@
 
 更新：2026-10-27（上海）。4.0.0 自动发行与生产切换已实际验收；下方保留 3.1.0 及更早版本的实际生产记录。
 
+## 下一阶段：实时AI后端（未部署）
+
+用户要求在免费额度内用Cloudflare Workers AI实时生成剧情。当前生产Worker只提供静态发行服务，本次只读返回 `bindings: []`；没有AI binding和剧情API，套餐/余额也尚未确认。候选模型出现在目录不等于推理已通过，详见 [核查记录](evidence/2026-10-27-workers-ai-planning-recon.json)。
+
+[新实施计划](superpowers/plans/2026-10-27-realtime-workers-ai.md) 要求增加同源API、AI binding与SQLite Durable Object的共享预算/幂等存储；先核验零付费边界，再部署兼容后端，通过能力协商后启用前端。现有main→HTML自动发行不会自动创建这些绑定或完成后端迁移。本次没有修改生产Worker或触发模型推理。
+
 ## 4.0.0 自动发行方案
 
 本轮继续使用现有 `baishi-wending` Worker 与同一游戏地址。普通游戏内容的发布路径为：main 检查成功 → GitHub Actions 发布不可变 HTML 和清单 → Worker 校验并切换。网关程序自身升级另行通过现有 Cloudflare API 部署。

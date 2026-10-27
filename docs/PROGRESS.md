@@ -2,7 +2,15 @@
 
 Plans: [first release](superpowers/plans/2026-10-24-first-release.md) · [1.1.0 narrative upgrade](superpowers/plans/2026-10-25-narrative-adventure.md)
 
-Current documentation date: 2026-10-27 (Shanghai). This turn implements the ordered [roadmap](ROADMAP.md) in [PR #12](https://github.com/ct1150/wending/pull/12). 4.0.0 technical delivery is complete and live; historical publication claims below remain tied to their original versions.
+Current documentation date: 2026-10-27 (Shanghai). The new [roadmap](ROADMAP.md) plans choice-driven, real-time Workers AI stories until actual character death. 4.0.0 remains the delivered runtime; historical publication claims below remain tied to their original versions.
+
+## 实时剧情新规划 — 2026-10-27（北京时间）
+
+- 已将用户方向写入 [设计](superpowers/specs/2026-10-27-realtime-workers-ai-design.md) 与 [实施计划](superpowers/plans/2026-10-27-realtime-workers-ai.md)：取消20—30分钟目标，不设预写终章，登仙/问鼎继续，实际死亡才结算。
+- 已按依赖排序8项待办：免费接入核验、人生规则、动态协议/记忆、API/预算、长档案、实时界面、长线验收、部署交付。全部实现项仍未完成。
+- 只读核查当前Worker无AI绑定，目录能查到Qwen候选模型；尚未验证套餐、剩余额度、真实推理与零付费条件。没有实际调用Workers AI或修改账号/生产配置。
+- 当前设计采用规则事实收据、可恢复回合事务、服务端共享预算、IndexedDB分页档案。免费门禁不成立或额度耗尽时暂停，不静默付费、回退固定主线或终结人物。
+- 本次变更限于规划文档与只读证据。下列4.0交付和本地模型创作记录不作为实时生成模式的完成证据。
 
 ## 4.0.0 roadmap execution — 2026-10-27
 
