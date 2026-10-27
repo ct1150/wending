@@ -46,7 +46,8 @@ export function createReleaseGateway({ fallback, icon = '', repository = 'ct1150
     try {
       return await Promise.race([
         (async () => {
-          const response = await fetchImpl(url, { signal: controller.signal, redirect: 'error', headers: { Accept: '*/*', 'Cache-Control': 'no-cache' } });
+          // Workers supports manual/follow only; reject every 3xx below without following it.
+          const response = await fetchImpl(url, { signal: controller.signal, redirect: 'manual', headers: { Accept: '*/*', 'Cache-Control': 'no-cache' } });
           if (!response.ok) throw new Error('Release source returned an HTTP error');
           return readBounded(response, limit);
         })(),
