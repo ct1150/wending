@@ -55,7 +55,7 @@ export async function startApp({ raw = null, denyWrite = false, denyRead = false
   };
   const code = await bundleModules(process.cwd(), './src/app.js');
   const context = { document, window: { localStorage: storage, crypto: { getRandomValues(array) { array[0] = 20261025; return array; } }, location: { protocol: 'file:' }, scrollTo(value) { scroll.push(value); } },
-    Uint32Array, Blob, URL: { createObjectURL(blob) { downloads.push(blob); return 'blob:test'; }, revokeObjectURL() {} }, setTimeout() {}, clearTimeout() {} };
+    Uint32Array, TextEncoder, TextDecoder, Blob, URL: { createObjectURL(blob) { downloads.push(blob); return 'blob:test'; }, revokeObjectURL() {} }, setTimeout() {}, clearTimeout() {} };
   // Saved game data is JSON; clone within the VM realm so strict plain-record
   // validation sees the same Object prototype as the bundled engine.
   vm.runInNewContext('globalThis.structuredClone = value => JSON.parse(JSON.stringify(value));\n' + code, context);

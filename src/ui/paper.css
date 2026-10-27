@@ -396,3 +396,11 @@ dialog.paper-drawer[open] { display: flex; flex-direction: column; }
 .legacy-rule-note { color: var(--muted); line-height: 1.7; }
 [data-legacy-bridge] { white-space: normal; min-height: 44px; }
 [data-legacy-bridge] .tiny { display: block; }
+
+/* Live mode retains the reading width and the committed character display. */
+.live-status { margin: 1.4rem 0; padding: 1rem; border: 1px solid currentColor; border-radius: .5rem; }
+.live-status p { margin: .3rem 0 .7rem; }
+.live-status .button, .live-toolbar .button { margin: .3rem .4rem .3rem 0; }
+.live-toolbar { display: flex; flex-wrap: wrap; gap: .4rem; }
+.birth #live-name, .birth #live-origin { display: block; box-sizing: border-box; width: 100%; max-width: 100%; min-height: 44px; margin: .5rem 0 1.3rem; padding: .6rem; font: inherit; color: inherit; background: transparent; border: 1px solid currentColor; border-radius: .3rem; }
+.live-status, .journey-choice-reason { overflow-wrap: anywhere; }
