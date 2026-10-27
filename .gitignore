@@ -1,8 +1,0 @@
-node_modules/
-dist/
-release/
-.superpowers/
-.scratch/
-test-results/
-*.log
-.DS_Store
