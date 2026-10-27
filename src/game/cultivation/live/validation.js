@@ -59,7 +59,8 @@ export function validateReceipt(row) {
 }
 export function validateLiveState(state) {
   assertPlainData(state);
-  exactKeys(state, ['version','mode','contentVersion','rulesVersion','promptVersion','runId','revision','turnId','phase','rng','life','birthReceipt','currentScene','lastReceipt','relatedEntities','archiveCursor']);
+  exactKeys(state, ['version','mode','contentVersion','rulesVersion','promptVersion','runId','revision','turnId','phase','rng','life','birthReceipt','currentScene','lastReceipt','relatedEntities','archiveCursor'],['relationshipVersion']);
+  if(state.relationshipVersion!==undefined&&state.relationshipVersion!==1)throw new Error('关系规则版本无效。');
   if (state.version !== 5 || state.mode !== 'cultivation' || state.contentVersion !== 4 || state.rulesVersion !== 1 || state.promptVersion !== 1 || !['awaitingOpening','active','dead'].includes(state.phase)) throw new Error('实时存档版本或阶段无效。');
   idField(state.runId);
   integer(state.revision);

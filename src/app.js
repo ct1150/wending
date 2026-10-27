@@ -41,6 +41,7 @@ const createRecommendedLife = options => createCultivation({ ...options, charact
 const ACTIVE_MODE_KEY = 'wending-active-mode-v1';
 let activeMode = 'offline';
 try { if (storage.getItem(ACTIVE_MODE_KEY) === 'live') activeMode = 'live'; } catch {}
+let liveBirthDraft={name:'云归',originId:'village'};
 let liveArchive=null, liveSession=null, liveSnapshot=null, liveError='', liveHistoryCursor=null, liveHistoryRun=null;
 const liveCatalogs={REALMS:LIVE_REALMS,ORIGINS:LIVE_ORIGINS,TALENTS:LIVE_TALENTS,ITEMS:LIVE_ITEMS};
 const liveClient=createStoryClient();
@@ -590,6 +591,7 @@ async function enterLive() {
 }
 async function beginLiveLife() {
   const name=$('#live-name')?.value?.trim()||'云归',originId=$('#live-origin')?.value||'village';
+  liveBirthDraft={name,originId};
   try { await ensureLive(); const capabilities=await liveClient.capabilities();if(!capabilities.available){liveError='实时生成暂未开放，尚未创建新人生。';render();return;}await liveSession.start({name,originId,seed:newSeed()});focusAdventure($('#journey-current-title')); }
   catch { notify('无法开始，请检查本地存储与网络。',true); }
 }
@@ -597,7 +599,7 @@ function renderLiveApp() {
   const snapshot=liveSnapshot,liveState=snapshot?.state;
   const header=liveState?renderIdentityBar(liveCharacterSummary(liveState,liveCatalogs)):'<h1>百世问鼎 · 实时人生</h1>';
   const settings=`<h2>实时存档与设置</h2><p>新增剧情需要联网，最小必要上下文传至 Cloudflare，完整历史保留在设备上。缓存离线可读。</p><div class="live-toolbar"><button class="button" data-export ${liveState?'':'disabled'}>导出完整实时存档</button><button class="button" data-import>导入存档</button><button class="button" data-offline-enter>返回旧人生</button><button class="button" data-help>实时人生须知</button></div><p>旧人生继续使用原有离线规则与独立存档。恢复旧版页面不会删除实时历史。</p>`;
-  const content=liveState?renderLiveJourney({...snapshot,stateHash:stateHash(liveState),itemNames:LIVE_ITEMS},liveState.phase==='active'?compileChoices(liveState,liveState.currentScene.choices):[]):`<section class="birth"><h2 id="journey-current-title" tabindex="-1">从此身开始</h2><p>出生事实保存后不再重掷。岁月只在选择中前行。</p><label for="live-name">此生姓名</label><input id="live-name" maxlength="24" value="云归"><label for="live-origin">从何处来</label><select id="live-origin">${Object.entries(LIVE_ORIGINS).map(([id,name])=>`<option value="${id}">${esc(name)}</option>`).join('')}</select><p>联网生成将发送最小必要的人物、行动与记忆上下文至 Cloudflare，完整历史留在本机。</p><button class="button primary" data-live-start ${!liveSession||liveError?'disabled':''}>保存此身并开启实时人生</button><button class="button" data-import>导入已有实时存档</button><button class="button" data-offline-enter>返回旧人生</button></section>`;
+  const content=liveState?renderLiveJourney({...snapshot,stateHash:stateHash(liveState),itemNames:LIVE_ITEMS},liveState.phase==='active'?compileChoices(liveState,liveState.currentScene.choices):[]):`<section class="birth"><h2 id="journey-current-title" tabindex="-1">从此身开始</h2><p>出生事实保存后不再重掷。岁月只在选择中前行。</p>${snapshot?.errorCode==='BIRTH_CONTEXT_INVALID'?'<p class="notice" role="alert">姓名无法用于故事，请修改后重新开始。支持中文姓名与常用标点。</p>':''}<label for="live-name">此生姓名</label><input id="live-name" maxlength="24" value="${esc(liveBirthDraft.name)}"><label for="live-origin">从何处来</label><select id="live-origin">${Object.entries(LIVE_ORIGINS).map(([id,name])=>`<option value="${id}" ${id===liveBirthDraft.originId?'selected':''}>${esc(name)}</option>`).join('')}</select><p>联网生成将发送最小必要的人物、行动与记忆上下文至 Cloudflare，完整历史留在本机。</p><button class="button primary" data-live-start ${!liveSession||liveError?'disabled':''}>保存此身并开启实时人生</button><button class="button" data-import>导入已有实时存档</button><button class="button" data-offline-enter>返回旧人生</button></section>`;
   $('#app').innerHTML=`<div class="paper-page paper-page-immersive"><header class="paper-top paper-top-immersive">${header}<nav class="paper-tools" aria-label="历史、帮助与存档"><button data-history ${liveState?'':'disabled'}>历史对话</button><button data-more>更多</button></nav></header><main id="main-content" class="paper-main" tabindex="-1">${liveError?`<p class="notice" role="status">${esc(liveError)}</p>`:''}${view==='settings'?'<button class="small-button" data-view="adventure">返回当前剧情</button>'+settings:content}</main><footer class="paper-footer">实时人生 · 已缓存内容离线可读 · 新剧情需要联网</footer></div>`;
 }
 async function showLiveHistory(first) {

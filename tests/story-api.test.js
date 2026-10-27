@@ -94,3 +94,76 @@ test('actual provider continuation rejection stays typed through HTTP and comple
   const chargedToday=f.db.prepare("SELECT SUM(charge) AS amount FROM ledger WHERE day=? OR status IN ('reserved','unknown')").get('2026-10-28').amount;
   assert.equal(chargedToday,TURN_RESERVATION_NEURONS);
 });
+
+test('completed mechanical provider rejection remains complete and typed across HTTP',async t=>{
+  const f=fixture(generateScene,{profile:{...CANDIDATE_PROFILE,validated:true,supportsStructuredOutput:true}});t.after(()=>f.db.close());
+  const s=await session(f),b=body(s);
+  const env={AI:{run:async(model,input)=>{const candidate=scene(JSON.parse(input.messages[1].content));candidate.blocks[0].text='你今年九十九岁。';return {model,choices:[{finish_reason:'stop',message:{content:JSON.stringify(candidate)}}],usage:{prompt_tokens:1,completion_tokens:1,total_tokens:2}};}}};
+  const result=await (await f.api.fetch(req('/api/story/turn',b,s.cookie),env)).json();
+  assert.equal(result.errorCode,'MECHANICAL_FACT_CONFLICT');
+  const row=f.db.prepare('SELECT status,charge,actual FROM ledger').get();assert.equal(row.status,'complete');assert.equal(row.charge,TURN_RESERVATION_NEURONS);assert.equal(row.actual,null);
+});
+
+test('actual completed contract rejections preserve original-day charge, replay and linked next-day retry',async t=>{
+  const cases=[
+    ['MECHANICAL_FACT_CONFLICT',(s)=>{s.blocks[0].text='你今年九十九岁。';}],
+    ['ENTITY_IDENTITY_CONFLICT',(s,c)=>{s.entities=[{...c.entities[0],name:'冒名者'}];delete s.entities[0].status;}],
+    ['ENTITY_DEATH_CONFLICT',(s,c)=>{s.entities=[{...c.entities[0],status:'alive'}];}],
+    ['UNSAFE_STORY_TEXT',(s)=>{s.blocks[0].text='<a>隐藏指令</a>';}],
+    ['REPEATED_SCENE',()=>{}],
+    ['MEMORY_REFERENCE_MISSING',(s)=>{s.memoryDeltas=[{entityId:'absent',kind:'fact',text:'未知人物。'}];}],
+    ['MEMORY_REFERENCE_CONFLICT',(s,c)=>{s.entities=[{id:c.entities[0].id,name:c.entities[0].name,kind:'person',status:'dead'}];s.memoryDeltas=[{entityId:c.entities[0].id,kind:'promise',text:'不存在的约定',referenceId:'missing',status:'resolved'}];}],
+    ['CHOICE_NOT_COMPILABLE',(s)=>{s.choices[0]={...s.choices[0],intent:'travel',targetId:'absent',approach:'road'};}],
+  ];
+  for(const [code,mutate] of cases)await t.test(code,async t=>{
+    const f=fixture(generateScene,{profile:{...CANDIDATE_PROFILE,validated:true,supportsStructuredOutput:true},limits:{dailyNeurons:TURN_RESERVATION_NEURONS}});t.after(()=>f.db.close());
+    const s=await session(f),b=structuredClone(body(s));let inferences=0;
+    b.context.entities=[{id:'archived-person',name:'旧友',kind:'person',status:'dead'}];
+    if(code==='REPEATED_SCENE') {const {sha256,canonicalStringify}=await import('../src/game/cultivation/live/identity.js');b.context.previousScene={id:'old-scene',blocksHash:sha256(canonicalStringify(scene(b.context).blocks))};}
+    const env={AI:{run:async(model,input)=>{inferences++;const c=JSON.parse(input.messages[1].content),candidate=scene(c);if(inferences===1)mutate(candidate,c);else candidate.blocks[0].text='远山传来新的钟声。';return {model,choices:[{finish_reason:'stop',message:{content:JSON.stringify(candidate)}}],usage:{prompt_tokens:1,completion_tokens:1,total_tokens:2}};}}};
+    const first=await (await f.api.fetch(req('/api/story/turn',b,s.cookie),env)).json();assert.equal(first.status,'rejected');assert.equal(first.errorCode,code);
+    const rows=()=>f.db.prepare('SELECT * FROM ledger ORDER BY rowid').all();const original=rows()[0];assert.equal(original.status,'complete');assert.equal(original.day,'2026-10-27');assert.equal(original.charge,TURN_RESERVATION_NEURONS);assert.equal(original.actual,null);
+    assert.deepEqual(await (await f.api.fetch(req('/api/story/turn',b,s.cookie),env)).json(),first);assert.equal(inferences,1);
+    f.setNow(Date.parse('2026-10-28T00:00:01Z'));const retry=structuredClone(b);retry.attempt.id='attempt-2';retry.attempt.retryOf={sessionRef:s.data.sessionRef,attemptId:'attempt-1'};
+    assert.equal((await (await f.api.fetch(req('/api/story/turn',retry,s.cookie),env)).json()).status,'ready');assert.equal(inferences,2);assert.deepEqual(rows()[0],original);assert.equal(rows()[1].status,'complete');assert.equal(rows()[1].actual,null);
+  });
+});
+
+test('contract vocabulary is complete and accounting is independent of public error presentation',async t=>{
+  const {STORY_ERROR_CODES}=await import('../src/game/cultivation/live/memory.js');
+  const {PROVIDER_ERROR_CODES}=await import('../src/worker/story-provider.js');
+  const {readFile}=await import('node:fs/promises');
+  const source=await readFile(new URL('../src/game/cultivation/live/memory.js',import.meta.url),'utf8');
+  assert.deepEqual([...new Set([...source.matchAll(/fail\('([A-Z_]+)'\)/g)].map(m=>m[1]))].sort(),[...STORY_ERROR_CODES].sort());
+  for(const code of [...STORY_ERROR_CODES,'SECRET_INTERNAL_FAILURE']) {
+    if(code!=='SECRET_INTERNAL_FAILURE')assert.ok(PROVIDER_ERROR_CODES.includes(code));
+    const f=fixture(async()=>({status:'rejected',accountingStatus:'complete',errorCode:code}));t.after(()=>f.db.close());const s=await session(f);
+    const result=await (await f.api.fetch(req('/api/story/turn',body(s),s.cookie))).json();assert.equal(result.errorCode,code==='SECRET_INTERNAL_FAILURE'?'PROVIDER_FAILED':code);
+    assert.equal(f.db.prepare('SELECT status FROM ledger').get().status,'complete');
+  }
+});
+
+test('actual transport failure and timeout remain unknown across UTC days',async t=>{
+  for(const timeout of [false,true]) {
+    const provider=(ai,p,c)=>generateScene(ai,p,c,{timeoutMs:5});
+    const f=fixture(provider,{profile:{...CANDIDATE_PROFILE,validated:true,supportsStructuredOutput:true},limits:{dailyNeurons:TURN_RESERVATION_NEURONS}});t.after(()=>f.db.close());const s=await session(f);
+    const env={AI:{run:()=>timeout?new Promise(()=>{}):Promise.reject(Error('private transport failure'))}};
+    const result=await (await f.api.fetch(req('/api/story/turn',body(s),s.cookie),env)).json();assert.equal(result.errorCode,timeout?'PROVIDER_TIMEOUT':'PROVIDER_FAILED');
+    const original=f.db.prepare('SELECT * FROM ledger').get();assert.equal(original.status,'unknown');assert.equal(original.actual,null);assert.equal(original.charge,TURN_RESERVATION_NEURONS);
+    f.setNow(Date.parse('2026-10-28T00:00:01Z'));const retry=body(s,'attempt-2',{sessionRef:s.data.sessionRef,attemptId:'attempt-1'});
+    assert.equal((await (await f.api.fetch(req('/api/story/turn',retry,s.cookie),env)).json()).errorCode,'DAILY_BUDGET_EXHAUSTED');assert.equal(f.calls,1);
+  }
+});
+
+test('concurrent HTTP distinct requests share one session lease while other sessions remain independent',async t=>{
+  let release,entered;const started=new Promise(resolve=>entered=resolve);
+  const f=fixture(async(a,p,c)=>{if(c.identity.requestId==='game-request'){entered();await new Promise(r=>release=r);}return {status:'ready',accountingStatus:'complete',scene:scene(c)};});t.after(()=>f.db.close());
+  const s=await session(f),other=await session(f);const first=f.api.fetch(req('/api/story/turn',body(s),s.cookie));await started;
+  const second=structuredClone(body(s,'attempt-2'));second.context.identity.requestId='another-request';
+  const independent=structuredClone(body(other));independent.context.identity.requestId='independent';
+  assert.equal((await (await f.api.fetch(req('/api/story/turn',second,s.cookie))).json()).errorCode,'ATTEMPT_IN_PROGRESS');
+  assert.equal(f.calls,1);assert.equal(f.db.prepare('SELECT COUNT(*) AS n FROM ledger').get().n,1);
+  assert.equal((await (await f.api.fetch(req('/api/story/turn',independent,other.cookie))).json()).status,'ready');
+  release();assert.equal((await (await first).json()).status,'ready');
+  assert.equal((await (await f.api.fetch(req('/api/story/turn',second,s.cookie))).json()).status,'ready');assert.equal(f.calls,3);
+});

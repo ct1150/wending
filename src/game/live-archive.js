@@ -115,10 +115,22 @@ class Archive {
    const add=row=>{if(!row||records.has(row.id))return;const record=row.record;bytes+=encodedBytes(record);check(records.size<limit&&bytes<=CHUNK_BYTES,'MEMORY_CONTEXT_TOO_LARGE');records.set(row.id,record);if(record.entityId)entities.add(record.entityId);};
    const entities=new Set(entityIds);const tasks=[];for(const id of referenceIds)tasks.push(()=>get(s.memory,[c.run.archiveId,id,-1],row=>{add(row);next();}));
    const scan=(index,key)=>()=>{const req=s.memory.index(index).openCursor(IDBKeyRange.only(key));req.onsuccess=guard(()=>{const cursor=req.result;if(!cursor){next();return;}add(cursor.value);cursor.continue();});};
-   for(const id of new Set(entityIds))if(factsPerEntity)tasks.push(()=>{let n=0,visited=0;const req=s.memory.index('recent').openCursor(IDBKeyRange.bound([c.run.archiveId,id,0],[c.run.archiveId,id,Number.MAX_SAFE_INTEGER,[]]),'prev');req.onsuccess=guard(()=>{const cursor=req.result;if(!cursor||n>=factsPerEntity||visited++>=factsPerEntity*2){next();return;}if(cursor.value.record.kind!=='entity'&&cursor.value.record.status!=='open'){add(cursor.value);n++;}cursor.continue();});});
+   for(const id of new Set(entityIds))if(factsPerEntity)tasks.push(()=>{let n=0,visited=0;const req=s.memory.index('recent').openCursor(IDBKeyRange.bound([c.run.archiveId,id,0],[c.run.archiveId,id,Number.MAX_SAFE_INTEGER,[]]),'prev');req.onsuccess=guard(()=>{const cursor=req.result;if(!cursor||n>=factsPerEntity||visited++>=factsPerEntity*2){next();return;}if(!['entity','ruleRelation'].includes(cursor.value.record.kind)&&cursor.value.record.status!=='open'){add(cursor.value);n++;}cursor.continue();});});
    if(includeOpen)tasks.push(scan('status',[c.run.archiveId,'open']));
    let fetchedEntities=false;
-   const next=()=>{if(tasks.length){tasks.shift()();return;}if(!fetchedEntities){fetchedEntities=true;for(const id of entities)tasks.push(()=>get(s.memory,[c.run.archiveId,'e:'+sha256(id).slice(0,40),-1],row=>{add(row);next();}));next();return;}done([...records.values()]);};next();
+   const next=()=>{
+    if(tasks.length){tasks.shift()();return;}
+    if(!fetchedEntities) {
+     fetchedEntities=true;
+     const prefixes=c.run.state.relationshipVersion===1?['e:','q:']:['e:'];
+     for(const id of entities)for(const prefix of prefixes) {
+      tasks.push(()=>get(s.memory,[c.run.archiveId,prefix+sha256(id).slice(0,40),-1],row=>{add(row);next();}));
+     }
+     next();return;
+    }
+    done([...records.values()]);
+   };
+   next();
   });
  }
  // Prompt retrieval is a bounded view over permanent indexes. All obligations
@@ -144,7 +156,7 @@ class Archive {
     if(!fetchedEntities) {
      fetchedEntities=true;
      for(const entityId of [...entities].sort()) {
-      tasks.push(()=>get(stores.memory,[c.run.archiveId,'e:'+sha256(entityId).slice(0,40),-1],row=>{add(row);next();}));
+      for(const prefix of c.run.state.relationshipVersion===1?['e:','q:']:['e:'])tasks.push(()=>get(stores.memory,[c.run.archiveId,prefix+sha256(entityId).slice(0,40),-1],row=>{add(row);next();}));
      }
      next();
      return;
@@ -192,7 +204,7 @@ class Archive {
      request.onsuccess=guard(()=>{
       const cursor=request.result;
       if(!cursor||selected>=2||visited++>=8) { next();return; }
-      if(cursor.value.record.kind!=='entity'&&cursor.value.record.status!=='open') { add(cursor.value);selected++; }
+      if(!['entity','ruleRelation'].includes(cursor.value.record.kind)&&cursor.value.record.status!=='open') { add(cursor.value);selected++; }
       cursor.continue();
      });
     });
@@ -213,7 +225,13 @@ class Archive {
   const expected=buildMemoryDelta(p.receipt,scene);check(same(expected,memoryDelta),'ARCHIVE_INVALID_MEMORY');
   const turnId=p.identity.turnId,common={runId:c.run.runId,turnId};
   const records=[{id:'receipt:'+turnId,...common,source:'rules',kind:'receipt',receipt:clone(p.receipt)},...expected.records.map(r=>({...r,...common})),...scene.entities.map(e=>{const prior=related.find(r=>r.kind==='entity'&&r.entity.id===e.id);return {id:'e:'+sha256(e.id).slice(0,40),...common,source:'narrative',kind:'entity',entity:{id:e.id,name:e.name,kind:e.kind},status:prior?.status==='dead'?'dead':e.status??prior?.status??'unknown'};})];
-  return {state:commitTurn(c.run.state,p,scene),records};
+  if(c.run.state.relationshipVersion===1) {
+   for(const entityId of Object.keys(p.receipt.relationChanges))records.push({
+    id:'q:'+sha256(entityId).slice(0,40),...common,source:'rules',kind:'ruleRelation',
+    entityId,value:p.nextLife.relations[entityId],
+   });
+  }
+  return {state:commitTurn(c.run.state,p,scene,context.relationships),records};
  }
  _writeMemory(store,archiveId,records) {
   for(const record of records){bounded(record,65536);const base={archiveId,id:record.id,record};store.add({...base,version:record.turnId});const entityId=record.entityId??record.entity?.id;store.put({...base,version:-1,...(entityId?{entityKey:[archiveId,entityId],recentKey:[archiveId,entityId,record.turnId,record.id]}:{}),...(record.status==='open'?{statusKey:[archiveId,'open']}:{})});}

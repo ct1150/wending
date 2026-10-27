@@ -46,8 +46,9 @@ export function createLiveSession({archive,client,engine=defaultEngine,onChange=
     if(result.requestId!==row.pending.identity.requestId || result.attemptId!==row.attempt.id || result.sessionRef!==row.attempt.sessionRef) {
       throw fault('RESPONSE_IDENTITY_MISMATCH');
     }
-    const scene=validateGeneratedScene(result.scene,context??await contextFor(row,result.scene));
-    const nextState=engine.commitTurn(row.state,row.pending,scene);
+    const validatedContext=context??await contextFor(row,result.scene);
+    const scene=validateGeneratedScene(result.scene,validatedContext);
+    const nextState=engine.commitTurn(row.state,row.pending,scene,validatedContext.relationships);
     loaded=await archive.commit({
       expectedRevision:row.state.revision,
       expectedAttemptId:row.attempt.id,
@@ -116,6 +117,9 @@ export function createLiveSession({archive,client,engine=defaultEngine,onChange=
       const expectedArchiveId=loaded?.archiveId??null;
       const state=engine.createLiveGame(options);
       const pending=engine.prepareOpening(state,{requestId:id()});
+      // Validate the exact opening DTO before activating immutable birth facts.
+      try { buildStoryContext(state,pending,[],{selection:'relevance-v1',openTotal:0}); }
+      catch { throw fault('BIRTH_CONTEXT_INVALID'); }
       loaded=await archive.create({state,pending,expectedArchiveId});
       status='pending';
       emit();

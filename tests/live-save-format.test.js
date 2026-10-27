@@ -16,3 +16,15 @@ test('captured export remains coherent while playing and restores pending retry 
 test('import must not replace a run that advances while the stream is being validated',async t=>{
  const {page}=await liveBrowser(t);const r=await page.evaluate(async()=>{const {exportLiveArchive,importLiveArchive}=await import('/src/game/live-save-format.js');const a=await open('format-race');await born(a);const bytes=new Uint8Array(await new Response(exportLiveArchive(a)).arrayBuffer());let sent=false;const stream=new ReadableStream({async pull(c){if(sent){await advance(a);c.close();return;}sent=true;c.enqueue(bytes);}});let rejected=false;try{await importLiveArchive(stream,a);}catch{rejected=true;}return {rejected,after:await a.load()};});assert.equal(r.rejected,true);assert.equal(r.after.state.revision,1);
 });
+
+test('unmarked pre-fix V5 histories and pending hashes roundtrip without implicit relationship migration',async t=>{
+ const {page}=await liveBrowser(t);const r=await page.evaluate(async()=>{
+  const {exportLiveArchive,importLiveArchive}=await import('/src/game/live-save-format.js');
+  const a=await open('legacy-v5'),state=engine.createLiveGame({runId:'legacy-v5',seed:42});delete state.relationshipVersion;
+  await a.create({state,pending:engine.prepareOpening(state,{requestId:'legacy-open'})});await advance(a);await advance(a);
+  const active=await a.load(),pending=engine.prepareChoice(active.state,{requestId:'legacy-pending',choiceId:active.state.currentScene.choices[0].id});await a.prepare(pending);
+  const before=await a.load(),b=await open('legacy-v5-import');const restored=await importLiveArchive(exportLiveArchive(a),b);
+  return {before,restored,historyA:await a.readHistory(state.runId),historyB:await b.readHistory(state.runId)};
+ });
+ assert.equal(Object.hasOwn(r.restored.state,'relationshipVersion'),false);assert.deepEqual(r.restored.state,r.before.state);assert.deepEqual(r.restored.pending,r.before.pending);assert.deepEqual(r.historyB.entries,r.historyA.entries);
+});

@@ -96,3 +96,13 @@ test('terminal cause must agree with actual lifespan or injury, with no posthumo
   battleDead.lastReceipt.death.cause='lifespan';
   assert.throws(()=>validation.deserializeLiveState(JSON.stringify(battleDead)));
 });
+
+test('relationship version is hash bound, rejects unknown versions and preserves unmarked replay semantics',()=>{
+  const state=born(),old=structuredClone(state);delete old.relationshipVersion;
+  assert.equal(state.relationshipVersion,1);assert.notEqual(identity.stateHash(state),identity.stateHash(old));
+  assert.doesNotThrow(()=>validation.validateLiveState(old));
+  for(const version of [0,2,'1',null])assert.throws(()=>validation.validateLiveState({...state,relationshipVersion:version}));
+  const opening=api.prepareOpening(old,{requestId:'old-opening'}),first=api.commitTurn(old,opening,scene());
+  const p=api.prepareChoice(first,{choiceId:'rest',requestId:'old-next'});
+  assert.deepEqual(api.commitTurn(first,p,scene(undefined,[{id:'returning',name:'旧友',kind:'person'}]),{returning:90}).life.relations,{});
+});

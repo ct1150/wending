@@ -18,7 +18,7 @@ export function createLiveGame(options={}) {
  const talents=Object.keys(TALENTS),first=talents.splice(draw(talents.length),1)[0],birth={originId,talentIds:[first,talents[draw(talents.length)]],attributes};
  const life={name,ageDays:16*DAYS_PER_YEAR,lifeLimit:80,realm:'mortal',cultivation:0,injury:0,items:{supplies:3,stones:0},relations:{},birth};
  const birthReceipt={kind:'opening',choiceId:null,action:null,elapsedDays:0,itemChanges:{},relationChanges:{},random:{before:rng,after:rng,roll:null},before:summary(life),after:summary(life),death:null,birth:copy(birth)};
- return validateLiveState({version:5,mode:'cultivation',contentVersion:4,rulesVersion:1,promptVersion:1,runId,revision:0,turnId:0,phase:'awaitingOpening',rng,life,birthReceipt,currentScene:null,lastReceipt:null,relatedEntities:[],archiveCursor:0});
+ return validateLiveState({relationshipVersion:1,version:5,mode:'cultivation',contentVersion:4,rulesVersion:1,promptVersion:1,runId,revision:0,turnId:0,phase:'awaitingOpening',rng,life,birthReceipt,currentScene:null,lastReceipt:null,relatedEntities:[],archiveCursor:0});
 }
 function actionRule(state,p) {
  validateProposal(p);
@@ -83,12 +83,20 @@ function verifiedPending(state,pending) {
  const expected=pending.kind==='opening'?prepareOpening(state,{requestId:pending.identity.requestId}):pending.kind==='choice'?prepareChoice(state,{requestId:pending.identity.requestId,choiceId:pending.identity.choiceId}):null;
  if(!expected||!same(pending,expected))throw new Error('待提交行动已过期或收据遭到修改。');return expected;
 }
-export function commitTurn(state,pending,scene) {
+// Only the scene's bounded working set enters snapshots and their hashes.
+// Restored values come from indexed rule records, never narrative descriptions.
+export function projectRelations(life,entities,restored={}) {
+ assertPlainData(restored);
+ if(!restored||typeof restored!=='object'||Array.isArray(restored)||Object.keys(restored).length>48)throw new Error('人物关系无效。');
+ for(const [id,value] of Object.entries(restored)){idField(id);if(!Number.isInteger(value)||value < -100||value > 100)throw new Error('人物关系无效。');}
+ return Object.fromEntries(Object.entries({...restored,...life.relations}).filter(([id])=>entities.some(e=>e.id===id)));
+}
+export function commitTurn(state,pending,scene,restoredRelations={}) {
  const fixed=verifiedPending(state,pending);if(fixed.receipt.death)throw new Error('真实死亡须本地结算。');validateGeneratedScene(scene);
  const relatedEntities=copy(scene.entities);
  // Every current target and memory reference must have an explicit stable entity.
  for(const m of scene.memoryDeltas)if(!relatedEntities.some(e=>e.id===m.entityId))throw new Error('记忆引用未知实体。');
- const life=copy(fixed.nextLife);life.relations=Object.fromEntries(Object.entries(life.relations).filter(([id])=>relatedEntities.some(e=>e.id===id)));
+ const life=copy(fixed.nextLife);life.relations=projectRelations(life,relatedEntities,state.relationshipVersion===1?restoredRelations:{});
  const next={...copy(state),revision:state.revision+1,turnId:state.turnId+1,phase:'active',life,rng:fixed.nextRng,lastReceipt:copy(fixed.receipt),currentScene:copy(scene),relatedEntities};
  const choices=compileChoices(next,scene.choices);if(!choices.some(p=>p.enabled))throw new Error('场景必须保留可执行行动。');return validateLiveState(next);
 }

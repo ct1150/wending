@@ -1,13 +1,24 @@
 import { assertPlainData, canonicalStringify, sha256 } from './identity.js';
 import { exactKeys, idField, textField, validateEntities, validateGeneratedScene as validateStructure } from './schema.js';
 import { validateLife, validateReceipt } from './validation.js';
-import { prepareOpening, prepareChoice, compileChoices } from './engine.js';
+import { prepareOpening, prepareChoice, compileChoices, projectRelations } from './engine.js';
 import { DAYS_PER_YEAR, ITEMS, REALMS } from './model.js';
 
 const encoder = new TextEncoder();
 const bytes = value => encoder.encode(JSON.stringify(value)).length;
 const copy = value => JSON.parse(JSON.stringify(value));
 const equal = (a,b) => canonicalStringify(a) === canonicalStringify(b);
+// Typed contract vocabulary shared by the provider and HTTP presentation.
+export const STORY_ERROR_CODES=Object.freeze([
+  'ACTION_RECEIPT_MISMATCH', 'CHOICE_NOT_COMPILABLE', 'DEATH_REQUIRES_LOCAL_SETTLEMENT',
+  'ENTITY_DEATH_CONFLICT', 'ENTITY_DEATH_FACT_REQUIRED', 'ENTITY_IDENTITY_CONFLICT',
+  'ENTITY_ID_SCOPE_INVALID', 'GENERATED_SCENE_INVALID', 'MECHANICAL_FACT_CONFLICT',
+  'MEMORY_CONTEXT_TOO_LARGE', 'MEMORY_RECORD_CONFLICT', 'MEMORY_RECORD_INVALID',
+  'MEMORY_REFERENCE_CONFLICT', 'MEMORY_REFERENCE_MISSING', 'MEMORY_RETRIEVAL_TOO_LARGE',
+  'NEXT_CONTEXT_TOO_LARGE', 'NO_EXECUTABLE_CHOICE', 'REPEATED_SCENE',
+  'SCENE_ID_SCOPE_INVALID', 'SPEAKER_REFERENCE_INVALID', 'STORY_CONTEXT_INVALID',
+  'STORY_DATA_INVALID', 'STORY_DATA_TOO_LARGE', 'UNSAFE_STORY_TEXT',
+]);
 const fail = code => { throw Object.assign(new Error(code), {code}); };
 const namespace = runId => 'r:' + sha256(runId).slice(0,16);
 const turnPrefix = c => `${c.namespace}:t${c.identity.turnId}:`;
@@ -29,11 +40,13 @@ function whole(value,min=0) { if(!Number.isSafeInteger(value)||value<min)fail('S
 
 function validateRecord(record,state) {
   const common=['id','runId','turnId','source','kind'];
-  const extras={receipt:['receipt'],entity:['entity','status'],fact:['entityId','text'],relationship:['entityId','text'],promise:['entityId','text','status'],clue:['entityId','text','status'],death:['entityId','text'],turn:['text','entityIds'],summary:['text','references']};
+  const extras={ruleRelation:['entityId','value'],receipt:['receipt'],entity:['entity','status'],fact:['entityId','text'],relationship:['entityId','text'],promise:['entityId','text','status'],clue:['entityId','text','status'],death:['entityId','text'],turn:['text','entityIds'],summary:['text','references']};
   if(!Object.hasOwn(extras,record.kind))fail('MEMORY_RECORD_INVALID');
   exactKeys(record,[...common,...extras[record.kind]]);idField(record.id);whole(record.turnId);
   if(record.runId!==state.runId||record.turnId>state.turnId)fail('MEMORY_RECORD_INVALID');
-  if(record.kind==='receipt'){if(record.source!=='rules')fail('MEMORY_RECORD_INVALID');validateReceipt(record.receipt);}
+  if(record.kind==='ruleRelation'){
+    idField(record.entityId);if(record.source!=='rules'||!Number.isInteger(record.value)||record.value < -100||record.value > 100)fail('MEMORY_RECORD_INVALID');
+  } else if(record.kind==='receipt'){if(record.source!=='rules')fail('MEMORY_RECORD_INVALID');validateReceipt(record.receipt);}
   else if(record.kind==='entity'){
     exactKeys(record.entity,['id','name','kind']);validateEntities([record.entity]);if(!['rules','narrative'].includes(record.source)||!['unknown','alive','dead'].includes(record.status)||record.entity.kind!=='person'&&record.status!=='unknown')fail('MEMORY_RECORD_INVALID');
   } else {
@@ -55,11 +68,11 @@ function latestRecords(records,state) {
       if(old.kind!==row.kind||old.source!==row.source)fail('MEMORY_RECORD_CONFLICT');
       // Only these record types have an explicit mutable payload. Re-indexing an
       // identical immutable fact at another wrapper turn cannot replace its data.
-      if(!['entity','promise','clue','summary'].includes(row.kind)){
+      if(!['entity','promise','clue','summary','ruleRelation'].includes(row.kind)){
         const payload=value=>Object.fromEntries(Object.entries(value).filter(([key])=>key!=='turnId'));
         if(!equal(payload(old),payload(row)))fail('MEMORY_RECORD_CONFLICT');
       }
-      if(['clue','promise'].includes(row.kind)&&(old.entityId!==row.entityId||old.text!==row.text))fail('MEMORY_RECORD_CONFLICT');
+      if(['clue','promise','ruleRelation'].includes(row.kind)&&(old.entityId!==row.entityId||old.text!==row.text))fail('MEMORY_RECORD_CONFLICT');
       if(row.kind==='entity'&&!equal(old.entity,row.entity))fail('MEMORY_RECORD_CONFLICT');
       if(old.turnId===row.turnId&&!equal(old,row))fail('MEMORY_RECORD_CONFLICT');
       const earlier=old.turnId<row.turnId?old:row,later=old.turnId<row.turnId?row:old;
@@ -104,6 +117,11 @@ export function buildStoryContext(state,pending,relatedRecords=[],options={}) {
   // silently dropping obligations/facts when that relevant set cannot fit.
   if(!selecting&&(facts.length>16||promises.length>12||clues.length>12))fail('MEMORY_CONTEXT_TOO_LARGE');
   const result={schemaVersion:1,phase:fixed.kind,identity:copy(fixed.identity),namespace:namespace(state.runId),receipt:copy(fixed.receipt),life:copy(fixed.nextLife),entities:[...entities.values()],memory:{facts,promises,clues,recent:records.filter(r=>r.kind==='turn').slice(0,4),summaries:records.filter(r=>r.kind==='summary').slice(0,2)},references:[],previousScene:state.currentScene?{id:state.currentScene.id,blocksHash:sha256(canonicalStringify(state.currentScene.blocks))}:null};
+  if(state.relationshipVersion===1) {
+    const restored=Object.fromEntries(records.filter(r=>r.kind==='ruleRelation').map(r=>[r.entityId,r.value]));
+    result.relationshipVersion=1;
+    result.relationships=projectRelations(fixed.nextLife,result.entities,restored);
+  }
   if(selecting) {
     selectRelevantMemory(result,records,state,entities,options.openTotal);
     validateStoryContext(result);
@@ -128,7 +146,9 @@ function selectRelevantMemory(result,records,state,entities,openTotal) {
   result.entities=[...entities.values()].filter(entity=>currentIds.has(entity.id));
   result.memory={facts:[],promises:[],clues:[],recent:[],summaries:[]};
   result.coverage={policy:'relevance-v1',openTotal,openIncluded:0,openOmitted:openTotal};
+  const canonicalRelations=result.relationships;
   const refresh=()=>{
+    if(canonicalRelations)result.relationships=projectRelations({relations:{}},result.entities,canonicalRelations);
     result.references=Object.values(result.memory).flat().map(row=>row.id);
     const included=[...result.memory.promises,...result.memory.clues].filter(row=>row.status==='open').length;
     result.coverage.openIncluded=included;
@@ -168,7 +188,7 @@ function selectRelevantMemory(result,records,state,entities,openTotal) {
 // builder re-derives pending; this checks consistency, not account authentication.
 export function validateStoryContext(c) {
   inspect(c,7000);
-  exactKeys(c,['schemaVersion','phase','identity','namespace','receipt','life','entities','memory','references','previousScene'],['coverage']);
+  exactKeys(c,['schemaVersion','phase','identity','namespace','receipt','life','entities','memory','references','previousScene'],['coverage','relationshipVersion','relationships']);
   if(c.schemaVersion!==1||!['opening','choice'].includes(c.phase))fail('STORY_CONTEXT_INVALID');
   exactKeys(c.identity,['runId','turnId','baseRevision','stateHash','choiceId','rulesVersion','promptVersion','requestId']);
   idField(c.identity.runId);idField(c.identity.requestId);whole(c.identity.turnId,1);whole(c.identity.baseRevision);
@@ -179,6 +199,12 @@ export function validateStoryContext(c) {
   if(c.phase==='opening'&&(!equal(c.life.items,{supplies:3,stones:0})||Object.keys(c.life.relations).length))fail('ACTION_RECEIPT_MISMATCH');
   if(!Array.isArray(c.entities)||c.entities.length>24)fail('STORY_CONTEXT_INVALID');
   const seen=new Set();for(const e of c.entities){exactKeys(e,['id','name','kind','status']);validateEntities([{id:e.id,name:e.name,kind:e.kind}]);if(seen.has(e.id)||!['unknown','alive','dead'].includes(e.status)||e.kind!=='person'&&e.status!=='unknown')fail('STORY_CONTEXT_INVALID');seen.add(e.id);}
+  if(c.relationshipVersion!==undefined||c.relationships!==undefined){
+    if(c.relationshipVersion!==1||c.relationships===undefined)fail('STORY_CONTEXT_INVALID');
+    const projected=projectRelations({relations:{}},c.entities,c.relationships);
+    if(!equal(projected,c.relationships)||c.phase==='opening'&&Object.keys(projected).length)fail('STORY_CONTEXT_INVALID');
+    for(const [id,value] of Object.entries(c.life.relations))if(c.relationships[id]!==value)fail('STORY_CONTEXT_INVALID');
+  }
   exactKeys(c.memory,['facts','promises','clues','recent','summaries']);
   const groupKinds={facts:['receipt','fact','relationship','death'],promises:['promise'],clues:['clue'],recent:['turn'],summaries:['summary']},records=[];
   for(const [key,rows] of Object.entries(c.memory)){
@@ -232,8 +258,8 @@ function compilationState(c,scene) {
   const birthReceipt=c.phase==='opening'?c.receipt:{kind:'opening',choiceId:null,action:null,elapsedDays:0,itemChanges:{},relationChanges:{},random:{before:0,after:0,roll:null},before:birthSummary,after:birthSummary,death:null,birth:c.life.birth};
   // Mirror commitTurn's bounded active relation set while keeping the complete
   // immutable relationChanges receipt available for permanent archive storage.
-  const life=copy(c.life);life.relations=Object.fromEntries(Object.entries(life.relations).filter(([id])=>scene.entities.some(e=>e.id===id)));
-  return {version:5,mode:'cultivation',contentVersion:4,rulesVersion:1,promptVersion:1,runId:c.identity.runId,revision:c.identity.turnId,turnId:c.identity.turnId,phase:'active',rng:c.receipt.random.after,life,birthReceipt,currentScene:scene,lastReceipt:c.receipt,relatedEntities:scene.entities,archiveCursor:0};
+  const life=copy(c.life);life.relations=projectRelations(life,scene.entities,c.relationshipVersion===1?c.relationships:{});
+  return {...(c.relationshipVersion===1?{relationshipVersion:1}:{}),version:5,mode:'cultivation',contentVersion:4,rulesVersion:1,promptVersion:1,runId:c.identity.runId,revision:c.identity.turnId,turnId:c.identity.turnId,phase:'active',rng:c.receipt.random.after,life,birthReceipt,currentScene:scene,lastReceipt:c.receipt,relatedEntities:scene.entities,archiveCursor:0};
 }
 
 export function validateGeneratedScene(raw,context) {

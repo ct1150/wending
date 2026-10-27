@@ -21,7 +21,14 @@ export function createBudgetCoordinator({storage,now=Date.now,limits={}}){
   const counter=(kind,subject,bucket)=>sql('SELECT count FROM counters WHERE kind=? AND subject=? AND bucket=?',kind,subject,bucket)[0]?.count??0;
   const increment=(kind,subject,bucket)=>sql('INSERT INTO counters(kind,subject,bucket,count) VALUES(?,?,?,1) ON CONFLICT(kind,subject,bucket) DO UPDATE SET count=count+1',kind,subject,bucket);
   const entry=(ref,id)=>sql('SELECT * FROM attempts WHERE session_ref=? AND attempt_id=?',ref,id)[0];
-  const replay=row=>row.result?{kind:'replay',result:JSON.parse(row.result)}:denied('ATTEMPT_IN_PROGRESS');
+  const replay=row=>{
+    if(row.result)return {kind:'replay',result:JSON.parse(row.result)};
+    if(now()-row.created>=policy.pendingMs) {
+      sql("UPDATE ledger SET status='unknown' WHERE session_ref=? AND attempt_id=? AND status='reserved'",row.session_ref,row.attempt_id);
+      return denied('PROVIDER_TIMEOUT');
+    }
+    return denied('ATTEMPT_IN_PROGRESS');
+  };
   const api={
     getSession(input){const found=session(input,now());return found?{kind:'session',sessionRef:found.ref,expiresAt:found.expires}:denied('SESSION_UNAVAILABLE');},
     admit({ipHash}){if(!validText(ipHash))return denied('REQUEST_INVALID');return tx(()=>{const bucket=String(Math.floor(now()/3600000));if(counter('request',ipHash,bucket)>=policy.ipRequestsPerHour)return denied('IP_REQUEST_LIMIT');increment('request',ipHash,bucket);return {kind:'admitted'};});},
@@ -57,6 +64,10 @@ export function createBudgetCoordinator({storage,now=Date.now,limits={}}){
         // cannot be invented or borrowed from another game request.
         return denied('RETRY_INVALID');
       }
+      // The active lease is session-wide; durable unknown accounting outlives it.
+      // Expiry is a conservative timeout transition, never a refund or cleanup.
+      sql("UPDATE ledger SET status='unknown' WHERE session_ref=? AND status='reserved' AND created<=?",s.ref,time-policy.pendingMs);
+      if(sql("SELECT 1 FROM ledger WHERE session_ref=? AND status='reserved' AND created>? LIMIT 1",s.ref,time-policy.pendingMs).length)return denied('ATTEMPT_IN_PROGRESS');
       // A foreign-session reference is accepted only for a request new to this
       // session. Never inspect that other session's result or private identity.
       if(sql('SELECT day FROM quota WHERE day=?',today).length)return denied('FREE_QUOTA_EXHAUSTED');

@@ -190,15 +190,15 @@ test('fixture continuous and counterfactual samples retain rules causality and r
   assert.notEqual(contexts[0].receipt.after.ageDays,contexts[1].receipt.after.ageDays);
   const context=contexts[0];
   const invalids=[
-    ['repeated-blocks',scene=>{scene.blocks=structuredClone(first.blocks);}],
-    ['duplicate-action-tuple',scene=>{scene.choices[1]={...scene.choices[0],id:scene.choices[1].id};}],
-    ['explicit-age-conflict',scene=>{scene.blocks=[{kind:'narration',text:'你今年999岁。'}];}],
-    ['explicit-realm-conflict',scene=>{scene.blocks=[{kind:'narration',text:'你如今已是登仙境界。'}];}],
+    ['repeated-blocks','REPEATED_SCENE',scene=>{scene.blocks=structuredClone(first.blocks);}],
+    ['duplicate-action-tuple','GENERATED_SCENE_INVALID',scene=>{scene.choices[1]={...scene.choices[0],id:scene.choices[1].id};}],
+    ['explicit-age-conflict','MECHANICAL_FACT_CONFLICT',scene=>{scene.blocks=[{kind:'narration',text:'你今年999岁。'}];}],
+    ['explicit-realm-conflict','MECHANICAL_FACT_CONFLICT',scene=>{scene.blocks=[{kind:'narration',text:'你如今已是登仙境界。'}];}],
   ];
-  for(const [name,change] of invalids) {
+  for(const [name,expectedCode,change] of invalids) {
     const scene=fixtureScene(context); change(scene);
     let reason;
-    assert.throws(()=>{try{memory.validateGeneratedScene(scene,context);}catch(e){reason=e.code??e.message;throw e;}});
+    assert.throws(()=>{try{memory.validateGeneratedScene(scene,context);}catch(e){reason=e.code??e.message;throw e;}}, {code:expectedCode});
     assert.equal(canonicalStringify(active),before);
     samples.push({sampleKind:'fixture',case:name,inputHash:sha256(canonicalStringify(context)),modelId:null,usage:null,actualNeurons:null,accepted:false,reason,latencyMs:null});
   }

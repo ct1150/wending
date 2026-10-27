@@ -1,7 +1,7 @@
 import { CANDIDATE_MODEL_ID, STORY_LIMITS } from './story-config.js';
 import { SCENE_SCHEMA, idField, exactKeys } from '../game/cultivation/live/schema.js';
 import { assertPlainData, canonicalStringify } from '../game/cultivation/live/identity.js';
-import { validateStoryContext, validateGeneratedScene } from '../game/cultivation/live/memory.js';
+import { validateStoryContext, validateGeneratedScene, STORY_ERROR_CODES } from '../game/cultivation/live/memory.js';
 
 // Server-only transport. The HTTP controller first calls assertProviderReady and
 // durably reserves budget; profile is never accepted from browser request data.
@@ -32,7 +32,8 @@ function providerInput(profile,context) {
   if(inputBytes+1024+64*input.messages.length+input.max_tokens>profile.contextTokens)fail('CONTEXT_TOO_LARGE');
   return input;
 }
-const ownCodes=new Set(['PROVIDER_PROFILE_INVALID','MODEL_NOT_ALLOWED','MODEL_UNVALIDATED','AI_BINDING_MISSING','PROVIDER_OPTIONS_INVALID','INPUT_TOO_LARGE','CONTEXT_TOO_LARGE','PROVIDER_TIMEOUT','PROVIDER_RESPONSE_INVALID','PROVIDER_RESPONSE_TOO_LARGE','MODEL_RESPONSE_MISMATCH','OUTPUT_TRUNCATED','STOP_REASON_INVALID','PROVIDER_USAGE_INVALID','OUTPUT_TOO_LARGE','GENERATED_SCENE_INVALID','STORY_DATA_INVALID','STORY_DATA_TOO_LARGE','UNSAFE_STORY_TEXT','STORY_CONTEXT_INVALID','ACTION_RECEIPT_MISMATCH','SCENE_ID_SCOPE_INVALID','ENTITY_IDENTITY_CONFLICT','ENTITY_DEATH_CONFLICT','ENTITY_ID_SCOPE_INVALID','ENTITY_DEATH_FACT_REQUIRED','MEMORY_REFERENCE_MISSING','MEMORY_REFERENCE_CONFLICT','MEMORY_RECORD_CONFLICT','SPEAKER_REFERENCE_INVALID','REPEATED_SCENE','MECHANICAL_FACT_CONFLICT','NO_EXECUTABLE_CHOICE','NEXT_CONTEXT_TOO_LARGE','CHOICE_NOT_COMPILABLE','MEMORY_RECORD_INVALID']);
+export const PROVIDER_ERROR_CODES=Object.freeze([...STORY_ERROR_CODES,'PROVIDER_PROFILE_INVALID','MODEL_NOT_ALLOWED','MODEL_UNVALIDATED','AI_BINDING_MISSING','PROVIDER_OPTIONS_INVALID','INPUT_TOO_LARGE','CONTEXT_TOO_LARGE','PROVIDER_TIMEOUT','PROVIDER_RESPONSE_INVALID','PROVIDER_RESPONSE_TOO_LARGE','MODEL_RESPONSE_MISMATCH','OUTPUT_TRUNCATED','STOP_REASON_INVALID','PROVIDER_USAGE_INVALID','OUTPUT_TOO_LARGE']);
+const ownCodes=new Set(PROVIDER_ERROR_CODES);
 function mappedCode(error) {
   const code=error?.code??error?.errors?.[0]?.code??error?.status;
   if(Number(code)===3036)return 'FREE_QUOTA_EXHAUSTED';
@@ -42,7 +43,7 @@ function mappedCode(error) {
 const pausedCodes=new Set(['FREE_QUOTA_EXHAUSTED','PROVIDER_BUSY','PROVIDER_TIMEOUT','PROVIDER_FAILED']);
 
 export async function generateScene(ai,profile,context,options={}) {
-  const result={status:'rejected',modelId:null,attemptId:null,inferencePerformed:false,usage:null,actualNeurons:null,stopReason:null};
+  const result={status:'rejected',accountingStatus:'complete',modelId:null,attemptId:null,inferencePerformed:false,usage:null,actualNeurons:null,stopReason:null};
   try {
     assertPlainData(options);exactKeys(options,[],['attemptId','timeoutMs']);
     const timeoutMs=options.timeoutMs??STORY_LIMITS.timeoutMs;
@@ -53,9 +54,11 @@ export async function generateScene(ai,profile,context,options={}) {
     if(typeof ai?.run!=='function')fail('AI_BINDING_MISSING');
     let timer,raw;
     result.inferencePerformed=true;
+    result.accountingStatus='unknown';
     try {
       raw=await Promise.race([Promise.resolve().then(()=>ai.run(profile.modelId,input)),new Promise((_,reject)=>{timer=setTimeout(()=>reject(Object.assign(new Error('PROVIDER_TIMEOUT'),{code:'PROVIDER_TIMEOUT'})),timeoutMs);})]);
     } finally { clearTimeout(timer); }
+    result.accountingStatus='complete';
     try { assertPlainData(raw); } catch { fail('PROVIDER_RESPONSE_INVALID'); }
     if(size(raw)>STORY_LIMITS.maxResponseBytes)fail('PROVIDER_RESPONSE_TOO_LARGE');
     if(raw.model!==undefined&&raw.model!==profile.modelId)fail('MODEL_RESPONSE_MISMATCH');
@@ -72,6 +75,7 @@ export async function generateScene(ai,profile,context,options={}) {
     result.status='ready';
   } catch(error) {
     result.errorCode=mappedCode(error);
+    if(['FREE_QUOTA_EXHAUSTED','PROVIDER_BUSY'].includes(result.errorCode))result.accountingStatus='complete';
     result.status=result.inferencePerformed&&pausedCodes.has(result.errorCode)?'paused':'rejected';
   }
   return result;

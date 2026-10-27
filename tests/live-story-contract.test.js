@@ -211,3 +211,24 @@ test('continuation admission permits heavy identities when all enabled next choi
   const committed=commitTurn(active,pending,value);
   for(const choice of committed.currentScene.choices)assert.equal(nextContext(committed,choice),null);
 });
+
+test('continuation admission includes restored canonical relationship bytes for returning entities',()=>{
+  const born=createLiveGame({runId:'story-run',seed:42}),opening=prepareOpening(born,{requestId:'opening'});
+  const active=commitTurn(born,opening,scene());
+  const pending=prepareChoice(active,{requestId:'returning',choiceId:proposal('rest').id});
+  let found=false;
+  for(let length=1;length<=58;length++) {
+    const c=structuredClone(buildStoryContext(active,pending));
+    const raw=continuationScene(length);
+    const prefix=ns+':t'+pending.identity.turnId+':';raw.id=prefix+'s:returning';raw.blocks=[{kind:'narration',text:'故人重聚在桥边。'}];raw.choices=raw.choices.map((p,i)=>({...p,id:prefix+'c:'+i}));
+    c.entities=raw.entities.map(e=>({...e,status:'alive'}));
+    c.relationships=Object.fromEntries(raw.entities.map(e=>[e.id,-100]));
+    try {validateStoryContext(c);}catch {continue;}
+    const without=structuredClone(c);without.relationships={};
+    try {validateGeneratedScene(raw,without);}catch {continue;}
+    try {validateGeneratedScene(raw,c);}catch(error) {
+      assert.equal(error.code,'NEXT_CONTEXT_TOO_LARGE');found=true;break;
+    }
+  }
+  assert.equal(found,true,'restored values must participate in pre-ready continuation admission');
+});

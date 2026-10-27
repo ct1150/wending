@@ -1,5 +1,5 @@
 import { STORY_LIMITS, CANDIDATE_PROFILE, assertProviderReady } from './story-config.js';
-import { generateScene } from './story-provider.js';
+import { generateScene, PROVIDER_ERROR_CODES } from './story-provider.js';
 import { validateStoryContext,validateGeneratedScene } from '../game/cultivation/live/memory.js';
 import { assertPlainData,canonicalStringify,sha256 } from '../game/cultivation/live/identity.js';
 import { exactKeys,idField } from '../game/cultivation/live/schema.js';
@@ -10,7 +10,7 @@ export const STORY_API_LIMITS=Object.freeze({maxRequestBytes:32768,maxResponseBy
 // maximum message framing and output. No client chooses a model/rate/budget.
 export const TURN_RESERVATION_NEURONS=Math.ceil(((STORY_LIMITS.maxInputBytes+1024+64*STORY_LIMITS.maxMessages)*CANDIDATE_PROFILE.neuronRates.inputPerMillion+STORY_LIMITS.maxOutputTokens*CANDIDATE_PROFILE.neuronRates.outputPerMillion)/1000000);
 const encoder=new TextEncoder();
-const allowedCodes=new Set(['INFERENCE_DISABLED','MODEL_NOT_ALLOWED','MODEL_UNVALIDATED','AI_BINDING_MISSING','FREE_BOUNDARY_UNVERIFIED','ACCOUNT_QUOTA_UNAVAILABLE','INPUT_TOO_LARGE','CONTEXT_TOO_LARGE','OUTPUT_TOO_LARGE','PROVIDER_PROFILE_INVALID','PROVIDER_OPTIONS_INVALID','PROVIDER_TIMEOUT','PROVIDER_RESPONSE_INVALID','PROVIDER_RESPONSE_TOO_LARGE','MODEL_RESPONSE_MISMATCH','OUTPUT_TRUNCATED','STOP_REASON_INVALID','PROVIDER_USAGE_INVALID','FREE_QUOTA_EXHAUSTED','PROVIDER_BUSY','PROVIDER_FAILED','GENERATED_SCENE_INVALID','NEXT_CONTEXT_TOO_LARGE','BUDGET_UNAVAILABLE']);
+const allowedCodes=new Set([...PROVIDER_ERROR_CODES,'INFERENCE_DISABLED','MODEL_NOT_ALLOWED','MODEL_UNVALIDATED','AI_BINDING_MISSING','FREE_BOUNDARY_UNVERIFIED','ACCOUNT_QUOTA_UNAVAILABLE','INPUT_TOO_LARGE','CONTEXT_TOO_LARGE','OUTPUT_TOO_LARGE','PROVIDER_PROFILE_INVALID','PROVIDER_OPTIONS_INVALID','PROVIDER_TIMEOUT','PROVIDER_RESPONSE_INVALID','PROVIDER_RESPONSE_TOO_LARGE','MODEL_RESPONSE_MISMATCH','OUTPUT_TRUNCATED','STOP_REASON_INVALID','PROVIDER_USAGE_INVALID','FREE_QUOTA_EXHAUSTED','PROVIDER_BUSY','PROVIDER_FAILED','GENERATED_SCENE_INVALID','NEXT_CONTEXT_TOO_LARGE','BUDGET_UNAVAILABLE']);
 const codeOf=(error,fallback='SERVICE_UNAVAILABLE')=>allowedCodes.has(error?.code)?error.code:fallback;
 const fail=(code,httpStatus=400)=>{throw Object.assign(new Error(code),{code,httpStatus});};
 const randomHex=length=>Array.from(crypto.getRandomValues(new Uint8Array(length)),n=>n.toString(16).padStart(2,'0')).join('');
@@ -75,13 +75,15 @@ export function createStoryApi({provider=generateScene,budget,config={}}={}){
       const reserved=await callBudget('reserve',reservationInput);
       if(reserved.kind!=='reserved')return json(reserved.kind==='replay'?reserved.result:envelope(['ATTEMPT_PAYLOAD_MISMATCH','RETRY_INVALID'].includes(reserved.code)?'rejected':'paused',reserved.code,identity));
       let generated,timer;
-      try {generated=await Promise.race([Promise.resolve().then(()=>provider(env.AI,profile,body.context,{attemptId:identity.attemptId})),new Promise(resolve=>{timer=setTimeout(()=>resolve({status:'paused',errorCode:'PROVIDER_TIMEOUT',inferencePerformed:true}),STORY_LIMITS.timeoutMs);})]);}catch{generated={status:'paused',errorCode:'PROVIDER_FAILED',inferencePerformed:true};}finally{clearTimeout(timer);}
+      try {generated=await Promise.race([Promise.resolve().then(()=>provider(env.AI,profile,body.context,{attemptId:identity.attemptId})),new Promise(resolve=>{timer=setTimeout(()=>resolve({status:'paused',errorCode:'PROVIDER_TIMEOUT',accountingStatus:'unknown',inferencePerformed:true}),STORY_LIMITS.timeoutMs);})]);}catch{generated={status:'paused',errorCode:'PROVIDER_FAILED',accountingStatus:'unknown',inferencePerformed:true};}finally{clearTimeout(timer);}
       let result;
       if(generated?.status==='ready'){
         try {const scene=validateGeneratedScene(generated.scene,body.context);result={...envelope('ready',null,identity),scene};if(encoder.encode(JSON.stringify(result)).length>STORY_LIMITS.maxResponseBytes)throw new Error();}catch{result=envelope('rejected','GENERATED_SCENE_INVALID',identity);}
       }else if(['paused','rejected'].includes(generated?.status))result=envelope(generated.status,allowedCodes.has(generated.errorCode)?generated.errorCode:'PROVIDER_FAILED',identity);
       else result=envelope('paused','PROVIDER_FAILED',identity);
-      const status=['PROVIDER_TIMEOUT','PROVIDER_FAILED'].includes(result.errorCode)?'unknown':'complete';
+      // Provider completion is trusted server metadata, independent of the public
+      // error vocabulary. An unclassified transport outcome stays conservative.
+      const status=generated?.accountingStatus==='complete'||generated?.status==='ready'?'complete':'unknown';
       const settled=await callBudget('settle',{sessionRef:identity.sessionRef,attemptId:identity.attemptId,status,actualNeurons:null,result,quotaExhausted:result.errorCode==='FREE_QUOTA_EXHAUSTED'});
       if(settled.kind!=='settled')return json(envelope('paused','BUDGET_UNAVAILABLE',identity));
       return json(result);
