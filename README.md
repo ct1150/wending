@@ -10,9 +10,9 @@
 
 取消“每世20—30分钟”目标。新模式将根据肉鸽选择，通过 Cloudflare Workers AI 在免费额度内实时生成剧情；登仙、问鼎只是阶段，人物仍活着就继续，实际死亡才结算。不设固定章节数或通关步数。选择的时间、资源、风险与死亡由规则结算，模型生成事件、对话和行动提案。
 
-这轮已实现独立V5/CV4规则、剧情契约、同源API、长期档案与实时界面，并完成受控后端打包和本地workerd/SQLite检查；**真实Workers AI、严格免费账号边界与生产闭环尚未验收，生产推理保持关闭**。1000回合原生档案fixture及本地完整release已通过；整分支审查和最终提交CI仍待完成，详见 [当前路线图](docs/ROADMAP.md) 与 [实施计划](docs/superpowers/plans/2026-10-27-realtime-workers-ai.md)。免费额度耗尽时保存进度、暂停生成，不自动付费；完整历史使用分页档案。新模式需要发送最小剧情上下文到Cloudflare，旧4.0离线玩法继续保留。下文描述当前可玩的4.0。
+这轮已实现独立V5/CV4规则、剧情契约、同源API、长期档案与实时界面，并完成受控后端打包和本地workerd/SQLite检查；**真实Workers AI、严格免费账号边界与生产闭环尚未验收，生产推理保持关闭**。此前1000回合原生档案fixture及完整release已通过；整分支审查随后发现4项需修复问题，I1—I4及重试补充修复现已通过独立源码复核，无未解决Critical/Important，最终代码CI也已通过，详见 [当前路线图](docs/ROADMAP.md) 与 [实施计划](docs/superpowers/plans/2026-10-27-realtime-workers-ai.md)。免费额度耗尽时保存进度、暂停生成，不自动付费；完整历史使用分页档案。新模式需要发送最小剧情上下文到Cloudflare，旧4.0离线玩法继续保留。下文描述当前可玩的4.0。
 
-本地完整验证在 `4e44811` 通过510项测试、117个JS语法检查，构建964968字节离线HTML；这不是最新提交CI或上线证明。[草稿PR #14](https://github.com/ct1150/wending/pull/14) 尚未合并或部署。真实AI调用0，实测Neurons为null（未测），不将fixture的1000回合解释为免费模型容量或叙事质量。
+[最终代码CI](https://github.com/ct1150/wending/actions/runs/40547281694) 在与已审本地 `65c3d0f` 同树的远端 `1322aa6` 通过539项测试、117个JS语法检查，构建970055字节离线HTML及13个backend模块；本地代码、独立审查和完整代码CI均已完成，实际账号/模型与上线验收仍阻塞。[草稿PR #14](https://github.com/ct1150/wending/pull/14) 尚未合并或部署。真实AI调用0，实测Neurons为null（未测），不将fixture的1000回合解释为免费模型容量或叙事质量。
 
 ## 开始游玩
 
@@ -62,6 +62,8 @@ npm run release
 实时模式独立使用 `version:5 / mode:cultivation / contentVersion:4`、IndexedDB和流式 `.wending.jsonl` 档案，按128回合或256KiB封块；旧1M总量限制不作为新人生终点。出生与待续事务先保存，失败暂停，明确重试仅创建新的调用attempt，不重复结算选择。
 
 实时档案数据库名仍为 `wending-live-v1`，数据库结构版本已升至2，新增检索索引并保留原有数据。**回滚须保留兼容数据库v2的读取器**；明确打开数据库v1的旧V5前端不能读取已升级的数据库。游戏档案版本仍为V5，旧v1—v4 localStorage存档不受此升级影响。
+
+本轮修复的新出生快照显式携带 `relationshipVersion:1`：累计数值关系保存在永久索引中，人物离场不清零，重返时只恢复当前所需关系。未带此标记的未发布V5档案保留其原历史、pending、状态哈希及旧关系语义；不会静默改写过去，也不会补回旧实现已丢失的累计值。该修复的最终复核/CI状态见路线图。
 
 已上线4.0为 JSON `version:4 / contentVersion:3`，存储键仍是 `baishi-wending-save-v1`。CV1/CV2 与 v1/v2/v3 旧人生继续原规则，只有明确新开局才进入新版。
 

@@ -1,10 +1,10 @@
 # GitHub → Cloudflare 部署
 
-更新：2026-10-27（上海）。4.0.0 自动发行与生产切换已实际验收；下方保留 3.1.0 及更早版本的实际生产记录。
+更新：2026-10-27（UTC）。4.0.0 自动发行与生产切换已实际验收；下方保留 3.1.0 及更早版本的实际生产记录。
 
 ## 实时AI后端：本地产物已验证，尚未部署或启用
 
-生产已验收基线仍为静态4.0.0。[草稿PR #14](https://github.com/ct1150/wending/pull/14) 未合并、未部署；本地完整release在 `4e44811` 为510项通过，之后 `0a5f0ab` HTTP整合修复专项及独立复核通过，最终提交CI/整分支审查仍待完成。实际构建SHA与摘要见 [QA](QA_REPORT.md)。最新只读现场记录返回 `bindings: []`；候选模型目录可读，但订阅接口403，账号settings中的standard和空entitlements不能证明Workers Free，也未验证账号剩余额度/存储免费边界。**真实Workers AI调用为0，没有新增生产绑定、credits、付费升级或后端部署。** [早期只读记录](evidence/2026-10-27-workers-ai-planning-recon.json) 与 [实施计划](superpowers/plans/2026-10-27-realtime-workers-ai.md) 不构成上线证明。
+生产已验收基线仍为静态4.0.0。[草稿PR #14](https://github.com/ct1150/wending/pull/14) 未合并、未部署；`65c3d0f`最终源码独立复核已通过，I1—I4/R1/M3均已处理；同树远端 `1322aa6` 的最终代码CI40547281694通过539项测试、117项语法检查及13模块打包。实际构建SHA与摘要见 [QA](QA_REPORT.md)。最新只读现场记录返回 `bindings: []`；候选模型目录可读，但订阅接口403，账号settings中的standard和空entitlements不能证明Workers Free，也未验证账号剩余额度/存储免费边界。**真实Workers AI调用为0，没有新增生产绑定、credits、付费升级或后端部署。** [早期只读记录](evidence/2026-10-27-workers-ai-planning-recon.json) 与 [实施计划](superpowers/plans/2026-10-27-realtime-workers-ai.md) 不构成上线证明。
 
 ### 受控产物与身份
 
@@ -35,9 +35,19 @@ SOURCE_COMMIT=完整40位已审提交 npm run build:gateway
 5. 账号与模型验收通过后，才可审查启用配置/白名单，并在预留预算内检查实际opening及一次choice→Workers AI→校验→保存→刷新续接。死亡与人为降低应用额度的暂停验证不另调用模型、不耗尽账号免费量。整分支release、旧版回归和独立审查也必须先通过。
 6. 最终记录前端源码SHA/HTML摘要、Cloudflare实际部署ID/版本/流量、backend清单摘要、协议/规则/提示版本、实际模型和免费用量证据。`/healthz`只证明当前HTML身份，不能替代后端部署和模型验收。当前这些生产新增证据仍未取得。
 
+### 已通过源码复核的修复与兼容要求
+
+本轮新出生的V5/CV4快照增加显式、经过校验且纳入状态哈希的 `relationshipVersion:1`。累计数值关系采用永久索引记录，按当前/返回人物恢复有界工作集；规则收据、上下文、提交和流式重放必须使用同一权威数值。不得把整个终生关系表塞进每个活动快照，或让模型关系文案覆盖规则累计值。
+
+未带标记的未发布V5档案继续原来已记录的历史、pending、哈希与关系语义，不自动迁移、不追补旧实现已经遗失的累计关系。支持该标记的前端与后端校验器必须配套发布；回滚需保留兼容标记/永久关系记录和数据库v2的读取器。旧v1—v4 localStorage路径不变。
+
+关系记录复用现有memory版本化存储/索引，不新增数据库结构版本。对修复前已经保存的无效姓名opening，仅保留可导出的原档和原身份；如需替换，必须走用户明确选择的有效备份导入流程。本轮没有自动改名、重掷、重置或身份重写迁移。
+
+同批修复还包含服务器明确的provider完成分类、跨requestId的会话级调用租约，以及出生持久化前的实际上下文预检。I3补充修复另以有界 `denied_admissions` 表保留未预留证明，绑定认证会话与请求/载荷；明确重试才可复用同一attempt，成功预留原子移除证明。该表与已预留调用账本分离，每会话最多120条并随会话到期清理；容量满不能记录时返回 `ADMISSION_RECORD_LIMIT`，可保持暂停至正常会话到期，不能通过删账或改身份自动修复。该补充修复已通过独立审查及最终539项代码CI；实际账号/模型和部署门禁仍须单独通过。
+
 ### 本地验证与回滚
 
-固定开发依赖Miniflare `4.20260730.0`（Node>=22）和workerd `2026-07-30`；`node tests/backend-runtime.test.js`在真正本地workerd启动全部打包模块，使用 `useSQLite:true` 及临时持久化目录，重启后检查幂等重放和未知用量保守占用。测试拦截全部Worker出站请求：静态渠道返回302时保留内嵌HTML且不跟随重定向；不存在真实AI绑定、账户或远端调用。`0a5f0ab`本地构建包含13模块，具体清单与HTML摘要已记录，但尚无对应Cloudflare部署版本。原单模块网关fixture仍通过。详细范围见 [QA](QA_REPORT.md)。
+固定开发依赖Miniflare `4.20260730.0`（Node>=22）和workerd `2026-07-30`；`node tests/backend-runtime.test.js`在真正本地workerd启动全部打包模块，使用 `useSQLite:true` 及临时持久化目录，重启后检查幂等重放和未知用量保守占用。测试拦截全部Worker出站请求：静态渠道返回302时保留内嵌HTML且不跟随重定向；不存在真实AI绑定、账户或远端调用。`65c3d0f`最终源码本地构建包含13模块，具体清单与HTML摘要已记录，但尚无对应Cloudflare部署版本。原单模块网关fixture仍通过。详细范围见 [QA](QA_REPORT.md)。
 
 **不要用带AI绑定的 `wrangler dev` 作为“纯本地AI测试”。** Cloudflare文档说明Workers AI模型在本地开发中仍使用远端推理；本项目只用上述无AI绑定的Miniflare harness。[官方本地开发说明](https://developers.cloudflare.com/workers/local-development/) · [Miniflare模块/SQLite/出站拦截API](https://github.com/cloudflare/workers-sdk/blob/main/packages/miniflare/README.md)
 

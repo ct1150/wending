@@ -1,6 +1,6 @@
 # Workers AI 实时剧情接入档案
 
-核验日期：2026-10-27。**当前状态：本地准备完成；真实免费边界与模型能力未验收，实时推理关闭。** 没有部署 AI binding，没有执行真实模型调用，也没有升级套餐、购买 credits 或修改远程资源。
+核验日期：2026-10-27（UTC）。**当前状态：本地准备完成；真实免费边界与模型能力未验收，实时推理关闭。** 没有部署 AI binding，没有执行真实模型调用，也没有升级套餐、购买 credits 或修改远程资源。
 
 ## 实际证据与阻塞
 
@@ -8,7 +8,7 @@
 
 | 项目 | 已观察结果 | 能证明什么 |
 | --- | --- | --- |
-| 账户 subscriptions | HTTP 403；当前 OAuth 权限不足，需要具有 Billing Read 的 API token | 无法判断实际 Free/Paid 套餐；不能开启推理 |
+| 账户 subscriptions | 2026-10-27 17:03:58.150 UTC再次只读查询仍HTTP 403；此接口没有可用OAuth scope，需要Billing Read或Write API token，重连OAuth不能解决 | 无法判断实际 Free/Paid 套餐；不能开启推理 |
 | workers/account-settings | `standard` | 不是 Free/Paid 订阅证明 |
 | 既有 Worker binding | 规划只读检查为 `[]` | 当时没有 AI binding；不是当前临时环境验证 |
 | 候选模型目录 | 规划检查 HTTP 200 | 仅证明目录可读，不证明调用权限、JSON Mode 或剩余免费额度 |
@@ -58,9 +58,18 @@
 
 这是保守的本地估算，**仍需真实 probe 确认模型的 `max_tokens` 覆盖思考与可见输出，以及框架开销没有超过上界**，不能把这个估算视为套餐硬限制。若观察到实际超过预留，账本阻止后续实验。12 KiB 输入、1536 输出、单消息时预留 109 Neurons；因此满上限样本可能最多只能做 7 次，不能为了凑足 10 次越过 800。
 
-实验账本不按日期清零，不在结算后退还预留。超时或异常的实际消耗为 `null`，预留不变。`usage.prompt_tokens` 等 token 计数不等于实际记账 Neurons；probe 仅保存计数，`actualNeurons` 保持 `null`，由可信账户账单核对后再结算。生产侧已实现独立SQLite Durable Object：同一namespace固定 `story-budget-v1-global`，短事务登记预留、结果重放与请求关联；账本独立于结果缓存，未明确结算的预留跨UTC日继续保守占用。迟到结算归原日，清缓存/会话到期不释放未知费用。完整请求上限的生产预留为111 Neurons；已完成但无实际Neuron证据的调用保留完整预留于原日，超时/真正未知结果才持续跨日占用。包含 `NEXT_CONTEXT_TOO_LARGE` 的确定拒绝通过HTTP保留类型并结算complete，不退款、不伪造actual用量。本纯函数实验账本不替代DO；本地workerd/SQLite已验证，实际账号namespace与部署仍未验收。
+实验账本不按日期清零，不在结算后退还预留。超时或异常的实际消耗为 `null`，预留不变。`usage.prompt_tokens` 等 token 计数不等于实际记账 Neurons；probe 仅保存计数，`actualNeurons` 保持 `null`，由可信账户账单核对后再结算。生产侧已实现独立SQLite Durable Object：同一namespace固定 `story-budget-v1-global`，短事务登记预留、结果重放与请求关联；账本独立于结果缓存，未明确结算的预留跨UTC日继续保守占用。迟到结算归原日，清缓存/会话到期不释放未知调用预留。完整请求上限的生产预留为111 Neurons；SQLite中的charge表示保守额度记账，不是货币收费，也不是已知实测Neurons。实际用量未测时保持null；已完成但无实际Neuron证据的调用保留完整预留于原日，超时/真正未知结果才持续跨日占用。包含 `NEXT_CONTEXT_TOO_LARGE` 的确定拒绝通过HTTP保留类型并结算complete，不退还预留、不伪造actual用量。本纯函数实验账本不替代DO；本地workerd/SQLite已验证，实际账号namespace与部署仍未验收。
 
 受控 probe 的余额检查采用明确的保守方案：**全部现有实验预留 + 新预留不得超过可信余额快照**。例如快照为 40、前一次预留 30 且用量未知，下一次只能再预留最多 10，不能再次预留 30。即使后来刷新快照、先前调用已结算，仍扣除整个实验账本的预留；可能重复扣减、提前停止，但不把该差额声称为真实账户余额。不设置快照 watermark，不通过清空、复制或重建账本释放这部分承诺。该扣减只用于 probe，不给未来生产玩法增加人工每 5 分钟确认的要求。
+
+## 已通过源码复核的服务端合同（最终代码CI通过）
+
+供应商结果新增明确的可信 `accountingStatus` 完成/未知分类，HTTP只向客户端呈现允许的安全错误码。记账不再依据公开错误码是否落在另一份字符串列表中：机械事实、死亡/身份、危险文本、重复场景、引用、编译等确定完成的校验拒绝都保留原UTC日完整预留且actualNeurons=null，不退还预留，也不作为永久unknown；真正超时/传输未知继续保守跨日占用。该分类为服务器内部信息，浏览器无权声明。
+
+同一认证会话的所有requestId共享一个SQLite事务保护的30秒有效调用租约。重复attempt重放不增加调用；不同会话在全局预算内独立申请；完成或超时转换可以释放租约，但超时转unknown的旧预留不能释放。租约限制不宣称超时后的外部推理已经停止，也不提供外部exactly-once保证。本地并发HTTP、重启及多类真实provider校验路径的fixture专项通过；最终源码独立复核已通过，最终539项完整代码CI通过，生产仍关闭。
+
+
+未获准调用使用独立、有界的SQLite `denied_admissions` 证据表，不创建已预留attempt或调用provider。证明绑定已认证session/attempt/request及payload/context hash；只有存在正向证明且没有调用预留承诺时才返回 `ATTEMPT_NOT_ADMITTED`，普通缺缓存、已预留调用墓碑和不存在的祖先不能冒充未调用。浏览器核对三种身份和暂停状态后，仅在用户明确重试时复用同一已持久attempt及原retryOf；刷新只查询，成功预留原子删除证明。每会话证明上限沿用尝试上限、最多120条，保留到会话到期；满额时新证明失败关闭为 `ADMISSION_RECORD_LIMIT`，可暂停至正常会话过期，不自动清身份或已预留调用记录。实际client/session/HTTP/SQLite补充专项60项及最后8项定向检查通过，独立源码复核已通过，最终代码CI通过。
 
 ## 受控 probe 操作
 
