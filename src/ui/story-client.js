@@ -25,7 +25,13 @@ export function createStoryClient({fetch:fetcher=globalThis.fetch,location=globa
   }
   async function capabilities(){try{const value=await json('capabilities');if(typeof value.available!=='boolean'||value.status!==(value.available?'ready':'paused')||!value.limits||Object.entries(LIMITS).some(([key,max])=>!Number.isSafeInteger(value.limits[key])||value.limits[key]<=0||value.limits[key]>max))throw error('PROTOCOL_MISMATCH');if(value.available&&value.errorCode!==null)throw error('PROTOCOL_MISMATCH');limits={...value.limits};return value;}catch(e){return {protocolVersion:1,available:false,status:'paused',errorCode:e.code};}}
   async function createSession(){const value=await json('session',{protocolVersion:1});if(value.status!=='ready')throw error(value.errorCode||'SESSION_UNAVAILABLE');if(!identifier(value.sessionRef)||!Number.isSafeInteger(value.expiresAt))throw error('PROTOCOL_MISMATCH');return value;}
-  function turn(value,pending,attempt){if(!['ready','paused','rejected'].includes(value.status)||typeof value.errorCode!=='string'&&value.errorCode!==null)throw error('PROTOCOL_MISMATCH');if(value.status==='ready'&&(value.errorCode!==null||value.requestId!==pending.identity.requestId||value.attemptId!==attempt.id||value.sessionRef!==attempt.sessionRef||!value.scene||value.retry!==null))throw error('RESPONSE_IDENTITY_MISMATCH');return value;}
+  function turn(value,pending,attempt) {
+    if(!['ready','paused','rejected'].includes(value.status)||typeof value.errorCode!=='string'&&value.errorCode!==null)throw error('PROTOCOL_MISMATCH');
+    const matches=value.requestId===pending.identity.requestId&&value.attemptId===attempt.id&&value.sessionRef===attempt.sessionRef;
+    if(value.errorCode==='ATTEMPT_NOT_ADMITTED'&&(value.status!=='paused'||!matches))throw error('RESPONSE_IDENTITY_MISMATCH');
+    if(value.status==='ready'&&(value.errorCode!==null||!matches||!value.scene||value.retry!==null))throw error('RESPONSE_IDENTITY_MISMATCH');
+    return value;
+  }
   async function requestTurn(pending,context,attempt){if(new TextEncoder().encode(JSON.stringify(context)).length>limits.maxContextBytes)throw error('REQUEST_TOO_LARGE');return turn(await json('turn',{context,attempt}),pending,attempt);}
   async function getTurn(pending,attempt){return turn(await json('turn/'+encodeURIComponent(pending.identity.requestId)+'?attemptId='+encodeURIComponent(attempt.id)),pending,attempt);}
   return {capabilities,createSession,requestTurn,getTurn};

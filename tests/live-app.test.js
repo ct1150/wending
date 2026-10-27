@@ -5,7 +5,7 @@ import { sha256, stateHash } from '../src/game/cultivation/live/identity.js';
 const sessionModule = await import('../src/ui/live-session.js').catch(()=>null);
 const clientModule = await import('../src/ui/story-client.js').catch(()=>null);
 const copy=x=>structuredClone(x);
-function archiveFixture(){let row=null;return {fail:false,async load(){return copy(row);},async create({state,pending}){if(row)throw Error('conflict');row={archiveId:'a',state,pending,attempt:null,pause:null};return copy(row);},async prepare(p){if(row.pending||p.identity.baseRevision!==row.state.revision)throw Error('conflict');row.pending=copy(p);return copy(row);},async setAttempt({requestId,expectedAttemptId,attempt,pause}){if(row.pending?.identity.requestId!==requestId||(row.attempt?.id??null)!==expectedAttemptId)throw Error('conflict');row.attempt=copy(attempt);row.pause=pause;return copy(row);},async commit({expectedRevision,nextState,requestId,expectedAttemptId=null}){if(this.fail)throw Error('quota');if(row.state.revision!==expectedRevision||row.pending?.identity.requestId!==requestId||(row.attempt?.id??null)!==expectedAttemptId)throw Error('conflict');row={...row,state:copy(nextState),pending:null,attempt:null,pause:null};return copy(row);},async readRelated(){return [];},async readStoryRecords(){return {records:[],openTotal:0};}};}
+function archiveFixture(){let row=null;return {fail:false,async load(){return copy(row);},async create({state,pending}){if(row)throw Error('conflict');row={archiveId:'a',state,pending,attempt:null,pause:null};return copy(row);},async prepare(p){if(p.identity.baseRevision!==row.state.revision||row.pending&&JSON.stringify(row.pending)!==JSON.stringify(p))throw Error('conflict');row.pending=copy(p);return copy(row);},async setAttempt({requestId,expectedAttemptId,attempt,pause}){if(row.pending?.identity.requestId!==requestId||(row.attempt?.id??null)!==expectedAttemptId)throw Error('conflict');row.attempt=copy(attempt);row.pause=pause;return copy(row);},async commit({expectedRevision,nextState,requestId,expectedAttemptId=null}){if(this.fail)throw Error('quota');if(row.state.revision!==expectedRevision||row.pending?.identity.requestId!==requestId||(row.attempt?.id??null)!==expectedAttemptId)throw Error('conflict');row={...row,state:copy(nextState),pending:null,attempt:null,pause:null};return copy(row);},async readRelated(){return [];},async readStoryRecords(){return {records:[],openTotal:0};}};}
 function scene(context){const p=context.namespace+':t'+context.identity.turnId+':';return {id:p+'s:one',title:'山路',location:'山间',blocks:[{kind:'narration',text:'你望见松影。'+context.identity.turnId}],entities:[],choices:[{id:p+'c:rest',label:'歇息',intent:'rest',targetId:'self',stake:'low',approach:'recover'},{id:p+'c:train',label:'修行',intent:'practice',targetId:'self',stake:'low',approach:'steady'}],memoryDeltas:[]};}
 function fixture(){assert.ok(sessionModule,'session module exists');const archive=archiveFixture(),calls={post:0,get:0,session:0};let result=null,hold=null;const client={async capabilities(){return {available:true};},async createSession(){calls.session++;return {sessionRef:'session-'+calls.session};},async requestTurn(p,c,a){calls.post++;if(hold)await hold;result={status:'ready',requestId:p.identity.requestId,attemptId:a.id,sessionRef:a.sessionRef,scene:scene(c)};return result;},async getTurn(p,a){calls.get++;return result??{status:'paused',errorCode:'SESSION_UNAVAILABLE',requestId:p.identity.requestId,attemptId:a.id,sessionRef:a.sessionRef};}};return {archive,client,calls,make:()=>sessionModule.createLiveSession({archive,client}),setHold(v){hold=v;},clearResult(){result=null;}};}
 test('birth and pending opening are durable before HTTP; refresh queries and never rerolls',async()=>{const f=fixture();let release;f.setHold(new Promise(r=>release=r));const s=f.make(),starting=s.start({runId:'run',seed:42});while(!f.calls.post)await new Promise(r=>setTimeout(r,0));const before=await f.archive.load();assert.equal(before.state.revision,0);assert.equal(s.view().state.revision,0);const refreshed=f.make();await refreshed.resume();assert.equal(f.calls.post,1);assert.equal(f.calls.get,1);assert.deepEqual(refreshed.view().state.life.birth,before.state.life.birth);release();await starting;assert.equal(s.view().state.revision,1);});
@@ -153,4 +153,64 @@ test('native session preserves bounded canonical relations through omission, ref
   });
   assert.equal(result.cachedRetries,1);assert.equal(result.sawCanonical,true);assert.deepEqual(result.omitted,{});assert.equal(result.positiveReturned,3);assert.equal(result.positiveReceipt,3);assert.equal(result.negativeReturned,-1);assert.equal(result.negativeReceipt,-1);assert.ok(result.maxRelations<=1);assert.equal(result.roundTrip,true);assert.equal(result.positiveImported,6);assert.equal(result.negativeImported,-2);assert.equal(result.positiveFinalReceipt,3);assert.equal(result.negativeFinalReceipt,-1);
   assert.deepEqual(result.records.filter(r=>r.kind==='ruleRelation').map(r=>r.value).sort((a,b)=>a-b),[-3,9]);
+});
+
+test('actual client session retries proven unadmitted attempts after lease or daily-budget denial and refresh',async t=>{
+  const {DatabaseSync}=await import('node:sqlite');
+  const {createStoryApi,TURN_RESERVATION_NEURONS}=await import('../src/worker/story-api.js');
+  const {createBudgetCoordinator}=await import('../src/worker/story-budget.js');
+  for(const scenario of ['lease','prior-unknown','daily-budget','expired-session'])await t.test(scenario,async t=>{
+    const db=new DatabaseSync(':memory:');t.after(()=>db.close());
+    const storage={sql:{exec(q,...args){return {toArray:()=>db.prepare(q).all(...args)};}},transactionSync(fn){db.exec('BEGIN IMMEDIATE');try{const value=fn();db.exec('COMMIT');return value;}catch(error){db.exec('ROLLBACK');throw error;}}};
+    let now=Date.parse('2026-10-27T10:00:00Z'),cookie='',release,entered,calls=0,bCalls=0;
+    const held=new Promise(resolve=>entered=resolve),bodies=[];
+    const makeBudget=()=>createBudgetCoordinator({storage,now:()=>now,limits:scenario==='daily-budget'?{dailyNeurons:TURN_RESERVATION_NEURONS}:{}});
+    let budget=makeBudget();
+    const api=createStoryApi({budget:new Proxy({}, {get:(_,method)=>(...args)=>budget[method](...args)}),config:{readiness:()=>({modelId:'fixture'})},provider:async(a,p,c)=>{
+      calls++;
+      if(c.identity.runId==='admission-a'&&scenario!=='daily-budget'){entered();await new Promise(resolve=>release=resolve);}
+      if(c.identity.runId==='admission-b'&&++bCalls===1&&scenario==='prior-unknown')return {status:'paused',errorCode:'PROVIDER_TIMEOUT',accountingStatus:'unknown'};
+      return {status:'ready',accountingStatus:'complete',scene:scene(c)};
+    }});
+    const client=clientModule.createStoryClient({location:{protocol:'https:'},fetch:async(path,options)=>{
+      if(options.body&&path.endsWith('/turn'))bodies.push(JSON.parse(options.body));
+      const response=await api.fetch(new Request('https://game.example'+path,{...options,headers:{...options.headers,origin:'https://game.example','cf-connecting-ip':'192.0.2.8',...(cookie?{cookie}:{})}}));
+      if(response.headers.has('set-cookie'))cookie=response.headers.get('set-cookie').split(';')[0];return response;
+    }});
+    const a=archiveFixture(),b=archiveFixture();let controller=sessionModule.createLiveSession({archive:b,client});
+    if(scenario==='prior-unknown')await controller.start({runId:'admission-b',seed:42});
+    const first=sessionModule.createLiveSession({archive:a,client}).start({runId:'admission-a',seed:42});
+    if(scenario==='daily-budget')await first;else await held;
+    if(scenario==='prior-unknown')await controller.retry();else await controller.start({runId:'admission-b',seed:42});
+    assert.equal(controller.view().errorCode,scenario==='daily-budget'?'DAILY_BUDGET_EXHAUSTED':'ATTEMPT_IN_PROGRESS');
+    const blocked=await b.load(),deniedBody=bodies.at(-1),beforeCalls=calls;
+    assert.equal(db.prepare('SELECT COUNT(*) AS n FROM ledger WHERE attempt_id=?').get(blocked.attempt.id).n,0);
+    budget=makeBudget();controller=sessionModule.createLiveSession({archive:b,client});await controller.resume();assert.equal(calls,beforeCalls);
+    await controller.retry();assert.equal(calls,beforeCalls);assert.deepEqual((await b.load()).attempt,blocked.attempt);
+    if(scenario!=='daily-budget'){release();await first;}
+    if(scenario==='daily-budget')now=Date.parse('2026-10-28T00:00:01Z');
+    if(scenario==='expired-session'){now+=2*86400000;budget.cleanup();}
+    await controller.retry();
+    assert.equal(controller.view().status,'ready',controller.view().errorCode);assert.equal(controller.view().state.revision,1);assert.equal(controller.view().pending,null);
+    assert.deepEqual(controller.view().state.life.birth,blocked.state.life.birth);assert.equal(controller.view().state.rng,blocked.state.rng);
+    assert.deepEqual(bodies.at(-1).context,deniedBody.context);
+    if(scenario==='expired-session')assert.deepEqual(bodies.at(-1).attempt.retryOf,{attemptId:blocked.attempt.id,sessionRef:blocked.attempt.sessionRef});
+    else assert.deepEqual(bodies.at(-1).attempt,deniedBody.attempt);
+    assert.equal(bCalls,scenario==='prior-unknown'?2:1);
+    const bRows=db.prepare('SELECT * FROM ledger WHERE request_id=? ORDER BY rowid').all(blocked.pending.identity.requestId);
+    assert.equal(bRows.length,scenario==='prior-unknown'?2:1);
+    if(scenario==='prior-unknown'){assert.equal(bRows[0].status,'unknown');assert.equal(bRows[0].charge,TURN_RESERVATION_NEURONS);assert.equal(bRows[1].retry_attempt_id,bRows[0].attempt_id);}
+    const completedCalls=calls;await controller.retry();assert.equal(calls,completedCalls);
+    if(scenario!=='expired-session')assert.equal((await client.requestTurn(blocked.pending,deniedBody.context,deniedBody.attempt)).status,'ready');
+    assert.equal(calls,completedCalls);assert.equal(db.prepare('SELECT COUNT(*) AS n FROM denied_admissions').get().n,0);
+  });
+});
+
+test('client rejects not-admitted proof for another attempt or credential session',async()=>{
+  const pending={identity:{requestId:'request'}},attempt={id:'attempt',sessionRef:'session',retryOf:null};
+  for(const change of [{requestId:'other'},{attemptId:'other'},{sessionRef:'other'},{status:'rejected'}]){
+    const value={protocolVersion:1,status:'paused',errorCode:'ATTEMPT_NOT_ADMITTED',requestId:'request',attemptId:'attempt',sessionRef:'session',...change};
+    const client=clientModule.createStoryClient({location:{protocol:'https:'},fetch:async()=>Response.json(value)});
+    await assert.rejects(client.getTurn(pending,attempt),{code:'RESPONSE_IDENTITY_MISMATCH'});
+  }
 });

@@ -74,21 +74,30 @@ export function createLiveSession({archive,client,engine=defaultEngine,onChange=
     emit();
     return true;
   }
-  async function generate(row) {
+  async function generate(row,{reuseAttempt=false}={}) {
     if(await death(row))return;
     const capability=await client.capabilities();
     if(!capability.available)throw fault(capability.errorCode||'SERVICE_UNAVAILABLE');
     const context=await contextFor(row);
     const session=await client.createSession();
     const previous=row.attempt;
-    const attempt={id:id(),sessionRef:session.sessionRef,retryOf:previous?{attemptId:previous.id,sessionRef:previous.sessionRef}:null};
-    // CAS precedes POST: a losing tab must not invoke inference.
-    loaded=await archive.setAttempt({
-      runId:row.state.runId,
-      requestId:row.pending.identity.requestId,
-      expectedAttemptId:previous?.id??null,
-      attempt,
-    });
+    let attempt;
+    if(reuseAttempt&&previous?.sessionRef===session.sessionRef) {
+      // The authenticated server proved this exact attempt was never reserved.
+      // Re-check its durable pending CAS; a refresh never creates new ancestry.
+      loaded=await archive.prepare(row.pending);
+      if(JSON.stringify(loaded.attempt)!==JSON.stringify(previous))throw fault('ARCHIVE_ATTEMPT_CONFLICT');
+      attempt=previous;
+    } else {
+      attempt={id:id(),sessionRef:session.sessionRef,retryOf:previous?{attemptId:previous.id,sessionRef:previous.sessionRef}:null};
+      // CAS precedes POST: a losing tab must not invoke inference.
+      loaded=await archive.setAttempt({
+        runId:row.state.runId,
+        requestId:row.pending.identity.requestId,
+        expectedAttemptId:previous?.id??null,
+        attempt,
+      });
+    }
     status='pending';
     errorCode=null;
     emit();
@@ -158,6 +167,10 @@ export function createLiveSession({archive,client,engine=defaultEngine,onChange=
       if(row.attempt) {
         const result=await client.getTurn(row.pending,row.attempt);
         if(await apply(row,result))return;
+        if(result.errorCode==='ATTEMPT_NOT_ADMITTED') {
+          await generate(row,{reuseAttempt:true});
+          return;
+        }
         if(result.errorCode==='ATTEMPT_IN_PROGRESS'&&result.retry?.afterMs>0)throw fault('ATTEMPT_IN_PROGRESS');
       }
       await generate(row);

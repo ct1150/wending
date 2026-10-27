@@ -67,7 +67,7 @@ export function createStoryApi({provider=generateScene,budget,config={}}={}){
       // Check duplicate payload before readiness, so cached results remain readable
       // when inference is disabled. reserve never adds another existing attempt.
       let profile;
-      if(lookup.code!=='ATTEMPT_NOT_FOUND'){
+      if(!['ATTEMPT_NOT_FOUND','ATTEMPT_NOT_ADMITTED'].includes(lookup.code)){
         const repeated=await callBudget('reserve',reservationInput);
         return json(repeated.kind==='replay'?repeated.result:envelope(repeated.code==='ATTEMPT_PAYLOAD_MISMATCH'?'rejected':'paused',repeated.code,identity));
       }

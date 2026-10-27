@@ -77,3 +77,42 @@ test('restart timeout lookup releases active lease and permits explicit same-req
   assert.equal(restarted.reserve(request('a2',{retryOf:{sessionRef:'s1',attemptId:'a1'}})).kind,'reserved');
   const rows=f.disk.sql.exec('SELECT status,charge FROM ledger ORDER BY rowid').toArray();assert.equal(rows[0].status,'unknown');assert.equal(rows[0].charge,40);assert.equal(rows[1].charge,40);
 });
+
+test('not-admitted proofs bind identity and payload, survive restart, and cannot override a charged tombstone',()=>{
+  const f=fixture();create(f.b);f.b.reserve(request());
+  const blocked=request('blocked',{requestId:'other',payloadHash:'blocked-body',contextHash:'blocked-context'});
+  assert.equal(f.b.reserve(blocked).code,'ATTEMPT_IN_PROGRESS');
+  assert.equal(f.make().lookup(blocked).code,'ATTEMPT_NOT_ADMITTED');
+  assert.equal(f.b.lookup({...blocked,tokenHash:'wrong'}).code,'SESSION_UNAVAILABLE');
+  assert.equal(f.b.lookup({...blocked,requestId:'wrong'}).code,'ATTEMPT_NOT_FOUND');
+  for(const change of [{payloadHash:'changed'},{contextHash:'changed'},{requestId:'changed'}])assert.equal(f.b.reserve({...blocked,...change}).code,'ATTEMPT_PAYLOAD_MISMATCH');
+  assert.equal(f.disk.sql.exec('SELECT COUNT(*) AS n FROM ledger').toArray()[0].n,1);
+  f.b.settle({sessionRef:'s1',attemptId:'a1',status:'unknown',result:{status:'paused'}});
+  assert.equal(f.b.reserve(blocked).kind,'reserved');
+  assert.equal(f.disk.sql.exec('SELECT COUNT(*) AS n FROM denied_admissions').toArray()[0].n,0);
+  f.disk.sql.exec('DELETE FROM attempts WHERE attempt_id=?','blocked').toArray();
+  assert.equal(f.b.lookup(blocked).code,'ATTEMPT_NOT_FOUND');
+  // Even stale/corrupt denial metadata cannot conceal a real charged commitment.
+  f.disk.sql.exec('INSERT INTO denied_admissions VALUES(?,?,?,?,?,?)','s1','blocked','other','blocked-body','blocked-context',f.now+1000).toArray();
+  assert.equal(f.b.lookup(blocked).code,'ATTEMPT_NOT_FOUND');
+  assert.equal(f.b.reserve({...blocked,attemptId:'invented',retryOf:{sessionRef:'s1',attemptId:'never-recorded'}}).code,'RETRY_INVALID');
+});
+
+test('denial proof capacity preserves existing retries without charge and expires only with session',()=>{
+  const f=fixture();const b=createBudgetCoordinator({storage:f.disk,now:()=>f.now,limits:{dailyNeurons:100,sessionAttemptsPerDay:2}});create(b);b.reserve(request());
+  const second=request('second',{requestId:'second'}),third=request('third',{requestId:'third'});
+  assert.equal(b.reserve(second).code,'ATTEMPT_IN_PROGRESS');assert.equal(b.reserve(third).code,'ATTEMPT_IN_PROGRESS');
+  assert.equal(b.reserve(request('overflow',{requestId:'overflow'})).code,'ADMISSION_RECORD_LIMIT');
+  assert.equal(b.lookup(request('overflow',{requestId:'overflow'})).code,'ATTEMPT_NOT_FOUND');
+  assert.equal(f.disk.sql.exec('SELECT COUNT(*) AS n FROM denied_admissions').toArray()[0].n,2);
+  assert.equal(f.disk.sql.exec('SELECT SUM(charge) AS n FROM ledger').toArray()[0].n,40);
+  b.settle({sessionRef:'s1',attemptId:'a1',status:'complete',result:{status:'ready'}});
+  assert.equal(b.reserve(second).kind,'reserved');
+  assert.equal(f.disk.sql.exec('SELECT COUNT(*) AS n FROM denied_admissions').toArray()[0].n,1);
+  b.settle({sessionRef:'s1',attemptId:'second',status:'complete',result:{status:'ready'}});
+  f.setNow('2026-10-28T00:00:01Z');b.cleanup();assert.equal(b.lookup(third).code,'ATTEMPT_NOT_ADMITTED');
+  assert.equal(b.reserve(third).kind,'reserved');
+  assert.equal(b.reserve(request('last',{requestId:'last'})).code,'ATTEMPT_IN_PROGRESS');
+  f.setNow('2026-10-28T12:00:01Z');b.cleanup();assert.equal(f.disk.sql.exec('SELECT COUNT(*) AS n FROM denied_admissions').toArray()[0].n,0);
+  assert.equal(b.lookup(third).code,'SESSION_UNAVAILABLE');
+});

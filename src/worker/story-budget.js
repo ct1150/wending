@@ -14,6 +14,8 @@ export function createBudgetCoordinator({storage,now=Date.now,limits={}}){
   sql('CREATE INDEX IF NOT EXISTS attempts_request ON attempts(session_ref,request_id)');
   sql('CREATE TABLE IF NOT EXISTS ledger (session_ref TEXT NOT NULL, attempt_id TEXT NOT NULL, request_id TEXT NOT NULL, payload_hash TEXT NOT NULL, context_hash TEXT NOT NULL, created INTEGER NOT NULL, retry_session_ref TEXT, retry_attempt_id TEXT, outcome TEXT, day TEXT NOT NULL, reserved INTEGER NOT NULL, charge REAL NOT NULL, status TEXT NOT NULL, actual REAL, PRIMARY KEY(session_ref,attempt_id))');
   sql('CREATE INDEX IF NOT EXISTS ledger_request ON ledger(session_ref,request_id)');
+  // Positive evidence of a policy denial, separate from charged commitments.
+  sql('CREATE TABLE IF NOT EXISTS denied_admissions (session_ref TEXT NOT NULL, attempt_id TEXT NOT NULL, request_id TEXT NOT NULL, payload_hash TEXT NOT NULL, context_hash TEXT NOT NULL, expires INTEGER NOT NULL, PRIMARY KEY(session_ref,attempt_id))');
   sql('CREATE TABLE IF NOT EXISTS counters (kind TEXT NOT NULL, subject TEXT NOT NULL, bucket TEXT NOT NULL, count INTEGER NOT NULL, PRIMARY KEY(kind,subject,bucket))');
   sql('CREATE TABLE IF NOT EXISTS quota (day TEXT PRIMARY KEY)');
   const tx=fn=>storage.transactionSync(fn);
@@ -33,13 +35,31 @@ export function createBudgetCoordinator({storage,now=Date.now,limits={}}){
     getSession(input){const found=session(input,now());return found?{kind:'session',sessionRef:found.ref,expiresAt:found.expires}:denied('SESSION_UNAVAILABLE');},
     admit({ipHash}){if(!validText(ipHash))return denied('REQUEST_INVALID');return tx(()=>{const bucket=String(Math.floor(now()/3600000));if(counter('request',ipHash,bucket)>=policy.ipRequestsPerHour)return denied('IP_REQUEST_LIMIT');increment('request',ipHash,bucket);return {kind:'admitted'};});},
     createSession({sessionRef,tokenHash,ipHash}){if(![sessionRef,tokenHash,ipHash].every(validText))return denied('REQUEST_INVALID');return tx(()=>{const time=now(),bucket=String(Math.floor(time/3600000));if(counter('session',ipHash,bucket)>=policy.ipSessionsPerHour)return denied('IP_SESSION_LIMIT');if(sql('SELECT ref FROM sessions WHERE ref=? OR token_hash=?',sessionRef,tokenHash).length)return denied('SESSION_CONFLICT');increment('session',ipHash,bucket);sql('INSERT INTO sessions(ref,token_hash,expires) VALUES(?,?,?)',sessionRef,tokenHash,time+policy.sessionMs);return {kind:'session',sessionRef,expiresAt:time+policy.sessionMs};});},
-    lookup(input){return tx(()=>{if(!session(input,now()))return denied('SESSION_UNAVAILABLE');const row=entry(input.sessionRef,input.attemptId);return !row||row.request_id!==input.requestId?denied('ATTEMPT_NOT_FOUND'):replay(row);});},
+    lookup(input){return tx(()=>{
+      if(!session(input,now()))return denied('SESSION_UNAVAILABLE');
+      const row=entry(input.sessionRef,input.attemptId);
+      if(row)return row.request_id===input.requestId?replay(row):denied('ATTEMPT_NOT_FOUND');
+      // Cache loss or a charged tombstone must never become not-admitted proof.
+      const charged=sql('SELECT 1 FROM ledger WHERE session_ref=? AND attempt_id=?',input.sessionRef,input.attemptId).length;
+      const proof=sql('SELECT request_id FROM denied_admissions WHERE session_ref=? AND attempt_id=? AND expires>?',input.sessionRef,input.attemptId,now())[0];
+      return denied(!charged&&proof?.request_id===input.requestId?'ATTEMPT_NOT_ADMITTED':'ATTEMPT_NOT_FOUND');
+    });},
     reserve(input){return tx(()=>{
       const time=now(),today=day(time),s=session(input,time);
       if(!s)return denied('SESSION_UNAVAILABLE');
       if(![input.attemptId,input.requestId,input.payloadHash,input.ipHash].every(validText)||!Number.isSafeInteger(input.reservedNeurons)||input.reservedNeurons<1||input.reservedNeurons>policy.dailyNeurons)return denied('RESERVATION_INVALID');
       const contextHash=input.contextHash??input.payloadHash;
       if(!validText(contextHash))return denied('RESERVATION_INVALID');
+      const admission=sql('SELECT * FROM denied_admissions WHERE session_ref=? AND attempt_id=?',s.ref,input.attemptId)[0];
+      if(admission&&(admission.payload_hash!==input.payloadHash||admission.context_hash!==contextHash||admission.request_id!==input.requestId))return denied('ATTEMPT_PAYLOAD_MISMATCH');
+      const notAdmitted=code=>{
+        if(!admission) {
+          const count=sql('SELECT COUNT(*) AS n FROM denied_admissions WHERE session_ref=?',s.ref)[0].n;
+          if(count>=policy.sessionAttemptsPerDay)return denied('ADMISSION_RECORD_LIMIT');
+          sql('INSERT INTO denied_admissions(session_ref,attempt_id,request_id,payload_hash,context_hash,expires) VALUES(?,?,?,?,?,?)',s.ref,input.attemptId,input.requestId,input.payloadHash,contextHash,s.expires);
+        }
+        return denied(code);
+      };
       const prior=entry(s.ref,input.attemptId);
       const priorCommitment=sql('SELECT * FROM ledger WHERE session_ref=? AND attempt_id=?',s.ref,input.attemptId)[0];
       if(priorCommitment&&(priorCommitment.payload_hash!==input.payloadHash||priorCommitment.request_id!==input.requestId||priorCommitment.context_hash!==contextHash))return denied('ATTEMPT_PAYLOAD_MISMATCH');
@@ -67,14 +87,15 @@ export function createBudgetCoordinator({storage,now=Date.now,limits={}}){
       // The active lease is session-wide; durable unknown accounting outlives it.
       // Expiry is a conservative timeout transition, never a refund or cleanup.
       sql("UPDATE ledger SET status='unknown' WHERE session_ref=? AND status='reserved' AND created<=?",s.ref,time-policy.pendingMs);
-      if(sql("SELECT 1 FROM ledger WHERE session_ref=? AND status='reserved' AND created>? LIMIT 1",s.ref,time-policy.pendingMs).length)return denied('ATTEMPT_IN_PROGRESS');
+      if(sql("SELECT 1 FROM ledger WHERE session_ref=? AND status='reserved' AND created>? LIMIT 1",s.ref,time-policy.pendingMs).length)return notAdmitted('ATTEMPT_IN_PROGRESS');
       // A foreign-session reference is accepted only for a request new to this
       // session. Never inspect that other session's result or private identity.
-      if(sql('SELECT day FROM quota WHERE day=?',today).length)return denied('FREE_QUOTA_EXHAUSTED');
-      if(counter('ipAttempt',input.ipHash,today)>=policy.ipAttemptsPerDay)return denied('IP_ATTEMPT_LIMIT');
-      if(counter('sessionAttempt',s.ref,today)>=policy.sessionAttemptsPerDay)return denied('SESSION_ATTEMPT_LIMIT');
+      if(sql('SELECT day FROM quota WHERE day=?',today).length)return notAdmitted('FREE_QUOTA_EXHAUSTED');
+      if(counter('ipAttempt',input.ipHash,today)>=policy.ipAttemptsPerDay)return notAdmitted('IP_ATTEMPT_LIMIT');
+      if(counter('sessionAttempt',s.ref,today)>=policy.sessionAttemptsPerDay)return notAdmitted('SESSION_ATTEMPT_LIMIT');
       const used=sql("SELECT COALESCE(SUM(charge),0) AS total FROM ledger WHERE day=? OR status IN ('reserved','unknown')",today)[0].total;
-      if(used+input.reservedNeurons>policy.dailyNeurons)return denied('DAILY_BUDGET_EXHAUSTED');
+      if(used+input.reservedNeurons>policy.dailyNeurons)return notAdmitted('DAILY_BUDGET_EXHAUSTED');
+      sql('DELETE FROM denied_admissions WHERE session_ref=? AND attempt_id=?',s.ref,input.attemptId);
       increment('ipAttempt',input.ipHash,today);increment('sessionAttempt',s.ref,today);
       sql('INSERT INTO attempts(session_ref,attempt_id,request_id,payload_hash,context_hash,created,expires,result) VALUES(?,?,?,?,?,?,?,NULL)',s.ref,input.attemptId,input.requestId,input.payloadHash,contextHash,time,s.expires);
       sql("INSERT INTO ledger(session_ref,attempt_id,request_id,payload_hash,context_hash,created,retry_session_ref,retry_attempt_id,day,reserved,charge,status,actual,outcome) VALUES(?,?,?,?,?,?,?,?,?,?,?,'reserved',NULL,NULL)",s.ref,input.attemptId,input.requestId,input.payloadHash,contextHash,time,input.retryOf?.sessionRef??null,input.retryOf?.attemptId??null,today,input.reservedNeurons,input.reservedNeurons);
@@ -94,7 +115,7 @@ export function createBudgetCoordinator({storage,now=Date.now,limits={}}){
       if(quotaExhausted)sql('INSERT OR IGNORE INTO quota(day) VALUES(?)',day(now()));
       return {kind:'settled'};
     });},
-    cleanup(){return tx(()=>{const time=now(),today=day(time);sql('DELETE FROM attempts WHERE expires<=?',time);sql('DELETE FROM sessions WHERE expires<=?',time);sql("DELETE FROM ledger WHERE day<? AND status='complete' AND NOT EXISTS (SELECT 1 FROM sessions WHERE sessions.ref=ledger.session_ref)",today);sql('DELETE FROM quota WHERE day<?',today);sql("DELETE FROM counters WHERE kind IN ('request','session') AND CAST(bucket AS INTEGER)<?",Math.floor(time/3600000)-1);sql("DELETE FROM counters WHERE kind IN ('ipAttempt','sessionAttempt') AND bucket<?",today);return {kind:'cleaned'};});},
+    cleanup(){return tx(()=>{const time=now(),today=day(time);sql('DELETE FROM denied_admissions WHERE expires<=?',time);sql('DELETE FROM attempts WHERE expires<=?',time);sql('DELETE FROM sessions WHERE expires<=?',time);sql("DELETE FROM ledger WHERE day<? AND status='complete' AND NOT EXISTS (SELECT 1 FROM sessions WHERE sessions.ref=ledger.session_ref)",today);sql('DELETE FROM quota WHERE day<?',today);sql("DELETE FROM counters WHERE kind IN ('request','session') AND CAST(bucket AS INTEGER)<?",Math.floor(time/3600000)-1);sql("DELETE FROM counters WHERE kind IN ('ipAttempt','sessionAttempt') AND bucket<?",today);return {kind:'cleaned'};});},
   };return api;
 }
 
