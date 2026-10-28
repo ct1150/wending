@@ -22,6 +22,7 @@ Use unique entity/choice IDs and action tuples(intent,targetId,stake,approach).
 Targets:practice=self(breakthrough=NEXT_REALM);rest=self;explore=supplies,stones,manual,crystal,core,soulseal,skykey,relic,iron;negotiate/fight/evade=living person/faction ID;travel=place ID;craft study=manual,forge=talisman.
 先写entities，只列本场speaker/targetId/memoryDeltas引用的NPC、地点及势力。主角仅用self，绝不把life.name作为NPC加入entities。再写blocks和choices，所有人物/地点引用必须对应entities的id。dialogue只写一个人的一句话，speaker为活人id或self；旁白narration不带speaker。title/location/text/label使用中文名称，不出现ID。询问用negotiate，找物资用explore；普通练功用steady/intensive，突破用breakthrough。选项文字必须符合实际intent和目标。
 travel的targetId必须指向entities中kind为place的实际目的地，label必须完整包含该目的地的name，且目的地name不能等于本场location。前往未声明的新地点时先声明对应place；已知地点沿用原id。不得把出发地当目的地，留在原地不能使用travel。
+本回合只演绎receipt.action已选动作及receipt结果。negotiate是在与targetId交涉、听取答复；谈及某处不等于已经前往或抵达该处。travel才描述抵达目的地；未选择的旅行、战斗、修炼等后续步骤必须留到choices，不能写成已发生。
 No effects or numeric rewards.`;
 
 // Only fixed categories cross the provider boundary. Reuse the real structure
