@@ -14,7 +14,7 @@
 
 后续仅离线准备并独立复核：生成schema通过oneOf表达19种合法行动配对，并验证133种非法配对不能通过；运行时校验器保持原约束。Task8服务器在严格校验ready场景后计算 `acceptedSceneHash = SHA256(canonicalStringify(scene))`，complete结算持久化该摘要并验证桥返回的确认，failed/unknown不接受摘要；首次终态及摘要不可更改。私有baseline核对该记录与contextHash，再从上下文和场景重算S1并比对浏览器保存状态，两条固定Task7分支各自从同一S1推进。摘要证明服务器接受过场景，实际浏览器提交仍须现场观察。
 
-上述新增代码尚未部署或真实调用。本地全量646/646项通过，失败/取消/跳过/todo均0，用时80.4605秒；133项JavaScript语法通过，HTML970046字节，覆盖原生Chromium、workerd/SQLite和1000回合fixture。新CI尚未发起，不能用 `bc742709` 的618项CI代替本次代码验证。
+上述新增代码尚未部署或真实调用。本地全量646/646项通过，失败/取消/跳过/todo均0，用时80.4605秒；133项JavaScript语法通过，HTML970046字节，覆盖原生Chromium、workerd/SQLite和1000回合fixture。新增源码 `b780a84` 的 [CI40628818519](https://github.com/ct1150/wending/actions/runs/40628818519) 已通过646/646、133项语法与14模块默认打包，publish跳过，不能用 `bc742709` 的618项CI代替本次代码验证。
 
 [待批准的新顺序](superpowers/plans/2026-10-28-shared-opening-acceptance.md) 为Task8浏览器开场→同S1的Task7分支A→分支B→Task8真实选择、保存和刷新。Task8每次固定预留111，Task7按实际输入估算、每次上界111；按四次各最多111作保守估算，总计最多11次/783 Neurons，不增加上限。开场只计Task8一次；这能验证的范围是一幕真实开场、同基准两条单步反事实和一次真实玩家选择闭环，不能声明更深连续叙事已通过。批准前无新推理；任何拒绝、未知或保存失败均暂停，保留预留且不自动重试。Task7/Task8和公开发布门槛仍未完成。
 

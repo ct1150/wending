@@ -1,6 +1,6 @@
 # Proposed shared-opening acceptance continuation
 
-Status: offline implementation and independent review passed; local release gate 646/646 tests, 133 JavaScript syntax checks and build passed. Remote CI is still required for the published preparation. Real calls are paused after the third rejected Task7 opening. A change to this acceptance sequence must be presented to the owner before another live call. The owner has already approved 11 total calls, Task1/7/8 limits of 4/5/2, and an unchanged 800 Neuron ceiling.
+Status: offline implementation and independent review passed; local release gate 646/646 tests, 133 JavaScript syntax checks and build passed. Published source `b780a84d4d0e6565159c8e3f9067f9c47532a57d` passed [CI40628818519](https://github.com/ct1150/wending/actions/runs/40628818519): 646/646, 133 syntax files and 14 default backend modules; publish skipped. The actual merge tree matched the reviewed source. Real calls are paused after the third rejected Task7 opening. A change to this acceptance sequence must be presented to the owner before another live call. The owner has already approved 11 total calls, Task1/7/8 limits of 4/5/2, and an unchanged 800 Neuron ceiling.
 
 ## Evidence and reason
 

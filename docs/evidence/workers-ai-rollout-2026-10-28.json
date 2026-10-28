@@ -181,7 +181,7 @@
   "actualNeurons": null,
   "remaining": [
     "Owner decision on reviewed shared-opening four-call sequence under already-approved 11/800 caps",
-    "Final prepared-source CI and a fresh same-account Free observation before any further real call",
+    "Fresh same-account Free observation and reviewed deployed-source identity before any further real call; prepared code full CI has passed",
     "Reviewed deployment identities and unchanged original ledger before protected browser opening",
     "Accepted full-schema Chinese opening and same-state counterfactual quality review",
     "Real protected HTTPS browser choice, durable save and refresh within permanent Task8 allocation",
@@ -832,7 +832,7 @@
       "operator": 13,
       "existingProvider": 18
     },
-    "ciScope": "Historical checkpoints retain their own source identity. approvedLimitsCI covers bc742709 including the deployed v3 recipe. sharedOpeningPreparation covers later offline code, which is not deployed or live-validated.",
+    "ciScope": "Historical checkpoints retain their own source identity. approvedLimitsCI covers the deployed bc742709 v3 recipe. sharedOpeningPreparation.remoteCI covers b780a84 with all 646 tests, which is not deployed or live-validated.",
     "task7": {
       "providerCommit": "bdf6b21dcf20af769f653befc6f3b6f8f3e9bcd6",
       "runnerCommit": "7fe621cd575ce64c489fd2a13b0263a8df2e9cd9",
@@ -1037,7 +1037,7 @@
       "realInferenceCallsInCI": 0
     },
     "sharedOpeningPreparation": {
-      "status": "OFFLINE_IMPLEMENTED_AND_INDEPENDENTLY_REVIEWED_NOT_DEPLOYED",
+      "status": "OFFLINE_IMPLEMENTATION_INDEPENDENT_REVIEW_AND_FULL_CI_PASSED_NOT_DEPLOYED",
       "baselineCommit": "bc7427097f606348351944cb4085942b0fa45905",
       "files": {
         "src/worker/operator-acceptance-state.js": "811ddf1757855a2bd518f6cdb6d0adcbbb42661d36ebe5b7df8d5dc4d8c61880",
@@ -1119,9 +1119,39 @@
       "realTask8Calls": 0,
       "productionModelValidated": false,
       "remoteCI": {
-        "status": "not-yet-started",
-        "scope": "Later shared-opening preparation; not the earlier 618-test bc742709 checkpoint."
-      }
+        "runId": 40628818519,
+        "jobId": 122620108712,
+        "publishJobId": 122620817269,
+        "sourceCommit": "b780a84d4d0e6565159c8e3f9067f9c47532a57d",
+        "mergeCommit": "22b1f37af7e50e29331b7f62574c5cdfd633cacf",
+        "sourceTree": "929780a63a0e47af19bdc45028f4de7c374e5fa9",
+        "treeMatchedReviewedSource": true,
+        "status": "success",
+        "completedAt": "2026-10-28T03:51:25Z",
+        "tests": 646,
+        "failures": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0,
+        "durationMs": 81973.439319,
+        "syntaxFiles": 133,
+        "backendModules": 14,
+        "htmlBytes": 970046,
+        "htmlSha256": "3c3b09de319e2032c3990867780998d67adcb6af62fc9fe0a78cb35fdf46b5b0",
+        "workerBytes": 990003,
+        "backendManifestSha256": "3452a65cc6636e7f0733f0d8d24229b72ead324e715bde401feb0bd61b135d84",
+        "artifactId": 12791070485,
+        "artifactZipBytes": 1715559,
+        "artifactZipSha256": "22dc31fbd3803beebc9ddb6882e94f71a4b42b8518ddcd03187c66b61076158f",
+        "artifactDigestEvidence": "GitHub Actions upload-artifact log; independent review also matched GitHub artifact API metadata",
+        "publish": "skipped",
+        "browserTestsIncluded": true,
+        "nativeSqliteAndWorkerdIncluded": true,
+        "longRunFixtureTurns": 1000,
+        "realInferenceCalls": 0,
+        "scope": "Exact reviewed runtime/test source and preparation docs in b780a84; later evidence-only commits preserve runtime/test hashes."
+      },
+      "sourceCommit": "b780a84d4d0e6565159c8e3f9067f9c47532a57d"
     }
   },
   "experimentActualCalls": 7,
