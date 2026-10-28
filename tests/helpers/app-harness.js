@@ -17,10 +17,12 @@ function escapeCssIdentifier(value) {
 
 // A deliberately small DOM adapter for functional controller tests. It does not
 // calculate layout, paint, start a server, or provide browser/visual evidence.
-export async function startApp({ raw = null, denyWrite = false, denyRead = false, legacyBackupRaw = null } = {}) {
+export async function startApp({ raw = null, denyWrite = false, denyRead = false, legacyBackupRaw = null, navigation = null, navigationType = 'navigate', sessionValues = null, autoEnter = true } = {}) {
   const listeners = new Map(), elements = new Map(), dynamic = new Map(), downloads = [], focus = [], scroll = [];
   const extras=new Map(legacyBackupRaw === null ? [] : [['baishi-wending-save-v1-legacy-handoff',legacyBackupRaw]]);
-  const storage = { raw, writes: 0, getItem(key) { if (denyRead) throw new Error('read denied'); return key === 'baishi-wending-save-v1' ? this.raw : extras.get(key) ?? null; }, setItem(key, value) { if (denyWrite) throw new Error('quota'); if(key === 'baishi-wending-save-v1') this.raw = value; else extras.set(key,value); this.writes++; } };
+  const writeDenied = (key, operation) => typeof denyWrite === 'function' ? denyWrite(key, operation) : denyWrite;
+  // Navigation/preferences use independent keys; gameplay assertions count main-save writes.
+  const storage = { raw, writes: 0, totalWrites: 0, writeCounts: new Map(), getItem(key) { if (denyRead) throw new Error('read denied'); return key === 'baishi-wending-save-v1' ? this.raw : extras.get(key) ?? null; }, setItem(key, value) { if (writeDenied(key, 'setItem')) throw new Error('quota'); if(key === 'baishi-wending-save-v1') { this.raw = value; this.writes++; } else extras.set(key,value); this.totalWrites++; this.writeCounts.set(key, (this.writeCounts.get(key) ?? 0) + 1); }, removeItem(key) { if (writeDenied(key, 'removeItem')) throw new Error('quota'); if (key === 'baishi-wending-save-v1') this.raw = null; else extras.delete(key); } };
   const make = selector => ({ innerHTML: '', textContent: '', className: '', dataset: {}, open: false, value: '', isConnected: true,
     localName: selector.match(/^[a-z][a-z0-9-]*/i)?.[0].toLowerCase() ?? 'button',
     get attributes() {
@@ -44,7 +46,7 @@ export async function startApp({ raw = null, denyWrite = false, denyRead = false
   for (const selector of ['#app', '#toast', '#dialog', '#import-file']) elements.set(selector, make(selector));
   const decode = value => value.replace(/&quot;/g, '"').replace(/&#39;/g, "'").replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&amp;/g, '&');
   let lastMarkup = '';
-  const document = { activeElement: null, body: { appendChild() {} },
+  const document = { activeElement: null, documentElement: { dataset: {} }, body: { appendChild() {} },
     querySelector(selector) {
       if (elements.has(selector)) return elements.get(selector);
       const markup = elements.get('#app').innerHTML + elements.get('#dialog').innerHTML;
@@ -82,14 +84,34 @@ export async function startApp({ raw = null, denyWrite = false, denyRead = false
     addEventListener(type, callback) { listeners.set(type, callback); }, createElement() { const link = make('a'); link.click = () => downloads.push(link); return link; },
   };
   const code = await bundleModules(process.cwd(), './src/app.js');
-  const context = { document, window: { localStorage: storage, crypto: { getRandomValues(array) { array[0] = 20261025; return array; } }, location: { protocol: 'file:' }, scrollTo(value) { scroll.push(value); } },
+  const tabValues = new Map(sessionValues instanceof Map ? sessionValues : Object.entries(sessionValues ?? {}));
+  if (navigation !== null) tabValues.set('wending-navigation-v1', typeof navigation === 'string' ? navigation : JSON.stringify(navigation));
+  const sessionStorage = { getItem(key) { return tabValues.get(key) ?? null; }, setItem(key, value) { tabValues.set(key, value); }, removeItem(key) { tabValues.delete(key); } };
+  let uuidCounter = 0;
+  const crypto = { randomUUID() { return `00000000-0000-4000-8000-${String(++uuidCounter).padStart(12, '0')}`; }, getRandomValues(array) { array[0] = 20261025; return array; } };
+  const context = { crypto, document, window: { localStorage: storage, sessionStorage, performance: { getEntriesByType() { return [{ type: navigationType }]; } }, crypto, location: { protocol: 'file:' }, scrollTo(value) { scroll.push(value); } },
     Uint32Array, TextEncoder, TextDecoder, Blob, CSS: { escape: escapeCssIdentifier }, URL: { createObjectURL(blob) { downloads.push(blob); return 'blob:test'; }, revokeObjectURL() {} }, setTimeout() {}, clearTimeout() {} };
   // Saved game data is JSON; clone within the VM realm so strict plain-record
   // validation sees the same Object prototype as the bundled engine.
   vm.runInNewContext('globalThis.structuredClone = value => JSON.parse(JSON.stringify(value));\n' + code, context);
-  return { storage, focus, scroll, downloads, get html() { return elements.get('#app').innerHTML; }, get dialog() { return elements.get('#dialog'); },
-    click(dataset) { const key = Object.keys(dataset)[0].replace(/[A-Z]/g, char => `-${char.toLowerCase()}`); const target = Object.assign(make(`[data-${key}]`), { dataset, disabled: false }); target.closest = () => target; document.activeElement = target; listeners.get('click')({ target, preventDefault() {} }); },
-    clickRendered(selector) { const target = document.querySelector(selector); if (!target) throw new Error(`Missing control: ${selector}`); document.activeElement = target; listeners.get('click')({ target, preventDefault() {} }); },
+  // These controller regressions explicitly exercise the retained offline game.
+  // Boot still starts at home, and gameplay is entered through its real controls.
+  await Promise.resolve();
+  if (autoEnter && document.querySelector('[data-title-new]')) {
+    const entry = document.querySelector(raw !== null || denyRead ? '[data-title-continue]' : '[data-title-new]');
+    if (entry && !entry.disabled) await listeners.get('click')({ target: entry, preventDefault() {} });
+    else if (raw !== null || denyRead) {
+      const settings = document.querySelector('[data-view="settings"]');
+      await listeners.get('click')({ target: settings, preventDefault() {} });
+    }
+  }
+  await Promise.resolve();
+  focus.length = 0; scroll.length = 0;
+  return { storage, sessionStorage, sessionValues: tabValues, focus, scroll, downloads,
+    get navigation() { return JSON.parse(tabValues.get('wending-navigation-v1') ?? 'null'); },
+    get html() { return elements.get('#app').innerHTML; }, get dialog() { return elements.get('#dialog'); },
+    click(dataset) { const key = Object.keys(dataset)[0].replace(/[A-Z]/g, char => `-${char.toLowerCase()}`); const target = Object.assign(make(`[data-${key}]`), { dataset, disabled: false }); target.closest = () => target; document.activeElement = target; return listeners.get('click')({ target, preventDefault() {} }); },
+    clickRendered(selector) { const target = document.querySelector(selector); if (!target) throw new Error(`Missing control: ${selector}`); document.activeElement = target; return listeners.get('click')({ target, preventDefault() {} }); },
     input(id, value, { isComposing = false } = {}) { const target = document.getElementById(id); if (!target) throw new Error(`Missing input: ${id}`); target.value = value; document.activeElement = target; listeners.get('input')({ target, isComposing }); },
     composition(id, type) { const target = document.getElementById(id); listeners.get(type)?.({ target }); },
     submit(id) { listeners.get('submit')?.({ target: document.getElementById(id), preventDefault() {} }); },

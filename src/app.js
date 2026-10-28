@@ -7,7 +7,7 @@ import { stateHash } from './game/cultivation/live/identity.js';
 import { REALMS as LIVE_REALMS, ORIGINS as LIVE_ORIGINS, TALENTS as LIVE_TALENTS, ITEMS as LIVE_ITEMS } from './game/cultivation/live/model.js';
 import { liveCharacterSummary } from './ui/character.js';
 import { renderLiveJourney, renderLiveHistory } from './ui/journey.js';
-import { readLegacyBackup } from './game/persistence.js';
+import { readLegacyBackup, SAVE_KEY, LEGACY_BACKUP_KEY } from './game/persistence.js';
 import { REALMS, PATHS, ORIGINS, WORLDS, ITEMS, LEGACIES, EVENTS, ENEMIES, CHALLENGES, WORLD_FLAGS } from './game/content.js';
 import { getStats, getActionInfo, act, getEventChoices, chooseEvent, combatAction, equipItem, selectLegacy, getStoryView, chooseStory } from './game/engine.js';
 import { getJourneyView, chooseJourney } from './game/journey/engine.js';
@@ -18,6 +18,9 @@ import { getLegacyBridgeChoices } from './game/journey/migration.js';
 import { renderJourney, renderJourneyHistory } from './ui/journey.js';
 import { renderIdentityBar, renderCharacterDetails, renderBirth } from './ui/character.js';
 import { bootstrapSession, persistSession, migrateSession, recoverLegacySession } from './ui/session.js';
+import { createJourneySaves } from './game/journey-saves.js';
+import { loadNavigation, saveNavigation, loadPreferences, savePreferences } from './ui/navigation.js';
+import { renderTitleScreen, renderGameNavigation, renderReadingSettings, renderJourneyList } from './ui/title-screen.js';
 import { icon } from './ui/icons.js';
 import { renderCombatActions } from './ui/combat.js';
 import { getPrimaryResult, renderStoryScene, renderStoryRecords, renderStoryOutcome, renderStoryInterruption } from './ui/story.js';
@@ -33,21 +36,31 @@ const CAUSES = { retired: '归隐', lifespan: '寿尽', battle: '陨落', victor
 const storage = {
   getItem(key) { return window.localStorage.getItem(key); },
   setItem(key, value) { window.localStorage.setItem(key, value); },
+  removeItem(key) { window.localStorage.removeItem(key); },
 };
 function newSeed() {
   return window.crypto?.getRandomValues ? String(window.crypto.getRandomValues(new Uint32Array(1))[0]) : String(Date.now());
 }
 const createRecommendedLife = options => createCultivation({ ...options, characterCreation: true, contentVersion: 3 });
 const ACTIVE_MODE_KEY = 'wending-active-mode-v1';
+const canReadLiveArchive=window.location.protocol!=='file:'||typeof globalThis.indexedDB!=='undefined';
 let activeMode = 'offline';
 try { if (storage.getItem(ACTIVE_MODE_KEY) === 'live') activeMode = 'live'; } catch {}
-let liveBirthDraft={name:'云归',originId:'village'};
+let navigationStorage=null;
+try { navigationStorage=window.sessionStorage; } catch {}
+const navigation=loadNavigation(navigationStorage,window.performance?.getEntriesByType?.('navigation')?.[0]?.type);
+let liveBirthDraft=navigation.draft??{name:'云归',originId:'village',expectedArchiveId:null};
 let liveArchive=null, liveSession=null, liveSnapshot=null, liveError='', liveHistoryCursor=null, liveHistoryRun=null;
+let liveInitialization=null,homeReady=false,uiBusy=false,creatingRunId=null,returnScreen=navigation.returnScreen;
+let savedJourneys=[],savedCursor=null,savedError='',savedLoading=false;
+const offlineJourneys=createJourneySaves(storage);
+let readingPreferences=loadPreferences(storage);
 const liveCatalogs={REALMS:LIVE_REALMS,ORIGINS:LIVE_ORIGINS,TALENTS:LIVE_TALENTS,ITEMS:LIVE_ITEMS};
 const liveClient=createStoryClient();
-let session = bootstrapSession(storage, { seed: newSeed(), createFresh: createRecommendedLife });
+let session = bootstrapSession(storage, { createFresh: false });
 let state = session.state;
-let view = 'adventure';
+let view = navigation.screen;
+if(navigation.mode)activeMode=navigation.mode;
 let preparingLife = false;
 let saveError = session.error;
 let lastSaved = session.saved;
@@ -60,8 +73,183 @@ const isCreating = game => game?.version === 4 && game.phase === 'creating';
 const getNarrativeView = game => game.version === 4 ? getCultivationView(game) : getJourneyView(game);
 const chooseNarrative = (game, command) => game.version === 4 ? chooseCultivation(game, command) : chooseJourney(game, command);
 let setup = { name: '云归', originId: 'village', pathId: 'sword', legacyIds: [] };
-let birthNameDraft = isCreating(state) ? state.life.name : '';
+let offlineBirthDraft=null;
+try {
+  if(window.location.protocol==='file:'&&navigation.offlineDraft) {
+    const candidate=deserializeGame(navigation.offlineDraft.raw);
+    if(isCreating(candidate)&&candidate.contentVersion===3)offlineBirthDraft={...navigation.offlineDraft,state:candidate};
+  }
+} catch {}
+let birthNameDraft = view==='new'&&offlineBirthDraft ? offlineBirthDraft.name : isCreating(state) ? state.life.name : '';
 let birthComposing = false;
+
+function rememberScreen() {
+  return saveNavigation(navigationStorage,{screen:view,mode:activeMode,draft:liveBirthDraft,offlineDraft:offlineBirthDraft?{raw:serializeGame(offlineBirthDraft.state),name:offlineBirthDraft.name,expectedRaw:offlineBirthDraft.expectedRaw,expectedBackupRaw:offlineBirthDraft.expectedBackupRaw}:null,returnScreen});
+}
+
+const currentBirth = () => view==='new'&&offlineBirthDraft?offlineBirthDraft.state:state;
+
+function saveCreationDraft() {
+  if(!rememberScreen())notify('创建草稿暂时无法保存到此标签页，刷新会丢失草稿。原有旅程保持不变。',true);
+}
+
+function applyReadingPreferences() {
+  if(document.documentElement) {
+    document.documentElement.dataset.theme=readingPreferences.theme;
+    document.documentElement.dataset.textSize=readingPreferences.textSize;
+  }
+}
+
+function summarizeJourney(game,mode) {
+  if(!game)return null;
+  const summary=mode==='live'?liveCharacterSummary(game,liveCatalogs):isJourney(game)?getNarrativeView(game).summary:{name:game.run.name,realmName:REALMS[game.run.realmIndex].name,age:game.run.age,generation:game.meta.generation};
+  const age=summary.ageText??`${summary.age}岁`;
+  const progress=mode==='live'?`第 ${game.turnId} 回`:`第 ${summary.generation} 世`;
+  return {name:summary.name,detail:`${summary.realmName??summary.realm??'凡人'} · ${age} · ${progress}${game.phase==='dead'?' · 此生已尽':isCreating(game)?' · 待入世':''}`,location:game.currentScene?.title??(isJourney(game)?getNarrativeView(game).title:null)};
+}
+
+function currentJourneySummary() {
+  return summarizeJourney(activeMode==='live'?liveSnapshot?.state:state,activeMode);
+}
+
+function preserveOfflineProgress() {
+  // Old formats can carry an unrelated handoff which their normal bootstrap
+  // does not inspect. Explicit recovery retains those bytes too.
+  try {
+    const backup=readLegacyBackup(storage);
+    if(backup&&!state)session={...session,backupError:'存在尚未关联到当前人生的旧备份。'};
+  } catch(error) {session={...session,backupError:error.message};}
+  if(session.status==='blocked'||session.backupError)return offlineJourneys.preserveUnreadable({...session,state});
+  if(state)return offlineJourneys.preserve({...session,state});
+}
+
+function retainUnsavedOfflineLife() {
+  if(activeMode!=='offline'||!state||lastSaved)return true;
+  let changed=true;
+  try {changed=serializeGame(state)!==serializeGame(deserializeGame(session.storageRaw));}catch{}
+  const pendingBackup=session.legacyBackup&&JSON.stringify(session.legacyBackup)!==session.storageBackupRaw;
+  if(!changed&&!pendingBackup)return true;
+  try {offlineJourneys.preserve({...session,state});return true;}
+  catch(error) {notify(`本页还有未保存的进度，暂不能切换旅程。请先导出当前进度。${saveProblem(error)}`,true);return false;}
+}
+
+function saveProblem(error) {
+  if(error.code==='JOURNEY_STORAGE_CONFLICT')return '另一页面已更新这段旅程，请刷新后再操作。';
+  if(error.code==='JOURNEY_BLOCKED_SAVE')return '旧存档暂时无法读取，请先在游戏设置中备份原始存档。';
+  if(error.code?.startsWith('JOURNEY_'))return '原有旅程尚未妥善保存，操作已停止。请检查浏览器存储空间并导出备份。';
+  return error.message||'本地存储暂时不可用，原有旅程保持不变。';
+}
+
+function renderScreenShell(content,{title='百世问鼎',back='返回首页'}={}) {
+  $('#app').innerHTML=`<div class="paper-page menu-page"><header class="menu-page-header"><p>${esc(title)}</p><button class="small-button" data-menu-back>← ${esc(back)}</button></header><main id="main-content" class="paper-main" tabindex="-1">${content}</main></div>`;
+}
+
+function renderSettingsPage() {
+  const summary=currentJourneySummary();
+  let recoveryCount=0;try{recoveryCount=offlineJourneys.listUnreadable().length;}catch{}
+  const body=`<p class="birth-kicker">收好行囊，再赴山河</p><h2 id="settings-title" tabindex="-1">游戏设置</h2>${renderReadingSettings(readingPreferences)}<section class="settings-section"><h3>旅程与存档</h3><p>${summary?`当前：${esc(summary.name)} · ${esc(summary.detail)}`:'尚未开启旅程。已有备份可以在这里导入。'}</p><div class="settings-actions"><button class="button" data-saves>切换存档</button><button class="button" data-export ${summary?'':'disabled'}>导出${activeMode==='live'?'完整':''}存档</button><button class="button" data-import>导入存档</button></div>${session.status==='blocked'?`<div class="notice error" role="alert"><p>${esc(session.error)} 原始存档已保留。</p>${session.rawCorruptSave!==null?'<button class="button" data-export-corrupt>备份原存档</button>':''}</div>`:''}${session.pendingLegacyRaw||session.backupError?'<div class="notice error"><p>发现待恢复的旧人生备份。</p><button class="button" data-recover-legacy>恢复较新旧人生／重试读取备份</button><button class="button" data-export-legacy>导出旧原档与交接备份</button></div>':''}<p class="save-info">进度保存在此浏览器。更换设备前，请导出备份。</p></section><section class="settings-section"><h3>入世须知</h3><p>岁月只在落下一项选择时前行。</p><div class="settings-actions"><button class="button" data-help>查看游戏说明</button>${window.location.protocol!=='file:'?'<a class="button" href="./baishi-wending-offline.html" download="百世问鼎-离线版.html">下载离线版</a>':''}</div><p class="save-info">新旅程默认联网续写。已保存的实时故事可离线阅读，原有离线旅程仍可继续。</p></section>`;
+  const backups=`${recoveryCount?`<section class="settings-section"><h3>原始恢复备份</h3><p>恢复存档前保留了 ${recoveryCount} 份原始数据，可下载后妥善收藏。</p><button class="button" data-export-recovery>导出原始恢复备份</button></section>`:''}${session.legacyBackup||session.originalLegacyRaw?'<section class="settings-section"><h3>旧人生交接备份</h3><button class="button" data-export-legacy>导出旧原档与交接备份</button></section>':''}`;
+  renderScreenShell(body+backups,{title:'游戏设置',back:returnScreen==='new'?'返回角色创建':returnScreen==='adventure'?'返回当前剧情':returnScreen==='home'?'返回首页':'返回当前页面'});
+}
+
+function renderNewJourney() {
+  if(window.location.protocol==='file:') {
+    if(!offlineBirthDraft){view='home';return render();}
+    birthNameDraft=offlineBirthDraft.name;
+    const journey=getNarrativeView(offlineBirthDraft.state);
+    return renderScreenShell(`${renderBirth({...journey.creation,name:birthNameDraft,revision:journey.revision,sceneId:journey.sceneId})}<p class="birth-preservation">确认入世后才切换旅程；原有旅程会保留，随时可以切回。</p><nav class="game-navigation" aria-label="创建期间的设置"><button class="small-button" data-view="settings">游戏设置</button></nav>`,{title:'踏入仙途'});
+  }
+  const invalid=liveSnapshot?.errorCode==='BIRTH_CONTEXT_INVALID';
+  renderScreenShell(`<section class="birth live-birth"><p class="birth-kicker">一纸姓名，一世山河</p><h2 id="journey-current-title" tabindex="-1">此生，你是谁？</h2><p class="section-intro">十六岁，山外的路还很长。留下你的名字，踏上自己的仙途。</p><label for="live-name">此生姓名</label><input id="live-name" autocomplete="off" maxlength="24" value="${esc(liveBirthDraft.name)}"><label for="live-origin">从何处来</label><select id="live-origin">${Object.entries(LIVE_ORIGINS).map(([id,name])=>`<option value="${id}" ${id===liveBirthDraft.originId?'selected':''}>${esc(name)}</option>`).join('')}</select>${invalid?'<p class="notice error" role="alert">姓名无法用于故事，请修改后重新开始。支持中文姓名与常用标点。</p>':''}${liveError?`<p class="notice error" role="status">${esc(liveError)}</p>`:''}<p class="birth-preservation">已有旅程会保留，随时可以切回。</p><button class="button primary birth-start" data-live-start ${!liveSession||uiBusy?'disabled':''}>${uiBusy?'正在安放此身…':'就以此身，入世'}</button><p class="save-info">新剧情需要联网；生成时会发送必要的人物与剧情上下文，完整历史留在本机。</p></section>`,{title:'踏入仙途'});
+}
+
+async function initializeScreens() {
+  applyReadingPreferences();
+  if(canReadLiveArchive) {
+    try { await ensureLive(); const loaded=await liveSession.load();if(!loaded.state&&loaded.errorCode)throw Error('archive read failed'); }
+    catch { liveError='无法读取实时旅程，请检查浏览器存储设置。已有离线存档仍可恢复。'; }
+  }
+  if(activeMode==='live'&&!liveSnapshot?.state&&state)activeMode='offline';
+  else if(activeMode==='offline'&&!state&&liveSnapshot?.state)activeMode='live';
+  homeReady=true;
+  if(['inventory','worlds','legacies','chronicle'].includes(view)&&(!state||isJourney(state)))view='adventure';
+  if(view==='adventure'&&!currentJourneySummary()&&session.status!=='blocked')view='home';
+  render();
+  if(view==='saves')await openSavedJourneys();
+  else if(view==='adventure'&&activeMode==='live'&&liveSession)await liveSession.resume();
+}
+
+function goHome() {
+  closeDialog(false);view='home';returnScreen='home';render();
+  $('#main-content')?.focus({preventScroll:true});window.scrollTo({top:0,behavior:'instant'});
+}
+
+async function continueJourney() {
+  if(uiBusy)return;
+  if(activeMode==='live'&&liveSnapshot?.state) {
+    view='adventure';render();await liveSession.resume();
+  } else if(state||session.status==='blocked') { setActiveMode('offline');birthNameDraft=isCreating(state)?state.life.name:'';view='adventure';render(); }
+  else return openSavedJourneys();
+  focusAdventure($('#birth-title')||$('#journey-current-title')||$('#main-content'));
+}
+
+async function prepareNewJourney() {
+  if(uiBusy||liveSnapshot?.busy)return notify('故事正在保存，请稍候再开启新旅程。',true);
+  if(!retainUnsavedOfflineLife())return;
+  if(window.location.protocol==='file:')return beginRecommendedLife();
+  uiBusy=true;render();
+  try {
+    await ensureLive();await liveSession.load();
+    liveBirthDraft={name:'云归',originId:'village',expectedArchiveId:liveSnapshot?.archiveId??null};
+    liveError='';view='new';returnScreen='home';
+    saveCreationDraft();
+  } catch {notify('暂时无法读取存档，原有旅程保持不变。',true);}
+  finally {uiBusy=false;render();$('#live-name')?.focus({preventScroll:true});}
+}
+
+function askNewJourney() {
+  if(!homeReady||uiBusy||liveSnapshot?.busy)return notify('故事正在保存，请稍候再开启新旅程。',true);
+  if(state||liveSnapshot?.state||session.status==='blocked')return confirmAction('开启新的旅程', '<p>你将为另一个人物开启独立的修仙人生。原有旅程会保留，可从「续写此生 → 切换存档」找回。无法读取的旧档会保留原始恢复备份。</p><p>这次新开不会结算旧人物，也不会领取轮回奖励。</p>',prepareNewJourney,'保留旧旅程，开始创建');
+  return prepareNewJourney();
+}
+
+async function openSavedJourneys(next=false) {
+  if(uiBusy||liveSnapshot?.busy)return notify('故事正在保存，请稍候再切换旅程。',true);
+  closeDialog(false);if(view!=='saves')returnScreen=view==='adventure'?'adventure':'home';
+  view='saves';savedLoading=true;if(!next){savedJourneys=[];savedCursor=null;savedError='';}render();
+  try {
+    if(!next) {
+      if(state)savedJourneys.push({id:'current',mode:'offline',active:activeMode==='offline',...summarizeJourney(state,'offline')});
+      try {for(const entry of offlineJourneys.list())savedJourneys.push({id:entry.id,mode:'offline',active:false,...summarizeJourney(entry.state,'offline')});}
+      catch {savedError='离线旅程目录暂时无法读取，原始数据仍保留；可继续选择下方可读取的旅程。';}
+    }
+    if(canReadLiveArchive) {
+      await ensureLive();const page=await liveArchive.listJourneys({cursor:next?savedCursor:null,limit:20});
+      savedJourneys.push(...page.entries.map(entry=>({id:entry.archiveId,mode:'live',active:activeMode==='live'&&entry.active,...summarizeJourney(entry.state,'live')})));
+      savedCursor=page.cursor;
+    }
+  } catch(error) {savedError=[savedError,error.message?.includes('存档')?error.message:'实时旅程暂时无法读取，请保留当前进度并重试。'].filter(Boolean).join(' ');}
+  finally {savedLoading=false;render();}
+}
+
+async function selectSavedJourney(id,mode) {
+  if(uiBusy||liveSnapshot?.busy)return notify('故事正在保存，请稍候再切换旅程。',true);
+  uiBusy=true;savedLoading=true;render();
+  try {
+    if(mode==='live') {
+      if(!retainUnsavedOfflineLife())return;
+      await ensureLive();const expected=liveSnapshot?.archiveId??null;
+      const selected=await liveSession.selectJourney(id,expected);
+      if(selected.archiveId!==id)throw Error('另一页面已更新旅程，请刷新列表后再选。');
+      setActiveMode('live');view='adventure';await liveSession.resume();
+    } else {
+      if(id!=='current')session=offlineJourneys.restore(id,{...session,state});
+      state=session.state;lastSaved=session.saved;saveError=session.error;birthNameDraft=isCreating(state)?state.life.name:'';
+      setActiveMode('offline');view='adventure';
+    }
+  } catch(error) {notify(saveProblem(error),true);}
+  finally {uiBusy=false;savedLoading=false;render();}
+}
 
 function notify(message, error = false) {
   const toast = $('#toast');
@@ -78,19 +266,70 @@ function persist() {
 }
 
 function replaceSession(next, originalRaw = null) {
-  session = { status: 'fresh', state: next, rawCorruptSave: null, error: '', saved: false, storageRaw: originalRaw, ...([1, 2].includes(next.version) && originalRaw !== null ? { originalLegacyRaw: originalRaw } : {}) };
+  if(!retainUnsavedOfflineLife())return false;
+  let previousRaw=null,previousBackup=null;
+  try {
+    previousRaw=storage.getItem(SAVE_KEY);previousBackup=storage.getItem(LEGACY_BACKUP_KEY);
+    preserveOfflineProgress();
+    if(storage.getItem(SAVE_KEY)!==previousRaw||storage.getItem(LEGACY_BACKUP_KEY)!==previousBackup)throw Object.assign(Error('JOURNEY_STORAGE_CONFLICT'),{code:'JOURNEY_STORAGE_CONFLICT'});
+    if(previousBackup!==null)storage.removeItem(LEGACY_BACKUP_KEY);
+  } catch(error){notify(saveProblem(error),true);return false;}
+  setActiveMode('offline');
+  session = { status: 'fresh', state: next, rawCorruptSave: null, error: '', saved: false, storageRaw: previousRaw, storageBackupRaw: null, ...([1, 2].includes(next.version) && originalRaw !== null ? { originalLegacyRaw: originalRaw } : {}) };
+  offlineBirthDraft=null;
   openPanels.clear();
   preparingLife = false;
   view = 'adventure';
   birthNameDraft = isCreating(next) ? next.life.name : '';
   birthComposing = false;
   update(next, { message: false, focusStory: true, resetSupport: true, currentContext: true });
+  if(!lastSaved){
+    try {
+      if(storage.getItem(SAVE_KEY)===previousRaw){
+        if(previousBackup===null)storage.removeItem(LEGACY_BACKUP_KEY);else storage.setItem(LEGACY_BACKUP_KEY,previousBackup);
+        if(storage.getItem(LEGACY_BACKUP_KEY)===previousBackup)session={...session,storageBackupRaw:previousBackup};
+      }
+    } catch {}
+  }
+  return true;
 }
 
 function beginRecommendedLife() {
-  replaceSession(createRecommendedLife({ seed: newSeed() }));
+  try {
+    const expectedRaw=storage.getItem(SAVE_KEY),expectedBackupRaw=storage.getItem(LEGACY_BACKUP_KEY);
+    const draft=createRecommendedLife({seed:newSeed()});
+    offlineBirthDraft={state:draft,name:draft.life.name,expectedRaw,expectedBackupRaw};
+    birthNameDraft=draft.life.name;birthComposing=false;view='new';returnScreen='home';
+    render();saveCreationDraft();
+  }
+  catch(error) {notify(saveProblem(error),true);return;}
   $('#birth-title')?.focus({ preventScroll: true });
   window.scrollTo({ top: 0, behavior: 'instant' });
+}
+
+function commitOfflineBirth(next) {
+  const draft=offlineBirthDraft;
+  try {
+    const assertSource=()=>{
+      if(storage.getItem(SAVE_KEY)!==draft.expectedRaw||storage.getItem(LEGACY_BACKUP_KEY)!==draft.expectedBackupRaw)throw Object.assign(Error('JOURNEY_STORAGE_CONFLICT'),{code:'JOURNEY_STORAGE_CONFLICT'});
+    };
+    assertSource();
+    const raw=serializeGame(next);
+    preserveOfflineProgress();
+    assertSource();
+    try {
+      if(draft.expectedBackupRaw!==null)storage.removeItem(LEGACY_BACKUP_KEY);
+      storage.setItem(SAVE_KEY,raw);
+      if(storage.getItem(SAVE_KEY)!==raw)throw Error('新人生尚未保存，请检查浏览器存储空间。');
+    } catch(error) {
+      try {if(draft.expectedBackupRaw===null)storage.removeItem(LEGACY_BACKUP_KEY);else storage.setItem(LEGACY_BACKUP_KEY,draft.expectedBackupRaw);}catch{}
+      try {if(draft.expectedRaw===null)storage.removeItem(SAVE_KEY);else storage.setItem(SAVE_KEY,draft.expectedRaw);}catch{}
+      throw error;
+    }
+    session={status:'loaded',state:next,rawCorruptSave:null,error:'',saved:true,storageRaw:raw};
+    lastSaved=true;saveError='';offlineBirthDraft=null;setActiveMode('offline');
+    update(next,{alreadyPersisted:true,goAdventure:true,message:false,currentContext:true,resetSupport:true});
+  } catch(error) {notify(saveProblem(error),true);}
 }
 
 function update(next, options = {}) {
@@ -205,18 +444,22 @@ function confirmAction(title, body, callback, label = '确认继续') {
   openDialog(title, body, `<button class="button ghost" data-close-dialog>再想一想</button><button class="button primary" data-confirm>${esc(label)}</button>`);
 }
 
-function showMore() {
-  openDialog('更多', '<p>岁月只在落下一项选择时前行。阅读和查看存档不会推进故事。</p>', '<button class="button" data-help>入世须知</button><button class="button" data-view="settings">存档与设置</button>');
-}
-
 function showHelp() {
-  if(activeMode==='live') return openDialog('实时人生须知','<p>每次选择先由规则确定岁月、物品、伤势与修行结果；完整剧情通过校验并保存后才显示。登仙与问鼎仍可继续人生，只有规则确认的死亡才会结算。</p><p>新增故事需要联网。最小必要的人物、当前行动与相关记忆会传至 Cloudflare；完整历史保留在本机。已缓存故事可以离线阅读，失败时保留待续状态，明确重试才会开始新请求。</p><p>出生与待续行动先保存，刷新不会重掷。历史按页读取，迁移设备请导出 .wending.jsonl 完整备份。</p>','<button class="button" data-view="settings">存档与设置</button>');
+  if(activeMode==='live'||!state) return openDialog('入世须知','<p>每次选择先由规则确定岁月、物品、伤势与修行结果；完整剧情通过校验并保存后才显示。登仙与问鼎仍可继续人生，只有规则确认的死亡才会结算。</p><p>新增故事需要联网。最小必要的人物、当前行动与相关记忆会传至 Cloudflare；完整历史保留在本机。已缓存故事可以离线阅读，失败时保留待续状态，明确重试才会开始新请求。</p><p>出生与待续行动先保存，刷新不会重掷。历史按页读取，迁移设备请导出 .wending.jsonl 完整备份。</p>','<button class="button" data-view="settings">存档与设置</button>');
   if (state?.version === 4 && state.contentVersion === 3) return openDialog('入世须知', '<p>先为此生取名，选择出身，再看两道命格。根骨、悟性与气运总计十二点；可以锁定一道命格后重新掷骰。入世之前的结果会保存，刷新不会重掷。</p><p>出身会带来不同的牵挂与行动，命格会在旅程中开启特殊机会。机缘也有代价；从凡人到登仙，都须取得真实功法、材料，经过修行与历险。已知的伤势、折寿或必死危险会在选择前提醒。</p><p>一年三百六十天。岁月只在落下一项选择时流逝，查看人物、历史和存档不会推进时间。余寿不足以完成修行时，无法预借下一境界的寿限。</p><p>一世终结后，可以带走一项亲自学会的法门。你留下的承诺与三界成就会继续影响世界，也可能解锁新的命格和出身。死亡次数本身不发奖励。</p><p>顶部简栏可展开人物详情；历史对话保留当世与前世的完整往事。更换设备或离线游玩前，请先导出存档备份。</p>', '<button class="button" data-view="settings">存档与设置</button><button class="button primary" data-close-dialog>继续阅读</button>');
-  if (isJourney(state)) return openDialog('入世须知', `${state.version === 4 ? '<p>你从十六岁的凡人开始求仙。先为这一世取名，掷骰查看根骨、悟性、气运与天赋，准备好后再入世。掷出的结果会保存，刷新页面不会重掷。</p><p>入世后，先读眼前处境与目标，再选择自己的做法。功法、修为、材料与安身之处，都要靠亲身经历取得；伤势也会影响能走的路。</p><p>药谷的危机按天推进，离谷后的修炼才会耗去数年，一年为三百六十天。普通变化随行动后果呈现；人物能够预知的重伤、燃寿和无法活着完成的危险，会在选择前提醒。</p><p>此生归宿会留下收获与教训。下一世重新求仙，可携一项真正学会的方法，也可只携记忆。留在世间的事不会因转世而消失。</p>' : '<p>先读眼前的处境，再选择自己的做法。不能行动时，会说明缺少的条件。</p><p>当前人生会继续原有的故事。若想取名掷骰、另从凡人入门，可在「存档与设置」中选择「开始三界求仙篇」，确认前请先导出当前人生。</p>'}<p>顶部简栏显示此身与余寿，点击可展开人物详情；「历史对话」保留已经发生的选择、后果与前世往事。阅读、打开抽屉和刷新页面都不会消耗岁月。</p><p>进度自动保存在当前浏览器。更换设备或离线游玩前，请从「更多 → 存档与设置」导出备份；导入存档会先检查内容，再请你确认替换。</p>`, '<button class="button" data-view="settings">存档与设置</button><button class="button primary" data-close-dialog>继续阅读</button>');
-  openDialog('入世须知', `<p>你的这一世，从药谷旧火开始。相逢、调查与取舍，会改变谷地，也改变后来人要面对的事。</p><div class="help-tip"><strong>先看眼前之事，再落下一念。</strong><br>场景与目标指明眼前方向；选项会列出所需岁月、灵石、药材、气血或命损。无法选择的缘由也会写明。选择的后果会留在正文中，手记、人物、线索与生平都在页面下方「回看」中。资源、修为和自身余寿在「状态」中。</div><div class="help-tip"><strong>调查有取舍，岁月只有一条河。</strong><br>药谷旧火的三条调查线最多追查两条。修炼、外出和旅行也推进世界年份，可能令最后一夜提前到来；阅读、看手记与换装不耗时。倒计时按游戏中的年计算。</div><div class="help-tip"><strong>修行是此生的另一条路。</strong><br>在页面下方「修行」中闭关、休息、炼丹或自由历练。修为满足条件后可尝试破境，突破提高寿限。主线结果确定后，仍可继续修行、问道三界，或归隐转世。</div><div class="help-tip"><strong>功法与法器要亲自装配。</strong><br>从「修行 → 功法与法器」中选择一门本命功法、两个神通与一件法器，再返回当前剧情。身在幽冥或天界时，可回看药谷故事；回到人间才能继续作出谷中的选择。</div><div class="help-tip"><strong>留意余寿和气血。</strong><br>燃寿强攻损耗寿元，延寿丹每世最多服用两次。战斗需先分胜负或遁走，才能继续剧情。</div><div class="help-tip"><strong>转世，走进自己改变的世界。</strong><br>医谷共守、宗门接管与焚种迁民，会通向不同的后世事务。人物随世界年份老去，新的你也有新的身份。寿尽、陨落或归隐后，先从真实经历产生的候选中明确选择一项旧途奖励，再按提示交接进入对话新人生；下一世只沿用一项情境方法，已得传承历史、世界因果与三界道证保留。</div><div class="help-tip"><strong>问鼎三界。</strong><br>取得人间、幽冥、天界的三枚道证，修至登仙，在天界挑战三界共主。可随时从「修行 → 三界山河」查看长远目标。</div><p>旧存档的当世沿旧途继续，结束此生并转世后进入新篇，不会补写未曾经历的药谷往事。进度自动保存在当前浏览器；更换设备前，请在页首「更多 → 存档与设置」中导出备份。</p>`, '<button class="button primary" data-close-dialog>我已明了</button>');
+  if (isJourney(state)) return openDialog('入世须知', `${state.version === 4 ? '<p>你从十六岁的凡人开始求仙。先为这一世取名，掷骰查看根骨、悟性、气运与天赋，准备好后再入世。掷出的结果会保存，刷新页面不会重掷。</p><p>入世后，先读眼前处境与目标，再选择自己的做法。功法、修为、材料与安身之处，都要靠亲身经历取得；伤势也会影响能走的路。</p><p>药谷的危机按天推进，离谷后的修炼才会耗去数年，一年为三百六十天。普通变化随行动后果呈现；人物能够预知的重伤、燃寿和无法活着完成的危险，会在选择前提醒。</p><p>此生归宿会留下收获与教训。下一世重新求仙，可携一项真正学会的方法，也可只携记忆。留在世间的事不会因转世而消失。</p>' : '<p>先读眼前的处境，再选择自己的做法。不能行动时，会说明缺少的条件。</p><p>当前人生会继续原有的故事。若想另开独立旅程，可返回首页选择「踏入仙途」，原有旅程会保留。</p>'}<p>顶部简栏显示此身与余寿，点击可展开人物详情；「历史对话」保留已经发生的选择、后果与前世往事。阅读、打开抽屉和刷新页面都不会消耗岁月。</p><p>进度自动保存在当前浏览器。更换设备或离线游玩前，请从「游戏设置」导出备份；导入存档会先检查内容，再请你确认导入；当前旅程会保留。</p>`, '<button class="button" data-view="settings">存档与设置</button><button class="button primary" data-close-dialog>继续阅读</button>');
+  openDialog('入世须知', `<p>你的这一世，从药谷旧火开始。相逢、调查与取舍，会改变谷地，也改变后来人要面对的事。</p><div class="help-tip"><strong>先看眼前之事，再落下一念。</strong><br>场景与目标指明眼前方向；选项会列出所需岁月、灵石、药材、气血或命损。无法选择的缘由也会写明。选择的后果会留在正文中，手记、人物、线索与生平都在页面下方「回看」中。资源、修为和自身余寿在「状态」中。</div><div class="help-tip"><strong>调查有取舍，岁月只有一条河。</strong><br>药谷旧火的三条调查线最多追查两条。修炼、外出和旅行也推进世界年份，可能令最后一夜提前到来；阅读、看手记与换装不耗时。倒计时按游戏中的年计算。</div><div class="help-tip"><strong>修行是此生的另一条路。</strong><br>在页面下方「修行」中闭关、休息、炼丹或自由历练。修为满足条件后可尝试破境，突破提高寿限。主线结果确定后，仍可继续修行、问道三界，或归隐转世。</div><div class="help-tip"><strong>功法与法器要亲自装配。</strong><br>从「修行 → 功法与法器」中选择一门本命功法、两个神通与一件法器，再返回当前剧情。身在幽冥或天界时，可回看药谷故事；回到人间才能继续作出谷中的选择。</div><div class="help-tip"><strong>留意余寿和气血。</strong><br>燃寿强攻损耗寿元，延寿丹每世最多服用两次。战斗需先分胜负或遁走，才能继续剧情。</div><div class="help-tip"><strong>转世，走进自己改变的世界。</strong><br>医谷共守、宗门接管与焚种迁民，会通向不同的后世事务。人物随世界年份老去，新的你也有新的身份。寿尽、陨落或归隐后，先从真实经历产生的候选中明确选择一项旧途奖励，再按提示交接进入对话新人生；下一世只沿用一项情境方法，已得传承历史、世界因果与三界道证保留。</div><div class="help-tip"><strong>问鼎三界。</strong><br>取得人间、幽冥、天界的三枚道证，修至登仙，在天界挑战三界共主。可随时从「修行 → 三界山河」查看长远目标。</div><p>旧存档的当世沿旧途继续，结束此生并转世后进入新篇，不会补写未曾经历的药谷往事。进度自动保存在当前浏览器；更换设备前，请在剧情下方的「游戏设置」中导出备份。</p>`, '<button class="button primary" data-close-dialog>我已明了</button>');
 }
 
 function render({ resetSupport = false, focusSelector = null } = {}) {
+  rememberScreen();
+  if(view==='home') {
+    $('#app').innerHTML=renderTitleScreen({summary:currentJourneySummary(),loading:!homeReady,error:liveError||saveError,hasOtherSaves:Boolean(state||liveSnapshot?.state)});
+    return;
+  }
+  if(view==='settings')return renderSettingsPage();
+  if(view==='new')return renderNewJourney();
+  if(view==='saves')return renderScreenShell(renderJourneyList({entries:savedJourneys,cursor:savedCursor,loading:savedLoading,error:savedError}),{title:'续写此生',back:returnScreen==='adventure'?'返回当前剧情':'返回首页'});
   if(activeMode==='live') return renderLiveApp();
   if (resetSupport) openPanels.clear();
   else document.querySelectorAll('details[data-panel-key]').forEach(panel => openPanels.set(panel.dataset.panelKey, panel.open));
@@ -227,11 +470,11 @@ function render({ resetSupport = false, focusSelector = null } = {}) {
   const standalone = view !== 'adventure';
   const returnLabel = state?.phase === 'combat' ? '返回未完成战斗' : state?.phase === 'event' ? '返回未完成际遇' : isCreating(state) ? '返回取名掷骰' : preparingLife ? '返回转世选择' : '返回当前剧情';
   const identity = journey && !isCreating(state) ? renderIdentityBar(journey.summary) : `<div><h1>百世问鼎</h1><p class="paper-clock">${esc(clock)}</p></div>`;
-  $('#app').innerHTML = `<div class="paper-page${journey ? ' paper-page-immersive' : ''}"><header class="paper-top${journey ? ' paper-top-immersive' : ''}">${identity}<nav class="paper-tools" aria-label="历史、帮助与存档">${journey && (!isCreating(state) || journey.summary.generation > 1) ? '<button data-history aria-haspopup="dialog">历史对话</button>' : ''}<button data-more aria-haspopup="dialog">更多</button></nav></header>
+  $('#app').innerHTML = `<div class="paper-page${journey ? ' paper-page-immersive' : ''}"><header class="paper-top${journey ? ' paper-top-immersive' : ''}">${identity}</header>
     <main id="main-content" class="paper-main" tabindex="-1">${saveError ? `<div class="notice error" role="alert"><p>${esc(saveError)}${session.status === 'blocked' ? ' 原存档未被覆盖，自动保存已暂停。' : ''}</p>${session.rawCorruptSave !== null ? '<button data-export-corrupt class="button">备份原存档</button>' : ''}${state ? '<button data-export class="button">导出当前进度</button>' : ''}${session.pendingLegacyRaw || session.backupError ? '<button data-recover-legacy class="button">恢复较新旧人生／重试读取备份</button><button data-export-legacy class="button">导出较新旧人生备份</button>' : ''}</div>` : ''}
     ${standalone ? `<div class="paper-return"><button class="small-button" data-view="adventure">${icon('arrow', 14)}${esc(returnLabel)}</button></div>` : ''}
-    ${view === 'settings' ? renderSettings() : session.status === 'blocked' ? renderRecovery() : journey ? isCreating(state) ? renderBirth({ ...journey.creation, name: birthNameDraft, revision: journey.revision, sceneId: journey.sceneId }) : renderJourney(journey) : preparingLife ? renderSetup() : renderView()}
-    </main><footer id="save-status" class="paper-footer">${lastSaved && !saveError ? '进度已自动保存' : state ? '请及时导出备份' : '岁月只在落子时前行'}</footer></div>`;
+    ${session.status === 'blocked' ? renderRecovery() : journey ? isCreating(state) ? renderBirth({ ...journey.creation, name: birthNameDraft, revision: journey.revision, sceneId: journey.sceneId }) : renderJourney(journey) : preparingLife ? renderSetup() : renderView()}
+    </main>${renderGameNavigation({history:Boolean(journey&&(!isCreating(state)||journey.summary.generation>1))})}<footer id="save-status" class="paper-footer">${lastSaved && !saveError ? '进度已自动保存' : state ? '请及时导出备份' : '岁月只在落子时前行'}</footer></div>`;
   document.querySelectorAll('details[data-panel-key]').forEach(panel => {
     if (openPanels.has(panel.dataset.panelKey)) panel.open = openPanels.get(panel.dataset.panelKey);
   });
@@ -300,7 +543,7 @@ function renderAdventure() {
     const latest = state.run.log.at(-1);
     content = `<section class="paper-free"><p class="story-location">${esc(row(WORLDS, state.run.worldId).location)}</p><h2>此生沿旧途继续</h2><p>你的经历、资源与因果完整保留。可在下方「修行」继续历练；结束此生并转世后进入新篇。</p>${latest ? `<section class="paper-feedback" role="status"><h3 id="latest-log-title" tabindex="-1">${esc(latest.title)}</h3><p>${esc(latest.text)}</p></section>` : ''}</section>`;
   }
-  return `<p class="legacy-rule-note">此生沿旧规继续；结束后直接交接到对话新人生。备份与重新开始仍在「更多」中。</p>${content}${renderUtilities(story)}`;
+  return `<p class="legacy-rule-note">此生沿旧规继续；结束后直接交接到对话新人生。可在「游戏设置」备份存档，返回首页可开启独立的新旅程。</p>${content}${renderUtilities(story)}`;
 }
 
 function renderLog(limit = 5) {
@@ -385,10 +628,6 @@ function renderPastLife(life) {
   return `<article class="chronicle-card"><header><h3>第 ${num(life.generation)} 世 · ${esc(life.name)}</h3><span class="badge ${life.cause === 'victory' ? 'gold' : 'dim'}">${esc(CAUSES[life.cause] || life.cause)}</span></header><p>${num(life.age)} 岁 · ${esc(REALMS[life.realmIndex].name)}境</p>${life.deeds.length ? `<div class="deeds">${life.deeds.slice(-7).map(deed => `<span class="deed">${esc(deed)}</span>`).join('')}</div>` : '<p>有人踏遍三界，有人归隐山林。这一生，也曾来过。</p>'}${legacy ? `<p class="history-legacy">${icon('lotus', 13)} 此生传承：${esc(legacy.name)}</p>` : ''}${entries.length ? `<details class="history-details" data-panel-key="history-${life.generation}"><summary>回看此世关键经历 <span>${entries.length} 则</span></summary><ol>${entries.map(entry => `<li><div class="history-date">${num(entry.age)} 岁 · 道历 ${num(entry.year)} 年</div><h4>${esc(entry.title)}</h4><p>${esc(entry.text)}</p></li>`).join('')}</ol></details>` : ''}</article>`;
 }
 
-function renderSettings() {
-  return liveModeControls() + `${heading('存档与设置', '将这一刻的修行妥善收藏，待下一次回来继续。')}<button class="button" data-export-legacy>导出旧原档与交接备份</button><div class="settings-grid"><section class="settings-row"><div><h3>导出修行存档</h3><p>下载包含当前人生、传承、世界因果和随机状态的备份，可导入到另一台设备。</p></div><button class="button primary" data-export ${state ? '' : 'disabled'}>${icon('download', 16)}导出存档</button></section><section class="settings-row"><div><h3>导入已有存档</h3><p>选择之前导出的 JSON 文件。通过完整校验后，再确认替换当前修行进度。</p></div><button class="button" data-import>${icon('upload', 16)}选择存档</button></section>${window.location.protocol !== 'file:' ? '<section class="settings-row"><div><h3>下载离线版</h3><p>保存为一个 HTML 文件，断网也能继续修行。将当前存档一并导出，再在离线版中导入。</p></div><a class="button" href="./baishi-wending-offline.html" download="百世问鼎-离线版.html">' + icon('download', 16) + '下载游戏</a></section>' : ''}<section class="settings-row"><div><h3>入世指南</h3><p>${isJourney(state) ? '了解当前行动、选择的后果与进度保存。' : '了解药谷主线、调查取舍、共同岁月与转世后的故事，也可查看修行、装备与三界规则。'}</p></div><button class="button" data-help>${icon('help', 16)}查看指南</button></section><section class="settings-row"><div><h3>开始三界求仙篇</h3><p>${state && state.version !== 4 ? '现有人生可以照常继续；也可另开一局，选择来处与双重命格，寻找自己的求仙之路。' : '为十六岁的凡人取名，选择来处、掷取双重命格，从人间一步步修行至幽冥与天界。'}确认后会替换这台设备上的人生与历史，请先导出备份。</p></div><button class="button danger" data-reset>${icon('refresh', 16)}开始三界求仙篇</button></section></div><p class="save-info">${state?.version === 4 ? (state.contentVersion === 3 ? '三界求仙篇' : '人间求仙篇') : '百世问鼎'} · 单机本地存档<br>存档不会上传至服务器。不同浏览器、域名或离线文件的存储彼此独立，请用导出与导入迁移。隐私模式或禁用本地存储时，请在离开前手动备份。</p>`;
-}
-
 function downloadText(filename, text, mime = 'application/json;charset=utf-8') {
   const url = URL.createObjectURL(new Blob([text], { type: mime }));
   const link = document.createElement('a'); link.href = url; link.download = filename;
@@ -414,17 +653,18 @@ function showBirthNameError(message = '') {
 }
 
 function saveBirthName() {
-  if (!isCreating(state) || birthComposing) return;
-  if (birthNameDraft === state.life.name) { showBirthNameError(); return; }
+  const birth=currentBirth();
+  if (!isCreating(birth) || birthComposing) return;
+  if (birthNameDraft === birth.life.name) { showBirthNameError(); return; }
   try {
-    const result = chooseCultivation(state, { revision: state.revision, sceneId: state.scene.nodeId, choiceId: 'birth-name', name: birthNameDraft });
+    const result = chooseCultivation(birth, { revision: birth.revision, sceneId: birth.scene.nodeId, choiceId: 'birth-name', name: birthNameDraft });
     if (result.kind !== 'applied') { showBirthNameError(result.message); return; }
     serializeGame(result.state);
-    state = result.state;
     const previousError = saveError;
-    persist();
+    if(view==='new'&&offlineBirthDraft){offlineBirthDraft.state=result.state;offlineBirthDraft.name=birthNameDraft;saveCreationDraft();}
+    else {state=result.state;persist();}
     showBirthNameError();
-    document.querySelectorAll('[data-birth-reroll], [data-birth-start], [data-birth-origin], [data-birth-lock]').forEach(button => { button.dataset.revision = String(state.revision); });
+    document.querySelectorAll('[data-birth-reroll], [data-birth-start], [data-birth-origin], [data-birth-lock]').forEach(button => { button.dataset.revision = String(result.state.revision); });
     const saveStatus = $('#save-status');
     if (saveStatus) saveStatus.textContent = lastSaved && !saveError ? '进度已自动保存' : '请及时导出备份';
     if (saveError && saveError !== previousError) notify(saveError, true);
@@ -432,23 +672,40 @@ function saveBirthName() {
 }
 
 function chooseBirth(choiceId, data) {
-  if (!isCreating(state) || birthComposing) return;
+  const birth=currentBirth();
+  if (!isCreating(birth) || birthComposing) return;
   try {
-    const result = chooseCultivation(state, { revision: Number(data.revision), sceneId: data.sceneId, choiceId, ...(choiceId === 'birth-start' ? { name: birthNameDraft } : {}), ...(choiceId === 'birth-origin' ? { originId: data.birthOrigin } : {}), ...(choiceId === 'birth-lock' ? { talentId: data.birthLock } : {}) });
+    const result = chooseCultivation(birth, { revision: Number(data.revision), sceneId: data.sceneId, choiceId, ...(choiceId === 'birth-start' ? { name: birthNameDraft } : {}), ...(choiceId === 'birth-origin' ? { originId: data.birthOrigin } : {}), ...(choiceId === 'birth-lock' ? { talentId: data.birthLock } : {}) });
     if (result.kind !== 'applied') {
       if (choiceId === 'birth-start') { showBirthNameError(result.message); $('#birth-name')?.focus({ preventScroll: true }); }
       return notify(result.message, true);
     }
     const focusSelector = choiceId === 'birth-reroll' ? '[data-birth-reroll]' : choiceId === 'birth-origin' ? `[data-birth-origin="${data.birthOrigin}"]` : choiceId === 'birth-lock' ? `[data-birth-lock="${data.birthLock}"]` : null;
+    if(view==='new'&&offlineBirthDraft) {
+      if(choiceId==='birth-start')return commitOfflineBirth(result.state);
+      offlineBirthDraft.state=result.state;render();saveCreationDraft();
+      if(focusSelector)focusAdventure($(focusSelector),true);
+      return;
+    }
     update(result.state, { goAdventure: true, message: false, ...(focusSelector ? { focusSelector } : {}) });
   } catch (error) { notify(error.message || '暂时无法准备这一世。', true); }
 }
 
 document.addEventListener('input', event => {
+  if(event.target.id==='live-name'){liveBirthDraft.name=event.target.value;saveCreationDraft();}
   if (event.target.id === 'dao-name') setup.name = event.target.value;
-  if (event.target.id === 'birth-name' && isCreating(state)) {
+  if (event.target.id === 'birth-name' && isCreating(currentBirth())) {
     birthNameDraft = event.target.value;
+    if(view==='new'&&offlineBirthDraft){offlineBirthDraft.name=birthNameDraft;saveCreationDraft();}
     if (!event.isComposing) saveBirthName();
+  }
+});
+document.addEventListener('change',event=>{
+  if(event.target.id==='live-origin'){liveBirthDraft.originId=event.target.value;saveCreationDraft();}
+  if(event.target.id==='reading-theme'||event.target.id==='reading-size') {
+    readingPreferences={...readingPreferences,[event.target.id==='reading-theme'?'theme':'textSize']:event.target.value};
+    applyReadingPreferences();
+    if(!savePreferences(storage,readingPreferences))notify('阅读设置已应用，本机暂时无法保存。',true);
   }
 });
 document.addEventListener('compositionstart', event => { if (event.target.id === 'birth-name') birthComposing = true; });
@@ -468,9 +725,16 @@ document.addEventListener('click', event => {
   const data = button.dataset;
   if ('closeDialog' in data) { closeDialog(); return; }
   if ('confirm' in data) { const callback = dialogConfirm; closeDialog(false); callback?.(); return; }
-  if ('liveEnter' in data) return enterLive();
-  if ('offlineEnter' in data) { setActiveMode('offline'); view='adventure'; render(); return; }
-  if ('liveStart' in data || 'liveNew' in data) return beginLiveLife();
+  if ('home' in data)return goHome();
+  if ('titleNew' in data)return askNewJourney();
+  if ('titleContinue' in data)return continueJourney();
+  if ('saves' in data)return openSavedJourneys();
+  if ('savesNext' in data)return openSavedJourneys(true);
+  if ('selectLive' in data)return selectSavedJourney(data.selectLive,'live');
+  if ('selectOffline' in data)return selectSavedJourney(data.selectOffline,'offline');
+  if ('menuBack' in data) {if(view==='new')return goHome();if(returnScreen==='adventure')return continueJourney();if(returnScreen==='new'){view='new';returnScreen='home';render();return;}if(['inventory','worlds','legacies','chronicle'].includes(returnScreen)){view=returnScreen;render();return;}return goHome();}
+  if ('liveStart' in data) return beginLiveLife();
+  if ('liveNew' in data) return prepareNewJourney();
   if ('liveRetry' in data) return liveSession?.retry();
   if ('liveResume' in data) return liveSession?.resume();
   if ('liveChoice' in data) return liveSession?.choose({choiceId:data.liveChoice,baseRevision:Number(data.revision),stateHash:data.stateHash});
@@ -479,10 +743,10 @@ document.addEventListener('click', event => {
   if ('character' in data) return showCharacter();
   if ('history' in data) return showHistory();
   if ('birthReroll' in data || 'birthStart' in data || 'birthOrigin' in data || 'birthLock' in data) { event.preventDefault(); return chooseBirth('birthStart' in data ? 'birth-start' : 'birthOrigin' in data ? 'birth-origin' : 'birthLock' in data ? 'birth-lock' : 'birth-reroll', data); }
-  if ('more' in data) return showMore();
   if ('help' in data) return showHelp();
   if ('view' in data) {
     closeDialog(false);
+    if(data.view==='settings') {if(view!=='settings')returnScreen=['adventure','new','inventory','worlds','legacies','chronicle'].includes(view)?view:'home';view='settings';render();$('#settings-title')?.focus({preventScroll:true});return;}
     view = isJourney(state) && data.view !== 'settings' ? 'adventure' : data.view; render();
     if (view === 'adventure' && state && !preparingLife) focusAdventure($('#birth-title') || $('#journey-current-title') || $('#ending-title') || $('#combat-title') || $('#event-title') || $('#story-scene-title') || $('#main-content'));
     else { $('#main-content')?.focus({ preventScroll: true }); window.scrollTo({ top: 0, behavior: 'instant' }); }
@@ -551,16 +815,27 @@ document.addEventListener('click', event => {
     return;
   }
   if ('export' in data) return exportGame();
+  if ('exportRecovery' in data) {
+    try {downloadText('百世问鼎-原始恢复备份.json',JSON.stringify({format:'wending-recovery-backups',entries:offlineJourneys.listUnreadable()},null,2));}
+    catch(error){notify(saveProblem(error),true);}return;
+  }
   if ('exportCorrupt' in data && session.rawCorruptSave !== null) { downloadText('百世问鼎-原存档备份.txt', session.rawCorruptSave, 'text/plain;charset=utf-8'); return; }
   if ('import' in data) { $('#import-file').click(); return; }
-  if ('newGame' in data || 'reset' in data) return confirmAction('开始三界求仙篇', `<p>将从十六岁的凡人开始第一世，先取名、选择来处与双重命格，再踏上三界求仙之路。这会替换当前浏览器中的人生、传承与历史。</p><p>若要保留眼前的故事，请先导出备份；已经导出的文件仍可随时恢复。</p>${state ? '<button class="button" data-export>先导出当前人生</button>' : session.rawCorruptSave !== null ? '<button class="button" data-export-corrupt>先备份原存档</button>' : ''}`, beginRecommendedLife, '确认替换并取名');
+  if ('newGame' in data || 'reset' in data) return askNewJourney();
 });
 
 $('#import-file').addEventListener('change', async event => {
   const file = event.target.files?.[0]; event.target.value = '';
   if (!file) return;
+  if(uiBusy||liveSnapshot?.busy)return notify('故事正在保存，请稍候再导入存档。',true);
   if (file.name?.endsWith('.wending.jsonl')) {
-    try { await ensureLive(); const imported=await importLiveArchive(file.stream(),liveArchive); setActiveMode('live'); view='adventure'; liveSnapshot={...imported,status:imported.pending?'paused':'ready',errorCode:imported.pause,busy:false}; render(); await liveSession.resume(); notify('完整存档已校验并恢复。'); } catch(error) { notify('实时存档未能恢复，原进度保留。',true); }
+    confirmAction('导入一段旅程','<p>将校验这份完整存档，成功后切换到导入的旅程。原有旅程仍会保留，可从「切换存档」找回。</p>',async()=>{
+      if(uiBusy||liveSnapshot?.busy)return notify('故事正在保存，请稍后导入。',true);
+      if(!retainUnsavedOfflineLife())return;
+      uiBusy=true;
+      try { await ensureLive(); const imported=await importLiveArchive(file.stream(),liveArchive); setActiveMode('live'); view='adventure'; liveSnapshot={...imported,status:imported.pending?'paused':'ready',errorCode:imported.pause,busy:false}; render(); await liveSession.resume(); notify('完整存档已校验并恢复。'); } catch(error) { notify('实时存档未能恢复，原进度保留。',true); }
+      finally {uiBusy=false;render();}
+    },'确认导入并续写');
     return;
   }
   if (file.size > MAX_SAVE_FILE_BYTES) return notify('存档文件超过字符上限可容纳的 UTF-8 大小，请选择有效的游戏存档。', true);
@@ -569,52 +844,57 @@ $('#import-file').addEventListener('change', async event => {
     const imported = deserializeGame(originalRaw);
     const narrative = isJourney(imported) ? getNarrativeView(imported).summary : null;
     const identity = narrative ? { name: narrative.name, generation: narrative.generation, age: narrative.ageText ?? `${narrative.age} 岁`, realm: narrative.realmName ? `，${narrative.realmName}` : '' } : { name: imported.run.name, generation: imported.meta.generation, age: `${imported.run.age} 岁`, realm: `，${REALMS[imported.run.realmIndex].name}境` };
-    confirmAction('导入修行存档', `将恢复「${esc(identity.name)}」的第 ${identity.generation} 世（${esc(identity.age)}${esc(identity.realm)}）。${isCreating(imported) ? '这一世尚未入世，姓名、属性与天赋将按存档恢复。' : ''}${state ? '当前进度将被替换；如需保留，请先取消并导出备份。' : ''}`, () => {
-      setActiveMode('offline'); replaceSession(imported, originalRaw); notify(lastSaved ? '存档已恢复，仙途继续。' : saveError, !lastSaved);
+    confirmAction('导入修行存档', `将恢复「${esc(identity.name)}」的第 ${identity.generation} 世（${esc(identity.age)}${esc(identity.realm)}）。${isCreating(imported) ? '这一世尚未入世，姓名、属性与天赋将按存档恢复。' : ''}${state ? '当前旅程会先保留，可从切换存档找回。' : ''}`, () => {
+      if(!replaceSession(imported, originalRaw))return;notify(lastSaved ? '存档已恢复，仙途继续。' : saveError, !lastSaved);
     }, '确认恢复');
   } catch (error) { notify(error.message || '无法读取这个存档文件。', true); }
 });
-
-if (activeMode==='offline' && session.status === 'fresh') persist();
 
 $('#dialog').addEventListener('cancel', event => { event.preventDefault(); closeDialog(); });
 $('#dialog').addEventListener('close', () => { if (!$('#dialog').open) { dialogConfirm = null; $('#dialog').className = ''; } });
 $('#dialog').addEventListener('click', event => { if (event.target === $('#dialog')) { const rect = $('#dialog').getBoundingClientRect(); if (event.clientX < rect.left || event.clientX > rect.right || event.clientY < rect.top || event.clientY > rect.bottom) closeDialog(); } });
 render();
 
-if(activeMode==='live') enterLive();
+initializeScreens();
 
 function setActiveMode(mode) {
   activeMode=mode;
   try { storage.setItem(ACTIVE_MODE_KEY,mode); }
   catch { notify('模式选择未能保存，下次打开可从设置重新进入。',true); }
 }
-function liveModeControls() {
-  return '<section class="settings-row"><div><h3>实时人生</h3><p>每次选择由规则结算，再联网生成新的故事。最小上下文传至 Cloudflare，完整历史留在本机；缓存可离线阅读。旧人生独立保留。</p></div><button class="button" data-live-enter>打开实时人生</button></section>';
-}
 async function ensureLive() {
   if(liveSession)return;
-  liveArchive=await openLiveArchive();
-  liveSession=createLiveSession({archive:liveArchive,client:liveClient,onChange:snapshot=>{liveSnapshot=snapshot;if(activeMode==='live')render();}});
-}
-async function enterLive() {
-  setActiveMode('live');view='adventure';liveError='';render();
-  try { await ensureLive(); await liveSession.resume(); if(!liveSnapshot?.state){const capabilities=await liveClient.capabilities();liveError=capabilities.available?'':'实时生成暂未开放或当前页面无法连接兼容服务。仍可导入备份阅读，或返回旧人生。';render();} }
-  catch { liveError='无法打开本地实时存档。请检查浏览器存储设置；旧人生仍可恢复。';render(); }
+  if(!liveInitialization)liveInitialization=(async()=>{
+    liveArchive=await openLiveArchive();
+    liveSession=createLiveSession({archive:liveArchive,client:liveClient,onChange:snapshot=>{
+      liveSnapshot=snapshot;
+      if(creatingRunId&&snapshot.state?.runId===creatingRunId){setActiveMode('live');if(view==='new')view='adventure';}
+      render();
+    }});
+  })();
+  try {await liveInitialization;}catch(error){liveInitialization=null;throw error;}
 }
 async function beginLiveLife() {
-  const name=$('#live-name')?.value?.trim()||'云归',originId=$('#live-origin')?.value||'village';
-  liveBirthDraft={name,originId};
-  try { await ensureLive(); const capabilities=await liveClient.capabilities();if(!capabilities.available){liveError='实时生成暂未开放，尚未创建新人生。';render();return;}await liveSession.start({name,originId,seed:newSeed()}); }
-  catch { notify('无法开始，请检查本地存储与网络。',true); }
+  if(uiBusy||view!=='new')return;
+  if(!retainUnsavedOfflineLife())return;
+  const name=$('#live-name')?.value?.trim()??liveBirthDraft.name,originId=$('#live-origin')?.value??liveBirthDraft.originId;
+  liveBirthDraft={...liveBirthDraft,name,originId};uiBusy=true;liveError='';render();
+  try {
+    await ensureLive();const capabilities=await liveClient.capabilities();
+    if(!capabilities.available){liveError='此刻无法连接实时剧情，尚未创建新人生。请稍后再试；已有旅程仍可继续。';return;}
+    creatingRunId=window.crypto.randomUUID();
+    const result=await liveSession.startNew({runId:creatingRunId,name,originId,seed:newSeed()},liveBirthDraft.expectedArchiveId);
+    if(result.state?.runId===creatingRunId){setActiveMode('live');if(view==='new')view='adventure';}
+    else if(result.errorCode!=='BIRTH_CONTEXT_INVALID')liveError='另一页面可能已切换旅程，或本地存档无法保存。请返回首页后重新创建，原进度保持不变。';
+  } catch { liveError='无法开始，请检查本地存储与网络。原有旅程保持不变。'; }
+  finally {uiBusy=false;creatingRunId=null;render();}
 }
 function renderLiveApp() {
   const focus = !$('#dialog').open && $('#app').contains(document.activeElement) ? captureFocusTarget() : null;
   const snapshot=liveSnapshot,liveState=snapshot?.state;
   const header=liveState?renderIdentityBar(liveCharacterSummary(liveState,liveCatalogs)):'<h1>百世问鼎 · 实时人生</h1>';
-  const settings=`<h2>实时存档与设置</h2><p>新增剧情需要联网，最小必要上下文传至 Cloudflare，完整历史保留在设备上。缓存离线可读。</p><div class="live-toolbar"><button class="button" data-export ${liveState?'':'disabled'}>导出完整实时存档</button><button class="button" data-import>导入存档</button><button class="button" data-offline-enter>返回旧人生</button><button class="button" data-help>实时人生须知</button></div><p>旧人生继续使用原有离线规则与独立存档。恢复旧版页面不会删除实时历史。</p>`;
-  const content=liveState?renderLiveJourney({...snapshot,stateHash:stateHash(liveState),itemNames:LIVE_ITEMS},liveState.phase==='active'?compileChoices(liveState,liveState.currentScene.choices):[]):`<section class="birth"><h2 id="journey-current-title" tabindex="-1">从此身开始</h2><p>出生事实保存后不再重掷。岁月只在选择中前行。</p>${snapshot?.errorCode==='BIRTH_CONTEXT_INVALID'?'<p class="notice" role="alert">姓名无法用于故事，请修改后重新开始。支持中文姓名与常用标点。</p>':''}<label for="live-name">此生姓名</label><input id="live-name" maxlength="24" value="${esc(liveBirthDraft.name)}"><label for="live-origin">从何处来</label><select id="live-origin">${Object.entries(LIVE_ORIGINS).map(([id,name])=>`<option value="${id}" ${id===liveBirthDraft.originId?'selected':''}>${esc(name)}</option>`).join('')}</select><p>联网生成将发送最小必要的人物、行动与记忆上下文至 Cloudflare，完整历史留在本机。</p><button class="button primary" data-live-start ${!liveSession||liveError?'disabled':''}>保存此身并开启实时人生</button><button class="button" data-import>导入已有实时存档</button><button class="button" data-offline-enter>返回旧人生</button></section>`;
-  $('#app').innerHTML=`<div class="paper-page paper-page-immersive"><header class="paper-top paper-top-immersive">${header}<nav class="paper-tools" aria-label="历史、帮助与存档"><button data-history ${liveState?'':'disabled'}>历史对话</button><button data-more>更多</button></nav></header><main id="main-content" class="paper-main" tabindex="-1">${liveError?`<p class="notice" role="status">${esc(liveError)}</p>`:''}${view==='settings'?'<button class="small-button" data-view="adventure">返回当前剧情</button>'+settings:content}</main><footer class="paper-footer">实时人生 · 已缓存内容离线可读 · 新剧情需要联网</footer></div>`;
+  const content=liveState?renderLiveJourney({...snapshot,stateHash:stateHash(liveState),itemNames:LIVE_ITEMS},liveState.phase==='active'?compileChoices(liveState,liveState.currentScene.choices):[]):'<p role="status">正在读取旅程…</p>';
+  $('#app').innerHTML=`<div class="paper-page paper-page-immersive"><header class="paper-top paper-top-immersive">${header}</header><main id="main-content" class="paper-main" tabindex="-1">${liveError?`<p class="notice" role="status">${esc(liveError)}</p>`:''}${content}</main>${renderGameNavigation({history:Boolean(liveState)})}<footer class="paper-footer">进度保存在本机 · 已缓存内容离线可读</footer></div>`;
   resolveFocusTarget(focus)?.focus({ preventScroll: true });
 }
 async function showLiveHistory(first) {

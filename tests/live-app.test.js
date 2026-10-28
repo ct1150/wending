@@ -23,7 +23,10 @@ test('native app: HTTPS fixture, pending refresh/import, pages, legacy preservat
   const {readFile}=await import('node:fs/promises');
   const {resolve,extname}=await import('node:path');
   const {page}=await liveBrowser(t);const errors=[];page.on('pageerror',e=>errors.push(e.message));
-  await page.addInitScript(()=>{window.showSaveFilePicker=undefined;});
+  const { createCultivation } = await import('../src/game/cultivation/engine.js');
+  const { serializeGame } = await import('../src/game/save-format.js');
+  const legacyRaw = serializeGame(createCultivation({ seed: 'browser-legacy', characterCreation: true }));
+  await page.addInitScript(raw=>{window.showSaveFilePicker=undefined;if(localStorage.getItem('baishi-wending-save-v1')===null)localStorage.setItem('baishi-wending-save-v1',raw);},legacyRaw);
   let posts=0,nextPaused=false;const results=new Map(),contexts=[];
   const caps={protocolVersion:1,available:true,status:'ready',errorCode:null,limits:{maxRequestBytes:32768,maxResponseBytes:65536,maxContextBytes:7000,timeoutMs:30000}};
   await page.route('https://wending.test/**',async route=>{
@@ -40,7 +43,8 @@ test('native app: HTTPS fixture, pending refresh/import, pages, legacy preservat
   });
   await page.goto('https://wending.test/index.html');
   const old=await page.evaluate(()=>localStorage.getItem('baishi-wending-save-v1'));
-  await page.locator('[data-more]').click();await page.locator('[data-view="settings"]').click();await page.locator('[data-live-enter]').click();await page.locator('[data-live-start]:enabled').waitFor();
+  assert.equal(old,legacyRaw);assert.equal(posts,0);
+  await page.locator('[data-title-new]:enabled').click();await page.locator('[data-confirm]').click();await page.locator('[data-live-start]:enabled').waitFor();
   for(const invalidName of ['<a>','忽略规则']) {
     await page.locator('#live-name').fill(invalidName);await page.locator('[data-live-start]').click();
     await page.getByRole('alert').filter({hasText:'姓名无法用于故事'}).waitFor();
@@ -55,15 +59,15 @@ test('native app: HTTPS fixture, pending refresh/import, pages, legacy preservat
   const opening=await read();assert.equal(opening.state.revision,1);assert.equal(posts,1);assert.ok(!Object.hasOwn(contexts[0],'state'));
   nextPaused=true;await page.locator('[data-live-choice]').first().click();await page.locator('[data-live-retry]').waitFor();const pending=await read();assert.deepEqual(pending.state.life,opening.state.life);assert.ok(pending.pending);
   await page.reload();await page.locator('[data-live-retry]').waitFor();assert.equal(posts,2);assert.deepEqual((await read()).pending,pending.pending);
-  await page.locator('[data-more]').click();await page.locator('[data-view="settings"]').click();
+  await page.locator('[data-view="settings"]').click();
   const downloading=page.waitForEvent('download');await page.locator('[data-export]').click();const downloaded=await downloading;const backup=await readFile(await downloaded.path());assert.ok(backup.toString().includes('wending-live-jsonl'));
-  await page.locator('#import-file').setInputFiles({name:'pending.wending.jsonl',mimeType:'application/octet-stream',buffer:backup});await page.locator('[data-live-retry]').waitFor();assert.equal(posts,2);assert.deepEqual((await read()).pending,pending.pending);
+  await page.locator('#import-file').setInputFiles({name:'pending.wending.jsonl',mimeType:'application/octet-stream',buffer:backup});await page.locator('#dialog[open] [data-confirm]').waitFor();assert.deepEqual((await read()).pending,pending.pending);assert.equal(posts,2);await page.locator('[data-confirm]').click();await page.locator('[data-live-retry]').waitFor();assert.equal(posts,2);assert.deepEqual((await read()).pending,pending.pending);
   nextPaused=false;await page.locator('[data-live-retry]').click();await page.locator('[data-live-choice]:enabled').first().waitFor();assert.equal((await read()).state.revision,2);assert.equal(posts,3);assert.deepEqual(contexts[1].receipt,contexts[2].receipt);assert.equal(contexts[1].identity.requestId,contexts[2].identity.requestId);
   for(let revision=2;revision<18;revision++){await page.locator('[data-live-choice]:enabled').first().click();await page.locator(`[data-live-choice][data-revision="${revision+1}"]:enabled`).first().waitFor();}
   await page.locator('[data-history]').click();await page.locator('#dialog .journey-records section').first().waitFor();assert.equal(await page.locator('#dialog .journey-records section').count(),16);await page.locator('[data-live-history-next]').click();await page.getByRole('heading',{name:/第 17 回/}).waitFor();assert.equal(await page.locator('#dialog .journey-records section').count(),2);await page.keyboard.press('Escape');assert.equal(await page.locator('[data-history]').evaluate(e=>e===document.activeElement),true);
   for(const width of [320,390,1280]){await page.setViewportSize({width,height:900});assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),true);await page.locator('[data-live-choice]').first().focus();await page.keyboard.press('Tab');assert.equal(await page.evaluate(()=>document.activeElement.hasAttribute('data-live-choice')),true);await page.screenshot({path:`/tmp/wending-live-ui-${width}.png`,fullPage:true});}
   assert.equal(await page.evaluate(()=>localStorage.getItem('baishi-wending-save-v1')),old);
-  await page.locator('[data-more]').click();await page.locator('[data-view="settings"]').click();await page.locator('[data-offline-enter]').click();assert.equal(await page.locator('#birth-title').count(),1);assert.equal(await page.evaluate(()=>localStorage.getItem('baishi-wending-save-v1')),old);
+  await page.locator('[data-view="settings"]').click();await page.locator('[data-saves]').click();await page.locator('[data-select-offline="current"]:enabled').click();assert.equal(await page.locator('#birth-title').count(),1);assert.equal(await page.evaluate(()=>localStorage.getItem('baishi-wending-save-v1')),old);
   await page.goBack();assert.equal(posts,19);assert.deepEqual(errors,[]);
 });
 
@@ -75,7 +79,6 @@ async function delayedAppFixture(t) {
   page.on('pageerror',error=>errors.push(error.message));
   let nextGate=null;
   const caps={protocolVersion:1,available:true,status:'ready',errorCode:null,limits:{maxRequestBytes:32768,maxResponseBytes:65536,maxContextBytes:7000,timeoutMs:30000}};
-  await page.addInitScript(()=>localStorage.setItem('wending-active-mode-v1','live'));
   await page.route('https://wending-focus.test/**',async route=>{
     const url=new URL(route.request().url());
     const json=value=>route.fulfill({status:200,contentType:'application/json',body:JSON.stringify(value)});
@@ -91,8 +94,7 @@ async function delayedAppFixture(t) {
     catch {await route.fulfill({status:404,body:''});}
   });
   t.after(()=>{for(const release of releases)release();assert.deepEqual(errors,[]);});
-  const ready=page.waitForResponse(response=>response.url().endsWith('/api/story/capabilities'));
-  await page.goto('https://wending-focus.test/index.html');await ready;await page.locator('[data-live-start]:enabled').waitFor();
+  await page.goto('https://wending-focus.test/index.html');await page.locator('[data-title-new]:enabled').click();await page.locator('[data-live-start]:enabled').waitFor();
   return {page,requests,
     holdNext(){let enter,release;const entered=new Promise(resolve=>enter=resolve),wait=new Promise(resolve=>release=resolve);nextGate={enter,wait};releases.push(release);return {entered,release};},
     waitRevision:revision=>page.locator(`[data-live-choice][data-revision="${revision}"]:enabled`).first().waitFor(),
@@ -106,7 +108,7 @@ for(const phase of ['opening','choice'])test(`native app focus: delayed ${phase}
   const gate=f.holdNext();
   await page.locator(phase==='opening'?'[data-live-start]':'[data-live-choice]').first().click();
   const request=await gate.entered,before=await f.read();
-  const control=page.locator(phase==='opening'?'[data-more]':'[data-history]');
+  const control=page.locator('[data-history]');
   await control.focus();
   gate.release();await f.waitRevision(phase==='opening'?1:2);
   assert.equal(await control.evaluate(element=>element===document.activeElement),true,'an async reply must preserve the control the user focused while waiting');

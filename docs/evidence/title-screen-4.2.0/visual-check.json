@@ -1,0 +1,36 @@
+{
+  "capturedAt": "2026-10-28T23:40:20.257Z",
+  "browser": "156.0.8078.73",
+  "desktop": {
+    "width": 1280,
+    "height": 800
+  },
+  "mobile": {
+    "width": 390,
+    "height": 844
+  },
+  "controlColors": {
+    "color": "rgb(229, 228, 219)",
+    "background": "rgb(30, 33, 31)"
+  },
+  "controls": [
+    {
+      "text": "踏入仙途",
+      "top": 350.40625,
+      "bottom": 436.09375
+    },
+    {
+      "text": "续写此生",
+      "top": 446.09375,
+      "bottom": 531.78125
+    },
+    {
+      "text": "游戏设置",
+      "top": 541.78125,
+      "bottom": 627.46875
+    }
+  ],
+  "overflow": false,
+  "pageErrors": [],
+  "externalRequests": []
+}
