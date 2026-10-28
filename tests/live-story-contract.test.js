@@ -141,7 +141,7 @@ test('relevance selection fits 17 facts and 13 byte-heavy obligations without er
   for(const coverage of [{...c.coverage,openIncluded:999},{...c.coverage,openOmitted:-1},{...c.coverage,policy:'all-resolved'},{...c.coverage,openTotal:Number.MAX_SAFE_INTEGER+1}])assert.throws(()=>validateStoryContext({...c,coverage}));
   let input;const responseScene={...next,memoryDeltas:[]};
   const output=await generateScene({run:async(model,value)=>{input=value;return response(responseScene);}},profile(),c);
-  assert.equal(output.status,'ready');assert.match(input.messages[0].content,/openOmitted/);assert.match(input.messages[0].content,/未解决/);
+  assert.equal(output.status,'ready');assert.match(input.messages[0].content,/coverage\.openOmitted stays unresolved; omission is not closure/);
   const size=value=>new TextEncoder().encode(JSON.stringify(value)).length;
   const overhead=size(input)-size(input.messages[1].content);
   assert.ok(overhead+7000<=12288);

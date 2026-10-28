@@ -1,6 +1,7 @@
 // Server-only transport to the existing operator ledger. The tester permit is
 // never forwarded; the operator credential is read only from a secret binding.
 import { canonicalStringify, sha256 } from '../game/cultivation/live/identity.js';
+import {validateStoryObservation,storyObservationHash} from './story-observation.js';
 
 export const STORY_EXPERIMENT_COORDINATOR_NAME='wending-realtime-acceptance-v1';
 export const STORY_EXPERIMENT_NAMESPACE_ID='dfb218f2f29d4ecab2395f8a00b48350';
@@ -35,6 +36,7 @@ export function createExperimentBridge(env){
           if(!sceneHash(input.acceptedSceneHash))return unavailable();
           body.acceptedSceneHash=input.acceptedSceneHash;
         }else if(Object.hasOwn(input,'acceptedSceneHash'))return unavailable();
+        if(Object.hasOwn(input,'observation'))body.observation=validateStoryObservation(input.observation,{status:body.status});
       }
       const expectedId='task8_'+sha256(canonicalStringify([body.sessionRef,body.attemptId]));
       const operation=(async()=>{
@@ -44,7 +46,7 @@ export function createExperimentBridge(env){
         if(result?.kind==='denied'&&codes.has(result.code))return {kind:'denied',code:result.code};
         if(!response.ok||result?.admissionId!==expectedId)return unavailable();
         if(path==='/task8/admit'&&['reserved','duplicate'].includes(result.kind)&&result.reservedNeurons===111&&(result.kind==='reserved'||['reserved','complete','failed','unknown'].includes(result.status)))return result;
-        if(path==='/task8/settle'&&result.kind==='settled'&&result.status===body.status&&(body.status==='complete'?result.acceptedSceneHash===body.acceptedSceneHash:!Object.hasOwn(result,'acceptedSceneHash')))return result;
+        if(path==='/task8/settle'&&result.kind==='settled'&&result.status===body.status&&(body.status==='complete'?result.acceptedSceneHash===body.acceptedSceneHash:!Object.hasOwn(result,'acceptedSceneHash'))&&(Object.hasOwn(body,'observation')?result.observationHash===storyObservationHash(body.observation):!Object.hasOwn(result,'observationHash')))return result;
         return unavailable();
       })();
       return await Promise.race([operation,new Promise(resolve=>{timer=setTimeout(()=>resolve(unavailable()),5000);})]);

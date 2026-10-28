@@ -9,6 +9,7 @@ import { OperatorProbeDurableObject } from '../src/worker/operator-probe.js';
 import { createLiveGame,prepareOpening,commitTurn } from '../src/game/cultivation/live/engine.js';
 import { buildStoryContext } from '../src/game/cultivation/live/memory.js';
 import { canonicalStringify,sha256,stateHash } from '../src/game/cultivation/live/identity.js';
+import {createStoryObservation,storyObservationHash} from '../src/worker/story-observation.js';
 
 const token='local-baseline-operator-credential',branchA='task7-player-branch-a-v1',branchB='task7-player-branch-b-v1';
 const clone=value=>structuredClone(value);
@@ -59,6 +60,31 @@ test('operator registers one server-attested browser opening without a model cal
   assert.ok(after.acceptance.playerBaseline.records.some(row=>row.kind==='promise'&&row.text==='替守路人留意来信。'));
   assert.equal(f.calls,0);assert.equal(f.writes,1);
   f.restart();assert.deepEqual(await f.call(),result);assert.equal(f.writes,1);assert.equal(f.calls,0);
+});
+
+test('baseline accepts coherent private observation links but rejects altered or orphaned copies',async()=>{
+  const data=sourceFixture(),id=data.body.admissionId;
+  const observation=createStoryObservation({modelId:'@cf/qwen/qwen3-30b-a3b-fp8',inputHash:sha256('actual fixture input'),inputBytes:6000,nonThinkingValidated:true},{latencyMs:30});
+  const observationHash=storyObservationHash(observation);
+  Object.assign(data.record.results[id],{observation,observationHash});data.record.task8.admissions[id].observationHash=observationHash;
+  const valid=await fixture(data),before=valid.record();assert.equal((await valid.call()).status,'registered');assert.deepEqual(valid.record().results,before.results);assert.deepEqual(valid.record().ledger,before.ledger);assert.equal(valid.calls,0);
+  for(const mutate of [d=>d.record.results[id].observation.latencyMs++,d=>delete d.record.results[id].observation,d=>delete d.record.results[id].observationHash,d=>delete d.record.task8.admissions[id].observationHash,d=>d.record.results[id].observation.errorCode='GENERATED_SCENE_INVALID']){
+    const bad=clone(data);mutate(bad);const f=await fixture(bad),before=f.record();assert.equal((await f.call()).status,'blocked');assert.deepEqual(f.record(),before);assert.equal(f.calls,0);assert.equal(f.writes,0);
+  }
+});
+
+test('first accepted opening may follow a preserved failed Task8 but never a prior unresolved or successful source',async()=>{
+  const data=sourceFixture(),identity={sessionRef:'old-failed-session',requestId:'old-failed-opening',attemptId:'old-failed-attempt',payloadHash:sha256('old failed payload'),contextHash:sha256('old failed context')};
+  const id='task8_'+sha256(canonicalStringify([identity.sessionRef,identity.attemptId]));
+  data.record.ledger.attempts.splice(7,0,{task:'task8',attemptId:id,status:'failed',reservedNeurons:111,actualNeurons:null});
+  data.record.task8.admissions[id]={identity,status:'failed'};data.record.results[id]={task:'task8',...identity,status:'failed',reservedNeurons:111,actualNeurons:null};
+  const f=await fixture(data),before=f.record();assert.equal((await f.call()).status,'registered');assert.deepEqual(f.record().ledger,before.ledger);assert.deepEqual(f.record().results,before.results);assert.deepEqual(f.record().task8,before.task8);assert.equal(f.calls,0);
+  f.restart();assert.equal((await f.call()).status,'registered');assert.equal(f.writes,1);
+  for(const status of ['reserved','unknown','complete']){
+    const blocked=clone(data);blocked.record.ledger.attempts[7].status=status;blocked.record.task8.admissions[id].status=status;blocked.record.results[id].status=status;
+    if(status==='complete'){const acceptedSceneHash=sha256('earlier accepted scene');blocked.record.task8.admissions[id].acceptedSceneHash=acceptedSceneHash;blocked.record.results[id].acceptedSceneHash=acceptedSceneHash;}
+    const g=await fixture(blocked),original=g.record();assert.equal((await g.call()).status,'blocked');assert.deepEqual(g.record(),original);assert.equal(g.writes,0);assert.equal(g.calls,0);
+  }
 });
 
 test('baseline authenticates, bounds and validates its body before writing or inferring',async()=>{
@@ -123,6 +149,9 @@ test('missing original ledger and failed baseline persistence never initialize o
 
 test('native workerd preserves attested baseline and private branches across SQLite restarts',{timeout:30000},async t=>{
   const data=sourceFixture(),root=await mkdtemp(path.join(tmpdir(),'wending-baseline-native-'));t.after(()=>rm(root,{recursive:true,force:true}));
+  const observation=createStoryObservation({modelId:'@cf/qwen/qwen3-30b-a3b-fp8',inputHash:sha256('native fixture input'),inputBytes:6000,nonThinkingValidated:true},{latencyMs:30});
+  const observationHash=storyObservationHash(observation);
+  Object.assign(data.record.results[data.body.admissionId],{observation,observationHash});data.record.task8.admissions[data.body.admissionId].observationHash=observationHash;
   const config={operatorTokenSha256:sha256(token),bindingAccountId:'local-account',freeBoundaryEvidence:{accountId:'local-account',source:'operator-account-verification',plan:'workers-free',hardLimit:true,noGatewayCredits:true,directBinding:true,accountUsageVerified:true,storageFreeVerified:true,remainingNeurons:800,checkedAt:new Date().toISOString()}};
   const entry=`import {OperatorProbeDurableObject,createOperatorProbeWorker} from './src/worker/operator-probe.js';
 const config=${JSON.stringify(config)},initial=${JSON.stringify(data.record)};
@@ -142,4 +171,5 @@ export default createOperatorProbeWorker(config);`;
   await mf.dispose();mf=new Miniflare(options);assert.equal((await post('/story-acceptance',{caseId:branchA,attemptId:'native-a-replay'})).attemptId,'native-a');
   assert.equal((await post('/story-acceptance',{caseId:branchB,attemptId:'native-b'})).status,'ready');
   const saved=await status();assert.equal(saved.callCount,10);assert.deepEqual(saved.ledger.attempts.slice(0,8),data.record.ledger.attempts);assert.deepEqual(saved.acceptance.playerBaseline.state,data.body.browserState);assert.equal(egress,0);
+  assert.deepEqual(saved.results[data.body.admissionId].observation,observation);assert.equal(saved.task8.admissions[data.body.admissionId].observationHash,observationHash);
 });

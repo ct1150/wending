@@ -12,6 +12,7 @@ const originalRecord=()=>({schemaVersion:1,ledger:{schemaVersion:1,attempts:[
 ]},results:{'old-task7-b':{status:'rejected',errorCode:'SCENE_ID_SCOPE_INVALID'}},acceptance:{schemaVersion:1,cases:{}},audit:'preserve this record'});
 const input=(suffix='a')=>({sessionRef:'session-'+suffix,requestId:'request-'+suffix,attemptId:'attempt-'+suffix,payloadHash:sha256('payload-'+suffix),contextHash:sha256('context-'+suffix)});
 const acceptedSceneHash=sha256('fixture-accepted-scene');
+const privateObservation=(patch={})=>({version:1,stage:'provider',errorCode:'GENERATED_SCENE_INVALID',structureDiagnostic:'FIELD_SET_INVALID',modelId:'@cf/qwen/qwen3-30b-a3b-fp8',inputHash:'a'.repeat(64),inputBytes:6000,usage:{promptTokens:100,completionTokens:80,totalTokens:180},stopReason:'stop',nonThinkingValidated:true,latencyMs:123,...patch});
 const request=(body,path='/task8/admit',authorization='Bearer '+operatorToken)=>new Request('https://operator.invalid'+path,{method:'POST',headers:{authorization,'content-type':'application/json'},body:JSON.stringify(body)});
 async function fixture(t,initial=originalRecord()){
   const db=new DatabaseSync(':memory:');t.after(()=>db.close());db.exec('CREATE TABLE kv (key TEXT PRIMARY KEY,value TEXT NOT NULL)');
@@ -170,4 +171,60 @@ test('failed durable admission and settlement writes never recycle or invoke Tas
 test('Task8 never initializes a replacement ledger when the existing record is missing',async t=>{
   const f=await fixture(t);f.storage.get=async()=>undefined;
   assert.equal((await f.call()).code,'EXPERIMENT_LEDGER_INVALID');assert.equal(f.storage.writes,0);assert.equal(f.calls,0);
+});
+
+test('Task8 atomically retains a private observation with immutable acknowledgment and original eight rows',async t=>{
+  const old=originalRecord();old.ledger.attempts.push({task:'task7',attemptId:'old-task7-c',reservedNeurons:83,actualNeurons:null,status:'failed'});
+  const legacy=input('legacy'),legacyId='task8_'+sha256(JSON.stringify([legacy.sessionRef,legacy.attemptId]));
+  old.ledger.attempts.push({task:'task8',attemptId:legacyId,reservedNeurons:111,actualNeurons:null,status:'failed'});
+  old.task8={schemaVersion:1,admissions:{[legacyId]:{identity:legacy,status:'failed'}}};
+  old.results[legacyId]={task:'task8',...legacy,status:'failed',reservedNeurons:111,actualNeurons:null};
+  const f=await fixture(t,old),body=input(),grant=await f.call(body),observation=privateObservation();
+  const settled={...body,status:'failed',observation};const ack=await f.call(settled,'/task8/settle');
+  assert.equal(ack.kind,'settled');assert.match(ack.observationHash,/^[a-f0-9]{64}$/);
+  const record=await f.record();assert.deepEqual(record.results[grant.admissionId].observation,observation);
+  assert.equal(record.results[grant.admissionId].observationHash,ack.observationHash);
+  assert.equal(record.task8.admissions[grant.admissionId].observationHash,ack.observationHash);
+  assert.equal(Object.hasOwn(record.task8.admissions[grant.admissionId],'observation'),false);
+  assert.deepEqual(record.ledger.attempts.slice(0,8),old.ledger.attempts);assert.deepEqual(record.acceptance,old.acceptance);
+  for(const [id,result]of Object.entries(old.results))assert.deepEqual(record.results[id],result);
+  assert.equal(record.ledger.attempts.length,9);assert.equal(record.ledger.attempts.reduce((n,x)=>n+x.reservedNeurons,0),561);
+  const writes=f.storage.writes;f.restart();assert.deepEqual(await f.call(settled,'/task8/settle'),ack);
+  for(const changed of [{...settled,observation:privateObservation({latencyMs:124})},{...body,status:'failed'},{...legacy,status:'failed',observation}])assert.equal((await f.call(changed,'/task8/settle')).code,'TASK8_SETTLEMENT_CONFLICT');
+  assert.equal(f.storage.writes,writes);assert.deepEqual(await f.record(),record);assert.equal(f.calls,0);
+});
+
+test('Task8 observations on complete and unknown outcomes remain bounded and preserve reservations on write failure',async t=>{
+  const f=await fixture(t),body=input();await f.call(body);
+  const observation=privateObservation({errorCode:null,structureDiagnostic:null}),settled={...body,status:'complete',acceptedSceneHash,observation};
+  const put=f.storage.put.bind(f.storage);f.storage.put=async()=>{throw Error('PRIVATE_SENTINEL');};
+  assert.equal((await f.call(settled,'/task8/settle')).code,'LEDGER_PERSIST_FAILED');
+  f.storage.put=put;f.restart();assert.equal((await f.record()).ledger.attempts.at(-1).status,'reserved');
+  assert.equal((await f.call(body)).kind,'duplicate');assert.equal((await f.call(settled,'/task8/settle')).kind,'settled');
+  const other=input('b');await f.call(other);
+  const unknown=privateObservation({errorCode:'PROVIDER_TIMEOUT',structureDiagnostic:null,usage:null,stopReason:null,nonThinkingValidated:null});
+  assert.equal((await f.call({...other,status:'unknown',observation:unknown},'/task8/settle')).kind,'settled');
+  const record=await f.record();assert.deepEqual(record.ledger.attempts.slice(-2).map(x=>[x.status,x.reservedNeurons]),[['complete',111],['unknown',111]]);assert.equal(f.calls,0);
+  assert.doesNotMatch(JSON.stringify(record),/PRIVATE_SENTINEL/);
+});
+
+test('Task8 rejects unsafe observations and inconsistent stored observation copies without writes',async t=>{
+  const f=await fixture(t),body=input(),grant=await f.call(body);const writes=f.storage.writes;
+  assert.equal((await f.response({...body,observation:privateObservation()})).status,400);
+  for(const observation of [privateObservation({raw:'PRIVATE_SENTINEL'}),privateObservation({errorCode:'PRIVATE_SENTINEL'}),privateObservation({latencyMs:-1})])assert.equal((await f.response({...body,status:'failed',observation},'/task8/settle')).status,400);
+  assert.equal(f.storage.writes,writes);
+  assert.equal((await f.call({...body,status:'failed',observation:privateObservation()},'/task8/settle')).kind,'settled');
+  const good=await f.record();
+  for(const mutate of [r=>r.results[grant.admissionId].observation.latencyMs++,r=>delete r.results[grant.admissionId].observation,r=>delete r.task8.admissions[grant.admissionId].observationHash]){
+    const corrupt=structuredClone(good);mutate(corrupt);await f.storage.put('experiment-v1',corrupt);f.restart();const before=f.storage.writes;
+    assert.equal((await f.call(body)).code,'EXPERIMENT_LEDGER_INVALID');assert.equal(f.storage.writes,before);
+  }
+});
+
+test('maximum identity and bounded observation metadata fit the unchanged 1024-byte settlement route',async t=>{
+  const f=await fixture(t),body={sessionRef:'s'.repeat(80),requestId:'r'.repeat(80),attemptId:'a'.repeat(80),payloadHash:'a'.repeat(64),contextHash:'b'.repeat(64)};
+  const observation=privateObservation({errorCode:null,structureDiagnostic:null,inputBytes:12288,usage:{promptTokens:500000000,completionTokens:500000000,totalTokens:1000000000},stopReason:'content_filter',latencyMs:86400000});
+  const settlement={...body,status:'complete',acceptedSceneHash,observation};
+  assert.equal(Buffer.byteLength(JSON.stringify(settlement)),952);assert.equal((await f.call(body)).kind,'reserved');
+  assert.equal((await f.call(settlement,'/task8/settle')).kind,'settled');assert.equal(f.calls,0);
 });

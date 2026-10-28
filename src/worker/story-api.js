@@ -1,8 +1,11 @@
 import { STORY_LIMITS, CANDIDATE_PROFILE, assertProviderReady } from './story-config.js';
 import { generateScene, PROVIDER_ERROR_CODES } from './story-provider.js';
 import { validateStoryContext,validateGeneratedScene } from '../game/cultivation/live/memory.js';
-import { assertPlainData,canonicalStringify,sha256 } from '../game/cultivation/live/identity.js';
+import { canonicalStringify,sha256 } from '../game/cultivation/live/identity.js';
 import { exactKeys,idField } from '../game/cultivation/live/schema.js';
+import { readStoryJson } from './story-request-body.js';
+import { createStoryObservation } from './story-observation.js';
+import { structureDiagnostic } from './story-provider-core.js';
 
 export const STORY_COOKIE='__Host-story_session';
 export const STORY_API_LIMITS=Object.freeze({maxRequestBytes:32768,maxResponseBytes:65536,maxContextBytes:7000,timeoutMs:30000});
@@ -11,22 +14,13 @@ export const STORY_API_LIMITS=Object.freeze({maxRequestBytes:32768,maxResponseBy
 export const TURN_RESERVATION_NEURONS=Math.ceil(((STORY_LIMITS.maxInputBytes+1024+64*STORY_LIMITS.maxMessages)*CANDIDATE_PROFILE.neuronRates.inputPerMillion+STORY_LIMITS.maxOutputTokens*CANDIDATE_PROFILE.neuronRates.outputPerMillion)/1000000);
 const encoder=new TextEncoder();
 const allowedCodes=new Set([...PROVIDER_ERROR_CODES,'INFERENCE_DISABLED','MODEL_NOT_ALLOWED','MODEL_UNVALIDATED','AI_BINDING_MISSING','FREE_BOUNDARY_UNVERIFIED','ACCOUNT_QUOTA_UNAVAILABLE','INPUT_TOO_LARGE','CONTEXT_TOO_LARGE','OUTPUT_TOO_LARGE','PROVIDER_PROFILE_INVALID','PROVIDER_OPTIONS_INVALID','PROVIDER_TIMEOUT','PROVIDER_RESPONSE_INVALID','PROVIDER_RESPONSE_TOO_LARGE','MODEL_RESPONSE_MISMATCH','OUTPUT_TRUNCATED','STOP_REASON_INVALID','PROVIDER_USAGE_INVALID','FREE_QUOTA_EXHAUSTED','PROVIDER_BUSY','PROVIDER_FAILED','GENERATED_SCENE_INVALID','NEXT_CONTEXT_TOO_LARGE','BUDGET_UNAVAILABLE']);
-for(const code of ['TESTER_PERMIT_REQUIRED','STORY_STAGE_CONFIGURATION_INVALID','EXPERIMENT_BUDGET_UNAVAILABLE','EXPERIMENT_BUDGET_EXHAUSTED','EXPERIMENT_LEDGER_INVALID','EXPERIMENT_ATTEMPT_INVALID','EXPERIMENT_ATTEMPT_ALREADY_ADMITTED','TASK8_ADMISSION_CONFLICT','TASK8_ADMISSION_MISSING','TASK8_SETTLEMENT_CONFLICT','ACCEPTANCE_STORAGE_LIMIT','LEDGER_PERSIST_FAILED'])allowedCodes.add(code);
+for(const code of ['TESTER_PERMIT_REQUIRED','STORY_STAGE_CONFIGURATION_INVALID','STORY_PRODUCTION_CONFIGURATION_INVALID','EXPERIMENT_BUDGET_UNAVAILABLE','EXPERIMENT_BUDGET_EXHAUSTED','EXPERIMENT_LEDGER_INVALID','EXPERIMENT_ATTEMPT_INVALID','EXPERIMENT_ATTEMPT_ALREADY_ADMITTED','TASK8_ADMISSION_CONFLICT','TASK8_ADMISSION_MISSING','TASK8_SETTLEMENT_CONFLICT','ACCEPTANCE_STORAGE_LIMIT','LEDGER_PERSIST_FAILED'])allowedCodes.add(code);
 const codeOf=(error,fallback='SERVICE_UNAVAILABLE')=>allowedCodes.has(error?.code)?error.code:fallback;
 const fail=(code,httpStatus=400)=>{throw Object.assign(new Error(code),{code,httpStatus});};
 const randomHex=length=>Array.from(crypto.getRandomValues(new Uint8Array(length)),n=>n.toString(16).padStart(2,'0')).join('');
 function cookieHash(request){const values=(request.headers.get('cookie')??'').split(';').map(s=>s.trim()).filter(s=>s.startsWith(STORY_COOKIE+'='));if(values.length!==1)return null;const token=values[0].slice(STORY_COOKIE.length+1);return /^[a-f0-9]{64}$/.test(token)?sha256(token):null;}
 function envelope(status,errorCode=null,identity={}){const {requestId=null,attemptId=null,sessionRef=null}=identity;return {protocolVersion:1,status,requestId,attemptId,sessionRef,errorCode,retry:status==='paused'?{explicit:true,afterMs:errorCode==='ATTEMPT_IN_PROGRESS'?30000:errorCode==='PROVIDER_BUSY'?5000:0,previousAttemptId:attemptId,previousSessionRef:sessionRef}:null};}
 function json(value,status=200,extra={}){const text=JSON.stringify(value);if(encoder.encode(text).length>STORY_LIMITS.maxResponseBytes)return json(envelope('rejected','RESPONSE_TOO_LARGE'),200);return new Response(text,{status,headers:{'content-type':'application/json; charset=utf-8','cache-control':'no-store','x-content-type-options':'nosniff',...extra}});}
-async function readJson(request){
-  if(!/^application\/json(?:\s*;\s*charset=utf-8)?$/i.test(request.headers.get('content-type')??'')||request.headers.has('content-encoding'))fail('CONTENT_TYPE_INVALID',415);
-  const length=request.headers.get('content-length');if(length!==null&&(!/^\d+$/.test(length)||Number(length)>STORY_LIMITS.maxRequestBytes))fail('REQUEST_TOO_LARGE',413);
-  if(!request.body)fail('REQUEST_INVALID');
-  const reader=request.body.getReader(),parts=[];let size=0;
-  try {while(true){const {done,value}=await reader.read();if(done)break;size+=value.byteLength;if(size>STORY_LIMITS.maxRequestBytes){await reader.cancel();fail('REQUEST_TOO_LARGE',413);}parts.push(value);}}finally{reader.releaseLock();}
-  const bytes=new Uint8Array(size);let offset=0;for(const part of parts){bytes.set(part,offset);offset+=part.byteLength;}
-  try {const result=JSON.parse(new TextDecoder('utf-8',{fatal:true}).decode(bytes));assertPlainData(result);return result;}catch{fail('REQUEST_INVALID');}
-}
 function validateTurn(body){try {exactKeys(body,['context','attempt']);validateStoryContext(body.context);exactKeys(body.attempt,['id','sessionRef','retryOf']);idField(body.attempt.id);idField(body.attempt.sessionRef);if(body.attempt.retryOf!==null){exactKeys(body.attempt.retryOf,['attemptId','sessionRef']);idField(body.attempt.retryOf.attemptId);idField(body.attempt.retryOf.sessionRef);}}catch{fail('REQUEST_INVALID');}}
 
 // These dependencies are trusted server composition seams. index.js and the
@@ -47,7 +41,7 @@ export function createStoryApi({provider=generateScene,budget,config={},experime
       if(capabilities){let errorCode=null;try{await readiness(env);}catch(error){errorCode=codeOf(error);}return json({protocolVersion:1,available:errorCode===null,status:errorCode?'paused':'ready',errorCode,limits:STORY_API_LIMITS});}
       const ipHash=sha256(request.headers.get('cf-connecting-ip')??'unknown');
       const admission=await callBudget('admit',{ipHash});if(admission.kind==='denied')return json(envelope('paused',admission.code),429);
-      let body;if(method==='POST')body=await readJson(request);
+      let body;if(method==='POST')body=await readStoryJson(request);
       if(sessionPath){
         try{exactKeys(body,['protocolVersion']);if(body.protocolVersion!==1)fail('REQUEST_INVALID');}catch{fail('REQUEST_INVALID');}
         try{await readiness(env);}catch(error){return json(envelope('paused',codeOf(error)));}
@@ -88,13 +82,21 @@ export function createStoryApi({provider=generateScene,budget,config={},experime
         }
       }
       let generated,timer;
+      const providerStartedAt=Date.now();
       try {generated=await Promise.race([Promise.resolve().then(()=>provider(env.AI,profile,body.context,{attemptId:identity.attemptId})),new Promise(resolve=>{timer=setTimeout(()=>resolve({status:'paused',errorCode:'PROVIDER_TIMEOUT',accountingStatus:'unknown',inferencePerformed:true}),STORY_LIMITS.timeoutMs);})]);}catch{generated={status:'paused',errorCode:'PROVIDER_FAILED',accountingStatus:'unknown',inferencePerformed:true};}finally{clearTimeout(timer);}
+      const latencyMs=Date.now()-providerStartedAt;
       // Account exhaustion survives a later bridge error changing the public
       // envelope; that presentation must not reopen the current day's quota.
       const quotaExhausted=generated?.errorCode==='FREE_QUOTA_EXHAUSTED';
-      let result;
+      let result,observationStage='provider',apiDiagnostic;
       if(generated?.status==='ready'){
-        try {const scene=validateGeneratedScene(generated.scene,body.context);result={...envelope('ready',null,identity),scene};if(encoder.encode(JSON.stringify(result)).length>STORY_LIMITS.maxResponseBytes)throw new Error();}catch{result=envelope('rejected','GENERATED_SCENE_INVALID',identity);}
+        try {
+          const scene=validateGeneratedScene(generated.scene,body.context);result={...envelope('ready',null,identity),scene};
+          if(encoder.encode(JSON.stringify(result)).length>STORY_LIMITS.maxResponseBytes){observationStage='api-envelope';result=envelope('rejected','GENERATED_SCENE_INVALID',identity);}
+        }catch(error){
+          observationStage='api-scene';apiDiagnostic=error?.code==='GENERATED_SCENE_INVALID'?structureDiagnostic(generated.scene):null;
+          result=envelope('rejected','GENERATED_SCENE_INVALID',identity);
+        }
       }else if(['paused','rejected'].includes(generated?.status))result=envelope(generated.status,allowedCodes.has(generated.errorCode)?generated.errorCode:'PROVIDER_FAILED',identity);
       else result=envelope('paused','PROVIDER_FAILED',identity);
       // Provider completion is trusted server metadata, independent of the public
@@ -104,7 +106,10 @@ export function createStoryApi({provider=generateScene,budget,config={},experime
         const experimentStatus=status==='unknown'?'unknown':result.status==='ready'?'complete':'failed';
         // Attest only the scene accepted by this server's strict validation.
         // Neither the browser nor provider can supply this settlement hash.
-        let settlement;try{settlement=await experiment.settle({...reservationInput,status:experimentStatus,...(experimentStatus==='complete'?{acceptedSceneHash:sha256(canonicalStringify(result.scene))}:{})});}catch{}
+        let settlement;try{
+          const observation=createStoryObservation(generated,{stage:observationStage,latencyMs,errorCode:result.errorCode,...(observationStage!=='provider'?{structureDiagnostic:apiDiagnostic??null}:{})});
+          settlement=await experiment.settle({...reservationInput,status:experimentStatus,observation,...(experimentStatus==='complete'?{acceptedSceneHash:sha256(canonicalStringify(result.scene))}:{})});
+        }catch{}
         if(settlement?.kind!=='settled'){
           status='unknown';result=envelope('paused','EXPERIMENT_BUDGET_UNAVAILABLE',identity);
         }

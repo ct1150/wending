@@ -5,6 +5,7 @@ import { validateLiveState } from '../game/cultivation/live/validation.js';
 import { prepareOpening,commitTurn } from '../game/cultivation/live/engine.js';
 import { buildStoryContext,validateStoryContext,validateGeneratedScene } from '../game/cultivation/live/memory.js';
 import { boundAcceptanceRecord,rememberAcceptanceTurn } from './operator-acceptance-state.js';
+import {validateStoryObservation,storyObservationHash} from './story-observation.js';
 
 export const MAX_BASELINE_BODY_BYTES=64*1024;
 export const BASELINE_ERROR_CODES=Object.freeze(['ACCEPTANCE_PREREQUISITE_MISSING','BASELINE_SOURCE_INVALID','BASELINE_CONTENT_INVALID','BASELINE_CONFLICT','ACCEPTANCE_STORAGE_LIMIT','LEDGER_PERSIST_FAILED']);
@@ -37,10 +38,18 @@ function attestedSource(record,admissionId){
   requireHistoricalFailures(record);
   const source=record.task8?.admissions?.[admissionId],entry=record.ledger.attempts.find(row=>row.attemptId===admissionId),result=record.results?.[admissionId];
   if(record.task8?.schemaVersion!==1||source?.status!=='complete'||entry?.task!=='task8'||entry.status!=='complete'||entry.reservedNeurons!==111||entry.actualNeurons!==null||result?.task!=='task8'||result.status!=='complete'||result.reservedNeurons!==111||result.actualNeurons!==null||!hash(source.acceptedSceneHash)||result.acceptedSceneHash!==source.acceptedSceneHash)fail('BASELINE_SOURCE_INVALID');
-  exactKeys(source,['identity','status','acceptedSceneHash']);exactKeys(source.identity,identityFields);
+  exactKeys(source,['identity','status','acceptedSceneHash'],['observationHash']);exactKeys(source.identity,identityFields);
+  if(Object.hasOwn(source,'observationHash')){
+    try{
+      validateStoryObservation(result.observation,{status:'complete'});
+      if(!hash(source.observationHash)||result.observationHash!==source.observationHash||storyObservationHash(result.observation)!==source.observationHash)fail('BASELINE_SOURCE_INVALID');
+    }catch{fail('BASELINE_SOURCE_INVALID');}
+  }else if(Object.hasOwn(result,'observation')||Object.hasOwn(result,'observationHash'))fail('BASELINE_SOURCE_INVALID');
   for(const key of ['sessionRef','requestId','attemptId'])idField(source.identity[key]);
   for(const key of ['payloadHash','contextHash'])if(!hash(source.identity[key]))fail('BASELINE_SOURCE_INVALID');
-  if(identityFields.some(key=>result[key]!==source.identity[key])||admissionId!=='task8_'+sha256(canonicalStringify([source.identity.sessionRef,source.identity.attemptId]))||record.ledger.attempts.find(row=>row.task==='task8')?.attemptId!==admissionId)fail('BASELINE_SOURCE_INVALID');
+  // Preserve failed openings without making their ordinal position a permanent
+  // ban on a later accepted opening. Never skip an unresolved or accepted source.
+  if(identityFields.some(key=>result[key]!==source.identity[key])||admissionId!=='task8_'+sha256(canonicalStringify([source.identity.sessionRef,source.identity.attemptId]))||record.ledger.attempts.find(row=>row.task==='task8'&&row.status!=='failed')?.attemptId!==admissionId)fail('BASELINE_SOURCE_INVALID');
   return source;
 }
 

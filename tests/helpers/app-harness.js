@@ -1,6 +1,20 @@
 import vm from 'node:vm';
 import { bundleModules } from '../../scripts/build.js';
 
+// CSSOM identifier escaping for the browser global used by controller code.
+function escapeCssIdentifier(value) {
+  const text = String(value);
+  let escaped = '';
+  for (let index = 0; index < text.length; index++) {
+    const code = text.charCodeAt(index), character = text[index];
+    if (code === 0) escaped += '\ufffd';
+    else if (code < 32 || code === 127 || code >= 48 && code <= 57 && (index === 0 || index === 1 && text[0] === '-')) escaped += '\\' + code.toString(16) + ' ';
+    else if (code >= 128 || /[A-Za-z0-9_-]/.test(character) && !(text.length === 1 && character === '-')) escaped += character;
+    else escaped += '\\' + character;
+  }
+  return escaped;
+}
+
 // A deliberately small DOM adapter for functional controller tests. It does not
 // calculate layout, paint, start a server, or provide browser/visual evidence.
 export async function startApp({ raw = null, denyWrite = false, denyRead = false, legacyBackupRaw = null } = {}) {
@@ -8,9 +22,22 @@ export async function startApp({ raw = null, denyWrite = false, denyRead = false
   const extras=new Map(legacyBackupRaw === null ? [] : [['baishi-wending-save-v1-legacy-handoff',legacyBackupRaw]]);
   const storage = { raw, writes: 0, getItem(key) { if (denyRead) throw new Error('read denied'); return key === 'baishi-wending-save-v1' ? this.raw : extras.get(key) ?? null; }, setItem(key, value) { if (denyWrite) throw new Error('quota'); if(key === 'baishi-wending-save-v1') this.raw = value; else extras.set(key,value); this.writes++; } };
   const make = selector => ({ innerHTML: '', textContent: '', className: '', dataset: {}, open: false, value: '', isConnected: true,
+    localName: selector.match(/^[a-z][a-z0-9-]*/i)?.[0].toLowerCase() ?? 'button',
+    get attributes() {
+      return [...(this.id ? [{ name: 'id', value: this.id }] : []), ...Object.entries(this.dataset).map(([key, value]) => ({ name: 'data-' + key.replace(/[A-Z]/g, character => '-' + character.toLowerCase()), value: String(value) }))];
+    },
     classList: { remove() {} }, addEventListener(type, callback) { listeners.set(`${selector}:${type}`, callback); },
     getAttribute(name) { if (name.startsWith('data-')) return this.dataset[name.slice(5).replace(/-([a-z])/g, (_, char) => char.toUpperCase())] ?? null; return name === 'id' ? this.id ?? null : null; },
     hasAttribute(name) { return this.getAttribute(name) !== null; },
+    matches(selectorList) {
+      return selectorList.split(',').some(part => {
+        const selector = part.trim();
+        if (selector === ':disabled') return this.disabled === true;
+        const attribute = selector.match(/^\[([\w-]+)\]$/);
+        if (attribute) return this.hasAttribute(attribute[1]);
+        throw new Error('Unsupported DOM adapter selector: ' + selector);
+      });
+    },
     focus() { document.activeElement = this; focus.push(selector); }, scrollIntoView() { scroll.push(selector); }, showModal() { this.open = true; }, close() { this.open = false; listeners.get(`${selector}:close`)?.({ target: this }); },
     click() {}, remove() {}, getBoundingClientRect() { return { left: 0, top: 0, right: 100, bottom: 100 }; },
   });
@@ -28,6 +55,7 @@ export async function startApp({ raw = null, denyWrite = false, denyRead = false
       const tag = [...markup.matchAll(/<[a-z][^>]*>/gi)].map(match => match[0]).find(value => id ? value.includes(`id="${id}"`) : attribute && (attribute[2] === undefined ? new RegExp(`\\s${attribute[1]}(?:[\\s=>])`).test(value) : value.includes(`${attribute[1]}="${attribute[2]}"`)));
       if (!tag) return null;
       const element = make(selector);
+      element.localName = tag.match(/^<([a-z][a-z0-9-]*)/i)[1].toLowerCase();
       element.id = id ?? tag.match(/\bid="([^"]*)"/)?.[1] ?? '';
       element.value = decode(tag.match(/\bvalue="([^"]*)"/)?.[1] ?? '');
       element.disabled = /\sdisabled(?:[\s=>])/.test(tag);
@@ -55,7 +83,7 @@ export async function startApp({ raw = null, denyWrite = false, denyRead = false
   };
   const code = await bundleModules(process.cwd(), './src/app.js');
   const context = { document, window: { localStorage: storage, crypto: { getRandomValues(array) { array[0] = 20261025; return array; } }, location: { protocol: 'file:' }, scrollTo(value) { scroll.push(value); } },
-    Uint32Array, TextEncoder, TextDecoder, Blob, URL: { createObjectURL(blob) { downloads.push(blob); return 'blob:test'; }, revokeObjectURL() {} }, setTimeout() {}, clearTimeout() {} };
+    Uint32Array, TextEncoder, TextDecoder, Blob, CSS: { escape: escapeCssIdentifier }, URL: { createObjectURL(blob) { downloads.push(blob); return 'blob:test'; }, revokeObjectURL() {} }, setTimeout() {}, clearTimeout() {} };
   // Saved game data is JSON; clone within the VM realm so strict plain-record
   // validation sees the same Object prototype as the bundled engine.
   vm.runInNewContext('globalThis.structuredClone = value => JSON.parse(JSON.stringify(value));\n' + code, context);

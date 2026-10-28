@@ -1,6 +1,20 @@
 # GitHub → Cloudflare 部署
 
-更新检查点：2026-10-28 13:30:22.097699（上海时间）。当前保留74aa受保护stage及V5兼容内嵌页面；一次真实Task8开场被拒绝，已验证出生/pending保存与刷新恢复，随后停止推理。下方4.0.0自动发行及更早版本保留各自历史，不代表当前stage正在读取main发行渠道。
+更新检查点：2026-10-28本轮生产路径准备；北京时间14:12:14回读原账本不变。本轮没有部署或新推理，当前保留74aa受保护stage及V5兼容内嵌页面。一次真实Task8开场被拒绝，已验证出生/pending保存与刷新恢复，随后停止推理。下方4.0.0自动发行及更早版本保留各自历史，不代表当前stage正在读取main发行渠道。
+
+## 本轮新增：正式生产构建路径已准备，尚未启用
+
+`buildGateway({sourceCommit,production})`支持明确的生产策略，复用`createStoryApi`、原StoryBudget namespace `1de1df3929534a8d8d495d6db6604e99`与`story-budget-v1-global`，生产manifest为`migrations:[]`。生产模块图不含stage/acceptance/experiment/operator入口，不需要tester permit或operator secret；所有账户证明只存在于服务端策略。
+
+| 构建方式 | 开关与验证 | 生成产物 |
+| --- | --- | --- |
+| 默认`npm run build:gateway` | 仓库`enabled`须为合法布尔值；即使未来为true也不自动激活 | disabled后端；供现有CI校验，公开生成关闭 |
+| 显式`acceptance` | 仓库开关false、tester策略及短期真实Free观察 | tester-only受保护验收包 |
+| 显式`production` | 仓库开关true、已验证生产registry、同账户currentPlan/Free proof、精确版本；构建器与源码须为同一真实root | 正式公共后端；保留原预算存储 |
+
+production策略严格包含`enabled:true`、`mode:'production'`、`modelId`、`bindingAccountId`、`currentPlan`、`freeBoundaryProof`和协议/规则/提示/存档/内容版本1/1/1/5/4；未知字段、外部传入profile、错账户、Paid或混合tester模式均拒绝。证明在请求readiness内核验，不在Cloudflare模块初始化时永久缓存；现有生产语义不以五分钟probe余额TTL作为玩家倒计时，`checkedAt`不会被自动改写。
+
+当前`config/story-deployment.json`仍false，`PRODUCTION_PROFILES`仍为空。上面的正例仅在独立fixture源码树与本地native workerd中验证。须先完成[待确认的真实四步验收](superpowers/plans/2026-10-28-controlled-reacceptance.md)、profile复核及CI，才能合并发布并执行真实生产上传；GitHub工作流只发布HTML，不部署Cloudflare后端。
 
 ## 实时AI后端：74aa已部署，首步失败后保留兼容stage与原账本
 

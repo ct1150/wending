@@ -1,5 +1,17 @@
 # Workers AI 实时剧情接入档案
 
+## 2026-10-28本轮续办：私有诊断与正式生产准备
+
+本轮仅完成代码、fixture验证和只读核查，没有新模型调用或部署。北京时间14:12:14再次回读原账本为8次/450，Task1/7/8为4/3/1、无S1；11/800及4/5/2原上限不变。[拟议12/900续验方案](superpowers/plans/2026-10-28-controlled-reacceptance.md)尚未授权或应用。
+
+之后的Task8终态可在同一原子结算中保存固定私有observation：provider/API-scene/API-envelope阶段、固定错误/结构类别、实际输入SHA-256/字节数、验证后的usage/stop/non-thinking及延迟。回执验证canonical observation hash；终态不可改写、删除或补写旧诊断。原场景、reasoning、任意异常文字、凭据与cookie不进入该记录，公开响应与玩家缓存保持原封装。旧8笔仍保持原样，上一轮具体拒绝原因仍未知。
+
+提交给模型的schema已加入block/entity/memory条件字段、非空文本与控制字符限制；完整input仍在12,288字节内。跨项唯一性、UTF-16长度、引用、机械事实与后续上下文等仍由原runtime验证。新增本地通过不等于Cloudflare当前模型已遵循schema，真实质量门槛继续待验。
+
+基线登记允许完整保留前面的failed Task8，再登记首个有效成功开场；不能跳过reserved、unknown或已有成功来源。`retryOf:null`的原始开场证明仍必需，后续新验收使用独立测试档案，保留已有失败pending。正式生产路径、默认CI关闭行为及原namespace复用见[部署说明](DEPLOYMENT.md)，本轮全量验证见[QA](QA_REPORT.md)。
+
+## 上一轮实际推理与部署状态（保留历史）
+
 最近核验：2026-10-28 13:30:22.097699（上海时间）。**当前状态：已审74aa私有helper与tester-only stage已部署；获批准四步的首个Task8浏览器开场被严格校验拒绝，按失败即停规则结束本轮推理。** 原账本现为8次、450 Neurons预留，Task1/7/8为4/3/1次，全部 `actualNeurons:null`；原7行与三笔Task7 cases逐值保留。用户确认的Workers Free、11次/800 Neurons及4/5/2上限不变。出生/pending保存与刷新读取同一拒绝结果已实际验证，但没有S1，baseline、两条Task7分支及真实choice均未执行，Task7/Task8完整门槛仍未完成。保留当前V5兼容stage，公开推理关闭、模型未验证、生产白名单为空；proof自然过期后未追加模型调用。没有升级套餐、购买credits或启用付费后备。
 
 ## 2026-10-28 继续执行的证据

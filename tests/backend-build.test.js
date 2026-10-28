@@ -47,10 +47,10 @@ test('backend package includes deterministic complete ESM graph, named DO export
   const missingBudget=await (await worker.default.fetch(new Request('https://game.test/api/story/session',{method:'POST',headers:{origin:'https://game.test','content-type':'application/json'},body:'{\"protocolVersion\":1}'}),{})).json();
   assert.equal(missingBudget.errorCode,'BUDGET_UNAVAILABLE');
 });
-test('backend build fails closed for unsupported versions, enabled policy, missing modules and escaping imports',async t=>{
+test('backend build fails closed for unsupported versions, invalid switches, missing modules and escaping imports',async t=>{
   const root=await fixture(t),sourceCommit='b'.repeat(40),config=path.join(root,'config/story-deployment.json');
   const baseline=JSON.parse(await readFile(config,'utf8'));
-  for(const change of [{protocolVersion:2},{rulesVersion:2},{promptVersion:2},{enabled:true},{freeBoundaryProof:{plan:'workers-free'}}]){
+  for(const change of [{protocolVersion:2},{rulesVersion:2},{promptVersion:2},{enabled:'true'},{enabled:1},{enabled:null},{freeBoundaryProof:{plan:'workers-free'}}]){
     await writeFile(config,JSON.stringify({...baseline,...change}));
     await assert.rejects(buildGateway({root,sourceCommit}),/deployment policy/i);
   }
@@ -184,4 +184,23 @@ test('tester package rejects unsupported modes, unbounded credentials, mismatche
   }
   const file=path.join(root,'config/story-deployment.json'),policy=JSON.parse(await readFile(file,'utf8'));await writeFile(file,JSON.stringify({...policy,enabled:true}));
   await assert.rejects(buildGateway({root,sourceCommit,acceptance:baseline}),/deployment policy/i);
+});
+
+test('production build arguments cannot bypass the checked-in switch or mix tester and production modes',async t=>{
+  const root=await fixture(t),sourceCommit='6'.repeat(40),acceptance=testerPolicy();
+  const {testerPermitSha256,...production}=acceptance;
+  Object.assign(production,{mode:'production',protocolVersion:1,rulesVersion:1,promptVersion:1,saveVersion:5,contentVersion:4});
+  await assert.rejects(buildGateway({root,sourceCommit,production}),/deployment policy/i);
+  await assert.rejects(buildGateway({root,sourceCommit,acceptance,production}),/mode/i);
+  await assert.rejects(buildGateway({root,sourceCommit,productionProfiles:[{validated:true}]}),/build option/i);
+  const file=path.join(root,'config/story-deployment.json'),policy=JSON.parse(await readFile(file,'utf8'));
+  await writeFile(file,JSON.stringify({...policy,enabled:true}));
+  await assert.rejects(buildGateway({root,sourceCommit,production}),/MODEL_UNVALIDATED/);
+});
+
+test('explicit tester or production mode cannot silently become a static-only package',async t=>{
+  const root=await fixture(t),sourceCommit='9'.repeat(40);
+  await rm(path.join(root,'src/worker/index.js'));await rm(path.join(root,'config/story-deployment.json'));
+  for(const mode of [{acceptance:testerPolicy()},{production:{enabled:true,mode:'production'}}])await assert.rejects(buildGateway({root,sourceCommit,...mode}),/backend entry/i);
+  assert.equal((await buildGateway({root,sourceCommit})).backend,undefined,'ordinary static-only roots remain supported');
 });

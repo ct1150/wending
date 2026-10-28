@@ -67,6 +67,89 @@ test('native app: HTTPS fixture, pending refresh/import, pages, legacy preservat
   await page.goBack();assert.equal(posts,19);assert.deepEqual(errors,[]);
 });
 
+async function delayedAppFixture(t) {
+  const {liveBrowser}=await import('./helpers/live-browser.js');
+  const {readFile}=await import('node:fs/promises');
+  const {resolve,extname}=await import('node:path');
+  const {page}=await liveBrowser(t),requests=[],errors=[],releases=[];
+  page.on('pageerror',error=>errors.push(error.message));
+  let nextGate=null;
+  const caps={protocolVersion:1,available:true,status:'ready',errorCode:null,limits:{maxRequestBytes:32768,maxResponseBytes:65536,maxContextBytes:7000,timeoutMs:30000}};
+  await page.addInitScript(()=>localStorage.setItem('wending-active-mode-v1','live'));
+  await page.route('https://wending-focus.test/**',async route=>{
+    const url=new URL(route.request().url());
+    const json=value=>route.fulfill({status:200,contentType:'application/json',body:JSON.stringify(value)});
+    if(url.pathname==='/api/story/capabilities')return json(caps);
+    if(url.pathname==='/api/story/session')return json({protocolVersion:1,status:'ready',sessionRef:'focus-session',expiresAt:Date.now()+86400000});
+    if(url.pathname==='/api/story/turn') {
+      const {context,attempt}=route.request().postDataJSON(),gate=nextGate;nextGate=null;
+      requests.push({context,attempt});
+      if(gate){gate.enter({context,attempt});await gate.wait;}
+      return json({protocolVersion:1,status:'ready',requestId:context.identity.requestId,attemptId:attempt.id,sessionRef:attempt.sessionRef,errorCode:null,retry:null,scene:scene(context)});
+    }
+    try {const path=resolve('.','.'+(url.pathname==='/'?'/index.html':url.pathname));await route.fulfill({status:200,contentType:({'.js':'text/javascript','.css':'text/css','.svg':'image/svg+xml'})[extname(path)]??'text/html',body:await readFile(path)});}
+    catch {await route.fulfill({status:404,body:''});}
+  });
+  t.after(()=>{for(const release of releases)release();assert.deepEqual(errors,[]);});
+  const ready=page.waitForResponse(response=>response.url().endsWith('/api/story/capabilities'));
+  await page.goto('https://wending-focus.test/index.html');await ready;await page.locator('[data-live-start]:enabled').waitFor();
+  return {page,requests,
+    holdNext(){let enter,release;const entered=new Promise(resolve=>enter=resolve),wait=new Promise(resolve=>release=resolve);nextGate={enter,wait};releases.push(release);return {entered,release};},
+    waitRevision:revision=>page.locator(`[data-live-choice][data-revision="${revision}"]:enabled`).first().waitFor(),
+    read:()=>page.evaluate(async()=>{const {openLiveArchive}=await import('/src/game/live-archive.js');const archive=await openLiveArchive();try{return await archive.load();}finally{archive.close();}}),
+  };
+}
+
+for(const phase of ['opening','choice'])test(`native app focus: delayed ${phase} keeps the user's current stable control`,async t=>{
+  const f=await delayedAppFixture(t),{page}=f;
+  if(phase==='choice'){await page.locator('[data-live-start]').click();await f.waitRevision(1);}
+  const gate=f.holdNext();
+  await page.locator(phase==='opening'?'[data-live-start]':'[data-live-choice]').first().click();
+  const request=await gate.entered,before=await f.read();
+  const control=page.locator(phase==='opening'?'[data-more]':'[data-history]');
+  await control.focus();
+  gate.release();await f.waitRevision(phase==='opening'?1:2);
+  assert.equal(await control.evaluate(element=>element===document.activeElement),true,'an async reply must preserve the control the user focused while waiting');
+  const after=await f.read();
+  assert.deepEqual(after.state.life.birth,before.state.life.birth);
+  assert.equal(after.state.revision,before.state.revision+1);
+  assert.deepEqual(after.state.lastReceipt,before.pending.receipt);
+  assert.equal(request.context.identity.requestId,before.pending.identity.requestId);
+  assert.equal(request.attempt.id,before.attempt.id);
+  assert.equal(f.requests.length,phase==='opening'?1:2);
+});
+
+test('native app focus: delayed reply leaves modal focus intact and Escape resolves its replaced return control',async t=>{
+  const f=await delayedAppFixture(t),{page}=f;
+  await page.locator('[data-live-start]').click();await f.waitRevision(1);
+  const before=await f.read(),gate=f.holdNext();
+  await page.locator('[data-live-choice]').first().click();await gate.entered;
+  const oldReturn=await page.locator('[data-history]').elementHandle();
+  await page.locator('[data-history]').click();await page.locator('#dialog[open] [data-live-history-first]').waitFor();
+  const inside=await page.locator('#dialog [data-live-history-first]').elementHandle();await inside.focus();
+  gate.release();await f.waitRevision(2);
+  assert.equal(await inside.evaluate(element=>element.isConnected&&element===document.activeElement),true,'background render must leave focus inside the existing modal');
+  assert.equal(await oldReturn.evaluate(element=>element.isConnected),false,'the reply actually replaced the dialog opener');
+  await page.keyboard.press('Escape');
+  assert.equal(await page.locator('[data-history]').evaluate(element=>element===document.activeElement),true,'closing the modal must resolve the equivalent control in the new DOM');
+  assert.equal(f.requests.length,2);
+  assert.deepEqual((await f.read()).state.life.birth,before.state.life.birth);
+});
+
+test('native app focus: a choice that becomes unavailable returns focus to the scene heading',async t=>{
+  const f=await delayedAppFixture(t),{page}=f;
+  await page.locator('[data-live-start]').click();await f.waitRevision(1);
+  const before=await f.read(),gate=f.holdNext(),choice=page.locator('[data-live-choice]').first();
+  const oldChoice=await choice.getAttribute('data-live-choice');
+  await choice.click();await gate.entered;
+  assert.equal(await page.locator('#journey-current-title').evaluate(element=>element===document.activeElement),true,'disabled pending choices must not strand keyboard focus on the document body');
+  assert.deepEqual((await f.read()).state,before.state,'pending focus recovery must not commit the action');
+  gate.release();await f.waitRevision(2);
+  assert.equal(await page.locator(`[data-live-choice="${oldChoice}"]`).count(),0);
+  assert.equal(await page.locator('#journey-current-title').evaluate(element=>element===document.activeElement),true);
+  assert.equal(f.requests.length,2);
+});
+
 test('late reply from superseded attempt cannot commit over explicit retry',async()=>{
   const f=fixture(),waiting=[];f.client.requestTurn=async(p,c,a)=>{f.calls.post++;await new Promise(resolve=>waiting.push(resolve));return {status:'ready',requestId:p.identity.requestId,attemptId:a.id,sessionRef:a.sessionRef,scene:scene(c)};};
   const first=f.make(),starting=first.start({runId:'late',seed:42});while(f.calls.post<1)await new Promise(r=>setTimeout(r,0));const second=f.make();await second.resume();const retrying=second.retry();while(f.calls.post<2)await new Promise(r=>setTimeout(r,0));const newer=(await f.archive.load()).attempt.id;waiting[0]();await starting;assert.equal((await f.archive.load()).state.revision,0);assert.equal((await f.archive.load()).attempt.id,newer);waiting[1]();await retrying;assert.equal((await f.archive.load()).state.revision,1);

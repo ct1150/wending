@@ -1,9 +1,10 @@
 // Private Task8 accounting only. The caller authenticates and serializes access
 // to the existing experiment-v1 record; this module never invokes a provider.
-import { assertProviderReady, reserveExperiment, settleExperiment } from './story-config.js';
+import { assertProviderReady, reserveExperiment, settleExperiment,EXPERIMENT_LIMITS } from './story-config.js';
 import { TURN_RESERVATION_NEURONS } from './story-api.js';
 import { assertPlainData, canonicalStringify, sha256 } from '../game/cultivation/live/identity.js';
 import { exactKeys, idField } from '../game/cultivation/live/schema.js';
+import { validateStoryObservation,storyObservationHash } from './story-observation.js';
 
 const identityFields=['sessionRef','requestId','attemptId','payloadHash','contextHash'];
 const statuses=['complete','failed','unknown'];
@@ -14,23 +15,28 @@ const admissionId=identity=>'task8_'+sha256(canonicalStringify([identity.session
 const sceneHash=value=>typeof value==='string'&&/^[a-f0-9]{64}$/.test(value);
 
 export function validateTask8Body(body,settlement=false){
-  assertPlainData(body);exactKeys(body,[...identityFields,...(settlement?['status',...(body.status==='complete'?['acceptedSceneHash']:[])]:[])]);
+  assertPlainData(body);exactKeys(body,[...identityFields,...(settlement?['status',...(body.status==='complete'?['acceptedSceneHash']:[])]:[])],settlement?['observation']:[]);
   for(const key of ['sessionRef','requestId','attemptId'])idField(body[key]);
   for(const key of ['payloadHash','contextHash'])if(typeof body[key]!=='string'||!/^[a-f0-9]{64}$/.test(body[key]))fail('REQUEST_INVALID');
   if(settlement&&!statuses.includes(body.status))fail('REQUEST_INVALID');
   if(settlement&&body.status==='complete'&&!sceneHash(body.acceptedSceneHash))fail('REQUEST_INVALID');
+  if(settlement&&Object.hasOwn(body,'observation'))validateStoryObservation(body.observation,{status:body.status});
   return Object.fromEntries(identityFields.map(key=>[key,body[key]]));
 }
 
 function stateOf(record){
   const state=record.task8??{schemaVersion:1,admissions:{}};
   assertPlainData(state);exactKeys(state,['schemaVersion','admissions']);
-  if(state.schemaVersion!==1||!state.admissions||typeof state.admissions!=='object'||Array.isArray(state.admissions)||Object.keys(state.admissions).length>2)fail('EXPERIMENT_LEDGER_INVALID');
+  if(state.schemaVersion!==1||!state.admissions||typeof state.admissions!=='object'||Array.isArray(state.admissions)||Object.keys(state.admissions).length>EXPERIMENT_LIMITS.taskCalls.task8)fail('EXPERIMENT_LEDGER_INVALID');
   for(const [id,row] of Object.entries(state.admissions)){
-    exactKeys(row,['identity','status',...(row.status==='complete'?['acceptedSceneHash']:[])]);validateTask8Body(row.identity);
+    exactKeys(row,['identity','status',...(row.status==='complete'?['acceptedSceneHash']:[])],['observationHash']);validateTask8Body(row.identity);
     const entry=record.ledger.attempts.find(value=>value.attemptId===id);
     if(id!==admissionId(row.identity)||!['reserved',...statuses].includes(row.status)||entry?.task!=='task8'||entry.reservedNeurons!==TURN_RESERVATION_NEURONS||entry.status!==row.status)fail('EXPERIMENT_LEDGER_INVALID');
     const result=record.results?.[id];
+    if(Object.hasOwn(row,'observationHash')){
+      if(row.status==='reserved'||!sceneHash(row.observationHash)||!result||result.observationHash!==row.observationHash||result.task!=='task8'||result.status!==row.status||result.reservedNeurons!==TURN_RESERVATION_NEURONS||result.actualNeurons!==null||identityFields.some(key=>result[key]!==row.identity[key]))fail('EXPERIMENT_LEDGER_INVALID');
+      try{validateStoryObservation(result.observation,{status:row.status});if(storyObservationHash(result.observation)!==row.observationHash)fail('EXPERIMENT_LEDGER_INVALID');}catch{fail('EXPERIMENT_LEDGER_INVALID');}
+    }else if(result&&(Object.hasOwn(result,'observation')||Object.hasOwn(result,'observationHash')))fail('EXPERIMENT_LEDGER_INVALID');
     if(row.status==='complete'){
       // Old un-attested completions and inconsistent copies cannot qualify a
       // later baseline or be silently upgraded by a settlement replay.
@@ -67,13 +73,16 @@ export async function settleTask8({record,body,save}){
     const identity=validateTask8Body(body,true),id=admissionId(identity),state=stateOf(record),existing=state.admissions[id];
     if(!existing)fail('TASK8_ADMISSION_MISSING');
     if(canonicalStringify(existing.identity)!==canonicalStringify(identity))fail('TASK8_ADMISSION_CONFLICT');
-    if(existing.status!=='reserved'&&(existing.status!==body.status||existing.acceptedSceneHash!==body.acceptedSceneHash))fail('TASK8_SETTLEMENT_CONFLICT');
+    const observation=Object.hasOwn(body,'observation')?validateStoryObservation(body.observation,{status:body.status}):undefined;
+    const observationHash=observation===undefined?undefined:storyObservationHash(observation);
+    if(existing.status!=='reserved'&&(existing.status!==body.status||existing.acceptedSceneHash!==body.acceptedSceneHash||existing.observationHash!==observationHash))fail('TASK8_SETTLEMENT_CONFLICT');
     const attestation=body.status==='complete'?{acceptedSceneHash:body.acceptedSceneHash}:{};
-    const response={kind:'settled',admissionId:id,status:body.status,...attestation};
+    const observationLink=observationHash===undefined?{}:{observationHash};
+    const response={kind:'settled',admissionId:id,status:body.status,...attestation,...observationLink};
     if(existing.status===body.status)return response;
     const ledger=settleExperiment(record.ledger,id,{status:body.status,actualNeurons:null});
-    const result={task:'task8',...identity,status:body.status,reservedNeurons:TURN_RESERVATION_NEURONS,actualNeurons:null,...attestation};
-    await saveBounded(save,{...record,ledger,results:{...record.results,[id]:result},task8:{schemaVersion:1,admissions:{...state.admissions,[id]:{identity,status:body.status,...attestation}}}});
+    const result={task:'task8',...identity,status:body.status,reservedNeurons:TURN_RESERVATION_NEURONS,actualNeurons:null,...attestation,...observationLink,...(observation===undefined?{}:{observation})};
+    await saveBounded(save,{...record,ledger,results:{...record.results,[id]:result},task8:{schemaVersion:1,admissions:{...state.admissions,[id]:{identity,status:body.status,...attestation,...observationLink}}}});
     return response;
   }catch(error){return denied(error);}
 }

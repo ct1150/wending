@@ -155,6 +155,19 @@ function focusAdventure(target, keepPosition = false) {
   target?.scrollIntoView({ block: keepPosition ? 'nearest' : 'start', behavior: 'instant' });
 }
 
+function captureFocusTarget(element = document.activeElement) {
+  if (!element || element === document.body) return null;
+  // Action identity survives a redraw; revision/state metadata does not.
+  const attributes = [...element.attributes].filter(({ name }) => name.startsWith('data-') && !['data-revision', 'data-state-hash', 'data-scene-id'].includes(name));
+  const selector = element.id ? `#${CSS.escape(element.id)}` : attributes.length ? element.localName + attributes.map(({ name, value }) => `[${name}="${CSS.escape(value)}"]`).join('') : null;
+  return { element, selector, sceneFallback: element.matches('[data-live-choice], [data-live-start], [data-live-new], [data-live-retry], [data-live-resume]') };
+}
+
+function resolveFocusTarget(target) {
+  const element = target?.element.isConnected ? target.element : target?.selector ? $(target.selector) : null;
+  return element && !element.matches(':disabled') ? element : target?.sceneFallback ? $('#journey-current-title') : null;
+}
+
 function attempt(callback, options) {
   try { update(callback(), options); }
   catch (error) { notify(error.message || '这一步暂时无法进行。', true); }
@@ -162,7 +175,7 @@ function attempt(callback, options) {
 
 function openDialog(title, body, actions = '', { drawer = false } = {}) {
   const dialog = $('#dialog');
-  if (!dialog.open) dialogReturnTarget = document.activeElement;
+  if (!dialog.open) dialogReturnTarget = captureFocusTarget();
   dialog.className = drawer ? 'paper-drawer' : '';
   dialog.innerHTML = `<header class="dialog-header"><h2 id="dialog-title" tabindex="-1">${esc(title)}</h2><button class="icon-button" data-close-dialog aria-label="关闭">${icon('close')}</button></header><div class="dialog-body">${body}</div>${actions ? `<footer class="dialog-actions">${actions}</footer>` : ''}`;
   if (!dialog.open) dialog.showModal();
@@ -174,7 +187,7 @@ function closeDialog(restoreFocus = true) {
   dialogReturnTarget = null;
   dialogConfirm = null;
   $('#dialog').close();
-  if (restoreFocus && target?.isConnected) target.focus({ preventScroll: true });
+  if (restoreFocus) resolveFocusTarget(target)?.focus({ preventScroll: true });
 }
 
 function showCharacter() {
@@ -460,7 +473,7 @@ document.addEventListener('click', event => {
   if ('liveStart' in data || 'liveNew' in data) return beginLiveLife();
   if ('liveRetry' in data) return liveSession?.retry();
   if ('liveResume' in data) return liveSession?.resume();
-  if ('liveChoice' in data) return liveSession?.choose({choiceId:data.liveChoice,baseRevision:Number(data.revision),stateHash:data.stateHash}).then(()=>focusAdventure($('#journey-current-title')));
+  if ('liveChoice' in data) return liveSession?.choose({choiceId:data.liveChoice,baseRevision:Number(data.revision),stateHash:data.stateHash});
   if ('liveHistoryNext' in data) return showLiveHistory(false);
   if ('liveHistoryFirst' in data) return showLiveHistory(true);
   if ('character' in data) return showCharacter();
@@ -592,15 +605,17 @@ async function enterLive() {
 async function beginLiveLife() {
   const name=$('#live-name')?.value?.trim()||'云归',originId=$('#live-origin')?.value||'village';
   liveBirthDraft={name,originId};
-  try { await ensureLive(); const capabilities=await liveClient.capabilities();if(!capabilities.available){liveError='实时生成暂未开放，尚未创建新人生。';render();return;}await liveSession.start({name,originId,seed:newSeed()});focusAdventure($('#journey-current-title')); }
+  try { await ensureLive(); const capabilities=await liveClient.capabilities();if(!capabilities.available){liveError='实时生成暂未开放，尚未创建新人生。';render();return;}await liveSession.start({name,originId,seed:newSeed()}); }
   catch { notify('无法开始，请检查本地存储与网络。',true); }
 }
 function renderLiveApp() {
+  const focus = !$('#dialog').open && $('#app').contains(document.activeElement) ? captureFocusTarget() : null;
   const snapshot=liveSnapshot,liveState=snapshot?.state;
   const header=liveState?renderIdentityBar(liveCharacterSummary(liveState,liveCatalogs)):'<h1>百世问鼎 · 实时人生</h1>';
   const settings=`<h2>实时存档与设置</h2><p>新增剧情需要联网，最小必要上下文传至 Cloudflare，完整历史保留在设备上。缓存离线可读。</p><div class="live-toolbar"><button class="button" data-export ${liveState?'':'disabled'}>导出完整实时存档</button><button class="button" data-import>导入存档</button><button class="button" data-offline-enter>返回旧人生</button><button class="button" data-help>实时人生须知</button></div><p>旧人生继续使用原有离线规则与独立存档。恢复旧版页面不会删除实时历史。</p>`;
   const content=liveState?renderLiveJourney({...snapshot,stateHash:stateHash(liveState),itemNames:LIVE_ITEMS},liveState.phase==='active'?compileChoices(liveState,liveState.currentScene.choices):[]):`<section class="birth"><h2 id="journey-current-title" tabindex="-1">从此身开始</h2><p>出生事实保存后不再重掷。岁月只在选择中前行。</p>${snapshot?.errorCode==='BIRTH_CONTEXT_INVALID'?'<p class="notice" role="alert">姓名无法用于故事，请修改后重新开始。支持中文姓名与常用标点。</p>':''}<label for="live-name">此生姓名</label><input id="live-name" maxlength="24" value="${esc(liveBirthDraft.name)}"><label for="live-origin">从何处来</label><select id="live-origin">${Object.entries(LIVE_ORIGINS).map(([id,name])=>`<option value="${id}" ${id===liveBirthDraft.originId?'selected':''}>${esc(name)}</option>`).join('')}</select><p>联网生成将发送最小必要的人物、行动与记忆上下文至 Cloudflare，完整历史留在本机。</p><button class="button primary" data-live-start ${!liveSession||liveError?'disabled':''}>保存此身并开启实时人生</button><button class="button" data-import>导入已有实时存档</button><button class="button" data-offline-enter>返回旧人生</button></section>`;
   $('#app').innerHTML=`<div class="paper-page paper-page-immersive"><header class="paper-top paper-top-immersive">${header}<nav class="paper-tools" aria-label="历史、帮助与存档"><button data-history ${liveState?'':'disabled'}>历史对话</button><button data-more>更多</button></nav></header><main id="main-content" class="paper-main" tabindex="-1">${liveError?`<p class="notice" role="status">${esc(liveError)}</p>`:''}${view==='settings'?'<button class="small-button" data-view="adventure">返回当前剧情</button>'+settings:content}</main><footer class="paper-footer">实时人生 · 已缓存内容离线可读 · 新剧情需要联网</footer></div>`;
+  resolveFocusTarget(focus)?.focus({ preventScroll: true });
 }
 async function showLiveHistory(first) {
   if(!liveArchive||!liveSnapshot?.state)return;

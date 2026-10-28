@@ -5,6 +5,7 @@ import { createStoryApi, TURN_RESERVATION_NEURONS } from '../src/worker/story-ap
 import { createStoryWorker } from '../src/worker/index.js';
 import { createBudgetCoordinator } from '../src/worker/story-budget.js';
 import { generateScene } from '../src/worker/story-provider.js';
+import { generateAcceptanceScene } from '../src/worker/story-acceptance.js';
 import { CANDIDATE_PROFILE } from '../src/worker/story-config.js';
 import { createLiveGame,prepareOpening } from '../src/game/cultivation/live/engine.js';
 import { buildStoryContext } from '../src/game/cultivation/live/memory.js';
@@ -48,6 +49,42 @@ test('browser-selected accepted scene hashes are rejected before Task8 reservati
     assert.equal((await f.api.fetch(req('/api/story/turn',changed,s.cookie))).status,400);
   }
   assert.equal(f.calls,0);assert.equal(admissions,0);assert.equal(f.db.prepare('SELECT COUNT(*) AS count FROM ledger').get().count,0);
+});
+
+test('Task8 records safe provider and API rejection observations once, without exposing them in public or cached responses',async t=>{
+  for(const mode of ['ready','provider-structure','api-scene','unknown'])await t.test(mode,async t=>{
+    const settlements=[],experiment={reserve:async()=>({kind:'reserved'}),settle:async input=>{settlements.push(structuredClone(input));return {kind:'settled'};}};
+    const f=fixture(async(ai,profile,c,options)=>{
+      if(mode==='unknown')return {status:'paused',errorCode:'PROVIDER_TIMEOUT',accountingStatus:'unknown',privateText:'private-output-sentinel'};
+      if(mode==='api-scene')return {status:'ready',accountingStatus:'complete',scene:{...scene(c),blocks:[{kind:'narration',text:'private-output-sentinel',speaker:'self'}]},structureDiagnostic:'provider-selected-diagnostic'};
+      const output=scene(c);output.id=c.namespace+':t1:s:scene';
+      if(mode==='provider-structure'){output.title='private-output-sentinel';output.blocks[0].speaker='self';}
+      return generateAcceptanceScene({run:async()=>({model:CANDIDATE_PROFILE.modelId,choices:[{finish_reason:'stop',message:{content:JSON.stringify(output),reasoning_content:'\n'}}],usage:{prompt_tokens:100,completion_tokens:80,total_tokens:180}})},c,options);
+    },{experiment});
+    t.after(()=>f.db.close());const s=await session(f),turn=body(s);
+    const result=await(await f.api.fetch(req('/api/story/turn',turn,s.cookie))).json();
+    assert.equal(settlements.length,1);
+    const observation=settlements[0].observation;
+    assert.ok(observation,'private settlement must retain bounded diagnostic metadata');
+    assert.equal(observation.stage,mode==='api-scene'?'api-scene':'provider');
+    assert.equal(observation.errorCode,mode==='ready'?null:mode==='unknown'?'PROVIDER_TIMEOUT':'GENERATED_SCENE_INVALID');
+    assert.equal(observation.structureDiagnostic,['provider-structure','api-scene'].includes(mode)?'FIELD_SET_INVALID':null);
+    assert.ok(Number.isInteger(observation.latencyMs)&&observation.latencyMs>=0);
+    if(['ready','provider-structure'].includes(mode)){
+      assert.equal(observation.modelId,CANDIDATE_PROFILE.modelId);assert.match(observation.inputHash,/^[a-f0-9]{64}$/);
+      assert.ok(observation.inputBytes>0&&observation.inputBytes<=12288);
+      assert.deepEqual(observation.usage,{promptTokens:100,completionTokens:80,totalTokens:180});
+      assert.equal(observation.stopReason,'stop');assert.equal(observation.nonThinkingValidated,true);
+    }
+    assert.doesNotMatch(JSON.stringify(observation),/private-output-sentinel|provider-selected-diagnostic|reasoning_content/);
+    const lookup=req('/api/story/turn/'+turn.context.identity.requestId+'?attemptId='+turn.attempt.id,undefined,s.cookie);
+    const cached=await(await f.api.fetch(lookup)).json(),replayed=await(await f.api.fetch(req('/api/story/turn',turn,s.cookie))).json();
+    assert.deepEqual(cached,result);assert.deepEqual(replayed,result);
+    for(const response of [result,cached,replayed])assert.doesNotMatch(JSON.stringify(response),/observation|structureDiagnostic|inputHash|inputBytes|usage|stopReason|nonThinkingValidated|latencyMs|private-output-sentinel/);
+    assert.equal(settlements.length,1);assert.equal(f.calls,1);
+    const playerStorage={attempts:f.db.prepare('SELECT result FROM attempts').all(),ledger:f.db.prepare('SELECT * FROM ledger').all()};
+    assert.doesNotMatch(JSON.stringify(playerStorage),/observation|structureDiagnostic|inputHash|inputBytes|usage|stopReason|nonThinkingValidated|latencyMs|private-output-sentinel/);
+  });
 });
 
 test('capabilities and deployed default fail closed without AI calls or session allocation',async()=>{let allocated=0;const api=createStoryApi({budget:{createSession(){allocated++;}},provider(){throw new Error('called');}});const r=await api.fetch(req('/api/story/capabilities'));const data=await r.json();assert.equal(data.available,false);assert.equal(data.errorCode,'INFERENCE_DISABLED');assert.equal(allocated,0);const worker=createStoryWorker({staticFetch:()=>new Response('static')});assert.equal((await (await worker.fetch(req('/api/story/capabilities'),{})).json()).available,false);assert.equal(await (await worker.fetch(req('/ordinary'),{})).text(),'static');});
@@ -201,4 +238,63 @@ test('concurrent HTTP distinct requests share one session lease while other sess
   assert.equal((await (await f.api.fetch(req('/api/story/turn',independent,other.cookie))).json()).status,'ready');
   release();assert.equal((await (await first).json()).status,'ready');
   assert.equal((await (await f.api.fetch(req('/api/story/turn',second,s.cookie))).json()).status,'ready');assert.equal(f.calls,3);
+});
+
+test('aborted request bodies cannot allocate sessions or reserve inference',async t=>{
+  for(const path of ['/api/story/session','/api/story/turn'])await t.test(path,async t=>{
+    const f=fixture();t.after(()=>f.db.close());
+    let creates=0,reservations=0;
+    const createSession=f.budget.createSession,reserve=f.budget.reserve;
+    f.budget.createSession=(...args)=>{creates++;return createSession(...args);};
+    f.budget.reserve=(...args)=>{reservations++;return reserve(...args);};
+    const controller=new AbortController();controller.abort(new Error('private abort detail'));
+    const request=new Request(origin+path,{method:'POST',headers:{origin,'content-type':'application/json'},signal:controller.signal,body:JSON.stringify(path.endsWith('/session')?{protocolVersion:1}:body({data:{sessionRef:'not-created'}}))});
+    const response=await f.api.fetch(request),result=await response.json();
+    assert.equal(response.status,400);assert.equal(result.status,'rejected');assert.equal(result.errorCode,'REQUEST_ABORTED');
+    assert.doesNotMatch(JSON.stringify(result),/private abort detail/);
+    assert.equal(creates,0);assert.equal(reservations,0);assert.equal(f.calls,0);
+    assert.equal(f.db.prepare('SELECT COUNT(*) AS count FROM ledger').get().count,0);
+  });
+});
+
+test('abort while reading a body returns before hanging cancel and allocates no inference',async t=>{
+  for(const path of ['/api/story/session','/api/story/turn'])await t.test(path,async t=>{
+    const f=fixture();t.after(()=>f.db.close());
+    let creates=0,reservations=0,canceled=0,streamController;
+    const createSession=f.budget.createSession,reserve=f.budget.reserve;
+    f.budget.createSession=(...args)=>{creates++;return createSession(...args);};
+    f.budget.reserve=(...args)=>{reservations++;return reserve(...args);};
+    const stream=new ReadableStream({start(controller){streamController=controller;controller.enqueue(new TextEncoder().encode('{'));},cancel(){canceled++;return new Promise(()=>{});}});
+    t.after(()=>{try{streamController.close();}catch{}});
+    const controller=new AbortController();
+    const request=new Request(origin+path,{method:'POST',headers:{origin,'content-type':'application/json'},body:stream,signal:controller.signal,duplex:'half'});
+    let watchdog;
+    const responsePromise=Promise.race([f.api.fetch(request),new Promise((_,reject)=>{watchdog=setTimeout(()=>reject(Error('Aborted API body did not settle')),300);})]);
+    const abortTimer=setTimeout(()=>controller.abort('private abort reason'),5);
+    t.after(()=>{clearTimeout(watchdog);clearTimeout(abortTimer);});
+    const response=await responsePromise,result=await response.json();
+    assert.equal(response.status,400);assert.equal(result.errorCode,'REQUEST_ABORTED');assert.equal(result.status,'rejected');
+    assert.equal(canceled,1);assert.equal(request.body.locked,false);
+    assert.equal(creates,0);assert.equal(reservations,0);assert.equal(f.calls,0);
+    assert.equal(f.db.prepare('SELECT COUNT(*) AS count FROM ledger').get().count,0);
+  });
+});
+
+test('the API uses the fixed request deadline before creating a session or reserving inference',async t=>{
+  const f=fixture();t.after(()=>f.db.close());
+  let creates=0,reservations=0,canceled=0,streamController;
+  const createSession=f.budget.createSession,reserve=f.budget.reserve;
+  f.budget.createSession=(...args)=>{creates++;return createSession(...args);};
+  f.budget.reserve=(...args)=>{reservations++;return reserve(...args);};
+  const stream=new ReadableStream({start(controller){streamController=controller;},cancel(){canceled++;return new Promise(()=>{});}});
+  t.after(()=>{try{streamController.close();}catch{}});
+  const request=new Request(origin+'/api/story/session',{method:'POST',headers:{origin,'content-type':'application/json'},body:stream,duplex:'half'});
+  const started=performance.now();let watchdog;
+  t.after(()=>clearTimeout(watchdog));
+  const response=await Promise.race([f.api.fetch(request),new Promise((_,reject)=>{watchdog=setTimeout(()=>reject(Error('API body exceeded its fixed deadline')),12000);})]);
+  assert.equal(response.status,408);assert.equal((await response.json()).errorCode,'REQUEST_TIMEOUT');
+  assert.ok(performance.now()-started>=9000,'the deployed API must use its fixed 10-second body limit');
+  assert.equal(canceled,1);assert.equal(request.body.locked,false);
+  assert.equal(creates,0);assert.equal(reservations,0);assert.equal(f.calls,0);
+  assert.equal(f.db.prepare('SELECT COUNT(*) AS count FROM ledger').get().count,0);
 });
