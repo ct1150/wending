@@ -1,9 +1,11 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import {CANDIDATE_MODEL_ID} from '../src/worker/story-config.js';
 import { DatabaseSync } from 'node:sqlite';
 import { OperatorProbeDurableObject } from '../src/worker/operator-probe.js';
 import { createBudgetCoordinator } from '../src/worker/story-budget.js';
 import { createStoryWorker } from '../src/worker/index.js';
+import {TURN_RESERVATION_NEURONS} from '../src/worker/story-api.js';
 import { createStoryClient } from '../src/ui/story-client.js';
 import { createLiveGame,prepareOpening } from '../src/game/cultivation/live/engine.js';
 import { buildStoryContext } from '../src/game/cultivation/live/memory.js';
@@ -28,11 +30,11 @@ async function fixture(t,options={}){
   const privateStorage={sql:{},async get(key){const row=privateDb.prepare('SELECT value FROM kv WHERE key=?').get(key);return row?JSON.parse(row.value):undefined;},async put(key,value){privateDb.prepare('INSERT INTO kv VALUES(?,?) ON CONFLICT(key) DO UPDATE SET value=excluded.value').run(key,JSON.stringify(value));}};
   await privateStorage.put('experiment-v1',oldRecord());
   const proof={accountId:'fixture-account',source:'operator-account-verification',plan:'workers-free',hardLimit:true,noGatewayCredits:true,directBinding:true,accountUsageVerified:true,storageFreeVerified:true,remainingNeurons:10000,checkedAt:new Date().toISOString()};
-  const config={enabled:true,mode:'tester-only',modelId:'@cf/qwen/qwen3-30b-a3b-fp8',testerPermitSha256:sha256(permit),bindingAccountId:'fixture-account',currentPlan:{accountId:'fixture-account',source:'operator-account-verification',plan:'workers-free'},freeBoundaryProof:proof};
+  const config={enabled:true,mode:'tester-only',modelId:CANDIDATE_MODEL_ID,testerPermitSha256:sha256(permit),bindingAccountId:'fixture-account',currentPlan:{accountId:'fixture-account',source:'operator-account-verification',plan:'workers-free'},freeBoundaryProof:proof};
   let calls=0,bridgeAdmissions=0;const operatorCfg={operatorTokenSha256:sha256(operatorToken),bindingAccountId:'fixture-account',freeBoundaryEvidence:proof};
   const operator=new OperatorProbeDurableObject({storage:privateStorage},{AI:{run(){throw Error('admission cannot call AI');}}},operatorCfg);
   const env={STORY_OPERATOR_TOKEN:operatorToken,STORY_BUDGET:{idFromName(name){assert.equal(name,'story-budget-v1-global');return name;},get(){return {async fetch(req){const method=new URL(req.url).pathname.slice(1);return Response.json(budget[method](await req.json()));}};}},STORY_EXPERIMENT:{idFromName(name){assert.equal(name,'wending-realtime-acceptance-v1');return name;},get(){return {async fetch(req){assert.equal(req.headers.get('authorization'),'Bearer '+operatorToken);assert.equal(req.headers.has(testerHeader),false);if(new URL(req.url).pathname==='/task8/admit')bridgeAdmissions++;return operator.fetch(req);}};}},AI:{async run(model,input){
-    calls++;assert.equal(model,'@cf/qwen/qwen3-30b-a3b-fp8');assert.equal(input.max_tokens,1536);
+    calls++;assert.equal(model,CANDIDATE_MODEL_ID);assert.equal(input.max_tokens,1536);
     assert.equal(db.prepare('SELECT status FROM ledger ORDER BY rowid DESC LIMIT 1').get().status,'reserved');
     assert.equal((await privateStorage.get('experiment-v1')).ledger.attempts.at(-1).status,'reserved');
     if(options.run)return options.run(model,input);
@@ -82,7 +84,7 @@ test('true player cookie and protocol client traverse both durable reservations 
   const {pending,context}=prepare(),attempt={id:'attempt-a',sessionRef:session.sessionRef,retryOf:null};
   const result=await client.requestTurn(pending,context,attempt);assert.equal(result.status,'ready');
   assert.equal(f.calls,1);assert.equal(f.bridgeAdmissions,1);
-  const record=await f.record();assert.equal(record.ledger.attempts.length,7);assert.equal(record.ledger.attempts.at(-1).reservedNeurons,111);assert.equal(record.ledger.attempts.at(-1).status,'complete');
+  const record=await f.record();assert.equal(record.ledger.attempts.length,7);assert.equal(record.ledger.attempts.at(-1).reservedNeurons,TURN_RESERVATION_NEURONS);assert.equal(record.ledger.attempts.at(-1).status,'complete');
   const admissionId=record.ledger.attempts.at(-1).attemptId,acceptedSceneHash=sha256(canonicalStringify(result.scene));
   assert.equal(record.task8.admissions[admissionId].acceptedSceneHash,acceptedSceneHash);
   assert.equal(record.results[admissionId].acceptedSceneHash,acceptedSceneHash);
@@ -94,14 +96,14 @@ test('true player cookie and protocol client traverse both durable reservations 
   assert.equal(f.calls,1);assert.equal(f.bridgeAdmissions,1);
 });
 
-test('fourth player attempt is paused by the shared Task8 cap and its player reservation remains charged',async t=>{
+test('player acceptance continues beyond the former Task8 cap while replay stays idempotent',async t=>{
   const f=await fixture(t),s=await f.session();
   for(const id of ['a','b','c'])assert.equal((await (await f.fetch(request('/api/story/turn',wireBody(body(s,id)),s.cookie))).json()).status,'ready');
   const fourth=wireBody(body(s,'d')),result=await (await f.fetch(request('/api/story/turn',fourth,s.cookie))).json();
-  assert.equal(result.status,'paused');assert.equal(result.errorCode,'EXPERIMENT_BUDGET_EXHAUSTED');assert.equal(f.calls,3);
+  assert.equal(result.status,'ready');assert.equal(f.calls,4);
   assert.deepEqual(await (await f.fetch(request('/api/story/turn',fourth,s.cookie))).json(),result);assert.equal(f.bridgeAdmissions,4);
-  const row=f.db.prepare('SELECT status,charge FROM ledger WHERE attempt_id=?').get('attempt-d');assert.equal(row.status,'unknown');assert.equal(row.charge,111);
-  assert.equal((await f.record()).ledger.attempts.length,9);
+  const row=f.db.prepare('SELECT status,charge FROM ledger WHERE attempt_id=?').get('attempt-d');assert.equal(row.status,'complete');assert.equal(row.charge,TURN_RESERVATION_NEURONS);
+  assert.equal((await f.record()).ledger.attempts.length,10);
 });
 
 test('shared admission persistence failure settles a recoverable player pause without invoking AI',async t=>{
@@ -150,7 +152,7 @@ test('bridge settlement acknowledgement must attest the same accepted scene befo
     const record=await f.record(),id=record.ledger.attempts.at(-1).attemptId;
     assert.equal(record.ledger.attempts.at(-1).status,'complete');
     assert.equal(record.task8.admissions[id].acceptedSceneHash,sha256(canonicalStringify(scene(turn.context))));
-    const player=f.db.prepare('SELECT status,charge,actual FROM ledger').get();assert.equal(player.status,'unknown');assert.equal(player.charge,111);assert.equal(player.actual,null);
+    const player=f.db.prepare('SELECT status,charge,actual FROM ledger').get();assert.equal(player.status,'unknown');assert.equal(player.charge,TURN_RESERVATION_NEURONS);assert.equal(player.actual,null);
     assert.deepEqual(await(await f.fetch(request('/api/story/turn',turn,s.cookie))).json(),result);
     assert.equal(f.calls,1);assert.equal(f.bridgeAdmissions,1);assert.deepEqual(await f.record(),record);
   });
@@ -174,7 +176,7 @@ test('strict scene rejection and provider uncertainty never persist or forward a
     const record=await f.record(),id=record.ledger.attempts.at(-1).attemptId;
     assert.equal(Object.hasOwn(record.task8.admissions[id],'acceptedSceneHash'),false);
     assert.equal(Object.hasOwn(record.results[id],'acceptedSceneHash'),false);
-    assert.equal(record.ledger.attempts.at(-1).reservedNeurons,111);assert.equal(record.ledger.attempts.at(-1).actualNeurons,null);
+    assert.equal(record.ledger.attempts.at(-1).reservedNeurons,TURN_RESERVATION_NEURONS);assert.equal(record.ledger.attempts.at(-1).actualNeurons,null);
   });
 });
 
@@ -186,8 +188,8 @@ test('provider quota exhaustion survives failed experiment settlement and blocks
   assert.equal(result.status,'paused');assert.equal(result.errorCode,'EXPERIMENT_BUDGET_UNAVAILABLE');assert.equal(f.calls,1);
   assert.equal(f.db.prepare('SELECT COUNT(*) AS count FROM quota').get().count,1);
   const firstPlayer=f.db.prepare('SELECT * FROM ledger').get(),firstExperiment=await f.record();
-  assert.equal(firstPlayer.status,'unknown');assert.equal(firstPlayer.charge,111);assert.equal(firstPlayer.reserved,111);assert.equal(firstPlayer.actual,null);
-  assert.equal(firstExperiment.ledger.attempts.length,7);assert.equal(firstExperiment.ledger.attempts.at(-1).status,'reserved');assert.equal(firstExperiment.ledger.attempts.at(-1).reservedNeurons,111);assert.equal(firstExperiment.ledger.attempts.at(-1).actualNeurons,null);
+  assert.equal(firstPlayer.status,'unknown');assert.equal(firstPlayer.charge,TURN_RESERVATION_NEURONS);assert.equal(firstPlayer.reserved,TURN_RESERVATION_NEURONS);assert.equal(firstPlayer.actual,null);
+  assert.equal(firstExperiment.ledger.attempts.length,7);assert.equal(firstExperiment.ledger.attempts.at(-1).status,'reserved');assert.equal(firstExperiment.ledger.attempts.at(-1).reservedNeurons,TURN_RESERVATION_NEURONS);assert.equal(firstExperiment.ledger.attempts.at(-1).actualNeurons,null);
   const retry=structuredClone(turn);retry.attempt={id:'explicit-retry',sessionRef:s.data.sessionRef,retryOf:{attemptId:turn.attempt.id,sessionRef:s.data.sessionRef}};
   const paused=await (await f.fetch(request('/api/story/turn',retry,s.cookie))).json();
   assert.equal(paused.status,'paused');assert.equal(paused.errorCode,'FREE_QUOTA_EXHAUSTED');assert.equal(f.calls,1);assert.equal(f.bridgeAdmissions,1);

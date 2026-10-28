@@ -7,6 +7,9 @@ import {PROVIDER_ERROR_CODES,STRUCTURE_DIAGNOSTIC_CODES} from './story-provider-
 
 const fields=['version','stage','errorCode','structureDiagnostic','modelId','inputHash','inputBytes','usage','stopReason','nonThinkingValidated','latencyMs'];
 const stages=['provider','api-scene','api-envelope'],stops=['stop','length','tool_calls','content_filter'];
+// Reading immutable prior evidence must not rewrite its model or hash. This
+// compatibility list does not select providers or authorize fresh observations.
+const observationModels=new Set([CANDIDATE_MODEL_ID,'@cf/qwen/qwen3-30b-a3b-fp8']);
 const errors=new Set([...PROVIDER_ERROR_CODES,'PROVIDER_FAILED','PROVIDER_BUSY','FREE_QUOTA_EXHAUSTED']),diagnostics=new Set(STRUCTURE_DIAGNOSTIC_CODES);
 const integer=(value,max)=>Number.isSafeInteger(value)&&value>=0&&value<=max;
 const hash=value=>typeof value==='string'&&/^[a-f0-9]{64}$/.test(value);
@@ -21,7 +24,7 @@ export function validateStoryObservation(value,{status}={}){
   try{
     assertPlainData(value);exactKeys(value,fields);
     if(value.version!==1||!stages.includes(value.stage)||value.errorCode!==null&&!errors.has(value.errorCode)||value.structureDiagnostic!==null&&!diagnostics.has(value.structureDiagnostic))fail();
-    if(value.modelId!==null&&value.modelId!==CANDIDATE_MODEL_ID)fail();
+    if(value.modelId!==null&&!observationModels.has(value.modelId))fail();
     if(value.inputHash===null?value.inputBytes!==null:!hash(value.inputHash)||!integer(value.inputBytes,STORY_LIMITS.maxInputBytes)||value.inputBytes===0)fail();
     if(value.usage!==null&&!usageValid(value.usage)||value.stopReason!==null&&!stops.includes(value.stopReason)||value.nonThinkingValidated!==null&&typeof value.nonThinkingValidated!=='boolean'||value.latencyMs!==null&&!integer(value.latencyMs,86400000))fail();
     if(value.stage!=='provider'&&value.errorCode!=='GENERATED_SCENE_INVALID'||value.structureDiagnostic!==null&&(value.errorCode!=='GENERATED_SCENE_INVALID'||value.stage==='api-envelope'))fail();

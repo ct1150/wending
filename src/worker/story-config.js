@@ -1,16 +1,16 @@
 // Server/operator-only policy. Never construct billing evidence from browser input.
-export const STORY_LIMITS = Object.freeze({ maxInputBytes:12 * 1024, maxRequestBytes:32 * 1024, maxResponseBytes:64 * 1024, maxOutputTokens:1536, timeoutMs:30000, maxMessages:8, evidenceMaxAgeMs:300000, dailyFreeNeurons:10000 });
-// Owner confirmed controlled reacceptance on 2026-10-28: retain all original
-// 8 calls/450 reserved; at most four new calls, stopping on the first failure.
-export const EXPERIMENT_LIMITS = Object.freeze({ maxCalls:12, maxNeurons:900, taskCalls:Object.freeze({ task1:4, task7:5, task8:3 }) });
-export const CANDIDATE_MODEL_ID = '@cf/qwen/qwen3-30b-a3b-fp8';
+export const STORY_LIMITS = Object.freeze({ maxInputBytes:24 * 1024, maxRequestBytes:32 * 1024, maxResponseBytes:64 * 1024, maxOutputTokens:1536, timeoutMs:60000, maxMessages:8, evidenceMaxAgeMs:300000, dailyFreeNeurons:10000 });
+// The owner authorized completion without experiment count or Neuron ceilings.
+// Null means uncapped history, not a provider quota or a replacement allocation.
+export const EXPERIMENT_LIMITS = Object.freeze({ maxCalls:null, maxNeurons:null, taskCalls:Object.freeze({ task1:null, task7:null, task8:null }) });
+export const CANDIDATE_MODEL_ID = '@cf/qwen/qwen3.8-27b';
 export const CANDIDATE_PROFILE = Object.freeze({
   modelId:CANDIDATE_MODEL_ID, validated:false, requestFormat:'workers-ai-messages', responseFormat:'json_schema', supportsStructuredOutput:null,
-  maxInput:STORY_LIMITS.maxInputBytes, maxOutput:STORY_LIMITS.maxOutputTokens, contextTokens:32768,
+  maxInput:STORY_LIMITS.maxInputBytes, maxOutput:STORY_LIMITS.maxOutputTokens, contextTokens:262144,
   usageFields:Object.freeze(['usage.prompt_tokens', 'usage.completion_tokens', 'usage.total_tokens']),
   stopFields:Object.freeze(['choices[0].finish_reason']),
   freeBoundaryEvidence:null,
-  neuronRates:Object.freeze({ inputPerMillion:4625, outputPerMillion:30475, verifiedOn:'2026-10-27', source:'https://developers.cloudflare.com/workers-ai/platform/pricing/' }),
+  neuronRates:Object.freeze({ inputPerMillion:40909, outputPerMillion:290909, verifiedOn:'2026-10-28', source:'https://developers.cloudflare.com/workers-ai/platform/pricing/' }),
 });
 // A successful catalog lookup is not validation. Promotion requires reviewed real evidence.
 export const PRODUCTION_PROFILES = Object.freeze([]);
@@ -36,17 +36,11 @@ export function assertProviderReady({ enabled = false, modelId = CANDIDATE_MODEL
   if (modelId !== CANDIDATE_MODEL_ID) fail('MODEL_NOT_ALLOWED');
   if (enabled !== true) fail('INFERENCE_DISABLED');
   if (typeof env?.AI?.run !== 'function') fail('AI_BINDING_MISSING');
-  if (ledger?.attempts?.length >= EXPERIMENT_LIMITS.maxCalls) fail('EXPERIMENT_BUDGET_EXHAUSTED');
-  let committedNeurons = 0;
-  if (ledger) {
-    validateLedger(ledger);
-    committedNeurons = ledger.attempts.reduce((sum, entry) => sum + entry.reservedNeurons, 0);
-    if (committedNeurons + reservationNeurons > EXPERIMENT_LIMITS.maxNeurons) fail('EXPERIMENT_BUDGET_EXHAUSTED');
-  }
+  if (ledger) validateLedger(ledger);
   if (!trustedEvidence.has(evidence) || !currentEvidence(evidence, now, purpose === 'probe')) fail('FREE_BOUNDARY_UNVERIFIED');
-  // Conservatively deduct every experiment reservation, including reconciled calls
-  // possibly already reflected in a newer snapshot. This is a ceiling, not live balance.
-  if (!finiteNonnegative(reservationNeurons) || (purpose === 'probe' && evidence.remainingNeurons < committedNeurons + reservationNeurons)) fail('ACCOUNT_QUOTA_UNAVAILABLE');
+  // Reservations are immutable history, not a lifetime spend ceiling. Account
+  // analytics are delayed observations; the verified Free provider enforces quota.
+  if (!finiteNonnegative(reservationNeurons)) fail('ACCOUNT_QUOTA_UNAVAILABLE');
   if (purpose !== 'probe') {
     const profile = PRODUCTION_PROFILES.find(candidate => candidate.modelId === modelId && candidate.validated === true && candidate.supportsStructuredOutput === true);
     if (!profile) fail('MODEL_UNVALIDATED');
@@ -67,25 +61,24 @@ export function estimateMaxNeurons(input, { modelId = CANDIDATE_MODEL_ID } = {})
   // No cache discounts. max_tokens must bound reasoning + visible output in the live probe.
   const inputTokens = inputBytes + 1024 + 64 * input.messages.length;
   if (inputTokens + input.max_tokens > CANDIDATE_PROFILE.contextTokens) fail('CONTEXT_TOO_LARGE');
-  return Math.ceil((inputTokens * 4625 + input.max_tokens * 30475) / 1000000);
+  const rates=CANDIDATE_PROFILE.neuronRates;
+  return Math.ceil((inputTokens * rates.inputPerMillion + input.max_tokens * rates.outputPerMillion) / 1000000);
 }
 
 export function createExperimentLedger() { return { schemaVersion:1, attempts:[] }; }
 function validateLedger(ledger) {
-  if (ledger?.schemaVersion !== 1 || !Array.isArray(ledger.attempts) || ledger.attempts.length > EXPERIMENT_LIMITS.maxCalls) fail('EXPERIMENT_LEDGER_INVALID');
-  const ids = new Set(), taskCounts = { task1:0, task7:0, task8:0 };
-  let total = 0;
+  if (ledger?.schemaVersion !== 1 || !Array.isArray(ledger.attempts)) fail('EXPERIMENT_LEDGER_INVALID');
+  const ids = new Set();
   for (const entry of ledger.attempts) {
-    if (!entry || !Object.hasOwn(taskCounts, entry.task) || typeof entry.attemptId !== 'string' || !/^[a-zA-Z0-9_-]{1,80}$/.test(entry.attemptId) || ids.has(entry.attemptId) || !Number.isSafeInteger(entry.reservedNeurons) || entry.reservedNeurons < 1 || !['reserved','complete','failed','unknown'].includes(entry.status) || (entry.actualNeurons !== null && !finiteNonnegative(entry.actualNeurons))) fail('EXPERIMENT_LEDGER_INVALID');
-    ids.add(entry.attemptId); taskCounts[entry.task]++; total += entry.reservedNeurons;
+    if (!entry || !Object.hasOwn(EXPERIMENT_LIMITS.taskCalls, entry.task) || typeof entry.attemptId !== 'string' || !/^[a-zA-Z0-9_-]{1,80}$/.test(entry.attemptId) || ids.has(entry.attemptId) || !Number.isSafeInteger(entry.reservedNeurons) || entry.reservedNeurons < 1 || !['reserved','complete','failed','unknown'].includes(entry.status) || (entry.actualNeurons !== null && !finiteNonnegative(entry.actualNeurons))) fail('EXPERIMENT_LEDGER_INVALID');
+    ids.add(entry.attemptId);
   }
-  if (total > EXPERIMENT_LIMITS.maxNeurons || Object.entries(taskCounts).some(([task,count]) => count > EXPERIMENT_LIMITS.taskCalls[task])) fail('EXPERIMENT_LEDGER_INVALID');
   return ledger;
 }
 export function reserveExperiment(ledger, { task, attemptId, reservedNeurons } = {}) {
   validateLedger(ledger);
   if (!Object.hasOwn(EXPERIMENT_LIMITS.taskCalls, task) || typeof attemptId !== 'string' || !/^[a-zA-Z0-9_-]{1,80}$/.test(attemptId) || ledger.attempts.some(entry => entry.attemptId === attemptId) || !Number.isSafeInteger(reservedNeurons) || reservedNeurons < 1) fail('EXPERIMENT_ATTEMPT_INVALID');
-  if (ledger.attempts.length >= EXPERIMENT_LIMITS.maxCalls || ledger.attempts.filter(entry => entry.task === task).length >= EXPERIMENT_LIMITS.taskCalls[task] || ledger.attempts.reduce((sum,entry) => sum + entry.reservedNeurons, 0) + reservedNeurons > EXPERIMENT_LIMITS.maxNeurons || ledger.attempts.some(entry => entry.actualNeurons > entry.reservedNeurons)) fail('EXPERIMENT_BUDGET_EXHAUSTED');
+  if (ledger.attempts.some(entry => entry.actualNeurons > entry.reservedNeurons)) fail('EXPERIMENT_BUDGET_EXHAUSTED');
   return { schemaVersion:1, attempts:[...ledger.attempts.map(entry => ({ ...entry })), { task, attemptId, reservedNeurons, actualNeurons:null, status:'reserved' }] };
 }
 export function settleExperiment(ledger, attemptId, { status = 'unknown', actualNeurons = null } = {}) {

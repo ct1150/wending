@@ -18,6 +18,53 @@ const req=(path,body,cookie,headers={})=>new Request(origin+path,{method:body===
 async function session(f){const r=await f.api.fetch(req('/api/story/session',{protocolVersion:1}));return {data:await r.json(),cookie:r.headers.get('set-cookie')?.split(';')[0],setCookie:r.headers.get('set-cookie')};}
 const body=(s,id='attempt-1',retryOf=null)=>({context:context(),attempt:{id,sessionRef:s.data.sessionRef,retryOf}});
 
+test('default HTTP admission crosses former session, IP and aggregate ceilings while retaining unknown accounting and exact replay',async t=>{
+  const f=fixture(async(ai,profile,c)=>c.identity.requestId==='uncapped-request-0'?{status:'paused',errorCode:'PROVIDER_TIMEOUT',accountingStatus:'unknown'}:{status:'ready',scene:scene(c),accountingStatus:'complete'});
+  t.after(()=>f.db.close());
+  const sessions=await Promise.all([session(f),session(f),session(f)]);
+  let firstBody,unknown,lastBody,lastResult;
+  for(let i=0;i<243;i++){
+    const s=sessions[Math.floor(i/121)],turn=structuredClone(body(s,'uncapped-attempt-'+i));
+    turn.context.identity.requestId='uncapped-request-'+i;
+    const result=await(await f.api.fetch(req('/api/story/turn',turn,s.cookie))).json();
+    assert.equal(result.status,i===0?'paused':'ready','explicit request '+i+' remains admissible');
+    if(i===0){firstBody=turn;unknown=f.db.prepare('SELECT * FROM ledger').get();}
+    lastBody=turn;lastResult=result;
+  }
+  assert.equal(f.calls,243);
+  assert.equal(f.db.prepare('SELECT COUNT(*) AS n FROM ledger').get().n,243);
+  assert.equal(f.db.prepare('SELECT SUM(charge) AS total FROM ledger').get().total,243*TURN_RESERVATION_NEURONS);
+  assert.ok(243*TURN_RESERVATION_NEURONS>10000);
+  assert.deepEqual(f.db.prepare('SELECT * FROM ledger WHERE attempt_id=?').get(firstBody.attempt.id),unknown);
+  assert.equal(unknown.status,'unknown');assert.equal(unknown.charge,TURN_RESERVATION_NEURONS);
+  const lastSession=sessions[2];
+  assert.deepEqual(await(await f.api.fetch(req('/api/story/turn',lastBody,lastSession.cookie))).json(),lastResult);
+  assert.equal(f.calls,243);
+  assert.equal(f.db.prepare("SELECT count FROM counters WHERE kind='ipAttempt'").get().count,243);
+  assert.equal(f.db.prepare("SELECT count FROM counters WHERE kind='sessionAttempt' AND subject=?").get(sessions[0].data.sessionRef).count,121);
+});
+
+test('actual provider3036 remains sticky through HTTP for its UTC day without an artificial default budget',async t=>{
+  const f=fixture(generateScene,{profile:{...CANDIDATE_PROFILE,validated:true,supportsStructuredOutput:true}});t.after(()=>f.db.close());
+  let inferences=0;
+  const env={AI:{run:async()=>{inferences++;throw Object.assign(new Error('quota exhausted'),{code:3036});}}};
+  const s=await session(f),firstBody=body(s);
+  const first=await(await f.api.fetch(req('/api/story/turn',firstBody,s.cookie),env)).json();
+  assert.equal(first.status,'paused');assert.equal(first.errorCode,'FREE_QUOTA_EXHAUSTED');assert.equal(inferences,1);
+  const original=f.db.prepare('SELECT * FROM ledger').get();
+  assert.equal(original.status,'complete');assert.equal(original.charge,TURN_RESERVATION_NEURONS);
+  const next=structuredClone(body(s,'next-attempt'));next.context.identity.requestId='next-request';
+  f.setNow(Date.parse('2026-10-27T23:59:59.999Z'));
+  assert.equal((await(await f.api.fetch(req('/api/story/turn',next,s.cookie),env)).json()).errorCode,'FREE_QUOTA_EXHAUSTED');
+  assert.deepEqual(await(await f.api.fetch(req('/api/story/turn',firstBody,s.cookie),env)).json(),first);
+  assert.equal(inferences,1);assert.equal(f.calls,1);
+  f.setNow(Date.parse('2026-10-28T00:00:00.000Z'));
+  assert.equal((await(await f.api.fetch(req('/api/story/turn',next,s.cookie),env)).json()).errorCode,'FREE_QUOTA_EXHAUSTED');
+  assert.equal(inferences,2);assert.equal(f.calls,2);
+  assert.deepEqual(f.db.prepare('SELECT * FROM ledger WHERE attempt_id=?').get(firstBody.attempt.id),original);
+  assert.deepEqual(f.db.prepare('SELECT day FROM quota ORDER BY day').all().map(row=>row.day),['2026-10-27','2026-10-28']);
+});
+
 test('Task8 API hashes only its strictly validated ready scene and ignores provider claims',async t=>{
   for(const mode of ['ready','invalid','unknown'])await t.test(mode,async t=>{
     const admissions=[],settlements=[],claim=sha256('provider-selected-hash');

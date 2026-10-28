@@ -21,11 +21,28 @@ const copy = value => JSON.parse(JSON.stringify(value));
 const fail = code => { throw Object.assign(new Error(code),{code}); };
 const safeCodes = new Set([...PROVIDER_ERROR_CODES,...BASELINE_ERROR_CODES,'FREE_BOUNDARY_UNVERIFIED','AI_BINDING_MISSING','ACCOUNT_QUOTA_UNAVAILABLE','EXPERIMENT_BUDGET_EXHAUSTED','EXPERIMENT_LEDGER_INVALID','EXPERIMENT_ATTEMPT_INVALID','ACCEPTANCE_PREREQUISITE_MISSING','ACCEPTANCE_DISTINCT_CHOICES_UNAVAILABLE','ACCEPTANCE_RULE_DEATH','ACCEPTANCE_STATE_INVALID','ACCEPTANCE_STORAGE_LIMIT','LEDGER_PERSIST_FAILED']);
 const errorCode = error => safeCodes.has(error?.code) ? error.code : 'ACCEPTANCE_PREPARATION_FAILED';
+function terminalBranchResult(record,row) {
+  const entry=record.ledger.attempts.find(value=>value.attemptId===row?.attemptId),result=record.results[row?.attemptId];
+  if (!PLAYER_BRANCH_CASES.includes(row?.caseId) || !['failed','unknown'].includes(row.status) || entry?.task!=='task7' || entry.status!==row.status || !Object.hasOwn(record.results,row.attemptId) || result?.task!=='task7' || !['rejected','paused'].includes(result.status) || result.reservedNeurons!==entry.reservedNeurons) fail('ACCEPTANCE_STATE_INVALID');
+  for (const key of ['caseId','attemptId','recipeVersion','sourceTask8AdmissionId','contextHash','inputHash','inputBytes','retryOf']) if (row[key]!==result[key]) fail('ACCEPTANCE_STATE_INVALID');
+  if (canonicalStringify(row.identity)!==canonicalStringify(result.identity) || canonicalStringify(row.receipt)!==canonicalStringify(result.receipt)) fail('ACCEPTANCE_STATE_INVALID');
+  return result;
+}
 function acceptanceState(record) {
   if (record.acceptance === undefined) return {schemaVersion:1,cases:{}};
   const state = record.acceptance;
   if (state?.schemaVersion !== 1 || !state.cases || typeof state.cases !== 'object' || Array.isArray(state.cases) || Object.keys(state.cases).some(id => !STORY_ACCEPTANCE_CASES.includes(id))) fail('ACCEPTANCE_STATE_INVALID');
   for (const [caseId,row] of Object.entries(state.cases)) if (!row || typeof row.attemptId !== 'string' || !['reserved','complete','failed','unknown'].includes(row.status) || recipeFor(caseId) && row.recipeVersion !== recipeFor(caseId).version || PLAYER_BRANCH_CASES.includes(caseId) && (row.recipeVersion !== 1 || typeof row.sourceTask8AdmissionId !== 'string')) fail('ACCEPTANCE_STATE_INVALID');
+  const history=state.caseHistory??{};
+  if (!history || typeof history!=='object' || Array.isArray(history)) fail('ACCEPTANCE_STATE_INVALID');
+  for (const [attemptId,row] of Object.entries(history)) {
+    if (row?.attemptId!==attemptId || row.recipeVersion!==1 || typeof row.sourceTask8AdmissionId!=='string') fail('ACCEPTANCE_STATE_INVALID');
+    terminalBranchResult(record,row);
+  }
+  for (const row of [...Object.values(history),...Object.values(state.cases)]) if (row.retryOf!==undefined) {
+    const previous=history[row.retryOf],currentIndex=record.ledger.attempts.findIndex(entry=>entry.attemptId===row.attemptId),previousIndex=record.ledger.attempts.findIndex(entry=>entry.attemptId===row.retryOf);
+    if (!Object.hasOwn(history,row.retryOf) || previous.caseId!==row.caseId || previous.sourceTask8AdmissionId!==row.sourceTask8AdmissionId || previousIndex<0 || previousIndex>=currentIndex) fail('ACCEPTANCE_STATE_INVALID');
+  }
   return state;
 }
 function requireOriginalStructuralFailure(record,acceptance) {
@@ -93,10 +110,21 @@ export async function runStoryAcceptance({record,caseId,attemptId,env,confirmEvi
   try { acceptance = acceptanceState(record); } catch (error) { return {status:'blocked',errorCode:errorCode(error)}; }
   const prior = record.ledger.attempts.find(row => row.attemptId === attemptId);
   const existing = acceptance.cases[caseId];
-  if (prior && existing?.attemptId !== attemptId) return {status:'blocked',errorCode:'ACCEPTANCE_ATTEMPT_CONFLICT'};
+  if (prior && existing?.attemptId !== attemptId) {
+    const historical=acceptance.caseHistory?.[attemptId];
+    if (!historical || historical.caseId!==caseId) return {status:'blocked',errorCode:'ACCEPTANCE_ATTEMPT_CONFLICT'};
+    return record.results[attemptId];
+  }
+  let retryOf;
   if (existing) {
-    if (Object.hasOwn(record.results,existing.attemptId)) return record.results[existing.attemptId];
-    return {status:'already-reserved-or-unknown',caseId,attemptId:existing.attemptId,reservation:record.ledger.attempts.find(row => row.attemptId === existing.attemptId) ?? null};
+    const resultExists=Object.hasOwn(record.results,existing.attemptId);
+    const explicitRetry=existing.attemptId!==attemptId && PLAYER_BRANCH_CASES.includes(caseId) && ['failed','unknown'].includes(existing.status) && resultExists;
+    if (!explicitRetry) {
+      if (resultExists) return record.results[existing.attemptId];
+      return {status:'already-reserved-or-unknown',caseId,attemptId:existing.attemptId,reservation:record.ledger.attempts.find(row => row.attemptId === existing.attemptId) ?? null};
+    }
+    try { terminalBranchResult(record,existing); } catch(error) { return {status:'blocked',errorCode:errorCode(error)}; }
+    retryOf=existing.attemptId;
   }
   let prepared,input,reservedNeurons,reserved,association;
   try {
@@ -108,10 +136,11 @@ export async function runStoryAcceptance({record,caseId,attemptId,env,confirmEvi
     association = {attemptId,caseId,status:'reserved',contextHash:sha256(canonicalStringify(prepared.context)),inputHash:sha256(serialized),inputBytes:encoder.encode(serialized).length,baseStateHash:stateHash(prepared.state),identity:copy(prepared.pending.identity),receipt:copy(prepared.pending.receipt)};
     if (recipeFor(caseId)) association.recipeVersion = recipeFor(caseId).version;
     if (prepared.sourceTask8AdmissionId) Object.assign(association,{recipeVersion:1,sourceTask8AdmissionId:prepared.sourceTask8AdmissionId});
+    if (retryOf) association.retryOf=retryOf;
     const evidence = confirmEvidence();
     assertProviderReady({enabled:true,env,evidence,purpose:'probe',ledger:record.ledger,reservationNeurons:reservedNeurons});
     const ledger = reserveExperiment(record.ledger,{task:'task7',attemptId,reservedNeurons});
-    reserved = bounded({...record,ledger,acceptance:{...acceptance,cases:{...acceptance.cases,[caseId]:association}}});
+    reserved = bounded({...record,ledger,acceptance:{...acceptance,...(retryOf?{caseHistory:{...acceptance.caseHistory,[retryOf]:copy(existing)}}:{}),cases:{...acceptance.cases,[caseId]:association}}});
     try { await save(reserved); } catch { fail('LEDGER_PERSIST_FAILED'); }
   } catch (error) { return {status:'blocked',errorCode:errorCode(error),caseId,attemptId}; }
 
@@ -125,6 +154,7 @@ export async function runStoryAcceptance({record,caseId,attemptId,env,confirmEvi
   const result = {schemaVersion:1,sampleKind:'workers-ai',task:'task7',caseId,attemptId,contextHash:association.contextHash,inputHash:association.inputHash,inputBytes:association.inputBytes,modelId:CANDIDATE_MODEL_ID,rulesVersion:prepared.context.identity.rulesVersion,promptVersion:prepared.context.identity.promptVersion,reservedNeurons,actualNeurons:null,inferencePerformed:generated.inferencePerformed === true,usage:generated.usage ?? null,stopReason:generated.stopReason ?? null,latencyMs:Math.max(0,Date.now()-started),status:generated.status,identity:association.identity,receipt:association.receipt};
   if (association.recipeVersion !== undefined) result.recipeVersion = association.recipeVersion;
   if (association.sourceTask8AdmissionId) result.sourceTask8AdmissionId = association.sourceTask8AdmissionId;
+  if (association.retryOf) result.retryOf=association.retryOf;
   if (generated.errorCode === 'GENERATED_SCENE_INVALID' && STRUCTURE_DIAGNOSTIC_CODES.includes(generated.structureDiagnostic)) result.structureDiagnostic = generated.structureDiagnostic;
   let state,records,status = generated.accountingStatus === 'unknown' ? 'unknown' : 'failed';
   if (generated.status === 'ready') {

@@ -42,7 +42,11 @@ test('packaged backend executes in local workerd: blocked outbound, static fallb
   await mf.dispose();mf=new Miniflare(options);stub=await stubFor(mf);
   assert.equal((await call(stub,'getSession',identity)).kind,'session');
   assert.deepEqual(await call(stub,'reserve',reservation),{kind:'replay',result});
-  const quota=await call(stub,'reserve',{...reservation,attemptId:'next_attempt',requestId:'next_request',reservedNeurons:10000});assert.equal(quota.code,'DAILY_BUDGET_EXHAUSTED');
+  const next={...reservation,attemptId:'next_attempt',requestId:'next_request',reservedNeurons:10000};
+  assert.equal((await call(stub,'reserve',next)).kind,'reserved','historical reservations do not impose an artificial lifetime or daily ceiling');
+  assert.equal((await call(stub,'settle',{...identity,attemptId:next.attemptId,status:'complete',quotaExhausted:true,result:{status:'paused',errorCode:'FREE_QUOTA_EXHAUSTED'}})).kind,'settled');
+  const quota=await call(stub,'reserve',{...reservation,attemptId:'quota_attempt',requestId:'quota_request'});assert.equal(quota.code,'FREE_QUOTA_EXHAUSTED');
+  assert.deepEqual(await call(stub,'reserve',reservation),{kind:'replay',result},'the original unknown reservation and response survive the observed quota error');
   assert.equal(outgoing.length,1,'only captured static release fetch; no AI or other egress');
 });
 

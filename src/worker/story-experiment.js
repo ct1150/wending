@@ -2,6 +2,7 @@
 // never forwarded; the operator credential is read only from a secret binding.
 import { canonicalStringify, sha256 } from '../game/cultivation/live/identity.js';
 import {validateStoryObservation,storyObservationHash} from './story-observation.js';
+import {TURN_RESERVATION_NEURONS} from './story-api.js';
 
 export const STORY_EXPERIMENT_COORDINATOR_NAME='wending-realtime-acceptance-v1';
 export const STORY_EXPERIMENT_NAMESPACE_ID='dfb218f2f29d4ecab2395f8a00b48350';
@@ -45,7 +46,10 @@ export function createExperimentBridge(env){
         const result=await readBounded(response);
         if(result?.kind==='denied'&&codes.has(result.code))return {kind:'denied',code:result.code};
         if(!response.ok||result?.admissionId!==expectedId)return unavailable();
-        if(path==='/task8/admit'&&['reserved','duplicate'].includes(result.kind)&&result.reservedNeurons===111&&(result.kind==='reserved'||['reserved','complete','failed','unknown'].includes(result.status)))return result;
+        if(path==='/task8/admit'&&result.kind==='reserved'&&result.reservedNeurons===TURN_RESERVATION_NEURONS)return result;
+        // A replay is never a new inference grant. Keep its original recorded
+        // reservation, including legacy requests with a smaller input bound.
+        if(path==='/task8/admit'&&result.kind==='duplicate'&&Number.isSafeInteger(result.reservedNeurons)&&result.reservedNeurons>0&&['reserved','complete','failed','unknown'].includes(result.status))return result;
         if(path==='/task8/settle'&&result.kind==='settled'&&result.status===body.status&&(body.status==='complete'?result.acceptedSceneHash===body.acceptedSceneHash:!Object.hasOwn(result,'acceptedSceneHash'))&&(Object.hasOwn(body,'observation')?result.observationHash===storyObservationHash(body.observation):!Object.hasOwn(result,'observationHash')))return result;
         return unavailable();
       })();

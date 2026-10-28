@@ -1,5 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import {CANDIDATE_MODEL_ID} from '../src/worker/story-config.js';
 import {mkdtemp,mkdir,readFile,writeFile,rm,cp} from 'node:fs/promises';
 import {tmpdir} from 'node:os';
 import path from 'node:path';
@@ -22,7 +23,7 @@ test('native packaged stage validates proof and permit in API request context wi
   await writeFile(path.join(root,'assets/seal.svg'),'<svg/>');await writeFile(path.join(root,'package.json'),'{"version":"4.0.0"}');
   const observedAt=Date.now();
   const proof={accountId:'fixture-account',source:'operator-account-verification',plan:'workers-free',hardLimit:true,noGatewayCredits:true,directBinding:true,accountUsageVerified:true,storageFreeVerified:true,remainingNeurons:10000,checkedAt:new Date(observedAt-1000).toISOString()};
-  const config={enabled:true,mode:'tester-only',modelId:'@cf/qwen/qwen3-30b-a3b-fp8',testerPermitSha256:sha256(permit),bindingAccountId:'fixture-account',currentPlan:{accountId:'fixture-account',source:'operator-account-verification',plan:'workers-free'},freeBoundaryProof:proof};
+  const config={enabled:true,mode:'tester-only',modelId:CANDIDATE_MODEL_ID,testerPermitSha256:sha256(permit),bindingAccountId:'fixture-account',currentPlan:{accountId:'fixture-account',source:'operator-account-verification',plan:'workers-free'},freeBoundaryProof:proof};
   await buildGateway({root,sourceCommit:'d'.repeat(40),acceptance:config});
   const output=path.join(root,'release/backend'),manifest=JSON.parse(await readFile(path.join(output,'deployment.json'),'utf8'));
   assert.equal(manifest.publicEnabled,false);assert.equal(manifest.modelValidated,false);assert.equal(manifest.accessMode,'tester-only');

@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {CANDIDATE_MODEL_ID} from '../src/worker/story-config.js';
+import {CANDIDATE_MODEL_ID,assertProviderReady} from '../src/worker/story-config.js';
+import {canonicalStringify,sha256} from '../src/game/cultivation/live/identity.js';
 import * as observation from '../src/worker/story-observation.js';
 const generated=()=>({modelId:CANDIDATE_MODEL_ID,inputHash:'a'.repeat(64),inputBytes:6000,usage:{promptTokens:100,completionTokens:80,totalTokens:180},stopReason:'stop',nonThinkingValidated:true,errorCode:'GENERATED_SCENE_INVALID',structureDiagnostic:'FIELD_SET_INVALID'});
 function create(value=generated(),options={stage:'provider',latencyMs:123}){assert.equal(typeof observation.createStoryObservation,'function');return observation.createStoryObservation(value,options);}
@@ -12,6 +13,15 @@ test('private observation selects bounded actual metadata without retaining prov
   assert.doesNotMatch(JSON.stringify(value),/PRIVATE_SENTINEL/);
   assert.deepEqual(observation.validateStoryObservation(value,{status:'failed'}),value);
   source.usage.totalTokens=999;assert.equal(value.usage.totalTokens,180);
+});
+
+test('legacy Qwen30 observations retain exact bytes and hashes without authorizing new inference or new legacy observations',()=>{
+  const legacy={...create(),modelId:'@cf/qwen/qwen3-30b-a3b-fp8'},before=canonicalStringify(legacy),hash=sha256(before);
+  assert.deepEqual(observation.validateStoryObservation(legacy,{status:'failed'}),legacy);
+  assert.equal(canonicalStringify(legacy),before);assert.equal(observation.storyObservationHash(legacy),hash);
+  assert.equal(create({...generated(),modelId:'@cf/qwen/qwen3-30b-a3b-fp8'}).modelId,null);
+  assert.equal(create().modelId,'@cf/qwen/qwen3.8-27b');
+  assert.throws(()=>assertProviderReady({modelId:legacy.modelId}),{code:'MODEL_NOT_ALLOWED'});
 });
 
 test('observation creation drops invalid metadata and preserves distinct API rejection stages',()=>{
@@ -29,7 +39,7 @@ test('observation creation drops invalid metadata and preserves distinct API rej
 
 test('strict observation validation rejects unknown content, unsafe numbers and inconsistent terminal states',()=>{
   const value=create();
-  for(const patch of [{version:2},{extra:'PRIVATE_SENTINEL'},{stage:'PRIVATE_SENTINEL'},{errorCode:'PRIVATE_SENTINEL'},{structureDiagnostic:'PRIVATE_SENTINEL'},{modelId:'other'},{inputHash:'b'.repeat(63)},{inputBytes:12289},{inputBytes:null},{latencyMs:-1},{latencyMs:Infinity},{latencyMs:1.2},{usage:{promptTokens:1,completionTokens:1,totalTokens:3}},{usage:{promptTokens:1,completionTokens:1,totalTokens:2,raw:'PRIVATE_SENTINEL'}},{nonThinkingValidated:1}])assert.throws(()=>observation.validateStoryObservation({...value,...patch}),/STORY_OBSERVATION_INVALID/);
+  for(const patch of [{version:2},{extra:'PRIVATE_SENTINEL'},{stage:'PRIVATE_SENTINEL'},{errorCode:'PRIVATE_SENTINEL'},{structureDiagnostic:'PRIVATE_SENTINEL'},{modelId:'other'},{inputHash:'b'.repeat(63)},{inputBytes:24577},{inputBytes:null},{latencyMs:-1},{latencyMs:Infinity},{latencyMs:1.2},{usage:{promptTokens:1,completionTokens:1,totalTokens:3}},{usage:{promptTokens:1,completionTokens:1,totalTokens:2,raw:'PRIVATE_SENTINEL'}},{nonThinkingValidated:1}])assert.throws(()=>observation.validateStoryObservation({...value,...patch}),/STORY_OBSERVATION_INVALID/);
   for(const status of ['complete','unknown','reserved'])assert.throws(()=>observation.validateStoryObservation(value,{status}));
   const ready=create({...generated(),errorCode:null,structureDiagnostic:null});
   assert.deepEqual(observation.validateStoryObservation(ready,{status:'complete'}),ready);

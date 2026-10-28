@@ -144,13 +144,13 @@ test('relevance selection fits 17 facts and 13 byte-heavy obligations without er
   assert.equal(output.status,'ready');assert.match(input.messages[0].content,/coverage\.openOmitted stays unresolved; omission is not closure/);
   const size=value=>new TextEncoder().encode(JSON.stringify(value)).length;
   const overhead=size(input)-size(input.messages[1].content);
-  assert.ok(overhead+7000<=12288);
+  assert.ok(overhead+7000<=CANDIDATE_PROFILE.maxInput);
   t.diagnostic(`Full provider input ${size(input)} bytes; encoded user content ${size(input.messages[1].content)} bytes; fixed system/schema/envelope overhead ${overhead} bytes.`);
   const escaped=records.map(record=>({...record,text:'\\'.repeat(500)}));
   const escapedContext=buildStoryContext(active,pending,escaped,options);
   const escapedOutput=await generateScene({run:async(model,value)=>{input=value;return response(responseScene);}},profile(),escapedContext);
   assert.equal(escapedOutput.status,'ready');
-  assert.ok(size(input.messages[1].content)<=7000);assert.ok(size(input)<=12288);
+  assert.ok(size(input.messages[1].content)<=7000);assert.ok(size(input)<=CANDIDATE_PROFILE.maxInput);
   t.diagnostic(`Escape-heavy context ${size(escapedContext)} bytes; full provider input ${size(input)} bytes.`);
 
 });

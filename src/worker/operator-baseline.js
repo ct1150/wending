@@ -16,8 +16,9 @@ const hash=value=>typeof value==='string'&&/^[a-f0-9]{64}$/.test(value);
 const identityFields=['sessionRef','requestId','attemptId','payloadHash','contextHash'];
 
 export function validateTask7BaselineBody(body){
-  assertPlainData(body);exactKeys(body,['admissionId','context','scene','browserState']);idField(body.admissionId);
+  assertPlainData(body);exactKeys(body,['admissionId','context','scene','browserState'],['retryOf']);idField(body.admissionId);
   for(const key of ['context','scene','browserState'])if(!body[key]||typeof body[key]!=='object'||Array.isArray(body[key]))throw Error('Invalid baseline body');
+  if(Object.hasOwn(body,'retryOf')&&body.retryOf!==null){exactKeys(body.retryOf,['attemptId','sessionRef']);idField(body.retryOf.attemptId);idField(body.retryOf.sessionRef);}
   if(new TextEncoder().encode(JSON.stringify(body)).length>MAX_BASELINE_BODY_BYTES)throw Error('Baseline body too large');
   return body;
 }
@@ -37,7 +38,7 @@ function attestedSource(record,admissionId){
   if(record.ledger?.schemaVersion!==1||!Array.isArray(record.ledger.attempts))fail('BASELINE_SOURCE_INVALID');
   requireHistoricalFailures(record);
   const source=record.task8?.admissions?.[admissionId],entry=record.ledger.attempts.find(row=>row.attemptId===admissionId),result=record.results?.[admissionId];
-  if(record.task8?.schemaVersion!==1||source?.status!=='complete'||entry?.task!=='task8'||entry.status!=='complete'||entry.reservedNeurons!==111||entry.actualNeurons!==null||result?.task!=='task8'||result.status!=='complete'||result.reservedNeurons!==111||result.actualNeurons!==null||!hash(source.acceptedSceneHash)||result.acceptedSceneHash!==source.acceptedSceneHash)fail('BASELINE_SOURCE_INVALID');
+  if(record.task8?.schemaVersion!==1||source?.status!=='complete'||entry?.task!=='task8'||entry.status!=='complete'||(!Number.isSafeInteger(entry.reservedNeurons)||entry.reservedNeurons<1)||entry.actualNeurons!==null||result?.task!=='task8'||result.status!=='complete'||result.reservedNeurons!==entry.reservedNeurons||result.actualNeurons!==null||!hash(source.acceptedSceneHash)||result.acceptedSceneHash!==source.acceptedSceneHash)fail('BASELINE_SOURCE_INVALID');
   exactKeys(source,['identity','status','acceptedSceneHash'],['observationHash']);exactKeys(source.identity,identityFields);
   if(Object.hasOwn(source,'observationHash')){
     try{
@@ -47,9 +48,9 @@ function attestedSource(record,admissionId){
   }else if(Object.hasOwn(result,'observation')||Object.hasOwn(result,'observationHash'))fail('BASELINE_SOURCE_INVALID');
   for(const key of ['sessionRef','requestId','attemptId'])idField(source.identity[key]);
   for(const key of ['payloadHash','contextHash'])if(!hash(source.identity[key]))fail('BASELINE_SOURCE_INVALID');
-  // Preserve failed openings without making their ordinal position a permanent
-  // ban on a later accepted opening. Never skip an unresolved or accepted source.
-  if(identityFields.some(key=>result[key]!==source.identity[key])||admissionId!=='task8_'+sha256(canonicalStringify([source.identity.sessionRef,source.identity.attemptId]))||record.ledger.attempts.find(row=>row.task==='task8'&&row.status!=='failed')?.attemptId!==admissionId)fail('BASELINE_SOURCE_INVALID');
+  // Preserve terminal failed/unknown openings and their reservations. A separate
+  // attested success can follow them; active reservations and prior successes cannot.
+  if(identityFields.some(key=>result[key]!==source.identity[key])||admissionId!=='task8_'+sha256(canonicalStringify([source.identity.sessionRef,source.identity.attemptId]))||record.ledger.attempts.find(row=>row.task==='task8'&&!['failed','unknown'].includes(row.status))?.attemptId!==admissionId)fail('BASELINE_SOURCE_INVALID');
   return source;
 }
 
@@ -57,7 +58,9 @@ function reconstruct(record,body){
   validateTask7BaselineBody(body);
   const source=attestedSource(record,body.admissionId),context=body.context;
   if(sha256(canonicalStringify(context))!==source.identity.contextHash||sha256(canonicalStringify(body.scene))!==source.acceptedSceneHash)fail('BASELINE_CONTENT_INVALID');
-  const attempt={id:source.identity.attemptId,sessionRef:source.identity.sessionRef,retryOf:null};
+  // Retry lineage is part of the successful request's attested payload. The
+  // caller may supply it, but cannot change it or the recorded attempt identity.
+  const attempt={id:source.identity.attemptId,sessionRef:source.identity.sessionRef,retryOf:body.retryOf??null};
   if(sha256(canonicalStringify({context,attempt}))!==source.identity.payloadHash)fail('BASELINE_CONTENT_INVALID');
   validateStoryContext(context);
   if(context.phase!=='opening'||context.identity.requestId!==source.identity.requestId||context.identity.baseRevision!==0||context.identity.turnId!==1||context.relationshipVersion!==1)fail('BASELINE_CONTENT_INVALID');
@@ -70,14 +73,14 @@ function reconstruct(record,body){
   if(!equal(rebuilt,context))fail('BASELINE_CONTENT_INVALID');
   const scene=validateGeneratedScene(body.scene,context),state=commitTurn(birth,pending,scene,context.relationships);
   validateLiveState(body.browserState);if(!equal(state,body.browserState))fail('BASELINE_CONTENT_INVALID');
-  return {schemaVersion:1,source:'task8-opening',admissionId:body.admissionId,identity:copy(source.identity),acceptedSceneHash:source.acceptedSceneHash,context:copy(context),stateHash:stateHash(state),state:copy(state),records:rememberAcceptanceTurn([],pending,scene)};
+  return {schemaVersion:1,source:'task8-opening',admissionId:body.admissionId,identity:copy(source.identity),acceptedSceneHash:source.acceptedSceneHash,context:copy(context),stateHash:stateHash(state),state:copy(state),records:rememberAcceptanceTurn([],pending,scene),...(attempt.retryOf===null?{}:{retryOf:copy(attempt.retryOf)})};
 }
 
 const summary=baseline=>({status:'registered',sourceTask:'task8',admissionId:baseline.admissionId,contextHash:baseline.identity.contextHash,acceptedSceneHash:baseline.acceptedSceneHash,stateHash:baseline.stateHash});
 export function readPlayerBaseline(record){
   const previous=record.acceptance?.playerBaseline;if(!previous)fail('ACCEPTANCE_PREREQUISITE_MISSING');
-  exactKeys(previous,['schemaVersion','source','admissionId','identity','acceptedSceneHash','context','stateHash','state','records']);
-  const expected=reconstruct(record,{admissionId:previous.admissionId,context:previous.context,scene:previous.state?.currentScene,browserState:previous.state});
+  exactKeys(previous,['schemaVersion','source','admissionId','identity','acceptedSceneHash','context','stateHash','state','records'],['retryOf']);
+  const expected=reconstruct(record,{admissionId:previous.admissionId,context:previous.context,scene:previous.state?.currentScene,browserState:previous.state,...(Object.hasOwn(previous,'retryOf')?{retryOf:previous.retryOf}:{})});
   if(!equal(expected,previous))fail('BASELINE_CONTENT_INVALID');
   return copy(expected);
 }

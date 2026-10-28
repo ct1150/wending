@@ -7,13 +7,13 @@ import {fileURLToPath,pathToFileURL} from 'node:url';
 import {Miniflare} from 'miniflare';
 import {createLiveGame,prepareOpening} from '../src/game/cultivation/live/engine.js';
 import {buildStoryContext} from '../src/game/cultivation/live/memory.js';
-import {PRODUCTION_PROFILES} from '../src/worker/story-config.js';
+import {CANDIDATE_MODEL_ID,PRODUCTION_PROFILES} from '../src/worker/story-config.js';
 import {execFile} from 'node:child_process';
 import {promisify} from 'node:util';
 const productionModule=await import('../src/worker/story-production.js').catch(()=>null);
 const repository=fileURLToPath(new URL('../',import.meta.url));
 const versions={protocolVersion:1,rulesVersion:1,promptVersion:1,saveVersion:5,contentVersion:4};
-const modelId='@cf/qwen/qwen3-30b-a3b-fp8';
+const modelId=CANDIDATE_MODEL_ID;
 function policy(){
   const accountId='isolated-production-fixture';
   return {enabled:true,mode:'production',modelId,...versions,bindingAccountId:accountId,currentPlan:{accountId,source:'operator-account-verification',plan:'workers-free'},freeBoundaryProof:{accountId,source:'operator-account-verification',plan:'workers-free',hardLimit:true,noGatewayCredits:true,directBinding:true,accountUsageVerified:true,storageFreeVerified:true,remainingNeurons:0,checkedAt:new Date(Date.now()-86400000).toISOString()}};
@@ -127,19 +127,19 @@ export default {async fetch(request,env,ctx){
   const post=body=>mf.dispatchFetch(origin+'/api/story/turn',{method:'POST',headers:{origin,cookie,'content-type':'application/json'},body:JSON.stringify(body)});
   const ready=await(await post(body)).json();assert.equal(ready.status,'ready',ready.errorCode);assert.equal(ready.requestId,'production-opening');
   assert.deepEqual(await(await post(body)).json(),ready);assert.equal((await getStatus()).aiCalls,1);
-  // Seed an independent unknown commitment through the real local DO. Its cost
-  // and the first turn's 111 remain charged across restart; never real inference.
+  // Persist observed provider exhaustion with an independent unknown commitment.
+  // Its original charge and the first turn survive restart; never real inference.
   const ns=await mf.getDurableObjectNamespace('STORY_BUDGET'),stub=ns.get(ns.idFromName(manifest.coordinatorName));
   const call=async(method,body)=>(await stub.fetch('https://story-budget.internal/'+method,{method:'POST',body:JSON.stringify(body)})).json();
   const owner={sessionRef:'fixture-budget-session',tokenHash:'fixture-budget-token',ipHash:'fixture-budget-ip'};
   assert.equal((await call('createSession',owner)).kind,'session');
   assert.equal((await call('reserve',{...owner,attemptId:'fixture-unknown',requestId:'fixture-unknown-request',payloadHash:'fixture-payload',contextHash:'fixture-context',reservedNeurons:9889,retryOf:null})).kind,'reserved');
-  assert.equal((await call('settle',{sessionRef:owner.sessionRef,attemptId:'fixture-unknown',status:'unknown',result:{status:'paused',errorCode:'PROVIDER_TIMEOUT'}})).kind,'settled');
+  assert.equal((await call('settle',{sessionRef:owner.sessionRef,attemptId:'fixture-unknown',status:'unknown',quotaExhausted:true,result:{status:'paused',errorCode:'FREE_QUOTA_EXHAUSTED'}})).kind,'settled');
   await mf.dispose();mf=new Miniflare(options);
   for(const variant of ['disabled','wrongAccount'])assert.deepEqual(await(await mf.dispatchFetch(origin+'/api/story/turn/production-opening?attemptId=production-attempt',{headers:{cookie,'x-fixture-policy':variant}})).json(),ready);
   const nextState=createLiveGame({runId:'production-blocked',seed:43}),nextPending=prepareOpening(nextState,{requestId:'production-blocked-opening'});
   const blocked=await(await post({context:buildStoryContext(nextState,nextPending),attempt:{id:'production-blocked-attempt',sessionRef:session.sessionRef,retryOf:null}})).json();
-  assert.equal(blocked.errorCode,'DAILY_BUDGET_EXHAUSTED');
+  assert.equal(blocked.errorCode,'FREE_QUOTA_EXHAUSTED');
   const status=await getStatus();assert.equal(status.aiCalls,0);assert.ok(status.coordinatorNames.length>0);assert.deepEqual([...new Set(status.coordinatorNames)],['story-budget-v1-global']);assert.equal(outbound,1,'only the blocked static release check, with no inference egress');
   assert.equal(JSON.parse(await readFile(path.join(repository,'config/story-deployment.json'),'utf8')).enabled,false);assert.deepEqual(PRODUCTION_PROFILES,[]);
 });

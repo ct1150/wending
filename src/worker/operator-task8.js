@@ -1,6 +1,6 @@
 // Private Task8 accounting only. The caller authenticates and serializes access
 // to the existing experiment-v1 record; this module never invokes a provider.
-import { assertProviderReady, reserveExperiment, settleExperiment,EXPERIMENT_LIMITS } from './story-config.js';
+import { assertProviderReady, reserveExperiment, settleExperiment } from './story-config.js';
 import { TURN_RESERVATION_NEURONS } from './story-api.js';
 import { assertPlainData, canonicalStringify, sha256 } from '../game/cultivation/live/identity.js';
 import { exactKeys, idField } from '../game/cultivation/live/schema.js';
@@ -27,20 +27,20 @@ export function validateTask8Body(body,settlement=false){
 function stateOf(record){
   const state=record.task8??{schemaVersion:1,admissions:{}};
   assertPlainData(state);exactKeys(state,['schemaVersion','admissions']);
-  if(state.schemaVersion!==1||!state.admissions||typeof state.admissions!=='object'||Array.isArray(state.admissions)||Object.keys(state.admissions).length>EXPERIMENT_LIMITS.taskCalls.task8)fail('EXPERIMENT_LEDGER_INVALID');
+  if(state.schemaVersion!==1||!state.admissions||typeof state.admissions!=='object'||Array.isArray(state.admissions))fail('EXPERIMENT_LEDGER_INVALID');
   for(const [id,row] of Object.entries(state.admissions)){
     exactKeys(row,['identity','status',...(row.status==='complete'?['acceptedSceneHash']:[])],['observationHash']);validateTask8Body(row.identity);
     const entry=record.ledger.attempts.find(value=>value.attemptId===id);
-    if(id!==admissionId(row.identity)||!['reserved',...statuses].includes(row.status)||entry?.task!=='task8'||entry.reservedNeurons!==TURN_RESERVATION_NEURONS||entry.status!==row.status)fail('EXPERIMENT_LEDGER_INVALID');
+    if(id!==admissionId(row.identity)||!['reserved',...statuses].includes(row.status)||entry?.task!=='task8'||(!Number.isSafeInteger(entry.reservedNeurons)||entry.reservedNeurons<1)||entry.status!==row.status)fail('EXPERIMENT_LEDGER_INVALID');
     const result=record.results?.[id];
     if(Object.hasOwn(row,'observationHash')){
-      if(row.status==='reserved'||!sceneHash(row.observationHash)||!result||result.observationHash!==row.observationHash||result.task!=='task8'||result.status!==row.status||result.reservedNeurons!==TURN_RESERVATION_NEURONS||result.actualNeurons!==null||identityFields.some(key=>result[key]!==row.identity[key]))fail('EXPERIMENT_LEDGER_INVALID');
+      if(row.status==='reserved'||!sceneHash(row.observationHash)||!result||result.observationHash!==row.observationHash||result.task!=='task8'||result.status!==row.status||result.reservedNeurons!==entry.reservedNeurons||result.actualNeurons!==null||identityFields.some(key=>result[key]!==row.identity[key]))fail('EXPERIMENT_LEDGER_INVALID');
       try{validateStoryObservation(result.observation,{status:row.status});if(storyObservationHash(result.observation)!==row.observationHash)fail('EXPERIMENT_LEDGER_INVALID');}catch{fail('EXPERIMENT_LEDGER_INVALID');}
     }else if(result&&(Object.hasOwn(result,'observation')||Object.hasOwn(result,'observationHash')))fail('EXPERIMENT_LEDGER_INVALID');
     if(row.status==='complete'){
       // Old un-attested completions and inconsistent copies cannot qualify a
       // later baseline or be silently upgraded by a settlement replay.
-      if(!sceneHash(row.acceptedSceneHash)||result?.task!=='task8'||result.status!=='complete'||result.acceptedSceneHash!==row.acceptedSceneHash||result.reservedNeurons!==TURN_RESERVATION_NEURONS||result.actualNeurons!==null||identityFields.some(key=>result[key]!==row.identity[key]))fail('EXPERIMENT_LEDGER_INVALID');
+      if(!sceneHash(row.acceptedSceneHash)||result?.task!=='task8'||result.status!=='complete'||result.acceptedSceneHash!==row.acceptedSceneHash||result.reservedNeurons!==entry.reservedNeurons||result.actualNeurons!==null||identityFields.some(key=>result[key]!==row.identity[key]))fail('EXPERIMENT_LEDGER_INVALID');
     }else if(result&&Object.hasOwn(result,'acceptedSceneHash'))fail('EXPERIMENT_LEDGER_INVALID');
   }
   return state;
@@ -58,7 +58,7 @@ export async function admitTask8({record,body,env,confirmEvidence,save}){
     if(existing){
       if(canonicalStringify(existing.identity)!==canonicalStringify(identity))fail('TASK8_ADMISSION_CONFLICT');
       // A replay is deliberately not another grant, even after a lost response.
-      return {kind:'duplicate',admissionId:id,status:existing.status,reservedNeurons:TURN_RESERVATION_NEURONS};
+      return {kind:'duplicate',admissionId:id,status:existing.status,reservedNeurons:record.ledger.attempts.find(entry=>entry.attemptId===id).reservedNeurons};
     }
     if(record.ledger.attempts.some(entry=>entry.attemptId===id))fail('TASK8_ADMISSION_CONFLICT');
     assertProviderReady({enabled:true,env,evidence:confirmEvidence(),purpose:'probe',ledger:record.ledger,reservationNeurons:TURN_RESERVATION_NEURONS});
@@ -80,8 +80,9 @@ export async function settleTask8({record,body,save}){
     const observationLink=observationHash===undefined?{}:{observationHash};
     const response={kind:'settled',admissionId:id,status:body.status,...attestation,...observationLink};
     if(existing.status===body.status)return response;
+    const reservedNeurons=record.ledger.attempts.find(entry=>entry.attemptId===id).reservedNeurons;
     const ledger=settleExperiment(record.ledger,id,{status:body.status,actualNeurons:null});
-    const result={task:'task8',...identity,status:body.status,reservedNeurons:TURN_RESERVATION_NEURONS,actualNeurons:null,...attestation,...observationLink,...(observation===undefined?{}:{observation})};
+    const result={task:'task8',...identity,status:body.status,reservedNeurons,actualNeurons:null,...attestation,...observationLink,...(observation===undefined?{}:{observation})};
     await saveBounded(save,{...record,ledger,results:{...record.results,[id]:result},task8:{schemaVersion:1,admissions:{...state.admissions,[id]:{identity,status:body.status,...attestation,...observationLink}}}});
     return response;
   }catch(error){return denied(error);}

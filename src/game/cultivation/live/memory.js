@@ -269,6 +269,9 @@ export function validateGeneratedScene(raw,context) {
   if(!raw.id.startsWith(prefix+'s:')||raw.choices.some(p=>!p.id.startsWith(prefix+'c:')))fail('SCENE_ID_SCOPE_INVALID');
   const known=new Map(context.entities.map(e=>[e.id,e])),current=new Map(raw.entities.map(e=>[e.id,e]));
   for(const e of raw.entities){
+    // The player has the fixed self identity; a separate NPC would let rule
+    // actions target the protagonist as though they were another character.
+    if(e.kind==='person'&&e.name===context.life.name)fail('ENTITY_IDENTITY_CONFLICT');
     const old=known.get(e.id);
     if(old){
       if(old.name!==e.name||old.kind!==e.kind)fail('ENTITY_IDENTITY_CONFLICT');
@@ -292,7 +295,7 @@ export function validateGeneratedScene(raw,context) {
     }
   }
   for(const block of raw.blocks)if(block.kind==='dialogue'){
-    if(block.speaker!=='self'&&!current.has(block.speaker))fail('SPEAKER_REFERENCE_INVALID');
+    if(block.speaker!=='self'&&current.get(block.speaker)?.kind!=='person')fail('SPEAKER_REFERENCE_INVALID');
     if(isDead(block.speaker))fail('ENTITY_DEATH_CONFLICT');
   }
   for(const p of raw.choices)if(['negotiate','fight','evade'].includes(p.intent)&&isDead(p.targetId))fail('ENTITY_DEATH_CONFLICT');

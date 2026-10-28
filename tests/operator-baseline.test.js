@@ -1,6 +1,7 @@
 // Local fixtures only. No Cloudflare request or real inference is made here.
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import {CANDIDATE_MODEL_ID} from '../src/worker/story-config.js';
 import { readFile,mkdtemp,rm } from 'node:fs/promises';
 import path from 'node:path';
 import { tmpdir } from 'node:os';
@@ -30,23 +31,33 @@ function makeScene(context){
   const prefix=context.namespace+':t'+context.identity.turnId+':',keeper=context.entities[0]??{id:prefix+'e:keeper',name:'守路人',kind:'person',status:'alive'};
   return {id:prefix+'s:scene',title:'山路来信',location:'山路',blocks:[{kind:'narration',text:'你沿山路走来，回应'+(context.receipt.action?.intent??'初次相逢')+'。'},{kind:'dialogue',speaker:keeper.id,text:'前路的约定还在。'}],entities:[keeper],choices:[{id:prefix+'c:talk',label:'协助守路人',intent:'negotiate',targetId:keeper.id,stake:'low',approach:'cooperate'},{id:prefix+'c:rest',label:'暂且休息',intent:'rest',targetId:'self',stake:'low',approach:'recover'}],memoryDeltas:context.phase==='opening'?[{entityId:keeper.id,kind:'promise',text:'替守路人留意来信。'}]:[]};
 }
-function sourceFixture({singleChoice=false}={}){
+function sourceFixture({singleChoice=false,retryOf=null}={}){
   const record=historicalRecord(),birth=createLiveGame({runId:'actual-player-fixture',seed:136,name:'云归',originId:'village'}),pending=prepareOpening(birth,{requestId:'player-opening'});
   const context=buildStoryContext(birth,pending,[],{selection:'relevance-v1',openTotal:0}),scene=makeScene(context);
   if(singleChoice)scene.choices[1]={...scene.choices[1],intent:'craft',targetId:'manual',approach:'study'};
-  const browserState=commitTurn(birth,pending,scene,context.relationships),attempt={id:'player-attempt',sessionRef:'player-session',retryOf:null};
+  const browserState=commitTurn(birth,pending,scene,context.relationships),attempt={id:'player-attempt',sessionRef:'player-session',retryOf};
   const identity={sessionRef:attempt.sessionRef,requestId:pending.identity.requestId,attemptId:attempt.id,payloadHash:sha256(canonicalStringify({context,attempt})),contextHash:sha256(canonicalStringify(context))};
   const admissionId='task8_'+sha256(canonicalStringify([identity.sessionRef,identity.attemptId])),acceptedSceneHash=sha256(canonicalStringify(scene));
   record.ledger.attempts.push({task:'task8',attemptId:admissionId,reservedNeurons:111,actualNeurons:null,status:'complete'});
   record.task8={schemaVersion:1,admissions:{[admissionId]:{identity,status:'complete',acceptedSceneHash}}};
   record.results[admissionId]={task:'task8',...identity,status:'complete',reservedNeurons:111,actualNeurons:null,acceptedSceneHash};
-  return clone({record,body:{admissionId,context,scene,browserState}});
+  return clone({record,body:{admissionId,context,scene,browserState,...(retryOf===null?{}:{retryOf})}});
 }
-async function fixture(data=sourceFixture()){
+function retrySourceFixture(){
+  const retryOf={attemptId:'unknown-opening',sessionRef:'player-session'},data=sourceFixture({retryOf});
+  const source=data.record.task8.admissions[data.body.admissionId],attempt={id:retryOf.attemptId,sessionRef:retryOf.sessionRef,retryOf:null};
+  const identity={...source.identity,attemptId:attempt.id,payloadHash:sha256(canonicalStringify({context:data.body.context,attempt}))};
+  const admissionId='task8_'+sha256(canonicalStringify([identity.sessionRef,identity.attemptId]));
+  data.record.ledger.attempts.splice(7,0,{task:'task8',attemptId:admissionId,reservedNeurons:111,actualNeurons:null,status:'unknown'});
+  data.record.task8.admissions[admissionId]={identity,status:'unknown'};
+  data.record.results[admissionId]={task:'task8',...identity,status:'unknown',reservedNeurons:111,actualNeurons:null};
+  return data;
+}
+async function fixture(data=sourceFixture(),run){
   let saved=clone(data.record),writes=0,calls=0;const inputs=[];
   const storage={sql:{},async get(){return clone(saved);},async put(key,value){assert.equal(key,'experiment-v1');saved=clone(value);writes++;}};
   const config={operatorTokenSha256:sha256(token),bindingAccountId:'local-account',freeBoundaryEvidence:{accountId:'local-account',source:'operator-account-verification',plan:'workers-free',hardLimit:true,noGatewayCredits:true,directBinding:true,accountUsageVerified:true,storageFreeVerified:true,remainingNeurons:800,checkedAt:new Date().toISOString()}};
-  const env={AI:{async run(model,input){calls++;const c=JSON.parse(input.messages[1].content);inputs.push(c);return {model,choices:[{finish_reason:'stop',message:{content:JSON.stringify(makeScene(c))}}],usage:{prompt_tokens:100,completion_tokens:80,total_tokens:180}};}}};
+  const env={AI:{async run(model,input){calls++;const c=JSON.parse(input.messages[1].content);inputs.push(c);const response={model,choices:[{finish_reason:'stop',message:{content:JSON.stringify(makeScene(c))}}],usage:{prompt_tokens:100,completion_tokens:80,total_tokens:180}};return run?run(c,response):response;}}};
   const make=()=>new OperatorProbeDurableObject({storage},env,config);let object=make();
   const fetch=(body=data.body,{path='/task7/baseline',authorization='Bearer '+token,method='POST'}={})=>object.fetch(new Request('https://operator.invalid'+path,{method,headers:{authorization,'content-type':'application/json'},...(method==='POST'?{body:typeof body==='string'?body:JSON.stringify(body)}:{})}));
   return {data,storage,inputs,fetch,async call(body,options){return (await fetch(body,options)).json();},async branch(caseId,attemptId){return this.call({caseId,attemptId},{path:'/story-acceptance'});},restart(){object=make();},record:()=>clone(saved),get calls(){return calls;},get writes(){return writes;}};
@@ -64,7 +75,7 @@ test('operator registers one server-attested browser opening without a model cal
 
 test('baseline accepts coherent private observation links but rejects altered or orphaned copies',async()=>{
   const data=sourceFixture(),id=data.body.admissionId;
-  const observation=createStoryObservation({modelId:'@cf/qwen/qwen3-30b-a3b-fp8',inputHash:sha256('actual fixture input'),inputBytes:6000,nonThinkingValidated:true},{latencyMs:30});
+  const observation={...createStoryObservation({modelId:CANDIDATE_MODEL_ID,inputHash:sha256('actual fixture input'),inputBytes:6000,nonThinkingValidated:true},{latencyMs:30}),modelId:'@cf/qwen/qwen3-30b-a3b-fp8'};
   const observationHash=storyObservationHash(observation);
   Object.assign(data.record.results[id],{observation,observationHash});data.record.task8.admissions[id].observationHash=observationHash;
   const valid=await fixture(data),before=valid.record();assert.equal((await valid.call()).status,'registered');assert.deepEqual(valid.record().results,before.results);assert.deepEqual(valid.record().ledger,before.ledger);assert.equal(valid.calls,0);
@@ -73,18 +84,80 @@ test('baseline accepts coherent private observation links but rejects altered or
   }
 });
 
-test('first accepted opening may follow a preserved failed Task8 but never a prior unresolved or successful source',async()=>{
+test('first accepted opening may follow a failed Task8 but not an active reservation or prior success',async()=>{
   const data=sourceFixture(),identity={sessionRef:'old-failed-session',requestId:'old-failed-opening',attemptId:'old-failed-attempt',payloadHash:sha256('old failed payload'),contextHash:sha256('old failed context')};
   const id='task8_'+sha256(canonicalStringify([identity.sessionRef,identity.attemptId]));
   data.record.ledger.attempts.splice(7,0,{task:'task8',attemptId:id,status:'failed',reservedNeurons:111,actualNeurons:null});
   data.record.task8.admissions[id]={identity,status:'failed'};data.record.results[id]={task:'task8',...identity,status:'failed',reservedNeurons:111,actualNeurons:null};
   const f=await fixture(data),before=f.record();assert.equal((await f.call()).status,'registered');assert.deepEqual(f.record().ledger,before.ledger);assert.deepEqual(f.record().results,before.results);assert.deepEqual(f.record().task8,before.task8);assert.equal(f.calls,0);
   f.restart();assert.equal((await f.call()).status,'registered');assert.equal(f.writes,1);
-  for(const status of ['reserved','unknown','complete']){
+  for(const status of ['reserved','complete']){
     const blocked=clone(data);blocked.record.ledger.attempts[7].status=status;blocked.record.task8.admissions[id].status=status;blocked.record.results[id].status=status;
     if(status==='complete'){const acceptedSceneHash=sha256('earlier accepted scene');blocked.record.task8.admissions[id].acceptedSceneHash=acceptedSceneHash;blocked.record.results[id].acceptedSceneHash=acceptedSceneHash;}
     const g=await fixture(blocked),original=g.record();assert.equal((await g.call()).status,'blocked');assert.deepEqual(g.record(),original);assert.equal(g.writes,0);assert.equal(g.calls,0);
   }
+});
+
+test('a separately attested opening may follow the actual failed and unknown history without altering it',async()=>{
+  const data=sourceFixture();
+  for(const [index,status]of ['failed','unknown'].entries()){
+    const identity={sessionRef:'previous-session-'+index,requestId:'previous-opening-'+index,attemptId:'previous-attempt-'+index,payloadHash:sha256('previous payload '+index),contextHash:sha256('previous context '+index)};
+    const id='task8_'+sha256(canonicalStringify([identity.sessionRef,identity.attemptId]));
+    data.record.ledger.attempts.splice(7+index,0,{task:'task8',attemptId:id,status,reservedNeurons:111,actualNeurons:null});
+    data.record.task8.admissions[id]={identity,status};data.record.results[id]={task:'task8',...identity,status,reservedNeurons:111,actualNeurons:null};
+  }
+  const f=await fixture(data),before=f.record();
+  assert.equal(before.ledger.attempts.slice(0,9).reduce((total,row)=>total+row.reservedNeurons,0),561);
+  assert.equal((await f.call()).status,'registered');
+  assert.deepEqual(f.record().ledger,before.ledger);assert.deepEqual(f.record().results,before.results);assert.deepEqual(f.record().task8,before.task8);
+  assert.equal(f.record().acceptance.playerBaseline.admissionId,data.body.admissionId);assert.equal(f.calls,0);
+  f.restart();assert.equal((await f.call()).status,'registered');assert.equal(f.writes,1);
+});
+
+test('successful explicit retry becomes an attested baseline and survives restart before branch acceptance',async()=>{
+  const data=retrySourceFixture(),f=await fixture(data),before=f.record(),registered=await f.call();
+  assert.equal(registered.status,'registered');assert.equal(f.calls,0);assert.equal(f.writes,1);
+  const baseline=f.record().acceptance.playerBaseline;
+  assert.deepEqual(baseline.retryOf,{attemptId:'unknown-opening',sessionRef:'player-session'});
+  assert.deepEqual(f.record().ledger,before.ledger);assert.deepEqual(f.record().task8,before.task8);assert.deepEqual(f.record().results,before.results);
+  f.restart();assert.deepEqual(await f.call(),registered);assert.equal(f.writes,1);
+  assert.equal((await f.branch(branchA,'retry-opening-branch')).status,'ready');assert.equal(f.calls,1);
+  assert.deepEqual(f.record().acceptance.playerBaseline,baseline);
+  assert.deepEqual(f.record().ledger.attempts.slice(0,-1),before.ledger.attempts);
+});
+
+test('baseline rejects missing or altered retry lineage and cannot skip an active predecessor',async()=>{
+  const data=retrySourceFixture();
+  for(const mutate of [
+    d=>{delete d.body.retryOf;},
+    d=>{d.body.retryOf=null;},
+    d=>{d.body.retryOf.attemptId='another-attempt';},
+    d=>{d.body.retryOf.sessionRef='another-session';},
+    d=>{const entry=d.record.ledger.attempts[7];entry.status='reserved';d.record.task8.admissions[entry.attemptId].status='reserved';delete d.record.results[entry.attemptId];},
+  ]){
+    const changed=clone(data);mutate(changed);const f=await fixture(changed),before=f.record();
+    assert.equal((await f.call()).status,'blocked');assert.deepEqual(f.record(),before);assert.equal(f.writes,0);assert.equal(f.calls,0);
+  }
+});
+
+test('explicit null retry lineage retains the legacy baseline representation and replay',async()=>{
+  const f=await fixture(),registered=await f.call(),before=f.record();
+  assert.deepEqual(await f.call({...f.data.body,retryOf:null}),registered);
+  assert.equal(Object.hasOwn(before.acceptance.playerBaseline,'retryOf'),false);
+  assert.deepEqual(f.record(),before);assert.equal(f.writes,1);assert.equal(f.calls,0);
+});
+
+test('baseline verifies the recorded positive reservation rather than one deployment constant',async()=>{
+  for(const reservation of [111,130]){
+    const data=sourceFixture();data.record.ledger.attempts.at(-1).reservedNeurons=reservation;data.record.results[data.body.admissionId].reservedNeurons=reservation;
+    const f=await fixture(data),before=f.record();assert.equal((await f.call()).status,'registered');assert.deepEqual(f.record().ledger,before.ledger);assert.deepEqual(f.record().results,before.results);
+  }
+  for(const reservation of [0,-1,1.5]){
+    const data=sourceFixture();data.record.ledger.attempts.at(-1).reservedNeurons=reservation;data.record.results[data.body.admissionId].reservedNeurons=reservation;
+    const f=await fixture(data),before=f.record();assert.equal((await f.call()).status,'blocked');assert.deepEqual(f.record(),before);assert.equal(f.writes,0);
+  }
+  const data=sourceFixture();data.record.results[data.body.admissionId].reservedNeurons=130;
+  const f=await fixture(data);assert.equal((await f.call()).status,'blocked');assert.equal(f.writes,0);
 });
 
 test('baseline authenticates, bounds and validates its body before writing or inferring',async()=>{
@@ -137,6 +210,51 @@ test('shared-opening branches clone the attested S1, keep all three failures and
   assert.equal(record.acceptance.cases[branchB].sourceTask8AdmissionId,f.data.body.admissionId);
 });
 
+test('explicit new branch attempts preserve terminal failures and exact replay across restart',async t=>{
+  for(const failure of ['rejected','unknown'])await t.test(failure,async()=>{
+    let calls=0;
+    const f=await fixture(sourceFixture(),(context,response)=>{
+      if(calls++===0){if(failure==='unknown')throw Error('private transient failure');response.choices[0].message.content='invalid json';}
+      return response;
+    });
+    await f.call();const baseline=clone(f.record().acceptance.playerBaseline);
+    const first=await f.branch(branchA,'failed-branch'),failed=f.record(),association=clone(failed.acceptance.cases[branchA]);
+    assert.equal(association.status,failure==='unknown'?'unknown':'failed');assert.equal(f.calls,1);
+    f.restart();assert.deepEqual(await f.branch(branchA,'failed-branch'),first);assert.equal(f.calls,1);
+    assert.equal((await f.branch(branchB,'too-early')).errorCode,'ACCEPTANCE_PREREQUISITE_MISSING');
+    const put=f.storage.put;f.storage.put=async()=>{throw Error('private storage unavailable');};
+    assert.equal((await f.branch(branchA,'new-branch')).errorCode,'LEDGER_PERSIST_FAILED');assert.deepEqual(f.record(),failed);assert.equal(f.calls,1);
+    f.storage.put=put;f.restart();
+    const [second,replay]=await Promise.all([f.branch(branchA,'new-branch'),f.branch(branchA,'new-branch')]);
+    assert.equal(second.status,'ready');assert.equal(second.attemptId,'new-branch');assert.equal(second.retryOf,'failed-branch');assert.deepEqual(replay,second);assert.equal(f.calls,2);
+    const stored=f.record();assert.deepEqual(stored.ledger.attempts.slice(0,-1),failed.ledger.attempts);
+    assert.deepEqual(stored.results['failed-branch'],failed.results['failed-branch']);assert.deepEqual(stored.acceptance.caseHistory['failed-branch'],association);
+    assert.equal(stored.acceptance.cases[branchA].retryOf,'failed-branch');assert.deepEqual(stored.acceptance.playerBaseline,baseline);
+    assert.deepEqual(f.inputs[0],f.inputs[1]);
+    f.restart();assert.deepEqual(await f.branch(branchA,'failed-branch'),first);assert.deepEqual(await f.branch(branchA,'new-branch'),second);
+    assert.deepEqual(await f.branch(branchA,'do-not-duplicate-success'),second);assert.equal(f.calls,2);assert.deepEqual(f.record(),stored);
+    assert.equal((await f.branch(branchB,'failed-branch')).errorCode,'ACCEPTANCE_ATTEMPT_CONFLICT');assert.equal(f.calls,2);
+    assert.equal((await f.branch(branchB,'branch-b')).status,'ready');assert.equal(f.calls,3);
+  });
+});
+
+test('a branch retry chain keeps each previous association and result immutable',async()=>{
+  let calls=0;const f=await fixture(sourceFixture(),(context,response)=>{if(calls++<2)throw Error('fixture temporary failure');return response;});
+  await f.call();const first=await f.branch(branchA,'attempt-one'),one=f.record();
+  const second=await f.branch(branchA,'attempt-two'),two=f.record();assert.equal(second.retryOf,'attempt-one');
+  const third=await f.branch(branchA,'attempt-three');assert.equal(third.status,'ready');assert.equal(third.retryOf,'attempt-two');
+  const stored=f.record();assert.deepEqual(stored.acceptance.caseHistory['attempt-one'],one.acceptance.cases[branchA]);assert.deepEqual(stored.acceptance.caseHistory['attempt-two'],two.acceptance.cases[branchA]);
+  assert.deepEqual(stored.results['attempt-one'],first);assert.deepEqual(stored.results['attempt-two'],second);
+  f.restart();assert.deepEqual(await f.branch(branchA,'attempt-one'),first);assert.deepEqual(await f.branch(branchA,'attempt-two'),second);assert.deepEqual(await f.branch(branchA,'attempt-three'),third);assert.equal(f.calls,3);assert.deepEqual(f.record(),stored);
+});
+
+test('a branch with no durable terminal result cannot be retried under a different identity',async()=>{
+  const f=await fixture();await f.call();const put=f.storage.put;let writes=0;
+  f.storage.put=async(key,value)=>{if(writes++>0)throw Error('final persistence failure');return put(key,value);};
+  await f.branch(branchA,'uncertain-branch');const before=f.record();assert.equal(before.acceptance.cases[branchA].status,'reserved');
+  f.storage.put=put;f.restart();assert.equal((await f.branch(branchA,'new-identity')).status,'already-reserved-or-unknown');assert.equal(f.calls,1);assert.deepEqual(f.record(),before);
+});
+
 test('only one executable source choice blocks branch A before any additional reservation',async()=>{
   const f=await fixture(sourceFixture({singleChoice:true}));assert.equal((await f.call()).status,'registered');const before=f.record();
   assert.equal((await f.branch(branchA,'cannot-contrast')).errorCode,'ACCEPTANCE_DISTINCT_CHOICES_UNAVAILABLE');assert.equal(f.calls,0);assert.deepEqual(f.record(),before);
@@ -149,7 +267,7 @@ test('missing original ledger and failed baseline persistence never initialize o
 
 test('native workerd preserves attested baseline and private branches across SQLite restarts',{timeout:30000},async t=>{
   const data=sourceFixture(),root=await mkdtemp(path.join(tmpdir(),'wending-baseline-native-'));t.after(()=>rm(root,{recursive:true,force:true}));
-  const observation=createStoryObservation({modelId:'@cf/qwen/qwen3-30b-a3b-fp8',inputHash:sha256('native fixture input'),inputBytes:6000,nonThinkingValidated:true},{latencyMs:30});
+  const observation={...createStoryObservation({modelId:CANDIDATE_MODEL_ID,inputHash:sha256('native fixture input'),inputBytes:6000,nonThinkingValidated:true},{latencyMs:30}),modelId:'@cf/qwen/qwen3-30b-a3b-fp8'};
   const observationHash=storyObservationHash(observation);
   Object.assign(data.record.results[data.body.admissionId],{observation,observationHash});data.record.task8.admissions[data.body.admissionId].observationHash=observationHash;
   const config={operatorTokenSha256:sha256(token),bindingAccountId:'local-account',freeBoundaryEvidence:{accountId:'local-account',source:'operator-account-verification',plan:'workers-free',hardLimit:true,noGatewayCredits:true,directBinding:true,accountUsageVerified:true,storageFreeVerified:true,remainingNeurons:800,checkedAt:new Date().toISOString()}};

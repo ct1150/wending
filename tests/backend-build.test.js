@@ -1,5 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import {CANDIDATE_MODEL_ID} from '../src/worker/story-config.js';
 import {mkdtemp,mkdir,readFile,writeFile,rm,cp,readdir} from 'node:fs/promises';
 import {tmpdir} from 'node:os';
 import path from 'node:path';
@@ -123,7 +124,7 @@ test('dependency parser rejects dynamic imports in any expression and ignores li
 
 function testerPolicy(){
   const accountId='fixture-account';
-  return {enabled:true,mode:'tester-only',modelId:'@cf/qwen/qwen3-30b-a3b-fp8',testerPermitSha256:hash('aa'.repeat(32)),bindingAccountId:accountId,currentPlan:{accountId,source:'operator-account-verification',plan:'workers-free'},freeBoundaryProof:{accountId,source:'operator-account-verification',plan:'workers-free',hardLimit:true,noGatewayCredits:true,directBinding:true,accountUsageVerified:true,storageFreeVerified:true,remainingNeurons:10000,checkedAt:new Date().toISOString()}};
+  return {enabled:true,mode:'tester-only',modelId:CANDIDATE_MODEL_ID,testerPermitSha256:hash('aa'.repeat(32)),bindingAccountId:accountId,currentPlan:{accountId,source:'operator-account-verification',plan:'workers-free'},freeBoundaryProof:{accountId,source:'operator-account-verification',plan:'workers-free',hardLimit:true,noGatewayCredits:true,directBinding:true,accountUsageVerified:true,storageFreeVerified:true,remainingNeurons:10000,checkedAt:new Date().toISOString()}};
 }
 
 test('explicit tester-only package preserves disabled public policy and declares existing shared namespaces',async t=>{

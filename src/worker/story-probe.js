@@ -11,9 +11,9 @@ function errorCode(error) {
 }
 function probeInput() {
   return {
-    messages:[{ role:'system', content:'你是修仙故事作者。只输出符合schema的中文JSON，不改动人物属性，不输出思考过程。 /no_think' }, { role:'user', content:'你十六岁，初到山门。写一个简短的入门场景和两个可选行动。' }],
-    stream:false, max_tokens:512,
-    response_format:{ type:'json_schema', json_schema:{ type:'object', additionalProperties:false, properties:{ scene:{ type:'string' }, choices:{ type:'array', minItems:2, maxItems:3, items:{ type:'string' } } }, required:['scene','choices'] } },
+    messages:[{ role:'system', content:'你是修仙故事作者。只输出符合schema的中文JSON，不改动人物属性，不输出思考过程。' }, { role:'user', content:'你十六岁，初到山门。写一个简短的入门场景和两个可选行动。' }],
+    stream:false, max_tokens:512, chat_template_kwargs:{enable_thinking:false},
+    response_format:{ type:'json_schema', json_schema:{name:'cultivation_probe',strict:true,schema:{ type:'object', additionalProperties:false, properties:{ scene:{ type:'string' }, choices:{ type:'array', minItems:2, maxItems:3, items:{ type:'string' } } }, required:['scene','choices'] }} },
   };
 }
 async function persist(save, ledger) { try { await save(ledger); } catch { throw fail('LEDGER_PERSIST_FAILED'); } }
@@ -49,9 +49,10 @@ export async function runProbe({ execute = false, env, evidence, ledger, persist
     if (raw?.model && raw.model !== modelId) throw fail('MODEL_RESPONSE_MISMATCH');
     const choice = raw?.choices?.[0];
     result.stopReason = ['stop','length','tool_calls','content_filter'].includes(choice?.finish_reason) ? choice.finish_reason : null;
-    result.reasoningPresent = typeof choice?.message?.reasoning_content === 'string' && choice.message.reasoning_content.length > 0;
-    result.reasoningChars = typeof choice?.message?.reasoning_content === 'string' ? choice.message.reasoning_content.length : 0;
-    result.reasoningNonWhitespacePresent = typeof choice?.message?.reasoning_content === 'string' && /\S/u.test(choice.message.reasoning_content);
+    const reasoning=[choice?.message?.reasoning_content,choice?.message?.reasoning].filter(value=>typeof value==='string');
+    result.reasoningPresent = reasoning.some(value=>value.length>0);
+    result.reasoningChars = reasoning.reduce((total,value)=>total+value.length,0);
+    result.reasoningNonWhitespacePresent = reasoning.some(value=>/\S/u.test(value));
     const usage = raw?.usage;
     if (usage && ['prompt_tokens','completion_tokens','total_tokens'].every(key => Number.isSafeInteger(usage[key]) && usage[key] >= 0)) result.usage = { promptTokens:usage.prompt_tokens, completionTokens:usage.completion_tokens, totalTokens:usage.total_tokens };
     // Token-derived estimates are not actual billed Neurons. Unknown remains null.
