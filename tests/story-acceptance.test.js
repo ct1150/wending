@@ -5,8 +5,9 @@ import { generateScene } from '../src/worker/story-provider.js';
 import { CANDIDATE_PROFILE, PRODUCTION_PROFILES, STORY_LIMITS } from '../src/worker/story-config.js';
 import { buildStoryContext, validateGeneratedScene } from '../src/game/cultivation/live/memory.js';
 import { createLiveGame, prepareOpening } from '../src/game/cultivation/live/engine.js';
-import { SCENE_SCHEMA } from '../src/game/cultivation/live/schema.js';
+import { SCENE_SCHEMA, idField } from '../src/game/cultivation/live/schema.js';
 import * as acceptance from '../src/worker/story-acceptance.js';
+import * as providerCore from '../src/worker/story-provider-core.js';
 const promotedFixtureProfile={...CANDIDATE_PROFILE,validated:true,supportsStructuredOutput:true};
 function context() {
   const born=createLiveGame({runId:'acceptance-run',seed:42});
@@ -193,4 +194,80 @@ test('candidate transport keeps no-retry quota, busy and timeout accounting sema
   assert.equal(timed.errorCode,'PROVIDER_TIMEOUT');assert.equal(timed.accountingStatus,'unknown');
   const missing=await acceptance.generateAcceptanceScene({},context());
   assert.equal(missing.errorCode,'AI_BINDING_MISSING');assert.equal(missing.inferencePerformed,false);
+});
+
+test('submitted identifier schemas enforce runtime ASCII IDs without consuming the maximum context allowance',()=>{
+  const input=acceptance.buildCandidateStoryInput(context()),schema=input.response_format.json_schema;
+  const identifiers=[schema.properties.id,schema.properties.blocks.items.properties.speaker,schema.properties.entities.items.properties.id,schema.properties.choices.items.properties.id,schema.properties.choices.items.properties.targetId,schema.properties.memoryDeltas.items.properties.entityId,schema.properties.memoryDeltas.items.properties.referenceId];
+  for(const field of identifiers) {
+    assert.equal(typeof field.pattern,'string','the submitted ID/reference contract includes its runtime pattern');
+    const accepts=value=>new RegExp(field.pattern).test(value);
+    for(const value of ['self','r:0123456789abcdef:t1:s:gate','A'+'x'.repeat(79)]) {idField(value);assert.equal(accepts(value),true);}
+    for(const value of ['',':bad','r:0123456789abcdef:t1:s:山门','id space','A'+'x'.repeat(80),'line\nbreak']) {assert.throws(()=>idField(value));assert.equal(accepts(value),false);}
+  }
+  const size=value=>new TextEncoder().encode(JSON.stringify(value)).length;
+  const overhead=size(input)-size(input.messages[1].content);
+  assert.ok(overhead<=5288,`fixed overhead ${overhead} must leave all 7000 encoded context bytes`);
+  const maximum={...input,messages:[input.messages[0],{role:'user',content:'x'.repeat(6998)}]};
+  assert.equal(size(maximum.messages[1].content),7000);assert.ok(size(maximum)<=12288);
+});
+
+test('submitted prompt supplies conditional fields and the complete authoritative action target/approach contract',()=>{
+  const system=acceptance.buildCandidateStoryInput(context()).messages[0].content;
+  assert.match(system,/ASCII/);
+  assert.match(system,/narration=kind,text;dialogue=kind,text,speaker/);
+  assert.match(system,/status:person only,alive\/dead;omit unknown/);
+  assert.match(system,/referenceId\/status:promise\/clue only;new=omit or open;close=referenceId\+resolved\(promise also broken\)/);
+  assert.match(system,/unique entity\/choice IDs and action tuples/);
+  const actionLine=system.match(/^Actions=(.*)$/m);assert.ok(actionLine,'the actual provider prompt declares action pairs');
+  assert.deepEqual(JSON.parse(actionLine[1]),{
+    practice:{self:['steady','intensive'],realm:['breakthrough']},
+    explore:{resource:['cautious','bold']},
+    negotiate:{npc:['cooperate','bargain','pressure']},
+    fight:{npc:['guard','assault','desperate']},
+    evade:{npc:['withdraw','conceal']},
+    rest:{self:['recover','retire']},
+    travel:{place:['road','wilderness']},
+    craft:{manual:['study'],talisman:['forge']},
+  });
+  assert.match(system,/npc=living person\/faction ID;place=place ID;realm=next realm ID/);
+  assert.match(system,/resource=supplies,stones,manual,crystal,core,soulseal,skykey,relic,iron/);
+  assert.match(system,/qi,foundation,golden,nascent,spirit,immortal/);
+  assert.match(system,/ \/no_think$/);
+});
+
+test('reproduced structure failures retain strict rejection and expose only fixed categorical diagnostics',async()=>{
+  const c=context(),prefix=c.namespace+':t1:';
+  const cases=[
+    ['FIELD_SET_INVALID',s=>s.blocks[0].speaker='self'],
+    ['FIELD_SET_INVALID',s=>s.blocks[0].kind='dialogue'],
+    ['ACTION_PAIR_INVALID',s=>s.choices[0].approach='cooperate'],
+    ['ENTITY_STATUS_INVALID',s=>s.entities.push({id:prefix+'e:gate',name:'山门',kind:'place',status:'alive'})],
+    ['FIELD_SET_INVALID',s=>s.memoryDeltas.push({kind:'fact',entityId:s.entities[0].id,text:'一件往事。',status:'open'})],
+    ['MEMORY_CLOSURE_STATUS_INVALID',s=>s.memoryDeltas.push({kind:'clue',entityId:s.entities[0].id,text:'一封来信。',referenceId:'m:prior',status:'open'})],
+    ['MEMORY_NEW_STATUS_INVALID',s=>s.memoryDeltas.push({kind:'promise',entityId:s.entities[0].id,text:'等待归来。',status:'resolved'})],
+    ['IDENTIFIER_INVALID',s=>s.id=prefix+'s:山门'],
+    ['TEXT_INVALID',s=>s.title=' '],
+    ['CHOICE_ACTION_DUPLICATE',s=>s.choices[1]={...s.choices[0],id:prefix+'c:other'}],
+    ['ENTITY_COLLECTION_INVALID',s=>s.entities.push({...s.entities[0]})],
+    ['STRUCTURE_UNCLASSIFIED',s=>s.blocks=[null]],
+  ];
+  for(const [want,mutate] of cases) {
+    const invalid=scene(c);invalid.title='private-rejected-title';mutate(invalid);
+    assert.throws(()=>validateGeneratedScene(invalid,c),{code:'GENERATED_SCENE_INVALID'});
+    const raw=response(invalid);raw.choices[0].message.reasoning_content=' \n';
+    const ai={run:async()=>raw};
+    const candidate=await acceptance.generateAcceptanceScene(ai,c),production=await generateScene(ai,promotedFixtureProfile,c);
+    assert.equal(candidate.status,'rejected');assert.equal(candidate.errorCode,'GENERATED_SCENE_INVALID');
+    assert.equal(candidate.accountingStatus,'complete');assert.equal(candidate.structureDiagnostic,want);
+    assert.equal(candidate.actualNeurons,null);assert.equal(Object.hasOwn(candidate,'scene'),false);
+    assert.deepEqual(candidate.usage,{promptTokens:100,completionTokens:80,totalTokens:180});assert.deepEqual(candidate,production);
+    assert.doesNotMatch(JSON.stringify(candidate),/private-rejected-title|reasoning_content|数据字段|未知行动|山门|Cannot read/);
+    assert.ok(providerCore.STRUCTURE_DIAGNOSTIC_CODES.includes(candidate.structureDiagnostic));
+  }
+  assert.equal(Object.isFrozen(providerCore.STRUCTURE_DIAGNOSTIC_CODES),true);
+  for(const value of [response(),{...response(),choices:[{finish_reason:'stop',message:{content:'bad JSON'}}]},response({...scene(c),blocks:[{kind:'narration',text:'你已突破至金丹。'}]})]) {
+    const result=await acceptance.generateAcceptanceScene({run:async()=>value},c);
+    assert.equal(Object.hasOwn(result,'structureDiagnostic'),false);
+  }
 });

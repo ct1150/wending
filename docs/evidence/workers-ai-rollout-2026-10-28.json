@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "dateShanghai": "2026-10-28",
-  "phase": "BASIC_MODEL_CAPABILITY_OBSERVED_FULL_GAME_ACCEPTANCE_PENDING",
+  "phase": "FULL_GAME_SAMPLE_REJECTED_CONTRACT_INVESTIGATION",
   "planConfirmation": {
     "status": "confirmed-by-account-owner",
     "source": "conversation",
@@ -20,9 +20,9 @@
     "paidFallbackConfigured": false
   },
   "accountUsageObservation": {
-    "observedAt": "2026-10-28T00:12:26.020Z",
+    "observedAt": "2026-10-28T00:27:24.043Z",
     "start": "2026-10-28T00:00:00Z",
-    "query": "query { viewer { accounts(filter:{accountTag:\"<verified-bound-account>\"}) { aiInferenceAdaptiveGroups(limit:1, filter:{datetime_geq:\"2026-10-28T00:00:00Z\", datetime_lt:\"2026-10-28T00:12:26.020Z\"}) { count sum { totalNeurons totalInputTokens totalOutputTokens } } } } }",
+    "query": "query { viewer { accounts(filter:{accountTag:\"<verified-bound-account>\"}) { aiInferenceAdaptiveGroups(limit:1, filter:{datetime_geq:\"2026-10-28T00:00:00Z\",datetime_lt:\"2026-10-28T00:27:24.043Z\"}) { count sum { totalNeurons totalInputTokens totalOutputTokens } } } } }",
     "status": 200,
     "success": true,
     "result": {
@@ -276,19 +276,51 @@
       "completeToNowGuaranteed": false,
       "actualBilledNeurons": null,
       "actualRemainingNeurons": null
+    },
+    {
+      "observedAt": "2026-10-28T00:27:24.043Z",
+      "start": "2026-10-28T00:00:00Z",
+      "query": "query { viewer { accounts(filter:{accountTag:\"<verified-bound-account>\"}) { aiInferenceAdaptiveGroups(limit:1, filter:{datetime_geq:\"2026-10-28T00:00:00Z\",datetime_lt:\"2026-10-28T00:27:24.043Z\"}) { count sum { totalNeurons totalInputTokens totalOutputTokens } } } } }",
+      "status": 200,
+      "success": true,
+      "result": {
+        "viewer": {
+          "accounts": [
+            {
+              "aiInferenceAdaptiveGroups": [
+                {
+                  "count": 4,
+                  "sum": {
+                    "totalInputTokens": 248,
+                    "totalNeurons": 20.985971450805664,
+                    "totalOutputTokens": 651
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "errors": [],
+      "sameBindingAccountVerified": true,
+      "billingMeasure": false,
+      "completeToNowGuaranteed": false,
+      "actualBilledNeurons": null,
+      "actualRemainingNeurons": null
     }
   ],
   "operatorDeployment": {
     "scriptName": "baishi-wending-ai-acceptance",
     "namespaceId": "dfb218f2f29d4ecab2395f8a00b48350",
     "migrationTag": "operator-probe-v1",
-    "deploymentId": "c6763878-377b-41b7-ad11-9c394e8b099b",
-    "versionId": "2683eeff-0320-48f6-b8cd-9f351a8e5f07",
-    "sourceCommit": "ef356ba97f2c14cd469c09efcbe7e8af0d08af32",
-    "sourceTree": "f6a605d6bd472265f2ad5ef2eb151917bc35c5a7",
-    "createdOn": "2026-10-28T00:09:04.46271Z",
-    "moduleCount": 4,
-    "artifactSha256": "eed805943f54cdabb2e436e7f4cf25678cddd7b32b1dd7d796ebb0a0dad03749",
+    "deploymentId": "c0269c85-dc6b-4529-8c46-eac19cefb2e0",
+    "versionId": "27488ea3-c1e0-4241-9b75-b65129b89456",
+    "sourceCommit": "7fe621cd575ce64c489fd2a13b0263a8df2e9cd9",
+    "sourceTree": "8795d742b79001f2a33bbe50c1728f2492cce87b",
+    "remoteSourceCommit": "cb623939baa653650fd73f852a7f9610f7334bc4",
+    "createdOn": "2026-10-28T00:29:44.190355Z",
+    "moduleCount": 14,
+    "artifactSha256": "8075616efe9f5bf8ded24821d6255b62718705990476f787a224e052a6e65882",
     "authenticatedStatusVerified": true,
     "unauthenticatedStatus": 401,
     "directAiBindingVerified": true,
@@ -296,9 +328,9 @@
     "namespaceName": "baishi-wending-ai-acceptance_OperatorProbe",
     "objectName": "wending-realtime-acceptance-v1",
     "productionRoute": false,
-    "change": "Add length/whitespace diagnostics only; preserve ledger and namespace"
+    "change": "Reviewed full-game shared provider and fixed-case runner; original four Task1 records and96reserve read back before inference; no migration or ledger reset."
   },
-  "experimentReservedNeurons": 96,
+  "experimentReservedNeurons": 173,
   "samples": [
     {
       "attemptId": "task1-20261028-001",
@@ -408,7 +440,7 @@
     "status": "root-cause-confirmed-on-two-identical-config-samples",
     "conclusion": "The production predicate treats a whitespace-only provider placeholder as reasoning. Add /no_think to shared prompt and accept only absent/null/empty/whitespace string reasoning; reject substantive strings and unexpected non-null types.",
     "earlierSampleCaveat": "001 and002 lack whitespace diagnostics and are not retroactively classified.",
-    "followup": "Focused provider correction and full-game acceptance runner under implementation; no profile promotion."
+    "followup": "Shared correction bdf6b21 independently approved and included in574-test checkpoint; full-game sample reached structure checks but was rejected. No profile promotion."
   },
   "operatorDeployments": [
     {
@@ -460,6 +492,27 @@
       "objectName": "wending-realtime-acceptance-v1",
       "productionRoute": false,
       "change": "Add length/whitespace diagnostics only; preserve ledger and namespace"
+    },
+    {
+      "scriptName": "baishi-wending-ai-acceptance",
+      "namespaceId": "dfb218f2f29d4ecab2395f8a00b48350",
+      "migrationTag": "operator-probe-v1",
+      "deploymentId": "c0269c85-dc6b-4529-8c46-eac19cefb2e0",
+      "versionId": "27488ea3-c1e0-4241-9b75-b65129b89456",
+      "sourceCommit": "7fe621cd575ce64c489fd2a13b0263a8df2e9cd9",
+      "sourceTree": "8795d742b79001f2a33bbe50c1728f2492cce87b",
+      "remoteSourceCommit": "cb623939baa653650fd73f852a7f9610f7334bc4",
+      "createdOn": "2026-10-28T00:29:44.190355Z",
+      "moduleCount": 14,
+      "artifactSha256": "8075616efe9f5bf8ded24821d6255b62718705990476f787a224e052a6e65882",
+      "authenticatedStatusVerified": true,
+      "unauthenticatedStatus": 401,
+      "directAiBindingVerified": true,
+      "sqliteStorageVerified": true,
+      "namespaceName": "baishi-wending-ai-acceptance_OperatorProbe",
+      "objectName": "wending-realtime-acceptance-v1",
+      "productionRoute": false,
+      "change": "Reviewed full-game shared provider and fixed-case runner; original four Task1 records and96reserve read back before inference; no migration or ledger reset."
     }
   ],
   "capabilitySummary": {
@@ -495,6 +548,174 @@
       "operator": 13,
       "existingProvider": 18
     },
-    "ciScope": "Previous539CI belongs to earlier accepted source; new helper has focused local evidence and will receive checkpoint CI."
+    "ciScope": "Task1 checkpoint552 and Task7 checkpoint574 are independently verified scopes; neither covers later in-progress contract correction.",
+    "task7": {
+      "providerCommit": "bdf6b21dcf20af769f653befc6f3b6f8f3e9bcd6",
+      "runnerCommit": "7fe621cd575ce64c489fd2a13b0263a8df2e9cd9",
+      "verdict": "APPROVED",
+      "critical": 0,
+      "important": 0,
+      "minor": 1,
+      "minorFinding": "Duplicated module graph traversal in two native test fixtures, nonblocking.",
+      "providerFocusedTests": 67,
+      "runnerFocusedTests": 25,
+      "independentRunnerTests": 25
+    },
+    "checkpointCI": {
+      "runId": 40607603689,
+      "jobId": 122550891273,
+      "remoteCommit": "623564abf2659dd97b6439a431f69a97d52f4d18",
+      "tree": "feb09068e64f354c20c6c6b4bf13f428845f7341",
+      "tests": 552,
+      "failures": 0,
+      "syntaxFiles": 120,
+      "status": "success",
+      "scope": "Task1 helper and preceding source; excludes later Task7 provider/runner."
+    },
+    "task7CheckpointCI": {
+      "runId": 40608803737,
+      "jobId": 122554940034,
+      "mergeCommit": "5296be2f9032521c4dd49ce64ca476c3c5998034",
+      "tree": "8795d742b79001f2a33bbe50c1728f2492cce87b",
+      "remoteCommit": "cb623939baa653650fd73f852a7f9610f7334bc4",
+      "tests": 574,
+      "failures": 0,
+      "syntaxFiles": 125,
+      "backendModules": 14,
+      "status": "success"
+    },
+    "contractCorrection": {
+      "sourceCommit": "950ff293648bd82b4b206a7aa1f6d2ffe4ed3e50",
+      "focusedTests": 70,
+      "diagnosisLocalVariants": 11,
+      "fixedInputOverheadBytes": 5189,
+      "maximumEncodedContextBytes": 7000,
+      "inputCapBytes": 12288,
+      "inputHeadroomBytes": 99,
+      "runtimeValidatorsUnchanged": true,
+      "independentReview": "pending"
+    },
+    "revisedRunner": {
+      "sourceCommit": "d74c8aef42c71bb6a1c91ca3e7d975d2070cc9c2",
+      "focusedTests": 33,
+      "nativeSqliteRestart": true,
+      "zeroEgressFixtureOnly": true,
+      "independentReview": "pending"
+    }
+  },
+  "experimentActualCalls": 5,
+  "fullGameSamples": [
+    {
+      "startedAt": "2026-10-28T00:30:11.549648+00:00",
+      "observedAt": "2026-10-28T00:30:17.503475+00:00",
+      "action": "story",
+      "httpStatus": 200,
+      "body": {
+        "schemaVersion": 1,
+        "sampleKind": "workers-ai",
+        "task": "task7",
+        "caseId": "task7-opening",
+        "attemptId": "task7-20261028-001",
+        "contextHash": "79633954725d5bc0297050ae77faf26d5ae55db7f066fb11b116b54923adcbbb",
+        "inputHash": "fca92c29a99c9df20f9a70f9701c8131c4abea0e8d307f85e58db5992f9559c1",
+        "inputBytes": 5314,
+        "modelId": "@cf/qwen/qwen3-30b-a3b-fp8",
+        "rulesVersion": 1,
+        "promptVersion": 1,
+        "reservedNeurons": 77,
+        "actualNeurons": null,
+        "inferencePerformed": true,
+        "usage": {
+          "promptTokens": 823,
+          "completionTokens": 563,
+          "totalTokens": 1386
+        },
+        "stopReason": "stop",
+        "latencyMs": 5888,
+        "status": "rejected",
+        "identity": {
+          "runId": "live-acceptance-v1",
+          "turnId": 1,
+          "baseRevision": 0,
+          "stateHash": "675f331481f98061e78263f04e155e576ae9f1069e97c964b349a2f814204eb2",
+          "choiceId": null,
+          "rulesVersion": 1,
+          "promptVersion": 1,
+          "requestId": "task7-opening"
+        },
+        "receipt": {
+          "kind": "opening",
+          "choiceId": null,
+          "action": null,
+          "elapsedDays": 0,
+          "itemChanges": {},
+          "relationChanges": {},
+          "random": {
+            "before": 1171638517,
+            "after": 1171638517,
+            "roll": null
+          },
+          "before": {
+            "ageDays": 5760,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "after": {
+            "ageDays": 5760,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "death": null,
+          "birth": {
+            "originId": "village",
+            "talentIds": [
+              "keen-memory",
+              "sword-bone"
+            ],
+            "attributes": {
+              "constitution": 4,
+              "insight": 6,
+              "fortune": 2
+            }
+          }
+        },
+        "errorCode": "GENERATED_SCENE_INVALID"
+      },
+      "attemptId": "task7-20261028-001"
+    }
+  ],
+  "fullGameAcceptance": {
+    "attempted": 1,
+    "accepted": 0,
+    "rejected": 1,
+    "remainingTask7Calls": 3,
+    "productionValidated": false,
+    "task8Started": false,
+    "finding": "The first complete game sample stopped normally but failed structure validation. Raw rejected output was not retained; its exact offending field is unknown.",
+    "next": "Bounded prompt/schema correction and versioned remaining-three-case runner implemented locally; independent scoped review and fresh same-account proof required before the next real call. Original failed case and77reservation remain unchanged."
+  },
+  "revisedTask7Recipe": {
+    "recipeVersion": 2,
+    "reason": "First full-game sample failed structure validation; original exact offending field unknown because rejected raw output was not retained.",
+    "cases": [
+      "task7-opening-v2",
+      "task7-branch-a-v2",
+      "task7-branch-b-v2"
+    ],
+    "requiresOriginalFailure": "GENERATED_SCENE_INVALID with matching durable failed case, ledger and result",
+    "base": "Both branches clone the same accepted revised opening S1; same fixed original birth.",
+    "limitsChanged": false,
+    "remainingTask7Calls": 3,
+    "task8ReservedCalls": 2,
+    "sourceCommit": "d74c8aef42c71bb6a1c91ca3e7d975d2070cc9c2",
+    "sourceTree": "f93eac6ed85a8243e6d8a44e8177a9fbefa9b762",
+    "liveExecuted": false,
+    "limitations": [
+      "One opening-to-next-scene continuity step; no second successive continuation.",
+      "Does not complete the original four-case S2-depth sequence.",
+      "Any rejection/unknown preserves its fixed-case tombstone and experiment reservation."
+    ]
   }
 }
