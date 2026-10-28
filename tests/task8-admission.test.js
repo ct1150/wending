@@ -11,6 +11,7 @@ const originalRecord=()=>({schemaVersion:1,ledger:{schemaVersion:1,attempts:[
   {task:'task7',attemptId:'old-task7-b',reservedNeurons:83,actualNeurons:null,status:'failed'},
 ]},results:{'old-task7-b':{status:'rejected',errorCode:'SCENE_ID_SCOPE_INVALID'}},acceptance:{schemaVersion:1,cases:{}},audit:'preserve this record'});
 const input=(suffix='a')=>({sessionRef:'session-'+suffix,requestId:'request-'+suffix,attemptId:'attempt-'+suffix,payloadHash:sha256('payload-'+suffix),contextHash:sha256('context-'+suffix)});
+const acceptedSceneHash=sha256('fixture-accepted-scene');
 const request=(body,path='/task8/admit',authorization='Bearer '+operatorToken)=>new Request('https://operator.invalid'+path,{method:'POST',headers:{authorization,'content-type':'application/json'},body:JSON.stringify(body)});
 async function fixture(t,initial=originalRecord()){
   const db=new DatabaseSync(':memory:');t.after(()=>db.close());db.exec('CREATE TABLE kv (key TEXT PRIMARY KEY,value TEXT NOT NULL)');
@@ -82,12 +83,56 @@ test('concurrent distinct Task8 attempts cannot overbook the two remaining slots
 
 test('Task8 settlement binds the full admission and cannot replace an earlier unknown outcome',async t=>{
   const f=await fixture(t),body=input();await f.call(body);
-  assert.equal((await f.call({...body,contextHash:sha256('wrong'),status:'complete'},'/task8/settle')).code,'TASK8_ADMISSION_CONFLICT');
-  assert.equal((await f.call({...input('absent'),status:'complete'},'/task8/settle')).code,'TASK8_ADMISSION_MISSING');
+  assert.equal((await f.call({...body,contextHash:sha256('wrong'),status:'complete',acceptedSceneHash},'/task8/settle')).code,'TASK8_ADMISSION_CONFLICT');
+  assert.equal((await f.call({...input('absent'),status:'complete',acceptedSceneHash},'/task8/settle')).code,'TASK8_ADMISSION_MISSING');
   assert.equal((await f.call({...body,status:'unknown'},'/task8/settle')).kind,'settled');
   assert.equal((await f.call({...body,status:'unknown'},'/task8/settle')).kind,'settled');
-  assert.equal((await f.call({...body,status:'complete'},'/task8/settle')).code,'TASK8_SETTLEMENT_CONFLICT');
+  assert.equal((await f.call({...body,status:'complete',acceptedSceneHash},'/task8/settle')).code,'TASK8_SETTLEMENT_CONFLICT');
   assert.equal((await f.record()).ledger.attempts.at(-1).status,'unknown');
+});
+
+test('Task8 complete settlement attests one immutable accepted scene hash across restart and replay',async t=>{
+  const f=await fixture(t),body=input(),grant=await f.call(body);
+  const settled={...body,status:'complete',acceptedSceneHash};
+  const first=await f.call(settled,'/task8/settle');
+  assert.equal(first.kind,'settled');assert.equal(first.acceptedSceneHash,acceptedSceneHash);
+  const record=await f.record(),row=record.task8.admissions[grant.admissionId];
+  assert.deepEqual(row,{identity:body,status:'complete',acceptedSceneHash});
+  assert.equal(record.results[grant.admissionId].acceptedSceneHash,acceptedSceneHash);
+  assert.equal(record.results[grant.admissionId].contextHash,body.contextHash);
+  assert.deepEqual(record.ledger.attempts.slice(0,6),originalRecord().ledger.attempts);
+  assert.equal(record.ledger.attempts.at(-1).reservedNeurons,111);assert.equal(record.ledger.attempts.at(-1).actualNeurons,null);
+  const writes=f.storage.writes;f.restart();
+  assert.deepEqual(await f.call(settled,'/task8/settle'),first);
+  assert.equal((await f.call({...settled,acceptedSceneHash:sha256('different-scene')},'/task8/settle')).code,'TASK8_SETTLEMENT_CONFLICT');
+  assert.equal((await f.call({...body,status:'failed'},'/task8/settle')).code,'TASK8_SETTLEMENT_CONFLICT');
+  assert.equal((await f.call(body)).kind,'duplicate');
+  assert.equal(f.storage.writes,writes);assert.deepEqual(await f.record(),record);assert.equal(f.calls,0);
+});
+
+test('Task8 scene attestation is forbidden on admission or non-complete settlement and required on complete',async t=>{
+  const f=await fixture(t),body=input();
+  assert.equal((await f.response({...body,acceptedSceneHash})).status,400);
+  await f.call(body);const before=await f.record(),writes=f.storage.writes;
+  for(const extra of [{},{acceptedSceneHash:null},{acceptedSceneHash:'a'.repeat(63)},{acceptedSceneHash:'A'.repeat(64)}]){
+    assert.equal((await f.response({...body,status:'complete',...extra},'/task8/settle')).status,400);
+  }
+  for(const status of ['failed','unknown'])assert.equal((await f.response({...body,status,acceptedSceneHash},'/task8/settle')).status,400);
+  assert.equal(f.storage.writes,writes);assert.deepEqual(await f.record(),before);assert.equal(f.calls,0);
+});
+
+test('Task8 complete records without a coherent scene attestation fail closed without backfilling',async t=>{
+  for(const mode of ['legacy','result-missing','result-changed'])await t.test(mode,async t=>{
+    const f=await fixture(t),body=input(),grant=await f.call(body),record=await f.record();
+    record.ledger.attempts.at(-1).status='complete';
+    record.task8.admissions[grant.admissionId]={identity:body,status:'complete',...(mode==='legacy'?{}:{acceptedSceneHash})};
+    record.results[grant.admissionId]={task:'task8',...body,status:'complete',reservedNeurons:111,actualNeurons:null,...(mode==='result-changed'?{acceptedSceneHash:sha256('changed-result')}:{})};
+    if(mode==='result-missing')delete record.results[grant.admissionId];
+    await f.storage.put('experiment-v1',record);const writes=f.storage.writes;f.restart();
+    assert.equal((await f.call(body)).code,'EXPERIMENT_LEDGER_INVALID');
+    assert.equal((await f.call({...body,status:'complete',acceptedSceneHash},'/task8/settle')).code,'EXPERIMENT_LEDGER_INVALID');
+    assert.deepEqual(await f.record(),record);assert.equal(f.storage.writes,writes);assert.equal(f.calls,0);
+  });
 });
 
 test('Task8 refuses malformed identities, caller-selected reservations and invalid fresh account proof',async t=>{
@@ -117,7 +162,7 @@ test('failed durable admission and settlement writes never recycle or invoke Tas
   assert.equal((await f.call()).code,'LEDGER_PERSIST_FAILED');assert.deepEqual(await f.record(),originalRecord());
   f.storage.put=put;assert.equal((await f.call()).kind,'reserved');
   f.storage.put=async()=>{throw Error('private persistence detail');};
-  assert.equal((await f.call({...input(),status:'complete'},'/task8/settle')).code,'LEDGER_PERSIST_FAILED');
+  assert.equal((await f.call({...input(),status:'complete',acceptedSceneHash},'/task8/settle')).code,'LEDGER_PERSIST_FAILED');
   f.storage.put=put;f.restart();assert.equal((await f.call()).kind,'duplicate');
   const record=await f.record();assert.equal(record.ledger.attempts.at(-1).status,'reserved');assert.equal(f.calls,0);assert.doesNotMatch(JSON.stringify(record),/private persistence detail|fixture-operator-secret/);
 });

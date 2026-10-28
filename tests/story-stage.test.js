@@ -70,6 +70,11 @@ test('true player cookie and protocol client traverse both durable reservations 
   const result=await client.requestTurn(pending,context,attempt);assert.equal(result.status,'ready');
   assert.equal(f.calls,1);assert.equal(f.bridgeAdmissions,1);
   const record=await f.record();assert.equal(record.ledger.attempts.length,7);assert.equal(record.ledger.attempts.at(-1).reservedNeurons,111);assert.equal(record.ledger.attempts.at(-1).status,'complete');
+  const admissionId=record.ledger.attempts.at(-1).attemptId,acceptedSceneHash=sha256(canonicalStringify(result.scene));
+  assert.equal(record.task8.admissions[admissionId].acceptedSceneHash,acceptedSceneHash);
+  assert.equal(record.results[admissionId].acceptedSceneHash,acceptedSceneHash);
+  assert.equal(record.results[admissionId].contextHash,sha256(canonicalStringify(context)));
+  assert.equal(Object.hasOwn(result,'acceptedSceneHash'),false);
   assert.doesNotMatch(JSON.stringify(record),new RegExp(permit+'|'+operatorToken));
   await f.useConfig({enabled:false});assert.equal((await client.capabilities()).errorCode,'INFERENCE_DISABLED');
   assert.deepEqual(await client.getTurn(pending,attempt),result);assert.deepEqual(await client.requestTurn(pending,context,attempt),result);
@@ -112,6 +117,51 @@ test('provider uncertainty and failed bridge settlement retain permanent unknown
     assert.equal(result.errorCode,mode==='provider'?'PROVIDER_FAILED':'EXPERIMENT_BUDGET_UNAVAILABLE');assert.equal(f.calls,1);
     assert.equal((await f.record()).ledger.attempts.at(-1).status,mode==='provider'?'unknown':'reserved');assert.equal(f.db.prepare('SELECT status FROM ledger').get().status,'unknown');
     assert.deepEqual(await (await f.fetch(request('/api/story/turn',turn,s.cookie))).json(),result);assert.equal(f.calls,1);
+  });
+});
+
+test('bridge settlement acknowledgement must attest the same accepted scene before the player receives ready',async t=>{
+  for(const mode of ['missing','changed'])await t.test(mode,async t=>{
+    const f=await fixture(t),s=await f.session(),turn=wireBody(body(s));
+    const originalGet=f.env.STORY_EXPERIMENT.get.bind(f.env.STORY_EXPERIMENT);
+    f.env.STORY_EXPERIMENT.get=(...args)=>{const stub=originalGet(...args);return {async fetch(req){
+      const response=await stub.fetch(req);
+      if(new URL(req.url).pathname!=='/task8/settle')return response;
+      const result=await response.json();
+      if(mode==='missing')delete result.acceptedSceneHash;else result.acceptedSceneHash=sha256('different-scene');
+      return Response.json(result);
+    }};};
+    const result=await(await f.fetch(request('/api/story/turn',turn,s.cookie))).json();
+    assert.equal(result.status,'paused');assert.equal(result.errorCode,'EXPERIMENT_BUDGET_UNAVAILABLE');
+    assert.equal(f.calls,1);assert.equal(f.bridgeAdmissions,1);
+    const record=await f.record(),id=record.ledger.attempts.at(-1).attemptId;
+    assert.equal(record.ledger.attempts.at(-1).status,'complete');
+    assert.equal(record.task8.admissions[id].acceptedSceneHash,sha256(canonicalStringify(scene(turn.context))));
+    const player=f.db.prepare('SELECT status,charge,actual FROM ledger').get();assert.equal(player.status,'unknown');assert.equal(player.charge,111);assert.equal(player.actual,null);
+    assert.deepEqual(await(await f.fetch(request('/api/story/turn',turn,s.cookie))).json(),result);
+    assert.equal(f.calls,1);assert.equal(f.bridgeAdmissions,1);assert.deepEqual(await f.record(),record);
+  });
+});
+
+test('strict scene rejection and provider uncertainty never persist or forward accepted scene hashes',async t=>{
+  for(const mode of ['rejected','unknown'])await t.test(mode,async t=>{
+    const f=await fixture(t,{run(model,input){
+      if(mode==='unknown')throw Error('provider unavailable');
+      const invalid=scene(JSON.parse(input.messages[1].content));invalid.choices[0].approach='steady';
+      return {model,choices:[{finish_reason:'stop',message:{content:JSON.stringify(invalid)}}],usage:{prompt_tokens:100,completion_tokens:80,total_tokens:180},acceptedSceneHash:sha256('untrusted-provider-hash')};
+    }}),s=await f.session(),turn=wireBody(body(s));
+    const originalGet=f.env.STORY_EXPERIMENT.get.bind(f.env.STORY_EXPERIMENT);let settlement;
+    f.env.STORY_EXPERIMENT.get=(...args)=>{const stub=originalGet(...args);return {async fetch(req){
+      if(new URL(req.url).pathname==='/task8/settle')settlement=await req.clone().json();
+      return stub.fetch(req);
+    }};};
+    const result=await(await f.fetch(request('/api/story/turn',turn,s.cookie))).json();
+    assert.equal(result.status,mode==='rejected'?'rejected':'paused');assert.equal(f.calls,1);
+    assert.equal(settlement.status,mode==='rejected'?'failed':'unknown');assert.equal(Object.hasOwn(settlement,'acceptedSceneHash'),false);
+    const record=await f.record(),id=record.ledger.attempts.at(-1).attemptId;
+    assert.equal(Object.hasOwn(record.task8.admissions[id],'acceptedSceneHash'),false);
+    assert.equal(Object.hasOwn(record.results[id],'acceptedSceneHash'),false);
+    assert.equal(record.ledger.attempts.at(-1).reservedNeurons,111);assert.equal(record.ledger.attempts.at(-1).actualNeurons,null);
   });
 });
 

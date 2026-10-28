@@ -3,6 +3,7 @@ import { createExperimentLedger, confirmFreeBoundaryEvidence, EXPERIMENT_LIMITS 
 import { runProbe } from './story-probe.js';
 import { runStoryAcceptance, STORY_ACCEPTANCE_CASES } from './operator-story.js';
 import { admitTask8, settleTask8, validateTask8Body } from './operator-task8.js';
+import { registerTask7Baseline,validateTask7BaselineBody,MAX_BASELINE_BODY_BYTES } from './operator-baseline.js';
 
 export const OPERATOR_PROBE_NAME = 'wending-realtime-acceptance-v1';
 const STORAGE_KEY = 'experiment-v1';
@@ -25,15 +26,16 @@ async function authenticate(request, config) {
 }
 function routeError(request) {
   const url = new URL(request.url);
-  if (!['/status','/probe','/story-acceptance','/task8/admit','/task8/settle'].includes(url.pathname)) return blocked('NOT_FOUND', 404);
+  if (!['/status','/probe','/story-acceptance','/task8/admit','/task8/settle','/task7/baseline'].includes(url.pathname)) return blocked('NOT_FOUND', 404);
   if (request.method !== (url.pathname === '/status' ? 'GET' : 'POST')) return blocked('METHOD_NOT_ALLOWED', 405);
   if (url.search) return blocked('REQUEST_INVALID', 400);
   return null;
 }
-async function readAttempt(request, storyAcceptance = false, task8Path = null) {
+async function readAttempt(request, storyAcceptance = false, task8Path = null, baseline = false) {
+  const maxBytes = baseline ? MAX_BASELINE_BODY_BYTES : MAX_BODY_BYTES;
   if (!/^application\/json(?:\s*;\s*charset=utf-8)?$/i.test(request.headers.get('content-type') ?? '')) return { error:blocked('CONTENT_TYPE_INVALID',415) };
   const length = request.headers.get('content-length');
-  if (length !== null && (!/^\d+$/.test(length) || Number(length) > MAX_BODY_BYTES)) return { error:blocked('REQUEST_INVALID',400) };
+  if (length !== null && (!/^\d+$/.test(length) || Number(length) > maxBytes)) return { error:blocked('REQUEST_INVALID',400) };
   const reader = request.body?.getReader();
   if (!reader) return { error:blocked('REQUEST_INVALID',400) };
   try {
@@ -43,13 +45,14 @@ async function readAttempt(request, storyAcceptance = false, task8Path = null) {
       const { done,value } = await reader.read();
       if (done) break;
       size += value.byteLength;
-      if (size > MAX_BODY_BYTES) { await reader.cancel(); return { error:blocked('REQUEST_INVALID',400) }; }
+      if (size > maxBytes) { await reader.cancel(); return { error:blocked('REQUEST_INVALID',400) }; }
       chunks.push(value);
     }
     const bytes = new Uint8Array(size);
     let offset = 0;
     for (const chunk of chunks) { bytes.set(chunk,offset); offset += chunk.byteLength; }
     const body = JSON.parse(new TextDecoder('utf-8',{ fatal:true }).decode(bytes));
+    if(baseline){validateTask7BaselineBody(body);return {baseline:body};}
     if(task8Path){validateTask8Body(body,task8Path==='/task8/settle');return {task8:{path:task8Path,body}};}
     if (!body || typeof body !== 'object' || Array.isArray(body) || Object.keys(body).length !== (storyAcceptance ? 2 : 1) || (storyAcceptance && !STORY_ACCEPTANCE_CASES.includes(body.caseId)) || typeof body.attemptId !== 'string' || !/^[a-zA-Z0-9_-]{1,80}$/.test(body.attemptId)) throw new Error();
     return { attemptId:body.attemptId, ...(storyAcceptance ? {caseId:body.caseId} : {}) };
@@ -76,27 +79,31 @@ export class OperatorProbeDurableObject {
     if (authError) return authError;
     const error = routeError(request);
     if (error) return error;
-    let attemptId,caseId,task8;
+    let attemptId,caseId,task8,baseline;
     if (request.method === 'POST') {
       const path=new URL(request.url).pathname;
-      const body = await readAttempt(request,path === '/story-acceptance',path.startsWith('/task8/')?path:null);
+      const body = await readAttempt(request,path === '/story-acceptance',path.startsWith('/task8/')?path:null,path === '/task7/baseline');
       if (body.error) return body.error;
-      attemptId = body.attemptId; caseId = body.caseId; task8=body.task8;
+      attemptId = body.attemptId; caseId = body.caseId; task8=body.task8; baseline=body.baseline;
     }
     // Serialize the whole read/reserve/invoke/settle operation, including external
     // awaits, rather than relying only on the DO's storage input/output gates.
-    const pending = this.queue.then(() => this.handle(attemptId,caseId,task8));
+    const pending = this.queue.then(() => this.handle(attemptId,caseId,task8,baseline));
     this.queue = pending.catch(() => {});
     try { return await pending; } catch { return blocked('OPERATOR_STORAGE_UNAVAILABLE'); }
   }
-  async handle(attemptId,caseId,task8) {
+  async handle(attemptId,caseId,task8,baseline) {
     if (!this.storage?.sql || typeof this.storage.get !== 'function' || typeof this.storage.put !== 'function') return blocked('OPERATOR_STORAGE_UNAVAILABLE');
     const stored = await this.storage.get(STORAGE_KEY);
     // Task8 may extend the original acceptance record, never initialize a new
     // budget after a missing record, wrong binding, or accidental namespace swap.
-    if(task8&&stored===undefined)return reply({kind:'denied',code:'EXPERIMENT_LEDGER_INVALID'},503);
+    if((task8||baseline)&&stored===undefined)return baseline?blocked('EXPERIMENT_LEDGER_INVALID'):reply({kind:'denied',code:'EXPERIMENT_LEDGER_INVALID'},503);
     const record = stored === undefined ? { schemaVersion:1, ledger:createExperimentLedger(), results:{} } : stored;
     if (record?.schemaVersion !== 1 || record.ledger?.schemaVersion !== 1 || !Array.isArray(record.ledger.attempts) || !record.results || typeof record.results !== 'object' || Array.isArray(record.results)) return blocked('EXPERIMENT_LEDGER_INVALID');
+    if(baseline){
+      const result=await registerTask7Baseline({record,body:baseline,save:next=>this.storage.put(STORAGE_KEY,next)});
+      return reply(result,result.status==='registered'?200:503);
+    }
     if(task8){
       const operation=task8.path==='/task8/admit'?admitTask8:settleTask8;
       const result=await operation({record,body:task8.body,env:this.env,confirmEvidence:()=>{try{return proof(this.config);}catch{throw Object.assign(new Error('FREE_BOUNDARY_UNVERIFIED'),{code:'FREE_BOUNDARY_UNVERIFIED'});}},save:next=>this.storage.put(STORAGE_KEY,next)});

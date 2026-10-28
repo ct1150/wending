@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "dateShanghai": "2026-10-28",
-  "phase": "SCOPE_CORRECTION_VERIFIED_LOCALLY_REAL_ACCEPTANCE_BLOCKED",
+  "phase": "THIRD_OPENING_REJECTED_SHARED_OPENING_PREPARED_PENDING_SEQUENCE_APPROVAL",
   "planConfirmation": {
     "status": "confirmed-by-account-owner",
     "source": "conversation",
@@ -20,22 +20,22 @@
     "paidFallbackConfigured": false
   },
   "accountUsageObservation": {
-    "observedAt": "2026-10-28T00:27:24.043Z",
+    "observedAt": "2026-10-28T03:23:33.984Z",
     "start": "2026-10-28T00:00:00Z",
-    "query": "query { viewer { accounts(filter:{accountTag:\"<verified-bound-account>\"}) { aiInferenceAdaptiveGroups(limit:1, filter:{datetime_geq:\"2026-10-28T00:00:00Z\",datetime_lt:\"2026-10-28T00:27:24.043Z\"}) { count sum { totalNeurons totalInputTokens totalOutputTokens } } } } }",
-    "status": 200,
+    "end": "2026-10-28T03:23:33.984Z",
     "success": true,
+    "status": 200,
     "result": {
       "viewer": {
         "accounts": [
           {
             "aiInferenceAdaptiveGroups": [
               {
-                "count": 4,
+                "count": 6,
                 "sum": {
-                  "totalInputTokens": 248,
-                  "totalNeurons": 20.985971450805664,
-                  "totalOutputTokens": 651
+                  "totalInputTokens": 2156,
+                  "totalNeurons": 64.67280769348145,
+                  "totalOutputTokens": 1795
                 }
               }
             ]
@@ -44,11 +44,20 @@
       }
     },
     "errors": [],
+    "messages": [],
+    "query": "query { viewer { accounts(filter:{accountTag:\"<verified-bound-account>\"}) { aiInferenceAdaptiveGroups(limit:1, filter:{datetime_geq:\"2026-10-28T00:00:00Z\",datetime_lt:\"2026-10-28T03:23:33.984Z\"}) { count sum { totalNeurons totalInputTokens totalOutputTokens } } } } }",
     "sameBindingAccountVerified": true,
     "billingMeasure": false,
     "completeToNowGuaranteed": false,
     "actualBilledNeurons": null,
-    "actualRemainingNeurons": null
+    "actualRemainingNeurons": null,
+    "observedAggregateNeurons": 64.67280769348145,
+    "probeAdmission": {
+      "basis": "observation-based-conservative-ceiling",
+      "ceilingNeurons": 800,
+      "extraReserveNeurons": 0,
+      "isGuaranteedRemainingBalance": false
+    }
   },
   "deployment": {
     "worker": "baishi-wending",
@@ -158,22 +167,33 @@
         "reservedNeurons": 83,
         "actualNeurons": null,
         "status": "failed"
+      },
+      {
+        "task": "task7",
+        "attemptId": "task7-20261028-003",
+        "reservedNeurons": 83,
+        "actualNeurons": null,
+        "status": "failed"
       }
     ]
   },
-  "actualModelCalls": 6,
+  "actualModelCalls": 7,
   "actualNeurons": null,
   "remaining": [
-    "Resolve the remaining Task7 sample/call-budget conflict without resetting, reclassifying or borrowing Task8 reservations",
-    "Fresh same-account usage proof and reviewed deployed-source identity before further real samples",
-    "Accepted complete-schema Chinese continuity/counterfactual samples and independent model-profile review",
-    "Reviewed tester-only Task8 shared-ledger admission, then real opening/choice/save/refresh within its two-call allocation",
-    "Final source CI and compatible frontend/backend release with real deployment evidence"
+    "Owner decision on reviewed shared-opening four-call sequence under already-approved 11/800 caps",
+    "Final prepared-source CI and a fresh same-account Free observation before any further real call",
+    "Reviewed deployment identities and unchanged original ledger before protected browser opening",
+    "Accepted full-schema Chinese opening and same-state counterfactual quality review",
+    "Real protected HTTPS browser choice, durable save and refresh within permanent Task8 allocation",
+    "Independent candidate-profile review and compatible production release only after all live gates pass"
   ],
   "sources": [
     "https://developers.cloudflare.com/workers-ai/platform/pricing/",
     "https://developers.cloudflare.com/durable-objects/platform/pricing/",
-    "https://developers.cloudflare.com/analytics/graphql-api/"
+    "https://developers.cloudflare.com/analytics/graphql-api/",
+    "https://developers.cloudflare.com/workers-ai/features/json-mode/",
+    "https://developers.cloudflare.com/workers-ai/models/qwen3-30b-a3b-fp8/",
+    "https://json-schema.org/understanding-json-schema/reference/combining"
   ],
   "accountUsageObservations": [
     {
@@ -322,25 +342,156 @@
       "completeToNowGuaranteed": false,
       "actualBilledNeurons": null,
       "actualRemainingNeurons": null
+    },
+    {
+      "observedAt": "2026-10-28T03:23:33.984Z",
+      "start": "2026-10-28T00:00:00Z",
+      "end": "2026-10-28T03:23:33.984Z",
+      "success": true,
+      "status": 200,
+      "result": {
+        "viewer": {
+          "accounts": [
+            {
+              "aiInferenceAdaptiveGroups": [
+                {
+                  "count": 6,
+                  "sum": {
+                    "totalInputTokens": 2156,
+                    "totalNeurons": 64.67280769348145,
+                    "totalOutputTokens": 1795
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "errors": [],
+      "messages": [],
+      "query": "query { viewer { accounts(filter:{accountTag:\"<verified-bound-account>\"}) { aiInferenceAdaptiveGroups(limit:1, filter:{datetime_geq:\"2026-10-28T00:00:00Z\",datetime_lt:\"2026-10-28T03:23:33.984Z\"}) { count sum { totalNeurons totalInputTokens totalOutputTokens } } } } }",
+      "sameBindingAccountVerified": true,
+      "billingMeasure": false,
+      "completeToNowGuaranteed": false,
+      "actualBilledNeurons": null,
+      "actualRemainingNeurons": null,
+      "observedAggregateNeurons": 64.67280769348145,
+      "probeAdmission": {
+        "basis": "observation-based-conservative-ceiling",
+        "ceilingNeurons": 800,
+        "extraReserveNeurons": 0,
+        "isGuaranteedRemainingBalance": false
+      }
     }
   ],
   "operatorDeployment": {
     "scriptName": "baishi-wending-ai-acceptance",
     "namespaceId": "dfb218f2f29d4ecab2395f8a00b48350",
     "migrationTag": "operator-probe-v1",
-    "deploymentId": "1e17abee-fc3b-442a-b46b-de3b5fe3b67a",
-    "versionId": "d69a29e6-23c1-49a7-9bd3-96bf7dd6f3ae",
-    "createdOn": "2026-10-28T01:05:31.439688Z",
-    "moduleCount": 14,
+    "deploymentId": "7556b818-9270-4f0b-a9c7-f5f3bb8440cc",
+    "versionId": "ce2eb3a2-04fd-48e2-84f5-ff817057a545",
+    "createdOn": "2026-10-28T03:24:25.597616Z",
+    "sourceCommit": "bc7427097f606348351944cb4085942b0fa45905",
+    "sourceTree": "ca1523337c641c5d05f8361a33f43c9a98503aca",
+    "moduleCount": 16,
+    "modules": [
+      {
+        "name": "entry.mjs",
+        "bytes": 841,
+        "sha256": "2552bd05e270b547d42b15a1d34e88751365343418167f231eeb4149f1d8604b"
+      },
+      {
+        "name": "src/game/cultivation/live/engine.js",
+        "bytes": 12171,
+        "sha256": "5d824d1e58a73da0b085d7be3c5ec57f920f683710330c0e1648b4473fa951a4"
+      },
+      {
+        "name": "src/game/cultivation/live/identity.js",
+        "bytes": 3931,
+        "sha256": "d619269073a7b9afcaa6245ae013ead2e82677d76698a372ff21a51a11cab232"
+      },
+      {
+        "name": "src/game/cultivation/live/memory.js",
+        "bytes": 24475,
+        "sha256": "ad7c117d24ecfc464c19c56bd1ba483f6e790b1a13f3914ef3fc4a22fdeec87a"
+      },
+      {
+        "name": "src/game/cultivation/live/model.js",
+        "bytes": 1379,
+        "sha256": "1b1b208631bac405395d84c240957a15db080333abe174b98e0eb5412336846a"
+      },
+      {
+        "name": "src/game/cultivation/live/schema.js",
+        "bytes": 5120,
+        "sha256": "dfdbdcadf35deb39315f571821203d61bd9f5a10d8c359b074001d16b0cdd0c9"
+      },
+      {
+        "name": "src/game/cultivation/live/validation.js",
+        "bytes": 10250,
+        "sha256": "44137cda97b87d78bdcf5513aa939e7549dd3c5406b699ac6491827a6514516a"
+      },
+      {
+        "name": "src/worker/operator-probe.js",
+        "bytes": 9549,
+        "sha256": "3d73ac0cee91a429a94162ef5062cf912c7f433238fdf888f6d6557e4f9b04b8"
+      },
+      {
+        "name": "src/worker/operator-story.js",
+        "bytes": 14390,
+        "sha256": "2134e5c507d86529410e8f80d45e4609e1457e0da39af379add699838dabe3ae"
+      },
+      {
+        "name": "src/worker/operator-task8.js",
+        "bytes": 5060,
+        "sha256": "de0363d1156bb6741109c9d4a7ef9ce69e105d66fbfc4576a0c78f0d9b354000"
+      },
+      {
+        "name": "src/worker/story-acceptance.js",
+        "bytes": 785,
+        "sha256": "1f764d3653f659960afde1d6142cbae21e0eca051df8457fed6c6275aff1f58b"
+      },
+      {
+        "name": "src/worker/story-api.js",
+        "bytes": 13294,
+        "sha256": "8f7f1cf1a7eb4af751e5e61b97769c351fc5442ef683f632b8f3653b05989e30"
+      },
+      {
+        "name": "src/worker/story-config.js",
+        "bytes": 9680,
+        "sha256": "d089f5f7c3de19e533b5241144791e8e6c5cb6265322a39d8f7f9f7103fa7429"
+      },
+      {
+        "name": "src/worker/story-probe.js",
+        "bytes": 6874,
+        "sha256": "faff93b16191735b5c78f8a7184f90b7853dc1a7721c06c35733c7f5d698b5f7"
+      },
+      {
+        "name": "src/worker/story-provider-core.js",
+        "bytes": 11308,
+        "sha256": "38c30ab71e6d0427f90b891219f824ab1810a91325a96c1ec69c10473b4d2752"
+      },
+      {
+        "name": "src/worker/story-provider.js",
+        "bytes": 637,
+        "sha256": "d910641c21df9fa76647b62e6076c1bb4540656d13f41164207f8dd5510c7283"
+      }
+    ],
+    "manifestSha256": "3a257f0f24f76e069a1e891890e99492484fa78eed5dc05e8ed1b6152ea91b77",
     "trafficPercentage": 100,
+    "compatibilityDate": "2026-07-30",
+    "compatibilityFlags": [],
     "authenticatedStatusVerified": true,
     "directAiBindingVerified": true,
     "sqliteStorageVerified": true,
+    "allModuleBytesAndHashesReadBackMatched": true,
     "objectName": "wending-realtime-acceptance-v1",
+    "storageKey": "experiment-v1",
     "productionRoute": false,
-    "change": "Refresh private operator access digest only; retain original namespace/object/experiment-v1, all six reservations/results, and expired proof. No model call or production activation."
+    "proofCheckedAt": "2026-10-28T03:23:33.984Z",
+    "proofCurrentlyExpired": true,
+    "change": "Deploy owner-approved 11/800 and 4/5/2 caps plus fixed v3 recipe. Original six ledger rows/results and two failed cases verified before the third opening. No migration or reset. Later action-pair and shared-opening preparation is NOT deployed."
   },
-  "experimentReservedNeurons": 256,
+  "experimentReservedNeurons": 339,
   "samples": [
     {
       "attemptId": "task1-20261028-001",
@@ -539,6 +690,113 @@
       "objectName": "wending-realtime-acceptance-v1",
       "productionRoute": false,
       "change": "Refresh private operator access digest only; retain original namespace/object/experiment-v1, all six reservations/results, and expired proof. No model call or production activation."
+    },
+    {
+      "scriptName": "baishi-wending-ai-acceptance",
+      "namespaceId": "dfb218f2f29d4ecab2395f8a00b48350",
+      "migrationTag": "operator-probe-v1",
+      "deploymentId": "7556b818-9270-4f0b-a9c7-f5f3bb8440cc",
+      "versionId": "ce2eb3a2-04fd-48e2-84f5-ff817057a545",
+      "createdOn": "2026-10-28T03:24:25.597616Z",
+      "sourceCommit": "bc7427097f606348351944cb4085942b0fa45905",
+      "sourceTree": "ca1523337c641c5d05f8361a33f43c9a98503aca",
+      "moduleCount": 16,
+      "modules": [
+        {
+          "name": "entry.mjs",
+          "bytes": 841,
+          "sha256": "2552bd05e270b547d42b15a1d34e88751365343418167f231eeb4149f1d8604b"
+        },
+        {
+          "name": "src/game/cultivation/live/engine.js",
+          "bytes": 12171,
+          "sha256": "5d824d1e58a73da0b085d7be3c5ec57f920f683710330c0e1648b4473fa951a4"
+        },
+        {
+          "name": "src/game/cultivation/live/identity.js",
+          "bytes": 3931,
+          "sha256": "d619269073a7b9afcaa6245ae013ead2e82677d76698a372ff21a51a11cab232"
+        },
+        {
+          "name": "src/game/cultivation/live/memory.js",
+          "bytes": 24475,
+          "sha256": "ad7c117d24ecfc464c19c56bd1ba483f6e790b1a13f3914ef3fc4a22fdeec87a"
+        },
+        {
+          "name": "src/game/cultivation/live/model.js",
+          "bytes": 1379,
+          "sha256": "1b1b208631bac405395d84c240957a15db080333abe174b98e0eb5412336846a"
+        },
+        {
+          "name": "src/game/cultivation/live/schema.js",
+          "bytes": 5120,
+          "sha256": "dfdbdcadf35deb39315f571821203d61bd9f5a10d8c359b074001d16b0cdd0c9"
+        },
+        {
+          "name": "src/game/cultivation/live/validation.js",
+          "bytes": 10250,
+          "sha256": "44137cda97b87d78bdcf5513aa939e7549dd3c5406b699ac6491827a6514516a"
+        },
+        {
+          "name": "src/worker/operator-probe.js",
+          "bytes": 9549,
+          "sha256": "3d73ac0cee91a429a94162ef5062cf912c7f433238fdf888f6d6557e4f9b04b8"
+        },
+        {
+          "name": "src/worker/operator-story.js",
+          "bytes": 14390,
+          "sha256": "2134e5c507d86529410e8f80d45e4609e1457e0da39af379add699838dabe3ae"
+        },
+        {
+          "name": "src/worker/operator-task8.js",
+          "bytes": 5060,
+          "sha256": "de0363d1156bb6741109c9d4a7ef9ce69e105d66fbfc4576a0c78f0d9b354000"
+        },
+        {
+          "name": "src/worker/story-acceptance.js",
+          "bytes": 785,
+          "sha256": "1f764d3653f659960afde1d6142cbae21e0eca051df8457fed6c6275aff1f58b"
+        },
+        {
+          "name": "src/worker/story-api.js",
+          "bytes": 13294,
+          "sha256": "8f7f1cf1a7eb4af751e5e61b97769c351fc5442ef683f632b8f3653b05989e30"
+        },
+        {
+          "name": "src/worker/story-config.js",
+          "bytes": 9680,
+          "sha256": "d089f5f7c3de19e533b5241144791e8e6c5cb6265322a39d8f7f9f7103fa7429"
+        },
+        {
+          "name": "src/worker/story-probe.js",
+          "bytes": 6874,
+          "sha256": "faff93b16191735b5c78f8a7184f90b7853dc1a7721c06c35733c7f5d698b5f7"
+        },
+        {
+          "name": "src/worker/story-provider-core.js",
+          "bytes": 11308,
+          "sha256": "38c30ab71e6d0427f90b891219f824ab1810a91325a96c1ec69c10473b4d2752"
+        },
+        {
+          "name": "src/worker/story-provider.js",
+          "bytes": 637,
+          "sha256": "d910641c21df9fa76647b62e6076c1bb4540656d13f41164207f8dd5510c7283"
+        }
+      ],
+      "manifestSha256": "3a257f0f24f76e069a1e891890e99492484fa78eed5dc05e8ed1b6152ea91b77",
+      "trafficPercentage": 100,
+      "compatibilityDate": "2026-07-30",
+      "compatibilityFlags": [],
+      "authenticatedStatusVerified": true,
+      "directAiBindingVerified": true,
+      "sqliteStorageVerified": true,
+      "allModuleBytesAndHashesReadBackMatched": true,
+      "objectName": "wending-realtime-acceptance-v1",
+      "storageKey": "experiment-v1",
+      "productionRoute": false,
+      "proofCheckedAt": "2026-10-28T03:23:33.984Z",
+      "proofCurrentlyExpired": true,
+      "change": "Deploy owner-approved 11/800 and 4/5/2 caps plus fixed v3 recipe. Original six ledger rows/results and two failed cases verified before the third opening. No migration or reset. Later action-pair and shared-opening preparation is NOT deployed."
     }
   ],
   "capabilitySummary": {
@@ -574,7 +832,7 @@
       "operator": 13,
       "existingProvider": 18
     },
-    "ciScope": "Historical Task1 checkpoint552 and Task7 checkpoint574 remain separate verified scopes. Contract-correction baseline6daca6a8 later passed585; none of those runs covers this continuation scope fix or Task8 bridge.",
+    "ciScope": "Historical checkpoints retain their own source identity. approvedLimitsCI covers bc742709 including the deployed v3 recipe. sharedOpeningPreparation covers later offline code, which is not deployed or live-validated.",
     "task7": {
       "providerCommit": "bdf6b21dcf20af769f653befc6f3b6f8f3e9bcd6",
       "runnerCommit": "7fe621cd575ce64c489fd2a13b0263a8df2e9cd9",
@@ -723,7 +981,8 @@
         "status": "success",
         "details": "review.continuationCI"
       },
-      "realBrowserClosurePassed": false
+      "realBrowserClosurePassed": false,
+      "checkpointKind": "historical-at-4992d658; later helper admission deployed with bc742709; tester stage still never deployed"
     },
     "continuationCI": {
       "runId": 40616175153,
@@ -749,9 +1008,123 @@
       "longRunFixtureTurns": 1000,
       "realInferenceCalls": 0,
       "scope": "Exact reviewed runtime/test source plus documentation in4992d658; later evidence-only commits preserve these source-file hashes."
+    },
+    "approvedLimitsCI": {
+      "runId": 40626224045,
+      "jobId": 122611668592,
+      "sourceCommit": "bc7427097f606348351944cb4085942b0fa45905",
+      "sourceTree": "ca1523337c641c5d05f8361a33f43c9a98503aca",
+      "mergeCommit": "a9eaa3c189444006682df3c4daf92f91dd8f6f95",
+      "treeMatchedReviewedSource": true,
+      "status": "success",
+      "completedAt": "2026-10-28T03:23:38Z",
+      "tests": 618,
+      "failures": 0,
+      "cancelled": 0,
+      "skipped": 0,
+      "todo": 0,
+      "syntaxFiles": 130,
+      "backendModules": 14,
+      "browserTestsIncluded": true,
+      "nativeSqliteAndWorkerdIncluded": true,
+      "longRunFixtureTurns": 1000,
+      "htmlBytes": 970046,
+      "htmlSha256": "3c3b09de319e2032c3990867780998d67adcb6af62fc9fe0a78cb35fdf46b5b0",
+      "backendManifestSha256": "31c11fa5b35a748879f20287ae619d667363a19f119ad809fe787a860037205c",
+      "artifactId": 12789856019,
+      "artifactZipSha256": "bdecce66f3d79749be81b9431af478ecafb6fe6a8ff1cbf0e4013898ee372d2b",
+      "publish": "skipped",
+      "realInferenceCallsInCI": 0
+    },
+    "sharedOpeningPreparation": {
+      "status": "OFFLINE_IMPLEMENTED_AND_INDEPENDENTLY_REVIEWED_NOT_DEPLOYED",
+      "baselineCommit": "bc7427097f606348351944cb4085942b0fa45905",
+      "files": {
+        "src/worker/operator-acceptance-state.js": "811ddf1757855a2bd518f6cdb6d0adcbbb42661d36ebe5b7df8d5dc4d8c61880",
+        "src/worker/operator-baseline.js": "808f7e06a2a4a869e5f472f1c43d15031321f1bc3b48e48f86b2e0defedc4642",
+        "src/worker/operator-probe.js": "6a761395e4e5ff454a55b8d8dacfec958d2096922c79d86731419016a913cb99",
+        "src/worker/operator-story.js": "907267e81629dee0c0adbb5c6f53d2b54d443c2a9e507f03563e392435be6370",
+        "src/worker/operator-task8.js": "3f822ef750bf3b2eabc75592ea60343f4e1ff38108270a0dfb52b0ed4f40830b",
+        "src/worker/story-api.js": "4de8137975bf4217139d33f751f144edc7ab7c34854873535060fa479cacd36c",
+        "src/worker/story-experiment.js": "b6c5401453762fbad14f917bc9b0d9ce49c8de06146b3fd32ea664efbe8da36c",
+        "src/worker/story-provider-core.js": "af6bb90b8148a3d37686e3af9292f65ea82f317bc6837a2e0b652bd806f67667",
+        "tests/operator-baseline.test.js": "0143ea819f249dcfc5da6b1c38d0605196cb94db332b0430c0375b2a246ca012",
+        "tests/story-acceptance.test.js": "b66dd345e63b11120f62b24462cc21888c1c30210c09ab20fa9f8afecf2710ed",
+        "tests/story-api.test.js": "63f7d5dcdb40116270e0330fa49244e6070ffe71a65b068c2f160544eecdfae4",
+        "tests/story-stage.test.js": "568dfe13a9301cdd344187cd3136f0e2db06269eefd7472e5cf17fec8702db34",
+        "tests/task8-admission.test.js": "e6d61c0d4c788920f54e7178d9fa5b042ca19c46192b07b26a9c99b0c70c9e52"
+      },
+      "independentReviews": {
+        "providerPairContract": "APPROVED; no Critical/Important findings; independently ran 37/37",
+        "baselineAndAttestation": "APPROVED; no Critical/Important/Minor findings; independently ran 40/40 plus 5/5 API attestation tests",
+        "nativeBaselineTest": "Read-only review passed; native test proves restart persistence and unchanged S1, separate unit case directly asserts both branches use S1"
+      },
+      "providerContract": {
+        "intentBranches": 8,
+        "allowedIntentApproachPairs": 19,
+        "rejectedCrossPairs": 133,
+        "matrixCombinations": 152,
+        "runtimeValidatorsUnchanged": true,
+        "fixedOpeningInputBytes": 6662,
+        "fixedOpeningEstimatedNeurons": 83,
+        "maximumEncodedContextBytes": 7000,
+        "maximumSafeTurnId": "9007199254740991",
+        "maximumInputBytesAcrossRealms": 12275,
+        "inputCapBytes": 12288,
+        "minimumInputHeadroomBytes": 13,
+        "realModelReverification": false,
+        "caveat": "Fixes a reproduced schema gap; not proof of the exact third-failure cause or real Qwen compliance with oneOf."
+      },
+      "attestation": {
+        "hashComputedBy": "trusted story API only after strict accepted ready result",
+        "terminalStatusAndHashImmutable": true,
+        "legacyMissingHashFailsClosed": true,
+        "provesBrowserDurableSave": false,
+        "operatorCredentialIsTrustedAdminBoundary": true
+      },
+      "baseline": {
+        "registrationInferenceCalls": 0,
+        "registrationReservations": 0,
+        "sourceBoundToFirstCompleteAttestedTask8Opening": true,
+        "sameS1ForBothBranches": true,
+        "oldFailedCasesPreserved": true,
+        "nativeSqliteRestarts": 2,
+        "nativeFixtureOutboundRequests": 0
+      },
+      "targetedVerification": {
+        "providerAndAcceptance": 37,
+        "stageAdmissionApi": 59,
+        "baselineAndExistingOperator": 46,
+        "overlappingScopesNotAdditive": true
+      },
+      "integratedLocal": {
+        "command": "WENDING_BROWSER_EXECUTABLE=<matching official Chrome 151.0.7922.34> npm run release",
+        "status": "success",
+        "tests": 646,
+        "failures": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0,
+        "durationMs": 80460.521474,
+        "syntaxFiles": 133,
+        "htmlBytes": 970046,
+        "htmlSha256": "3c3b09de319e2032c3990867780998d67adcb6af62fc9fe0a78cb35fdf46b5b0",
+        "browserTestsIncluded": true,
+        "nativeSqliteAndWorkerdIncluded": true,
+        "longRunFixtureTurns": 1000,
+        "realInferenceCalls": 0,
+        "logSha256": "2de8f5556ac0de981368c99b16187f656e5aaa23fd6252192984f637f7279f64"
+      },
+      "newSequenceApproved": false,
+      "realTask8Calls": 0,
+      "productionModelValidated": false,
+      "remoteCI": {
+        "status": "not-yet-started",
+        "scope": "Later shared-opening preparation; not the earlier 618-test bc742709 checkpoint."
+      }
     }
   },
-  "experimentActualCalls": 6,
+  "experimentActualCalls": 7,
   "fullGameSamples": [
     {
       "startedAt": "2026-10-28T00:30:11.549648+00:00",
@@ -914,17 +1287,102 @@
         "errorCode": "SCENE_ID_SCOPE_INVALID"
       },
       "attemptId": "task7-20261028-002"
+    },
+    {
+      "startedAt": "2026-10-28T03:25:22.418551+00:00",
+      "observedAt": "2026-10-28T03:25:28.075898+00:00",
+      "elapsedMs": 5657,
+      "action": "story",
+      "httpStatus": null,
+      "transportObservation": "curl --fail-with-body completed with exit 0; HTTP numeric status was not separately retained",
+      "curlExit": 0,
+      "body": {
+        "schemaVersion": 1,
+        "sampleKind": "workers-ai",
+        "task": "task7",
+        "caseId": "task7-opening-v3",
+        "attemptId": "task7-20261028-003",
+        "contextHash": "4b4f972a92c01909cbec055a9c7a4a3e09d155bd98f83ad78c140181857c47b0",
+        "inputHash": "58171a364e73c9415a8ee648444e5e496be7f7f277b4b409b739e94eec006027",
+        "inputBytes": 6635,
+        "modelId": "@cf/qwen/qwen3-30b-a3b-fp8",
+        "rulesVersion": 1,
+        "promptVersion": 1,
+        "reservedNeurons": 83,
+        "actualNeurons": null,
+        "inferencePerformed": true,
+        "usage": {
+          "promptTokens": 1129,
+          "completionTokens": 571,
+          "totalTokens": 1700
+        },
+        "stopReason": "stop",
+        "latencyMs": 5555,
+        "status": "rejected",
+        "identity": {
+          "runId": "live-acceptance-v1",
+          "turnId": 1,
+          "baseRevision": 0,
+          "stateHash": "675f331481f98061e78263f04e155e576ae9f1069e97c964b349a2f814204eb2",
+          "choiceId": null,
+          "rulesVersion": 1,
+          "promptVersion": 1,
+          "requestId": "task7-opening-v3"
+        },
+        "receipt": {
+          "kind": "opening",
+          "choiceId": null,
+          "action": null,
+          "elapsedDays": 0,
+          "itemChanges": {},
+          "relationChanges": {},
+          "random": {
+            "before": 1171638517,
+            "after": 1171638517,
+            "roll": null
+          },
+          "before": {
+            "ageDays": 5760,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "after": {
+            "ageDays": 5760,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "death": null,
+          "birth": {
+            "originId": "village",
+            "talentIds": [
+              "keen-memory",
+              "sword-bone"
+            ],
+            "attributes": {
+              "constitution": 4,
+              "insight": 6,
+              "fortune": 2
+            }
+          }
+        },
+        "recipeVersion": 3,
+        "structureDiagnostic": "ACTION_PAIR_INVALID",
+        "errorCode": "GENERATED_SCENE_INVALID"
+      },
+      "attemptId": "task7-20261028-003"
     }
   ],
   "fullGameAcceptance": {
-    "attempted": 2,
+    "attempted": 3,
     "accepted": 0,
-    "rejected": 2,
+    "rejected": 3,
     "remainingTask7Calls": 2,
     "productionValidated": false,
     "task8Started": false,
-    "finding": "Original opening failed structure validation; revised opening also failed SCENE_ID_SCOPE_INVALID. The rejected raw scenes were not retained; the second error identifies scene or choice ID scope, not which exact field. Neither opening advanced state.",
-    "next": "Per-request generation scope correction passed local regression and independent review. Both fixed-case tombstones remain authoritative. A fresh opening plus two branches requires three calls, exceeding the two remaining Task7 calls; resolve this before any new inference. Task8 retains two calls, and production remains disabled."
+    "finding": "Third fixed opening rejected GENERATED_SCENE_INVALID / ACTION_PAIR_INVALID. This diagnostic includes unknown intent, incompatible intent/approach, or invalid stake. Raw rejected scene was not retained; exact field and cause are unknown. Structure validation precedes scene ID validation, so this result does not prove the earlier ID correction succeeded on real output. No opening advanced state.",
+    "next": "All further inference paused. Offline action-pair schema correction, trusted Task8 opening attestation and same-S1 counterfactual handoff are reviewed. Proposed four-call shared-opening sequence remains pending owner approval; caps stay 11/800 and 4/5/2."
   },
   "revisedTask7Recipe": {
     "recipeVersion": 2,
@@ -952,41 +1410,73 @@
     ],
     "acceptedCases": [],
     "observationAt": "2026-10-28T01:08:21.858083+00:00",
-    "blockedBy": "task7-opening-v2 rejected SCENE_ID_SCOPE_INVALID; fixed case cannot be retried under another attempt ID"
+    "blockedBy": "task7-opening-v2 rejected SCENE_ID_SCOPE_INVALID; fixed case cannot be retried under another attempt ID",
+    "checkpointKind": "historical-v2-recipe; failed case immutable; superseded by approved v3 attempt"
   },
   "ledgerObservation": {
-    "observedAt": "2026-10-28T01:08:21.858083+00:00",
+    "observedAt": "2026-10-28T03:42:46.017892+00:00",
     "source": "authenticated original operator /status",
     "objectName": "wending-realtime-acceptance-v1",
     "storageKey": "experiment-v1",
     "namespaceId": "dfb218f2f29d4ecab2395f8a00b48350",
-    "newInferenceCallsInThisContinuation": 0,
+    "newInferenceCallsAfterOwnerApproval": 1,
+    "furtherInferenceCallsAfterThirdRejection": 0,
     "earlierFailedCasesPreserved": true,
-    "limitsChanged": false
+    "originalSixLedgerRowsAndResultsPreserved": true,
+    "allSevenRowsResultsAndCasesUnchangedAtRecheck": true,
+    "limitsChanged": true,
+    "limitsApproval": "approvedExperimentLimits",
+    "task8Admissions": 0
   },
   "remainingAcceptanceBudgetAnalysis": {
-    "kind": "local-no-inference-preflight-not-authorization",
-    "currentCalls": 6,
-    "currentReservedNeurons": 256,
-    "existingTotalCallCap": 10,
-    "existingTask7CallCap": 4,
-    "task7CallsAlreadyUsed": 2,
-    "minimumAdditionalCallsForFreshRecipe": {
-      "task7Opening": 1,
-      "task7Branches": 2,
-      "task8PlayerOpeningAndChoice": 2
-    },
+    "kind": "reviewed-offline-shared-opening-proposal-not-live-sequence-authorization",
+    "currentCalls": 7,
+    "currentReservedNeurons": 339,
+    "existingTotalCallCap": 11,
+    "existingTask7CallCap": 5,
+    "task7CallsAlreadyUsed": 3,
+    "task8CallsAlreadyUsed": 0,
+    "remainingCalls": 4,
+    "sequence": [
+      {
+        "task": "task8",
+        "operation": "real browser opening accepted and saved as S1"
+      },
+      {
+        "task": "task7",
+        "operation": "private counterfactual A from S1"
+      },
+      {
+        "task": "task7",
+        "operation": "private counterfactual B from the same S1"
+      },
+      {
+        "task": "task8",
+        "operation": "real browser choice from unchanged S1, save and refresh"
+      }
+    ],
+    "remainingCallsMaximumReservedNeuronsEach": 111,
     "resultingTotalCalls": 11,
-    "resultingTask7Calls": 5,
-    "correctedFixedOpeningEstimatedNeurons": 83,
-    "otherFourCallsMaximumReservedNeuronsEach": 111,
+    "resultingTaskCalls": {
+      "task1": 4,
+      "task7": 5,
+      "task8": 2
+    },
     "resultingConservativeReservationCeiling": 783,
     "existingNeuronCap": 800,
-    "limitsChanged": false,
-    "newCaseImplemented": false
+    "additionalLimitChangeProposed": false,
+    "retryCallsAvailable": 0,
+    "newCasesImplementedOffline": true,
+    "newSequenceApproved": false,
+    "plan": "../superpowers/plans/2026-10-28-shared-opening-acceptance.md",
+    "limitations": [
+      "One opening and one-step counterfactuals; not a deeper continuous sequence.",
+      "Opening is counted once as Task8. Reuse of accepted evidence does not reclassify or refund a call.",
+      "Any rejection, unknown outcome, unusable S1 or failed durable save pauses execution."
+    ]
   },
   "continuationProductionRecheck": {
-    "observedAt": "2026-10-28T01:38:51.819741+00:00",
+    "observedAt": "2026-10-28T03:42:46.017892+00:00",
     "health": {
       "status": "ok",
       "version": "4.0.0",
@@ -994,8 +1484,8 @@
       "htmlSha256": "02b1248bd287b3f2ebc89aef6f22ab85d56364feef53d1b40d18f51a40ccf617",
       "htmlBytes": 852849,
       "releaseSource": "remote-fetch",
-      "lastAttemptAt": 1793151531717,
-      "lastSuccessAt": 1793151531924,
+      "lastAttemptAt": 1793158965668,
+      "lastSuccessAt": 1793158965826,
       "lastError": ""
     },
     "capabilities": {
@@ -1010,9 +1500,30 @@
         "timeoutMs": 30000
       }
     },
-    "operatorCallCount": 6,
-    "operatorReservedNeurons": 256,
+    "operatorCallCount": 7,
+    "operatorReservedNeurons": 339,
     "limits": {
+      "maxCalls": 11,
+      "maxNeurons": 800,
+      "taskCalls": {
+        "task1": 4,
+        "task7": 5,
+        "task8": 2
+      }
+    },
+    "furtherInferenceCallsAfterThirdRejection": 0,
+    "publicDeploymentChanged": false,
+    "testerStageDeployed": false,
+    "privateHelperVersion": "ce2eb3a2-04fd-48e2-84f5-ff817057a545",
+    "publicDeploymentId": "8dd97750-8fd4-40c9-a6c9-c3c61f72a6a2",
+    "publicVersionId": "b4fb827d-aa78-4062-9510-299f11f11064"
+  },
+  "approvedExperimentLimits": {
+    "status": "confirmed-by-account-owner",
+    "source": "conversation",
+    "statement": "允许",
+    "dateShanghai": "2026-10-28",
+    "previous": {
       "maxCalls": 10,
       "maxNeurons": 800,
       "taskCalls": {
@@ -1021,8 +1532,113 @@
         "task8": 2
       }
     },
-    "newInferenceCallsInContinuation": 0,
-    "publicDeploymentChanged": false,
-    "testerStageDeployed": false
-  }
+    "current": {
+      "maxCalls": 11,
+      "maxNeurons": 800,
+      "taskCalls": {
+        "task1": 4,
+        "task7": 5,
+        "task8": 2
+      }
+    },
+    "implementedCommit": "bc7427097f606348351944cb4085942b0fa45905",
+    "scope": "One additional total call and Task7 slot; unchanged Free boundary, 800 Neurons, original namespaces, ledger and failure tombstones. This does not approve another cap increase."
+  },
+  "approvedTask7V3Recipe": {
+    "recipeVersion": 3,
+    "sourceCommit": "bc7427097f606348351944cb4085942b0fa45905",
+    "cases": [
+      "task7-opening-v3",
+      "task7-branch-a-v3",
+      "task7-branch-b-v3"
+    ],
+    "requiresHistoricalFailures": [
+      "GENERATED_SCENE_INVALID",
+      "SCENE_ID_SCOPE_INVALID"
+    ],
+    "executedCases": [
+      "task7-opening-v3"
+    ],
+    "acceptedCases": [],
+    "blockedBy": "Third opening rejected; its fixed-case tombstone cannot be retried under another attempt ID.",
+    "observationAt": "2026-10-28T03:25:28.075898+00:00"
+  },
+  "ledgerObservations": [
+    {
+      "observedAt": "2026-10-28T01:08:21.858083+00:00",
+      "source": "authenticated original operator /status",
+      "objectName": "wending-realtime-acceptance-v1",
+      "storageKey": "experiment-v1",
+      "namespaceId": "dfb218f2f29d4ecab2395f8a00b48350",
+      "newInferenceCallsInThisContinuation": 0,
+      "earlierFailedCasesPreserved": true,
+      "limitsChanged": false
+    }
+  ],
+  "historicalBudgetAnalyses": [
+    {
+      "kind": "local-no-inference-preflight-not-authorization",
+      "currentCalls": 6,
+      "currentReservedNeurons": 256,
+      "existingTotalCallCap": 10,
+      "existingTask7CallCap": 4,
+      "task7CallsAlreadyUsed": 2,
+      "minimumAdditionalCallsForFreshRecipe": {
+        "task7Opening": 1,
+        "task7Branches": 2,
+        "task8PlayerOpeningAndChoice": 2
+      },
+      "resultingTotalCalls": 11,
+      "resultingTask7Calls": 5,
+      "correctedFixedOpeningEstimatedNeurons": 83,
+      "otherFourCallsMaximumReservedNeuronsEach": 111,
+      "resultingConservativeReservationCeiling": 783,
+      "existingNeuronCap": 800,
+      "limitsChanged": false,
+      "newCaseImplemented": false,
+      "status": "superseded-after-explicit-cap-approval-and-third-opening-rejection"
+    }
+  ],
+  "productionRecheckHistory": [
+    {
+      "observedAt": "2026-10-28T01:38:51.819741+00:00",
+      "health": {
+        "status": "ok",
+        "version": "4.0.0",
+        "sourceCommit": "e247a875d3f5eea18fe1ec67cf5842b6d70204cc",
+        "htmlSha256": "02b1248bd287b3f2ebc89aef6f22ab85d56364feef53d1b40d18f51a40ccf617",
+        "htmlBytes": 852849,
+        "releaseSource": "remote-fetch",
+        "lastAttemptAt": 1793151531717,
+        "lastSuccessAt": 1793151531924,
+        "lastError": ""
+      },
+      "capabilities": {
+        "protocolVersion": 1,
+        "available": false,
+        "status": "paused",
+        "errorCode": "INFERENCE_DISABLED",
+        "limits": {
+          "maxRequestBytes": 32768,
+          "maxResponseBytes": 65536,
+          "maxContextBytes": 7000,
+          "timeoutMs": 30000
+        }
+      },
+      "operatorCallCount": 6,
+      "operatorReservedNeurons": 256,
+      "limits": {
+        "maxCalls": 10,
+        "maxNeurons": 800,
+        "taskCalls": {
+          "task1": 4,
+          "task7": 4,
+          "task8": 2
+        }
+      },
+      "newInferenceCallsInContinuation": 0,
+      "publicDeploymentChanged": false,
+      "testerStageDeployed": false
+    }
+  ]
 }

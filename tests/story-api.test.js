@@ -8,13 +8,48 @@ import { generateScene } from '../src/worker/story-provider.js';
 import { CANDIDATE_PROFILE } from '../src/worker/story-config.js';
 import { createLiveGame,prepareOpening } from '../src/game/cultivation/live/engine.js';
 import { buildStoryContext } from '../src/game/cultivation/live/memory.js';
+import { canonicalStringify,sha256 } from '../src/game/cultivation/live/identity.js';
 const origin='https://game.example';
 const context=()=>{const s=createLiveGame({runId:'api-run',seed:42});return buildStoryContext(s,prepareOpening(s,{requestId:'game-request'}));};
 const scene=c=>({id:c.namespace+':t1:s:opening',title:'山中来信',location:'山下',blocks:[{kind:'narration',text:'一位旅人留下了一封来信。'}],entities:[],choices:['a','b'].map(id=>({id:c.namespace+':t1:c:'+id,label:id,intent:id==='a'?'rest':'practice',targetId:'self',approach:id==='a'?'recover':'steady',stake:'normal'})),memoryDeltas:[]});
-function fixture(provider,options={}){const db=new DatabaseSync(':memory:');const storage={sql:{exec(q,...p){return {toArray:()=>db.prepare(q).all(...p)};}},transactionSync(fn){db.exec('BEGIN IMMEDIATE');try{const r=fn();db.exec('COMMIT');return r;}catch(e){db.exec('ROLLBACK');throw e;}}};let now=Date.parse('2026-10-27T10:00:00Z'),calls=0;const budget=createBudgetCoordinator({storage,now:()=>now,limits:options.limits??{}});const api=createStoryApi({budget,config:{readiness:()=>options.profile??{modelId:'fixture'},now:()=>now},provider:async(...args)=>{calls++;return provider?provider(...args):{status:'ready',scene:scene(args[2]),actualNeurons:null,inferencePerformed:true};}});return {api,budget,db,setNow:v=>now=v,get calls(){return calls;}};}
+function fixture(provider,options={}){const db=new DatabaseSync(':memory:');const storage={sql:{exec(q,...p){return {toArray:()=>db.prepare(q).all(...p)};}},transactionSync(fn){db.exec('BEGIN IMMEDIATE');try{const r=fn();db.exec('COMMIT');return r;}catch(e){db.exec('ROLLBACK');throw e;}}};let now=Date.parse('2026-10-27T10:00:00Z'),calls=0;const budget=createBudgetCoordinator({storage,now:()=>now,limits:options.limits??{}});const api=createStoryApi({budget,experiment:options.experiment,config:{readiness:()=>options.profile??{modelId:'fixture'},now:()=>now},provider:async(...args)=>{calls++;return provider?provider(...args):{status:'ready',scene:scene(args[2]),actualNeurons:null,inferencePerformed:true};}});return {api,budget,db,setNow:v=>now=v,get calls(){return calls;}};}
 const req=(path,body,cookie,headers={})=>new Request(origin+path,{method:body===undefined?'GET':'POST',headers:{origin,'content-type':'application/json','cf-connecting-ip':'192.0.2.5',...(cookie?{cookie}:{}),...headers},...(body===undefined?{}:{body:typeof body==='string'?body:JSON.stringify(body)})});
 async function session(f){const r=await f.api.fetch(req('/api/story/session',{protocolVersion:1}));return {data:await r.json(),cookie:r.headers.get('set-cookie')?.split(';')[0],setCookie:r.headers.get('set-cookie')};}
 const body=(s,id='attempt-1',retryOf=null)=>({context:context(),attempt:{id,sessionRef:s.data.sessionRef,retryOf}});
+
+test('Task8 API hashes only its strictly validated ready scene and ignores provider claims',async t=>{
+  for(const mode of ['ready','invalid','unknown'])await t.test(mode,async t=>{
+    const admissions=[],settlements=[],claim=sha256('provider-selected-hash');
+    const experiment={
+      async reserve(input){admissions.push(structuredClone(input));return {kind:'reserved'};},
+      async settle(input){settlements.push(structuredClone(input));return {kind:'settled',status:input.status,...(input.acceptedSceneHash?{acceptedSceneHash:input.acceptedSceneHash}:{})};},
+    };
+    const f=fixture(async(ai,profile,c)=>mode==='unknown'?{status:'paused',errorCode:'PROVIDER_TIMEOUT',accountingStatus:'unknown',acceptedSceneHash:claim}:{status:'ready',scene:mode==='invalid'?{id:'invalid'}:scene(c),acceptedSceneHash:claim},{experiment});
+    t.after(()=>f.db.close());const s=await session(f),turn=body(s);
+    const result=await(await f.api.fetch(req('/api/story/turn',turn,s.cookie))).json();
+    assert.equal(result.status,mode==='ready'?'ready':mode==='invalid'?'rejected':'paused');
+    assert.equal(admissions.length,1);assert.equal(Object.hasOwn(admissions[0],'acceptedSceneHash'),false);
+    assert.equal(settlements.length,1);assert.equal(settlements[0].status,mode==='ready'?'complete':mode==='invalid'?'failed':'unknown');
+    assert.equal(settlements[0].payloadHash,sha256(canonicalStringify(turn)));assert.equal(settlements[0].contextHash,sha256(canonicalStringify(turn.context)));
+    if(mode==='ready'){
+      assert.equal(settlements[0].acceptedSceneHash,sha256(canonicalStringify(result.scene)));
+      assert.notEqual(settlements[0].acceptedSceneHash,claim);
+    }else assert.equal(Object.hasOwn(settlements[0],'acceptedSceneHash'),false);
+    assert.equal(Object.hasOwn(result,'acceptedSceneHash'),false);
+    assert.deepEqual(await(await f.api.fetch(req('/api/story/turn',turn,s.cookie))).json(),result);
+    assert.equal(f.calls,1);assert.equal(admissions.length,1);assert.equal(settlements.length,1);
+  });
+});
+
+test('browser-selected accepted scene hashes are rejected before Task8 reservation or provider',async t=>{
+  let admissions=0;const f=fixture(null,{experiment:{reserve(){admissions++;return {kind:'reserved'};}}});t.after(()=>f.db.close());
+  const s=await session(f),turn=body(s),acceptedSceneHash=sha256('browser-selected-scene');
+  for(const changed of [{...turn,acceptedSceneHash},{...turn,attempt:{...turn.attempt,acceptedSceneHash}}]){
+    assert.equal((await f.api.fetch(req('/api/story/turn',changed,s.cookie))).status,400);
+  }
+  assert.equal(f.calls,0);assert.equal(admissions,0);assert.equal(f.db.prepare('SELECT COUNT(*) AS count FROM ledger').get().count,0);
+});
+
 test('capabilities and deployed default fail closed without AI calls or session allocation',async()=>{let allocated=0;const api=createStoryApi({budget:{createSession(){allocated++;}},provider(){throw new Error('called');}});const r=await api.fetch(req('/api/story/capabilities'));const data=await r.json();assert.equal(data.available,false);assert.equal(data.errorCode,'INFERENCE_DISABLED');assert.equal(allocated,0);const worker=createStoryWorker({staticFetch:()=>new Response('static')});assert.equal((await (await worker.fetch(req('/api/story/capabilities'),{})).json()).available,false);assert.equal(await (await worker.fetch(req('/ordinary'),{})).text(),'static');});
 test('secure cookie and concurrent idempotency return one persisted scene, never another session result',async()=>{let release;const f=fixture(async(a,p,c)=>{await new Promise(r=>release=r);return {status:'ready',scene:scene(c),inferencePerformed:true};});const s=await session(f);assert.match(s.setCookie,/HttpOnly/);assert.match(s.setCookie,/Secure/);assert.match(s.setCookie,/SameSite=Strict/);const b=body(s);const first=f.api.fetch(req('/api/story/turn',b,s.cookie));await new Promise(r=>setTimeout(r,10));const duplicate=await f.api.fetch(req('/api/story/turn',b,s.cookie));assert.equal((await duplicate.json()).errorCode,'ATTEMPT_IN_PROGRESS');release();assert.equal((await (await first).json()).status,'ready');assert.equal((await (await f.api.fetch(req('/api/story/turn',b,s.cookie))).json()).status,'ready');assert.equal(f.calls,1);const changed=structuredClone(b);changed.context.life.name='另一个人';assert.equal((await (await f.api.fetch(req('/api/story/turn',changed,s.cookie))).json()).errorCode,'ATTEMPT_PAYLOAD_MISMATCH');const second=await session({...f,api:createStoryApi({budget:f.budget,config:{readiness:()=>({})}})}); // no-cookie explicit new session
 const other=await f.api.fetch(req('/api/story/turn/game-request?attemptId=attempt-1',undefined,second.cookie));assert.equal((await other.json()).errorCode,'ATTEMPT_NOT_FOUND');assert.equal(f.calls,1);});

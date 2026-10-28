@@ -1,10 +1,10 @@
 # GitHub → Cloudflare 部署
 
-更新：2026-10-28（北京时间）。4.0.0 自动发行与生产切换已实际验收；下方保留 3.1.0 及更早版本的实际生产记录。
+更新：2026-10-28 11:42（上海时间）。4.0.0 自动发行与生产切换已实际验收；下方保留3.1.0及更早版本的实际生产记录。
 
 ## 实时AI后端：兼容后端已部署，玩家生成尚未启用
 
-线上前端仍为4.0.0，[草稿PR #14](https://github.com/ct1150/wending/pull/14) 仍draft、main未合并。账号所有者已确认Workers Free；关闭生成的兼容后端已实际部署，AI直接绑定与SQLite namespace已读回核对。私有鉴权环境已完成Task1原定的小schema传输/非思考能力取样，**玩家生成保持关闭，完整模型与保存/刷新闭环仍待验收**。最新样本、预留、账户分析观察和部署身份见 [接入记录](evidence/workers-ai-rollout-2026-10-28.json)。
+2026-10-28 11:42:46（上海）只读检查确认，线上前端仍为4.0.0、main `e247a875d3f5eea18fe1ec67cf5842b6d70204cc`；[草稿PR #14](https://github.com/ct1150/wending/pull/14) 未合并。账号所有者已确认Workers Free；关闭生成的兼容后端已实际部署，AI直接绑定与SQLite namespace已读回核对。私有helper已更新至 `bc742709`，Task1四次能力取样保留；第三次Task7开场也被拒绝，原账本为7次/339 Neurons预留、Task8为0次。**所有真实调用现已停止；公开生成保持关闭，Task7质量、Task8保存/刷新与发布门槛仍待完成。** 最新样本、预留、账户分析观察和部署身份见 [接入记录](evidence/workers-ai-rollout-2026-10-28.json)。
 
 | 实际兼容部署 | 已核对身份 |
 | --- | --- |
@@ -15,7 +15,9 @@
 | 兼容日期 / 状态 | `2026-07-30`；按已验证产物日期部署，原日期变更见接入记录；生成关闭，capabilities/session明确INFERENCE_DISABLED |
 | 玩家页面 | 继续读取原4.0发行渠道；此次关闭门禁的session未签发cookie，不当作启用后会话验收 |
 
-`65c3d0f`源码及I1—I4/R1/M3修复独立复核已通过；同树远端 `1322aa6` 的CI40547281694通过539项、117项语法和13模块打包，文档收尾CI40549153882也已通过。它们是新增操作员helper之前的验证范围；helper独立复核、/no_think及诊断修订的定向证据见 [QA](QA_REPORT.md)，不能冒充最新新增代码的全量CI。此前 `bindings:[]` 和订阅API403仅保留在 [历史只读记录](evidence/2026-10-27-workers-ai-planning-recon.json)，不覆盖本次实际部署或所有者确认。
+2026-10-27历史检查点：`65c3d0f`源码及I1—I4/R1/M3修复独立复核已通过；同树远端 `1322aa6` 的CI40547281694通过539项、117项语法和13模块打包，文档收尾CI40549153882也已通过。它们是新增操作员helper之前的验证范围；helper独立复核、/no_think及诊断修订的定向证据见 [QA](QA_REPORT.md)，不能冒充最新新增代码的全量CI。此前 `bindings:[]` 和订阅API403仅保留在 [历史只读记录](evidence/2026-10-27-workers-ai-planning-recon.json)，不覆盖本次实际部署或所有者确认。
+
+2026-10-28已完成的 [CI40626224045](https://github.com/ct1150/wending/actions/runs/40626224045) 对应 `bc742709`：618/618项、130项JavaScript语法及14模块默认后端打包通过，publish跳过。后续行动配对、场景证明和共享S1分支代码已离线实现及独立复核，本地全量646/646、133项语法和970046字节HTML通过；失败/取消/跳过/todo均0，用时80.4605秒，覆盖原生Chromium、workerd/SQLite及1000回合fixture。新CI尚未发起，新代码未部署或真实调用；本地结果、默认包和已部署私有helper分别记录。
 
 ### 受控产物与身份
 
@@ -39,11 +41,11 @@ SOURCE_COMMIT=完整40位已审提交 npm run build:gateway
 
 ### 绑定、SQLite迁移与发布次序
 
-1. Workers Free已由所有者确认，实际直接AI/SQLite免费路径已核对；继续使用全账户、当日、有原始时间的GraphQL分析观察作为保守probe准入材料，不冒充实时账单余额。历史403不再是套餐未知阻塞，AI Gateway支出限制也不替代Free硬边界。所有真实模型验收保留共享10次/800 Neurons及4/4/2分项上限；Task8真实闭环尚待执行。
+1. Workers Free已由所有者确认，实际直接AI/SQLite免费路径已核对；继续使用全账户、当日、有原始时间的GraphQL分析观察作为保守probe准入材料，不冒充实时账单余额。历史403不再是套餐未知阻塞，AI Gateway支出限制也不替代Free硬边界。用户已批准共享11次/800 Neurons及Task1/7/8的4/5/2分项上限，原7次/339预留全部累计；真实调用停止，剩余四次的新顺序须先获用户批准。
 2. 受控配置声明 `AI` 绑定与 `STORY_BUDGET → StoryBudget`，迁移标签 `story-budget-v1` 使用 `new_sqlite_classes:["StoryBudget"]`。首次SQLite类迁移已随关闭后端部署并读回核对。后续版本必须复用上述生产namespace与账本，不重放首次创建来生成新账本；旧本地预部署数据库不保证兼容，不能代替现场记录。
 3. 所有流量必须指向同一既有Worker的同一DO namespace，以固定名 `story-budget-v1-global` 获取协调对象。固定名字本身不会跨不同namespace共享预算；多版本、测试域名或独立canary不得各建一份账本后同时消费同一账号额度。若采用原始API上传，先根据实际迁移取得namespace ID，再转换绑定metadata；上传所有清单模块并保留命名类导出，不能只上传entry或旧gateway。
-4. 已部署兼容后端与关闭门禁，现场已确认capabilities暂停、旧4.0页面继续服务。后续模型与策略验收通过后再发布兼容HTML并启用玩家生成。GitHub CI只校验、保存产物和发布HTML，不持有Cloudflare部署凭据、不执行Worker部署、不自动启用AI。
-5. 账号与模型验收通过后，才可审查启用配置/白名单，并在预留预算内检查实际opening及一次choice→Workers AI→校验→保存→刷新续接。死亡与人为降低应用额度的暂停验证不另调用模型、不耗尽账号免费量。整分支release、旧版回归和独立审查也必须先通过。
+4. 已部署兼容后端与关闭门禁，现场已确认capabilities暂停、旧4.0页面继续服务。只有新顺序获批且对应代码验证通过后，才准备受保护验收部署并核对实际模块/HTML身份、原账本与Free证明；tester-only包不晋升模型或向公众启用。GitHub CI只校验、保存产物和发布HTML，不持有Cloudflare部署凭据、不执行Worker部署、不自动启用AI。
+5. [共享开场方案](superpowers/plans/2026-10-28-shared-opening-acceptance.md) 拟执行Task8浏览器开场→同S1的Task7分支A→分支B→Task8真实选择、保存和刷新。Task8每次固定预留111；Task7按实际输入估算、每次上界111，按四次各最多111作保守估算，累计至多11次/783 Neurons。新顺序尚未获批；无额外重试名额，任一步失败或未知即暂停。Task7质量、Task8闭环、旧版回归和独立审查通过后，才能审查生产启用配置/白名单与公开前端发布。死亡与人为降低应用额度的暂停验证不另调用模型、不耗尽账号免费量。
 6. 最终记录前端源码SHA/HTML摘要、Cloudflare实际部署ID/版本/流量、backend清单摘要、协议/规则/提示版本、实际模型和免费用量证据。`/healthz`只证明当前HTML身份，不能替代后端部署和模型验收。关闭后端的部署、绑定与协议证据已取得；启用版本、玩家闭环和完整模型证据仍待取得。
 
 ### 已通过源码复核的修复与兼容要求
@@ -58,7 +60,16 @@ SOURCE_COMMIT=完整40位已审提交 npm run build:gateway
 
 ### 私有真实验收环境
 
-操作员验收Worker位于同一已确认Free账户，单独鉴权，不接入玩家路由。SQLite namespace `dfb218f2f29d4ecab2395f8a00b48350` 与固定对象 `wending-realtime-acceptance-v1` 承载同一实验账本；刷新实际用量观察或上传新辅助代码均不得换namespace、删记录或释放未知预留。它与生产StoryBudget namespace分工不同，不是两份可各自消耗10次/800 Neurons的预算。后续Task7/Task8继续使用原实验记录统一扣减。
+操作员验收Worker位于同一已确认Free账户，单独鉴权，不接入玩家路由。SQLite namespace `dfb218f2f29d4ecab2395f8a00b48350`、固定对象 `wending-realtime-acceptance-v1` 与键 `experiment-v1` 承载同一实验账本；刷新实际用量观察或上传新辅助代码均不得换namespace、删记录或释放未知预留。它与生产StoryBudget namespace分工不同，所有Task1/7/8调用仍共享唯一的11次/800 Neurons上限。
+
+| 2026-10-28已部署私有helper | 核对身份 |
+| --- | --- |
+| 源码 / 模块 | `bc7427097f606348351944cb4085942b0fa45905` / 16个ESM模块 |
+| version | `ce2eb3a2-04fd-48e2-84f5-ff817057a545` |
+| deployment | `7556b818-9270-4f0b-a9c7-f5f3bb8440cc` |
+| 持久状态 | 原namespace/object/账本不变；11:42:46（上海）核对原7行、results、cases全部一致，无迁移或重置 |
+
+该helper于11:25:22—11:25:28执行的 `task7-20261028-003` / `task7-opening-v3` 失败为 `GENERATED_SCENE_INVALID / ACTION_PAIR_INVALID`。原正文未保存，不能确诊具体非法字段。当前Task1/7/8为4/3/0次，三次Task7均failed，预留339、actualNeurons=null。新增oneOf的19种合法/133种非法配对覆盖、可信acceptedSceneHash和共享S1 baseline代码均属于后续离线准备，不属于这个已部署版本。
 
 Task1四次小schema样本已经完成，原定Task1次数已用尽，保留96 Neurons预留；简单JSON和两次无非空白思考样本不代表完整游戏schema或严格生产parser通过。思考字段、输出限制、中文连续性和实际账单用量须分别记录。最新观察与辅助部署身份以 [接入记录](evidence/workers-ai-rollout-2026-10-28.json) 为准，鉴权凭据不得进入仓库、浏览器或日志。
 
@@ -66,11 +77,15 @@ Task1四次小schema样本已经完成，原定Task1次数已用尽，保留96 N
 
 普通构建与公开策略仍关闭生成。只有可信服务器构建调用显式传入 `buildGateway({root,sourceCommit,acceptance})`，才选择独立的 `createStoryStageWorker`；没有新增浏览器开关、CLI开关或环境变量快捷启用。该包的入口身份与清单同时声明 `enabled:true / publicEnabled:false / accessMode:tester-only / modelValidated:false`，不修改生产模型白名单。
 
+显式验收包只提供该次已审内嵌HTML，不从边缘缓存或远端发行清单替换页面；首页、下载和health身份应与验收包候选一致。普通公开网关继续原发行更新行为。该HTML固定行为已有本地及对应CI覆盖，受保护包尚未实际部署。
+
 `acceptance` 必须含 `enabled:true`、`mode:tester-only`、固定候选modelId、独立tester permit的SHA-256、bindingAccountId、当前同账号Free确认与保留原checkedAt的freeBoundaryProof。测试请求通过 `x-wending-story-tester` 传递单独的32字节十六进制permit；普通客户端不存储或内置它。operator凭据只从服务器secret binding `STORY_OPERATOR_TOKEN` 读取，禁止与tester permit相同，也不转发tester permit给私有账本。
 
 该包复用原StoryBudget namespace、原 `STORY_EXPERIMENT` namespace `dfb218f2f29d4ecab2395f8a00b48350` 和固定对象 `wending-realtime-acceptance-v1`，清单不重新创建迁移。私有helper必须先具备受operator鉴权保护的 `/task8/admit` 与 `/task8/settle`；旧helper或桥不可用会暂停，不调用模型。
 
 每次新请求按“玩家账本预留→原experiment-v1永久预留111→单次模型调用→实验结算→玩家结算”执行。准入绑定session/request/attempt及载荷、上下文摘要，固定Task8最多2次；重复准入不再授予调用，缺失原账本直接拒绝，失败/未知或丢失响应不退还配额。停用后仍允许已认证玩家读取和重放旧结果。受控包的存在不表示Task7质量通过，也不授权改变实验上限；真实部署、同源浏览器cookie/存档/刷新闭环仍须另行记录。
+
+新增但未部署的结算合同只在严格校验后的ready结果计算并记录 `acceptedSceneHash`；complete必须携带匹配摘要，failed/unknown不能携带，首次终态和摘要不可更改。后续私有baseline还须核对原contextHash与场景摘要，并重算S1比对浏览器实际保存状态；不能由客户端选择摘要来补齐旧记录。旧complete若缺少可信摘要即失败关闭。实际Task8记录仍为0，这些离线能力不构成真实闭环通过。
 
 ### 本地验证与回滚
 

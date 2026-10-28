@@ -4,27 +4,28 @@ import { buildCandidateStoryInput, generateAcceptanceScene } from './story-accep
 import { PROVIDER_ERROR_CODES } from './story-provider.js';
 import { STRUCTURE_DIAGNOSTIC_CODES } from './story-provider-core.js';
 import { createLiveGame, prepareOpening, prepareChoice, compileChoices, commitTurn } from '../game/cultivation/live/engine.js';
-import { buildStoryContext, validateGeneratedScene, buildMemoryDelta } from '../game/cultivation/live/memory.js';
+import { buildStoryContext, validateGeneratedScene } from '../game/cultivation/live/memory.js';
 import { sha256, canonicalStringify, stateHash } from '../game/cultivation/live/identity.js';
+import { boundAcceptanceRecord as bounded,rememberAcceptanceTurn as remember } from './operator-acceptance-state.js';
+export { MAX_ACCEPTANCE_SNAPSHOT_BYTES } from './operator-acceptance-state.js';
+import { readPlayerBaseline,BASELINE_ERROR_CODES } from './operator-baseline.js';
 
 const REVISED_CASES = Object.freeze(['task7-opening-v2','task7-branch-a-v2','task7-branch-b-v2']);
 const SCOPE_CORRECTED_CASES = Object.freeze(['task7-opening-v3','task7-branch-a-v3','task7-branch-b-v3']);
+const PLAYER_BRANCH_CASES = Object.freeze(['task7-player-branch-a-v1','task7-player-branch-b-v1']);
 const recipes = [{version:2,cases:REVISED_CASES},{version:3,cases:SCOPE_CORRECTED_CASES}];
 const recipeFor = caseId => recipes.find(recipe => recipe.cases.includes(caseId));
-export const STORY_ACCEPTANCE_CASES = Object.freeze(['task7-opening','task7-continuation','task7-counterfactual-a','task7-counterfactual-b',...REVISED_CASES,...SCOPE_CORRECTED_CASES]);
-// Deliberately conservative acceptance-only cap, below SQLite KV's 2 MB limit.
-export const MAX_ACCEPTANCE_SNAPSHOT_BYTES = 120 * 1024;
+export const STORY_ACCEPTANCE_CASES = Object.freeze(['task7-opening','task7-continuation','task7-counterfactual-a','task7-counterfactual-b',...REVISED_CASES,...SCOPE_CORRECTED_CASES,...PLAYER_BRANCH_CASES]);
 const encoder = new TextEncoder();
 const copy = value => JSON.parse(JSON.stringify(value));
 const fail = code => { throw Object.assign(new Error(code),{code}); };
-const safeCodes = new Set([...PROVIDER_ERROR_CODES,'FREE_BOUNDARY_UNVERIFIED','AI_BINDING_MISSING','ACCOUNT_QUOTA_UNAVAILABLE','EXPERIMENT_BUDGET_EXHAUSTED','EXPERIMENT_LEDGER_INVALID','EXPERIMENT_ATTEMPT_INVALID','ACCEPTANCE_PREREQUISITE_MISSING','ACCEPTANCE_DISTINCT_CHOICES_UNAVAILABLE','ACCEPTANCE_RULE_DEATH','ACCEPTANCE_STATE_INVALID','ACCEPTANCE_STORAGE_LIMIT','LEDGER_PERSIST_FAILED']);
+const safeCodes = new Set([...PROVIDER_ERROR_CODES,...BASELINE_ERROR_CODES,'FREE_BOUNDARY_UNVERIFIED','AI_BINDING_MISSING','ACCOUNT_QUOTA_UNAVAILABLE','EXPERIMENT_BUDGET_EXHAUSTED','EXPERIMENT_LEDGER_INVALID','EXPERIMENT_ATTEMPT_INVALID','ACCEPTANCE_PREREQUISITE_MISSING','ACCEPTANCE_DISTINCT_CHOICES_UNAVAILABLE','ACCEPTANCE_RULE_DEATH','ACCEPTANCE_STATE_INVALID','ACCEPTANCE_STORAGE_LIMIT','LEDGER_PERSIST_FAILED']);
 const errorCode = error => safeCodes.has(error?.code) ? error.code : 'ACCEPTANCE_PREPARATION_FAILED';
-function bounded(record) { if (encoder.encode(JSON.stringify(record)).length > MAX_ACCEPTANCE_SNAPSHOT_BYTES) fail('ACCEPTANCE_STORAGE_LIMIT'); return record; }
 function acceptanceState(record) {
   if (record.acceptance === undefined) return {schemaVersion:1,cases:{}};
   const state = record.acceptance;
   if (state?.schemaVersion !== 1 || !state.cases || typeof state.cases !== 'object' || Array.isArray(state.cases) || Object.keys(state.cases).some(id => !STORY_ACCEPTANCE_CASES.includes(id))) fail('ACCEPTANCE_STATE_INVALID');
-  for (const [caseId,row] of Object.entries(state.cases)) if (!row || typeof row.attemptId !== 'string' || !['reserved','complete','failed','unknown'].includes(row.status) || recipeFor(caseId) && row.recipeVersion !== recipeFor(caseId).version) fail('ACCEPTANCE_STATE_INVALID');
+  for (const [caseId,row] of Object.entries(state.cases)) if (!row || typeof row.attemptId !== 'string' || !['reserved','complete','failed','unknown'].includes(row.status) || recipeFor(caseId) && row.recipeVersion !== recipeFor(caseId).version || PLAYER_BRANCH_CASES.includes(caseId) && (row.recipeVersion !== 1 || typeof row.sourceTask8AdmissionId !== 'string')) fail('ACCEPTANCE_STATE_INVALID');
   return state;
 }
 function requireOriginalStructuralFailure(record,acceptance) {
@@ -48,12 +49,17 @@ function distinctAction(first,next) {
   return ['intent','targetId','approach'].some(key => a[key] !== b[key]) || canonicalStringify(first.nextLife) !== canonicalStringify(next.nextLife);
 }
 function prepareCase(record,acceptance,caseId) {
-  const recipe = recipeFor(caseId), revised = Boolean(recipe);
+  const recipe = recipeFor(caseId), revised = Boolean(recipe), player = PLAYER_BRANCH_CASES.includes(caseId);
   const opening = caseId === STORY_ACCEPTANCE_CASES[0] || caseId === recipe?.cases[0];
   if (revised) requireOriginalStructuralFailure(record,acceptance);
   if (recipe?.version === 3) requireRevisedScopeFailure(record,acceptance);
-  let state,records = [];
-  if (opening) state = createLiveGame({runId:'live-acceptance-v1',seed:42,name:'云归',originId:'village'});
+  let state,records = [],sourceTask8AdmissionId;
+  if (player) {
+    const baseline = readPlayerBaseline(record);
+    const first = acceptance.cases[PLAYER_BRANCH_CASES[0]];
+    if (caseId === PLAYER_BRANCH_CASES[1] && (first?.status !== 'complete' || first.sourceTask8AdmissionId !== baseline.admissionId)) fail('ACCEPTANCE_PREREQUISITE_MISSING');
+    state = copy(baseline.state); records = copy(baseline.records); sourceTask8AdmissionId = baseline.admissionId;
+  } else if (opening) state = createLiveGame({runId:'live-acceptance-v1',seed:42,name:'云归',originId:'village'});
   else {
     const prerequisite = acceptance.cases[revised ? recipe.cases[0] : caseId === STORY_ACCEPTANCE_CASES[1] ? STORY_ACCEPTANCE_CASES[0] : STORY_ACCEPTANCE_CASES[1]];
     const precedingBranch = caseId === STORY_ACCEPTANCE_CASES[3] ? STORY_ACCEPTANCE_CASES[2] : caseId === recipe?.cases[2] ? recipe.cases[1] : null;
@@ -66,10 +72,10 @@ function prepareCase(record,acceptance,caseId) {
     const enabled = compileChoices(state,state.currentScene.choices).filter(choice => choice.enabled);
     const living = enabled.map(choice => prepareChoice(state,{requestId:caseId,choiceId:choice.id})).filter(candidate => !candidate.receipt.death);
     if (!living.length) fail('ACCEPTANCE_RULE_DEATH');
-    if (revised) {
+    if (revised || player) {
       const distinctSecond = living.slice(1).find(candidate => distinctAction(living[0],candidate));
       if (!distinctSecond) fail('ACCEPTANCE_DISTINCT_CHOICES_UNAVAILABLE');
-      pending = caseId === recipe.cases[2] ? distinctSecond : living[0];
+      pending = caseId === (player ? PLAYER_BRANCH_CASES[1] : recipe.cases[2]) ? distinctSecond : living[0];
     } else {
       if (caseId !== STORY_ACCEPTANCE_CASES[1] && living.length < 2) fail('ACCEPTANCE_DISTINCT_CHOICES_UNAVAILABLE');
       pending = living[caseId === STORY_ACCEPTANCE_CASES[3] ? 1 : 0];
@@ -77,21 +83,7 @@ function prepareCase(record,acceptance,caseId) {
   }
   const openTotal = records.filter(row => ['promise','clue'].includes(row.kind) && row.status === 'open').length;
   const context = buildStoryContext(state,pending,records,{selection:'relevance-v1',openTotal});
-  return {state,records,pending,context};
-}
-function remember(previous,pending,scene) {
-  const delta = buildMemoryDelta(pending.receipt,scene), common = {runId:pending.identity.runId,turnId:pending.identity.turnId};
-  const rows = new Map(previous.map(row => [row.id,copy(row)]));
-  const add = row => rows.set(row.id,row);
-  add({id:'receipt:'+common.turnId,...common,source:'rules',kind:'receipt',receipt:copy(delta.receipt)});
-  for (const row of delta.records) add({...row,...common});
-  for (const entity of scene.entities) {
-    const id = 'e:'+sha256(entity.id).slice(0,40), prior = rows.get(id);
-    add({id,...common,source:'narrative',kind:'entity',entity:{id:entity.id,name:entity.name,kind:entity.kind},status:prior?.status === 'dead' ? 'dead' : entity.status ?? prior?.status ?? 'unknown'});
-  }
-  for (const entityId of Object.keys(pending.receipt.relationChanges)) add({id:'q:'+sha256(entityId).slice(0,40),...common,source:'rules',kind:'ruleRelation',entityId,value:pending.nextLife.relations[entityId]});
-  if (rows.size > 256) fail('ACCEPTANCE_STORAGE_LIMIT');
-  return [...rows.values()];
+  return {state,records,pending,context,...(sourceTask8AdmissionId ? {sourceTask8AdmissionId} : {})};
 }
 
 // Caller supplies only trusted env/config/storage and holds the singleton queue.
@@ -115,6 +107,7 @@ export async function runStoryAcceptance({record,caseId,attemptId,env,confirmEvi
     reservedNeurons = estimateMaxNeurons(input);
     association = {attemptId,caseId,status:'reserved',contextHash:sha256(canonicalStringify(prepared.context)),inputHash:sha256(serialized),inputBytes:encoder.encode(serialized).length,baseStateHash:stateHash(prepared.state),identity:copy(prepared.pending.identity),receipt:copy(prepared.pending.receipt)};
     if (recipeFor(caseId)) association.recipeVersion = recipeFor(caseId).version;
+    if (prepared.sourceTask8AdmissionId) Object.assign(association,{recipeVersion:1,sourceTask8AdmissionId:prepared.sourceTask8AdmissionId});
     const evidence = confirmEvidence();
     assertProviderReady({enabled:true,env,evidence,purpose:'probe',ledger:record.ledger,reservationNeurons:reservedNeurons});
     const ledger = reserveExperiment(record.ledger,{task:'task7',attemptId,reservedNeurons});
@@ -131,6 +124,7 @@ export async function runStoryAcceptance({record,caseId,attemptId,env,confirmEvi
   } catch { generated = {status:'paused',accountingStatus:'unknown',inferencePerformed:true,errorCode:'PROVIDER_FAILED'}; }
   const result = {schemaVersion:1,sampleKind:'workers-ai',task:'task7',caseId,attemptId,contextHash:association.contextHash,inputHash:association.inputHash,inputBytes:association.inputBytes,modelId:CANDIDATE_MODEL_ID,rulesVersion:prepared.context.identity.rulesVersion,promptVersion:prepared.context.identity.promptVersion,reservedNeurons,actualNeurons:null,inferencePerformed:generated.inferencePerformed === true,usage:generated.usage ?? null,stopReason:generated.stopReason ?? null,latencyMs:Math.max(0,Date.now()-started),status:generated.status,identity:association.identity,receipt:association.receipt};
   if (association.recipeVersion !== undefined) result.recipeVersion = association.recipeVersion;
+  if (association.sourceTask8AdmissionId) result.sourceTask8AdmissionId = association.sourceTask8AdmissionId;
   if (generated.errorCode === 'GENERATED_SCENE_INVALID' && STRUCTURE_DIAGNOSTIC_CODES.includes(generated.structureDiagnostic)) result.structureDiagnostic = generated.structureDiagnostic;
   let state,records,status = generated.accountingStatus === 'unknown' ? 'unknown' : 'failed';
   if (generated.status === 'ready') {

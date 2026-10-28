@@ -101,7 +101,10 @@ export function createStoryApi({provider=generateScene,budget,config={},experime
       // error vocabulary. An unclassified transport outcome stays conservative.
       let status=generated?.accountingStatus==='complete'||generated?.status==='ready'?'complete':'unknown';
       if(experiment){
-        let settlement;try{settlement=await experiment.settle({...reservationInput,status:status==='unknown'?'unknown':result.status==='ready'?'complete':'failed'});}catch{}
+        const experimentStatus=status==='unknown'?'unknown':result.status==='ready'?'complete':'failed';
+        // Attest only the scene accepted by this server's strict validation.
+        // Neither the browser nor provider can supply this settlement hash.
+        let settlement;try{settlement=await experiment.settle({...reservationInput,status:experimentStatus,...(experimentStatus==='complete'?{acceptedSceneHash:sha256(canonicalStringify(result.scene))}:{})});}catch{}
         if(settlement?.kind!=='settled'){
           status='unknown';result=envelope('paused','EXPERIMENT_BUDGET_UNAVAILABLE',identity);
         }

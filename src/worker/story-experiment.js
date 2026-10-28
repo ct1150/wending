@@ -7,6 +7,7 @@ export const STORY_EXPERIMENT_NAMESPACE_ID='dfb218f2f29d4ecab2395f8a00b48350';
 const fields=['sessionRef','requestId','attemptId','payloadHash','contextHash'];
 const codes=new Set(['FREE_BOUNDARY_UNVERIFIED','AI_BINDING_MISSING','ACCOUNT_QUOTA_UNAVAILABLE','EXPERIMENT_BUDGET_EXHAUSTED','EXPERIMENT_LEDGER_INVALID','EXPERIMENT_ATTEMPT_INVALID','TASK8_ADMISSION_CONFLICT','TASK8_ADMISSION_MISSING','TASK8_SETTLEMENT_CONFLICT','ACCEPTANCE_STORAGE_LIMIT','LEDGER_PERSIST_FAILED']);
 const unavailable=()=>({kind:'denied',code:'EXPERIMENT_BUDGET_UNAVAILABLE'});
+const sceneHash=value=>typeof value==='string'&&/^[a-f0-9]{64}$/.test(value);
 
 export function assertExperimentBridgeReady(env){
   if(typeof env?.STORY_EXPERIMENT?.idFromName!=='function'||typeof env.STORY_EXPERIMENT.get!=='function'||typeof env.STORY_OPERATOR_TOKEN!=='string'||!/^[^\s]{32,256}$/.test(env.STORY_OPERATOR_TOKEN))throw Object.assign(new Error('EXPERIMENT_BUDGET_UNAVAILABLE'),{code:'EXPERIMENT_BUDGET_UNAVAILABLE'});
@@ -27,7 +28,14 @@ export function createExperimentBridge(env){
     try{
       assertExperimentBridgeReady(env);
       const body=Object.fromEntries(fields.map(field=>[field,input[field]]));
-      if(path==='/task8/settle')body.status=input.status;
+      if(path==='/task8/settle'){
+        body.status=input.status;
+        if(!['complete','failed','unknown'].includes(body.status))return unavailable();
+        if(body.status==='complete'){
+          if(!sceneHash(input.acceptedSceneHash))return unavailable();
+          body.acceptedSceneHash=input.acceptedSceneHash;
+        }else if(Object.hasOwn(input,'acceptedSceneHash'))return unavailable();
+      }
       const expectedId='task8_'+sha256(canonicalStringify([body.sessionRef,body.attemptId]));
       const operation=(async()=>{
         const binding=env.STORY_EXPERIMENT,stub=binding.get(binding.idFromName(STORY_EXPERIMENT_COORDINATOR_NAME));
@@ -36,7 +44,7 @@ export function createExperimentBridge(env){
         if(result?.kind==='denied'&&codes.has(result.code))return {kind:'denied',code:result.code};
         if(!response.ok||result?.admissionId!==expectedId)return unavailable();
         if(path==='/task8/admit'&&['reserved','duplicate'].includes(result.kind)&&result.reservedNeurons===111&&(result.kind==='reserved'||['reserved','complete','failed','unknown'].includes(result.status)))return result;
-        if(path==='/task8/settle'&&result.kind==='settled'&&result.status===body.status)return result;
+        if(path==='/task8/settle'&&result.kind==='settled'&&result.status===body.status&&(body.status==='complete'?result.acceptedSceneHash===body.acceptedSceneHash:!Object.hasOwn(result,'acceptedSceneHash')))return result;
         return unavailable();
       })();
       return await Promise.race([operation,new Promise(resolve=>{timer=setTimeout(()=>resolve(unavailable()),5000);})]);
