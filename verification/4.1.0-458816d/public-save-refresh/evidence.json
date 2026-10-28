@@ -1,0 +1,648 @@
+{
+  "schemaVersion": 1,
+  "startedAt": "2026-10-28T17:18:02.602Z",
+  "status": "ACCEPTANCE_PASSED",
+  "mode": "PUBLIC",
+  "phase": "complete",
+  "baseUrl": "https://baishi-wending.ct1150.workers.dev/",
+  "profilePath": "/tmp/wending-public-60d77884fe74-4_1-profile",
+  "continuedProfile": true,
+  "browser": {
+    "executable": "/tmp/wending-cft-151/chrome-headless-shell-linux64/chrome-headless-shell",
+    "version": "151.0.7922.34",
+    "headless": true,
+    "certificateValidationEnabled": true,
+    "fontConfig": "/tmp/wending-cjk-fonts/fonts.conf"
+  },
+  "driver": {
+    "path": "/workspace/scratch/60d77884fe74/accept-real-browser.mjs",
+    "sha256": "ebfa3a49e4149acf4ec59806aaa95c4f0d6e57d0dd657ec98cca97ce4ee98bbf",
+    "responseMockingUsed": false,
+    "fetchReplaced": false,
+    "archiveWritesByDriver": false,
+    "automaticRetryUsed": false,
+    "filePickerFallbackForced": true,
+    "credentialTransport": "No tester header or permit"
+  },
+  "actions": [
+    {
+      "at": "2026-10-28T17:18:02.811Z",
+      "kind": "navigate",
+      "url": "https://baishi-wending.ct1150.workers.dev/"
+    },
+    {
+      "at": "2026-10-28T17:18:03.582Z",
+      "kind": "continue-committed-profile",
+      "revision": 2,
+      "runId": "7fc2dbd6-e9ba-4dc4-a4fe-156455c31a3b"
+    },
+    {
+      "at": "2026-10-28T17:18:04.059Z",
+      "kind": "click-export"
+    },
+    {
+      "at": "2026-10-28T17:18:04.376Z",
+      "kind": "refresh"
+    }
+  ],
+  "api": [],
+  "snapshots": [
+    {
+      "label": "00-entered",
+      "at": "2026-10-28T17:18:03.558Z",
+      "file": "00-entered.json",
+      "screenshot": "00-entered.png",
+      "summary": {
+        "database": {
+          "name": "wending-live-v1",
+          "version": 2,
+          "storeCounts": {
+            "runs": 3,
+            "pending": 0,
+            "history": 1,
+            "memory": 17
+          }
+        },
+        "archiveId": "6f580987-0a62-43ca-9d3d-a060b441f8a4",
+        "runId": "7fc2dbd6-e9ba-4dc4-a4fe-156455c31a3b",
+        "revision": 2,
+        "turnId": 2,
+        "phase": "active",
+        "stateSha256": "28984c20b612d64bf79089cdcf77c41bed9f9758a4732027b2a5be1127f2a1dc",
+        "storedStateHash": "28984c20b612d64bf79089cdcf77c41bed9f9758a4732027b2a5be1127f2a1dc",
+        "sceneId": "r:8910e88c0ed357d9:t2:s:scene",
+        "sceneSha256": "32bdfc9f4c7838de3d1f84cc614ca6a73f6aa905e3c6e5b29795d1fa8537577f",
+        "pendingRequestId": null,
+        "pendingKind": null,
+        "attemptId": null,
+        "pause": null,
+        "history": {
+          "chunks": 1,
+          "tailEntries": [
+            {
+              "identity": {
+                "runId": "7fc2dbd6-e9ba-4dc4-a4fe-156455c31a3b",
+                "turnId": 1,
+                "baseRevision": 0,
+                "stateHash": "fe8456a1da6165634734aa0ef423ce85418eec528a022db2d5101e42d33660a9",
+                "choiceId": null,
+                "rulesVersion": 1,
+                "promptVersion": 1,
+                "requestId": "3e222aae-eb2e-4a4a-baec-5ce59bff45e1"
+              },
+              "stateHash": "305aa39641f0e85057897ef26c98debebc6d3cfce9e6f6794bf30d06c9b4e736",
+              "sceneId": "r:8910e88c0ed357d9:t1:s:scene",
+              "title": "青石村的清晨"
+            },
+            {
+              "identity": {
+                "runId": "7fc2dbd6-e9ba-4dc4-a4fe-156455c31a3b",
+                "turnId": 2,
+                "baseRevision": 1,
+                "stateHash": "305aa39641f0e85057897ef26c98debebc6d3cfce9e6f6794bf30d06c9b4e736",
+                "choiceId": "r:8910e88c0ed357d9:t1:c:a",
+                "rulesVersion": 1,
+                "promptVersion": 1,
+                "requestId": "230530a2-0dea-4a43-9d54-8cc488fa42e8"
+              },
+              "stateHash": "28984c20b612d64bf79089cdcf77c41bed9f9758a4732027b2a5be1127f2a1dc",
+              "sceneId": "r:8910e88c0ed357d9:t2:s:scene",
+              "title": "北山迷雾"
+            }
+          ],
+          "totalTurns": 2
+        }
+      },
+      "requestCounts": {
+        "apiRequests": 0,
+        "turnPosts": 0,
+        "turnGets": 0,
+        "sessionPosts": 0,
+        "capabilityGets": 0,
+        "readyTurnResponses": 0
+      }
+    },
+    {
+      "label": "01-opening-or-existing",
+      "at": "2026-10-28T17:18:03.722Z",
+      "file": "01-opening-or-existing.json",
+      "screenshot": "01-opening-or-existing.png",
+      "summary": {
+        "database": {
+          "name": "wending-live-v1",
+          "version": 2,
+          "storeCounts": {
+            "runs": 3,
+            "pending": 0,
+            "history": 1,
+            "memory": 17
+          }
+        },
+        "archiveId": "6f580987-0a62-43ca-9d3d-a060b441f8a4",
+        "runId": "7fc2dbd6-e9ba-4dc4-a4fe-156455c31a3b",
+        "revision": 2,
+        "turnId": 2,
+        "phase": "active",
+        "stateSha256": "28984c20b612d64bf79089cdcf77c41bed9f9758a4732027b2a5be1127f2a1dc",
+        "storedStateHash": "28984c20b612d64bf79089cdcf77c41bed9f9758a4732027b2a5be1127f2a1dc",
+        "sceneId": "r:8910e88c0ed357d9:t2:s:scene",
+        "sceneSha256": "32bdfc9f4c7838de3d1f84cc614ca6a73f6aa905e3c6e5b29795d1fa8537577f",
+        "pendingRequestId": null,
+        "pendingKind": null,
+        "attemptId": null,
+        "pause": null,
+        "history": {
+          "chunks": 1,
+          "tailEntries": [
+            {
+              "identity": {
+                "runId": "7fc2dbd6-e9ba-4dc4-a4fe-156455c31a3b",
+                "turnId": 1,
+                "baseRevision": 0,
+                "stateHash": "fe8456a1da6165634734aa0ef423ce85418eec528a022db2d5101e42d33660a9",
+                "choiceId": null,
+                "rulesVersion": 1,
+                "promptVersion": 1,
+                "requestId": "3e222aae-eb2e-4a4a-baec-5ce59bff45e1"
+              },
+              "stateHash": "305aa39641f0e85057897ef26c98debebc6d3cfce9e6f6794bf30d06c9b4e736",
+              "sceneId": "r:8910e88c0ed357d9:t1:s:scene",
+              "title": "青石村的清晨"
+            },
+            {
+              "identity": {
+                "runId": "7fc2dbd6-e9ba-4dc4-a4fe-156455c31a3b",
+                "turnId": 2,
+                "baseRevision": 1,
+                "stateHash": "305aa39641f0e85057897ef26c98debebc6d3cfce9e6f6794bf30d06c9b4e736",
+                "choiceId": "r:8910e88c0ed357d9:t1:c:a",
+                "rulesVersion": 1,
+                "promptVersion": 1,
+                "requestId": "230530a2-0dea-4a43-9d54-8cc488fa42e8"
+              },
+              "stateHash": "28984c20b612d64bf79089cdcf77c41bed9f9758a4732027b2a5be1127f2a1dc",
+              "sceneId": "r:8910e88c0ed357d9:t2:s:scene",
+              "title": "北山迷雾"
+            }
+          ],
+          "totalTurns": 2
+        }
+      },
+      "requestCounts": {
+        "apiRequests": 0,
+        "turnPosts": 0,
+        "turnGets": 0,
+        "sessionPosts": 0,
+        "capabilityGets": 0,
+        "readyTurnResponses": 0
+      }
+    },
+    {
+      "label": "02-choice-committed",
+      "at": "2026-10-28T17:18:03.851Z",
+      "file": "02-choice-committed.json",
+      "screenshot": "02-choice-committed.png",
+      "summary": {
+        "database": {
+          "name": "wending-live-v1",
+          "version": 2,
+          "storeCounts": {
+            "runs": 3,
+            "pending": 0,
+            "history": 1,
+            "memory": 17
+          }
+        },
+        "archiveId": "6f580987-0a62-43ca-9d3d-a060b441f8a4",
+        "runId": "7fc2dbd6-e9ba-4dc4-a4fe-156455c31a3b",
+        "revision": 2,
+        "turnId": 2,
+        "phase": "active",
+        "stateSha256": "28984c20b612d64bf79089cdcf77c41bed9f9758a4732027b2a5be1127f2a1dc",
+        "storedStateHash": "28984c20b612d64bf79089cdcf77c41bed9f9758a4732027b2a5be1127f2a1dc",
+        "sceneId": "r:8910e88c0ed357d9:t2:s:scene",
+        "sceneSha256": "32bdfc9f4c7838de3d1f84cc614ca6a73f6aa905e3c6e5b29795d1fa8537577f",
+        "pendingRequestId": null,
+        "pendingKind": null,
+        "attemptId": null,
+        "pause": null,
+        "history": {
+          "chunks": 1,
+          "tailEntries": [
+            {
+              "identity": {
+                "runId": "7fc2dbd6-e9ba-4dc4-a4fe-156455c31a3b",
+                "turnId": 1,
+                "baseRevision": 0,
+                "stateHash": "fe8456a1da6165634734aa0ef423ce85418eec528a022db2d5101e42d33660a9",
+                "choiceId": null,
+                "rulesVersion": 1,
+                "promptVersion": 1,
+                "requestId": "3e222aae-eb2e-4a4a-baec-5ce59bff45e1"
+              },
+              "stateHash": "305aa39641f0e85057897ef26c98debebc6d3cfce9e6f6794bf30d06c9b4e736",
+              "sceneId": "r:8910e88c0ed357d9:t1:s:scene",
+              "title": "青石村的清晨"
+            },
+            {
+              "identity": {
+                "runId": "7fc2dbd6-e9ba-4dc4-a4fe-156455c31a3b",
+                "turnId": 2,
+                "baseRevision": 1,
+                "stateHash": "305aa39641f0e85057897ef26c98debebc6d3cfce9e6f6794bf30d06c9b4e736",
+                "choiceId": "r:8910e88c0ed357d9:t1:c:a",
+                "rulesVersion": 1,
+                "promptVersion": 1,
+                "requestId": "230530a2-0dea-4a43-9d54-8cc488fa42e8"
+              },
+              "stateHash": "28984c20b612d64bf79089cdcf77c41bed9f9758a4732027b2a5be1127f2a1dc",
+              "sceneId": "r:8910e88c0ed357d9:t2:s:scene",
+              "title": "北山迷雾"
+            }
+          ],
+          "totalTurns": 2
+        }
+      },
+      "requestCounts": {
+        "apiRequests": 0,
+        "turnPosts": 0,
+        "turnGets": 0,
+        "sessionPosts": 0,
+        "capabilityGets": 0,
+        "readyTurnResponses": 0
+      }
+    },
+    {
+      "label": "03-exported",
+      "at": "2026-10-28T17:18:04.212Z",
+      "file": "03-exported.json",
+      "screenshot": "03-exported.png",
+      "summary": {
+        "database": {
+          "name": "wending-live-v1",
+          "version": 2,
+          "storeCounts": {
+            "runs": 3,
+            "pending": 0,
+            "history": 1,
+            "memory": 17
+          }
+        },
+        "archiveId": "6f580987-0a62-43ca-9d3d-a060b441f8a4",
+        "runId": "7fc2dbd6-e9ba-4dc4-a4fe-156455c31a3b",
+        "revision": 2,
+        "turnId": 2,
+        "phase": "active",
+        "stateSha256": "28984c20b612d64bf79089cdcf77c41bed9f9758a4732027b2a5be1127f2a1dc",
+        "storedStateHash": "28984c20b612d64bf79089cdcf77c41bed9f9758a4732027b2a5be1127f2a1dc",
+        "sceneId": "r:8910e88c0ed357d9:t2:s:scene",
+        "sceneSha256": "32bdfc9f4c7838de3d1f84cc614ca6a73f6aa905e3c6e5b29795d1fa8537577f",
+        "pendingRequestId": null,
+        "pendingKind": null,
+        "attemptId": null,
+        "pause": null,
+        "history": {
+          "chunks": 1,
+          "tailEntries": [
+            {
+              "identity": {
+                "runId": "7fc2dbd6-e9ba-4dc4-a4fe-156455c31a3b",
+                "turnId": 1,
+                "baseRevision": 0,
+                "stateHash": "fe8456a1da6165634734aa0ef423ce85418eec528a022db2d5101e42d33660a9",
+                "choiceId": null,
+                "rulesVersion": 1,
+                "promptVersion": 1,
+                "requestId": "3e222aae-eb2e-4a4a-baec-5ce59bff45e1"
+              },
+              "stateHash": "305aa39641f0e85057897ef26c98debebc6d3cfce9e6f6794bf30d06c9b4e736",
+              "sceneId": "r:8910e88c0ed357d9:t1:s:scene",
+              "title": "青石村的清晨"
+            },
+            {
+              "identity": {
+                "runId": "7fc2dbd6-e9ba-4dc4-a4fe-156455c31a3b",
+                "turnId": 2,
+                "baseRevision": 1,
+                "stateHash": "305aa39641f0e85057897ef26c98debebc6d3cfce9e6f6794bf30d06c9b4e736",
+                "choiceId": "r:8910e88c0ed357d9:t1:c:a",
+                "rulesVersion": 1,
+                "promptVersion": 1,
+                "requestId": "230530a2-0dea-4a43-9d54-8cc488fa42e8"
+              },
+              "stateHash": "28984c20b612d64bf79089cdcf77c41bed9f9758a4732027b2a5be1127f2a1dc",
+              "sceneId": "r:8910e88c0ed357d9:t2:s:scene",
+              "title": "北山迷雾"
+            }
+          ],
+          "totalTurns": 2
+        }
+      },
+      "requestCounts": {
+        "apiRequests": 0,
+        "turnPosts": 0,
+        "turnGets": 0,
+        "sessionPosts": 0,
+        "capabilityGets": 0,
+        "readyTurnResponses": 0
+      }
+    },
+    {
+      "label": "04-before-refresh",
+      "at": "2026-10-28T17:18:04.375Z",
+      "file": "04-before-refresh.json",
+      "screenshot": "04-before-refresh.png",
+      "summary": {
+        "database": {
+          "name": "wending-live-v1",
+          "version": 2,
+          "storeCounts": {
+            "runs": 3,
+            "pending": 0,
+            "history": 1,
+            "memory": 17
+          }
+        },
+        "archiveId": "6f580987-0a62-43ca-9d3d-a060b441f8a4",
+        "runId": "7fc2dbd6-e9ba-4dc4-a4fe-156455c31a3b",
+        "revision": 2,
+        "turnId": 2,
+        "phase": "active",
+        "stateSha256": "28984c20b612d64bf79089cdcf77c41bed9f9758a4732027b2a5be1127f2a1dc",
+        "storedStateHash": "28984c20b612d64bf79089cdcf77c41bed9f9758a4732027b2a5be1127f2a1dc",
+        "sceneId": "r:8910e88c0ed357d9:t2:s:scene",
+        "sceneSha256": "32bdfc9f4c7838de3d1f84cc614ca6a73f6aa905e3c6e5b29795d1fa8537577f",
+        "pendingRequestId": null,
+        "pendingKind": null,
+        "attemptId": null,
+        "pause": null,
+        "history": {
+          "chunks": 1,
+          "tailEntries": [
+            {
+              "identity": {
+                "runId": "7fc2dbd6-e9ba-4dc4-a4fe-156455c31a3b",
+                "turnId": 1,
+                "baseRevision": 0,
+                "stateHash": "fe8456a1da6165634734aa0ef423ce85418eec528a022db2d5101e42d33660a9",
+                "choiceId": null,
+                "rulesVersion": 1,
+                "promptVersion": 1,
+                "requestId": "3e222aae-eb2e-4a4a-baec-5ce59bff45e1"
+              },
+              "stateHash": "305aa39641f0e85057897ef26c98debebc6d3cfce9e6f6794bf30d06c9b4e736",
+              "sceneId": "r:8910e88c0ed357d9:t1:s:scene",
+              "title": "青石村的清晨"
+            },
+            {
+              "identity": {
+                "runId": "7fc2dbd6-e9ba-4dc4-a4fe-156455c31a3b",
+                "turnId": 2,
+                "baseRevision": 1,
+                "stateHash": "305aa39641f0e85057897ef26c98debebc6d3cfce9e6f6794bf30d06c9b4e736",
+                "choiceId": "r:8910e88c0ed357d9:t1:c:a",
+                "rulesVersion": 1,
+                "promptVersion": 1,
+                "requestId": "230530a2-0dea-4a43-9d54-8cc488fa42e8"
+              },
+              "stateHash": "28984c20b612d64bf79089cdcf77c41bed9f9758a4732027b2a5be1127f2a1dc",
+              "sceneId": "r:8910e88c0ed357d9:t2:s:scene",
+              "title": "北山迷雾"
+            }
+          ],
+          "totalTurns": 2
+        }
+      },
+      "requestCounts": {
+        "apiRequests": 0,
+        "turnPosts": 0,
+        "turnGets": 0,
+        "sessionPosts": 0,
+        "capabilityGets": 0,
+        "readyTurnResponses": 0
+      }
+    },
+    {
+      "label": "05-after-refresh",
+      "at": "2026-10-28T17:18:14.719Z",
+      "file": "05-after-refresh.json",
+      "screenshot": "05-after-refresh.png",
+      "summary": {
+        "database": {
+          "name": "wending-live-v1",
+          "version": 2,
+          "storeCounts": {
+            "runs": 3,
+            "pending": 0,
+            "history": 1,
+            "memory": 17
+          }
+        },
+        "archiveId": "6f580987-0a62-43ca-9d3d-a060b441f8a4",
+        "runId": "7fc2dbd6-e9ba-4dc4-a4fe-156455c31a3b",
+        "revision": 2,
+        "turnId": 2,
+        "phase": "active",
+        "stateSha256": "28984c20b612d64bf79089cdcf77c41bed9f9758a4732027b2a5be1127f2a1dc",
+        "storedStateHash": "28984c20b612d64bf79089cdcf77c41bed9f9758a4732027b2a5be1127f2a1dc",
+        "sceneId": "r:8910e88c0ed357d9:t2:s:scene",
+        "sceneSha256": "32bdfc9f4c7838de3d1f84cc614ca6a73f6aa905e3c6e5b29795d1fa8537577f",
+        "pendingRequestId": null,
+        "pendingKind": null,
+        "attemptId": null,
+        "pause": null,
+        "history": {
+          "chunks": 1,
+          "tailEntries": [
+            {
+              "identity": {
+                "runId": "7fc2dbd6-e9ba-4dc4-a4fe-156455c31a3b",
+                "turnId": 1,
+                "baseRevision": 0,
+                "stateHash": "fe8456a1da6165634734aa0ef423ce85418eec528a022db2d5101e42d33660a9",
+                "choiceId": null,
+                "rulesVersion": 1,
+                "promptVersion": 1,
+                "requestId": "3e222aae-eb2e-4a4a-baec-5ce59bff45e1"
+              },
+              "stateHash": "305aa39641f0e85057897ef26c98debebc6d3cfce9e6f6794bf30d06c9b4e736",
+              "sceneId": "r:8910e88c0ed357d9:t1:s:scene",
+              "title": "青石村的清晨"
+            },
+            {
+              "identity": {
+                "runId": "7fc2dbd6-e9ba-4dc4-a4fe-156455c31a3b",
+                "turnId": 2,
+                "baseRevision": 1,
+                "stateHash": "305aa39641f0e85057897ef26c98debebc6d3cfce9e6f6794bf30d06c9b4e736",
+                "choiceId": "r:8910e88c0ed357d9:t1:c:a",
+                "rulesVersion": 1,
+                "promptVersion": 1,
+                "requestId": "230530a2-0dea-4a43-9d54-8cc488fa42e8"
+              },
+              "stateHash": "28984c20b612d64bf79089cdcf77c41bed9f9758a4732027b2a5be1127f2a1dc",
+              "sceneId": "r:8910e88c0ed357d9:t2:s:scene",
+              "title": "北山迷雾"
+            }
+          ],
+          "totalTurns": 2
+        }
+      },
+      "requestCounts": {
+        "apiRequests": 0,
+        "turnPosts": 0,
+        "turnGets": 0,
+        "sessionPosts": 0,
+        "capabilityGets": 0,
+        "readyTurnResponses": 0
+      }
+    }
+  ],
+  "checks": [
+    {
+      "name": "One-choice result is committed at revision 2",
+      "passed": true
+    },
+    {
+      "name": "Stored state hash matches the actual choice result",
+      "passed": true
+    },
+    {
+      "name": "Downloaded a complete live archive",
+      "passed": true
+    },
+    {
+      "name": "Saved export matches committed scene and revision",
+      "passed": true
+    },
+    {
+      "name": "Refresh preserves archive ID and run ID",
+      "passed": true
+    },
+    {
+      "name": "Refresh preserves revision and turn ID",
+      "passed": true
+    },
+    {
+      "name": "Refresh preserves exact scene and full state",
+      "passed": true
+    },
+    {
+      "name": "Refresh preserves displayed scene body",
+      "passed": true
+    },
+    {
+      "name": "Refresh issues no new turn POST",
+      "passed": true,
+      "before": 0,
+      "after": 0,
+      "observationMs": 10000
+    },
+    {
+      "name": "Refresh issues no new session POST",
+      "passed": true
+    },
+    {
+      "name": "No uncaught page errors",
+      "passed": true
+    },
+    {
+      "name": "No evidence collection errors",
+      "passed": true
+    }
+  ],
+  "pageErrors": [],
+  "consoleErrors": [],
+  "requestFailures": [],
+  "evidenceErrors": [],
+  "invocation": {
+    "continue": true,
+    "retryOnce": false,
+    "operatorRetry": false,
+    "phase": "complete",
+    "timeoutMs": 120000
+  },
+  "operatorRetries": [],
+  "requestCounts": {
+    "apiRequests": 0,
+    "turnPosts": 0,
+    "turnGets": 0,
+    "sessionPosts": 0,
+    "capabilityGets": 0,
+    "readyTurnResponses": 0
+  },
+  "startingArchive": {
+    "database": {
+      "name": "wending-live-v1",
+      "version": 2,
+      "storeCounts": {
+        "runs": 3,
+        "pending": 0,
+        "history": 1,
+        "memory": 17
+      }
+    },
+    "archiveId": "6f580987-0a62-43ca-9d3d-a060b441f8a4",
+    "runId": "7fc2dbd6-e9ba-4dc4-a4fe-156455c31a3b",
+    "revision": 2,
+    "turnId": 2,
+    "phase": "active",
+    "stateSha256": "28984c20b612d64bf79089cdcf77c41bed9f9758a4732027b2a5be1127f2a1dc",
+    "storedStateHash": "28984c20b612d64bf79089cdcf77c41bed9f9758a4732027b2a5be1127f2a1dc",
+    "sceneId": "r:8910e88c0ed357d9:t2:s:scene",
+    "sceneSha256": "32bdfc9f4c7838de3d1f84cc614ca6a73f6aa905e3c6e5b29795d1fa8537577f",
+    "pendingRequestId": null,
+    "pendingKind": null,
+    "attemptId": null,
+    "pause": null,
+    "history": {
+      "chunks": 1,
+      "tailEntries": [
+        {
+          "identity": {
+            "runId": "7fc2dbd6-e9ba-4dc4-a4fe-156455c31a3b",
+            "turnId": 1,
+            "baseRevision": 0,
+            "stateHash": "fe8456a1da6165634734aa0ef423ce85418eec528a022db2d5101e42d33660a9",
+            "choiceId": null,
+            "rulesVersion": 1,
+            "promptVersion": 1,
+            "requestId": "3e222aae-eb2e-4a4a-baec-5ce59bff45e1"
+          },
+          "stateHash": "305aa39641f0e85057897ef26c98debebc6d3cfce9e6f6794bf30d06c9b4e736",
+          "sceneId": "r:8910e88c0ed357d9:t1:s:scene",
+          "title": "青石村的清晨"
+        },
+        {
+          "identity": {
+            "runId": "7fc2dbd6-e9ba-4dc4-a4fe-156455c31a3b",
+            "turnId": 2,
+            "baseRevision": 1,
+            "stateHash": "305aa39641f0e85057897ef26c98debebc6d3cfce9e6f6794bf30d06c9b4e736",
+            "choiceId": "r:8910e88c0ed357d9:t1:c:a",
+            "rulesVersion": 1,
+            "promptVersion": 1,
+            "requestId": "230530a2-0dea-4a43-9d54-8cc488fa42e8"
+          },
+          "stateHash": "28984c20b612d64bf79089cdcf77c41bed9f9758a4732027b2a5be1127f2a1dc",
+          "sceneId": "r:8910e88c0ed357d9:t2:s:scene",
+          "title": "北山迷雾"
+        }
+      ],
+      "totalTurns": 2
+    }
+  },
+  "export": {
+    "file": "saved-game.wending.jsonl",
+    "bytes": 10827,
+    "sha256": "a1c641fcaeaecbff6a9861e4d87f7eb35759dacfb9813ef63eb2276036563bcc",
+    "lines": 3,
+    "revision": 2,
+    "sceneId": "r:8910e88c0ed357d9:t2:s:scene",
+    "turns": 2
+  },
+  "coverage": "Continued existing revision 2; see prior evidence for earlier requests",
+  "finishedAt": "2026-10-28T17:18:14.781Z",
+  "browserClosed": true,
+  "profilePreserved": true
+}

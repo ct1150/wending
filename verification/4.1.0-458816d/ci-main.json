@@ -1,0 +1,81 @@
+{
+  "schemaVersion": 1,
+  "observedAt": "2026-10-28 17:14:01 UTC",
+  "repository": "ct1150/wending",
+  "sourceCommit": "458816d14a2d48612f0e66a1f28e6f0045f4951b",
+  "runId": 40733113624,
+  "runNumber": 120,
+  "runUrl": "https://github.com/ct1150/wending/actions/runs/40733113624",
+  "trigger": "push",
+  "conclusion": "success",
+  "validateJobId": 122974412177,
+  "publishJobId": 122975853763,
+  "tests": {
+    "tests": 805,
+    "suites": 0,
+    "pass": 805,
+    "fail": 0,
+    "cancelled": 0,
+    "skipped": 0,
+    "todo": 0,
+    "duration_ms": 91311.455822
+  },
+  "syntaxCheckedFiles": 151,
+  "frontend": {
+    "version": "4.1.0",
+    "htmlBytes": 971378,
+    "htmlSha256": "574123926708a59b6dc75da822f6dc0f2ca39dacc4ce4825873856b93270707d"
+  },
+  "gateway": {
+    "sourceCommit": "458816d14a2d48612f0e66a1f28e6f0045f4951b",
+    "htmlSha256": "574123926708a59b6dc75da822f6dc0f2ca39dacc4ce4825873856b93270707d",
+    "workerBytes": 991355,
+    "backend": {
+      "mainModule": "entry.mjs",
+      "moduleCount": 17,
+      "manifestSha256": "c0e8fea2bc1a34730297ca1e973b34937acae6470c5e3ab4b3a302a1a4a7d9bd"
+    }
+  },
+  "publication": {
+    "published": true,
+    "sourceCommit": "458816d14a2d48612f0e66a1f28e6f0045f4951b",
+    "releaseCommit": "a731ec6074708a190d22c418fb4b1db1e18ab80e",
+    "htmlSha256": "574123926708a59b6dc75da822f6dc0f2ca39dacc4ce4825873856b93270707d"
+  },
+  "channelManifest": {
+    "schemaVersion": 1,
+    "version": "4.1.0",
+    "sourceCommit": "458816d14a2d48612f0e66a1f28e6f0045f4951b",
+    "artifactCommit": "8a10ae8fadd12fb3089c156ae9920b0b69759de4",
+    "htmlSha256": "574123926708a59b6dc75da822f6dc0f2ca39dacc4ce4825873856b93270707d",
+    "htmlBytes": 971378,
+    "artifactPath": "releases/574123926708a59b6dc75da822f6dc0f2ca39dacc4ce4825873856b93270707d.html"
+  },
+  "channelMatchesExactMain": true,
+  "logFiles": {
+    "validate": "ci-main-458816d-validate-122974412177.log",
+    "publish": "ci-main-458816d-publish-122975853763.log"
+  },
+  "rawFiles": {
+    "jobs": "ci-main-458816d-jobs.json",
+    "run": "ci-main-458816d-run.json",
+    "channel": "ci-main-458816d-release-channel-raw.json"
+  },
+  "scope": {
+    "readOnly": true,
+    "modelCalls": 0,
+    "mutations": 0,
+    "productionBackendDeploymentClaimed": false,
+    "notes": "GitHub static publication passed. CI packaged a disabled story backend; actual Cloudflare production deployment and public-browser acceptance are separate root-owned steps."
+  },
+  "logDigests": {
+    "validate": {
+      "bytes": 160061,
+      "sha256": "90fc81f2c8615bd2e21ef784b5a74a0d19361e21bf4a3a04088dcea78a4b340d"
+    },
+    "publish": {
+      "bytes": 18644,
+      "sha256": "b968b090458d5c429c37f2c4ec8c7cc16c96d90ee6c0e89fbc64b8da26d07241"
+    }
+  }
+}

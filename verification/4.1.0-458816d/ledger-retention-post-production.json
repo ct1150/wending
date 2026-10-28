@@ -1,0 +1,67 @@
+{
+  "schemaVersion": 1,
+  "checkedAt": "2026-10-28T17:19:23.857006+00:00",
+  "status": "POST_PRODUCTION_OPERATOR_HISTORY_UNCHANGED",
+  "passed": true,
+  "checks": {
+    "bothStatusSnapshotsSuccessful": true,
+    "allLedgerRowsUnchanged": true,
+    "allResultsUnchanged": true,
+    "allAdmissionsUnchanged": true,
+    "allAcceptanceCasesUnchanged": true,
+    "callCountUnchanged": true,
+    "reservationHistoryUnchanged": true,
+    "allStatusBodyFieldsUnchanged": true,
+    "allActualNeuronsStillNull": true
+  },
+  "sourceSnapshots": {
+    "before": {
+      "file": "/workspace/scratch/60d77884fe74/acceptance-evidence/operator-pre-production.json",
+      "sha256": "cf7fc9d01dd195c152c5918f7afa9bd2896351ef6080ab72ecf6251290f7a209"
+    },
+    "after": {
+      "file": "/workspace/scratch/60d77884fe74/acceptance-evidence/operator-after-production.json",
+      "sha256": "cf7fc9d01dd195c152c5918f7afa9bd2896351ef6080ab72ecf6251290f7a209"
+    }
+  },
+  "before": {
+    "callCount": 18,
+    "reservedNeurons": 14205,
+    "ledgerSha256": "b0959cd474996be69e542512f6c5e9ca5a27fc11ab43e6a2c273dccf8ab2c598",
+    "rowStatusCounts": {
+      "complete": 8,
+      "failed": 7,
+      "unknown": 3
+    },
+    "resultCount": 18,
+    "admissionCount": 11,
+    "acceptanceCaseCount": 3,
+    "nullActualNeuronRows": 18
+  },
+  "after": {
+    "callCount": 18,
+    "reservedNeurons": 14205,
+    "ledgerSha256": "b0959cd474996be69e542512f6c5e9ca5a27fc11ab43e6a2c273dccf8ab2c598",
+    "rowStatusCounts": {
+      "complete": 8,
+      "failed": 7,
+      "unknown": 3
+    },
+    "resultCount": 18,
+    "admissionCount": 11,
+    "acceptanceCaseCount": 3,
+    "nullActualNeuronRows": 18
+  },
+  "newRows": [],
+  "newReservedNeurons": 0,
+  "accountingNote": "The preserved14205 reservedNeurons is accumulated conservative reservation history, not actual usage, spending, billing or quota balance. All18 actualNeurons remain null, including failed/unknown reservations. Production requests do not add rows to this retained operator experiment ledger; its unchanged count is not evidence that production made no AI calls.",
+  "scope": {
+    "localSnapshotComparisonOnly": true,
+    "networkCalls": 0,
+    "modelCalls": 0,
+    "ledgerWrites": 0,
+    "archiveWrites": 0,
+    "credentialsRead": false,
+    "observationTimeNote": "checkedAt is the local comparison time, not a newly observed Cloudflare timestamp."
+  }
+}

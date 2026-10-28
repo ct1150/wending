@@ -1,0 +1,57 @@
+{
+  "schemaVersion": 1,
+  "observedAt": "2026-10-28 17:10:36 UTC",
+  "repository": "ct1150/wending",
+  "candidateHead": "57977bef9b56deb48ee69b73541d833eee7b81c9",
+  "runId": 40732687090,
+  "runNumber": 119,
+  "jobId": 122972899940,
+  "runUrl": "https://github.com/ct1150/wending/actions/runs/40732687090",
+  "jobUrl": "https://github.com/ct1150/wending/actions/runs/40732687090/job/122972899940",
+  "conclusion": "success",
+  "trigger": "pull_request",
+  "checkoutSourceCommit": "7717843080daa8749db18fc8bbc04e838a290c34",
+  "checkoutScope": "GitHub-generated PR merge ref; association with candidate head verified by fetch_commit_workflow_runs.",
+  "tests": {
+    "tests": 805,
+    "suites": 0,
+    "pass": 805,
+    "fail": 0,
+    "cancelled": 0,
+    "skipped": 0,
+    "todo": 0,
+    "duration_ms": 72499.662862
+  },
+  "syntaxCheckedFiles": 151,
+  "frontend": {
+    "version": "4.1.0",
+    "htmlBytes": 971378,
+    "htmlSha256": "574123926708a59b6dc75da822f6dc0f2ca39dacc4ce4825873856b93270707d"
+  },
+  "gateway": {
+    "sourceCommit": "7717843080daa8749db18fc8bbc04e838a290c34",
+    "htmlSha256": "574123926708a59b6dc75da822f6dc0f2ca39dacc4ce4825873856b93270707d",
+    "workerBytes": 991355,
+    "backend": {
+      "mainModule": "entry.mjs",
+      "moduleCount": 17,
+      "manifestSha256": "4edf6066bb18b044d7fc69aeef0e96e019f6dd16f4119ababd62f01388159a6b"
+    }
+  },
+  "artifact": {
+    "id": 12836765172,
+    "bytes": 1725725
+  },
+  "publish": "skipped for pull request as configured",
+  "logFile": "ci-pr-57977bef-job-122972899940.log",
+  "rawJobsFile": "ci-pr-57977bef-jobs.json",
+  "rawRunsFile": "ci-pr-57977bef-runs.json",
+  "scope": {
+    "readOnly": true,
+    "modelCalls": 0,
+    "mutations": 0,
+    "productionDeploymentClaimed": false
+  },
+  "logBytes": 160752,
+  "logSha256": "cb477d3bbf052be93e26842b323f0702576e078c0ed8c52484e293e5722c3ea9"
+}

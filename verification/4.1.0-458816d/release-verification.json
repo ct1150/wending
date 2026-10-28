@@ -1,0 +1,156 @@
+{
+  "schemaVersion": 1,
+  "version": "4.1.0",
+  "sourceCommit": "458816d14a2d48612f0e66a1f28e6f0045f4951b",
+  "sourceTree": "23075b2064f52fcf586a89fd713cb9a195c355e1",
+  "preparedAt": "2026-10-28T17:15:16.741879Z",
+  "status": "RELEASE_AND_PUBLIC_FUNCTIONAL_ACCEPTANCE_VERIFIED",
+  "pr": "https://github.com/ct1150/wending/pull/14",
+  "liveUrl": "https://baishi-wending.ct1150.workers.dev/",
+  "modelId": "@cf/qwen/qwen3.8-27b",
+  "verification": {
+    "prCi": {
+      "passed": true,
+      "evidence": "ci-pr.json",
+      "url": "https://github.com/ct1150/wending/actions/runs/40732687090",
+      "testsPassed": 805
+    },
+    "mainCiAndStaticPublication": {
+      "passed": true,
+      "evidence": "ci-main.json",
+      "url": "https://github.com/ct1150/wending/actions/runs/40733113624",
+      "testsPassed": 805,
+      "channelMatchesExactMain": true
+    },
+    "productionDeployment": {
+      "passed": true,
+      "evidence": "production-deployment.json",
+      "completedAt": "2026-10-28T17:14:04.245Z",
+      "deploymentId": "05ff07f4-f530-46c9-9ef3-b3459892b32e",
+      "versionId": "9d7e9fdb-12dc-4710-8283-7f4ca8608b27",
+      "trafficPercent": 100,
+      "moduleCount": 18,
+      "allModuleHashesMatched": true
+    },
+    "publicServingIdentity": {
+      "passed": true,
+      "evidence": "public-identity.json",
+      "checksPassed": 8,
+      "testerPermitUsed": false,
+      "htmlSha256": "574123926708a59b6dc75da822f6dc0f2ca39dacc4ce4825873856b93270707d",
+      "htmlBytes": 971378
+    },
+    "publicNativeBrowser": {
+      "passed": true,
+      "scope": "Actual public native browser opening and one chosen action committed; cached readback independently recovered the original committed S2 response. This is aggregate functional acceptance, not a relabeled whole-driver pass.",
+      "evidence": "public-generation/evidence.json",
+      "originalDriverStatus": "FAILED",
+      "originalDriverFailure": {
+        "at": "2026-10-28T17:15:43.038Z",
+        "name": "Error",
+        "message": "Choice API response evidence was captured",
+        "automaticRetryIssued": false,
+        "profilePreserved": true
+      },
+      "originalEvidenceErrorsPreserved": true,
+      "openingSnapshot": "public-generation/01-opening-or-existing.json",
+      "choiceSnapshot": "public-generation/02-choice-committed.json",
+      "testerPermitUsed": false,
+      "responseMockingUsed": false,
+      "archiveWritesByDriver": false,
+      "turnPosts": 2,
+      "explicitRetries": 0,
+      "automaticRetries": 0,
+      "cachedResponseRecovery": {
+        "passed": true,
+        "evidence": "public-cache/cached-choice-response.json",
+        "checksPassed": 6,
+        "requests": 1,
+        "method": "GET",
+        "newModelCalls": 0,
+        "originalSceneAndIdentityMatched": true,
+        "originalDriverStatusPreserved": true
+      }
+    },
+    "browserRestart": {
+      "passed": true,
+      "evidence": "public-save-refresh/evidence.json",
+      "scope": "Restarted the same native browser profile, restored exact committed revision 2, exported the complete archive and refreshed with 10 seconds observation.",
+      "checksPassed": 12,
+      "apiRequests": 0,
+      "turnPosts": 0,
+      "sessionPosts": 0,
+      "before": "public-save-refresh/04-before-refresh.json",
+      "after": "public-save-refresh/05-after-refresh.json",
+      "archive": "public-save-refresh/saved-game.wending.jsonl",
+      "export": {
+        "file": "saved-game.wending.jsonl",
+        "bytes": 10827,
+        "sha256": "a1c641fcaeaecbff6a9861e4d87f7eb35759dacfb9813ef63eb2276036563bcc",
+        "lines": 3,
+        "revision": 2,
+        "sceneId": "r:8910e88c0ed357d9:t2:s:scene",
+        "turns": 2
+      },
+      "runId": "7fc2dbd6-e9ba-4dc4-a4fe-156455c31a3b",
+      "archiveId": "6f580987-0a62-43ca-9d3d-a060b441f8a4",
+      "revision": 2,
+      "stateSha256": "28984c20b612d64bf79089cdcf77c41bed9f9758a4732027b2a5be1127f2a1dc",
+      "sceneSha256": "32bdfc9f4c7838de3d1f84cc614ca6a73f6aa905e3c6e5b29795d1fa8537577f",
+      "finishedAt": "2026-10-28T17:18:14.781Z",
+      "restartSnapshot": "public-save-refresh/00-entered.json"
+    },
+    "ledgerPreservation": {
+      "passed": true,
+      "evidence": "ledger-retention-post-production.json",
+      "checksPassed": 9,
+      "rows": 18,
+      "results": 18,
+      "admissions": 11,
+      "acceptanceCases": 3,
+      "statusCounts": {
+        "complete": 8,
+        "failed": 7,
+        "unknown": 3
+      },
+      "allOriginalFieldsUnchanged": true,
+      "allActualNeuronsRemainNull": true,
+      "scope": "Preserved operator experiment history. Production requests do not append to this ledger; its unchanged count does not imply zero production AI calls. Reservation history is not measured spending or quota balance."
+    },
+    "independentPublicReview": {
+      "passed": true,
+      "evidence": "public-narrative-review.json",
+      "checksPassed": 22,
+      "narrativePassed": true,
+      "materialFindings": [],
+      "sourceCommit": "458816d14a2d48612f0e66a1f28e6f0045f4951b",
+      "openingChoices": {
+        "total": 3,
+        "enabled": 2,
+        "disabledReason": "Realm restriction visibly explained for relic exploration; continuation remains available."
+      },
+      "continuationChoices": {
+        "total": 3,
+        "enabled": 3
+      },
+      "scope": "Independent local review of actual public snapshots, the original cached response and restarted archive. No new model calls, browser actions or archive writes."
+    }
+  },
+  "freePlan": {
+    "plan": "workers-free",
+    "paidFallback": false,
+    "originalProofCheckedAt": "2026-10-28T16:59:05.727Z",
+    "proofTimestampRewritten": false,
+    "actualQuotaRemainsProviderEnforced": true
+  },
+  "sourceIdentityNote": "This verification record is added to release-channel after the code release. It does not alter main source, the deployed module graph or the static manifest sourceCommit.",
+  "evidenceManifest": "manifest.json",
+  "passed": true,
+  "verifiedAt": "2026-10-28T17:21:05.243365Z",
+  "limitations": [
+    "The original public generation driver remains FAILED because CDP did not capture the choice HTTP response body. The actual S2 was committed; a separate GET recovered the same request, attempt and scene. This record claims aggregate functional acceptance, not a whole-driver pass or reconstruction of the missing wire capture.",
+    "One opening choice is visibly disabled by the realm rule; the other two opening choices and all three continuation choices are executable.",
+    "The public flow covers a fresh opening, one actual selected action and persistence. It does not prove all future narrative output or unlimited production uptime."
+  ],
+  "modelPromotionEvidence": "https://github.com/ct1150/wending/blob/458816d14a2d48612f0e66a1f28e6f0045f4951b/docs/evidence/realtime-release-2026-10-28.json"
+}

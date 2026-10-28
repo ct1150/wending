@@ -1,0 +1,321 @@
+{
+  "at": "2026-10-28T17:15:22.985Z",
+  "url": "https://baishi-wending.ct1150.workers.dev/",
+  "summary": {
+    "database": {
+      "name": "wending-live-v1",
+      "version": 2,
+      "storeCounts": {
+        "runs": 3,
+        "pending": 0,
+        "history": 1,
+        "memory": 8
+      }
+    },
+    "archiveId": "6f580987-0a62-43ca-9d3d-a060b441f8a4",
+    "runId": "7fc2dbd6-e9ba-4dc4-a4fe-156455c31a3b",
+    "revision": 1,
+    "turnId": 1,
+    "phase": "active",
+    "stateSha256": "305aa39641f0e85057897ef26c98debebc6d3cfce9e6f6794bf30d06c9b4e736",
+    "storedStateHash": "305aa39641f0e85057897ef26c98debebc6d3cfce9e6f6794bf30d06c9b4e736",
+    "sceneId": "r:8910e88c0ed357d9:t1:s:scene",
+    "sceneSha256": "7c6f6d1d5ceb3e706a1ba3df3b6d81d8cb0d8d87f0d7d1b3a0269c92febb21af",
+    "pendingRequestId": null,
+    "pendingKind": null,
+    "attemptId": null,
+    "pause": null,
+    "history": {
+      "chunks": 1,
+      "tailEntries": [
+        {
+          "identity": {
+            "runId": "7fc2dbd6-e9ba-4dc4-a4fe-156455c31a3b",
+            "turnId": 1,
+            "baseRevision": 0,
+            "stateHash": "fe8456a1da6165634734aa0ef423ce85418eec528a022db2d5101e42d33660a9",
+            "choiceId": null,
+            "rulesVersion": 1,
+            "promptVersion": 1,
+            "requestId": "3e222aae-eb2e-4a4a-baec-5ce59bff45e1"
+          },
+          "stateHash": "305aa39641f0e85057897ef26c98debebc6d3cfce9e6f6794bf30d06c9b4e736",
+          "sceneId": "r:8910e88c0ed357d9:t1:s:scene",
+          "title": "青石村的清晨"
+        }
+      ],
+      "totalTurns": 1
+    }
+  },
+  "archive": {
+    "database": {
+      "name": "wending-live-v1",
+      "version": 2,
+      "storeCounts": {
+        "runs": 3,
+        "pending": 0,
+        "history": 1,
+        "memory": 8
+      }
+    },
+    "archive": {
+      "archiveId": "6f580987-0a62-43ca-9d3d-a060b441f8a4",
+      "runId": "7fc2dbd6-e9ba-4dc4-a4fe-156455c31a3b",
+      "state": {
+        "relationshipVersion": 1,
+        "version": 5,
+        "mode": "cultivation",
+        "contentVersion": 4,
+        "rulesVersion": 1,
+        "promptVersion": 1,
+        "runId": "7fc2dbd6-e9ba-4dc4-a4fe-156455c31a3b",
+        "revision": 1,
+        "turnId": 1,
+        "phase": "active",
+        "rng": 2902189466,
+        "life": {
+          "name": "云归",
+          "ageDays": 5760,
+          "lifeLimit": 80,
+          "realm": "mortal",
+          "cultivation": 0,
+          "injury": 0,
+          "items": {
+            "supplies": 3,
+            "stones": 0
+          },
+          "relations": {},
+          "birth": {
+            "originId": "village",
+            "talentIds": [
+              "fortune-debt",
+              "sensitive-breath"
+            ],
+            "attributes": {
+              "constitution": 4,
+              "insight": 4,
+              "fortune": 4
+            }
+          }
+        },
+        "birthReceipt": {
+          "kind": "opening",
+          "choiceId": null,
+          "action": null,
+          "elapsedDays": 0,
+          "itemChanges": {},
+          "relationChanges": {},
+          "random": {
+            "before": 2902189466,
+            "after": 2902189466,
+            "roll": null
+          },
+          "before": {
+            "ageDays": 5760,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "after": {
+            "ageDays": 5760,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "death": null,
+          "birth": {
+            "originId": "village",
+            "talentIds": [
+              "fortune-debt",
+              "sensitive-breath"
+            ],
+            "attributes": {
+              "constitution": 4,
+              "insight": 4,
+              "fortune": 4
+            }
+          }
+        },
+        "currentScene": {
+          "id": "r:8910e88c0ed357d9:t1:s:scene",
+          "title": "青石村的清晨",
+          "location": "青石村",
+          "entities": [
+            {
+              "id": "r:8910e88c0ed357d9:t1:e:person_OldManWang",
+              "name": "王老伯",
+              "kind": "person",
+              "status": "alive"
+            },
+            {
+              "id": "r:8910e88c0ed357d9:t1:e:place_QingshiVillage",
+              "name": "青石村",
+              "kind": "place"
+            },
+            {
+              "id": "r:8910e88c0ed357d9:t1:e:place_NorthMountain",
+              "name": "北山",
+              "kind": "place"
+            }
+          ],
+          "blocks": [
+            {
+              "kind": "narration",
+              "text": "晨雾未散，青石村的石板路上还带着露水。你站在自家院门口，深吸一口气，那股敏锐的呼吸感让你能察觉到空气中细微的灵气流动，尽管你目前仍是凡人，修为为零。腰间挂着三袋行粮，口袋里空空如也，没有灵石。"
+            },
+            {
+              "kind": "dialogue",
+              "text": "云归，你又要往北山跑？那地方最近不太平，听说有妖兽出没。",
+              "speaker": "r:8910e88c0ed357d9:t1:e:person_OldManWang"
+            },
+            {
+              "kind": "narration",
+              "text": "王老伯倚在门框上，手里拿着一把蒲扇，眼神里透着担忧。他提到北山深处似乎有古修遗物的传闻，但也警告那里危险重重。"
+            }
+          ],
+          "choices": [
+            {
+              "id": "r:8910e88c0ed357d9:t1:c:a",
+              "label": "询问王老伯关于北山古修遗物的具体线索",
+              "intent": "negotiate",
+              "targetId": "r:8910e88c0ed357d9:t1:e:person_OldManWang",
+              "stake": "low",
+              "approach": "cooperate"
+            },
+            {
+              "id": "r:8910e88c0ed357d9:t1:c:b",
+              "label": "前往北山探索寻找古修遗物",
+              "intent": "explore",
+              "targetId": "relic",
+              "stake": "high",
+              "approach": "cautious"
+            },
+            {
+              "id": "r:8910e88c0ed357d9:t1:c:c",
+              "label": "在青石村附近寻找行粮补充物资",
+              "intent": "explore",
+              "targetId": "supplies",
+              "stake": "low",
+              "approach": "cautious"
+            }
+          ],
+          "memoryDeltas": []
+        },
+        "lastReceipt": {
+          "kind": "opening",
+          "choiceId": null,
+          "action": null,
+          "elapsedDays": 0,
+          "itemChanges": {},
+          "relationChanges": {},
+          "random": {
+            "before": 2902189466,
+            "after": 2902189466,
+            "roll": null
+          },
+          "before": {
+            "ageDays": 5760,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "after": {
+            "ageDays": 5760,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "death": null,
+          "birth": {
+            "originId": "village",
+            "talentIds": [
+              "fortune-debt",
+              "sensitive-breath"
+            ],
+            "attributes": {
+              "constitution": 4,
+              "insight": 4,
+              "fortune": 4
+            }
+          }
+        },
+        "relatedEntities": [
+          {
+            "id": "r:8910e88c0ed357d9:t1:e:person_OldManWang",
+            "name": "王老伯",
+            "kind": "person",
+            "status": "alive"
+          },
+          {
+            "id": "r:8910e88c0ed357d9:t1:e:place_QingshiVillage",
+            "name": "青石村",
+            "kind": "place"
+          },
+          {
+            "id": "r:8910e88c0ed357d9:t1:e:place_NorthMountain",
+            "name": "北山",
+            "kind": "place"
+          }
+        ],
+        "archiveCursor": 0
+      },
+      "storedStateHash": "305aa39641f0e85057897ef26c98debebc6d3cfce9e6f6794bf30d06c9b4e736",
+      "headHash": "ace2f4dccafe063961ad4b064ec08a392a11df2a5fea39f06405ee8c59293274",
+      "tailIndex": 0,
+      "pending": null,
+      "attempt": null,
+      "pause": null,
+      "history": {
+        "chunks": 1,
+        "tailEntries": [
+          {
+            "identity": {
+              "runId": "7fc2dbd6-e9ba-4dc4-a4fe-156455c31a3b",
+              "turnId": 1,
+              "baseRevision": 0,
+              "stateHash": "fe8456a1da6165634734aa0ef423ce85418eec528a022db2d5101e42d33660a9",
+              "choiceId": null,
+              "rulesVersion": 1,
+              "promptVersion": 1,
+              "requestId": "3e222aae-eb2e-4a4a-baec-5ce59bff45e1"
+            },
+            "stateHash": "305aa39641f0e85057897ef26c98debebc6d3cfce9e6f6794bf30d06c9b4e736",
+            "sceneId": "r:8910e88c0ed357d9:t1:s:scene",
+            "title": "青石村的清晨"
+          }
+        ],
+        "totalTurns": 1
+      }
+    }
+  },
+  "dom": {
+    "title": "百世问鼎 · 三界求仙篇",
+    "bodyText": "跳转到游戏内容\n实时人生\n云归\n⌄\n凡人\n16岁\n余寿64年\n历史对话\n更多\n\n青石村\n\n青石村的清晨\n\n晨雾未散，青石村的石板路上还带着露水。你站在自家院门口，深吸一口气，那股敏锐的呼吸感让你能察觉到空气中细微的灵气流动，尽管你目前仍是凡人，修为为零。腰间挂着三袋行粮，口袋里空空如也，没有灵石。\n\n王老伯：“云归，你又要往北山跑？那地方最近不太平，听说有妖兽出没。”\n\n王老伯倚在门框上，手里拿着一把蒲扇，眼神里透着担忧。他提到北山深处似乎有古修遗物的传闻，但也警告那里危险重重。\n\n落下一念，故事才会继续。\n\n询问王老伯关于北山古修遗物的具体线索\n7日 · 行粮 1\n前往北山探索寻找古修遗物\n境界尚不足以寻找此种材料。 · 90日 · 历练受伤基础风险5%，根骨与坚韧筋骨可降低风险。\n在青石村附近寻找行粮补充物资\n90日 · 历练受伤基础风险5%，根骨与坚韧筋骨可降低风险。\n实时人生 · 已缓存内容离线可读 · 新剧情需要联网",
+    "liveStatus": "落下一念，故事才会继续。",
+    "sceneTitle": "青石村的清晨",
+    "sceneText": "晨雾未散，青石村的石板路上还带着露水。你站在自家院门口，深吸一口气，那股敏锐的呼吸感让你能察觉到空气中细微的灵气流动，尽管你目前仍是凡人，修为为零。腰间挂着三袋行粮，口袋里空空如也，没有灵石。\n\n王老伯：“云归，你又要往北山跑？那地方最近不太平，听说有妖兽出没。”\n\n王老伯倚在门框上，手里拿着一把蒲扇，眼神里透着担忧。他提到北山深处似乎有古修遗物的传闻，但也警告那里危险重重。",
+    "choices": [
+      {
+        "id": "r:8910e88c0ed357d9:t1:c:a",
+        "revision": 1,
+        "label": "询问王老伯关于北山古修遗物的具体线索\n7日 · 行粮 1",
+        "enabled": true
+      },
+      {
+        "id": "r:8910e88c0ed357d9:t1:c:b",
+        "revision": 1,
+        "label": "前往北山探索寻找古修遗物\n境界尚不足以寻找此种材料。 · 90日 · 历练受伤基础风险5%，根骨与坚韧筋骨可降低风险。",
+        "enabled": false
+      },
+      {
+        "id": "r:8910e88c0ed357d9:t1:c:c",
+        "revision": 1,
+        "label": "在青石村附近寻找行粮补充物资\n90日 · 历练受伤基础风险5%，根骨与坚韧筋骨可降低风险。",
+        "enabled": true
+      }
+    ],
+    "startEnabled": false,
+    "pendingControls": false,
+    "activeMode": "live"
+  }
+}

@@ -1,0 +1,360 @@
+{
+  "at": "2026-10-28T17:18:03.382Z",
+  "url": "https://baishi-wending.ct1150.workers.dev/",
+  "summary": {
+    "database": {
+      "name": "wending-live-v1",
+      "version": 2,
+      "storeCounts": {
+        "runs": 3,
+        "pending": 0,
+        "history": 1,
+        "memory": 17
+      }
+    },
+    "archiveId": "6f580987-0a62-43ca-9d3d-a060b441f8a4",
+    "runId": "7fc2dbd6-e9ba-4dc4-a4fe-156455c31a3b",
+    "revision": 2,
+    "turnId": 2,
+    "phase": "active",
+    "stateSha256": "28984c20b612d64bf79089cdcf77c41bed9f9758a4732027b2a5be1127f2a1dc",
+    "storedStateHash": "28984c20b612d64bf79089cdcf77c41bed9f9758a4732027b2a5be1127f2a1dc",
+    "sceneId": "r:8910e88c0ed357d9:t2:s:scene",
+    "sceneSha256": "32bdfc9f4c7838de3d1f84cc614ca6a73f6aa905e3c6e5b29795d1fa8537577f",
+    "pendingRequestId": null,
+    "pendingKind": null,
+    "attemptId": null,
+    "pause": null,
+    "history": {
+      "chunks": 1,
+      "tailEntries": [
+        {
+          "identity": {
+            "runId": "7fc2dbd6-e9ba-4dc4-a4fe-156455c31a3b",
+            "turnId": 1,
+            "baseRevision": 0,
+            "stateHash": "fe8456a1da6165634734aa0ef423ce85418eec528a022db2d5101e42d33660a9",
+            "choiceId": null,
+            "rulesVersion": 1,
+            "promptVersion": 1,
+            "requestId": "3e222aae-eb2e-4a4a-baec-5ce59bff45e1"
+          },
+          "stateHash": "305aa39641f0e85057897ef26c98debebc6d3cfce9e6f6794bf30d06c9b4e736",
+          "sceneId": "r:8910e88c0ed357d9:t1:s:scene",
+          "title": "青石村的清晨"
+        },
+        {
+          "identity": {
+            "runId": "7fc2dbd6-e9ba-4dc4-a4fe-156455c31a3b",
+            "turnId": 2,
+            "baseRevision": 1,
+            "stateHash": "305aa39641f0e85057897ef26c98debebc6d3cfce9e6f6794bf30d06c9b4e736",
+            "choiceId": "r:8910e88c0ed357d9:t1:c:a",
+            "rulesVersion": 1,
+            "promptVersion": 1,
+            "requestId": "230530a2-0dea-4a43-9d54-8cc488fa42e8"
+          },
+          "stateHash": "28984c20b612d64bf79089cdcf77c41bed9f9758a4732027b2a5be1127f2a1dc",
+          "sceneId": "r:8910e88c0ed357d9:t2:s:scene",
+          "title": "北山迷雾"
+        }
+      ],
+      "totalTurns": 2
+    }
+  },
+  "archive": {
+    "database": {
+      "name": "wending-live-v1",
+      "version": 2,
+      "storeCounts": {
+        "runs": 3,
+        "pending": 0,
+        "history": 1,
+        "memory": 17
+      }
+    },
+    "archive": {
+      "archiveId": "6f580987-0a62-43ca-9d3d-a060b441f8a4",
+      "runId": "7fc2dbd6-e9ba-4dc4-a4fe-156455c31a3b",
+      "state": {
+        "relationshipVersion": 1,
+        "version": 5,
+        "mode": "cultivation",
+        "contentVersion": 4,
+        "rulesVersion": 1,
+        "promptVersion": 1,
+        "runId": "7fc2dbd6-e9ba-4dc4-a4fe-156455c31a3b",
+        "revision": 2,
+        "turnId": 2,
+        "phase": "active",
+        "rng": 3468621873,
+        "life": {
+          "name": "云归",
+          "ageDays": 5767,
+          "lifeLimit": 80,
+          "realm": "mortal",
+          "cultivation": 0,
+          "injury": 0,
+          "items": {
+            "supplies": 2,
+            "stones": 1
+          },
+          "relations": {
+            "r:8910e88c0ed357d9:t1:e:person_OldManWang": 3
+          },
+          "birth": {
+            "originId": "village",
+            "talentIds": [
+              "fortune-debt",
+              "sensitive-breath"
+            ],
+            "attributes": {
+              "constitution": 4,
+              "insight": 4,
+              "fortune": 4
+            }
+          }
+        },
+        "birthReceipt": {
+          "kind": "opening",
+          "choiceId": null,
+          "action": null,
+          "elapsedDays": 0,
+          "itemChanges": {},
+          "relationChanges": {},
+          "random": {
+            "before": 2902189466,
+            "after": 2902189466,
+            "roll": null
+          },
+          "before": {
+            "ageDays": 5760,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "after": {
+            "ageDays": 5760,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "death": null,
+          "birth": {
+            "originId": "village",
+            "talentIds": [
+              "fortune-debt",
+              "sensitive-breath"
+            ],
+            "attributes": {
+              "constitution": 4,
+              "insight": 4,
+              "fortune": 4
+            }
+          }
+        },
+        "currentScene": {
+          "id": "r:8910e88c0ed357d9:t2:s:scene",
+          "title": "北山迷雾",
+          "location": "青石村",
+          "entities": [
+            {
+              "id": "r:8910e88c0ed357d9:t1:e:person_OldManWang",
+              "name": "王老伯",
+              "kind": "person",
+              "status": "alive"
+            },
+            {
+              "id": "r:8910e88c0ed357d9:t1:e:place_QingshiVillage",
+              "name": "青石村",
+              "kind": "place"
+            },
+            {
+              "id": "r:8910e88c0ed357d9:t1:e:place_NorthMountain",
+              "name": "北山",
+              "kind": "place"
+            }
+          ],
+          "blocks": [
+            {
+              "kind": "narration",
+              "text": "王老伯压低声音，枯瘦的手指在粗糙的木桌上画了个圈：“北山深处有片‘回音谷’，风一吹，石头会自己响。我年轻时听我爹说，那底下埋着个老东西，不是人，是修行的。”"
+            },
+            {
+              "kind": "dialogue",
+              "text": "“但别去！那地方邪性，进去的人十个有九个走不出来。你要是真想去，至少带上把火折子，还有……”他顿了顿，眼神闪烁，“最好别一个人去。”",
+              "speaker": "r:8910e88c0ed357d9:t1:e:person_OldManWang"
+            },
+            {
+              "kind": "narration",
+              "text": "你摸了摸怀里新得的灵石，又看了看仅剩的两份行粮。北山就在村后，翻过两道梁就能到。王老伯的话让你心里发毛，但那份对古修遗物的渴望像火一样烧着。"
+            }
+          ],
+          "choices": [
+            {
+              "id": "r:8910e88c0ed357d9:t2:c:a",
+              "label": "前往北山寻找古修遗物",
+              "intent": "travel",
+              "targetId": "r:8910e88c0ed357d9:t1:e:place_NorthMountain",
+              "stake": "high",
+              "approach": "road"
+            },
+            {
+              "id": "r:8910e88c0ed357d9:t2:c:b",
+              "label": "在青石村打听同行者",
+              "intent": "negotiate",
+              "targetId": "r:8910e88c0ed357d9:t1:e:person_OldManWang",
+              "stake": "low",
+              "approach": "cooperate"
+            },
+            {
+              "id": "r:8910e88c0ed357d9:t2:c:c",
+              "label": "在青石村休整恢复体力",
+              "intent": "rest",
+              "targetId": "self",
+              "stake": "low",
+              "approach": "recover"
+            }
+          ],
+          "memoryDeltas": [
+            {
+              "entityId": "r:8910e88c0ed357d9:t1:e:place_NorthMountain",
+              "text": "北山深处有回音谷，传说埋有古修遗物，环境危险，单人进入风险极高。",
+              "kind": "clue"
+            }
+          ]
+        },
+        "lastReceipt": {
+          "kind": "choice",
+          "choiceId": "r:8910e88c0ed357d9:t1:c:a",
+          "action": {
+            "id": "r:8910e88c0ed357d9:t1:c:a",
+            "label": "询问王老伯关于北山古修遗物的具体线索",
+            "intent": "negotiate",
+            "targetId": "r:8910e88c0ed357d9:t1:e:person_OldManWang",
+            "stake": "low",
+            "approach": "cooperate"
+          },
+          "elapsedDays": 7,
+          "itemChanges": {
+            "stones": 1,
+            "supplies": -1
+          },
+          "relationChanges": {
+            "r:8910e88c0ed357d9:t1:e:person_OldManWang": 3
+          },
+          "random": {
+            "before": 2902189466,
+            "after": 3468621873,
+            "roll": 73
+          },
+          "before": {
+            "ageDays": 5760,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "after": {
+            "ageDays": 5767,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "death": null,
+          "birth": null
+        },
+        "relatedEntities": [
+          {
+            "id": "r:8910e88c0ed357d9:t1:e:person_OldManWang",
+            "name": "王老伯",
+            "kind": "person",
+            "status": "alive"
+          },
+          {
+            "id": "r:8910e88c0ed357d9:t1:e:place_QingshiVillage",
+            "name": "青石村",
+            "kind": "place"
+          },
+          {
+            "id": "r:8910e88c0ed357d9:t1:e:place_NorthMountain",
+            "name": "北山",
+            "kind": "place"
+          }
+        ],
+        "archiveCursor": 0
+      },
+      "storedStateHash": "28984c20b612d64bf79089cdcf77c41bed9f9758a4732027b2a5be1127f2a1dc",
+      "headHash": "457ea3a9a828df95cf9fbe4108a22d6f9a14f8fbe4da222c0b03224ac8f17309",
+      "tailIndex": 0,
+      "pending": null,
+      "attempt": null,
+      "pause": null,
+      "history": {
+        "chunks": 1,
+        "tailEntries": [
+          {
+            "identity": {
+              "runId": "7fc2dbd6-e9ba-4dc4-a4fe-156455c31a3b",
+              "turnId": 1,
+              "baseRevision": 0,
+              "stateHash": "fe8456a1da6165634734aa0ef423ce85418eec528a022db2d5101e42d33660a9",
+              "choiceId": null,
+              "rulesVersion": 1,
+              "promptVersion": 1,
+              "requestId": "3e222aae-eb2e-4a4a-baec-5ce59bff45e1"
+            },
+            "stateHash": "305aa39641f0e85057897ef26c98debebc6d3cfce9e6f6794bf30d06c9b4e736",
+            "sceneId": "r:8910e88c0ed357d9:t1:s:scene",
+            "title": "青石村的清晨"
+          },
+          {
+            "identity": {
+              "runId": "7fc2dbd6-e9ba-4dc4-a4fe-156455c31a3b",
+              "turnId": 2,
+              "baseRevision": 1,
+              "stateHash": "305aa39641f0e85057897ef26c98debebc6d3cfce9e6f6794bf30d06c9b4e736",
+              "choiceId": "r:8910e88c0ed357d9:t1:c:a",
+              "rulesVersion": 1,
+              "promptVersion": 1,
+              "requestId": "230530a2-0dea-4a43-9d54-8cc488fa42e8"
+            },
+            "stateHash": "28984c20b612d64bf79089cdcf77c41bed9f9758a4732027b2a5be1127f2a1dc",
+            "sceneId": "r:8910e88c0ed357d9:t2:s:scene",
+            "title": "北山迷雾"
+          }
+        ],
+        "totalTurns": 2
+      }
+    }
+  },
+  "dom": {
+    "title": "百世问鼎 · 三界求仙篇",
+    "bodyText": "跳转到游戏内容\n实时人生\n云归\n⌄\n凡人\n16岁7日\n余寿63年353日\n历史对话\n更多\n\n青石村\n\n北山迷雾\n\n王老伯压低声音，枯瘦的手指在粗糙的木桌上画了个圈：“北山深处有片‘回音谷’，风一吹，石头会自己响。我年轻时听我爹说，那底下埋着个老东西，不是人，是修行的。”\n\n王老伯：“但别去！那地方邪性，进去的人十个有九个走不出来。你要是真想去，至少带上把火折子，还有……”他顿了顿，眼神闪烁，“最好别一个人去。”\n\n你摸了摸怀里新得的灵石，又看了看仅剩的两份行粮。北山就在村后，翻过两道梁就能到。王老伯的话让你心里发毛，但那份对古修遗物的渴望像火一样烧着。\n\n落下一念，故事才会继续。\n\n前往北山寻找古修遗物\n30日 · 行粮 1\n在青石村打听同行者\n7日 · 行粮 1\n在青石村休整恢复体力\n30日\n实时人生 · 已缓存内容离线可读 · 新剧情需要联网",
+    "liveStatus": "落下一念，故事才会继续。",
+    "sceneTitle": "北山迷雾",
+    "sceneText": "王老伯压低声音，枯瘦的手指在粗糙的木桌上画了个圈：“北山深处有片‘回音谷’，风一吹，石头会自己响。我年轻时听我爹说，那底下埋着个老东西，不是人，是修行的。”\n\n王老伯：“但别去！那地方邪性，进去的人十个有九个走不出来。你要是真想去，至少带上把火折子，还有……”他顿了顿，眼神闪烁，“最好别一个人去。”\n\n你摸了摸怀里新得的灵石，又看了看仅剩的两份行粮。北山就在村后，翻过两道梁就能到。王老伯的话让你心里发毛，但那份对古修遗物的渴望像火一样烧着。",
+    "choices": [
+      {
+        "id": "r:8910e88c0ed357d9:t2:c:a",
+        "revision": 2,
+        "label": "前往北山寻找古修遗物\n30日 · 行粮 1",
+        "enabled": true
+      },
+      {
+        "id": "r:8910e88c0ed357d9:t2:c:b",
+        "revision": 2,
+        "label": "在青石村打听同行者\n7日 · 行粮 1",
+        "enabled": true
+      },
+      {
+        "id": "r:8910e88c0ed357d9:t2:c:c",
+        "revision": 2,
+        "label": "在青石村休整恢复体力\n30日",
+        "enabled": true
+      }
+    ],
+    "startEnabled": false,
+    "pendingControls": false,
+    "activeMode": "live"
+  }
+}

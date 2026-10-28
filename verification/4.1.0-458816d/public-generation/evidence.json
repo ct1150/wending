@@ -1,0 +1,908 @@
+{
+  "schemaVersion": 1,
+  "startedAt": "2026-10-28T17:14:35.683Z",
+  "status": "FAILED",
+  "mode": "PUBLIC",
+  "phase": "complete",
+  "baseUrl": "https://baishi-wending.ct1150.workers.dev/",
+  "profilePath": "/tmp/wending-public-60d77884fe74-4_1-profile",
+  "continuedProfile": false,
+  "browser": {
+    "executable": "/tmp/wending-cft-151/chrome-headless-shell-linux64/chrome-headless-shell",
+    "version": "151.0.7922.34",
+    "headless": true,
+    "certificateValidationEnabled": true,
+    "fontConfig": "/tmp/wending-cjk-fonts/fonts.conf"
+  },
+  "driver": {
+    "path": "/workspace/scratch/60d77884fe74/accept-real-browser.mjs",
+    "sha256": "ebfa3a49e4149acf4ec59806aaa95c4f0d6e57d0dd657ec98cca97ce4ee98bbf",
+    "responseMockingUsed": false,
+    "fetchReplaced": false,
+    "archiveWritesByDriver": false,
+    "automaticRetryUsed": false,
+    "filePickerFallbackForced": true,
+    "credentialTransport": "No tester header or permit"
+  },
+  "actions": [
+    {
+      "at": "2026-10-28T17:14:35.975Z",
+      "kind": "navigate",
+      "url": "https://baishi-wending.ct1150.workers.dev/"
+    },
+    {
+      "at": "2026-10-28T17:14:36.776Z",
+      "kind": "click-opening",
+      "playerName": "云归",
+      "originId": "village"
+    },
+    {
+      "at": "2026-10-28T17:15:23.137Z",
+      "kind": "click-one-choice",
+      "choiceId": "r:8910e88c0ed357d9:t1:c:a",
+      "revision": 1,
+      "label": "询问王老伯关于北山古修遗物的具体线索\n7日 · 行粮 1"
+    }
+  ],
+  "api": [
+    {
+      "sequence": 1,
+      "requestedAt": "2026-10-28T17:14:36.539Z",
+      "method": "GET",
+      "path": "/api/story/capabilities",
+      "query": {},
+      "requestBytes": 0,
+      "requestSha256": null,
+      "requestBody": null,
+      "response": null,
+      "failure": {
+        "at": "2026-10-28T17:14:36.574Z",
+        "method": "GET",
+        "path": "/api/story/capabilities",
+        "error": "net::ERR_ABORTED"
+      }
+    },
+    {
+      "sequence": 2,
+      "requestedAt": "2026-10-28T17:14:36.823Z",
+      "method": "GET",
+      "path": "/api/story/capabilities",
+      "query": {},
+      "requestBytes": 0,
+      "requestSha256": null,
+      "requestBody": null,
+      "response": null,
+      "failure": {
+        "at": "2026-10-28T17:14:36.882Z",
+        "method": "GET",
+        "path": "/api/story/capabilities",
+        "error": "net::ERR_ABORTED"
+      }
+    },
+    {
+      "sequence": 3,
+      "requestedAt": "2026-10-28T17:14:36.943Z",
+      "method": "GET",
+      "path": "/api/story/capabilities",
+      "query": {},
+      "requestBytes": 0,
+      "requestSha256": null,
+      "requestBody": null,
+      "response": null,
+      "failure": {
+        "at": "2026-10-28T17:14:36.967Z",
+        "method": "GET",
+        "path": "/api/story/capabilities",
+        "error": "net::ERR_ABORTED"
+      }
+    },
+    {
+      "sequence": 4,
+      "requestedAt": "2026-10-28T17:14:36.975Z",
+      "method": "POST",
+      "path": "/api/story/session",
+      "query": {},
+      "requestBytes": 21,
+      "requestSha256": "f1e39d9b6cd3a60db72c0b80e4679e715bd7e55c1a22762e96234045f46da55c",
+      "requestBody": {
+        "protocolVersion": 1
+      },
+      "response": null,
+      "failure": {
+        "at": "2026-10-28T17:14:37.603Z",
+        "method": "POST",
+        "path": "/api/story/session",
+        "error": "net::ERR_ABORTED"
+      }
+    },
+    {
+      "sequence": 5,
+      "requestedAt": "2026-10-28T17:14:37.609Z",
+      "method": "POST",
+      "path": "/api/story/turn",
+      "query": {},
+      "requestBytes": 1472,
+      "requestSha256": "80ac279f2d48fd0ee4f8d31435be05f925197c1d05fb668b8c1e563cbbf199fd",
+      "requestBody": {
+        "context": {
+          "schemaVersion": 1,
+          "phase": "opening",
+          "identity": {
+            "runId": "7fc2dbd6-e9ba-4dc4-a4fe-156455c31a3b",
+            "turnId": 1,
+            "baseRevision": 0,
+            "stateHash": "fe8456a1da6165634734aa0ef423ce85418eec528a022db2d5101e42d33660a9",
+            "choiceId": null,
+            "rulesVersion": 1,
+            "promptVersion": 1,
+            "requestId": "3e222aae-eb2e-4a4a-baec-5ce59bff45e1"
+          },
+          "namespace": "r:8910e88c0ed357d9",
+          "receipt": {
+            "kind": "opening",
+            "choiceId": null,
+            "action": null,
+            "elapsedDays": 0,
+            "itemChanges": {},
+            "relationChanges": {},
+            "random": {
+              "before": 2902189466,
+              "after": 2902189466,
+              "roll": null
+            },
+            "before": {
+              "ageDays": 5760,
+              "realm": "mortal",
+              "cultivation": 0,
+              "injury": 0
+            },
+            "after": {
+              "ageDays": 5760,
+              "realm": "mortal",
+              "cultivation": 0,
+              "injury": 0
+            },
+            "death": null,
+            "birth": {
+              "originId": "village",
+              "talentIds": [
+                "fortune-debt",
+                "sensitive-breath"
+              ],
+              "attributes": {
+                "constitution": 4,
+                "insight": 4,
+                "fortune": 4
+              }
+            }
+          },
+          "life": {
+            "name": "云归",
+            "ageDays": 5760,
+            "lifeLimit": 80,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0,
+            "items": {
+              "supplies": 3,
+              "stones": 0
+            },
+            "relations": {},
+            "birth": {
+              "originId": "village",
+              "talentIds": [
+                "fortune-debt",
+                "sensitive-breath"
+              ],
+              "attributes": {
+                "constitution": 4,
+                "insight": 4,
+                "fortune": 4
+              }
+            }
+          },
+          "entities": [],
+          "memory": {
+            "facts": [],
+            "promises": [],
+            "clues": [],
+            "recent": [],
+            "summaries": []
+          },
+          "references": [],
+          "previousScene": null,
+          "relationshipVersion": 1,
+          "relationships": {},
+          "coverage": {
+            "policy": "relevance-v1",
+            "openTotal": 0,
+            "openIncluded": 0,
+            "openOmitted": 0
+          }
+        },
+        "attempt": {
+          "id": "bf2b27eb-22e1-4e8a-aaac-ed79c9dc4490",
+          "sessionRef": "[REDACTED]",
+          "retryOf": null
+        }
+      },
+      "response": {
+        "receivedAt": "2026-10-28T17:15:22.866Z",
+        "httpStatus": 200,
+        "bytes": 1869,
+        "sha256": "8ea9798b1dfcc85a74bb503fbdf4a1774db505bbf73912ffc670f6c90c0189bc",
+        "body": {
+          "protocolVersion": 1,
+          "status": "ready",
+          "requestId": "3e222aae-eb2e-4a4a-baec-5ce59bff45e1",
+          "attemptId": "bf2b27eb-22e1-4e8a-aaac-ed79c9dc4490",
+          "sessionRef": "[REDACTED]",
+          "errorCode": null,
+          "retry": null,
+          "scene": {
+            "id": "r:8910e88c0ed357d9:t1:s:scene",
+            "title": "青石村的清晨",
+            "location": "青石村",
+            "entities": [
+              {
+                "id": "r:8910e88c0ed357d9:t1:e:person_OldManWang",
+                "name": "王老伯",
+                "kind": "person",
+                "status": "alive"
+              },
+              {
+                "id": "r:8910e88c0ed357d9:t1:e:place_QingshiVillage",
+                "name": "青石村",
+                "kind": "place"
+              },
+              {
+                "id": "r:8910e88c0ed357d9:t1:e:place_NorthMountain",
+                "name": "北山",
+                "kind": "place"
+              }
+            ],
+            "blocks": [
+              {
+                "kind": "narration",
+                "text": "晨雾未散，青石村的石板路上还带着露水。你站在自家院门口，深吸一口气，那股敏锐的呼吸感让你能察觉到空气中细微的灵气流动，尽管你目前仍是凡人，修为为零。腰间挂着三袋行粮，口袋里空空如也，没有灵石。"
+              },
+              {
+                "kind": "dialogue",
+                "text": "云归，你又要往北山跑？那地方最近不太平，听说有妖兽出没。",
+                "speaker": "r:8910e88c0ed357d9:t1:e:person_OldManWang"
+              },
+              {
+                "kind": "narration",
+                "text": "王老伯倚在门框上，手里拿着一把蒲扇，眼神里透着担忧。他提到北山深处似乎有古修遗物的传闻，但也警告那里危险重重。"
+              }
+            ],
+            "choices": [
+              {
+                "id": "r:8910e88c0ed357d9:t1:c:a",
+                "label": "询问王老伯关于北山古修遗物的具体线索",
+                "intent": "negotiate",
+                "targetId": "r:8910e88c0ed357d9:t1:e:person_OldManWang",
+                "stake": "low",
+                "approach": "cooperate"
+              },
+              {
+                "id": "r:8910e88c0ed357d9:t1:c:b",
+                "label": "前往北山探索寻找古修遗物",
+                "intent": "explore",
+                "targetId": "relic",
+                "stake": "high",
+                "approach": "cautious"
+              },
+              {
+                "id": "r:8910e88c0ed357d9:t1:c:c",
+                "label": "在青石村附近寻找行粮补充物资",
+                "intent": "explore",
+                "targetId": "supplies",
+                "stake": "low",
+                "approach": "cautious"
+              }
+            ],
+            "memoryDeltas": []
+          }
+        }
+      }
+    },
+    {
+      "sequence": 6,
+      "requestedAt": "2026-10-28T17:15:23.223Z",
+      "method": "GET",
+      "path": "/api/story/capabilities",
+      "query": {},
+      "requestBytes": 0,
+      "requestSha256": null,
+      "requestBody": null,
+      "response": {
+        "receivedAt": "2026-10-28T17:15:23.251Z",
+        "httpStatus": 200,
+        "bytes": 174,
+        "sha256": "3fbfd812263a6159fba2a6a96d99c494307c795f0d519e8de36fcace13372088",
+        "body": {
+          "protocolVersion": 1,
+          "available": true,
+          "status": "ready",
+          "errorCode": null,
+          "limits": {
+            "maxRequestBytes": 32768,
+            "maxResponseBytes": 65536,
+            "maxContextBytes": 7000,
+            "timeoutMs": 105000
+          }
+        }
+      }
+    },
+    {
+      "sequence": 7,
+      "requestedAt": "2026-10-28T17:15:23.263Z",
+      "method": "POST",
+      "path": "/api/story/session",
+      "query": {},
+      "requestBytes": 21,
+      "requestSha256": "f1e39d9b6cd3a60db72c0b80e4679e715bd7e55c1a22762e96234045f46da55c",
+      "requestBody": {
+        "protocolVersion": 1
+      },
+      "response": {
+        "receivedAt": "2026-10-28T17:15:23.359Z",
+        "httpStatus": 200,
+        "bytes": 117,
+        "sha256": "4100cef63c76231754d9acc42b4d7c1cb261702de0acb78583044102beb6d61d",
+        "body": {
+          "protocolVersion": 1,
+          "status": "ready",
+          "sessionRef": "[REDACTED]",
+          "expiresAt": 1793294077543
+        }
+      }
+    },
+    {
+      "sequence": 8,
+      "requestedAt": "2026-10-28T17:15:23.370Z",
+      "method": "POST",
+      "path": "/api/story/turn",
+      "query": {},
+      "requestBytes": 2185,
+      "requestSha256": "27f054ddb0391f0a92147d35828b59cd85e8bab430a5404c532df7ae44b7d27b",
+      "requestBody": {
+        "context": {
+          "schemaVersion": 1,
+          "phase": "choice",
+          "identity": {
+            "runId": "7fc2dbd6-e9ba-4dc4-a4fe-156455c31a3b",
+            "turnId": 2,
+            "baseRevision": 1,
+            "stateHash": "305aa39641f0e85057897ef26c98debebc6d3cfce9e6f6794bf30d06c9b4e736",
+            "choiceId": "r:8910e88c0ed357d9:t1:c:a",
+            "rulesVersion": 1,
+            "promptVersion": 1,
+            "requestId": "230530a2-0dea-4a43-9d54-8cc488fa42e8"
+          },
+          "namespace": "r:8910e88c0ed357d9",
+          "receipt": {
+            "kind": "choice",
+            "choiceId": "r:8910e88c0ed357d9:t1:c:a",
+            "action": {
+              "id": "r:8910e88c0ed357d9:t1:c:a",
+              "label": "询问王老伯关于北山古修遗物的具体线索",
+              "intent": "negotiate",
+              "targetId": "r:8910e88c0ed357d9:t1:e:person_OldManWang",
+              "stake": "low",
+              "approach": "cooperate"
+            },
+            "elapsedDays": 7,
+            "itemChanges": {
+              "stones": 1,
+              "supplies": -1
+            },
+            "relationChanges": {
+              "r:8910e88c0ed357d9:t1:e:person_OldManWang": 3
+            },
+            "random": {
+              "before": 2902189466,
+              "after": 3468621873,
+              "roll": 73
+            },
+            "before": {
+              "ageDays": 5760,
+              "realm": "mortal",
+              "cultivation": 0,
+              "injury": 0
+            },
+            "after": {
+              "ageDays": 5767,
+              "realm": "mortal",
+              "cultivation": 0,
+              "injury": 0
+            },
+            "death": null,
+            "birth": null
+          },
+          "life": {
+            "name": "云归",
+            "ageDays": 5767,
+            "lifeLimit": 80,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0,
+            "items": {
+              "supplies": 2,
+              "stones": 1
+            },
+            "relations": {
+              "r:8910e88c0ed357d9:t1:e:person_OldManWang": 3
+            },
+            "birth": {
+              "originId": "village",
+              "talentIds": [
+                "fortune-debt",
+                "sensitive-breath"
+              ],
+              "attributes": {
+                "constitution": 4,
+                "insight": 4,
+                "fortune": 4
+              }
+            }
+          },
+          "entities": [
+            {
+              "id": "r:8910e88c0ed357d9:t1:e:person_OldManWang",
+              "name": "王老伯",
+              "kind": "person",
+              "status": "alive"
+            },
+            {
+              "id": "r:8910e88c0ed357d9:t1:e:place_QingshiVillage",
+              "name": "青石村",
+              "kind": "place",
+              "status": "unknown"
+            },
+            {
+              "id": "r:8910e88c0ed357d9:t1:e:place_NorthMountain",
+              "name": "北山",
+              "kind": "place",
+              "status": "unknown"
+            }
+          ],
+          "memory": {
+            "facts": [],
+            "promises": [],
+            "clues": [],
+            "recent": [],
+            "summaries": []
+          },
+          "references": [],
+          "previousScene": {
+            "id": "r:8910e88c0ed357d9:t1:s:scene",
+            "blocksHash": "cb71298f6e66f1705d6f6fdf5d3542b7b458a3987e135bcc90525811732476de"
+          },
+          "relationshipVersion": 1,
+          "relationships": {
+            "r:8910e88c0ed357d9:t1:e:person_OldManWang": 3
+          },
+          "coverage": {
+            "policy": "relevance-v1",
+            "openTotal": 0,
+            "openIncluded": 0,
+            "openOmitted": 0
+          }
+        },
+        "attempt": {
+          "id": "7fe4c325-568a-4234-9bd1-4436b5a966c0",
+          "sessionRef": "[REDACTED]",
+          "retryOf": null
+        }
+      },
+      "response": null,
+      "failure": {
+        "at": "2026-10-28T17:15:42.742Z",
+        "method": "POST",
+        "path": "/api/story/turn",
+        "error": "net::ERR_ABORTED"
+      }
+    }
+  ],
+  "snapshots": [
+    {
+      "label": "00-entered",
+      "at": "2026-10-28T17:14:36.688Z",
+      "file": "00-entered.json",
+      "screenshot": "00-entered.png",
+      "summary": {
+        "database": {
+          "name": "wending-live-v1",
+          "version": 2,
+          "storeCounts": {
+            "runs": 0,
+            "pending": 0,
+            "history": 0,
+            "memory": 0
+          }
+        },
+        "archiveId": null,
+        "runId": null,
+        "revision": null,
+        "turnId": null,
+        "phase": null,
+        "stateSha256": null,
+        "storedStateHash": null,
+        "sceneId": null,
+        "sceneSha256": null,
+        "pendingRequestId": null,
+        "pendingKind": null,
+        "attemptId": null,
+        "pause": null,
+        "history": null
+      },
+      "requestCounts": {
+        "apiRequests": 1,
+        "turnPosts": 0,
+        "turnGets": 0,
+        "sessionPosts": 0,
+        "capabilityGets": 1,
+        "readyTurnResponses": 0
+      }
+    },
+    {
+      "label": "01-opening-or-existing",
+      "at": "2026-10-28T17:15:23.104Z",
+      "file": "01-opening-or-existing.json",
+      "screenshot": "01-opening-or-existing.png",
+      "summary": {
+        "database": {
+          "name": "wending-live-v1",
+          "version": 2,
+          "storeCounts": {
+            "runs": 3,
+            "pending": 0,
+            "history": 1,
+            "memory": 8
+          }
+        },
+        "archiveId": "6f580987-0a62-43ca-9d3d-a060b441f8a4",
+        "runId": "7fc2dbd6-e9ba-4dc4-a4fe-156455c31a3b",
+        "revision": 1,
+        "turnId": 1,
+        "phase": "active",
+        "stateSha256": "305aa39641f0e85057897ef26c98debebc6d3cfce9e6f6794bf30d06c9b4e736",
+        "storedStateHash": "305aa39641f0e85057897ef26c98debebc6d3cfce9e6f6794bf30d06c9b4e736",
+        "sceneId": "r:8910e88c0ed357d9:t1:s:scene",
+        "sceneSha256": "7c6f6d1d5ceb3e706a1ba3df3b6d81d8cb0d8d87f0d7d1b3a0269c92febb21af",
+        "pendingRequestId": null,
+        "pendingKind": null,
+        "attemptId": null,
+        "pause": null,
+        "history": {
+          "chunks": 1,
+          "tailEntries": [
+            {
+              "identity": {
+                "runId": "7fc2dbd6-e9ba-4dc4-a4fe-156455c31a3b",
+                "turnId": 1,
+                "baseRevision": 0,
+                "stateHash": "fe8456a1da6165634734aa0ef423ce85418eec528a022db2d5101e42d33660a9",
+                "choiceId": null,
+                "rulesVersion": 1,
+                "promptVersion": 1,
+                "requestId": "3e222aae-eb2e-4a4a-baec-5ce59bff45e1"
+              },
+              "stateHash": "305aa39641f0e85057897ef26c98debebc6d3cfce9e6f6794bf30d06c9b4e736",
+              "sceneId": "r:8910e88c0ed357d9:t1:s:scene",
+              "title": "青石村的清晨"
+            }
+          ],
+          "totalTurns": 1
+        }
+      },
+      "requestCounts": {
+        "apiRequests": 5,
+        "turnPosts": 1,
+        "turnGets": 0,
+        "sessionPosts": 1,
+        "capabilityGets": 3,
+        "readyTurnResponses": 1
+      }
+    },
+    {
+      "label": "02-choice-committed",
+      "at": "2026-10-28T17:15:43.037Z",
+      "file": "02-choice-committed.json",
+      "screenshot": "02-choice-committed.png",
+      "summary": {
+        "database": {
+          "name": "wending-live-v1",
+          "version": 2,
+          "storeCounts": {
+            "runs": 3,
+            "pending": 0,
+            "history": 1,
+            "memory": 17
+          }
+        },
+        "archiveId": "6f580987-0a62-43ca-9d3d-a060b441f8a4",
+        "runId": "7fc2dbd6-e9ba-4dc4-a4fe-156455c31a3b",
+        "revision": 2,
+        "turnId": 2,
+        "phase": "active",
+        "stateSha256": "28984c20b612d64bf79089cdcf77c41bed9f9758a4732027b2a5be1127f2a1dc",
+        "storedStateHash": "28984c20b612d64bf79089cdcf77c41bed9f9758a4732027b2a5be1127f2a1dc",
+        "sceneId": "r:8910e88c0ed357d9:t2:s:scene",
+        "sceneSha256": "32bdfc9f4c7838de3d1f84cc614ca6a73f6aa905e3c6e5b29795d1fa8537577f",
+        "pendingRequestId": null,
+        "pendingKind": null,
+        "attemptId": null,
+        "pause": null,
+        "history": {
+          "chunks": 1,
+          "tailEntries": [
+            {
+              "identity": {
+                "runId": "7fc2dbd6-e9ba-4dc4-a4fe-156455c31a3b",
+                "turnId": 1,
+                "baseRevision": 0,
+                "stateHash": "fe8456a1da6165634734aa0ef423ce85418eec528a022db2d5101e42d33660a9",
+                "choiceId": null,
+                "rulesVersion": 1,
+                "promptVersion": 1,
+                "requestId": "3e222aae-eb2e-4a4a-baec-5ce59bff45e1"
+              },
+              "stateHash": "305aa39641f0e85057897ef26c98debebc6d3cfce9e6f6794bf30d06c9b4e736",
+              "sceneId": "r:8910e88c0ed357d9:t1:s:scene",
+              "title": "青石村的清晨"
+            },
+            {
+              "identity": {
+                "runId": "7fc2dbd6-e9ba-4dc4-a4fe-156455c31a3b",
+                "turnId": 2,
+                "baseRevision": 1,
+                "stateHash": "305aa39641f0e85057897ef26c98debebc6d3cfce9e6f6794bf30d06c9b4e736",
+                "choiceId": "r:8910e88c0ed357d9:t1:c:a",
+                "rulesVersion": 1,
+                "promptVersion": 1,
+                "requestId": "230530a2-0dea-4a43-9d54-8cc488fa42e8"
+              },
+              "stateHash": "28984c20b612d64bf79089cdcf77c41bed9f9758a4732027b2a5be1127f2a1dc",
+              "sceneId": "r:8910e88c0ed357d9:t2:s:scene",
+              "title": "北山迷雾"
+            }
+          ],
+          "totalTurns": 2
+        }
+      },
+      "requestCounts": {
+        "apiRequests": 8,
+        "turnPosts": 2,
+        "turnGets": 0,
+        "sessionPosts": 2,
+        "capabilityGets": 4,
+        "readyTurnResponses": 1
+      }
+    },
+    {
+      "label": "99-failure",
+      "at": "2026-10-28T17:15:43.138Z",
+      "file": "99-failure.json",
+      "screenshot": "99-failure.png",
+      "summary": {
+        "database": {
+          "name": "wending-live-v1",
+          "version": 2,
+          "storeCounts": {
+            "runs": 3,
+            "pending": 0,
+            "history": 1,
+            "memory": 17
+          }
+        },
+        "archiveId": "6f580987-0a62-43ca-9d3d-a060b441f8a4",
+        "runId": "7fc2dbd6-e9ba-4dc4-a4fe-156455c31a3b",
+        "revision": 2,
+        "turnId": 2,
+        "phase": "active",
+        "stateSha256": "28984c20b612d64bf79089cdcf77c41bed9f9758a4732027b2a5be1127f2a1dc",
+        "storedStateHash": "28984c20b612d64bf79089cdcf77c41bed9f9758a4732027b2a5be1127f2a1dc",
+        "sceneId": "r:8910e88c0ed357d9:t2:s:scene",
+        "sceneSha256": "32bdfc9f4c7838de3d1f84cc614ca6a73f6aa905e3c6e5b29795d1fa8537577f",
+        "pendingRequestId": null,
+        "pendingKind": null,
+        "attemptId": null,
+        "pause": null,
+        "history": {
+          "chunks": 1,
+          "tailEntries": [
+            {
+              "identity": {
+                "runId": "7fc2dbd6-e9ba-4dc4-a4fe-156455c31a3b",
+                "turnId": 1,
+                "baseRevision": 0,
+                "stateHash": "fe8456a1da6165634734aa0ef423ce85418eec528a022db2d5101e42d33660a9",
+                "choiceId": null,
+                "rulesVersion": 1,
+                "promptVersion": 1,
+                "requestId": "3e222aae-eb2e-4a4a-baec-5ce59bff45e1"
+              },
+              "stateHash": "305aa39641f0e85057897ef26c98debebc6d3cfce9e6f6794bf30d06c9b4e736",
+              "sceneId": "r:8910e88c0ed357d9:t1:s:scene",
+              "title": "青石村的清晨"
+            },
+            {
+              "identity": {
+                "runId": "7fc2dbd6-e9ba-4dc4-a4fe-156455c31a3b",
+                "turnId": 2,
+                "baseRevision": 1,
+                "stateHash": "305aa39641f0e85057897ef26c98debebc6d3cfce9e6f6794bf30d06c9b4e736",
+                "choiceId": "r:8910e88c0ed357d9:t1:c:a",
+                "rulesVersion": 1,
+                "promptVersion": 1,
+                "requestId": "230530a2-0dea-4a43-9d54-8cc488fa42e8"
+              },
+              "stateHash": "28984c20b612d64bf79089cdcf77c41bed9f9758a4732027b2a5be1127f2a1dc",
+              "sceneId": "r:8910e88c0ed357d9:t2:s:scene",
+              "title": "北山迷雾"
+            }
+          ],
+          "totalTurns": 2
+        }
+      },
+      "requestCounts": {
+        "apiRequests": 8,
+        "turnPosts": 2,
+        "turnGets": 0,
+        "sessionPosts": 2,
+        "capabilityGets": 4,
+        "readyTurnResponses": 1
+      }
+    }
+  ],
+  "checks": [
+    {
+      "name": "Opening issued exactly one turn POST",
+      "passed": true,
+      "initialPosts": 1,
+      "initialCause": "initial-action",
+      "operatorTriggeredPosts": 0,
+      "operatorRetryPosts": 0,
+      "totalPosts": 1,
+      "postSequences": [
+        5
+      ]
+    },
+    {
+      "name": "Opening is committed with a real scene",
+      "passed": true
+    },
+    {
+      "name": "Stored state hash matches the actual opening",
+      "passed": true
+    },
+    {
+      "name": "Opening API response evidence was captured",
+      "passed": true
+    },
+    {
+      "name": "Actual opening API returned the committed ready scene",
+      "passed": true
+    },
+    {
+      "name": "Choice issued exactly one turn POST",
+      "passed": true,
+      "initialPosts": 1,
+      "initialCause": "initial-action",
+      "operatorTriggeredPosts": 0,
+      "operatorRetryPosts": 0,
+      "totalPosts": 1,
+      "postSequences": [
+        8
+      ]
+    },
+    {
+      "name": "One-choice result is committed at revision 2",
+      "passed": true
+    },
+    {
+      "name": "Stored state hash matches the actual choice result",
+      "passed": true
+    },
+    {
+      "name": "Choice API response evidence was captured",
+      "passed": false
+    }
+  ],
+  "pageErrors": [],
+  "consoleErrors": [],
+  "requestFailures": [
+    {
+      "at": "2026-10-28T17:14:36.574Z",
+      "method": "GET",
+      "path": "/api/story/capabilities",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "at": "2026-10-28T17:14:36.882Z",
+      "method": "GET",
+      "path": "/api/story/capabilities",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "at": "2026-10-28T17:14:36.967Z",
+      "method": "GET",
+      "path": "/api/story/capabilities",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "at": "2026-10-28T17:14:37.603Z",
+      "method": "POST",
+      "path": "/api/story/session",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "at": "2026-10-28T17:15:42.742Z",
+      "method": "POST",
+      "path": "/api/story/turn",
+      "error": "net::ERR_ABORTED"
+    }
+  ],
+  "evidenceErrors": [
+    "response.body: Protocol error (Network.getResponseBody): No data found for resource with given identifier\nResponse body is not available for a response that was navigated away from. Read response.body() before triggering any navigation.",
+    "response.body: Protocol error (Network.getResponseBody): No data found for resource with given identifier\nResponse body is not available for a response that was navigated away from. Read response.body() before triggering any navigation.",
+    "response.body: Protocol error (Network.getResponseBody): No data found for resource with given identifier\nResponse body is not available for a response that was navigated away from. Read response.body() before triggering any navigation.",
+    "response.body: Protocol error (Network.getResponseBody): No data found for resource with given identifier\nResponse body is not available for a response that was navigated away from. Read response.body() before triggering any navigation.",
+    "response.body: Protocol error (Network.getResponseBody): No data found for resource with given identifier\nResponse body is not available for a response that was navigated away from. Read response.body() before triggering any navigation."
+  ],
+  "invocation": {
+    "continue": false,
+    "retryOnce": false,
+    "operatorRetry": true,
+    "phase": "complete",
+    "timeoutMs": 120000
+  },
+  "operatorRetries": [],
+  "requestCounts": {
+    "apiRequests": 8,
+    "turnPosts": 2,
+    "turnGets": 0,
+    "sessionPosts": 2,
+    "capabilityGets": 4,
+    "readyTurnResponses": 1
+  },
+  "startingArchive": {
+    "database": {
+      "name": "wending-live-v1",
+      "version": 2,
+      "storeCounts": {
+        "runs": 0,
+        "pending": 0,
+        "history": 0,
+        "memory": 0
+      }
+    },
+    "archiveId": null,
+    "runId": null,
+    "revision": null,
+    "turnId": null,
+    "phase": null,
+    "stateSha256": null,
+    "storedStateHash": null,
+    "sceneId": null,
+    "sceneSha256": null,
+    "pendingRequestId": null,
+    "pendingKind": null,
+    "attemptId": null,
+    "pause": null,
+    "history": null
+  },
+  "failure": {
+    "at": "2026-10-28T17:15:43.038Z",
+    "name": "Error",
+    "message": "Choice API response evidence was captured",
+    "automaticRetryIssued": false,
+    "profilePreserved": true
+  },
+  "finishedAt": "2026-10-28T17:15:43.189Z",
+  "browserClosed": true,
+  "profilePreserved": true
+}

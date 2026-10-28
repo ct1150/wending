@@ -1,0 +1,111 @@
+{
+  "schemaVersion": 1,
+  "verifiedAt": "2026-10-28T17:17:34.733Z",
+  "scope": "Read-only recovery of the original committed response from the existing production cache; not another generation and not a relabeled browser-driver pass",
+  "originalReportStatus": "FAILED",
+  "originalReportSha256": "51e3395eb9ce806538da188033a63842b3d4567b24e2ac9c6d0cc48d5783a741",
+  "modelCalls": 0,
+  "testerPermitUsed": false,
+  "requestId": "230530a2-0dea-4a43-9d54-8cc488fa42e8",
+  "attemptId": "7fe4c325-568a-4234-9bd1-4436b5a966c0",
+  "sourceCommit": "458816d14a2d48612f0e66a1f28e6f0045f4951b",
+  "checks": {
+    "http200": true,
+    "ready": true,
+    "identity": true,
+    "scene": true,
+    "noTurnPost": true,
+    "originalReportPreserved": true
+  },
+  "passed": true,
+  "response": {
+    "at": "2026-10-28T17:17:34.725Z",
+    "status": 200,
+    "body": {
+      "protocolVersion": 1,
+      "status": "ready",
+      "requestId": "230530a2-0dea-4a43-9d54-8cc488fa42e8",
+      "attemptId": "7fe4c325-568a-4234-9bd1-4436b5a966c0",
+      "sessionRef": "[REDACTED]",
+      "errorCode": null,
+      "retry": null,
+      "scene": {
+        "id": "r:8910e88c0ed357d9:t2:s:scene",
+        "title": "北山迷雾",
+        "location": "青石村",
+        "entities": [
+          {
+            "id": "r:8910e88c0ed357d9:t1:e:person_OldManWang",
+            "name": "王老伯",
+            "kind": "person",
+            "status": "alive"
+          },
+          {
+            "id": "r:8910e88c0ed357d9:t1:e:place_QingshiVillage",
+            "name": "青石村",
+            "kind": "place"
+          },
+          {
+            "id": "r:8910e88c0ed357d9:t1:e:place_NorthMountain",
+            "name": "北山",
+            "kind": "place"
+          }
+        ],
+        "blocks": [
+          {
+            "kind": "narration",
+            "text": "王老伯压低声音，枯瘦的手指在粗糙的木桌上画了个圈：“北山深处有片‘回音谷’，风一吹，石头会自己响。我年轻时听我爹说，那底下埋着个老东西，不是人，是修行的。”"
+          },
+          {
+            "kind": "dialogue",
+            "text": "“但别去！那地方邪性，进去的人十个有九个走不出来。你要是真想去，至少带上把火折子，还有……”他顿了顿，眼神闪烁，“最好别一个人去。”",
+            "speaker": "r:8910e88c0ed357d9:t1:e:person_OldManWang"
+          },
+          {
+            "kind": "narration",
+            "text": "你摸了摸怀里新得的灵石，又看了看仅剩的两份行粮。北山就在村后，翻过两道梁就能到。王老伯的话让你心里发毛，但那份对古修遗物的渴望像火一样烧着。"
+          }
+        ],
+        "choices": [
+          {
+            "id": "r:8910e88c0ed357d9:t2:c:a",
+            "label": "前往北山寻找古修遗物",
+            "intent": "travel",
+            "targetId": "r:8910e88c0ed357d9:t1:e:place_NorthMountain",
+            "stake": "high",
+            "approach": "road"
+          },
+          {
+            "id": "r:8910e88c0ed357d9:t2:c:b",
+            "label": "在青石村打听同行者",
+            "intent": "negotiate",
+            "targetId": "r:8910e88c0ed357d9:t1:e:person_OldManWang",
+            "stake": "low",
+            "approach": "cooperate"
+          },
+          {
+            "id": "r:8910e88c0ed357d9:t2:c:c",
+            "label": "在青石村休整恢复体力",
+            "intent": "rest",
+            "targetId": "self",
+            "stake": "low",
+            "approach": "recover"
+          }
+        ],
+        "memoryDeltas": [
+          {
+            "entityId": "r:8910e88c0ed357d9:t1:e:place_NorthMountain",
+            "text": "北山深处有回音谷，传说埋有古修遗物，环境危险，单人进入风险极高。",
+            "kind": "clue"
+          }
+        ]
+      }
+    }
+  },
+  "events": [
+    {
+      "method": "GET",
+      "path": "/api/story/turn/230530a2-0dea-4a43-9d54-8cc488fa42e8"
+    }
+  ]
+}

@@ -1,0 +1,168 @@
+{
+  "schemaVersion": 1,
+  "createdAt": "2026-10-28T17:15:16.741879Z",
+  "repository": "ct1150/wending",
+  "branch": "release-channel",
+  "sourceCommit": "458816d14a2d48612f0e66a1f28e6f0045f4951b",
+  "verificationPath": "verification/4.1.0-458816d/",
+  "scope": "Selected release verification evidence; no browser profiles, credentials or screenshots. Only author_email and ephemeral sessionRef values are redacted where present. Source files remain unchanged. Bulky CI logs are referenced by their actual GitHub URLs and original SHA-256 values in the CI summaries.",
+  "files": [
+    {
+      "sourceEvidence": "ci-pr-57977bef.json",
+      "file": "ci-pr.json",
+      "sourceSha256": "f26fa4276819cea463293c82839f550fd69371030f95a2c7808ceb102933df08",
+      "publishedSha256": "f26fa4276819cea463293c82839f550fd69371030f95a2c7808ceb102933df08",
+      "bytes": 1862,
+      "redactedFields": [],
+      "originalOutcomePreserved": true
+    },
+    {
+      "sourceEvidence": "ci-main-458816d.json",
+      "file": "ci-main.json",
+      "sourceSha256": "4268c2c306a11bc4b0dac59396cb5ad6f59e5f9b78354406b763f3219d010e29",
+      "publishedSha256": "4268c2c306a11bc4b0dac59396cb5ad6f59e5f9b78354406b763f3219d010e29",
+      "bytes": 2731,
+      "redactedFields": [],
+      "originalOutcomePreserved": true
+    },
+    {
+      "sourceEvidence": "production-deployment.json",
+      "file": "production-deployment.json",
+      "sourceSha256": "8ed343763f2eda6192fe0b010d19570fd83f5096d2fe3fda1c9cb0b796ad9e14",
+      "publishedSha256": "6afbf397ee32f637b19a64b44cca7e7f148aa197902d31cc90bbc8d9fc088b06",
+      "bytes": 7248,
+      "redactedFields": [
+        "/observations/0/deployment/author_email"
+      ],
+      "originalOutcomePreserved": true
+    },
+    {
+      "sourceEvidence": "public-release-identity/identity.json",
+      "file": "public-identity.json",
+      "sourceSha256": "c2a288d1d5656979319a3dd5ef4b67ac36ec6e8c24b5ff6cb60ac41fc60a99d2",
+      "publishedSha256": "c2a288d1d5656979319a3dd5ef4b67ac36ec6e8c24b5ff6cb60ac41fc60a99d2",
+      "bytes": 2438,
+      "redactedFields": [],
+      "originalOutcomePreserved": true
+    },
+    {
+      "sourceEvidence": "public-final-generation/evidence.json",
+      "file": "public-generation/evidence.json",
+      "sourceSha256": "51e3395eb9ce806538da188033a63842b3d4567b24e2ac9c6d0cc48d5783a741",
+      "publishedSha256": "48df5ed2aaa2f8bc9506945328ae03ee896747c6e39d00b6523eea9d85d39611",
+      "bytes": 28758,
+      "redactedFields": [
+        "/api/4/requestBody/attempt/sessionRef",
+        "/api/4/response/body/sessionRef",
+        "/api/6/response/body/sessionRef",
+        "/api/7/requestBody/attempt/sessionRef"
+      ],
+      "originalOutcomePreserved": true
+    },
+    {
+      "sourceEvidence": "public-final-generation/01-opening-or-existing.json",
+      "file": "public-generation/01-opening-or-existing.json",
+      "sourceSha256": "2f49e0d5136f23a133b656bae22d9b8a350f91a0e26469e9e684dd903d838b96",
+      "publishedSha256": "2f49e0d5136f23a133b656bae22d9b8a350f91a0e26469e9e684dd903d838b96",
+      "bytes": 11741,
+      "redactedFields": [],
+      "originalOutcomePreserved": true
+    },
+    {
+      "sourceEvidence": "public-final-generation/02-choice-committed.json",
+      "file": "public-generation/02-choice-committed.json",
+      "sourceSha256": "f0484aec2ddc0885e025c531e038a85c6ead5059bb49bb262b84255a0eb6c616",
+      "publishedSha256": "f0484aec2ddc0885e025c531e038a85c6ead5059bb49bb262b84255a0eb6c616",
+      "bytes": 13371,
+      "redactedFields": [],
+      "originalOutcomePreserved": true
+    },
+    {
+      "sourceEvidence": "public-final-cached-response/cached-choice-response.json",
+      "file": "public-cache/cached-choice-response.json",
+      "sourceSha256": "0ee5e403d0255e10b5ad154578da24f5c6ffad069d82b46a0fe956ec07942fb6",
+      "publishedSha256": "09f366816a844a749bfae8dd28f4c4fc19925fc4270f5b5585775d5597f5fa08",
+      "bytes": 4011,
+      "redactedFields": [
+        "/response/body/sessionRef"
+      ],
+      "originalOutcomePreserved": true
+    },
+    {
+      "sourceEvidence": "public-final-save-refresh/evidence.json",
+      "file": "public-save-refresh/evidence.json",
+      "sourceSha256": "cb07319cf7c4db24ef4af57841b2095729f4d8bfd423daa987f384aeb954a83d",
+      "publishedSha256": "cb07319cf7c4db24ef4af57841b2095729f4d8bfd423daa987f384aeb954a83d",
+      "bytes": 22037,
+      "redactedFields": [],
+      "originalOutcomePreserved": true
+    },
+    {
+      "sourceEvidence": "public-final-save-refresh/04-before-refresh.json",
+      "file": "public-save-refresh/04-before-refresh.json",
+      "sourceSha256": "81c04c1c40d152c3ce9aae73cf1c7ee309d9a3276e656574b4087c0a90cfd50e",
+      "publishedSha256": "81c04c1c40d152c3ce9aae73cf1c7ee309d9a3276e656574b4087c0a90cfd50e",
+      "bytes": 13397,
+      "redactedFields": [],
+      "originalOutcomePreserved": true
+    },
+    {
+      "sourceEvidence": "public-final-save-refresh/05-after-refresh.json",
+      "file": "public-save-refresh/05-after-refresh.json",
+      "sourceSha256": "0fbb63a5ebe68d59bf8274cb4580c4b6a9948dbd1e6d137a0dcf01961c96755e",
+      "publishedSha256": "0fbb63a5ebe68d59bf8274cb4580c4b6a9948dbd1e6d137a0dcf01961c96755e",
+      "bytes": 13371,
+      "redactedFields": [],
+      "originalOutcomePreserved": true
+    },
+    {
+      "sourceEvidence": "public-final-save-refresh/saved-game.wending.jsonl",
+      "file": "public-save-refresh/saved-game.wending.jsonl",
+      "sourceSha256": "a1c641fcaeaecbff6a9861e4d87f7eb35759dacfb9813ef63eb2276036563bcc",
+      "publishedSha256": "a1c641fcaeaecbff6a9861e4d87f7eb35759dacfb9813ef63eb2276036563bcc",
+      "bytes": 10827,
+      "redactedFields": [],
+      "originalOutcomePreserved": true
+    },
+    {
+      "sourceEvidence": "public-final-save-refresh/00-entered.json",
+      "file": "public-save-refresh/00-entered.json",
+      "sourceSha256": "0eb1fff1ed72e7e2565e058df473ad5f0cf1087ea0dcc0674ff2e0a5787f4a25",
+      "publishedSha256": "0eb1fff1ed72e7e2565e058df473ad5f0cf1087ea0dcc0674ff2e0a5787f4a25",
+      "bytes": 13371,
+      "redactedFields": [],
+      "originalOutcomePreserved": true
+    },
+    {
+      "sourceEvidence": "public-narrative-review.json",
+      "file": "public-narrative-review.json",
+      "sourceSha256": "112e8e5bbb78910d4327213e03c6936eedabdf03cd1807ef5375d4cdf23a59f9",
+      "publishedSha256": "112e8e5bbb78910d4327213e03c6936eedabdf03cd1807ef5375d4cdf23a59f9",
+      "bytes": 24164,
+      "redactedFields": [],
+      "originalOutcomePreserved": true
+    },
+    {
+      "sourceEvidence": "ledger-retention-post-production.json",
+      "file": "ledger-retention-post-production.json",
+      "sourceSha256": "87cd6977749834529ffaf670fab2b676c79111e51f8a8bc61743c75bdba0db9b",
+      "publishedSha256": "87cd6977749834529ffaf670fab2b676c79111e51f8a8bc61743c75bdba0db9b",
+      "bytes": 2386,
+      "redactedFields": [],
+      "originalOutcomePreserved": true
+    }
+  ],
+  "finalizedAt": "2026-10-28T17:21:05.243365Z",
+  "generatedFiles": [
+    {
+      "file": "README.md",
+      "sha256": "5448c81b4e04f9a6da92f829554d22edc38eb189706915dd073207f834266098",
+      "bytes": 5268
+    },
+    {
+      "file": "release-verification.json",
+      "sha256": "a8959815d565e50522182b08b1027832fabd479520ca6eea22506f39baee4962",
+      "bytes": 6845
+    }
+  ]
+}

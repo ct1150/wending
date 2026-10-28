@@ -1,0 +1,680 @@
+{
+  "schemaVersion": 1,
+  "reviewedAt": "2026-10-28T17:17:20.181Z",
+  "sourceCommit": "458816d14a2d48612f0e66a1f28e6f0045f4951b",
+  "verdict": "PUBLIC_SAVED_SELECTED_TRANSITION_AND_NARRATIVE_PASSED_WITH_NON_BLOCKING_LIMITATIONS",
+  "narrativePassed": true,
+  "materialFindings": [],
+  "source": {
+    "url": "https://baishi-wending.ct1150.workers.dev/",
+    "sourceCommit": "458816d14a2d48612f0e66a1f28e6f0045f4951b",
+    "sourceFileHashes": {
+      "src/game/cultivation/live/engine.js": "5d824d1e58a73da0b085d7be3c5ec57f920f683710330c0e1648b4473fa951a4",
+      "src/game/cultivation/live/memory.js": "4c22df151d7264308026e39de32abc0b5675dfc767232759ae2bad80c0dfc5d9",
+      "src/game/cultivation/live/schema.js": "dfdbdcadf35deb39315f571821203d61bd9f5a10d8c359b074001d16b0cdd0c9",
+      "src/game/cultivation/live/validation.js": "44137cda97b87d78bdcf5513aa939e7549dd3c5406b699ac6491827a6514516a",
+      "src/game/cultivation/live/model.js": "1b1b208631bac405395d84c240957a15db080333abe174b98e0eb5412336846a"
+    },
+    "files": {
+      "/tmp/wending-public-60d77884fe74-4_1-evidence/evidence.json": "51e3395eb9ce806538da188033a63842b3d4567b24e2ac9c6d0cc48d5783a741",
+      "/tmp/wending-public-60d77884fe74-4_1-evidence/01-opening-or-existing.json": "2f49e0d5136f23a133b656bae22d9b8a350f91a0e26469e9e684dd903d838b96",
+      "/tmp/wending-public-60d77884fe74-4_1-evidence/02-choice-committed.json": "f0484aec2ddc0885e025c531e038a85c6ead5059bb49bb262b84255a0eb6c616"
+    },
+    "runId": "7fc2dbd6-e9ba-4dc4-a4fe-156455c31a3b",
+    "archiveId": "6f580987-0a62-43ca-9d3d-a060b441f8a4",
+    "openingAt": "2026-10-28T17:15:22.985Z",
+    "choiceAt": "2026-10-28T17:15:42.956Z",
+    "originalDriverStatus": "FAILED",
+    "originalDriverFailure": {
+      "at": "2026-10-28T17:15:43.038Z",
+      "name": "Error",
+      "message": "Choice API response evidence was captured",
+      "automaticRetryIssued": false,
+      "profilePreserved": true
+    },
+    "originalDriverRequestCounts": {
+      "apiRequests": 8,
+      "turnPosts": 2,
+      "turnGets": 0,
+      "sessionPosts": 2,
+      "capabilityGets": 4,
+      "readyTurnResponses": 1
+    }
+  },
+  "technical": {
+    "birthStateHash": "fe8456a1da6165634734aa0ef423ce85418eec528a022db2d5101e42d33660a9",
+    "s1StateHash": "305aa39641f0e85057897ef26c98debebc6d3cfce9e6f6794bf30d06c9b4e736",
+    "s2StateHash": "28984c20b612d64bf79089cdcf77c41bed9f9758a4732027b2a5be1127f2a1dc",
+    "s1SceneHash": "7c6f6d1d5ceb3e706a1ba3df3b6d81d8cb0d8d87f0d7d1b3a0269c92febb21af",
+    "s2SceneHash": "32bdfc9f4c7838de3d1f84cc614ca6a73f6aa905e3c6e5b29795d1fa8537577f",
+    "openingCanonicalContextAndCommitMatch": true,
+    "choiceCanonicalContextAndCommitMatch": true,
+    "savedAndCalculatedHashesMatch": true,
+    "pendingClearedAfterBothTurns": true,
+    "actualOpeningResponseBodyCaptured": true,
+    "actualChoiceResponseBodyCaptured": false,
+    "openingEnabledChoices": 2,
+    "openingTotalChoices": 3,
+    "choiceEnabledChoices": 3,
+    "choiceTotalChoices": 3,
+    "visibleChoiceAvailabilityMatchesRules": true
+  },
+  "opening": {
+    "title": "青石村的清晨",
+    "location": "青石村",
+    "life": {
+      "name": "云归",
+      "ageDays": 5760,
+      "lifeLimit": 80,
+      "realm": "mortal",
+      "cultivation": 0,
+      "injury": 0,
+      "items": {
+        "supplies": 3,
+        "stones": 0
+      },
+      "relations": {},
+      "birth": {
+        "originId": "village",
+        "talentIds": [
+          "fortune-debt",
+          "sensitive-breath"
+        ],
+        "attributes": {
+          "constitution": 4,
+          "insight": 4,
+          "fortune": 4
+        }
+      }
+    },
+    "receipt": {
+      "kind": "opening",
+      "choiceId": null,
+      "action": null,
+      "elapsedDays": 0,
+      "itemChanges": {},
+      "relationChanges": {},
+      "random": {
+        "before": 2902189466,
+        "after": 2902189466,
+        "roll": null
+      },
+      "before": {
+        "ageDays": 5760,
+        "realm": "mortal",
+        "cultivation": 0,
+        "injury": 0
+      },
+      "after": {
+        "ageDays": 5760,
+        "realm": "mortal",
+        "cultivation": 0,
+        "injury": 0
+      },
+      "death": null,
+      "birth": {
+        "originId": "village",
+        "talentIds": [
+          "fortune-debt",
+          "sensitive-breath"
+        ],
+        "attributes": {
+          "constitution": 4,
+          "insight": 4,
+          "fortune": 4
+        }
+      }
+    },
+    "choices": [
+      {
+        "id": "r:8910e88c0ed357d9:t1:c:a",
+        "label": "询问王老伯关于北山古修遗物的具体线索",
+        "intent": "negotiate",
+        "targetId": "r:8910e88c0ed357d9:t1:e:person_OldManWang",
+        "stake": "low",
+        "approach": "cooperate",
+        "enabled": true,
+        "reason": null,
+        "costs": {
+          "days": 7,
+          "items": {
+            "supplies": 1
+          }
+        },
+        "warnings": [],
+        "visibleLabel": "询问王老伯关于北山古修遗物的具体线索\n7日 · 行粮 1",
+        "previewReceipt": {
+          "kind": "choice",
+          "choiceId": "r:8910e88c0ed357d9:t1:c:a",
+          "action": {
+            "id": "r:8910e88c0ed357d9:t1:c:a",
+            "label": "询问王老伯关于北山古修遗物的具体线索",
+            "intent": "negotiate",
+            "targetId": "r:8910e88c0ed357d9:t1:e:person_OldManWang",
+            "stake": "low",
+            "approach": "cooperate"
+          },
+          "elapsedDays": 7,
+          "itemChanges": {
+            "stones": 1,
+            "supplies": -1
+          },
+          "relationChanges": {
+            "r:8910e88c0ed357d9:t1:e:person_OldManWang": 3
+          },
+          "random": {
+            "before": 2902189466,
+            "after": 3468621873,
+            "roll": 73
+          },
+          "before": {
+            "ageDays": 5760,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "after": {
+            "ageDays": 5767,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "death": null,
+          "birth": null
+        }
+      },
+      {
+        "id": "r:8910e88c0ed357d9:t1:c:b",
+        "label": "前往北山探索寻找古修遗物",
+        "intent": "explore",
+        "targetId": "relic",
+        "stake": "high",
+        "approach": "cautious",
+        "enabled": false,
+        "reason": "境界尚不足以寻找此种材料。",
+        "costs": {
+          "days": 90,
+          "items": {}
+        },
+        "warnings": [
+          "历练受伤基础风险5%，根骨与坚韧筋骨可降低风险。"
+        ],
+        "visibleLabel": "前往北山探索寻找古修遗物\n境界尚不足以寻找此种材料。 · 90日 · 历练受伤基础风险5%，根骨与坚韧筋骨可降低风险。",
+        "previewReceipt": null
+      },
+      {
+        "id": "r:8910e88c0ed357d9:t1:c:c",
+        "label": "在青石村附近寻找行粮补充物资",
+        "intent": "explore",
+        "targetId": "supplies",
+        "stake": "low",
+        "approach": "cautious",
+        "enabled": true,
+        "reason": null,
+        "costs": {
+          "days": 90,
+          "items": {}
+        },
+        "warnings": [
+          "历练受伤基础风险5%，根骨与坚韧筋骨可降低风险。"
+        ],
+        "visibleLabel": "在青石村附近寻找行粮补充物资\n90日 · 历练受伤基础风险5%，根骨与坚韧筋骨可降低风险。",
+        "previewReceipt": {
+          "kind": "choice",
+          "choiceId": "r:8910e88c0ed357d9:t1:c:c",
+          "action": {
+            "id": "r:8910e88c0ed357d9:t1:c:c",
+            "label": "在青石村附近寻找行粮补充物资",
+            "intent": "explore",
+            "targetId": "supplies",
+            "stake": "low",
+            "approach": "cautious"
+          },
+          "elapsedDays": 90,
+          "itemChanges": {
+            "supplies": 1
+          },
+          "relationChanges": {},
+          "random": {
+            "before": 2902189466,
+            "after": 3468621873,
+            "roll": 73
+          },
+          "before": {
+            "ageDays": 5760,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "after": {
+            "ageDays": 5850,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "death": null,
+          "birth": null
+        }
+      }
+    ],
+    "findings": [
+      {
+        "severity": "pass",
+        "category": "birth-and-state",
+        "text": "开场是16岁的凡人云归，村庄出身与命格感应相符；明确三份行粮、零灵石，未叙述额外奖励、受伤、突破或婴儿出生。"
+      },
+      {
+        "severity": "pass",
+        "category": "identity",
+        "text": "王老伯具有本场稳定人物ID，主角没有被加入NPC；北山与青石村均有明确place实体。"
+      },
+      {
+        "severity": "pass",
+        "category": "available-actions",
+        "text": "向王老伯询问线索和寻找行粮可执行，显示的时间与资源成本符合规则。"
+      },
+      {
+        "severity": "limitation",
+        "category": "disabled-action",
+        "text": "古修遗物探索使用正确relic目标，但凡人境界不满足材料探索条件；该选项明确禁用并显示原因。开场只有2/3选择可执行，不能报告为全部选项可执行。这没有阻断继续游戏，也没有绕过境界规则。"
+      }
+    ]
+  },
+  "continuation": {
+    "title": "北山迷雾",
+    "location": "青石村",
+    "actualSelectedAction": {
+      "id": "r:8910e88c0ed357d9:t1:c:a",
+      "label": "询问王老伯关于北山古修遗物的具体线索",
+      "intent": "negotiate",
+      "targetId": "r:8910e88c0ed357d9:t1:e:person_OldManWang",
+      "stake": "low",
+      "approach": "cooperate"
+    },
+    "receipt": {
+      "kind": "choice",
+      "choiceId": "r:8910e88c0ed357d9:t1:c:a",
+      "action": {
+        "id": "r:8910e88c0ed357d9:t1:c:a",
+        "label": "询问王老伯关于北山古修遗物的具体线索",
+        "intent": "negotiate",
+        "targetId": "r:8910e88c0ed357d9:t1:e:person_OldManWang",
+        "stake": "low",
+        "approach": "cooperate"
+      },
+      "elapsedDays": 7,
+      "itemChanges": {
+        "stones": 1,
+        "supplies": -1
+      },
+      "relationChanges": {
+        "r:8910e88c0ed357d9:t1:e:person_OldManWang": 3
+      },
+      "random": {
+        "before": 2902189466,
+        "after": 3468621873,
+        "roll": 73
+      },
+      "before": {
+        "ageDays": 5760,
+        "realm": "mortal",
+        "cultivation": 0,
+        "injury": 0
+      },
+      "after": {
+        "ageDays": 5767,
+        "realm": "mortal",
+        "cultivation": 0,
+        "injury": 0
+      },
+      "death": null,
+      "birth": null
+    },
+    "life": {
+      "name": "云归",
+      "ageDays": 5767,
+      "lifeLimit": 80,
+      "realm": "mortal",
+      "cultivation": 0,
+      "injury": 0,
+      "items": {
+        "supplies": 2,
+        "stones": 1
+      },
+      "relations": {
+        "r:8910e88c0ed357d9:t1:e:person_OldManWang": 3
+      },
+      "birth": {
+        "originId": "village",
+        "talentIds": [
+          "fortune-debt",
+          "sensitive-breath"
+        ],
+        "attributes": {
+          "constitution": 4,
+          "insight": 4,
+          "fortune": 4
+        }
+      }
+    },
+    "choices": [
+      {
+        "id": "r:8910e88c0ed357d9:t2:c:a",
+        "label": "前往北山寻找古修遗物",
+        "intent": "travel",
+        "targetId": "r:8910e88c0ed357d9:t1:e:place_NorthMountain",
+        "stake": "high",
+        "approach": "road",
+        "enabled": true,
+        "reason": null,
+        "costs": {
+          "days": 30,
+          "items": {
+            "supplies": 1
+          }
+        },
+        "warnings": [],
+        "visibleLabel": "前往北山寻找古修遗物\n30日 · 行粮 1",
+        "previewReceipt": {
+          "kind": "choice",
+          "choiceId": "r:8910e88c0ed357d9:t2:c:a",
+          "action": {
+            "id": "r:8910e88c0ed357d9:t2:c:a",
+            "label": "前往北山寻找古修遗物",
+            "intent": "travel",
+            "targetId": "r:8910e88c0ed357d9:t1:e:place_NorthMountain",
+            "stake": "high",
+            "approach": "road"
+          },
+          "elapsedDays": 30,
+          "itemChanges": {
+            "supplies": -1
+          },
+          "relationChanges": {},
+          "random": {
+            "before": 3468621873,
+            "after": 265163740,
+            "roll": 40
+          },
+          "before": {
+            "ageDays": 5767,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "after": {
+            "ageDays": 5797,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "death": null,
+          "birth": null
+        }
+      },
+      {
+        "id": "r:8910e88c0ed357d9:t2:c:b",
+        "label": "在青石村打听同行者",
+        "intent": "negotiate",
+        "targetId": "r:8910e88c0ed357d9:t1:e:person_OldManWang",
+        "stake": "low",
+        "approach": "cooperate",
+        "enabled": true,
+        "reason": null,
+        "costs": {
+          "days": 7,
+          "items": {
+            "supplies": 1
+          }
+        },
+        "warnings": [],
+        "visibleLabel": "在青石村打听同行者\n7日 · 行粮 1",
+        "previewReceipt": {
+          "kind": "choice",
+          "choiceId": "r:8910e88c0ed357d9:t2:c:b",
+          "action": {
+            "id": "r:8910e88c0ed357d9:t2:c:b",
+            "label": "在青石村打听同行者",
+            "intent": "negotiate",
+            "targetId": "r:8910e88c0ed357d9:t1:e:person_OldManWang",
+            "stake": "low",
+            "approach": "cooperate"
+          },
+          "elapsedDays": 7,
+          "itemChanges": {
+            "stones": 1,
+            "supplies": -1
+          },
+          "relationChanges": {
+            "r:8910e88c0ed357d9:t1:e:person_OldManWang": 3
+          },
+          "random": {
+            "before": 3468621873,
+            "after": 265163740,
+            "roll": 40
+          },
+          "before": {
+            "ageDays": 5767,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "after": {
+            "ageDays": 5774,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "death": null,
+          "birth": null
+        }
+      },
+      {
+        "id": "r:8910e88c0ed357d9:t2:c:c",
+        "label": "在青石村休整恢复体力",
+        "intent": "rest",
+        "targetId": "self",
+        "stake": "low",
+        "approach": "recover",
+        "enabled": true,
+        "reason": null,
+        "costs": {
+          "days": 30,
+          "items": {}
+        },
+        "warnings": [],
+        "visibleLabel": "在青石村休整恢复体力\n30日",
+        "previewReceipt": {
+          "kind": "choice",
+          "choiceId": "r:8910e88c0ed357d9:t2:c:c",
+          "action": {
+            "id": "r:8910e88c0ed357d9:t2:c:c",
+            "label": "在青石村休整恢复体力",
+            "intent": "rest",
+            "targetId": "self",
+            "stake": "low",
+            "approach": "recover"
+          },
+          "elapsedDays": 30,
+          "itemChanges": {},
+          "relationChanges": {},
+          "random": {
+            "before": 3468621873,
+            "after": 265163740,
+            "roll": 40
+          },
+          "before": {
+            "ageDays": 5767,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "after": {
+            "ageDays": 5797,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "death": null,
+          "birth": null
+        }
+      }
+    ],
+    "findings": [
+      {
+        "severity": "pass",
+        "category": "selected-action-and-location",
+        "text": "实际选择是询问王老伯。续写由王老伯补充回音谷线索，玩家仍在青石村；标题北山迷雾是谈论主题，不代表玩家已经移至北山。"
+      },
+      {
+        "severity": "pass",
+        "category": "fixed-rules",
+        "text": "提交精确等于规则结果：7天、行粮-1、灵石+1、王老伯关系+3；正文正确提到新得灵石与两份行粮，没有凭空增添其他物品、受伤、突破或死亡。"
+      },
+      {
+        "severity": "pass",
+        "category": "memory",
+        "text": "新增记忆是北山回音谷的危险传闻，关联已知北山ID；未把未选择的旅行或获得遗物写成已经发生。"
+      },
+      {
+        "severity": "pass-with-qualification",
+        "category": "travel-choice",
+        "text": "“前往北山寻找古修遗物”编码为travel/road，指向已声明北山、标签包含目的地且不同于当前位置；实际预演只旅行30天并消耗行粮，不获得遗物。文案可以理解为带着寻找目的启程，未承诺获得遗物，但若后续把一次travel写成完成遗物探索，将违反固定收据；本次没有发生该问题。"
+      },
+      {
+        "severity": "pass",
+        "category": "other-choices",
+        "text": "打听同行者是与王老伯交涉，休整使用rest/self/recover。三项都可执行，显示规则成本，不承诺固定时长之外的数字奖励。"
+      },
+      {
+        "severity": "minor",
+        "category": "dialogue-format",
+        "text": "dialogue文字含“他顿了顿，眼神闪烁”等旁白，叙述块也嵌入一句对白；不是严格的一人一句分块，仍能辨认说话者，没有改变身份或机械结果。"
+      },
+      {
+        "severity": "minor",
+        "category": "time-exposition",
+        "text": "正文没有详细铺陈七天交谈经过，实际年龄、收据和界面成本一致；未写成另一固定时长。"
+      }
+    ]
+  },
+  "evidenceLimitations": [
+    "原始浏览器报告为FAILED，原因是Choice API response evidence was captured检查失败；该状态未被重写。",
+    "实际choice POST已被观察，S2在原生浏览器中提交并显示，且可完整重现canonical commit；本报告不能补造丢失的原始HTTP响应体或宣称其已捕获。",
+    "本报告只覆盖真实公开S1/S2的存档状态、规则、可见叙事和选择。导出、刷新、浏览器重启由独立后续证据负责。"
+  ],
+  "scope": {
+    "localFilesOnly": true,
+    "freshModelCalls": 0,
+    "networkCalls": 0,
+    "browserCalls": 0,
+    "profileAccess": false,
+    "archiveWrites": 0,
+    "ledgerWrites": 0,
+    "productEdits": 0,
+    "rawEvidenceUnmodified": true
+  },
+  "additionalProofs": {
+    "verifiedAt": "2026-10-28T17:19:58.308Z",
+    "status": "PUBLIC_FLOW_VERIFIED_WITH_SEPARATE_CACHE_AND_RESTART_EVIDENCE",
+    "passed": true,
+    "originalDriverStatus": "FAILED",
+    "originalDriverRunRelabeled": false,
+    "originalReviewSha256": "c5c25968fc9ee1be110f7790e12c105d83939a1968e8a9379f1fa613631ccb8a",
+    "checks": {
+      "originalGenerationFailedStatusPreserved": true,
+      "originalGenerationFileHashMatchesRecovery": true,
+      "cachedRecoveryOriginalRequestId": true,
+      "cachedRecoveryOriginalAttemptId": true,
+      "cachedResponseReady": true,
+      "cachedSceneExactlyEqualsCommittedS2": true,
+      "cacheReadWasGetOnlyNoInference": true,
+      "allSixCacheChecksPassed": true,
+      "saveRefreshReportPassed": true,
+      "allTwelveSaveRefreshChecksPassed": true,
+      "saveRefreshHadZeroApiRequests": true,
+      "sameProfileFreshRestart": true,
+      "restartedFullStateExactlyEqualsS2": true,
+      "beforeRefreshFullStateExactlyEqualsS2": true,
+      "afterRefreshFullStateExactlyEqualsS2": true,
+      "allCalculatedStateHashesEqual": true,
+      "archiveAndRunIdentityPreserved": true,
+      "renderedNarrativePreserved": true,
+      "exportHashAndBytesMatch": true,
+      "exportContainsExactS2": true,
+      "exportCompleteTwoTurnArchive": true,
+      "noErrorsInRestartSaveRefresh": true
+    },
+    "sourceFiles": {
+      "generation": {
+        "file": "/workspace/scratch/60d77884fe74/acceptance-evidence/public-final-generation/evidence.json",
+        "sha256": "51e3395eb9ce806538da188033a63842b3d4567b24e2ac9c6d0cc48d5783a741"
+      },
+      "s2": {
+        "file": "/workspace/scratch/60d77884fe74/acceptance-evidence/public-final-generation/02-choice-committed.json",
+        "sha256": "f0484aec2ddc0885e025c531e038a85c6ead5059bb49bb262b84255a0eb6c616"
+      },
+      "cache": {
+        "file": "/workspace/scratch/60d77884fe74/acceptance-evidence/public-final-cached-response/cached-choice-response.json",
+        "sha256": "0ee5e403d0255e10b5ad154578da24f5c6ffad069d82b46a0fe956ec07942fb6"
+      },
+      "save": {
+        "file": "/workspace/scratch/60d77884fe74/acceptance-evidence/public-final-save-refresh/evidence.json",
+        "sha256": "cb07319cf7c4db24ef4af57841b2095729f4d8bfd423daa987f384aeb954a83d"
+      },
+      "restarted": {
+        "file": "/workspace/scratch/60d77884fe74/acceptance-evidence/public-final-save-refresh/00-entered.json",
+        "sha256": "0eb1fff1ed72e7e2565e058df473ad5f0cf1087ea0dcc0674ff2e0a5787f4a25"
+      },
+      "beforeRefresh": {
+        "file": "/workspace/scratch/60d77884fe74/acceptance-evidence/public-final-save-refresh/04-before-refresh.json",
+        "sha256": "81c04c1c40d152c3ce9aae73cf1c7ee309d9a3276e656574b4087c0a90cfd50e"
+      },
+      "afterRefresh": {
+        "file": "/workspace/scratch/60d77884fe74/acceptance-evidence/public-final-save-refresh/05-after-refresh.json",
+        "sha256": "0fbb63a5ebe68d59bf8274cb4580c4b6a9948dbd1e6d137a0dcf01961c96755e"
+      },
+      "export": {
+        "file": "/workspace/scratch/60d77884fe74/acceptance-evidence/public-final-save-refresh/saved-game.wending.jsonl",
+        "sha256": "a1c641fcaeaecbff6a9861e4d87f7eb35759dacfb9813ef63eb2276036563bcc"
+      }
+    },
+    "cachedResponse": {
+      "verifiedAt": "2026-10-28T17:17:34.733Z",
+      "requestId": "230530a2-0dea-4a43-9d54-8cc488fa42e8",
+      "attemptId": "7fe4c325-568a-4234-9bd1-4436b5a966c0",
+      "sceneSha256": "32bdfc9f4c7838de3d1f84cc614ca6a73f6aa905e3c6e5b29795d1fa8537577f",
+      "sixChecksPassed": true,
+      "readMethod": "GET",
+      "freshModelCalls": 0,
+      "scope": "Retrieved the original committed response from existing production cache. This does not manufacture or claim recovery of the missing original network-wire capture."
+    },
+    "restartSaveRefresh": {
+      "startedAt": "2026-10-28T17:18:02.602Z",
+      "finishedAt": "2026-10-28T17:18:14.781Z",
+      "reportStatus": "ACCEPTANCE_PASSED",
+      "checksPassed": 12,
+      "apiRequests": 0,
+      "stateHash": "28984c20b612d64bf79089cdcf77c41bed9f9758a4732027b2a5be1127f2a1dc",
+      "archiveId": "6f580987-0a62-43ca-9d3d-a060b441f8a4",
+      "runId": "7fc2dbd6-e9ba-4dc4-a4fe-156455c31a3b",
+      "revision": 2,
+      "turnId": 2,
+      "export": {
+        "file": "saved-game.wending.jsonl",
+        "bytes": 10827,
+        "sha256": "a1c641fcaeaecbff6a9861e4d87f7eb35759dacfb9813ef63eb2276036563bcc",
+        "lines": 3,
+        "revision": 2,
+        "sceneId": "r:8910e88c0ed357d9:t2:s:scene",
+        "turns": 2
+      },
+      "tenSecondRefreshObservation": true
+    },
+    "operatorLedgerEvidence": {
+      "file": "/workspace/scratch/60d77884fe74/acceptance-evidence/ledger-retention-post-production.json",
+      "passed": true
+    },
+    "conclusion": "Actual public opening and choice were committed. The original driver FAILED status is preserved because its choice response-body observer failed. A separate GET recovered the exact original request/attempt/scene, and a freshly restarted browser then passed all12 export/refresh checks with zero API requests. Combined evidence verifies the requested public gameplay and persistence flow without an extra inference or relabeling the original failure."
+  }
+}

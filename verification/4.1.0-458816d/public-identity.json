@@ -1,0 +1,76 @@
+{
+  "schemaVersion": 1,
+  "verifiedAt": "2026-10-28T17:14:16.459383+00:00",
+  "expectedCommit": "458816d14a2d48612f0e66a1f28e6f0045f4951b",
+  "expectedHtmlSha256": "574123926708a59b6dc75da822f6dc0f2ca39dacc4ce4825873856b93270707d",
+  "testerPermitUsed": false,
+  "modelCalls": 0,
+  "checks": {
+    "allHttp200": true,
+    "sameOrigin": true,
+    "version": true,
+    "sourceCommit": true,
+    "healthHash": true,
+    "rootHtml": true,
+    "downloadHtml": true,
+    "publicCapabilities": true
+  },
+  "passed": true,
+  "responses": [
+    {
+      "path": "/healthz",
+      "status": 200,
+      "url": "https://baishi-wending.ct1150.workers.dev/healthz",
+      "bytes": 296,
+      "sha256": "5a25bc479ca25d77b1e422cdf243c591232ecdfb7a80d8d30bc6b69714ea0068",
+      "contentType": "application/json; charset=utf-8",
+      "body": {
+        "status": "ok",
+        "version": "4.1.0",
+        "sourceCommit": "458816d14a2d48612f0e66a1f28e6f0045f4951b",
+        "htmlSha256": "574123926708a59b6dc75da822f6dc0f2ca39dacc4ce4825873856b93270707d",
+        "htmlBytes": 971378,
+        "releaseSource": "remote-fetch",
+        "lastAttemptAt": 1793207655525,
+        "lastSuccessAt": 1793207656060,
+        "lastError": ""
+      }
+    },
+    {
+      "path": "/api/story/capabilities",
+      "status": 200,
+      "url": "https://baishi-wending.ct1150.workers.dev/api/story/capabilities",
+      "bytes": 174,
+      "sha256": "3fbfd812263a6159fba2a6a96d99c494307c795f0d519e8de36fcace13372088",
+      "contentType": "application/json; charset=utf-8",
+      "body": {
+        "protocolVersion": 1,
+        "available": true,
+        "status": "ready",
+        "errorCode": null,
+        "limits": {
+          "maxRequestBytes": 32768,
+          "maxResponseBytes": 65536,
+          "maxContextBytes": 7000,
+          "timeoutMs": 105000
+        }
+      }
+    },
+    {
+      "path": "/",
+      "status": 200,
+      "url": "https://baishi-wending.ct1150.workers.dev/",
+      "bytes": 971378,
+      "sha256": "574123926708a59b6dc75da822f6dc0f2ca39dacc4ce4825873856b93270707d",
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "/baishi-wending-offline.html",
+      "status": 200,
+      "url": "https://baishi-wending.ct1150.workers.dev/baishi-wending-offline.html",
+      "bytes": 971378,
+      "sha256": "574123926708a59b6dc75da822f6dc0f2ca39dacc4ce4825873856b93270707d",
+      "contentType": "text/html; charset=utf-8"
+    }
+  ]
+}
