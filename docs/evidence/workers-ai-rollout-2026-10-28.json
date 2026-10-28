@@ -664,7 +664,8 @@
       "maximumInputBytesAtMaximumSafeTurn": 12240,
       "inputCapBytes": 12288,
       "minimumInputHeadroomBytes": 48,
-      "realModelReverification": false
+      "realModelReverification": false,
+      "finalCommitCiRunId": 40616175153
     },
     "task8Preparation": {
       "status": "LOCAL_IMPLEMENTATION_AND_INDEPENDENT_REVIEW_PASSED_NOT_DEPLOYED",
@@ -716,8 +717,38 @@
         "independentFixReview": "APPROVED",
         "status": "closed"
       },
-      "finalCommitCi": "pending publication of this exact source; PR checks are authoritative",
+      "finalCommitCi": {
+        "runId": 40616175153,
+        "sourceCommit": "4992d658d7406de67003fee857566c0bef4f853a",
+        "status": "success",
+        "details": "review.continuationCI"
+      },
       "realBrowserClosurePassed": false
+    },
+    "continuationCI": {
+      "runId": 40616175153,
+      "jobId": 122579073531,
+      "sourceCommit": "4992d658d7406de67003fee857566c0bef4f853a",
+      "mergeCommit": "55cc6966eb95b69a76f9fe62869159a6188994fa",
+      "sourceTree": "5de02194e353297166cdaf653b0ad537d1feb989",
+      "treeMatchedReviewedSource": true,
+      "tests": 610,
+      "failures": 0,
+      "cancelled": 0,
+      "skipped": 0,
+      "syntaxFiles": 130,
+      "backendModules": 14,
+      "htmlBytes": 970046,
+      "htmlSha256": "3c3b09de319e2032c3990867780998d67adcb6af62fc9fe0a78cb35fdf46b5b0",
+      "backendManifestSha256": "26ec17fe46b7c38dee11365d56ffa4f2b65dd357771c206174f8f93ec1b029d0",
+      "artifactId": 12785266796,
+      "status": "success",
+      "publish": "skipped",
+      "browserTestsIncluded": true,
+      "nativeSqliteAndWorkerdIncluded": true,
+      "longRunFixtureTurns": 1000,
+      "realInferenceCalls": 0,
+      "scope": "Exact reviewed runtime/test source plus documentation in4992d658; later evidence-only commits preserve these source-file hashes."
     }
   },
   "experimentActualCalls": 6,
@@ -953,5 +984,45 @@
     "existingNeuronCap": 800,
     "limitsChanged": false,
     "newCaseImplemented": false
+  },
+  "continuationProductionRecheck": {
+    "observedAt": "2026-10-28T01:38:51.819741+00:00",
+    "health": {
+      "status": "ok",
+      "version": "4.0.0",
+      "sourceCommit": "e247a875d3f5eea18fe1ec67cf5842b6d70204cc",
+      "htmlSha256": "02b1248bd287b3f2ebc89aef6f22ab85d56364feef53d1b40d18f51a40ccf617",
+      "htmlBytes": 852849,
+      "releaseSource": "remote-fetch",
+      "lastAttemptAt": 1793151531717,
+      "lastSuccessAt": 1793151531924,
+      "lastError": ""
+    },
+    "capabilities": {
+      "protocolVersion": 1,
+      "available": false,
+      "status": "paused",
+      "errorCode": "INFERENCE_DISABLED",
+      "limits": {
+        "maxRequestBytes": 32768,
+        "maxResponseBytes": 65536,
+        "maxContextBytes": 7000,
+        "timeoutMs": 30000
+      }
+    },
+    "operatorCallCount": 6,
+    "operatorReservedNeurons": 256,
+    "limits": {
+      "maxCalls": 10,
+      "maxNeurons": 800,
+      "taskCalls": {
+        "task1": 4,
+        "task7": 4,
+        "task8": 2
+      }
+    },
+    "newInferenceCallsInContinuation": 0,
+    "publicDeploymentChanged": false,
+    "testerStageDeployed": false
   }
 }
