@@ -21,6 +21,7 @@ memoryDeltas may be empty; only material facts/relationships/promises/clues. Sum
 Use unique entity/choice IDs and action tuples(intent,targetId,stake,approach).
 Targets:practice=self(breakthrough=NEXT_REALM);rest=self;explore=supplies,stones,manual,crystal,core,soulseal,skykey,relic,iron;negotiate/fight/evade=living person/faction ID;travel=place ID;craft study=manual,forge=talisman.
 先写entities，只列本场speaker/targetId/memoryDeltas引用的NPC、地点及势力。主角仅用self，绝不把life.name作为NPC加入entities。再写blocks和choices，所有人物/地点引用必须对应entities的id。dialogue只写一个人的一句话，speaker为活人id或self；旁白narration不带speaker。title/location/text/label使用中文名称，不出现ID。询问用negotiate，找物资用explore；普通练功用steady/intensive，突破用breakthrough。选项文字必须符合实际intent和目标。
+travel的targetId必须指向entities中kind为place的实际目的地，label必须完整包含该目的地的name，且目的地name不能等于本场location。前往未声明的新地点时先声明对应place；已知地点沿用原id。不得把出发地当目的地，留在原地不能使用travel。
 No effects or numeric rewards.`;
 
 // Only fixed categories cross the provider boundary. Reuse the real structure
@@ -127,7 +128,16 @@ export async function generateProviderScene(ai,profile,context,options={},assert
     });
     if(!result.nonThinkingValidated)fail('PROVIDER_RESPONSE_INVALID');
     let scene;try { scene=JSON.parse(choice.message.content); } catch { fail('PROVIDER_RESPONSE_INVALID'); }
-    try { result.scene=validateGeneratedScene(scene,context); }
+    try {
+      const validated=validateGeneratedScene(scene,context);
+      // Apply this narrative check only to new provider output. Canonical scene
+      // validation and previously saved/cached scene recovery remain unchanged.
+      for(const proposal of validated.choices)if(proposal.intent==='travel'){
+        const destination=validated.entities.find(entity=>entity.id===proposal.targetId&&entity.kind==='place');
+        if(!destination||!proposal.label.includes(destination.name)||destination.name===validated.location)fail('CHOICE_NOT_COMPILABLE');
+      }
+      result.scene=validated;
+    }
     catch(error) {
       if(error?.code==='GENERATED_SCENE_INVALID')result.structureDiagnostic=structureDiagnostic(scene);
       throw error;
