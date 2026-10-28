@@ -43,8 +43,15 @@ if(saved.ledger.attempts.at(-1).status!=='reserved'||model!=='@cf/qwen/qwen3-30b
 return ${JSON.stringify(response())};
 }}},config); } }
 export default createOperatorProbeWorker(config);`;
-  const modules=[{type:'ESModule',path:path.join(root,'entry.js'),contents:entry}];
-  for(const name of ['operator-probe.js','story-probe.js','story-config.js'])modules.push({type:'ESModule',path:path.join(root,name),contents:await readFile(new URL('../src/worker/'+name,import.meta.url),'utf8')});
+  const modules=[{type:'ESModule',path:path.join(root,'src/worker/entry.js'),contents:entry}];
+  const visited=new Set();
+  async function moduleGraph(url,name){
+    if(visited.has(url.href))return;visited.add(url.href);
+    const contents=await readFile(url,'utf8');
+    modules.push({type:'ESModule',path:path.join(root,name),contents});
+    for(const match of contents.matchAll(/(?:from\s*|import\s*)['"](\.[^'"]+)['"]/g))await moduleGraph(new URL(match[1],url),path.normalize(path.join(path.dirname(name),match[1])));
+  }
+  await moduleGraph(new URL('../src/worker/operator-probe.js',import.meta.url),'src/worker/operator-probe.js');
   let egress=0;
   const options={name:'wending-operator-local',compatibilityDate:'2026-07-30',modulesRoot:root,modules,durableObjects:{OPERATOR_PROBE:{className:'Probe',useSQLite:true}},durableObjectsPersist:path.join(root,'sqlite'),outboundService:()=>{egress++;throw new Error('network forbidden');}};
   let mf=new Miniflare(options);t.after(()=>mf.dispose());

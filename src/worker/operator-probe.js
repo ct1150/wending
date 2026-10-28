@@ -1,6 +1,7 @@
 // Temporary operator-only entry; deliberately absent from the production graph.
 import { createExperimentLedger, confirmFreeBoundaryEvidence, EXPERIMENT_LIMITS } from './story-config.js';
 import { runProbe } from './story-probe.js';
+import { runStoryAcceptance, STORY_ACCEPTANCE_CASES } from './operator-story.js';
 
 export const OPERATOR_PROBE_NAME = 'wending-realtime-acceptance-v1';
 const STORAGE_KEY = 'experiment-v1';
@@ -23,12 +24,12 @@ async function authenticate(request, config) {
 }
 function routeError(request) {
   const url = new URL(request.url);
-  if (!['/status','/probe'].includes(url.pathname)) return blocked('NOT_FOUND', 404);
+  if (!['/status','/probe','/story-acceptance'].includes(url.pathname)) return blocked('NOT_FOUND', 404);
   if (request.method !== (url.pathname === '/status' ? 'GET' : 'POST')) return blocked('METHOD_NOT_ALLOWED', 405);
   if (url.search) return blocked('REQUEST_INVALID', 400);
   return null;
 }
-async function readAttempt(request) {
+async function readAttempt(request, storyAcceptance = false) {
   if (!/^application\/json(?:\s*;\s*charset=utf-8)?$/i.test(request.headers.get('content-type') ?? '')) return { error:blocked('CONTENT_TYPE_INVALID',415) };
   const length = request.headers.get('content-length');
   if (length !== null && (!/^\d+$/.test(length) || Number(length) > MAX_BODY_BYTES)) return { error:blocked('REQUEST_INVALID',400) };
@@ -48,8 +49,8 @@ async function readAttempt(request) {
     let offset = 0;
     for (const chunk of chunks) { bytes.set(chunk,offset); offset += chunk.byteLength; }
     const body = JSON.parse(new TextDecoder('utf-8',{ fatal:true }).decode(bytes));
-    if (!body || typeof body !== 'object' || Array.isArray(body) || Object.keys(body).length !== 1 || typeof body.attemptId !== 'string' || !/^[a-zA-Z0-9_-]{1,80}$/.test(body.attemptId)) throw new Error();
-    return { attemptId:body.attemptId };
+    if (!body || typeof body !== 'object' || Array.isArray(body) || Object.keys(body).length !== (storyAcceptance ? 2 : 1) || (storyAcceptance && !STORY_ACCEPTANCE_CASES.includes(body.caseId)) || typeof body.attemptId !== 'string' || !/^[a-zA-Z0-9_-]{1,80}$/.test(body.attemptId)) throw new Error();
+    return { attemptId:body.attemptId, ...(storyAcceptance ? {caseId:body.caseId} : {}) };
   } catch { return { error:blocked('REQUEST_INVALID',400) }; }
   finally { reader.releaseLock(); }
 }
@@ -73,25 +74,29 @@ export class OperatorProbeDurableObject {
     if (authError) return authError;
     const error = routeError(request);
     if (error) return error;
-    let attemptId;
+    let attemptId,caseId;
     if (request.method === 'POST') {
-      const body = await readAttempt(request);
+      const body = await readAttempt(request,new URL(request.url).pathname === '/story-acceptance');
       if (body.error) return body.error;
-      attemptId = body.attemptId;
+      attemptId = body.attemptId; caseId = body.caseId;
     }
     // Serialize the whole read/reserve/invoke/settle operation, including external
     // awaits, rather than relying only on the DO's storage input/output gates.
-    const pending = this.queue.then(() => this.handle(attemptId));
+    const pending = this.queue.then(() => this.handle(attemptId,caseId));
     this.queue = pending.catch(() => {});
     try { return await pending; } catch { return blocked('OPERATOR_STORAGE_UNAVAILABLE'); }
   }
-  async handle(attemptId) {
+  async handle(attemptId,caseId) {
     if (!this.storage?.sql || typeof this.storage.get !== 'function' || typeof this.storage.put !== 'function') return blocked('OPERATOR_STORAGE_UNAVAILABLE');
     const stored = await this.storage.get(STORAGE_KEY);
     const record = stored === undefined ? { schemaVersion:1, ledger:createExperimentLedger(), results:{} } : stored;
     if (record?.schemaVersion !== 1 || record.ledger?.schemaVersion !== 1 || !Array.isArray(record.ledger.attempts) || !record.results || typeof record.results !== 'object' || Array.isArray(record.results)) return blocked('EXPERIMENT_LEDGER_INVALID');
     if (attemptId === undefined) {
-      return reply({ schemaVersion:1, status:'ok', limits:EXPERIMENT_LIMITS, callCount:record.ledger.attempts.length, reservedNeurons:record.ledger.attempts.reduce((sum,entry) => sum + entry.reservedNeurons,0), ledger:record.ledger, results:record.results });
+      return reply({ schemaVersion:1, status:'ok', limits:EXPERIMENT_LIMITS, callCount:record.ledger.attempts.length, reservedNeurons:record.ledger.attempts.reduce((sum,entry) => sum + entry.reservedNeurons,0), ledger:record.ledger, results:record.results, ...(record.acceptance === undefined ? {} : {acceptance:record.acceptance}) });
+    }
+    if (caseId !== undefined) {
+      const result = await runStoryAcceptance({record,caseId,attemptId,env:this.env,confirmEvidence:() => { try { return proof(this.config); } catch { throw Object.assign(new Error('FREE_BOUNDARY_UNVERIFIED'),{code:'FREE_BOUNDARY_UNVERIFIED'}); } },save:next => this.storage.put(STORAGE_KEY,next)});
+      return reply(result,result.status === 'blocked' || result.ledgerErrorCode ? 503 : 200);
     }
     const previous = record.ledger.attempts.find(entry => entry.attemptId === attemptId);
     if (previous) return Object.hasOwn(record.results,attemptId) ? reply(record.results[attemptId]) : reply({ status:'already-reserved-or-unknown', attemptId, reservation:previous });
