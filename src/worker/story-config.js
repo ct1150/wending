@@ -13,7 +13,9 @@ export const CANDIDATE_PROFILE = Object.freeze({
   neuronRates:Object.freeze({ inputPerMillion:40909, outputPerMillion:290909, verifiedOn:'2026-10-28', source:'https://developers.cloudflare.com/workers-ai/platform/pricing/' }),
 });
 // A successful catalog lookup is not validation. Promotion requires reviewed real evidence.
-export const PRODUCTION_PROFILES = Object.freeze([]);
+export const PRODUCTION_PROFILES = Object.freeze([
+  Object.freeze({ ...CANDIDATE_PROFILE, validated:true, supportsStructuredOutput:true, validationEvidence:'docs/evidence/realtime-release-2026-10-28.json' }),
+]);
 const trustedEvidence = new WeakSet();
 const encoder = new TextEncoder();
 function fail(code) { throw Object.assign(new Error(code), { code }); }

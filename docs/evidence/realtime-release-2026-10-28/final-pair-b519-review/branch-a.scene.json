@@ -1,0 +1,70 @@
+{
+  "id": "r:17d4b63b7a333a81:t2:s:scene",
+  "title": "杂货铺里的低语",
+  "location": "青石村",
+  "entities": [
+    {
+      "id": "r:17d4b63b7a333a81:t1:e:place_qingshi_village",
+      "name": "青石村",
+      "kind": "place"
+    },
+    {
+      "id": "r:17d4b63b7a333a81:t1:e:person_lao_wang",
+      "name": "老王",
+      "kind": "person"
+    },
+    {
+      "id": "r:17d4b63b7a333a81:t1:e:person_ling_shang",
+      "name": "林商",
+      "kind": "person"
+    }
+  ],
+  "blocks": [
+    {
+      "kind": "narration",
+      "text": "老王压低声音，将一张泛黄的符纸推到你面前。符纸边缘焦黑，散发着淡淡的硫磺味。他指了指北边，眼神闪烁，提到最近山里妖兽躁动不安，似乎有什么东西在苏醒。"
+    },
+    {
+      "kind": "dialogue",
+      "text": "这符纸能挡一次低阶妖兽的扑击，但别指望它救命。北边的路，没个引路人，进去就是死。",
+      "speaker": "r:17d4b63b7a333a81:t1:e:person_lao_wang"
+    },
+    {
+      "kind": "narration",
+      "text": "铺子外传来车轮碾过碎石的声音，林商正站在门口整理货物，似乎听到了里面的动静，探头看了一眼。"
+    }
+  ],
+  "choices": [
+    {
+      "id": "r:17d4b63b7a333a81:t2:c:a",
+      "label": "向老王询问符纸的具体用法及妖兽异动的细节",
+      "intent": "negotiate",
+      "targetId": "r:17d4b63b7a333a81:t1:e:person_lao_wang",
+      "stake": "low",
+      "approach": "cooperate"
+    },
+    {
+      "id": "r:17d4b63b7a333a81:t2:c:b",
+      "label": "询问林商前往云州城的车资及行程",
+      "intent": "negotiate",
+      "targetId": "r:17d4b63b7a333a81:t1:e:person_ling_shang",
+      "stake": "low",
+      "approach": "cooperate"
+    },
+    {
+      "id": "r:17d4b63b7a333a81:t2:c:c",
+      "label": "在青石村周边探索，寻找行粮",
+      "intent": "explore",
+      "targetId": "supplies",
+      "stake": "low",
+      "approach": "cautious"
+    }
+  ],
+  "memoryDeltas": [
+    {
+      "entityId": "r:17d4b63b7a333a81:t1:e:person_lao_wang",
+      "text": "老王透露北边妖兽异动加剧，且符纸仅能抵挡一次低阶妖兽攻击。",
+      "kind": "fact"
+    }
+  ]
+}

@@ -1,0 +1,55 @@
+{
+  "kind": "final-source-two-branch-diagnostic",
+  "sourceCommit": "7613dc7298b12ab786850f77140bab535fc99953",
+  "branch": "b",
+  "inputSha256": "7046771aae7a19a818f8967fd4447ef99fb9a0502670d7f134d741839d93bde7",
+  "startedAt": "2026-10-28T16:47:06.827Z",
+  "completedAt": "2026-10-28T16:47:29.978Z",
+  "result": {
+    "result": {
+      "id": "chatcmpl-bfcda667-8b0f-4294-84dc-3cf9158d2240",
+      "object": "chat.completion",
+      "created": 1793206027,
+      "model": "@cf/qwen/qwen3.8-27b",
+      "choices": [
+        {
+          "index": 0,
+          "message": {
+            "role": "assistant",
+            "content": "{\n  \"id\": \"r:17d4b63b7a333a81:t2:s:scene\",\n  \"title\": \"山风与石\",\n  \"location\": \"青石村后山林\",\n  \"entities\": [\n    {\n      \"id\": \"r:17d4b63b7a333a81:t1:e:place_qingshi_village\",\n      \"name\": \"青石村\",\n      \"kind\": \"place\"\n    },\n    {\n      \"id\": \"r:17d4b63b7a333a81:t1:e:person_lao_wang\",\n      \"name\": \"老王\",\n      \"kind\": \"person\"\n    },\n    {\n      \"id\": \"r:17d4b63b7a333a81:t1:e:person_ling_shang\",\n      \"name\": \"林商\",\n      \"kind\": \"person\"\n    }\n  ],\n  \"blocks\": [\n    {\n      \"kind\": \"narration\",\n      \"text\": \"九十个日夜的风霜在青石村后的山林里留下了痕迹。云归在枯叶与乱石间摸索，指尖终于触到一块微凉的石头。那石头表面有细微的纹路，像是被某种力量打磨过，入手沉重，隐隐有温热感。\"\n    },\n    {\n      \"kind\": \"dialogue\",\n      \"text\": \"“这石头……不像普通的山石。”\",\n      \"speaker\": \"self\"\n    },\n    {\n      \"kind\": \"narration\",\n      \"text\": \"云归将石头收入怀中，继续在山林中搜寻。行粮已经所剩无几，必须尽快找到补给或离开这片山林。\"\n    }\n  ],\n  \"choices\": [\n    {\n      \"id\": \"r:17d4b63b7a333a81:t2:c:a\",\n      \"label\": \"返回青石村，向老王询问石头的来历\",\n      \"intent\": \"negotiate\",\n      \"targetId\": \"r:17d4b63b7a333a81:t1:e:person_lao_wang\",\n      \"stake\": \"low\",\n      \"approach\": \"cooperate\"\n    },\n    {\n      \"id\": \"r:17d4b63b7a333a81:t2:c:b\",\n      \"label\": \"继续在山林中搜寻行粮\",\n      \"intent\": \"explore\",\n      \"targetId\": \"supplies\",\n      \"stake\": \"high\",\n      \"approach\": \"cautious\"\n    },\n    {\n      \"id\": \"r:17d4b63b7a333a81:t2:c:c\",\n      \"label\": \"返回青石村，寻找林商搭车前往云州城\",\n      \"intent\": \"negotiate\",\n      \"targetId\": \"r:17d4b63b7a333a81:t1:e:person_ling_shang\",\n      \"stake\": \"low\",\n      \"approach\": \"cooperate\"\n    }\n  ],\n  \"memoryDeltas\": [\n    {\n      \"entityId\": \"r:17d4b63b7a333a81:t1:e:place_qingshi_village\",\n      \"text\": \"云归在青石村后山林中发现了一块疑似灵石的石头。\"\n    ,\n      \"kind\": \"fact\"\n    }\n  ]\n}",
+            "refusal": null,
+            "annotations": null,
+            "audio": null,
+            "function_call": null,
+            "reasoning": null
+          },
+          "logprobs": null,
+          "finish_reason": "stop",
+          "stop_reason": null,
+          "token_ids": null,
+          "routed_experts": null
+        }
+      ],
+      "service_tier": null,
+      "usage": {
+        "prompt_tokens": 2016,
+        "completion_tokens": 839,
+        "total_tokens": 2855,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        },
+        "neurons": 326.5454406738281
+      },
+      "prompt_logprobs": null,
+      "prompt_token_ids": null,
+      "prompt_text": null,
+      "kv_transfer_params": null,
+      "ec_transfer_params": null,
+      "metrics": null
+    },
+    "success": true,
+    "errors": [],
+    "messages": [],
+    "status": 200
+  }
+}

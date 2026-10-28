@@ -1,0 +1,361 @@
+{
+  "branch": "branch-a",
+  "captureFile": "branch-a.json",
+  "captureSha256": "3cf553fb05b8d2cf42cb5c6105e212708ddf773e299f5d309f987794d9d5b52b",
+  "captureInputSourceCommit": "7613dc7298b12ab786850f77140bab535fc99953",
+  "verifiedSourceCommit": "b519bf4fd730133a852b3b6e6d1f5aab90144220",
+  "sourceS1StateHash": "65fa96ed4c6190a4063aa54476a8f2ebee6ce08a26250f5c74d58d2c5f9abf60",
+  "input": {
+    "sha256": "779cd735076747b2ed27e44f850f0ebf9b8fe0db7f980d90c7a324255befbb48",
+    "bytes": 14075,
+    "sameExactBytesAsActualRequest": true,
+    "systemTextSha256": "0e4c6d4c3fbf52cc92fe030dc9620a86fcbee8ea133f6513a8f1f2205c129734",
+    "schemaSha256": "b697f151754f7db007f932edad46fec1509fe64cf649d7fd83d2430bedd57044"
+  },
+  "capture": {
+    "startedAt": "2026-10-28T16:46:06.940Z",
+    "completedAt": "2026-10-28T16:47:05.792Z",
+    "latencyMs": 58852,
+    "model": "@cf/qwen/qwen3.8-27b",
+    "finishReason": "stop",
+    "usage": {
+      "prompt_tokens": 2143,
+      "completion_tokens": 879,
+      "total_tokens": 3022,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "neurons": 343.37725830078125
+    }
+  },
+  "provider": {
+    "status": "ready",
+    "nonThinkingValidated": true,
+    "accountingStatus": "complete",
+    "usage": {
+      "promptTokens": 2143,
+      "completionTokens": 879,
+      "totalTokens": 3022
+    },
+    "stopReason": "stop",
+    "inputHash": "779cd735076747b2ed27e44f850f0ebf9b8fe0db7f980d90c7a324255befbb48",
+    "inputBytes": 14075
+  },
+  "rules": {
+    "status": "CANONICAL_IN_MEMORY_COMMIT_PASSED",
+    "stateHash": "81675e47cc024ba63a04a87ccb77fe887994241b38337eae07fdb031464dc98a",
+    "revision": 2,
+    "turnId": 2,
+    "life": {
+      "name": "云归",
+      "ageDays": 5767,
+      "lifeLimit": 80,
+      "realm": "mortal",
+      "cultivation": 0,
+      "injury": 0,
+      "items": {
+        "supplies": 2,
+        "stones": 1
+      },
+      "relations": {
+        "r:17d4b63b7a333a81:t1:e:person_lao_wang": 3
+      },
+      "birth": {
+        "originId": "village",
+        "talentIds": [
+          "fortune-debt",
+          "iron-bones"
+        ],
+        "attributes": {
+          "constitution": 3,
+          "insight": 6,
+          "fortune": 3
+        }
+      }
+    },
+    "receipt": {
+      "kind": "choice",
+      "choiceId": "r:17d4b63b7a333a81:t1:c:a",
+      "action": {
+        "id": "r:17d4b63b7a333a81:t1:c:a",
+        "label": "与老王交谈，询问符纸详情及北边妖兽传闻",
+        "intent": "negotiate",
+        "targetId": "r:17d4b63b7a333a81:t1:e:person_lao_wang",
+        "stake": "low",
+        "approach": "cooperate"
+      },
+      "elapsedDays": 7,
+      "itemChanges": {
+        "stones": 1,
+        "supplies": -1
+      },
+      "relationChanges": {
+        "r:17d4b63b7a333a81:t1:e:person_lao_wang": 3
+      },
+      "random": {
+        "before": 1080474372,
+        "after": 3012430483,
+        "roll": 83
+      },
+      "before": {
+        "ageDays": 5760,
+        "realm": "mortal",
+        "cultivation": 0,
+        "injury": 0
+      },
+      "after": {
+        "ageDays": 5767,
+        "realm": "mortal",
+        "cultivation": 0,
+        "injury": 0
+      },
+      "death": null,
+      "birth": null
+    },
+    "choices": [
+      {
+        "id": "r:17d4b63b7a333a81:t2:c:a",
+        "label": "向老王询问符纸的具体用法及妖兽异动的细节",
+        "intent": "negotiate",
+        "targetId": "r:17d4b63b7a333a81:t1:e:person_lao_wang",
+        "stake": "low",
+        "approach": "cooperate",
+        "enabled": true,
+        "reason": null,
+        "costs": {
+          "days": 7,
+          "items": {
+            "supplies": 1
+          }
+        },
+        "warnings": [],
+        "previewReceipt": {
+          "kind": "choice",
+          "choiceId": "r:17d4b63b7a333a81:t2:c:a",
+          "action": {
+            "id": "r:17d4b63b7a333a81:t2:c:a",
+            "label": "向老王询问符纸的具体用法及妖兽异动的细节",
+            "intent": "negotiate",
+            "targetId": "r:17d4b63b7a333a81:t1:e:person_lao_wang",
+            "stake": "low",
+            "approach": "cooperate"
+          },
+          "elapsedDays": 7,
+          "itemChanges": {
+            "stones": 1,
+            "supplies": -1
+          },
+          "relationChanges": {
+            "r:17d4b63b7a333a81:t1:e:person_lao_wang": 3
+          },
+          "random": {
+            "before": 3012430483,
+            "after": 4214689494,
+            "roll": 94
+          },
+          "before": {
+            "ageDays": 5767,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "after": {
+            "ageDays": 5774,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "death": null,
+          "birth": null
+        }
+      },
+      {
+        "id": "r:17d4b63b7a333a81:t2:c:b",
+        "label": "询问林商前往云州城的车资及行程",
+        "intent": "negotiate",
+        "targetId": "r:17d4b63b7a333a81:t1:e:person_ling_shang",
+        "stake": "low",
+        "approach": "cooperate",
+        "enabled": true,
+        "reason": null,
+        "costs": {
+          "days": 7,
+          "items": {
+            "supplies": 1
+          }
+        },
+        "warnings": [],
+        "previewReceipt": {
+          "kind": "choice",
+          "choiceId": "r:17d4b63b7a333a81:t2:c:b",
+          "action": {
+            "id": "r:17d4b63b7a333a81:t2:c:b",
+            "label": "询问林商前往云州城的车资及行程",
+            "intent": "negotiate",
+            "targetId": "r:17d4b63b7a333a81:t1:e:person_ling_shang",
+            "stake": "low",
+            "approach": "cooperate"
+          },
+          "elapsedDays": 7,
+          "itemChanges": {
+            "stones": 1,
+            "supplies": -1
+          },
+          "relationChanges": {
+            "r:17d4b63b7a333a81:t1:e:person_ling_shang": 3
+          },
+          "random": {
+            "before": 3012430483,
+            "after": 4214689494,
+            "roll": 94
+          },
+          "before": {
+            "ageDays": 5767,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "after": {
+            "ageDays": 5774,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "death": null,
+          "birth": null
+        }
+      },
+      {
+        "id": "r:17d4b63b7a333a81:t2:c:c",
+        "label": "在青石村周边探索，寻找行粮",
+        "intent": "explore",
+        "targetId": "supplies",
+        "stake": "low",
+        "approach": "cautious",
+        "enabled": true,
+        "reason": null,
+        "costs": {
+          "days": 90,
+          "items": {}
+        },
+        "warnings": [
+          "历练受伤基础风险5%，根骨与坚韧筋骨可降低风险。"
+        ],
+        "previewReceipt": {
+          "kind": "choice",
+          "choiceId": "r:17d4b63b7a333a81:t2:c:c",
+          "action": {
+            "id": "r:17d4b63b7a333a81:t2:c:c",
+            "label": "在青石村周边探索，寻找行粮",
+            "intent": "explore",
+            "targetId": "supplies",
+            "stake": "low",
+            "approach": "cautious"
+          },
+          "elapsedDays": 90,
+          "itemChanges": {
+            "supplies": 1
+          },
+          "relationChanges": {},
+          "random": {
+            "before": 3012430483,
+            "after": 4214689494,
+            "roll": 94
+          },
+          "before": {
+            "ageDays": 5767,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "after": {
+            "ageDays": 5857,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "death": null,
+          "birth": null
+        }
+      }
+    ],
+    "memoryDelta": {
+      "schemaVersion": 1,
+      "receipt": {
+        "kind": "choice",
+        "choiceId": "r:17d4b63b7a333a81:t1:c:a",
+        "action": {
+          "id": "r:17d4b63b7a333a81:t1:c:a",
+          "label": "与老王交谈，询问符纸详情及北边妖兽传闻",
+          "intent": "negotiate",
+          "targetId": "r:17d4b63b7a333a81:t1:e:person_lao_wang",
+          "stake": "low",
+          "approach": "cooperate"
+        },
+        "elapsedDays": 7,
+        "itemChanges": {
+          "stones": 1,
+          "supplies": -1
+        },
+        "relationChanges": {
+          "r:17d4b63b7a333a81:t1:e:person_lao_wang": 3
+        },
+        "random": {
+          "before": 1080474372,
+          "after": 3012430483,
+          "roll": 83
+        },
+        "before": {
+          "ageDays": 5760,
+          "realm": "mortal",
+          "cultivation": 0,
+          "injury": 0
+        },
+        "after": {
+          "ageDays": 5767,
+          "realm": "mortal",
+          "cultivation": 0,
+          "injury": 0
+        },
+        "death": null,
+        "birth": null
+      },
+      "entities": [
+        {
+          "id": "r:17d4b63b7a333a81:t1:e:place_qingshi_village",
+          "name": "青石村",
+          "kind": "place"
+        },
+        {
+          "id": "r:17d4b63b7a333a81:t1:e:person_lao_wang",
+          "name": "老王",
+          "kind": "person"
+        },
+        {
+          "id": "r:17d4b63b7a333a81:t1:e:person_ling_shang",
+          "name": "林商",
+          "kind": "person"
+        }
+      ],
+      "records": [
+        {
+          "id": "m:dc570dff9d42064e5d4eb0d500473fa5",
+          "source": "narrative",
+          "kind": "fact",
+          "entityId": "r:17d4b63b7a333a81:t1:e:person_lao_wang",
+          "text": "老王透露北边妖兽异动加剧，且符纸仅能抵挡一次低阶妖兽攻击。"
+        }
+      ],
+      "summary": null
+    }
+  },
+  "scope": {
+    "mode": "OFFLINE_REPLAY_OF_UNMODIFIED_REAL_PROVIDER_CAPTURE",
+    "adapterReads": 1,
+    "freshModelCalls": 0,
+    "networkCalls": 0,
+    "archiveWrites": 0,
+    "operatorLedgerWrites": 0,
+    "realLatencySimulated": false
+  }
+}

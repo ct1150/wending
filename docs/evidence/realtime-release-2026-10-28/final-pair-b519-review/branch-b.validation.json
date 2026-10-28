@@ -1,0 +1,355 @@
+{
+  "branch": "branch-b",
+  "captureFile": "branch-b-retry-1.json",
+  "captureSha256": "1021cf6c19267782109ec7d098a8bc8c720c2af031640236cd235803a0bf40ab",
+  "captureInputSourceCommit": "7613dc7298b12ab786850f77140bab535fc99953",
+  "verifiedSourceCommit": "b519bf4fd730133a852b3b6e6d1f5aab90144220",
+  "sourceS1StateHash": "65fa96ed4c6190a4063aa54476a8f2ebee6ce08a26250f5c74d58d2c5f9abf60",
+  "input": {
+    "sha256": "7046771aae7a19a818f8967fd4447ef99fb9a0502670d7f134d741839d93bde7",
+    "bytes": 13905,
+    "sameExactBytesAsActualRequest": true,
+    "systemTextSha256": "0e4c6d4c3fbf52cc92fe030dc9620a86fcbee8ea133f6513a8f1f2205c129734",
+    "schemaSha256": "b697f151754f7db007f932edad46fec1509fe64cf649d7fd83d2430bedd57044"
+  },
+  "capture": {
+    "startedAt": "2026-10-28T16:50:43.847Z",
+    "completedAt": "2026-10-28T16:51:51.824Z",
+    "latencyMs": 67977,
+    "model": "@cf/qwen/qwen3.8-27b",
+    "finishReason": "stop",
+    "usage": {
+      "prompt_tokens": 2016,
+      "completion_tokens": 959,
+      "total_tokens": 2975,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "neurons": 361.45452880859375
+    }
+  },
+  "provider": {
+    "status": "ready",
+    "nonThinkingValidated": true,
+    "accountingStatus": "complete",
+    "usage": {
+      "promptTokens": 2016,
+      "completionTokens": 959,
+      "totalTokens": 2975
+    },
+    "stopReason": "stop",
+    "inputHash": "7046771aae7a19a818f8967fd4447ef99fb9a0502670d7f134d741839d93bde7",
+    "inputBytes": 13905
+  },
+  "rules": {
+    "status": "CANONICAL_IN_MEMORY_COMMIT_PASSED",
+    "stateHash": "93a87c9e9f68be900f5e21da1e7ee8d5705809dd5db6e40f10585000ceb4b642",
+    "revision": 2,
+    "turnId": 2,
+    "life": {
+      "name": "云归",
+      "ageDays": 5850,
+      "lifeLimit": 80,
+      "realm": "mortal",
+      "cultivation": 0,
+      "injury": 0,
+      "items": {
+        "supplies": 3,
+        "stones": 1
+      },
+      "relations": {},
+      "birth": {
+        "originId": "village",
+        "talentIds": [
+          "fortune-debt",
+          "iron-bones"
+        ],
+        "attributes": {
+          "constitution": 3,
+          "insight": 6,
+          "fortune": 3
+        }
+      }
+    },
+    "receipt": {
+      "kind": "choice",
+      "choiceId": "r:17d4b63b7a333a81:t1:c:c",
+      "action": {
+        "id": "r:17d4b63b7a333a81:t1:c:c",
+        "label": "独自前往村后山林，寻找可能存在的灵石或行粮",
+        "intent": "explore",
+        "targetId": "stones",
+        "stake": "high",
+        "approach": "cautious"
+      },
+      "elapsedDays": 90,
+      "itemChanges": {
+        "stones": 1
+      },
+      "relationChanges": {},
+      "random": {
+        "before": 1080474372,
+        "after": 3012430483,
+        "roll": 83
+      },
+      "before": {
+        "ageDays": 5760,
+        "realm": "mortal",
+        "cultivation": 0,
+        "injury": 0
+      },
+      "after": {
+        "ageDays": 5850,
+        "realm": "mortal",
+        "cultivation": 0,
+        "injury": 0
+      },
+      "death": null,
+      "birth": null
+    },
+    "choices": [
+      {
+        "id": "r:17d4b63b7a333a81:t2:c:a",
+        "label": "悄悄后退，避开野猪，返回青石村",
+        "intent": "travel",
+        "targetId": "r:17d4b63b7a333a81:t1:e:place_qingshi_village",
+        "stake": "low",
+        "approach": "road",
+        "enabled": true,
+        "reason": null,
+        "costs": {
+          "days": 30,
+          "items": {
+            "supplies": 1
+          }
+        },
+        "warnings": [],
+        "previewReceipt": {
+          "kind": "choice",
+          "choiceId": "r:17d4b63b7a333a81:t2:c:a",
+          "action": {
+            "id": "r:17d4b63b7a333a81:t2:c:a",
+            "label": "悄悄后退，避开野猪，返回青石村",
+            "intent": "travel",
+            "targetId": "r:17d4b63b7a333a81:t1:e:place_qingshi_village",
+            "stake": "low",
+            "approach": "road"
+          },
+          "elapsedDays": 30,
+          "itemChanges": {
+            "supplies": -1
+          },
+          "relationChanges": {},
+          "random": {
+            "before": 3012430483,
+            "after": 4214689494,
+            "roll": 94
+          },
+          "before": {
+            "ageDays": 5850,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "after": {
+            "ageDays": 5880,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "death": null,
+          "birth": null
+        }
+      },
+      {
+        "id": "r:17d4b63b7a333a81:t2:c:b",
+        "label": "继续深入山林，寻找更多灵石",
+        "intent": "explore",
+        "targetId": "stones",
+        "stake": "high",
+        "approach": "cautious",
+        "enabled": true,
+        "reason": null,
+        "costs": {
+          "days": 90,
+          "items": {}
+        },
+        "warnings": [
+          "历练受伤基础风险5%，根骨与坚韧筋骨可降低风险。"
+        ],
+        "previewReceipt": {
+          "kind": "choice",
+          "choiceId": "r:17d4b63b7a333a81:t2:c:b",
+          "action": {
+            "id": "r:17d4b63b7a333a81:t2:c:b",
+            "label": "继续深入山林，寻找更多灵石",
+            "intent": "explore",
+            "targetId": "stones",
+            "stake": "high",
+            "approach": "cautious"
+          },
+          "elapsedDays": 90,
+          "itemChanges": {
+            "stones": 1
+          },
+          "relationChanges": {},
+          "random": {
+            "before": 3012430483,
+            "after": 4214689494,
+            "roll": 94
+          },
+          "before": {
+            "ageDays": 5850,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "after": {
+            "ageDays": 5940,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "death": null,
+          "birth": null
+        }
+      },
+      {
+        "id": "r:17d4b63b7a333a81:t2:c:c",
+        "label": "尝试与野猪沟通，了解山中情况",
+        "intent": "negotiate",
+        "targetId": "r:17d4b63b7a333a81:t2:e:person_wild_boar",
+        "stake": "high",
+        "approach": "cooperate",
+        "enabled": true,
+        "reason": null,
+        "costs": {
+          "days": 7,
+          "items": {
+            "supplies": 1
+          }
+        },
+        "warnings": [],
+        "previewReceipt": {
+          "kind": "choice",
+          "choiceId": "r:17d4b63b7a333a81:t2:c:c",
+          "action": {
+            "id": "r:17d4b63b7a333a81:t2:c:c",
+            "label": "尝试与野猪沟通，了解山中情况",
+            "intent": "negotiate",
+            "targetId": "r:17d4b63b7a333a81:t2:e:person_wild_boar",
+            "stake": "high",
+            "approach": "cooperate"
+          },
+          "elapsedDays": 7,
+          "itemChanges": {
+            "stones": 1,
+            "supplies": -1
+          },
+          "relationChanges": {
+            "r:17d4b63b7a333a81:t2:e:person_wild_boar": 3
+          },
+          "random": {
+            "before": 3012430483,
+            "after": 4214689494,
+            "roll": 94
+          },
+          "before": {
+            "ageDays": 5850,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "after": {
+            "ageDays": 5857,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "death": null,
+          "birth": null
+        }
+      }
+    ],
+    "memoryDelta": {
+      "schemaVersion": 1,
+      "receipt": {
+        "kind": "choice",
+        "choiceId": "r:17d4b63b7a333a81:t1:c:c",
+        "action": {
+          "id": "r:17d4b63b7a333a81:t1:c:c",
+          "label": "独自前往村后山林，寻找可能存在的灵石或行粮",
+          "intent": "explore",
+          "targetId": "stones",
+          "stake": "high",
+          "approach": "cautious"
+        },
+        "elapsedDays": 90,
+        "itemChanges": {
+          "stones": 1
+        },
+        "relationChanges": {},
+        "random": {
+          "before": 1080474372,
+          "after": 3012430483,
+          "roll": 83
+        },
+        "before": {
+          "ageDays": 5760,
+          "realm": "mortal",
+          "cultivation": 0,
+          "injury": 0
+        },
+        "after": {
+          "ageDays": 5850,
+          "realm": "mortal",
+          "cultivation": 0,
+          "injury": 0
+        },
+        "death": null,
+        "birth": null
+      },
+      "entities": [
+        {
+          "id": "r:17d4b63b7a333a81:t1:e:place_qingshi_village",
+          "name": "青石村",
+          "kind": "place"
+        },
+        {
+          "id": "r:17d4b63b7a333a81:t1:e:person_lao_wang",
+          "name": "老王",
+          "kind": "person"
+        },
+        {
+          "id": "r:17d4b63b7a333a81:t1:e:person_ling_shang",
+          "name": "林商",
+          "kind": "person"
+        },
+        {
+          "id": "r:17d4b63b7a333a81:t2:e:person_wild_boar",
+          "name": "铁背野猪",
+          "kind": "person"
+        }
+      ],
+      "records": [
+        {
+          "id": "m:dc570dff9d42064e5d4eb0d500473fa5",
+          "source": "narrative",
+          "kind": "fact",
+          "entityId": "r:17d4b63b7a333a81:t2:e:person_wild_boar",
+          "text": "铁背野猪是山林中的妖兽，体型硕大，具有金属光泽的黑毛，目前处于警戒状态。"
+        }
+      ],
+      "summary": null
+    }
+  },
+  "scope": {
+    "mode": "OFFLINE_REPLAY_OF_UNMODIFIED_REAL_PROVIDER_CAPTURE",
+    "adapterReads": 1,
+    "freshModelCalls": 0,
+    "networkCalls": 0,
+    "archiveWrites": 0,
+    "operatorLedgerWrites": 0,
+    "realLatencySimulated": false
+  }
+}

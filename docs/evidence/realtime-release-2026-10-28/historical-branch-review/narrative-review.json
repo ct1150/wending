@@ -1,0 +1,289 @@
+{
+  "schemaVersion": 1,
+  "reviewedAt": "2026-10-28T16:50:39.852Z",
+  "sourceCommit": "7613dc7298b12ab786850f77140bab535fc99953",
+  "sourceS1StateHash": "65fa96ed4c6190a4063aa54476a8f2ebee6ce08a26250f5c74d58d2c5f9abf60",
+  "sourceInputHashes": [
+    {
+      "branch": "branch-a",
+      "inputSha256": "779cd735076747b2ed27e44f850f0ebf9b8fe0db7f980d90c7a324255befbb48",
+      "captureSha256": "3cf553fb05b8d2cf42cb5c6105e212708ddf773e299f5d309f987794d9d5b52b"
+    },
+    {
+      "branch": "branch-b",
+      "inputSha256": "7046771aae7a19a818f8967fd4447ef99fb9a0502670d7f134d741839d93bde7",
+      "captureSha256": "980082c3aac872f19dfaf4f5859655c3e22da7cae745146542e6623d5ac770c6"
+    }
+  ],
+  "freshModelCalls": 0,
+  "networkCalls": 0,
+  "archiveWrites": 0,
+  "operatorLedgerWrites": 0,
+  "profileAccess": false,
+  "structuralVerdict": "BOTH_SHARED_PROVIDER_PARSER_AND_CANONICAL_COMMITS_PASSED",
+  "selectedActionAndOutcomeVerdict": "BOTH_SELECTED_TRANSITIONS_COHERENT_AND_RULE_STATE_EXACT",
+  "completeChoiceSemanticsVerdict": "BRANCH_B_FUTURE_NEGOTIATION_LABEL_CONTAINS_UNSUPPORTED_TRAVEL_PROMISE",
+  "entirePairNarrativePass": false,
+  "noProvenMechanicalStateCorruption": true,
+  "branchA": {
+    "verdict": "PASS_WITH_MINOR_NARRATIVE_LIMITATIONS",
+    "actualSelectedAction": {
+      "id": "r:17d4b63b7a333a81:t1:c:a",
+      "label": "与老王交谈，询问符纸详情及北边妖兽传闻",
+      "intent": "negotiate",
+      "targetId": "r:17d4b63b7a333a81:t1:e:person_lao_wang",
+      "stake": "low",
+      "approach": "cooperate"
+    },
+    "actualReceipt": {
+      "kind": "choice",
+      "choiceId": "r:17d4b63b7a333a81:t1:c:a",
+      "action": {
+        "id": "r:17d4b63b7a333a81:t1:c:a",
+        "label": "与老王交谈，询问符纸详情及北边妖兽传闻",
+        "intent": "negotiate",
+        "targetId": "r:17d4b63b7a333a81:t1:e:person_lao_wang",
+        "stake": "low",
+        "approach": "cooperate"
+      },
+      "elapsedDays": 7,
+      "itemChanges": {
+        "stones": 1,
+        "supplies": -1
+      },
+      "relationChanges": {
+        "r:17d4b63b7a333a81:t1:e:person_lao_wang": 3
+      },
+      "random": {
+        "before": 1080474372,
+        "after": 3012430483,
+        "roll": 83
+      },
+      "before": {
+        "ageDays": 5760,
+        "realm": "mortal",
+        "cultivation": 0,
+        "injury": 0
+      },
+      "after": {
+        "ageDays": 5767,
+        "realm": "mortal",
+        "cultivation": 0,
+        "injury": 0
+      },
+      "death": null,
+      "birth": null
+    },
+    "canonicalStateHash": "81675e47cc024ba63a04a87ccb77fe887994241b38337eae07fdb031464dc98a",
+    "findings": [
+      {
+        "severity": "pass",
+        "category": "selected-intent",
+        "text": "已选动作是向老王询问符纸及北方妖兽。老王展示库存符纸并给出口头回答；叙事仍在青石村，林商只在门口整理货物，没有代玩家旅行。"
+      },
+      {
+        "severity": "pass",
+        "category": "rules-and-identity",
+        "text": "7天、行粮-1、灵石+1、老王关系+3均来自收据。云归身份和出生事实、老王/林商/青石村的原id/name/kind均保持；没有新增受伤、境界变化、假死亡或复活。"
+      },
+      {
+        "severity": "pass",
+        "category": "next-choices",
+        "text": "三个后续选项分别是询问老王、询问林商车资行程、探索行粮，分别与negotiate/negotiate/explore(supplies)一致，全部可执行；旧版购买符纸承诺已消失。"
+      },
+      {
+        "severity": "pass",
+        "category": "memory",
+        "text": "记忆记录老王透露北边妖兽异动和符纸用途，未写玩家已获得符纸；与正文信息一致。"
+      },
+      {
+        "severity": "clarification",
+        "category": "item-possession",
+        "text": "把符纸推到面前是在商家展示语境下，没有明确交付。符纸挡扑击是NPC对未持有商品的描述，不能误报为玩家已取得或实际触发的奖励/防御效果。"
+      },
+      {
+        "severity": "minor",
+        "category": "receipt-exposition",
+        "text": "正文没有解释规则新增灵石的来由，也没有清楚表现交谈共耗7天。规则收据和存档准确，这属于叙事铺陈不足，不是实际资源或时间被改写。"
+      },
+      {
+        "severity": "minor",
+        "category": "choice-variety",
+        "text": "两个后续行动仍是继续询问，和当前信息交换较近；第三项探索行粮提供不同方向。没有达到固定循环或重复原场景的程度。"
+      }
+    ]
+  },
+  "branchB": {
+    "verdict": "SELECTED_EXPLORATION_PASSES_BUT_NEXT_RIDE_CHOICE_NEEDS_CORRECTION",
+    "actualSelectedAction": {
+      "id": "r:17d4b63b7a333a81:t1:c:c",
+      "label": "独自前往村后山林，寻找可能存在的灵石或行粮",
+      "intent": "explore",
+      "targetId": "stones",
+      "stake": "high",
+      "approach": "cautious"
+    },
+    "actualReceipt": {
+      "kind": "choice",
+      "choiceId": "r:17d4b63b7a333a81:t1:c:c",
+      "action": {
+        "id": "r:17d4b63b7a333a81:t1:c:c",
+        "label": "独自前往村后山林，寻找可能存在的灵石或行粮",
+        "intent": "explore",
+        "targetId": "stones",
+        "stake": "high",
+        "approach": "cautious"
+      },
+      "elapsedDays": 90,
+      "itemChanges": {
+        "stones": 1
+      },
+      "relationChanges": {},
+      "random": {
+        "before": 1080474372,
+        "after": 3012430483,
+        "roll": 83
+      },
+      "before": {
+        "ageDays": 5760,
+        "realm": "mortal",
+        "cultivation": 0,
+        "injury": 0
+      },
+      "after": {
+        "ageDays": 5850,
+        "realm": "mortal",
+        "cultivation": 0,
+        "injury": 0
+      },
+      "death": null,
+      "birth": null
+    },
+    "canonicalStateHash": "b06c38e28c8252151ac3b97e1d391d6568bd96f582c3f7b859d2967c99a49616",
+    "findings": [
+      {
+        "severity": "pass",
+        "category": "selected-intent-location",
+        "text": "原开场真实选择是前往村后山林探索灵石。续写地点是青石村后山林，描述九十个日夜并发现一块疑似灵石；与90天和stones+1匹配，不是交谈擅自旅行。"
+      },
+      {
+        "severity": "pass",
+        "category": "rules-and-identity",
+        "text": "探索提交后supplies仍3、stones为1、injury仍0，出生、境界、修为不变。没有显式宣称获得第二种物品、消耗具体数量、受伤、突破或死亡。云归仍是self对白，没有作为NPC重建身份。"
+      },
+      {
+        "severity": "pass",
+        "category": "memory",
+        "text": "记忆记录在村后山林发现疑似灵石，绑定已知青石村地点；未记录未发生的回村、搭车或到达云州城。"
+      },
+      {
+        "severity": "material-action-label-mismatch",
+        "category": "unsupported-compound-action",
+        "sceneId": "r:17d4b63b7a333a81:t2:s:scene",
+        "choiceId": "r:17d4b63b7a333a81:t2:c:c",
+        "label": "返回青石村，寻找林商搭车前往云州城",
+        "intent": "negotiate",
+        "targetId": "r:17d4b63b7a333a81:t1:e:person_ling_shang",
+        "actualCompiledCosts": {
+          "days": 7,
+          "items": {
+            "supplies": 1
+          }
+        },
+        "actualPreviewReceipt": {
+          "kind": "choice",
+          "choiceId": "r:17d4b63b7a333a81:t2:c:c",
+          "action": {
+            "id": "r:17d4b63b7a333a81:t2:c:c",
+            "label": "返回青石村，寻找林商搭车前往云州城",
+            "intent": "negotiate",
+            "targetId": "r:17d4b63b7a333a81:t1:e:person_ling_shang",
+            "stake": "low",
+            "approach": "cooperate"
+          },
+          "elapsedDays": 7,
+          "itemChanges": {
+            "stones": 1,
+            "supplies": -1
+          },
+          "relationChanges": {
+            "r:17d4b63b7a333a81:t1:e:person_ling_shang": 3
+          },
+          "random": {
+            "before": 3012430483,
+            "after": 4214689494,
+            "roll": 94
+          },
+          "before": {
+            "ageDays": 5850,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "after": {
+            "ageDays": 5857,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "death": null,
+          "birth": null
+        },
+        "text": "文案包含返回村庄、找林商并搭车前往云州城，后半段给玩家的目标已经包含实际旅行；编码却只有negotiate/cooperate及人物目标。规则执行交谈7天、行粮-1、灵石+1、人物关系+3，没有travel目的地和旅行收据。它并非“询问搭车条件”或“商议车资”这样的纯交涉标签，与当前提示词不得把negotiate写成跟随前往别处的要求不符。",
+        "scope": "尚未执行的下一步选择；不能据此声称本回合已经发生错误旅行或存档损坏。",
+        "ambiguity": "如果模型把“寻找搭车”理解成先询问条件，下一次正文可能仍停留交谈，但标签没有把该限定清楚表达给玩家，因此不能把它判作干净的行动语义通过。",
+        "passesCurrentStructuralParser": true
+      },
+      {
+        "severity": "warning",
+        "category": "resource-wording",
+        "text": "“行粮已经所剩无几”暗示补给紧张，而规则保持3份行粮、未消耗。3份本来就少，正文没有给出减少前后的数值，也未说消耗了行粮；因此这是容易造成误解的状态描写，不能认定为已证实的非法扣粮。"
+      },
+      {
+        "severity": "minor",
+        "category": "local-return-label",
+        "text": "第一项“返回青石村，向老王询问石头的来历”也包含接近交谈对象的本地移动。它的主要动作明确是询问，问题弱于第三项跨地点搭车前往的承诺；没有单独当作机械失败。"
+      },
+      {
+        "severity": "minor",
+        "category": "prose",
+        "text": "同一块石头先写微凉、后写隐隐温热，self对白额外带引号；这些是风格/感官表述问题，不改变奖励、身份或规则。"
+      },
+      {
+        "severity": "limitation",
+        "category": "location-registration",
+        "text": "场景位置写青石村后山林，但entities只保留青石村、老王、林商，没有新后山林实体。当前选择没有把该地点作为travel目标，canonical验证允许；不把这点等同于无效旅行目的地或重复实体。"
+      }
+    ]
+  },
+  "pairedBranchAssessment": {
+    "sameActuallyGeneratedS1": true,
+    "contextAIsExactActualBrowserContext": true,
+    "contextBIsCanonicalAlternativeForActualDisplayedChoice": true,
+    "currentPromptAndSchemaSameBetweenBranches": true,
+    "meaningfullyDistinct": true,
+    "text": "A延续村中交谈和妖兽线索，B执行山林探索并发现灵石，地点、时长、关系/物资结果及下步方向不同；两条不是同一文本换名。两条当前已选行为及机械结果均成立，但B的下一步搭车选项仍有行为文案问题。"
+  },
+  "timing": {
+    "actualRestLatenciesMs": {
+      "a": 58852,
+      "b": 23151
+    },
+    "scope": "这些是实际REST请求墙钟耗时；离线解析立即返回，没有模拟或证明Worker/browser超时预算。修改超时若不改变builder输入，则可以用输入hash单独证明提示词/schema保持一致。"
+  },
+  "actualUsageSum": {
+    "promptTokens": 4159,
+    "completionTokens": 1718,
+    "totalTokens": 5877,
+    "providerReportedNeurons": 669.9226989746094
+  },
+  "preservation": {
+    "rawResponsesUnmodified": true,
+    "original47DriverFailedStatusUnchanged": true,
+    "original47PurchaseFindingUnchanged": true,
+    "older2eFailedPairUnchanged": true,
+    "diagnosticNotInsertedIntoOperatorLedger": true,
+    "diagnosticNotCommittedToBrowserArchive": true
+  },
+  "finalConclusion": "结构解析及canonical commit双双通过；两条当前动作结果连贯。A可评为通过，B仍含一个实质性后续行动文案问题，故不能宣布整对所有行动语义均通过。"
+}

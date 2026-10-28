@@ -1,0 +1,55 @@
+{
+  "kind": "final-source-two-branch-diagnostic",
+  "sourceCommit": "7613dc7298b12ab786850f77140bab535fc99953",
+  "branch": "a",
+  "inputSha256": "779cd735076747b2ed27e44f850f0ebf9b8fe0db7f980d90c7a324255befbb48",
+  "startedAt": "2026-10-28T16:46:06.940Z",
+  "completedAt": "2026-10-28T16:47:05.792Z",
+  "result": {
+    "result": {
+      "id": "chatcmpl-f986755d-693f-4273-94d1-81df1d264c2b",
+      "object": "chat.completion",
+      "created": 1793205967,
+      "model": "@cf/qwen/qwen3.8-27b",
+      "choices": [
+        {
+          "index": 0,
+          "message": {
+            "role": "assistant",
+            "content": "{\n  \"id\": \"r:17d4b63b7a333a81:t2:s:scene\",\n  \"title\": \"杂货铺里的低语\",\n  \"location\": \"青石村\",\n  \"entities\": [\n    {\n      \"id\": \"r:17d4b63b7a333a81:t1:e:place_qingshi_village\",\n      \"name\": \"青石村\",\n      \"kind\": \"place\"\n    },\n    {\n      \"id\": \"r:17d4b63b7a333a81:t1:e:person_lao_wang\",\n      \"name\": \"老王\",\n      \"kind\": \"person\"\n    },\n    {\n      \"id\": \"r:17d4b63b7a333a81:t1:e:person_ling_shang\",\n      \"name\": \"林商\",\n      \"kind\": \"person\"\n    }\n  ],\n  \"blocks\": [\n    {\n      \"kind\": \"narration\",\n      \"text\": \"老王压低声音，将一张泛黄的符纸推到你面前。符纸边缘焦黑，散发着淡淡的硫磺味。他指了指北边，眼神闪烁，提到最近山里妖兽躁动不安，似乎有什么东西在苏醒。\"\n    },\n    {\n      \"kind\": \"dialogue\",\n      \"text\": \"这符纸能挡一次低阶妖兽的扑击，但别指望它救命。北边的路，没个引路人，进去就是死。\",\n      \"speaker\": \"r:17d4b63b7a333a81:t1:e:person_lao_wang\"\n    },\n    {\n      \"kind\": \"narration\",\n      \"text\": \"铺子外传来车轮碾过碎石的声音，林商正站在门口整理货物，似乎听到了里面的动静，探头看了一眼。\"\n    }\n  ],\n  \"choices\": [\n    {\n      \"id\": \"r:17d4b63b7a333a81:t2:c:a\",\n      \"label\": \"向老王询问符纸的具体用法及妖兽异动的细节\",\n      \"intent\": \"negotiate\",\n      \"targetId\": \"r:17d4b63b7a333a81:t1:e:person_lao_wang\",\n      \"stake\": \"low\",\n      \"approach\": \"cooperate\"\n    },\n    {\n      \"id\": \"r:17d4b63b7a333a81:t2:c:b\",\n      \"label\": \"询问林商前往云州城的车资及行程\",\n      \"intent\": \"negotiate\",\n      \"targetId\": \"r:17d4b63b7a333a81:t1:e:person_ling_shang\",\n      \"stake\": \"low\",\n      \"approach\": \"cooperate\"\n    },\n    {\n      \"id\": \"r:17d4b63b7a333a81:t2:c:c\",\n      \"label\": \"在青石村周边探索，寻找行粮\",\n      \"intent\": \"explore\",\n      \"targetId\": \"supplies\",\n      \"stake\": \"low\",\n      \"approach\": \"cautious\"\n    }\n  ],\n  \"memoryDeltas\": [\n    {\n      \"entityId\": \"r:17d4b63b7a333a81:t1:e:person_lao_wang\",\n      \"text\": \"老王透露北边妖兽异动加剧，且符纸仅能抵挡一次低阶妖兽攻击。\"\n    ,\n      \"kind\": \"fact\"\n    }\n  ]\n}",
+            "refusal": null,
+            "annotations": null,
+            "audio": null,
+            "function_call": null,
+            "reasoning": null
+          },
+          "logprobs": null,
+          "finish_reason": "stop",
+          "stop_reason": null,
+          "token_ids": null,
+          "routed_experts": null
+        }
+      ],
+      "service_tier": null,
+      "usage": {
+        "prompt_tokens": 2143,
+        "completion_tokens": 879,
+        "total_tokens": 3022,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        },
+        "neurons": 343.37725830078125
+      },
+      "prompt_logprobs": null,
+      "prompt_token_ids": null,
+      "prompt_text": null,
+      "kv_transfer_params": null,
+      "ec_transfer_params": null,
+      "metrics": null
+    },
+    "success": true,
+    "errors": [],
+    "messages": [],
+    "status": 200
+  }
+}

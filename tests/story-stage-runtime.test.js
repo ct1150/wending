@@ -17,6 +17,10 @@ test('native packaged stage validates proof and permit in API request context wi
   const root=await mkdtemp(path.join(tmpdir(),'wending-stage-runtime-'));t.after(()=>rm(root,{recursive:true,force:true}));
   await cp(path.join(repository,'src'),path.join(root,'src'),{recursive:true});
   await cp(path.join(repository,'config'),path.join(root,'config'),{recursive:true});
+  // This disposable tester fixture is independent of public production promotion.
+  const policyFile=path.join(root,'config/story-deployment.json');
+  const deploymentPolicy=JSON.parse(await readFile(policyFile,'utf8'));
+  await writeFile(policyFile,JSON.stringify({...deploymentPolicy,enabled:false}));
   for(const dir of ['release','assets'])await mkdir(path.join(root,dir),{recursive:true});
   const html='<!doctype html><title>tester stage runtime fixture</title>';
   await writeFile(path.join(root,'release/baishi-wending-offline.html'),html);

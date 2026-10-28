@@ -1,0 +1,57 @@
+{
+  "kind": "final-source-two-branch-diagnostic",
+  "inputSourceCommit": "7613dc7298b12ab786850f77140bab535fc99953",
+  "branch": "b",
+  "attempt": 2,
+  "previousDiagnostic": "branch-b.json",
+  "inputSha256": "7046771aae7a19a818f8967fd4447ef99fb9a0502670d7f134d741839d93bde7",
+  "startedAt": "2026-10-28T16:50:43.847Z",
+  "completedAt": "2026-10-28T16:51:51.824Z",
+  "result": {
+    "result": {
+      "id": "chatcmpl-833b6732-29b2-41bc-be84-428f7203d2a8",
+      "object": "chat.completion",
+      "created": 1793206244,
+      "model": "@cf/qwen/qwen3.8-27b",
+      "choices": [
+        {
+          "index": 0,
+          "message": {
+            "role": "assistant",
+            "content": "{\n  \"id\": \"r:17d4b63b7a333a81:t2:s:scene\",\n  \"title\": \"山间余响\",\n  \"location\": \"青石村后山林\",\n  \"entities\": [\n    {\n      \"id\": \"r:17d4b63b7a333a81:t1:e:place_qingshi_village\",\n      \"name\": \"青石村\",\n      \"kind\": \"place\"\n    },\n    {\n      \"id\": \"r:17d4b63b7a333a81:t1:e:person_lao_wang\",\n      \"name\": \"老王\",\n      \"kind\": \"person\"\n    },\n    {\n      \"id\": \"r:17d4b63b7a333a81:t1:e:person_ling_shang\",\n      \"name\": \"林商\",\n      \"kind\": \"person\"\n    },\n    {\n      \"id\": \"r:17d4b63b7a333a81:t2:e:person_wild_boar\",\n      \"name\": \"铁背野猪\",\n      \"kind\": \"person\"\n    }\n  ],\n  \"blocks\": [\n    {\n      \"kind\": \"narration\",\n      \"text\": \"九十个日夜的跋涉让双腿沉重如铅，但掌心那枚温润的灵石证明了一切值得。山林深处，枯叶覆盖的岩缝里还残留着淡淡的灵气波动，似乎这片区域并非毫无价值。远处传来树枝断裂的脆响，一头体型硕大的铁背野猪正警惕地注视着这边，它身上的黑毛在夕阳下泛着金属光泽。\"\n    },\n    {\n      \"kind\": \"dialogue\",\n      \"text\": \"哼，人类？正好饿了。\",\n      \"speaker\": \"r:17d4b63b7a333a81:t2:e:person_wild_boar\"\n    },\n    {\n      \"kind\": \"narration\",\n      \"text\": \"野猪低吼着，獠牙间滴落着唾液。它似乎并不急于进攻，而是在评估这个闯入者。与此同时，山风卷起几片落叶，隐约能听到山下青石村方向传来的炊烟气息。\"\n    }\n  ],\n  \"choices\": [\n    {\n      \"id\": \"r:17d4b63b7a333a81:t2:c:a\",\n      \"label\": \"悄悄后退，避开野猪，返回青石村\",\n      \"intent\": \"travel\",\n      \"targetId\": \"r:17d4b63b7a333a81:t1:e:place_qingshi_village\",\n      \"stake\": \"low\",\n      \"approach\": \"road\"\n    },\n    {\n      \"id\": \"r:17d4b63b7a333a81:t2:c:b\",\n      \"label\": \"继续深入山林，寻找更多灵石\",\n      \"intent\": \"explore\",\n      \"targetId\": \"stones\",\n      \"stake\": \"high\",\n      \"approach\": \"cautious\"\n    },\n    {\n      \"id\": \"r:17d4b63b7a333a81:t2:c:c\",\n      \"label\": \"尝试与野猪沟通，了解山中情况\",\n      \"intent\": \"negotiate\",\n      \"targetId\": \"r:17d4b63b7a333a81:t2:e:person_wild_boar\",\n      \"stake\": \"high\",\n      \"approach\": \"cooperate\"\n    }\n  ],\n  \"memoryDeltas\": [\n    {\n      \"entityId\": \"r:17d4b63b7a333a81:t2:e:person_wild_boar\",\n      \"text\": \"铁背野猪是山林中的妖兽，体型硕大，具有金属光泽的黑毛，目前处于警戒状态。\"\n    ,\n      \"kind\": \"fact\"\n    }\n  ]\n}",
+            "refusal": null,
+            "annotations": null,
+            "audio": null,
+            "function_call": null,
+            "reasoning": null
+          },
+          "logprobs": null,
+          "finish_reason": "stop",
+          "stop_reason": null,
+          "token_ids": null,
+          "routed_experts": null
+        }
+      ],
+      "service_tier": null,
+      "usage": {
+        "prompt_tokens": 2016,
+        "completion_tokens": 959,
+        "total_tokens": 2975,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        },
+        "neurons": 361.45452880859375
+      },
+      "prompt_logprobs": null,
+      "prompt_token_ids": null,
+      "prompt_text": null,
+      "kv_transfer_params": null,
+      "ec_transfer_params": null,
+      "metrics": null
+    },
+    "success": true,
+    "errors": [],
+    "messages": [],
+    "status": 200
+  }
+}

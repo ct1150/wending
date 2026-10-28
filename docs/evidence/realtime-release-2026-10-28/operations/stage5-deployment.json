@@ -1,0 +1,392 @@
+{
+  "success": true,
+  "sourceCommit": "47c40646892e185588c61b9750076c829bb3fcfb",
+  "sourceTree": "a0df5c117d7a2b2d041c474461a15fc33a65160e",
+  "reviewedBundleSha256": "9bf6ce30ce10ae18954d328a9796de126a013f3a0585f1c60432282e3466a83c",
+  "turnReservationNeurons": 1516,
+  "proof": {
+    "accountId": "b266970852cbc371061c94c5b1fe76a9",
+    "source": "operator-account-verification",
+    "plan": "workers-free",
+    "hardLimit": true,
+    "noGatewayCredits": true,
+    "directBinding": true,
+    "accountUsageVerified": true,
+    "storageFreeVerified": true,
+    "remainingNeurons": 6873,
+    "checkedAt": "2026-10-28T16:29:12.156Z"
+  },
+  "proofCheckedAt": "2026-10-28T16:29:12.156Z",
+  "completedAt": "2026-10-28T16:32:47.992Z",
+  "proofAgeMs": 215836,
+  "observations": [
+    {
+      "name": "baishi-wending-ai-acceptance",
+      "modifiedOn": "2026-10-28T16:32:42.964384Z",
+      "migrationTag": "operator-probe-v1",
+      "deployment": {
+        "id": "606990e3-7421-4501-bc10-44bfc9d55b1b",
+        "source": "api",
+        "strategy": "percentage",
+        "author_email": "[REDACTED]",
+        "annotations": {
+          "workers/message": "Owner-authorized realtime acceptance; preserve ...",
+          "workers/triggered_by": "upload"
+        },
+        "versions": [
+          {
+            "version_id": "163eae83-80c8-47e9-a346-dac5e99b1249",
+            "percentage": 100
+          }
+        ],
+        "created_on": "2026-10-28T16:32:42.964384Z"
+      },
+      "settings": {
+        "placement": {},
+        "compatibility_date": "2026-07-30",
+        "compatibility_flags": [],
+        "usage_model": "standard",
+        "tags": [
+          "wending",
+          "github-ct1150-wending",
+          "private-ai-acceptance"
+        ],
+        "tail_consumers": [],
+        "logpush": false,
+        "annotations": {
+          "workers/message": "Owner-authorized realtime acceptance; preserve original namespaces and complete history; source 47c40646892e185588c61b9750076c829bb3fcfb",
+          "workers/tag": "realtime-release-20261028",
+          "workers/triggered_by": "upload"
+        },
+        "bindings": [
+          {
+            "name": "AI",
+            "project": "<catalog>",
+            "type": "ai"
+          },
+          {
+            "class_name": "OperatorProbe",
+            "name": "OPERATOR_PROBE",
+            "namespace_id": "dfb218f2f29d4ecab2395f8a00b48350",
+            "type": "durable_object_namespace"
+          }
+        ]
+      },
+      "modules": [
+        {
+          "name": "entry.mjs",
+          "type": "esm",
+          "bytes": 842,
+          "sha256": "0368f5cee22513572947f8dc38dd84d5b36b38c13de4c7ffa1236cb1d9614d4f"
+        },
+        {
+          "name": "src/game/cultivation/live/engine.js",
+          "type": "esm",
+          "bytes": 12171,
+          "sha256": "5d824d1e58a73da0b085d7be3c5ec57f920f683710330c0e1648b4473fa951a4"
+        },
+        {
+          "name": "src/game/cultivation/live/identity.js",
+          "type": "esm",
+          "bytes": 3931,
+          "sha256": "d619269073a7b9afcaa6245ae013ead2e82677d76698a372ff21a51a11cab232"
+        },
+        {
+          "name": "src/game/cultivation/live/memory.js",
+          "type": "esm",
+          "bytes": 24732,
+          "sha256": "4c22df151d7264308026e39de32abc0b5675dfc767232759ae2bad80c0dfc5d9"
+        },
+        {
+          "name": "src/game/cultivation/live/model.js",
+          "type": "esm",
+          "bytes": 1379,
+          "sha256": "1b1b208631bac405395d84c240957a15db080333abe174b98e0eb5412336846a"
+        },
+        {
+          "name": "src/game/cultivation/live/schema.js",
+          "type": "esm",
+          "bytes": 5120,
+          "sha256": "dfdbdcadf35deb39315f571821203d61bd9f5a10d8c359b074001d16b0cdd0c9"
+        },
+        {
+          "name": "src/game/cultivation/live/validation.js",
+          "type": "esm",
+          "bytes": 10250,
+          "sha256": "44137cda97b87d78bdcf5513aa939e7549dd3c5406b699ac6491827a6514516a"
+        },
+        {
+          "name": "src/worker/operator-acceptance-state.js",
+          "type": "esm",
+          "bytes": 1655,
+          "sha256": "811ddf1757855a2bd518f6cdb6d0adcbbb42661d36ebe5b7df8d5dc4d8c61880"
+        },
+        {
+          "name": "src/worker/operator-baseline.js",
+          "type": "esm",
+          "bytes": 9496,
+          "sha256": "17cd3c9444234fbbd5e057726e42633f9690172410c070010d6364a7da8d1fdc"
+        },
+        {
+          "name": "src/worker/operator-probe.js",
+          "type": "esm",
+          "bytes": 10176,
+          "sha256": "6a761395e4e5ff454a55b8d8dacfec958d2096922c79d86731419016a913cb99"
+        },
+        {
+          "name": "src/worker/operator-story.js",
+          "type": "esm",
+          "bytes": 17014,
+          "sha256": "b8a30338dd6efe94a6bd80c13b6aaf15731bce406694fcc7bf2870ec8a6eeb35"
+        },
+        {
+          "name": "src/worker/operator-task8.js",
+          "type": "esm",
+          "bytes": 7718,
+          "sha256": "cee7aae6f12560fe71d784fce6f068b7d816abea3bde63fa1347cac0c92e448a"
+        },
+        {
+          "name": "src/worker/story-acceptance.js",
+          "type": "esm",
+          "bytes": 785,
+          "sha256": "1f764d3653f659960afde1d6142cbae21e0eca051df8457fed6c6275aff1f58b"
+        },
+        {
+          "name": "src/worker/story-api.js",
+          "type": "esm",
+          "bytes": 13619,
+          "sha256": "5ec0010d9a646a0a11381b2a710b7d3b2dace50be0b3c1b1bfa020852480df1a"
+        },
+        {
+          "name": "src/worker/story-config.js",
+          "type": "esm",
+          "bytes": 8717,
+          "sha256": "4a634a5c44862886adb2525bb82346937ec3d143adc855ec489604b839e0abbc"
+        },
+        {
+          "name": "src/worker/story-generation-schema.js",
+          "type": "esm",
+          "bytes": 5670,
+          "sha256": "e7793c441af00345165643ec2ae11fef3a3f16b59e980fabcef82a496de84620"
+        },
+        {
+          "name": "src/worker/story-observation.js",
+          "type": "esm",
+          "bytes": 5375,
+          "sha256": "5a3a4641434d55d6fdf34c187e802918292aa5f35a09cdb50452f6fc6523ecb2"
+        },
+        {
+          "name": "src/worker/story-probe.js",
+          "type": "esm",
+          "bytes": 7090,
+          "sha256": "e09dd0a1866983c86ff0964def42f1e2fe8bb9bf9201af6b6dbbc81b6140899a"
+        },
+        {
+          "name": "src/worker/story-provider-core.js",
+          "type": "esm",
+          "bytes": 13888,
+          "sha256": "46b31797f973fe453bcf9e435a40b1d058b1ff46cdfefeaf0034b35526e08b5f"
+        },
+        {
+          "name": "src/worker/story-provider.js",
+          "type": "esm",
+          "bytes": 637,
+          "sha256": "d910641c21df9fa76647b62e6076c1bb4540656d13f41164207f8dd5510c7283"
+        },
+        {
+          "name": "src/worker/story-request-body.js",
+          "type": "esm",
+          "bytes": 3486,
+          "sha256": "53c441cb50bba79d467d0e24779fa8ba89c80711d2703f4af4f19da6a93d5e5a"
+        }
+      ],
+      "allModuleHashesMatched": true
+    },
+    {
+      "name": "baishi-wending",
+      "modifiedOn": "2026-10-28T16:32:46.494248Z",
+      "migrationTag": "story-budget-v1",
+      "deployment": {
+        "id": "9c747588-b2e2-49ef-9fcf-fe916331f96d",
+        "source": "api",
+        "strategy": "percentage",
+        "author_email": "[REDACTED]",
+        "annotations": {
+          "workers/message": "Owner-authorized realtime acceptance; preserve ...",
+          "workers/triggered_by": "upload"
+        },
+        "versions": [
+          {
+            "version_id": "46dd3063-7a19-44e1-a0ca-a4f52b17a3ab",
+            "percentage": 100
+          }
+        ],
+        "created_on": "2026-10-28T16:32:46.494248Z"
+      },
+      "settings": {
+        "placement": {},
+        "compatibility_date": "2026-07-30",
+        "compatibility_flags": [],
+        "usage_model": "standard",
+        "tags": [
+          "wending",
+          "github-ct1150-wending"
+        ],
+        "tail_consumers": [],
+        "logpush": false,
+        "annotations": {
+          "workers/message": "Owner-authorized realtime acceptance; preserve original namespaces and complete history; source 47c40646892e185588c61b9750076c829bb3fcfb",
+          "workers/tag": "realtime-release-20261028",
+          "workers/triggered_by": "upload"
+        },
+        "bindings": [
+          {
+            "name": "AI",
+            "project": "<catalog>",
+            "type": "ai"
+          },
+          {
+            "class_name": "StoryBudget",
+            "name": "STORY_BUDGET",
+            "namespace_id": "1de1df3929534a8d8d495d6db6604e99",
+            "type": "durable_object_namespace"
+          },
+          {
+            "class_name": "OperatorProbe",
+            "name": "STORY_EXPERIMENT",
+            "namespace_id": "dfb218f2f29d4ecab2395f8a00b48350",
+            "script_name": "baishi-wending-ai-acceptance",
+            "type": "durable_object_namespace"
+          },
+          {
+            "name": "STORY_OPERATOR_TOKEN",
+            "type": "secret_text"
+          }
+        ]
+      },
+      "modules": [
+        {
+          "name": "entry.mjs",
+          "type": "esm",
+          "bytes": 984137,
+          "sha256": "3cb8e981690f4c065adfc87973cafbb2ea933477b89f45bdcb7ef73b868c1b47"
+        },
+        {
+          "name": "src/game/cultivation/live/engine.js",
+          "type": "esm",
+          "bytes": 12171,
+          "sha256": "5d824d1e58a73da0b085d7be3c5ec57f920f683710330c0e1648b4473fa951a4"
+        },
+        {
+          "name": "src/game/cultivation/live/identity.js",
+          "type": "esm",
+          "bytes": 3931,
+          "sha256": "d619269073a7b9afcaa6245ae013ead2e82677d76698a372ff21a51a11cab232"
+        },
+        {
+          "name": "src/game/cultivation/live/memory.js",
+          "type": "esm",
+          "bytes": 24732,
+          "sha256": "4c22df151d7264308026e39de32abc0b5675dfc767232759ae2bad80c0dfc5d9"
+        },
+        {
+          "name": "src/game/cultivation/live/model.js",
+          "type": "esm",
+          "bytes": 1379,
+          "sha256": "1b1b208631bac405395d84c240957a15db080333abe174b98e0eb5412336846a"
+        },
+        {
+          "name": "src/game/cultivation/live/schema.js",
+          "type": "esm",
+          "bytes": 5120,
+          "sha256": "dfdbdcadf35deb39315f571821203d61bd9f5a10d8c359b074001d16b0cdd0c9"
+        },
+        {
+          "name": "src/game/cultivation/live/validation.js",
+          "type": "esm",
+          "bytes": 10250,
+          "sha256": "44137cda97b87d78bdcf5513aa939e7549dd3c5406b699ac6491827a6514516a"
+        },
+        {
+          "name": "src/worker/index.js",
+          "type": "esm",
+          "bytes": 1695,
+          "sha256": "49c10eee2600f7e17e1ca1668f568a8349f4d3840912d5de1af379aab0567eaa"
+        },
+        {
+          "name": "src/worker/release-gateway.js",
+          "type": "esm",
+          "bytes": 8492,
+          "sha256": "db66b3b90e40e8695dfd0a9ddd4815591e85784c31d02d223a7565a0b2065276"
+        },
+        {
+          "name": "src/worker/story-acceptance.js",
+          "type": "esm",
+          "bytes": 785,
+          "sha256": "1f764d3653f659960afde1d6142cbae21e0eca051df8457fed6c6275aff1f58b"
+        },
+        {
+          "name": "src/worker/story-api.js",
+          "type": "esm",
+          "bytes": 13619,
+          "sha256": "5ec0010d9a646a0a11381b2a710b7d3b2dace50be0b3c1b1bfa020852480df1a"
+        },
+        {
+          "name": "src/worker/story-budget.js",
+          "type": "esm",
+          "bytes": 14825,
+          "sha256": "4911d5c776faefa17b3b2752d70e7cc60c1280edd7679d00ccdca71cdb461bde"
+        },
+        {
+          "name": "src/worker/story-config.js",
+          "type": "esm",
+          "bytes": 8717,
+          "sha256": "4a634a5c44862886adb2525bb82346937ec3d143adc855ec489604b839e0abbc"
+        },
+        {
+          "name": "src/worker/story-experiment.js",
+          "type": "esm",
+          "bytes": 4819,
+          "sha256": "a0ceda665b3961af6cee1914d0769e4b423bbdf021972519e78c85edcd8f1d74"
+        },
+        {
+          "name": "src/worker/story-generation-schema.js",
+          "type": "esm",
+          "bytes": 5670,
+          "sha256": "e7793c441af00345165643ec2ae11fef3a3f16b59e980fabcef82a496de84620"
+        },
+        {
+          "name": "src/worker/story-observation.js",
+          "type": "esm",
+          "bytes": 5375,
+          "sha256": "5a3a4641434d55d6fdf34c187e802918292aa5f35a09cdb50452f6fc6523ecb2"
+        },
+        {
+          "name": "src/worker/story-provider-core.js",
+          "type": "esm",
+          "bytes": 13888,
+          "sha256": "46b31797f973fe453bcf9e435a40b1d058b1ff46cdfefeaf0034b35526e08b5f"
+        },
+        {
+          "name": "src/worker/story-provider.js",
+          "type": "esm",
+          "bytes": 637,
+          "sha256": "d910641c21df9fa76647b62e6076c1bb4540656d13f41164207f8dd5510c7283"
+        },
+        {
+          "name": "src/worker/story-request-body.js",
+          "type": "esm",
+          "bytes": 3486,
+          "sha256": "53c441cb50bba79d467d0e24779fa8ba89c80711d2703f4af4f19da6a93d5e5a"
+        },
+        {
+          "name": "src/worker/story-stage.js",
+          "type": "esm",
+          "bytes": 3144,
+          "sha256": "93e4895693f0fb39dd68b37813da07fa655e8fd0c3e11dcad7cf17bee0a0beb2"
+        }
+      ],
+      "allModuleHashesMatched": true
+    }
+  ]
+}

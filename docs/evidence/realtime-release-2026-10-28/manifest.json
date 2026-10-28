@@ -1,0 +1,394 @@
+{
+  "schemaVersion": 1,
+  "createdAt": "2026-10-28T17:01:33.732511Z",
+  "sourceCommit": "b519bf4fd730133a852b3b6e6d1f5aab90144220",
+  "scope": "Public evidence copies; original source evidence retained unchanged outside this tree. Ephemeral session references and personal author email are redacted where present. No browser profiles or credentials included. No source status or generation outcome rewritten.",
+  "files": [
+    {
+      "sourceEvidence": "real-final-stage-generation/evidence.json",
+      "file": "stage-browser/evidence.json",
+      "originalSha256": "8994d2d0ef90936670379759cad83340081bdcf45b3e0faa47a4458d4a1086c7",
+      "publishedSha256": "9d299709bb37ab54a3a6863614d0b2459f7e41df1a41629d1719ab483ce8108f",
+      "bytes": 70593,
+      "redactedFields": [
+        "/actions/2/previousAttempt/sessionRef",
+        "/actions/3/previousAttempt/sessionRef",
+        "/actions/7/previousAttempt/sessionRef",
+        "/actions/8/previousAttempt/sessionRef",
+        "/actions/9/previousAttempt/sessionRef",
+        "/actions/9/previousAttempt/retryOf/sessionRef",
+        "/actions/10/previousAttempt/sessionRef",
+        "/actions/10/previousAttempt/retryOf/sessionRef",
+        "/api/3/response/body/sessionRef",
+        "/api/4/requestBody/attempt/sessionRef",
+        "/api/4/response/body/sessionRef",
+        "/api/5/response/body/sessionRef",
+        "/api/7/response/body/sessionRef",
+        "/api/8/requestBody/attempt/sessionRef",
+        "/api/8/requestBody/attempt/retryOf/sessionRef",
+        "/api/8/response/body/sessionRef",
+        "/api/11/response/body/sessionRef",
+        "/api/12/requestBody/attempt/sessionRef",
+        "/api/12/response/body/sessionRef",
+        "/api/16/requestBody/attempt/sessionRef",
+        "/api/16/requestBody/attempt/retryOf/sessionRef",
+        "/api/16/response/body/sessionRef",
+        "/api/19/response/body/sessionRef",
+        "/api/20/requestBody/attempt/sessionRef",
+        "/api/20/requestBody/attempt/retryOf/sessionRef",
+        "/api/20/response/body/sessionRef",
+        "/operatorRetries/0/previousAttempt/sessionRef",
+        "/operatorRetries/0/attempt/sessionRef",
+        "/operatorRetries/0/attempt/retryOf/sessionRef",
+        "/operatorRetries/1/attempt/sessionRef",
+        "/operatorRetries/2/previousAttempt/sessionRef",
+        "/operatorRetries/2/attempt/sessionRef",
+        "/operatorRetries/2/attempt/retryOf/sessionRef",
+        "/operatorRetries/3/previousAttempt/sessionRef",
+        "/operatorRetries/3/previousAttempt/retryOf/sessionRef",
+        "/operatorRetries/3/attempt/sessionRef",
+        "/operatorRetries/3/attempt/retryOf/sessionRef"
+      ],
+      "sourceStatusPreserved": true
+    },
+    {
+      "sourceEvidence": "real-final-stage-generation/01-opening-or-existing.json",
+      "file": "stage-browser/opening-snapshot.json",
+      "originalSha256": "f048bf67a0732d1ea2fabad53374d62d0d7b9a7fa44d121dd5f9e7ad37afaf71",
+      "publishedSha256": "f048bf67a0732d1ea2fabad53374d62d0d7b9a7fa44d121dd5f9e7ad37afaf71",
+      "bytes": 12977,
+      "redactedFields": [],
+      "sourceStatusPreserved": true
+    },
+    {
+      "sourceEvidence": "real-final-stage-generation/99-failure.json",
+      "file": "stage-browser/committed-snapshot.json",
+      "originalSha256": "5d159a25da9c9c0741723d5af5eff2ba1e3df6eb698276c50319dca33c290d70",
+      "publishedSha256": "5d159a25da9c9c0741723d5af5eff2ba1e3df6eb698276c50319dca33c290d70",
+      "bytes": 13180,
+      "redactedFields": [],
+      "sourceStatusPreserved": true
+    },
+    {
+      "sourceEvidence": "real-final-stage-save-refresh/evidence.json",
+      "file": "stage-save-refresh/evidence.json",
+      "originalSha256": "a6e45195585770cd1b9512d02631bdc85ab45a3950e5eb3705efb58c88a58361",
+      "publishedSha256": "a6e45195585770cd1b9512d02631bdc85ab45a3950e5eb3705efb58c88a58361",
+      "bytes": 22173,
+      "redactedFields": [],
+      "sourceStatusPreserved": true
+    },
+    {
+      "sourceEvidence": "real-final-stage-save-refresh/04-before-refresh.json",
+      "file": "stage-save-refresh/before-refresh.json",
+      "originalSha256": "d00eb132d89e788277474ec932c9b6d01d9d26b930e3c06a28cbbd0235071706",
+      "publishedSha256": "d00eb132d89e788277474ec932c9b6d01d9d26b930e3c06a28cbbd0235071706",
+      "bytes": 13206,
+      "redactedFields": [],
+      "sourceStatusPreserved": true
+    },
+    {
+      "sourceEvidence": "real-final-stage-save-refresh/05-after-refresh.json",
+      "file": "stage-save-refresh/after-refresh.json",
+      "originalSha256": "ea1b50b1cb26185aa0819c5fb42d33592451b0f49b0c84932bba77de45527d53",
+      "publishedSha256": "ea1b50b1cb26185aa0819c5fb42d33592451b0f49b0c84932bba77de45527d53",
+      "bytes": 13180,
+      "redactedFields": [],
+      "sourceStatusPreserved": true
+    },
+    {
+      "sourceEvidence": "real-final-stage-save-refresh/saved-game.wending.jsonl",
+      "file": "stage-save-refresh/saved-game.wending.jsonl",
+      "originalSha256": "e07901183fa1b59c0500168f6e2869d5e9121c801e08c17c11db03c8c9914ced",
+      "publishedSha256": "e07901183fa1b59c0500168f6e2869d5e9121c801e08c17c11db03c8c9914ced",
+      "bytes": 11249,
+      "redactedFields": [],
+      "sourceStatusPreserved": true
+    },
+    {
+      "sourceEvidence": "current-input-analysis-47-final/technical-validation.json",
+      "file": "stage-review/technical-validation.json",
+      "originalSha256": "966670dbe51b9c4197c8e822b7fe92f11a7e1e21a9cfc8e9eb1afcbd3bc41aa5",
+      "publishedSha256": "966670dbe51b9c4197c8e822b7fe92f11a7e1e21a9cfc8e9eb1afcbd3bc41aa5",
+      "bytes": 17416,
+      "redactedFields": [],
+      "sourceStatusPreserved": true
+    },
+    {
+      "sourceEvidence": "current-input-analysis-47-final/narrative-review.json",
+      "file": "stage-review/narrative-review.json",
+      "originalSha256": "99b4ffac6ab017548559b77fca31198aab5c202938fb6c13704fd53f90dcb11e",
+      "publishedSha256": "99b4ffac6ab017548559b77fca31198aab5c202938fb6c13704fd53f90dcb11e",
+      "bytes": 4564,
+      "redactedFields": [],
+      "sourceStatusPreserved": true
+    },
+    {
+      "sourceEvidence": "current-input-analysis-47-final/purchase-regression-7613.json",
+      "file": "stage-review/purchase-regression-7613.json",
+      "originalSha256": "a6f611a7833030879feb9f9d8affc3b0ddf18cc1f28a8208421aad94b52755e6",
+      "publishedSha256": "a6f611a7833030879feb9f9d8affc3b0ddf18cc1f28a8208421aad94b52755e6",
+      "bytes": 969,
+      "redactedFields": [],
+      "sourceStatusPreserved": true
+    },
+    {
+      "sourceEvidence": "current-input-analysis-7613dc7-final/actual-s1.state.json",
+      "file": "final-input/actual-s1.state.json",
+      "originalSha256": "15841fe82525bc17017581e4512da45aecd836f9a5bb567726d2f0760ad09b39",
+      "publishedSha256": "15841fe82525bc17017581e4512da45aecd836f9a5bb567726d2f0760ad09b39",
+      "bytes": 4091,
+      "redactedFields": [],
+      "sourceStatusPreserved": true
+    },
+    {
+      "sourceEvidence": "current-input-analysis-7613dc7-final/actual-s1.scene.json",
+      "file": "final-input/actual-s1.scene.json",
+      "originalSha256": "efe2eacb675cf8f48fda51178c7b70388fb99e1e27f32aac87e11dc44052862d",
+      "publishedSha256": "efe2eacb675cf8f48fda51178c7b70388fb99e1e27f32aac87e11dc44052862d",
+      "bytes": 2335,
+      "redactedFields": [],
+      "sourceStatusPreserved": true
+    },
+    {
+      "sourceEvidence": "current-input-analysis-7613dc7-final/branch-a.context.json",
+      "file": "final-input/branch-a.context.json",
+      "originalSha256": "d5728bc1022cec1d9b45553f31b246d959d8f61f0e8522e9e7ce5a0e141b795d",
+      "publishedSha256": "d5728bc1022cec1d9b45553f31b246d959d8f61f0e8522e9e7ce5a0e141b795d",
+      "bytes": 2685,
+      "redactedFields": [],
+      "sourceStatusPreserved": true
+    },
+    {
+      "sourceEvidence": "current-input-analysis-7613dc7-final/branch-b.context.json",
+      "file": "final-input/branch-b.context.json",
+      "originalSha256": "7b3bb90b691a016e839cab121ec72d0cb71c80111475697431fd534365a568e4",
+      "publishedSha256": "7b3bb90b691a016e839cab121ec72d0cb71c80111475697431fd534365a568e4",
+      "bytes": 2523,
+      "redactedFields": [],
+      "sourceStatusPreserved": true
+    },
+    {
+      "sourceEvidence": "current-input-analysis-7613dc7-final/branch-a.pending.json",
+      "file": "final-input/branch-a.pending.json",
+      "originalSha256": "8299fb54c54c6e146f6c0778cc67c88e3cad42bb85c840a141b0c73e83550af7",
+      "publishedSha256": "8299fb54c54c6e146f6c0778cc67c88e3cad42bb85c840a141b0c73e83550af7",
+      "bytes": 1290,
+      "redactedFields": [],
+      "sourceStatusPreserved": true
+    },
+    {
+      "sourceEvidence": "current-input-analysis-7613dc7-final/branch-b.pending.json",
+      "file": "final-input/branch-b.pending.json",
+      "originalSha256": "3ce3d4411a7cb98ee76a299cefc6d9d9e51f407ca204ca917b475d1b354bc136",
+      "publishedSha256": "3ce3d4411a7cb98ee76a299cefc6d9d9e51f407ca204ca917b475d1b354bc136",
+      "bytes": 1171,
+      "redactedFields": [],
+      "sourceStatusPreserved": true
+    },
+    {
+      "sourceEvidence": "final-source-branches/branch-a.json",
+      "file": "final-source-branches/branch-a.json",
+      "originalSha256": "3cf553fb05b8d2cf42cb5c6105e212708ddf773e299f5d309f987794d9d5b52b",
+      "publishedSha256": "3cf553fb05b8d2cf42cb5c6105e212708ddf773e299f5d309f987794d9d5b52b",
+      "bytes": 3953,
+      "redactedFields": [],
+      "sourceStatusPreserved": true
+    },
+    {
+      "sourceEvidence": "final-source-branches/branch-b.json",
+      "file": "final-source-branches/branch-b.json",
+      "originalSha256": "980082c3aac872f19dfaf4f5859655c3e22da7cae745146542e6623d5ac770c6",
+      "publishedSha256": "980082c3aac872f19dfaf4f5859655c3e22da7cae745146542e6623d5ac770c6",
+      "bytes": 3843,
+      "redactedFields": [],
+      "sourceStatusPreserved": true
+    },
+    {
+      "sourceEvidence": "final-source-branches/branch-b-retry-1.json",
+      "file": "final-source-branches/branch-b-retry-1.json",
+      "originalSha256": "1021cf6c19267782109ec7d098a8bc8c720c2af031640236cd235803a0bf40ab",
+      "publishedSha256": "1021cf6c19267782109ec7d098a8bc8c720c2af031640236cd235803a0bf40ab",
+      "bytes": 4285,
+      "redactedFields": [],
+      "sourceStatusPreserved": true
+    },
+    {
+      "sourceEvidence": "final-source-branch-review/narrative-review.json",
+      "file": "historical-branch-review/narrative-review.json",
+      "originalSha256": "b69b1069ee29616579ebcbf244b1d6b12feef9ada4ecdf809046fc825df42d29",
+      "publishedSha256": "b69b1069ee29616579ebcbf244b1d6b12feef9ada4ecdf809046fc825df42d29",
+      "bytes": 12266,
+      "redactedFields": [],
+      "sourceStatusPreserved": true
+    },
+    {
+      "sourceEvidence": "final-source-branch-review/validation-summary.json",
+      "file": "historical-branch-review/validation-summary.json",
+      "originalSha256": "fccf8486735a30ff360accebdff25578b749a77a505d71b9df1480d8de45e1d3",
+      "publishedSha256": "fccf8486735a30ff360accebdff25578b749a77a505d71b9df1480d8de45e1d3",
+      "bytes": 28934,
+      "redactedFields": [],
+      "sourceStatusPreserved": true
+    },
+    {
+      "sourceEvidence": "stage5-deployment.json",
+      "file": "operations/stage5-deployment.json",
+      "originalSha256": "74839b0fe28199221aaab76316a0ee557272c978ef4760c2b157987601730010",
+      "publishedSha256": "dd814e74013a3ce91e0880f843387b9f9f9b86b0c4b5612d3d0f2bb02b405688",
+      "bytes": 13274,
+      "redactedFields": [
+        "/observations/0/deployment/author_email",
+        "/observations/1/deployment/author_email"
+      ],
+      "sourceStatusPreserved": true
+    },
+    {
+      "sourceEvidence": "stage6-deployment.json",
+      "file": "operations/stage6-deployment.json",
+      "originalSha256": "bb5d8038003cbb3d5d6336ac14e0aa52914a555366cb13142942bc73ec4d754f",
+      "publishedSha256": "658b6af8662a58667db2cef9e3106b8452101d36e37049741aea0cae19c8f7da",
+      "bytes": 13273,
+      "redactedFields": [
+        "/observations/0/deployment/author_email",
+        "/observations/1/deployment/author_email"
+      ],
+      "sourceStatusPreserved": true
+    },
+    {
+      "sourceEvidence": "ledger-retention-after-travel.json",
+      "file": "operations/ledger-retention-after-travel.json",
+      "originalSha256": "a213da114a83068379f8d7abdf9f8e6e661a5f3a11a9bbd8374574d67953bf54",
+      "publishedSha256": "a213da114a83068379f8d7abdf9f8e6e661a5f3a11a9bbd8374574d67953bf54",
+      "bytes": 1511,
+      "redactedFields": [],
+      "sourceStatusPreserved": true
+    },
+    {
+      "sourceEvidence": "temporary-diagnostic-cleanup.json",
+      "file": "operations/temporary-diagnostic-cleanup.json",
+      "originalSha256": "6f813225bb633a8dbe555d02899b802a6fce66ea45afb6110b795d83e4dc791f",
+      "publishedSha256": "6f813225bb633a8dbe555d02899b802a6fce66ea45afb6110b795d83e4dc791f",
+      "bytes": 138,
+      "redactedFields": [],
+      "sourceStatusPreserved": true
+    },
+    {
+      "sourceEvidence": "final-pair-b519-review/narrative-review.json",
+      "file": "final-pair-b519-review/narrative-review.json",
+      "originalSha256": "ea89ccc150778a921322508198424924090ec35986624a5582f0eed8c6926ae4",
+      "publishedSha256": "ea89ccc150778a921322508198424924090ec35986624a5582f0eed8c6926ae4",
+      "bytes": 8967,
+      "redactedFields": [],
+      "sourceStatusPreserved": true
+    },
+    {
+      "sourceEvidence": "final-pair-b519-review/branch-b.validation.json",
+      "file": "final-pair-b519-review/branch-b.validation.json",
+      "originalSha256": "5c67946af59403e84307742ab8b3ea298c9033d8cd20cbdd3359f9e5d05f5bc3",
+      "publishedSha256": "5c67946af59403e84307742ab8b3ea298c9033d8cd20cbdd3359f9e5d05f5bc3",
+      "bytes": 9823,
+      "redactedFields": [],
+      "sourceStatusPreserved": true
+    },
+    {
+      "sourceEvidence": "final-pair-b519-review/branch-a.scene.json",
+      "file": "final-pair-b519-review/branch-a.scene.json",
+      "originalSha256": "7e2fc4074aef1463bb2d3f1490a4fcc453fa0ef6e311ed15d1e110cfd450dc5c",
+      "publishedSha256": "7e2fc4074aef1463bb2d3f1490a4fcc453fa0ef6e311ed15d1e110cfd450dc5c",
+      "bytes": 2207,
+      "redactedFields": [],
+      "sourceStatusPreserved": true
+    },
+    {
+      "sourceEvidence": "final-pair-b519-review/original-b-regression.json",
+      "file": "final-pair-b519-review/original-b-regression.json",
+      "originalSha256": "0469d69ecb09093dff0f8891fb9a5a11ce8c562bb765a8537a2dbb7cd2fd0dd6",
+      "publishedSha256": "0469d69ecb09093dff0f8891fb9a5a11ce8c562bb765a8537a2dbb7cd2fd0dd6",
+      "bytes": 462,
+      "redactedFields": [],
+      "sourceStatusPreserved": true
+    },
+    {
+      "sourceEvidence": "final-pair-b519-review/branch-b.current-input.json",
+      "file": "final-pair-b519-review/branch-b.current-input.json",
+      "originalSha256": "7046771aae7a19a818f8967fd4447ef99fb9a0502670d7f134d741839d93bde7",
+      "publishedSha256": "7046771aae7a19a818f8967fd4447ef99fb9a0502670d7f134d741839d93bde7",
+      "bytes": 13905,
+      "redactedFields": [],
+      "sourceStatusPreserved": true
+    },
+    {
+      "sourceEvidence": "final-pair-b519-review/acceptance-manifest.json",
+      "file": "final-pair-b519-review/acceptance-manifest.json",
+      "originalSha256": "f1fb5401f4ffc13d66545cd161fdfb636c8c4e43e822c404adf799ed4b418b79",
+      "publishedSha256": "f1fb5401f4ffc13d66545cd161fdfb636c8c4e43e822c404adf799ed4b418b79",
+      "bytes": 2412,
+      "redactedFields": [],
+      "sourceStatusPreserved": true
+    },
+    {
+      "sourceEvidence": "final-pair-b519-review/validation-summary.json",
+      "file": "final-pair-b519-review/validation-summary.json",
+      "originalSha256": "2e5fda5ae4c13f8bdcd4b015918d8cc34d7dbcbf494b72124995d49156a99c18",
+      "publishedSha256": "2e5fda5ae4c13f8bdcd4b015918d8cc34d7dbcbf494b72124995d49156a99c18",
+      "bytes": 25379,
+      "redactedFields": [],
+      "sourceStatusPreserved": true
+    },
+    {
+      "sourceEvidence": "final-pair-b519-review/branch-a.current-input.json",
+      "file": "final-pair-b519-review/branch-a.current-input.json",
+      "originalSha256": "779cd735076747b2ed27e44f850f0ebf9b8fe0db7f980d90c7a324255befbb48",
+      "publishedSha256": "779cd735076747b2ed27e44f850f0ebf9b8fe0db7f980d90c7a324255befbb48",
+      "bytes": 14075,
+      "redactedFields": [],
+      "sourceStatusPreserved": true
+    },
+    {
+      "sourceEvidence": "final-pair-b519-review/branch-a.canonical-next-state.json",
+      "file": "final-pair-b519-review/branch-a.canonical-next-state.json",
+      "originalSha256": "1c47066c8472b090f114bb61a5266801008c28bc6a76cf24cc91bf32fd0249bd",
+      "publishedSha256": "1c47066c8472b090f114bb61a5266801008c28bc6a76cf24cc91bf32fd0249bd",
+      "bytes": 5168,
+      "redactedFields": [],
+      "sourceStatusPreserved": true
+    },
+    {
+      "sourceEvidence": "final-pair-b519-review/branch-a.validation.json",
+      "file": "final-pair-b519-review/branch-a.validation.json",
+      "originalSha256": "4aa127ba4f3776e7ae0283d25184b645edac7558f195e83ec293d9b2188d979c",
+      "publishedSha256": "4aa127ba4f3776e7ae0283d25184b645edac7558f195e83ec293d9b2188d979c",
+      "bytes": 10077,
+      "redactedFields": [],
+      "sourceStatusPreserved": true
+    },
+    {
+      "sourceEvidence": "final-pair-b519-review/branch-b.scene.json",
+      "file": "final-pair-b519-review/branch-b.scene.json",
+      "originalSha256": "f6df3c6c7469a2ebe7588dc04c3e5f69845e22ed4e621cb8b37d42691b09b474",
+      "publishedSha256": "f6df3c6c7469a2ebe7588dc04c3e5f69845e22ed4e621cb8b37d42691b09b474",
+      "bytes": 2460,
+      "redactedFields": [],
+      "sourceStatusPreserved": true
+    },
+    {
+      "sourceEvidence": "final-pair-b519-review/branch-b.canonical-next-state.json",
+      "file": "final-pair-b519-review/branch-b.canonical-next-state.json",
+      "originalSha256": "b183f72ccfebe66f38e75952914c480f136e526386e99ee5728d24d2569262eb",
+      "publishedSha256": "b183f72ccfebe66f38e75952914c480f136e526386e99ee5728d24d2569262eb",
+      "bytes": 5391,
+      "redactedFields": [],
+      "sourceStatusPreserved": true
+    },
+    {
+      "sourceEvidence": "ledger-retention-pre-production.json",
+      "file": "operations/ledger-retention-pre-production.json",
+      "originalSha256": "838e76ad4653b5da965e918828421ca2b40267b6c880366052bd1d0b751e54b3",
+      "publishedSha256": "838e76ad4653b5da965e918828421ca2b40267b6c880366052bd1d0b751e54b3",
+      "bytes": 6270,
+      "redactedFields": [],
+      "sourceStatusPreserved": true
+    }
+  ]
+}

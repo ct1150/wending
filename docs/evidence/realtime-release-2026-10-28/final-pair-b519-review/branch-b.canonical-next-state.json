@@ -1,0 +1,210 @@
+{
+  "relationshipVersion": 1,
+  "version": 5,
+  "mode": "cultivation",
+  "contentVersion": 4,
+  "rulesVersion": 1,
+  "promptVersion": 1,
+  "runId": "62ed8197-a43b-4ab1-b3af-d25b795382ca",
+  "revision": 2,
+  "turnId": 2,
+  "phase": "active",
+  "rng": 3012430483,
+  "life": {
+    "name": "云归",
+    "ageDays": 5850,
+    "lifeLimit": 80,
+    "realm": "mortal",
+    "cultivation": 0,
+    "injury": 0,
+    "items": {
+      "supplies": 3,
+      "stones": 1
+    },
+    "relations": {},
+    "birth": {
+      "originId": "village",
+      "talentIds": [
+        "fortune-debt",
+        "iron-bones"
+      ],
+      "attributes": {
+        "constitution": 3,
+        "insight": 6,
+        "fortune": 3
+      }
+    }
+  },
+  "birthReceipt": {
+    "kind": "opening",
+    "choiceId": null,
+    "action": null,
+    "elapsedDays": 0,
+    "itemChanges": {},
+    "relationChanges": {},
+    "random": {
+      "before": 1080474372,
+      "after": 1080474372,
+      "roll": null
+    },
+    "before": {
+      "ageDays": 5760,
+      "realm": "mortal",
+      "cultivation": 0,
+      "injury": 0
+    },
+    "after": {
+      "ageDays": 5760,
+      "realm": "mortal",
+      "cultivation": 0,
+      "injury": 0
+    },
+    "death": null,
+    "birth": {
+      "originId": "village",
+      "talentIds": [
+        "fortune-debt",
+        "iron-bones"
+      ],
+      "attributes": {
+        "constitution": 3,
+        "insight": 6,
+        "fortune": 3
+      }
+    }
+  },
+  "currentScene": {
+    "id": "r:17d4b63b7a333a81:t2:s:scene",
+    "title": "山间余响",
+    "location": "青石村后山林",
+    "entities": [
+      {
+        "id": "r:17d4b63b7a333a81:t1:e:place_qingshi_village",
+        "name": "青石村",
+        "kind": "place"
+      },
+      {
+        "id": "r:17d4b63b7a333a81:t1:e:person_lao_wang",
+        "name": "老王",
+        "kind": "person"
+      },
+      {
+        "id": "r:17d4b63b7a333a81:t1:e:person_ling_shang",
+        "name": "林商",
+        "kind": "person"
+      },
+      {
+        "id": "r:17d4b63b7a333a81:t2:e:person_wild_boar",
+        "name": "铁背野猪",
+        "kind": "person"
+      }
+    ],
+    "blocks": [
+      {
+        "kind": "narration",
+        "text": "九十个日夜的跋涉让双腿沉重如铅，但掌心那枚温润的灵石证明了一切值得。山林深处，枯叶覆盖的岩缝里还残留着淡淡的灵气波动，似乎这片区域并非毫无价值。远处传来树枝断裂的脆响，一头体型硕大的铁背野猪正警惕地注视着这边，它身上的黑毛在夕阳下泛着金属光泽。"
+      },
+      {
+        "kind": "dialogue",
+        "text": "哼，人类？正好饿了。",
+        "speaker": "r:17d4b63b7a333a81:t2:e:person_wild_boar"
+      },
+      {
+        "kind": "narration",
+        "text": "野猪低吼着，獠牙间滴落着唾液。它似乎并不急于进攻，而是在评估这个闯入者。与此同时，山风卷起几片落叶，隐约能听到山下青石村方向传来的炊烟气息。"
+      }
+    ],
+    "choices": [
+      {
+        "id": "r:17d4b63b7a333a81:t2:c:a",
+        "label": "悄悄后退，避开野猪，返回青石村",
+        "intent": "travel",
+        "targetId": "r:17d4b63b7a333a81:t1:e:place_qingshi_village",
+        "stake": "low",
+        "approach": "road"
+      },
+      {
+        "id": "r:17d4b63b7a333a81:t2:c:b",
+        "label": "继续深入山林，寻找更多灵石",
+        "intent": "explore",
+        "targetId": "stones",
+        "stake": "high",
+        "approach": "cautious"
+      },
+      {
+        "id": "r:17d4b63b7a333a81:t2:c:c",
+        "label": "尝试与野猪沟通，了解山中情况",
+        "intent": "negotiate",
+        "targetId": "r:17d4b63b7a333a81:t2:e:person_wild_boar",
+        "stake": "high",
+        "approach": "cooperate"
+      }
+    ],
+    "memoryDeltas": [
+      {
+        "entityId": "r:17d4b63b7a333a81:t2:e:person_wild_boar",
+        "text": "铁背野猪是山林中的妖兽，体型硕大，具有金属光泽的黑毛，目前处于警戒状态。",
+        "kind": "fact"
+      }
+    ]
+  },
+  "lastReceipt": {
+    "kind": "choice",
+    "choiceId": "r:17d4b63b7a333a81:t1:c:c",
+    "action": {
+      "id": "r:17d4b63b7a333a81:t1:c:c",
+      "label": "独自前往村后山林，寻找可能存在的灵石或行粮",
+      "intent": "explore",
+      "targetId": "stones",
+      "stake": "high",
+      "approach": "cautious"
+    },
+    "elapsedDays": 90,
+    "itemChanges": {
+      "stones": 1
+    },
+    "relationChanges": {},
+    "random": {
+      "before": 1080474372,
+      "after": 3012430483,
+      "roll": 83
+    },
+    "before": {
+      "ageDays": 5760,
+      "realm": "mortal",
+      "cultivation": 0,
+      "injury": 0
+    },
+    "after": {
+      "ageDays": 5850,
+      "realm": "mortal",
+      "cultivation": 0,
+      "injury": 0
+    },
+    "death": null,
+    "birth": null
+  },
+  "relatedEntities": [
+    {
+      "id": "r:17d4b63b7a333a81:t1:e:place_qingshi_village",
+      "name": "青石村",
+      "kind": "place"
+    },
+    {
+      "id": "r:17d4b63b7a333a81:t1:e:person_lao_wang",
+      "name": "老王",
+      "kind": "person"
+    },
+    {
+      "id": "r:17d4b63b7a333a81:t1:e:person_ling_shang",
+      "name": "林商",
+      "kind": "person"
+    },
+    {
+      "id": "r:17d4b63b7a333a81:t2:e:person_wild_boar",
+      "name": "铁背野猪",
+      "kind": "person"
+    }
+  ],
+  "archiveCursor": 0
+}

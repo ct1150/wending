@@ -1,0 +1,22 @@
+{
+  "checkedAt": "2026-10-28T16:46:51.940Z",
+  "sourceCommit": "7613dc7298b12ab786850f77140bab535fc99953",
+  "providerCoreSha256": "5fb29ce555b620bf4c5b34eac87590fe3c4c8705270daf6c35bd32880937359b",
+  "mode": "EXACT_SOURCE_GUARD_CONDITION_EVALUATION_ON_ACTUAL_BROWSER_CHOICE",
+  "sourceScene": "/workspace/scratch/60d77884fe74/acceptance-evidence/current-input-analysis-47-final/actual-s2.scene.json",
+  "choice": {
+    "id": "r:17d4b63b7a333a81:t2:c:a",
+    "label": "向老王购买那张低阶符纸",
+    "intent": "negotiate",
+    "targetId": "r:17d4b63b7a333a81:t1:e:person_lao_wang",
+    "stake": "low",
+    "approach": "cooperate"
+  },
+  "newGuardMatched": true,
+  "guardErrorCode": "CHOICE_NOT_COMPILABLE",
+  "fullRawProviderReplay": false,
+  "reasonFullRawNotReplayed": "Browser API scene available; underlying raw provider envelope unavailable. No fake usage or raw envelope was invented.",
+  "modelCallsMade": 0,
+  "networkCalls": 0,
+  "archiveWrites": 0
+}

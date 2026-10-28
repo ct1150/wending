@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 1,
+  "verifiedAt": "2026-10-28T16:59:47.356Z",
+  "passed": true,
+  "status": "FINAL_REAL_PAIR_VERIFIED_WITH_EXACT_CURRENT_INPUTS",
+  "sourceCommit": "b519bf4fd730133a852b3b6e6d1f5aab90144220",
+  "sourceTree": "8a11c953e0cd854a663466421b821e77633a9597",
+  "modelId": "@cf/qwen/qwen3.8-27b",
+  "sourceS1StateHash": "65fa96ed4c6190a4063aa54476a8f2ebee6ce08a26250f5c74d58d2c5f9abf60",
+  "branches": {
+    "passed": true,
+    "technicalEvidence": "validation-summary.json",
+    "narrativeEvidence": "narrative-review.json",
+    "allSixChoicesExecutable": true
+  },
+  "exactInputHashes": [
+    "779cd735076747b2ed27e44f850f0ebf9b8fe0db7f980d90c7a324255befbb48",
+    "7046771aae7a19a818f8967fd4447ef99fb9a0502670d7f134d741839d93bde7"
+  ],
+  "captureFiles": [
+    "../final-source-branches/branch-a.json",
+    "../final-source-branches/branch-b-retry-1.json"
+  ],
+  "captureSha256": [
+    "3cf553fb05b8d2cf42cb5c6105e212708ddf773e299f5d309f987794d9d5b52b",
+    "1021cf6c19267782109ec7d098a8bc8c720c2af031640236cd235803a0bf40ab"
+  ],
+  "actualCapturedUsage": {
+    "promptTokens": 4159,
+    "completionTokens": 1838,
+    "totalTokens": 5997,
+    "providerReportedNeurons": 704.831787109375
+  },
+  "freshModelCalls": 0,
+  "nativeBrowserAcceptanceClaimed": false,
+  "filesSha256": {
+    "branch-a.canonical-next-state.json": "1c47066c8472b090f114bb61a5266801008c28bc6a76cf24cc91bf32fd0249bd",
+    "branch-a.current-input.json": "779cd735076747b2ed27e44f850f0ebf9b8fe0db7f980d90c7a324255befbb48",
+    "branch-a.scene.json": "7e2fc4074aef1463bb2d3f1490a4fcc453fa0ef6e311ed15d1e110cfd450dc5c",
+    "branch-a.validation.json": "4aa127ba4f3776e7ae0283d25184b645edac7558f195e83ec293d9b2188d979c",
+    "branch-b.canonical-next-state.json": "b183f72ccfebe66f38e75952914c480f136e526386e99ee5728d24d2569262eb",
+    "branch-b.current-input.json": "7046771aae7a19a818f8967fd4447ef99fb9a0502670d7f134d741839d93bde7",
+    "branch-b.scene.json": "f6df3c6c7469a2ebe7588dc04c3e5f69845e22ed4e621cb8b37d42691b09b474",
+    "branch-b.validation.json": "5c67946af59403e84307742ab8b3ea298c9033d8cd20cbdd3359f9e5d05f5bc3",
+    "narrative-review.json": "ea89ccc150778a921322508198424924090ec35986624a5582f0eed8c6926ae4",
+    "original-b-regression.json": "0469d69ecb09093dff0f8891fb9a5a11ce8c562bb765a8537a2dbb7cd2fd0dd6",
+    "validation-summary.json": "2e5fda5ae4c13f8bdcd4b015918d8cc34d7dbcbf494b72124995d49156a99c18"
+  }
+}
