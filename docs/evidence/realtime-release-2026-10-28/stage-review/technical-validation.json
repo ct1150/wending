@@ -1,0 +1,559 @@
+{
+  "schemaVersion": 1,
+  "status": "ACTUAL_TWO_READY_TURNS_AND_CANONICAL_COMMITS_VERIFIED",
+  "driverStatus": "FAILED",
+  "driverFailure": {
+    "at": "2026-10-28T16:39:49.211Z",
+    "name": "Error",
+    "message": "Choice issued one initial turn POST plus 3 explicit operator retry POST(s)",
+    "automaticRetryIssued": false,
+    "profilePreserved": true
+  },
+  "sourceCommit": "47c40646892e185588c61b9750076c829bb3fcfb",
+  "freshModelCalls": 0,
+  "networkCalls": 0,
+  "archiveWrites": 0,
+  "profileAccess": false,
+  "providerRawAvailable": false,
+  "provenance": {
+    "schemaVersion": 1,
+    "sourceCommit": "47c40646892e185588c61b9750076c829bb3fcfb",
+    "sourceFileHashes": {
+      "src/worker/story-provider-core.js": "46b31797f973fe453bcf9e435a40b1d058b1ff46cdfefeaf0034b35526e08b5f",
+      "src/worker/story-generation-schema.js": "e7793c441af00345165643ec2ae11fef3a3f16b59e980fabcef82a496de84620",
+      "src/worker/story-config.js": "4a634a5c44862886adb2525bb82346937ec3d143adc855ec489604b839e0abbc",
+      "src/game/cultivation/live/engine.js": "5d824d1e58a73da0b085d7be3c5ec57f920f683710330c0e1648b4473fa951a4",
+      "src/game/cultivation/live/memory.js": "4c22df151d7264308026e39de32abc0b5675dfc767232759ae2bad80c0dfc5d9"
+    },
+    "sourceFiles": {
+      "/workspace/scratch/60d77884fe74/acceptance-evidence/real-final-stage-generation/evidence.json": "8994d2d0ef90936670379759cad83340081bdcf45b3e0faa47a4458d4a1086c7",
+      "/workspace/scratch/60d77884fe74/acceptance-evidence/real-final-stage-generation/01-opening-or-existing.json": "f048bf67a0732d1ea2fabad53374d62d0d7b9a7fa44d121dd5f9e7ad37afaf71",
+      "/workspace/scratch/60d77884fe74/acceptance-evidence/real-final-stage-generation/99-failure.json": "5d159a25da9c9c0741723d5af5eff2ba1e3df6eb698276c50319dca33c290d70"
+    },
+    "sourceReportStatus": "FAILED",
+    "sourceReportFailure": {
+      "at": "2026-10-28T16:39:49.211Z",
+      "name": "Error",
+      "message": "Choice issued one initial turn POST plus 3 explicit operator retry POST(s)",
+      "automaticRetryIssued": false,
+      "profilePreserved": true
+    },
+    "sourceRequestCounts": {
+      "apiRequests": 21,
+      "turnPosts": 5,
+      "turnGets": 3,
+      "sessionPosts": 5,
+      "capabilityGets": 8,
+      "readyTurnResponses": 2
+    },
+    "archiveId": "9bd91d07-af0b-4ce3-b722-532fef8a1680",
+    "runId": "62ed8197-a43b-4ab1-b3af-d25b795382ca",
+    "birthStateHash": "ee41fdf3593d5a9ade54bfad25ddb19a178338c6ffd79a6eadba84929b693336",
+    "s1StateHash": "65fa96ed4c6190a4063aa54476a8f2ebee6ce08a26250f5c74d58d2c5f9abf60",
+    "s1SceneHash": "fcb3ed30c0809b4adc050ea12ab2536db8cd4cde0580bc03152ef94772f08d81",
+    "s2StateHash": "804b79eddc7fa712cac3d3ee37651a8b0d64ba6c66e170dd01037297d9cb92a0",
+    "s2SceneHash": "cc082ef4d5a6d4938aef3d5311590a6d7a6fd2ce45752436a17a4ceb3a7631c9",
+    "actualOpening": {
+      "requestedAt": "2026-10-28T16:33:53.460Z",
+      "receivedAt": "2026-10-28T16:34:41.270Z",
+      "httpStatus": 200,
+      "status": "ready",
+      "requestId": "06b892a2-7664-42de-941f-52add7799bd3",
+      "attemptId": "9abff858-4c84-44c7-9ece-b5e012cf56aa",
+      "retryOfAttemptId": "1fb2e98e-bcd0-4b51-bb77-6254a4084ead",
+      "requestSha256": "da6ea378521fda4322acbfa50aba12be48fbfdf300459d9409feb64bb774c699",
+      "responseSha256": "1e6410e7a56904ae60a12cee31a0ea62c394a7ed67314e324683d92c7a7d7b18",
+      "contextSha256": "282abb9428792727236b14ab43b7d09142f5ddd3d06890af8c32e70f81263f1e",
+      "latencyMs": 47810
+    },
+    "actualChoice": {
+      "requestedAt": "2026-10-28T16:39:18.391Z",
+      "receivedAt": "2026-10-28T16:39:48.921Z",
+      "httpStatus": 200,
+      "status": "ready",
+      "requestId": "dd6c5982-4e73-435a-bc52-7000044b602d",
+      "attemptId": "ba9b7d5e-b4e9-4f69-bf90-0e39f45d524d",
+      "retryOfAttemptId": "10101cd1-5a10-471f-a4c2-dc02c01eccf0",
+      "requestSha256": "3853330e87040a45b05caa62b90741f4c6d7ecff2155f8d84c426540f6310bd6",
+      "responseSha256": "524d635d51db61fbbf334e85843eb6ba1b89026fb7a489f150178f44f5316f91",
+      "contextSha256": "7f841ea8cec0aa36159e14cbcb3c0a2437695dd144b1216b3229949f21dd0da7",
+      "latencyMs": 30530
+    },
+    "deploymentEvidence": [
+      {
+        "file": "stage5-deployment.json",
+        "sourceCommit": "47c40646892e185588c61b9750076c829bb3fcfb",
+        "completedAt": "2026-10-28T16:32:47.992Z"
+      },
+      {
+        "file": "stage6-deployment.json",
+        "sourceCommit": "47c40646892e185588c61b9750076c829bb3fcfb",
+        "completedAt": "2026-10-28T16:35:49.560Z"
+      }
+    ],
+    "verification": {
+      "deployedModuleHashesMatch": true,
+      "birthHashReproduced": true,
+      "openingContextReproduced": true,
+      "openingCommitEqualsActualS1": true,
+      "actualChoiceContextReproduced": true,
+      "actualChoiceCommitEqualsActualS2": true,
+      "allChoiceRetryContextsEqual": true,
+      "pendingClearedAtS1AndS2": true
+    },
+    "sourceEvidenceUnmodified": true,
+    "archiveWrites": 0
+  },
+  "opening": {
+    "canonicalValidated": true,
+    "guards": [
+      {
+        "id": "r:17d4b63b7a333a81:t1:c:a",
+        "label": "与老王交谈，询问符纸详情及北边妖兽传闻",
+        "durationMatch": null,
+        "travelGuardPassed": true
+      },
+      {
+        "id": "r:17d4b63b7a333a81:t1:c:b",
+        "label": "向林商询问搭车去云州城的条件",
+        "durationMatch": null,
+        "travelGuardPassed": true
+      },
+      {
+        "id": "r:17d4b63b7a333a81:t1:c:c",
+        "label": "独自前往村后山林，寻找可能存在的灵石或行粮",
+        "durationMatch": null,
+        "travelGuardPassed": true
+      }
+    ],
+    "choices": [
+      {
+        "id": "r:17d4b63b7a333a81:t1:c:a",
+        "label": "与老王交谈，询问符纸详情及北边妖兽传闻",
+        "intent": "negotiate",
+        "targetId": "r:17d4b63b7a333a81:t1:e:person_lao_wang",
+        "stake": "low",
+        "approach": "cooperate",
+        "enabled": true,
+        "reason": null,
+        "costs": {
+          "days": 7,
+          "items": {
+            "supplies": 1
+          }
+        },
+        "warnings": [],
+        "previewReceipt": {
+          "kind": "choice",
+          "choiceId": "r:17d4b63b7a333a81:t1:c:a",
+          "action": {
+            "id": "r:17d4b63b7a333a81:t1:c:a",
+            "label": "与老王交谈，询问符纸详情及北边妖兽传闻",
+            "intent": "negotiate",
+            "targetId": "r:17d4b63b7a333a81:t1:e:person_lao_wang",
+            "stake": "low",
+            "approach": "cooperate"
+          },
+          "elapsedDays": 7,
+          "itemChanges": {
+            "stones": 1,
+            "supplies": -1
+          },
+          "relationChanges": {
+            "r:17d4b63b7a333a81:t1:e:person_lao_wang": 3
+          },
+          "random": {
+            "before": 1080474372,
+            "after": 3012430483,
+            "roll": 83
+          },
+          "before": {
+            "ageDays": 5760,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "after": {
+            "ageDays": 5767,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "death": null,
+          "birth": null
+        }
+      },
+      {
+        "id": "r:17d4b63b7a333a81:t1:c:b",
+        "label": "向林商询问搭车去云州城的条件",
+        "intent": "negotiate",
+        "targetId": "r:17d4b63b7a333a81:t1:e:person_ling_shang",
+        "stake": "low",
+        "approach": "cooperate",
+        "enabled": true,
+        "reason": null,
+        "costs": {
+          "days": 7,
+          "items": {
+            "supplies": 1
+          }
+        },
+        "warnings": [],
+        "previewReceipt": {
+          "kind": "choice",
+          "choiceId": "r:17d4b63b7a333a81:t1:c:b",
+          "action": {
+            "id": "r:17d4b63b7a333a81:t1:c:b",
+            "label": "向林商询问搭车去云州城的条件",
+            "intent": "negotiate",
+            "targetId": "r:17d4b63b7a333a81:t1:e:person_ling_shang",
+            "stake": "low",
+            "approach": "cooperate"
+          },
+          "elapsedDays": 7,
+          "itemChanges": {
+            "stones": 1,
+            "supplies": -1
+          },
+          "relationChanges": {
+            "r:17d4b63b7a333a81:t1:e:person_ling_shang": 3
+          },
+          "random": {
+            "before": 1080474372,
+            "after": 3012430483,
+            "roll": 83
+          },
+          "before": {
+            "ageDays": 5760,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "after": {
+            "ageDays": 5767,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "death": null,
+          "birth": null
+        }
+      },
+      {
+        "id": "r:17d4b63b7a333a81:t1:c:c",
+        "label": "独自前往村后山林，寻找可能存在的灵石或行粮",
+        "intent": "explore",
+        "targetId": "stones",
+        "stake": "high",
+        "approach": "cautious",
+        "enabled": true,
+        "reason": null,
+        "costs": {
+          "days": 90,
+          "items": {}
+        },
+        "warnings": [
+          "历练受伤基础风险5%，根骨与坚韧筋骨可降低风险。"
+        ],
+        "previewReceipt": {
+          "kind": "choice",
+          "choiceId": "r:17d4b63b7a333a81:t1:c:c",
+          "action": {
+            "id": "r:17d4b63b7a333a81:t1:c:c",
+            "label": "独自前往村后山林，寻找可能存在的灵石或行粮",
+            "intent": "explore",
+            "targetId": "stones",
+            "stake": "high",
+            "approach": "cautious"
+          },
+          "elapsedDays": 90,
+          "itemChanges": {
+            "stones": 1
+          },
+          "relationChanges": {},
+          "random": {
+            "before": 1080474372,
+            "after": 3012430483,
+            "roll": 83
+          },
+          "before": {
+            "ageDays": 5760,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "after": {
+            "ageDays": 5850,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "death": null,
+          "birth": null
+        }
+      }
+    ]
+  },
+  "actualChoice": {
+    "canonicalValidated": true,
+    "guards": [
+      {
+        "id": "r:17d4b63b7a333a81:t2:c:a",
+        "label": "向老王购买那张低阶符纸",
+        "durationMatch": null,
+        "travelGuardPassed": true
+      },
+      {
+        "id": "r:17d4b63b7a333a81:t2:c:b",
+        "label": "出门与林商商议前往云州城的车资",
+        "durationMatch": null,
+        "travelGuardPassed": true
+      },
+      {
+        "id": "r:17d4b63b7a333a81:t2:c:c",
+        "label": "在青石村寻找行粮补充体力",
+        "durationMatch": null,
+        "travelGuardPassed": true
+      }
+    ],
+    "receipt": {
+      "kind": "choice",
+      "choiceId": "r:17d4b63b7a333a81:t1:c:a",
+      "action": {
+        "id": "r:17d4b63b7a333a81:t1:c:a",
+        "label": "与老王交谈，询问符纸详情及北边妖兽传闻",
+        "intent": "negotiate",
+        "targetId": "r:17d4b63b7a333a81:t1:e:person_lao_wang",
+        "stake": "low",
+        "approach": "cooperate"
+      },
+      "elapsedDays": 7,
+      "itemChanges": {
+        "stones": 1,
+        "supplies": -1
+      },
+      "relationChanges": {
+        "r:17d4b63b7a333a81:t1:e:person_lao_wang": 3
+      },
+      "random": {
+        "before": 1080474372,
+        "after": 3012430483,
+        "roll": 83
+      },
+      "before": {
+        "ageDays": 5760,
+        "realm": "mortal",
+        "cultivation": 0,
+        "injury": 0
+      },
+      "after": {
+        "ageDays": 5767,
+        "realm": "mortal",
+        "cultivation": 0,
+        "injury": 0
+      },
+      "death": null,
+      "birth": null
+    },
+    "life": {
+      "name": "云归",
+      "ageDays": 5767,
+      "lifeLimit": 80,
+      "realm": "mortal",
+      "cultivation": 0,
+      "injury": 0,
+      "items": {
+        "supplies": 2,
+        "stones": 1
+      },
+      "relations": {
+        "r:17d4b63b7a333a81:t1:e:person_lao_wang": 3
+      },
+      "birth": {
+        "originId": "village",
+        "talentIds": [
+          "fortune-debt",
+          "iron-bones"
+        ],
+        "attributes": {
+          "constitution": 3,
+          "insight": 6,
+          "fortune": 3
+        }
+      }
+    },
+    "choices": [
+      {
+        "id": "r:17d4b63b7a333a81:t2:c:a",
+        "label": "向老王购买那张低阶符纸",
+        "intent": "negotiate",
+        "targetId": "r:17d4b63b7a333a81:t1:e:person_lao_wang",
+        "stake": "low",
+        "approach": "cooperate",
+        "enabled": true,
+        "reason": null,
+        "costs": {
+          "days": 7,
+          "items": {
+            "supplies": 1
+          }
+        },
+        "warnings": [],
+        "previewReceipt": {
+          "kind": "choice",
+          "choiceId": "r:17d4b63b7a333a81:t2:c:a",
+          "action": {
+            "id": "r:17d4b63b7a333a81:t2:c:a",
+            "label": "向老王购买那张低阶符纸",
+            "intent": "negotiate",
+            "targetId": "r:17d4b63b7a333a81:t1:e:person_lao_wang",
+            "stake": "low",
+            "approach": "cooperate"
+          },
+          "elapsedDays": 7,
+          "itemChanges": {
+            "stones": 1,
+            "supplies": -1
+          },
+          "relationChanges": {
+            "r:17d4b63b7a333a81:t1:e:person_lao_wang": 3
+          },
+          "random": {
+            "before": 3012430483,
+            "after": 4214689494,
+            "roll": 94
+          },
+          "before": {
+            "ageDays": 5767,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "after": {
+            "ageDays": 5774,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "death": null,
+          "birth": null
+        }
+      },
+      {
+        "id": "r:17d4b63b7a333a81:t2:c:b",
+        "label": "出门与林商商议前往云州城的车资",
+        "intent": "negotiate",
+        "targetId": "r:17d4b63b7a333a81:t1:e:person_ling_shang",
+        "stake": "low",
+        "approach": "cooperate",
+        "enabled": true,
+        "reason": null,
+        "costs": {
+          "days": 7,
+          "items": {
+            "supplies": 1
+          }
+        },
+        "warnings": [],
+        "previewReceipt": {
+          "kind": "choice",
+          "choiceId": "r:17d4b63b7a333a81:t2:c:b",
+          "action": {
+            "id": "r:17d4b63b7a333a81:t2:c:b",
+            "label": "出门与林商商议前往云州城的车资",
+            "intent": "negotiate",
+            "targetId": "r:17d4b63b7a333a81:t1:e:person_ling_shang",
+            "stake": "low",
+            "approach": "cooperate"
+          },
+          "elapsedDays": 7,
+          "itemChanges": {
+            "stones": 1,
+            "supplies": -1
+          },
+          "relationChanges": {
+            "r:17d4b63b7a333a81:t1:e:person_ling_shang": 3
+          },
+          "random": {
+            "before": 3012430483,
+            "after": 4214689494,
+            "roll": 94
+          },
+          "before": {
+            "ageDays": 5767,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "after": {
+            "ageDays": 5774,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "death": null,
+          "birth": null
+        }
+      },
+      {
+        "id": "r:17d4b63b7a333a81:t2:c:c",
+        "label": "在青石村寻找行粮补充体力",
+        "intent": "explore",
+        "targetId": "supplies",
+        "stake": "low",
+        "approach": "cautious",
+        "enabled": true,
+        "reason": null,
+        "costs": {
+          "days": 90,
+          "items": {}
+        },
+        "warnings": [
+          "历练受伤基础风险5%，根骨与坚韧筋骨可降低风险。"
+        ],
+        "previewReceipt": {
+          "kind": "choice",
+          "choiceId": "r:17d4b63b7a333a81:t2:c:c",
+          "action": {
+            "id": "r:17d4b63b7a333a81:t2:c:c",
+            "label": "在青石村寻找行粮补充体力",
+            "intent": "explore",
+            "targetId": "supplies",
+            "stake": "low",
+            "approach": "cautious"
+          },
+          "elapsedDays": 90,
+          "itemChanges": {
+            "supplies": 1
+          },
+          "relationChanges": {},
+          "random": {
+            "before": 3012430483,
+            "after": 4214689494,
+            "roll": 94
+          },
+          "before": {
+            "ageDays": 5767,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "after": {
+            "ageDays": 5857,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "death": null,
+          "birth": null
+        }
+      }
+    ]
+  },
+  "notVerifiedHere": [
+    "whole browser acceptance driver pass",
+    "export and refresh verification being performed separately",
+    "raw provider finish/usage for browser responses",
+    "unexecuted alternate model result"
+  ]
+}

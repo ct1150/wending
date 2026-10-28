@@ -1,0 +1,2220 @@
+{
+  "schemaVersion": 1,
+  "startedAt": "2026-10-28T16:32:59.953Z",
+  "status": "FAILED",
+  "mode": "TESTER_STAGE",
+  "phase": "complete",
+  "baseUrl": "https://baishi-wending.ct1150.workers.dev/",
+  "profilePath": "/tmp/wending-stage5-profile",
+  "continuedProfile": false,
+  "browser": {
+    "executable": "/tmp/wending-cft-151/chrome-headless-shell-linux64/chrome-headless-shell",
+    "version": "151.0.7922.34",
+    "headless": true,
+    "certificateValidationEnabled": true,
+    "fontConfig": "/tmp/wending-cjk-fonts/fonts.conf"
+  },
+  "driver": {
+    "path": "/workspace/scratch/60d77884fe74/accept-real-browser.mjs",
+    "sha256": "fa6d7ae41f4b53f50fcd4810922bba1951271d51bf246f3623f0ce2fd7f38ee4",
+    "responseMockingUsed": false,
+    "fetchReplaced": false,
+    "archiveWritesByDriver": false,
+    "automaticRetryUsed": false,
+    "filePickerFallbackForced": true,
+    "credentialTransport": "CDP request-header override on exact origin /api/story/* only; overrides do not propagate across redirect hops"
+  },
+  "actions": [
+    {
+      "at": "2026-10-28T16:33:00.264Z",
+      "kind": "navigate",
+      "url": "https://baishi-wending.ct1150.workers.dev/"
+    },
+    {
+      "at": "2026-10-28T16:33:01.195Z",
+      "kind": "click-opening",
+      "playerName": "云归",
+      "originId": "village"
+    },
+    {
+      "at": "2026-10-28T16:33:31.336Z",
+      "kind": "waiting-for-operator",
+      "revision": 1,
+      "requestId": "06b892a2-7664-42de-941f-52add7799bd3",
+      "previousAttempt": {
+        "id": "1fb2e98e-bcd0-4b51-bb77-6254a4084ead",
+        "sessionRef": "[REDACTED]",
+        "retryOf": null
+      },
+      "evidence": "operator-pause-001.json",
+      "status": "rejected",
+      "errorCode": "CHOICE_NOT_COMPILABLE",
+      "commands": [
+        "retry",
+        "stop"
+      ]
+    },
+    {
+      "at": "2026-10-28T16:33:53.035Z",
+      "kind": "explicit-operator-retry",
+      "number": 1,
+      "revision": 1,
+      "requestId": "06b892a2-7664-42de-941f-52add7799bd3",
+      "previousAttempt": {
+        "id": "1fb2e98e-bcd0-4b51-bb77-6254a4084ead",
+        "sessionRef": "[REDACTED]",
+        "retryOf": null
+      }
+    },
+    {
+      "at": "2026-10-28T16:34:41.602Z",
+      "kind": "click-one-choice",
+      "choiceId": "r:17d4b63b7a333a81:t1:c:a",
+      "revision": 1,
+      "label": "与老王交谈，询问符纸详情及北边妖兽传闻\n7日 · 行粮 1"
+    },
+    {
+      "at": "2026-10-28T16:34:42.078Z",
+      "kind": "waiting-for-operator",
+      "revision": 2,
+      "requestId": "dd6c5982-4e73-435a-bc52-7000044b602d",
+      "previousAttempt": null,
+      "evidence": "operator-pause-002.json",
+      "status": "ready",
+      "errorCode": null,
+      "commands": [
+        "retry",
+        "stop"
+      ]
+    },
+    {
+      "at": "2026-10-28T16:35:51.589Z",
+      "kind": "explicit-operator-retry",
+      "number": 2,
+      "revision": 2,
+      "requestId": "dd6c5982-4e73-435a-bc52-7000044b602d",
+      "previousAttempt": null
+    },
+    {
+      "at": "2026-10-28T16:36:27.443Z",
+      "kind": "waiting-for-operator",
+      "revision": 2,
+      "requestId": "dd6c5982-4e73-435a-bc52-7000044b602d",
+      "previousAttempt": {
+        "id": "9c35d702-67bb-47c4-acae-3f08316ce815",
+        "sessionRef": "[REDACTED]",
+        "retryOf": null
+      },
+      "evidence": "operator-pause-003.json",
+      "status": "rejected",
+      "errorCode": "CHOICE_NOT_COMPILABLE",
+      "commands": [
+        "retry",
+        "stop"
+      ]
+    },
+    {
+      "at": "2026-10-28T16:36:53.785Z",
+      "kind": "explicit-operator-retry",
+      "number": 3,
+      "revision": 2,
+      "requestId": "dd6c5982-4e73-435a-bc52-7000044b602d",
+      "previousAttempt": {
+        "id": "9c35d702-67bb-47c4-acae-3f08316ce815",
+        "sessionRef": "[REDACTED]",
+        "retryOf": null
+      }
+    },
+    {
+      "at": "2026-10-28T16:37:24.324Z",
+      "kind": "waiting-for-operator",
+      "revision": 2,
+      "requestId": "dd6c5982-4e73-435a-bc52-7000044b602d",
+      "previousAttempt": {
+        "id": "10101cd1-5a10-471f-a4c2-dc02c01eccf0",
+        "sessionRef": "[REDACTED]",
+        "retryOf": {
+          "attemptId": "9c35d702-67bb-47c4-acae-3f08316ce815",
+          "sessionRef": "[REDACTED]"
+        }
+      },
+      "evidence": "operator-pause-004.json",
+      "status": "rejected",
+      "errorCode": "CHOICE_NOT_COMPILABLE",
+      "commands": [
+        "retry",
+        "stop"
+      ]
+    },
+    {
+      "at": "2026-10-28T16:39:17.414Z",
+      "kind": "explicit-operator-retry",
+      "number": 4,
+      "revision": 2,
+      "requestId": "dd6c5982-4e73-435a-bc52-7000044b602d",
+      "previousAttempt": {
+        "id": "10101cd1-5a10-471f-a4c2-dc02c01eccf0",
+        "sessionRef": "[REDACTED]",
+        "retryOf": {
+          "attemptId": "9c35d702-67bb-47c4-acae-3f08316ce815",
+          "sessionRef": "[REDACTED]"
+        }
+      }
+    }
+  ],
+  "api": [
+    {
+      "sequence": 1,
+      "requestedAt": "2026-10-28T16:33:01.086Z",
+      "method": "GET",
+      "path": "/api/story/capabilities",
+      "query": {},
+      "requestBytes": 0,
+      "requestSha256": null,
+      "requestBody": null,
+      "response": {
+        "receivedAt": "2026-10-28T16:33:01.161Z",
+        "httpStatus": 200,
+        "bytes": 173,
+        "sha256": "2622c14fe1fb413edfbf2d5f187a87a79fdc50aff40f7ebcebedbebf24c1d7cd",
+        "body": {
+          "protocolVersion": 1,
+          "available": true,
+          "status": "ready",
+          "errorCode": null,
+          "limits": {
+            "maxRequestBytes": 32768,
+            "maxResponseBytes": 65536,
+            "maxContextBytes": 7000,
+            "timeoutMs": 75000
+          }
+        }
+      }
+    },
+    {
+      "sequence": 2,
+      "requestedAt": "2026-10-28T16:33:01.247Z",
+      "method": "GET",
+      "path": "/api/story/capabilities",
+      "query": {},
+      "requestBytes": 0,
+      "requestSha256": null,
+      "requestBody": null,
+      "response": {
+        "receivedAt": "2026-10-28T16:33:01.298Z",
+        "httpStatus": 200,
+        "bytes": 173,
+        "sha256": "2622c14fe1fb413edfbf2d5f187a87a79fdc50aff40f7ebcebedbebf24c1d7cd",
+        "body": {
+          "protocolVersion": 1,
+          "available": true,
+          "status": "ready",
+          "errorCode": null,
+          "limits": {
+            "maxRequestBytes": 32768,
+            "maxResponseBytes": 65536,
+            "maxContextBytes": 7000,
+            "timeoutMs": 75000
+          }
+        }
+      }
+    },
+    {
+      "sequence": 3,
+      "requestedAt": "2026-10-28T16:33:01.317Z",
+      "method": "GET",
+      "path": "/api/story/capabilities",
+      "query": {},
+      "requestBytes": 0,
+      "requestSha256": null,
+      "requestBody": null,
+      "response": {
+        "receivedAt": "2026-10-28T16:33:01.388Z",
+        "httpStatus": 200,
+        "bytes": 173,
+        "sha256": "2622c14fe1fb413edfbf2d5f187a87a79fdc50aff40f7ebcebedbebf24c1d7cd",
+        "body": {
+          "protocolVersion": 1,
+          "available": true,
+          "status": "ready",
+          "errorCode": null,
+          "limits": {
+            "maxRequestBytes": 32768,
+            "maxResponseBytes": 65536,
+            "maxContextBytes": 7000,
+            "timeoutMs": 75000
+          }
+        }
+      }
+    },
+    {
+      "sequence": 4,
+      "requestedAt": "2026-10-28T16:33:01.394Z",
+      "method": "POST",
+      "path": "/api/story/session",
+      "query": {},
+      "requestBytes": 21,
+      "requestSha256": "f1e39d9b6cd3a60db72c0b80e4679e715bd7e55c1a22762e96234045f46da55c",
+      "requestBody": {
+        "protocolVersion": 1
+      },
+      "response": {
+        "receivedAt": "2026-10-28T16:33:02.017Z",
+        "httpStatus": 200,
+        "bytes": 117,
+        "sha256": "515666e7cdc10502535084e9da5415453c16aa33d013e5d880f633bd8a8aef3d",
+        "body": {
+          "protocolVersion": 1,
+          "status": "ready",
+          "sessionRef": "[REDACTED]",
+          "expiresAt": 1793291581935
+        }
+      }
+    },
+    {
+      "sequence": 5,
+      "requestedAt": "2026-10-28T16:33:02.023Z",
+      "method": "POST",
+      "path": "/api/story/turn",
+      "query": {},
+      "requestBytes": 1460,
+      "requestSha256": "b5663605838600e0da514845febeae53830cdaf37e8fd6578548d042f2b69d72",
+      "requestBody": {
+        "context": {
+          "schemaVersion": 1,
+          "phase": "opening",
+          "identity": {
+            "runId": "62ed8197-a43b-4ab1-b3af-d25b795382ca",
+            "turnId": 1,
+            "baseRevision": 0,
+            "stateHash": "ee41fdf3593d5a9ade54bfad25ddb19a178338c6ffd79a6eadba84929b693336",
+            "choiceId": null,
+            "rulesVersion": 1,
+            "promptVersion": 1,
+            "requestId": "06b892a2-7664-42de-941f-52add7799bd3"
+          },
+          "namespace": "r:17d4b63b7a333a81",
+          "receipt": {
+            "kind": "opening",
+            "choiceId": null,
+            "action": null,
+            "elapsedDays": 0,
+            "itemChanges": {},
+            "relationChanges": {},
+            "random": {
+              "before": 1080474372,
+              "after": 1080474372,
+              "roll": null
+            },
+            "before": {
+              "ageDays": 5760,
+              "realm": "mortal",
+              "cultivation": 0,
+              "injury": 0
+            },
+            "after": {
+              "ageDays": 5760,
+              "realm": "mortal",
+              "cultivation": 0,
+              "injury": 0
+            },
+            "death": null,
+            "birth": {
+              "originId": "village",
+              "talentIds": [
+                "fortune-debt",
+                "iron-bones"
+              ],
+              "attributes": {
+                "constitution": 3,
+                "insight": 6,
+                "fortune": 3
+              }
+            }
+          },
+          "life": {
+            "name": "云归",
+            "ageDays": 5760,
+            "lifeLimit": 80,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0,
+            "items": {
+              "supplies": 3,
+              "stones": 0
+            },
+            "relations": {},
+            "birth": {
+              "originId": "village",
+              "talentIds": [
+                "fortune-debt",
+                "iron-bones"
+              ],
+              "attributes": {
+                "constitution": 3,
+                "insight": 6,
+                "fortune": 3
+              }
+            }
+          },
+          "entities": [],
+          "memory": {
+            "facts": [],
+            "promises": [],
+            "clues": [],
+            "recent": [],
+            "summaries": []
+          },
+          "references": [],
+          "previousScene": null,
+          "relationshipVersion": 1,
+          "relationships": {},
+          "coverage": {
+            "policy": "relevance-v1",
+            "openTotal": 0,
+            "openIncluded": 0,
+            "openOmitted": 0
+          }
+        },
+        "attempt": {
+          "id": "1fb2e98e-bcd0-4b51-bb77-6254a4084ead",
+          "sessionRef": "[REDACTED]",
+          "retryOf": null
+        }
+      },
+      "response": {
+        "receivedAt": "2026-10-28T16:33:31.203Z",
+        "httpStatus": 200,
+        "bytes": 245,
+        "sha256": "acc8b820730ac78860702f8391bad11c4fe7ead61e3cba7348a15fbd02df7332",
+        "body": {
+          "protocolVersion": 1,
+          "status": "rejected",
+          "requestId": "06b892a2-7664-42de-941f-52add7799bd3",
+          "attemptId": "1fb2e98e-bcd0-4b51-bb77-6254a4084ead",
+          "sessionRef": "[REDACTED]",
+          "errorCode": "CHOICE_NOT_COMPILABLE",
+          "retry": null
+        }
+      }
+    },
+    {
+      "sequence": 6,
+      "requestedAt": "2026-10-28T16:33:53.116Z",
+      "method": "GET",
+      "path": "/api/story/turn/06b892a2-7664-42de-941f-52add7799bd3",
+      "query": {
+        "attemptId": "1fb2e98e-bcd0-4b51-bb77-6254a4084ead"
+      },
+      "requestBytes": 0,
+      "requestSha256": null,
+      "requestBody": null,
+      "response": {
+        "receivedAt": "2026-10-28T16:33:53.276Z",
+        "httpStatus": 200,
+        "bytes": 245,
+        "sha256": "acc8b820730ac78860702f8391bad11c4fe7ead61e3cba7348a15fbd02df7332",
+        "body": {
+          "protocolVersion": 1,
+          "status": "rejected",
+          "requestId": "06b892a2-7664-42de-941f-52add7799bd3",
+          "attemptId": "1fb2e98e-bcd0-4b51-bb77-6254a4084ead",
+          "sessionRef": "[REDACTED]",
+          "errorCode": "CHOICE_NOT_COMPILABLE",
+          "retry": null
+        }
+      }
+    },
+    {
+      "sequence": 7,
+      "requestedAt": "2026-10-28T16:33:53.272Z",
+      "method": "GET",
+      "path": "/api/story/capabilities",
+      "query": {},
+      "requestBytes": 0,
+      "requestSha256": null,
+      "requestBody": null,
+      "response": {
+        "receivedAt": "2026-10-28T16:33:53.318Z",
+        "httpStatus": 200,
+        "bytes": 173,
+        "sha256": "2622c14fe1fb413edfbf2d5f187a87a79fdc50aff40f7ebcebedbebf24c1d7cd",
+        "body": {
+          "protocolVersion": 1,
+          "available": true,
+          "status": "ready",
+          "errorCode": null,
+          "limits": {
+            "maxRequestBytes": 32768,
+            "maxResponseBytes": 65536,
+            "maxContextBytes": 7000,
+            "timeoutMs": 75000
+          }
+        }
+      }
+    },
+    {
+      "sequence": 8,
+      "requestedAt": "2026-10-28T16:33:53.323Z",
+      "method": "POST",
+      "path": "/api/story/session",
+      "query": {},
+      "requestBytes": 21,
+      "requestSha256": "f1e39d9b6cd3a60db72c0b80e4679e715bd7e55c1a22762e96234045f46da55c",
+      "requestBody": {
+        "protocolVersion": 1
+      },
+      "response": {
+        "receivedAt": "2026-10-28T16:33:53.456Z",
+        "httpStatus": 200,
+        "bytes": 117,
+        "sha256": "515666e7cdc10502535084e9da5415453c16aa33d013e5d880f633bd8a8aef3d",
+        "body": {
+          "protocolVersion": 1,
+          "status": "ready",
+          "sessionRef": "[REDACTED]",
+          "expiresAt": 1793291581935
+        }
+      }
+    },
+    {
+      "sequence": 9,
+      "requestedAt": "2026-10-28T16:33:53.460Z",
+      "method": "POST",
+      "path": "/api/story/turn",
+      "query": {},
+      "requestBytes": 1561,
+      "requestSha256": "da6ea378521fda4322acbfa50aba12be48fbfdf300459d9409feb64bb774c699",
+      "requestBody": {
+        "context": {
+          "schemaVersion": 1,
+          "phase": "opening",
+          "identity": {
+            "runId": "62ed8197-a43b-4ab1-b3af-d25b795382ca",
+            "turnId": 1,
+            "baseRevision": 0,
+            "stateHash": "ee41fdf3593d5a9ade54bfad25ddb19a178338c6ffd79a6eadba84929b693336",
+            "choiceId": null,
+            "rulesVersion": 1,
+            "promptVersion": 1,
+            "requestId": "06b892a2-7664-42de-941f-52add7799bd3"
+          },
+          "namespace": "r:17d4b63b7a333a81",
+          "receipt": {
+            "kind": "opening",
+            "choiceId": null,
+            "action": null,
+            "elapsedDays": 0,
+            "itemChanges": {},
+            "relationChanges": {},
+            "random": {
+              "before": 1080474372,
+              "after": 1080474372,
+              "roll": null
+            },
+            "before": {
+              "ageDays": 5760,
+              "realm": "mortal",
+              "cultivation": 0,
+              "injury": 0
+            },
+            "after": {
+              "ageDays": 5760,
+              "realm": "mortal",
+              "cultivation": 0,
+              "injury": 0
+            },
+            "death": null,
+            "birth": {
+              "originId": "village",
+              "talentIds": [
+                "fortune-debt",
+                "iron-bones"
+              ],
+              "attributes": {
+                "constitution": 3,
+                "insight": 6,
+                "fortune": 3
+              }
+            }
+          },
+          "life": {
+            "name": "云归",
+            "ageDays": 5760,
+            "lifeLimit": 80,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0,
+            "items": {
+              "supplies": 3,
+              "stones": 0
+            },
+            "relations": {},
+            "birth": {
+              "originId": "village",
+              "talentIds": [
+                "fortune-debt",
+                "iron-bones"
+              ],
+              "attributes": {
+                "constitution": 3,
+                "insight": 6,
+                "fortune": 3
+              }
+            }
+          },
+          "entities": [],
+          "memory": {
+            "facts": [],
+            "promises": [],
+            "clues": [],
+            "recent": [],
+            "summaries": []
+          },
+          "references": [],
+          "previousScene": null,
+          "relationshipVersion": 1,
+          "relationships": {},
+          "coverage": {
+            "policy": "relevance-v1",
+            "openTotal": 0,
+            "openIncluded": 0,
+            "openOmitted": 0
+          }
+        },
+        "attempt": {
+          "id": "9abff858-4c84-44c7-9ece-b5e012cf56aa",
+          "sessionRef": "[REDACTED]",
+          "retryOf": {
+            "attemptId": "1fb2e98e-bcd0-4b51-bb77-6254a4084ead",
+            "sessionRef": "[REDACTED]"
+          }
+        }
+      },
+      "response": {
+        "receivedAt": "2026-10-28T16:34:41.270Z",
+        "httpStatus": 200,
+        "bytes": 2567,
+        "sha256": "1e6410e7a56904ae60a12cee31a0ea62c394a7ed67314e324683d92c7a7d7b18",
+        "body": {
+          "protocolVersion": 1,
+          "status": "ready",
+          "requestId": "06b892a2-7664-42de-941f-52add7799bd3",
+          "attemptId": "9abff858-4c84-44c7-9ece-b5e012cf56aa",
+          "sessionRef": "[REDACTED]",
+          "errorCode": null,
+          "retry": null,
+          "scene": {
+            "id": "r:17d4b63b7a333a81:t1:s:scene",
+            "title": "青石村的晨雾",
+            "location": "青石村",
+            "entities": [
+              {
+                "id": "r:17d4b63b7a333a81:t1:e:place_qingshi_village",
+                "name": "青石村",
+                "kind": "place"
+              },
+              {
+                "id": "r:17d4b63b7a333a81:t1:e:person_lao_wang",
+                "name": "老王",
+                "kind": "person",
+                "status": "alive"
+              },
+              {
+                "id": "r:17d4b63b7a333a81:t1:e:person_ling_shang",
+                "name": "林商",
+                "kind": "person",
+                "status": "alive"
+              }
+            ],
+            "blocks": [
+              {
+                "kind": "narration",
+                "text": "晨雾笼罩着青石村，你背着行囊站在村口。十六岁的你骨骼坚硬，却背负着莫名的因果债。行囊里仅有三份干粮，没有灵石。村口的老槐树下，卖杂货的老王正擦拭着秤杆，远处山道上，林商赶着骡车缓缓驶来，车斗里堆满了待售的草药。"
+              },
+              {
+                "kind": "dialogue",
+                "text": "云归，你又要出远门？老王停下手中的活计，眯着眼打量你，“这世道不太平，北边山里的妖兽最近不太对劲。若是想换点灵石，我这有批陈年的符纸，虽然品阶低，但胜在量大。”",
+                "speaker": "r:17d4b63b7a333a81:t1:e:person_lao_wang"
+              },
+              {
+                "kind": "dialogue",
+                "text": "老王，别吓唬孩子。林商从骡车上跳下来，拍了拍身上的尘土，“我这次去云州城，若云归想去城里看看，可以搭我的车。不过，车资可不便宜，得拿东西换。”",
+                "speaker": "r:17d4b63b7a333a81:t1:e:person_ling_shang"
+              }
+            ],
+            "choices": [
+              {
+                "id": "r:17d4b63b7a333a81:t1:c:a",
+                "label": "与老王交谈，询问符纸详情及北边妖兽传闻",
+                "intent": "negotiate",
+                "targetId": "r:17d4b63b7a333a81:t1:e:person_lao_wang",
+                "stake": "low",
+                "approach": "cooperate"
+              },
+              {
+                "id": "r:17d4b63b7a333a81:t1:c:b",
+                "label": "向林商询问搭车去云州城的条件",
+                "intent": "negotiate",
+                "targetId": "r:17d4b63b7a333a81:t1:e:person_ling_shang",
+                "stake": "low",
+                "approach": "cooperate"
+              },
+              {
+                "id": "r:17d4b63b7a333a81:t1:c:c",
+                "label": "独自前往村后山林，寻找可能存在的灵石或行粮",
+                "intent": "explore",
+                "targetId": "stones",
+                "stake": "high",
+                "approach": "cautious"
+              }
+            ],
+            "memoryDeltas": [
+              {
+                "entityId": "r:17d4b63b7a333a81:t1:e:person_lao_wang",
+                "text": "老王是青石村的杂货商，知晓北边山里的妖兽异动，手中持有低阶符纸。",
+                "kind": "fact"
+              },
+              {
+                "entityId": "r:17d4b63b7a333a81:t1:e:person_ling_shang",
+                "text": "林商是行商，正前往云州城，愿意提供搭车服务但需支付车资。",
+                "kind": "fact"
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "sequence": 10,
+      "requestedAt": "2026-10-28T16:34:41.666Z",
+      "method": "GET",
+      "path": "/api/story/capabilities",
+      "query": {},
+      "requestBytes": 0,
+      "requestSha256": null,
+      "requestBody": null,
+      "response": {
+        "receivedAt": "2026-10-28T16:34:41.701Z",
+        "httpStatus": 200,
+        "bytes": 197,
+        "sha256": "285ba1d8e4ddc090bfcddc6c7b41086b1cb43b272842c4e2a9be9521db1061bc",
+        "body": {
+          "protocolVersion": 1,
+          "available": false,
+          "status": "paused",
+          "errorCode": "FREE_BOUNDARY_UNVERIFIED",
+          "limits": {
+            "maxRequestBytes": 32768,
+            "maxResponseBytes": 65536,
+            "maxContextBytes": 7000,
+            "timeoutMs": 75000
+          }
+        }
+      }
+    },
+    {
+      "sequence": 11,
+      "requestedAt": "2026-10-28T16:35:51.659Z",
+      "method": "GET",
+      "path": "/api/story/capabilities",
+      "query": {},
+      "requestBytes": 0,
+      "requestSha256": null,
+      "requestBody": null,
+      "response": null,
+      "failure": {
+        "at": "2026-10-28T16:35:51.830Z",
+        "method": "GET",
+        "path": "/api/story/capabilities",
+        "error": "net::ERR_ABORTED"
+      }
+    },
+    {
+      "sequence": 12,
+      "requestedAt": "2026-10-28T16:35:51.852Z",
+      "method": "POST",
+      "path": "/api/story/session",
+      "query": {},
+      "requestBytes": 21,
+      "requestSha256": "f1e39d9b6cd3a60db72c0b80e4679e715bd7e55c1a22762e96234045f46da55c",
+      "requestBody": {
+        "protocolVersion": 1
+      },
+      "response": {
+        "receivedAt": "2026-10-28T16:35:52.051Z",
+        "httpStatus": 200,
+        "bytes": 117,
+        "sha256": "515666e7cdc10502535084e9da5415453c16aa33d013e5d880f633bd8a8aef3d",
+        "body": {
+          "protocolVersion": 1,
+          "status": "ready",
+          "sessionRef": "[REDACTED]",
+          "expiresAt": 1793291581935
+        }
+      }
+    },
+    {
+      "sequence": 13,
+      "requestedAt": "2026-10-28T16:35:52.058Z",
+      "method": "POST",
+      "path": "/api/story/turn",
+      "query": {},
+      "requestBytes": 2821,
+      "requestSha256": "3992a206649d5bc4b81337794425dc016d7c378dfb42ae9f8440ddf92d8b7452",
+      "requestBody": {
+        "context": {
+          "schemaVersion": 1,
+          "phase": "choice",
+          "identity": {
+            "runId": "62ed8197-a43b-4ab1-b3af-d25b795382ca",
+            "turnId": 2,
+            "baseRevision": 1,
+            "stateHash": "65fa96ed4c6190a4063aa54476a8f2ebee6ce08a26250f5c74d58d2c5f9abf60",
+            "choiceId": "r:17d4b63b7a333a81:t1:c:a",
+            "rulesVersion": 1,
+            "promptVersion": 1,
+            "requestId": "dd6c5982-4e73-435a-bc52-7000044b602d"
+          },
+          "namespace": "r:17d4b63b7a333a81",
+          "receipt": {
+            "kind": "choice",
+            "choiceId": "r:17d4b63b7a333a81:t1:c:a",
+            "action": {
+              "id": "r:17d4b63b7a333a81:t1:c:a",
+              "label": "与老王交谈，询问符纸详情及北边妖兽传闻",
+              "intent": "negotiate",
+              "targetId": "r:17d4b63b7a333a81:t1:e:person_lao_wang",
+              "stake": "low",
+              "approach": "cooperate"
+            },
+            "elapsedDays": 7,
+            "itemChanges": {
+              "stones": 1,
+              "supplies": -1
+            },
+            "relationChanges": {
+              "r:17d4b63b7a333a81:t1:e:person_lao_wang": 3
+            },
+            "random": {
+              "before": 1080474372,
+              "after": 3012430483,
+              "roll": 83
+            },
+            "before": {
+              "ageDays": 5760,
+              "realm": "mortal",
+              "cultivation": 0,
+              "injury": 0
+            },
+            "after": {
+              "ageDays": 5767,
+              "realm": "mortal",
+              "cultivation": 0,
+              "injury": 0
+            },
+            "death": null,
+            "birth": null
+          },
+          "life": {
+            "name": "云归",
+            "ageDays": 5767,
+            "lifeLimit": 80,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0,
+            "items": {
+              "supplies": 2,
+              "stones": 1
+            },
+            "relations": {
+              "r:17d4b63b7a333a81:t1:e:person_lao_wang": 3
+            },
+            "birth": {
+              "originId": "village",
+              "talentIds": [
+                "fortune-debt",
+                "iron-bones"
+              ],
+              "attributes": {
+                "constitution": 3,
+                "insight": 6,
+                "fortune": 3
+              }
+            }
+          },
+          "entities": [
+            {
+              "id": "r:17d4b63b7a333a81:t1:e:place_qingshi_village",
+              "name": "青石村",
+              "kind": "place",
+              "status": "unknown"
+            },
+            {
+              "id": "r:17d4b63b7a333a81:t1:e:person_lao_wang",
+              "name": "老王",
+              "kind": "person",
+              "status": "alive"
+            },
+            {
+              "id": "r:17d4b63b7a333a81:t1:e:person_ling_shang",
+              "name": "林商",
+              "kind": "person",
+              "status": "alive"
+            }
+          ],
+          "memory": {
+            "facts": [
+              {
+                "id": "m:745ed4d627b76e9c35e9be565d35d269",
+                "source": "narrative",
+                "kind": "fact",
+                "entityId": "r:17d4b63b7a333a81:t1:e:person_lao_wang",
+                "text": "老王是青石村的杂货商，知晓北边山里的妖兽异动，手中持有低阶符纸。",
+                "runId": "62ed8197-a43b-4ab1-b3af-d25b795382ca",
+                "turnId": 1
+              },
+              {
+                "id": "m:e0226a70252377732b0f8899fa983a55",
+                "source": "narrative",
+                "kind": "fact",
+                "entityId": "r:17d4b63b7a333a81:t1:e:person_ling_shang",
+                "text": "林商是行商，正前往云州城，愿意提供搭车服务但需支付车资。",
+                "runId": "62ed8197-a43b-4ab1-b3af-d25b795382ca",
+                "turnId": 1
+              }
+            ],
+            "promises": [],
+            "clues": [],
+            "recent": [],
+            "summaries": []
+          },
+          "references": [
+            "m:745ed4d627b76e9c35e9be565d35d269",
+            "m:e0226a70252377732b0f8899fa983a55"
+          ],
+          "previousScene": {
+            "id": "r:17d4b63b7a333a81:t1:s:scene",
+            "blocksHash": "8f73e664c174e5ff12491c0174afa718000722b0f2b13d10e3fdf258f268c119"
+          },
+          "relationshipVersion": 1,
+          "relationships": {
+            "r:17d4b63b7a333a81:t1:e:person_lao_wang": 3
+          },
+          "coverage": {
+            "policy": "relevance-v1",
+            "openTotal": 0,
+            "openIncluded": 0,
+            "openOmitted": 0
+          }
+        },
+        "attempt": {
+          "id": "9c35d702-67bb-47c4-acae-3f08316ce815",
+          "sessionRef": "[REDACTED]",
+          "retryOf": null
+        }
+      },
+      "response": {
+        "receivedAt": "2026-10-28T16:36:27.319Z",
+        "httpStatus": 200,
+        "bytes": 245,
+        "sha256": "21224ddcad4d610d46ef2db104ecfd99af0922fe0eaa9afce230be73c57632b3",
+        "body": {
+          "protocolVersion": 1,
+          "status": "rejected",
+          "requestId": "dd6c5982-4e73-435a-bc52-7000044b602d",
+          "attemptId": "9c35d702-67bb-47c4-acae-3f08316ce815",
+          "sessionRef": "[REDACTED]",
+          "errorCode": "CHOICE_NOT_COMPILABLE",
+          "retry": null
+        }
+      }
+    },
+    {
+      "sequence": 14,
+      "requestedAt": "2026-10-28T16:36:53.850Z",
+      "method": "GET",
+      "path": "/api/story/turn/dd6c5982-4e73-435a-bc52-7000044b602d",
+      "query": {
+        "attemptId": "9c35d702-67bb-47c4-acae-3f08316ce815"
+      },
+      "requestBytes": 0,
+      "requestSha256": null,
+      "requestBody": null,
+      "response": null,
+      "failure": {
+        "at": "2026-10-28T16:36:53.973Z",
+        "method": "GET",
+        "path": "/api/story/turn/dd6c5982-4e73-435a-bc52-7000044b602d",
+        "error": "net::ERR_ABORTED"
+      }
+    },
+    {
+      "sequence": 15,
+      "requestedAt": "2026-10-28T16:36:53.975Z",
+      "method": "GET",
+      "path": "/api/story/capabilities",
+      "query": {},
+      "requestBytes": 0,
+      "requestSha256": null,
+      "requestBody": null,
+      "response": {
+        "receivedAt": "2026-10-28T16:36:54.045Z",
+        "httpStatus": 200,
+        "bytes": 173,
+        "sha256": "2622c14fe1fb413edfbf2d5f187a87a79fdc50aff40f7ebcebedbebf24c1d7cd",
+        "body": {
+          "protocolVersion": 1,
+          "available": true,
+          "status": "ready",
+          "errorCode": null,
+          "limits": {
+            "maxRequestBytes": 32768,
+            "maxResponseBytes": 65536,
+            "maxContextBytes": 7000,
+            "timeoutMs": 75000
+          }
+        }
+      }
+    },
+    {
+      "sequence": 16,
+      "requestedAt": "2026-10-28T16:36:54.051Z",
+      "method": "POST",
+      "path": "/api/story/session",
+      "query": {},
+      "requestBytes": 21,
+      "requestSha256": "f1e39d9b6cd3a60db72c0b80e4679e715bd7e55c1a22762e96234045f46da55c",
+      "requestBody": {
+        "protocolVersion": 1
+      },
+      "response": null,
+      "failure": {
+        "at": "2026-10-28T16:36:54.149Z",
+        "method": "POST",
+        "path": "/api/story/session",
+        "error": "net::ERR_ABORTED"
+      }
+    },
+    {
+      "sequence": 17,
+      "requestedAt": "2026-10-28T16:36:54.170Z",
+      "method": "POST",
+      "path": "/api/story/turn",
+      "query": {},
+      "requestBytes": 2922,
+      "requestSha256": "5a7989baca8526bb265f4a26750f524d80264777a7d443475fdd8ee52649d000",
+      "requestBody": {
+        "context": {
+          "schemaVersion": 1,
+          "phase": "choice",
+          "identity": {
+            "runId": "62ed8197-a43b-4ab1-b3af-d25b795382ca",
+            "turnId": 2,
+            "baseRevision": 1,
+            "stateHash": "65fa96ed4c6190a4063aa54476a8f2ebee6ce08a26250f5c74d58d2c5f9abf60",
+            "choiceId": "r:17d4b63b7a333a81:t1:c:a",
+            "rulesVersion": 1,
+            "promptVersion": 1,
+            "requestId": "dd6c5982-4e73-435a-bc52-7000044b602d"
+          },
+          "namespace": "r:17d4b63b7a333a81",
+          "receipt": {
+            "kind": "choice",
+            "choiceId": "r:17d4b63b7a333a81:t1:c:a",
+            "action": {
+              "id": "r:17d4b63b7a333a81:t1:c:a",
+              "label": "与老王交谈，询问符纸详情及北边妖兽传闻",
+              "intent": "negotiate",
+              "targetId": "r:17d4b63b7a333a81:t1:e:person_lao_wang",
+              "stake": "low",
+              "approach": "cooperate"
+            },
+            "elapsedDays": 7,
+            "itemChanges": {
+              "stones": 1,
+              "supplies": -1
+            },
+            "relationChanges": {
+              "r:17d4b63b7a333a81:t1:e:person_lao_wang": 3
+            },
+            "random": {
+              "before": 1080474372,
+              "after": 3012430483,
+              "roll": 83
+            },
+            "before": {
+              "ageDays": 5760,
+              "realm": "mortal",
+              "cultivation": 0,
+              "injury": 0
+            },
+            "after": {
+              "ageDays": 5767,
+              "realm": "mortal",
+              "cultivation": 0,
+              "injury": 0
+            },
+            "death": null,
+            "birth": null
+          },
+          "life": {
+            "name": "云归",
+            "ageDays": 5767,
+            "lifeLimit": 80,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0,
+            "items": {
+              "supplies": 2,
+              "stones": 1
+            },
+            "relations": {
+              "r:17d4b63b7a333a81:t1:e:person_lao_wang": 3
+            },
+            "birth": {
+              "originId": "village",
+              "talentIds": [
+                "fortune-debt",
+                "iron-bones"
+              ],
+              "attributes": {
+                "constitution": 3,
+                "insight": 6,
+                "fortune": 3
+              }
+            }
+          },
+          "entities": [
+            {
+              "id": "r:17d4b63b7a333a81:t1:e:place_qingshi_village",
+              "name": "青石村",
+              "kind": "place",
+              "status": "unknown"
+            },
+            {
+              "id": "r:17d4b63b7a333a81:t1:e:person_lao_wang",
+              "name": "老王",
+              "kind": "person",
+              "status": "alive"
+            },
+            {
+              "id": "r:17d4b63b7a333a81:t1:e:person_ling_shang",
+              "name": "林商",
+              "kind": "person",
+              "status": "alive"
+            }
+          ],
+          "memory": {
+            "facts": [
+              {
+                "id": "m:745ed4d627b76e9c35e9be565d35d269",
+                "source": "narrative",
+                "kind": "fact",
+                "entityId": "r:17d4b63b7a333a81:t1:e:person_lao_wang",
+                "text": "老王是青石村的杂货商，知晓北边山里的妖兽异动，手中持有低阶符纸。",
+                "runId": "62ed8197-a43b-4ab1-b3af-d25b795382ca",
+                "turnId": 1
+              },
+              {
+                "id": "m:e0226a70252377732b0f8899fa983a55",
+                "source": "narrative",
+                "kind": "fact",
+                "entityId": "r:17d4b63b7a333a81:t1:e:person_ling_shang",
+                "text": "林商是行商，正前往云州城，愿意提供搭车服务但需支付车资。",
+                "runId": "62ed8197-a43b-4ab1-b3af-d25b795382ca",
+                "turnId": 1
+              }
+            ],
+            "promises": [],
+            "clues": [],
+            "recent": [],
+            "summaries": []
+          },
+          "references": [
+            "m:745ed4d627b76e9c35e9be565d35d269",
+            "m:e0226a70252377732b0f8899fa983a55"
+          ],
+          "previousScene": {
+            "id": "r:17d4b63b7a333a81:t1:s:scene",
+            "blocksHash": "8f73e664c174e5ff12491c0174afa718000722b0f2b13d10e3fdf258f268c119"
+          },
+          "relationshipVersion": 1,
+          "relationships": {
+            "r:17d4b63b7a333a81:t1:e:person_lao_wang": 3
+          },
+          "coverage": {
+            "policy": "relevance-v1",
+            "openTotal": 0,
+            "openIncluded": 0,
+            "openOmitted": 0
+          }
+        },
+        "attempt": {
+          "id": "10101cd1-5a10-471f-a4c2-dc02c01eccf0",
+          "sessionRef": "[REDACTED]",
+          "retryOf": {
+            "attemptId": "9c35d702-67bb-47c4-acae-3f08316ce815",
+            "sessionRef": "[REDACTED]"
+          }
+        }
+      },
+      "response": {
+        "receivedAt": "2026-10-28T16:37:22.920Z",
+        "httpStatus": 200,
+        "bytes": 245,
+        "sha256": "ab8fa8a69439d2725e650ab1539bff6675870255b8fb1433eddfa7255e42ca89",
+        "body": {
+          "protocolVersion": 1,
+          "status": "rejected",
+          "requestId": "dd6c5982-4e73-435a-bc52-7000044b602d",
+          "attemptId": "10101cd1-5a10-471f-a4c2-dc02c01eccf0",
+          "sessionRef": "[REDACTED]",
+          "errorCode": "CHOICE_NOT_COMPILABLE",
+          "retry": null
+        }
+      }
+    },
+    {
+      "sequence": 18,
+      "requestedAt": "2026-10-28T16:39:17.493Z",
+      "method": "GET",
+      "path": "/api/story/turn/dd6c5982-4e73-435a-bc52-7000044b602d",
+      "query": {
+        "attemptId": "10101cd1-5a10-471f-a4c2-dc02c01eccf0"
+      },
+      "requestBytes": 0,
+      "requestSha256": null,
+      "requestBody": null,
+      "response": null,
+      "failure": {
+        "at": "2026-10-28T16:39:18.111Z",
+        "method": "GET",
+        "path": "/api/story/turn/dd6c5982-4e73-435a-bc52-7000044b602d",
+        "error": "net::ERR_ABORTED"
+      }
+    },
+    {
+      "sequence": 19,
+      "requestedAt": "2026-10-28T16:39:18.115Z",
+      "method": "GET",
+      "path": "/api/story/capabilities",
+      "query": {},
+      "requestBytes": 0,
+      "requestSha256": null,
+      "requestBody": null,
+      "response": {
+        "receivedAt": "2026-10-28T16:39:18.184Z",
+        "httpStatus": 200,
+        "bytes": 173,
+        "sha256": "2622c14fe1fb413edfbf2d5f187a87a79fdc50aff40f7ebcebedbebf24c1d7cd",
+        "body": {
+          "protocolVersion": 1,
+          "available": true,
+          "status": "ready",
+          "errorCode": null,
+          "limits": {
+            "maxRequestBytes": 32768,
+            "maxResponseBytes": 65536,
+            "maxContextBytes": 7000,
+            "timeoutMs": 75000
+          }
+        }
+      }
+    },
+    {
+      "sequence": 20,
+      "requestedAt": "2026-10-28T16:39:18.196Z",
+      "method": "POST",
+      "path": "/api/story/session",
+      "query": {},
+      "requestBytes": 21,
+      "requestSha256": "f1e39d9b6cd3a60db72c0b80e4679e715bd7e55c1a22762e96234045f46da55c",
+      "requestBody": {
+        "protocolVersion": 1
+      },
+      "response": {
+        "receivedAt": "2026-10-28T16:39:18.383Z",
+        "httpStatus": 200,
+        "bytes": 117,
+        "sha256": "515666e7cdc10502535084e9da5415453c16aa33d013e5d880f633bd8a8aef3d",
+        "body": {
+          "protocolVersion": 1,
+          "status": "ready",
+          "sessionRef": "[REDACTED]",
+          "expiresAt": 1793291581935
+        }
+      }
+    },
+    {
+      "sequence": 21,
+      "requestedAt": "2026-10-28T16:39:18.391Z",
+      "method": "POST",
+      "path": "/api/story/turn",
+      "query": {},
+      "requestBytes": 2922,
+      "requestSha256": "3853330e87040a45b05caa62b90741f4c6d7ecff2155f8d84c426540f6310bd6",
+      "requestBody": {
+        "context": {
+          "schemaVersion": 1,
+          "phase": "choice",
+          "identity": {
+            "runId": "62ed8197-a43b-4ab1-b3af-d25b795382ca",
+            "turnId": 2,
+            "baseRevision": 1,
+            "stateHash": "65fa96ed4c6190a4063aa54476a8f2ebee6ce08a26250f5c74d58d2c5f9abf60",
+            "choiceId": "r:17d4b63b7a333a81:t1:c:a",
+            "rulesVersion": 1,
+            "promptVersion": 1,
+            "requestId": "dd6c5982-4e73-435a-bc52-7000044b602d"
+          },
+          "namespace": "r:17d4b63b7a333a81",
+          "receipt": {
+            "kind": "choice",
+            "choiceId": "r:17d4b63b7a333a81:t1:c:a",
+            "action": {
+              "id": "r:17d4b63b7a333a81:t1:c:a",
+              "label": "与老王交谈，询问符纸详情及北边妖兽传闻",
+              "intent": "negotiate",
+              "targetId": "r:17d4b63b7a333a81:t1:e:person_lao_wang",
+              "stake": "low",
+              "approach": "cooperate"
+            },
+            "elapsedDays": 7,
+            "itemChanges": {
+              "stones": 1,
+              "supplies": -1
+            },
+            "relationChanges": {
+              "r:17d4b63b7a333a81:t1:e:person_lao_wang": 3
+            },
+            "random": {
+              "before": 1080474372,
+              "after": 3012430483,
+              "roll": 83
+            },
+            "before": {
+              "ageDays": 5760,
+              "realm": "mortal",
+              "cultivation": 0,
+              "injury": 0
+            },
+            "after": {
+              "ageDays": 5767,
+              "realm": "mortal",
+              "cultivation": 0,
+              "injury": 0
+            },
+            "death": null,
+            "birth": null
+          },
+          "life": {
+            "name": "云归",
+            "ageDays": 5767,
+            "lifeLimit": 80,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0,
+            "items": {
+              "supplies": 2,
+              "stones": 1
+            },
+            "relations": {
+              "r:17d4b63b7a333a81:t1:e:person_lao_wang": 3
+            },
+            "birth": {
+              "originId": "village",
+              "talentIds": [
+                "fortune-debt",
+                "iron-bones"
+              ],
+              "attributes": {
+                "constitution": 3,
+                "insight": 6,
+                "fortune": 3
+              }
+            }
+          },
+          "entities": [
+            {
+              "id": "r:17d4b63b7a333a81:t1:e:place_qingshi_village",
+              "name": "青石村",
+              "kind": "place",
+              "status": "unknown"
+            },
+            {
+              "id": "r:17d4b63b7a333a81:t1:e:person_lao_wang",
+              "name": "老王",
+              "kind": "person",
+              "status": "alive"
+            },
+            {
+              "id": "r:17d4b63b7a333a81:t1:e:person_ling_shang",
+              "name": "林商",
+              "kind": "person",
+              "status": "alive"
+            }
+          ],
+          "memory": {
+            "facts": [
+              {
+                "id": "m:745ed4d627b76e9c35e9be565d35d269",
+                "source": "narrative",
+                "kind": "fact",
+                "entityId": "r:17d4b63b7a333a81:t1:e:person_lao_wang",
+                "text": "老王是青石村的杂货商，知晓北边山里的妖兽异动，手中持有低阶符纸。",
+                "runId": "62ed8197-a43b-4ab1-b3af-d25b795382ca",
+                "turnId": 1
+              },
+              {
+                "id": "m:e0226a70252377732b0f8899fa983a55",
+                "source": "narrative",
+                "kind": "fact",
+                "entityId": "r:17d4b63b7a333a81:t1:e:person_ling_shang",
+                "text": "林商是行商，正前往云州城，愿意提供搭车服务但需支付车资。",
+                "runId": "62ed8197-a43b-4ab1-b3af-d25b795382ca",
+                "turnId": 1
+              }
+            ],
+            "promises": [],
+            "clues": [],
+            "recent": [],
+            "summaries": []
+          },
+          "references": [
+            "m:745ed4d627b76e9c35e9be565d35d269",
+            "m:e0226a70252377732b0f8899fa983a55"
+          ],
+          "previousScene": {
+            "id": "r:17d4b63b7a333a81:t1:s:scene",
+            "blocksHash": "8f73e664c174e5ff12491c0174afa718000722b0f2b13d10e3fdf258f268c119"
+          },
+          "relationshipVersion": 1,
+          "relationships": {
+            "r:17d4b63b7a333a81:t1:e:person_lao_wang": 3
+          },
+          "coverage": {
+            "policy": "relevance-v1",
+            "openTotal": 0,
+            "openIncluded": 0,
+            "openOmitted": 0
+          }
+        },
+        "attempt": {
+          "id": "ba9b7d5e-b4e9-4f69-bf90-0e39f45d524d",
+          "sessionRef": "[REDACTED]",
+          "retryOf": {
+            "attemptId": "10101cd1-5a10-471f-a4c2-dc02c01eccf0",
+            "sessionRef": "[REDACTED]"
+          }
+        }
+      },
+      "response": {
+        "receivedAt": "2026-10-28T16:39:48.921Z",
+        "httpStatus": 200,
+        "bytes": 2016,
+        "sha256": "524d635d51db61fbbf334e85843eb6ba1b89026fb7a489f150178f44f5316f91",
+        "body": {
+          "protocolVersion": 1,
+          "status": "ready",
+          "requestId": "dd6c5982-4e73-435a-bc52-7000044b602d",
+          "attemptId": "ba9b7d5e-b4e9-4f69-bf90-0e39f45d524d",
+          "sessionRef": "[REDACTED]",
+          "errorCode": null,
+          "retry": null,
+          "scene": {
+            "id": "r:17d4b63b7a333a81:t2:s:scene",
+            "title": "杂货铺里的低语",
+            "location": "青石村",
+            "entities": [
+              {
+                "id": "r:17d4b63b7a333a81:t1:e:place_qingshi_village",
+                "name": "青石村",
+                "kind": "place"
+              },
+              {
+                "id": "r:17d4b63b7a333a81:t1:e:person_lao_wang",
+                "name": "老王",
+                "kind": "person"
+              },
+              {
+                "id": "r:17d4b63b7a333a81:t1:e:person_ling_shang",
+                "name": "林商",
+                "kind": "person"
+              }
+            ],
+            "blocks": [
+              {
+                "kind": "narration",
+                "text": "老王压低声音，将一张泛黄的符纸推到你面前。他指着符纸边缘的焦痕，说这是上个月从北边逃难者手里收来的，能挡一次低阶妖兽的爪击，但灵力耗尽后就会自燃。"
+              },
+              {
+                "kind": "dialogue",
+                "text": "北边的雾越来越浓了，连猎户都不敢进山。听说那妖兽能模仿人声，你要是想活命，别信任何在雾里喊你名字的声音。",
+                "speaker": "r:17d4b63b7a333a81:t1:e:person_lao_wang"
+              },
+              {
+                "kind": "narration",
+                "text": "铺子外传来车轮碾过石板的声响，林商正站在门口整理货物。他看见你，扬了扬下巴，示意你出来谈车资。"
+              }
+            ],
+            "choices": [
+              {
+                "id": "r:17d4b63b7a333a81:t2:c:a",
+                "label": "向老王购买那张低阶符纸",
+                "intent": "negotiate",
+                "targetId": "r:17d4b63b7a333a81:t1:e:person_lao_wang",
+                "stake": "low",
+                "approach": "cooperate"
+              },
+              {
+                "id": "r:17d4b63b7a333a81:t2:c:b",
+                "label": "出门与林商商议前往云州城的车资",
+                "intent": "negotiate",
+                "targetId": "r:17d4b63b7a333a81:t1:e:person_ling_shang",
+                "stake": "low",
+                "approach": "cooperate"
+              },
+              {
+                "id": "r:17d4b63b7a333a81:t2:c:c",
+                "label": "在青石村寻找行粮补充体力",
+                "intent": "explore",
+                "targetId": "supplies",
+                "stake": "low",
+                "approach": "cautious"
+              }
+            ],
+            "memoryDeltas": [
+              {
+                "entityId": "r:17d4b63b7a333a81:t1:e:person_lao_wang",
+                "text": "老王透露北边妖兽能模仿人声，并出售一张能挡一次爪击的低阶符纸。",
+                "kind": "fact"
+              }
+            ]
+          }
+        }
+      }
+    }
+  ],
+  "snapshots": [
+    {
+      "label": "00-entered",
+      "at": "2026-10-28T16:33:01.156Z",
+      "file": "00-entered.json",
+      "screenshot": "00-entered.png",
+      "summary": {
+        "database": {
+          "name": "wending-live-v1",
+          "version": 2,
+          "storeCounts": {
+            "runs": 0,
+            "pending": 0,
+            "history": 0,
+            "memory": 0
+          }
+        },
+        "archiveId": null,
+        "runId": null,
+        "revision": null,
+        "turnId": null,
+        "phase": null,
+        "stateSha256": null,
+        "storedStateHash": null,
+        "sceneId": null,
+        "sceneSha256": null,
+        "pendingRequestId": null,
+        "pendingKind": null,
+        "attemptId": null,
+        "pause": null,
+        "history": null
+      },
+      "requestCounts": {
+        "apiRequests": 1,
+        "turnPosts": 0,
+        "turnGets": 0,
+        "sessionPosts": 0,
+        "capabilityGets": 1,
+        "readyTurnResponses": 0
+      }
+    },
+    {
+      "label": "operator-pause-001",
+      "at": "2026-10-28T16:33:31.334Z",
+      "file": "operator-pause-001.json",
+      "screenshot": "operator-pause-001.png",
+      "summary": {
+        "database": {
+          "name": "wending-live-v1",
+          "version": 2,
+          "storeCounts": {
+            "runs": 3,
+            "pending": 1,
+            "history": 0,
+            "memory": 0
+          }
+        },
+        "archiveId": "9bd91d07-af0b-4ce3-b722-532fef8a1680",
+        "runId": "62ed8197-a43b-4ab1-b3af-d25b795382ca",
+        "revision": 0,
+        "turnId": 0,
+        "phase": "awaitingOpening",
+        "stateSha256": "ee41fdf3593d5a9ade54bfad25ddb19a178338c6ffd79a6eadba84929b693336",
+        "storedStateHash": "ee41fdf3593d5a9ade54bfad25ddb19a178338c6ffd79a6eadba84929b693336",
+        "sceneId": null,
+        "sceneSha256": null,
+        "pendingRequestId": "06b892a2-7664-42de-941f-52add7799bd3",
+        "pendingKind": "opening",
+        "attemptId": "1fb2e98e-bcd0-4b51-bb77-6254a4084ead",
+        "pause": null,
+        "history": {
+          "chunks": 0,
+          "tailEntries": [],
+          "totalTurns": 0
+        }
+      },
+      "requestCounts": {
+        "apiRequests": 5,
+        "turnPosts": 1,
+        "turnGets": 0,
+        "sessionPosts": 1,
+        "capabilityGets": 3,
+        "readyTurnResponses": 0
+      }
+    },
+    {
+      "label": "01-opening-or-existing",
+      "at": "2026-10-28T16:34:41.585Z",
+      "file": "01-opening-or-existing.json",
+      "screenshot": "01-opening-or-existing.png",
+      "summary": {
+        "database": {
+          "name": "wending-live-v1",
+          "version": 2,
+          "storeCounts": {
+            "runs": 3,
+            "pending": 0,
+            "history": 1,
+            "memory": 12
+          }
+        },
+        "archiveId": "9bd91d07-af0b-4ce3-b722-532fef8a1680",
+        "runId": "62ed8197-a43b-4ab1-b3af-d25b795382ca",
+        "revision": 1,
+        "turnId": 1,
+        "phase": "active",
+        "stateSha256": "65fa96ed4c6190a4063aa54476a8f2ebee6ce08a26250f5c74d58d2c5f9abf60",
+        "storedStateHash": "65fa96ed4c6190a4063aa54476a8f2ebee6ce08a26250f5c74d58d2c5f9abf60",
+        "sceneId": "r:17d4b63b7a333a81:t1:s:scene",
+        "sceneSha256": "fcb3ed30c0809b4adc050ea12ab2536db8cd4cde0580bc03152ef94772f08d81",
+        "pendingRequestId": null,
+        "pendingKind": null,
+        "attemptId": null,
+        "pause": null,
+        "history": {
+          "chunks": 1,
+          "tailEntries": [
+            {
+              "identity": {
+                "runId": "62ed8197-a43b-4ab1-b3af-d25b795382ca",
+                "turnId": 1,
+                "baseRevision": 0,
+                "stateHash": "ee41fdf3593d5a9ade54bfad25ddb19a178338c6ffd79a6eadba84929b693336",
+                "choiceId": null,
+                "rulesVersion": 1,
+                "promptVersion": 1,
+                "requestId": "06b892a2-7664-42de-941f-52add7799bd3"
+              },
+              "stateHash": "65fa96ed4c6190a4063aa54476a8f2ebee6ce08a26250f5c74d58d2c5f9abf60",
+              "sceneId": "r:17d4b63b7a333a81:t1:s:scene",
+              "title": "青石村的晨雾"
+            }
+          ],
+          "totalTurns": 1
+        }
+      },
+      "requestCounts": {
+        "apiRequests": 9,
+        "turnPosts": 2,
+        "turnGets": 1,
+        "sessionPosts": 2,
+        "capabilityGets": 4,
+        "readyTurnResponses": 1
+      }
+    },
+    {
+      "label": "operator-pause-002",
+      "at": "2026-10-28T16:34:42.075Z",
+      "file": "operator-pause-002.json",
+      "screenshot": "operator-pause-002.png",
+      "summary": {
+        "database": {
+          "name": "wending-live-v1",
+          "version": 2,
+          "storeCounts": {
+            "runs": 3,
+            "pending": 1,
+            "history": 1,
+            "memory": 12
+          }
+        },
+        "archiveId": "9bd91d07-af0b-4ce3-b722-532fef8a1680",
+        "runId": "62ed8197-a43b-4ab1-b3af-d25b795382ca",
+        "revision": 1,
+        "turnId": 1,
+        "phase": "active",
+        "stateSha256": "65fa96ed4c6190a4063aa54476a8f2ebee6ce08a26250f5c74d58d2c5f9abf60",
+        "storedStateHash": "65fa96ed4c6190a4063aa54476a8f2ebee6ce08a26250f5c74d58d2c5f9abf60",
+        "sceneId": "r:17d4b63b7a333a81:t1:s:scene",
+        "sceneSha256": "fcb3ed30c0809b4adc050ea12ab2536db8cd4cde0580bc03152ef94772f08d81",
+        "pendingRequestId": "dd6c5982-4e73-435a-bc52-7000044b602d",
+        "pendingKind": "choice",
+        "attemptId": null,
+        "pause": null,
+        "history": {
+          "chunks": 1,
+          "tailEntries": [
+            {
+              "identity": {
+                "runId": "62ed8197-a43b-4ab1-b3af-d25b795382ca",
+                "turnId": 1,
+                "baseRevision": 0,
+                "stateHash": "ee41fdf3593d5a9ade54bfad25ddb19a178338c6ffd79a6eadba84929b693336",
+                "choiceId": null,
+                "rulesVersion": 1,
+                "promptVersion": 1,
+                "requestId": "06b892a2-7664-42de-941f-52add7799bd3"
+              },
+              "stateHash": "65fa96ed4c6190a4063aa54476a8f2ebee6ce08a26250f5c74d58d2c5f9abf60",
+              "sceneId": "r:17d4b63b7a333a81:t1:s:scene",
+              "title": "青石村的晨雾"
+            }
+          ],
+          "totalTurns": 1
+        }
+      },
+      "requestCounts": {
+        "apiRequests": 10,
+        "turnPosts": 2,
+        "turnGets": 1,
+        "sessionPosts": 2,
+        "capabilityGets": 5,
+        "readyTurnResponses": 1
+      }
+    },
+    {
+      "label": "operator-pause-003",
+      "at": "2026-10-28T16:36:27.441Z",
+      "file": "operator-pause-003.json",
+      "screenshot": "operator-pause-003.png",
+      "summary": {
+        "database": {
+          "name": "wending-live-v1",
+          "version": 2,
+          "storeCounts": {
+            "runs": 3,
+            "pending": 1,
+            "history": 1,
+            "memory": 12
+          }
+        },
+        "archiveId": "9bd91d07-af0b-4ce3-b722-532fef8a1680",
+        "runId": "62ed8197-a43b-4ab1-b3af-d25b795382ca",
+        "revision": 1,
+        "turnId": 1,
+        "phase": "active",
+        "stateSha256": "65fa96ed4c6190a4063aa54476a8f2ebee6ce08a26250f5c74d58d2c5f9abf60",
+        "storedStateHash": "65fa96ed4c6190a4063aa54476a8f2ebee6ce08a26250f5c74d58d2c5f9abf60",
+        "sceneId": "r:17d4b63b7a333a81:t1:s:scene",
+        "sceneSha256": "fcb3ed30c0809b4adc050ea12ab2536db8cd4cde0580bc03152ef94772f08d81",
+        "pendingRequestId": "dd6c5982-4e73-435a-bc52-7000044b602d",
+        "pendingKind": "choice",
+        "attemptId": "9c35d702-67bb-47c4-acae-3f08316ce815",
+        "pause": null,
+        "history": {
+          "chunks": 1,
+          "tailEntries": [
+            {
+              "identity": {
+                "runId": "62ed8197-a43b-4ab1-b3af-d25b795382ca",
+                "turnId": 1,
+                "baseRevision": 0,
+                "stateHash": "ee41fdf3593d5a9ade54bfad25ddb19a178338c6ffd79a6eadba84929b693336",
+                "choiceId": null,
+                "rulesVersion": 1,
+                "promptVersion": 1,
+                "requestId": "06b892a2-7664-42de-941f-52add7799bd3"
+              },
+              "stateHash": "65fa96ed4c6190a4063aa54476a8f2ebee6ce08a26250f5c74d58d2c5f9abf60",
+              "sceneId": "r:17d4b63b7a333a81:t1:s:scene",
+              "title": "青石村的晨雾"
+            }
+          ],
+          "totalTurns": 1
+        }
+      },
+      "requestCounts": {
+        "apiRequests": 13,
+        "turnPosts": 3,
+        "turnGets": 1,
+        "sessionPosts": 3,
+        "capabilityGets": 6,
+        "readyTurnResponses": 1
+      }
+    },
+    {
+      "label": "operator-pause-004",
+      "at": "2026-10-28T16:37:24.294Z",
+      "file": "operator-pause-004.json",
+      "screenshot": "operator-pause-004.png",
+      "summary": {
+        "database": {
+          "name": "wending-live-v1",
+          "version": 2,
+          "storeCounts": {
+            "runs": 3,
+            "pending": 1,
+            "history": 1,
+            "memory": 12
+          }
+        },
+        "archiveId": "9bd91d07-af0b-4ce3-b722-532fef8a1680",
+        "runId": "62ed8197-a43b-4ab1-b3af-d25b795382ca",
+        "revision": 1,
+        "turnId": 1,
+        "phase": "active",
+        "stateSha256": "65fa96ed4c6190a4063aa54476a8f2ebee6ce08a26250f5c74d58d2c5f9abf60",
+        "storedStateHash": "65fa96ed4c6190a4063aa54476a8f2ebee6ce08a26250f5c74d58d2c5f9abf60",
+        "sceneId": "r:17d4b63b7a333a81:t1:s:scene",
+        "sceneSha256": "fcb3ed30c0809b4adc050ea12ab2536db8cd4cde0580bc03152ef94772f08d81",
+        "pendingRequestId": "dd6c5982-4e73-435a-bc52-7000044b602d",
+        "pendingKind": "choice",
+        "attemptId": "10101cd1-5a10-471f-a4c2-dc02c01eccf0",
+        "pause": null,
+        "history": {
+          "chunks": 1,
+          "tailEntries": [
+            {
+              "identity": {
+                "runId": "62ed8197-a43b-4ab1-b3af-d25b795382ca",
+                "turnId": 1,
+                "baseRevision": 0,
+                "stateHash": "ee41fdf3593d5a9ade54bfad25ddb19a178338c6ffd79a6eadba84929b693336",
+                "choiceId": null,
+                "rulesVersion": 1,
+                "promptVersion": 1,
+                "requestId": "06b892a2-7664-42de-941f-52add7799bd3"
+              },
+              "stateHash": "65fa96ed4c6190a4063aa54476a8f2ebee6ce08a26250f5c74d58d2c5f9abf60",
+              "sceneId": "r:17d4b63b7a333a81:t1:s:scene",
+              "title": "青石村的晨雾"
+            }
+          ],
+          "totalTurns": 1
+        }
+      },
+      "requestCounts": {
+        "apiRequests": 17,
+        "turnPosts": 4,
+        "turnGets": 2,
+        "sessionPosts": 4,
+        "capabilityGets": 7,
+        "readyTurnResponses": 1
+      }
+    },
+    {
+      "label": "99-failure",
+      "at": "2026-10-28T16:39:49.301Z",
+      "file": "99-failure.json",
+      "screenshot": "99-failure.png",
+      "summary": {
+        "database": {
+          "name": "wending-live-v1",
+          "version": 2,
+          "storeCounts": {
+            "runs": 3,
+            "pending": 0,
+            "history": 1,
+            "memory": 21
+          }
+        },
+        "archiveId": "9bd91d07-af0b-4ce3-b722-532fef8a1680",
+        "runId": "62ed8197-a43b-4ab1-b3af-d25b795382ca",
+        "revision": 2,
+        "turnId": 2,
+        "phase": "active",
+        "stateSha256": "804b79eddc7fa712cac3d3ee37651a8b0d64ba6c66e170dd01037297d9cb92a0",
+        "storedStateHash": "804b79eddc7fa712cac3d3ee37651a8b0d64ba6c66e170dd01037297d9cb92a0",
+        "sceneId": "r:17d4b63b7a333a81:t2:s:scene",
+        "sceneSha256": "cc082ef4d5a6d4938aef3d5311590a6d7a6fd2ce45752436a17a4ceb3a7631c9",
+        "pendingRequestId": null,
+        "pendingKind": null,
+        "attemptId": null,
+        "pause": null,
+        "history": {
+          "chunks": 1,
+          "tailEntries": [
+            {
+              "identity": {
+                "runId": "62ed8197-a43b-4ab1-b3af-d25b795382ca",
+                "turnId": 1,
+                "baseRevision": 0,
+                "stateHash": "ee41fdf3593d5a9ade54bfad25ddb19a178338c6ffd79a6eadba84929b693336",
+                "choiceId": null,
+                "rulesVersion": 1,
+                "promptVersion": 1,
+                "requestId": "06b892a2-7664-42de-941f-52add7799bd3"
+              },
+              "stateHash": "65fa96ed4c6190a4063aa54476a8f2ebee6ce08a26250f5c74d58d2c5f9abf60",
+              "sceneId": "r:17d4b63b7a333a81:t1:s:scene",
+              "title": "青石村的晨雾"
+            },
+            {
+              "identity": {
+                "runId": "62ed8197-a43b-4ab1-b3af-d25b795382ca",
+                "turnId": 2,
+                "baseRevision": 1,
+                "stateHash": "65fa96ed4c6190a4063aa54476a8f2ebee6ce08a26250f5c74d58d2c5f9abf60",
+                "choiceId": "r:17d4b63b7a333a81:t1:c:a",
+                "rulesVersion": 1,
+                "promptVersion": 1,
+                "requestId": "dd6c5982-4e73-435a-bc52-7000044b602d"
+              },
+              "stateHash": "804b79eddc7fa712cac3d3ee37651a8b0d64ba6c66e170dd01037297d9cb92a0",
+              "sceneId": "r:17d4b63b7a333a81:t2:s:scene",
+              "title": "杂货铺里的低语"
+            }
+          ],
+          "totalTurns": 2
+        }
+      },
+      "requestCounts": {
+        "apiRequests": 21,
+        "turnPosts": 5,
+        "turnGets": 3,
+        "sessionPosts": 5,
+        "capabilityGets": 8,
+        "readyTurnResponses": 2
+      }
+    }
+  ],
+  "checks": [
+    {
+      "name": "Operator retry 1 issued at most one turn POST",
+      "passed": true,
+      "postSequences": [
+        9
+      ]
+    },
+    {
+      "name": "Operator retry 1 retained the original pending request",
+      "passed": true
+    },
+    {
+      "name": "Operator retry 1 recorded an attempt identity",
+      "passed": true
+    },
+    {
+      "name": "Operator retry 1 records its immediate predecessor",
+      "passed": true
+    },
+    {
+      "name": "Opening issued one initial turn POST plus 1 explicit operator retry POST(s)",
+      "passed": true,
+      "initialPosts": 1,
+      "operatorRetryPosts": 1,
+      "totalPosts": 2,
+      "postSequences": [
+        5,
+        9
+      ]
+    },
+    {
+      "name": "Opening is committed with a real scene",
+      "passed": true
+    },
+    {
+      "name": "Stored state hash matches the actual opening",
+      "passed": true
+    },
+    {
+      "name": "Opening API response evidence was captured",
+      "passed": true
+    },
+    {
+      "name": "Actual opening API returned the committed ready scene",
+      "passed": true
+    },
+    {
+      "name": "Operator retry 2 issued at most one turn POST",
+      "passed": true,
+      "postSequences": [
+        13
+      ]
+    },
+    {
+      "name": "Operator retry 2 retained the original pending request",
+      "passed": true
+    },
+    {
+      "name": "Operator retry 2 recorded an attempt identity",
+      "passed": true
+    },
+    {
+      "name": "Operator retry 2 records its immediate predecessor",
+      "passed": true
+    },
+    {
+      "name": "Operator retry 3 issued at most one turn POST",
+      "passed": true,
+      "postSequences": [
+        17
+      ]
+    },
+    {
+      "name": "Operator retry 3 retained the original pending request",
+      "passed": true
+    },
+    {
+      "name": "Operator retry 3 recorded an attempt identity",
+      "passed": true
+    },
+    {
+      "name": "Operator retry 3 records its immediate predecessor",
+      "passed": true
+    },
+    {
+      "name": "Operator retry 4 issued at most one turn POST",
+      "passed": true,
+      "postSequences": [
+        21
+      ]
+    },
+    {
+      "name": "Operator retry 4 retained the original pending request",
+      "passed": true
+    },
+    {
+      "name": "Operator retry 4 recorded an attempt identity",
+      "passed": true
+    },
+    {
+      "name": "Operator retry 4 records its immediate predecessor",
+      "passed": true
+    },
+    {
+      "name": "Choice issued one initial turn POST plus 3 explicit operator retry POST(s)",
+      "passed": false,
+      "initialPosts": 0,
+      "operatorRetryPosts": 3,
+      "totalPosts": 3,
+      "postSequences": [
+        13,
+        17,
+        21
+      ]
+    }
+  ],
+  "pageErrors": [],
+  "consoleErrors": [],
+  "requestFailures": [
+    {
+      "at": "2026-10-28T16:35:51.830Z",
+      "method": "GET",
+      "path": "/api/story/capabilities",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "at": "2026-10-28T16:36:53.973Z",
+      "method": "GET",
+      "path": "/api/story/turn/dd6c5982-4e73-435a-bc52-7000044b602d",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "at": "2026-10-28T16:36:54.149Z",
+      "method": "POST",
+      "path": "/api/story/session",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "at": "2026-10-28T16:39:18.111Z",
+      "method": "GET",
+      "path": "/api/story/turn/dd6c5982-4e73-435a-bc52-7000044b602d",
+      "error": "net::ERR_ABORTED"
+    }
+  ],
+  "evidenceErrors": [
+    "response.body: Protocol error (Network.getResponseBody): No data found for resource with given identifier\nResponse body is not available for a response that was navigated away from. Read response.body() before triggering any navigation.",
+    "response.body: Protocol error (Network.getResponseBody): No data found for resource with given identifier\nResponse body is not available for a response that was navigated away from. Read response.body() before triggering any navigation.",
+    "response.body: Protocol error (Network.getResponseBody): No data found for resource with given identifier\nResponse body is not available for a response that was navigated away from. Read response.body() before triggering any navigation.",
+    "response.body: Protocol error (Network.getResponseBody): No data found for resource with given identifier\nResponse body is not available for a response that was navigated away from. Read response.body() before triggering any navigation."
+  ],
+  "invocation": {
+    "continue": false,
+    "retryOnce": false,
+    "operatorRetry": true,
+    "phase": "complete",
+    "timeoutMs": 120000
+  },
+  "operatorRetries": [
+    {
+      "number": 1,
+      "command": "retry",
+      "requestedAt": "2026-10-28T16:33:53.035Z",
+      "expectedRevision": 1,
+      "requestId": "06b892a2-7664-42de-941f-52add7799bd3",
+      "previousAttempt": {
+        "id": "1fb2e98e-bcd0-4b51-bb77-6254a4084ead",
+        "sessionRef": "[REDACTED]",
+        "retryOf": null
+      },
+      "apiSequenceBefore": 5,
+      "pauseEvidence": "operator-pause-001.json",
+      "clickedAt": "2026-10-28T16:33:53.107Z",
+      "finishedAt": "2026-10-28T16:34:41.430Z",
+      "outcome": "committed",
+      "postSequences": [
+        9
+      ],
+      "turnPosts": 1,
+      "attempt": {
+        "id": "9abff858-4c84-44c7-9ece-b5e012cf56aa",
+        "sessionRef": "[REDACTED]",
+        "retryOf": {
+          "attemptId": "1fb2e98e-bcd0-4b51-bb77-6254a4084ead",
+          "sessionRef": "[REDACTED]"
+        }
+      },
+      "reusedAttempt": false
+    },
+    {
+      "number": 2,
+      "command": "retry",
+      "requestedAt": "2026-10-28T16:35:51.589Z",
+      "expectedRevision": 2,
+      "requestId": "dd6c5982-4e73-435a-bc52-7000044b602d",
+      "previousAttempt": null,
+      "apiSequenceBefore": 10,
+      "pauseEvidence": "operator-pause-002.json",
+      "clickedAt": "2026-10-28T16:35:51.638Z",
+      "finishedAt": "2026-10-28T16:36:27.335Z",
+      "outcome": "paused",
+      "postSequences": [
+        13
+      ],
+      "turnPosts": 1,
+      "attempt": {
+        "id": "9c35d702-67bb-47c4-acae-3f08316ce815",
+        "sessionRef": "[REDACTED]",
+        "retryOf": null
+      },
+      "reusedAttempt": false
+    },
+    {
+      "number": 3,
+      "command": "retry",
+      "requestedAt": "2026-10-28T16:36:53.785Z",
+      "expectedRevision": 2,
+      "requestId": "dd6c5982-4e73-435a-bc52-7000044b602d",
+      "previousAttempt": {
+        "id": "9c35d702-67bb-47c4-acae-3f08316ce815",
+        "sessionRef": "[REDACTED]",
+        "retryOf": null
+      },
+      "apiSequenceBefore": 13,
+      "pauseEvidence": "operator-pause-003.json",
+      "clickedAt": "2026-10-28T16:36:53.833Z",
+      "finishedAt": "2026-10-28T16:37:23.813Z",
+      "outcome": "paused",
+      "postSequences": [
+        17
+      ],
+      "turnPosts": 1,
+      "attempt": {
+        "id": "10101cd1-5a10-471f-a4c2-dc02c01eccf0",
+        "sessionRef": "[REDACTED]",
+        "retryOf": {
+          "attemptId": "9c35d702-67bb-47c4-acae-3f08316ce815",
+          "sessionRef": "[REDACTED]"
+        }
+      },
+      "reusedAttempt": false
+    },
+    {
+      "number": 4,
+      "command": "retry",
+      "requestedAt": "2026-10-28T16:39:17.414Z",
+      "expectedRevision": 2,
+      "requestId": "dd6c5982-4e73-435a-bc52-7000044b602d",
+      "previousAttempt": {
+        "id": "10101cd1-5a10-471f-a4c2-dc02c01eccf0",
+        "sessionRef": "[REDACTED]",
+        "retryOf": {
+          "attemptId": "9c35d702-67bb-47c4-acae-3f08316ce815",
+          "sessionRef": "[REDACTED]"
+        }
+      },
+      "apiSequenceBefore": 17,
+      "pauseEvidence": "operator-pause-004.json",
+      "clickedAt": "2026-10-28T16:39:17.480Z",
+      "finishedAt": "2026-10-28T16:39:49.201Z",
+      "outcome": "committed",
+      "postSequences": [
+        21
+      ],
+      "turnPosts": 1,
+      "attempt": {
+        "id": "ba9b7d5e-b4e9-4f69-bf90-0e39f45d524d",
+        "sessionRef": "[REDACTED]",
+        "retryOf": {
+          "attemptId": "10101cd1-5a10-471f-a4c2-dc02c01eccf0",
+          "sessionRef": "[REDACTED]"
+        }
+      },
+      "reusedAttempt": false
+    }
+  ],
+  "requestCounts": {
+    "apiRequests": 21,
+    "turnPosts": 5,
+    "turnGets": 3,
+    "sessionPosts": 5,
+    "capabilityGets": 8,
+    "readyTurnResponses": 2
+  },
+  "startingArchive": {
+    "database": {
+      "name": "wending-live-v1",
+      "version": 2,
+      "storeCounts": {
+        "runs": 0,
+        "pending": 0,
+        "history": 0,
+        "memory": 0
+      }
+    },
+    "archiveId": null,
+    "runId": null,
+    "revision": null,
+    "turnId": null,
+    "phase": null,
+    "stateSha256": null,
+    "storedStateHash": null,
+    "sceneId": null,
+    "sceneSha256": null,
+    "pendingRequestId": null,
+    "pendingKind": null,
+    "attemptId": null,
+    "pause": null,
+    "history": null
+  },
+  "failure": {
+    "at": "2026-10-28T16:39:49.211Z",
+    "name": "Error",
+    "message": "Choice issued one initial turn POST plus 3 explicit operator retry POST(s)",
+    "automaticRetryIssued": false,
+    "profilePreserved": true
+  },
+  "finishedAt": "2026-10-28T16:39:49.357Z",
+  "browserClosed": true,
+  "profilePreserved": true
+}

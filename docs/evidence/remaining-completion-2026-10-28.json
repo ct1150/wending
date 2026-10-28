@@ -1,0 +1,1000 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-10-28",
+  "scope": "Recovered offline fixes, current full release, independent read-only review, original deployment/ledger GET verification, and publication to existing Draft PR14. No new model inference or deployment.",
+  "baseCommit": "ffcef06b436b1a482925a2ba5613674e3d394054",
+  "sourceFingerprint": {
+    "algorithm": "sha256",
+    "method": "sha256 of canonical compact JSON of sorted path/bytes/sha256 entries; excludes documentation and generated output",
+    "sha256": "80ff80c676de0b96e275132ceb3b1547ea17a9ffaa231e0fe0d7734f4e2871da",
+    "files": [
+      {
+        "path": ".github/workflows/validate-deploy.yml",
+        "bytes": 2676,
+        "sha256": "9824049b0a98ee46fe55bfc9ccee45c48c7f91170f8f34dee0bed7790b9d0782"
+      },
+      {
+        "path": ".node-version",
+        "bytes": 3,
+        "sha256": "68ca3fba3b7e864770cb61aeb306d4bd4354b68ab4dd38450860c5d823e42a53"
+      },
+      {
+        "path": "config/story-deployment.json",
+        "bytes": 133,
+        "sha256": "c1ac97f1b2dec1fc416afb5b5a2ab2394b521318d775ea9a2cab46ddec33563b"
+      },
+      {
+        "path": "package-lock.json",
+        "bytes": 33299,
+        "sha256": "87cb473836b0fe5dfdd1b92209e79c8673396209ae346d0d4d4820f147a05c7e"
+      },
+      {
+        "path": "package.json",
+        "bytes": 804,
+        "sha256": "48c0076163c43ecce9368c41587b908df7c72b44a52d7a8c72b025a63cdd9346"
+      },
+      {
+        "path": "scripts/build-gateway.js",
+        "bytes": 9339,
+        "sha256": "7798a463b2f0abb0834588e76fd7a1ad53b665eadc4c066143e2f2b2e8bb5bf8"
+      },
+      {
+        "path": "scripts/build-worker.js",
+        "bytes": 3275,
+        "sha256": "8a5539cbb196e6b7a5630a255ea1db911b6943470b2de46d63e0c00ca242d84a"
+      },
+      {
+        "path": "scripts/build.js",
+        "bytes": 15449,
+        "sha256": "fd9bb86e71cee4e25f07f5a4f26342722855316890c1901e78b2d8f336d44c17"
+      },
+      {
+        "path": "scripts/check.js",
+        "bytes": 1078,
+        "sha256": "d64c189963329a258273f38c3f64cdeee1f99fb79cc87fa86193486d55af6e66"
+      },
+      {
+        "path": "scripts/dev.js",
+        "bytes": 3538,
+        "sha256": "7f05fda87be087b685a4f4584a32183c0838b7f0ac11f17ccc98f2d15bb9571a"
+      },
+      {
+        "path": "scripts/publish-release.js",
+        "bytes": 4089,
+        "sha256": "f7c2682cad0db57a6bf5c0a5ddba85c7a328c50bc1d5a37a33cf7b54d6a74411"
+      },
+      {
+        "path": "scripts/story-author.js",
+        "bytes": 3800,
+        "sha256": "a62e9d6f5c9f2ea3ace4d6feac59e7da3344dcb7743c4e593438519d55f36dbc"
+      },
+      {
+        "path": "scripts/story-author/index.js",
+        "bytes": 13646,
+        "sha256": "965f3391c83bbce9f12368b49ad3bc52b4683ff4c6f92c008cc2fc82eed8f776"
+      },
+      {
+        "path": "scripts/workers-ai-probe.js",
+        "bytes": 2141,
+        "sha256": "4b848d471e866d46e51f657997b11c51efeebbd4891a8fc0beb24eea17b95687"
+      },
+      {
+        "path": "src/app.js",
+        "bytes": 72424,
+        "sha256": "5b7ea4f63ac4ee3d21e7908fad4928ea8ff13774982b345d2866e9c88a199897"
+      },
+      {
+        "path": "src/game/content.js",
+        "bytes": 57062,
+        "sha256": "f3a7369f58d45714ce1f1b38cc1d2dcfaaa12ff5c0d515bc56154e3fc7b266ee"
+      },
+      {
+        "path": "src/game/cultivation/content.js",
+        "bytes": 125455,
+        "sha256": "0e87d04104943c0038d996e10fc5393b081a455cdc616e27c7ae238d35b3a12e"
+      },
+      {
+        "path": "src/game/cultivation/engine.js",
+        "bytes": 825,
+        "sha256": "ce17da223801e057e7878833e9011d890df73dcf06346b4c3749108655e20ddf"
+      },
+      {
+        "path": "src/game/cultivation/legacy-engine.js",
+        "bytes": 20614,
+        "sha256": "fab4a25f770ca449509ae8dc622167bd1f86bf3f12417b986c158f4d11b11aea"
+      },
+      {
+        "path": "src/game/cultivation/legacy-validation.js",
+        "bytes": 12180,
+        "sha256": "38fc03dedc5442ba5e1a7db32a399923955b091ecf37c404895422f33b0e38b1"
+      },
+      {
+        "path": "src/game/cultivation/live/engine.js",
+        "bytes": 12171,
+        "sha256": "5d824d1e58a73da0b085d7be3c5ec57f920f683710330c0e1648b4473fa951a4"
+      },
+      {
+        "path": "src/game/cultivation/live/identity.js",
+        "bytes": 3931,
+        "sha256": "d619269073a7b9afcaa6245ae013ead2e82677d76698a372ff21a51a11cab232"
+      },
+      {
+        "path": "src/game/cultivation/live/memory.js",
+        "bytes": 24475,
+        "sha256": "ad7c117d24ecfc464c19c56bd1ba483f6e790b1a13f3914ef3fc4a22fdeec87a"
+      },
+      {
+        "path": "src/game/cultivation/live/model.js",
+        "bytes": 1379,
+        "sha256": "1b1b208631bac405395d84c240957a15db080333abe174b98e0eb5412336846a"
+      },
+      {
+        "path": "src/game/cultivation/live/schema.js",
+        "bytes": 5120,
+        "sha256": "dfdbdcadf35deb39315f571821203d61bd9f5a10d8c359b074001d16b0cdd0c9"
+      },
+      {
+        "path": "src/game/cultivation/live/validation.js",
+        "bytes": 10250,
+        "sha256": "44137cda97b87d78bdcf5513aa939e7549dd3c5406b699ac6491827a6514516a"
+      },
+      {
+        "path": "src/game/cultivation/model.js",
+        "bytes": 2428,
+        "sha256": "17a2a86458db5ea9a1e5de2ab22153c1b02ee1b8eed25badbc3bc87b1804a00c"
+      },
+      {
+        "path": "src/game/cultivation/v3/birth.js",
+        "bytes": 1371,
+        "sha256": "6959ceb68ab74883796655d50403fbdadce381b3546829d284f3f2adacae51d0"
+      },
+      {
+        "path": "src/game/cultivation/v3/chapters/celestial.js",
+        "bytes": 38618,
+        "sha256": "391811f36d155f72840918365f1589b33c10837f38222bae45a8975e88553a8f"
+      },
+      {
+        "path": "src/game/cultivation/v3/chapters/common.js",
+        "bytes": 956,
+        "sha256": "a470a8efe515ada605f696797e022434b7f8a5053fa28783cb67589be487994c"
+      },
+      {
+        "path": "src/game/cultivation/v3/chapters/expeditions.js",
+        "bytes": 16373,
+        "sha256": "6398752caa9d04e72584ad5de32208a08eb4747084de6f1ca6dbb293236eb2c7"
+      },
+      {
+        "path": "src/game/cultivation/v3/chapters/origins.js",
+        "bytes": 16727,
+        "sha256": "fa5ff768c91daad0eabac8811e28979698258f03fd0e8cae05a508627cd56a7e"
+      },
+      {
+        "path": "src/game/cultivation/v3/chapters/routes.js",
+        "bytes": 15660,
+        "sha256": "98826bbfa754bf518071eca19eed168804c5417f81051d3ec3aea5f826aff25f"
+      },
+      {
+        "path": "src/game/cultivation/v3/chapters/thresholds.js",
+        "bytes": 22453,
+        "sha256": "6060c0f848b9a0c2e0e0953fc81ff11fbf818e3a67a733f6325308054b4db8be"
+      },
+      {
+        "path": "src/game/cultivation/v3/chapters/worlds.js",
+        "bytes": 18008,
+        "sha256": "4c8806216073ca4dc5c15204fbac4f997997d87be73458fc06cf7b50061fda0a"
+      },
+      {
+        "path": "src/game/cultivation/v3/content.js",
+        "bytes": 3609,
+        "sha256": "7c3a8df0f7a92f10ec8001aba183b4cc9aad7ad55ca3808ee9146900153f0b6c"
+      },
+      {
+        "path": "src/game/cultivation/v3/engine.js",
+        "bytes": 20270,
+        "sha256": "3639b992a12440610e985bf9fcefef15519938a767f52be373049dd665f44b5a"
+      },
+      {
+        "path": "src/game/cultivation/v3/model.js",
+        "bytes": 4191,
+        "sha256": "664e96ed986e1ff5e770ada479def22c5b43f27f16c85ed01370f18f5cdd5d4f"
+      },
+      {
+        "path": "src/game/cultivation/v3/prose.js",
+        "bytes": 164,
+        "sha256": "7fe397a50292f88c1be1441b4ec4a75f2434c7d280589c2f2f349321fd2bb74d"
+      },
+      {
+        "path": "src/game/cultivation/v3/validation.js",
+        "bytes": 13584,
+        "sha256": "f6973e503a9da33512b0894bb27211872d3fecaa41606470d869ca20eee9684e"
+      },
+      {
+        "path": "src/game/cultivation/validation.js",
+        "bytes": 619,
+        "sha256": "a1f58465487c3b555fc585252af983cba4937091fb1e9ff0dfee425c0da361c0"
+      },
+      {
+        "path": "src/game/engine.js",
+        "bytes": 42458,
+        "sha256": "ab38b83f55900d969a0609886ae86425843757beb3bc215b9fbc788af96e220b"
+      },
+      {
+        "path": "src/game/journey/chapters/celestial.js",
+        "bytes": 27079,
+        "sha256": "8038b439c9a3929126d89bf28d2ed25cec1f1212946b6fc7a9b88ed2f04af29a"
+      },
+      {
+        "path": "src/game/journey/chapters/later.js",
+        "bytes": 12424,
+        "sha256": "60580dbc7243e65fd41790f374e3e3ae07142c71f7e5252ecb0d70e32554ea77"
+      },
+      {
+        "path": "src/game/journey/chapters/mortal.js",
+        "bytes": 29759,
+        "sha256": "5f9a0795173cc7fb589ac98a3312ad57d0a10078606c0c96f143ae7188f3e910"
+      },
+      {
+        "path": "src/game/journey/chapters/nether.js",
+        "bytes": 14374,
+        "sha256": "61cdbfc9c52691bfa9ff1b960cebf4c983570cc7d63d8f67935baf666e9b607d"
+      },
+      {
+        "path": "src/game/journey/content.js",
+        "bytes": 5095,
+        "sha256": "d0c7e1ead3cd748852a4bd757b72ca42d331068f9b6796c428ba3fab0bccbea8"
+      },
+      {
+        "path": "src/game/journey/engine.js",
+        "bytes": 16912,
+        "sha256": "e73287aecbda9b981e29c27b0eb4ee70732c3b6eae01cf0ef3be8f6467c552f8"
+      },
+      {
+        "path": "src/game/journey/migration.js",
+        "bytes": 3336,
+        "sha256": "fa538dec7c2317b4041cd4a283747ae2117cebac79da95c686ea506aa6675d5d"
+      },
+      {
+        "path": "src/game/journey/validation.js",
+        "bytes": 21337,
+        "sha256": "a2f433452936196a913da0aa27d71fb5abdccd65dbb66cd81e7deae4c7d0280a"
+      },
+      {
+        "path": "src/game/live-archive.js",
+        "bytes": 22864,
+        "sha256": "9104d65d40d2585b666ba9d0fefe6a7e1f5b9205d202359c1c8372a0cb9ecc05"
+      },
+      {
+        "path": "src/game/live-save-format.js",
+        "bytes": 4443,
+        "sha256": "01a9815dee1cff680c9387429cb14ab0fa3c3991746870c999133e99ccb22faf"
+      },
+      {
+        "path": "src/game/persistence.js",
+        "bytes": 3238,
+        "sha256": "6c90df2a257a0023f3ca1f6cd9f38f748420c28e0723b199aabfe0c2d0cc8d58"
+      },
+      {
+        "path": "src/game/save-format.js",
+        "bytes": 2401,
+        "sha256": "5856a1352824a9593c9ff19ef6eb4da59dc993b574101fc60f78420160029940"
+      },
+      {
+        "path": "src/game/save-size.js",
+        "bytes": 704,
+        "sha256": "046b5bdaf1036c8527257b1004a32d4e728e380d7967a22ca32e57fafebcb15b"
+      },
+      {
+        "path": "src/game/story-content.js",
+        "bytes": 54350,
+        "sha256": "6adecdfe42a95abd9b98ffaa4d3d4d41c3039ca6bd941a7696c5a6749f17e4e1"
+      },
+      {
+        "path": "src/game/story.js",
+        "bytes": 39619,
+        "sha256": "fdc59c940257b847272846e2590b8ed15a3804489c3ede8dc9050b612f57296a"
+      },
+      {
+        "path": "src/ui/character.js",
+        "bytes": 10396,
+        "sha256": "3e2b5cd581a7c0f3e3e785c88ebc91646bc49a2311a4cfdc10436a7d8ef2fa8e"
+      },
+      {
+        "path": "src/ui/combat.js",
+        "bytes": 1354,
+        "sha256": "46ae0b0afa1bbe0edf8151752f4eee1ae47de20d830b1e05cc3f6f2be6729e24"
+      },
+      {
+        "path": "src/ui/icons.js",
+        "bytes": 3497,
+        "sha256": "27080219ec5700cc8f9a132780418ba499f8f62c853bcf215e899533038ec771"
+      },
+      {
+        "path": "src/ui/journey.js",
+        "bytes": 11599,
+        "sha256": "3ca228c7ce11c50d9f3911ed92f2c091c13f17ef5bab66d985c26dc5f5c60a45"
+      },
+      {
+        "path": "src/ui/live-session.js",
+        "bytes": 7385,
+        "sha256": "163dcedc96e325a4f67796b7cbf149e419061b278ee89d0c9be33a63a5859319"
+      },
+      {
+        "path": "src/ui/paper.css",
+        "bytes": 30247,
+        "sha256": "f242ec3f970822b6a6cb6f028d4dfaac0bb1612ec36afcacad3593bb02e849a2"
+      },
+      {
+        "path": "src/ui/session.js",
+        "bytes": 5786,
+        "sha256": "89e30cab10122c843e439728e85059c449721c428ca9a66f0e8c366294ede148"
+      },
+      {
+        "path": "src/ui/story-client.js",
+        "bytes": 4197,
+        "sha256": "7cb412dedd9590775167c5aabbf16b02fb5851262bca09a60a11f2096a9b889b"
+      },
+      {
+        "path": "src/ui/story.js",
+        "bytes": 7114,
+        "sha256": "bcc1a22ccf4eac9d3dcf7c6e17f06e9ff92c434cfe5f4bebc78bc30f0a61d539"
+      },
+      {
+        "path": "src/ui/styles.css",
+        "bytes": 44359,
+        "sha256": "443b3710e4109c9d97d28b17359f82ec4711d7883e8a0d92aa5646785be5fd30"
+      },
+      {
+        "path": "src/worker/index.js",
+        "bytes": 1695,
+        "sha256": "49c10eee2600f7e17e1ca1668f568a8349f4d3840912d5de1af379aab0567eaa"
+      },
+      {
+        "path": "src/worker/operator-acceptance-state.js",
+        "bytes": 1655,
+        "sha256": "811ddf1757855a2bd518f6cdb6d0adcbbb42661d36ebe5b7df8d5dc4d8c61880"
+      },
+      {
+        "path": "src/worker/operator-baseline.js",
+        "bytes": 8903,
+        "sha256": "456aa0ebb7d3441152f5c448b9f1952ec7997f337bb75124761ade4be1f4ce8f"
+      },
+      {
+        "path": "src/worker/operator-probe.js",
+        "bytes": 10176,
+        "sha256": "6a761395e4e5ff454a55b8d8dacfec958d2096922c79d86731419016a913cb99"
+      },
+      {
+        "path": "src/worker/operator-story.js",
+        "bytes": 14403,
+        "sha256": "907267e81629dee0c0adbb5c6f53d2b54d443c2a9e507f03563e392435be6370"
+      },
+      {
+        "path": "src/worker/operator-task8.js",
+        "bytes": 7668,
+        "sha256": "be4aed88fc2216ec8972d87f554b071b4d770c54506f32a4b2c28261f03bddf5"
+      },
+      {
+        "path": "src/worker/release-gateway.js",
+        "bytes": 8492,
+        "sha256": "db66b3b90e40e8695dfd0a9ddd4815591e85784c31d02d223a7565a0b2065276"
+      },
+      {
+        "path": "src/worker/story-acceptance.js",
+        "bytes": 785,
+        "sha256": "1f764d3653f659960afde1d6142cbae21e0eca051df8457fed6c6275aff1f58b"
+      },
+      {
+        "path": "src/worker/story-api.js",
+        "bytes": 13458,
+        "sha256": "84a9f442a0443c5bb91ae5d5d07f6ab938cd65a593a7a57f4f31960c1950d40f"
+      },
+      {
+        "path": "src/worker/story-budget.js",
+        "bytes": 14404,
+        "sha256": "3ff9136e5f598914791d1484e08cf49217d14ebc8f0008250335392b6ace343a"
+      },
+      {
+        "path": "src/worker/story-config.js",
+        "bytes": 9680,
+        "sha256": "d089f5f7c3de19e533b5241144791e8e6c5cb6265322a39d8f7f9f7103fa7429"
+      },
+      {
+        "path": "src/worker/story-experiment.js",
+        "bytes": 4487,
+        "sha256": "c617bd2ffe2fc93405400b9f608de2e5d98d350b8b2d16416a5c6295ec121ca1"
+      },
+      {
+        "path": "src/worker/story-generation-schema.js",
+        "bytes": 2394,
+        "sha256": "74e21c0301837d81ee4de95344236f22daca48c7c6d16c21740dae248ff8c51d"
+      },
+      {
+        "path": "src/worker/story-observation.js",
+        "bytes": 5130,
+        "sha256": "37486812366c23471d039b450cec1fd094ea75d26d83d8c6d81ec2dc06c066c2"
+      },
+      {
+        "path": "src/worker/story-probe.js",
+        "bytes": 6874,
+        "sha256": "faff93b16191735b5c78f8a7184f90b7853dc1a7721c06c35733c7f5d698b5f7"
+      },
+      {
+        "path": "src/worker/story-production.js",
+        "bytes": 2989,
+        "sha256": "312eb127bb2cffd1087103037d11e8e76a9e3847c046577528cfd4fa4a9cc6d5"
+      },
+      {
+        "path": "src/worker/story-provider-core.js",
+        "bytes": 10432,
+        "sha256": "349217545d78d22212e4e0be35052d0863d7a26151c16564f92068907d7e724d"
+      },
+      {
+        "path": "src/worker/story-provider.js",
+        "bytes": 637,
+        "sha256": "d910641c21df9fa76647b62e6076c1bb4540656d13f41164207f8dd5510c7283"
+      },
+      {
+        "path": "src/worker/story-request-body.js",
+        "bytes": 3486,
+        "sha256": "53c441cb50bba79d467d0e24779fa8ba89c80711d2703f4af4f19da6a93d5e5a"
+      },
+      {
+        "path": "src/worker/story-stage.js",
+        "bytes": 3144,
+        "sha256": "93e4895693f0fb39dd68b37813da07fa655e8fd0c3e11dcad7cf17bee0a0beb2"
+      },
+      {
+        "path": "tests/backend-build.test.js",
+        "bytes": 16859,
+        "sha256": "baf4fe8020fa4a8727dc0c11e8e96883a80a6aea73d5d2ff29681623092faa19"
+      },
+      {
+        "path": "tests/backend-runtime.test.js",
+        "bytes": 5571,
+        "sha256": "95b5ffe86c8082c7ec314a7bc09c9e1b6ecdc5dcf1b3209019a0da1fc2b92fed"
+      },
+      {
+        "path": "tests/build.test.js",
+        "bytes": 8793,
+        "sha256": "fb969eadad47de47082a251631d783821b17bec097d286f6334e1f26de9bdf37"
+      },
+      {
+        "path": "tests/campaign-app.test.js",
+        "bytes": 4032,
+        "sha256": "7b258f44629a982a8f8754ded3b15005c1849c61bcca0c4fc7688f3fc92a4bbe"
+      },
+      {
+        "path": "tests/campaign-birth.test.js",
+        "bytes": 4431,
+        "sha256": "6b7df1fe21875deb493d827d5c0c6b76fb67f61f504e2451438789644a40b4f1"
+      },
+      {
+        "path": "tests/campaign-content.test.js",
+        "bytes": 1523,
+        "sha256": "1c048f981370aa2d5851b68443103d3f43b9edfe08a189a091c2ed380a781ec6"
+      },
+      {
+        "path": "tests/campaign-opportunities.test.js",
+        "bytes": 4110,
+        "sha256": "6e04fb4ea61f3d38f27e0f4a8a7eb92f5cffed2438d72414772fbadb3e52f835"
+      },
+      {
+        "path": "tests/campaign-routes.test.js",
+        "bytes": 8576,
+        "sha256": "aa176c91fc6f860f4ec65361b07b22ae7754129066012f4c69f9ccdbc53668d2"
+      },
+      {
+        "path": "tests/campaign-save.test.js",
+        "bytes": 9234,
+        "sha256": "2002ccf564aa62e7397b0a1cca720b86b315fa4dff096bd060a53fbc284a23cd"
+      },
+      {
+        "path": "tests/combat-ui.test.js",
+        "bytes": 3103,
+        "sha256": "3290c028860f65ae79c5315bda68c1c965a3bf03c4acb848eb62a95fb3912c09"
+      },
+      {
+        "path": "tests/content.test.js",
+        "bytes": 9814,
+        "sha256": "75aef0b260045f13bee440600a98b534f062e9fd41879187fa772c8602319ab5"
+      },
+      {
+        "path": "tests/cultivation-birth.test.js",
+        "bytes": 18655,
+        "sha256": "2316e3aebc1e40ffd3ca37dcf07c65e4de6cf4aed53a821d45c89d18401c323d"
+      },
+      {
+        "path": "tests/cultivation-engine.test.js",
+        "bytes": 18014,
+        "sha256": "c913c12e8e30b83936dfa3fae7f5a5ee7f630fdf279b9f0d351566ed6a1f0963"
+      },
+      {
+        "path": "tests/cultivation-ui.test.js",
+        "bytes": 13793,
+        "sha256": "3b0084448221a087e5f33ee0dc685ecce72f57a54d54d2d9ea69ac204de57fd4"
+      },
+      {
+        "path": "tests/cultivation-validation.test.js",
+        "bytes": 18753,
+        "sha256": "18225ecad76f1b431d7a646e7611600e191e51c9bbad3bc48debd2da66edd4b4"
+      },
+      {
+        "path": "tests/engine.test.js",
+        "bytes": 18099,
+        "sha256": "1e4393c06c2efd6469060f773d7d3c777c75afcbd94326b9d3d970e55105381e"
+      },
+      {
+        "path": "tests/gateway-build.test.js",
+        "bytes": 2515,
+        "sha256": "1718d1b49b3eabf42d8b4a9a4b9d8ac7f46a2fdf6c84cb19f90ccfcc387261f9"
+      },
+      {
+        "path": "tests/helpers/app-harness.js",
+        "bytes": 8299,
+        "sha256": "fc796a5ef92add627c7b3b533cf63a5c3e24b621dc2bc1b02d720025981bbccb"
+      },
+      {
+        "path": "tests/helpers/journey-routes.js",
+        "bytes": 1809,
+        "sha256": "b7349ae2bb99a2d4f02f380a7b06ea65241eeb9c0fd9d7212e8d7fdea1646c3d"
+      },
+      {
+        "path": "tests/helpers/live-browser.js",
+        "bytes": 3086,
+        "sha256": "bd74fd7ba68ed112bf88fa3c5c85d69e48958246dc6e73ac17885a2a7d9317a5"
+      },
+      {
+        "path": "tests/helpers/save-boundaries.js",
+        "bytes": 1544,
+        "sha256": "1a7957fd88bdf95c1ec351b561270106ce042766badf2bfef5c2ff27d2b45dbc"
+      },
+      {
+        "path": "tests/history.test.js",
+        "bytes": 6165,
+        "sha256": "24f68230a597fbc019a76de4b91bbe4963e77f92dc15e1ba1635fcdf7a71a47f"
+      },
+      {
+        "path": "tests/immersive-app.test.js",
+        "bytes": 5881,
+        "sha256": "30c1894b10fcaa92d269cbbd2ca33ef3a8054d9996148c4f80a52f435536583f"
+      },
+      {
+        "path": "tests/immersive-renderers.test.js",
+        "bytes": 13523,
+        "sha256": "a032df9898e471e349187a6572f979a9dfb5852f6f5ba5d71f8fa6d621acd7a2"
+      },
+      {
+        "path": "tests/journey-campaign.test.js",
+        "bytes": 14937,
+        "sha256": "9e7a316784abf62379d23e788190ffdf6f776efe97e0450cf5dcd75eccb79c38"
+      },
+      {
+        "path": "tests/journey-content.test.js",
+        "bytes": 4683,
+        "sha256": "f8826d6529dcc2ba08ce92b8bafc5267541d7075e8a5c7411b0b2f794856b2bf"
+      },
+      {
+        "path": "tests/journey-migration.test.js",
+        "bytes": 20468,
+        "sha256": "b31286efea08cc14ff50cb150851625d096844dd02b27e64240bc385c8809f82"
+      },
+      {
+        "path": "tests/journey-mortal.test.js",
+        "bytes": 14176,
+        "sha256": "6230c389ffc94d388c6bbf4a40108010dac10e3d126291ded5e8fc8d05894b64"
+      },
+      {
+        "path": "tests/journey-rebirth.test.js",
+        "bytes": 10778,
+        "sha256": "475c03e859e70dbd5acd7eb7097b66749dc1336a73301353654d97bd62d4dc26"
+      },
+      {
+        "path": "tests/journey-release.test.js",
+        "bytes": 6569,
+        "sha256": "463bdf440b9384a88d3e7c1fa2b38702b1c4b486dcc675064851c869cb20dd0b"
+      },
+      {
+        "path": "tests/journey-save.test.js",
+        "bytes": 11061,
+        "sha256": "463acfde140c18e4b6a223b74147e9969bf8405073af62beffa34314bf7d5922"
+      },
+      {
+        "path": "tests/journey-ui.test.js",
+        "bytes": 10609,
+        "sha256": "d1cbdc3fca1dec585fecd18884a727f32cc1e764d091b019aa31daedb5fef181"
+      },
+      {
+        "path": "tests/journey.test.js",
+        "bytes": 10984,
+        "sha256": "3932a3cb26da09574eb6d539ca7c87753f082c3b52254e8e20d3a97f92a181b8"
+      },
+      {
+        "path": "tests/live-app.test.js",
+        "bytes": 38118,
+        "sha256": "a1542537290ec8f22dc3254c50af01ffcb4905bd06ab5b8676bf3e3256c88610"
+      },
+      {
+        "path": "tests/live-archive.test.js",
+        "bytes": 22928,
+        "sha256": "fe153871b9682f519ba8b5289922fd148b029a6b58b65f4d84d4de10ab69ae18"
+      },
+      {
+        "path": "tests/live-engine.test.js",
+        "bytes": 16058,
+        "sha256": "98d9888a93dc156868a7da48f1cef887d07735a90601ad4cfadfbadd84bd19b7"
+      },
+      {
+        "path": "tests/live-long-run.test.js",
+        "bytes": 19494,
+        "sha256": "336a2ef9ebbf81bf3fccd72baeb0fd44c134d06449385b7dbe83784c4ffd0b86"
+      },
+      {
+        "path": "tests/live-save-format.test.js",
+        "bytes": 5941,
+        "sha256": "812e88d408828959d8f082258f7de3f739c7a950962cd7c7558f1b809bfc5de0"
+      },
+      {
+        "path": "tests/live-story-contract.test.js",
+        "bytes": 35853,
+        "sha256": "476459ac8d10fce88588e0b29a68d09cd4e94e3c84ce5687cc3937d1a9a31109"
+      },
+      {
+        "path": "tests/operator-baseline.test.js",
+        "bytes": 19807,
+        "sha256": "6a5e149301293a7ec99542073129cfc8e3765e9c90189c1c8e902d30f95a50e9"
+      },
+      {
+        "path": "tests/operator-probe.test.js",
+        "bytes": 14028,
+        "sha256": "870b3966fe457e2721f04fb975cb343cd0123d9bb92510fb0f42868b61c0d755"
+      },
+      {
+        "path": "tests/operator-story.test.js",
+        "bytes": 43091,
+        "sha256": "641b9a16e3d43a402f28e901fb53da2d96aee685fcf194bf49293093b20a19e7"
+      },
+      {
+        "path": "tests/paper-ui.test.js",
+        "bytes": 8953,
+        "sha256": "dee644194bf5a4a4000ca7be53896c36ee30dffb9e9b60cce3f01a51dfe2eb4b"
+      },
+      {
+        "path": "tests/publish-release.test.js",
+        "bytes": 3564,
+        "sha256": "71a1346c804c1145f799947c20ea6742e4f13f055cd8b25bd2704c0fe64906f8"
+      },
+      {
+        "path": "tests/release-channel.test.js",
+        "bytes": 10450,
+        "sha256": "a68e809412d6ef2839142570bb5af2876e6084791e100f62fea57fda307ce657"
+      },
+      {
+        "path": "tests/session.test.js",
+        "bytes": 12291,
+        "sha256": "be36253b86bbeecfc4e1aaaca117ddf32995723cc66ec0fedc658181b50bbd49"
+      },
+      {
+        "path": "tests/simulation.test.js",
+        "bytes": 8143,
+        "sha256": "a9df26a5a44cce553ee7fb0a67790b57f5066c017b6283af3c3bf8bf59effb17"
+      },
+      {
+        "path": "tests/story-acceptance.test.js",
+        "bytes": 36245,
+        "sha256": "841910d48b1fd08c157d636f90c13a7515a6c1d25efe1bf821c1b8dfd9ccf26c"
+      },
+      {
+        "path": "tests/story-api.test.js",
+        "bytes": 31530,
+        "sha256": "b417dcf9dcd91ae36fe7509db2b5b6513ad02b5ba87a0f16efcda8c7da47c368"
+      },
+      {
+        "path": "tests/story-author.test.js",
+        "bytes": 12179,
+        "sha256": "eedd794bdd75998f0643f5edc820b4faf36153f6d6b53ac7dfffb31bac57f5b8"
+      },
+      {
+        "path": "tests/story-budget.test.js",
+        "bytes": 16643,
+        "sha256": "f2dc511750034ec6a90b37e792183d49df55a4c06d7f239fcc5f6878017d2a60"
+      },
+      {
+        "path": "tests/story-experiment-observation.test.js",
+        "bytes": 4623,
+        "sha256": "646ed300e8104ad8fa20e056d2d6a9bd799dafcadd21b65a36df4557361159b4"
+      },
+      {
+        "path": "tests/story-observation.test.js",
+        "bytes": 4764,
+        "sha256": "e47e4991055759cf42d8fc55c5b7c0ea75698525b24e7f63bff6876baeb43d52"
+      },
+      {
+        "path": "tests/story-production.test.js",
+        "bytes": 16424,
+        "sha256": "27abc6e1201d4d0fd8c71673bcaa6fcd56676d9253a912f1ce2ede9022e1e7de"
+      },
+      {
+        "path": "tests/story-request-body.test.js",
+        "bytes": 7512,
+        "sha256": "98563267573c1e02980c10450857b459d31fc41544f8d9d5f5ccdde8c90aa7a4"
+      },
+      {
+        "path": "tests/story-save.test.js",
+        "bytes": 13287,
+        "sha256": "057ae6d0becaad460df58ad6154926254366ef7cac65ed73f531f791df890771"
+      },
+      {
+        "path": "tests/story-stage-runtime.test.js",
+        "bytes": 5927,
+        "sha256": "a738d5a420e253f310294e14e010fb2da576d636891f129605d7e7fc3e1b6c42"
+      },
+      {
+        "path": "tests/story-stage.test.js",
+        "bytes": 20213,
+        "sha256": "10200419297ad07fe3446e43e569df4e0b10b3c8e24e88c779fd6614aaaac15c"
+      },
+      {
+        "path": "tests/story.test.js",
+        "bytes": 16660,
+        "sha256": "bfdbfd9edcfcca4439544c649cd46e5ca26d6c6162f9010c33e2f4b2d8290340"
+      },
+      {
+        "path": "tests/task8-admission.test.js",
+        "bytes": 20100,
+        "sha256": "16b79740b886663e18bc1b17a6f17dfd5487398759f668846673d3f8dd9344c2"
+      },
+      {
+        "path": "tests/worker.test.js",
+        "bytes": 3681,
+        "sha256": "9e83750a32a5bc08e00c2b5f9cf320a8ef1191792fecec7615e127df5f2e4381"
+      },
+      {
+        "path": "tests/workers-ai-provider.test.js",
+        "bytes": 15835,
+        "sha256": "692b301ca9d9101a6a4841d8084263b49c6e2782b66648caf746983c702265e3"
+      },
+      {
+        "path": "wrangler.story.json",
+        "bytes": 612,
+        "sha256": "bfe73b652e484d3a0797bd904adc2d097f816fd12a709056b62d3d40b79bfe35"
+      }
+    ]
+  },
+  "historicalVerification": [
+    {
+      "startedAt": "2026-10-28T06:16:51.679578+00:00",
+      "finishedAt": "2026-10-28T06:18:30.508275+00:00",
+      "exitCode": 1,
+      "testSummary": [
+        "ℹ tests 722",
+        "ℹ suites 0",
+        "ℹ pass 721",
+        "ℹ fail 1",
+        "ℹ cancelled 0",
+        "ℹ skipped 0",
+        "ℹ todo 0",
+        "ℹ duration_ms 98345.190309"
+      ],
+      "origin": "Recovered previous-session full release log and summary",
+      "logSha256": "216d235361de75d00696babcba56ea9145c9ff70ade185ce9d3818e4cc7ee447",
+      "sourceFingerprintAtThatTime": null,
+      "failure": {
+        "file": "tests/live-story-contract.test.js",
+        "reason": "Stale Chinese prompt fragment assertion /未解决/ after the equivalent complete unresolved-obligation rule was expressed in English.",
+        "resolution": "The new assertion checks coverage.openOmitted stays unresolved; omission is not closure. A complete release rerun followed."
+      }
+    },
+    {
+      "startedAt": "2026-10-28T06:19:44.959305+00:00",
+      "finishedAt": "2026-10-28T06:21:39.978795+00:00",
+      "exitCode": 0,
+      "testSummary": [
+        "ℹ tests 722",
+        "ℹ suites 0",
+        "ℹ pass 722",
+        "ℹ fail 0",
+        "ℹ cancelled 0",
+        "ℹ skipped 0",
+        "ℹ todo 0",
+        "ℹ duration_ms 89749.474611"
+      ],
+      "origin": "Recovered previous-session full release log and summary",
+      "logSha256": "26b7d3ddf5b1c7a901e1baf493e0aeae8e302bdc6cb209c90463491450a4134b",
+      "sourceFingerprintAtThatTime": null,
+      "syntaxFiles": 490,
+      "syntaxScope": "Includes ignored preparation copies; not clean CI count."
+    }
+  ],
+  "currentVerification": {
+    "command": "WENDING_BROWSER_EXECUTABLE=<installed Chrome> npm run release",
+    "exitCode": 0,
+    "summary": {
+      "tests": 722,
+      "suites": 0,
+      "pass": 722,
+      "fail": 0,
+      "cancelled": 0,
+      "skipped": 0,
+      "todo": 0,
+      "duration_ms": 113654.090216
+    },
+    "syntaxFiles": 142,
+    "logSha256": "673e5e5c630ff3aa025485094ba22fe8cdef051cca314a3e6fa88c403cf2c6f7",
+    "sourceFingerprintSha256": "80ff80c676de0b96e275132ceb3b1547ea17a9ffaa231e0fe0d7734f4e2871da",
+    "nativeCoverage": [
+      "Chromium/IndexedDB",
+      "workerd/SQLite",
+      "1000-turn deterministic fixture"
+    ],
+    "realModelCalls": 0,
+    "environmentNote": "The first sandboxed attempt could not listen on 127.0.0.1 (EPERM) and was stopped. Complete release then ran with permission for local test servers. The interrupted attempt is not counted as a passing test run."
+  },
+  "build": {
+    "frontend": {
+      "bytes": 971109,
+      "sha256": "b2be6d9d1695cc0f46af5ff4bac16c0519a36cd28a284a0b77c4834f0b058e16"
+    },
+    "defaultBackend": {
+      "moduleCount": 17,
+      "accessMode": "disabled",
+      "enabled": false,
+      "publicEnabled": false,
+      "modelValidated": false
+    },
+    "productionProfileCount": 0,
+    "checkedInEnabled": false,
+    "scope": "Local artifacts from this source fingerprint, not a cloud deployment. Exact committed revision packaging is independently repeated by GitHub CI."
+  },
+  "independentReview": {
+    "standards": {
+      "blockingFindings": 0,
+      "scope": "Recovered diff and untracked source/tests; no repository-specific standards beyond existing contracts."
+    },
+    "spec": {
+      "blockingCodeFindings": 0,
+      "documentationFinding": "QA and ROADMAP referenced this evidence file before it existed. Resolved by adding this verified artifact."
+    },
+    "tests": "Reviewer test attempts were sandbox limited; currentVerification contains the root full-release result."
+  },
+  "readonlyVerification": {
+    "observedAt": "2026-10-28T06:28:21.917916+00:00",
+    "scope": "Three read-only GET requests; no session, turn, probe, or deployment mutation",
+    "health": {
+      "status": "ok",
+      "version": "4.0.0",
+      "sourceCommit": "74aa25884c5468d9eb90abb1bbb82ba92752ba0b",
+      "htmlSha256": "3c3b09de319e2032c3990867780998d67adcb6af62fc9fe0a78cb35fdf46b5b0",
+      "htmlBytes": 970046,
+      "releaseSource": "embedded",
+      "lastAttemptAt": null,
+      "lastSuccessAt": null,
+      "lastError": ""
+    },
+    "capabilitiesWithoutPermit": {
+      "protocolVersion": 1,
+      "available": false,
+      "status": "paused",
+      "errorCode": "TESTER_PERMIT_REQUIRED",
+      "limits": {
+        "maxRequestBytes": 32768,
+        "maxResponseBytes": 65536,
+        "maxContextBytes": 7000,
+        "timeoutMs": 30000
+      }
+    },
+    "statusUnchangedFromPriorRead": true,
+    "callCount": 8,
+    "reservedNeurons": 450,
+    "limits": {
+      "maxCalls": 11,
+      "maxNeurons": 800,
+      "taskCalls": {
+        "task1": 4,
+        "task7": 5,
+        "task8": 2
+      }
+    },
+    "taskCalls": {
+      "task1": 4,
+      "task7": 3,
+      "task8": 1
+    },
+    "allActualNeuronsNull": true,
+    "statusSha256": "a5611fba3a536a2411f17887f659313ca4835b8d8780de284e2e1e0b8ddcf4ff",
+    "priorStatusSha256": "a5611fba3a536a2411f17887f659313ca4835b8d8780de284e2e1e0b8ddcf4ff",
+    "inferenceRequests": 0
+  },
+  "deploymentVerification": {
+    "source": "Cloudflare API GET settings and latest deployments for the existing scripts",
+    "stage": {
+      "scriptName": "baishi-wending",
+      "deploymentId": "73aedb80-4191-42a7-8ab5-263821acb05d",
+      "versionId": "c44a3a9d-b9d6-4d78-95cb-0eae37d8610b",
+      "percentage": 100
+    },
+    "helper": {
+      "scriptName": "baishi-wending-ai-acceptance",
+      "deploymentId": "a3cccc55-406e-4785-8a75-90d1f457f080",
+      "versionId": "40e56059-5c3f-4d77-9df9-ac5f01e63dcf",
+      "percentage": 100
+    },
+    "namespaces": {
+      "StoryBudget": "1de1df3929534a8d8d495d6db6604e99",
+      "OperatorProbe": "dfb218f2f29d4ecab2395f8a00b48350"
+    },
+    "mutation": false
+  },
+  "recoveredReadonlyObservation": {
+    "observedAt": "2026-10-28T06:12:14.627979+00:00",
+    "callCount": 8,
+    "reservedNeurons": 450,
+    "originalSevenUnchanged": true,
+    "tasks": {
+      "task1": 4,
+      "task7": 3,
+      "task8": 1
+    },
+    "newRows": [
+      {
+        "task": "task8",
+        "attemptId": "task8_efc24c54f29f3fe28cce72b88e129f10402219b62fe45d6477bbc492b9d7634d",
+        "reservedNeurons": 111,
+        "actualNeurons": null,
+        "status": "failed"
+      }
+    ],
+    "newCases": {},
+    "baselinePresent": false
+  },
+  "recoveredCjkDisplayCheck": {
+    "scope": "Existing public stage, read-only navigation; no permit or model request",
+    "checkedAt": "2026-10-28T06:09:22.553Z",
+    "font": "Noto Sans CJK SC",
+    "fontSha256": "2c76254f6fc379fddfce0a7e84fb5385bb135d3e399294f6eeb6680d0365b74b",
+    "title": "百世问鼎 · 三界求仙篇",
+    "requests": [
+      {
+        "method": "GET",
+        "url": "https://baishi-wending.ct1150.workers.dev/"
+      }
+    ]
+  },
+  "liveGate": {
+    "acceptedOpening": false,
+    "acceptedS1": false,
+    "task7QualityPassed": false,
+    "task8SuccessfulChoiceSaveRefreshPassed": false,
+    "productionProfileValidated": false,
+    "publicInferenceEnabled": false,
+    "newInferenceCallsThisContinuation": 0,
+    "originalCallCount": 8,
+    "originalReservedNeurons": 450,
+    "approvedLimits": {
+      "maxCalls": 11,
+      "maxNeurons": 800,
+      "taskCalls": {
+        "task1": 4,
+        "task7": 5,
+        "task8": 2
+      }
+    },
+    "proposalApplied": false,
+    "proposedLimits": {
+      "maxCalls": 12,
+      "maxNeurons": 900,
+      "taskCalls": {
+        "task1": 4,
+        "task7": 5,
+        "task8": 3
+      }
+    },
+    "proposedFurtherCalls": 4,
+    "worstReservedNeuronsAfterProposedSequence": 894,
+    "failureStopsSequence": true,
+    "plan": "../superpowers/plans/2026-10-28-controlled-reacceptance.md"
+  },
+  "github": {
+    "pullRequest": "https://github.com/ct1150/wending/pull/14",
+    "status": "Draft; source and evidence publication/CI tracked on the PR. Main and public deployment unchanged."
+  }
+}

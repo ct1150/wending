@@ -105,3 +105,16 @@ test('production app and journey renderer bundle through the offline named-modul
   app.clickRendered('[data-birth-start]');
   assert.match(app.html, /data-journey-choice/);
 });
+
+test('static outputs exclude server code and browser imports cannot reach worker modules',async t=>{
+  const root=await fixture(t);
+  await mkdir(path.join(root,'src/worker'));
+  await writeFile(path.join(root,'index.html'),'<script type="module" src="./src/app.js"></script>');
+  await writeFile(path.join(root,'src/app.js'),'globalThis.browserOnly = true;');
+  await writeFile(path.join(root,'src/worker/private.js'),'export const operatorEvidence = "SERVER_ONLY_EVIDENCE";');
+  await build(root);
+  await assert.rejects(readFile(path.join(root,'dist/src/worker/private.js')),/ENOENT/);
+  assert.doesNotMatch(await readFile(path.join(root,'release/baishi-wending-offline.html'),'utf8'),/SERVER_ONLY_EVIDENCE/);
+  await writeFile(path.join(root,'src/app.js'),'import { operatorEvidence } from "./worker/private.js"; globalThis.leak = operatorEvidence;');
+  await assert.rejects(build(root),/server|worker/i);
+});

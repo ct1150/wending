@@ -1,3 +1,12 @@
+import { openLiveArchive } from './game/live-archive.js';
+import { exportLiveArchive, importLiveArchive } from './game/live-save-format.js';
+import { createLiveSession } from './ui/live-session.js';
+import { createStoryClient } from './ui/story-client.js';
+import { compileChoices } from './game/cultivation/live/engine.js';
+import { stateHash } from './game/cultivation/live/identity.js';
+import { REALMS as LIVE_REALMS, ORIGINS as LIVE_ORIGINS, TALENTS as LIVE_TALENTS, ITEMS as LIVE_ITEMS } from './game/cultivation/live/model.js';
+import { liveCharacterSummary } from './ui/character.js';
+import { renderLiveJourney, renderLiveHistory } from './ui/journey.js';
 import { readLegacyBackup } from './game/persistence.js';
 import { REALMS, PATHS, ORIGINS, WORLDS, ITEMS, LEGACIES, EVENTS, ENEMIES, CHALLENGES, WORLD_FLAGS } from './game/content.js';
 import { getStats, getActionInfo, act, getEventChoices, chooseEvent, combatAction, equipItem, selectLegacy, getStoryView, chooseStory } from './game/engine.js';
@@ -29,6 +38,13 @@ function newSeed() {
   return window.crypto?.getRandomValues ? String(window.crypto.getRandomValues(new Uint32Array(1))[0]) : String(Date.now());
 }
 const createRecommendedLife = options => createCultivation({ ...options, characterCreation: true, contentVersion: 3 });
+const ACTIVE_MODE_KEY = 'wending-active-mode-v1';
+let activeMode = 'offline';
+try { if (storage.getItem(ACTIVE_MODE_KEY) === 'live') activeMode = 'live'; } catch {}
+let liveBirthDraft={name:'云归',originId:'village'};
+let liveArchive=null, liveSession=null, liveSnapshot=null, liveError='', liveHistoryCursor=null, liveHistoryRun=null;
+const liveCatalogs={REALMS:LIVE_REALMS,ORIGINS:LIVE_ORIGINS,TALENTS:LIVE_TALENTS,ITEMS:LIVE_ITEMS};
+const liveClient=createStoryClient();
 let session = bootstrapSession(storage, { seed: newSeed(), createFresh: createRecommendedLife });
 let state = session.state;
 let view = 'adventure';
@@ -139,6 +155,19 @@ function focusAdventure(target, keepPosition = false) {
   target?.scrollIntoView({ block: keepPosition ? 'nearest' : 'start', behavior: 'instant' });
 }
 
+function captureFocusTarget(element = document.activeElement) {
+  if (!element || element === document.body) return null;
+  // Action identity survives a redraw; revision/state metadata does not.
+  const attributes = [...element.attributes].filter(({ name }) => name.startsWith('data-') && !['data-revision', 'data-state-hash', 'data-scene-id'].includes(name));
+  const selector = element.id ? `#${CSS.escape(element.id)}` : attributes.length ? element.localName + attributes.map(({ name, value }) => `[${name}="${CSS.escape(value)}"]`).join('') : null;
+  return { element, selector, sceneFallback: element.matches('[data-live-choice], [data-live-start], [data-live-new], [data-live-retry], [data-live-resume]') };
+}
+
+function resolveFocusTarget(target) {
+  const element = target?.element.isConnected ? target.element : target?.selector ? $(target.selector) : null;
+  return element && !element.matches(':disabled') ? element : target?.sceneFallback ? $('#journey-current-title') : null;
+}
+
 function attempt(callback, options) {
   try { update(callback(), options); }
   catch (error) { notify(error.message || '这一步暂时无法进行。', true); }
@@ -146,7 +175,7 @@ function attempt(callback, options) {
 
 function openDialog(title, body, actions = '', { drawer = false } = {}) {
   const dialog = $('#dialog');
-  if (!dialog.open) dialogReturnTarget = document.activeElement;
+  if (!dialog.open) dialogReturnTarget = captureFocusTarget();
   dialog.className = drawer ? 'paper-drawer' : '';
   dialog.innerHTML = `<header class="dialog-header"><h2 id="dialog-title" tabindex="-1">${esc(title)}</h2><button class="icon-button" data-close-dialog aria-label="关闭">${icon('close')}</button></header><div class="dialog-body">${body}</div>${actions ? `<footer class="dialog-actions">${actions}</footer>` : ''}`;
   if (!dialog.open) dialog.showModal();
@@ -158,14 +187,16 @@ function closeDialog(restoreFocus = true) {
   dialogReturnTarget = null;
   dialogConfirm = null;
   $('#dialog').close();
-  if (restoreFocus && target?.isConnected) target.focus({ preventScroll: true });
+  if (restoreFocus) resolveFocusTarget(target)?.focus({ preventScroll: true });
 }
 
 function showCharacter() {
+  if(activeMode==='live') { if(liveSnapshot?.state) openDialog('此身修行',renderCharacterDetails(liveCharacterSummary(liveSnapshot.state,liveCatalogs)),'',{drawer:true}); return; }
   if (isJourney(state) && !isCreating(state)) openDialog('此身修行', renderCharacterDetails(getNarrativeView(state).summary), '', { drawer: true });
 }
 
 function showHistory() {
+  if(activeMode==='live') return showLiveHistory(true);
   if (isJourney(state)) openDialog('历史对话', renderJourneyHistory(getNarrativeView(state)), '', { drawer: true });
 }
 
@@ -179,12 +210,14 @@ function showMore() {
 }
 
 function showHelp() {
+  if(activeMode==='live') return openDialog('实时人生须知','<p>每次选择先由规则确定岁月、物品、伤势与修行结果；完整剧情通过校验并保存后才显示。登仙与问鼎仍可继续人生，只有规则确认的死亡才会结算。</p><p>新增故事需要联网。最小必要的人物、当前行动与相关记忆会传至 Cloudflare；完整历史保留在本机。已缓存故事可以离线阅读，失败时保留待续状态，明确重试才会开始新请求。</p><p>出生与待续行动先保存，刷新不会重掷。历史按页读取，迁移设备请导出 .wending.jsonl 完整备份。</p>','<button class="button" data-view="settings">存档与设置</button>');
   if (state?.version === 4 && state.contentVersion === 3) return openDialog('入世须知', '<p>先为此生取名，选择出身，再看两道命格。根骨、悟性与气运总计十二点；可以锁定一道命格后重新掷骰。入世之前的结果会保存，刷新不会重掷。</p><p>出身会带来不同的牵挂与行动，命格会在旅程中开启特殊机会。机缘也有代价；从凡人到登仙，都须取得真实功法、材料，经过修行与历险。已知的伤势、折寿或必死危险会在选择前提醒。</p><p>一年三百六十天。岁月只在落下一项选择时流逝，查看人物、历史和存档不会推进时间。余寿不足以完成修行时，无法预借下一境界的寿限。</p><p>一世终结后，可以带走一项亲自学会的法门。你留下的承诺与三界成就会继续影响世界，也可能解锁新的命格和出身。死亡次数本身不发奖励。</p><p>顶部简栏可展开人物详情；历史对话保留当世与前世的完整往事。更换设备或离线游玩前，请先导出存档备份。</p>', '<button class="button" data-view="settings">存档与设置</button><button class="button primary" data-close-dialog>继续阅读</button>');
   if (isJourney(state)) return openDialog('入世须知', `${state.version === 4 ? '<p>你从十六岁的凡人开始求仙。先为这一世取名，掷骰查看根骨、悟性、气运与天赋，准备好后再入世。掷出的结果会保存，刷新页面不会重掷。</p><p>入世后，先读眼前处境与目标，再选择自己的做法。功法、修为、材料与安身之处，都要靠亲身经历取得；伤势也会影响能走的路。</p><p>药谷的危机按天推进，离谷后的修炼才会耗去数年，一年为三百六十天。普通变化随行动后果呈现；人物能够预知的重伤、燃寿和无法活着完成的危险，会在选择前提醒。</p><p>此生归宿会留下收获与教训。下一世重新求仙，可携一项真正学会的方法，也可只携记忆。留在世间的事不会因转世而消失。</p>' : '<p>先读眼前的处境，再选择自己的做法。不能行动时，会说明缺少的条件。</p><p>当前人生会继续原有的故事。若想取名掷骰、另从凡人入门，可在「存档与设置」中选择「开始三界求仙篇」，确认前请先导出当前人生。</p>'}<p>顶部简栏显示此身与余寿，点击可展开人物详情；「历史对话」保留已经发生的选择、后果与前世往事。阅读、打开抽屉和刷新页面都不会消耗岁月。</p><p>进度自动保存在当前浏览器。更换设备或离线游玩前，请从「更多 → 存档与设置」导出备份；导入存档会先检查内容，再请你确认替换。</p>`, '<button class="button" data-view="settings">存档与设置</button><button class="button primary" data-close-dialog>继续阅读</button>');
   openDialog('入世须知', `<p>你的这一世，从药谷旧火开始。相逢、调查与取舍，会改变谷地，也改变后来人要面对的事。</p><div class="help-tip"><strong>先看眼前之事，再落下一念。</strong><br>场景与目标指明眼前方向；选项会列出所需岁月、灵石、药材、气血或命损。无法选择的缘由也会写明。选择的后果会留在正文中，手记、人物、线索与生平都在页面下方「回看」中。资源、修为和自身余寿在「状态」中。</div><div class="help-tip"><strong>调查有取舍，岁月只有一条河。</strong><br>药谷旧火的三条调查线最多追查两条。修炼、外出和旅行也推进世界年份，可能令最后一夜提前到来；阅读、看手记与换装不耗时。倒计时按游戏中的年计算。</div><div class="help-tip"><strong>修行是此生的另一条路。</strong><br>在页面下方「修行」中闭关、休息、炼丹或自由历练。修为满足条件后可尝试破境，突破提高寿限。主线结果确定后，仍可继续修行、问道三界，或归隐转世。</div><div class="help-tip"><strong>功法与法器要亲自装配。</strong><br>从「修行 → 功法与法器」中选择一门本命功法、两个神通与一件法器，再返回当前剧情。身在幽冥或天界时，可回看药谷故事；回到人间才能继续作出谷中的选择。</div><div class="help-tip"><strong>留意余寿和气血。</strong><br>燃寿强攻损耗寿元，延寿丹每世最多服用两次。战斗需先分胜负或遁走，才能继续剧情。</div><div class="help-tip"><strong>转世，走进自己改变的世界。</strong><br>医谷共守、宗门接管与焚种迁民，会通向不同的后世事务。人物随世界年份老去，新的你也有新的身份。寿尽、陨落或归隐后，先从真实经历产生的候选中明确选择一项旧途奖励，再按提示交接进入对话新人生；下一世只沿用一项情境方法，已得传承历史、世界因果与三界道证保留。</div><div class="help-tip"><strong>问鼎三界。</strong><br>取得人间、幽冥、天界的三枚道证，修至登仙，在天界挑战三界共主。可随时从「修行 → 三界山河」查看长远目标。</div><p>旧存档的当世沿旧途继续，结束此生并转世后进入新篇，不会补写未曾经历的药谷往事。进度自动保存在当前浏览器；更换设备前，请在页首「更多 → 存档与设置」中导出备份。</p>`, '<button class="button primary" data-close-dialog>我已明了</button>');
 }
 
 function render({ resetSupport = false, focusSelector = null } = {}) {
+  if(activeMode==='live') return renderLiveApp();
   if (resetSupport) openPanels.clear();
   else document.querySelectorAll('details[data-panel-key]').forEach(panel => openPanels.set(panel.dataset.panelKey, panel.open));
   const journey = isJourney(state) ? getNarrativeView(state) : null;
@@ -353,7 +386,7 @@ function renderPastLife(life) {
 }
 
 function renderSettings() {
-  return `${heading('存档与设置', '将这一刻的修行妥善收藏，待下一次回来继续。')}<button class="button" data-export-legacy>导出旧原档与交接备份</button><div class="settings-grid"><section class="settings-row"><div><h3>导出修行存档</h3><p>下载包含当前人生、传承、世界因果和随机状态的备份，可导入到另一台设备。</p></div><button class="button primary" data-export ${state ? '' : 'disabled'}>${icon('download', 16)}导出存档</button></section><section class="settings-row"><div><h3>导入已有存档</h3><p>选择之前导出的 JSON 文件。通过完整校验后，再确认替换当前修行进度。</p></div><button class="button" data-import>${icon('upload', 16)}选择存档</button></section>${window.location.protocol !== 'file:' ? '<section class="settings-row"><div><h3>下载离线版</h3><p>保存为一个 HTML 文件，断网也能继续修行。将当前存档一并导出，再在离线版中导入。</p></div><a class="button" href="./baishi-wending-offline.html" download="百世问鼎-离线版.html">' + icon('download', 16) + '下载游戏</a></section>' : ''}<section class="settings-row"><div><h3>入世指南</h3><p>${isJourney(state) ? '了解当前行动、选择的后果与进度保存。' : '了解药谷主线、调查取舍、共同岁月与转世后的故事，也可查看修行、装备与三界规则。'}</p></div><button class="button" data-help>${icon('help', 16)}查看指南</button></section><section class="settings-row"><div><h3>开始三界求仙篇</h3><p>${state && state.version !== 4 ? '现有人生可以照常继续；也可另开一局，选择来处与双重命格，寻找自己的求仙之路。' : '为十六岁的凡人取名，选择来处、掷取双重命格，从人间一步步修行至幽冥与天界。'}确认后会替换这台设备上的人生与历史，请先导出备份。</p></div><button class="button danger" data-reset>${icon('refresh', 16)}开始三界求仙篇</button></section></div><p class="save-info">${state?.version === 4 ? (state.contentVersion === 3 ? '三界求仙篇' : '人间求仙篇') : '百世问鼎'} · 单机本地存档<br>存档不会上传至服务器。不同浏览器、域名或离线文件的存储彼此独立，请用导出与导入迁移。隐私模式或禁用本地存储时，请在离开前手动备份。</p>`;
+  return liveModeControls() + `${heading('存档与设置', '将这一刻的修行妥善收藏，待下一次回来继续。')}<button class="button" data-export-legacy>导出旧原档与交接备份</button><div class="settings-grid"><section class="settings-row"><div><h3>导出修行存档</h3><p>下载包含当前人生、传承、世界因果和随机状态的备份，可导入到另一台设备。</p></div><button class="button primary" data-export ${state ? '' : 'disabled'}>${icon('download', 16)}导出存档</button></section><section class="settings-row"><div><h3>导入已有存档</h3><p>选择之前导出的 JSON 文件。通过完整校验后，再确认替换当前修行进度。</p></div><button class="button" data-import>${icon('upload', 16)}选择存档</button></section>${window.location.protocol !== 'file:' ? '<section class="settings-row"><div><h3>下载离线版</h3><p>保存为一个 HTML 文件，断网也能继续修行。将当前存档一并导出，再在离线版中导入。</p></div><a class="button" href="./baishi-wending-offline.html" download="百世问鼎-离线版.html">' + icon('download', 16) + '下载游戏</a></section>' : ''}<section class="settings-row"><div><h3>入世指南</h3><p>${isJourney(state) ? '了解当前行动、选择的后果与进度保存。' : '了解药谷主线、调查取舍、共同岁月与转世后的故事，也可查看修行、装备与三界规则。'}</p></div><button class="button" data-help>${icon('help', 16)}查看指南</button></section><section class="settings-row"><div><h3>开始三界求仙篇</h3><p>${state && state.version !== 4 ? '现有人生可以照常继续；也可另开一局，选择来处与双重命格，寻找自己的求仙之路。' : '为十六岁的凡人取名，选择来处、掷取双重命格，从人间一步步修行至幽冥与天界。'}确认后会替换这台设备上的人生与历史，请先导出备份。</p></div><button class="button danger" data-reset>${icon('refresh', 16)}开始三界求仙篇</button></section></div><p class="save-info">${state?.version === 4 ? (state.contentVersion === 3 ? '三界求仙篇' : '人间求仙篇') : '百世问鼎'} · 单机本地存档<br>存档不会上传至服务器。不同浏览器、域名或离线文件的存储彼此独立，请用导出与导入迁移。隐私模式或禁用本地存储时，请在离开前手动备份。</p>`;
 }
 
 function downloadText(filename, text, mime = 'application/json;charset=utf-8') {
@@ -364,6 +397,7 @@ function downloadText(filename, text, mime = 'application/json;charset=utf-8') {
 }
 
 function exportGame() {
+  if(activeMode==='live') return exportLiveGame();
   if (!state) return notify('尚无修行进度可导出。', true);
   try {
     const generation = isJourney(state) ? state.world.generation : state.meta.generation;
@@ -434,6 +468,14 @@ document.addEventListener('click', event => {
   const data = button.dataset;
   if ('closeDialog' in data) { closeDialog(); return; }
   if ('confirm' in data) { const callback = dialogConfirm; closeDialog(false); callback?.(); return; }
+  if ('liveEnter' in data) return enterLive();
+  if ('offlineEnter' in data) { setActiveMode('offline'); view='adventure'; render(); return; }
+  if ('liveStart' in data || 'liveNew' in data) return beginLiveLife();
+  if ('liveRetry' in data) return liveSession?.retry();
+  if ('liveResume' in data) return liveSession?.resume();
+  if ('liveChoice' in data) return liveSession?.choose({choiceId:data.liveChoice,baseRevision:Number(data.revision),stateHash:data.stateHash});
+  if ('liveHistoryNext' in data) return showLiveHistory(false);
+  if ('liveHistoryFirst' in data) return showLiveHistory(true);
   if ('character' in data) return showCharacter();
   if ('history' in data) return showHistory();
   if ('birthReroll' in data || 'birthStart' in data || 'birthOrigin' in data || 'birthLock' in data) { event.preventDefault(); return chooseBirth('birthStart' in data ? 'birth-start' : 'birthOrigin' in data ? 'birth-origin' : 'birthLock' in data ? 'birth-lock' : 'birth-reroll', data); }
@@ -517,6 +559,10 @@ document.addEventListener('click', event => {
 $('#import-file').addEventListener('change', async event => {
   const file = event.target.files?.[0]; event.target.value = '';
   if (!file) return;
+  if (file.name?.endsWith('.wending.jsonl')) {
+    try { await ensureLive(); const imported=await importLiveArchive(file.stream(),liveArchive); setActiveMode('live'); view='adventure'; liveSnapshot={...imported,status:imported.pending?'paused':'ready',errorCode:imported.pause,busy:false}; render(); await liveSession.resume(); notify('完整存档已校验并恢复。'); } catch(error) { notify('实时存档未能恢复，原进度保留。',true); }
+    return;
+  }
   if (file.size > MAX_SAVE_FILE_BYTES) return notify('存档文件超过字符上限可容纳的 UTF-8 大小，请选择有效的游戏存档。', true);
   try {
     const originalRaw = await file.text();
@@ -524,14 +570,71 @@ $('#import-file').addEventListener('change', async event => {
     const narrative = isJourney(imported) ? getNarrativeView(imported).summary : null;
     const identity = narrative ? { name: narrative.name, generation: narrative.generation, age: narrative.ageText ?? `${narrative.age} 岁`, realm: narrative.realmName ? `，${narrative.realmName}` : '' } : { name: imported.run.name, generation: imported.meta.generation, age: `${imported.run.age} 岁`, realm: `，${REALMS[imported.run.realmIndex].name}境` };
     confirmAction('导入修行存档', `将恢复「${esc(identity.name)}」的第 ${identity.generation} 世（${esc(identity.age)}${esc(identity.realm)}）。${isCreating(imported) ? '这一世尚未入世，姓名、属性与天赋将按存档恢复。' : ''}${state ? '当前进度将被替换；如需保留，请先取消并导出备份。' : ''}`, () => {
-      replaceSession(imported, originalRaw); notify(lastSaved ? '存档已恢复，仙途继续。' : saveError, !lastSaved);
+      setActiveMode('offline'); replaceSession(imported, originalRaw); notify(lastSaved ? '存档已恢复，仙途继续。' : saveError, !lastSaved);
     }, '确认恢复');
   } catch (error) { notify(error.message || '无法读取这个存档文件。', true); }
 });
 
-if (session.status === 'fresh') persist();
+if (activeMode==='offline' && session.status === 'fresh') persist();
 
 $('#dialog').addEventListener('cancel', event => { event.preventDefault(); closeDialog(); });
 $('#dialog').addEventListener('close', () => { if (!$('#dialog').open) { dialogConfirm = null; $('#dialog').className = ''; } });
 $('#dialog').addEventListener('click', event => { if (event.target === $('#dialog')) { const rect = $('#dialog').getBoundingClientRect(); if (event.clientX < rect.left || event.clientX > rect.right || event.clientY < rect.top || event.clientY > rect.bottom) closeDialog(); } });
 render();
+
+if(activeMode==='live') enterLive();
+
+function setActiveMode(mode) {
+  activeMode=mode;
+  try { storage.setItem(ACTIVE_MODE_KEY,mode); }
+  catch { notify('模式选择未能保存，下次打开可从设置重新进入。',true); }
+}
+function liveModeControls() {
+  return '<section class="settings-row"><div><h3>实时人生</h3><p>每次选择由规则结算，再联网生成新的故事。最小上下文传至 Cloudflare，完整历史留在本机；缓存可离线阅读。旧人生独立保留。</p></div><button class="button" data-live-enter>打开实时人生</button></section>';
+}
+async function ensureLive() {
+  if(liveSession)return;
+  liveArchive=await openLiveArchive();
+  liveSession=createLiveSession({archive:liveArchive,client:liveClient,onChange:snapshot=>{liveSnapshot=snapshot;if(activeMode==='live')render();}});
+}
+async function enterLive() {
+  setActiveMode('live');view='adventure';liveError='';render();
+  try { await ensureLive(); await liveSession.resume(); if(!liveSnapshot?.state){const capabilities=await liveClient.capabilities();liveError=capabilities.available?'':'实时生成暂未开放或当前页面无法连接兼容服务。仍可导入备份阅读，或返回旧人生。';render();} }
+  catch { liveError='无法打开本地实时存档。请检查浏览器存储设置；旧人生仍可恢复。';render(); }
+}
+async function beginLiveLife() {
+  const name=$('#live-name')?.value?.trim()||'云归',originId=$('#live-origin')?.value||'village';
+  liveBirthDraft={name,originId};
+  try { await ensureLive(); const capabilities=await liveClient.capabilities();if(!capabilities.available){liveError='实时生成暂未开放，尚未创建新人生。';render();return;}await liveSession.start({name,originId,seed:newSeed()}); }
+  catch { notify('无法开始，请检查本地存储与网络。',true); }
+}
+function renderLiveApp() {
+  const focus = !$('#dialog').open && $('#app').contains(document.activeElement) ? captureFocusTarget() : null;
+  const snapshot=liveSnapshot,liveState=snapshot?.state;
+  const header=liveState?renderIdentityBar(liveCharacterSummary(liveState,liveCatalogs)):'<h1>百世问鼎 · 实时人生</h1>';
+  const settings=`<h2>实时存档与设置</h2><p>新增剧情需要联网，最小必要上下文传至 Cloudflare，完整历史保留在设备上。缓存离线可读。</p><div class="live-toolbar"><button class="button" data-export ${liveState?'':'disabled'}>导出完整实时存档</button><button class="button" data-import>导入存档</button><button class="button" data-offline-enter>返回旧人生</button><button class="button" data-help>实时人生须知</button></div><p>旧人生继续使用原有离线规则与独立存档。恢复旧版页面不会删除实时历史。</p>`;
+  const content=liveState?renderLiveJourney({...snapshot,stateHash:stateHash(liveState),itemNames:LIVE_ITEMS},liveState.phase==='active'?compileChoices(liveState,liveState.currentScene.choices):[]):`<section class="birth"><h2 id="journey-current-title" tabindex="-1">从此身开始</h2><p>出生事实保存后不再重掷。岁月只在选择中前行。</p>${snapshot?.errorCode==='BIRTH_CONTEXT_INVALID'?'<p class="notice" role="alert">姓名无法用于故事，请修改后重新开始。支持中文姓名与常用标点。</p>':''}<label for="live-name">此生姓名</label><input id="live-name" maxlength="24" value="${esc(liveBirthDraft.name)}"><label for="live-origin">从何处来</label><select id="live-origin">${Object.entries(LIVE_ORIGINS).map(([id,name])=>`<option value="${id}" ${id===liveBirthDraft.originId?'selected':''}>${esc(name)}</option>`).join('')}</select><p>联网生成将发送最小必要的人物、行动与记忆上下文至 Cloudflare，完整历史留在本机。</p><button class="button primary" data-live-start ${!liveSession||liveError?'disabled':''}>保存此身并开启实时人生</button><button class="button" data-import>导入已有实时存档</button><button class="button" data-offline-enter>返回旧人生</button></section>`;
+  $('#app').innerHTML=`<div class="paper-page paper-page-immersive"><header class="paper-top paper-top-immersive">${header}<nav class="paper-tools" aria-label="历史、帮助与存档"><button data-history ${liveState?'':'disabled'}>历史对话</button><button data-more>更多</button></nav></header><main id="main-content" class="paper-main" tabindex="-1">${liveError?`<p class="notice" role="status">${esc(liveError)}</p>`:''}${view==='settings'?'<button class="small-button" data-view="adventure">返回当前剧情</button>'+settings:content}</main><footer class="paper-footer">实时人生 · 已缓存内容离线可读 · 新剧情需要联网</footer></div>`;
+  resolveFocusTarget(focus)?.focus({ preventScroll: true });
+}
+async function showLiveHistory(first) {
+  if(!liveArchive||!liveSnapshot?.state)return;
+  try { const run=liveSnapshot.state.runId;if(first||run!==liveHistoryRun){liveHistoryRun=run;liveHistoryCursor=null;}const page=await liveArchive.readHistory(run,liveHistoryCursor,16);liveHistoryCursor=page.cursor;openDialog('历史对话',renderLiveHistory(page.entries,liveSnapshot.state.life.name),`<button class="button" data-live-history-first>从头阅读</button>${page.cursor?'<button class="button" data-live-history-next>下一页</button>':''}`,{drawer:true}); }
+  catch { notify('历史读取暂未完成，请重试。',true); }
+}
+async function exportLiveGame() {
+  if(!liveArchive||!liveSnapshot?.state)return notify('尚无实时存档可导出。',true);
+  try {
+    const filename=`百世问鼎-${liveSnapshot.state.life.name}.wending.jsonl`;
+    // File System Access streams directly where available; Blob fallback only
+    // affects download memory, never the stored archive or the history DOM.
+    if(typeof window.showSaveFilePicker==='function') {
+      const handle=await window.showSaveFilePicker({suggestedName:filename,types:[{description:'实时人生完整备份',accept:{'application/octet-stream':['.jsonl']}}]});
+      const writable=await handle.createWritable();await exportLiveArchive(liveArchive,liveSnapshot.state.runId).pipeTo(writable);
+    } else {
+      const blob=await new Response(exportLiveArchive(liveArchive,liveSnapshot.state.runId)).blob();downloadText(filename,blob,'application/octet-stream');
+    }
+    notify('实时存档已导出。');
+  } catch(error) { if(error.name!=='AbortError')notify('导出未完成，请重试并保留本机存档。',true); }
+}
+window.addEventListener?.('pageshow',event=>{if(event.persisted&&activeMode==='live')liveSession?.resume();});

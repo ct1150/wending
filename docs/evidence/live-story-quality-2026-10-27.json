@@ -1,0 +1,591 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-10-27",
+  "status": "LOCAL_CODE_FIXTURE_ACCEPTANCE_PASS_PRODUCTION_AND_REAL_QUALITY_BLOCKED",
+  "sampleKind": "fixture",
+  "provenance": {
+    "description": "Deterministic JavaScript fixture diagnostics captured from the successful final-code GitHub Actions validation; native Chromium IndexedDB and public live-session API. No real AI generation or production acceptance is established.",
+    "runId": "legal-long-life",
+    "seed": 42,
+    "birthState": "unmodified createLiveGame output",
+    "browserExecutable": "Playwright-managed Chromium in GitHub Actions",
+    "realInferenceCalls": 0,
+    "actualNeurons": null,
+    "diagnosticsSource": "/tmp/wending-roadmap-work/live-checkpoint-7-evidence.json",
+    "diagnosticsSha256": "a56616159e971582b05e63e48e79fefcb0c10f0cee787c0aa48b0ce616e4e438",
+    "sourceLocalCommit": "65c3d0ff16d1aa48f60ca5e17612a555ce294be0",
+    "sourceRemoteCommit": "1322aa6ce78119d3438e52275e35fdae1e116158",
+    "sourceLocalTree": "8ef18342c3302d238dfa993d4879a30beb3cbafb",
+    "sourceRelationship": "Root reports the remote commit has exactly the same tree as the recorded local source commit.",
+    "ciRun": 40547281694,
+    "ciJob": 122341157334,
+    "ciRunUrl": "https://github.com/ct1150/wending/actions/runs/40547281694",
+    "ciJobUrl": "https://github.com/ct1150/wending/actions/runs/40547281694/job/122341157334",
+    "acceptanceScope": "Final local code validation for the recorded exact source tree, including I1-I4/R1/M3. Production deployment, real model quality and verified Free-plan boundaries remain blocked.",
+    "canonicalRelationshipsMarker": 1,
+    "localCodeAcceptance": {
+      "status": "ACCEPTED",
+      "scope": "The recorded source tree passed CI and formal final-fix review; this does not authorize or establish production deployment."
+    },
+    "productionAcceptance": {
+      "status": "BLOCKED",
+      "reason": "Production inference remains disabled; real-model validation and confirmed Free-plan/hard free-boundary evidence are absent."
+    },
+    "formalReview": {
+      "report": "final-fix-review.md",
+      "status": "APPROVED",
+      "coverage": [
+        "I1",
+        "I2",
+        "I3",
+        "I4",
+        "R1",
+        "M3"
+      ],
+      "criticalFindings": 0,
+      "importantFindings": 0,
+      "nonblocking": [
+        "M1",
+        "M2"
+      ],
+      "resultProvenance": "Root-supplied formal review outcome."
+    },
+    "historyHashInterpretation": "Each run allocates request IDs with crypto.randomUUID. Digests and sample input hashes may differ across runs. Full restoration is validated by equality of before/after digests within the same recorded run, not by equality to an earlier CI run."
+  },
+  "workersAi": {
+    "sampleKind": "workers-ai",
+    "status": "NOT_RUN",
+    "blocked": true,
+    "reason": "Root account evidence: OAuth Billing Read 403; Free plan/hard free boundary not confirmed. Production inference remains disabled.",
+    "actualCalls": 0,
+    "modelId": null,
+    "usage": null,
+    "actualNeurons": null,
+    "latencyMs": null,
+    "structureSuccessRate": null,
+    "narrativeQuality": null
+  },
+  "commands": [
+    {
+      "command": "WENDING_BROWSER_EXECUTABLE=/tmp/wending-browser/chrome-headless-shell-linux64/chrome-headless-shell node --test tests/live-long-run.test.js",
+      "revision": "pre-policy-fix, before fourth regression was appended",
+      "tests": 3,
+      "passed": 3,
+      "failed": 0,
+      "durationMs": 39222.035959,
+      "environment": "approved local loopback/Chromium execution; output recovered after exec-server outage",
+      "scope": "historical local Task7 verification; not the current CI checkpoint"
+    },
+    {
+      "command": "WENDING_BROWSER_EXECUTABLE=/tmp/wending-browser/chrome-headless-shell-linux64/chrome-headless-shell node --test --test-name-pattern='unresolved narrative' tests/live-long-run.test.js",
+      "revision": "pre-policy-fix",
+      "tests": 1,
+      "passed": 0,
+      "failed": 1,
+      "durationMs": 1030.790563,
+      "scope": "historical local Task7 verification; not the current CI checkpoint"
+    },
+    {
+      "command": "WENDING_BROWSER_EXECUTABLE=/tmp/wending-browser/chrome-headless-shell-linux64/chrome-headless-shell node --test --test-name-pattern='unresolved narrative' tests/live-long-run.test.js",
+      "revision": "owner local policy fix",
+      "tests": 1,
+      "passed": 1,
+      "failed": 0,
+      "durationMs": 1066.627066,
+      "scope": "historical local Task7 verification; not the current CI checkpoint"
+    },
+    {
+      "command": "WENDING_BROWSER_EXECUTABLE=/tmp/wending-browser/chrome-headless-shell-linux64/chrome-headless-shell node --test tests/live-long-run.test.js",
+      "revision": "settled owner relevance-v1 policy fix",
+      "tests": 4,
+      "passed": 4,
+      "failed": 0,
+      "durationMs": 40438.524623,
+      "exitCode": 0,
+      "scope": "historical local Task7 verification; not the current CI checkpoint"
+    },
+    {
+      "command": "GitHub Actions validate job: npm run release and npm run build:gateway",
+      "revision": "c167c71b93ebc9fc3daae4771ba8f117cc6c876d",
+      "localEquivalentRevision": "7ee799f7a061f14e5e6c96d5f7d2c994813df6af",
+      "scope": "historical checkpoint CI, superseded by final-code CI40547281694",
+      "ciRun": 40545848107,
+      "ciJob": 122336128084,
+      "conclusion": "success",
+      "tests": 531,
+      "passed": 531,
+      "failed": 0,
+      "skipped": 0,
+      "syntaxFiles": 117,
+      "htmlBytes": 969267,
+      "backendModules": 13,
+      "resultProvenance": "Root-supplied successful CI job summary; Task7 diagnostic payloads copied exactly from diagnosticsSource."
+    },
+    {
+      "command": "GitHub Actions validate job: npm run release and npm run build:gateway",
+      "revision": "1322aa6ce78119d3438e52275e35fdae1e116158",
+      "localEquivalentRevision": "65c3d0ff16d1aa48f60ca5e17612a555ce294be0",
+      "scope": "final local code validation of the recorded exact tree; not production acceptance",
+      "ciRun": 40547281694,
+      "ciJob": 122341157334,
+      "conclusion": "success",
+      "tests": 539,
+      "passed": 539,
+      "failed": 0,
+      "skipped": 0,
+      "syntaxFiles": 117,
+      "htmlBytes": 970055,
+      "backendModules": 13,
+      "durationMs": 81388.8,
+      "resultProvenance": "Root-supplied successful CI job summary; Task7 diagnostic payloads copied exactly from diagnosticsSource."
+    }
+  ],
+  "longRun": {
+    "calls": 1000,
+    "realms": [
+      "mortal",
+      "qi",
+      "foundation",
+      "golden",
+      "nascent",
+      "spirit",
+      "immortal"
+    ],
+    "immortalAt": 36,
+    "birthUnchanged": true,
+    "maxContextBytes": 1590,
+    "maxSnapshotBytes": 5691,
+    "chunks": [
+      {
+        "count": 52,
+        "bytes": 258955,
+        "hash": "0766c05595daabf11471e0c170f37f2f9b9c05500879936f01719770c2ccd67f",
+        "previousHash": "0000000000000000000000000000000000000000000000000000000000000000"
+      },
+      {
+        "count": 52,
+        "bytes": 258889,
+        "hash": "9c1d24e4f3ee2d548be0e0765df5d4329ea522cd35c218413a42a5ac1a8c782e",
+        "previousHash": "0766c05595daabf11471e0c170f37f2f9b9c05500879936f01719770c2ccd67f"
+      },
+      {
+        "count": 52,
+        "bytes": 259308,
+        "hash": "1d79d3cfd3cd29020e47c09fe28f26cf93af1122149fcbf85ff7da778677ce71",
+        "previousHash": "9c1d24e4f3ee2d548be0e0765df5d4329ea522cd35c218413a42a5ac1a8c782e"
+      },
+      {
+        "count": 52,
+        "bytes": 259316,
+        "hash": "c070253dda1674e8354823112963ef29a171fb1b2f7fc734553bfa7b5229acd4",
+        "previousHash": "1d79d3cfd3cd29020e47c09fe28f26cf93af1122149fcbf85ff7da778677ce71"
+      },
+      {
+        "count": 52,
+        "bytes": 259315,
+        "hash": "a47d1796b9acb2eacb7c22d7adaec3a9e73922eaa642c05caa9eacf366a703da",
+        "previousHash": "c070253dda1674e8354823112963ef29a171fb1b2f7fc734553bfa7b5229acd4"
+      },
+      {
+        "count": 52,
+        "bytes": 259316,
+        "hash": "809883b90823911e1388c65dae255c14703dbd3d086f39b7e98879045e7081bc",
+        "previousHash": "a47d1796b9acb2eacb7c22d7adaec3a9e73922eaa642c05caa9eacf366a703da"
+      },
+      {
+        "count": 52,
+        "bytes": 259329,
+        "hash": "0ec852034b7ce091210d857293a2086ebe297a9a43f61b36f4e13ab6558957ff",
+        "previousHash": "809883b90823911e1388c65dae255c14703dbd3d086f39b7e98879045e7081bc"
+      },
+      {
+        "count": 52,
+        "bytes": 259322,
+        "hash": "68e2d7c2848f61c68d45fac4e5c670f42eaf11846a6d31a929bdd530a11a88e7",
+        "previousHash": "0ec852034b7ce091210d857293a2086ebe297a9a43f61b36f4e13ab6558957ff"
+      },
+      {
+        "count": 52,
+        "bytes": 259316,
+        "hash": "b40e1b96f4cf56d7b8e2021b2459c36b4ac337d9a197c0dfc4cbe3f100cb091c",
+        "previousHash": "68e2d7c2848f61c68d45fac4e5c670f42eaf11846a6d31a929bdd530a11a88e7"
+      },
+      {
+        "count": 52,
+        "bytes": 259320,
+        "hash": "157b1f66fc321c652f1ac0f17cd96857294a1f290f62ec38ff5261379bd186ae",
+        "previousHash": "b40e1b96f4cf56d7b8e2021b2459c36b4ac337d9a197c0dfc4cbe3f100cb091c"
+      },
+      {
+        "count": 52,
+        "bytes": 259303,
+        "hash": "8de774b5a9571ae773e54c6f450d2a074ac80c792302455b76415f29132d4569",
+        "previousHash": "157b1f66fc321c652f1ac0f17cd96857294a1f290f62ec38ff5261379bd186ae"
+      },
+      {
+        "count": 52,
+        "bytes": 259308,
+        "hash": "8f072c72f38773f0f2de4841edab089e05cf2fc57265a28fcf21429dd7e8ad01",
+        "previousHash": "8de774b5a9571ae773e54c6f450d2a074ac80c792302455b76415f29132d4569"
+      },
+      {
+        "count": 52,
+        "bytes": 259320,
+        "hash": "584911bb68404f7aeac6e3984601656852cf710e16912fafbcf7d537b8a76913",
+        "previousHash": "8f072c72f38773f0f2de4841edab089e05cf2fc57265a28fcf21429dd7e8ad01"
+      },
+      {
+        "count": 52,
+        "bytes": 259308,
+        "hash": "76496fe2d284f0a843642e09ae56f1bfe4f2bae19ae95b888872a4ff3b08fe95",
+        "previousHash": "584911bb68404f7aeac6e3984601656852cf710e16912fafbcf7d537b8a76913"
+      },
+      {
+        "count": 52,
+        "bytes": 259323,
+        "hash": "a603ff7246728d13b1e11b724cce01f51ab8f3ef9995f2e9aa396ed3e0e00166",
+        "previousHash": "76496fe2d284f0a843642e09ae56f1bfe4f2bae19ae95b888872a4ff3b08fe95"
+      },
+      {
+        "count": 52,
+        "bytes": 259310,
+        "hash": "3d99042ebd6c8efca506a08b4b3ebe1747bc9a234817afe181ecc4ccca4fd5bd",
+        "previousHash": "a603ff7246728d13b1e11b724cce01f51ab8f3ef9995f2e9aa396ed3e0e00166"
+      },
+      {
+        "count": 52,
+        "bytes": 259309,
+        "hash": "368627bbfb98a3d75491465d801edb01ae06555e6f468cadca7b081f2b9f9461",
+        "previousHash": "3d99042ebd6c8efca506a08b4b3ebe1747bc9a234817afe181ecc4ccca4fd5bd"
+      },
+      {
+        "count": 52,
+        "bytes": 259333,
+        "hash": "021e27a2dea1c6757e3818c31af46888d1e632946186f84838878b999395cd17",
+        "previousHash": "368627bbfb98a3d75491465d801edb01ae06555e6f468cadca7b081f2b9f9461"
+      },
+      {
+        "count": 52,
+        "bytes": 259300,
+        "hash": "fdbc7e50d6e1b7330814cd8a81d86dd12fb097430df98cb48adb02d16308c599",
+        "previousHash": "021e27a2dea1c6757e3818c31af46888d1e632946186f84838878b999395cd17"
+      },
+      {
+        "count": 12,
+        "bytes": 59986,
+        "hash": "eb8e6e0ed99aa99753e7d05c64a2201f2c4c1cb1dbfee225645243d3ac24112b",
+        "previousHash": "fdbc7e50d6e1b7330814cd8a81d86dd12fb097430df98cb48adb02d16308c599"
+      }
+    ],
+    "exportBytes": 4993731,
+    "before": {
+      "count": 1000,
+      "digest": "1b220c5d0ca9ee3f78d0a55975d781d7897be2b74b5e1494c574c4a68542fc3a",
+      "maxPageBytes": 184401,
+      "maxPageEntries": 37
+    },
+    "after": {
+      "count": 1000,
+      "digest": "1b220c5d0ca9ee3f78d0a55975d781d7897be2b74b5e1494c574c4a68542fc3a",
+      "maxPageBytes": 184401,
+      "maxPageEntries": 37
+    },
+    "sameState": true,
+    "final": {
+      "revision": 1000,
+      "turnId": 1000,
+      "phase": "active",
+      "ageDays": 61500,
+      "lifeLimit": 3000,
+      "realm": "immortal"
+    },
+    "postImmortalTurns": 964,
+    "repeatedBlocks": 0,
+    "samples": [
+      {
+        "sampleKind": "fixture",
+        "case": "opening",
+        "inputHash": "df4e5076f35db3f0933fc2a3a4cd4236ecc3ea94c18fa1dc984cedeb41b775be",
+        "modelId": null,
+        "usage": null,
+        "actualNeurons": null,
+        "accepted": true,
+        "reason": "context-aware schema and rule commit accepted",
+        "latencyMs": null,
+        "fixtureGenerationLatencyMs": 0.6999999999534339,
+        "review": {
+          "playerName": "云归",
+          "ageDays": 5760,
+          "realm": "mortal",
+          "location": "松溪",
+          "proseExcerpt": "松溪的山风吹过石阶，你继续这一程。记事1。松松松松松松松松松松松松松松松松松松松松松松松松松松松松松松松松松松松松松松松松松松松松松松松松松松松松松松松松松松松",
+          "paddingCharacters": 1200,
+          "elapsedDays": 0,
+          "action": null,
+          "relationships": "not exercised",
+          "suspense": "not exercised"
+        }
+      },
+      {
+        "sampleKind": "fixture",
+        "case": "continuous-choice",
+        "inputHash": "4302dd70ddfdb9ade73f8ff7d75ae25f2ca6159fe2de2c3928d8a7e7ff81daa4",
+        "modelId": null,
+        "usage": null,
+        "actualNeurons": null,
+        "accepted": true,
+        "reason": "context-aware schema and rule commit accepted",
+        "latencyMs": null,
+        "fixtureGenerationLatencyMs": 0.5,
+        "review": {
+          "playerName": "云归",
+          "ageDays": 6120,
+          "realm": "mortal",
+          "location": "松溪",
+          "proseExcerpt": "松溪的山风吹过石阶，你继续这一程。记事2。松松松松松松松松松松松松松松松松松松松松松松松松松松松松松松松松松松松松松松松松松松松松松松松松松松松松松松松松松松松",
+          "paddingCharacters": 1200,
+          "elapsedDays": 360,
+          "action": {
+            "id": "r:5948ea9389355512:t1:c:continue",
+            "label": "continue",
+            "intent": "practice",
+            "targetId": "self",
+            "stake": "low",
+            "approach": "steady"
+          },
+          "relationships": "not exercised",
+          "suspense": "not exercised"
+        }
+      }
+    ],
+    "craftedImmortalDeath": {
+      "provenance": "crafted from the legally reached turn-1000 immortal state; age moved to one day before lifespan",
+      "phase": "dead",
+      "cause": "lifespan",
+      "ageDays": 1080000
+    }
+  },
+  "deaths": [
+    {
+      "cause": "lifespan",
+      "phase": "dead",
+      "ageDays": 28800,
+      "injury": 0,
+      "turns": 65,
+      "historyEntries": 65,
+      "generationsAtDeath": 64,
+      "clientCallsAfterDeath": 0,
+      "deathRequestGenerated": false,
+      "stateUnchanged": true,
+      "terminalCause": "lifespan",
+      "terminalScene": null,
+      "pending": null
+    },
+    {
+      "cause": "injury",
+      "phase": "dead",
+      "ageDays": 5774,
+      "injury": 10,
+      "turns": 3,
+      "historyEntries": 3,
+      "generationsAtDeath": 2,
+      "clientCallsAfterDeath": 0,
+      "deathRequestGenerated": false,
+      "stateUnchanged": true,
+      "terminalCause": "injury",
+      "terminalScene": null,
+      "pending": null
+    }
+  ],
+  "causal": {
+    "samples": [
+      {
+        "sampleKind": "fixture",
+        "case": "counterfactual-practice",
+        "inputHash": "813f01c40f30298063e88d745d98bcc408fa809362e7cffe9cfd9e677cefa94e",
+        "modelId": null,
+        "usage": null,
+        "actualNeurons": null,
+        "accepted": true,
+        "reason": "exact rules receipt controls age and action cost",
+        "latencyMs": null,
+        "fixtureValidationLatencyMs": 5.711983000001055,
+        "review": {
+          "playerName": "云归",
+          "ageDays": 6120,
+          "realm": "mortal",
+          "location": "松溪",
+          "blocks": [
+            {
+              "kind": "narration",
+              "text": "松溪的山风吹过石阶，你继续这一程。记事2。"
+            }
+          ],
+          "elapsedDays": 360,
+          "action": {
+            "id": "r:b93b90e38f95bf19:t1:c:continue",
+            "label": "continue",
+            "intent": "practice",
+            "targetId": "self",
+            "stake": "low",
+            "approach": "steady"
+          },
+          "relationships": "not exercised",
+          "suspense": "not exercised"
+        }
+      },
+      {
+        "sampleKind": "fixture",
+        "case": "counterfactual-rest",
+        "inputHash": "6ae1b9dc095184fb8641db5892eb2b24d6fdd708c852ac5d51a05e483e57f53a",
+        "modelId": null,
+        "usage": null,
+        "actualNeurons": null,
+        "accepted": true,
+        "reason": "exact rules receipt controls age and action cost",
+        "latencyMs": null,
+        "fixtureValidationLatencyMs": 5.308144000002358,
+        "review": {
+          "playerName": "云归",
+          "ageDays": 5790,
+          "realm": "mortal",
+          "location": "松溪",
+          "blocks": [
+            {
+              "kind": "narration",
+              "text": "松溪的山风吹过石阶，你继续这一程。记事2。"
+            }
+          ],
+          "elapsedDays": 30,
+          "action": {
+            "id": "r:b93b90e38f95bf19:t1:c:alternative",
+            "label": "alternative",
+            "intent": "rest",
+            "targetId": "self",
+            "stake": "low",
+            "approach": "recover"
+          },
+          "relationships": "not exercised",
+          "suspense": "not exercised"
+        }
+      },
+      {
+        "sampleKind": "fixture",
+        "case": "repeated-blocks",
+        "inputHash": "813f01c40f30298063e88d745d98bcc408fa809362e7cffe9cfd9e677cefa94e",
+        "modelId": null,
+        "usage": null,
+        "actualNeurons": null,
+        "accepted": false,
+        "reason": "REPEATED_SCENE",
+        "latencyMs": null
+      },
+      {
+        "sampleKind": "fixture",
+        "case": "duplicate-action-tuple",
+        "inputHash": "813f01c40f30298063e88d745d98bcc408fa809362e7cffe9cfd9e677cefa94e",
+        "modelId": null,
+        "usage": null,
+        "actualNeurons": null,
+        "accepted": false,
+        "reason": "GENERATED_SCENE_INVALID",
+        "latencyMs": null
+      },
+      {
+        "sampleKind": "fixture",
+        "case": "explicit-age-conflict",
+        "inputHash": "813f01c40f30298063e88d745d98bcc408fa809362e7cffe9cfd9e677cefa94e",
+        "modelId": null,
+        "usage": null,
+        "actualNeurons": null,
+        "accepted": false,
+        "reason": "MECHANICAL_FACT_CONFLICT",
+        "latencyMs": null
+      },
+      {
+        "sampleKind": "fixture",
+        "case": "explicit-realm-conflict",
+        "inputHash": "813f01c40f30298063e88d745d98bcc408fa809362e7cffe9cfd9e677cefa94e",
+        "modelId": null,
+        "usage": null,
+        "actualNeurons": null,
+        "accepted": false,
+        "reason": "MECHANICAL_FACT_CONFLICT",
+        "latencyMs": null
+      }
+    ],
+    "modulesChecked": 7,
+    "realCalls": 0,
+    "actualNeurons": null
+  },
+  "blockingRegression": {
+    "status": "RESOLVED_AT_ACCEPTED_LOCAL_CODE_TREE",
+    "expectedRevision": 15,
+    "observed": {
+      "generated": 13,
+      "revision": 13,
+      "phase": "active",
+      "status": "paused",
+      "errorCode": "MEMORY_CONTEXT_TOO_LARGE",
+      "pending": true,
+      "openPromises": 13,
+      "pausedBeforeRetry": true
+    },
+    "owner": "Task6/root context policy; no Task7 production patch",
+    "finalReverification": "PASS_FINAL_CODE_CI_40547281694",
+    "postFix": {
+      "generated": 15,
+      "revision": 15,
+      "phase": "active",
+      "status": "ready",
+      "errorCode": null,
+      "pending": false,
+      "openPromises": 13,
+      "pausedBeforeRetry": false,
+      "maxContextBytes": 4499,
+      "lastCoverage": {
+        "policy": "relevance-v1",
+        "openTotal": 13,
+        "openIncluded": 12,
+        "openOmitted": 1
+      },
+      "lastIncludedPromises": 12
+    }
+  },
+  "qualityReview": {
+    "fixtureAcceptedScenes": 1000,
+    "exactBlockDuplicates": 0,
+    "repetitiveTemplate": true,
+    "repeatedSemanticEvents": "NOT_MEASURED: fixture intentionally uses the same mountain-stream template with turn marker",
+    "characterContinuity": "Only player receipt/birth identity is exercised over1000turns; rich NPC continuity not established by this path",
+    "ageAndRealm": "Computed entirely by rules; explicit contradictory age and realm fixture outputs rejected",
+    "location": "Synthetic scenes remain at Songxi; no geographic continuity claim",
+    "relationshipsAndSuspense": "Real narrative relationships, suspense and literary quality NOT_RUN",
+    "actionCosts": "Counterfactual practice360days vs rest30days from identical base state; rule results immutable",
+    "fixtureStructureAcceptanceRate": {
+      "accepted": 1000,
+      "attempted": 1000,
+      "rate": 1.0,
+      "provenance": "deterministically constructed legal fixtures; not a measured model success rate"
+    }
+  },
+  "limitations": [
+    "1000turns is an acceptance observation, never a product lifetime/scene cap.",
+    "The 3000year immortal lifespan death uses an explicitly crafted near-end state, not3000years of naturally played turns.",
+    "Every sample is a fixture, never a Workers AI response. Fixture validation durations do not measure real provider latency.",
+    "Zero exact repeated blocks does not mean zero repeated events or good writing.",
+    "Natural quota/device storage exhaustion and non-Chromium browsers are not established.",
+    "The13openpromise regression passes after owner selection-policy fix; provider context declares12included/1omitted while all13original obligations remain indexed.",
+    "Local code validation is accepted for the recorded exact source tree. This does not establish production deployment, real-model narrative quality or confirmed Free-plan/hard free-boundary evidence; those remain blocked."
+  ],
+  "historicalMetrics": [
+    {
+      "scope": "Original local Task7 four-test run before canonical relationships marker1",
+      "maxSnapshotBytes": 5667,
+      "maxContextBytes": 1547,
+      "exportBytes": 4993683,
+      "historyDigest": "b89f27e57f07db7ae3f6bceabe4b3553fdc48a5ad4698efbe8ebaad5701fe93e",
+      "obligationMaxContextBytes": 4456
+    }
+  ]
+}

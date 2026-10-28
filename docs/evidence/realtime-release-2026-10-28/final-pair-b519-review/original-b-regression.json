@@ -1,0 +1,16 @@
+{
+  "sourceCommit": "b519bf4fd730133a852b3b6e6d1f5aab90144220",
+  "originalCaptureSha256": "980082c3aac872f19dfaf4f5859655c3e22da7cae745146542e6623d5ac770c6",
+  "originalCaptureUnmodified": true,
+  "status": "rejected",
+  "errorCode": "CHOICE_NOT_COMPILABLE",
+  "accountingStatus": "complete",
+  "usage": {
+    "promptTokens": 2016,
+    "completionTokens": 839,
+    "totalTokens": 2855
+  },
+  "sceneExposed": false,
+  "freshModelCalls": 0,
+  "networkCalls": 0
+}

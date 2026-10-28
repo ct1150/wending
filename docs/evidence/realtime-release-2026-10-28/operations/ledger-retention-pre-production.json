@@ -1,0 +1,188 @@
+{
+  "schemaVersion": 1,
+  "checkedAt": "2026-10-28T17:01:08.162967+00:00",
+  "status": "PRESERVATION_VERIFIED",
+  "checks": {
+    "bothStatusSnapshotsSuccessful": true,
+    "allOriginalLedgerRowsUnchanged": true,
+    "allOriginalLedgerRowsRemainInOriginalOrder": true,
+    "allOriginalResultsUnchanged": true,
+    "allOriginalAdmissionsUnchanged": true,
+    "oldAcceptanceCasesUnchanged": true,
+    "completeAcceptanceContainerUnchanged": true,
+    "noDuplicateLedgerAttemptIds": true,
+    "callCountMatchesLedgerRows": true,
+    "reservationTotalsMatchStoredRows": true,
+    "allPriorTravelRetentionRowsUnchanged": true,
+    "allActualNeuronsStillNull": true
+  },
+  "sourceSnapshots": {
+    "before": {
+      "file": "/workspace/scratch/60d77884fe74/acceptance-evidence/operator-before.json",
+      "sha256": "805b477accfa702987a171d1d862d8ee0e15d4ecd936a099137dbc6ecfb9eba7"
+    },
+    "after": {
+      "file": "/workspace/scratch/60d77884fe74/acceptance-evidence/operator-pre-production.json",
+      "sha256": "cf7fc9d01dd195c152c5918f7afa9bd2896351ef6080ab72ecf6251290f7a209"
+    },
+    "previousRetention": {
+      "file": "/workspace/scratch/60d77884fe74/acceptance-evidence/ledger-retention-after-travel.json",
+      "sha256": "a213da114a83068379f8d7abdf9f8e6e661a5f3a11a9bbd8374574d67953bf54"
+    }
+  },
+  "hashConvention": "SHA-256 over UTF-8 JSON with sorted keys, compact separators, no trailing newline; identical to prior ledger retention report.",
+  "before": {
+    "callCount": 9,
+    "reservedNeurons": 561,
+    "ledgerSha256": "e6c37743dd8a5f46fe1cbf98ad160b1b3fc0486864b711d0799783899fe96a28",
+    "rowStatusCounts": {
+      "complete": 4,
+      "failed": 4,
+      "unknown": 1
+    },
+    "resultCount": 9,
+    "resultStatusCounts": {
+      "failed": 1,
+      "passed": 4,
+      "rejected": 3,
+      "unknown": 1
+    },
+    "admissionCount": 2,
+    "acceptanceCaseCount": 3,
+    "nullActualNeuronRows": 9
+  },
+  "after": {
+    "callCount": 18,
+    "reservedNeurons": 14205,
+    "ledgerSha256": "b0959cd474996be69e542512f6c5e9ca5a27fc11ab43e6a2c273dccf8ab2c598",
+    "rowStatusCounts": {
+      "complete": 8,
+      "failed": 7,
+      "unknown": 3
+    },
+    "resultCount": 18,
+    "resultStatusCounts": {
+      "complete": 4,
+      "failed": 4,
+      "passed": 4,
+      "rejected": 3,
+      "unknown": 3
+    },
+    "admissionCount": 11,
+    "acceptanceCaseCount": 3,
+    "nullActualNeuronRows": 18
+  },
+  "newRows": [
+    {
+      "task": "task8",
+      "attemptId": "task8_19c9f83afdb146197aed6f5700b8bae32e60b1daa9bfe3d4e40af2c0e36683f3",
+      "reservedNeurons": 1516,
+      "actualNeurons": null,
+      "status": "complete"
+    },
+    {
+      "task": "task8",
+      "attemptId": "task8_a1cc255d43aa93d1e9c7b28c9b54615c00ef46242432ec7c5aebd44319a20be9",
+      "reservedNeurons": 1516,
+      "actualNeurons": null,
+      "status": "unknown"
+    },
+    {
+      "task": "task8",
+      "attemptId": "task8_8b05b87852dfe143a0e373a35a8ee772cd7c977bb46b4ab29ae7e1ea35284018",
+      "reservedNeurons": 1516,
+      "actualNeurons": null,
+      "status": "complete"
+    },
+    {
+      "task": "task8",
+      "attemptId": "task8_2120b92c8aa37825062c969bcf6ddea7eb18ba031b1c2f78957b2e38f69e8774",
+      "reservedNeurons": 1516,
+      "actualNeurons": null,
+      "status": "unknown"
+    },
+    {
+      "task": "task8",
+      "attemptId": "task8_f40eba875a5f828217e43f1579fc17872f9f8deeb38543ad3586f947e842fccd",
+      "reservedNeurons": 1516,
+      "actualNeurons": null,
+      "status": "failed"
+    },
+    {
+      "task": "task8",
+      "attemptId": "task8_d41f8ca86982266730f1b8eb559d787ddbe8963957ccfe71db5470af66452d1d",
+      "reservedNeurons": 1516,
+      "actualNeurons": null,
+      "status": "complete"
+    },
+    {
+      "task": "task8",
+      "attemptId": "task8_85707159547cfffc7b755e45c5bf5924caa92a6a45d3fadfccce242f65bbf3b3",
+      "reservedNeurons": 1516,
+      "actualNeurons": null,
+      "status": "failed"
+    },
+    {
+      "task": "task8",
+      "attemptId": "task8_b03c058df28601431473c788e4ff7d103c26ae0cabe29b3d23a3f7407ab9ed73",
+      "reservedNeurons": 1516,
+      "actualNeurons": null,
+      "status": "failed"
+    },
+    {
+      "task": "task8",
+      "attemptId": "task8_f4959dfc7a2004952f572bd34102f29d104401270b0b4f0d043e6b3f581080f4",
+      "reservedNeurons": 1516,
+      "actualNeurons": null,
+      "status": "complete"
+    }
+  ],
+  "newRowStatusCounts": {
+    "complete": 4,
+    "failed": 3,
+    "unknown": 2
+  },
+  "newReservedNeurons": 13644,
+  "preservedOriginalCounts": {
+    "ledgerRows": 9,
+    "results": 9,
+    "admissions": 2,
+    "acceptanceCases": 3
+  },
+  "categoryMeanings": {
+    "complete": "Ledger bookkeeping status; does not itself assert narrative acceptance or measured billing.",
+    "failed": "Failure remains recorded with original reservation and actualNeurons value.",
+    "unknown": "Uncertain outcome remains unknown; never reclassified as zero cost or silently refunded."
+  },
+  "accountingNote": "14205 reservedNeurons is the accumulated conservative reservation history, not measured usage, spending, billing, a live quota balance, or evidence that a paid plan was used. All 18 actualNeurons remain null; the four original failed and one original unknown reservations and their records are unchanged. Direct REST diagnostics are separate and are not inserted into this operator ledger.",
+  "changedConfiguration": {
+    "beforeLimits": {
+      "maxCalls": 12,
+      "maxNeurons": 900,
+      "taskCalls": {
+        "task1": 4,
+        "task7": 5,
+        "task8": 3
+      }
+    },
+    "afterLimits": {
+      "maxCalls": null,
+      "maxNeurons": null,
+      "taskCalls": {
+        "task1": null,
+        "task7": null,
+        "task8": null
+      }
+    },
+    "note": "The current no-artificial-cap configuration differs from the historical cap configuration. This does not mutate the preserved ledger, results, admissions or acceptance cases and does not change the platform Workers Free quota."
+  },
+  "scope": {
+    "localSnapshotComparisonOnly": true,
+    "networkCalls": 0,
+    "modelCalls": 0,
+    "ledgerWrites": 0,
+    "archiveWrites": 0,
+    "credentialsRead": false,
+    "observationTimeNote": "checkedAt is the local comparison time, not a new Cloudflare observation timestamp."
+  }
+}

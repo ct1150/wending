@@ -1,0 +1,358 @@
+{
+  "at": "2026-10-28T16:39:49.220Z",
+  "url": "https://baishi-wending.ct1150.workers.dev/",
+  "summary": {
+    "database": {
+      "name": "wending-live-v1",
+      "version": 2,
+      "storeCounts": {
+        "runs": 3,
+        "pending": 0,
+        "history": 1,
+        "memory": 21
+      }
+    },
+    "archiveId": "9bd91d07-af0b-4ce3-b722-532fef8a1680",
+    "runId": "62ed8197-a43b-4ab1-b3af-d25b795382ca",
+    "revision": 2,
+    "turnId": 2,
+    "phase": "active",
+    "stateSha256": "804b79eddc7fa712cac3d3ee37651a8b0d64ba6c66e170dd01037297d9cb92a0",
+    "storedStateHash": "804b79eddc7fa712cac3d3ee37651a8b0d64ba6c66e170dd01037297d9cb92a0",
+    "sceneId": "r:17d4b63b7a333a81:t2:s:scene",
+    "sceneSha256": "cc082ef4d5a6d4938aef3d5311590a6d7a6fd2ce45752436a17a4ceb3a7631c9",
+    "pendingRequestId": null,
+    "pendingKind": null,
+    "attemptId": null,
+    "pause": null,
+    "history": {
+      "chunks": 1,
+      "tailEntries": [
+        {
+          "identity": {
+            "runId": "62ed8197-a43b-4ab1-b3af-d25b795382ca",
+            "turnId": 1,
+            "baseRevision": 0,
+            "stateHash": "ee41fdf3593d5a9ade54bfad25ddb19a178338c6ffd79a6eadba84929b693336",
+            "choiceId": null,
+            "rulesVersion": 1,
+            "promptVersion": 1,
+            "requestId": "06b892a2-7664-42de-941f-52add7799bd3"
+          },
+          "stateHash": "65fa96ed4c6190a4063aa54476a8f2ebee6ce08a26250f5c74d58d2c5f9abf60",
+          "sceneId": "r:17d4b63b7a333a81:t1:s:scene",
+          "title": "青石村的晨雾"
+        },
+        {
+          "identity": {
+            "runId": "62ed8197-a43b-4ab1-b3af-d25b795382ca",
+            "turnId": 2,
+            "baseRevision": 1,
+            "stateHash": "65fa96ed4c6190a4063aa54476a8f2ebee6ce08a26250f5c74d58d2c5f9abf60",
+            "choiceId": "r:17d4b63b7a333a81:t1:c:a",
+            "rulesVersion": 1,
+            "promptVersion": 1,
+            "requestId": "dd6c5982-4e73-435a-bc52-7000044b602d"
+          },
+          "stateHash": "804b79eddc7fa712cac3d3ee37651a8b0d64ba6c66e170dd01037297d9cb92a0",
+          "sceneId": "r:17d4b63b7a333a81:t2:s:scene",
+          "title": "杂货铺里的低语"
+        }
+      ],
+      "totalTurns": 2
+    }
+  },
+  "archive": {
+    "database": {
+      "name": "wending-live-v1",
+      "version": 2,
+      "storeCounts": {
+        "runs": 3,
+        "pending": 0,
+        "history": 1,
+        "memory": 21
+      }
+    },
+    "archive": {
+      "archiveId": "9bd91d07-af0b-4ce3-b722-532fef8a1680",
+      "runId": "62ed8197-a43b-4ab1-b3af-d25b795382ca",
+      "state": {
+        "relationshipVersion": 1,
+        "version": 5,
+        "mode": "cultivation",
+        "contentVersion": 4,
+        "rulesVersion": 1,
+        "promptVersion": 1,
+        "runId": "62ed8197-a43b-4ab1-b3af-d25b795382ca",
+        "revision": 2,
+        "turnId": 2,
+        "phase": "active",
+        "rng": 3012430483,
+        "life": {
+          "name": "云归",
+          "ageDays": 5767,
+          "lifeLimit": 80,
+          "realm": "mortal",
+          "cultivation": 0,
+          "injury": 0,
+          "items": {
+            "supplies": 2,
+            "stones": 1
+          },
+          "relations": {
+            "r:17d4b63b7a333a81:t1:e:person_lao_wang": 3
+          },
+          "birth": {
+            "originId": "village",
+            "talentIds": [
+              "fortune-debt",
+              "iron-bones"
+            ],
+            "attributes": {
+              "constitution": 3,
+              "insight": 6,
+              "fortune": 3
+            }
+          }
+        },
+        "birthReceipt": {
+          "kind": "opening",
+          "choiceId": null,
+          "action": null,
+          "elapsedDays": 0,
+          "itemChanges": {},
+          "relationChanges": {},
+          "random": {
+            "before": 1080474372,
+            "after": 1080474372,
+            "roll": null
+          },
+          "before": {
+            "ageDays": 5760,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "after": {
+            "ageDays": 5760,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "death": null,
+          "birth": {
+            "originId": "village",
+            "talentIds": [
+              "fortune-debt",
+              "iron-bones"
+            ],
+            "attributes": {
+              "constitution": 3,
+              "insight": 6,
+              "fortune": 3
+            }
+          }
+        },
+        "currentScene": {
+          "id": "r:17d4b63b7a333a81:t2:s:scene",
+          "title": "杂货铺里的低语",
+          "location": "青石村",
+          "entities": [
+            {
+              "id": "r:17d4b63b7a333a81:t1:e:place_qingshi_village",
+              "name": "青石村",
+              "kind": "place"
+            },
+            {
+              "id": "r:17d4b63b7a333a81:t1:e:person_lao_wang",
+              "name": "老王",
+              "kind": "person"
+            },
+            {
+              "id": "r:17d4b63b7a333a81:t1:e:person_ling_shang",
+              "name": "林商",
+              "kind": "person"
+            }
+          ],
+          "blocks": [
+            {
+              "kind": "narration",
+              "text": "老王压低声音，将一张泛黄的符纸推到你面前。他指着符纸边缘的焦痕，说这是上个月从北边逃难者手里收来的，能挡一次低阶妖兽的爪击，但灵力耗尽后就会自燃。"
+            },
+            {
+              "kind": "dialogue",
+              "text": "北边的雾越来越浓了，连猎户都不敢进山。听说那妖兽能模仿人声，你要是想活命，别信任何在雾里喊你名字的声音。",
+              "speaker": "r:17d4b63b7a333a81:t1:e:person_lao_wang"
+            },
+            {
+              "kind": "narration",
+              "text": "铺子外传来车轮碾过石板的声响，林商正站在门口整理货物。他看见你，扬了扬下巴，示意你出来谈车资。"
+            }
+          ],
+          "choices": [
+            {
+              "id": "r:17d4b63b7a333a81:t2:c:a",
+              "label": "向老王购买那张低阶符纸",
+              "intent": "negotiate",
+              "targetId": "r:17d4b63b7a333a81:t1:e:person_lao_wang",
+              "stake": "low",
+              "approach": "cooperate"
+            },
+            {
+              "id": "r:17d4b63b7a333a81:t2:c:b",
+              "label": "出门与林商商议前往云州城的车资",
+              "intent": "negotiate",
+              "targetId": "r:17d4b63b7a333a81:t1:e:person_ling_shang",
+              "stake": "low",
+              "approach": "cooperate"
+            },
+            {
+              "id": "r:17d4b63b7a333a81:t2:c:c",
+              "label": "在青石村寻找行粮补充体力",
+              "intent": "explore",
+              "targetId": "supplies",
+              "stake": "low",
+              "approach": "cautious"
+            }
+          ],
+          "memoryDeltas": [
+            {
+              "entityId": "r:17d4b63b7a333a81:t1:e:person_lao_wang",
+              "text": "老王透露北边妖兽能模仿人声，并出售一张能挡一次爪击的低阶符纸。",
+              "kind": "fact"
+            }
+          ]
+        },
+        "lastReceipt": {
+          "kind": "choice",
+          "choiceId": "r:17d4b63b7a333a81:t1:c:a",
+          "action": {
+            "id": "r:17d4b63b7a333a81:t1:c:a",
+            "label": "与老王交谈，询问符纸详情及北边妖兽传闻",
+            "intent": "negotiate",
+            "targetId": "r:17d4b63b7a333a81:t1:e:person_lao_wang",
+            "stake": "low",
+            "approach": "cooperate"
+          },
+          "elapsedDays": 7,
+          "itemChanges": {
+            "stones": 1,
+            "supplies": -1
+          },
+          "relationChanges": {
+            "r:17d4b63b7a333a81:t1:e:person_lao_wang": 3
+          },
+          "random": {
+            "before": 1080474372,
+            "after": 3012430483,
+            "roll": 83
+          },
+          "before": {
+            "ageDays": 5760,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "after": {
+            "ageDays": 5767,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "death": null,
+          "birth": null
+        },
+        "relatedEntities": [
+          {
+            "id": "r:17d4b63b7a333a81:t1:e:place_qingshi_village",
+            "name": "青石村",
+            "kind": "place"
+          },
+          {
+            "id": "r:17d4b63b7a333a81:t1:e:person_lao_wang",
+            "name": "老王",
+            "kind": "person"
+          },
+          {
+            "id": "r:17d4b63b7a333a81:t1:e:person_ling_shang",
+            "name": "林商",
+            "kind": "person"
+          }
+        ],
+        "archiveCursor": 0
+      },
+      "storedStateHash": "804b79eddc7fa712cac3d3ee37651a8b0d64ba6c66e170dd01037297d9cb92a0",
+      "headHash": "fd5613dc8d19dd4cb7928af2079681b6326afaef55c5e380a4c5e32c5a9b9a90",
+      "tailIndex": 0,
+      "pending": null,
+      "attempt": null,
+      "pause": null,
+      "history": {
+        "chunks": 1,
+        "tailEntries": [
+          {
+            "identity": {
+              "runId": "62ed8197-a43b-4ab1-b3af-d25b795382ca",
+              "turnId": 1,
+              "baseRevision": 0,
+              "stateHash": "ee41fdf3593d5a9ade54bfad25ddb19a178338c6ffd79a6eadba84929b693336",
+              "choiceId": null,
+              "rulesVersion": 1,
+              "promptVersion": 1,
+              "requestId": "06b892a2-7664-42de-941f-52add7799bd3"
+            },
+            "stateHash": "65fa96ed4c6190a4063aa54476a8f2ebee6ce08a26250f5c74d58d2c5f9abf60",
+            "sceneId": "r:17d4b63b7a333a81:t1:s:scene",
+            "title": "青石村的晨雾"
+          },
+          {
+            "identity": {
+              "runId": "62ed8197-a43b-4ab1-b3af-d25b795382ca",
+              "turnId": 2,
+              "baseRevision": 1,
+              "stateHash": "65fa96ed4c6190a4063aa54476a8f2ebee6ce08a26250f5c74d58d2c5f9abf60",
+              "choiceId": "r:17d4b63b7a333a81:t1:c:a",
+              "rulesVersion": 1,
+              "promptVersion": 1,
+              "requestId": "dd6c5982-4e73-435a-bc52-7000044b602d"
+            },
+            "stateHash": "804b79eddc7fa712cac3d3ee37651a8b0d64ba6c66e170dd01037297d9cb92a0",
+            "sceneId": "r:17d4b63b7a333a81:t2:s:scene",
+            "title": "杂货铺里的低语"
+          }
+        ],
+        "totalTurns": 2
+      }
+    }
+  },
+  "dom": {
+    "title": "百世问鼎 · 三界求仙篇",
+    "bodyText": "跳转到游戏内容\n实时人生\n云归\n⌄\n凡人\n16岁7日\n余寿63年353日\n历史对话\n更多\n\n青石村\n\n杂货铺里的低语\n\n老王压低声音，将一张泛黄的符纸推到你面前。他指着符纸边缘的焦痕，说这是上个月从北边逃难者手里收来的，能挡一次低阶妖兽的爪击，但灵力耗尽后就会自燃。\n\n老王：“北边的雾越来越浓了，连猎户都不敢进山。听说那妖兽能模仿人声，你要是想活命，别信任何在雾里喊你名字的声音。”\n\n铺子外传来车轮碾过石板的声响，林商正站在门口整理货物。他看见你，扬了扬下巴，示意你出来谈车资。\n\n落下一念，故事才会继续。\n\n向老王购买那张低阶符纸\n7日 · 行粮 1\n出门与林商商议前往云州城的车资\n7日 · 行粮 1\n在青石村寻找行粮补充体力\n90日 · 历练受伤基础风险5%，根骨与坚韧筋骨可降低风险。\n实时人生 · 已缓存内容离线可读 · 新剧情需要联网",
+    "liveStatus": "落下一念，故事才会继续。",
+    "sceneTitle": "杂货铺里的低语",
+    "sceneText": "老王压低声音，将一张泛黄的符纸推到你面前。他指着符纸边缘的焦痕，说这是上个月从北边逃难者手里收来的，能挡一次低阶妖兽的爪击，但灵力耗尽后就会自燃。\n\n老王：“北边的雾越来越浓了，连猎户都不敢进山。听说那妖兽能模仿人声，你要是想活命，别信任何在雾里喊你名字的声音。”\n\n铺子外传来车轮碾过石板的声响，林商正站在门口整理货物。他看见你，扬了扬下巴，示意你出来谈车资。",
+    "choices": [
+      {
+        "id": "r:17d4b63b7a333a81:t2:c:a",
+        "revision": 2,
+        "label": "向老王购买那张低阶符纸\n7日 · 行粮 1",
+        "enabled": true
+      },
+      {
+        "id": "r:17d4b63b7a333a81:t2:c:b",
+        "revision": 2,
+        "label": "出门与林商商议前往云州城的车资\n7日 · 行粮 1",
+        "enabled": true
+      },
+      {
+        "id": "r:17d4b63b7a333a81:t2:c:c",
+        "revision": 2,
+        "label": "在青石村寻找行粮补充体力\n90日 · 历练受伤基础风险5%，根骨与坚韧筋骨可降低风险。",
+        "enabled": true
+      }
+    ],
+    "startEnabled": false,
+    "pendingControls": false,
+    "activeMode": "live"
+  }
+}

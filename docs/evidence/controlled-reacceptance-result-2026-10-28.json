@@ -1,0 +1,794 @@
+{
+  "schemaVersion": 1,
+  "recordedDate": "2026-10-28",
+  "status": "stopped-at-step-1-provider-failed",
+  "authoritativePlan": "docs/superpowers/plans/2026-10-28-controlled-reacceptance.md",
+  "scope": "Sanitized actual controlled reacceptance result; historical failed attempts and reservations retained. No private story, payload, credentials, user/session identifiers or original snapshots are published.",
+  "authorization": {
+    "maxCalls": 12,
+    "maxNeurons": 900,
+    "taskCalls": {
+      "task1": 4,
+      "task7": 5,
+      "task8": 3
+    },
+    "originalCallsPreserved": 8,
+    "originalReservedNeuronsPreserved": 450,
+    "maximumAdditionalCalls": 4,
+    "stopOnAnyFailure": true,
+    "remainingCallSlotsAfterStop": 3,
+    "remainingSlotsAuthorizeFurtherCalls": false
+  },
+  "source": {
+    "commit": "c3376d8d479e6be530cfe29fd427e6b13c7018a3",
+    "tree": "ebb0dfe6a585e5497b1310f8907777d83c239f59",
+    "reviewedBundleSha256": "8e389258a36b21ff26af79cba52e0dd4ebbd5417ff80990eb6032861ed3ce74c",
+    "htmlBytes": 971109,
+    "htmlSha256": "b2be6d9d1695cc0f46af5ff4bac16c0519a36cd28a284a0b77c4834f0b058e16",
+    "releaseSource": "embedded"
+  },
+  "sourceValidation": {
+    "ci": {
+      "url": "https://github.com/ct1150/wending/actions/runs/40682034187",
+      "runId": 40682034187,
+      "headCommit": "c3376d8d479e6be530cfe29fd427e6b13c7018a3",
+      "checkoutCommit": "c657189a0c30472ef0093379dc1ef82d3be8dae0",
+      "tree": "ebb0dfe6a585e5497b1310f8907777d83c239f59",
+      "conclusion": "success",
+      "updatedAt": "2026-10-28T11:44:17Z",
+      "tests": 723,
+      "passed": 723,
+      "javascriptSyntaxFiles": 142,
+      "defaultBackendModules": 17,
+      "publish": "skipped",
+      "scope": "Existing source CI/preflight evidence, separate from this failed live attempt; not a new full local suite run."
+    },
+    "freshLocalChecks": {
+      "buildHtmlBytes": 971109,
+      "buildHtmlSha256": "b2be6d9d1695cc0f46af5ff4bac16c0519a36cd28a284a0b77c4834f0b058e16",
+      "offlineToolingSmokePassCounts": [
+        15,
+        26
+      ],
+      "fullLocalSuiteNewlyPassed": false,
+      "scope": "Pre-deployment checks of c3376d8 only; subsequent full validation of the offline binding-error delta is recorded separately in offlineClassificationFix."
+    }
+  },
+  "beforeDeploy": {
+    "observedAt": "2026-10-28T12:40:51.199153+00:00",
+    "callCount": 8,
+    "reservedNeurons": 450,
+    "limits": {
+      "maxCalls": 11,
+      "maxNeurons": 800,
+      "taskCalls": {
+        "task1": 4,
+        "task7": 5,
+        "task8": 2
+      }
+    },
+    "taskCalls": {
+      "task1": 4,
+      "task7": 3,
+      "task8": 1
+    },
+    "allActualNeuronsNull": true,
+    "statusSha256": "a5611fba3a536a2411f17887f659313ca4835b8d8780de284e2e1e0b8ddcf4ff",
+    "priorStatusSha256": "a5611fba3a536a2411f17887f659313ca4835b8d8780de284e2e1e0b8ddcf4ff",
+    "statusUnchangedFromPriorRead": true,
+    "inferenceRequests": 0
+  },
+  "freeBoundaryObservation": {
+    "observedAt": "2026-10-28T12:42:03.772Z",
+    "completedAt": "2026-10-28T12:42:04.141Z",
+    "windowStart": "2026-10-28T00:00:00Z",
+    "windowEndExclusive": "2026-10-28T12:42:03.772Z",
+    "planSource": "Existing explicit owner Workers Free confirmation; billing API not verified.",
+    "directAiBindingVerified": true,
+    "sqliteNamespacesVerified": true,
+    "gatewayCreditsUsed": false,
+    "usage": {
+      "count": 8,
+      "sum": {
+        "totalInputTokens": 4363,
+        "totalNeurons": 105.87210083007812,
+        "totalOutputTokens": 2812
+      }
+    },
+    "conservativeAllowanceNeurons": 900,
+    "caveat": "Delayed account analytics, not a bill, exact live balance, per-attempt measured usage, or permission to refund a reservation.",
+    "inferenceCalls": 0
+  },
+  "deployment": {
+    "completedAt": "2026-10-28T12:43:04.715Z",
+    "proofCheckedAt": "2026-10-28T12:42:03.772Z",
+    "proofAgeMsAtCompletion": 60943,
+    "originalNamespacesUnchanged": true,
+    "originalFixedObjectsAndExperimentV1Unchanged": true,
+    "originalStorageAndOperatorTokenPreserved": true,
+    "newMigrations": [],
+    "namespaces": {
+      "StoryBudget": "1de1df3929534a8d8d495d6db6604e99",
+      "OperatorProbe": "dfb218f2f29d4ecab2395f8a00b48350"
+    },
+    "observations": [
+      {
+        "worker": "baishi-wending-ai-acceptance",
+        "createdAt": "2026-10-28T12:43:00.547421Z",
+        "deploymentId": "00253b62-fd0a-4906-bf46-76d7e98e810b",
+        "versions": [
+          {
+            "versionId": "d8dc818e-77c0-403b-b340-26d41d110c42",
+            "percentage": 100
+          }
+        ],
+        "moduleCount": 21,
+        "allModuleHashesMatched": true,
+        "migrationTag": "operator-probe-v1",
+        "modules": [
+          {
+            "name": "entry.mjs",
+            "type": "esm",
+            "bytes": 841,
+            "sha256": "dbacee2164e98d5a0968599bb9865ad002865b390e646c1984e152cfb518e41b"
+          },
+          {
+            "name": "src/game/cultivation/live/engine.js",
+            "type": "esm",
+            "bytes": 12171,
+            "sha256": "5d824d1e58a73da0b085d7be3c5ec57f920f683710330c0e1648b4473fa951a4"
+          },
+          {
+            "name": "src/game/cultivation/live/identity.js",
+            "type": "esm",
+            "bytes": 3931,
+            "sha256": "d619269073a7b9afcaa6245ae013ead2e82677d76698a372ff21a51a11cab232"
+          },
+          {
+            "name": "src/game/cultivation/live/memory.js",
+            "type": "esm",
+            "bytes": 24475,
+            "sha256": "ad7c117d24ecfc464c19c56bd1ba483f6e790b1a13f3914ef3fc4a22fdeec87a"
+          },
+          {
+            "name": "src/game/cultivation/live/model.js",
+            "type": "esm",
+            "bytes": 1379,
+            "sha256": "1b1b208631bac405395d84c240957a15db080333abe174b98e0eb5412336846a"
+          },
+          {
+            "name": "src/game/cultivation/live/schema.js",
+            "type": "esm",
+            "bytes": 5120,
+            "sha256": "dfdbdcadf35deb39315f571821203d61bd9f5a10d8c359b074001d16b0cdd0c9"
+          },
+          {
+            "name": "src/game/cultivation/live/validation.js",
+            "type": "esm",
+            "bytes": 10250,
+            "sha256": "44137cda97b87d78bdcf5513aa939e7549dd3c5406b699ac6491827a6514516a"
+          },
+          {
+            "name": "src/worker/operator-acceptance-state.js",
+            "type": "esm",
+            "bytes": 1655,
+            "sha256": "811ddf1757855a2bd518f6cdb6d0adcbbb42661d36ebe5b7df8d5dc4d8c61880"
+          },
+          {
+            "name": "src/worker/operator-baseline.js",
+            "type": "esm",
+            "bytes": 8903,
+            "sha256": "456aa0ebb7d3441152f5c448b9f1952ec7997f337bb75124761ade4be1f4ce8f"
+          },
+          {
+            "name": "src/worker/operator-probe.js",
+            "type": "esm",
+            "bytes": 10176,
+            "sha256": "6a761395e4e5ff454a55b8d8dacfec958d2096922c79d86731419016a913cb99"
+          },
+          {
+            "name": "src/worker/operator-story.js",
+            "type": "esm",
+            "bytes": 14403,
+            "sha256": "907267e81629dee0c0adbb5c6f53d2b54d443c2a9e507f03563e392435be6370"
+          },
+          {
+            "name": "src/worker/operator-task8.js",
+            "type": "esm",
+            "bytes": 7668,
+            "sha256": "be4aed88fc2216ec8972d87f554b071b4d770c54506f32a4b2c28261f03bddf5"
+          },
+          {
+            "name": "src/worker/story-acceptance.js",
+            "type": "esm",
+            "bytes": 785,
+            "sha256": "1f764d3653f659960afde1d6142cbae21e0eca051df8457fed6c6275aff1f58b"
+          },
+          {
+            "name": "src/worker/story-api.js",
+            "type": "esm",
+            "bytes": 13458,
+            "sha256": "84a9f442a0443c5bb91ae5d5d07f6ab938cd65a593a7a57f4f31960c1950d40f"
+          },
+          {
+            "name": "src/worker/story-config.js",
+            "type": "esm",
+            "bytes": 9687,
+            "sha256": "2e518626a166b479e11dfec042a84efe5de318e2459c3d1e35da3340d5834e4b"
+          },
+          {
+            "name": "src/worker/story-generation-schema.js",
+            "type": "esm",
+            "bytes": 2394,
+            "sha256": "74e21c0301837d81ee4de95344236f22daca48c7c6d16c21740dae248ff8c51d"
+          },
+          {
+            "name": "src/worker/story-observation.js",
+            "type": "esm",
+            "bytes": 5130,
+            "sha256": "37486812366c23471d039b450cec1fd094ea75d26d83d8c6d81ec2dc06c066c2"
+          },
+          {
+            "name": "src/worker/story-probe.js",
+            "type": "esm",
+            "bytes": 6874,
+            "sha256": "faff93b16191735b5c78f8a7184f90b7853dc1a7721c06c35733c7f5d698b5f7"
+          },
+          {
+            "name": "src/worker/story-provider-core.js",
+            "type": "esm",
+            "bytes": 10432,
+            "sha256": "349217545d78d22212e4e0be35052d0863d7a26151c16564f92068907d7e724d"
+          },
+          {
+            "name": "src/worker/story-provider.js",
+            "type": "esm",
+            "bytes": 637,
+            "sha256": "d910641c21df9fa76647b62e6076c1bb4540656d13f41164207f8dd5510c7283"
+          },
+          {
+            "name": "src/worker/story-request-body.js",
+            "type": "esm",
+            "bytes": 3486,
+            "sha256": "53c441cb50bba79d467d0e24779fa8ba89c80711d2703f4af4f19da6a93d5e5a"
+          }
+        ]
+      },
+      {
+        "worker": "baishi-wending",
+        "createdAt": "2026-10-28T12:43:03.220857Z",
+        "deploymentId": "cec43b9e-48f7-4346-bdfb-27966f2f9c3f",
+        "versions": [
+          {
+            "versionId": "9bb11b35-514f-48ab-b61d-eb1c0f119d6d",
+            "percentage": 100
+          }
+        ],
+        "moduleCount": 20,
+        "allModuleHashesMatched": true,
+        "migrationTag": "story-budget-v1",
+        "modules": [
+          {
+            "name": "entry.mjs",
+            "type": "esm",
+            "bytes": 983877,
+            "sha256": "326bf4fc683e90e8301ddf5ae22d6e9fc604f149d7d9b4a22e7495d06a5c4432"
+          },
+          {
+            "name": "src/game/cultivation/live/engine.js",
+            "type": "esm",
+            "bytes": 12171,
+            "sha256": "5d824d1e58a73da0b085d7be3c5ec57f920f683710330c0e1648b4473fa951a4"
+          },
+          {
+            "name": "src/game/cultivation/live/identity.js",
+            "type": "esm",
+            "bytes": 3931,
+            "sha256": "d619269073a7b9afcaa6245ae013ead2e82677d76698a372ff21a51a11cab232"
+          },
+          {
+            "name": "src/game/cultivation/live/memory.js",
+            "type": "esm",
+            "bytes": 24475,
+            "sha256": "ad7c117d24ecfc464c19c56bd1ba483f6e790b1a13f3914ef3fc4a22fdeec87a"
+          },
+          {
+            "name": "src/game/cultivation/live/model.js",
+            "type": "esm",
+            "bytes": 1379,
+            "sha256": "1b1b208631bac405395d84c240957a15db080333abe174b98e0eb5412336846a"
+          },
+          {
+            "name": "src/game/cultivation/live/schema.js",
+            "type": "esm",
+            "bytes": 5120,
+            "sha256": "dfdbdcadf35deb39315f571821203d61bd9f5a10d8c359b074001d16b0cdd0c9"
+          },
+          {
+            "name": "src/game/cultivation/live/validation.js",
+            "type": "esm",
+            "bytes": 10250,
+            "sha256": "44137cda97b87d78bdcf5513aa939e7549dd3c5406b699ac6491827a6514516a"
+          },
+          {
+            "name": "src/worker/index.js",
+            "type": "esm",
+            "bytes": 1695,
+            "sha256": "49c10eee2600f7e17e1ca1668f568a8349f4d3840912d5de1af379aab0567eaa"
+          },
+          {
+            "name": "src/worker/release-gateway.js",
+            "type": "esm",
+            "bytes": 8492,
+            "sha256": "db66b3b90e40e8695dfd0a9ddd4815591e85784c31d02d223a7565a0b2065276"
+          },
+          {
+            "name": "src/worker/story-acceptance.js",
+            "type": "esm",
+            "bytes": 785,
+            "sha256": "1f764d3653f659960afde1d6142cbae21e0eca051df8457fed6c6275aff1f58b"
+          },
+          {
+            "name": "src/worker/story-api.js",
+            "type": "esm",
+            "bytes": 13458,
+            "sha256": "84a9f442a0443c5bb91ae5d5d07f6ab938cd65a593a7a57f4f31960c1950d40f"
+          },
+          {
+            "name": "src/worker/story-budget.js",
+            "type": "esm",
+            "bytes": 14404,
+            "sha256": "3ff9136e5f598914791d1484e08cf49217d14ebc8f0008250335392b6ace343a"
+          },
+          {
+            "name": "src/worker/story-config.js",
+            "type": "esm",
+            "bytes": 9687,
+            "sha256": "2e518626a166b479e11dfec042a84efe5de318e2459c3d1e35da3340d5834e4b"
+          },
+          {
+            "name": "src/worker/story-experiment.js",
+            "type": "esm",
+            "bytes": 4487,
+            "sha256": "c617bd2ffe2fc93405400b9f608de2e5d98d350b8b2d16416a5c6295ec121ca1"
+          },
+          {
+            "name": "src/worker/story-generation-schema.js",
+            "type": "esm",
+            "bytes": 2394,
+            "sha256": "74e21c0301837d81ee4de95344236f22daca48c7c6d16c21740dae248ff8c51d"
+          },
+          {
+            "name": "src/worker/story-observation.js",
+            "type": "esm",
+            "bytes": 5130,
+            "sha256": "37486812366c23471d039b450cec1fd094ea75d26d83d8c6d81ec2dc06c066c2"
+          },
+          {
+            "name": "src/worker/story-provider-core.js",
+            "type": "esm",
+            "bytes": 10432,
+            "sha256": "349217545d78d22212e4e0be35052d0863d7a26151c16564f92068907d7e724d"
+          },
+          {
+            "name": "src/worker/story-provider.js",
+            "type": "esm",
+            "bytes": 637,
+            "sha256": "d910641c21df9fa76647b62e6076c1bb4540656d13f41164207f8dd5510c7283"
+          },
+          {
+            "name": "src/worker/story-request-body.js",
+            "type": "esm",
+            "bytes": 3486,
+            "sha256": "53c441cb50bba79d467d0e24779fa8ba89c80711d2703f4af4f19da6a93d5e5a"
+          },
+          {
+            "name": "src/worker/story-stage.js",
+            "type": "esm",
+            "bytes": 3144,
+            "sha256": "93e4895693f0fb39dd68b37813da07fa655e8fd0c3e11dcad7cf17bee0a0beb2"
+          }
+        ]
+      }
+    ]
+  },
+  "postDeployReadback": {
+    "observedAt": "2026-10-28T12:43:23.067225+00:00",
+    "scope": "Six GET requests only; no session or turn POST",
+    "health": {
+      "status": "ok",
+      "version": "4.0.0",
+      "sourceCommit": "c3376d8d479e6be530cfe29fd427e6b13c7018a3",
+      "htmlSha256": "b2be6d9d1695cc0f46af5ff4bac16c0519a36cd28a284a0b77c4834f0b058e16",
+      "htmlBytes": 971109,
+      "releaseSource": "embedded",
+      "lastAttemptAt": null,
+      "lastSuccessAt": null,
+      "lastError": ""
+    },
+    "html": [
+      {
+        "path": "/",
+        "bytes": 971109,
+        "sha256": "b2be6d9d1695cc0f46af5ff4bac16c0519a36cd28a284a0b77c4834f0b058e16"
+      },
+      {
+        "path": "/baishi-wending-offline.html",
+        "bytes": 971109,
+        "sha256": "b2be6d9d1695cc0f46af5ff4bac16c0519a36cd28a284a0b77c4834f0b058e16"
+      }
+    ],
+    "capabilitiesWithoutPermit": {
+      "protocolVersion": 1,
+      "available": false,
+      "status": "paused",
+      "errorCode": "TESTER_PERMIT_REQUIRED",
+      "limits": {
+        "maxRequestBytes": 32768,
+        "maxResponseBytes": 65536,
+        "maxContextBytes": 7000,
+        "timeoutMs": 30000
+      }
+    },
+    "capabilitiesWithPermit": {
+      "protocolVersion": 1,
+      "available": true,
+      "status": "ready",
+      "errorCode": null,
+      "limits": {
+        "maxRequestBytes": 32768,
+        "maxResponseBytes": 65536,
+        "maxContextBytes": 7000,
+        "timeoutMs": 30000
+      }
+    },
+    "limits": {
+      "maxCalls": 12,
+      "maxNeurons": 900,
+      "taskCalls": {
+        "task1": 4,
+        "task7": 5,
+        "task8": 3
+      }
+    },
+    "callCount": 8,
+    "reservedNeurons": 450,
+    "originalStatusEqualExceptAuthorizedLimits": true,
+    "originalNamespacesUnchanged": true,
+    "allActualNeuronsNull": true,
+    "taskCalls": {
+      "task1": 4,
+      "task7": 3,
+      "task8": 1
+    },
+    "inferenceCalls": 0
+  },
+  "step1": {
+    "browserActionStartedAt": "2026-10-28T12:43:48.932Z",
+    "responseCapturedAt": "2026-10-28T12:43:50.909Z",
+    "responseShanghai": "2026-10-28T20:43:50.909+08:00",
+    "task": "task8",
+    "turnPostCount": 1,
+    "retryCount": 0,
+    "httpStatus": 200,
+    "publicStatus": "paused",
+    "publicErrorCode": "PROVIDER_FAILED",
+    "ledgerStatus": "unknown",
+    "ledgerStatusCaveat": "Unknown is the stored outcome; it is neither complete nor failed. The attempt and its reservation remain retained.",
+    "reservedNeurons": 111,
+    "actualNeurons": null,
+    "privateObservation": {
+      "version": 1,
+      "stage": "provider",
+      "errorCode": "PROVIDER_FAILED",
+      "structureDiagnostic": null,
+      "modelId": "@cf/qwen/qwen3-30b-a3b-fp8",
+      "inputHash": "9cc62f704c126dc33b2599ccaeb664ad7f52afc065d90c142fa9b67669857f7f",
+      "inputBytes": 6696,
+      "usage": null,
+      "stopReason": null,
+      "nonThinkingValidated": null,
+      "latencyMs": 280
+    },
+    "rootCauseLimit": "The ai.run invocation threw an exception mapped to PROVIDER_FAILED; exact upstream exception code/message was not stored. No structural rejection or model-content root cause is established."
+  },
+  "failureWindowAnalytics": {
+    "observedAt": "2026-10-28T12:45:49.992Z",
+    "windowStart": "2026-10-28T12:43:40Z",
+    "windowEndExclusive": "2026-10-28T12:44:10Z",
+    "groups": [
+      {
+        "count": 1,
+        "datetime": "2026-10-28T12:43:50Z",
+        "errorCode": 8007,
+        "modelId": "@cf/qwen/qwen3-30b-a3b-fp8",
+        "inferenceTimeMs": 219,
+        "requestBytesIn": 6726,
+        "requestBytesOut": 0,
+        "requestSource": "unknown",
+        "aggregateInputTokens": 0,
+        "aggregateOutputTokens": 0,
+        "aggregateNeurons": 0
+      }
+    ],
+    "association": "Temporal/model correspondence with the browser failure is inferred; analytics contains no request, attempt or session ID to verify a one-to-one link.",
+    "caveat": "Account analytics aggregates are not per-attempt billing evidence; actualNeurons stays null and the unknown 111 reservation is not refunded.",
+    "inferenceRequestsByThisRead": 0
+  },
+  "afterOpening": {
+    "observedAt": "2026-10-28T12:44:33.482066+00:00",
+    "callCount": 9,
+    "reservedNeurons": 561,
+    "taskCalls": {
+      "task1": 4,
+      "task7": 3,
+      "task8": 2
+    },
+    "limits": {
+      "maxCalls": 12,
+      "maxNeurons": 900,
+      "taskCalls": {
+        "task1": 4,
+        "task7": 5,
+        "task8": 3
+      }
+    },
+    "originalEightUnchanged": true,
+    "originalResultsCasesAdmissionsAndAssociationsUnchanged": true,
+    "allActualNeuronsNull": true,
+    "newRowStatus": "unknown",
+    "baselineRegistered": false,
+    "inferenceRequestsByThisRead": 0,
+    "reservationCaveat": "561 is conservative reservation, not a bill or measured actual spend."
+  },
+  "browser": {
+    "mode": "real-browser-command-driven",
+    "version": "151.0.7922.34",
+    "tlsVerification": "normal; ignoreHTTPSErrors=false",
+    "independentTestProfile": true,
+    "archiveVersion": 2,
+    "newRunRevision": 0,
+    "newRunCurrentScene": null,
+    "newBirthRetained": true,
+    "newPendingRetained": true,
+    "acceptedSceneCommitted": false,
+    "sameArchiveAcrossReadOnlySnapshots": true,
+    "readOnlySnapshotTimes": [
+      "2026-10-28T12:43:51.569Z",
+      "2026-10-28T12:44:12.367Z",
+      "2026-10-28T12:44:33.640Z"
+    ],
+    "refreshExecutedAfterStop": false,
+    "failureRecoveryByRefreshVerifiedThisRound": false,
+    "stopLatch": "Permanent read-only after first failure; only snapshot/screenshot then quit.",
+    "quitAt": "2026-10-28T12:45:05.211Z",
+    "driverClosed": true,
+    "visualScope": "Chinese failure UI observed on this desktop browser only; no accepted story quality or broader device claim."
+  },
+  "remainingSteps": {
+    "acceptedS1": false,
+    "sharedBaselineRegistered": false,
+    "task7BranchAExecuted": false,
+    "task7BranchBExecuted": false,
+    "browserFinalChoiceExecuted": false,
+    "successfulSceneSaveAndRefreshVerified": false
+  },
+  "release": {
+    "publicEnabled": false,
+    "modelValidated": false,
+    "productionRegistryEmpty": true,
+    "pr": 14,
+    "prDraft": true,
+    "merged": false,
+    "publicReleaseCompleted": false
+  },
+  "provenance": {
+    "location": "Private local controlled-reacceptance evidence retained outside the repository; only relative evidence names and byte hashes are published.",
+    "files": [
+      {
+        "name": "readonly-before-deploy-summary.json",
+        "sha256": "961daaa5b4fd4562e10ecc095c3a7d0bd717a648b2052d62362e51b8fdd93877"
+      },
+      {
+        "name": "deployment-baseline.json",
+        "sha256": "0ced7d6fdcc5cbb3f59da962d269fe12ff73edbf33f6fcbf363f31261095b093"
+      },
+      {
+        "name": "deployment-readback.json",
+        "sha256": "1b6c11dcef8dfefd3b9afc4fd03c406f5caa6af97d06d55936d887994cd2160b"
+      },
+      {
+        "name": "post-deploy-readback-summary.json",
+        "sha256": "59b286d9ed245f4d3e5d125c5c71932e75edfb6423fbd89cb8e4e14978b6a1e1"
+      },
+      {
+        "name": "fresh-account-observation.json",
+        "sha256": "e10fbb6975ed712169bdb12003cf00b77b963891c3047387906298845dd7d3b7"
+      },
+      {
+        "name": "after-opening-summary.json",
+        "sha256": "3d93eb2935a0559130668b06c3aac3ef37e1e3b9cff8c0fb7df55ff41b7f504b"
+      },
+      {
+        "name": "failure-account-analytics.json",
+        "sha256": "4b27ced9f9b86b5549d6c66bfcde46dfcba7befafa528cb34f59d830c512b11f"
+      },
+      {
+        "name": "browser-live-20261028-c3376d8-01/manifest.json",
+        "sha256": "025d96e33631ea519b2199d425278881442c3dc3fbad249cda6c523f01ea5415"
+      },
+      {
+        "name": "browser-live-20261028-c3376d8-01/commands.jsonl",
+        "sha256": "8074ee2873f3da5b83aca4431d3f42c0dffcb0a5c42e78dcb49b5de8c4164b10"
+      },
+      {
+        "name": "browser-live-20261028-c3376d8-01/network/0005.response.json",
+        "sha256": "de7bf00cfee505c2c18f82b4b0548cb973a2c5facfa96fe17ee44224b333a057"
+      },
+      {
+        "name": "browser-live-20261028-c3376d8-01/snapshots/005-opening-1.json",
+        "sha256": "62875cee517d3e373fd2df0498ee4d98e91ac83f2df79aefd14add338fb830df"
+      },
+      {
+        "name": "browser-live-20261028-c3376d8-01/snapshots/006-failure-snapshot.json",
+        "sha256": "0c6ad168b6c1624bcb551914d5bc814c05ad46099a8f8b7cd4ca5a3e3049222b"
+      },
+      {
+        "name": "browser-live-20261028-c3376d8-01/snapshots/007-failure-image.json",
+        "sha256": "a9d012db04b1d4671b83dcaa5e8127d9e0941d2a9e1c82e37aa3d589b2fee583"
+      },
+      {
+        "name": "final-readonly-status.json",
+        "sha256": "be2b467d29c9a284a96dd56e448b89529242008ac9bb25ccfa1141d878b0234c"
+      },
+      {
+        "name": "failure-telemetry-summary.json",
+        "sha256": "5b23c8c6ede9721433aa18414fda228255add9b6a42e94dff30e7c0d63efee49"
+      }
+    ]
+  },
+  "limitations": [
+    "No additional inference after this failure, regardless of remaining quota.",
+    "No successful opening, same-S1 branch quality, final player choice, save/refresh loop, or production promotion passed.",
+    "Earlier 74aa failure refresh evidence remains historical and does not prove refresh recovery for this round.",
+    "The offline binding-error fix passed local validation and independent review but was not deployed; it does not diagnose or resolve the live 8007-associated failure."
+  ],
+  "finalReadOnlyStopVerification": {
+    "observedAt": "2026-10-28T12:48:11.582099+00:00",
+    "inferenceRequests": 0,
+    "statusUnchangedAfterStop": true,
+    "callCount": 9,
+    "reservedNeurons": 561,
+    "lastAttemptStatus": "unknown",
+    "health": {
+      "status": "ok",
+      "version": "4.0.0",
+      "sourceCommit": "c3376d8d479e6be530cfe29fd427e6b13c7018a3",
+      "htmlSha256": "b2be6d9d1695cc0f46af5ff4bac16c0519a36cd28a284a0b77c4834f0b058e16",
+      "htmlBytes": 971109,
+      "releaseSource": "embedded",
+      "lastAttemptAt": null,
+      "lastSuccessAt": null,
+      "lastError": ""
+    },
+    "publicCapabilities": {
+      "protocolVersion": 1,
+      "available": false,
+      "status": "paused",
+      "errorCode": "TESTER_PERMIT_REQUIRED",
+      "limits": {
+        "maxRequestBytes": 32768,
+        "maxResponseBytes": 65536,
+        "maxContextBytes": 7000,
+        "timeoutMs": 30000
+      }
+    },
+    "testerCapabilities": {
+      "protocolVersion": 1,
+      "available": false,
+      "status": "paused",
+      "errorCode": "FREE_BOUNDARY_UNVERIFIED",
+      "limits": {
+        "maxRequestBytes": 32768,
+        "maxResponseBytes": 65536,
+        "maxContextBytes": 7000,
+        "timeoutMs": 30000
+      }
+    }
+  },
+  "retainedTelemetrySearch": {
+    "observedAt": "2026-10-28T12:47:00.817Z",
+    "status": 200,
+    "success": true,
+    "dry": true,
+    "matchingEventCount": 0,
+    "conclusion": "No matching retained telemetry event was returned for the failed opening time window; exact upstream message remains unavailable.",
+    "inferenceRequests": 0
+  },
+  "offlineClassificationFix": {
+    "status": "offline-validated-not-deployed",
+    "scope": "Preserve structured-code precedence and recognize only already-supported numeric codes in an anchored message prefix bounded to 16 characters: provider 3036/3040/429, probe 3036/3040. Unknown 8007 remains PROVIDER_FAILED/unknown; no raw message retention, retry, refund, schema or module-graph change.",
+    "validationResult": {
+      "targetedRed": {
+        "tests": 47,
+        "pass": 45,
+        "fail": 2,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0,
+        "duration_ms": 639.743202
+      },
+      "targetedRedFailures": "Only the two new message-only known-code classifications failed before the implementation: PROVIDER_FAILED instead of FREE_QUOTA_EXHAUSTED.",
+      "targetedGreen": {
+        "tests": 47,
+        "pass": 47,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0,
+        "duration_ms": 611.172184
+      },
+      "fullRelease": {
+        "command": "npm run release",
+        "exitCode": 0,
+        "tests": 728,
+        "pass": 728,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0,
+        "duration_ms": 139241.619951,
+        "javascriptSyntaxFiles": 142,
+        "htmlBytes": 971109,
+        "htmlSha256": "b2be6d9d1695cc0f46af5ff4bac16c0519a36cd28a284a0b77c4834f0b058e16"
+      },
+      "independentReview": {
+        "scope": "Working-tree delta from base commit, including the sanitized evidence and documentation; no claim of main-merge or deployment readiness.",
+        "critical": 0,
+        "important": 0,
+        "minor": 0,
+        "targetedTestsPassed": 47,
+        "nonEntryDeploymentModuleHashesMatched": 39
+      },
+      "logs": [
+        {
+          "name": "wending-binding-errors-red.log",
+          "sha256": "a779a3773d31f9553acec56a0e75db263440f8a5e24a01c497e9355d3b6ddd87"
+        },
+        {
+          "name": "wending-binding-errors-green.log",
+          "sha256": "194ea2b132b1b2253a47e1fc8966cc74bde4985402f99d1a4ba466aafac0bea3"
+        },
+        {
+          "name": "wending-binding-errors-release.log",
+          "sha256": "2afdadc1f110158f0ce65253e854efa685a57a1f4ddad7a3f2846977921512f5"
+        }
+      ],
+      "ci": "New commit CI is recorded separately in the Draft PR after publication; the c3376d8 CI above applies only to the deployed source."
+    },
+    "deployed": false,
+    "additionalInferenceCalls": 0,
+    "error8007CauseResolved": false,
+    "liveResultAndReservationUnchanged": true,
+    "officialBindingSource": "https://github.com/cloudflare/workerd/blob/9022f4dc45485e2b2fc619171674ae7065b6213c/src/cloudflare/internal/ai-api.ts",
+    "baseCommit": "c3376d8d479e6be530cfe29fd427e6b13c7018a3",
+    "files": [
+      {
+        "path": "src/worker/story-provider-core.js",
+        "sha256": "599a2d5849487b526b236c096dbed3df6716b79c83228a04064ee1eace5bd26f"
+      },
+      {
+        "path": "src/worker/story-probe.js",
+        "sha256": "6f406594705917dccb2cfa630eee4dbf142b6e557d8a2c88f0a9eb4abc15d3c2"
+      },
+      {
+        "path": "tests/story-acceptance.test.js",
+        "sha256": "ec3fe043b43ddee89d954370a1971d320d52111ee3521af396ce6b70fa1cb0b6"
+      },
+      {
+        "path": "tests/workers-ai-provider.test.js",
+        "sha256": "ab4a768d814b2cd970ea96fe4dd0373c2eb6c6492684ba2bc8116a7fc673c8c8"
+      }
+    ]
+  }
+}

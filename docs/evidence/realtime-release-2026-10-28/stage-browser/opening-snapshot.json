@@ -1,0 +1,335 @@
+{
+  "at": "2026-10-28T16:34:41.459Z",
+  "url": "https://baishi-wending.ct1150.workers.dev/",
+  "summary": {
+    "database": {
+      "name": "wending-live-v1",
+      "version": 2,
+      "storeCounts": {
+        "runs": 3,
+        "pending": 0,
+        "history": 1,
+        "memory": 12
+      }
+    },
+    "archiveId": "9bd91d07-af0b-4ce3-b722-532fef8a1680",
+    "runId": "62ed8197-a43b-4ab1-b3af-d25b795382ca",
+    "revision": 1,
+    "turnId": 1,
+    "phase": "active",
+    "stateSha256": "65fa96ed4c6190a4063aa54476a8f2ebee6ce08a26250f5c74d58d2c5f9abf60",
+    "storedStateHash": "65fa96ed4c6190a4063aa54476a8f2ebee6ce08a26250f5c74d58d2c5f9abf60",
+    "sceneId": "r:17d4b63b7a333a81:t1:s:scene",
+    "sceneSha256": "fcb3ed30c0809b4adc050ea12ab2536db8cd4cde0580bc03152ef94772f08d81",
+    "pendingRequestId": null,
+    "pendingKind": null,
+    "attemptId": null,
+    "pause": null,
+    "history": {
+      "chunks": 1,
+      "tailEntries": [
+        {
+          "identity": {
+            "runId": "62ed8197-a43b-4ab1-b3af-d25b795382ca",
+            "turnId": 1,
+            "baseRevision": 0,
+            "stateHash": "ee41fdf3593d5a9ade54bfad25ddb19a178338c6ffd79a6eadba84929b693336",
+            "choiceId": null,
+            "rulesVersion": 1,
+            "promptVersion": 1,
+            "requestId": "06b892a2-7664-42de-941f-52add7799bd3"
+          },
+          "stateHash": "65fa96ed4c6190a4063aa54476a8f2ebee6ce08a26250f5c74d58d2c5f9abf60",
+          "sceneId": "r:17d4b63b7a333a81:t1:s:scene",
+          "title": "青石村的晨雾"
+        }
+      ],
+      "totalTurns": 1
+    }
+  },
+  "archive": {
+    "database": {
+      "name": "wending-live-v1",
+      "version": 2,
+      "storeCounts": {
+        "runs": 3,
+        "pending": 0,
+        "history": 1,
+        "memory": 12
+      }
+    },
+    "archive": {
+      "archiveId": "9bd91d07-af0b-4ce3-b722-532fef8a1680",
+      "runId": "62ed8197-a43b-4ab1-b3af-d25b795382ca",
+      "state": {
+        "relationshipVersion": 1,
+        "version": 5,
+        "mode": "cultivation",
+        "contentVersion": 4,
+        "rulesVersion": 1,
+        "promptVersion": 1,
+        "runId": "62ed8197-a43b-4ab1-b3af-d25b795382ca",
+        "revision": 1,
+        "turnId": 1,
+        "phase": "active",
+        "rng": 1080474372,
+        "life": {
+          "name": "云归",
+          "ageDays": 5760,
+          "lifeLimit": 80,
+          "realm": "mortal",
+          "cultivation": 0,
+          "injury": 0,
+          "items": {
+            "supplies": 3,
+            "stones": 0
+          },
+          "relations": {},
+          "birth": {
+            "originId": "village",
+            "talentIds": [
+              "fortune-debt",
+              "iron-bones"
+            ],
+            "attributes": {
+              "constitution": 3,
+              "insight": 6,
+              "fortune": 3
+            }
+          }
+        },
+        "birthReceipt": {
+          "kind": "opening",
+          "choiceId": null,
+          "action": null,
+          "elapsedDays": 0,
+          "itemChanges": {},
+          "relationChanges": {},
+          "random": {
+            "before": 1080474372,
+            "after": 1080474372,
+            "roll": null
+          },
+          "before": {
+            "ageDays": 5760,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "after": {
+            "ageDays": 5760,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "death": null,
+          "birth": {
+            "originId": "village",
+            "talentIds": [
+              "fortune-debt",
+              "iron-bones"
+            ],
+            "attributes": {
+              "constitution": 3,
+              "insight": 6,
+              "fortune": 3
+            }
+          }
+        },
+        "currentScene": {
+          "id": "r:17d4b63b7a333a81:t1:s:scene",
+          "title": "青石村的晨雾",
+          "location": "青石村",
+          "entities": [
+            {
+              "id": "r:17d4b63b7a333a81:t1:e:place_qingshi_village",
+              "name": "青石村",
+              "kind": "place"
+            },
+            {
+              "id": "r:17d4b63b7a333a81:t1:e:person_lao_wang",
+              "name": "老王",
+              "kind": "person",
+              "status": "alive"
+            },
+            {
+              "id": "r:17d4b63b7a333a81:t1:e:person_ling_shang",
+              "name": "林商",
+              "kind": "person",
+              "status": "alive"
+            }
+          ],
+          "blocks": [
+            {
+              "kind": "narration",
+              "text": "晨雾笼罩着青石村，你背着行囊站在村口。十六岁的你骨骼坚硬，却背负着莫名的因果债。行囊里仅有三份干粮，没有灵石。村口的老槐树下，卖杂货的老王正擦拭着秤杆，远处山道上，林商赶着骡车缓缓驶来，车斗里堆满了待售的草药。"
+            },
+            {
+              "kind": "dialogue",
+              "text": "云归，你又要出远门？老王停下手中的活计，眯着眼打量你，“这世道不太平，北边山里的妖兽最近不太对劲。若是想换点灵石，我这有批陈年的符纸，虽然品阶低，但胜在量大。”",
+              "speaker": "r:17d4b63b7a333a81:t1:e:person_lao_wang"
+            },
+            {
+              "kind": "dialogue",
+              "text": "老王，别吓唬孩子。林商从骡车上跳下来，拍了拍身上的尘土，“我这次去云州城，若云归想去城里看看，可以搭我的车。不过，车资可不便宜，得拿东西换。”",
+              "speaker": "r:17d4b63b7a333a81:t1:e:person_ling_shang"
+            }
+          ],
+          "choices": [
+            {
+              "id": "r:17d4b63b7a333a81:t1:c:a",
+              "label": "与老王交谈，询问符纸详情及北边妖兽传闻",
+              "intent": "negotiate",
+              "targetId": "r:17d4b63b7a333a81:t1:e:person_lao_wang",
+              "stake": "low",
+              "approach": "cooperate"
+            },
+            {
+              "id": "r:17d4b63b7a333a81:t1:c:b",
+              "label": "向林商询问搭车去云州城的条件",
+              "intent": "negotiate",
+              "targetId": "r:17d4b63b7a333a81:t1:e:person_ling_shang",
+              "stake": "low",
+              "approach": "cooperate"
+            },
+            {
+              "id": "r:17d4b63b7a333a81:t1:c:c",
+              "label": "独自前往村后山林，寻找可能存在的灵石或行粮",
+              "intent": "explore",
+              "targetId": "stones",
+              "stake": "high",
+              "approach": "cautious"
+            }
+          ],
+          "memoryDeltas": [
+            {
+              "entityId": "r:17d4b63b7a333a81:t1:e:person_lao_wang",
+              "text": "老王是青石村的杂货商，知晓北边山里的妖兽异动，手中持有低阶符纸。",
+              "kind": "fact"
+            },
+            {
+              "entityId": "r:17d4b63b7a333a81:t1:e:person_ling_shang",
+              "text": "林商是行商，正前往云州城，愿意提供搭车服务但需支付车资。",
+              "kind": "fact"
+            }
+          ]
+        },
+        "lastReceipt": {
+          "kind": "opening",
+          "choiceId": null,
+          "action": null,
+          "elapsedDays": 0,
+          "itemChanges": {},
+          "relationChanges": {},
+          "random": {
+            "before": 1080474372,
+            "after": 1080474372,
+            "roll": null
+          },
+          "before": {
+            "ageDays": 5760,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "after": {
+            "ageDays": 5760,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "death": null,
+          "birth": {
+            "originId": "village",
+            "talentIds": [
+              "fortune-debt",
+              "iron-bones"
+            ],
+            "attributes": {
+              "constitution": 3,
+              "insight": 6,
+              "fortune": 3
+            }
+          }
+        },
+        "relatedEntities": [
+          {
+            "id": "r:17d4b63b7a333a81:t1:e:place_qingshi_village",
+            "name": "青石村",
+            "kind": "place"
+          },
+          {
+            "id": "r:17d4b63b7a333a81:t1:e:person_lao_wang",
+            "name": "老王",
+            "kind": "person",
+            "status": "alive"
+          },
+          {
+            "id": "r:17d4b63b7a333a81:t1:e:person_ling_shang",
+            "name": "林商",
+            "kind": "person",
+            "status": "alive"
+          }
+        ],
+        "archiveCursor": 0
+      },
+      "storedStateHash": "65fa96ed4c6190a4063aa54476a8f2ebee6ce08a26250f5c74d58d2c5f9abf60",
+      "headHash": "928ab29dc27f97fa91a80fd8eb6fb9a23eea597db39f227ffaccabbec79c0137",
+      "tailIndex": 0,
+      "pending": null,
+      "attempt": null,
+      "pause": null,
+      "history": {
+        "chunks": 1,
+        "tailEntries": [
+          {
+            "identity": {
+              "runId": "62ed8197-a43b-4ab1-b3af-d25b795382ca",
+              "turnId": 1,
+              "baseRevision": 0,
+              "stateHash": "ee41fdf3593d5a9ade54bfad25ddb19a178338c6ffd79a6eadba84929b693336",
+              "choiceId": null,
+              "rulesVersion": 1,
+              "promptVersion": 1,
+              "requestId": "06b892a2-7664-42de-941f-52add7799bd3"
+            },
+            "stateHash": "65fa96ed4c6190a4063aa54476a8f2ebee6ce08a26250f5c74d58d2c5f9abf60",
+            "sceneId": "r:17d4b63b7a333a81:t1:s:scene",
+            "title": "青石村的晨雾"
+          }
+        ],
+        "totalTurns": 1
+      }
+    }
+  },
+  "dom": {
+    "title": "百世问鼎 · 三界求仙篇",
+    "bodyText": "跳转到游戏内容\n实时人生\n云归\n⌄\n凡人\n16岁\n余寿64年\n历史对话\n更多\n\n青石村\n\n青石村的晨雾\n\n晨雾笼罩着青石村，你背着行囊站在村口。十六岁的你骨骼坚硬，却背负着莫名的因果债。行囊里仅有三份干粮，没有灵石。村口的老槐树下，卖杂货的老王正擦拭着秤杆，远处山道上，林商赶着骡车缓缓驶来，车斗里堆满了待售的草药。\n\n老王：“云归，你又要出远门？老王停下手中的活计，眯着眼打量你，“这世道不太平，北边山里的妖兽最近不太对劲。若是想换点灵石，我这有批陈年的符纸，虽然品阶低，但胜在量大。””\n\n林商：“老王，别吓唬孩子。林商从骡车上跳下来，拍了拍身上的尘土，“我这次去云州城，若云归想去城里看看，可以搭我的车。不过，车资可不便宜，得拿东西换。””\n\n落下一念，故事才会继续。\n\n与老王交谈，询问符纸详情及北边妖兽传闻\n7日 · 行粮 1\n向林商询问搭车去云州城的条件\n7日 · 行粮 1\n独自前往村后山林，寻找可能存在的灵石或行粮\n90日 · 历练受伤基础风险5%，根骨与坚韧筋骨可降低风险。\n实时人生 · 已缓存内容离线可读 · 新剧情需要联网",
+    "liveStatus": "落下一念，故事才会继续。",
+    "sceneTitle": "青石村的晨雾",
+    "sceneText": "晨雾笼罩着青石村，你背着行囊站在村口。十六岁的你骨骼坚硬，却背负着莫名的因果债。行囊里仅有三份干粮，没有灵石。村口的老槐树下，卖杂货的老王正擦拭着秤杆，远处山道上，林商赶着骡车缓缓驶来，车斗里堆满了待售的草药。\n\n老王：“云归，你又要出远门？老王停下手中的活计，眯着眼打量你，“这世道不太平，北边山里的妖兽最近不太对劲。若是想换点灵石，我这有批陈年的符纸，虽然品阶低，但胜在量大。””\n\n林商：“老王，别吓唬孩子。林商从骡车上跳下来，拍了拍身上的尘土，“我这次去云州城，若云归想去城里看看，可以搭我的车。不过，车资可不便宜，得拿东西换。””",
+    "choices": [
+      {
+        "id": "r:17d4b63b7a333a81:t1:c:a",
+        "revision": 1,
+        "label": "与老王交谈，询问符纸详情及北边妖兽传闻\n7日 · 行粮 1",
+        "enabled": true
+      },
+      {
+        "id": "r:17d4b63b7a333a81:t1:c:b",
+        "revision": 1,
+        "label": "向林商询问搭车去云州城的条件\n7日 · 行粮 1",
+        "enabled": true
+      },
+      {
+        "id": "r:17d4b63b7a333a81:t1:c:c",
+        "revision": 1,
+        "label": "独自前往村后山林，寻找可能存在的灵石或行粮\n90日 · 历练受伤基础风险5%，根骨与坚韧筋骨可降低风险。",
+        "enabled": true
+      }
+    ],
+    "startEnabled": false,
+    "pendingControls": false,
+    "activeMode": "live"
+  }
+}

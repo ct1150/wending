@@ -1,5 +1,5 @@
 // A stable gateway for public, tested static releases. It never runs downloaded code server-side.
-export function createReleaseGateway({ fallback, icon = '', repository = 'ct1150/wending', branch = 'release-channel', fetchImpl = globalThis.fetch, now = Date.now, cache = null, pollMs = 60000, timeoutMs = 7000 } = {}) {
+export function createReleaseGateway({ fallback, icon = '', repository = 'ct1150/wending', branch = 'release-channel', fetchImpl = globalThis.fetch, now = Date.now, cache = null, pollMs = 60000, timeoutMs = 7000, embeddedOnly = false } = {}) {
   const maximum = 3000000;
   const encoder = new TextEncoder();
   const hex = bytes => [...new Uint8Array(bytes)].map(value => value.toString(16).padStart(2, '0')).join('');
@@ -110,6 +110,8 @@ export function createReleaseGateway({ fallback, icon = '', repository = 'ct1150
   }
 
   async function snapshot() {
+    // Trusted acceptance packages pin the exact reviewed frontend identity.
+    if (embeddedOnly === true) return active;
     if (!pending && (attemptedAt === null || now() - attemptedAt >= pollMs)) pending = refresh().finally(() => { pending = null; });
     if (pending) await pending;
     return active;

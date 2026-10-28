@@ -1,0 +1,215 @@
+{
+  "schemaVersion": 1,
+  "reviewedAt": "2026-10-28T16:59:47.356Z",
+  "sourceCommit": "b519bf4fd730133a852b3b6e6d1f5aab90144220",
+  "verdict": "PASS_WITH_NON_BLOCKING_PROSE_LIMITATIONS",
+  "passed": true,
+  "materialFindings": [],
+  "method": "Independent reading of both unmodified real REST scenes, their actual selected action receipts, canonical next states and six compiled choice previews; current b519 parser/guard checks were executed separately in validation-summary.json.",
+  "branchA": {
+    "captureFile": "branch-a.json",
+    "passed": true,
+    "selectedAction": {
+      "id": "r:17d4b63b7a333a81:t1:c:a",
+      "label": "与老王交谈，询问符纸详情及北边妖兽传闻",
+      "intent": "negotiate",
+      "targetId": "r:17d4b63b7a333a81:t1:e:person_lao_wang",
+      "stake": "low",
+      "approach": "cooperate"
+    },
+    "receipt": {
+      "kind": "choice",
+      "choiceId": "r:17d4b63b7a333a81:t1:c:a",
+      "action": {
+        "id": "r:17d4b63b7a333a81:t1:c:a",
+        "label": "与老王交谈，询问符纸详情及北边妖兽传闻",
+        "intent": "negotiate",
+        "targetId": "r:17d4b63b7a333a81:t1:e:person_lao_wang",
+        "stake": "low",
+        "approach": "cooperate"
+      },
+      "elapsedDays": 7,
+      "itemChanges": {
+        "stones": 1,
+        "supplies": -1
+      },
+      "relationChanges": {
+        "r:17d4b63b7a333a81:t1:e:person_lao_wang": 3
+      },
+      "random": {
+        "before": 1080474372,
+        "after": 3012430483,
+        "roll": 83
+      },
+      "before": {
+        "ageDays": 5760,
+        "realm": "mortal",
+        "cultivation": 0,
+        "injury": 0
+      },
+      "after": {
+        "ageDays": 5767,
+        "realm": "mortal",
+        "cultivation": 0,
+        "injury": 0
+      },
+      "death": null,
+      "birth": null
+    },
+    "stateHash": "81675e47cc024ba63a04a87ccb77fe887994241b38337eae07fdb031464dc98a",
+    "findings": [
+      {
+        "severity": "pass",
+        "category": "selected-action",
+        "text": "继续与老王交谈并取得有关符纸、北边妖兽的消息，地点保持青石村；没有把谈及北边写成已经前往，没有执行未选择的旅行或战斗。"
+      },
+      {
+        "severity": "pass",
+        "category": "items-and-identity",
+        "text": "商家把符纸推到面前属于展示语境，没有写明赠送、购买或归玩家所有。没有叙述额外物品、受伤、境界突破或死亡。主角没有变成NPC，老王的对白使用既有稳定人物ID。"
+      },
+      {
+        "severity": "pass",
+        "category": "follow-up-choices",
+        "text": "询问老王、询问林商车资都是纯交涉；第三项明确探索行粮并使用supplies目标。六项中的这三项均通过当前校验和规则预演；没有固定时长、额外奖励、购买或实际旅程的错误承诺。"
+      },
+      {
+        "severity": "pass",
+        "category": "memory",
+        "text": "记忆记录老王透露的妖兽动向和符纸用途，没有把符纸记为已获得物品。规则收据单独保存7天、行粮-1、灵石+1、老王关系+3。"
+      },
+      {
+        "severity": "minor",
+        "category": "receipt-exposition",
+        "text": "正文没有具体铺陈七天经过和灵石取得原因，但没有给出相矛盾的数值或改写固定收据。"
+      },
+      {
+        "severity": "minor",
+        "category": "choice-variety",
+        "text": "后续两个询问选项较接近，仍有探索行粮这一不同方向；不是仅重排同一行动。"
+      }
+    ]
+  },
+  "branchB": {
+    "captureFile": "branch-b-retry-1.json",
+    "passed": true,
+    "selectedAction": {
+      "id": "r:17d4b63b7a333a81:t1:c:c",
+      "label": "独自前往村后山林，寻找可能存在的灵石或行粮",
+      "intent": "explore",
+      "targetId": "stones",
+      "stake": "high",
+      "approach": "cautious"
+    },
+    "receipt": {
+      "kind": "choice",
+      "choiceId": "r:17d4b63b7a333a81:t1:c:c",
+      "action": {
+        "id": "r:17d4b63b7a333a81:t1:c:c",
+        "label": "独自前往村后山林，寻找可能存在的灵石或行粮",
+        "intent": "explore",
+        "targetId": "stones",
+        "stake": "high",
+        "approach": "cautious"
+      },
+      "elapsedDays": 90,
+      "itemChanges": {
+        "stones": 1
+      },
+      "relationChanges": {},
+      "random": {
+        "before": 1080474372,
+        "after": 3012430483,
+        "roll": 83
+      },
+      "before": {
+        "ageDays": 5760,
+        "realm": "mortal",
+        "cultivation": 0,
+        "injury": 0
+      },
+      "after": {
+        "ageDays": 5850,
+        "realm": "mortal",
+        "cultivation": 0,
+        "injury": 0
+      },
+      "death": null,
+      "birth": null
+    },
+    "stateHash": "93a87c9e9f68be900f5e21da1e7ee8d5705809dd5db6e40f10585000ceb4b642",
+    "findings": [
+      {
+        "severity": "pass",
+        "category": "selected-action",
+        "text": "描述在青石村后山林探索九十个日夜并得到一枚灵石，与已选explore/stones和90天、stones+1相符；没有额外扣粮、受伤、突破或实际发动战斗。"
+      },
+      {
+        "severity": "pass",
+        "category": "identity-and-new-event",
+        "text": "铁背野猪是明确新登场、可说话的妖兽角色，使用本回合新人物ID；person是现有schema中的可交涉行动角色类别，未伪造已有角色身份，也未将主角添加为NPC。"
+      },
+      {
+        "severity": "pass",
+        "category": "travel-choice",
+        "text": "返回青石村以travel/road编码，目标是既有place实体青石村，标签包含其完整名称且不同于当前青石村后山林位置；规则预演30天、行粮-1，没有把旅程隐藏在negotiate中。"
+      },
+      {
+        "severity": "pass",
+        "category": "other-choices",
+        "text": "继续寻找灵石使用explore/stones，尝试与会说话的野猪沟通使用negotiate/cooperate并指向该妖兽。全部可执行，标签没有给出不受规则支持的奖励、交易或时长承诺。"
+      },
+      {
+        "severity": "pass",
+        "category": "memory",
+        "text": "新记忆仅记录妖兽外观与警戒状态；没有把尚未选择的回村、继续探索或沟通记成已发生。固定探索收据仍在记忆增量中。"
+      },
+      {
+        "severity": "minor",
+        "category": "prose",
+        "text": "“听到……炊烟气息”混用感官词，属于表达瑕疵，不影响身份、机械结果或下一步行动。"
+      },
+      {
+        "severity": "minor",
+        "category": "working-entities",
+        "text": "entities保留了老王与林商，但正文没有宣称他们出现在山林；属于多保留两个既有实体，不构成错误位移或身份重建。"
+      }
+    ]
+  },
+  "pair": {
+    "sameActualS1": true,
+    "sameS1StateHash": "65fa96ed4c6190a4063aa54476a8f2ebee6ce08a26250f5c74d58d2c5f9abf60",
+    "meaningfullyDistinct": true,
+    "allSixChoicesExecutable": true,
+    "text": "A推进村中交谈、老王关系与补给交换；B推进90天山林探索、灵石发现及妖兽相遇。两条地点、事件、时长和下一步选择不同，均从同一个实际浏览器S1按各自已选规则行动产生。"
+  },
+  "exactInputProof": {
+    "actualCaptureInputSourceCommit": "7613dc7298b12ab786850f77140bab535fc99953",
+    "verifiedCurrentCommit": "b519bf4fd730133a852b3b6e6d1f5aab90144220",
+    "aSha256": "779cd735076747b2ed27e44f850f0ebf9b8fe0db7f980d90c7a324255befbb48",
+    "bSha256": "7046771aae7a19a818f8967fd4447ef99fb9a0502670d7f134d741839d93bde7",
+    "currentSerializedBytesExactlyMatchBothActualRequests": true
+  },
+  "coverage": {
+    "realModelCaptures": true,
+    "captureTransport": "Cloudflare AI REST",
+    "model": "@cf/qwen/qwen3.8-27b",
+    "newModelCallsInThisReview": 0,
+    "nativeBrowserFlowPerformedByThisReview": false,
+    "realLatencySimulated": false,
+    "actualCapturedLatencyMs": {
+      "a": 58852,
+      "bRetry1": 67977
+    },
+    "currentProviderWatchdogMs": 90000,
+    "text": "当前b519源代码离线读取真实REST原始响应，通过共享provider解析、保护规则及canonical commit。输入字节与请求完全相同。该审查不是新一轮生产Worker或浏览器请求，不能替代发布后的公开入口验证。原生浏览器存档/刷新实证单独来自47c4064，需按其真实来源表述。"
+  },
+  "preservation": {
+    "originalFailedBUnmodified": true,
+    "originalFailedBNowRejected": "CHOICE_NOT_COMPILABLE",
+    "originalBrowserDriverFailedReportUnmodified": true,
+    "noRawResponseRewritten": true,
+    "noArchiveOrLedgerMutation": true
+  },
+  "finalConclusion": "最终A与B第二次真实样本均通过当前b519解析、规则提交和行动语义复核；两条共六项后续选择可执行，无实质性叙事与收据冲突。仅保留上述不阻断的表达/铺陈限制。"
+}

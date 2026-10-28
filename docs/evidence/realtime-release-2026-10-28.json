@@ -1,0 +1,108 @@
+{
+  "schemaVersion": 1,
+  "modelId": "@cf/qwen/qwen3.8-27b",
+  "sourceCommit": "b519bf4fd730133a852b3b6e6d1f5aab90144220",
+  "sourceTree": "8a11c953e0cd854a663466421b821e77633a9597",
+  "verifiedAt": "2026-10-28T17:01:33.732511Z",
+  "status": "MODEL_PROMOTION_EVIDENCE_VERIFIED",
+  "releaseExecutionRecord": "https://github.com/ct1150/wending/pull/14",
+  "acceptance": {
+    "opening": {
+      "passed": true,
+      "scope": "Actual protected browser opening returned ready and committed. The original generation driver status remains FAILED due to a later POST-count assertion; this section is not a whole-driver pass.",
+      "sourceCommit": "47c40646892e185588c61b9750076c829bb3fcfb",
+      "receivedAt": "2026-10-28T16:34:41.270Z",
+      "stateHash": "65fa96ed4c6190a4063aa54476a8f2ebee6ce08a26250f5c74d58d2c5f9abf60",
+      "evidence": "docs/evidence/realtime-release-2026-10-28/stage-review/technical-validation.json",
+      "originalDriverEvidence": "docs/evidence/realtime-release-2026-10-28/stage-browser/evidence.json",
+      "snapshot": "docs/evidence/realtime-release-2026-10-28/stage-browser/opening-snapshot.json"
+    },
+    "branches": {
+      "passed": true,
+      "scope": "Two unmodified real model responses from the same actual browser S1. Current b519 input bytes exactly match each original 7613 request; current provider/parser/guards/canonical commit and all 6 choices pass. Offline verification makes 0 new model calls and is not a new native browser run.",
+      "sourceCommit": "b519bf4fd730133a852b3b6e6d1f5aab90144220",
+      "inputSourceCommit": "7613dc7298b12ab786850f77140bab535fc99953",
+      "evidence": "docs/evidence/realtime-release-2026-10-28/final-pair-b519-review/acceptance-manifest.json",
+      "technicalEvidence": "docs/evidence/realtime-release-2026-10-28/final-pair-b519-review/validation-summary.json",
+      "narrativeEvidence": "docs/evidence/realtime-release-2026-10-28/final-pair-b519-review/narrative-review.json",
+      "actualModelResponses": [
+        "docs/evidence/realtime-release-2026-10-28/final-source-branches/branch-a.json",
+        "docs/evidence/realtime-release-2026-10-28/final-source-branches/branch-b-retry-1.json"
+      ],
+      "exactInputHashes": [
+        "779cd735076747b2ed27e44f850f0ebf9b8fe0db7f980d90c7a324255befbb48",
+        "7046771aae7a19a818f8967fd4447ef99fb9a0502670d7f134d741839d93bde7"
+      ],
+      "actualWallTimesMs": [
+        58852,
+        67977
+      ],
+      "allSixChoicesExecutable": true
+    },
+    "browserSaveRefresh": {
+      "passed": true,
+      "scope": "Restarted the same existing revision 2 native browser profile, exported full archive, refreshed, and observed 10 seconds without any new API/session/turn POST. Separate functional persistence proof for 47c; source changes after 47c were provider guard/prompt plus client timing, not archive schema or commit logic.",
+      "sourceCommit": "47c40646892e185588c61b9750076c829bb3fcfb",
+      "evidence": "docs/evidence/realtime-release-2026-10-28/stage-save-refresh/evidence.json",
+      "before": "docs/evidence/realtime-release-2026-10-28/stage-save-refresh/before-refresh.json",
+      "after": "docs/evidence/realtime-release-2026-10-28/stage-save-refresh/after-refresh.json",
+      "archive": "docs/evidence/realtime-release-2026-10-28/stage-save-refresh/saved-game.wending.jsonl",
+      "checksPassed": 12,
+      "apiRequests": 0,
+      "stateHash": "804b79eddc7fa712cac3d3ee37651a8b0d64ba6c66e170dd01037297d9cb92a0",
+      "archiveBytes": 11249,
+      "archiveSha256": "e07901183fa1b59c0500168f6e2869d5e9121c801e08c17c11db03c8c9914ced"
+    }
+  },
+  "retainedFailures": [
+    {
+      "kind": "browser-driver-post-count-assertion",
+      "originalStatus": "FAILED",
+      "evidence": "docs/evidence/realtime-release-2026-10-28/stage-browser/evidence.json",
+      "explanation": "Actual 2 ready responses and revision 2commit independently verified; original failure status not changed."
+    },
+    {
+      "kind": "unsupported-purchase-choice",
+      "evidence": "docs/evidence/realtime-release-2026-10-28/stage-review/narrative-review.json",
+      "currentRejectionEvidence": "docs/evidence/realtime-release-2026-10-28/stage-review/purchase-regression-7613.json"
+    },
+    {
+      "kind": "original-exploration-b1-dialogue-movement",
+      "evidence": "docs/evidence/realtime-release-2026-10-28/final-source-branches/branch-b.json",
+      "originalReview": "docs/evidence/realtime-release-2026-10-28/historical-branch-review/narrative-review.json",
+      "currentRejectionEvidence": "docs/evidence/realtime-release-2026-10-28/final-pair-b519-review/original-b-regression.json"
+    },
+    {
+      "kind": "earlier-generation-timeouts-and-preflight-expiry",
+      "explanation": "Earlier failures and unknown reservations remain historical. Preflight proof expiry caused 0 new inference; latest timing is 90/105/120 seconds."
+    }
+  ],
+  "timing": {
+    "providerTimeoutMs": 90000,
+    "browserTransportTimeoutMs": 105000,
+    "activeLeaseMs": 120000,
+    "automaticRetries": false
+  },
+  "freeBoundary": {
+    "plan": "workers-free",
+    "paidFallback": false,
+    "artificialCallOrLifetimeNeuronCeiling": false,
+    "actualProviderQuotaEnforced": true,
+    "usageIsDelayedAccountObservation": true,
+    "unknownReservationsPreserved": true
+  },
+  "releaseCoverage": {
+    "finalPublicDeployment": "Recorded separately in releaseExecutionRecord after actual upload and readback",
+    "freshPublicBrowserAcceptance": "Required after final production deployment; not claimed by this prepublication evidence",
+    "currentRuntimeCi": "https://github.com/ct1150/wending/actions/runs/40730466541"
+  },
+  "evidenceManifest": "docs/evidence/realtime-release-2026-10-28/manifest.json",
+  "ledgerPreservation": {
+    "evidence": "docs/evidence/realtime-release-2026-10-28/operations/ledger-retention-pre-production.json",
+    "originalLedgerRows": 9,
+    "currentLedgerRows": 18,
+    "originalRowsResultsAdmissionsAndCasesUnchanged": true,
+    "historicalActualNeuronsNullPreserved": true,
+    "reservationTotalsAreNotMeasuredSpend": true
+  }
+}

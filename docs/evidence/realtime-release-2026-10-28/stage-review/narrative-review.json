@@ -1,0 +1,107 @@
+{
+  "schemaVersion": 1,
+  "reviewedAt": "2026-10-28T16:44:50.409Z",
+  "sourceCommit": "47c40646892e185588c61b9750076c829bb3fcfb",
+  "sourceS1StateHash": "65fa96ed4c6190a4063aa54476a8f2ebee6ce08a26250f5c74d58d2c5f9abf60",
+  "sourceS2StateHash": "804b79eddc7fa712cac3d3ee37651a8b0d64ba6c66e170dd01037297d9cb92a0",
+  "verdict": "CURRENT_SELECTED_TRANSITION_COHERENT_BUT_NEXT_CHOICE_SEMANTICS_FAIL",
+  "releaseNarrativePass": false,
+  "findings": [
+    {
+      "id": "selected-intent-location",
+      "severity": "pass",
+      "text": "选择的是向老王询问符纸与妖兽传闻；续写由老王回答，仍在青石村，没有擅自前往云州城或进入山林。"
+    },
+    {
+      "id": "identity",
+      "severity": "pass",
+      "text": "玩家云归没有作为NPC加入实体。老王、林商、青石村沿用原有id/name/kind；两个人物均是存活已知实体；没有复活或别名替换。"
+    },
+    {
+      "id": "fixed-mechanics",
+      "severity": "pass",
+      "text": "实际提交精确等于规则提交：7天，行粮-1、灵石+1、老王关系+3，伤势0、凡人境界、修为0；正文未宣称相反数值或新增受伤。正文未解释灵石的来由，属于叙事完整性不足，不是擅改状态。"
+    },
+    {
+      "id": "unsupported-purchase",
+      "severity": "blocking",
+      "sceneId": "r:17d4b63b7a333a81:t2:s:scene",
+      "choiceId": "r:17d4b63b7a333a81:t2:c:a",
+      "label": "向老王购买那张低阶符纸",
+      "text": "下一项明确承诺购买符纸，但映射为negotiate/cooperate，实际只消耗行粮并获得灵石、关系；既不支付灵石，也不获得符纸/护符。它通过结构校验与compileChoices，仍与玩家看到的行动含义不符。",
+      "actualCompiledCosts": {
+        "days": 7,
+        "items": {
+          "supplies": 1
+        }
+      },
+      "actualPreviewReceipt": {
+        "kind": "choice",
+        "choiceId": "r:17d4b63b7a333a81:t2:c:a",
+        "action": {
+          "id": "r:17d4b63b7a333a81:t2:c:a",
+          "label": "向老王购买那张低阶符纸",
+          "intent": "negotiate",
+          "targetId": "r:17d4b63b7a333a81:t1:e:person_lao_wang",
+          "stake": "low",
+          "approach": "cooperate"
+        },
+        "elapsedDays": 7,
+        "itemChanges": {
+          "stones": 1,
+          "supplies": -1
+        },
+        "relationChanges": {
+          "r:17d4b63b7a333a81:t1:e:person_lao_wang": 3
+        },
+        "random": {
+          "before": 3012430483,
+          "after": 4214689494,
+          "roll": 94
+        },
+        "before": {
+          "ageDays": 5767,
+          "realm": "mortal",
+          "cultivation": 0,
+          "injury": 0
+        },
+        "after": {
+          "ageDays": 5774,
+          "realm": "mortal",
+          "cultivation": 0,
+          "injury": 0
+        },
+        "death": null,
+        "birth": null
+      }
+    },
+    {
+      "id": "display-not-transfer",
+      "severity": "clarification",
+      "text": "正文“将一张泛黄的符纸推到你面前”在出售语境下是展示，不足以判定已经赠送给玩家；因此不把这段误报为当前已获得未记账物品。"
+    },
+    {
+      "id": "dialogue-boundary",
+      "severity": "minor",
+      "sceneId": "r:17d4b63b7a333a81:t1:s:scene",
+      "text": "开场两个dialogue块内夹有“老王停下手中的活计”“林商从骡车上跳下来”等第三人称旁白，没有遵守一个人一句话的正文分块要求。"
+    },
+    {
+      "id": "explore-label-target",
+      "severity": "warning",
+      "sceneId": "r:17d4b63b7a333a81:t1:s:scene",
+      "choiceId": "r:17d4b63b7a333a81:t1:c:c",
+      "text": "开场探索标签写“灵石或行粮”，但固定targetId是stones，成功规则只给灵石；标签应聚焦唯一目标资源。准备的替代分支保留真实原选择，不改写为更容易通过的合成选项。"
+    },
+    {
+      "id": "memory",
+      "severity": "pass-with-limit",
+      "text": "续写记忆保留老王透露模仿人声妖兽及其出售符纸，未写玩家已买到或持有符纸；与正文一致。符纸挡爪击的效用是NPC售卖描述，未由当前规则支持为玩家可用机制。"
+    }
+  ],
+  "limitations": [
+    "未调用任何模型生成替代分支，不能宣布成对分支叙事通过。",
+    "原始浏览器FAILED报告保持原样；单独确认实际两次ready与revision2提交，不倒改原始验收状态。",
+    "旧2e分支对中的叙事失败仍保留，未据此样本改成通过。"
+  ]
+}

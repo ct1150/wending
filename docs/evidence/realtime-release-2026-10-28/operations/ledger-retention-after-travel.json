@@ -1,0 +1,49 @@
+{
+  "checkedAt": "2026-10-28T16:28:37.827186+00:00",
+  "checks": {
+    "allOriginalLedgerRowsUnchanged": true,
+    "allOriginalResultsUnchanged": true,
+    "allOriginalAdmissionsUnchanged": true,
+    "oldAcceptanceCasesUnchanged": true
+  },
+  "before": {
+    "callCount": 9,
+    "reservedNeurons": 561,
+    "ledgerSha256": "e6c37743dd8a5f46fe1cbf98ad160b1b3fc0486864b711d0799783899fe96a28"
+  },
+  "after": {
+    "callCount": 13,
+    "reservedNeurons": 6625
+  },
+  "newRows": [
+    {
+      "task": "task8",
+      "attemptId": "task8_19c9f83afdb146197aed6f5700b8bae32e60b1daa9bfe3d4e40af2c0e36683f3",
+      "reservedNeurons": 1516,
+      "actualNeurons": null,
+      "status": "complete"
+    },
+    {
+      "task": "task8",
+      "attemptId": "task8_a1cc255d43aa93d1e9c7b28c9b54615c00ef46242432ec7c5aebd44319a20be9",
+      "reservedNeurons": 1516,
+      "actualNeurons": null,
+      "status": "unknown"
+    },
+    {
+      "task": "task8",
+      "attemptId": "task8_8b05b87852dfe143a0e373a35a8ee772cd7c977bb46b4ab29ae7e1ea35284018",
+      "reservedNeurons": 1516,
+      "actualNeurons": null,
+      "status": "complete"
+    },
+    {
+      "task": "task8",
+      "attemptId": "task8_2120b92c8aa37825062c969bcf6ddea7eb18ba031b1c2f78957b2e38f69e8774",
+      "reservedNeurons": 1516,
+      "actualNeurons": null,
+      "status": "unknown"
+    }
+  ],
+  "accountingNote": "Reserved neurons are conservative history, not measured billing. Original failed/unknown reservations and actualNeurons values were not changed."
+}

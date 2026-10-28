@@ -1,0 +1,89 @@
+{
+  "schemaVersion": 1,
+  "dateUTC": "2026-10-27",
+  "evidenceKind": "read-only-account-observation-and-local-preparation",
+  "accountChecksReportedBy": "task-controller",
+  "fixture": false,
+  "remoteMutationPerformed": false,
+  "inferencePerformed": false,
+  "inferenceEnabled": false,
+  "accountSubscription": {
+    "status": "unknown",
+    "operation": "GET account subscriptions (account identifier redacted)",
+    "httpStatus": 403,
+    "credentialKind": "OAuth",
+    "blocker": "OAuth cannot access the subscriptions endpoint; Billing Read API token required",
+    "accountSettingsUsageModel": "standard",
+    "usageModelProvesFreePlan": false
+  },
+  "accountUsage": {
+    "otherWorkloadNeurons": null,
+    "remainingFreeNeurons": null,
+    "verified": false
+  },
+  "zeroBillBoundary": {
+    "verified": false,
+    "aiBindingVerifiedForProbe": false,
+    "coordinationStorageFreeBoundaryVerified": false,
+    "aiGatewayCreditsAllowed": false,
+    "paidFallbackAllowed": false,
+    "gatewayBestEffortSpendLimitIsProof": false
+  },
+  "providerProfile": {
+    "modelId": "@cf/qwen/qwen3-30b-a3b-fp8",
+    "validated": false,
+    "requestFormat": "workers-ai-messages",
+    "responseFormat": "json_schema",
+    "supportsStructuredOutput": null,
+    "maxInput": 12288,
+    "maxOutput": 1536,
+    "usageFields": ["usage.prompt_tokens", "usage.completion_tokens", "usage.total_tokens"],
+    "stopFields": ["choices[0].finish_reason"],
+    "freeBoundaryEvidence": null,
+    "productionWhitelist": [],
+    "capabilityCaveat": "Model page advertises response_format but the general JSON Mode supported list omits this Qwen3 model; real validation required"
+  },
+  "officialPolicyReviewed": {
+    "dateUTC": "2026-10-27",
+    "neuronsPerAccountPerDay": 10000,
+    "resetUTC": "00:00",
+    "resetShanghai": "08:00",
+    "inputNeuronsPerMillionTokens": 4625,
+    "outputNeuronsPerMillionTokens": 30475,
+    "workersFreeExhaustion": "fails instead of paid overage",
+    "workersPaidOverage": "can charge"
+  },
+  "experimentLedger": {
+    "schemaVersion": 1,
+    "attempts": []
+  },
+  "experimentLimits": {
+    "calls": 10,
+    "conservativeNeurons": 800,
+    "taskCallCaps": {"task1": 4, "task7": 4, "task8": 2}
+  },
+  "observations": {
+    "realInferenceCount": 0,
+    "latencyMs": [],
+    "structure": {"passed": 0, "attempted": 0, "ratio": null},
+    "actualNeurons": null,
+    "chineseQualityValidated": false,
+    "reasoningOutputBoundValidated": false,
+    "localTestsAreLiveInferenceEvidence": false
+  },
+  "remainingGates": [
+    "Trusted same-account confirmed Workers Free subscription and account-wide usage with known remaining quota",
+    "Direct AI binding and coordination storage zero-bill boundary",
+    "Repeated real Chinese structured output with known finish/reasoning behavior and bounded total output",
+    "Reconcile real model usage and conservative Neuron upper bound",
+    "Independent review before production profile promotion"
+  ],
+  "sources": [
+    "https://developers.cloudflare.com/workers-ai/platform/pricing/",
+    "https://developers.cloudflare.com/workers-ai/models/qwen3-30b-a3b-fp8/",
+    "https://developers.cloudflare.com/workers-ai/features/json-mode/",
+    "https://developers.cloudflare.com/workers-ai/configuration/bindings/",
+    "https://developers.cloudflare.com/workers-ai/platform/errors/",
+    "https://developers.cloudflare.com/durable-objects/platform/pricing/"
+  ]
+}

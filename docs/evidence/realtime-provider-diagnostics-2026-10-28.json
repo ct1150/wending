@@ -1,0 +1,3039 @@
+{
+  "date": "2026-10-28",
+  "purpose": "Provider compatibility and correctness diagnostics; these direct API calls are not browser acceptance, and do not rewrite the historical operator ledger.",
+  "billingNote": "Returned usage.neurons is provider-reported metadata, not a per-attempt billing attestation. Historical unknown reservations stay unknown.",
+  "context": {
+    "schemaVersion": 1,
+    "phase": "opening",
+    "identity": {
+      "runId": "release-live-20261028",
+      "turnId": 1,
+      "baseRevision": 0,
+      "stateHash": "f360901e87d14df163451b4b7159e863809d4f1087260d2cf890f9ca020944c5",
+      "choiceId": null,
+      "rulesVersion": 1,
+      "promptVersion": 1,
+      "requestId": "release-opening-20261028"
+    },
+    "namespace": "r:6704f4d5e6e48906",
+    "receipt": {
+      "kind": "opening",
+      "choiceId": null,
+      "action": null,
+      "elapsedDays": 0,
+      "itemChanges": {},
+      "relationChanges": {},
+      "random": {
+        "before": 1171638517,
+        "after": 1171638517,
+        "roll": null
+      },
+      "before": {
+        "ageDays": 5760,
+        "realm": "mortal",
+        "cultivation": 0,
+        "injury": 0
+      },
+      "after": {
+        "ageDays": 5760,
+        "realm": "mortal",
+        "cultivation": 0,
+        "injury": 0
+      },
+      "death": null,
+      "birth": {
+        "originId": "village",
+        "talentIds": [
+          "keen-memory",
+          "sword-bone"
+        ],
+        "attributes": {
+          "constitution": 4,
+          "insight": 6,
+          "fortune": 2
+        }
+      }
+    },
+    "life": {
+      "name": "云归",
+      "ageDays": 5760,
+      "lifeLimit": 80,
+      "realm": "mortal",
+      "cultivation": 0,
+      "injury": 0,
+      "items": {
+        "supplies": 3,
+        "stones": 0
+      },
+      "relations": {},
+      "birth": {
+        "originId": "village",
+        "talentIds": [
+          "keen-memory",
+          "sword-bone"
+        ],
+        "attributes": {
+          "constitution": 4,
+          "insight": 6,
+          "fortune": 2
+        }
+      }
+    },
+    "entities": [],
+    "memory": {
+      "facts": [],
+      "promises": [],
+      "clues": [],
+      "recent": [],
+      "summaries": []
+    },
+    "references": [],
+    "previousScene": null,
+    "relationshipVersion": 1,
+    "relationships": {},
+    "coverage": {
+      "policy": "relevance-v1",
+      "openTotal": 0,
+      "openIncluded": 0,
+      "openOmitted": 0
+    }
+  },
+  "diagnostics": [
+    {
+      "variant": "original",
+      "data": {
+        "started": "2026-10-28T14:46:13.225Z",
+        "completed": "2026-10-28T14:46:14.054Z",
+        "variant": "current-full-schema",
+        "error": "Error: Cloudflare API error: POST /accounts/b266970852cbc371061c94c5b1fe76a9/ai/run/@cf/qwen/qwen3-30b-a3b-fp8 returned HTTP 400: 8007: AiError: AiError: {\"error\":{\"message\":\"Grammar error: regex parse error:\\n    ^(?=[\\\\s\\\\S]*\\\\S)[^\\\\x00-\\\\x08\\\\x0b\\\\x0c\\\\x0e-\\\\x1f]*$\\n     ^^^\\nerror: look-around, including look-ahead and look-behind, is not supported\",\"type\":\"BadRequestError\",\"param\":null,\"code\":400}} (e0883575-862a-4191-9b0c-861c7926424b)"
+      }
+    },
+    {
+      "variant": "lookahead_free",
+      "data": {
+        "started": "2026-10-28T14:46:34.580Z",
+        "completed": "2026-10-28T14:46:35.562Z",
+        "variant": "lookahead-free-text-patterns",
+        "error": "Error: Cloudflare API error: POST /accounts/b266970852cbc371061c94c5b1fe76a9/ai/run/@cf/qwen/qwen3-30b-a3b-fp8 returned HTTP 500: 8005: AiError: AiError: Internal server error (b8bdbd31-393b-4401-aeea-cb8497e0bbac)"
+      }
+    },
+    {
+      "variant": "simple_text",
+      "data": {
+        "started": "2026-10-28T14:47:09.574Z",
+        "completed": "2026-10-28T14:47:10.291Z",
+        "variant": "simple-text-constraints",
+        "error": "Error: Cloudflare API error: POST /accounts/b266970852cbc371061c94c5b1fe76a9/ai/run/@cf/qwen/qwen3-30b-a3b-fp8 returned HTTP 500: 8005: AiError: AiError: Internal server error (5b81cea8-8e5a-4a31-be51-d884f989f6e1)"
+      }
+    },
+    {
+      "variant": "flat",
+      "data": {
+        "started": "2026-10-28T14:47:21.252Z",
+        "completed": "2026-10-28T14:47:25.963Z",
+        "variant": "remove-new-conditional-oneofs",
+        "result": {
+          "result": {
+            "id": "chatcmpl-d3ba341b-2685-4dc1-8b54-d40edf432ed7",
+            "object": "chat.completion",
+            "created": 1793198841,
+            "model": "@cf/qwen/qwen3-30b-a3b-fp8",
+            "choices": [
+              {
+                "index": 0,
+                "message": {
+                  "role": "assistant",
+                  "content": "{\"id\":\"r:6704f4d5e6e48906:t1:s:scene\",\"title\":\"山村晨雾\",\"location\":\"village\",\"blocks\":[{\"kind\":\"narration\",\"text\":\"晨雾如纱，笼罩着青石小径。少年云归站在村口，手中紧握着一块温润的青玉髓，这是父亲临终前交给他的唯一遗物。远处传来鸡鸣，山风裹挟着露水的气息，他望着山道尽头那片被云雾遮蔽的林海，心中泛起一丝难以言喻的悸动。\"},{\"kind\":\"narration\",\"text\":\"村中老人常说，山林深处藏着上古修士的遗迹，但从未有人真正踏入。父亲生前总在深夜独自入山，却再未归来。如今，那块青玉髓在掌心微微发烫，仿佛在召唤他走向未知。\"},{\"kind\":\"narration\",\"text\":\"村头老李头正在清扫落叶，见云归立于山道，便唤道：「小归，莫要再往山里去了，你爹就是...」话音未落，云归已转身离去，只留下一句：「我必须知道真相。」\"}],\"entities\":[],\"choices\":[{\"intent\":\"explore\",\"approach\":\"cautious\"},{\"intent\":\"explore\",\"approach\":\"bold\"}],\"memoryDeltas\":[]}",
+                  "refusal": null,
+                  "annotations": null,
+                  "audio": null,
+                  "function_call": null,
+                  "reasoning": "\n\n",
+                  "reasoning_content": "\n\n"
+                },
+                "logprobs": null,
+                "finish_reason": "stop",
+                "stop_reason": null,
+                "token_ids": null,
+                "routed_experts": null
+              }
+            ],
+            "service_tier": null,
+            "usage": {
+              "prompt_tokens": 857,
+              "completion_tokens": 306,
+              "total_tokens": 1163,
+              "prompt_tokens_details": {
+                "cached_tokens": 0
+              },
+              "neurons": 13.288546562194824
+            },
+            "prompt_logprobs": null,
+            "prompt_token_ids": null,
+            "prompt_text": null,
+            "kv_transfer_params": null,
+            "ec_transfer_params": null,
+            "metrics": null,
+            "response": {
+              "id": "r:6704f4d5e6e48906:t1:s:scene",
+              "title": "山村晨雾",
+              "location": "village",
+              "blocks": [
+                {
+                  "kind": "narration",
+                  "text": "晨雾如纱，笼罩着青石小径。少年云归站在村口，手中紧握着一块温润的青玉髓，这是父亲临终前交给他的唯一遗物。远处传来鸡鸣，山风裹挟着露水的气息，他望着山道尽头那片被云雾遮蔽的林海，心中泛起一丝难以言喻的悸动。"
+                },
+                {
+                  "kind": "narration",
+                  "text": "村中老人常说，山林深处藏着上古修士的遗迹，但从未有人真正踏入。父亲生前总在深夜独自入山，却再未归来。如今，那块青玉髓在掌心微微发烫，仿佛在召唤他走向未知。"
+                },
+                {
+                  "kind": "narration",
+                  "text": "村头老李头正在清扫落叶，见云归立于山道，便唤道：「小归，莫要再往山里去了，你爹就是...」话音未落，云归已转身离去，只留下一句：「我必须知道真相。」"
+                }
+              ],
+              "entities": [],
+              "choices": [
+                {
+                  "intent": "explore",
+                  "approach": "cautious"
+                },
+                {
+                  "intent": "explore",
+                  "approach": "bold"
+                }
+              ],
+              "memoryDeltas": []
+            },
+            "tool_calls": []
+          },
+          "success": true,
+          "errors": [],
+          "messages": [],
+          "status": 200
+        }
+      },
+      "runtimeValidation": "GENERATED_SCENE_INVALID"
+    },
+    {
+      "variant": "complete_branches",
+      "data": {
+        "started": "2026-10-28T14:48:10.285Z",
+        "completed": "2026-10-28T14:48:13.159Z",
+        "variant": "complete-disjoint-object-branches",
+        "result": {
+          "result": {
+            "id": "chatcmpl-692cf4c2-a902-4752-8d01-97988f912934",
+            "object": "chat.completion",
+            "created": 1793198890,
+            "model": "@cf/qwen/qwen3-30b-a3b-fp8",
+            "choices": [
+              {
+                "index": 0,
+                "message": {
+                  "role": "assistant",
+                  "content": "{\"id\":\"r:6704f4d5e6e48906:t1:s:scene\",\"title\":\"山村晨雾\",\"scene\":\"山村晨雾\",\"summary\":\"云归在晨雾中醒来，感受到体内涌动的奇异力量。远处的山峦在雾气中若隐若现，空气中弥漫着泥土和青草的气息。他低头看着自己的双手，似乎能感受到体内有一股微弱的气流在流动。\",\"dialogue\":[],\"events\":[{\"id\":\"r:6704f4d5e6e48906:t1:c:short\",\"type\":\"choice\",\"title\":\"选择\",\"summary\":\"云归面临第一个重要抉择：是探索体内异变，还是继续过平静的山村生活。\",\"choices\":[{\"id\":\"r:6704f4d5e6e48906:t1:c:explore\",\"type\":\"action\",\"intent\":\"explore\",\"targetId\":\"self\",\"stake\":\"体内异变\",\"approach\":\"感知体内气流\"},{\"id\":\"r:6704f4d5e6e48906:t1:c:stay\",\"type\":\"action\",\"intent\":\"rest\",\"targetId\":\"self\",\"stake\":\"平静生活\",\"approach\":\"继续日常劳作\"}]}],\"entities\":[],\"memoryDeltas\":{\"facts\":[],\"promises\":[],\"clues\":[],\"recent\":[],\"summaries\":[]}},\"references\":[]}",
+                  "refusal": null,
+                  "annotations": null,
+                  "audio": null,
+                  "function_call": null,
+                  "reasoning": "\n\n",
+                  "reasoning_content": "\n\n"
+                },
+                "logprobs": null,
+                "finish_reason": "stop",
+                "stop_reason": 151643,
+                "token_ids": null,
+                "routed_experts": null
+              }
+            ],
+            "service_tier": null,
+            "usage": {
+              "prompt_tokens": 857,
+              "completion_tokens": 311,
+              "total_tokens": 1168,
+              "prompt_tokens_details": {
+                "cached_tokens": 0
+              },
+              "neurons": 13.440919876098633
+            },
+            "prompt_logprobs": null,
+            "prompt_token_ids": null,
+            "prompt_text": null,
+            "kv_transfer_params": null,
+            "ec_transfer_params": null,
+            "metrics": null,
+            "response": "{\"id\":\"r:6704f4d5e6e48906:t1:s:scene\",\"title\":\"山村晨雾\",\"scene\":\"山村晨雾\",\"summary\":\"云归在晨雾中醒来，感受到体内涌动的奇异力量。远处的山峦在雾气中若隐若现，空气中弥漫着泥土和青草的气息。他低头看着自己的双手，似乎能感受到体内有一股微弱的气流在流动。\",\"dialogue\":[],\"events\":[{\"id\":\"r:6704f4d5e6e48906:t1:c:short\",\"type\":\"choice\",\"title\":\"选择\",\"summary\":\"云归面临第一个重要抉择：是探索体内异变，还是继续过平静的山村生活。\",\"choices\":[{\"id\":\"r:6704f4d5e6e48906:t1:c:explore\",\"type\":\"action\",\"intent\":\"explore\",\"targetId\":\"self\",\"stake\":\"体内异变\",\"approach\":\"感知体内气流\"},{\"id\":\"r:6704f4d5e6e48906:t1:c:stay\",\"type\":\"action\",\"intent\":\"rest\",\"targetId\":\"self\",\"stake\":\"平静生活\",\"approach\":\"继续日常劳作\"}]}],\"entities\":[],\"memoryDeltas\":{\"facts\":[],\"promises\":[],\"clues\":[],\"recent\":[],\"summaries\":[]}},\"references\":[]}",
+            "tool_calls": []
+          },
+          "success": true,
+          "errors": [],
+          "messages": [],
+          "status": 200
+        }
+      },
+      "runtimeValidation": "SyntaxError"
+    },
+    {
+      "variant": "simple_branches",
+      "data": {
+        "started": "2026-10-28T14:48:48.382Z",
+        "completed": "2026-10-28T14:48:53.182Z",
+        "variant": "complete-anyof-simple-text",
+        "result": {
+          "result": {
+            "id": "chatcmpl-8aa3d826-104f-4f92-99d2-f4e110463267",
+            "object": "chat.completion",
+            "created": 1793198928,
+            "model": "@cf/qwen/qwen3-30b-a3b-fp8",
+            "choices": [
+              {
+                "index": 0,
+                "message": {
+                  "role": "assistant",
+                  "content": "{\"id\":\"r:6704f4d5e6e48906:t1:s:scene\",\"title\":\"山村觉醒\",\"location\":\"云隐村\",\"blocks\":[{\"kind\":\"narration\",\"text\":\"少年云归在云隐村的晨雾中醒来，体内仿佛有某种力量在蠢蠢欲动。他记得自己自幼便展现出过目不忘的天赋，以及天生的剑骨，但此刻这些似乎都变得不同了。\"},{\"kind\":\"dialogue\",\"text\":\"村民甲：「云归，你这孩子最近总是半夜惊醒，是不是做了什么噩梦？」\",\"speaker\":\"r:6704f4d5e6e48906:t1:e:short\"},{\"kind\":\"dialogue\",\"text\":\"云归：「没有，只是...总觉得体内有股奇怪的力量在涌动。」\",\"speaker\":\"self\"}],\"entities\":[{\"id\":\"r:6704f4d5e6e48906:t1:e:short\",\"name\":\"村民甲\",\"kind\":\"person\",\"status\":\"alive\"},{\"id\":\"r:6704f4d5e6e48906:t1:e:short2\",\"name\":\"村民乙\",\"kind\":\"person\",\"status\":\"alive\"}],\"choices\":[{\"id\":\"r:6704f4d5e6e48906:t1:c:short\",\"label\":\"尝试感知体内力量\",\"intent\":\"practice\",\"targetId\":\"self\",\"stake\":\"normal\",\"approach\":\"steady\"},{\"id\":\"r:6704f4d5e6e48906:t1:c:short2\",\"label\":\"询问村民关于村外的传闻\",\"intent\":\"explore\",\"targetId\":\"r:6704f4d5e6e48906:t1:e:short\",\"stake\":\"normal\",\"approach\":\"cautious\"}],\"memoryDeltas\":[]}",
+                  "refusal": null,
+                  "annotations": null,
+                  "audio": null,
+                  "function_call": null,
+                  "reasoning": "\n\n",
+                  "reasoning_content": "\n\n"
+                },
+                "logprobs": null,
+                "finish_reason": "stop",
+                "stop_reason": null,
+                "token_ids": null,
+                "routed_experts": null
+              }
+            ],
+            "service_tier": null,
+            "usage": {
+              "prompt_tokens": 857,
+              "completion_tokens": 422,
+              "total_tokens": 1279,
+              "prompt_tokens_details": {
+                "cached_tokens": 0
+              },
+              "neurons": 16.823619842529297
+            },
+            "prompt_logprobs": null,
+            "prompt_token_ids": null,
+            "prompt_text": null,
+            "kv_transfer_params": null,
+            "ec_transfer_params": null,
+            "metrics": null,
+            "response": {
+              "id": "r:6704f4d5e6e48906:t1:s:scene",
+              "title": "山村觉醒",
+              "location": "云隐村",
+              "blocks": [
+                {
+                  "kind": "narration",
+                  "text": "少年云归在云隐村的晨雾中醒来，体内仿佛有某种力量在蠢蠢欲动。他记得自己自幼便展现出过目不忘的天赋，以及天生的剑骨，但此刻这些似乎都变得不同了。"
+                },
+                {
+                  "kind": "dialogue",
+                  "text": "村民甲：「云归，你这孩子最近总是半夜惊醒，是不是做了什么噩梦？」",
+                  "speaker": "r:6704f4d5e6e48906:t1:e:short"
+                },
+                {
+                  "kind": "dialogue",
+                  "text": "云归：「没有，只是...总觉得体内有股奇怪的力量在涌动。」",
+                  "speaker": "self"
+                }
+              ],
+              "entities": [
+                {
+                  "id": "r:6704f4d5e6e48906:t1:e:short",
+                  "name": "村民甲",
+                  "kind": "person",
+                  "status": "alive"
+                },
+                {
+                  "id": "r:6704f4d5e6e48906:t1:e:short2",
+                  "name": "村民乙",
+                  "kind": "person",
+                  "status": "alive"
+                }
+              ],
+              "choices": [
+                {
+                  "id": "r:6704f4d5e6e48906:t1:c:short",
+                  "label": "尝试感知体内力量",
+                  "intent": "practice",
+                  "targetId": "self",
+                  "stake": "normal",
+                  "approach": "steady"
+                },
+                {
+                  "id": "r:6704f4d5e6e48906:t1:c:short2",
+                  "label": "询问村民关于村外的传闻",
+                  "intent": "explore",
+                  "targetId": "r:6704f4d5e6e48906:t1:e:short",
+                  "stake": "normal",
+                  "approach": "cautious"
+                }
+              ],
+              "memoryDeltas": []
+            },
+            "tool_calls": []
+          },
+          "success": true,
+          "errors": [],
+          "messages": [],
+          "status": 200
+        }
+      },
+      "runtimeValidation": "CHOICE_NOT_COMPILABLE"
+    },
+    {
+      "variant": "targeted",
+      "data": {
+        "started": "2026-10-28T14:50:49.087Z",
+        "completed": "2026-10-28T14:50:54.836Z",
+        "variant": "complete-anyof-valid-targets",
+        "result": {
+          "result": {
+            "id": "chatcmpl-804ac378-cfde-43f3-8595-7872fce199c6",
+            "object": "chat.completion",
+            "created": 1793199049,
+            "model": "@cf/qwen/qwen3-30b-a3b-fp8",
+            "choices": [
+              {
+                "index": 0,
+                "message": {
+                  "role": "assistant",
+                  "content": "{\"id\":\"r:6704f4d5e6e48906:t1:s:scene\",\"title\":\"山村晨雾\",\"location\":\"village\",\"blocks\":[{\"kind\":\"dialogue\",\"text\":\"山风裹挟着潮湿的雾气掠过青石板路，你揉了揉因晨露而微凉的眉心。远处传来樵夫砍伐柴薪的闷响，混杂着犬吠声在山谷间回荡。\",\"speaker\":\"scene\"},{\"kind\":\"dialogue\",\"text\":\"「小归子，早啊！」隔壁王婶端着木盆从篱笆外探头，围裙上还沾着昨夜腌制的咸菜渣。」「王婶早。」你应了一声，指尖无意识地摩挲着腰间那枚温润的青玉佩——那是父亲临终前塞进你掌心的最后一件东西。\",\"speaker\":\"scene\"},{\"kind\":\"dialogue\",\"text\":\"「你爹当年可是咱们村最厉害的炼气期修士，可惜...」王婶的声音突然低了下去，屋檐下的风铃发出清脆的叮当声。你望着她鬓角的白发，忽然觉得这山村的晨雾比往日更浓了些。\",\"speaker\":\"scene\"}],\"entities\":[{\"id\":\"r:6704f4d5e6e48906:t1:e:short\",\"name\":\"王婶\",\"kind\":\"person\",\"status\":\"alive\"},{\"id\":\"r:6704f4d5e6e48906:t1:e:short\",\"name\":\"青玉佩\",\"kind\":\"faction\"},{\"id\":\"r:6704f4d5e6e48906:t1:e:short\",\"name\":\"父亲\",\"kind\":\"person\",\"status\":\"dead\"}],\"choices\":[{\"id\":\"r:6704f4d5e6e48906:t1:c:short\",\"label\":\"查看青玉佩\",\"intent\":\"explore\",\"targetId\":\"relic\",\"stake\":\"normal\",\"approach\":\"cautious\"},{\"id\":\"r:6704f4d5e6e48906:t1:c:short\",\"label\":\"询问父亲往事\",\"intent\":\"negotiate\",\"targetId\":\"r:6704f4d5e6e48906:t1:e:short\",\"stake\":\"normal\",\"approach\":\"cooperate\"},{\"id\":\"r:6704f4d5e6e48906:t1:c:short\",\"label\":\"前往山林采药\",\"intent\":\"travel\",\"targetId\":\"mountain\",\"stake\":\"normal\",\"approach\":\"wilderness\"}],\"memoryDeltas\":[{\"entityId\":\"r:6704f4d5e6e48906:t1:e:short\",\"kind\":\"death\",\"text\":\"父亲在三年前的筑基失败中陨落，临终前将青玉佩交给云归\"}]}",
+                  "refusal": null,
+                  "annotations": null,
+                  "audio": null,
+                  "function_call": null,
+                  "reasoning": "\n\n",
+                  "reasoning_content": "\n\n"
+                },
+                "logprobs": null,
+                "finish_reason": "stop",
+                "stop_reason": null,
+                "token_ids": null,
+                "routed_experts": null
+              }
+            ],
+            "service_tier": null,
+            "usage": {
+              "prompt_tokens": 857,
+              "completion_tokens": 653,
+              "total_tokens": 1510,
+              "prompt_tokens_details": {
+                "cached_tokens": 0
+              },
+              "neurons": 23.863290786743164
+            },
+            "prompt_logprobs": null,
+            "prompt_token_ids": null,
+            "prompt_text": null,
+            "kv_transfer_params": null,
+            "ec_transfer_params": null,
+            "metrics": null,
+            "response": {
+              "id": "r:6704f4d5e6e48906:t1:s:scene",
+              "title": "山村晨雾",
+              "location": "village",
+              "blocks": [
+                {
+                  "kind": "dialogue",
+                  "text": "山风裹挟着潮湿的雾气掠过青石板路，你揉了揉因晨露而微凉的眉心。远处传来樵夫砍伐柴薪的闷响，混杂着犬吠声在山谷间回荡。",
+                  "speaker": "scene"
+                },
+                {
+                  "kind": "dialogue",
+                  "text": "「小归子，早啊！」隔壁王婶端着木盆从篱笆外探头，围裙上还沾着昨夜腌制的咸菜渣。」「王婶早。」你应了一声，指尖无意识地摩挲着腰间那枚温润的青玉佩——那是父亲临终前塞进你掌心的最后一件东西。",
+                  "speaker": "scene"
+                },
+                {
+                  "kind": "dialogue",
+                  "text": "「你爹当年可是咱们村最厉害的炼气期修士，可惜...」王婶的声音突然低了下去，屋檐下的风铃发出清脆的叮当声。你望着她鬓角的白发，忽然觉得这山村的晨雾比往日更浓了些。",
+                  "speaker": "scene"
+                }
+              ],
+              "entities": [
+                {
+                  "id": "r:6704f4d5e6e48906:t1:e:short",
+                  "name": "王婶",
+                  "kind": "person",
+                  "status": "alive"
+                },
+                {
+                  "id": "r:6704f4d5e6e48906:t1:e:short",
+                  "name": "青玉佩",
+                  "kind": "faction"
+                },
+                {
+                  "id": "r:6704f4d5e6e48906:t1:e:short",
+                  "name": "父亲",
+                  "kind": "person",
+                  "status": "dead"
+                }
+              ],
+              "choices": [
+                {
+                  "id": "r:6704f4d5e6e48906:t1:c:short",
+                  "label": "查看青玉佩",
+                  "intent": "explore",
+                  "targetId": "relic",
+                  "stake": "normal",
+                  "approach": "cautious"
+                },
+                {
+                  "id": "r:6704f4d5e6e48906:t1:c:short",
+                  "label": "询问父亲往事",
+                  "intent": "negotiate",
+                  "targetId": "r:6704f4d5e6e48906:t1:e:short",
+                  "stake": "normal",
+                  "approach": "cooperate"
+                },
+                {
+                  "id": "r:6704f4d5e6e48906:t1:c:short",
+                  "label": "前往山林采药",
+                  "intent": "travel",
+                  "targetId": "mountain",
+                  "stake": "normal",
+                  "approach": "wilderness"
+                }
+              ],
+              "memoryDeltas": [
+                {
+                  "entityId": "r:6704f4d5e6e48906:t1:e:short",
+                  "kind": "death",
+                  "text": "父亲在三年前的筑基失败中陨落，临终前将青玉佩交给云归"
+                }
+              ]
+            },
+            "tool_calls": []
+          },
+          "success": true,
+          "errors": [],
+          "messages": [],
+          "status": 200
+        }
+      },
+      "runtimeValidation": "GENERATED_SCENE_INVALID"
+    },
+    {
+      "variant": "prompt",
+      "data": {
+        "started": "2026-10-28T14:52:31.782Z",
+        "completed": "2026-10-28T14:52:36.770Z",
+        "variant": "complete-schema-clear-identity-prompt",
+        "result": {
+          "result": {
+            "id": "chatcmpl-f5d8ad0c-48e6-481d-a311-0b4a3ebac2e5",
+            "object": "chat.completion",
+            "created": 1793199152,
+            "model": "@cf/qwen/qwen3-30b-a3b-fp8",
+            "choices": [
+              {
+                "index": 0,
+                "message": {
+                  "role": "assistant",
+                  "content": "{\"id\":\"r:6704f4d5e6e48906:t1:s:scene\",\"title\":\"山村晨曦\",\"location\":\"青石村\",\"blocks\":[{\"kind\":\"dialogue\",\"text\":\"村中老槐树下，孩童嬉闹声中，你睁开眼，感受到体内一股奇异的波动。\",\"speaker\":\"narration\"},{\"kind\":\"dialogue\",\"text\":\"「这孩子天生异象，怕是不简单啊。」村中老者低声议论，目光在你身上打量。\",\"speaker\":\"narration\"},{\"kind\":\"dialogue\",\"text\":\"「云归，你可愿随我去山中寻些草药？」村中药师李伯向你招手，眼中闪烁着期待的光芒。\",\"speaker\":\"narration\"},{\"kind\":\"dialogue\",\"text\":\"「我...我还不知道该怎么做。」你犹豫地回答，心中却对未知的世界充满了好奇。\",\"speaker\":\"narration\"},{\"kind\":\"dialogue\",\"text\":\"「别怕，跟着我，你将会踏上一条不一样的道路。」李伯温和地说道，伸出手来。\",\"speaker\":\"narration\"}],\"entities\":[],\"choices\":[{\"id\":\"r:6704f4d5e6e48906:t1:c:a\",\"label\":\"跟随李伯前往山中\",\"intent\":\"explore\",\"targetId\":\"relic\",\"stake\":\"normal\",\"approach\":\"cautious\"},{\"id\":\"r:6704f4d5e6e48906:t1:c:b\",\"label\":\"留在村中，观察周围环境\",\"intent\":\"rest\",\"targetId\":\"self\",\"stake\":\"normal\",\"approach\":\"recover\"},{\"id\":\"r:6704f4d5e6e48906:t1:c:c\",\"label\":\"寻找村中其他村民交谈\",\"intent\":\"negotiate\",\"targetId\":\"village\",\"stake\":\"normal\",\"approach\":\"cooperate\"}],\"memoryDeltas\":[]}",
+                  "refusal": null,
+                  "annotations": null,
+                  "audio": null,
+                  "function_call": null,
+                  "reasoning": "\n\n",
+                  "reasoning_content": "\n\n"
+                },
+                "logprobs": null,
+                "finish_reason": "stop",
+                "stop_reason": null,
+                "token_ids": null,
+                "routed_experts": null
+              }
+            ],
+            "service_tier": null,
+            "usage": {
+              "prompt_tokens": 976,
+              "completion_tokens": 443,
+              "total_tokens": 1419,
+              "prompt_tokens_details": {
+                "cached_tokens": 0
+              },
+              "neurons": 18.013914108276367
+            },
+            "prompt_logprobs": null,
+            "prompt_token_ids": null,
+            "prompt_text": null,
+            "kv_transfer_params": null,
+            "ec_transfer_params": null,
+            "metrics": null,
+            "response": {
+              "id": "r:6704f4d5e6e48906:t1:s:scene",
+              "title": "山村晨曦",
+              "location": "青石村",
+              "blocks": [
+                {
+                  "kind": "dialogue",
+                  "text": "村中老槐树下，孩童嬉闹声中，你睁开眼，感受到体内一股奇异的波动。",
+                  "speaker": "narration"
+                },
+                {
+                  "kind": "dialogue",
+                  "text": "「这孩子天生异象，怕是不简单啊。」村中老者低声议论，目光在你身上打量。",
+                  "speaker": "narration"
+                },
+                {
+                  "kind": "dialogue",
+                  "text": "「云归，你可愿随我去山中寻些草药？」村中药师李伯向你招手，眼中闪烁着期待的光芒。",
+                  "speaker": "narration"
+                },
+                {
+                  "kind": "dialogue",
+                  "text": "「我...我还不知道该怎么做。」你犹豫地回答，心中却对未知的世界充满了好奇。",
+                  "speaker": "narration"
+                },
+                {
+                  "kind": "dialogue",
+                  "text": "「别怕，跟着我，你将会踏上一条不一样的道路。」李伯温和地说道，伸出手来。",
+                  "speaker": "narration"
+                }
+              ],
+              "entities": [],
+              "choices": [
+                {
+                  "id": "r:6704f4d5e6e48906:t1:c:a",
+                  "label": "跟随李伯前往山中",
+                  "intent": "explore",
+                  "targetId": "relic",
+                  "stake": "normal",
+                  "approach": "cautious"
+                },
+                {
+                  "id": "r:6704f4d5e6e48906:t1:c:b",
+                  "label": "留在村中，观察周围环境",
+                  "intent": "rest",
+                  "targetId": "self",
+                  "stake": "normal",
+                  "approach": "recover"
+                },
+                {
+                  "id": "r:6704f4d5e6e48906:t1:c:c",
+                  "label": "寻找村中其他村民交谈",
+                  "intent": "negotiate",
+                  "targetId": "village",
+                  "stake": "normal",
+                  "approach": "cooperate"
+                }
+              ],
+              "memoryDeltas": []
+            },
+            "tool_calls": []
+          },
+          "success": true,
+          "errors": [],
+          "messages": [],
+          "status": 200
+        }
+      },
+      "runtimeValidation": "SPEAKER_REFERENCE_INVALID"
+    },
+    {
+      "variant": "example",
+      "data": {
+        "started": "2026-10-28T14:53:25.654Z",
+        "completed": "2026-10-28T14:53:31.548Z",
+        "variant": "complete-schema-identity-example",
+        "result": {
+          "result": {
+            "id": "chatcmpl-b6520545-690b-4207-ac52-840283df78e0",
+            "object": "chat.completion",
+            "created": 1793199206,
+            "model": "@cf/qwen/qwen3-30b-a3b-fp8",
+            "choices": [
+              {
+                "index": 0,
+                "message": {
+                  "role": "assistant",
+                  "content": "{\"id\":\"r:6704f4d5e6e48906:t1:s:scene\",\"title\":\"山村晨曦\",\"location\":\"青石村\",\"blocks\":[{\"kind\":\"narration\",\"text\":\"晨雾未散，村中传来鸡鸣。你感受到体内有一股奇异的气流涌动，似乎与生俱来的天赋正在苏醒。\"},{\"kind\":\"dialogue\",\"text\":\"老村长（r:6704f4d5e6e48906:t1:e:elder）：「小归，你可感觉体内有异样？」\",\"speaker\":\"r:6704f4d5e6e48906:t1:e:elder\"}],\"entities\":[{\"id\":\"r:6704f4d5e6e48906:t1:e:elder\",\"name\":\"老村长\",\"kind\":\"person\",\"status\":\"alive\"}],\"choices\":[{\"id\":\"r:6704f4d5e6e48906:t1:c:a\",\"label\":\"尝试引导气流\",\"intent\":\"practice\",\"targetId\":\"self\",\"stake\":\"low\",\"approach\":\"intensive\"},{\"id\":\"r:6704f4d5e6e48906:t1:c:b\",\"label\":\"询问天赋来历\",\"intent\":\"negotiate\",\"targetId\":\"r:6704f4d5e6e48906:t1:e:elder\",\"stake\":\"normal\",\"approach\":\"cooperate\"}],\"memoryDeltas\":[]}",
+                  "refusal": null,
+                  "annotations": null,
+                  "audio": null,
+                  "function_call": null,
+                  "reasoning": "\n\n",
+                  "reasoning_content": "\n\n"
+                },
+                "logprobs": null,
+                "finish_reason": "stop",
+                "stop_reason": null,
+                "token_ids": null,
+                "routed_experts": null
+              }
+            ],
+            "service_tier": null,
+            "usage": {
+              "prompt_tokens": 1275,
+              "completion_tokens": 341,
+              "total_tokens": 1616,
+              "prompt_tokens_details": {
+                "cached_tokens": 0
+              },
+              "neurons": 16.288238525390625
+            },
+            "prompt_logprobs": null,
+            "prompt_token_ids": null,
+            "prompt_text": null,
+            "kv_transfer_params": null,
+            "ec_transfer_params": null,
+            "metrics": null,
+            "response": {
+              "id": "r:6704f4d5e6e48906:t1:s:scene",
+              "title": "山村晨曦",
+              "location": "青石村",
+              "blocks": [
+                {
+                  "kind": "narration",
+                  "text": "晨雾未散，村中传来鸡鸣。你感受到体内有一股奇异的气流涌动，似乎与生俱来的天赋正在苏醒。"
+                },
+                {
+                  "kind": "dialogue",
+                  "text": "老村长（r:6704f4d5e6e48906:t1:e:elder）：「小归，你可感觉体内有异样？」",
+                  "speaker": "r:6704f4d5e6e48906:t1:e:elder"
+                }
+              ],
+              "entities": [
+                {
+                  "id": "r:6704f4d5e6e48906:t1:e:elder",
+                  "name": "老村长",
+                  "kind": "person",
+                  "status": "alive"
+                }
+              ],
+              "choices": [
+                {
+                  "id": "r:6704f4d5e6e48906:t1:c:a",
+                  "label": "尝试引导气流",
+                  "intent": "practice",
+                  "targetId": "self",
+                  "stake": "low",
+                  "approach": "intensive"
+                },
+                {
+                  "id": "r:6704f4d5e6e48906:t1:c:b",
+                  "label": "询问天赋来历",
+                  "intent": "negotiate",
+                  "targetId": "r:6704f4d5e6e48906:t1:e:elder",
+                  "stake": "normal",
+                  "approach": "cooperate"
+                }
+              ],
+              "memoryDeltas": []
+            },
+            "tool_calls": []
+          },
+          "success": true,
+          "errors": [],
+          "messages": [],
+          "status": 200
+        }
+      },
+      "runtimeValidation": "accepted"
+    },
+    {
+      "variant": "compact",
+      "data": {
+        "started": "2026-10-28T14:54:05.739Z",
+        "completed": "2026-10-28T14:54:11.681Z",
+        "variant": "compact-ref-schema-identity-example",
+        "result": {
+          "result": {
+            "id": "chatcmpl-ec72c7c2-4239-443a-b779-66ee7a0a6d66",
+            "object": "chat.completion",
+            "created": 1793199246,
+            "model": "@cf/qwen/qwen3-30b-a3b-fp8",
+            "choices": [
+              {
+                "index": 0,
+                "message": {
+                  "role": "assistant",
+                  "content": "{\"id\":\"r:6704f4d5e6e48906:t1:s:scene\",\"title\":\"山村晨雾\",\"location\":\"青石村\",\"blocks\":[{\"kind\":\"narration\",\"text\":\"晨雾中传来远处山林的鸟鸣，你感受到体内经脉隐隐作痛，仿佛有某种力量在体内躁动。村头老槐树下，一位身着青衫的老人正在擦拭一把锈迹斑斑的长剑。\"},{\"kind\":\"dialogue\",\"text\":\"老者突然抬头望向你，声音沙哑：「小友可是感觉体内有异样？」\",\"speaker\":\"r:6704f4d5e6e48906:t1:e:elder\"}],\"entities\":[{\"id\":\"r:6704f4d5e6e48906:t1:e:elder\",\"name\":\"陈老\",\"kind\":\"person\",\"status\":\"alive\"}],\"choices\":[{\"id\":\"r:6704f4d5e6e48906:t1:c:a\",\"label\":\"询问经脉异状\",\"intent\":\"explore\",\"targetId\":\"supplies\",\"stake\":\"low\",\"approach\":\"cautious\"},{\"id\":\"r:6704f4d5e6e48906:t1:c:b\",\"label\":\"请教修真入门\",\"intent\":\"explore\",\"targetId\":\"manual\",\"stake\":\"normal\",\"approach\":\"cautious\"},{\"id\":\"r:6704f4d5e6e48906:t1:c:c\",\"label\":\"假装无事继续练功\",\"intent\":\"practice\",\"targetId\":\"self\",\"stake\":\"high\",\"approach\":\"breakthrough\"}],\"memoryDeltas\":[]}",
+                  "refusal": null,
+                  "annotations": null,
+                  "audio": null,
+                  "function_call": null,
+                  "reasoning": "\n\n",
+                  "reasoning_content": "\n\n"
+                },
+                "logprobs": null,
+                "finish_reason": "stop",
+                "stop_reason": null,
+                "token_ids": null,
+                "routed_experts": null
+              }
+            ],
+            "service_tier": null,
+            "usage": {
+              "prompt_tokens": 1313,
+              "completion_tokens": 382,
+              "total_tokens": 1695,
+              "prompt_tokens_details": {
+                "cached_tokens": 0
+              },
+              "neurons": 17.713438034057617
+            },
+            "prompt_logprobs": null,
+            "prompt_token_ids": null,
+            "prompt_text": null,
+            "kv_transfer_params": null,
+            "ec_transfer_params": null,
+            "metrics": null,
+            "response": {
+              "id": "r:6704f4d5e6e48906:t1:s:scene",
+              "title": "山村晨雾",
+              "location": "青石村",
+              "blocks": [
+                {
+                  "kind": "narration",
+                  "text": "晨雾中传来远处山林的鸟鸣，你感受到体内经脉隐隐作痛，仿佛有某种力量在体内躁动。村头老槐树下，一位身着青衫的老人正在擦拭一把锈迹斑斑的长剑。"
+                },
+                {
+                  "kind": "dialogue",
+                  "text": "老者突然抬头望向你，声音沙哑：「小友可是感觉体内有异样？」",
+                  "speaker": "r:6704f4d5e6e48906:t1:e:elder"
+                }
+              ],
+              "entities": [
+                {
+                  "id": "r:6704f4d5e6e48906:t1:e:elder",
+                  "name": "陈老",
+                  "kind": "person",
+                  "status": "alive"
+                }
+              ],
+              "choices": [
+                {
+                  "id": "r:6704f4d5e6e48906:t1:c:a",
+                  "label": "询问经脉异状",
+                  "intent": "explore",
+                  "targetId": "supplies",
+                  "stake": "low",
+                  "approach": "cautious"
+                },
+                {
+                  "id": "r:6704f4d5e6e48906:t1:c:b",
+                  "label": "请教修真入门",
+                  "intent": "explore",
+                  "targetId": "manual",
+                  "stake": "normal",
+                  "approach": "cautious"
+                },
+                {
+                  "id": "r:6704f4d5e6e48906:t1:c:c",
+                  "label": "假装无事继续练功",
+                  "intent": "practice",
+                  "targetId": "self",
+                  "stake": "high",
+                  "approach": "breakthrough"
+                }
+              ],
+              "memoryDeltas": []
+            },
+            "tool_calls": []
+          },
+          "success": true,
+          "errors": [],
+          "messages": [],
+          "status": 200
+        }
+      },
+      "runtimeValidation": "CHOICE_NOT_COMPILABLE"
+    },
+    {
+      "variant": "source",
+      "data": {
+        "started": "2026-10-28T14:56:17.030Z",
+        "completed": "2026-10-28T14:56:22.983Z",
+        "variant": "source-complete-compact-schema-prompt",
+        "result": {
+          "result": {
+            "id": "chatcmpl-30aacd71-0926-420d-ad72-9e41aba6b7c2",
+            "object": "chat.completion",
+            "created": 1793199377,
+            "model": "@cf/qwen/qwen3-30b-a3b-fp8",
+            "choices": [
+              {
+                "index": 0,
+                "message": {
+                  "role": "assistant",
+                  "content": "{\"id\":\"r:6704f4d5e6e48906:t1:s:scene\",\"title\":\"山村觉醒\",\"location\":\"青石村\",\"blocks\":[{\"kind\":\"narration\",\"text\":\"五岁孩童云归在村口古槐下突然睁开双眼，体内经脉如星河运转。村中老者惊觉他竟能感知天地灵气，却不知这异象暗藏天机。\"},{\"kind\":\"dialogue\",\"text\":\"“这孩子莫非是天纵奇才？”村长望着云归手中凝聚的微弱灵光，声音颤抖。\",\"speaker\":\"narration\"}],\"entities\":[{\"id\":\"r:6704f4d5e6e48906:t1:e:elder\",\"name\":\"村长\",\"kind\":\"person\",\"status\":\"alive\"},{\"id\":\"r:6704f4d5e6e48906:t1:e:cloud\",\"name\":\"云归\",\"kind\":\"person\",\"status\":\"alive\"}],\"choices\":[{\"id\":\"r:6704f4d5e6e48906:t1:c:a\",\"label\":\"尝试凝聚灵力\",\"intent\":\"practice\",\"targetId\":\"self\",\"stake\":\"low\",\"approach\":\"intensive\"},{\"id\":\"r:6704f4d5e6e48906:t1:c:b\",\"label\":\"询问村中秘辛\",\"intent\":\"negotiate\",\"targetId\":\"r:6704f4d5e6e48906:t1:e:elder\",\"stake\":\"normal\",\"approach\":\"cooperate\"},{\"id\":\"r:6704f4d5e6e48906:t1:c:c\",\"label\":\"探索村中古槐\",\"intent\":\"explore\",\"targetId\":\"relic\",\"stake\":\"high\",\"approach\":\"cautious\"}],\"memoryDeltas\":[{\"entityId\":\"r:6704f4d5e6e48906:t1:e:cloud\",\"text\":\"五岁孩童云归觉醒异象，体内经脉如星河运转，能感知天地灵气。\",\"kind\":\"fact\"}]}",
+                  "refusal": null,
+                  "annotations": null,
+                  "audio": null,
+                  "function_call": null,
+                  "reasoning": "\n\n",
+                  "reasoning_content": "\n\n"
+                },
+                "logprobs": null,
+                "finish_reason": "stop",
+                "stop_reason": null,
+                "token_ids": null,
+                "routed_experts": null
+              }
+            ],
+            "service_tier": null,
+            "usage": {
+              "prompt_tokens": 1248,
+              "completion_tokens": 472,
+              "total_tokens": 1720,
+              "prompt_tokens_details": {
+                "cached_tokens": 0
+              },
+              "neurons": 20.155569076538086
+            },
+            "prompt_logprobs": null,
+            "prompt_token_ids": null,
+            "prompt_text": null,
+            "kv_transfer_params": null,
+            "ec_transfer_params": null,
+            "metrics": null,
+            "response": {
+              "id": "r:6704f4d5e6e48906:t1:s:scene",
+              "title": "山村觉醒",
+              "location": "青石村",
+              "blocks": [
+                {
+                  "kind": "narration",
+                  "text": "五岁孩童云归在村口古槐下突然睁开双眼，体内经脉如星河运转。村中老者惊觉他竟能感知天地灵气，却不知这异象暗藏天机。"
+                },
+                {
+                  "kind": "dialogue",
+                  "text": "“这孩子莫非是天纵奇才？”村长望着云归手中凝聚的微弱灵光，声音颤抖。",
+                  "speaker": "narration"
+                }
+              ],
+              "entities": [
+                {
+                  "id": "r:6704f4d5e6e48906:t1:e:elder",
+                  "name": "村长",
+                  "kind": "person",
+                  "status": "alive"
+                },
+                {
+                  "id": "r:6704f4d5e6e48906:t1:e:cloud",
+                  "name": "云归",
+                  "kind": "person",
+                  "status": "alive"
+                }
+              ],
+              "choices": [
+                {
+                  "id": "r:6704f4d5e6e48906:t1:c:a",
+                  "label": "尝试凝聚灵力",
+                  "intent": "practice",
+                  "targetId": "self",
+                  "stake": "low",
+                  "approach": "intensive"
+                },
+                {
+                  "id": "r:6704f4d5e6e48906:t1:c:b",
+                  "label": "询问村中秘辛",
+                  "intent": "negotiate",
+                  "targetId": "r:6704f4d5e6e48906:t1:e:elder",
+                  "stake": "normal",
+                  "approach": "cooperate"
+                },
+                {
+                  "id": "r:6704f4d5e6e48906:t1:c:c",
+                  "label": "探索村中古槐",
+                  "intent": "explore",
+                  "targetId": "relic",
+                  "stake": "high",
+                  "approach": "cautious"
+                }
+              ],
+              "memoryDeltas": [
+                {
+                  "entityId": "r:6704f4d5e6e48906:t1:e:cloud",
+                  "text": "五岁孩童云归觉醒异象，体内经脉如星河运转，能感知天地灵气。",
+                  "kind": "fact"
+                }
+              ]
+            },
+            "tool_calls": []
+          },
+          "success": true,
+          "errors": [],
+          "messages": [],
+          "status": 200
+        }
+      },
+      "runtimeValidation": "SPEAKER_REFERENCE_INVALID"
+    },
+    {
+      "variant": "scoped",
+      "data": {
+        "started": "2026-10-28T14:58:16.016Z",
+        "completed": "2026-10-28T14:58:23.802Z",
+        "variant": "scoped-speaker-current-facts",
+        "result": {
+          "result": {
+            "id": "chatcmpl-d932cc04-ff92-4aa6-92fa-413dfbc5ec6d",
+            "object": "chat.completion",
+            "created": 1793199496,
+            "model": "@cf/qwen/qwen3-30b-a3b-fp8",
+            "choices": [
+              {
+                "index": 0,
+                "message": {
+                  "role": "assistant",
+                  "content": "{\"id\":\"r:6704f4d5e6e48906:t1:s:scene\",\"title\":\"山脚小村\",\"location\":\"青石村村口\",\"blocks\":[{\"kind\":\"narration\",\"text\":\"十六岁生辰当日，云归在村口老槐树下感受到体内经脉隐隐作痛。远处山林间飘来若有若无的剑鸣声，惊起一群栖息的寒鸦。\"},{\"kind\":\"dialogue\",\"text\":\"「这气息...是筑基期的剑气？」云归握紧腰间布袋里的三枚粗石，这是父亲临终前留给他的最后一件物品。\",\"speaker\":\"self\"},{\"kind\":\"dialogue\",\"text\":\"「小归，别乱跑！」村中传来母亲的呼唤，但云归已经注意到村口石碑上的刻字正在泛起微光。\",\"speaker\":\"r:6704f4d5e6e48906:t1:e:mother\"}],\"entities\":[{\"id\":\"r:6704f4d5e6e48906:t1:e:mother\",\"name\":\"云母\",\"kind\":\"person\",\"status\":\"alive\"}],\"choices\":[{\"id\":\"r:6704f4d5e6e48906:t1:c:a\",\"label\":\"查看石碑异象\",\"intent\":\"explore\",\"targetId\":\"relic\",\"stake\":\"low\",\"approach\":\"cautious\"},{\"id\":\"r:6704f4d5e6e48906:t1:c:b\",\"label\":\"返回家中\",\"intent\":\"travel\",\"targetId\":\"r:6704f4d5e6e48906:t1:e:home\",\"stake\":\"low\",\"approach\":\"wilderness\"},{\"id\":\"r:6704f4d5e6e48906:t1:c:c\",\"label\":\"练习基础吐纳\",\"intent\":\"practice\",\"targetId\":\"self\",\"stake\":\"low\",\"approach\":\"steady\"}],\"memoryDeltas\":[{\"entityId\":\"r:6704f4d5e6e48906:t1:e:mother\",\"text\":\"云母曾说村中老槐树下埋着父亲的佩剑，但从未见过\",\"kind\":\"fact\"}]}",
+                  "refusal": null,
+                  "annotations": null,
+                  "audio": null,
+                  "function_call": null,
+                  "reasoning": "\n\n",
+                  "reasoning_content": "\n\n"
+                },
+                "logprobs": null,
+                "finish_reason": "stop",
+                "stop_reason": null,
+                "token_ids": null,
+                "routed_experts": null
+              }
+            ],
+            "service_tier": null,
+            "usage": {
+              "prompt_tokens": 1262,
+              "completion_tokens": 504,
+              "total_tokens": 1766,
+              "prompt_tokens_details": {
+                "cached_tokens": 0
+              },
+              "neurons": 21.195507049560547
+            },
+            "prompt_logprobs": null,
+            "prompt_token_ids": null,
+            "prompt_text": null,
+            "kv_transfer_params": null,
+            "ec_transfer_params": null,
+            "metrics": null,
+            "response": {
+              "id": "r:6704f4d5e6e48906:t1:s:scene",
+              "title": "山脚小村",
+              "location": "青石村村口",
+              "blocks": [
+                {
+                  "kind": "narration",
+                  "text": "十六岁生辰当日，云归在村口老槐树下感受到体内经脉隐隐作痛。远处山林间飘来若有若无的剑鸣声，惊起一群栖息的寒鸦。"
+                },
+                {
+                  "kind": "dialogue",
+                  "text": "「这气息...是筑基期的剑气？」云归握紧腰间布袋里的三枚粗石，这是父亲临终前留给他的最后一件物品。",
+                  "speaker": "self"
+                },
+                {
+                  "kind": "dialogue",
+                  "text": "「小归，别乱跑！」村中传来母亲的呼唤，但云归已经注意到村口石碑上的刻字正在泛起微光。",
+                  "speaker": "r:6704f4d5e6e48906:t1:e:mother"
+                }
+              ],
+              "entities": [
+                {
+                  "id": "r:6704f4d5e6e48906:t1:e:mother",
+                  "name": "云母",
+                  "kind": "person",
+                  "status": "alive"
+                }
+              ],
+              "choices": [
+                {
+                  "id": "r:6704f4d5e6e48906:t1:c:a",
+                  "label": "查看石碑异象",
+                  "intent": "explore",
+                  "targetId": "relic",
+                  "stake": "low",
+                  "approach": "cautious"
+                },
+                {
+                  "id": "r:6704f4d5e6e48906:t1:c:b",
+                  "label": "返回家中",
+                  "intent": "travel",
+                  "targetId": "r:6704f4d5e6e48906:t1:e:home",
+                  "stake": "low",
+                  "approach": "wilderness"
+                },
+                {
+                  "id": "r:6704f4d5e6e48906:t1:c:c",
+                  "label": "练习基础吐纳",
+                  "intent": "practice",
+                  "targetId": "self",
+                  "stake": "low",
+                  "approach": "steady"
+                }
+              ],
+              "memoryDeltas": [
+                {
+                  "entityId": "r:6704f4d5e6e48906:t1:e:mother",
+                  "text": "云母曾说村中老槐树下埋着父亲的佩剑，但从未见过",
+                  "kind": "fact"
+                }
+              ]
+            },
+            "tool_calls": []
+          },
+          "success": true,
+          "errors": [],
+          "messages": [],
+          "status": 200
+        }
+      },
+      "runtimeValidation": "CHOICE_NOT_COMPILABLE"
+    },
+    {
+      "variant": "entities",
+      "data": {
+        "started": "2026-10-28T14:59:43.619Z",
+        "completed": "2026-10-28T14:59:49.301Z",
+        "variant": "explicit-complete-entity-references",
+        "result": {
+          "result": {
+            "id": "chatcmpl-02f91703-6aa0-4efb-baf8-1f44db77c1da",
+            "object": "chat.completion",
+            "created": 1793199583,
+            "model": "@cf/qwen/qwen3-30b-a3b-fp8",
+            "choices": [
+              {
+                "index": 0,
+                "message": {
+                  "role": "assistant",
+                  "content": "{\"id\":\"r:6704f4d5e6e48906:t1:s:scene\",\"title\":\"山村晨雾\",\"location\":\"青石村\",\"blocks\":[{\"kind\":\"narration\",\"text\":\"晨雾中传来清脆的金属撞击声，云归握紧腰间锈迹斑斑的短刀，这是父亲留下的唯一遗物。村口老槐树下聚集着三五个村民，他们围着一个青衣人指指点点。\"},{\"kind\":\"dialogue\",\"text\":\"“这孩子天生能看见气机，怕是不详之兆。”青衣人声音冷峻，目光如刀般扫过云归。\",\"speaker\":\"r:6704f4d5e6e48906:t1:e:qingyi\"},{\"kind\":\"dialogue\",\"text\":\"“我...我只是想找个练功的地方。”云归感觉喉咙发紧，掌心渗出冷汗。\",\"speaker\":\"self\"}],\"entities\":[{\"id\":\"r:6704f4d5e6e48906:t1:e:qingyi\",\"name\":\"青衣人\",\"kind\":\"person\",\"status\":\"alive\"},{\"id\":\"r:6704f4d5e6e48906:t1:e:villager1\",\"name\":\"村民甲\",\"kind\":\"person\",\"status\":\"alive\"},{\"id\":\"r:6704f4d5e6e48906:t1:e:villager2\",\"name\":\"村民乙\",\"kind\":\"person\",\"status\":\"alive\"}],\"choices\":[{\"id\":\"r:6704f4d5e6e48906:t1:c:a\",\"label\":\"强行突破\",\"intent\":\"practice\",\"targetId\":\"self\",\"stake\":\"high\",\"approach\":\"intensive\"},{\"id\":\"r:6704f4d5e6e48906:t1:c:b\",\"label\":\"寻找出路\",\"intent\":\"travel\",\"targetId\":\"r:6704f4d5e6e48906:t1:e:forest\",\"stake\":\"normal\",\"approach\":\"wilderness\"},{\"id\":\"r:6704f4d5e6e48906:t1:c:c\",\"label\":\"与青衣人谈判\",\"intent\":\"negotiate\",\"targetId\":\"r:6704f4d5e6e48906:t1:e:qingyi\",\"stake\":\"low\",\"approach\":\"cooperate\"}],\"memoryDeltas\":[{\"entityId\":\"r:6704f4d5e6e48906:t1:e:qingyi\",\"text\":\"青衣人手持青铜罗盘，衣袖内隐约可见符文刺青\",\"kind\":\"fact\"}]}",
+                  "refusal": null,
+                  "annotations": null,
+                  "audio": null,
+                  "function_call": null,
+                  "reasoning": "\n\n",
+                  "reasoning_content": "\n\n"
+                },
+                "logprobs": null,
+                "finish_reason": "stop",
+                "stop_reason": null,
+                "token_ids": null,
+                "routed_experts": null
+              }
+            ],
+            "service_tier": null,
+            "usage": {
+              "prompt_tokens": 1267,
+              "completion_tokens": 600,
+              "total_tokens": 1867,
+              "prompt_tokens_details": {
+                "cached_tokens": 0
+              },
+              "neurons": 24.144207000732422
+            },
+            "prompt_logprobs": null,
+            "prompt_token_ids": null,
+            "prompt_text": null,
+            "kv_transfer_params": null,
+            "ec_transfer_params": null,
+            "metrics": null,
+            "response": {
+              "id": "r:6704f4d5e6e48906:t1:s:scene",
+              "title": "山村晨雾",
+              "location": "青石村",
+              "blocks": [
+                {
+                  "kind": "narration",
+                  "text": "晨雾中传来清脆的金属撞击声，云归握紧腰间锈迹斑斑的短刀，这是父亲留下的唯一遗物。村口老槐树下聚集着三五个村民，他们围着一个青衣人指指点点。"
+                },
+                {
+                  "kind": "dialogue",
+                  "text": "“这孩子天生能看见气机，怕是不详之兆。”青衣人声音冷峻，目光如刀般扫过云归。",
+                  "speaker": "r:6704f4d5e6e48906:t1:e:qingyi"
+                },
+                {
+                  "kind": "dialogue",
+                  "text": "“我...我只是想找个练功的地方。”云归感觉喉咙发紧，掌心渗出冷汗。",
+                  "speaker": "self"
+                }
+              ],
+              "entities": [
+                {
+                  "id": "r:6704f4d5e6e48906:t1:e:qingyi",
+                  "name": "青衣人",
+                  "kind": "person",
+                  "status": "alive"
+                },
+                {
+                  "id": "r:6704f4d5e6e48906:t1:e:villager1",
+                  "name": "村民甲",
+                  "kind": "person",
+                  "status": "alive"
+                },
+                {
+                  "id": "r:6704f4d5e6e48906:t1:e:villager2",
+                  "name": "村民乙",
+                  "kind": "person",
+                  "status": "alive"
+                }
+              ],
+              "choices": [
+                {
+                  "id": "r:6704f4d5e6e48906:t1:c:a",
+                  "label": "强行突破",
+                  "intent": "practice",
+                  "targetId": "self",
+                  "stake": "high",
+                  "approach": "intensive"
+                },
+                {
+                  "id": "r:6704f4d5e6e48906:t1:c:b",
+                  "label": "寻找出路",
+                  "intent": "travel",
+                  "targetId": "r:6704f4d5e6e48906:t1:e:forest",
+                  "stake": "normal",
+                  "approach": "wilderness"
+                },
+                {
+                  "id": "r:6704f4d5e6e48906:t1:c:c",
+                  "label": "与青衣人谈判",
+                  "intent": "negotiate",
+                  "targetId": "r:6704f4d5e6e48906:t1:e:qingyi",
+                  "stake": "low",
+                  "approach": "cooperate"
+                }
+              ],
+              "memoryDeltas": [
+                {
+                  "entityId": "r:6704f4d5e6e48906:t1:e:qingyi",
+                  "text": "青衣人手持青铜罗盘，衣袖内隐约可见符文刺青",
+                  "kind": "fact"
+                }
+              ]
+            },
+            "tool_calls": []
+          },
+          "success": true,
+          "errors": [],
+          "messages": [],
+          "status": 200
+        }
+      },
+      "runtimeValidation": "CHOICE_NOT_COMPILABLE"
+    },
+    {
+      "variant": "reference_order",
+      "data": {
+        "started": "2026-10-28T15:00:40.287Z",
+        "completed": "2026-10-28T15:00:47.907Z",
+        "variant": "references-before-entity-declarations",
+        "result": {
+          "result": {
+            "id": "chatcmpl-fcbf9330-0302-4e60-8921-61d72913f6fe",
+            "object": "chat.completion",
+            "created": 1793199640,
+            "model": "@cf/qwen/qwen3-30b-a3b-fp8",
+            "choices": [
+              {
+                "index": 0,
+                "message": {
+                  "role": "assistant",
+                  "content": "{\"id\":\"r:6704f4d5e6e48906:t1:s:scene\",\"title\":\"山村晨雾\",\"location\":\"青石村\",\"blocks\":[{\"kind\":\"narration\",\"text\":\"晨雾中传来金铁交鸣之声，云归握紧腰间木剑，循声望去。\"},{\"kind\":\"dialogue\",\"text\":\"「这声音...不像是寻常练剑。」\",\"speaker\":\"self\"},{\"kind\":\"dialogue\",\"text\":\"「小友也听到了？」\",\"speaker\":\"r:6704f4d5e6e48906:t1:e:oldman\"},{\"kind\":\"dialogue\",\"text\":\"「是村东老铁匠在淬剑，他每日寅时便...」\",\"speaker\":\"r:6704f4d5e6e48906:t1:e:oldman\"}],\"choices\":[{\"id\":\"r:6704f4d5e6e48906:t1:c:a\",\"label\":\"前往铁匠铺\",\"intent\":\"travel\",\"targetId\":\"r:6704f4d5e6e48906:t1:e:oldman\",\"stake\":\"low\",\"approach\":\"wilderness\"},{\"id\":\"r:6704f4d5e6e48906:t1:c:b\",\"label\":\"返回屋内\",\"intent\":\"rest\",\"targetId\":\"self\",\"stake\":\"low\",\"approach\":\"recover\"},{\"id\":\"r:6704f4d5e6e48906:t1:c:c\",\"label\":\"搜寻线索\",\"intent\":\"explore\",\"targetId\":\"relic\",\"stake\":\"normal\",\"approach\":\"cautious\"}],\"entities\":[{\"id\":\"r:6704f4d5e6e48906:t1:e:oldman\",\"name\":\"老铁匠\",\"kind\":\"person\",\"status\":\"alive\"},{\"id\":\"r:6704f4d5e6e48906:t1:e:relinc\",\"name\":\"残破剑鞘\",\"kind\":\"place\"},{\"id\":\"r:6704f4d5e6e48906:t1:e:relic\",\"name\":\"铁匠铺\",\"kind\":\"place\"}],\"memoryDeltas\":[{\"entityId\":\"r:6704f4d5e6e48906:t1:e:oldman\",\"text\":\"老铁匠每日寅时在铁匠铺淬剑\",\"kind\":\"fact\"},{\"entityId\":\"r:6704f4d5e6e48906:t1:e:relic\",\"text\":\"铁匠铺内有残破剑鞘\",\"kind\":\"clue\"}]}",
+                  "refusal": null,
+                  "annotations": null,
+                  "audio": null,
+                  "function_call": null,
+                  "reasoning": "\n\n",
+                  "reasoning_content": "\n\n"
+                },
+                "logprobs": null,
+                "finish_reason": "stop",
+                "stop_reason": null,
+                "token_ids": null,
+                "routed_experts": null
+              }
+            ],
+            "service_tier": null,
+            "usage": {
+              "prompt_tokens": 1267,
+              "completion_tokens": 598,
+              "total_tokens": 1865,
+              "prompt_tokens_details": {
+                "cached_tokens": 0
+              },
+              "neurons": 24.0832576751709
+            },
+            "prompt_logprobs": null,
+            "prompt_token_ids": null,
+            "prompt_text": null,
+            "kv_transfer_params": null,
+            "ec_transfer_params": null,
+            "metrics": null,
+            "response": {
+              "id": "r:6704f4d5e6e48906:t1:s:scene",
+              "title": "山村晨雾",
+              "location": "青石村",
+              "blocks": [
+                {
+                  "kind": "narration",
+                  "text": "晨雾中传来金铁交鸣之声，云归握紧腰间木剑，循声望去。"
+                },
+                {
+                  "kind": "dialogue",
+                  "text": "「这声音...不像是寻常练剑。」",
+                  "speaker": "self"
+                },
+                {
+                  "kind": "dialogue",
+                  "text": "「小友也听到了？」",
+                  "speaker": "r:6704f4d5e6e48906:t1:e:oldman"
+                },
+                {
+                  "kind": "dialogue",
+                  "text": "「是村东老铁匠在淬剑，他每日寅时便...」",
+                  "speaker": "r:6704f4d5e6e48906:t1:e:oldman"
+                }
+              ],
+              "choices": [
+                {
+                  "id": "r:6704f4d5e6e48906:t1:c:a",
+                  "label": "前往铁匠铺",
+                  "intent": "travel",
+                  "targetId": "r:6704f4d5e6e48906:t1:e:oldman",
+                  "stake": "low",
+                  "approach": "wilderness"
+                },
+                {
+                  "id": "r:6704f4d5e6e48906:t1:c:b",
+                  "label": "返回屋内",
+                  "intent": "rest",
+                  "targetId": "self",
+                  "stake": "low",
+                  "approach": "recover"
+                },
+                {
+                  "id": "r:6704f4d5e6e48906:t1:c:c",
+                  "label": "搜寻线索",
+                  "intent": "explore",
+                  "targetId": "relic",
+                  "stake": "normal",
+                  "approach": "cautious"
+                }
+              ],
+              "entities": [
+                {
+                  "id": "r:6704f4d5e6e48906:t1:e:oldman",
+                  "name": "老铁匠",
+                  "kind": "person",
+                  "status": "alive"
+                },
+                {
+                  "id": "r:6704f4d5e6e48906:t1:e:relinc",
+                  "name": "残破剑鞘",
+                  "kind": "place"
+                },
+                {
+                  "id": "r:6704f4d5e6e48906:t1:e:relic",
+                  "name": "铁匠铺",
+                  "kind": "place"
+                }
+              ],
+              "memoryDeltas": [
+                {
+                  "entityId": "r:6704f4d5e6e48906:t1:e:oldman",
+                  "text": "老铁匠每日寅时在铁匠铺淬剑",
+                  "kind": "fact"
+                },
+                {
+                  "entityId": "r:6704f4d5e6e48906:t1:e:relic",
+                  "text": "铁匠铺内有残破剑鞘",
+                  "kind": "clue"
+                }
+              ]
+            },
+            "tool_calls": []
+          },
+          "success": true,
+          "errors": [],
+          "messages": [],
+          "status": 200
+        }
+      },
+      "runtimeValidation": "CHOICE_NOT_COMPILABLE"
+    },
+    {
+      "variant": "gemma",
+      "data": {
+        "started": "2026-10-28T15:05:36.487Z",
+        "completed": "2026-10-28T15:05:54.243Z",
+        "variant": "gemma4-same-scene-schema",
+        "result": {
+          "result": {
+            "id": "40d5d92c1c3c4c208a17d4eec57bd1ca",
+            "object": "chat.completion",
+            "created": 1793199937,
+            "model": "@cf/google/gemma-4-26b-a4b-it-external",
+            "choices": [
+              {
+                "index": 0,
+                "message": {
+                  "role": "assistant",
+                  "content": "{\n  \"id\": \"r:6704f4d5e6e48906:t1:s:scene\",\n  \"title\": \"寒林初诞\",\n  \"location\": \"青石村\",\n  \"blocks\": [\n    {\n      \"kind\": \"narration\",\n      \"text\": \"寒风穿过林间的缝隙，吹动了摇篮边的草席。云归在这一年的冬日里降生，周围是简陋的土屋与粗糙的农具。村里的长辈们低声议论着，似乎在谈论着这孩子眼中透出的异样神采。\"\n    },\n    {\n      \"kind\": \"dialogue\",\n      \"text\": \"这孩子生得倒是个硬朗模样，只是这眼神，瞧着不像个寻常农家娃。\",\n      \"speaker\": \"r:6704f4d5e6e48906:t1:e:elder\"\n    },\n    {\n      \"kind\": \"narration\",\n      \"text\": \"一名年迈的村民站在摇篮旁，目光在云归身上停留了许久，随后转头看向屋外的风雪。\"\n    }\n  ],\n  \"entities\": [\n    {\n      \"id\": \"r:6704f4d5e6e48906:t1:e:elder\",\n      \"name\": \"村中长辈\",\n      \"kind\": \"person\",\n      \"status\": \"alive\"\n    },\n    {\n      \"id\": \"r:6704f4d5e6e48906:t1:e:village\",\n      \"name\": \"青石村\",\n      \"kind\": \"place\"\n    }\n  ],\n  \"choices\": [\n    {\n      \"id\": \"r:6704f4d5e6e48906:t1:c:a\",\n      \"label\": \"在襁褓中啼哭\",\n      \"intent\": \"explore\",\n      \"targetId\": \"relic\",\n      \"stake\": \"low\",\n      \"approach\": \"cautious\"\n    },\n    {\n      \"id\": \"r:6704f4d5e6e48906:t1:c:b\",\n      \"label\": \"静静观察四周\",\n      \"intent\": \"explore\",\n      \"targetId\": \"relic\",\n      \"stake\": \"low\",\n      \"approach\": \"cautious\"\n    },\n    {\n      \"id\": \"r:6704f4d5e6e48906:t1:c:c\",\n      \"label\": \"试图抓握身边的物件\",\n      \"intent\": \"explore\",\n      \"targetId\": \"supplies\",\n      \"stake\": \"low\",\n      \"approach\": \"cautious\"\n    }\n  ],\n  \"memoryDeltas\": [\n    {\n      \"entityId\": \"self\",\n      \"text\": \"出生于青石村，天生具备过目不忘与剑骨之资。\"\n    \n    ,\n      \"kind\": \"fact\"\n    }\n  ]\n}"
+                },
+                "finish_reason": "stop",
+                "logprobs": null
+              }
+            ],
+            "usage": {
+              "prompt_tokens": 1308,
+              "completion_tokens": 748,
+              "total_tokens": 2056,
+              "prompt_tokens_details": {
+                "cached_tokens": 0
+              },
+              "neurons": 32.29090881347656
+            }
+          },
+          "success": true,
+          "errors": [],
+          "messages": [],
+          "status": 200
+        }
+      },
+      "runtimeValidation": "GENERATED_SCENE_INVALID"
+    },
+    {
+      "variant": "chinese_order",
+      "data": {
+        "started": "2026-10-28T15:06:54.807Z",
+        "completed": "2026-10-28T15:07:01.551Z",
+        "variant": "chinese-explicit-state-entities-first",
+        "result": {
+          "result": {
+            "id": "chatcmpl-362a876d-a37d-4e52-bf53-a8913a3e8949",
+            "object": "chat.completion",
+            "created": 1793200015,
+            "model": "@cf/qwen/qwen3-30b-a3b-fp8",
+            "choices": [
+              {
+                "index": 0,
+                "message": {
+                  "role": "assistant",
+                  "content": "{\"id\":\"r:6704f4d5e6e48906:t1:s:scene\",\"title\":\"青石镇边缘\",\"location\":\"r:6704f4d5e6e48906:t1:p:town\",\"entities\":[{\"id\":\"r:6704f4d5e6e48906:t1:n:oldman\",\"name\":\"赵老\",\"kind\":\"person\"},{\"id\":\"r:6704f4d5e6e48906:t1:n:merchant\",\"name\":\"王掌柜\",\"kind\":\"person\"},{\"id\":\"r:6704f4d5e6e48906:t1:p:town\",\"name\":\"青石镇\",\"kind\":\"place\"}],\"blocks\":[{\"kind\":\"narration\",\"text\":\"云归站在青石镇边缘的山道上，晨雾中隐约可见远处的山峰。他握紧了腰间的短刀，这是父亲留下的唯一遗物。镇口的酒肆里传来阵阵喧哗，似乎有什么热闹发生。\"},{\"kind\":\"dialogue\",\"text\":\"赵老（眯眼打量着云归）：小子，你这身打扮不像本地人啊？\",\"speaker\":\"r:6704f4d5e6e48906:t1:e:oldman\"},{\"kind\":\"dialogue\",\"text\":\"云归（抱拳行礼）：晚辈云归，刚从山外回来。不知老丈何指？\",\"speaker\":\"self\"},{\"kind\":\"dialogue\",\"text\":\"王掌柜（从酒肆探出头）：哎呀，这不是云家的后人么？你爹当年可是镇上的英雄！\",\"speaker\":\"r:6704f4d5e6e48906:t1:e:merchant\"}],\"choices\":[{\"id\":\"r:6704f4d5e6e48906:t1:c:a\",\"label\":\"询问父亲的事迹\",\"intent\":\"negotiate\",\"targetId\":\"r:6704f4d5e6e48906:t1:e:oldman\",\"stake\":\"normal\",\"approach\":\"cooperate\"},{\"id\":\"r:6704f4d5e6e48906:t1:c:b\",\"label\":\"前往酒肆打听消息\",\"intent\":\"travel\",\"targetId\":\"r:6704f4d5e6e48906:t1:e:merchant\",\"stake\":\"normal\",\"approach\":\"road\"},{\"id\":\"r:6704f4d5e6e48906:t1:c:c\",\"label\":\"观察山道地形\",\"intent\":\"explore\",\"targetId\":\"relic\",\"stake\":\"normal\",\"approach\":\"cautious\"}],\"memoryDeltas\":[{\"entityId\":\"r:6704f4d5e6e48906:t1:e:oldman\",\"text\":\"赵老似乎知道云归父亲的往事\",\"kind\":\"fact\"},{\"entityId\":\"r:6704f4d5e6e48906:t1:e:merchant\",\"text\":\"王掌柜对云归表现出意外的亲近\",\"kind\":\"fact\"}]}",
+                  "refusal": null,
+                  "annotations": null,
+                  "audio": null,
+                  "function_call": null,
+                  "reasoning": "\n\n",
+                  "reasoning_content": "\n\n"
+                },
+                "logprobs": null,
+                "finish_reason": "stop",
+                "stop_reason": null,
+                "token_ids": null,
+                "routed_experts": null
+              }
+            ],
+            "service_tier": null,
+            "usage": {
+              "prompt_tokens": 1051,
+              "completion_tokens": 716,
+              "total_tokens": 1767,
+              "prompt_tokens_details": {
+                "cached_tokens": 0
+              },
+              "neurons": 26.68037223815918
+            },
+            "prompt_logprobs": null,
+            "prompt_token_ids": null,
+            "prompt_text": null,
+            "kv_transfer_params": null,
+            "ec_transfer_params": null,
+            "metrics": null,
+            "response": {
+              "id": "r:6704f4d5e6e48906:t1:s:scene",
+              "title": "青石镇边缘",
+              "location": "r:6704f4d5e6e48906:t1:p:town",
+              "entities": [
+                {
+                  "id": "r:6704f4d5e6e48906:t1:n:oldman",
+                  "name": "赵老",
+                  "kind": "person"
+                },
+                {
+                  "id": "r:6704f4d5e6e48906:t1:n:merchant",
+                  "name": "王掌柜",
+                  "kind": "person"
+                },
+                {
+                  "id": "r:6704f4d5e6e48906:t1:p:town",
+                  "name": "青石镇",
+                  "kind": "place"
+                }
+              ],
+              "blocks": [
+                {
+                  "kind": "narration",
+                  "text": "云归站在青石镇边缘的山道上，晨雾中隐约可见远处的山峰。他握紧了腰间的短刀，这是父亲留下的唯一遗物。镇口的酒肆里传来阵阵喧哗，似乎有什么热闹发生。"
+                },
+                {
+                  "kind": "dialogue",
+                  "text": "赵老（眯眼打量着云归）：小子，你这身打扮不像本地人啊？",
+                  "speaker": "r:6704f4d5e6e48906:t1:e:oldman"
+                },
+                {
+                  "kind": "dialogue",
+                  "text": "云归（抱拳行礼）：晚辈云归，刚从山外回来。不知老丈何指？",
+                  "speaker": "self"
+                },
+                {
+                  "kind": "dialogue",
+                  "text": "王掌柜（从酒肆探出头）：哎呀，这不是云家的后人么？你爹当年可是镇上的英雄！",
+                  "speaker": "r:6704f4d5e6e48906:t1:e:merchant"
+                }
+              ],
+              "choices": [
+                {
+                  "id": "r:6704f4d5e6e48906:t1:c:a",
+                  "label": "询问父亲的事迹",
+                  "intent": "negotiate",
+                  "targetId": "r:6704f4d5e6e48906:t1:e:oldman",
+                  "stake": "normal",
+                  "approach": "cooperate"
+                },
+                {
+                  "id": "r:6704f4d5e6e48906:t1:c:b",
+                  "label": "前往酒肆打听消息",
+                  "intent": "travel",
+                  "targetId": "r:6704f4d5e6e48906:t1:e:merchant",
+                  "stake": "normal",
+                  "approach": "road"
+                },
+                {
+                  "id": "r:6704f4d5e6e48906:t1:c:c",
+                  "label": "观察山道地形",
+                  "intent": "explore",
+                  "targetId": "relic",
+                  "stake": "normal",
+                  "approach": "cautious"
+                }
+              ],
+              "memoryDeltas": [
+                {
+                  "entityId": "r:6704f4d5e6e48906:t1:e:oldman",
+                  "text": "赵老似乎知道云归父亲的往事",
+                  "kind": "fact"
+                },
+                {
+                  "entityId": "r:6704f4d5e6e48906:t1:e:merchant",
+                  "text": "王掌柜对云归表现出意外的亲近",
+                  "kind": "fact"
+                }
+              ]
+            },
+            "tool_calls": []
+          },
+          "success": true,
+          "errors": [],
+          "messages": [],
+          "status": 200
+        }
+      },
+      "runtimeValidation": "ENTITY_ID_SCOPE_INVALID"
+    },
+    {
+      "variant": "gemma_chinese",
+      "data": {
+        "started": "2026-10-28T15:07:46.256Z",
+        "completed": "2026-10-28T15:08:17.143Z",
+        "variant": "gemma4-chinese-entities-first",
+        "result": {
+          "result": {
+            "id": "714a04a39ed44ee196d20bf59cdc1370",
+            "object": "chat.completion",
+            "created": 1793200067,
+            "model": "@cf/google/gemma-4-26b-a4b-it-external",
+            "choices": [
+              {
+                "index": 0,
+                "message": {
+                  "role": "assistant",
+                  "content": "{\n  \"id\": \"r:6704f4d5e6e48906:t1:s:scene\",\n  \"title\": \"启程\",\n  \"location\": \"r:6704f4d5e6e48906:t1:e:starting_village\",\n  \"entities\": [\n    {\n      \"id\": \"r:6704f4d5e6e48906:t1:e:starting_village\",\n      \"name\": \"青石村\",\n      \"kind\": \"place\"\n    },\n    {\n      \"id\": \"r:6704f4d5e6e48906:t1:e:village_elder\",\n      \"name\": \"村长\",\n      \"kind\": \"person\"\n    }\n  ],\n  \"blocks\": [\n    {\n      \"kind\": \"narration\",\n      \"text\": \"十六岁的云归背起简单的行囊，站在青石村的村口。晨雾尚未散尽，远处的山峦在薄雾中若隐若现，那是他从未涉足过的未知世界。\"\n    },\n    {\n      \"kind\": \"dialogue\",\n      \"text\": \"云归，外面的世界可不像村里这么太平，若遇上不长眼的修士，记得收敛些性子。\",\n      \"speaker\": \"r:6704f4d5e6e48906:t1:e:village_elder\"\n    },\n    {\n      \"kind\": \"narration\",\n      \"text\": \"村长递过一袋干粮，目光中既有期许，也藏着一丝担忧。云归点了点头，望着通往山脉的小径，心中那股不安分的劲头正蠢蠢欲动。\"\n    }\n  ],\n  \"choices\": [\n    {\n      \"id\": \"r:6704f4d5e6e48906:t1:c:a\",\n      \"label\": \"前往后山寻找修行之法\",\n      \"intent\": \"practice\",\n      \"targetId\": \"self\",\n      \"stake\": \"low\",\n      \"approach\": \"steady\"\n    },\n    {\n      \"id\": \"r:6704f4d5e6e48906:t1:c:b\",\n      \"label\": \"深入林间搜寻物资\",\n      \"intent\": \"explore\",\n      \"targetId\": \"supplies\",\n      \"stake\": \"low\",\n      \"approach\": \"cautious\"\n    },\n    {\n      \"id\": \"r:6704f4d5e6e48906:t1:c:c\",\n      \"label\": \"离开村庄前往城镇\",\n      \"intent\": \"travel\",\n      \"targetId\": \"r:6704f4d5e6e48906:t1:e:starting_village\",\n      \"stake\": \"low\",\n      \"approach\": \"road\"\n    }\n  ],\n  \"memoryDeltas\": [\n    {\n      \"entityId\": \"self\",\n      \"text\": \"云归决定离开青石村开始修行之路。\"\n    \n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n    \t\n"
+                },
+                "finish_reason": "length",
+                "logprobs": null
+              }
+            ],
+            "usage": {
+              "prompt_tokens": 1082,
+              "completion_tokens": 1536,
+              "total_tokens": 2618,
+              "prompt_tokens_details": {
+                "cached_tokens": 0
+              },
+              "neurons": 51.727272033691406
+            }
+          },
+          "success": true,
+          "errors": [],
+          "messages": [],
+          "status": 200
+        }
+      },
+      "runtimeValidation": "SyntaxError"
+    },
+    {
+      "variant": "typed_source",
+      "context": {
+        "schemaVersion": 1,
+        "phase": "opening",
+        "identity": {
+          "runId": "release-live-20261028",
+          "turnId": 1,
+          "baseRevision": 0,
+          "stateHash": "f360901e87d14df163451b4b7159e863809d4f1087260d2cf890f9ca020944c5",
+          "choiceId": null,
+          "rulesVersion": 1,
+          "promptVersion": 1,
+          "requestId": "release-opening-20261028"
+        },
+        "namespace": "r:6704f4d5e6e48906",
+        "receipt": {
+          "kind": "opening",
+          "choiceId": null,
+          "action": null,
+          "elapsedDays": 0,
+          "itemChanges": {},
+          "relationChanges": {},
+          "random": {
+            "before": 1171638517,
+            "after": 1171638517,
+            "roll": null
+          },
+          "before": {
+            "ageDays": 5760,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "after": {
+            "ageDays": 5760,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "death": null,
+          "birth": {
+            "originId": "village",
+            "talentIds": [
+              "keen-memory",
+              "sword-bone"
+            ],
+            "attributes": {
+              "constitution": 4,
+              "insight": 6,
+              "fortune": 2
+            }
+          }
+        },
+        "life": {
+          "name": "云归",
+          "ageDays": 5760,
+          "lifeLimit": 80,
+          "realm": "mortal",
+          "cultivation": 0,
+          "injury": 0,
+          "items": {
+            "supplies": 3,
+            "stones": 0
+          },
+          "relations": {},
+          "birth": {
+            "originId": "village",
+            "talentIds": [
+              "keen-memory",
+              "sword-bone"
+            ],
+            "attributes": {
+              "constitution": 4,
+              "insight": 6,
+              "fortune": 2
+            }
+          }
+        },
+        "entities": [],
+        "memory": {
+          "facts": [],
+          "promises": [],
+          "clues": [],
+          "recent": [],
+          "summaries": []
+        },
+        "references": [],
+        "previousScene": null,
+        "relationshipVersion": 1,
+        "relationships": {},
+        "coverage": {
+          "policy": "relevance-v1",
+          "openTotal": 0,
+          "openIncluded": 0,
+          "openOmitted": 0
+        }
+      },
+      "data": {
+        "started": "2026-10-28T15:14:10.077Z",
+        "completed": "2026-10-28T15:14:15.547Z",
+        "variant": "typed-identities-entities-first",
+        "result": {
+          "result": {
+            "id": "chatcmpl-8a6e432d-ae6d-479f-8fd5-05c7eb01816d",
+            "object": "chat.completion",
+            "created": 1793200450,
+            "model": "@cf/qwen/qwen3-30b-a3b-fp8",
+            "choices": [
+              {
+                "index": 0,
+                "message": {
+                  "role": "assistant",
+                  "content": "{\"id\":\"r:6704f4d5e6e48906:t1:s:scene\",\"title\":\"青石村\",\"location\":\"青石村\",\"entities\":[{\"id\":\"r:6704f4d5e6e48906:t1:e:person_yun-gui\",\"name\":\"云归\",\"kind\":\"person\",\"status\":\"alive\"},{\"id\":\"r:6704f4d5e6e48906:t1:e:person_ling-xiao\",\"name\":\"灵宵\",\"kind\":\"person\",\"status\":\"alive\"},{\"id\":\"r:6704f4d5e6e48906:t1:e:place_qing-shi-village\",\"name\":\"青石村\",\"kind\":\"place\"},{\"id\":\"r:6704f4d5e6e48906:t1:e:faction_earth-spirit\",\"name\":\"地灵宗\",\"kind\":\"faction\"}],\"blocks\":[{\"kind\":\"narration\",\"text\":\"十六岁的云归站在青石村的山脚下，望着远处若隐若现的山脉。他记得父亲临终前说过，地灵宗的弟子每年都会来村里挑选有潜力的少年。而他，或许就是那个被选中的人。\"},{\"kind\":\"dialogue\",\"text\":\"灵宵：「云归，你真的要离开村子吗？」「云归：「我必须试试。如果能进入地灵宗，或许能改变我们的命运。」\",\"speaker\":\"r:6704f4d5e6e48906:t1:e:person_ling-xiao\"},{\"kind\":\"narration\",\"text\":\"云归深吸一口气，转身走向村口的古树。那里，是村民们每年祭拜山神的地方。他想，也许能在这里找到一些线索。\"}],\"choices\":[{\"id\":\"r:6704f4d5e6e48906:t1:c:a\",\"label\":\"前往地灵宗\",\"intent\":\"travel\",\"targetId\":\"r:6704f4d5e6e48906:t1:e:place_qing-shi-village\",\"stake\":\"normal\",\"approach\":\"wilderness\"},{\"id\":\"r:6704f4d5e6e48906:t1:c:b\",\"label\":\"探索村中古树\",\"intent\":\"explore\",\"targetId\":\"relic\",\"stake\":\"normal\",\"approach\":\"cautious\"},{\"id\":\"r:6704f4d5e6e48906:t1:c:c\",\"label\":\"与灵宵告别\",\"intent\":\"negotiate\",\"targetId\":\"r:6704f4d5e6e48906:t1:e:person_ling-xiao\",\"stake\":\"normal\",\"approach\":\"cooperate\"}],\"memoryDeltas\":[]}",
+                  "refusal": null,
+                  "annotations": null,
+                  "audio": null,
+                  "function_call": null,
+                  "reasoning": "\n\n",
+                  "reasoning_content": "\n\n"
+                },
+                "logprobs": null,
+                "finish_reason": "stop",
+                "stop_reason": null,
+                "token_ids": null,
+                "routed_experts": null
+              }
+            ],
+            "service_tier": null,
+            "usage": {
+              "prompt_tokens": 1010,
+              "completion_tokens": 638,
+              "total_tokens": 1648,
+              "prompt_tokens_details": {
+                "cached_tokens": 0
+              },
+              "neurons": 24.113731384277344
+            },
+            "prompt_logprobs": null,
+            "prompt_token_ids": null,
+            "prompt_text": null,
+            "kv_transfer_params": null,
+            "ec_transfer_params": null,
+            "metrics": null,
+            "response": {
+              "id": "r:6704f4d5e6e48906:t1:s:scene",
+              "title": "青石村",
+              "location": "青石村",
+              "entities": [
+                {
+                  "id": "r:6704f4d5e6e48906:t1:e:person_yun-gui",
+                  "name": "云归",
+                  "kind": "person",
+                  "status": "alive"
+                },
+                {
+                  "id": "r:6704f4d5e6e48906:t1:e:person_ling-xiao",
+                  "name": "灵宵",
+                  "kind": "person",
+                  "status": "alive"
+                },
+                {
+                  "id": "r:6704f4d5e6e48906:t1:e:place_qing-shi-village",
+                  "name": "青石村",
+                  "kind": "place"
+                },
+                {
+                  "id": "r:6704f4d5e6e48906:t1:e:faction_earth-spirit",
+                  "name": "地灵宗",
+                  "kind": "faction"
+                }
+              ],
+              "blocks": [
+                {
+                  "kind": "narration",
+                  "text": "十六岁的云归站在青石村的山脚下，望着远处若隐若现的山脉。他记得父亲临终前说过，地灵宗的弟子每年都会来村里挑选有潜力的少年。而他，或许就是那个被选中的人。"
+                },
+                {
+                  "kind": "dialogue",
+                  "text": "灵宵：「云归，你真的要离开村子吗？」「云归：「我必须试试。如果能进入地灵宗，或许能改变我们的命运。」",
+                  "speaker": "r:6704f4d5e6e48906:t1:e:person_ling-xiao"
+                },
+                {
+                  "kind": "narration",
+                  "text": "云归深吸一口气，转身走向村口的古树。那里，是村民们每年祭拜山神的地方。他想，也许能在这里找到一些线索。"
+                }
+              ],
+              "choices": [
+                {
+                  "id": "r:6704f4d5e6e48906:t1:c:a",
+                  "label": "前往地灵宗",
+                  "intent": "travel",
+                  "targetId": "r:6704f4d5e6e48906:t1:e:place_qing-shi-village",
+                  "stake": "normal",
+                  "approach": "wilderness"
+                },
+                {
+                  "id": "r:6704f4d5e6e48906:t1:c:b",
+                  "label": "探索村中古树",
+                  "intent": "explore",
+                  "targetId": "relic",
+                  "stake": "normal",
+                  "approach": "cautious"
+                },
+                {
+                  "id": "r:6704f4d5e6e48906:t1:c:c",
+                  "label": "与灵宵告别",
+                  "intent": "negotiate",
+                  "targetId": "r:6704f4d5e6e48906:t1:e:person_ling-xiao",
+                  "stake": "normal",
+                  "approach": "cooperate"
+                }
+              ],
+              "memoryDeltas": []
+            },
+            "tool_calls": []
+          },
+          "success": true,
+          "errors": [],
+          "messages": [],
+          "status": 200
+        }
+      },
+      "inputHash": "55c6888ee0fb2f787c2d92c20f14c8b4535e04d912ee5efa331523ce814eb2fa",
+      "inputBytes": 10490,
+      "runtimeValidation": "accepted",
+      "narrativeReview": "Not accepted for narrative quality: redundant protagonist NPC and travel label/target mismatch."
+    },
+    {
+      "variant": "qwen38_typed",
+      "context": {
+        "schemaVersion": 1,
+        "phase": "opening",
+        "identity": {
+          "runId": "release-live-20261028",
+          "turnId": 1,
+          "baseRevision": 0,
+          "stateHash": "f360901e87d14df163451b4b7159e863809d4f1087260d2cf890f9ca020944c5",
+          "choiceId": null,
+          "rulesVersion": 1,
+          "promptVersion": 1,
+          "requestId": "release-opening-20261028"
+        },
+        "namespace": "r:6704f4d5e6e48906",
+        "receipt": {
+          "kind": "opening",
+          "choiceId": null,
+          "action": null,
+          "elapsedDays": 0,
+          "itemChanges": {},
+          "relationChanges": {},
+          "random": {
+            "before": 1171638517,
+            "after": 1171638517,
+            "roll": null
+          },
+          "before": {
+            "ageDays": 5760,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "after": {
+            "ageDays": 5760,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "death": null,
+          "birth": {
+            "originId": "village",
+            "talentIds": [
+              "keen-memory",
+              "sword-bone"
+            ],
+            "attributes": {
+              "constitution": 4,
+              "insight": 6,
+              "fortune": 2
+            }
+          }
+        },
+        "life": {
+          "name": "云归",
+          "ageDays": 5760,
+          "lifeLimit": 80,
+          "realm": "mortal",
+          "cultivation": 0,
+          "injury": 0,
+          "items": {
+            "supplies": 3,
+            "stones": 0
+          },
+          "relations": {},
+          "birth": {
+            "originId": "village",
+            "talentIds": [
+              "keen-memory",
+              "sword-bone"
+            ],
+            "attributes": {
+              "constitution": 4,
+              "insight": 6,
+              "fortune": 2
+            }
+          }
+        },
+        "entities": [],
+        "memory": {
+          "facts": [],
+          "promises": [],
+          "clues": [],
+          "recent": [],
+          "summaries": []
+        },
+        "references": [],
+        "previousScene": null,
+        "relationshipVersion": 1,
+        "relationships": {},
+        "coverage": {
+          "policy": "relevance-v1",
+          "openTotal": 0,
+          "openIncluded": 0,
+          "openOmitted": 0
+        }
+      },
+      "data": {
+        "started": "2026-10-28T15:14:32.553Z",
+        "completed": "2026-10-28T15:14:58.139Z",
+        "variant": "qwen38-typed-schema",
+        "result": {
+          "result": {
+            "id": "chatcmpl-735a8276-b992-4a3f-9126-92479df6aa5b",
+            "object": "chat.completion",
+            "created": 1793200472,
+            "model": "@cf/qwen/qwen3.8-27b",
+            "choices": [
+              {
+                "index": 0,
+                "message": {
+                  "role": "assistant",
+                  "content": "{\n  \"id\": \"r:6704f4d5e6e48906:t1:s:scene\",\n  \"title\": \"青石村的清晨\",\n  \"location\": \"青石村\",\n  \"entities\": [\n    {\n      \"id\": \"r:6704f4d5e6e48906:t1:e:person_OldMan_Li\",\n      \"name\": \"李老头\",\n      \"kind\": \"person\",\n      \"status\": \"alive\"\n    },\n    {\n      \"id\": \"r:6704f4d5e6e48906:t1:e:place_QingshiVillage\",\n      \"name\": \"青石村\",\n      \"kind\": \"place\"\n    },\n    {\n      \"id\": \"r:6704f4d5e6e48906:t1:e:place_NorthMountain\",\n      \"name\": \"北山\",\n      \"kind\": \"place\"\n    },\n    {\n      \"id\": \"r:6704f4d5e6e48906:t1:e:place_VillageMarket\",\n      \"name\": \"村口集市\",\n      \"kind\": \"place\"\n    }\n  ],\n  \"blocks\": [\n    {\n      \"kind\": \"narration\",\n      \"text\": \"晨雾未散，青石村的石板路泛着湿意。你今年十六岁，身体里没有任何灵气流转，是个彻头彻尾的凡人。但你的记忆极好，且天生对剑意有莫名的亲近感。腰间挂着三件简单的补给，口袋里空空如也。\"\n    },\n    {\n      \"kind\": \"dialogue\",\n      \"text\": \"云归，别在那发呆。听说北山深处的‘听剑崖’最近有异象，不少散修都往那边赶。你虽然没修为，但脑子灵光，去碰碰运气也好，总比在家种地强。\",\n      \"speaker\": \"r:6704f4d5e6e48906:t1:e:person_OldMan_Li\"\n    },\n    {\n      \"kind\": \"narration\",\n      \"text\": \"李老头拄着拐杖，眯着眼看向村口。集市上人来人往，偶尔有背着行囊的修士路过，引来村民们的窃窃私语。北山方向云雾缭绕，隐约传来风声。\"\n    }\n  ],\n  \"choices\": [\n    {\n      \"id\": \"r:6704f4d5e6e48906:t1:c:a\",\n      \"label\": \"前往北山探查异象\",\n      \"intent\": \"travel\",\n      \"targetId\": \"r:6704f4d5e6e48906:t1:e:place_NorthMountain\",\n      \"stake\": \"high\",\n      \"approach\": \"road\"\n    },\n    {\n      \"id\": \"r:6704f4d5e6e48906:t1:c:b\",\n      \"label\": \"在村口集市打听消息\",\n      \"intent\": \"negotiate\",\n      \"targetId\": \"r:6704f4d5e6e48906:t1:e:person_OldMan_Li\",\n      \"stake\": \"low\",\n      \"approach\": \"cooperate\"\n    },\n    {\n      \"id\": \"r:6704f4d5e6e48906:t1:c:c\",\n      \"label\": \"在原地尝试感应灵气\",\n      \"intent\": \"practice\",\n      \"targetId\": \"self\",\n      \"stake\": \"low\",\n      \"approach\": \"steady\"\n    }\n  ]\n,\n  \"memoryDeltas\": [\n    {\n      \"entityId\": \"r:6704f4d5e6e48906:t1:e:person_OldMan_Li\",\n      \"text\": \"李老头建议云归去北山听剑崖碰碰运气，认为他脑子灵光。\"\n    ,\n      \"kind\": \"fact\"\n    }\n  ]\n}",
+                  "refusal": null,
+                  "annotations": null,
+                  "audio": null,
+                  "function_call": null,
+                  "reasoning": null
+                },
+                "logprobs": null,
+                "finish_reason": "stop",
+                "stop_reason": null,
+                "token_ids": null,
+                "routed_experts": null
+              }
+            ],
+            "service_tier": null,
+            "usage": {
+              "prompt_tokens": 1009,
+              "completion_tokens": 976,
+              "total_tokens": 1985,
+              "prompt_tokens_details": {
+                "cached_tokens": 0
+              },
+              "neurons": 325.2045593261719
+            },
+            "prompt_logprobs": null,
+            "prompt_token_ids": null,
+            "prompt_text": null,
+            "kv_transfer_params": null,
+            "ec_transfer_params": null,
+            "metrics": null
+          },
+          "success": true,
+          "errors": [],
+          "messages": [],
+          "status": 200
+        }
+      },
+      "inputHash": "883828402fb47ef7dff270062bdee544f78e3d3af95d85d474487c77c3c6010c",
+      "inputBytes": 10581,
+      "runtimeValidation": "accepted",
+      "narrativeReview": "Opening is grounded in the actual current age, realm, birth talents and inventory. Its independently executable choices were used for two continuations."
+    },
+    {
+      "variant": "glm_typed",
+      "context": {
+        "schemaVersion": 1,
+        "phase": "opening",
+        "identity": {
+          "runId": "release-live-20261028",
+          "turnId": 1,
+          "baseRevision": 0,
+          "stateHash": "f360901e87d14df163451b4b7159e863809d4f1087260d2cf890f9ca020944c5",
+          "choiceId": null,
+          "rulesVersion": 1,
+          "promptVersion": 1,
+          "requestId": "release-opening-20261028"
+        },
+        "namespace": "r:6704f4d5e6e48906",
+        "receipt": {
+          "kind": "opening",
+          "choiceId": null,
+          "action": null,
+          "elapsedDays": 0,
+          "itemChanges": {},
+          "relationChanges": {},
+          "random": {
+            "before": 1171638517,
+            "after": 1171638517,
+            "roll": null
+          },
+          "before": {
+            "ageDays": 5760,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "after": {
+            "ageDays": 5760,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "death": null,
+          "birth": {
+            "originId": "village",
+            "talentIds": [
+              "keen-memory",
+              "sword-bone"
+            ],
+            "attributes": {
+              "constitution": 4,
+              "insight": 6,
+              "fortune": 2
+            }
+          }
+        },
+        "life": {
+          "name": "云归",
+          "ageDays": 5760,
+          "lifeLimit": 80,
+          "realm": "mortal",
+          "cultivation": 0,
+          "injury": 0,
+          "items": {
+            "supplies": 3,
+            "stones": 0
+          },
+          "relations": {},
+          "birth": {
+            "originId": "village",
+            "talentIds": [
+              "keen-memory",
+              "sword-bone"
+            ],
+            "attributes": {
+              "constitution": 4,
+              "insight": 6,
+              "fortune": 2
+            }
+          }
+        },
+        "entities": [],
+        "memory": {
+          "facts": [],
+          "promises": [],
+          "clues": [],
+          "recent": [],
+          "summaries": []
+        },
+        "references": [],
+        "previousScene": null,
+        "relationshipVersion": 1,
+        "relationships": {},
+        "coverage": {
+          "policy": "relevance-v1",
+          "openTotal": 0,
+          "openIncluded": 0,
+          "openOmitted": 0
+        }
+      },
+      "data": {
+        "started": "2026-10-28T15:15:41.528Z",
+        "completed": "2026-10-28T15:16:50.684Z",
+        "variant": "glm47-typed-schema",
+        "result": {
+          "result": {
+            "id": "chatcmpl-857255aceca0c269",
+            "object": "chat.completion",
+            "created": 1793200542,
+            "model": "@cf/zai-org/glm-4.7-flash",
+            "choices": [
+              {
+                "index": 0,
+                "message": {
+                  "role": "assistant",
+                  "content": "{\"id\":\"r:6704f4d5e6e48906:t1:s:scene\",\"title\":\"云归的晨练\",\"location\":\"青云村\",\"entities\":[{\"id\":\"r:6704f4d5e6e48906:t1:e:place_village\",\"name\":\"青云村\",\"kind\":\"place\"},{\"id\":\"r:6704f4d5e6e48906:t1:e:person_elder_li\",\"name\":\"李老伯\",\"kind\":\"person\"},{\"id\":\"r:6704f4d5e6e48906:t1:e:person_elder_li\",\"name\":\"李老伯\",\"kind\":\"person\"}],\"blocks\":[{\"kind\":\"narration\",\"text\":\"清晨的雾气还未散去，青云村笼罩在一片青灰色的薄纱中。十六岁的云归站在村口的打谷场上，手中握着一根磨得发亮的木棍。虽然只是凡人，但他那双眼睛里透着与年龄不符的沉稳。村子里静悄悄的，只有偶尔几声鸡鸣打破寂静。李老伯正蹲在墙角抽着旱烟，见云归出来，便抬起头，眯着眼打量了一番。\"},{\"kind\":\"dialogue\",\"text\":\"“哟，小云归，起这么早？这雾气重，当心着凉。”\",\"speaker\":\"r:6704f4d5e6e48906:t1:e:person_elder_li\"},{\"kind\":\"narration\",\"text\":\"李老伯吐出一口烟圈，目光落在云归手中的木棍上，似乎想起了什么往事，又摇了摇头。\"},{\"kind\":\"dialogue\",\"text\":\"“这把木棍跟了你三年了吧？还是那么顺手。”\",\"speaker\":\"r:6704f4d5e6e48906:t1:e:person_elder_li\"},{\"kind\":\"narration\",\"text\":\"云归点了点头，没有多言，只是握紧了木棍，指节微微发白。他记得自己自幼便有这根木棍，仿佛是某种执念，又像是某种传承。\"},{\"kind\":\"dialogue\",\"text\":\"“村里最近不太平，听说山那边有些动静。你小子还是少往深山里跑，老老实实待在村里。”\",\"speaker\":\"r:6704f4d5e6e48906:t1:e:person_elder_li\"},{\"kind\":\"narration\",\"text\":\"李老伯的话让云归心头一跳。他虽然只是凡人，但那双敏锐的眼睛让他察觉到了一丝不寻常。他看向村外的山林，那里云雾缭绕，隐约可见几道黑影闪过，似乎有什么东西在窥视着这里。\"},{\"kind\":\"narration\",\"text\":\"“对了，你娘临走前给你留了个包裹，说是等你十六岁生日那天再给你。”\"},{\"kind\":\"narration\",\"text\":\"云归心中一动，他确实记得自己十六岁生日快到了，但从未想过娘亲会在那时给他东西。他看向李老伯，等待下文。\"},{\"kind\":\"dialogue\",\"text\":\"“我前两天去后山给你取柴火，在老槐树下挖到了这个。”\",\"speaker\":\"r:6704f4d5e6e48906:t1:e:person_elder_li\"},{\"kind\":\"narration\",\"text\":\"李老伯从怀里掏出一个用油纸包着的包裹，递到了云归面前。包裹看起来有些旧了，但保存得很好。\"},{\"kind\":\"narration\",\"text\":\"粗布包裹，里面是一块看似普通的青石，上面刻着几个模糊不清的符文，散发着微弱的灵气波动。\"}],\"choices\":[{\"id\":\"r:6704f4d5e6e48906:t1:c:a\",\"label\":\"收下青石，询问符文含义\",\"intent\":\"negotiate\",\"targetId\":\"r:6704f4d5e6e48906:t1:e:person_elder_li\",\"stake\":\"low\",\"approach\":\"cooperate\"},{\"id\":\"r:6704f4d5e6e48906:t1:c:b\",\"label\":\"检查包裹内其他物品\",\"intent\":\"explore\",\"targetId\":\"relic\",\"stake\":\"low\",\"approach\":\"cautious\"},{\"id\":\"r:6704f4d5e6e48906:t1:c:c\",\"label\":\"无视李老伯的警告，前往后山\",\"intent\":\"travel\",\"targetId\":\"r:6704f4d5e6e48906:t1:e:place_village\",\"stake\":\"low\",\"approach\":\"road\"}],\"memoryDeltas\":[{\"entityId\":\"r:6704f4d5e6e48906:t1:e:person_elder_li\",\"text\":\"李老伯在老槐树下挖出了云归娘留下的包裹，内含刻有模糊符文的青石。李老伯警告云归最近山里不太平。\",\"kind\":\"relationship\"},{\"entityId\":\"r:6704f4d5e6e48906:t1:e:person_elder_li\",\"text\":\"云归十六岁生日快到了，娘亲临走前留下的包裹尚未开启。\",\"kind\":\"relationship\"}]}",
+                  "refusal": null,
+                  "annotations": null,
+                  "audio": null,
+                  "function_call": null,
+                  "tool_calls": [],
+                  "reasoning": null,
+                  "reasoning_content": null
+                },
+                "logprobs": null,
+                "finish_reason": "stop",
+                "stop_reason": null,
+                "token_ids": null
+              }
+            ],
+            "service_tier": null,
+            "system_fingerprint": null,
+            "usage": {
+              "prompt_tokens": 941,
+              "completion_tokens": 1136,
+              "total_tokens": 2077,
+              "prompt_tokens_details": {
+                "cached_tokens": 0
+              },
+              "neurons": 46.5259
+            },
+            "prompt_logprobs": null,
+            "prompt_token_ids": null,
+            "kv_transfer_params": null
+          },
+          "success": true,
+          "errors": [],
+          "messages": [],
+          "status": 200
+        }
+      },
+      "inputHash": "883828402fb47ef7dff270062bdee544f78e3d3af95d85d474487c77c3c6010c",
+      "inputBytes": 10581,
+      "runtimeValidation": "GENERATED_SCENE_INVALID",
+      "narrativeReview": "Not accepted for candidate promotion."
+    },
+    {
+      "variant": "typed_example",
+      "context": {
+        "schemaVersion": 1,
+        "phase": "opening",
+        "identity": {
+          "runId": "release-live-20261028",
+          "turnId": 1,
+          "baseRevision": 0,
+          "stateHash": "f360901e87d14df163451b4b7159e863809d4f1087260d2cf890f9ca020944c5",
+          "choiceId": null,
+          "rulesVersion": 1,
+          "promptVersion": 1,
+          "requestId": "release-opening-20261028"
+        },
+        "namespace": "r:6704f4d5e6e48906",
+        "receipt": {
+          "kind": "opening",
+          "choiceId": null,
+          "action": null,
+          "elapsedDays": 0,
+          "itemChanges": {},
+          "relationChanges": {},
+          "random": {
+            "before": 1171638517,
+            "after": 1171638517,
+            "roll": null
+          },
+          "before": {
+            "ageDays": 5760,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "after": {
+            "ageDays": 5760,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "death": null,
+          "birth": {
+            "originId": "village",
+            "talentIds": [
+              "keen-memory",
+              "sword-bone"
+            ],
+            "attributes": {
+              "constitution": 4,
+              "insight": 6,
+              "fortune": 2
+            }
+          }
+        },
+        "life": {
+          "name": "云归",
+          "ageDays": 5760,
+          "lifeLimit": 80,
+          "realm": "mortal",
+          "cultivation": 0,
+          "injury": 0,
+          "items": {
+            "supplies": 3,
+            "stones": 0
+          },
+          "relations": {},
+          "birth": {
+            "originId": "village",
+            "talentIds": [
+              "keen-memory",
+              "sword-bone"
+            ],
+            "attributes": {
+              "constitution": 4,
+              "insight": 6,
+              "fortune": 2
+            }
+          }
+        },
+        "entities": [],
+        "memory": {
+          "facts": [],
+          "promises": [],
+          "clues": [],
+          "recent": [],
+          "summaries": []
+        },
+        "references": [],
+        "previousScene": null,
+        "relationshipVersion": 1,
+        "relationships": {},
+        "coverage": {
+          "policy": "relevance-v1",
+          "openTotal": 0,
+          "openIncluded": 0,
+          "openOmitted": 0
+        }
+      },
+      "data": {
+        "started": "2026-10-28T15:17:42.086Z",
+        "completed": "2026-10-28T15:17:51.947Z",
+        "variant": "typed-entities-matched-target-example",
+        "result": {
+          "result": {
+            "id": "chatcmpl-53a56c69-d29c-449c-b41e-0ed1ecea5f0e",
+            "object": "chat.completion",
+            "created": 1793200662,
+            "model": "@cf/qwen/qwen3-30b-a3b-fp8",
+            "choices": [
+              {
+                "index": 0,
+                "message": {
+                  "role": "assistant",
+                  "content": "{\"id\":\"r:6704f4d5e6e48906:t1:s:scene\",\"title\":\"山村晨雾\",\"location\":\"青石村\",\"entities\":[{\"id\":\"r:6704f4d5e6e48906:t1:e:person_elder\",\"name\":\"村老\",\"kind\":\"person\"},{\"id\":\"r:6704f4d5e6e48906:t1:e:place_village\",\"name\":\"青石村\",\"kind\":\"place\"},{\"id\":\"r:6704f4d5e6e48906:t1:e:person_yun\",\"name\":\"云归\",\"kind\":\"person\"},{\"id\":\"r:6704f4d5e6e48906:t1:e:place_mountain\",\"name\":\"青石山\",\"kind\":\"place\"}],\"blocks\":[{\"kind\":\"narration\",\"text\":\"晨雾笼罩着青石村，远处的青石山若隐若现。村老站在村口的老槐树下，目光深邃。\"},{\"kind\":\"dialogue\",\"text\":\"云归，你已满十六岁，该去青石山寻些机缘了。\",\"speaker\":\"r:6704f4d5e6e48906:t1:e:person_elder\"}],\"choices\":[{\"id\":\"r:6704f4d5e6e48906:t1:c:a\",\"label\":\"前往青石山\",\"intent\":\"travel\",\"targetId\":\"r:6704f4d5e6e48906:t1:e:place_mountain\",\"stake\":\"normal\",\"approach\":\"road\"},{\"id\":\"r:6704f4d5e6e48906:t1:c:b\",\"label\":\"向村老询问修仙\",\"intent\":\"negotiate\",\"targetId\":\"r:6704f4d5e6e48906:t1:e:person_elder\",\"stake\":\"low\",\"approach\":\"cooperate\"},{\"id\":\"r:6704f4d5e6e48906:t1:c:c\",\"label\":\"探索村庄寻找线索\",\"intent\":\"explore\",\"targetId\":\"relic\",\"stake\":\"normal\",\"approach\":\"cautious\"}],\"memoryDeltas\":[]}",
+                  "refusal": null,
+                  "annotations": null,
+                  "audio": null,
+                  "function_call": null,
+                  "reasoning": "\n\n",
+                  "reasoning_content": "\n\n"
+                },
+                "logprobs": null,
+                "finish_reason": "stop",
+                "stop_reason": null,
+                "token_ids": null,
+                "routed_experts": null
+              }
+            ],
+            "service_tier": null,
+            "usage": {
+              "prompt_tokens": 1373,
+              "completion_tokens": 514,
+              "total_tokens": 1887,
+              "prompt_tokens_details": {
+                "cached_tokens": 0
+              },
+              "neurons": 22.013582229614258
+            },
+            "prompt_logprobs": null,
+            "prompt_token_ids": null,
+            "prompt_text": null,
+            "kv_transfer_params": null,
+            "ec_transfer_params": null,
+            "metrics": null,
+            "response": {
+              "id": "r:6704f4d5e6e48906:t1:s:scene",
+              "title": "山村晨雾",
+              "location": "青石村",
+              "entities": [
+                {
+                  "id": "r:6704f4d5e6e48906:t1:e:person_elder",
+                  "name": "村老",
+                  "kind": "person"
+                },
+                {
+                  "id": "r:6704f4d5e6e48906:t1:e:place_village",
+                  "name": "青石村",
+                  "kind": "place"
+                },
+                {
+                  "id": "r:6704f4d5e6e48906:t1:e:person_yun",
+                  "name": "云归",
+                  "kind": "person"
+                },
+                {
+                  "id": "r:6704f4d5e6e48906:t1:e:place_mountain",
+                  "name": "青石山",
+                  "kind": "place"
+                }
+              ],
+              "blocks": [
+                {
+                  "kind": "narration",
+                  "text": "晨雾笼罩着青石村，远处的青石山若隐若现。村老站在村口的老槐树下，目光深邃。"
+                },
+                {
+                  "kind": "dialogue",
+                  "text": "云归，你已满十六岁，该去青石山寻些机缘了。",
+                  "speaker": "r:6704f4d5e6e48906:t1:e:person_elder"
+                }
+              ],
+              "choices": [
+                {
+                  "id": "r:6704f4d5e6e48906:t1:c:a",
+                  "label": "前往青石山",
+                  "intent": "travel",
+                  "targetId": "r:6704f4d5e6e48906:t1:e:place_mountain",
+                  "stake": "normal",
+                  "approach": "road"
+                },
+                {
+                  "id": "r:6704f4d5e6e48906:t1:c:b",
+                  "label": "向村老询问修仙",
+                  "intent": "negotiate",
+                  "targetId": "r:6704f4d5e6e48906:t1:e:person_elder",
+                  "stake": "low",
+                  "approach": "cooperate"
+                },
+                {
+                  "id": "r:6704f4d5e6e48906:t1:c:c",
+                  "label": "探索村庄寻找线索",
+                  "intent": "explore",
+                  "targetId": "relic",
+                  "stake": "normal",
+                  "approach": "cautious"
+                }
+              ],
+              "memoryDeltas": []
+            },
+            "tool_calls": []
+          },
+          "success": true,
+          "errors": [],
+          "messages": [],
+          "status": 200
+        }
+      },
+      "inputHash": "9d03e66507586e0e9ad7c4b0e5662b6d44194062f7e5499a3a98d33b228c52a1",
+      "inputBytes": 11505,
+      "runtimeValidation": "accepted",
+      "narrativeReview": "Not accepted for narrative quality: redundant protagonist NPC."
+    },
+    {
+      "variant": "final_source",
+      "context": {
+        "schemaVersion": 1,
+        "phase": "opening",
+        "identity": {
+          "runId": "release-live-20261028",
+          "turnId": 1,
+          "baseRevision": 0,
+          "stateHash": "f360901e87d14df163451b4b7159e863809d4f1087260d2cf890f9ca020944c5",
+          "choiceId": null,
+          "rulesVersion": 1,
+          "promptVersion": 1,
+          "requestId": "release-opening-20261028"
+        },
+        "namespace": "r:6704f4d5e6e48906",
+        "receipt": {
+          "kind": "opening",
+          "choiceId": null,
+          "action": null,
+          "elapsedDays": 0,
+          "itemChanges": {},
+          "relationChanges": {},
+          "random": {
+            "before": 1171638517,
+            "after": 1171638517,
+            "roll": null
+          },
+          "before": {
+            "ageDays": 5760,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "after": {
+            "ageDays": 5760,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "death": null,
+          "birth": {
+            "originId": "village",
+            "talentIds": [
+              "keen-memory",
+              "sword-bone"
+            ],
+            "attributes": {
+              "constitution": 4,
+              "insight": 6,
+              "fortune": 2
+            }
+          }
+        },
+        "life": {
+          "name": "云归",
+          "ageDays": 5760,
+          "lifeLimit": 80,
+          "realm": "mortal",
+          "cultivation": 0,
+          "injury": 0,
+          "items": {
+            "supplies": 3,
+            "stones": 0
+          },
+          "relations": {},
+          "birth": {
+            "originId": "village",
+            "talentIds": [
+              "keen-memory",
+              "sword-bone"
+            ],
+            "attributes": {
+              "constitution": 4,
+              "insight": 6,
+              "fortune": 2
+            }
+          }
+        },
+        "entities": [],
+        "memory": {
+          "facts": [],
+          "promises": [],
+          "clues": [],
+          "recent": [],
+          "summaries": []
+        },
+        "references": [],
+        "previousScene": null,
+        "relationshipVersion": 1,
+        "relationships": {},
+        "coverage": {
+          "policy": "relevance-v1",
+          "openTotal": 0,
+          "openIncluded": 0,
+          "openOmitted": 0
+        }
+      },
+      "data": {
+        "started": "2026-10-28T15:19:25.268Z",
+        "completed": "2026-10-28T15:19:28.749Z",
+        "variant": "final-typed-input-example-and-state",
+        "result": {
+          "result": {
+            "id": "chatcmpl-bc169574-e582-476c-8b45-688c3db87e42",
+            "object": "chat.completion",
+            "created": 1793200765,
+            "model": "@cf/qwen/qwen3-30b-a3b-fp8",
+            "choices": [
+              {
+                "index": 0,
+                "message": {
+                  "role": "assistant",
+                  "content": "{\"id\":\"r:6704f4d5e6e48906:t1:s:scene\",\"title\":\"山道问路\",\"location\":\"山道\",\"entities\":[{\"id\":\"r:6704f4d5e6e48906:t1:e:person_guard\",\"name\":\"守山人\",\"kind\":\"person\"},{\"id\":\"r:6704f4d5e6e48906:t1:e:place_gate\",\"name\":\"山门\",\"kind\":\"place\"}],\"blocks\":[{\"kind\":\"narration\",\"text\":\"守山人停在路旁，指向前面的山门。\"},{\"kind\":\"dialogue\",\"text\":\"想过关，还是先问路？\",\"speaker\":\"r:6704f4d5e6e48906:t1:e:person_guard\"}],\"choices\":[{\"id\":\"r:6704f4d5e6e48906:t1:c:a\",\"label\":\"前往山门\",\"intent\":\"travel\",\"targetId\":\"r:6704f4d5e6e48906:t1:e:place_gate\",\"stake\":\"normal\",\"approach\":\"road\"},{\"id\":\"r:6704f4d5e6e48906:t1:c:b\",\"label\":\"向守山人问路\",\"intent\":\"negotiate\",\"targetId\":\"r:6704f4d5e6e48906:t1:e:person_guard\",\"stake\":\"low\",\"approach\":\"cooperate\"}],\"memoryDeltas\":[]}",
+                  "refusal": null,
+                  "annotations": null,
+                  "audio": null,
+                  "function_call": null,
+                  "reasoning": "\n\n",
+                  "reasoning_content": "\n\n"
+                },
+                "logprobs": null,
+                "finish_reason": "stop",
+                "stop_reason": null,
+                "token_ids": null,
+                "routed_experts": null
+              }
+            ],
+            "service_tier": null,
+            "usage": {
+              "prompt_tokens": 1381,
+              "completion_tokens": 348,
+              "total_tokens": 1729,
+              "prompt_tokens_details": {
+                "cached_tokens": 0
+              },
+              "neurons": 16.99176788330078
+            },
+            "prompt_logprobs": null,
+            "prompt_token_ids": null,
+            "prompt_text": null,
+            "kv_transfer_params": null,
+            "ec_transfer_params": null,
+            "metrics": null,
+            "response": {
+              "id": "r:6704f4d5e6e48906:t1:s:scene",
+              "title": "山道问路",
+              "location": "山道",
+              "entities": [
+                {
+                  "id": "r:6704f4d5e6e48906:t1:e:person_guard",
+                  "name": "守山人",
+                  "kind": "person"
+                },
+                {
+                  "id": "r:6704f4d5e6e48906:t1:e:place_gate",
+                  "name": "山门",
+                  "kind": "place"
+                }
+              ],
+              "blocks": [
+                {
+                  "kind": "narration",
+                  "text": "守山人停在路旁，指向前面的山门。"
+                },
+                {
+                  "kind": "dialogue",
+                  "text": "想过关，还是先问路？",
+                  "speaker": "r:6704f4d5e6e48906:t1:e:person_guard"
+                }
+              ],
+              "choices": [
+                {
+                  "id": "r:6704f4d5e6e48906:t1:c:a",
+                  "label": "前往山门",
+                  "intent": "travel",
+                  "targetId": "r:6704f4d5e6e48906:t1:e:place_gate",
+                  "stake": "normal",
+                  "approach": "road"
+                },
+                {
+                  "id": "r:6704f4d5e6e48906:t1:c:b",
+                  "label": "向守山人问路",
+                  "intent": "negotiate",
+                  "targetId": "r:6704f4d5e6e48906:t1:e:person_guard",
+                  "stake": "low",
+                  "approach": "cooperate"
+                }
+              ],
+              "memoryDeltas": []
+            },
+            "tool_calls": []
+          },
+          "success": true,
+          "errors": [],
+          "messages": [],
+          "status": 200
+        }
+      },
+      "inputHash": "26374829299788738a0d93bcf8bc7a64db63a22bf5f68b3784d2ede95daa8ba1",
+      "inputBytes": 11549,
+      "runtimeValidation": "accepted",
+      "narrativeReview": "Not accepted for narrative quality: copied the concrete structural example."
+    },
+    {
+      "variant": "modern_branch_0",
+      "context": {
+        "schemaVersion": 1,
+        "phase": "choice",
+        "identity": {
+          "runId": "release-live-20261028",
+          "turnId": 2,
+          "baseRevision": 1,
+          "stateHash": "62fedf35fcc5f91fa3a2b4e923cf6ebac3b2ba3475924eab151ccabfcb96b90f",
+          "choiceId": "r:6704f4d5e6e48906:t1:c:a",
+          "rulesVersion": 1,
+          "promptVersion": 1,
+          "requestId": "modern-branch-0"
+        },
+        "namespace": "r:6704f4d5e6e48906",
+        "receipt": {
+          "kind": "choice",
+          "choiceId": "r:6704f4d5e6e48906:t1:c:a",
+          "action": {
+            "id": "r:6704f4d5e6e48906:t1:c:a",
+            "label": "前往北山探查异象",
+            "intent": "travel",
+            "targetId": "r:6704f4d5e6e48906:t1:e:place_NorthMountain",
+            "stake": "high",
+            "approach": "road"
+          },
+          "elapsedDays": 30,
+          "itemChanges": {
+            "supplies": -1
+          },
+          "relationChanges": {},
+          "random": {
+            "before": 1171638517,
+            "after": 2521351632,
+            "roll": 32
+          },
+          "before": {
+            "ageDays": 5760,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "after": {
+            "ageDays": 5790,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "death": null,
+          "birth": null
+        },
+        "life": {
+          "name": "云归",
+          "ageDays": 5790,
+          "lifeLimit": 80,
+          "realm": "mortal",
+          "cultivation": 0,
+          "injury": 0,
+          "items": {
+            "supplies": 2,
+            "stones": 0
+          },
+          "relations": {},
+          "birth": {
+            "originId": "village",
+            "talentIds": [
+              "keen-memory",
+              "sword-bone"
+            ],
+            "attributes": {
+              "constitution": 4,
+              "insight": 6,
+              "fortune": 2
+            }
+          }
+        },
+        "entities": [
+          {
+            "id": "r:6704f4d5e6e48906:t1:e:person_OldMan_Li",
+            "name": "李老头",
+            "kind": "person",
+            "status": "alive"
+          },
+          {
+            "id": "r:6704f4d5e6e48906:t1:e:place_QingshiVillage",
+            "name": "青石村",
+            "kind": "place",
+            "status": "unknown"
+          },
+          {
+            "id": "r:6704f4d5e6e48906:t1:e:place_NorthMountain",
+            "name": "北山",
+            "kind": "place",
+            "status": "unknown"
+          },
+          {
+            "id": "r:6704f4d5e6e48906:t1:e:place_VillageMarket",
+            "name": "村口集市",
+            "kind": "place",
+            "status": "unknown"
+          }
+        ],
+        "memory": {
+          "facts": [
+            {
+              "id": "m:5a3ecb2cf379432d48f37d6b340acd61",
+              "source": "narrative",
+              "kind": "fact",
+              "entityId": "r:6704f4d5e6e48906:t1:e:person_OldMan_Li",
+              "text": "李老头建议云归去北山听剑崖碰碰运气，认为他脑子灵光。",
+              "runId": "release-live-20261028",
+              "turnId": 1
+            },
+            {
+              "id": "receipt:1",
+              "runId": "release-live-20261028",
+              "turnId": 1,
+              "source": "rules",
+              "kind": "receipt",
+              "receipt": {
+                "kind": "opening",
+                "choiceId": null,
+                "action": null,
+                "elapsedDays": 0,
+                "itemChanges": {},
+                "relationChanges": {},
+                "random": {
+                  "before": 1171638517,
+                  "after": 1171638517,
+                  "roll": null
+                },
+                "before": {
+                  "ageDays": 5760,
+                  "realm": "mortal",
+                  "cultivation": 0,
+                  "injury": 0
+                },
+                "after": {
+                  "ageDays": 5760,
+                  "realm": "mortal",
+                  "cultivation": 0,
+                  "injury": 0
+                },
+                "death": null,
+                "birth": {
+                  "originId": "village",
+                  "talentIds": [
+                    "keen-memory",
+                    "sword-bone"
+                  ],
+                  "attributes": {
+                    "constitution": 4,
+                    "insight": 6,
+                    "fortune": 2
+                  }
+                }
+              }
+            }
+          ],
+          "promises": [],
+          "clues": [],
+          "recent": [],
+          "summaries": []
+        },
+        "references": [
+          "m:5a3ecb2cf379432d48f37d6b340acd61",
+          "receipt:1"
+        ],
+        "previousScene": {
+          "id": "r:6704f4d5e6e48906:t1:s:scene",
+          "blocksHash": "816b932a9380efee2be4d470aeee0ea81362842938b16997688bd82104ffc98d"
+        },
+        "relationshipVersion": 1,
+        "relationships": {},
+        "coverage": {
+          "policy": "relevance-v1",
+          "openTotal": 0,
+          "openIncluded": 0,
+          "openOmitted": 0
+        }
+      },
+      "data": {
+        "started": "2026-10-28T15:21:30.078Z",
+        "completed": "2026-10-28T15:22:02.394Z",
+        "variant": "qwen38-branch-0",
+        "result": {
+          "result": {
+            "id": "chatcmpl-75f4e75e-f824-4dfb-864d-2a71090a3296",
+            "object": "chat.completion",
+            "created": 1793200891,
+            "model": "@cf/qwen/qwen3.8-27b",
+            "choices": [
+              {
+                "index": 0,
+                "message": {
+                  "role": "assistant",
+                  "content": "{\n  \"id\": \"r:6704f4d5e6e48906:t2:s:scene\",\n  \"title\": \"北山听剑崖\",\n  \"location\": \"北山\",\n  \"entities\": [\n    {\n      \"id\": \"r:6704f4d5e6e48906:t1:e:place_NorthMountain\",\n      \"name\": \"北山\",\n      \"kind\": \"place\"\n    },\n    {\n      \"id\": \"r:6704f4d5e6e48906:t2:e:person_WanderingSwordsman\",\n      \"name\": \"游方剑客\",\n      \"kind\": \"person\",\n      \"status\": \"alive\"\n    }\n  ],\n  \"blocks\": [\n    {\n      \"kind\": \"narration\",\n      \"text\": \"三十日跋涉，云归终于抵达北山深处。此处云雾缭绕，崖壁如削，风过处竟有隐隐剑鸣之声。崖边杂草丛生，隐约可见一处被藤蔓遮蔽的石台，石台中央似乎刻着模糊的纹路。\"\n    },\n    {\n      \"kind\": \"dialogue\",\n      \"text\": \"小子，你身上有剑骨，却无剑意。这听剑崖的剑鸣，凡人听了只会头痛欲裂，你竟能走到这里，倒是有些意思。\",\n      \"speaker\": \"r:6704f4d5e6e48906:t2:e:person_WanderingSwordsman\"\n    },\n    {\n      \"kind\": \"narration\",\n      \"text\": \"一名灰袍男子不知何时出现在石台旁，手中把玩着一枚生锈的铁片。他目光如电，上下打量着云归，嘴角挂着一丝玩味的笑意。\"\n    }\n  ],\n  \"choices\": [\n    {\n      \"id\": \"r:6704f4d5e6e48906:t2:c:a\",\n      \"label\": \"询问剑客关于剑鸣的来历\",\n      \"intent\": \"negotiate\",\n      \"targetId\": \"r:6704f4d5e6e48906:t2:e:person_WanderingSwordsman\",\n      \"stake\": \"low\",\n      \"approach\": \"cooperate\"\n    },\n    {\n      \"id\": \"r:6704f4d5e6e48906:t2:c:b\",\n      \"label\": \"探查石台上的模糊纹路\",\n      \"intent\": \"explore\",\n      \"targetId\": \"relic\",\n      \"stake\": \"high\",\n      \"approach\": \"cautious\"\n    },\n    {\n      \"id\": \"r:6704f4d5e6e48906:t2:c:c\",\n      \"label\": \"趁其不备逃离北山\",\n      \"intent\": \"evade\",\n      \"targetId\": \"r:6704f4d5e6e48906:t2:e:person_WanderingSwordsman\",\n      \"stake\": \"high\",\n      \"approach\": \"conceal\"\n    }\n  ],\n  \"memoryDeltas\": [\n    {\n      \"entityId\": \"r:6704f4d5e6e48906:t2:e:person_WanderingSwordsman\",\n      \"text\": \"游方剑客出现在听剑崖，认出云归有剑骨，并提及听剑崖剑鸣对凡人的危害。\"\n    , \"kind\": \"fact\"\n    }\n  ]\n}",
+                  "refusal": null,
+                  "annotations": null,
+                  "audio": null,
+                  "function_call": null,
+                  "reasoning": null
+                },
+                "logprobs": null,
+                "finish_reason": "stop",
+                "stop_reason": null,
+                "token_ids": null,
+                "routed_experts": null
+              }
+            ],
+            "service_tier": null,
+            "usage": {
+              "prompt_tokens": 1685,
+              "completion_tokens": 855,
+              "total_tokens": 2540,
+              "prompt_tokens_details": {
+                "cached_tokens": 0
+              },
+              "neurons": 317.6590881347656
+            },
+            "prompt_logprobs": null,
+            "prompt_token_ids": null,
+            "prompt_text": null,
+            "kv_transfer_params": null,
+            "ec_transfer_params": null,
+            "metrics": null
+          },
+          "success": true,
+          "errors": [],
+          "messages": [],
+          "status": 200
+        }
+      },
+      "inputHash": "3d27b9e0ec09e65fdf098036ce3e151dcb703fde9678aff453b9625e81dcfb52",
+      "inputBytes": 12750,
+      "runtimeValidation": "accepted",
+      "narrativeReview": "Travel continuation retains the NorthMountain identity, reflects the actual thirty elapsed days, and introduces a causally connected encounter."
+    },
+    {
+      "variant": "modern_branch_1",
+      "context": {
+        "schemaVersion": 1,
+        "phase": "choice",
+        "identity": {
+          "runId": "release-live-20261028",
+          "turnId": 2,
+          "baseRevision": 1,
+          "stateHash": "62fedf35fcc5f91fa3a2b4e923cf6ebac3b2ba3475924eab151ccabfcb96b90f",
+          "choiceId": "r:6704f4d5e6e48906:t1:c:b",
+          "rulesVersion": 1,
+          "promptVersion": 1,
+          "requestId": "modern-branch-1"
+        },
+        "namespace": "r:6704f4d5e6e48906",
+        "receipt": {
+          "kind": "choice",
+          "choiceId": "r:6704f4d5e6e48906:t1:c:b",
+          "action": {
+            "id": "r:6704f4d5e6e48906:t1:c:b",
+            "label": "在村口集市打听消息",
+            "intent": "negotiate",
+            "targetId": "r:6704f4d5e6e48906:t1:e:person_OldMan_Li",
+            "stake": "low",
+            "approach": "cooperate"
+          },
+          "elapsedDays": 7,
+          "itemChanges": {
+            "stones": 1,
+            "supplies": -1
+          },
+          "relationChanges": {
+            "r:6704f4d5e6e48906:t1:e:person_OldMan_Li": 3
+          },
+          "random": {
+            "before": 1171638517,
+            "after": 2521351632,
+            "roll": 32
+          },
+          "before": {
+            "ageDays": 5760,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "after": {
+            "ageDays": 5767,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "death": null,
+          "birth": null
+        },
+        "life": {
+          "name": "云归",
+          "ageDays": 5767,
+          "lifeLimit": 80,
+          "realm": "mortal",
+          "cultivation": 0,
+          "injury": 0,
+          "items": {
+            "supplies": 2,
+            "stones": 1
+          },
+          "relations": {
+            "r:6704f4d5e6e48906:t1:e:person_OldMan_Li": 3
+          },
+          "birth": {
+            "originId": "village",
+            "talentIds": [
+              "keen-memory",
+              "sword-bone"
+            ],
+            "attributes": {
+              "constitution": 4,
+              "insight": 6,
+              "fortune": 2
+            }
+          }
+        },
+        "entities": [
+          {
+            "id": "r:6704f4d5e6e48906:t1:e:person_OldMan_Li",
+            "name": "李老头",
+            "kind": "person",
+            "status": "alive"
+          },
+          {
+            "id": "r:6704f4d5e6e48906:t1:e:place_QingshiVillage",
+            "name": "青石村",
+            "kind": "place",
+            "status": "unknown"
+          },
+          {
+            "id": "r:6704f4d5e6e48906:t1:e:place_NorthMountain",
+            "name": "北山",
+            "kind": "place",
+            "status": "unknown"
+          },
+          {
+            "id": "r:6704f4d5e6e48906:t1:e:place_VillageMarket",
+            "name": "村口集市",
+            "kind": "place",
+            "status": "unknown"
+          }
+        ],
+        "memory": {
+          "facts": [
+            {
+              "id": "m:5a3ecb2cf379432d48f37d6b340acd61",
+              "source": "narrative",
+              "kind": "fact",
+              "entityId": "r:6704f4d5e6e48906:t1:e:person_OldMan_Li",
+              "text": "李老头建议云归去北山听剑崖碰碰运气，认为他脑子灵光。",
+              "runId": "release-live-20261028",
+              "turnId": 1
+            },
+            {
+              "id": "receipt:1",
+              "runId": "release-live-20261028",
+              "turnId": 1,
+              "source": "rules",
+              "kind": "receipt",
+              "receipt": {
+                "kind": "opening",
+                "choiceId": null,
+                "action": null,
+                "elapsedDays": 0,
+                "itemChanges": {},
+                "relationChanges": {},
+                "random": {
+                  "before": 1171638517,
+                  "after": 1171638517,
+                  "roll": null
+                },
+                "before": {
+                  "ageDays": 5760,
+                  "realm": "mortal",
+                  "cultivation": 0,
+                  "injury": 0
+                },
+                "after": {
+                  "ageDays": 5760,
+                  "realm": "mortal",
+                  "cultivation": 0,
+                  "injury": 0
+                },
+                "death": null,
+                "birth": {
+                  "originId": "village",
+                  "talentIds": [
+                    "keen-memory",
+                    "sword-bone"
+                  ],
+                  "attributes": {
+                    "constitution": 4,
+                    "insight": 6,
+                    "fortune": 2
+                  }
+                }
+              }
+            }
+          ],
+          "promises": [],
+          "clues": [],
+          "recent": [],
+          "summaries": []
+        },
+        "references": [
+          "m:5a3ecb2cf379432d48f37d6b340acd61",
+          "receipt:1"
+        ],
+        "previousScene": {
+          "id": "r:6704f4d5e6e48906:t1:s:scene",
+          "blocksHash": "816b932a9380efee2be4d470aeee0ea81362842938b16997688bd82104ffc98d"
+        },
+        "relationshipVersion": 1,
+        "relationships": {
+          "r:6704f4d5e6e48906:t1:e:person_OldMan_Li": 3
+        },
+        "coverage": {
+          "policy": "relevance-v1",
+          "openTotal": 0,
+          "openIncluded": 0,
+          "openOmitted": 0
+        }
+      },
+      "data": {
+        "started": "2026-10-28T15:22:06.886Z",
+        "completed": "2026-10-28T15:22:41.771Z",
+        "variant": "qwen38-branch-1",
+        "result": {
+          "result": {
+            "id": "chatcmpl-ce8e72c0-faa4-4fac-9d64-777a4833b096",
+            "object": "chat.completion",
+            "created": 1793200927,
+            "model": "@cf/qwen/qwen3.8-27b",
+            "choices": [
+              {
+                "index": 0,
+                "message": {
+                  "role": "assistant",
+                  "content": "{\n  \"id\": \"r:6704f4d5e6e48906:t2:s:scene\",\n  \"title\": \"集市余音\",\n  \"location\": \"村口集市\",\n  \"entities\": [\n    {\n      \"id\": \"r:6704f4d5e6e48906:t1:e:person_OldMan_Li\",\n      \"name\": \"李老头\",\n      \"kind\": \"person\",\n      \"status\": \"alive\"\n    },\n    {\n      \"id\": \"r:6704f4d5e6e48906:t1:e:place_VillageMarket\",\n      \"name\": \"村口集市\",\n      \"kind\": \"place\"\n    },\n    {\n      \"id\": \"r:6704f4d5e6e48906:t1:e:place_NorthMountain\",\n      \"name\": \"北山\",\n      \"kind\": \"place\"\n    }\n  ],\n  \"blocks\": [\n    {\n      \"kind\": \"narration\",\n      \"text\": \"集市的人流渐渐散去，李老头的身影在摊位间若隐若现。你手里攥着刚换来的灵石，指尖微凉。\"\n    },\n    {\n      \"kind\": \"dialogue\",\n      \"text\": \"“小子，北山的路不好走，但剑崖的风声能磨掉凡人的杂念。记住，别贪多。”\",\n      \"speaker\": \"r:6704f4d5e6e48906:t1:e:person_OldMan_Li\"\n    },\n    {\n      \"kind\": \"narration\",\n      \"text\": \"他摆摆手，转身消失在人群里。你望着北山方向，云雾缭绕，不知深浅。\"\n    }\n  ],\n  \"choices\": [\n    {\n      \"id\": \"r:6704f4d5e6e48906:t2:c:a\",\n      \"label\": \"立刻动身前往北山\",\n      \"intent\": \"travel\",\n      \"targetId\": \"r:6704f4d5e6e48906:t1:e:place_NorthMountain\",\n      \"stake\": \"low\",\n      \"approach\": \"road\"\n    },\n    {\n      \"id\": \"r:6704f4d5e6e48906:t2:c:b\",\n      \"label\": \"在集市寻找北山地图\",\n      \"intent\": \"explore\",\n      \"targetId\": \"relic\",\n      \"stake\": \"low\",\n      \"approach\": \"bold\"\n    },\n    {\n      \"id\": \"r:6704f4d5e6e48906:t2:c:c\",\n      \"label\": \"向李老头追问剑崖细节\",\n      \"intent\": \"negotiate\",\n      \"targetId\": \"r:6704f4d5e6e48906:t1:e:person_OldMan_Li\",\n      \"stake\": \"low\",\n      \"approach\": \"cooperate\"\n    }\n  ],\n  \"memoryDeltas\": [\n    {\n      \"entityId\": \"r:6704f4d5e6e48906:t1:e:person_OldMan_Li\",\n      \"text\": \"李老头提醒云归北山路难走，剑崖风声可磨杂念，且不可贪多。\"\n    ,\n      \"kind\": \"fact\"\n    }\n  ]\n}",
+                  "refusal": null,
+                  "annotations": null,
+                  "audio": null,
+                  "function_call": null,
+                  "reasoning": null
+                },
+                "logprobs": null,
+                "finish_reason": "stop",
+                "stop_reason": null,
+                "token_ids": null,
+                "routed_experts": null
+              }
+            ],
+            "service_tier": null,
+            "usage": {
+              "prompt_tokens": 1780,
+              "completion_tokens": 846,
+              "total_tokens": 2626,
+              "prompt_tokens_details": {
+                "cached_tokens": 0
+              },
+              "neurons": 318.92724609375
+            },
+            "prompt_logprobs": null,
+            "prompt_token_ids": null,
+            "prompt_text": null,
+            "kv_transfer_params": null,
+            "ec_transfer_params": null,
+            "metrics": null
+          },
+          "success": true,
+          "errors": [],
+          "messages": [],
+          "status": 200
+        }
+      },
+      "inputHash": "663e3cee19243d057aa0973687698764a5e72385f7690032ff6661341919d51c",
+      "inputBytes": 12907,
+      "runtimeValidation": "accepted",
+      "narrativeReview": "Negotiation continuation retains OldMan_Li and reflects actual stone gain and relationships; differs from the travel branch."
+    }
+  ],
+  "candidateDecision": {
+    "modelId": "@cf/qwen/qwen3.8-27b",
+    "reason": "Better reference, action-target and narrative continuity in actual complete opening and two counterfactual continuations. Public promotion still requires protected real-browser acceptance.",
+    "reference": "https://developers.cloudflare.com/workers-ai/models/qwen3.8-27b/",
+    "pricingReference": "https://developers.cloudflare.com/workers-ai/platform/pricing/",
+    "productionValidated": false
+  }
+}
