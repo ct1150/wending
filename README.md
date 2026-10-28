@@ -4,15 +4,15 @@
 
 - [线上游戏](https://baishi-wending.ct1150.workers.dev/)
 - [待办与交付账本](docs/ROADMAP.md) · [玩法规格](docs/PRODUCT_SPEC.md) · [验收证据](docs/QA_REPORT.md) · [部署记录](docs/DEPLOYMENT.md)
-- 当前4.0使用原生 JavaScript，浏览器本地运行，无账号、游戏后端和运行时外部依赖，存档不会上传。
+- 当前4.0玩法使用原生 JavaScript，浏览器本地运行，无账号，不依赖剧情后端或运行时外部服务，存档不会上传。
 
-## 下一阶段：选择驱动的实时人生（本地实现，尚未启用）
+## 下一阶段：选择驱动的实时人生（兼容后端已部署，生成尚未启用）
 
 取消“每世20—30分钟”目标。新模式将根据肉鸽选择，通过 Cloudflare Workers AI 在免费额度内实时生成剧情；登仙、问鼎只是阶段，人物仍活着就继续，实际死亡才结算。不设固定章节数或通关步数。选择的时间、资源、风险与死亡由规则结算，模型生成事件、对话和行动提案。
 
-这轮已实现独立V5/CV4规则、剧情契约、同源API、长期档案与实时界面，并完成受控后端打包和本地workerd/SQLite检查；**真实Workers AI、严格免费账号边界与生产闭环尚未验收，生产推理保持关闭**。此前1000回合原生档案fixture及完整release已通过；整分支审查随后发现4项需修复问题，I1—I4及重试补充修复现已通过独立源码复核，无未解决Critical/Important，最终代码CI也已通过，详见 [当前路线图](docs/ROADMAP.md) 与 [实施计划](docs/superpowers/plans/2026-10-27-realtime-workers-ai.md)。免费额度耗尽时保存进度、暂停生成，不自动付费；完整历史使用分页档案。新模式需要发送最小剧情上下文到Cloudflare，旧4.0离线玩法继续保留。下文描述当前可玩的4.0。
+这轮已实现独立V5/CV4规则、剧情契约、同源API、长期档案与实时界面。**账号所有者已确认Workers Free；兼容后端已实际部署，直接AI绑定和SQLite协调存储已读回核对，面向玩家的生成仍关闭。** 私有、经鉴权的验收环境已取得真实中文JSON/stop与非思考能力样本；完整游戏结构、连续剧情质量和保存/刷新闭环仍待验收。最新调用、额度预留和部署身份以 [实时接入记录](docs/evidence/workers-ai-rollout-2026-10-28.json) 为准，步骤见 [当前路线图](docs/ROADMAP.md) 与 [实施计划](docs/superpowers/plans/2026-10-27-realtime-workers-ai.md)。免费额度耗尽时保存进度、暂停生成，不自动付费；完整历史使用分页档案。新模式需要发送最小剧情上下文到Cloudflare，旧4.0离线玩法继续保留。下文描述当前可玩的4.0。
 
-[最终代码CI](https://github.com/ct1150/wending/actions/runs/40547281694) 在与已审本地 `65c3d0f` 同树的远端 `1322aa6` 通过539项测试、117个JS语法检查，构建970055字节离线HTML及13个backend模块；本地代码、独立审查和完整代码CI均已完成，实际账号/模型与上线验收仍阻塞。[草稿PR #14](https://github.com/ct1150/wending/pull/14) 尚未合并或部署。真实AI调用0，实测Neurons为null（未测），不将fixture的1000回合解释为免费模型容量或叙事质量。
+[2026-10-27代码CI](https://github.com/ct1150/wending/actions/runs/40547281694) 在与已审本地 `65c3d0f` 同树的远端 `1322aa6` 通过539项测试、117个JS语法检查，构建970055字节离线HTML及13个backend模块，并包含1000回合原生档案fixture。该范围的审查修复已经通过；后来新增的操作员验收辅助代码单独记录定向验证，不把历史539项写成新代码已全量重跑。[草稿PR #14](https://github.com/ct1150/wending/pull/14) 仍未合并，线上前端仍为4.0。真实样本与fixture分别记账，实测账单Neurons仍为null；GraphQL用量观察不冒充精确账单余额。
 
 ## 开始游玩
 
@@ -87,7 +87,7 @@ npm run build
 
 仓库已配置 main 通过 GitHub Actions 全部验证后，使用仓库自己的 `GITHUB_TOKEN` 发布不可变游戏包与清单到 `release-channel`；只有发行任务获得写权限。现有 Cloudflare 发行网关会校验来源与摘要再切换，下载失败或清单无效时保留已验证版本。活动实例按请求检查，间隔至少 60 秒，不承诺全球同时刷新。
 
-网关程序自身变更需 `SOURCE_COMMIT=真实完整提交SHA npm run build:gateway` 并部署到现有 Worker。之后普通游戏与剧情变更可通过 main 自动发行。本轮已实际验证 main→发行清单→网关读取→4.0 页面切换，最终 GitHub 检查361/361通过；线上完整通关、存档与离线验收已完成。线上实际版本、来源和摘要以 [`/healthz`](https://baishi-wending.ct1150.workers.dev/healthz) 为准；本轮验收记录见 [部署记录](docs/DEPLOYMENT.md)。
+网关程序自身变更需 `SOURCE_COMMIT=真实完整提交SHA npm run build:gateway` 并部署到现有 Worker。之后普通游戏与剧情变更可通过 main 自动发行。4.0发行阶段已实际验证 main→发行清单→网关读取→4.0 页面切换，当次最终GitHub检查361/361通过；该版本的线上完整通关、存档与离线验收已完成。线上实际版本、来源和摘要以 [`/healthz`](https://baishi-wending.ct1150.workers.dev/healthz) 为准；本轮验收记录见 [部署记录](docs/DEPLOYMENT.md)。
 
 ## 代码入口
 

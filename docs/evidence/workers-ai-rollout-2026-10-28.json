@@ -1,0 +1,500 @@
+{
+  "schemaVersion": 1,
+  "dateShanghai": "2026-10-28",
+  "phase": "BASIC_MODEL_CAPABILITY_OBSERVED_FULL_GAME_ACCEPTANCE_PENDING",
+  "planConfirmation": {
+    "status": "confirmed-by-account-owner",
+    "source": "conversation",
+    "statement": "是free套餐",
+    "subscriptionApiVerified": false,
+    "historicalApi403": "workers-ai-runtime-2026-10-27.json"
+  },
+  "freeBoundary": {
+    "plan": "workers-free",
+    "basis": "owner confirmation plus current official policy",
+    "dailyAccountNeurons": 10000,
+    "resetUTC": "00:00",
+    "resetShanghai": "08:00",
+    "paidUpgradePerformed": false,
+    "gatewayCreditsConfigured": false,
+    "paidFallbackConfigured": false
+  },
+  "accountUsageObservation": {
+    "observedAt": "2026-10-28T00:12:26.020Z",
+    "start": "2026-10-28T00:00:00Z",
+    "query": "query { viewer { accounts(filter:{accountTag:\"<verified-bound-account>\"}) { aiInferenceAdaptiveGroups(limit:1, filter:{datetime_geq:\"2026-10-28T00:00:00Z\", datetime_lt:\"2026-10-28T00:12:26.020Z\"}) { count sum { totalNeurons totalInputTokens totalOutputTokens } } } } }",
+    "status": 200,
+    "success": true,
+    "result": {
+      "viewer": {
+        "accounts": [
+          {
+            "aiInferenceAdaptiveGroups": [
+              {
+                "count": 4,
+                "sum": {
+                  "totalInputTokens": 248,
+                  "totalNeurons": 20.985971450805664,
+                  "totalOutputTokens": 651
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "errors": [],
+    "sameBindingAccountVerified": true,
+    "billingMeasure": false,
+    "completeToNowGuaranteed": false,
+    "actualBilledNeurons": null,
+    "actualRemainingNeurons": null
+  },
+  "deployment": {
+    "worker": "baishi-wending",
+    "deployedAtUTC": "2026-10-27T23:48:54.235759Z",
+    "deploymentId": "8dd97750-8fd4-40c9-a6c9-c3c61f72a6a2",
+    "versionId": "b4fb827d-aa78-4062-9510-299f11f11064",
+    "trafficPercentage": 100,
+    "sourceCommit": "3e3912cd1e8e6b1a4aafe3a6dd278881df298230",
+    "sourceTree": "eca2f165b2f920cce38fde21def44411bc324ac8",
+    "compatibilityDate": "2026-07-30",
+    "previousCompatibilityDate": "2026-10-24",
+    "compatibilityDecision": "Use artifact date 2026-07-30 covered by existing local workerd validation; actual date change explicitly recorded.",
+    "migrationTag": "story-budget-v1",
+    "moduleCount": 13,
+    "manifestSha256": "bbd50fa5c0700fdc879878b939262f2ab812389ab2b5237d1194993c0fb3cca9",
+    "inferenceEnabled": false,
+    "modelValidated": false
+  },
+  "bindings": {
+    "observed": [
+      {
+        "name": "AI",
+        "project": "<catalog>",
+        "type": "ai"
+      },
+      {
+        "class_name": "StoryBudget",
+        "name": "STORY_BUDGET",
+        "namespace_id": "1de1df3929534a8d8d495d6db6604e99",
+        "type": "durable_object_namespace"
+      }
+    ],
+    "namespace": {
+      "id": "1de1df3929534a8d8d495d6db6604e99",
+      "name": "baishi-wending_StoryBudget",
+      "script": "baishi-wending",
+      "class": "StoryBudget",
+      "use_sqlite": true
+    },
+    "directAiBindingVerified": true,
+    "sqliteStorageVerified": true
+  },
+  "httpVerification": {
+    "health": {
+      "status": 200,
+      "version": "4.0.0",
+      "sourceCommit": "e247a875d3f5eea18fe1ec67cf5842b6d70204cc",
+      "htmlSha256": "02b1248bd287b3f2ebc89aef6f22ab85d56364feef53d1b40d18f51a40ccf617",
+      "htmlBytes": 852849,
+      "releaseSource": "remote-fetch"
+    },
+    "capabilities": {
+      "status": 200,
+      "available": false,
+      "errorCode": "INFERENCE_DISABLED"
+    },
+    "session": {
+      "status": 200,
+      "state": "paused",
+      "errorCode": "INFERENCE_DISABLED",
+      "setCookiePresent": false
+    },
+    "client": "wending-release-check/1.0",
+    "clientNote": "Default urllib identification received Cloudflare1010; explicit project API-client identification succeeded. No access settings were altered."
+  },
+  "experimentLedger": {
+    "schemaVersion": 1,
+    "attempts": [
+      {
+        "task": "task1",
+        "attemptId": "task1-20261028-001",
+        "reservedNeurons": 24,
+        "actualNeurons": null,
+        "status": "complete"
+      },
+      {
+        "task": "task1",
+        "attemptId": "task1-20261028-002",
+        "reservedNeurons": 24,
+        "actualNeurons": null,
+        "status": "complete"
+      },
+      {
+        "task": "task1",
+        "attemptId": "task1-20261028-003",
+        "reservedNeurons": 24,
+        "actualNeurons": null,
+        "status": "complete"
+      },
+      {
+        "task": "task1",
+        "attemptId": "task1-20261028-004",
+        "reservedNeurons": 24,
+        "actualNeurons": null,
+        "status": "complete"
+      }
+    ]
+  },
+  "actualModelCalls": 4,
+  "actualNeurons": null,
+  "remaining": [
+    "Full-game shared parser/prompt correction and independent review",
+    "Task7 continuous and counterfactual real story samples within4calls",
+    "Reviewed model profile and enabled build-policy promotion",
+    "Task8 real player API/save/refresh within2calls"
+  ],
+  "sources": [
+    "https://developers.cloudflare.com/workers-ai/platform/pricing/",
+    "https://developers.cloudflare.com/durable-objects/platform/pricing/",
+    "https://developers.cloudflare.com/analytics/graphql-api/"
+  ],
+  "accountUsageObservations": [
+    {
+      "source": "Cloudflare GraphQL aiInferenceAdaptiveGroups",
+      "observedAt": "2026-10-27T23:49:50.533Z",
+      "start": "2026-10-27T00:00:00Z",
+      "status": 200,
+      "result": {
+        "viewer": {
+          "accounts": [
+            {
+              "aiInferenceAdaptiveGroups": []
+            }
+          ]
+        }
+      },
+      "errors": [],
+      "measurementKind": "account-wide-aggregate-analytics-not-billing",
+      "measurementCaveat": "Aggregate analytics are not billing usage and may lag; no rows means no usage returned for this query window, not a guaranteed exact available balance."
+    },
+    {
+      "observedAt": "2026-10-28T00:02:46.505Z",
+      "start": "2026-10-28T00:00:00Z",
+      "query": "query { viewer { accounts(filter:{accountTag:\"<verified-bound-account>\"}) { aiInferenceAdaptiveGroups(limit:1, filter:{datetime_geq:\"2026-10-28T00:00:00Z\", datetime_lt:\"2026-10-28T00:02:46.505Z\"}) { count sum { totalNeurons totalInputTokens totalOutputTokens } } } } }",
+      "status": 200,
+      "success": true,
+      "result": {
+        "viewer": {
+          "accounts": [
+            {
+              "aiInferenceAdaptiveGroups": []
+            }
+          ]
+        }
+      },
+      "errors": [],
+      "observedAggregateNeurons": 0,
+      "billingMeasure": false,
+      "completeToNowGuaranteed": false,
+      "actualBilledNeurons": null,
+      "actualRemainingNeurons": null,
+      "probeAdmission": {
+        "basis": "observation-based-conservative-ceiling",
+        "ceilingNeurons": 800,
+        "extraReserveNeurons": 0,
+        "isGuaranteedRemainingBalance": false
+      },
+      "sameBindingAccountVerified": true
+    },
+    {
+      "observedAt": "2026-10-28T00:05:56.195Z",
+      "start": "2026-10-28T00:00:00Z",
+      "query": "query { viewer { accounts(filter:{accountTag:\"<verified-bound-account>\"}) { aiInferenceAdaptiveGroups(limit:1, filter:{datetime_geq:\"2026-10-28T00:00:00Z\", datetime_lt:\"2026-10-28T00:05:56.195Z\"}) { count sum { totalNeurons totalInputTokens totalOutputTokens } } } } }",
+      "status": 200,
+      "success": true,
+      "result": {
+        "viewer": {
+          "accounts": [
+            {
+              "aiInferenceAdaptiveGroups": [
+                {
+                  "count": 1,
+                  "sum": {
+                    "totalInputTokens": 59,
+                    "totalNeurons": 11.700888633728027,
+                    "totalOutputTokens": 375
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "errors": [],
+      "observedAggregateNeurons": 11.700888633728027,
+      "billingMeasure": false,
+      "completeToNowGuaranteed": false,
+      "actualBilledNeurons": null,
+      "actualRemainingNeurons": null,
+      "probeAdmission": {
+        "basis": "observation-based-conservative-ceiling",
+        "ceilingNeurons": 800,
+        "extraReserveNeurons": 0,
+        "isGuaranteedRemainingBalance": false
+      },
+      "sameBindingAccountVerified": true
+    },
+    {
+      "observedAt": "2026-10-28T00:12:26.020Z",
+      "start": "2026-10-28T00:00:00Z",
+      "query": "query { viewer { accounts(filter:{accountTag:\"<verified-bound-account>\"}) { aiInferenceAdaptiveGroups(limit:1, filter:{datetime_geq:\"2026-10-28T00:00:00Z\", datetime_lt:\"2026-10-28T00:12:26.020Z\"}) { count sum { totalNeurons totalInputTokens totalOutputTokens } } } } }",
+      "status": 200,
+      "success": true,
+      "result": {
+        "viewer": {
+          "accounts": [
+            {
+              "aiInferenceAdaptiveGroups": [
+                {
+                  "count": 4,
+                  "sum": {
+                    "totalInputTokens": 248,
+                    "totalNeurons": 20.985971450805664,
+                    "totalOutputTokens": 651
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "errors": [],
+      "sameBindingAccountVerified": true,
+      "billingMeasure": false,
+      "completeToNowGuaranteed": false,
+      "actualBilledNeurons": null,
+      "actualRemainingNeurons": null
+    }
+  ],
+  "operatorDeployment": {
+    "scriptName": "baishi-wending-ai-acceptance",
+    "namespaceId": "dfb218f2f29d4ecab2395f8a00b48350",
+    "migrationTag": "operator-probe-v1",
+    "deploymentId": "c6763878-377b-41b7-ad11-9c394e8b099b",
+    "versionId": "2683eeff-0320-48f6-b8cd-9f351a8e5f07",
+    "sourceCommit": "ef356ba97f2c14cd469c09efcbe7e8af0d08af32",
+    "sourceTree": "f6a605d6bd472265f2ad5ef2eb151917bc35c5a7",
+    "createdOn": "2026-10-28T00:09:04.46271Z",
+    "moduleCount": 4,
+    "artifactSha256": "eed805943f54cdabb2e436e7f4cf25678cddd7b32b1dd7d796ebb0a0dad03749",
+    "authenticatedStatusVerified": true,
+    "unauthenticatedStatus": 401,
+    "directAiBindingVerified": true,
+    "sqliteStorageVerified": true,
+    "namespaceName": "baishi-wending-ai-acceptance_OperatorProbe",
+    "objectName": "wending-realtime-acceptance-v1",
+    "productionRoute": false,
+    "change": "Add length/whitespace diagnostics only; preserve ledger and namespace"
+  },
+  "experimentReservedNeurons": 96,
+  "samples": [
+    {
+      "attemptId": "task1-20261028-001",
+      "schemaVersion": 1,
+      "evidenceKind": "probe-observation",
+      "modelId": "@cf/qwen/qwen3-30b-a3b-fp8",
+      "inferencePerformed": true,
+      "status": "passed",
+      "actualNeurons": null,
+      "usage": {
+        "promptTokens": 59,
+        "completionTokens": 375,
+        "totalTokens": 434
+      },
+      "structuredOutputPassed": true,
+      "chinesePassed": true,
+      "reasoningPresent": true,
+      "stopReason": "stop",
+      "latencyMs": 3072,
+      "reservedNeurons": 24,
+      "inputBytes": 555,
+      "inputVariant": "original-chinese-instruction",
+      "fullGameAcceptance": false,
+      "reasoningInterpretation": "nonempty-field-contents-not-retained-no-whitespace-inference"
+    },
+    {
+      "attemptId": "task1-20261028-002",
+      "schemaVersion": 1,
+      "evidenceKind": "probe-observation",
+      "modelId": "@cf/qwen/qwen3-30b-a3b-fp8",
+      "inferencePerformed": true,
+      "status": "passed",
+      "actualNeurons": null,
+      "usage": {
+        "promptTokens": 63,
+        "completionTokens": 108,
+        "totalTokens": 171
+      },
+      "structuredOutputPassed": true,
+      "chinesePassed": true,
+      "reasoningPresent": true,
+      "stopReason": "stop",
+      "latencyMs": 1064,
+      "reservedNeurons": 24,
+      "inputBytes": 565,
+      "inputVariant": "fixed-system-no-think",
+      "fullGameAcceptance": false,
+      "reasoningInterpretation": "nonempty-field-contents-not-retained-no-whitespace-inference"
+    },
+    {
+      "attemptId": "task1-20261028-003",
+      "schemaVersion": 1,
+      "evidenceKind": "probe-observation",
+      "modelId": "@cf/qwen/qwen3-30b-a3b-fp8",
+      "inferencePerformed": true,
+      "status": "passed",
+      "actualNeurons": null,
+      "usage": {
+        "promptTokens": 63,
+        "completionTokens": 82,
+        "totalTokens": 145
+      },
+      "structuredOutputPassed": true,
+      "chinesePassed": true,
+      "reasoningPresent": true,
+      "reasoningChars": 2,
+      "reasoningNonWhitespacePresent": false,
+      "stopReason": "stop",
+      "latencyMs": 736,
+      "reservedNeurons": 24,
+      "inputBytes": 565,
+      "inputVariant": "fixed-system-no-think",
+      "fullGameAcceptance": false,
+      "reasoningInterpretation": "observed-two-whitespace-characters"
+    },
+    {
+      "attemptId": "task1-20261028-004",
+      "schemaVersion": 1,
+      "evidenceKind": "probe-observation",
+      "modelId": "@cf/qwen/qwen3-30b-a3b-fp8",
+      "inferencePerformed": true,
+      "status": "passed",
+      "actualNeurons": null,
+      "usage": {
+        "promptTokens": 63,
+        "completionTokens": 86,
+        "totalTokens": 149
+      },
+      "structuredOutputPassed": true,
+      "chinesePassed": true,
+      "reasoningPresent": true,
+      "reasoningChars": 2,
+      "reasoningNonWhitespacePresent": false,
+      "stopReason": "stop",
+      "latencyMs": 591,
+      "reservedNeurons": 24,
+      "inputBytes": 565,
+      "inputVariant": "fixed-system-no-think",
+      "fullGameAcceptance": false,
+      "reasoningInterpretation": "observed-two-whitespace-characters"
+    }
+  ],
+  "reasoningInvestigation": {
+    "observed": "First real Qwen sample returned nonempty reasoning_content despite Chinese instruction.",
+    "reference": "https://github.com/QwenLM/Qwen3/blob/main/docs/source/inference/transformers.md",
+    "hypothesis": "Use the model-documented /no_think instruction; verify actual output before any promotion.",
+    "status": "root-cause-confirmed-on-two-identical-config-samples",
+    "conclusion": "The production predicate treats a whitespace-only provider placeholder as reasoning. Add /no_think to shared prompt and accept only absent/null/empty/whitespace string reasoning; reject substantive strings and unexpected non-null types.",
+    "earlierSampleCaveat": "001 and002 lack whitespace diagnostics and are not retroactively classified.",
+    "followup": "Focused provider correction and full-game acceptance runner under implementation; no profile promotion."
+  },
+  "operatorDeployments": [
+    {
+      "scriptName": "baishi-wending-ai-acceptance",
+      "namespaceId": "dfb218f2f29d4ecab2395f8a00b48350",
+      "migrationTag": "operator-probe-v1",
+      "deploymentId": "03ffdc63-2ded-4079-86b7-dcc73819dbfa",
+      "versionId": "57c46f47-6708-45fb-81cc-1dd6c8970f59",
+      "sourceCommit": "07fc047c6499405524909c1bbd49c166e7946724",
+      "sourceTree": "ff25c565e044962b025e25e82cf8d6dc7337d34b",
+      "createdOn": "2026-10-28T00:03:07.885031Z",
+      "moduleCount": 4,
+      "artifactSha256": "55f2ec9bee1e8b3abfbb2de9916643dade7bf6cbb1bb21159f591314ce73ce67",
+      "authenticatedStatusVerified": true,
+      "unauthenticatedStatus": 401,
+      "directAiBindingVerified": true,
+      "sqliteStorageVerified": true,
+      "namespaceName": "baishi-wending-ai-acceptance_OperatorProbe",
+      "objectName": "wending-realtime-acceptance-v1",
+      "productionRoute": false
+    },
+    {
+      "scriptName": "baishi-wending-ai-acceptance",
+      "namespaceId": "dfb218f2f29d4ecab2395f8a00b48350",
+      "migrationTag": "operator-probe-v1",
+      "deploymentId": "31f01c90-b0d3-4991-a1df-46c5e31945ba",
+      "versionId": "9c8f829f-d613-4893-b84e-efe931a1f188",
+      "sourceCommit": "ab5a270e20e68d9d566956aba8059c9a5f549432",
+      "sourceTree": "28b3a038ba49b3185abe0edbf7040fed55b3eabe",
+      "createdOn": "2026-10-28T00:06:28.112339Z",
+      "change": "Append documented /no_think; preserve ledger and namespace"
+    },
+    {
+      "scriptName": "baishi-wending-ai-acceptance",
+      "namespaceId": "dfb218f2f29d4ecab2395f8a00b48350",
+      "migrationTag": "operator-probe-v1",
+      "deploymentId": "c6763878-377b-41b7-ad11-9c394e8b099b",
+      "versionId": "2683eeff-0320-48f6-b8cd-9f351a8e5f07",
+      "sourceCommit": "ef356ba97f2c14cd469c09efcbe7e8af0d08af32",
+      "sourceTree": "f6a605d6bd472265f2ad5ef2eb151917bc35c5a7",
+      "createdOn": "2026-10-28T00:09:04.46271Z",
+      "moduleCount": 4,
+      "artifactSha256": "eed805943f54cdabb2e436e7f4cf25678cddd7b32b1dd7d796ebb0a0dad03749",
+      "authenticatedStatusVerified": true,
+      "unauthenticatedStatus": 401,
+      "directAiBindingVerified": true,
+      "sqliteStorageVerified": true,
+      "namespaceName": "baishi-wending-ai-acceptance_OperatorProbe",
+      "objectName": "wending-realtime-acceptance-v1",
+      "productionRoute": false,
+      "change": "Add length/whitespace diagnostics only; preserve ledger and namespace"
+    }
+  ],
+  "capabilitySummary": {
+    "sampleKind": "workers-ai",
+    "actualCalls": 4,
+    "structurePassed": 4,
+    "chinesePassed": 4,
+    "normalStopPassed": 4,
+    "latencyMs": [
+      3072,
+      1064,
+      736,
+      591
+    ],
+    "noThinkStructuredSamples": 3,
+    "whitespaceDiagnosedSamples": 2,
+    "substantiveReasoningAbsentInDiagnosedSamples": true,
+    "outputTokenCaps": {
+      "configured": 512,
+      "observedMaximum": 375
+    },
+    "task1AllocationExhausted": true,
+    "productionValidated": false,
+    "fullGameSchemaValidated": false
+  },
+  "review": {
+    "operatorSource": "ef356ba97f2c14cd469c09efcbe7e8af0d08af32",
+    "verdict": "APPROVED",
+    "critical": 0,
+    "important": 0,
+    "openMinor": 0,
+    "focusedTests": {
+      "operator": 13,
+      "existingProvider": 18
+    },
+    "ciScope": "Previous539CI belongs to earlier accepted source; new helper has focused local evidence and will receive checkpoint CI."
+  }
+}

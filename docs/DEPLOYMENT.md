@@ -1,10 +1,21 @@
 # GitHub → Cloudflare 部署
 
-更新：2026-10-27（UTC）。4.0.0 自动发行与生产切换已实际验收；下方保留 3.1.0 及更早版本的实际生产记录。
+更新：2026-10-28（北京时间）。4.0.0 自动发行与生产切换已实际验收；下方保留 3.1.0 及更早版本的实际生产记录。
 
-## 实时AI后端：本地产物已验证，尚未部署或启用
+## 实时AI后端：兼容后端已部署，玩家生成尚未启用
 
-生产已验收基线仍为静态4.0.0。[草稿PR #14](https://github.com/ct1150/wending/pull/14) 未合并、未部署；`65c3d0f`最终源码独立复核已通过，I1—I4/R1/M3均已处理；同树远端 `1322aa6` 的最终代码CI40547281694通过539项测试、117项语法检查及13模块打包。实际构建SHA与摘要见 [QA](QA_REPORT.md)。最新只读现场记录返回 `bindings: []`；候选模型目录可读，但订阅接口403，账号settings中的standard和空entitlements不能证明Workers Free，也未验证账号剩余额度/存储免费边界。**真实Workers AI调用为0，没有新增生产绑定、credits、付费升级或后端部署。** [早期只读记录](evidence/2026-10-27-workers-ai-planning-recon.json) 与 [实施计划](superpowers/plans/2026-10-27-realtime-workers-ai.md) 不构成上线证明。
+线上前端仍为4.0.0，[草稿PR #14](https://github.com/ct1150/wending/pull/14) 仍draft、main未合并。账号所有者已确认Workers Free；关闭生成的兼容后端已实际部署，AI直接绑定与SQLite namespace已读回核对。私有鉴权环境已完成Task1原定的小schema传输/非思考能力取样，**玩家生成保持关闭，完整模型与保存/刷新闭环仍待验收**。最新样本、预留、账户分析观察和部署身份见 [接入记录](evidence/workers-ai-rollout-2026-10-28.json)。
+
+| 实际兼容部署 | 已核对身份 |
+| --- | --- |
+| Worker / deployment | `baishi-wending` / `8dd97750-8fd4-40c9-a6c9-c3c61f72a6a2` |
+| version / 流量 | `b4fb827d-aa78-4062-9510-299f11f11064` / 100% |
+| 已部署源码 / 模块 | `3e3912cd1e8e6b1a4aafe3a6dd278881df298230` / 13个ESM模块 |
+| AI / SQLite | 直接AI binding；StoryBudget namespace `1de1df3929534a8d8d495d6db6604e99`，`use_sqlite:true`，迁移 `story-budget-v1` |
+| 兼容日期 / 状态 | `2026-07-30`；按已验证产物日期部署，原日期变更见接入记录；生成关闭，capabilities/session明确INFERENCE_DISABLED |
+| 玩家页面 | 继续读取原4.0发行渠道；此次关闭门禁的session未签发cookie，不当作启用后会话验收 |
+
+`65c3d0f`源码及I1—I4/R1/M3修复独立复核已通过；同树远端 `1322aa6` 的CI40547281694通过539项、117项语法和13模块打包，文档收尾CI40549153882也已通过。它们是新增操作员helper之前的验证范围；helper独立复核、/no_think及诊断修订的定向证据见 [QA](QA_REPORT.md)，不能冒充最新新增代码的全量CI。此前 `bindings:[]` 和订阅API403仅保留在 [历史只读记录](evidence/2026-10-27-workers-ai-planning-recon.json)，不覆盖本次实际部署或所有者确认。
 
 ### 受控产物与身份
 
@@ -24,16 +35,16 @@ SOURCE_COMMIT=完整40位已审提交 npm run build:gateway
 | `config/story-deployment.json` | `enabled:false`；协议1、规则1、提示1、存档5、内容4。当前构建拒绝启用、未知字段和不兼容版本，不能用vars或命令行开关跳过验收。 |
 | `wrangler.story.json` | 独立受控后端配置：入口、兼容日期2026-07-30、AI绑定、SQLite DO绑定与首次迁移。旧 `wrangler.jsonc` 仍只是静态Assets方案，不能代替它。 |
 
-静态 `dist/` 不再复制 `src/worker`，离线打包也拒绝从浏览器依赖图引用Worker模块。账号证明、发布凭据、AI调用权限只属于服务器/运维边界。候选模型不是生产白名单，`PRODUCTION_PROFILES` 仍为空；模型实际格式、停止原因、中文结构化输出、推理token上限与免费用量没有真实验收。后续启用必须先记录可信账号/模型证据，再独立审查代码与策略变更，不能填一份自称Free的JSON就解除门禁。
+静态 `dist/` 不再复制 `src/worker`，离线打包也拒绝从浏览器依赖图引用Worker模块。账号证明、发布凭据、AI调用权限只属于服务器/运维边界。候选模型不是生产白名单，`PRODUCTION_PROFILES` 仍为空；简单中文结构、停止原因、token用量及无非空白思考已有能力样本，完整游戏格式、思考字段/输出上限与生产质量尚未通过。后续启用必须先记录可信账号/模型证据，再独立审查代码与策略变更，不能填一份自称Free的JSON就解除门禁。
 
 ### 绑定、SQLite迁移与发布次序
 
-1. 运维先核对真实绑定账号的Workers Free硬边界、账号内其他用量、存储免费额度与实时模型能力。当前403是阻塞条件，AI Gateway的延迟支出限制不作为零收费证明。保留已授权的实验总量/每项上限；Task8真实闭环建议最多2次，当前未使用。
-2. 受控配置声明 `AI` 绑定与 `STORY_BUDGET → StoryBudget`，迁移标签 `story-budget-v1` 使用 `new_sqlite_classes:["StoryBudget"]`。这是首次创建SQLite类的迁移；当前没有已部署旧剧情账本的升级迁移。旧本地预部署数据库不保证兼容，不能冒充生产迁移已验证。
+1. Workers Free已由所有者确认，实际直接AI/SQLite免费路径已核对；继续使用全账户、当日、有原始时间的GraphQL分析观察作为保守probe准入材料，不冒充实时账单余额。历史403不再是套餐未知阻塞，AI Gateway支出限制也不替代Free硬边界。所有真实模型验收保留共享10次/800 Neurons及4/4/2分项上限；Task8真实闭环尚待执行。
+2. 受控配置声明 `AI` 绑定与 `STORY_BUDGET → StoryBudget`，迁移标签 `story-budget-v1` 使用 `new_sqlite_classes:["StoryBudget"]`。首次SQLite类迁移已随关闭后端部署并读回核对。后续版本必须复用上述生产namespace与账本，不重放首次创建来生成新账本；旧本地预部署数据库不保证兼容，不能代替现场记录。
 3. 所有流量必须指向同一既有Worker的同一DO namespace，以固定名 `story-budget-v1-global` 获取协调对象。固定名字本身不会跨不同namespace共享预算；多版本、测试域名或独立canary不得各建一份账本后同时消费同一账号额度。若采用原始API上传，先根据实际迁移取得namespace ID，再转换绑定metadata；上传所有清单模块并保留命名类导出，不能只上传entry或旧gateway。
-4. 在已审源码、实际账号与明确部署授权范围内，先部署兼容后端与关闭的免费门禁。先验证缺绑定/关闭门禁时capabilities暂停、旧页面和下载继续工作，再发布兼容HTML。GitHub CI只校验、保存产物和发布HTML，不持有Cloudflare部署凭据、不执行Worker部署、不自动启用AI。
+4. 已部署兼容后端与关闭门禁，现场已确认capabilities暂停、旧4.0页面继续服务。后续模型与策略验收通过后再发布兼容HTML并启用玩家生成。GitHub CI只校验、保存产物和发布HTML，不持有Cloudflare部署凭据、不执行Worker部署、不自动启用AI。
 5. 账号与模型验收通过后，才可审查启用配置/白名单，并在预留预算内检查实际opening及一次choice→Workers AI→校验→保存→刷新续接。死亡与人为降低应用额度的暂停验证不另调用模型、不耗尽账号免费量。整分支release、旧版回归和独立审查也必须先通过。
-6. 最终记录前端源码SHA/HTML摘要、Cloudflare实际部署ID/版本/流量、backend清单摘要、协议/规则/提示版本、实际模型和免费用量证据。`/healthz`只证明当前HTML身份，不能替代后端部署和模型验收。当前这些生产新增证据仍未取得。
+6. 最终记录前端源码SHA/HTML摘要、Cloudflare实际部署ID/版本/流量、backend清单摘要、协议/规则/提示版本、实际模型和免费用量证据。`/healthz`只证明当前HTML身份，不能替代后端部署和模型验收。关闭后端的部署、绑定与协议证据已取得；启用版本、玩家闭环和完整模型证据仍待取得。
 
 ### 已通过源码复核的修复与兼容要求
 
@@ -45,9 +56,15 @@ SOURCE_COMMIT=完整40位已审提交 npm run build:gateway
 
 同批修复还包含服务器明确的provider完成分类、跨requestId的会话级调用租约，以及出生持久化前的实际上下文预检。I3补充修复另以有界 `denied_admissions` 表保留未预留证明，绑定认证会话与请求/载荷；明确重试才可复用同一attempt，成功预留原子移除证明。该表与已预留调用账本分离，每会话最多120条并随会话到期清理；容量满不能记录时返回 `ADMISSION_RECORD_LIMIT`，可保持暂停至正常会话到期，不能通过删账或改身份自动修复。该补充修复已通过独立审查及最终539项代码CI；实际账号/模型和部署门禁仍须单独通过。
 
+### 私有真实验收环境
+
+操作员验收Worker位于同一已确认Free账户，单独鉴权，不接入玩家路由。SQLite namespace `dfb218f2f29d4ecab2395f8a00b48350` 与固定对象 `wending-realtime-acceptance-v1` 承载同一实验账本；刷新实际用量观察或上传新辅助代码均不得换namespace、删记录或释放未知预留。它与生产StoryBudget namespace分工不同，不是两份可各自消耗10次/800 Neurons的预算。后续Task7/Task8继续使用原实验记录统一扣减。
+
+Task1四次小schema样本已经完成，原定Task1次数已用尽，保留96 Neurons预留；简单JSON和两次无非空白思考样本不代表完整游戏schema或严格生产parser通过。思考字段、输出限制、中文连续性和实际账单用量须分别记录。最新观察与辅助部署身份以 [接入记录](evidence/workers-ai-rollout-2026-10-28.json) 为准，鉴权凭据不得进入仓库、浏览器或日志。
+
 ### 本地验证与回滚
 
-固定开发依赖Miniflare `4.20260730.0`（Node>=22）和workerd `2026-07-30`；`node tests/backend-runtime.test.js`在真正本地workerd启动全部打包模块，使用 `useSQLite:true` 及临时持久化目录，重启后检查幂等重放和未知用量保守占用。测试拦截全部Worker出站请求：静态渠道返回302时保留内嵌HTML且不跟随重定向；不存在真实AI绑定、账户或远端调用。`65c3d0f`最终源码本地构建包含13模块，具体清单与HTML摘要已记录，但尚无对应Cloudflare部署版本。原单模块网关fixture仍通过。详细范围见 [QA](QA_REPORT.md)。
+固定开发依赖Miniflare `4.20260730.0`（Node>=22）和workerd `2026-07-30`；`node tests/backend-runtime.test.js`在真正本地workerd启动全部打包模块，使用 `useSQLite:true` 及临时持久化目录，重启后检查幂等重放和未知用量保守占用。测试拦截全部Worker出站请求：静态渠道返回302时保留内嵌HTML且不跟随重定向；不存在真实AI绑定、账户或远端调用。`65c3d0f`源码的该次本地构建包含13模块，具体清单与HTML摘要保留原身份；后续实际Cloudflare部署使用`3e3912c`来源，部署ID另见本页现场表，不能混用两个清单摘要。原单模块网关fixture仍通过。详细范围见 [QA](QA_REPORT.md)。
 
 **不要用带AI绑定的 `wrangler dev` 作为“纯本地AI测试”。** Cloudflare文档说明Workers AI模型在本地开发中仍使用远端推理；本项目只用上述无AI绑定的Miniflare harness。[官方本地开发说明](https://developers.cloudflare.com/workers/local-development/) · [Miniflare模块/SQLite/出站拦截API](https://github.com/cloudflare/workers-sdk/blob/main/packages/miniflare/README.md)
 
