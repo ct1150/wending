@@ -1,8 +1,8 @@
 // Server/operator-only policy. Never construct billing evidence from browser input.
 export const STORY_LIMITS = Object.freeze({ maxInputBytes:12 * 1024, maxRequestBytes:32 * 1024, maxResponseBytes:64 * 1024, maxOutputTokens:1536, timeoutMs:30000, maxMessages:8, evidenceMaxAgeMs:300000, dailyFreeNeurons:10000 });
-// Owner-authorized continuation on 2026-10-28: retain the original ledger and
-// 800 Neuron ceiling; add one Task7 slot (11 total, task split 4/5/2).
-export const EXPERIMENT_LIMITS = Object.freeze({ maxCalls:11, maxNeurons:800, taskCalls:Object.freeze({ task1:4, task7:5, task8:2 }) });
+// Owner confirmed controlled reacceptance on 2026-10-28: retain all original
+// 8 calls/450 reserved; at most four new calls, stopping on the first failure.
+export const EXPERIMENT_LIMITS = Object.freeze({ maxCalls:12, maxNeurons:900, taskCalls:Object.freeze({ task1:4, task7:5, task8:3 }) });
 export const CANDIDATE_MODEL_ID = '@cf/qwen/qwen3-30b-a3b-fp8';
 export const CANDIDATE_PROFILE = Object.freeze({
   modelId:CANDIDATE_MODEL_ID, validated:false, requestFormat:'workers-ai-messages', responseFormat:'json_schema', supportsStructuredOutput:null,

@@ -94,14 +94,14 @@ test('true player cookie and protocol client traverse both durable reservations 
   assert.equal(f.calls,1);assert.equal(f.bridgeAdmissions,1);
 });
 
-test('third player attempt is paused by the shared Task8 cap and its player reservation remains charged',async t=>{
+test('fourth player attempt is paused by the shared Task8 cap and its player reservation remains charged',async t=>{
   const f=await fixture(t),s=await f.session();
-  for(const id of ['a','b'])assert.equal((await (await f.fetch(request('/api/story/turn',wireBody(body(s,id)),s.cookie))).json()).status,'ready');
-  const third=wireBody(body(s,'c')),result=await (await f.fetch(request('/api/story/turn',third,s.cookie))).json();
-  assert.equal(result.status,'paused');assert.equal(result.errorCode,'EXPERIMENT_BUDGET_EXHAUSTED');assert.equal(f.calls,2);
-  assert.deepEqual(await (await f.fetch(request('/api/story/turn',third,s.cookie))).json(),result);assert.equal(f.bridgeAdmissions,3);
-  const row=f.db.prepare('SELECT status,charge FROM ledger WHERE attempt_id=?').get('attempt-c');assert.equal(row.status,'unknown');assert.equal(row.charge,111);
-  assert.equal((await f.record()).ledger.attempts.length,8);
+  for(const id of ['a','b','c'])assert.equal((await (await f.fetch(request('/api/story/turn',wireBody(body(s,id)),s.cookie))).json()).status,'ready');
+  const fourth=wireBody(body(s,'d')),result=await (await f.fetch(request('/api/story/turn',fourth,s.cookie))).json();
+  assert.equal(result.status,'paused');assert.equal(result.errorCode,'EXPERIMENT_BUDGET_EXHAUSTED');assert.equal(f.calls,3);
+  assert.deepEqual(await (await f.fetch(request('/api/story/turn',fourth,s.cookie))).json(),result);assert.equal(f.bridgeAdmissions,4);
+  const row=f.db.prepare('SELECT status,charge FROM ledger WHERE attempt_id=?').get('attempt-d');assert.equal(row.status,'unknown');assert.equal(row.charge,111);
+  assert.equal((await f.record()).ledger.attempts.length,9);
 });
 
 test('shared admission persistence failure settles a recoverable player pause without invoking AI',async t=>{

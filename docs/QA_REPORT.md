@@ -2,7 +2,11 @@
 
 更新：2026-10-28本轮离线修复与回归；最近只读账本核对为14:28:21（UTC+8）。本页区分本地/原生fixture、实际生产交互与尚未覆盖的设备范围；历史结果保留原版本归属。
 
-## 本轮待办修复与验证
+## 已确认额度的续验预检
+
+用户已确认总上限12次/900 Neurons、Task1/7/8为4/5/3；原8次/450及全部历史保持不变，最多新增四次且失败即停。边界测试先在旧配置下出现3项预期额度拒绝，再在新配置下通过专项96/96；完整`npm run release`通过 **723/723，0失败/取消/跳过/todo**，测试102.535秒、142项JavaScript语法。HTML仍为971,109字节，SHA-256 `b2be6d9d1695cc0f46af5ff4bac16c0519a36cd28a284a0b77c4834f0b058e16`。独立审查无阻塞问题。该检查点尚未部署或新增推理，不能作为真实剧情通过依据；[当前预检证据](evidence/controlled-reacceptance-preflight-2026-10-28.json)与[已确认四步方案](superpowers/plans/2026-10-28-controlled-reacceptance.md)分别记录。
+
+## 前一轮待办修复与验证
 
 恢复工作后再次完整运行`npm run release`，**722/722测试，0失败/取消/跳过/todo**，测试113.654秒；隔离旧准备副本后语法检查为142个JavaScript文件。默认关闭生成的后端17模块打包通过；构建HTML为971,109字节，SHA-256 `b2be6d9d1695cc0f46af5ff4bac16c0519a36cd28a284a0b77c4834f0b058e16`。当前运行的150份源码/测试/配置文件指纹见[结构化验证证据](evidence/remaining-completion-2026-10-28.json)，GitHub CI按实际checkout另行核对，不借用历史655项结果。
 
@@ -16,7 +20,7 @@ M1固定10秒请求体deadline、abort与有界取消已覆盖到实际API，失
 
 生产构建以明确隔离的已验证fixture运行真实workerd入口，覆盖三模式、原namespace/对象、无新迁移、请求时间校验、暂停后缓存读取和unknown预留不退。新增真实无参CLI回归证明，即使将来仓库开关为true，普通CI仍只产disabled包；显式生产继续要求完整registry/Free/版本门禁。实际仓库开关false和registry空保持不变。
 
-14:28:21（UTC+8）再次通过三个GET读取原账本、health及公共capabilities，完整status与14:12:14记录逐值一致，仍为8次/450、Task1/7/8=4/3/1，无S1；本轮新增推理0。实际部署ID和绑定也已通过Cloudflare API只读核对，仍为原74aa版本。此前临时Noto Sans CJK SC字体修复了验收环境缺字，只读打开现有线上页面并检查截图，仅一条页面GET、无POST。该显示检查不补写上一轮失败的截图结论，也不代表新剧情质量通过。[实现与审查记录](superpowers/plans/2026-10-28-remaining-completion.md) · [待确认的真实重验方案](superpowers/plans/2026-10-28-controlled-reacceptance.md)
+14:28:21（UTC+8）再次通过三个GET读取原账本、health及公共capabilities，完整status与14:12:14记录逐值一致，仍为8次/450、Task1/7/8=4/3/1，无S1；本轮新增推理0。实际部署ID和绑定也已通过Cloudflare API只读核对，仍为原74aa版本。此前临时Noto Sans CJK SC字体修复了验收环境缺字，只读打开现有线上页面并检查截图，仅一条页面GET、无POST。该显示检查不补写上一轮失败的截图结论，也不代表新剧情质量通过。[实现与审查记录](superpowers/plans/2026-10-28-remaining-completion.md) · [已确认的真实重验方案](superpowers/plans/2026-10-28-controlled-reacceptance.md)
 
 ## 新实时模式：兼容部署、真实取样与待验收边界
 

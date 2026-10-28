@@ -49,28 +49,30 @@ test('concurrent duplicate Task8 admissions grant once and reject changed reques
   f.restart();assert.equal((await f.call(body)).kind,'duplicate');assert.equal((await f.record()).ledger.attempts.length,7);assert.equal(f.calls,0);
 });
 
-test('two permanent Task8 reservations survive unknown and failed outcomes, restart and UTC rollover',async t=>{
+test('three permanent Task8 reservations survive unknown and failed outcomes, restart and UTC rollover',async t=>{
   const f=await fixture(t);await f.call(input('a'));
   assert.equal((await f.call({...input('a'),status:'unknown'},'/task8/settle')).kind,'settled');
   f.restart();assert.equal((await f.call(input('a'))).kind,'duplicate');
   assert.equal((await f.call(input('b'))).kind,'reserved');
   assert.equal((await f.call({...input('b'),status:'failed'},'/task8/settle')).kind,'settled');
-  f.nextDay();const denied=await f.call(input('c'));assert.equal(denied.kind,'denied');assert.equal(denied.code,'EXPERIMENT_BUDGET_EXHAUSTED');
-  const record=await f.record();assert.equal(record.ledger.attempts.length,8);
-  assert.deepEqual(record.ledger.attempts.slice(6).map(row=>[row.status,row.reservedNeurons,row.actualNeurons]),[['unknown',111,null],['failed',111,null]]);
-  assert.equal(record.ledger.attempts.reduce((sum,row)=>sum+row.reservedNeurons,0),478);assert.equal(f.calls,0);
+  assert.equal((await f.call(input('c'))).kind,'reserved');
+  assert.equal((await f.call({...input('c'),status:'failed'},'/task8/settle')).kind,'settled');
+  f.nextDay();const denied=await f.call(input('d'));assert.equal(denied.kind,'denied');assert.equal(denied.code,'EXPERIMENT_BUDGET_EXHAUSTED');
+  const record=await f.record();assert.equal(record.ledger.attempts.length,9);
+  assert.deepEqual(record.ledger.attempts.slice(6).map(row=>[row.status,row.reservedNeurons,row.actualNeurons]),[['unknown',111,null],['failed',111,null],['failed',111,null]]);
+  assert.equal(record.ledger.attempts.reduce((sum,row)=>sum+row.reservedNeurons,0),589);assert.equal(f.calls,0);
 });
 
-test('concurrent distinct Task8 attempts cannot overbook the two remaining slots',async t=>{
+test('concurrent distinct Task8 attempts cannot overbook the three allowed slots',async t=>{
   const f=await fixture(t);
   const bodies=['a','b','c','d'].map(id=>input(id));
   const results=await Promise.all(bodies.map(body=>f.call(body)));
   // Authentication/body reads precede the serialized admission queue, so
-  // concurrent callers have no promised arrival order. Exactly two may win.
-  assert.deepEqual(results.map(row=>row.kind).sort(),['denied','denied','reserved','reserved']);
+  // concurrent callers have no promised arrival order. Exactly three may win.
+  assert.deepEqual(results.map(row=>row.kind).sort(),['denied','reserved','reserved','reserved']);
   assert.ok(results.filter(row=>row.kind==='denied').every(row=>row.code==='EXPERIMENT_BUDGET_EXHAUSTED'));
-  const record=await f.record();assert.equal(record.ledger.attempts.length,8);
-  assert.equal(Object.keys(record.task8.admissions).length,2);
+  const record=await f.record();assert.equal(record.ledger.attempts.length,9);
+  assert.equal(Object.keys(record.task8.admissions).length,3);
   for(let i=0;i<results.length;i++){
     const row=results[i];
     if(row.kind==='reserved'){
@@ -150,8 +152,8 @@ test('Task8 refuses malformed identities, caller-selected reservations and inval
 });
 
 test('global Neuron and call caps reject Task8 without changing previous reservations',async t=>{
-  const high=originalRecord();high.ledger.attempts[5].reservedNeurons=587;
-  const full={...originalRecord(),ledger:{schemaVersion:1,attempts:Array.from({length:11},(_,i)=>({task:i<4?'task1':i<9?'task7':'task8',attemptId:'prior-'+i,reservedNeurons:50,actualNeurons:null,status:'unknown'}))}};
+  const high=originalRecord();high.ledger.attempts[5].reservedNeurons=687;
+  const full={...originalRecord(),ledger:{schemaVersion:1,attempts:Array.from({length:12},(_,i)=>({task:i<4?'task1':i<9?'task7':'task8',attemptId:'prior-'+i,reservedNeurons:50,actualNeurons:null,status:'unknown'}))}};
   for(const record of [high,full])await t.test(String(record.ledger.attempts.length),async t=>{
     const f=await fixture(t,record);assert.equal((await f.call()).code,'EXPERIMENT_BUDGET_EXHAUSTED');assert.deepEqual(await f.record(),record);assert.equal(f.calls,0);
   });

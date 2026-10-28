@@ -2,7 +2,7 @@
 
 > **For agentic workers:** Use the existing parallel implementation/review workflow. Keep file ownership explicit; the root integrates shared API changes and runs the complete release gate.
 
-**Goal:** Complete all current implementation work and deliver real model/browser acceptance and compatible production release when its numerical allocation is authorized.
+**Goal:** Complete all current implementation work and deliver real model/browser acceptance and compatible production release under the confirmed numerical allocation once every actual acceptance gate passes.
 
 **Architecture:** Preserve strict domain/runtime contracts, add generation-side constraints and atomically persisted private observations, complete request/UI robustness, and prepare an explicit validated production composition.
 
@@ -13,7 +13,7 @@
 ## Global constraints
 
 - Preserve the original8 calls/450 reserved Neurons, all failed rows/results/cases and existing namespaces.
-- Do not change11/800 or Task1/7/8 caps4/5/2 without resolving the explicit authorization conflict.
+- The user explicitly confirmed the reviewed12/900 proposal on2026-10-28: Task1/7/8 caps4/5/3, at most four further calls, stop on first failure. Preserve original8/450 and all history; this supersedes only the prior numerical11/800,4/5/2 authorization.
 - Keep public inference disabled and the real production profile unvalidated until live acceptance passes.
 - Preserve strict scene validation, public API envelopes, V5/IndexedDBv2 reads and request/attempt lineage.
 - No paid upgrade, Gateway credits, paid fallback, response substitution or automatic model retry.
@@ -94,7 +94,7 @@ Review found and corrected a future CI blocker: the workflow always invokes the 
 Continuation verification: recovered the complete uncommitted changes from `ffcef06`, repeated the full release with permitted local test servers, and obtained722/722 with zero failures/cancellations/skips/todo,142 JavaScript syntax checks and17 default disabled backend modules. Independent Standards and Spec reviews found no blocking code defect; the missing linked evidence artifact was completed with original-run summaries, current source fingerprints and fresh GET-only ledger/health checks. At14:28:21 UTC+8 the original status was identical to the preceding read, still8 calls/450 reserved. No inference, deployment, quota change or production promotion occurred. See `docs/evidence/remaining-completion-2026-10-28.json` and PR14 for source publication and current CI.
 
 - [x] Reconcile the missing call/Task8 allocation into a concrete reviewable proposal, retaining every original row and reservation: [controlled reacceptance](2026-10-28-controlled-reacceptance.md).
-- [ ] Obtain explicit numerical authorization before new inference. The prepared proposal is 12/900 and Task1/7/8 4/5/3, with four new calls maximum and failure-stop; it is not applied by this document.
+- [x] Obtain explicit numerical authorization before new inference. The user replied“确认”to the reviewed12/900 and Task1/7/8 4/5/3 proposal, with four new calls maximum and failure-stop. Budget boundary tests were updated before implementation and failed against the old limits, then passed after the narrow configuration change; deployment/live execution remain separately gated.
 - [ ] Deploy only reviewed packages with a new actual same-account proof; read back all module hashes, namespace and original ledger.
 - [ ] Obtain a genuine accepted browser opening/S1, perform independent A/B review, and complete actual browser choice/save/refresh under the authorized limits.
 - [ ] Pin reviewed real profile evidence; run release, whole-branch review and exact-head CI.

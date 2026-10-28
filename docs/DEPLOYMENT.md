@@ -14,7 +14,7 @@
 
 production策略严格包含`enabled:true`、`mode:'production'`、`modelId`、`bindingAccountId`、`currentPlan`、`freeBoundaryProof`和协议/规则/提示/存档/内容版本1/1/1/5/4；未知字段、外部传入profile、错账户、Paid或混合tester模式均拒绝。证明在请求readiness内核验，不在Cloudflare模块初始化时永久缓存；现有生产语义不以五分钟probe余额TTL作为玩家倒计时，`checkedAt`不会被自动改写。
 
-当前`config/story-deployment.json`仍false，`PRODUCTION_PROFILES`仍为空。上面的正例仅在独立fixture源码树与本地native workerd中验证。须先完成[待确认的真实四步验收](superpowers/plans/2026-10-28-controlled-reacceptance.md)、profile复核及CI，才能合并发布并执行真实生产上传；GitHub工作流只发布HTML，不部署Cloudflare后端。
+当前`config/story-deployment.json`仍false，`PRODUCTION_PROFILES`仍为空。上面的正例仅在独立fixture源码树与本地native workerd中验证。须先完成[已确认的真实四步验收](superpowers/plans/2026-10-28-controlled-reacceptance.md)、profile复核及CI，才能合并发布并执行真实生产上传；GitHub工作流只发布HTML，不部署Cloudflare后端。
 
 ## 实时AI后端：74aa已部署，首步失败后保留兼容stage与原账本
 
