@@ -27,6 +27,43 @@ function assertSeam() {
   assert.equal(typeof acceptance.generateAcceptanceScene,'function','acceptance generator exists');
 }
 
+test('binding message-only quota and busy errors retain their existing provider classifications',async()=>{
+  // workerd _parseError constructs Error(message, custom name), without code/status.
+  for(const [prefix,want] of [[3036,'FREE_QUOTA_EXHAUSTED'],[3040,'PROVIDER_BUSY'],[429,'PROVIDER_BUSY']]){
+    const error=new Error(prefix+': private-upstream-detail');error.name='CustomUpstreamError';
+    let calls=0;
+    const result=await acceptance.generateAcceptanceScene({run:async()=>{calls++;throw error;}},context());
+    assert.equal(result.errorCode,want);assert.equal(result.status,'paused');
+    assert.equal(result.accountingStatus,'complete');assert.equal(result.actualNeurons,null);
+    assert.equal(calls,1);assert.doesNotMatch(JSON.stringify(result),/private-upstream-detail|CustomUpstreamError/);
+  }
+});
+
+test('provider message fallback rejects incidental digits and unknown codes without changing unknown accounting',async()=>{
+  for(const message of ['8007: private-upstream-detail','upstream 3036: private-upstream-detail',' 3036: private-upstream-detail','30360: private-upstream-detail','3036 private-upstream-detail','PROVIDER_TIMEOUT: private-upstream-detail']){
+    let calls=0;
+    const result=await acceptance.generateAcceptanceScene({run:async()=>{calls++;throw new Error(message);}},context());
+    assert.equal(result.errorCode,'PROVIDER_FAILED');assert.equal(result.accountingStatus,'unknown');
+    assert.equal(result.actualNeurons,null);assert.equal(calls,1);
+    assert.doesNotMatch(JSON.stringify(result),/private-upstream-detail/);
+  }
+});
+
+test('structured provider codes take precedence over a conflicting binding message prefix',async()=>{
+  for(const [fields,want,accounting] of [
+    [{code:'OUTPUT_TOO_LARGE'},'OUTPUT_TOO_LARGE','unknown'],
+    [{code:8007,errors:[{code:3036}],status:429},'PROVIDER_FAILED','unknown'],
+    [{code:3040},'PROVIDER_BUSY','complete'],
+    [{errors:[{code:8007}],status:429},'PROVIDER_FAILED','unknown'],
+    [{status:503},'PROVIDER_FAILED','unknown'],
+  ]){
+    const error=Object.assign(new Error('3036: private-upstream-detail'),fields);
+    const result=await acceptance.generateAcceptanceScene({run:async()=>{throw error;}},context());
+    assert.equal(result.errorCode,want);assert.equal(result.accountingStatus,accounting);
+    assert.doesNotMatch(JSON.stringify(result),/private-upstream-detail/);
+  }
+});
+
 // A test-only interpreter for the actual submitted schema's JSON Schema
 // vocabulary. It knows no game intents and rejects unsupported keywords rather
 // than silently treating an unimplemented constraint as passing.

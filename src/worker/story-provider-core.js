@@ -77,7 +77,9 @@ export function buildStoryInput(profile,context) {
 export const PROVIDER_ERROR_CODES=Object.freeze([...STORY_ERROR_CODES,'PROVIDER_PROFILE_INVALID','MODEL_NOT_ALLOWED','MODEL_UNVALIDATED','AI_BINDING_MISSING','PROVIDER_OPTIONS_INVALID','INPUT_TOO_LARGE','CONTEXT_TOO_LARGE','PROVIDER_TIMEOUT','PROVIDER_RESPONSE_INVALID','PROVIDER_RESPONSE_TOO_LARGE','MODEL_RESPONSE_MISMATCH','OUTPUT_TRUNCATED','STOP_REASON_INVALID','PROVIDER_USAGE_INVALID','OUTPUT_TOO_LARGE']);
 const ownCodes=new Set(PROVIDER_ERROR_CODES);
 function mappedCode(error) {
-  const code=error?.code??error?.errors?.[0]?.code??error?.status;
+  // workerd binding errors carry the numeric code only in a leading message.
+  // Inspect a bounded prefix; structured codes keep precedence, even unknown ones.
+  const code=error?.code??error?.errors?.[0]?.code??error?.status??(typeof error?.message==='string'?/^(3036|3040|429): /.exec(error.message.slice(0,16))?.[1]:undefined);
   if(Number(code)===3036)return 'FREE_QUOTA_EXHAUSTED';
   if([3040,429].includes(Number(code)))return 'PROVIDER_BUSY';
   return ownCodes.has(code)?code:'PROVIDER_FAILED';

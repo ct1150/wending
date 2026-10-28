@@ -205,6 +205,35 @@ test('timeout and provider exhaustion never trigger retry or fallback', async ()
   }
 });
 
+test('message-only binding quota and busy errors are recognized without refunding probe reservations',async()=>{
+  for(const [prefix,want] of [[3036,'FREE_QUOTA_EXHAUSTED'],[3040,'PROVIDER_BUSY']]){
+    const error=new Error(prefix+': private-upstream-detail');error.name='CustomUpstreamError';
+    let calls=0,final;
+    const result=await runProbe({execute:true,env:{AI:{run(){calls++;throw error;}}},evidence:evidence(),ledger:config.createExperimentLedger(),attemptId:'binding-error',now:()=>now,persistLedger:async ledger=>{final=ledger;}});
+    assert.equal(result.errorCode,want);assert.equal(result.status,'failed');assert.equal(calls,1);
+    assert.equal(final.attempts[0].status,'unknown');assert.equal(final.attempts[0].reservedNeurons,24);
+    assert.equal(final.attempts[0].actualNeurons,null);assert.equal(result.actualNeurons,null);
+    assert.doesNotMatch(JSON.stringify({result,final}),/private-upstream-detail|CustomUpstreamError/);
+  }
+});
+
+test('probe message fallback ignores incidental digits and preserves structured-code precedence',async()=>{
+  for(const [error,want] of [
+    ...['8007: private-upstream-detail','upstream 3036: private-upstream-detail',' 3036: private-upstream-detail','30360: private-upstream-detail','3036 private-upstream-detail','429: private-upstream-detail','PROVIDER_TIMEOUT: private-upstream-detail'].map(message=>[new Error(message),'PROVIDER_FAILED']),
+    [Object.assign(new Error('3036: private-upstream-detail'),{code:'OUTPUT_TOO_LARGE'}),'OUTPUT_TOO_LARGE'],
+    [Object.assign(new Error('3036: private-upstream-detail'),{code:8007,errors:[{code:3040}]}),'PROVIDER_FAILED'],
+    [Object.assign(new Error('3036: private-upstream-detail'),{errors:[{code:8007}]}),'PROVIDER_FAILED'],
+    [Object.assign(new Error('3036: private-upstream-detail'),{code:3040}),'PROVIDER_BUSY'],
+  ]){
+    let calls=0,final;
+    const result=await runProbe({execute:true,env:{AI:{run(){calls++;throw error;}}},evidence:evidence(),ledger:config.createExperimentLedger(),attemptId:'binding-error',now:()=>now,persistLedger:async ledger=>{final=ledger;}});
+    assert.equal(result.errorCode,want);assert.equal(calls,1);assert.equal(result.status,'failed');
+    assert.equal(final.attempts[0].status,'unknown');assert.equal(final.attempts[0].reservedNeurons,24);
+    assert.equal(final.attempts[0].actualNeurons,null);
+    assert.doesNotMatch(JSON.stringify({result,final}),/private-upstream-detail/);
+  }
+});
+
 test('persisted deployment proof restores only for exact binding account/current Free plan without refreshing snapshot time',()=>{
   const persisted={...evidence(),accountId:'binding-account'},later=now+86400000;
   const options={bindingAccountId:'binding-account',currentPlan:{accountId:'binding-account',plan:'workers-free',source:'operator-account-verification'},now:later};

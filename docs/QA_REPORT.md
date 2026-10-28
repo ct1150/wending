@@ -1,12 +1,51 @@
 # 百世问鼎 · 验收记录
 
-更新：2026-10-28本轮离线修复与回归；最近只读账本核对为14:28:21（UTC+8）。本页区分本地/原生fixture、实际生产交互与尚未覆盖的设备范围；历史结果保留原版本归属。
+更新：2026-10-28，当前真实续验在北京时间20:43:50.909的唯一新开场失败后停止；20:48:11最终只读回读仍为9次/561 Neurons保守预留。源码CI通过与真实模型失败分别记录，历史结果保持原版本归属。
 
-## 已确认额度的续验预检
+## 当前真实续验结果：PROVIDER_FAILED，unknown预留保留
+
+按用户确认的[12次/900、Task1/7/8=4/5/3四步方案](superpowers/plans/2026-10-28-controlled-reacceptance.md)，已部署 `c3376d8d479e6be530cfe29fd427e6b13c7018a3`；helper21模块、stage20模块全部读回摘要匹配。20:43:23部署后六次GET证明原8次/450与全部旧记录不变，仅授权上限改变。独立档案真实浏览器按正常TLS执行一次开场，失败后进入只读停止状态，没有追加attempt或重试。[脱敏结果与逐项来源摘要](evidence/controlled-reacceptance-result-2026-10-28.json)
+
+| 当前检查项 | 实际结果与边界 |
+| --- | --- |
+| 已部署c3376d8源码CI | [40682034187](https://github.com/ct1150/wending/actions/runs/40682034187)：head `c3376d8`，checkout `c657189a0c30472ef0093379dc1ef82d3be8dae0`，同树 `ebb0dfe6a585e5497b1310f8907777d83c239f59`；723/723、142项语法、17模块默认后端通过，publish跳过。这是源码验证，不是实时模型验收。 |
+| 当前HTML | 971109字节，SHA-256 `b2be6d9d1695cc0f46af5ff4bac16c0519a36cd28a284a0b77c4834f0b058e16`；health、root与下载GET读回一致，releaseSource为embedded。 |
+| 唯一新增真实推理 | 2026-10-28T12:43:50.909Z（上海20:43:50.909）捕获turn POST响应，HTTP200，`status:paused / PROVIDER_FAILED`；只执行一次，没有重试。HTTP200不代表开场通过。 |
+| 私有provider观察 | stage=provider，latency280ms，inputBytes6696；usage、stopReason、nonThinkingValidated和structureDiagnostic均null。`ai.run`调用抛出的上游code/message未存储，具体原因未知；没有证据认定为结构校验或某个非法字段。 |
+| 账本与保留 | 20:44:33回读9次/561；Task1/7/8=4/3/2。新增Task8状态**unknown**、预留111、actualNeurons=null，不改写成failed或complete；原8笔、results/cases/admissions及关联不变。561是保守预留，不是账单或实际花费。 |
+| 存档与只读观察 | birth/pending在revision0保留，没有场景提交或accepted S1；20:43:51、20:44:12、20:44:33只读档案快照一致。本轮失败后没有刷新，不能宣称刷新恢复通过；浏览器20:45:05退出。中文桌面失败界面已观察，不证明成功叙事或其他设备。 |
+| 未执行与停止条件 | 无S1、baseline、Task7分支A/B和最终浏览器选择；成功场景保存/刷新未验收。任一步失败即停止，剩余三个预算名额不是追加调用授权。 |
+| 发布门禁 | publicEnabled=false、modelValidated=false、生产registry空；PR14保持Draft、未合并，公开release未完成。 |
+| 部署前本地验证范围 | 新构建HTML与上述大小/hash一致，离线工具烟测15+26通过；随后错误分类修复的完整728项验证见下一节。既有预检723/723及历史722/655等各保留原运行归属。 |
+
+本轮新的同账户Free观察为12:42:03.772Z，账户分析窗口为当日00:00至该时间，聚合count8、input/output tokens4363/2812、Neurons105.87210083007812；Workers Free来自既有所有者明确确认，未宣称账单API核验成功。这是有延迟的分析数据，900只是保守准入额度，不能当作精确余额或逐次实际用量。
+
+失败后的只读账户分析在12:45:49.992Z观察12:43:40—12:44:10Z窗口，返回一个12:43:50Z、同模型的聚合组：errorCode8007、inferenceTime219ms、requestBytesIn6726/out0、input/output tokens0/0、Neurons0。它与本次失败的时间/模型对应关系是**推断**，分析中没有request/attempt/session ID可验证一一关联；不能将0填入actualNeurons、退还111预留或据此断言账单为零。
+
+最终只读核验为2026-10-28T12:48:11.582099Z（上海20:48:11.582）：完整私有status与停止后记录逐值一致，仍9次/561、末笔unknown，health源码/HTML摘要及971109字节不变；无permit仍TESTER_PERMIT_REQUIRED，有permit因原五分钟proof自然过期为FREE_BOUNDARY_UNVERIFIED。没有刷新proof或新增模型请求。12:47只读保留遥测查询未返回匹配事件，具体上游异常消息仍未知。
+
+## 离线错误分类修复（尚未部署）
+
+已根据[Cloudflare workerd绑定实现（固定提交9022f4d）](https://github.com/cloudflare/workerd/blob/9022f4dc45485e2b2fc619171674ae7065b6213c/src/cloudflare/internal/ai-api.ts)修复异常格式兼容：绑定可能仅提供name/message、把数字码放在message开头。保留结构化字段优先级，仅在其均缺失时读取最多16字符的严格前缀；provider识别原有3036/3040/429，probe识别原有3036/3040。测试覆盖自定义异常name、冲突优先级、非前缀数字、不支持的8007、一次调用、消息不泄露与预留保留。没有新增模块、schema、原始异常记录、重试或退款。
+
+| 离线修复验证 | 实际结果 |
+| --- | --- |
+| RED（实现前） | 47项中45通过、2失败；失败仅为provider/probe新message-only已知码应分类为FREE_QUOTA_EXHAUSTED却得到PROVIDER_FAILED。 |
+| GREEN（最小实现后） | 专项47/47，0失败/取消/跳过/todo，611.172184ms。 |
+| 完整release | **728/728**，0失败/取消/跳过/todo，测试139241.619951ms；142项JavaScript语法、971109字节HTML构建通过，HTML摘要与已部署页面相同。 |
+| 独立审查 | 无Critical/Important/Minor问题；另行专项47/47，核对新结果21/20模块数量、39个非入口源码模块的c3376d8摘要以及9/561预留算术。 |
+
+源码与日志摘要保存在[本轮结果的offlineClassificationFix字段](evidence/controlled-reacceptance-result-2026-10-28.json)；新增提交CI在PR中按实际结果更新。修复尚未部署，本次8007保持未识别的PROVIDER_FAILED/unknown；真实失败原因仍未知，不能据此宣布模型验收通过。c3376d8部署及723项CI继续只属于上面的已部署源码。
+
+## 历史检查点说明
+
+下列预检与14:28、13:30等检查点保留原观察范围；“尚未部署”“最新”“当前”指当时状态，由上面的20:48最终只读检查点取代。74aa旧失败的刷新GET不能补作本轮刷新证据，旧结构错误不能解释本轮provider失败。
+
+## 历史：已确认额度的续验预检
 
 用户已确认总上限12次/900 Neurons、Task1/7/8为4/5/3；原8次/450及全部历史保持不变，最多新增四次且失败即停。边界测试先在旧配置下出现3项预期额度拒绝，再在新配置下通过专项96/96；完整`npm run release`通过 **723/723，0失败/取消/跳过/todo**，测试102.535秒、142项JavaScript语法。HTML仍为971,109字节，SHA-256 `b2be6d9d1695cc0f46af5ff4bac16c0519a36cd28a284a0b77c4834f0b058e16`。独立审查无阻塞问题。该检查点尚未部署或新增推理，不能作为真实剧情通过依据；[当前预检证据](evidence/controlled-reacceptance-preflight-2026-10-28.json)与[已确认四步方案](superpowers/plans/2026-10-28-controlled-reacceptance.md)分别记录。
 
-## 前一轮待办修复与验证
+## 历史：前一轮待办修复与验证
 
 恢复工作后再次完整运行`npm run release`，**722/722测试，0失败/取消/跳过/todo**，测试113.654秒；隔离旧准备副本后语法检查为142个JavaScript文件。默认关闭生成的后端17模块打包通过；构建HTML为971,109字节，SHA-256 `b2be6d9d1695cc0f46af5ff4bac16c0519a36cd28a284a0b77c4834f0b058e16`。当前运行的150份源码/测试/配置文件指纹见[结构化验证证据](evidence/remaining-completion-2026-10-28.json)，GitHub CI按实际checkout另行核对，不借用历史655项结果。
 
@@ -26,7 +65,7 @@ M1固定10秒请求体deadline、abort与有界取消已覆盖到实际API，失
 
 固定“每世20—30分钟”目标已取消。新验收是持续选择、登仙/问鼎后继续、实际死亡才结算，以及连续记忆、完整长档案、免费预算与故障恢复。V5/CV4本地实现、关闭生成的兼容部署、真实模型小样本与已上线4.0分别记录；能力样本不能用来宣称完整生产生成已验收。
 
-### 2026-10-28真实推理检查点（13:30）：浏览器开场一次拒绝，四步验收停止
+### 2026-10-28历史真实推理检查点（13:30）：浏览器开场一次拒绝，四步验收停止
 
 **用户确认的四步方案只执行了第一步：Task8真实浏览器开场一次，于北京时间13:24:56.749返回 `GENERATED_SCENE_INVALID`。没有accepted场景、S1或共享baseline，步骤2—4未执行，随后没有追加模型调用；本轮不得继续任何模型调用。** 原三次Task7失败未改变，新的失败只归Task8。Task7真实质量、Task8成功选择闭环及最终release均未通过。原始结果、部署与刷新观察的脱敏汇总见 [真实浏览器证据](evidence/shared-opening-browser-2026-10-28.json)。
 
@@ -66,7 +105,7 @@ M1固定10秒请求体deadline、abort与有界取消已覆盖到实际API，失
 
 **最新本地完整release为655/655，失败/取消/跳过/todo均0，用时83.7290秒；HTML970046字节。** 首次655项中的21个浏览器用例因默认可执行路径缺失而未能启动；配置已有、匹配版本的 `WENDING_BROWSER_EXECUTABLE` 后重新执行了整套release并通过，该环境问题已解决。本地343项语法检查包含ignored准备副本；干净CI实际为134个JavaScript文件，二者分别记录。
 
-### 最新修复CI身份：74aa258（655项）
+### 历史修复CI身份：74aa258（655项）
 
 [CI40636654680](https://github.com/ct1150/wending/actions/runs/40636654680) 于北京时间13:15:08完成：validate job `122645069505` 成功，publish job `122645792840` 跳过。PR head `74aa25884c5468d9eb90abb1bbb82ba92752ba0b` 与实际checkout `bbce147f11b00de7003340943d2e38f54f5cf3ad` 的树均为 `e19215b7fec41cfa799aa9db0d60ec175a44dd55`，已独立核对。655/655项、0失败/取消/跳过/todo，134项JavaScript语法、14模块默认兼容后端和970046字节HTML全部通过；测试用时87.3349秒。14模块默认包不等于上方18模块私有helper或17模块受保护stage。
 

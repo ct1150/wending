@@ -1,6 +1,32 @@
 # GitHub → Cloudflare 部署
 
-更新检查点：2026-10-28本轮生产路径准备；北京时间14:12:14回读原账本不变。本轮没有部署或新推理，当前保留74aa受保护stage及V5兼容内嵌页面。一次真实Task8开场被拒绝，已验证出生/pending保存与刷新恢复，随后停止推理。下方4.0.0自动发行及更早版本保留各自历史，不代表当前stage正在读取main发行渠道。
+更新检查点：2026-10-28，北京时间20:43已部署 `c3376d8` 的21模块私有helper与20模块受保护stage；20:43:50.909唯一新增Task8开场返回PROVIDER_FAILED并按规则停止，20:48:11最终只读账本仍为9次/561、unknown预留保留。公开生成未启用，PR14仍Draft未合并。下方74aa与更早发行均为历史，不描述当前stage。
+
+## 当前受保护部署与真实续验停止结果
+
+用户确认的[续验方案](superpowers/plans/2026-10-28-controlled-reacceptance.md)允许原账本调整为12次/900 Neurons、Task1/7/8=4/5/3，保留原8次/450及全部失败。12:42:03.772Z取得新的同账户观察，12:43:04.715Z完成上传与读回，证明年龄60943ms；原namespace、固定对象、`experiment-v1`、存储和operator token保留，没有新迁移。直接AI/SQLite绑定保持原身份，公开生成与生产晋升仍关闭。[实际结果及全部模块摘要](evidence/controlled-reacceptance-result-2026-10-28.json)
+
+| 当前c3376d8部署 | 已观察身份与范围 |
+| --- | --- |
+| 源码 / 树 | `c3376d8d479e6be530cfe29fd427e6b13c7018a3` / `ebb0dfe6a585e5497b1310f8907777d83c239f59` |
+| Helper deployment / version | `00253b62-fd0a-4906-bf46-76d7e98e810b` / `d8dc818e-77c0-403b-b340-26d41d110c42`，100%；21个ESM模块全部SHA-256读回匹配，创建12:43:00.547421Z |
+| Stage deployment / version | `cec43b9e-48f7-4346-bdfb-27966f2f9c3f` / `9bb11b35-514f-48ab-b61d-eb1c0f119d6d`，100%；20个ESM模块全部SHA-256读回匹配，创建12:43:03.220857Z |
+| 内嵌页面 | 971109字节，SHA-256 `b2be6d9d1695cc0f46af5ff4bac16c0519a36cd28a284a0b77c4834f0b058e16`；health、root及离线下载GET一致，releaseSource=embedded |
+| 原存储身份 | StoryBudget `1de1df3929534a8d8d495d6db6604e99`；OperatorProbe `dfb218f2f29d4ecab2395f8a00b48350`；固定对象及原迁移标签保留，无新迁移 |
+| 部署后只读回读 | 12:43:23.067Z六次GET，无session/turn POST；原8/450与原记录不变，仅授权上限变为12/900、4/5/3；无permit为TESTER_PERMIT_REQUIRED，有permit及当时新proof为ready |
+| 已部署c3376d8源码验证 | [CI40682034187](https://github.com/ct1150/wending/actions/runs/40682034187)通过723/723、142项语法与17模块默认后端，publish跳过；默认17模块不等于真实21/20模块部署。部署预检的构建及离线工具烟测15+26通过；随后离线修复的728项完整验证见下节。 |
+| 实际开场与账本 | 12:43:50.909Z单次真实浏览器turn POST返回HTTP200、paused/PROVIDER_FAILED；新Task8记录unknown、预留111、actualNeurons=null，累计9/561、Task1/7/8=4/3/2；旧8笔及results/cases/admissions与关联不变 |
+| 立即停止 | 无重试，无S1、baseline、Task7分支或最终choice；剩余三个名额不能继续调用。birth/pending在revision0保留，未提交场景；失败后只读快照一致，未刷新，20:45:05浏览器退出。 |
+
+provider私有观察仅为latency280ms、inputBytes6696及PROVIDER_FAILED，usage/stopReason/nonThinkingValidated/structureDiagnostic均null。`ai.run`异常的具体上游code/message没有保存，不能确诊为结构拒绝或模型内容错误。失败时间窗口的账户分析另有errorCode8007聚合组，仅能推断时间/模型对应，无request/attempt/session ID的一一关联；聚合Neurons0不改变unknown和111预留。完整原始账户分析与浏览器档案未发布。
+
+公开策略仍`enabled:false`、`modelValidated:false`，生产registry为空；此次受保护上传不等于正式生产release，Task7/Task8成功闭环仍未通过。本轮没有刷新恢复验收；下方74aa失败后的刷新事实保留其历史归属。部署仍保留V5读取能力与当前出生/pending，后续操作不得重建账本或回滚至缺少读取器的版本。
+
+最终只读核验为2026-10-28T12:48:11.582099Z（上海20:48:11.582）：完整私有status与停止后记录逐值一致，仍9次/561、末笔unknown，health源码/HTML摘要及971109字节不变；无permit仍TESTER_PERMIT_REQUIRED，有permit因原五分钟proof自然过期为FREE_BOUNDARY_UNVERIFIED。没有刷新proof或新增模型请求。12:47只读保留遥测查询未返回匹配事件，具体上游异常消息仍未知。
+
+## 离线错误分类修复（尚未部署）
+
+provider/probe已知错误码归一化的最小修复已离线通过：专项RED 45/47至GREEN 47/47、完整release728/728、142项语法、971109字节HTML构建及独立审查。仅增加保留结构化码优先级的有限message前缀识别；没有schema或模块图变更。该修复尚未部署，没有新模型调用。当前线上仍为c3376d8的21/20模块，不改变8007原因未知、PROVIDER_FAILED/unknown和111预留，不视为真实模型验收修复完成。[验证记录](QA_REPORT.md)
 
 ## 本轮新增：正式生产构建路径已准备，尚未启用
 
@@ -16,9 +42,9 @@ production策略严格包含`enabled:true`、`mode:'production'`、`modelId`、`
 
 当前`config/story-deployment.json`仍false，`PRODUCTION_PROFILES`仍为空。上面的正例仅在独立fixture源码树与本地native workerd中验证。须先完成[已确认的真实四步验收](superpowers/plans/2026-10-28-controlled-reacceptance.md)、profile复核及CI，才能合并发布并执行真实生产上传；GitHub工作流只发布HTML，不部署Cloudflare后端。
 
-## 实时AI后端：74aa已部署，首步失败后保留兼容stage与原账本
+## 历史实时AI后端：74aa部署与当时首步失败
 
-账号所有者已确认Workers Free，并明确批准共享开场四步真实验收，11次/800 Neurons及Task1/7/8的4/5/2上限不变。源码 `74aa25884c5468d9eb90abb1bbb82ba92752ba0b` 的私有helper18模块与tester-only stage17模块现已部署，全部模块哈希读回匹配，本地fresh builders另行复现全部35个模块哈希；原namespace和账本保留。13:24:56.749唯一一次Task8浏览器开场返回 `GENERATED_SCENE_INVALID`，新增failed记录及111永久预留，累计8次/450、Task1/7/8为4/3/1，actualNeurons=null。**按获批方案首步失败即停，没有S1、baseline、分支A/B或真实choice；公开推理关闭、模型未验证、生产白名单为空，Task7/Task8完整门槛和公开发布仍未完成。** 逐次记录见 [接入记录](evidence/workers-ai-rollout-2026-10-28.json) 与 [浏览器失败/恢复证据](evidence/shared-opening-browser-2026-10-28.json)。
+本节及其后“早期兼容部署历史”前的“当前”“本次”均指74aa历史检查点，已由上方c3376d8部署取代。账号所有者当时已确认Workers Free，并明确批准共享开场四步真实验收，11次/800 Neurons及Task1/7/8的4/5/2上限不变。源码 `74aa25884c5468d9eb90abb1bbb82ba92752ba0b` 的私有helper18模块与tester-only stage17模块现已部署，全部模块哈希读回匹配，本地fresh builders另行复现全部35个模块哈希；原namespace和账本保留。13:24:56.749唯一一次Task8浏览器开场返回 `GENERATED_SCENE_INVALID`，新增failed记录及111永久预留，累计8次/450、Task1/7/8为4/3/1，actualNeurons=null。**按获批方案首步失败即停，没有S1、baseline、分支A/B或真实choice；公开推理关闭、模型未验证、生产白名单为空，Task7/Task8完整门槛和公开发布仍未完成。** 逐次记录见 [接入记录](evidence/workers-ai-rollout-2026-10-28.json) 与 [浏览器失败/恢复证据](evidence/shared-opening-browser-2026-10-28.json)。
 
 | 当前受保护74aa部署 | 已核对范围 |
 | --- | --- |
@@ -72,7 +98,7 @@ SOURCE_COMMIT=完整40位已审提交 npm run build:gateway
 
 静态 `dist/` 不再复制 `src/worker`，离线打包也拒绝从浏览器依赖图引用Worker模块。账号证明、发布凭据、AI调用权限只属于服务器/运维边界。候选模型不是生产白名单，`PRODUCTION_PROFILES` 仍为空；简单中文结构、停止原因、token用量及无非空白思考已有能力样本，完整游戏格式、思考字段/输出上限与生产质量尚未通过。后续启用必须先记录可信账号/模型证据，再独立审查代码与策略变更，不能填一份自称Free的JSON就解除门禁。
 
-### 绑定、SQLite迁移与发布次序
+### 绑定、SQLite迁移与发布次序（保留早期11/800执行记录）
 
 1. Workers Free已由所有者确认，实际直接AI/SQLite免费路径已核对；使用全账户、当日、有原始时间的GraphQL分析观察作为保守probe准入材料，不冒充实时账单余额。历史403不再是套餐未知阻塞，AI Gateway支出限制也不替代Free硬边界。用户已批准共享11次/800 Neurons、Task1/7/8的4/5/2分项上限及共享开场四步；首步失败后的8次/450预留全部累计，余量不是自动重试授权。
 2. 受控配置声明 `AI` 绑定与 `STORY_BUDGET → StoryBudget`，迁移标签 `story-budget-v1` 使用 `new_sqlite_classes:["StoryBudget"]`。首次SQLite类迁移已随关闭后端部署并读回核对。后续版本必须复用上述生产namespace与账本，不重放首次创建来生成新账本；旧本地预部署数据库不保证兼容，不能代替现场记录。

@@ -1,14 +1,34 @@
 # 问鼎待办与交付账本
 
-更新：2026-10-28，本轮继续完成代码待办；14:28:21（UTC+8）只读核对原账本仍为8次/450，完整status与上一检查点逐值一致。用户最新方向：取消固定一世时长，按肉鸽选择持续生成剧情，直到人物死亡；使用 Cloudflare Workers AI 免费额度实时生成。
+更新：2026-10-28，20:48:11（UTC+8）最终只读续验回读：当前已部署 `c3376d8`，唯一新增Task8开场返回 `PROVIDER_FAILED`，持久状态为unknown；按失败即停规则停止在9次/561 Neurons保守预留。用户方向仍为取消固定一世时长，按肉鸽选择持续生成剧情直到人物死亡，使用Workers AI免费额度实时生成。
 
-## 已确认的真实续验（执行中）
+## 当前真实续验：第一步失败，已停止
+
+用户确认的[四步续验方案](superpowers/plans/2026-10-28-controlled-reacceptance.md)已将原账本上限调整为12次/900 Neurons、Task1/7/8为4/5/3；原8次/450、全部失败、results/cases/admissions与关联保留。`c3376d8d479e6be530cfe29fd427e6b13c7018a3` 的21模块helper与20模块受保护stage已实际部署且全部摘要读回匹配，原namespace、固定对象、`experiment-v1`、存储和operator token保留，无新迁移。部署后的六次GET先确认仍为8/450，新上限已生效。
+
+**北京时间20:43:50.909，独立真实浏览器唯一一次开场turn POST返回HTTP200、`status:paused / PROVIDER_FAILED`。没有重试；新记录状态为unknown，并非complete或failed，111预留保留，累计9次/561、Task1/7/8为4/3/2，actualNeurons仍null。** 私有观察仅证provider阶段失败、latency280ms/inputBytes6696，usage/stopReason/nonThinkingValidated/structureDiagnostic均null；`ai.run`抛出的具体上游code/message未存储，不能猜测结构或内容原因。没有可用S1、baseline、Task7分支A/B或最终浏览器选择。余下三个名额不构成继续调用授权，后续仅只读记录并关闭浏览器。
+
+新birth与pending在revision0保留，未提交场景；失败后只读快照一致。**本轮没有刷新，不宣称新一轮刷新恢复通过。** 先前74aa拒绝后的刷新证据只属于历史检查点。已部署c3376d8源码[CI40682034187](https://github.com/ct1150/wending/actions/runs/40682034187)为723/723、142项语法与17模块默认打包通过，publish跳过；这些源码验证与此次真实失败分别记录。部署预检另通过构建及离线工具烟测15+26；随后错误分类修复的完整本地验证单独记录于下一节。
+
+公开生成仍关闭、`modelValidated:false`、`PRODUCTION_PROFILES`为空，PR14保持Draft且未合并；Task7质量、Task8成功选择/保存/刷新及生产发布未通过。[实际续验结果与证据边界](evidence/controlled-reacceptance-result-2026-10-28.json) · [QA](QA_REPORT.md) · [部署身份](DEPLOYMENT.md)
+
+最终只读核验为2026-10-28T12:48:11.582099Z（上海20:48:11.582）：完整私有status与停止后记录逐值一致，仍9次/561、末笔unknown，health源码/HTML摘要及971109字节不变；无permit仍TESTER_PERMIT_REQUIRED，有permit因原五分钟proof自然过期为FREE_BOUNDARY_UNVERIFIED。没有刷新proof或新增模型请求。12:47只读保留遥测查询未返回匹配事件，具体上游异常消息仍未知。
+
+## 离线错误分类修复（尚未部署）
+
+已修复Cloudflare绑定把已知错误码放在异常message前缀、原provider/probe只读结构化字段而遗漏分类的问题。优先保留原code/errors/status链；仅在无结构化码时读取最多16字符的严格前缀，provider支持既有3036/3040/429、probe支持既有3036/3040，不保存原始消息。专项先RED 45/47（仅两项新分类断言失败）、后GREEN 47/47；完整`npm run release`通过**728/728**，0失败/取消/跳过/todo，142项语法和971109字节HTML构建通过。独立审查无阻塞问题，另行重跑专项47/47。修复尚未部署，没有新增模型调用，不改变本次8007原因未知、PROVIDER_FAILED/unknown及111预留；部署身份仍为上述c3376d8，真实验收仍未通过。[验证范围](QA_REPORT.md)
+
+## 历史检查点说明
+
+以下额度确认、前一轮续办、历史实施及历史证据各节保留当时状态和用语，已由上面的20:48最终只读检查点取代；其中74aa、8/450、11/800、未部署、待CI或待确认不再描述当前状态。历史失败、刷新和本地验证不得合并为本轮成功。
+
+## 历史：额度确认与源码预检
 
 用户在2026-10-28明确回复“确认”，批准[四步续验方案](superpowers/plans/2026-10-28-controlled-reacceptance.md)：总上限12次/900 Neurons，Task1/7/8为4/5/3，保留原8次/450及全部失败，最多新增4次且任一步失败即停。仅修改统一实验额度配置及对应边界回归；生产白名单、公开开关、严格校验和存储身份保持原合同。部署及真实调用结果单独记录，不能以授权或本地测试代替通过。
 
 专项96/96、完整release723/723、142项JavaScript语法与971,109字节HTML已通过，独立审查无阻塞问题；[预检证据](evidence/controlled-reacceptance-preflight-2026-10-28.json)保留旧上限下的预期失败、当前源码指纹和原部署观察。四步真实执行仍待当前提交CI、实际新proof及部署/账本回读。
 
-## 前一轮续办：离线实现与真实验收分别结项
+## 历史前一轮续办：离线实现与真实验收分别结项
 
 M1请求体绝对10秒deadline/abort与M2异步焦点恢复已实现并交叉审查；生成schema已补旁白/对话、实体状态、记忆状态及非空文本约束，严格runtime校验未放宽。新增私有固定诊断与输入/用量元数据，在原账本终态内一次性保存并核对hash，不进入公开响应或玩家缓存，不补写旧失败信息。基线登记已兼容前序failed Task8，仍不能跳过reserved/unknown/已有成功来源。
 
@@ -18,7 +38,7 @@ M1请求体绝对10秒deadline/abort与M2异步焦点恢复已实现并交叉审
 
 完整重验缺少的容量已核算并写成[待确认方案](superpowers/plans/2026-10-28-controlled-reacceptance.md)：原8次/450保留，四步还需4次，拟总上限12次/900、Task1/7/8为4/5/3。**该方案未生效，现有11/800、4/5/2仍执行。** 真实质量、成功选择/保存/刷新与公开发布继续待验收；不把本地通过当成模型通过。[本轮实施记录](superpowers/plans/2026-10-28-remaining-completion.md) · [本轮验证](QA_REPORT.md)
 
-## 当前实施：选择驱动、持续生成、死亡终局
+## 历史实施检查点：选择驱动、持续生成、死亡终局
 
 **已确认的四步共享开场方案在第一步停止：真实浏览器开场仅执行一次，于北京时间13:24:56.749返回 `GENERATED_SCENE_INVALID`，没有可用S1，步骤2—4未执行，不得继续模型调用。** 最新时钟修复 `74aa258` 已部署；本地全量655/655与 [CI40636654680](https://github.com/ct1150/wending/actions/runs/40636654680) 均通过，干净CI为134项语法、14模块默认后端打包，publish跳过。Task7真实质量、Task8玩家生成/保存/刷新与最终发布仍待完成，PR14保持Draft、main未合并。本地规则、协议、API、存档与界面已实现；所有者已确认Workers Free，实际直接AI/SQLite绑定已核对。
 
@@ -43,7 +63,7 @@ M1请求体绝对10秒deadline/abort与M2异步焦点恢复已实现并交叉审
 
 Workers Free每日账号合计10,000 Neurons，北京时间08:00重置，耗尽后拒绝继续推理；所有玩家与账户其他项目共享额度。所有者已确认Free，此前订阅API403保留为历史权限记录，不再作为当前套餐未知的阻塞。已核对直接AI与SQLite免费路径；全账户GraphQL分析有延迟且不是账单计量，只作为有来源的保守probe准入观察，不能声称精确剩余额度。没有升级套餐、Gateway credits或付费后备。[官方定价](https://developers.cloudflare.com/workers-ai/platform/pricing/) · [运行合同](WORKERS_AI_RUNTIME.md)
 
-### 当前证据与按顺序剩余事项
+### 历史证据与当时按顺序剩余事项
 
 最新修复 `74aa25884c5468d9eb90abb1bbb82ba92752ba0b` 的 [CI40636654680](https://github.com/ct1150/wending/actions/runs/40636654680) 为655/655项、0失败/取消/跳过/todo，134项JavaScript语法、970046字节HTML及14模块默认后端通过；实际checkout `bbce147f11b00de7003340943d2e38f54f5cf3ad` 与head同树 `e19215b7fec41cfa799aa9db0d60ec175a44dd55`，publish跳过。HTML SHA-256为 `3c3b09de319e2032c3990867780998d67adcb6af62fc9fe0a78cb35fdf46b5b0`。本地首次因浏览器路径缺失的21项失败已用现有浏览器路径完成整套重跑，最终655/655通过；本地343项语法包含ignored准备副本，不能作为干净CI文件数。真实预检、修复前后回归和最初正常TLS主页观察见 [预检记录](evidence/shared-opening-preflight-2026-10-28.json)；这些检查没有新增AI调用，之后的一次真实Task8开场另记。
 

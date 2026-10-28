@@ -3,7 +3,8 @@ import { CANDIDATE_MODEL_ID, STORY_LIMITS, assertProviderReady, estimateMaxNeuro
 const fail = code => Object.assign(new Error(code), { code });
 const safeCodes = new Set(['INFERENCE_DISABLED','MODEL_NOT_ALLOWED','AI_BINDING_MISSING','FREE_BOUNDARY_UNVERIFIED','ACCOUNT_QUOTA_UNAVAILABLE','MODEL_UNVALIDATED','EXPERIMENT_BUDGET_EXHAUSTED','EXPERIMENT_LEDGER_INVALID','EXPERIMENT_ATTEMPT_INVALID','INPUT_TOO_LARGE','INPUT_INVALID','OUTPUT_TOO_LARGE','LEDGER_PERSIST_FAILED','PROBE_CONFIGURATION_INVALID','PROVIDER_TIMEOUT','PROVIDER_RESPONSE_TOO_LARGE','MODEL_RESPONSE_MISMATCH','PROVIDER_RESPONSE_INVALID']);
 function errorCode(error) {
-  const code = error?.code ?? error?.errors?.[0]?.code;
+  // Binding exceptions expose only name/message; never retain the message text.
+  const code = error?.code ?? error?.errors?.[0]?.code ?? (typeof error?.message==='string'?/^(3036|3040): /.exec(error.message.slice(0,16))?.[1]:undefined);
   if (Number(code) === 3036) return 'FREE_QUOTA_EXHAUSTED';
   if (Number(code) === 3040) return 'PROVIDER_BUSY';
   return safeCodes.has(code) ? code : 'PROVIDER_FAILED';
