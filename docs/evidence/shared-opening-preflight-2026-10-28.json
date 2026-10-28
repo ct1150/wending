@@ -1,0 +1,184 @@
+{
+  "schemaVersion": 1,
+  "dateShanghai": "2026-10-28",
+  "authorization": {
+    "source": "conversation",
+    "statement": "确认",
+    "scope": "Protected shared-opening four-call acceptance; unchanged 11/800 and Task1/7/8 4/5/2 caps.",
+    "capsChanged": false
+  },
+  "originalLedger": {
+    "callCount": 7,
+    "reservedNeurons": 339,
+    "taskCalls": {
+      "task1": 4,
+      "task7": 3,
+      "task8": 0
+    },
+    "allSevenOriginalRowsResultsAndCasesUnchanged": true,
+    "lastVerifiedAt": "2026-10-28T05:00:33.440219Z"
+  },
+  "initialProtectedDeployments": [
+    {
+      "worker": "baishi-wending-ai-acceptance",
+      "sourceCommit": "deba31b55bfe3f486cab3365bec6abeb1d18bf0c",
+      "deploymentId": "7dc3662a-6b39-4a6a-9505-1e20c2c21f67",
+      "versionId": "fc23c127-9576-4285-ad84-6a15e2b052ba",
+      "modifiedAt": "2026-10-28T04:44:33.447235Z",
+      "moduleCount": 18,
+      "allModuleHashesMatched": true,
+      "originalNamespacePreserved": true
+    },
+    {
+      "worker": "baishi-wending",
+      "sourceCommit": "deba31b55bfe3f486cab3365bec6abeb1d18bf0c",
+      "deploymentId": "be66dedb-f635-48c2-b36d-d8b7640ff29b",
+      "versionId": "c2773029-76b5-4c05-bfb5-92f729073c55",
+      "modifiedAt": "2026-10-28T04:56:36.193488Z",
+      "moduleCount": 17,
+      "allModuleHashesMatched": true,
+      "originalNamespacesPreserved": true,
+      "publicEnabled": false,
+      "modelValidated": false,
+      "htmlSha256": "3c3b09de319e2032c3990867780998d67adcb6af62fc9fe0a78cb35fdf46b5b0",
+      "htmlBytes": 970046,
+      "releaseSource": "embedded"
+    }
+  ],
+  "preflightResult": {
+    "modelCalls": 0,
+    "capabilitiesError": "STORY_STAGE_CONFIGURATION_INVALID",
+    "proofCheckedAt": "2026-10-28T04:41:02.653Z",
+    "proofExpiredBeforeStageUploadCompleted": true,
+    "expiredProofNotUsedForInference": true
+  },
+  "productionClockDiagnostic": {
+    "observedAt": "2026-10-28T05:02:40.220Z",
+    "diagnostic": "wending-proof-clock-v1",
+    "moduleObservation": {
+      "now": 0,
+      "valid": false,
+      "errorCode": "FREE_BOUNDARY_UNVERIFIED"
+    },
+    "requestObservation": {
+      "now": 1793163760220,
+      "valid": true
+    },
+    "proofCheckedAt": "2026-10-28T04:41:02.653Z",
+    "requestUrl": "https://baishi-wending-runtime-diagnostic-20261028.ct1150.workers.dev/",
+    "bindings": [],
+    "actualModelCalls": 0,
+    "scriptName": "baishi-wending-runtime-diagnostic-20261028",
+    "diagnosticVersionId": "01293bc5833441f6a51be83707c6c622",
+    "temporaryWorkerDeleted": true,
+    "deletionVerifiedAbsent": true,
+    "interpretation": "The same original restore function rejects the proof during actual production module initialization (clock 0), but reconstructs it successfully during a request. Reconstruction success alone does not satisfy the later five-minute inference freshness gate.",
+    "sourceReferences": [
+      "https://github.com/cloudflare/workerd/issues/6839",
+      "https://github.com/cloudflare/workerd/issues/3567"
+    ]
+  },
+  "localNativeContrast": {
+    "moduleNow": 1793163637898,
+    "requestNow": 1793163637955,
+    "moduleValidationSucceeded": true,
+    "requestValidationSucceeded": true,
+    "actualPackagedEntryError": "TESTER_PERMIT_REQUIRED",
+    "outboundRequests": 0,
+    "note": "Pinned local workerd did not reproduce the production zero clock. Its behavior is recorded separately from the explicitly simulated regression."
+  },
+  "correction": {
+    "file": "src/worker/story-stage.js",
+    "sha256": "93e4895693f0fb39dd68b37813da07fa655e8fd0c3e11dcad7cf17bee0a0beb2",
+    "change": "Validate the unchanged trusted server policy inside request readiness; remove permanently cached factory-time validation failure.",
+    "freshnessLimitMs": 300000,
+    "utcDayGateUnchanged": true,
+    "quotaAndModelPolicyUnchanged": true,
+    "independentReview": "passed-no-blocking-findings"
+  },
+  "targetedVerification": {
+    "red": {
+      "tests": 25,
+      "pass": 24,
+      "fail": 1,
+      "failingTest": "production startup-clock simulation does not latch a valid stage policy as invalid",
+      "expected": "TESTER_PERMIT_REQUIRED",
+      "actual": "STORY_STAGE_CONFIGURATION_INVALID"
+    },
+    "green": {
+      "tests": 25,
+      "pass": 25,
+      "fail": 0
+    },
+    "related": {
+      "tests": 62,
+      "pass": 62,
+      "fail": 0
+    },
+    "nativeCases": 7,
+    "nativeAiCalls": 0,
+    "nativeExperimentCalls": 0,
+    "nativeOutboundRequests": 0
+  },
+  "browserPreparation": {
+    "certificateValidationEnabled": true,
+    "initialCertificateTrustFailureResolved": true,
+    "realHomepageLoaded": true,
+    "browserVersion": "151.0.7922.34",
+    "archiveExists": false,
+    "storyApiRequestsOnHomepage": 0,
+    "inferenceActions": 0
+  },
+  "acceptance": {
+    "opening": "pending",
+    "privateBranchA": "pending",
+    "privateBranchB": "pending",
+    "browserChoiceSaveRefresh": "pending",
+    "productionProfileValidated": false
+  },
+  "fullLocalRelease": {
+    "status": "passed",
+    "command": "WENDING_BROWSER_EXECUTABLE=/tmp/wending-cft-151/chrome-headless-shell-linux64/chrome-headless-shell npm run release",
+    "tests": 655,
+    "pass": 655,
+    "fail": 0,
+    "cancelled": 0,
+    "skipped": 0,
+    "todo": 0,
+    "durationMs": 83728.955038,
+    "syntaxChecks": 343,
+    "syntaxCountNote": "Includes ignored local preparation copies; clean CI syntax count must be recorded independently.",
+    "htmlBytes": 970046,
+    "htmlSha256": "3c3b09de319e2032c3990867780998d67adcb6af62fc9fe0a78cb35fdf46b5b0"
+  },
+  "priorLocalReleaseAttempt": {
+    "status": "environment-failure-resolved",
+    "tests": 655,
+    "pass": 634,
+    "fail": 21,
+    "reason": "The default Playwright executable path was absent; all 21 browser cases failed to launch. The full suite was rerun with the existing supported WENDING_BROWSER_EXECUTABLE setting.",
+    "failedTests": [
+      "native app: HTTPS fixture, pending refresh/import, pages, legacy preservation, mobile and keyboard",
+      "native session preserves bounded canonical relations through omission, refresh and full import",
+      "native IDB atomically fixes birth, persists attempts, rejects forged commit and competing tabs",
+      "history crosses 128-turn and UTF-8 byte chunks beyond 1MiB with stable pages and full streaming restore",
+      "permanent promise versions and NPC tombstones survive indexed retrieval and cannot reopen",
+      "injected native transaction abort rolls back writes and preserves recoverable pending",
+      "quota probe reports native enforcement honestly; injected quota error rolls back archive commit",
+      "rules-confirmed death is atomically archived with null scene and permanent receipt",
+      "page refresh preserves fixed birth/choice and rejects credential fields in attempt metadata",
+      "explicit new-life creation CAS preserves old history and rejects a stale tab",
+      "injected storage permission denial fails without replacing existing archive",
+      "late response from an older attempt cannot commit after an explicit retry is durable",
+      "bounded story retrieval preserves 17 facts, 13 large obligations and dead identities across retry and export",
+      "native v1 database upgrades additively without changing active run, pending, history or memory",
+      "1000 native session turns legally reach immortality, remain bounded and restore every archived entry beyond the old total cap",
+      "natural mortal lifespan and battle deaths settle in native sessions without any later client operation",
+      "unresolved narrative obligations do not create an alive but permanently unplayable run",
+      "streaming roundtrip preserves pending identity and rejects trailing or truncated data before activation",
+      "captured export remains coherent while playing and restores pending retry lineage",
+      "import must not replace a run that advances while the stream is being validated",
+      "unmarked pre-fix V5 histories and pending hashes roundtrip without implicit relationship migration"
+    ]
+  }
+}

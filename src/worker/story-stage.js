@@ -28,13 +28,13 @@ function permitMatches(request,expected){
 }
 
 export function createStoryStageWorker({staticFetch=()=>new Response('Not found',{status:404}),config={}}={}){
-  let trusted=null,invalid=false;
-  if(config?.enabled===true){try{trusted=validateStoryStagePolicy(config);}catch{invalid=true;}}
   return {async fetch(request,env={},ctx){
     const path=new URL(request.url).pathname;
     if(path!=='/api/story'&&!path.startsWith('/api/story/'))return staticFetch(request,env,ctx);
     const readiness=()=>{
-      if(invalid)fail('STORY_STAGE_CONFIGURATION_INVALID');
+      // Production module initialization has no request clock. Validate proof
+      // only here, without caching an initialization-time failure or freshness.
+      const trusted=config?.enabled===true?validateStoryStagePolicy(config):null;
       if(!trusted)fail('INFERENCE_DISABLED');
       if(!permitMatches(request,trusted.testerPermitSha256))fail('TESTER_PERMIT_REQUIRED');
       assertExperimentBridgeReady(env);

@@ -57,6 +57,19 @@ test('tester-only composition denies missing, wrong and operator credentials wit
   assert.equal(await (await f.fetch(new Request(origin+'/'))).text(),'static');
 });
 
+test('production startup-clock simulation does not latch a valid stage policy as invalid',async t=>{
+  const f=await fixture(t);
+  // Production observation: Date.now() is 0 during module evaluation, then
+  // becomes request time. This is a simulation; pinned local workerd differs.
+  const startupClock=t.mock.method(Date,'now',()=>0);
+  try{await f.useConfig(f.config);}finally{startupClock.mock.restore();}
+  const missing=await(await f.fetch(request('/api/story/capabilities',undefined,null,null))).json();
+  assert.equal(missing.available,false);assert.equal(missing.errorCode,'TESTER_PERMIT_REQUIRED');
+  const permitted=await(await f.fetch(request('/api/story/capabilities'))).json();
+  assert.equal(permitted.available,true);assert.equal(permitted.errorCode,null);
+  assert.equal(f.calls,0);assert.equal(f.bridgeAdmissions,0);assert.deepEqual(await f.record(),oldRecord());
+});
+
 test('true player cookie and protocol client traverse both durable reservations once, then replay after disable',async t=>{
   const f=await fixture(t);let cookie=null,setCookie=null;
   const client=createStoryClient({location:{protocol:'https:'},fetch:async(path,init)=>{
