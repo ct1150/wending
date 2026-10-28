@@ -2,7 +2,7 @@ import { CANDIDATE_MODEL_ID, STORY_LIMITS } from './story-config.js';
 import { idField, exactKeys, validateGeneratedScene as validateStructure } from '../game/cultivation/live/schema.js';
 import { assertPlainData, canonicalStringify, sha256 } from '../game/cultivation/live/identity.js';
 import { validateStoryContext, validateGeneratedScene, STORY_ERROR_CODES } from '../game/cultivation/live/memory.js';
-import { REALMS, DAYS_PER_YEAR } from '../game/cultivation/live/model.js';
+import { REALMS, DAYS_PER_YEAR, ITEMS } from '../game/cultivation/live/model.js';
 import { buildGenerationSchema } from './story-generation-schema.js';
 
 // Shared server-only input/transport/parser. Production supplies its validation
@@ -20,9 +20,11 @@ Keep known IDs/names/kinds. Scene=namespace:t本回合:s:scene;choices=namespace
 memoryDeltas may be empty; only material facts/relationships/promises/clues. Summaries cannot override facts/obligations. Close only supplied referenceId, unchanged text; never reopen. coverage.openOmitted stays unresolved; omission is not closure.
 Use unique entity/choice IDs and action tuples(intent,targetId,stake,approach).
 Targets:practice=self(breakthrough=NEXT_REALM);rest=self;explore=supplies,stones,manual,crystal,core,soulseal,skykey,relic,iron;negotiate/fight/evade=living person/faction ID;travel=place ID;craft study=manual,forge=talisman.
+explore的targetId资源含义：${Object.entries(ITEMS).filter(([id])=>id!=='talisman').map(([id,name])=>id+'='+name).join('，')}。选项须明确寻找该目标资源；搜索入口或普通物资不能使用relic等其他资源目标。
 先写entities，只列本场speaker/targetId/memoryDeltas引用的NPC、地点及势力。主角仅用self，绝不把life.name作为NPC加入entities。再写blocks和choices，所有人物/地点引用必须对应entities的id。dialogue只写一个人的一句话，speaker为活人id或self；旁白narration不带speaker。title/location/text/label使用中文名称，不出现ID。询问用negotiate，找物资用explore；普通练功用steady/intensive，突破用breakthrough。选项文字必须符合实际intent和目标。
 travel的targetId必须指向entities中kind为place的实际目的地，label必须完整包含该目的地的name，且目的地name不能等于本场location。前往未声明的新地点时先声明对应place；已知地点沿用原id。不得把出发地当目的地，留在原地不能使用travel。
 本回合只演绎receipt.action已选动作及receipt结果。negotiate是在与targetId交涉、听取答复；谈及某处不等于已经前往或抵达该处。travel才描述抵达目的地；未选择的旅行、战斗、修炼等后续步骤必须留到choices，不能写成已发生。
+choices.label只写行动，不写固定时长或数值奖励；界面会显示规则确定的时间和资源成本。物品取得、消耗及伤势变化只能来自receipt，不得叙述未选择行动的收获或伤害；新线索优先通过口头消息呈现，不擅自交付信物、地图或其他物品。
 No effects or numeric rewards.`;
 
 // Only fixed categories cross the provider boundary. Reuse the real structure
@@ -133,9 +135,15 @@ export async function generateProviderScene(ai,profile,context,options={},assert
       const validated=validateGeneratedScene(scene,context);
       // Apply this narrative check only to new provider output. Canonical scene
       // validation and previously saved/cached scene recovery remain unchanged.
-      for(const proposal of validated.choices)if(proposal.intent==='travel'){
-        const destination=validated.entities.find(entity=>entity.id===proposal.targetId&&entity.kind==='place');
-        if(!destination||!proposal.label.includes(destination.name)||destination.name===validated.location)fail('CHOICE_NOT_COMPILABLE');
+      for(const proposal of validated.choices){
+        // Costs are compiled by the rules and shown separately by the UI.
+        // New labels must not promise another fixed duration; archive replay
+        // and narrative descriptions of actual elapsed time remain unchanged.
+        if(/[0-9零〇一二两三四五六七八九十百千万半]+\s*(?:个\s*)?(?:年|月|天|日|晚|夜|周|星期|时辰|小时|分钟|刻钟|炷香)/u.test(proposal.label))fail('CHOICE_NOT_COMPILABLE');
+        if(proposal.intent==='travel'){
+          const destination=validated.entities.find(entity=>entity.id===proposal.targetId&&entity.kind==='place');
+          if(!destination||!proposal.label.includes(destination.name)||destination.name===validated.location)fail('CHOICE_NOT_COMPILABLE');
+        }
       }
       result.scene=validated;
     }
