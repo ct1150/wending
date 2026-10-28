@@ -24,6 +24,7 @@ explore的targetId资源含义：${Object.entries(ITEMS).filter(([id])=>id!=='ta
 先写entities，只列本场speaker/targetId/memoryDeltas引用的NPC、地点及势力。主角仅用self，绝不把life.name作为NPC加入entities。再写blocks和choices，所有人物/地点引用必须对应entities的id。dialogue只写一个人的一句话，speaker为活人id或self；旁白narration不带speaker。title/location/text/label使用中文名称，不出现ID。询问用negotiate，找物资用explore；普通练功用steady/intensive，突破用breakthrough。选项文字必须符合实际intent和目标。
 travel的targetId必须指向entities中kind为place的实际目的地，label必须完整包含该目的地的name，且目的地name不能等于本场location。前往未声明的新地点时先声明对应place；已知地点沿用原id。不得把出发地当目的地，留在原地不能使用travel。
 本回合只演绎receipt.action已选动作及receipt结果。negotiate是在与targetId交涉、听取答复；谈及某处不等于已经前往或抵达该处。travel才描述抵达目的地；未选择的旅行、战斗、修炼等后续步骤必须留到choices，不能写成已发生。
+negotiate选项可以询问价格、来历或讨价还价，只能产生规则定义的资源变化；不能承诺购买、出售具体物品，也不能擅自赠送、领取额外物品或跟随对方前往别处。物品变化须遵守receipt及explore/craft等规则，不得把谈话写成已完成交易。
 choices.label只写行动，不写固定时长或数值奖励；界面会显示规则确定的时间和资源成本。物品取得、消耗及伤势变化只能来自receipt，不得叙述未选择行动的收获或伤害；新线索优先通过口头消息呈现，不擅自交付信物、地图或其他物品。
 No effects or numeric rewards.`;
 
@@ -140,6 +141,14 @@ export async function generateProviderScene(ai,profile,context,options={},assert
         // New labels must not promise another fixed duration; archive replay
         // and narrative descriptions of actual elapsed time remain unchanged.
         if(/[0-9零〇一二两三四五六七八九十百千万半]+\s*(?:个\s*)?(?:年|月|天|日|晚|夜|周|星期|时辰|小时|分钟|刻钟|炷香)/u.test(proposal.label))fail('CHOICE_NOT_COMPILABLE');
+        if(proposal.intent==='negotiate'){
+          if(/购买|买下|买走|买入|购入|卖出|卖掉|出售/u.test(proposal.label))fail('CHOICE_NOT_COMPILABLE');
+          const exchange=/(?:换取|换得|兑换)(.+)$/u.exec(proposal.label);
+          // Negotiation rules grant only stones (cooperate/pressure) or
+          // supplies (bargain), never the named object offered by an NPC.
+          const resource=ITEMS[proposal.approach==='bargain'?'supplies':'stones'];
+          if(exchange&&exchange[1].trim().replace(/[。！!]+$/u,'')!==resource)fail('CHOICE_NOT_COMPILABLE');
+        }
         if(proposal.intent==='travel'){
           const destination=validated.entities.find(entity=>entity.id===proposal.targetId&&entity.kind==='place');
           if(!destination||!proposal.label.includes(destination.name)||destination.name===validated.location)fail('CHOICE_NOT_COMPILABLE');
