@@ -1,0 +1,297 @@
+{
+  "schemaVersion": 1,
+  "dateShanghai": "2026-10-28",
+  "status": "SHARED_OPENING_REJECTED_STOPPED_AFTER_FIRST_STEP",
+  "sourceCommit": "74aa25884c5468d9eb90abb1bbb82ba92752ba0b",
+  "sourceTree": "e19215b7fec41cfa799aa9db0d60ec175a44dd55",
+  "authorization": {
+    "statement": "确认",
+    "approvedSequence": [
+      "Task8 real browser opening and saved S1",
+      "Task7 private A from S1",
+      "Task7 private B from the same S1",
+      "Task8 real browser choice, save and refresh"
+    ],
+    "stopCondition": "Any rejection, unknown outcome, unusable S1 or failed save stops subsequent model calls.",
+    "limits": {
+      "maxCalls": 11,
+      "maxNeurons": 800,
+      "taskCalls": {
+        "task1": 4,
+        "task7": 5,
+        "task8": 2
+      }
+    },
+    "retryAuthorized": false
+  },
+  "runtime": {
+    "gameOrigin": "https://baishi-wending.ct1150.workers.dev",
+    "browser": "Chrome headless shell 151.0.7922.34",
+    "certificateValidationEnabled": true,
+    "testerPermitScope": "exact game origin /api/story/ routes; transport injection only",
+    "actualSessionResponse": {
+      "observedAt": "2026-10-28T05:24:52.658Z",
+      "httpStatus": 200,
+      "body": {
+        "protocolVersion": 1,
+        "status": "ready",
+        "sessionRef": "sess_d7a08496a922242488afe4b3c080bc41",
+        "expiresAt": 1793251492600
+      }
+    },
+    "actualReadyCapabilities": {
+      "observedAt": "2026-10-28T05:24:39.405Z",
+      "httpStatus": 200,
+      "body": {
+        "protocolVersion": 1,
+        "available": true,
+        "status": "ready",
+        "errorCode": null,
+        "limits": {
+          "maxRequestBytes": 32768,
+          "maxResponseBytes": 65536,
+          "maxContextBytes": 7000,
+          "timeoutMs": 30000
+        }
+      }
+    },
+    "responseMockingUsed": false,
+    "archiveWritesByDriver": false,
+    "browserProfileIsolated": true,
+    "driverSha256": "615ae868d5a3857759d0178fc0085836ef48073f800855623076db83d6890305",
+    "browserClosedAfterReadOnlyEvidence": true
+  },
+  "opening": {
+    "task": "task8",
+    "requestAt": "2026-10-28T05:24:52.662Z",
+    "responseAt": "2026-10-28T05:24:56.749Z",
+    "observedRequestResponseIntervalMs": 4087,
+    "intervalMeaning": "Browser capture interval, not isolated provider latency.",
+    "method": "POST",
+    "path": "/api/story/turn",
+    "httpStatus": 200,
+    "response": {
+      "protocolVersion": 1,
+      "status": "rejected",
+      "requestId": "31f35194-2ce8-42cd-857d-3d7092faff2c",
+      "attemptId": "b6e6c992-301e-438a-a414-e21f3bf58be6",
+      "sessionRef": "sess_d7a08496a922242488afe4b3c080bc41",
+      "errorCode": "GENERATED_SCENE_INVALID",
+      "retry": null
+    },
+    "responseBytes": 247,
+    "responseSha256": "0d9bfbbdcedb316c0165bb65ab2176429d22570b39d441285cbdaa280a517164",
+    "requestBytes": 1456,
+    "requestBodySha256": "6cc55728fa3d6597cc64550f2c72f323baf29291eeac192fbf9d053887709a75",
+    "contextHash": "ee58da86a0f832796fa1bf9360f9575189c5d912af495b08146f7b97763d613d",
+    "canonicalPayloadHash": "bb4ce9ee677aa29702623f615cb1fa41a84219bc6c4a4caab0d5da409c52de01",
+    "admissionId": "task8_efc24c54f29f3fe28cce72b88e129f10402219b62fe45d6477bbc492b9d7634d",
+    "ledgerRow": {
+      "task": "task8",
+      "attemptId": "task8_efc24c54f29f3fe28cce72b88e129f10402219b62fe45d6477bbc492b9d7634d",
+      "reservedNeurons": 111,
+      "actualNeurons": null,
+      "status": "failed"
+    },
+    "durableResult": {
+      "task": "task8",
+      "sessionRef": "sess_d7a08496a922242488afe4b3c080bc41",
+      "requestId": "31f35194-2ce8-42cd-857d-3d7092faff2c",
+      "attemptId": "b6e6c992-301e-438a-a414-e21f3bf58be6",
+      "payloadHash": "bb4ce9ee677aa29702623f615cb1fa41a84219bc6c4a4caab0d5da409c52de01",
+      "contextHash": "ee58da86a0f832796fa1bf9360f9575189c5d912af495b08146f7b97763d613d",
+      "status": "failed",
+      "reservedNeurons": 111,
+      "actualNeurons": null
+    },
+    "acceptedSceneHashPresent": false,
+    "acceptedS1Exists": false,
+    "rawRejectedSceneRetained": false,
+    "structureDiagnosticRetained": false,
+    "specificInvalidFieldKnown": false,
+    "diagnosticLimit": "The provider diagnostic is not passed through the player API envelope or Task8 settlement. The same public error can also represent API revalidation or envelope size rejection. Do not infer ACTION_PAIR_INVALID from the earlier Task7 sample."
+  },
+  "persistenceAndRefresh": {
+    "beforeRefreshAt": "2026-10-28T05:24:57.265Z",
+    "afterRefreshAt": "2026-10-28T05:25:57.322Z",
+    "archiveId": "de25a787-fb66-4ef6-aea4-e676fa586d79",
+    "runId": "016fe11d-a94d-415e-baae-72fb09b1d695",
+    "stateHash": "5f887f27c88d214577517d005a6025c89f2ccef5b749fef5b708472b632fccf1",
+    "phase": "awaitingOpening",
+    "revision": 0,
+    "turnId": 0,
+    "currentScene": null,
+    "historyEntries": 0,
+    "memoryEntries": 0,
+    "fullArchiveEqualAcrossRefresh": true,
+    "storesCompared": [
+      "runs",
+      "pending",
+      "history",
+      "memory"
+    ],
+    "pendingIdentity": {
+      "runId": "016fe11d-a94d-415e-baae-72fb09b1d695",
+      "turnId": 1,
+      "baseRevision": 0,
+      "stateHash": "5f887f27c88d214577517d005a6025c89f2ccef5b749fef5b708472b632fccf1",
+      "choiceId": null,
+      "rulesVersion": 1,
+      "promptVersion": 1,
+      "requestId": "31f35194-2ce8-42cd-857d-3d7092faff2c"
+    },
+    "attempt": {
+      "id": "b6e6c992-301e-438a-a414-e21f3bf58be6",
+      "sessionRef": "sess_d7a08496a922242488afe4b3c080bc41",
+      "retryOf": null
+    },
+    "stateContextAndPayloadHashesIndependentlyRecomputed": true,
+    "refreshRequestMethod": "GET",
+    "refreshRequestAt": "2026-10-28T05:25:56.797Z",
+    "refreshResponseAt": "2026-10-28T05:25:56.902Z",
+    "refreshHttpStatus": 200,
+    "cachedResponseBodyExactlyEqualsOriginal": true,
+    "cachedResponseSha256": "0d9bfbbdcedb316c0165bb65ab2176429d22570b39d441285cbdaa280a517164",
+    "totalTurnPosts": 1,
+    "totalSessionPosts": 1,
+    "additionalModelCallsOnRefresh": 0,
+    "domHeading": "静候开场",
+    "domStatus": "此刻暂不能续写，进度已保留。\n\n人物数值以已保存的结果为准。可读历史或导出备份。\n\n重试续接检查已有回应",
+    "visualLimit": "The captured screenshot lacks CJK glyphs in this local Chrome environment. DOM text and state recovery were verified; Chinese visual quality was not accepted."
+  },
+  "ledger": {
+    "observedAt": "2026-10-28T05:29:03.747349+00:00",
+    "callCount": 8,
+    "reservedNeurons": 450,
+    "originalSevenUnchanged": true,
+    "tasks": {
+      "task1": 4,
+      "task7": 3,
+      "task8": 1
+    },
+    "newRows": [
+      {
+        "task": "task8",
+        "attemptId": "task8_efc24c54f29f3fe28cce72b88e129f10402219b62fe45d6477bbc492b9d7634d",
+        "reservedNeurons": 111,
+        "actualNeurons": null,
+        "status": "failed"
+      }
+    ],
+    "newCases": {},
+    "baselinePresent": false,
+    "originalResultsUnchanged": true,
+    "originalThreeTask7CasesUnchanged": true,
+    "originalNamespacePreserved": true,
+    "limitsChanged": false,
+    "failedReservationRetained": true,
+    "actualNeurons": null,
+    "measurementKind": "conservative-reservation-not-billed-usage"
+  },
+  "execution": {
+    "opening": "attempted-once-rejected",
+    "baselineRegistration": "not-run-no-accepted-S1",
+    "privateBranchA": "not-run-stop-condition",
+    "privateBranchB": "not-run-stop-condition",
+    "browserChoiceSaveRefresh": "not-run-stop-condition",
+    "failureStateRefresh": "verified-read-only",
+    "task7Complete": false,
+    "task8Complete": false,
+    "productionModelValidated": false,
+    "furtherCallsAfterRejection": 0,
+    "remainingCallSlots": 3,
+    "remainingTaskCallSlots": {
+      "task1": 0,
+      "task7": 2,
+      "task8": 1
+    },
+    "remainingConservativeReservationHeadroom": 350,
+    "budgetLimit": "The remaining slots do not supply the missing accepted S1 or authorize a retry. The approved four-step sequence stopped at its first step."
+  },
+  "accountUsageAfterAttempt": {
+    "observedAt": "2026-10-28T05:29:11.444Z",
+    "start": "2026-10-28T00:00:00Z",
+    "end": "2026-10-28T05:29:11.444Z",
+    "success": true,
+    "status": 200,
+    "result": {
+      "viewer": {
+        "accounts": [
+          {
+            "aiInferenceAdaptiveGroups": [
+              {
+                "count": 8,
+                "sum": {
+                  "totalInputTokens": 4363,
+                  "totalNeurons": 105.87210083007812,
+                  "totalOutputTokens": 2812
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "errors": [],
+    "messages": [],
+    "query": "query { viewer { accounts(filter:{accountTag:\"<verified-bound-account>\"}) { aiInferenceAdaptiveGroups(limit:1,filter:{datetime_geq:\"2026-10-28T00:00:00Z\",datetime_lt:\"2026-10-28T05:29:11.444Z\"}) { count sum { totalNeurons totalInputTokens totalOutputTokens } } } } }",
+    "sameBindingAccountVerified": true,
+    "measurementKind": "account-wide-aggregate-analytics-not-billing",
+    "billingMeasure": false,
+    "completeToNowGuaranteed": false,
+    "actualBilledNeurons": null,
+    "actualRemainingNeurons": null,
+    "individualAttemptBilledNeuronsKnown": false
+  },
+  "finalReadOnlyReadiness": {
+    "health": {
+      "status": "ok",
+      "version": "4.0.0",
+      "sourceCommit": "74aa25884c5468d9eb90abb1bbb82ba92752ba0b",
+      "htmlSha256": "3c3b09de319e2032c3990867780998d67adcb6af62fc9fe0a78cb35fdf46b5b0",
+      "htmlBytes": 970046,
+      "releaseSource": "embedded",
+      "lastAttemptAt": null,
+      "lastSuccessAt": null,
+      "lastError": ""
+    },
+    "capabilitiesWithoutPermit": {
+      "protocolVersion": 1,
+      "available": false,
+      "status": "paused",
+      "errorCode": "TESTER_PERMIT_REQUIRED",
+      "limits": {
+        "maxRequestBytes": 32768,
+        "maxResponseBytes": 65536,
+        "maxContextBytes": 7000,
+        "timeoutMs": 30000
+      }
+    },
+    "capabilitiesWithPermitAfterProofExpired": {
+      "protocolVersion": 1,
+      "available": false,
+      "status": "paused",
+      "errorCode": "FREE_BOUNDARY_UNVERIFIED",
+      "limits": {
+        "maxRequestBytes": 32768,
+        "maxResponseBytes": 65536,
+        "maxContextBytes": 7000,
+        "timeoutMs": 30000
+      }
+    },
+    "observedAt": "2026-10-28T05:30:22.097699+00:00",
+    "inferenceRequests": 0
+  },
+  "independentReview": "Read-only evidence and source review passed; no acceptance-completion claim. Verified original records, request/context/state hashes, exact refresh body/archive equality, no accepted S1 and the diagnostic limitation.",
+  "privateEvidenceDigests": {
+    "manifest.json": "8cf5554272da04265ad493c0c7df422d3b85a2bf56f5881bcffe45ef5053b650",
+    "network/0005.request.json": "a5d5131f04831006faa56b9db2daa9244ae52249ab778b4ac4ad439169e8a35d",
+    "network/0005.response.json": "788e20bfb9767f4f6578ad39af3c8e347193e982597d7c55d4b0a24ddb4a8aad",
+    "network/0006.request.json": "ba93cc483d574312ea313108b31abe5f6ee8a9e4300b4d724b6070b57f3bcd39",
+    "network/0006.response.json": "486cadcc5c1d2dbd25b3cddc47d438add645e0ed65a448ce625839b737a5bce1",
+    "snapshots/005-opening-1.json": "b512ecb40e433eb69fda0574f564bae9cf94fda1c3a8192460b85d90fa2ad268",
+    "snapshots/007-refresh-rejected.json": "2bafb0904607d843f5e22c28605a34ba7b06280bc5431772a6f4067071bd2808",
+    "screenshots/006-opening-rejected.png": "9edae0dd692ecba003c3ecb86fcd69d6d8756090baf24386f9f6718f5893a3d8"
+  },
+  "credentialHandling": "No bearer credentials, tester permit, cookie values or browser profile are included in this public record."
+}

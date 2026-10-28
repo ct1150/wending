@@ -1,12 +1,46 @@
 # Workers AI 实时剧情接入档案
 
-最近核验：2026-10-28 11:42:46（上海时间）。**当前状态：用户已确认 Workers Free；兼容后端、直接 AI binding 和 SQLite 协调存储已实际部署，公开实时推理仍关闭，全部真实验收调用已停止。** 四次基础能力样本和三次失败的完整游戏开场均保留在原账本：共7次、339 Neurons预留，Task8为0次，`actualNeurons:null`。用户已批准11次/800 Neurons及Task1/7/8的4/5/2上限；剩余四次的共享开场新顺序仍待批准。没有升级套餐、购买 credits 或启用付费后备。2026-10-27的接口权限阻塞保留为历史观察，不再用于否定用户随后提供的套餐确认。
+最近核验：2026-10-28 13:30:22.097699（上海时间）。**当前状态：已审74aa私有helper与tester-only stage已部署；获批准四步的首个Task8浏览器开场被严格校验拒绝，按失败即停规则结束本轮推理。** 原账本现为8次、450 Neurons预留，Task1/7/8为4/3/1次，全部 `actualNeurons:null`；原7行与三笔Task7 cases逐值保留。用户确认的Workers Free、11次/800 Neurons及4/5/2上限不变。出生/pending保存与刷新读取同一拒绝结果已实际验证，但没有S1，baseline、两条Task7分支及真实choice均未执行，Task7/Task8完整门槛仍未完成。保留当前V5兼容stage，公开推理关闭、模型未验证、生产白名单为空；proof自然过期后未追加模型调用。没有升级套餐、购买credits或启用付费后备。
 
 ## 2026-10-28 继续执行的证据
 
-当前记录见 [`evidence/workers-ai-rollout-2026-10-28.json`](evidence/workers-ai-rollout-2026-10-28.json)。账户所有者明确回复“是free套餐”，按所有者确认记录 Workers Free，不声称订阅 API 已恢复权限。实际后端部署 `8dd97750-8fd4-40c9-a6c9-c3c61f72a6a2`、版本 `b4fb827d-aa78-4062-9510-299f11f11064` 已接收 100% 流量；回读确认直接 AI binding 与 `use_sqlite:true` 的 StoryBudget namespace。在线能力与会话接口返回 `INFERENCE_DISABLED`；旧版前端仍正常提供。
+### 最新实际结果：74aa部署成功，首步拒绝与恢复已验证
 
-### 最新检查点：v3开场拒绝与离线准备
+13:22:29.490取得新的整账户、当日GraphQL观察：7次、3285输入/2366输出tokens、87.29505348205566聚合Neurons；由该次真实观察构造的受控proof保留原时间，有效期至13:27:29.490。执行器在下载/重建包之后取得观察，未刷新旧模板时间。13:22:32.522完成两份74aa包上传与读回，当时proof年龄3032毫秒；18模块helper及17模块stage全部哈希匹配，本地正常fresh builders也复现全部35个模块哈希。
+
+| 已部署74aa产物 | 实际身份 |
+| --- | --- |
+| 源码 | `74aa25884c5468d9eb90abb1bbb82ba92752ba0b` |
+| Helper deployment / version | `a3cccc55-406e-4785-8a75-90d1f457f080` / `40e56059-5c3f-4d77-9df9-ac5f01e63dcf` |
+| Stage deployment / version | `73aedb80-4191-42a7-8ab5-263821acb05d` / `c44a3a9d-b9d6-4d78-95cb-0eae37d8610b` |
+| 当前页面 | 74aa内嵌HTML；970046字节；SHA-256 `3c3b09de319e2032c3990867780998d67adcb6af62fc9fe0a78cb35fdf46b5b0`；embedded |
+| 持久状态 | 原StoryBudget与实验namespace、固定对象和 `experiment-v1` 全部保留，无迁移或重置 |
+
+13:24:56.749，真实浏览器只执行一次Task8 opening，返回 `GENERATED_SCENE_INVALID`。新记录以failed结算，永久保留111 Neurons，累计8次/450、Task1/7/8为4/3/1。provider的细分诊断没有进入公开响应，Task8桥也未保存该诊断；目前不能定位具体非法字段，更不能把旧Task7的 `ACTION_PAIR_INVALID` 归给这次失败。没有accepted场景或S1，因此没有注册baseline、执行分支A/B或进行真实choice；本轮没有自动重试或第二次Task8调用。
+
+出生与opening pending已持久化；刷新只GET同一缓存拒绝结果，未再调用模型。13:29:03.747349只读核对账本仍8/450，原7行和三笔cases保持不变；刷新前后 `runs/pending/history/memory` 四个IndexedDB stores逐值相等。本次实际通过的是单次请求、拒绝留档与刷新恢复这一局部失败路径，不代表ready场景提交、S1、真实选择闭环或Task7质量通过。详见 [浏览器与恢复证据](evidence/shared-opening-browser-2026-10-28.json)。
+
+13:29:11.444后续整账户当日GraphQL观察为8次、4363输入/2812输出tokens、105.87210083007812聚合Neurons。两次GraphQL值均是可能延迟的账户分析观察，不是账单金额或精确余额，不能用聚合差值给单次attempt填写actualNeurons；全部450实验预留继续保留。后续查询没有更新部署证明，proof仍于13:27:29.490自然过期。13:30:22.097699最终只读health确认74aa/embedded/970046；无permit实际返回 `TESTER_PERMIT_REQUIRED`，有permit因proof过期实际返回 `FREE_BOUNDARY_UNVERIFIED`。测试浏览器已关闭，没有延长TTL或追加模型调用。当前保留兼容V5的74aa stage以读取已保存birth/pending，不退回缺少该读取能力的旧HTML；`publicEnabled:false / modelValidated:false` 与空生产白名单保持不变。
+
+源码对应 [CI40636654680](https://github.com/ct1150/wending/actions/runs/40636654680) 通过655/655项测试、134项JavaScript语法和14模块默认后端打包。CI merge `bbce147f11b00de7003340943d2e38f54f5cf3ad` 与74aa源码同树 `e19215b7fec41cfa799aa9db0d60ec175a44dd55`；已部署受控包的18/17模块另行核对，不把代码CI或部署成功记为模型验收通过。
+
+### 2026-10-28 13:17:18历史检查点：受保护首轮部署与上传前暂停
+
+用户已明确批准[共享开场四步](superpowers/plans/2026-10-28-shared-opening-acceptance.md)：Task8真实浏览器开场→同S1的Task7分支A→分支B→Task8真实选择、保存和刷新；不需要再次请求此顺序的授权。Task8每次固定预留111，Task7按实际输入估算、每次上界111；按四次各最多111保守估算，累计至多11次/783 Neurons。任何拒绝、未知、保存失败或不可用S1均暂停，没有额外重试名额。
+
+初次部署采用 `deba31b55bfe3f486cab3365bec6abeb1d18bf0c`：私有helper18模块、stage17模块均已逐模块读回SHA-256核对。原StoryBudget namespace `1de1df3929534a8d8d495d6db6604e99`、原实验namespace `dfb218f2f29d4ecab2395f8a00b48350`、固定对象及账本保持不变。当时首页由stage提供deba内嵌HTML，970046字节、SHA-256 `3c3b09de319e2032c3990867780998d67adcb6af62fc9fe0a78cb35fdf46b5b0`、`releaseSource:embedded`。该检查点浏览器只用正常TLS打开主页，尚未触发API、AI或建立档案；之后的真实首步另记于上节。
+
+生产只读诊断直接观察到模块顶层 `Date.now()=0`，同一原proof在模块初始化时被 `restoreFreeBoundaryEvidence` 拒绝，而在请求上下文可完成重建。原stage factory把初始化错误永久缓存，导致无permit请求也返回 `STORY_STAGE_CONFIGURATION_INVALID`。修复 `74aa25884c5468d9eb90abb1bbb82ba92752ba0b` 将policy验证移至请求内readiness，保留账户、permit、5分钟/UTC日期及全部预算门禁；没有刷新旧proof。原生打包入口与明确标注的生产启动时钟模拟回归均通过，不能将本地workerd的非零顶层时钟描述为生产复现。
+
+该修复的CI在13:17检查点已通过，但当时尚未替换Cloudflare上的deba版本，stage配置错误阻止了推理。13:22后74aa实际部署成功；生产白名单仍为空、模型仍未验证，不能将当时的上传前状态继续当作当前状态。
+
+13:17:18只读账本当时为7次/339，未新增预留或推理。为避免大包传输消耗proof的五分钟窗口，准备了明确不可部署的过期模板；执行器须先下载/重建已审包，再进行新的整账户当日GraphQL观察，仅替换proof、重核全部模块哈希并检查时效。当时刷新命中五分钟限流，停在PUT前，并约定13:22:18后重查；随后已取得上节13:22:29.490的新观察。模板保留原12:41:02.653观察，没有改旧时间充当新证明。
+
+### 2026-10-28早期兼容部署历史
+
+逐次记录见 [`evidence/workers-ai-rollout-2026-10-28.json`](evidence/workers-ai-rollout-2026-10-28.json)。账户所有者明确回复“是free套餐”，按所有者确认记录Workers Free，不声称订阅API已恢复权限。早期后端部署 `8dd97750-8fd4-40c9-a6c9-c3c61f72a6a2`、版本 `b4fb827d-aa78-4062-9510-299f11f11064` 当时接收100%流量；回读确认直接AI binding与 `use_sqlite:true` 的StoryBudget namespace。当时能力与会话接口返回 `INFERENCE_DISABLED`，旧版前端正常提供；该记录不是当前74aa stage的部署身份。
+
+### 2026-10-28 11:42:46历史检查点：v3开场拒绝与离线准备
 
 私有helper已部署源码 `bc7427097f606348351944cb4085942b0fa45905` 的16个模块：version `ce2eb3a2-04fd-48e2-84f5-ff817057a545`、deployment `7556b818-9270-4f0b-a9c7-f5f3bb8440cc`。继续使用原namespace `dfb218f2f29d4ecab2395f8a00b48350`、固定对象 `wending-realtime-acceptance-v1` 和 `experiment-v1`；没有迁移、重置或换账本。对应 [CI40626224045](https://github.com/ct1150/wending/actions/runs/40626224045) 通过618/618项、130项语法和14模块默认后端打包，publish跳过；默认产物与16模块私有helper分别核对身份。
 
@@ -14,9 +48,9 @@
 
 后续仅离线准备并独立复核：生成schema通过oneOf表达19种合法行动配对，并验证133种非法配对不能通过；运行时校验器保持原约束。Task8服务器在严格校验ready场景后计算 `acceptedSceneHash = SHA256(canonicalStringify(scene))`，complete结算持久化该摘要并验证桥返回的确认，failed/unknown不接受摘要；首次终态及摘要不可更改。私有baseline核对该记录与contextHash，再从上下文和场景重算S1并比对浏览器保存状态，两条固定Task7分支各自从同一S1推进。摘要证明服务器接受过场景，实际浏览器提交仍须现场观察。
 
-上述新增代码尚未部署或真实调用。本地全量646/646项通过，失败/取消/跳过/todo均0，用时80.4605秒；133项JavaScript语法通过，HTML970046字节，覆盖原生Chromium、workerd/SQLite和1000回合fixture。新增源码 `b780a84` 的 [CI40628818519](https://github.com/ct1150/wending/actions/runs/40628818519) 已通过646/646、133项语法与14模块默认打包，publish跳过，不能用 `bc742709` 的618项CI代替本次代码验证。
+在该历史检查点，上述新增代码尚未部署或真实调用；此后deba首次部署，74aa修复版又完成一次被拒绝的Task8开场，最新结果单列于上节。本地全量646/646项通过，失败/取消/跳过/todo均0，用时80.4605秒；133项JavaScript语法通过，HTML970046字节，覆盖原生Chromium、workerd/SQLite和1000回合fixture。新增源码 `b780a84` 的 [CI40628818519](https://github.com/ct1150/wending/actions/runs/40628818519) 已通过646/646、133项语法与14模块默认打包，publish跳过，不能用 `bc742709` 的618项CI代替本次代码验证。
 
-[待批准的新顺序](superpowers/plans/2026-10-28-shared-opening-acceptance.md) 为Task8浏览器开场→同S1的Task7分支A→分支B→Task8真实选择、保存和刷新。Task8每次固定预留111，Task7按实际输入估算、每次上界111；按四次各最多111作保守估算，总计最多11次/783 Neurons，不增加上限。开场只计Task8一次；这能验证的范围是一幕真实开场、同基准两条单步反事实和一次真实玩家选择闭环，不能声明更深连续叙事已通过。批准前无新推理；任何拒绝、未知或保存失败均暂停，保留预留且不自动重试。Task7/Task8和公开发布门槛仍未完成。
+该历史检查点形成的[共享开场新顺序](superpowers/plans/2026-10-28-shared-opening-acceptance.md) 当时待批准，此后用户已明确确认，当前执行边界见上节。开场只计Task8一次；这能验证的范围是一幕真实开场、同基准两条单步反事实和一次真实玩家选择闭环，不能声明更深连续叙事已通过。任何拒绝、未知或保存失败均暂停，保留预留且不自动重试。Task7/Task8和公开发布门槛仍未完成。
 
 ### 2026-10-28早期接入历史记录（上海时间）
 
@@ -115,7 +149,7 @@
 
 `estimateMaxNeurons` 统计传给 AI 的完整请求 JSON 字节（包含 schema、系统指令、消息和参数），不只统计中文正文，也不假定一个汉字等于一个 token。每 UTF-8 字节预留一个输入 token，再加 1,024 固定和每条消息 64 tokens 的 chat framing 余量；不使用缓存折扣。输出预留完整 `max_tokens`，并向上取整 Neurons。上下文必须容纳输入上界和输出。
 
-这是保守的本地估算，**仍需真实 probe 确认模型的 `max_tokens` 覆盖思考与可见输出，以及框架开销没有超过上界**，不能把这个估算视为套餐硬限制。若观察到实际超过预留，账本阻止后续实验。12 KiB输入、1536输出、单消息时预留109 Neurons；因此全部采用这一上界的样本最多只能做7次，不能为了凑足11次越过800。当前拟议方案按339加四次各最多111得到783的保守上界，依赖原七笔较小预留，不能将已用预留统一重算或降低。
+这是保守的本地估算，**仍需真实 probe 确认模型的 `max_tokens` 覆盖思考与可见输出，以及框架开销没有超过上界**，不能把这个估算视为套餐硬限制。若观察到实际超过预留，账本阻止后续实验。12 KiB输入、1536输出、单消息时预留109 Neurons；因此全部采用这一上界的样本最多只能做7次，不能为了凑足11次越过800。获批四步原按339加四次各最多111得到783的保守上界，依赖原七笔较小预留；首步失败后实际保留450并停止，不能将余量当作自动重试许可，也不能重算或降低已用预留。
 
 实验账本不按日期清零，不在结算后退还预留。超时或异常的实际消耗为 `null`，预留不变。`usage.prompt_tokens` 等 token 计数不等于实际记账 Neurons；probe 仅保存计数，`actualNeurons` 保持 `null`，由可信账户账单核对后再结算。生产侧已实现独立SQLite Durable Object：同一namespace固定 `story-budget-v1-global`，短事务登记预留、结果重放与请求关联；账本独立于结果缓存，未明确结算的预留跨UTC日继续保守占用。迟到结算归原日，清缓存/会话到期不释放未知调用预留。完整请求上限的生产预留为111 Neurons；SQLite中的charge表示保守额度记账，不是货币收费，也不是已知实测Neurons。实际用量未测时保持null；已完成但无实际Neuron证据的调用保留完整预留于原日，超时/真正未知结果才持续跨日占用。包含 `NEXT_CONTEXT_TOO_LARGE` 的确定拒绝通过HTTP保留类型并结算complete，不退还预留、不伪造actual用量。本纯函数实验账本不替代DO；本地workerd/SQLite已验证，实际账号namespace与关闭推理的兼容部署也已回读确认，具体身份见本页最新章节；启用后的生产闭环仍待验收。
 
@@ -125,7 +159,7 @@
 
 供应商结果新增明确的可信 `accountingStatus` 完成/未知分类，HTTP只向客户端呈现允许的安全错误码。记账不再依据公开错误码是否落在另一份字符串列表中：机械事实、死亡/身份、危险文本、重复场景、引用、编译等确定完成的校验拒绝都保留原UTC日完整预留且actualNeurons=null，不退还预留，也不作为永久unknown；真正超时/传输未知继续保守跨日占用。该分类为服务器内部信息，浏览器无权声明。
 
-同一认证会话的所有requestId共享一个SQLite事务保护的30秒有效调用租约。重复attempt重放不增加调用；不同会话在全局预算内独立申请；完成或超时转换可以释放租约，但超时转unknown的旧预留不能释放。租约限制不宣称超时后的外部推理已经停止，也不提供外部exactly-once保证。本地并发HTTP、重启及多类真实provider校验路径的fixture专项通过；最终源码独立复核已通过，最终539项完整代码CI通过，生产仍关闭。
+同一认证会话的所有requestId共享一个SQLite事务保护的30秒有效调用租约。重复attempt重放不增加调用；不同会话在全局预算内独立申请；完成或超时转换可以释放租约，但超时转unknown的旧预留不能释放。租约限制不宣称超时后的外部推理已经停止，也不提供外部exactly-once保证。本地并发HTTP、重启及多类真实provider校验路径的fixture专项通过；该2026-10-27代码检查点独立复核及539项完整CI通过，后续修订的CI身份另见本页最新检查点，公开生产推理仍关闭。
 
 
 未获准调用使用独立、有界的SQLite `denied_admissions` 证据表，不创建已预留attempt或调用provider。证明绑定已认证session/attempt/request及payload/context hash；只有存在正向证明且没有调用预留承诺时才返回 `ATTEMPT_NOT_ADMITTED`，普通缺缓存、已预留调用墓碑和不存在的祖先不能冒充未调用。浏览器核对三种身份和暂停状态后，仅在用户明确重试时复用同一已持久attempt及原retryOf；刷新只查询，成功预留原子删除证明。每会话证明上限沿用尝试上限、最多120条，保留到会话到期；满额时新证明失败关闭为 `ADMISSION_RECORD_LIMIT`，可暂停至正常会话过期，不自动清身份或已预留调用记录。实际client/session/HTTP/SQLite补充专项60项及最后8项定向检查通过，独立源码复核已通过，最终代码CI通过。
