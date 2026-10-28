@@ -2,7 +2,7 @@ import {createStoryApi} from './story-api.js';
 import {assertProviderReady,restoreFreeBoundaryEvidence} from './story-config.js';
 export {StoryBudget} from './story-budget.js';
 export const STORY_COORDINATOR_NAME='story-budget-v1-global';
-function coordinator(env){
+export function storyBudgetCoordinator(env){
   // This fixed name is global to the deployment's account/game, never session/IP.
   const binding=env?.STORY_BUDGET;
   if(!binding?.idFromName||!binding?.get)return {};
@@ -17,7 +17,7 @@ export function createStoryWorker({staticFetch=()=>new Response('Not found',{sta
   return {async fetch(request,env={},ctx){
     const path=new URL(request.url).pathname;
     if(path!=='/api/story'&&!path.startsWith('/api/story/'))return staticFetch(request,env,ctx);
-    const api=createStoryApi({budget:coordinator(env),config:{readiness:runtime=>assertProviderReady({enabled:config.enabled===true,modelId:config.modelId,env:runtime,evidence:config.enabled===true?restoreFreeBoundaryEvidence(config.freeBoundaryProof,{bindingAccountId:config.bindingAccountId,currentPlan:config.currentPlan}):undefined,purpose:'production'})}});
+    const api=createStoryApi({budget:storyBudgetCoordinator(env),config:{readiness:runtime=>assertProviderReady({enabled:config.enabled===true,modelId:config.modelId,env:runtime,evidence:config.enabled===true?restoreFreeBoundaryEvidence(config.freeBoundaryProof,{bindingAccountId:config.bindingAccountId,currentPlan:config.currentPlan}):undefined,purpose:'production'})}});
     return api.fetch(request,env,ctx);
   }};
 }

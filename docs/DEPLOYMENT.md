@@ -62,6 +62,16 @@ SOURCE_COMMIT=完整40位已审提交 npm run build:gateway
 
 Task1四次小schema样本已经完成，原定Task1次数已用尽，保留96 Neurons预留；简单JSON和两次无非空白思考样本不代表完整游戏schema或严格生产parser通过。思考字段、输出限制、中文连续性和实际账单用量须分别记录。最新观察与辅助部署身份以 [接入记录](evidence/workers-ai-rollout-2026-10-28.json) 为准，鉴权凭据不得进入仓库、浏览器或日志。
 
+### Task8受保护验收包（已实现，未部署或真实验收）
+
+普通构建与公开策略仍关闭生成。只有可信服务器构建调用显式传入 `buildGateway({root,sourceCommit,acceptance})`，才选择独立的 `createStoryStageWorker`；没有新增浏览器开关、CLI开关或环境变量快捷启用。该包的入口身份与清单同时声明 `enabled:true / publicEnabled:false / accessMode:tester-only / modelValidated:false`，不修改生产模型白名单。
+
+`acceptance` 必须含 `enabled:true`、`mode:tester-only`、固定候选modelId、独立tester permit的SHA-256、bindingAccountId、当前同账号Free确认与保留原checkedAt的freeBoundaryProof。测试请求通过 `x-wending-story-tester` 传递单独的32字节十六进制permit；普通客户端不存储或内置它。operator凭据只从服务器secret binding `STORY_OPERATOR_TOKEN` 读取，禁止与tester permit相同，也不转发tester permit给私有账本。
+
+该包复用原StoryBudget namespace、原 `STORY_EXPERIMENT` namespace `dfb218f2f29d4ecab2395f8a00b48350` 和固定对象 `wending-realtime-acceptance-v1`，清单不重新创建迁移。私有helper必须先具备受operator鉴权保护的 `/task8/admit` 与 `/task8/settle`；旧helper或桥不可用会暂停，不调用模型。
+
+每次新请求按“玩家账本预留→原experiment-v1永久预留111→单次模型调用→实验结算→玩家结算”执行。准入绑定session/request/attempt及载荷、上下文摘要，固定Task8最多2次；重复准入不再授予调用，缺失原账本直接拒绝，失败/未知或丢失响应不退还配额。停用后仍允许已认证玩家读取和重放旧结果。受控包的存在不表示Task7质量通过，也不授权改变实验上限；真实部署、同源浏览器cookie/存档/刷新闭环仍须另行记录。
+
 ### 本地验证与回滚
 
 固定开发依赖Miniflare `4.20260730.0`（Node>=22）和workerd `2026-07-30`；`node tests/backend-runtime.test.js`在真正本地workerd启动全部打包模块，使用 `useSQLite:true` 及临时持久化目录，重启后检查幂等重放和未知用量保守占用。测试拦截全部Worker出站请求：静态渠道返回302时保留内嵌HTML且不跟随重定向；不存在真实AI绑定、账户或远端调用。`65c3d0f`源码的该次本地构建包含13模块，具体清单与HTML摘要保留原身份；后续实际Cloudflare部署使用`3e3912c`来源，部署ID另见本页现场表，不能混用两个清单摘要。原单模块网关fixture仍通过。详细范围见 [QA](QA_REPORT.md)。

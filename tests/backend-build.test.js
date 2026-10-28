@@ -120,3 +120,35 @@ test('dependency parser rejects dynamic imports in any expression and ignores li
   const worker=await import(pathToFileURL(path.join(root,'release/backend/entry.mjs')).href);
   assert.equal(typeof worker.default.fetch,'function');
 });
+
+function testerPolicy(){
+  const accountId='fixture-account';
+  return {enabled:true,mode:'tester-only',modelId:'@cf/qwen/qwen3-30b-a3b-fp8',testerPermitSha256:hash('aa'.repeat(32)),bindingAccountId:accountId,currentPlan:{accountId,source:'operator-account-verification',plan:'workers-free'},freeBoundaryProof:{accountId,source:'operator-account-verification',plan:'workers-free',hardLimit:true,noGatewayCredits:true,directBinding:true,accountUsageVerified:true,storageFreeVerified:true,remainingNeurons:10000,checkedAt:new Date().toISOString()}};
+}
+
+test('explicit tester-only package preserves disabled public policy and declares existing shared namespaces',async t=>{
+  const root=await fixture(t),acceptance=testerPolicy();
+  await buildGateway({root,sourceCommit:'1'.repeat(40),acceptance});
+  const manifest=JSON.parse(await readFile(path.join(root,'release/backend/deployment.json'),'utf8'));
+  assert.equal(manifest.accessMode,'tester-only');assert.equal(manifest.enabled,true);assert.equal(manifest.publicEnabled,false);assert.equal(manifest.modelValidated,false);
+  const worker=await import(pathToFileURL(path.join(root,'release/backend/entry.mjs')).href);
+  assert.equal(worker.backendIdentity.accessMode,'tester-only');assert.equal(worker.backendIdentity.enabled,true);assert.equal(worker.backendIdentity.publicEnabled,false);assert.equal(worker.backendIdentity.modelValidated,false);
+  const response=await worker.default.fetch(new Request('https://game.test/api/story/capabilities'));
+  assert.equal((await response.json()).errorCode,'TESTER_PERMIT_REQUIRED');
+  assert.equal(manifest.bindings.find(row=>row.name==='STORY_BUDGET').namespace_id,'1de1df3929534a8d8d495d6db6604e99');
+  assert.equal(manifest.bindings.find(row=>row.name==='STORY_EXPERIMENT').namespace_id,'dfb218f2f29d4ecab2395f8a00b48350');
+  assert.equal(manifest.experimentCoordinatorName,'wending-realtime-acceptance-v1');assert.deepEqual(manifest.migrations,[]);assert.deepEqual(manifest.requiredSecrets,['STORY_OPERATOR_TOKEN']);
+  assert.ok(manifest.modules.some(row=>row.name==='src/worker/story-stage.js'));assert.equal(manifest.modules.some(row=>row.name.startsWith('src/worker/operator-')),false);
+  assert.equal(JSON.parse(await readFile(path.join(root,'config/story-deployment.json'),'utf8')).enabled,false);
+  assert.equal((await readFile(path.join(root,'release/gateway.mjs'),'utf8')).includes(acceptance.testerPermitSha256),false);
+  for(const module of manifest.modules)assert.equal(hash(await readFile(path.join(root,'release/backend',module.name))),module.sha256);
+});
+
+test('tester package rejects unsupported modes, unbounded credentials, mismatched accounts and public policy activation',async t=>{
+  const root=await fixture(t),sourceCommit='2'.repeat(40),baseline=testerPolicy();
+  for(const change of [{enabled:false},{mode:'public'},{modelId:'another/model'},{testerPermitSha256:'bad'},{operatorToken:'must-not-be-packaged'},{bindingAccountId:'other-account'}]){
+    await assert.rejects(buildGateway({root,sourceCommit,acceptance:{...baseline,...change}}),/STORY_STAGE_CONFIGURATION_INVALID/);
+  }
+  const file=path.join(root,'config/story-deployment.json'),policy=JSON.parse(await readFile(file,'utf8'));await writeFile(file,JSON.stringify({...policy,enabled:true}));
+  await assert.rejects(buildGateway({root,sourceCommit,acceptance:baseline}),/deployment policy/i);
+});

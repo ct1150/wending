@@ -4,7 +4,7 @@ import assert from 'node:assert/strict';
 import { generateScene } from '../src/worker/story-provider.js';
 import { CANDIDATE_PROFILE, PRODUCTION_PROFILES, STORY_LIMITS } from '../src/worker/story-config.js';
 import { buildStoryContext, validateGeneratedScene } from '../src/game/cultivation/live/memory.js';
-import { createLiveGame, prepareOpening } from '../src/game/cultivation/live/engine.js';
+import { createLiveGame, prepareOpening, prepareChoice, commitTurn } from '../src/game/cultivation/live/engine.js';
 import { SCENE_SCHEMA, idField } from '../src/game/cultivation/live/schema.js';
 import * as acceptance from '../src/worker/story-acceptance.js';
 import * as providerCore from '../src/worker/story-provider-core.js';
@@ -49,7 +49,11 @@ test('the fixed acceptance seam executes the unpromoted candidate while producti
   assert.equal(calls.length,1);assert.deepEqual(calls[0],{model:CANDIDATE_PROFILE.modelId,input:expected});
   assert.equal(expected.max_tokens,1536);assert.equal(expected.stream,false);
   assert.equal(expected.messages.length,2);assert.equal(expected.messages[1].content,JSON.stringify(c));
-  assert.deepEqual(expected.response_format,{type:'json_schema',json_schema:SCENE_SCHEMA});
+  assert.equal(expected.response_format.type,'json_schema');
+  const unscoped=structuredClone(expected.response_format.json_schema);
+  unscoped.properties.id=SCENE_SCHEMA.properties.id;
+  unscoped.properties.choices.items.properties.id=SCENE_SCHEMA.properties.choices.items.properties.id;
+  assert.deepEqual(unscoped,SCENE_SCHEMA);
   assert.equal(CANDIDATE_PROFILE.validated,false);assert.equal(CANDIDATE_PROFILE.supportsStructuredOutput,null);
   assert.deepEqual(PRODUCTION_PROFILES,[]);
 });
@@ -196,9 +200,9 @@ test('candidate transport keeps no-retry quota, busy and timeout accounting sema
   assert.equal(missing.errorCode,'AI_BINDING_MISSING');assert.equal(missing.inferencePerformed,false);
 });
 
-test('submitted identifier schemas enforce runtime ASCII IDs without consuming the maximum context allowance',()=>{
+test('submitted identifier schemas enforce runtime ASCII references without consuming the maximum context allowance',()=>{
   const input=acceptance.buildCandidateStoryInput(context()),schema=input.response_format.json_schema;
-  const identifiers=[schema.properties.id,schema.properties.blocks.items.properties.speaker,schema.properties.entities.items.properties.id,schema.properties.choices.items.properties.id,schema.properties.choices.items.properties.targetId,schema.properties.memoryDeltas.items.properties.entityId,schema.properties.memoryDeltas.items.properties.referenceId];
+  const identifiers=[schema.properties.blocks.items.properties.speaker,schema.properties.entities.items.properties.id,schema.properties.choices.items.properties.targetId,schema.properties.memoryDeltas.items.properties.entityId,schema.properties.memoryDeltas.items.properties.referenceId];
   for(const field of identifiers) {
     assert.equal(typeof field.pattern,'string','the submitted ID/reference contract includes its runtime pattern');
     const accepts=value=>new RegExp(field.pattern).test(value);
@@ -210,6 +214,54 @@ test('submitted identifier schemas enforce runtime ASCII IDs without consuming t
   assert.ok(overhead<=5288,`fixed overhead ${overhead} must leave all 7000 encoded context bytes`);
   const maximum={...input,messages:[input.messages[0],{role:'user',content:'x'.repeat(6998)}]};
   assert.equal(size(maximum.messages[1].content),7000);assert.ok(size(maximum)<=12288);
+});
+
+test('each submitted schema restricts scene and choice IDs to the actual run and turn without mutating references',()=>{
+  const originalSchema=structuredClone(SCENE_SCHEMA),contexts=[context()];
+  const born=createLiveGame({runId:'different-acceptance-run',seed:42});
+  const pending=prepareOpening(born,{requestId:'other-opening'}),opening=buildStoryContext(born,pending);
+  contexts.push(opening);
+  const active=commitTurn(born,pending,scene(opening));
+  const continuation=buildStoryContext(active,prepareChoice(active,{requestId:'other-turn',choiceId:active.currentScene.choices[0].id}));
+  contexts.push(continuation);
+  const distant=structuredClone(continuation);
+  distant.identity.turnId=9007199254740991;distant.identity.baseRevision=9007199254740990;
+  contexts.push(distant);
+  for(const c of contexts) {
+    const input=acceptance.buildCandidateStoryInput(c),schema=input.response_format.json_schema;
+    const prefix=c.namespace+':t'+c.identity.turnId+':';
+    assert.deepEqual(schema.properties.id.enum,[prefix+'s:scene'],'the model receives one valid scene ID for this exact request');
+    idField(schema.properties.id.enum[0]);
+    const field=schema.properties.choices.items.properties.id,pattern=new RegExp(field.pattern);
+    const accepts=value=>typeof value==='string'&&value.length<=field.maxLength&&pattern.test(value);
+    for(const value of [prefix+'c:rest',prefix+'c:talk_2'])assert.equal(accepts(value),true);
+    for(const value of ['namespace:t1:c:rest',c.namespace+':t0:c:rest','r:0000000000000000:t'+c.identity.turnId+':c:rest',prefix+'s:rest',prefix+'c:山门',prefix+'c:',prefix+'c:'+'x'.repeat(80)])assert.equal(accepts(value),false,value);
+    assert.ok(input.messages[0].content.includes(prefix+'s:scene'));
+    assert.ok(input.messages[0].content.includes(prefix+'c:'));
+    assert.ok(input.messages[0].content.includes(prefix+'e:'));
+    assert.doesNotMatch(input.messages[0].content,/namespace:t本回合/);
+    const target=schema.properties.choices.items.properties.targetId;
+    assert.equal(new RegExp(target.pattern).test('self'),true,'action targets must not inherit the current scene scope');
+    assert.equal(new RegExp(schema.properties.entities.items.properties.id.pattern).test('old-entity'),true,'existing entities retain their IDs');
+    const maximum={...input,messages:[input.messages[0],{role:'user',content:'x'.repeat(6998)}]};
+    const bytes=new TextEncoder().encode(JSON.stringify(maximum)).length;
+    assert.ok(bytes<=12288,`scope for turn ${c.identity.turnId} must leave all 7000 encoded context bytes, got ${bytes}`);
+  }
+  assert.deepEqual(SCENE_SCHEMA,originalSchema,'per-request constraints must never leak into the shared schema');
+});
+
+test('wrong-scope model output remains rejected without repairing scene or choice IDs',async()=>{
+  const c=context();
+  for(const mutate of [s=>s.id='namespace:t1:s:scene',s=>s.choices[0].id='namespace:t1:c:rest']) {
+    const invalid=scene(c);mutate(invalid);
+    assert.throws(()=>validateGeneratedScene(invalid,c),{code:'SCENE_ID_SCOPE_INVALID'});
+    const raw=response(invalid),before=JSON.stringify(raw),ai={run:async()=>raw};
+    const result=await acceptance.generateAcceptanceScene(ai,c);
+    assert.equal(result.errorCode,'SCENE_ID_SCOPE_INVALID');assert.equal(result.status,'rejected');
+    assert.equal(result.inferencePerformed,true);assert.equal(result.accountingStatus,'complete');
+    assert.equal(Object.hasOwn(result,'scene'),false);assert.equal(JSON.stringify(raw),before);
+    assert.deepEqual(result,await generateScene(ai,promotedFixtureProfile,c));
+  }
 });
 
 test('submitted prompt supplies conditional fields and the complete authoritative action target/approach contract',()=>{

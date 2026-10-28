@@ -11,6 +11,7 @@ export const STORY_API_LIMITS=Object.freeze({maxRequestBytes:32768,maxResponseBy
 export const TURN_RESERVATION_NEURONS=Math.ceil(((STORY_LIMITS.maxInputBytes+1024+64*STORY_LIMITS.maxMessages)*CANDIDATE_PROFILE.neuronRates.inputPerMillion+STORY_LIMITS.maxOutputTokens*CANDIDATE_PROFILE.neuronRates.outputPerMillion)/1000000);
 const encoder=new TextEncoder();
 const allowedCodes=new Set([...PROVIDER_ERROR_CODES,'INFERENCE_DISABLED','MODEL_NOT_ALLOWED','MODEL_UNVALIDATED','AI_BINDING_MISSING','FREE_BOUNDARY_UNVERIFIED','ACCOUNT_QUOTA_UNAVAILABLE','INPUT_TOO_LARGE','CONTEXT_TOO_LARGE','OUTPUT_TOO_LARGE','PROVIDER_PROFILE_INVALID','PROVIDER_OPTIONS_INVALID','PROVIDER_TIMEOUT','PROVIDER_RESPONSE_INVALID','PROVIDER_RESPONSE_TOO_LARGE','MODEL_RESPONSE_MISMATCH','OUTPUT_TRUNCATED','STOP_REASON_INVALID','PROVIDER_USAGE_INVALID','FREE_QUOTA_EXHAUSTED','PROVIDER_BUSY','PROVIDER_FAILED','GENERATED_SCENE_INVALID','NEXT_CONTEXT_TOO_LARGE','BUDGET_UNAVAILABLE']);
+for(const code of ['TESTER_PERMIT_REQUIRED','STORY_STAGE_CONFIGURATION_INVALID','EXPERIMENT_BUDGET_UNAVAILABLE','EXPERIMENT_BUDGET_EXHAUSTED','EXPERIMENT_LEDGER_INVALID','EXPERIMENT_ATTEMPT_INVALID','EXPERIMENT_ATTEMPT_ALREADY_ADMITTED','TASK8_ADMISSION_CONFLICT','TASK8_ADMISSION_MISSING','TASK8_SETTLEMENT_CONFLICT','ACCEPTANCE_STORAGE_LIMIT','LEDGER_PERSIST_FAILED'])allowedCodes.add(code);
 const codeOf=(error,fallback='SERVICE_UNAVAILABLE')=>allowedCodes.has(error?.code)?error.code:fallback;
 const fail=(code,httpStatus=400)=>{throw Object.assign(new Error(code),{code,httpStatus});};
 const randomHex=length=>Array.from(crypto.getRandomValues(new Uint8Array(length)),n=>n.toString(16).padStart(2,'0')).join('');
@@ -28,9 +29,10 @@ async function readJson(request){
 }
 function validateTurn(body){try {exactKeys(body,['context','attempt']);validateStoryContext(body.context);exactKeys(body.attempt,['id','sessionRef','retryOf']);idField(body.attempt.id);idField(body.attempt.sessionRef);if(body.attempt.retryOf!==null){exactKeys(body.attempt.retryOf,['attemptId','sessionRef']);idField(body.attempt.retryOf.attemptId);idField(body.attempt.retryOf.sessionRef);}}catch{fail('REQUEST_INVALID');}}
 
-// Dependencies here are trusted server composition seams. Only index.js is the
-// deployed entry and it installs the non-overridable production readiness gate.
-export function createStoryApi({provider=generateScene,budget,config={}}={}){
+// These dependencies are trusted server composition seams. index.js and the
+// explicit tester-only entry fix their provider/readiness policies; browser
+// input cannot select or override them.
+export function createStoryApi({provider=generateScene,budget,config={},experiment}={}){
   const readiness=config.readiness??(env=>assertProviderReady({enabled:config.enabled===true,env,evidence:config.evidence,now:(config.now??Date.now)()}));
   async function callBudget(method,input){if(typeof budget?.[method]!=='function')throw Object.assign(new Error('BUDGET_UNAVAILABLE'),{code:'BUDGET_UNAVAILABLE'});return await budget[method](input);}
   return {async fetch(request,env={},ctx){
@@ -74,8 +76,22 @@ export function createStoryApi({provider=generateScene,budget,config={}}={}){
       try{profile=await readiness(env);}catch(error){return json(envelope('paused',codeOf(error),identity));}
       const reserved=await callBudget('reserve',reservationInput);
       if(reserved.kind!=='reserved')return json(reserved.kind==='replay'?reserved.result:envelope(['ATTEMPT_PAYLOAD_MISMATCH','RETRY_INVALID'].includes(reserved.code)?'rejected':'paused',reserved.code,identity));
+      if(experiment){
+        let admitted;try{admitted=await experiment.reserve(reservationInput);}catch{}
+        if(admitted?.kind!=='reserved'){
+          const code=admitted?.kind==='duplicate'?'EXPERIMENT_ATTEMPT_ALREADY_ADMITTED':codeOf(admitted,'EXPERIMENT_BUDGET_UNAVAILABLE');
+          const result=envelope(code==='TASK8_ADMISSION_CONFLICT'?'rejected':'paused',code,identity);
+          // The player reservation already exists. A bridge failure or lost grant
+          // is never a refund and can never fall through to the model.
+          const settled=await callBudget('settle',{sessionRef:identity.sessionRef,attemptId:identity.attemptId,status:'unknown',actualNeurons:null,result});
+          return json(settled.kind==='settled'?result:envelope('paused','BUDGET_UNAVAILABLE',identity));
+        }
+      }
       let generated,timer;
       try {generated=await Promise.race([Promise.resolve().then(()=>provider(env.AI,profile,body.context,{attemptId:identity.attemptId})),new Promise(resolve=>{timer=setTimeout(()=>resolve({status:'paused',errorCode:'PROVIDER_TIMEOUT',accountingStatus:'unknown',inferencePerformed:true}),STORY_LIMITS.timeoutMs);})]);}catch{generated={status:'paused',errorCode:'PROVIDER_FAILED',accountingStatus:'unknown',inferencePerformed:true};}finally{clearTimeout(timer);}
+      // Account exhaustion survives a later bridge error changing the public
+      // envelope; that presentation must not reopen the current day's quota.
+      const quotaExhausted=generated?.errorCode==='FREE_QUOTA_EXHAUSTED';
       let result;
       if(generated?.status==='ready'){
         try {const scene=validateGeneratedScene(generated.scene,body.context);result={...envelope('ready',null,identity),scene};if(encoder.encode(JSON.stringify(result)).length>STORY_LIMITS.maxResponseBytes)throw new Error();}catch{result=envelope('rejected','GENERATED_SCENE_INVALID',identity);}
@@ -83,8 +99,14 @@ export function createStoryApi({provider=generateScene,budget,config={}}={}){
       else result=envelope('paused','PROVIDER_FAILED',identity);
       // Provider completion is trusted server metadata, independent of the public
       // error vocabulary. An unclassified transport outcome stays conservative.
-      const status=generated?.accountingStatus==='complete'||generated?.status==='ready'?'complete':'unknown';
-      const settled=await callBudget('settle',{sessionRef:identity.sessionRef,attemptId:identity.attemptId,status,actualNeurons:null,result,quotaExhausted:result.errorCode==='FREE_QUOTA_EXHAUSTED'});
+      let status=generated?.accountingStatus==='complete'||generated?.status==='ready'?'complete':'unknown';
+      if(experiment){
+        let settlement;try{settlement=await experiment.settle({...reservationInput,status:status==='unknown'?'unknown':result.status==='ready'?'complete':'failed'});}catch{}
+        if(settlement?.kind!=='settled'){
+          status='unknown';result=envelope('paused','EXPERIMENT_BUDGET_UNAVAILABLE',identity);
+        }
+      }
+      const settled=await callBudget('settle',{sessionRef:identity.sessionRef,attemptId:identity.attemptId,status,actualNeurons:null,result,quotaExhausted});
       if(settled.kind!=='settled')return json(envelope('paused','BUDGET_UNAVAILABLE',identity));
       return json(result);
     }catch(error){return json(envelope(error?.httpStatus?'rejected':'paused',error?.httpStatus?error.code:codeOf(error),identity),error?.httpStatus??200);}

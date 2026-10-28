@@ -1,0 +1,115 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import { DatabaseSync } from 'node:sqlite';
+import { OperatorProbeDurableObject } from '../src/worker/operator-probe.js';
+import { sha256 } from '../src/game/cultivation/live/identity.js';
+
+const operatorToken='fixture-operator-secret-with-at-least-32-characters';
+const originalRecord=()=>({schemaVersion:1,ledger:{schemaVersion:1,attempts:[
+  ...Array.from({length:4},(_,i)=>({task:'task1',attemptId:'old-task1-'+i,reservedNeurons:24,actualNeurons:null,status:'complete'})),
+  {task:'task7',attemptId:'old-task7-a',reservedNeurons:77,actualNeurons:null,status:'failed'},
+  {task:'task7',attemptId:'old-task7-b',reservedNeurons:83,actualNeurons:null,status:'failed'},
+]},results:{'old-task7-b':{status:'rejected',errorCode:'SCENE_ID_SCOPE_INVALID'}},acceptance:{schemaVersion:1,cases:{}},audit:'preserve this record'});
+const input=(suffix='a')=>({sessionRef:'session-'+suffix,requestId:'request-'+suffix,attemptId:'attempt-'+suffix,payloadHash:sha256('payload-'+suffix),contextHash:sha256('context-'+suffix)});
+const request=(body,path='/task8/admit',authorization='Bearer '+operatorToken)=>new Request('https://operator.invalid'+path,{method:'POST',headers:{authorization,'content-type':'application/json'},body:JSON.stringify(body)});
+async function fixture(t,initial=originalRecord()){
+  const db=new DatabaseSync(':memory:');t.after(()=>db.close());db.exec('CREATE TABLE kv (key TEXT PRIMARY KEY,value TEXT NOT NULL)');
+  const storage={sql:{},reads:0,writes:0,async get(key){this.reads++;const row=db.prepare('SELECT value FROM kv WHERE key=?').get(key);return row?JSON.parse(row.value):undefined;},async put(key,value){this.writes++;db.prepare('INSERT INTO kv VALUES(?,?) ON CONFLICT(key) DO UPDATE SET value=excluded.value').run(key,JSON.stringify(value));}};
+  await storage.put('experiment-v1',initial);storage.writes=0;
+  let now=Date.now(),calls=0;t.mock.method(Date,'now',()=>now);
+  const cfg={operatorTokenSha256:sha256(operatorToken),bindingAccountId:'fixture-account',freeBoundaryEvidence:{accountId:'fixture-account',source:'operator-account-verification',plan:'workers-free',hardLimit:true,noGatewayCredits:true,directBinding:true,accountUsageVerified:true,storageFreeVerified:true,remainingNeurons:10000,checkedAt:new Date(now).toISOString()}};
+  const env={AI:{run(){calls++;throw new Error('Task8 admission must never run the model');}}};
+  const make=()=>new OperatorProbeDurableObject({storage},env,cfg);
+  let object=make();
+  return {storage,cfg,env,async call(body=input(),path='/task8/admit',authorization){return (await object.fetch(request(body,path,authorization))).json();},async response(body=input(),path='/task8/admit',authorization){return object.fetch(request(body,path,authorization));},async record(){return storage.get('experiment-v1');},restart(){object=make();},nextDay(){now+=86400000;cfg.freeBoundaryEvidence.checkedAt=new Date(now).toISOString();object=make();},get calls(){return calls;}};
+}
+
+test('operator-authenticated Task8 admission durably adds exactly111 to the existing six-call record',async t=>{
+  const old=originalRecord(),f=await fixture(t,old);
+  const denied=await f.response(input(),'/task8/admit','Bearer not-the-operator');
+  assert.equal(denied.status,401);assert.equal(f.storage.reads,0);assert.equal(f.storage.writes,0);
+  const admitted=await f.call();assert.equal(admitted.kind,'reserved');assert.equal(admitted.reservedNeurons,111);
+  const record=await f.record();assert.deepEqual(record.ledger.attempts.slice(0,6),old.ledger.attempts);
+  assert.deepEqual(record.results,old.results);assert.deepEqual(record.acceptance,old.acceptance);assert.equal(record.audit,old.audit);
+  assert.equal(record.ledger.attempts.length,7);assert.equal(record.ledger.attempts.reduce((sum,row)=>sum+row.reservedNeurons,0),367);
+  assert.equal(record.ledger.attempts[6].task,'task8');assert.equal(record.ledger.attempts[6].status,'reserved');assert.equal(record.ledger.attempts[6].actualNeurons,null);
+  assert.equal(f.calls,0);
+});
+
+test('concurrent duplicate Task8 admissions grant once and reject changed request or content',async t=>{
+  const f=await fixture(t),body=input();
+  const results=await Promise.all([f.call(body),f.call(body),f.call(body)]);
+  assert.deepEqual(results.map(row=>row.kind),['reserved','duplicate','duplicate']);
+  assert.equal(results[1].admissionId,results[0].admissionId);
+  for(const changed of [{requestId:'changed-request'},{payloadHash:sha256('changed')},{contextHash:sha256('changed-context')}]){
+    const result=await f.call({...body,...changed});assert.equal(result.kind,'denied');assert.equal(result.code,'TASK8_ADMISSION_CONFLICT');
+  }
+  f.restart();assert.equal((await f.call(body)).kind,'duplicate');assert.equal((await f.record()).ledger.attempts.length,7);assert.equal(f.calls,0);
+});
+
+test('two permanent Task8 reservations survive unknown and failed outcomes, restart and UTC rollover',async t=>{
+  const f=await fixture(t);await f.call(input('a'));
+  assert.equal((await f.call({...input('a'),status:'unknown'},'/task8/settle')).kind,'settled');
+  f.restart();assert.equal((await f.call(input('a'))).kind,'duplicate');
+  assert.equal((await f.call(input('b'))).kind,'reserved');
+  assert.equal((await f.call({...input('b'),status:'failed'},'/task8/settle')).kind,'settled');
+  f.nextDay();const denied=await f.call(input('c'));assert.equal(denied.kind,'denied');assert.equal(denied.code,'EXPERIMENT_BUDGET_EXHAUSTED');
+  const record=await f.record();assert.equal(record.ledger.attempts.length,8);
+  assert.deepEqual(record.ledger.attempts.slice(6).map(row=>[row.status,row.reservedNeurons,row.actualNeurons]),[['unknown',111,null],['failed',111,null]]);
+  assert.equal(record.ledger.attempts.reduce((sum,row)=>sum+row.reservedNeurons,0),478);assert.equal(f.calls,0);
+});
+
+test('concurrent distinct Task8 attempts cannot overbook the two remaining slots',async t=>{
+  const f=await fixture(t);
+  const results=await Promise.all(['a','b','c','d'].map(id=>f.call(input(id))));
+  assert.deepEqual(results.map(row=>row.kind),['reserved','reserved','denied','denied']);
+  assert.ok(results.slice(2).every(row=>row.code==='EXPERIMENT_BUDGET_EXHAUSTED'));
+  assert.equal((await f.record()).ledger.attempts.length,8);
+});
+
+test('Task8 settlement binds the full admission and cannot replace an earlier unknown outcome',async t=>{
+  const f=await fixture(t),body=input();await f.call(body);
+  assert.equal((await f.call({...body,contextHash:sha256('wrong'),status:'complete'},'/task8/settle')).code,'TASK8_ADMISSION_CONFLICT');
+  assert.equal((await f.call({...input('absent'),status:'complete'},'/task8/settle')).code,'TASK8_ADMISSION_MISSING');
+  assert.equal((await f.call({...body,status:'unknown'},'/task8/settle')).kind,'settled');
+  assert.equal((await f.call({...body,status:'unknown'},'/task8/settle')).kind,'settled');
+  assert.equal((await f.call({...body,status:'complete'},'/task8/settle')).code,'TASK8_SETTLEMENT_CONFLICT');
+  assert.equal((await f.record()).ledger.attempts.at(-1).status,'unknown');
+});
+
+test('Task8 refuses malformed identities, caller-selected reservations and invalid fresh account proof',async t=>{
+  const f=await fixture(t);
+  for(const body of [{...input(),reservedNeurons:1},{...input(),task:'task1'},{...input(),payloadHash:'bad'},{...input(),attemptId:'bad space'},{...input(),context:{}},{...input(),status:'unknown'}]){
+    assert.equal((await f.response(body)).status,400);
+  }
+  assert.equal(f.storage.writes,0);
+  for(const change of [{checkedAt:'2020-01-01T00:00:00.000Z'},{accountId:'other'},{plan:'workers-paid'},{remainingNeurons:300}]){
+    const original={...f.cfg.freeBoundaryEvidence};Object.assign(f.cfg.freeBoundaryEvidence,change);f.restart();
+    assert.equal((await f.call()).kind,'denied');assert.equal(f.storage.writes,0);f.cfg.freeBoundaryEvidence=original;
+  }
+  f.restart();delete f.env.AI;assert.equal((await f.call()).code,'AI_BINDING_MISSING');assert.equal(f.storage.writes,0);assert.equal(f.calls,0);
+});
+
+test('global Neuron and call caps reject Task8 without changing previous reservations',async t=>{
+  const high=originalRecord();high.ledger.attempts[5].reservedNeurons=587;
+  const full={...originalRecord(),ledger:{schemaVersion:1,attempts:Array.from({length:10},(_,i)=>({task:i<4?'task1':i<8?'task7':'task8',attemptId:'prior-'+i,reservedNeurons:50,actualNeurons:null,status:'unknown'}))}};
+  for(const record of [high,full])await t.test(String(record.ledger.attempts.length),async t=>{
+    const f=await fixture(t,record);assert.equal((await f.call()).code,'EXPERIMENT_BUDGET_EXHAUSTED');assert.deepEqual(await f.record(),record);assert.equal(f.calls,0);
+  });
+});
+
+test('failed durable admission and settlement writes never recycle or invoke Task8',async t=>{
+  const f=await fixture(t),put=f.storage.put.bind(f.storage);
+  f.storage.put=async()=>{throw Error('private persistence detail');};
+  assert.equal((await f.call()).code,'LEDGER_PERSIST_FAILED');assert.deepEqual(await f.record(),originalRecord());
+  f.storage.put=put;assert.equal((await f.call()).kind,'reserved');
+  f.storage.put=async()=>{throw Error('private persistence detail');};
+  assert.equal((await f.call({...input(),status:'complete'},'/task8/settle')).code,'LEDGER_PERSIST_FAILED');
+  f.storage.put=put;f.restart();assert.equal((await f.call()).kind,'duplicate');
+  const record=await f.record();assert.equal(record.ledger.attempts.at(-1).status,'reserved');assert.equal(f.calls,0);assert.doesNotMatch(JSON.stringify(record),/private persistence detail|fixture-operator-secret/);
+});
+
+test('Task8 never initializes a replacement ledger when the existing record is missing',async t=>{
+  const f=await fixture(t);f.storage.get=async()=>undefined;
+  assert.equal((await f.call()).code,'EXPERIMENT_LEDGER_INVALID');assert.equal(f.storage.writes,0);assert.equal(f.calls,0);
+});
