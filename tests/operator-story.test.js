@@ -13,6 +13,7 @@ import { sha256,canonicalStringify } from '../src/game/cultivation/live/identity
 const token='fixture-only-story-operator';
 const caseIds=['task7-opening','task7-continuation','task7-counterfactual-a','task7-counterfactual-b'];
 const revisedCaseIds=['task7-opening-v2','task7-branch-a-v2','task7-branch-b-v2'];
+const scopeCorrectedCaseIds=['task7-opening-v3','task7-branch-a-v3','task7-branch-b-v3'];
 function disk(){const db=new DatabaseSync(':memory:');db.exec('CREATE TABLE kv(key TEXT PRIMARY KEY,value TEXT)');return {sql:{},async get(key){const row=db.prepare('SELECT value FROM kv WHERE key=?').get(key);return row?JSON.parse(row.value):undefined;},async put(key,value){db.prepare('INSERT INTO kv VALUES(?,?) ON CONFLICT(key) DO UPDATE SET value=excluded.value').run(key,JSON.stringify(value));}};}
 const oldRecord=()=>({schemaVersion:1,ledger:{schemaVersion:1,attempts:Array.from({length:4},(_,i)=>({attemptId:'old'+i,task:'task1',reservedNeurons:24,actualNeurons:null,status:'complete'}))},results:Object.fromEntries(Array.from({length:4},(_,i)=>['old'+i,{status:'passed',reasoningPresent:true,reasoningChars:2,reasoningNonWhitespacePresent:false}]))});
 function failedOriginalRecord(){
@@ -25,6 +26,18 @@ function failedOriginalRecord(){
   record.ledger.attempts.push({task:'task7',attemptId,reservedNeurons:77,actualNeurons:null,status:'failed'});
   record.results[attemptId]={schemaVersion:1,sampleKind:'workers-ai',task:'task7',caseId:'task7-opening',attemptId,contextHash:association.contextHash,inputHash:association.inputHash,inputBytes:5314,modelId:'@cf/qwen/qwen3-30b-a3b-fp8',rulesVersion:1,promptVersion:1,reservedNeurons:77,actualNeurons:null,inferencePerformed:true,usage:{promptTokens:823,completionTokens:563,totalTokens:1386},stopReason:'stop',latencyMs:5888,status:'rejected',identity:pending.identity,receipt:pending.receipt,errorCode:'GENERATED_SCENE_INVALID'};
   record.acceptance={schemaVersion:1,cases:{'task7-opening':association}};
+  return record;
+}
+function failedRevisedRecord(){
+  // The second rejected opening is a separate permanent case, not a retry of
+  // the first. Its original input/receipt metadata remains the v2 observation.
+  const record=failedOriginalRecord(),attemptId='task7-20261028-002',caseId='task7-opening-v2';
+  const state=createLiveGame({runId:'live-acceptance-v1',seed:42,name:'云归',originId:'village'});
+  const pending=prepareOpening(state,{requestId:caseId});
+  const association={attemptId,caseId,status:'failed',contextHash:'b5675e9306d0a787a6811bbab70a93deb662fc32ddb251b1cbf18e9f977a02c2',inputHash:'add5f707be99b2c2ed40a62d85b3b0558170d7f5f02567bc2332b1496d3ae1c7',inputBytes:6659,baseStateHash:pending.identity.stateHash,identity:pending.identity,receipt:pending.receipt,recipeVersion:2};
+  record.ledger.attempts.push({task:'task7',attemptId,reservedNeurons:83,actualNeurons:null,status:'failed'});
+  record.results[attemptId]={schemaVersion:1,sampleKind:'workers-ai',task:'task7',caseId,attemptId,contextHash:association.contextHash,inputHash:association.inputHash,inputBytes:6659,modelId:'@cf/qwen/qwen3-30b-a3b-fp8',rulesVersion:1,promptVersion:1,reservedNeurons:83,actualNeurons:null,inferencePerformed:true,usage:{promptTokens:1085,completionTokens:581,totalTokens:1666},stopReason:'stop',latencyMs:4838,status:'rejected',identity:pending.identity,receipt:pending.receipt,recipeVersion:2,errorCode:'SCENE_ID_SCOPE_INVALID'};
+  record.acceptance.cases[caseId]=association;
   return record;
 }
 function scene(context){const p=context.namespace+':t'+context.identity.turnId+':',entity=context.entities[0]??{id:p+'e:keeper',name:'守山人',kind:'person',status:'alive'};return {id:p+'s:path',title:'山路新事',location:'松溪山门',blocks:[{kind:'narration',text:'山路传来新消息，第'+context.identity.turnId+'回。行动'+(context.receipt.action?.intent??'opening')+'。'},{kind:'dialogue',speaker:entity.id,text:'旧约还记在册中。'}],entities:[entity],choices:[{id:p+'c:talk',label:'协助守山人',intent:'negotiate',targetId:entity.id,stake:'low',approach:'cooperate'},{id:p+'c:rest',label:'歇息观察',intent:'rest',targetId:'self',stake:'low',approach:'recover'}],memoryDeltas:context.identity.turnId===1?[{kind:'promise',entityId:entity.id,text:'替守山人留意山路。'}]:[]};}
@@ -43,8 +56,8 @@ test('insufficient distinct nonterminal choices block counterfactual without fab
 
 test('Task7 allocation and global call cap remain shared with old Tasks1/8 entries',async()=>{
   for(const additional of [
-    Array.from({length:4},(_,i)=>({task:'task7',attemptId:'spent7_'+i,reservedNeurons:40,actualNeurons:null,status:'unknown'})),
-    Array.from({length:6},(_,i)=>({task:i<4?'task7':'task8',attemptId:'spent_'+i,reservedNeurons:40,actualNeurons:null,status:'unknown'})),
+    Array.from({length:5},(_,i)=>({task:'task7',attemptId:'spent7_'+i,reservedNeurons:40,actualNeurons:null,status:'unknown'})),
+    Array.from({length:7},(_,i)=>({task:i<5?'task7':'task8',attemptId:'spent_'+i,reservedNeurons:40,actualNeurons:null,status:'unknown'})),
   ]){
     const f=await fixture();const record=await f.storage.get('experiment-v1');record.ledger.attempts.push(...additional);await f.storage.put('experiment-v1',record);
     assert.equal((await call(f,caseIds[0],'new')).errorCode,'EXPERIMENT_BUDGET_EXHAUSTED');assert.equal(f.inputs.length,0);
@@ -235,9 +248,9 @@ test('revised failed, unknown and lost-write opening cannot restart or unlock a 
   }
 });
 
-test('revised recipe cannot allocate a fifth Task7 call after previous commitments',async()=>{
+test('revised recipe cannot allocate a sixth Task7 call after previous commitments',async()=>{
   const record=failedOriginalRecord();
-  for(let i=0;i<3;i++)record.ledger.attempts.push({task:'task7',attemptId:'previously-spent-'+i,reservedNeurons:77,actualNeurons:null,status:'unknown'});
+  for(let i=0;i<4;i++)record.ledger.attempts.push({task:'task7',attemptId:'previously-spent-'+i,reservedNeurons:77,actualNeurons:null,status:'unknown'});
   const f=await fixture(undefined,record);
   assert.equal((await call(f,revisedCaseIds[0],'not-allowed')).errorCode,'EXPERIMENT_BUDGET_EXHAUSTED');
   assert.equal(f.inputs.length,0);assert.deepEqual(await f.storage.get('experiment-v1'),record);
@@ -290,4 +303,136 @@ test('native workerd revised recipe preserves the failed opening and resumes onl
   const a=status.acceptance.cases[revisedCaseIds[1]],b=status.acceptance.cases[revisedCaseIds[2]];
   assert.equal(a.baseStateHash,b.baseStateHash);assert.equal(a.identity.baseRevision,1);assert.equal(b.identity.baseRevision,1);
   assert.equal(a.recipeVersion,2);assert.equal(b.recipeVersion,2);assert.equal(f.egress,0);
+});
+
+test('v3 uses one new opening and two counterfactual branches while preserving all six earlier commitments',async()=>{
+  const original=failedRevisedRecord(),f=await fixture(undefined,original);
+  for(const id of scopeCorrectedCaseIds.slice(1))assert.equal((await call(f,id,'early-'+id)).errorCode,'ACCEPTANCE_PREREQUISITE_MISSING');
+  assert.equal(f.inputs.length,0);
+  const openings=await Promise.all([call(f,scopeCorrectedCaseIds[0],'v3-opening'),call(f,scopeCorrectedCaseIds[0],'v3-duplicate')]);
+  assert.equal(openings[0].status,'ready');assert.deepEqual(openings[1],openings[0]);assert.equal(f.inputs.length,1);
+  let record=await f.storage.get('experiment-v1');const opening=structuredClone(record.acceptance.cases[scopeCorrectedCaseIds[0]]);
+  assert.equal(opening.recipeVersion,3);assert.equal(opening.state.revision,1);
+  assert.deepEqual(opening.receipt,original.acceptance.cases['task7-opening-v2'].receipt);
+  assert.equal(opening.baseStateHash,original.acceptance.cases['task7-opening-v2'].baseStateHash);
+  assert.deepEqual(f.inputs[0].input.response_format.json_schema.properties.id.enum,[f.inputs[0].context.namespace+':t1:s:scene']);
+  assert.equal((await call(f,scopeCorrectedCaseIds[2],'too-early')).errorCode,'ACCEPTANCE_PREREQUISITE_MISSING');
+  f.object=f.make();assert.equal((await call(f,scopeCorrectedCaseIds[1],'v3-a')).status,'ready');
+  record=await f.storage.get('experiment-v1');const a=structuredClone(record.acceptance.cases[scopeCorrectedCaseIds[1]]);
+  f.object=f.make();assert.equal((await call(f,scopeCorrectedCaseIds[2],'v3-b')).status,'ready');
+  record=await f.storage.get('experiment-v1');const b=record.acceptance.cases[scopeCorrectedCaseIds[2]];
+  assert.deepEqual(record.ledger.attempts.slice(0,6),original.ledger.attempts);
+  for(const [id,value] of Object.entries(original.results))assert.deepEqual(record.results[id],value);
+  for(const [id,value] of Object.entries(original.acceptance.cases))assert.deepEqual(record.acceptance.cases[id],value);
+  assert.deepEqual(record.acceptance.cases[scopeCorrectedCaseIds[0]],opening);assert.deepEqual(record.acceptance.cases[scopeCorrectedCaseIds[1]],a);
+  assert.equal(record.ledger.attempts.length,9);assert.equal(record.ledger.attempts.filter(row=>row.task==='task7').length,5);
+  assert.equal(record.ledger.attempts.slice(0,6).reduce((n,row)=>n+row.reservedNeurons,0),256);
+  for(const id of scopeCorrectedCaseIds){assert.equal(record.acceptance.cases[id].recipeVersion,3);assert.equal(record.results[record.acceptance.cases[id].attemptId].recipeVersion,3);}
+  assert.equal(a.baseStateHash,b.baseStateHash);assert.equal(a.identity.baseRevision,1);assert.equal(b.identity.baseRevision,1);
+  assert.equal(a.state.revision,2);assert.equal(b.state.revision,2);
+  assert.equal(a.receipt.action.intent,'negotiate');assert.equal(b.receipt.action.intent,'rest');
+  assert.equal(a.receipt.elapsedDays,7);assert.equal(b.receipt.elapsedDays,30);
+  assert.notDeepEqual(a.receipt,b.receipt);assert.notDeepEqual(a.state.life,b.state.life);
+  assert.deepEqual(f.inputs[1].context.memory,f.inputs[2].context.memory);
+  assert.equal(f.inputs[1].context.memory.promises[0].text,'替守山人留意山路。');
+  for(const id of ['task7-opening','task7-opening-v2',...scopeCorrectedCaseIds])assert.equal((await call(f,id,'do-not-reinfer')).attemptId,record.acceptance.cases[id].attemptId);
+  assert.equal((await call(f,scopeCorrectedCaseIds[1],'v3-opening')).errorCode,'ACCEPTANCE_ATTEMPT_CONFLICT');
+  assert.equal(f.inputs.length,3);
+});
+
+test('v3 admission requires the matching permanent v2 scope failure, original failure and immutable association',async()=>{
+  const changes=[
+    record=>{delete record.acceptance.cases['task7-opening'];},
+    record=>{record.results['task7-20261028-001'].errorCode='PROVIDER_FAILED';},
+    record=>{delete record.acceptance.cases['task7-opening-v2'];},
+    ...['reserved','unknown','complete'].map(status=>record=>{record.acceptance.cases['task7-opening-v2'].status=status;}),
+    record=>{record.acceptance.cases['task7-opening-v2'].caseId='task7-opening';},
+    record=>{record.ledger.attempts.pop();},
+    ...['reserved','unknown','complete'].map(status=>record=>{record.ledger.attempts[5].status=status;}),
+    record=>{record.ledger.attempts[5].task='task8';},
+    record=>{record.ledger.attempts[5].reservedNeurons=82;},
+    record=>{record.acceptance.cases['task7-opening-v2'].attemptId='different-attempt';},
+    record=>{delete record.results['task7-20261028-002'];},
+    record=>{record.results['task7-20261028-002'].errorCode='GENERATED_SCENE_INVALID';},
+    record=>{record.results['task7-20261028-002'].status='ready';},
+    record=>{record.results['task7-20261028-002'].task='task8';},
+    record=>{record.results['task7-20261028-002'].caseId='task7-opening';},
+    record=>{record.results['task7-20261028-002'].attemptId='different-attempt';},
+    record=>{record.results['task7-20261028-002'].recipeVersion=3;},
+    record=>{record.results['task7-20261028-002'].inferencePerformed=false;},
+    record=>{record.results['task7-20261028-002'].inputHash='0'.repeat(64);},
+    record=>{record.results['task7-20261028-002'].contextHash='0'.repeat(64);},
+    record=>{record.results['task7-20261028-002'].inputBytes++;},
+    record=>{record.results['task7-20261028-002'].identity.requestId='other-case';},
+    record=>{record.results['task7-20261028-002'].receipt.elapsedDays=1;},
+    record=>{record.acceptance.cases['task7-opening-v2'].baseStateHash='0'.repeat(64);},
+  ];
+  for(const change of changes){
+    const record=JSON.parse(JSON.stringify(failedRevisedRecord()));change(record);const f=await fixture(undefined,record);
+    assert.equal((await call(f,scopeCorrectedCaseIds[0],'v3-blocked')).errorCode,'ACCEPTANCE_PREREQUISITE_MISSING');
+    assert.equal(f.inputs.length,0);assert.deepEqual(await f.storage.get('experiment-v1'),record);
+  }
+});
+
+test('v3 failed, unknown and lost-write opening keep their own tombstone and cannot unlock branches',async()=>{
+  for(const kind of ['rejected','unknown','lost-write']){
+    const original=failedRevisedRecord(),f=await fixture(context=>{
+      if(kind==='unknown')throw new Error('private v3 transport detail');
+      const value=raw(context);if(kind==='rejected')value.choices[0].message.content='not-json';return value;
+    },original);
+    if(kind==='lost-write'){
+      const put=f.storage.put.bind(f.storage);let writes=0;
+      f.storage.put=async(key,value)=>{if(writes++)throw new Error('private v3 storage detail');return put(key,value);};
+    }
+    await call(f,scopeCorrectedCaseIds[0],'v3-once');f.object=f.make();
+    const replay=await call(f,scopeCorrectedCaseIds[0],'v3-never-again');
+    assert.ok(['rejected','paused','already-reserved-or-unknown'].includes(replay.status));
+    assert.equal(replay.attemptId,'v3-once');
+    for(const id of scopeCorrectedCaseIds.slice(1))assert.equal((await call(f,id,'no-branch')).errorCode,'ACCEPTANCE_PREREQUISITE_MISSING');
+    assert.equal(f.inputs.length,1);const record=await f.storage.get('experiment-v1');
+    assert.equal(record.ledger.attempts.length,7);assert.deepEqual(record.ledger.attempts.slice(0,6),original.ledger.attempts);
+    assert.equal(record.acceptance.cases[scopeCorrectedCaseIds[0]].recipeVersion,3);
+    for(const [id,value] of Object.entries(original.acceptance.cases))assert.deepEqual(record.acceptance.cases[id],value);
+    assert.doesNotMatch(JSON.stringify(record),/private v3/);
+  }
+});
+
+test('v3 requires two distinct living actions before spending branch A',async()=>{
+  for(const kind of ['one-enabled','cosmetic-only']){
+    const f=await fixture(context=>{
+      const value=raw(context),s=scene(context);
+      if(context.identity.turnId===1){
+        const rest=s.choices[1];
+        const second=kind==='one-enabled'?{...s.choices[0],intent:'craft',targetId:'manual',approach:'study'}:{...rest,id:rest.id+'2',label:'换个说法歇息',stake:'normal'};
+        s.choices=[rest,second];
+      }
+      value.choices[0].message.content=JSON.stringify(s);return value;
+    },failedRevisedRecord());
+    assert.equal((await call(f,scopeCorrectedCaseIds[0],'v3-opening')).status,'ready');
+    const before=await f.storage.get('experiment-v1');
+    assert.equal((await call(f,scopeCorrectedCaseIds[1],'v3-branch')).errorCode,'ACCEPTANCE_DISTINCT_CHOICES_UNAVAILABLE');
+    assert.equal((await call(f,scopeCorrectedCaseIds[2],'v3-other')).errorCode,'ACCEPTANCE_PREREQUISITE_MISSING');
+    assert.equal(f.inputs.length,1);assert.deepEqual(await f.storage.get('experiment-v1'),before);
+  }
+});
+
+test('native workerd v3 preserves both failed openings and all old reservations through restart and replay',{timeout:30000},async t=>{
+  const original=failedRevisedRecord(),f=await nativeFixture(t,original);
+  assert.equal((await f.status()).callCount,6);assert.equal((await f.status()).reservedNeurons,256);
+  assert.equal((await f.call(scopeCorrectedCaseIds[0],'native-v3-opening')).status,'ready');
+  await f.restart();
+  assert.equal((await f.call(scopeCorrectedCaseIds[0],'native-v3-replay')).attemptId,'native-v3-opening');
+  assert.equal((await f.call(scopeCorrectedCaseIds[2],'b-before-a')).errorCode,'ACCEPTANCE_PREREQUISITE_MISSING');
+  assert.equal((await f.call(scopeCorrectedCaseIds[1],'native-v3-a')).status,'ready');
+  await f.restart();
+  assert.equal((await f.call(scopeCorrectedCaseIds[2],'native-v3-b')).status,'ready');
+  const status=await f.status();assert.equal(status.callCount,9);
+  assert.deepEqual(status.ledger.attempts.slice(0,6),original.ledger.attempts);
+  for(const [id,value] of Object.entries(original.acceptance.cases))assert.deepEqual(status.acceptance.cases[id],value);
+  for(const [id,value] of Object.entries(original.results))assert.deepEqual(status.results[id],value);
+  const a=status.acceptance.cases[scopeCorrectedCaseIds[1]],b=status.acceptance.cases[scopeCorrectedCaseIds[2]];
+  assert.equal(a.baseStateHash,b.baseStateHash);assert.equal(a.identity.baseRevision,1);assert.equal(b.identity.baseRevision,1);
+  assert.equal(a.recipeVersion,3);assert.equal(b.recipeVersion,3);
+  for(const id of ['task7-opening','task7-opening-v2',...scopeCorrectedCaseIds])assert.equal((await f.call(id,'never-repeat')).attemptId,status.acceptance.cases[id].attemptId);
+  assert.equal((await f.status()).callCount,9);assert.equal(f.egress,0);
 });

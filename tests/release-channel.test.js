@@ -42,6 +42,25 @@ test('verified release activation changes HTML and health together and polls onl
   time+=60001;await request(worker);assert.equal(calls,3,'unchanged verified hash needs only manifest check');
 });
 
+test('embedded-only gateway keeps reviewed HTML and health despite a valid stale cache and remote release', async () => {
+  const {createReleaseGateway}=await moduleReady();let time=100000;
+  const calls={match:0,put:0,fetch:0};
+  const reviewedHtml='<!doctype html><title>reviewed live candidate 实时人生</title>';
+  const reviewed={html:reviewedHtml,sourceCommit:'d'.repeat(40),version:'4.0.0',htmlSha256:hash(reviewedHtml)};
+  const cache={
+    async match(){calls.match++;return new Response(newHtml,{headers:{'X-Wending-Release':JSON.stringify(manifest)}});},
+    async put(){calls.put++;},
+  };
+  const worker=createReleaseGateway({fallback:reviewed,embeddedOnly:true,cache,now:()=>time,fetchImpl:async url=>{calls.fetch++;return new Response(url.endsWith('manifest.json')?JSON.stringify(manifest):newHtml);}});
+  for(const path of ['/','/index.html','/baishi-wending-offline.html'])assert.equal(await(await request(worker,path)).text(),reviewedHtml);
+  time+=60001;
+  const health=await(await request(worker,'/healthz')).json();
+  assert.equal(health.sourceCommit,reviewed.sourceCommit);assert.equal(health.htmlSha256,reviewed.htmlSha256);assert.equal(health.htmlBytes,Buffer.byteLength(reviewedHtml));assert.equal(health.version,reviewed.version);
+  assert.equal(health.releaseSource,'embedded');assert.equal(health.lastAttemptAt,null);assert.equal(health.lastSuccessAt,null);assert.equal(health.lastError,'');
+  assert.equal((await worker.fetch(new Request('https://example.workers.dev/',{method:'HEAD'}))).body,null);
+  assert.deepEqual(calls,{match:0,put:0,fetch:0},'pinned acceptance must not consult or rewrite the public release channel');
+});
+
 test('bad new content or network failure preserves the verified playable snapshot and truthful health', async () => {
   const {createReleaseGateway}=await moduleReady();let time=100000, mode='good';
   const worker=createReleaseGateway({fallback,now:()=>time,fetchImpl:async url=>{

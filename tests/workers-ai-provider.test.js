@@ -41,14 +41,39 @@ test('reservation accounts for every UTF8 byte, schema, framing and full output 
 });
 test('one shared bounded experiment ledger enforces task caps, total calls and total reservation', () => {
   let ledger = config.createExperimentLedger();
-  for (let i = 0; i < 4; i++) ledger = config.reserveExperiment(ledger, { task:'task1', attemptId:`task1-${i}`, reservedNeurons:80 });
+  for (let i = 0; i < 4; i++) ledger = config.reserveExperiment(ledger, { task:'task1', attemptId:`task1-${i}`, reservedNeurons:70 });
   assert.throws(() => config.reserveExperiment(ledger, { task:'task1', attemptId:'fifth', reservedNeurons:1 }), { code:'EXPERIMENT_BUDGET_EXHAUSTED' });
-  for (let i = 0; i < 4; i++) ledger = config.reserveExperiment(ledger, { task:'task7', attemptId:`task7-${i}`, reservedNeurons:80 });
-  for (let i = 0; i < 2; i++) ledger = config.reserveExperiment(ledger, { task:'task8', attemptId:`task8-${i}`, reservedNeurons:80 });
-  assert.equal(ledger.attempts.length, 10);
-  assert.throws(() => config.reserveExperiment(ledger, { task:'task8', attemptId:'eleventh', reservedNeurons:1 }), { code:'EXPERIMENT_BUDGET_EXHAUSTED' });
+  for (let i = 0; i < 5; i++) ledger = config.reserveExperiment(ledger, { task:'task7', attemptId:`task7-${i}`, reservedNeurons:70 });
+  assert.throws(() => config.reserveExperiment(ledger, { task:'task7', attemptId:'sixth', reservedNeurons:1 }), { code:'EXPERIMENT_BUDGET_EXHAUSTED' });
+  for (let i = 0; i < 2; i++) ledger = config.reserveExperiment(ledger, { task:'task8', attemptId:`task8-${i}`, reservedNeurons:70 });
+  assert.equal(ledger.attempts.length, 11);
+  assert.throws(() => config.reserveExperiment(ledger, { task:'task8', attemptId:'twelfth', reservedNeurons:1 }), { code:'EXPERIMENT_BUDGET_EXHAUSTED' });
   const large = config.reserveExperiment(config.createExperimentLedger(), { task:'task1', attemptId:'large', reservedNeurons:799 });
   assert.throws(() => config.reserveExperiment(large, { task:'task7', attemptId:'over', reservedNeurons:2 }), { code:'EXPERIMENT_BUDGET_EXHAUSTED' });
+});
+test('authorized five-call continuation preserves the original six reservations and remains below800', () => {
+  const original = {schemaVersion:1,attempts:[
+    ...Array.from({length:4},(_,i)=>({task:'task1',attemptId:'original-task1-'+i,reservedNeurons:24,actualNeurons:null,status:'complete'})),
+    {task:'task7',attemptId:'original-opening',reservedNeurons:77,actualNeurons:null,status:'failed'},
+    {task:'task7',attemptId:'original-opening-v2',reservedNeurons:83,actualNeurons:null,status:'failed'},
+  ]};
+  const snapshot = structuredClone(original);
+  let ledger = original;
+  for (const [task,attemptId,reservedNeurons] of [
+    ['task7','opening-v3',83],['task7','branch-a-v3',111],['task7','branch-b-v3',111],
+    ['task8','player-opening',111],['task8','player-choice',111],
+  ]) {
+    assert.equal(assertProviderReady({enabled:true,purpose:'probe',env:{AI:{run(){}}},evidence:evidence({remainingNeurons:800}),now,ledger,reservationNeurons:reservedNeurons}).modelId,config.CANDIDATE_MODEL_ID);
+    ledger = config.reserveExperiment(ledger,{task,attemptId,reservedNeurons});
+    ledger = config.settleExperiment(ledger,attemptId,{status:'unknown'});
+  }
+  assert.deepEqual(original,snapshot);
+  assert.deepEqual(ledger.attempts.slice(0,6),snapshot.attempts);
+  assert.equal(ledger.attempts.length,11);
+  assert.equal(ledger.attempts.reduce((sum,row)=>sum+row.reservedNeurons,0),783);
+  assert.ok(ledger.attempts.every(row=>row.actualNeurons===null));
+  assert.throws(()=>config.reserveExperiment(ledger,{task:'task7',attemptId:'extra',reservedNeurons:1}),{code:'EXPERIMENT_BUDGET_EXHAUSTED'});
+  assert.throws(()=>assertProviderReady({enabled:true,purpose:'probe',env:{AI:{run(){}}},ledger,evidence:evidence(),now}),{code:'EXPERIMENT_BUDGET_EXHAUSTED'});
 });
 test('unknown consumption and settled usage never recycle the initial experiment reservations', () => {
   let ledger = config.reserveExperiment(config.createExperimentLedger(), { task:'task1', attemptId:'a', reservedNeurons:400 });
@@ -98,7 +123,7 @@ test('missing AI binding blocks inference', () => {
   assert.throws(() => assertProviderReady({ enabled:true, env:{} }), { code:'AI_BINDING_MISSING' });
 });
 test('exhausted experiment budget blocks inference', () => {
-  assert.throws(() => assertProviderReady({ enabled:true, env:{ AI:{ run() {} } }, ledger:{ attempts:Array(10).fill({ reservedNeurons:1 }) }, purpose:'probe' }), { code:'EXPERIMENT_BUDGET_EXHAUSTED' });
+  assert.throws(() => assertProviderReady({ enabled:true, env:{ AI:{ run() {} } }, ledger:{ attempts:Array(11).fill({ reservedNeurons:1 }) }, purpose:'probe' }), { code:'EXPERIMENT_BUDGET_EXHAUSTED' });
 });
 
 test('probe requires explicit execution, trusted evidence and durable pre-reservation before inference', async () => {

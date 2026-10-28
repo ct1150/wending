@@ -144,6 +144,39 @@ test('explicit tester-only package preserves disabled public policy and declares
   for(const module of manifest.modules)assert.equal(hash(await readFile(path.join(root,'release/backend',module.name))),module.sha256);
 });
 
+test('tester-only package serves its reviewed HTML while the separate ordinary gateway still updates',async t=>{
+  const root=await fixture(t),sourceCommit='3'.repeat(40),candidate='<!doctype html><title>reviewed live candidate 实时人生</title>';
+  await writeFile(path.join(root,'release/baishi-wending-offline.html'),candidate);
+  await buildGateway({root,sourceCommit,acceptance:testerPolicy()});
+  const packageManifest=JSON.parse(await readFile(path.join(root,'release/backend/deployment.json'),'utf8'));
+  const staleHtml='<!doctype html><title>previous public 4.0 game</title>',staleHash=hash(staleHtml);
+  const staleManifest={schemaVersion:1,version:'4.0.0',sourceCommit:'4'.repeat(40),artifactCommit:'5'.repeat(40),htmlSha256:staleHash,htmlBytes:Buffer.byteLength(staleHtml),artifactPath:`releases/${staleHash}.html`};
+  const originalFetch=globalThis.fetch,originalCaches=Object.getOwnPropertyDescriptor(globalThis,'caches'),calls={match:0,put:0,fetch:0};
+  globalThis.fetch=async url=>{calls.fetch++;return new Response(url.endsWith('manifest.json')?JSON.stringify(staleManifest):staleHtml);};
+  Object.defineProperty(globalThis,'caches',{configurable:true,value:{default:{
+    async match(){calls.match++;return new Response(staleHtml,{headers:{'X-Wending-Release':JSON.stringify(staleManifest)}});},
+    async put(){calls.put++;},
+  }}});
+  try {
+    const stage=await import(pathToFileURL(path.join(root,'release/backend/entry.mjs')).href);
+    const response=await stage.default.fetch(new Request('https://game.test/'));
+    assert.equal(await response.text(),candidate);
+    const health=await(await stage.default.fetch(new Request('https://game.test/healthz'))).json();
+    assert.equal(health.sourceCommit,stage.backendIdentity.sourceCommit);assert.equal(health.sourceCommit,sourceCommit);
+    assert.equal(health.htmlSha256,packageManifest.frontend.htmlSha256);assert.equal(health.htmlSha256,hash(candidate));assert.equal(health.releaseSource,'embedded');
+    assert.equal(await(await stage.default.fetch(new Request('https://game.test/baishi-wending-offline.html'))).text(),candidate);
+    assert.deepEqual(calls,{match:0,put:0,fetch:0});
+    const ordinary=await import(pathToFileURL(path.join(root,'release/gateway.mjs')).href);
+    assert.equal(await(await ordinary.default.fetch(new Request('https://game.test/'))).text(),staleHtml);
+    const ordinaryHealth=await(await ordinary.default.fetch(new Request('https://game.test/healthz'))).json();
+    assert.equal(ordinaryHealth.sourceCommit,staleManifest.sourceCommit);assert.equal(ordinaryHealth.htmlSha256,staleHash);assert.equal(ordinaryHealth.releaseSource,'remote-fetch');
+    assert.deepEqual(calls,{match:1,put:1,fetch:1});
+  } finally {
+    globalThis.fetch=originalFetch;
+    if(originalCaches)Object.defineProperty(globalThis,'caches',originalCaches);else delete globalThis.caches;
+  }
+});
+
 test('tester package rejects unsupported modes, unbounded credentials, mismatched accounts and public policy activation',async t=>{
   const root=await fixture(t),sourceCommit='2'.repeat(40),baseline=testerPolicy();
   for(const change of [{enabled:false},{mode:'public'},{modelId:'another/model'},{testerPermitSha256:'bad'},{operatorToken:'must-not-be-packaged'},{bindingAccountId:'other-account'}]){

@@ -8,7 +8,10 @@ import { buildStoryContext, validateGeneratedScene, buildMemoryDelta } from '../
 import { sha256, canonicalStringify, stateHash } from '../game/cultivation/live/identity.js';
 
 const REVISED_CASES = Object.freeze(['task7-opening-v2','task7-branch-a-v2','task7-branch-b-v2']);
-export const STORY_ACCEPTANCE_CASES = Object.freeze(['task7-opening','task7-continuation','task7-counterfactual-a','task7-counterfactual-b',...REVISED_CASES]);
+const SCOPE_CORRECTED_CASES = Object.freeze(['task7-opening-v3','task7-branch-a-v3','task7-branch-b-v3']);
+const recipes = [{version:2,cases:REVISED_CASES},{version:3,cases:SCOPE_CORRECTED_CASES}];
+const recipeFor = caseId => recipes.find(recipe => recipe.cases.includes(caseId));
+export const STORY_ACCEPTANCE_CASES = Object.freeze(['task7-opening','task7-continuation','task7-counterfactual-a','task7-counterfactual-b',...REVISED_CASES,...SCOPE_CORRECTED_CASES]);
 // Deliberately conservative acceptance-only cap, below SQLite KV's 2 MB limit.
 export const MAX_ACCEPTANCE_SNAPSHOT_BYTES = 120 * 1024;
 const encoder = new TextEncoder();
@@ -21,7 +24,7 @@ function acceptanceState(record) {
   if (record.acceptance === undefined) return {schemaVersion:1,cases:{}};
   const state = record.acceptance;
   if (state?.schemaVersion !== 1 || !state.cases || typeof state.cases !== 'object' || Array.isArray(state.cases) || Object.keys(state.cases).some(id => !STORY_ACCEPTANCE_CASES.includes(id))) fail('ACCEPTANCE_STATE_INVALID');
-  for (const [caseId,row] of Object.entries(state.cases)) if (!row || typeof row.attemptId !== 'string' || !['reserved','complete','failed','unknown'].includes(row.status) || REVISED_CASES.includes(caseId) && row.recipeVersion !== 2) fail('ACCEPTANCE_STATE_INVALID');
+  for (const [caseId,row] of Object.entries(state.cases)) if (!row || typeof row.attemptId !== 'string' || !['reserved','complete','failed','unknown'].includes(row.status) || recipeFor(caseId) && row.recipeVersion !== recipeFor(caseId).version) fail('ACCEPTANCE_STATE_INVALID');
   return state;
 }
 function requireOriginalStructuralFailure(record,acceptance) {
@@ -30,20 +33,30 @@ function requireOriginalStructuralFailure(record,acceptance) {
   const result = record.results[original?.attemptId];
   if (original?.caseId !== 'task7-opening' || original.status !== 'failed' || reservation?.task !== 'task7' || reservation.status !== 'failed' || result?.task !== 'task7' || result.caseId !== 'task7-opening' || result.attemptId !== original.attemptId || result.status !== 'rejected' || result.errorCode !== 'GENERATED_SCENE_INVALID') fail('ACCEPTANCE_PREREQUISITE_MISSING');
 }
+function requireRevisedScopeFailure(record,acceptance) {
+  const caseId = REVISED_CASES[0], revised = acceptance.cases[caseId];
+  const reservation = record.ledger.attempts.find(row => row.attemptId === revised?.attemptId);
+  const result = record.results[revised?.attemptId], original = acceptance.cases['task7-opening'];
+  if (revised?.caseId !== caseId || revised.status !== 'failed' || revised.recipeVersion !== 2 || reservation?.task !== 'task7' || reservation.status !== 'failed' || result?.task !== 'task7' || result.caseId !== caseId || result.attemptId !== revised.attemptId || result.recipeVersion !== 2 || result.status !== 'rejected' || result.errorCode !== 'SCENE_ID_SCOPE_INVALID' || result.inferencePerformed !== true || result.reservedNeurons !== reservation.reservedNeurons) fail('ACCEPTANCE_PREREQUISITE_MISSING');
+  // The new fixed case depends on this exact persisted failure, never a loose
+  // error-code match or a replacement attempt that discards the earlier proof.
+  if (['contextHash','inputHash'].some(key => typeof revised[key] !== 'string' || !/^[a-f0-9]{64}$/.test(revised[key]) || result[key] !== revised[key]) || !Number.isSafeInteger(revised.inputBytes) || revised.inputBytes < 1 || result.inputBytes !== revised.inputBytes || revised.identity?.requestId !== caseId || revised.baseStateHash !== revised.identity?.stateHash || revised.baseStateHash !== original.baseStateHash || canonicalStringify(result.identity) !== canonicalStringify(revised.identity) || canonicalStringify(result.receipt) !== canonicalStringify(revised.receipt) || canonicalStringify(revised.receipt) !== canonicalStringify(original.receipt)) fail('ACCEPTANCE_PREREQUISITE_MISSING');
+}
 function distinctAction(first,next) {
   const a = first.receipt.action, b = next.receipt.action;
   // Labels, IDs and an ineffective stake change do not establish a contrast.
   return ['intent','targetId','approach'].some(key => a[key] !== b[key]) || canonicalStringify(first.nextLife) !== canonicalStringify(next.nextLife);
 }
 function prepareCase(record,acceptance,caseId) {
-  const revised = REVISED_CASES.includes(caseId);
-  const opening = caseId === STORY_ACCEPTANCE_CASES[0] || caseId === REVISED_CASES[0];
+  const recipe = recipeFor(caseId), revised = Boolean(recipe);
+  const opening = caseId === STORY_ACCEPTANCE_CASES[0] || caseId === recipe?.cases[0];
   if (revised) requireOriginalStructuralFailure(record,acceptance);
+  if (recipe?.version === 3) requireRevisedScopeFailure(record,acceptance);
   let state,records = [];
   if (opening) state = createLiveGame({runId:'live-acceptance-v1',seed:42,name:'云归',originId:'village'});
   else {
-    const prerequisite = acceptance.cases[revised ? REVISED_CASES[0] : caseId === STORY_ACCEPTANCE_CASES[1] ? STORY_ACCEPTANCE_CASES[0] : STORY_ACCEPTANCE_CASES[1]];
-    const precedingBranch = caseId === STORY_ACCEPTANCE_CASES[3] ? STORY_ACCEPTANCE_CASES[2] : caseId === REVISED_CASES[2] ? REVISED_CASES[1] : null;
+    const prerequisite = acceptance.cases[revised ? recipe.cases[0] : caseId === STORY_ACCEPTANCE_CASES[1] ? STORY_ACCEPTANCE_CASES[0] : STORY_ACCEPTANCE_CASES[1]];
+    const precedingBranch = caseId === STORY_ACCEPTANCE_CASES[3] ? STORY_ACCEPTANCE_CASES[2] : caseId === recipe?.cases[2] ? recipe.cases[1] : null;
     if (prerequisite?.status !== 'complete' || !prerequisite.state || !Array.isArray(prerequisite.records) || precedingBranch && acceptance.cases[precedingBranch]?.status !== 'complete') fail('ACCEPTANCE_PREREQUISITE_MISSING');
     state = copy(prerequisite.state); records = copy(prerequisite.records);
   }
@@ -56,7 +69,7 @@ function prepareCase(record,acceptance,caseId) {
     if (revised) {
       const distinctSecond = living.slice(1).find(candidate => distinctAction(living[0],candidate));
       if (!distinctSecond) fail('ACCEPTANCE_DISTINCT_CHOICES_UNAVAILABLE');
-      pending = caseId === REVISED_CASES[2] ? distinctSecond : living[0];
+      pending = caseId === recipe.cases[2] ? distinctSecond : living[0];
     } else {
       if (caseId !== STORY_ACCEPTANCE_CASES[1] && living.length < 2) fail('ACCEPTANCE_DISTINCT_CHOICES_UNAVAILABLE');
       pending = living[caseId === STORY_ACCEPTANCE_CASES[3] ? 1 : 0];
@@ -101,7 +114,7 @@ export async function runStoryAcceptance({record,caseId,attemptId,env,confirmEvi
     const serialized = JSON.stringify(input);
     reservedNeurons = estimateMaxNeurons(input);
     association = {attemptId,caseId,status:'reserved',contextHash:sha256(canonicalStringify(prepared.context)),inputHash:sha256(serialized),inputBytes:encoder.encode(serialized).length,baseStateHash:stateHash(prepared.state),identity:copy(prepared.pending.identity),receipt:copy(prepared.pending.receipt)};
-    if (REVISED_CASES.includes(caseId)) association.recipeVersion = 2;
+    if (recipeFor(caseId)) association.recipeVersion = recipeFor(caseId).version;
     const evidence = confirmEvidence();
     assertProviderReady({enabled:true,env,evidence,purpose:'probe',ledger:record.ledger,reservationNeurons:reservedNeurons});
     const ledger = reserveExperiment(record.ledger,{task:'task7',attemptId,reservedNeurons});
@@ -117,7 +130,7 @@ export async function runStoryAcceptance({record,caseId,attemptId,env,confirmEvi
     generated = await generateAcceptanceScene(env.AI,prepared.context,{attemptId:caseId});
   } catch { generated = {status:'paused',accountingStatus:'unknown',inferencePerformed:true,errorCode:'PROVIDER_FAILED'}; }
   const result = {schemaVersion:1,sampleKind:'workers-ai',task:'task7',caseId,attemptId,contextHash:association.contextHash,inputHash:association.inputHash,inputBytes:association.inputBytes,modelId:CANDIDATE_MODEL_ID,rulesVersion:prepared.context.identity.rulesVersion,promptVersion:prepared.context.identity.promptVersion,reservedNeurons,actualNeurons:null,inferencePerformed:generated.inferencePerformed === true,usage:generated.usage ?? null,stopReason:generated.stopReason ?? null,latencyMs:Math.max(0,Date.now()-started),status:generated.status,identity:association.identity,receipt:association.receipt};
-  if (association.recipeVersion === 2) result.recipeVersion = 2;
+  if (association.recipeVersion !== undefined) result.recipeVersion = association.recipeVersion;
   if (generated.errorCode === 'GENERATED_SCENE_INVALID' && STRUCTURE_DIAGNOSTIC_CODES.includes(generated.structureDiagnostic)) result.structureDiagnostic = generated.structureDiagnostic;
   let state,records,status = generated.accountingStatus === 'unknown' ? 'unknown' : 'failed';
   if (generated.status === 'ready') {

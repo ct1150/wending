@@ -78,7 +78,7 @@ async function buildBackend({root,sourceCommit,fallback,icon,acceptance}){
   const activation={enabled:stage!==null,publicEnabled:false,accessMode:stage?'tester-only':'disabled',candidateModelId:CANDIDATE_MODEL_ID,modelValidated:false};
   const identity={sourceCommit,...VERSIONS,...activation};
   const factory=stage?'createStoryStageWorker':'createStoryWorker',factoryModule=stage?'story-stage.js':'index.js';
-  const code=`import {createReleaseGateway} from './src/worker/release-gateway.js';\nimport {${factory}} from './src/worker/${factoryModule}';\nexport {StoryBudget} from './src/worker/index.js';\nexport const backendIdentity=Object.freeze(${JSON.stringify(identity)});\nconst gateway=createReleaseGateway(${JSON.stringify({fallback,icon})});\nexport default ${factory}({staticFetch:(request,env,ctx)=>gateway.fetch(request,env,ctx),config:${JSON.stringify(stage??{enabled:false})}});\n`;
+  const code=`import {createReleaseGateway} from './src/worker/release-gateway.js';\nimport {${factory}} from './src/worker/${factoryModule}';\nexport {StoryBudget} from './src/worker/index.js';\nexport const backendIdentity=Object.freeze(${JSON.stringify(identity)});\nconst gateway=createReleaseGateway(${JSON.stringify({fallback,icon,...(stage?{embeddedOnly:true}:{})})});\nexport default ${factory}({staticFetch:(request,env,ctx)=>gateway.fetch(request,env,ctx),config:${JSON.stringify(stage??{enabled:false})}});\n`;
   modules.set('entry.mjs',code);
   await mkdir(output,{recursive:true});
   const description=[];

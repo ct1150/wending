@@ -61,10 +61,23 @@ test('two permanent Task8 reservations survive unknown and failed outcomes, rest
 
 test('concurrent distinct Task8 attempts cannot overbook the two remaining slots',async t=>{
   const f=await fixture(t);
-  const results=await Promise.all(['a','b','c','d'].map(id=>f.call(input(id))));
-  assert.deepEqual(results.map(row=>row.kind),['reserved','reserved','denied','denied']);
-  assert.ok(results.slice(2).every(row=>row.code==='EXPERIMENT_BUDGET_EXHAUSTED'));
-  assert.equal((await f.record()).ledger.attempts.length,8);
+  const bodies=['a','b','c','d'].map(id=>input(id));
+  const results=await Promise.all(bodies.map(body=>f.call(body)));
+  // Authentication/body reads precede the serialized admission queue, so
+  // concurrent callers have no promised arrival order. Exactly two may win.
+  assert.deepEqual(results.map(row=>row.kind).sort(),['denied','denied','reserved','reserved']);
+  assert.ok(results.filter(row=>row.kind==='denied').every(row=>row.code==='EXPERIMENT_BUDGET_EXHAUSTED'));
+  const record=await f.record();assert.equal(record.ledger.attempts.length,8);
+  assert.equal(Object.keys(record.task8.admissions).length,2);
+  for(let i=0;i<results.length;i++){
+    const row=results[i];
+    if(row.kind==='reserved'){
+      assert.equal(row.reservedNeurons,111);
+      assert.deepEqual(record.task8.admissions[row.admissionId].identity,bodies[i]);
+      assert.ok(record.ledger.attempts.some(entry=>entry.attemptId===row.admissionId&&entry.task==='task8'&&entry.reservedNeurons===111));
+    }else assert.ok(!Object.values(record.task8.admissions).some(entry=>entry.identity.attemptId===bodies[i].attemptId));
+  }
+  assert.equal(f.calls,0);
 });
 
 test('Task8 settlement binds the full admission and cannot replace an earlier unknown outcome',async t=>{
@@ -92,7 +105,7 @@ test('Task8 refuses malformed identities, caller-selected reservations and inval
 
 test('global Neuron and call caps reject Task8 without changing previous reservations',async t=>{
   const high=originalRecord();high.ledger.attempts[5].reservedNeurons=587;
-  const full={...originalRecord(),ledger:{schemaVersion:1,attempts:Array.from({length:10},(_,i)=>({task:i<4?'task1':i<8?'task7':'task8',attemptId:'prior-'+i,reservedNeurons:50,actualNeurons:null,status:'unknown'}))}};
+  const full={...originalRecord(),ledger:{schemaVersion:1,attempts:Array.from({length:11},(_,i)=>({task:i<4?'task1':i<9?'task7':'task8',attemptId:'prior-'+i,reservedNeurons:50,actualNeurons:null,status:'unknown'}))}};
   for(const record of [high,full])await t.test(String(record.ledger.attempts.length),async t=>{
     const f=await fixture(t,record);assert.equal((await f.call()).code,'EXPERIMENT_BUDGET_EXHAUSTED');assert.deepEqual(await f.record(),record);assert.equal(f.calls,0);
   });

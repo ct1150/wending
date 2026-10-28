@@ -1,6 +1,8 @@
 // Server/operator-only policy. Never construct billing evidence from browser input.
 export const STORY_LIMITS = Object.freeze({ maxInputBytes:12 * 1024, maxRequestBytes:32 * 1024, maxResponseBytes:64 * 1024, maxOutputTokens:1536, timeoutMs:30000, maxMessages:8, evidenceMaxAgeMs:300000, dailyFreeNeurons:10000 });
-export const EXPERIMENT_LIMITS = Object.freeze({ maxCalls:10, maxNeurons:800, taskCalls:Object.freeze({ task1:4, task7:4, task8:2 }) });
+// Owner-authorized continuation on 2026-10-28: retain the original ledger and
+// 800 Neuron ceiling; add one Task7 slot (11 total, task split 4/5/2).
+export const EXPERIMENT_LIMITS = Object.freeze({ maxCalls:11, maxNeurons:800, taskCalls:Object.freeze({ task1:4, task7:5, task8:2 }) });
 export const CANDIDATE_MODEL_ID = '@cf/qwen/qwen3-30b-a3b-fp8';
 export const CANDIDATE_PROFILE = Object.freeze({
   modelId:CANDIDATE_MODEL_ID, validated:false, requestFormat:'workers-ai-messages', responseFormat:'json_schema', supportsStructuredOutput:null,
@@ -70,20 +72,20 @@ export function estimateMaxNeurons(input, { modelId = CANDIDATE_MODEL_ID } = {})
 
 export function createExperimentLedger() { return { schemaVersion:1, attempts:[] }; }
 function validateLedger(ledger) {
-  if (ledger?.schemaVersion !== 1 || !Array.isArray(ledger.attempts) || ledger.attempts.length > 10) fail('EXPERIMENT_LEDGER_INVALID');
+  if (ledger?.schemaVersion !== 1 || !Array.isArray(ledger.attempts) || ledger.attempts.length > EXPERIMENT_LIMITS.maxCalls) fail('EXPERIMENT_LEDGER_INVALID');
   const ids = new Set(), taskCounts = { task1:0, task7:0, task8:0 };
   let total = 0;
   for (const entry of ledger.attempts) {
     if (!entry || !Object.hasOwn(taskCounts, entry.task) || typeof entry.attemptId !== 'string' || !/^[a-zA-Z0-9_-]{1,80}$/.test(entry.attemptId) || ids.has(entry.attemptId) || !Number.isSafeInteger(entry.reservedNeurons) || entry.reservedNeurons < 1 || !['reserved','complete','failed','unknown'].includes(entry.status) || (entry.actualNeurons !== null && !finiteNonnegative(entry.actualNeurons))) fail('EXPERIMENT_LEDGER_INVALID');
     ids.add(entry.attemptId); taskCounts[entry.task]++; total += entry.reservedNeurons;
   }
-  if (total > 800 || Object.entries(taskCounts).some(([task,count]) => count > EXPERIMENT_LIMITS.taskCalls[task])) fail('EXPERIMENT_LEDGER_INVALID');
+  if (total > EXPERIMENT_LIMITS.maxNeurons || Object.entries(taskCounts).some(([task,count]) => count > EXPERIMENT_LIMITS.taskCalls[task])) fail('EXPERIMENT_LEDGER_INVALID');
   return ledger;
 }
 export function reserveExperiment(ledger, { task, attemptId, reservedNeurons } = {}) {
   validateLedger(ledger);
   if (!Object.hasOwn(EXPERIMENT_LIMITS.taskCalls, task) || typeof attemptId !== 'string' || !/^[a-zA-Z0-9_-]{1,80}$/.test(attemptId) || ledger.attempts.some(entry => entry.attemptId === attemptId) || !Number.isSafeInteger(reservedNeurons) || reservedNeurons < 1) fail('EXPERIMENT_ATTEMPT_INVALID');
-  if (ledger.attempts.length >= 10 || ledger.attempts.filter(entry => entry.task === task).length >= EXPERIMENT_LIMITS.taskCalls[task] || ledger.attempts.reduce((sum,entry) => sum + entry.reservedNeurons, 0) + reservedNeurons > 800 || ledger.attempts.some(entry => entry.actualNeurons > entry.reservedNeurons)) fail('EXPERIMENT_BUDGET_EXHAUSTED');
+  if (ledger.attempts.length >= EXPERIMENT_LIMITS.maxCalls || ledger.attempts.filter(entry => entry.task === task).length >= EXPERIMENT_LIMITS.taskCalls[task] || ledger.attempts.reduce((sum,entry) => sum + entry.reservedNeurons, 0) + reservedNeurons > EXPERIMENT_LIMITS.maxNeurons || ledger.attempts.some(entry => entry.actualNeurons > entry.reservedNeurons)) fail('EXPERIMENT_BUDGET_EXHAUSTED');
   return { schemaVersion:1, attempts:[...ledger.attempts.map(entry => ({ ...entry })), { task, attemptId, reservedNeurons, actualNeurons:null, status:'reserved' }] };
 }
 export function settleExperiment(ledger, attemptId, { status = 'unknown', actualNeurons = null } = {}) {
