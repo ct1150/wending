@@ -2,6 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import * as config from '../src/worker/story-config.js';
 import { runProbe, summarizeProbeEvidence } from '../scripts/workers-ai-probe.js';
+import {loadConfigWithProfiles,UNVALIDATED_PROFILE,VALIDATED_FIXTURE_PROFILE} from './helpers/production-profiles.js';
 const { assertProviderReady } = config;
 
 test('unknown billing blocks inference before using a binding', () => {
@@ -10,12 +11,15 @@ test('unknown billing blocks inference before using a binding', () => {
 
 const now = Date.parse('2026-10-27T10:00:00Z');
 const payload = { messages:[{ role:'system', content:'只输出中文JSON。' }, { role:'user', content:'山门前发生了什么？' }], max_tokens:128, stream:false, response_format:{ type:'json_schema', json_schema:{name:'accounting_fixture',strict:true,schema:{ type:'object' }} } };
-function evidence(overrides = {}) {
-  return config.confirmFreeBoundaryEvidence({ source:'operator-account-verification', plan:'workers-free', hardLimit:true, noGatewayCredits:true, directBinding:true, accountUsageVerified:true, storageFreeVerified:true, remainingNeurons:9000, checkedAt:new Date(now).toISOString(), ...overrides }, { now });
+function evidence(overrides = {},authority = config) {
+  return authority.confirmFreeBoundaryEvidence({ source:'operator-account-verification', plan:'workers-free', hardLimit:true, noGatewayCredits:true, directBinding:true, accountUsageVerified:true, storageFreeVerified:true, remainingNeurons:9000, checkedAt:new Date(now).toISOString(), ...overrides }, { now });
 }
-test('disabled default and unvalidated production profile cannot be bypassed by a model name', () => {
+test('disabled default and unvalidated fixture profile cannot be bypassed by a model name', async t => {
   assert.throws(() => assertProviderReady(), { code:'INFERENCE_DISABLED' });
-  assert.throws(() => assertProviderReady({ enabled:true, env:{ AI:{ run() {} } }, evidence:evidence(), now }), { code:'MODEL_UNVALIDATED' });
+  for(const profile of [UNVALIDATED_PROFILE,{...VALIDATED_FIXTURE_PROFILE,supportsStructuredOutput:false}]){
+    const isolated=await loadConfigWithProfiles(t,[profile]);
+    assert.throws(() => isolated.assertProviderReady({ enabled:true, env:{ AI:{ run() {} } }, evidence:evidence({},isolated), now }), { code:'MODEL_UNVALIDATED' });
+  }
 });
 test('only branded current trusted server evidence unlocks an explicit candidate probe', () => {
   const trusted = evidence();
@@ -134,9 +138,9 @@ test('historical reservations do not become a permanent quota ceiling for verifi
   assert.throws(()=>assertProviderReady({...options,evidence:{...options.evidence,plan:'workers-paid'}}),{code:'FREE_BOUNDARY_UNVERIFIED'});
 });
 
-test('production remains unvalidated without treating a five-minute probe balance as a lifetime limit', () => {
-  const trusted = evidence();
-  assert.throws(() => assertProviderReady({enabled:true,env:{AI:{run(){}}},evidence:trusted,now:now+86400000,purpose:'production'}), {code:'MODEL_UNVALIDATED'});
+test('validated production does not treat a five-minute probe balance as a lifetime limit', async t => {
+  const isolated=await loadConfigWithProfiles(t,[VALIDATED_FIXTURE_PROFILE]),trusted=evidence({},isolated);
+  assert.equal(isolated.assertProviderReady({enabled:true,env:{AI:{run(){}}},evidence:trusted,now:now+86400000,purpose:'production'}).modelId,config.CANDIDATE_MODEL_ID);
   assert.equal(trusted.checkedAt, '2026-10-27T10:00:00.000Z');
 });
 test('paid or unknown models cannot be selected', () => {
@@ -253,12 +257,13 @@ test('probe message fallback ignores incidental digits and preserves structured-
   }
 });
 
-test('persisted deployment proof restores only for exact binding account/current Free plan without refreshing snapshot time',()=>{
+test('persisted deployment proof restores only for exact binding account/current Free plan without refreshing snapshot time',async t=>{
+  const isolated=await loadConfigWithProfiles(t,[VALIDATED_FIXTURE_PROFILE]);
   const persisted={...evidence(),accountId:'binding-account'},later=now+86400000;
   const options={bindingAccountId:'binding-account',currentPlan:{accountId:'binding-account',plan:'workers-free',source:'operator-account-verification'},now:later};
-  const restored=config.restoreFreeBoundaryEvidence(persisted,options);
+  const restored=isolated.restoreFreeBoundaryEvidence(persisted,options);
   assert.equal(restored.checkedAt,persisted.checkedAt);
-  assert.throws(()=>assertProviderReady({enabled:true,env:{AI:{run(){}}},evidence:restored,now:later}),{code:'MODEL_UNVALIDATED'});
-  assert.throws(()=>assertProviderReady({enabled:true,env:{AI:{run(){}}},purpose:'probe',evidence:restored,now:later}),{code:'FREE_BOUNDARY_UNVERIFIED'});
-  for(const overrides of [{bindingAccountId:'other'},{currentPlan:null},{currentPlan:{...options.currentPlan,plan:'workers-paid'}},{currentPlan:{...options.currentPlan,accountId:'other'}}])assert.throws(()=>config.restoreFreeBoundaryEvidence(persisted,{...options,...overrides}),{code:'FREE_BOUNDARY_UNVERIFIED'});
+  assert.equal(isolated.assertProviderReady({enabled:true,env:{AI:{run(){}}},evidence:restored,now:later}).modelId,config.CANDIDATE_MODEL_ID);
+  assert.throws(()=>isolated.assertProviderReady({enabled:true,env:{AI:{run(){}}},purpose:'probe',evidence:restored,now:later}),{code:'FREE_BOUNDARY_UNVERIFIED'});
+  for(const overrides of [{bindingAccountId:'other'},{currentPlan:null},{currentPlan:{...options.currentPlan,plan:'workers-paid'}},{currentPlan:{...options.currentPlan,accountId:'other'}}])assert.throws(()=>isolated.restoreFreeBoundaryEvidence(persisted,{...options,...overrides}),{code:'FREE_BOUNDARY_UNVERIFIED'});
 });

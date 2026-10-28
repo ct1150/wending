@@ -142,6 +142,9 @@ export async function generateProviderScene(ai,profile,context,options={},assert
         // and narrative descriptions of actual elapsed time remain unchanged.
         if(/[0-9零〇一二两三四五六七八九十百千万半]+\s*(?:个\s*)?(?:年|月|天|日|晚|夜|周|星期|时辰|小时|分钟|刻钟|炷香)/u.test(proposal.label))fail('CHOICE_NOT_COMPILABLE');
         if(proposal.intent==='negotiate'){
+          // Asking about a route is dialogue; a label beginning with an actual
+          // journey must use a travel action instead of negotiation mechanics.
+          if(/^(?:返回|前往|赶往|赶赴|启程|出发|跟随|搭车|乘车|乘船)/u.test(proposal.label))fail('CHOICE_NOT_COMPILABLE');
           if(/购买|买下|买走|买入|购入|卖出|卖掉|出售/u.test(proposal.label))fail('CHOICE_NOT_COMPILABLE');
           const exchange=/(?:换取|换得|兑换)(.+)$/u.exec(proposal.label);
           // Negotiation rules grant only stones (cooperate/pressure) or

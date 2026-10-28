@@ -1,5 +1,5 @@
 // Server/operator-only policy. Never construct billing evidence from browser input.
-export const STORY_LIMITS = Object.freeze({ maxInputBytes:24 * 1024, maxRequestBytes:32 * 1024, maxResponseBytes:64 * 1024, maxOutputTokens:1536, timeoutMs:60000, maxMessages:8, evidenceMaxAgeMs:300000, dailyFreeNeurons:10000 });
+export const STORY_LIMITS = Object.freeze({ maxInputBytes:24 * 1024, maxRequestBytes:32 * 1024, maxResponseBytes:64 * 1024, maxOutputTokens:1536, timeoutMs:90000, maxMessages:8, evidenceMaxAgeMs:300000, dailyFreeNeurons:10000 });
 // The owner authorized completion without experiment count or Neuron ceilings.
 // Null means uncapped history, not a provider quota or a replacement allocation.
 export const EXPERIMENT_LIMITS = Object.freeze({ maxCalls:null, maxNeurons:null, taskCalls:Object.freeze({ task1:null, task7:null, task8:null }) });

@@ -1,5 +1,5 @@
 // Browser transport: credentials remain in the same-origin HttpOnly cookie.
-const LIMITS = {maxRequestBytes:32768,maxResponseBytes:65536,maxContextBytes:7000,timeoutMs:75000};
+const LIMITS = {maxRequestBytes:32768,maxResponseBytes:65536,maxContextBytes:7000,timeoutMs:105000};
 const error = code => Object.assign(new Error(code), {code});
 const identifier = value => typeof value === 'string' && /^[A-Za-z0-9][A-Za-z0-9:_-]{0,79}$/.test(value);
 export function createStoryClient({fetch:fetcher=globalThis.fetch,location=globalThis.location,timeoutMs=LIMITS.timeoutMs}={}) {

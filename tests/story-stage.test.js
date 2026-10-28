@@ -4,7 +4,7 @@ import {CANDIDATE_MODEL_ID} from '../src/worker/story-config.js';
 import { DatabaseSync } from 'node:sqlite';
 import { OperatorProbeDurableObject } from '../src/worker/operator-probe.js';
 import { createBudgetCoordinator } from '../src/worker/story-budget.js';
-import { createStoryWorker } from '../src/worker/index.js';
+import { createStoryProductionWorker } from '../src/worker/story-production.js';
 import {TURN_RESERVATION_NEURONS} from '../src/worker/story-api.js';
 import { createStoryClient } from '../src/ui/story-client.js';
 import { createLiveGame,prepareOpening } from '../src/game/cultivation/live/engine.js';
@@ -197,10 +197,10 @@ test('provider quota exhaustion survives failed experiment settlement and blocks
   assert.equal(f.db.prepare('SELECT COUNT(*) AS count FROM quota').get().count,1);
 });
 
-test('tester policy cannot activate the public worker or bypass a missing bridge or account proof',async t=>{
+test('tester policy cannot activate the explicit production worker or bypass a missing bridge or account proof',async t=>{
   const f=await fixture(t);
-  const publicWorker=createStoryWorker({config:f.config});
-  assert.equal((await (await publicWorker.fetch(request('/api/story/capabilities'),f.env)).json()).errorCode,'MODEL_UNVALIDATED');
+  const publicWorker=createStoryProductionWorker({config:f.config});
+  assert.equal((await (await publicWorker.fetch(request('/api/story/capabilities'),f.env)).json()).errorCode,'STORY_PRODUCTION_CONFIGURATION_INVALID');
   for(const key of ['STORY_OPERATOR_TOKEN','STORY_EXPERIMENT']){const old=f.env[key];delete f.env[key];assert.equal((await (await f.fetch(request('/api/story/capabilities'))).json()).available,false);f.env[key]=old;}
   await f.useConfig({...f.config,freeBoundaryProof:{...f.config.freeBoundaryProof,accountId:'wrong'}});
   assert.equal((await (await f.fetch(request('/api/story/capabilities'))).json()).available,false);

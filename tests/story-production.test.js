@@ -10,6 +10,7 @@ import {buildStoryContext} from '../src/game/cultivation/live/memory.js';
 import {CANDIDATE_MODEL_ID,PRODUCTION_PROFILES} from '../src/worker/story-config.js';
 import {execFile} from 'node:child_process';
 import {promisify} from 'node:util';
+import {setFixtureProductionProfiles,UNVALIDATED_PROFILE,VALIDATED_FIXTURE_PROFILE} from './helpers/production-profiles.js';
 const productionModule=await import('../src/worker/story-production.js').catch(()=>null);
 const repository=fileURLToPath(new URL('../',import.meta.url));
 const versions={protocolVersion:1,rulesVersion:1,promptVersion:1,saveVersion:5,contentVersion:4};
@@ -18,7 +19,7 @@ function policy(){
   const accountId='isolated-production-fixture';
   return {enabled:true,mode:'production',modelId,...versions,bindingAccountId:accountId,currentPlan:{accountId,source:'operator-account-verification',plan:'workers-free'},freeBoundaryProof:{accountId,source:'operator-account-verification',plan:'workers-free',hardLimit:true,noGatewayCredits:true,directBinding:true,accountUsageVerified:true,storageFreeVerified:true,remainingNeurons:0,checkedAt:new Date(Date.now()-86400000).toISOString()}};
 }
-async function fixture(t){
+async function fixture(t,{profiles=[VALIDATED_FIXTURE_PROFILE]}={}){
   assert.ok(productionModule,'the explicit production policy module is required');
   const root=await mkdtemp(path.join(tmpdir(),'wending-production-fixture-'));t.after(()=>rm(root,{recursive:true,force:true}));
   await cp(path.join(repository,'src'),path.join(root,'src'),{recursive:true});
@@ -27,21 +28,17 @@ async function fixture(t){
   await writeFile(path.join(root,'assets/seal.svg'),'<svg/>');
   await writeFile(path.join(root,'release/baishi-wending-offline.html'),'<!doctype html><title>isolated production fixture</title>');
   await writeFile(path.join(root,'config/story-deployment.json'),JSON.stringify({enabled:true,...versions}));
-  // Only this disposable source tree has a synthetic validated profile. Neither
-  // a build argument nor the real registry grants candidate validation.
-  const profileFile=path.join(root,'src/worker/story-config.js'),source=await readFile(profileFile,'utf8');
-  assert.ok(source.includes('export const PRODUCTION_PROFILES = Object.freeze([]);'));
-  await writeFile(profileFile,source.replace('export const PRODUCTION_PROFILES = Object.freeze([]);','export const PRODUCTION_PROFILES = Object.freeze([Object.freeze({...CANDIDATE_PROFILE,validated:true,supportsStructuredOutput:true})]);'));
+  // Fixture admission is independent of the real release's promotion state.
+  await setFixtureProductionProfiles(root,profiles);
   await cp(path.join(repository,'scripts/build-gateway.js'),path.join(root,'scripts/build-gateway.js'));
   await symlink(path.join(repository,'node_modules'),path.join(root,'node_modules'),'dir');
   return {root,module:await import(pathToFileURL(path.join(root,'src/worker/story-production.js')).href),build: (await import(pathToFileURL(path.join(root,'scripts/build-gateway.js')).href)).buildGateway};
 }
 
-test('real production registry remains closed and a supplied candidate cannot grant validation',()=>{
-  assert.ok(productionModule,'the explicit production policy module is required');
-  assert.deepEqual(PRODUCTION_PROFILES,[]);
-  assert.throws(()=>productionModule.validateStoryProductionPolicy(policy()),{code:'MODEL_UNVALIDATED'});
-  assert.throws(()=>productionModule.validateStoryProductionPolicy({...policy(),profile:{modelId,validated:true,supportsStructuredOutput:true}}),{code:'STORY_PRODUCTION_CONFIGURATION_INVALID'});
+test('an unvalidated fixture registry cannot be promoted by a supplied policy profile',async t=>{
+  const f=await fixture(t,{profiles:[UNVALIDATED_PROFILE]});
+  assert.throws(()=>f.module.validateStoryProductionPolicy(policy()),{code:'MODEL_UNVALIDATED'});
+  assert.throws(()=>f.module.validateStoryProductionPolicy({...policy(),profile:{modelId,validated:true,supportsStructuredOutput:true}}),{code:'STORY_PRODUCTION_CONFIGURATION_INVALID'});
 });
 
 test('production policy binds exact versions, current Free plan and original account proof without renewing probe balance',async t=>{
@@ -63,14 +60,12 @@ test('production factory defers proof validation past simulated zero module cloc
 });
 
 test('production packaging cannot borrow a validated registry from another source root',async t=>{
-  const trusted=await fixture(t),unvalidated=await fixture(t);
-  await cp(path.join(repository,'src/worker/story-config.js'),path.join(unvalidated.root,'src/worker/story-config.js'));
+  const trusted=await fixture(t),unvalidated=await fixture(t,{profiles:[UNVALIDATED_PROFILE]});
   await assert.rejects(trusted.build({root:unvalidated.root,sourceCommit:'8'.repeat(40),production:policy()}),/production source root/i);
 });
 
 for(const promoted of [false,true])test(`default CLI builds a disabled backend with enabled policy and ${promoted?'promoted':'unvalidated'} registry`,async t=>{
-  const f=await fixture(t),sourceCommit='a'.repeat(40);
-  if(!promoted)await cp(path.join(repository,'src/worker/story-config.js'),path.join(f.root,'src/worker/story-config.js'));
+  const f=await fixture(t,{profiles:[promoted?VALIDATED_FIXTURE_PROFILE:UNVALIDATED_PROFILE]}),sourceCommit='a'.repeat(40);
   // Match CI's no-argument script invocation and SOURCE_COMMIT environment.
   // No account proof or activation policy is supplied to this child process.
   await promisify(execFile)(process.execPath,[path.join(f.root,'scripts/build-gateway.js')],{cwd:f.root,env:{...process.env,SOURCE_COMMIT:sourceCommit},timeout:15000});
@@ -85,6 +80,7 @@ for(const promoted of [false,true])test(`default CLI builds a disabled backend w
 });
 
 test('isolated production package has no tester bridge or secrets and executes public API with durable budget and cached recovery', {timeout:30000},async t=>{
+  const originalPolicy=await readFile(path.join(repository,'config/story-deployment.json'),'utf8'),originalRegistry=JSON.stringify(PRODUCTION_PROFILES);
   const f=await fixture(t),config=policy(),sourceCommit='7'.repeat(40);
   await f.build({root:f.root,sourceCommit,production:config});
   const output=path.join(f.root,'release/backend'),manifest=JSON.parse(await readFile(path.join(output,'deployment.json'),'utf8'));
@@ -141,5 +137,5 @@ export default {async fetch(request,env,ctx){
   const blocked=await(await post({context:buildStoryContext(nextState,nextPending),attempt:{id:'production-blocked-attempt',sessionRef:session.sessionRef,retryOf:null}})).json();
   assert.equal(blocked.errorCode,'FREE_QUOTA_EXHAUSTED');
   const status=await getStatus();assert.equal(status.aiCalls,0);assert.ok(status.coordinatorNames.length>0);assert.deepEqual([...new Set(status.coordinatorNames)],['story-budget-v1-global']);assert.equal(outbound,1,'only the blocked static release check, with no inference egress');
-  assert.equal(JSON.parse(await readFile(path.join(repository,'config/story-deployment.json'),'utf8')).enabled,false);assert.deepEqual(PRODUCTION_PROFILES,[]);
+  assert.equal(await readFile(path.join(repository,'config/story-deployment.json'),'utf8'),originalPolicy);assert.equal(JSON.stringify(PRODUCTION_PROFILES),originalRegistry);
 });

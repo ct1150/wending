@@ -10,6 +10,7 @@ import { createHash } from 'node:crypto';
 import { REALMS } from '../src/game/cultivation/live/model.js';
 import * as acceptance from '../src/worker/story-acceptance.js';
 import * as providerCore from '../src/worker/story-provider-core.js';
+import {UNVALIDATED_PROFILE} from './helpers/production-profiles.js';
 const promotedFixtureProfile={...CANDIDATE_PROFILE,validated:true,supportsStructuredOutput:true};
 function context() {
   const born=createLiveGame({runId:'acceptance-run',seed:42});
@@ -148,11 +149,12 @@ test('foreign model IDs and malformed profile metadata cannot reach inference',a
   assert.equal(calls,0);assert.equal(evaluated,0);
 });
 
-test('the fixed acceptance seam executes the unpromoted candidate while production still refuses it',async()=>{
+test('the fixed acceptance seam cannot promote a fixture profile or mutate the release registry',async()=>{
   assertSeam();
+  const registryBefore=JSON.stringify(PRODUCTION_PROFILES),candidateBefore=JSON.stringify(CANDIDATE_PROFILE);
   const c=context(),expected=acceptance.buildCandidateStoryInput(c),calls=[];
   const ai={run:async(model,input)=>{calls.push({model,input:structuredClone(input)});return response();}};
-  const blocked=await generateScene(ai,CANDIDATE_PROFILE,c);
+  const blocked=await generateScene(ai,UNVALIDATED_PROFILE,c);
   assert.equal(blocked.errorCode,'MODEL_UNVALIDATED');assert.equal(blocked.inferencePerformed,false);
   assert.equal(calls.length,0);
   const result=await acceptance.generateAcceptanceScene(ai,c,{attemptId:'acceptance-attempt'});
@@ -164,8 +166,8 @@ test('the fixed acceptance seam executes the unpromoted candidate while producti
   assert.equal(expected.max_tokens,1536);assert.equal(expected.stream,false);
   assert.equal(expected.messages.length,2);assert.equal(expected.messages[1].content,JSON.stringify(c));
   assert.equal(expected.response_format.type,'json_schema');
-  assert.equal(CANDIDATE_PROFILE.validated,false);assert.equal(CANDIDATE_PROFILE.supportsStructuredOutput,null);
-  assert.deepEqual(PRODUCTION_PROFILES,[]);
+  assert.equal(JSON.stringify(CANDIDATE_PROFILE),candidateBefore);
+  assert.equal(JSON.stringify(PRODUCTION_PROFILES),registryBefore);
 });
 
 test('both paths inspect every reasoning alias and reject substantive or malformed thinking without returning it',async()=>{
@@ -577,6 +579,7 @@ test('typed reference guidance retains strict rejection of undeclared entities w
 });
 
 test('both provider paths submit identical paired schemas and still reject invalid model actions without repair',async()=>{
+  const registryBefore=JSON.stringify(PRODUCTION_PROFILES),candidateBefore=JSON.stringify(CANDIDATE_PROFILE);
   const c=context(),submitted=[],invalid=scene(c);invalid.choices[0].approach='cooperate';
   const raw=response(invalid),before=JSON.stringify(raw),ai={run:async(model,input)=>{submitted.push(structuredClone(input));return raw;}};
   const candidate=await acceptance.generateAcceptanceScene(ai,c),production=await generateScene(ai,promotedFixtureProfile,c);
@@ -586,7 +589,7 @@ test('both provider paths submit identical paired schemas and still reject inval
   assert.deepEqual(submitted[0],acceptance.buildCandidateStoryInput(c));assert.deepEqual(submitted[1],submitted[0]);
   const schema=submitted[0].response_format.json_schema.schema;
   assert.equal(acceptsChoiceSchema(schema.properties.choices.items,invalid.choices[0],schema),false);
-  assert.deepEqual(PRODUCTION_PROFILES,[]);assert.equal(CANDIDATE_PROFILE.validated,false);
+  assert.equal(JSON.stringify(PRODUCTION_PROFILES),registryBefore);assert.equal(JSON.stringify(CANDIDATE_PROFILE),candidateBefore);
 });
 
 test('reproduced structure failures retain strict rejection and expose only fixed categorical diagnostics',async()=>{

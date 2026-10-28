@@ -2,7 +2,7 @@
 // transaction. Ledger commitments are independent of expiring response records.
 // Null count/budget limits keep accounting without imposing an application
 // allocation. Cloudflare's actual Free quota response remains authoritative.
-export const BUDGET_LIMITS=Object.freeze({dailyNeurons:null,sessionMs:86400000,ipSessionsPerHour:null,ipRequestsPerHour:null,ipAttemptsPerDay:null,sessionAttemptsPerDay:null,pendingMs:90000});
+export const BUDGET_LIMITS=Object.freeze({dailyNeurons:null,sessionMs:86400000,ipSessionsPerHour:null,ipRequestsPerHour:null,ipAttemptsPerDay:null,sessionAttemptsPerDay:null,pendingMs:120000});
 const denied=code=>({kind:'denied',code});
 const day=now=>new Date(now).toISOString().slice(0,10);
 const validText=v=>typeof v==='string'&&v.length>0&&v.length<=256;

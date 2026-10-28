@@ -186,12 +186,12 @@ test('default denied-admission proofs exceed 120 while the session still has onl
   assert.equal(f.disk.sql.exec("SELECT charge FROM ledger WHERE status='unknown'").toArray()[0].charge,40);
 });
 
-test('default active lease lasts ninety seconds across restart without refunding its eventual unknown outcome',()=>{
+test('default active lease lasts 120 seconds across restart without refunding its eventual unknown outcome',()=>{
   const f=fixture({});create(f.b);f.b.reserve(request());
-  f.setNow('2026-10-27T12:01:29.999Z');
+  f.setNow('2026-10-27T12:01:59.999Z');
   assert.equal(f.make().reserve(request('another',{requestId:'another'})).code,'ATTEMPT_IN_PROGRESS');
   assert.equal(f.b.lookup(request()).code,'ATTEMPT_IN_PROGRESS');
-  f.setNow('2026-10-27T12:01:30.000Z');
+  f.setNow('2026-10-27T12:02:00.000Z');
   assert.equal(f.make().reserve(request('another',{requestId:'another'})).kind,'reserved');
   assert.equal(f.disk.sql.exec('SELECT status,charge FROM ledger WHERE attempt_id=?','a1').toArray()[0].status,'unknown');
   assert.equal(f.disk.sql.exec('SELECT status,charge FROM ledger WHERE attempt_id=?','a1').toArray()[0].charge,40);
@@ -210,7 +210,7 @@ test('default policy still makes provider quota exhaustion sticky for the observ
 
 test('trusted policy accepts explicit finite count limits without retaining old production ceilings and rejects malformed policy',()=>{
   for(const limits of [{dailyNeurons:10001},{ipSessionsPerHour:11},{ipRequestsPerHour:1201},{ipAttemptsPerDay:241},{sessionAttemptsPerDay:121}])assert.doesNotThrow(()=>createBudgetCoordinator({storage:storage(),limits}));
-  for(const limits of [{dailyNeurons:0},{dailyNeurons:-1},{dailyNeurons:1.1},{dailyNeurons:Infinity},{ipRequestsPerHour:'1200'},{sessionAttemptsPerDay:undefined},{pendingMs:null},{pendingMs:90001},{sessionMs:null},{unknown:1}])assert.throws(()=>createBudgetCoordinator({storage:storage(),limits}),/BUDGET_POLICY_INVALID/);
+  for(const limits of [{dailyNeurons:0},{dailyNeurons:-1},{dailyNeurons:1.1},{dailyNeurons:Infinity},{ipRequestsPerHour:'1200'},{sessionAttemptsPerDay:undefined},{pendingMs:null},{pendingMs:120001},{sessionMs:null},{unknown:1}])assert.throws(()=>createBudgetCoordinator({storage:storage(),limits}),/BUDGET_POLICY_INVALID/);
   const f=fixture({});create(f.b);
   for(const reservedNeurons of [0,-1,1.1,NaN,Infinity,null,Number.MAX_SAFE_INTEGER+1])assert.equal(f.b.reserve(request('invalid',{reservedNeurons})).code,'RESERVATION_INVALID');
 });

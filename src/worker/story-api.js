@@ -10,7 +10,7 @@ import { structureDiagnostic } from './story-provider-core.js';
 export const STORY_COOKIE='__Host-story_session';
 // Leave room for provider completion and durable settlement before the browser
 // gives up. The coordinator lease must in turn outlast this transport deadline.
-export const STORY_API_LIMITS=Object.freeze({maxRequestBytes:32768,maxResponseBytes:65536,maxContextBytes:7000,timeoutMs:75000});
+export const STORY_API_LIMITS=Object.freeze({maxRequestBytes:32768,maxResponseBytes:65536,maxContextBytes:7000,timeoutMs:105000});
 // Reserve the full permitted serialized prompt, including schema/system fields,
 // maximum message framing and output. No client chooses a model/rate/budget.
 export const TURN_RESERVATION_NEURONS=Math.ceil(((STORY_LIMITS.maxInputBytes+1024+64*STORY_LIMITS.maxMessages)*CANDIDATE_PROFILE.neuronRates.inputPerMillion+STORY_LIMITS.maxOutputTokens*CANDIDATE_PROFILE.neuronRates.outputPerMillion)/1000000);

@@ -1,13 +1,14 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {CANDIDATE_MODEL_ID} from '../src/worker/story-config.js';
-import {mkdtemp,mkdir,readFile,writeFile,rm,cp,readdir} from 'node:fs/promises';
+import {mkdtemp,mkdir,readFile,writeFile,rm,cp,readdir,symlink} from 'node:fs/promises';
 import {tmpdir} from 'node:os';
 import path from 'node:path';
 import {pathToFileURL,fileURLToPath} from 'node:url';
 import {createHash} from 'node:crypto';
 import {buildGateway} from '../scripts/build-gateway.js';
 import {createStoryClient} from '../src/ui/story-client.js';
+import {setFixtureProductionProfiles,UNVALIDATED_PROFILE} from './helpers/production-profiles.js';
 const repository=fileURLToPath(new URL('../',import.meta.url));
 const hash=text=>createHash('sha256').update(text).digest('hex');
 async function fixture(t){
@@ -196,7 +197,12 @@ test('production build arguments cannot bypass the checked-in switch or mix test
   await assert.rejects(buildGateway({root,sourceCommit,productionProfiles:[{validated:true}]}),/build option/i);
   const file=path.join(root,'config/story-deployment.json'),policy=JSON.parse(await readFile(file,'utf8'));
   await writeFile(file,JSON.stringify({...policy,enabled:true}));
-  await assert.rejects(buildGateway({root,sourceCommit,production}),/MODEL_UNVALIDATED/);
+  await setFixtureProductionProfiles(root,[UNVALIDATED_PROFILE]);
+  await mkdir(path.join(root,'scripts'));
+  await cp(path.join(repository,'scripts/build-gateway.js'),path.join(root,'scripts/build-gateway.js'));
+  await symlink(path.join(repository,'node_modules'),path.join(root,'node_modules'),'dir');
+  const isolatedBuild=(await import(pathToFileURL(path.join(root,'scripts/build-gateway.js')).href)).buildGateway;
+  await assert.rejects(isolatedBuild({root,sourceCommit,production}),/MODEL_UNVALIDATED/);
 });
 
 test('explicit tester or production mode cannot silently become a static-only package',async t=>{

@@ -18,6 +18,29 @@ const req=(path,body,cookie,headers={})=>new Request(origin+path,{method:body===
 async function session(f){const r=await f.api.fetch(req('/api/story/session',{protocolVersion:1}));return {data:await r.json(),cookie:r.headers.get('set-cookie')?.split(';')[0],setCookie:r.headers.get('set-cookie')};}
 const body=(s,id='attempt-1',retryOf=null)=>({context:context(),attempt:{id,sessionRef:s.data.sessionRef,retryOf}});
 
+test('default API watchdog pauses at 90 seconds and preserves the unknown reservation without retry',async t=>{
+  let enter;
+  const entered=new Promise(resolve=>enter=resolve);
+  const f=fixture(async()=>{enter();return new Promise(()=>{});});
+  t.after(()=>f.db.close());
+  const s=await session(f),turn=body(s);
+  t.mock.timers.enable({apis:['setTimeout']});
+  let settled=false;
+  const pending=f.api.fetch(req('/api/story/turn',turn,s.cookie));
+  pending.then(()=>{settled=true;},()=>{settled=true;});
+  await entered;
+  t.mock.timers.tick(89999);await new Promise(resolve=>setImmediate(resolve));
+  assert.equal(settled,false);assert.equal(f.calls,1);
+  assert.equal(f.db.prepare('SELECT status FROM ledger').get().status,'reserved');
+  t.mock.timers.tick(1);
+  const result=await(await pending).json();
+  assert.equal(result.status,'paused');assert.equal(result.errorCode,'PROVIDER_TIMEOUT');assert.equal(result.retry.explicit,true);
+  const commitment=f.db.prepare('SELECT status,charge,actual FROM ledger').get();
+  assert.equal(commitment.status,'unknown');assert.equal(commitment.charge,TURN_RESERVATION_NEURONS);assert.equal(commitment.actual,null);
+  assert.deepEqual(await(await f.api.fetch(req('/api/story/turn',turn,s.cookie))).json(),result);
+  assert.deepEqual(f.db.prepare('SELECT status,charge,actual FROM ledger').get(),commitment);assert.equal(f.calls,1);
+});
+
 test('default HTTP admission crosses former session, IP and aggregate ceilings while retaining unknown accounting and exact replay',async t=>{
   const f=fixture(async(ai,profile,c)=>c.identity.requestId==='uncapped-request-0'?{status:'paused',errorCode:'PROVIDER_TIMEOUT',accountingStatus:'unknown'}:{status:'ready',scene:scene(c),accountingStatus:'complete'});
   t.after(()=>f.db.close());
