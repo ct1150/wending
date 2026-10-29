@@ -1,0 +1,70 @@
+{
+  "checkedOn": "2026-10-29",
+  "currency": "USD",
+  "priceUnit": "per 1 million tokens",
+  "sourcePolicy": "Official Cloudflare model and pricing pages; no new successful inference or Chinese story quality benchmark.",
+  "sources": [
+    "https://developers.cloudflare.com/workers-ai/platform/pricing/",
+    "https://developers.cloudflare.com/workers-ai/models/qwen3.8-27b/",
+    "https://developers.cloudflare.com/workers-ai/models/glm-4.7-flash/",
+    "https://developers.cloudflare.com/workers-ai/models/qwen3-30b-a3b-fp8/",
+    "https://developers.cloudflare.com/workers-ai/models/glm-5.3-flash/"
+  ],
+  "quota": {
+    "dailyFreeNeurons": 10000,
+    "sharedAcrossAccountModels": true,
+    "resetUtc": "00:00",
+    "switchingModelsDoesNotRestoreExhaustedQuota": true
+  },
+  "models": [
+    {
+      "id": "@cf/qwen/qwen3.8-27b",
+      "role": "Current production model and benchmark baseline",
+      "inputPrice": 0.45,
+      "outputPrice": 3.2,
+      "inputNeurons": 40909,
+      "outputNeurons": 290909,
+      "contextTokens": 262144,
+      "standardWorkersFreeEligible": true
+    },
+    {
+      "id": "@cf/zai-org/glm-4.7-flash",
+      "role": "Prioritize as a lower-cost multilingual dialogue candidate; Chinese cultivation quality and latency remain unmeasured",
+      "inputPrice": 0.0605,
+      "outputPrice": 0.4,
+      "priceCaveat": "The aggregate pricing page rounds input to 0.060; model page and 5500 Neurons correspond to 0.0605.",
+      "inputNeurons": 5500,
+      "outputNeurons": 36400,
+      "contextTokens": 131072,
+      "standardWorkersFreeEligible": true
+    },
+    {
+      "id": "@cf/qwen/qwen3-30b-a3b-fp8",
+      "role": "Prioritize as a lower-cost Qwen candidate; Chinese cultivation quality and latency remain unmeasured",
+      "inputPrice": 0.0509,
+      "outputPrice": 0.335,
+      "inputNeurons": 4625,
+      "outputNeurons": 30475,
+      "contextTokens": 32768,
+      "standardWorkersFreeEligible": true
+    },
+    {
+      "id": "@cf/zai-org/glm-5.3-flash",
+      "role": "Low-cost paid candidate only; excluded from current no-upgrade design",
+      "inputPrice": 0.15,
+      "outputPrice": 0.5,
+      "contextTokens": 1048576,
+      "standardWorkersFreeEligible": false,
+      "requiredBilling": "Workers Paid or prepaid AI Gateway credits",
+      "reasoningCanBeDisabled": false
+    }
+  ],
+  "capacityIllustration": {
+    "assumedInputTokensPerTurn": 3000,
+    "assumedOutputTokensPerTurn": 1000,
+    "formula": "floor(10000 / (inputNeurons*3000/1000000 + outputNeurons*1000/1000000))",
+    "theoreticalTurns": {"currentQwen":24,"glm47Flash":189,"qwen30bA3b":225},
+    "caveats": ["An arithmetic illustration, not actual production capacity", "Model tokenization, reasoning, schema input, retries and other account usage affect actual consumption", "Generating unselected branches also consumes quota"]
+  },
+  "compatibilityCaveat": "Ordinary stream support is documented for candidates, but stream plus the game's strict schema, final usage/stop metadata and existing narrative rules require actual acceptance tests."
+}

@@ -1,0 +1,33 @@
+{
+  "checkedAt": "2026-10-29T03:04:47.980Z",
+  "mode": "local-only-no-model-calls",
+  "sourceStateHash": "65fa96ed4c6190a4063aa54476a8f2ebee6ce08a26250f5c74d58d2c5f9abf60",
+  "choiceCount": 3,
+  "results": [
+    {
+      "choiceId": "r:17d4b63b7a333a81:t1:c:a",
+      "sourceStateUnchanged": true,
+      "deterministicPending": true,
+      "nextRng": 3012430483,
+      "contextBytes": 2011,
+      "contextHash": "ba782040f5c9856907a0d9bd57854c84a7032257575bdceea20c03f2deaef228"
+    },
+    {
+      "choiceId": "r:17d4b63b7a333a81:t1:c:b",
+      "sourceStateUnchanged": true,
+      "deterministicPending": true,
+      "nextRng": 3012430483,
+      "contextBytes": 2004,
+      "contextHash": "38bb209e77079421db145e2b7f387aa58ee38a5d435a228a0fd0cc9559c22655"
+    },
+    {
+      "choiceId": "r:17d4b63b7a333a81:t1:c:c",
+      "sourceStateUnchanged": true,
+      "deterministicPending": true,
+      "nextRng": 3012430483,
+      "contextBytes": 1840,
+      "contextHash": "6ef094392d42c92d027936e4805d2b974ee0a7ffd5f8465955088cac66506a78"
+    }
+  ],
+  "scope": "Pure candidate derivation only; no IndexedDB writes, no speculative model scheduling, no cross-tab or response adoption verification."
+}

@@ -1,0 +1,468 @@
+{
+  "caseId": "opening",
+  "mode": "backup",
+  "startedAt": "2026-10-29T04:52:42.130Z",
+  "sourceBase": "1f5b9e18dae06e4b74e6d60403c46964cf45e1f9",
+  "sourceStatus": "uncommitted GLM transport under test",
+  "firstPreviewMs": 1598,
+  "doneMs": 5931,
+  "timeline": [
+    {
+      "atMs": 285,
+      "serverMs": 0,
+      "reset": true
+    },
+    {
+      "atMs": 1598,
+      "serverMs": 1328,
+      "chars": 1
+    },
+    {
+      "atMs": 1610,
+      "serverMs": 1340,
+      "chars": 2
+    },
+    {
+      "atMs": 1615,
+      "serverMs": 1345,
+      "chars": 4
+    },
+    {
+      "atMs": 1632,
+      "serverMs": 1361,
+      "chars": 6
+    },
+    {
+      "atMs": 1660,
+      "serverMs": 1390,
+      "chars": 7
+    },
+    {
+      "atMs": 1687,
+      "serverMs": 1417,
+      "chars": 8
+    },
+    {
+      "atMs": 1716,
+      "serverMs": 1446,
+      "chars": 9
+    },
+    {
+      "atMs": 1716,
+      "serverMs": 1446,
+      "chars": 10
+    },
+    {
+      "atMs": 1717,
+      "serverMs": 1446,
+      "chars": 12
+    },
+    {
+      "atMs": 1883,
+      "serverMs": 1613,
+      "chars": 14
+    },
+    {
+      "atMs": 1883,
+      "serverMs": 1613,
+      "chars": 16
+    },
+    {
+      "atMs": 1884,
+      "serverMs": 1615,
+      "chars": 17
+    },
+    {
+      "atMs": 1891,
+      "serverMs": 1621,
+      "chars": 19
+    },
+    {
+      "atMs": 1891,
+      "serverMs": 1621,
+      "chars": 20
+    },
+    {
+      "atMs": 1892,
+      "serverMs": 1621,
+      "chars": 21
+    },
+    {
+      "atMs": 1892,
+      "serverMs": 1621,
+      "chars": 22
+    },
+    {
+      "atMs": 1892,
+      "serverMs": 1621,
+      "chars": 24
+    },
+    {
+      "atMs": 1912,
+      "serverMs": 1640,
+      "chars": 26
+    },
+    {
+      "atMs": 1938,
+      "serverMs": 1667,
+      "chars": 28
+    },
+    {
+      "atMs": 1967,
+      "serverMs": 1696,
+      "chars": 29
+    },
+    {
+      "atMs": 1996,
+      "serverMs": 1724,
+      "chars": 31
+    },
+    {
+      "atMs": 1996,
+      "serverMs": 1724,
+      "chars": 33
+    },
+    {
+      "atMs": 1996,
+      "serverMs": 1724,
+      "chars": 34
+    },
+    {
+      "atMs": 2024,
+      "serverMs": 1751,
+      "chars": 35
+    },
+    {
+      "atMs": 2024,
+      "serverMs": 1751,
+      "chars": 37
+    },
+    {
+      "atMs": 2050,
+      "serverMs": 1778,
+      "chars": 38
+    },
+    {
+      "atMs": 2080,
+      "serverMs": 1807,
+      "chars": 39
+    },
+    {
+      "atMs": 2107,
+      "serverMs": 1833,
+      "chars": 40
+    },
+    {
+      "atMs": 2107,
+      "serverMs": 1834,
+      "chars": 42
+    },
+    {
+      "atMs": 2142,
+      "serverMs": 1868,
+      "chars": 43
+    },
+    {
+      "atMs": 2142,
+      "serverMs": 1868,
+      "chars": 45
+    },
+    {
+      "atMs": 2174,
+      "serverMs": 1900,
+      "chars": 46
+    },
+    {
+      "atMs": 2174,
+      "serverMs": 1900,
+      "chars": 49
+    },
+    {
+      "atMs": 2205,
+      "serverMs": 1932,
+      "chars": 50
+    },
+    {
+      "atMs": 2215,
+      "serverMs": 1941,
+      "chars": 51
+    },
+    {
+      "atMs": 2247,
+      "serverMs": 1973,
+      "chars": 52
+    },
+    {
+      "atMs": 2271,
+      "serverMs": 1997,
+      "chars": 53
+    },
+    {
+      "atMs": 2271,
+      "serverMs": 1997,
+      "chars": 54
+    },
+    {
+      "atMs": 2272,
+      "serverMs": 1998,
+      "chars": 55
+    },
+    {
+      "atMs": 2296,
+      "serverMs": 2022,
+      "chars": 56
+    },
+    {
+      "atMs": 2330,
+      "serverMs": 2054,
+      "chars": 57
+    },
+    {
+      "atMs": 2330,
+      "serverMs": 2054,
+      "chars": 58
+    },
+    {
+      "atMs": 2330,
+      "serverMs": 2054,
+      "chars": 60
+    },
+    {
+      "atMs": 2365,
+      "serverMs": 2090,
+      "chars": 61
+    },
+    {
+      "atMs": 2397,
+      "serverMs": 2122,
+      "chars": 63
+    },
+    {
+      "atMs": 2397,
+      "serverMs": 2122,
+      "chars": 65
+    },
+    {
+      "atMs": 2433,
+      "serverMs": 2156,
+      "chars": 66
+    },
+    {
+      "atMs": 2465,
+      "serverMs": 2190,
+      "chars": 67
+    },
+    {
+      "atMs": 2465,
+      "serverMs": 2190,
+      "chars": 68
+    },
+    {
+      "atMs": 2501,
+      "serverMs": 2227,
+      "chars": 70
+    },
+    {
+      "atMs": 2508,
+      "serverMs": 2234,
+      "chars": 72
+    },
+    {
+      "atMs": 2538,
+      "serverMs": 2263,
+      "chars": 73
+    },
+    {
+      "atMs": 2565,
+      "serverMs": 2290,
+      "chars": 75
+    },
+    {
+      "atMs": 2565,
+      "serverMs": 2290,
+      "chars": 77
+    },
+    {
+      "atMs": 2594,
+      "serverMs": 2317,
+      "chars": 78
+    },
+    {
+      "atMs": 2619,
+      "serverMs": 2342,
+      "chars": 79
+    },
+    {
+      "atMs": 2619,
+      "serverMs": 2342,
+      "chars": 80
+    },
+    {
+      "atMs": 2619,
+      "serverMs": 2342,
+      "chars": 81
+    },
+    {
+      "atMs": 2648,
+      "serverMs": 2373,
+      "chars": 83
+    },
+    {
+      "atMs": 2648,
+      "serverMs": 2373,
+      "chars": 86
+    },
+    {
+      "atMs": 2676,
+      "serverMs": 2401,
+      "chars": 87
+    },
+    {
+      "atMs": 2677,
+      "serverMs": 2401,
+      "chars": 88
+    },
+    {
+      "atMs": 2677,
+      "serverMs": 2401,
+      "chars": 90
+    },
+    {
+      "atMs": 2704,
+      "serverMs": 2428,
+      "chars": 92
+    },
+    {
+      "atMs": 2704,
+      "serverMs": 2428,
+      "chars": 94
+    },
+    {
+      "atMs": 2737,
+      "serverMs": 2455,
+      "chars": 96
+    },
+    {
+      "atMs": 2763,
+      "serverMs": 2487,
+      "chars": 98
+    },
+    {
+      "atMs": 2763,
+      "serverMs": 2487,
+      "chars": 100
+    },
+    {
+      "atMs": 2794,
+      "serverMs": 2518,
+      "chars": 101
+    },
+    {
+      "atMs": 2795,
+      "serverMs": 2520,
+      "chars": 104
+    },
+    {
+      "atMs": 2817,
+      "serverMs": 2541,
+      "chars": 108
+    },
+    {
+      "atMs": 2848,
+      "serverMs": 2571,
+      "chars": 109
+    },
+    {
+      "atMs": 2848,
+      "serverMs": 2571,
+      "chars": 110
+    },
+    {
+      "atMs": 2870,
+      "serverMs": 2594,
+      "chars": 112
+    },
+    {
+      "atMs": 2901,
+      "serverMs": 2624,
+      "chars": 113
+    },
+    {
+      "atMs": 3183,
+      "serverMs": 2906,
+      "chars": 118
+    },
+    {
+      "atMs": 3210,
+      "serverMs": 2933,
+      "chars": 121
+    },
+    {
+      "atMs": 3233,
+      "serverMs": 2957,
+      "chars": 123
+    },
+    {
+      "atMs": 3234,
+      "serverMs": 2957,
+      "chars": 124
+    },
+    {
+      "atMs": 3261,
+      "serverMs": 2984,
+      "chars": 125
+    }
+  ],
+  "result": {
+    "status": "rejected",
+    "accountingStatus": "complete",
+    "modelId": "@cf/zai-org/glm-4.7-flash",
+    "attemptId": "glm-speed-opening",
+    "inferencePerformed": true,
+    "usage": {
+      "promptTokens": 2650,
+      "completionTokens": 390,
+      "totalTokens": 3040
+    },
+    "actualNeurons": null,
+    "stopReason": "stop",
+    "inputHash": "cc5332b3b10d82639980f551416ebf60b1db919840c2a0dd2364e4998ea75237",
+    "inputBytes": 9941,
+    "nonThinkingValidated": true,
+    "structureDiagnostic": "ENTITY_STATUS_INVALID",
+    "errorCode": "GENERATED_SCENE_INVALID"
+  },
+  "source": "zhipu",
+  "httpStatus": 200,
+  "headersMs": 284,
+  "accountingUnknown": false,
+  "serverDoneMs": 5636,
+  "upstream": {
+    "httpStatus": 200
+  },
+  "primaryError": null,
+  "rawCompletion": {
+    "model": "@cf/zai-org/glm-4.7-flash",
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "message": {
+          "content": "\n{\n  \"blocks\": [\n    {\n      \"kind\": \"narration\",\n      \"text\": \"云归站在青云村村口，十六岁的少年身形单薄，却有着一双异常明亮的眼睛。他刚刚从村中走出，身后是熟悉的茅屋和炊烟，身前是通往外界的蜿蜒土路。作为村里少有的拥有\\\"剑骨\\\"天赋的孩子，他一直渴望离开这个闭塞之地，去看看传说中的修仙世界。\"\n    },\n    {\n      \"kind\": \"dialogue\",\n      \"speaker\": \"self\",\n      \"text\": \"这就是外面的世界吗？\"\n    }\n  ],\n  \"title\": \"初入江湖\",\n  \"location\": \"青云村口\",\n  \"entities\": [\n    {\n      \"id\": \"l1\",\n      \"name\": \"青云村\",\n      \"kind\": \"place\",\n      \"status\": \"alive\"\n    },\n    {\n      \"id\": \"l2\",\n      \"name\": \"蜿蜒土路\",\n      \"kind\": \"place\",\n      \"status\": \"alive\"\n    }\n  ],\n  \"choices\": [\n    {\n      \"label\": \"向左前往青石镇\",\n      \"intent\": \"travel\",\n      \"targetId\": \"l2\",\n      \"stake\": \"normal\",\n      \"approach\": \"road\"\n    },\n    {\n      \"label\": \"在村中寻找机会\",\n      \"intent\": \"explore\",\n      \"targetId\": \"supplies\",\n      \"stake\": \"low\",\n      \"approach\": \"cautious\"\n    },\n    {\n      \"label\": \"尝试修炼剑法\",\n      \"intent\": \"practice\",\n      \"targetId\": \"self\",\n      \"stake\": \"normal\",\n      \"approach\": \"steady\"\n    }\n  ],\n  \"memoryDeltas\": []\n}\n",
+          "reasoning_content": ""
+        }
+      }
+    ],
+    "usage": {
+      "prompt_tokens": 2650,
+      "completion_tokens": 390,
+      "total_tokens": 3040,
+      "prompt_tokens_details": {
+        "cached_tokens": 61
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0
+      }
+    }
+  },
+  "keyPresent": true
+}

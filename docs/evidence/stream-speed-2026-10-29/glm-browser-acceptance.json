@@ -1,0 +1,1791 @@
+{
+  "recordedAt": "2026-10-29T05:29:53.272Z",
+  "version": "118b46b6-4050-41b8-b4cd-203b1880d527",
+  "frontendSource": "local current release HTML served by browser harness; API and SQLite are real Workers",
+  "records": [
+    {
+      "caseId": "opening",
+      "mode": "browser-real-api",
+      "start": 347.90000009536743,
+      "timeline": [
+        {
+          "atMs": 3425,
+          "chars": 1
+        },
+        {
+          "atMs": 3476,
+          "chars": 11
+        },
+        {
+          "atMs": 3574,
+          "chars": 16
+        },
+        {
+          "atMs": 3641,
+          "chars": 21
+        },
+        {
+          "atMs": 3726,
+          "chars": 26
+        },
+        {
+          "atMs": 3789,
+          "chars": 32
+        },
+        {
+          "atMs": 3861,
+          "chars": 35
+        },
+        {
+          "atMs": 3941,
+          "chars": 41
+        },
+        {
+          "atMs": 4027,
+          "chars": 45
+        },
+        {
+          "atMs": 4092,
+          "chars": 51
+        },
+        {
+          "atMs": 4173,
+          "chars": 55
+        },
+        {
+          "atMs": 4243,
+          "chars": 58
+        },
+        {
+          "atMs": 4327,
+          "chars": 61
+        },
+        {
+          "atMs": 4394,
+          "chars": 65
+        },
+        {
+          "atMs": 4461,
+          "chars": 70
+        },
+        {
+          "atMs": 4538,
+          "chars": 73
+        },
+        {
+          "atMs": 4612,
+          "chars": 77
+        },
+        {
+          "atMs": 4975,
+          "chars": 84
+        },
+        {
+          "atMs": 5043,
+          "chars": 91
+        },
+        {
+          "atMs": 5124,
+          "chars": 93
+        },
+        {
+          "atMs": 5192,
+          "chars": 94
+        },
+        {
+          "atMs": 5459,
+          "chars": 98
+        },
+        {
+          "atMs": 5762,
+          "chars": 129
+        },
+        {
+          "atMs": 5813,
+          "chars": 132
+        }
+      ],
+      "firstBirthMs": 78,
+      "lastText": "你叫云归，今年十六岁，是个凡人。你出身于云溪村，身体强健，记忆力极佳，但家境贫寒。村口的老槐树下，你正望着远处连绵的青山发呆，手里紧紧攥着仅剩的半块干粮。\n\n这日子没法过了，我得出去闯闯。\n\n你咬了一口干粮，眼神逐渐变得坚定。你决定离开村子，去外面的世界寻找出路。",
+      "doneMs": 8787,
+      "result": {
+        "protocolVersion": 1,
+        "status": "ready",
+        "requestId": "883baca4-47d1-466d-a9f0-a6b3a5f9d9be",
+        "attemptId": "68163321-dd6d-4cdb-b8a3-4ec415eff0d8",
+        "sessionRef": "sess_3cc2f30ea6a0836ed26f41fa3d782703",
+        "errorCode": null,
+        "retry": null,
+        "scene": {
+          "id": "r:34618253524e28b0:t1:s:scene",
+          "title": "云溪村口",
+          "location": "云溪村口",
+          "entities": [
+            {
+              "id": "r:34618253524e28b0:t1:e:place_1",
+              "name": "山道",
+              "kind": "place"
+            },
+            {
+              "id": "r:34618253524e28b0:t1:e:place_2",
+              "name": "集市",
+              "kind": "place"
+            }
+          ],
+          "blocks": [
+            {
+              "kind": "narration",
+              "text": "你叫云归，今年十六岁，是个凡人。你出身于云溪村，身体强健，记忆力极佳，但家境贫寒。村口的老槐树下，你正望着远处连绵的青山发呆，手里紧紧攥着仅剩的半块干粮。"
+            },
+            {
+              "kind": "dialogue",
+              "speaker": "self",
+              "text": "这日子没法过了，我得出去闯闯。"
+            },
+            {
+              "kind": "narration",
+              "text": "你咬了一口干粮，眼神逐渐变得坚定。你决定离开村子，去外面的世界寻找出路。"
+            }
+          ],
+          "choices": [
+            {
+              "id": "r:34618253524e28b0:t1:c:a",
+              "label": "沿路前往山道（谨慎）",
+              "intent": "travel",
+              "targetId": "r:34618253524e28b0:t1:e:place_1",
+              "stake": "low",
+              "approach": "road"
+            },
+            {
+              "id": "r:34618253524e28b0:t1:c:b",
+              "label": "沿路前往集市（谨慎）",
+              "intent": "travel",
+              "targetId": "r:34618253524e28b0:t1:e:place_2",
+              "stake": "low",
+              "approach": "road"
+            },
+            {
+              "id": "r:34618253524e28b0:t1:c:c",
+              "label": "歇息调养（谨慎）",
+              "intent": "rest",
+              "targetId": "self",
+              "stake": "low",
+              "approach": "recover"
+            }
+          ],
+          "memoryDeltas": []
+        }
+      },
+      "revision": 1,
+      "pending": false,
+      "posts": 1,
+      "diagnostics": [
+        {
+          "requestId": "2cbfcf82-1cc2-46ac-bc56-8141c01bc121",
+          "context": {
+            "schemaVersion": 1,
+            "phase": "opening",
+            "identity": {
+              "runId": "1b6685f3-1283-4861-9178-033e880d7c23",
+              "turnId": 1,
+              "baseRevision": 0,
+              "stateHash": "f47f0858a10bcb05da34f8eef814ddb4418e107ad125d28fe4e6100a3cb09f44",
+              "choiceId": null,
+              "rulesVersion": 1,
+              "promptVersion": 1,
+              "requestId": "2cbfcf82-1cc2-46ac-bc56-8141c01bc121"
+            },
+            "namespace": "r:528302d4866d4bf2",
+            "receipt": {
+              "kind": "opening",
+              "choiceId": null,
+              "action": null,
+              "elapsedDays": 0,
+              "itemChanges": {},
+              "relationChanges": {},
+              "random": {
+                "before": 1566245833,
+                "after": 1566245833,
+                "roll": null
+              },
+              "before": {
+                "ageDays": 5760,
+                "realm": "mortal",
+                "cultivation": 0,
+                "injury": 0
+              },
+              "after": {
+                "ageDays": 5760,
+                "realm": "mortal",
+                "cultivation": 0,
+                "injury": 0
+              },
+              "death": null,
+              "birth": {
+                "originId": "village",
+                "talentIds": [
+                  "keen-memory",
+                  "flash-wisdom"
+                ],
+                "attributes": {
+                  "constitution": 6,
+                  "insight": 1,
+                  "fortune": 5
+                }
+              }
+            },
+            "life": {
+              "name": "云归",
+              "ageDays": 5760,
+              "lifeLimit": 80,
+              "realm": "mortal",
+              "cultivation": 0,
+              "injury": 0,
+              "items": {
+                "supplies": 3,
+                "stones": 0
+              },
+              "relations": {},
+              "birth": {
+                "originId": "village",
+                "talentIds": [
+                  "keen-memory",
+                  "flash-wisdom"
+                ],
+                "attributes": {
+                  "constitution": 6,
+                  "insight": 1,
+                  "fortune": 5
+                }
+              }
+            },
+            "entities": [],
+            "memory": {
+              "facts": [],
+              "promises": [],
+              "clues": [],
+              "recent": [],
+              "summaries": []
+            },
+            "references": [],
+            "previousScene": null,
+            "relationshipVersion": 1,
+            "relationships": {},
+            "coverage": {
+              "policy": "relevance-v1",
+              "openTotal": 0,
+              "openIncluded": 0,
+              "openOmitted": 0
+            }
+          },
+          "rawCompletion": {
+            "model": "@cf/zai-org/glm-4.7-flash",
+            "choices": [
+              {
+                "finish_reason": "stop",
+                "message": {
+                  "content": "\n{\n  \"blocks\": [\n    {\n      \"kind\": \"narration\",\n      \"text\": \"你站在青云村口，晨雾还未散去。十六岁的云归，身形清瘦，眼神中透着与年龄不符的沉稳。你拥有过目不忘的天赋，这让你在村中显得有些格格不入。村长曾叹息，你的聪慧不属于这片土地。今天是你离开村庄的日子，也是你踏上修仙路的起点。\"\n    },\n    {\n      \"kind\": \"dialogue\",\n      \"speaker\": \"self\",\n      \"text\": \"我该动身了。\"\n    },\n    {\n      \"kind\": \"narration\",\n      \"text\": \"你背起简单的行囊，里面只有三天的干粮和一把磨得锋利的柴刀。村口的老槐树下，几位村民正目送你离开。你回过头，最后看了一眼这个生活了十六年的地方，转身踏上了通往外界的山道。\"\n    }\n  ],\n  \"title\": \"启程\",\n  \"location\": \"青云村口\",\n  \"otherPeople\": [],\n  \"places\": [\n    {\n      \"id\": \"l1\",\n      \"name\": \"山道\"\n    }\n  ],\n  \"factions\": [],\n  \"choices\": [\n    {\n      \"action\": \"travel:road\",\n      \"targetId\": \"l1\",\n      \"stake\": \"low\"\n    },\n    {\n      \"action\": \"rest:recover\",\n      \"targetId\": \"self\",\n      \"stake\": \"low\"\n    },\n    {\n      \"action\": \"explore:cautious\",\n      \"targetId\": \"stones\",\n      \"stake\": \"low\"\n    }\n  ],\n  \"memoryDeltas\": []\n}\n",
+                  "reasoning_content": ""
+                }
+              }
+            ],
+            "usage": {
+              "prompt_tokens": 2775,
+              "completion_tokens": 379,
+              "total_tokens": 3154,
+              "prompt_tokens_details": {
+                "cached_tokens": 61
+              },
+              "completion_tokens_details": {
+                "reasoning_tokens": 0
+              }
+            }
+          },
+          "result": {
+            "status": "ready",
+            "accountingStatus": "complete",
+            "modelId": "@cf/zai-org/glm-4.7-flash",
+            "attemptId": "6e02a76c-2d8d-4d6f-9c97-c0b977106467",
+            "inferencePerformed": true,
+            "usage": {
+              "promptTokens": 2775,
+              "completionTokens": 379,
+              "totalTokens": 3154
+            },
+            "actualNeurons": null,
+            "stopReason": "stop",
+            "inputHash": "9280d690ebc66917d6222a27eb4ddc49118098cf076e699bc34462e7c52ba00a",
+            "inputBytes": 10573,
+            "nonThinkingValidated": true,
+            "scene": {
+              "id": "r:528302d4866d4bf2:t1:s:scene",
+              "title": "启程",
+              "location": "青云村口",
+              "entities": [
+                {
+                  "id": "r:528302d4866d4bf2:t1:e:place_1",
+                  "name": "山道",
+                  "kind": "place"
+                }
+              ],
+              "blocks": [
+                {
+                  "kind": "narration",
+                  "text": "你站在青云村口，晨雾还未散去。十六岁的云归，身形清瘦，眼神中透着与年龄不符的沉稳。你拥有过目不忘的天赋，这让你在村中显得有些格格不入。村长曾叹息，你的聪慧不属于这片土地。今天是你离开村庄的日子，也是你踏上修仙路的起点。"
+                },
+                {
+                  "kind": "dialogue",
+                  "speaker": "self",
+                  "text": "我该动身了。"
+                },
+                {
+                  "kind": "narration",
+                  "text": "你背起简单的行囊，里面只有三天的干粮和一把磨得锋利的柴刀。村口的老槐树下，几位村民正目送你离开。你回过头，最后看了一眼这个生活了十六年的地方，转身踏上了通往外界的山道。"
+                }
+              ],
+              "choices": [
+                {
+                  "id": "r:528302d4866d4bf2:t1:c:a",
+                  "label": "沿路前往山道（谨慎）",
+                  "intent": "travel",
+                  "targetId": "r:528302d4866d4bf2:t1:e:place_1",
+                  "stake": "low",
+                  "approach": "road"
+                },
+                {
+                  "id": "r:528302d4866d4bf2:t1:c:b",
+                  "label": "歇息调养（谨慎）",
+                  "intent": "rest",
+                  "targetId": "self",
+                  "stake": "low",
+                  "approach": "recover"
+                },
+                {
+                  "id": "r:528302d4866d4bf2:t1:c:c",
+                  "label": "寻找灵石（谨慎）",
+                  "intent": "explore",
+                  "targetId": "stones",
+                  "stake": "low",
+                  "approach": "cautious"
+                }
+              ],
+              "memoryDeltas": []
+            }
+          }
+        },
+        {
+          "requestId": "c4f4a0e6-a297-4ce4-9e77-d2ff37ca44ca",
+          "context": {
+            "schemaVersion": 1,
+            "phase": "choice",
+            "identity": {
+              "runId": "1b6685f3-1283-4861-9178-033e880d7c23",
+              "turnId": 2,
+              "baseRevision": 1,
+              "stateHash": "3728cacb51794e5ec35fbba0d20ceb13fc76e26c2877a3e1fc8f226ba5d05bda",
+              "choiceId": "r:528302d4866d4bf2:t1:c:a",
+              "rulesVersion": 1,
+              "promptVersion": 1,
+              "requestId": "c4f4a0e6-a297-4ce4-9e77-d2ff37ca44ca"
+            },
+            "namespace": "r:528302d4866d4bf2",
+            "receipt": {
+              "kind": "choice",
+              "choiceId": "r:528302d4866d4bf2:t1:c:a",
+              "action": {
+                "id": "r:528302d4866d4bf2:t1:c:a",
+                "label": "沿路前往山道（谨慎）",
+                "intent": "travel",
+                "targetId": "r:528302d4866d4bf2:t1:e:place_1",
+                "stake": "low",
+                "approach": "road"
+              },
+              "elapsedDays": 30,
+              "itemChanges": {
+                "supplies": -1
+              },
+              "relationChanges": {},
+              "random": {
+                "before": 1566245833,
+                "after": 2620471956,
+                "roll": 56
+              },
+              "before": {
+                "ageDays": 5760,
+                "realm": "mortal",
+                "cultivation": 0,
+                "injury": 0
+              },
+              "after": {
+                "ageDays": 5790,
+                "realm": "mortal",
+                "cultivation": 0,
+                "injury": 0
+              },
+              "death": null,
+              "birth": null
+            },
+            "life": {
+              "name": "云归",
+              "ageDays": 5790,
+              "lifeLimit": 80,
+              "realm": "mortal",
+              "cultivation": 0,
+              "injury": 0,
+              "items": {
+                "supplies": 2,
+                "stones": 0
+              },
+              "relations": {},
+              "birth": {
+                "originId": "village",
+                "talentIds": [
+                  "keen-memory",
+                  "flash-wisdom"
+                ],
+                "attributes": {
+                  "constitution": 6,
+                  "insight": 1,
+                  "fortune": 5
+                }
+              }
+            },
+            "entities": [
+              {
+                "id": "r:528302d4866d4bf2:t1:e:place_1",
+                "name": "山道",
+                "kind": "place",
+                "status": "unknown"
+              }
+            ],
+            "memory": {
+              "facts": [],
+              "promises": [],
+              "clues": [],
+              "recent": [],
+              "summaries": []
+            },
+            "references": [],
+            "previousScene": {
+              "id": "r:528302d4866d4bf2:t1:s:scene",
+              "blocksHash": "14c5fd9a826e33e090a3996f9a5d9e14d41232633a85e44a2969ca50f4a4e266"
+            },
+            "relationshipVersion": 1,
+            "relationships": {},
+            "coverage": {
+              "policy": "relevance-v1",
+              "openTotal": 0,
+              "openIncluded": 0,
+              "openOmitted": 0
+            }
+          },
+          "rawCompletion": {
+            "model": "@cf/zai-org/glm-4.7-flash",
+            "choices": [
+              {
+                "finish_reason": "stop",
+                "message": {
+                  "content": "\n{\n  \"blocks\": [\n    {\n      \"kind\": \"narration\",\n      \"text\": \"你沿着蜿蜒的山道前行，脚下的碎石发出轻微的声响。三十天的跋涉让你对周围的环境更加熟悉，虽然依旧是一介凡人，但身体的耐力似乎比以前更强了一些。山道两旁古木参天，偶尔能听到远处传来的鸟鸣，显得格外幽静。\"\n    },\n    {\n      \"kind\": \"dialogue\",\n      \"speaker\": \"self\",\n      \"text\": \"这山道走了许久，前面似乎有岔路。\"\n    }\n  ],\n  \"title\": \"山道岔口\",\n  \"location\": \"山道岔口\",\n  \"otherPeople\": [],\n  \"places\": [\n    {\n      \"id\": \"k1\",\n      \"name\": \"山道\"\n    },\n    {\n      \"id\": \"l1\",\n      \"name\": \"幽林小径\"\n    },\n    {\n      \"id\": \"l2\",\n      \"name\": \"悬崖峭壁\"\n    }\n  ],\n  \"factions\": [],\n  \"choices\": [\n    {\n      \"action\": \"travel:road\",\n      \"targetId\": \"l1\",\n      \"stake\": \"low\"\n    },\n    {\n      \"action\": \"travel:road\",\n      \"targetId\": \"l2\",\n      \"stake\": \"normal\"\n    },\n    {\n      \"action\": \"explore:cautious\",\n      \"targetId\": \"stones\",\n      \"stake\": \"low\"\n    }\n  ],\n  \"memoryDeltas\": []\n}\n",
+                  "reasoning_content": ""
+                }
+              }
+            ],
+            "usage": {
+              "prompt_tokens": 2912,
+              "completion_tokens": 343,
+              "total_tokens": 3255,
+              "prompt_tokens_details": {
+                "cached_tokens": 1524
+              },
+              "completion_tokens_details": {
+                "reasoning_tokens": 0
+              }
+            }
+          },
+          "result": {
+            "status": "ready",
+            "accountingStatus": "complete",
+            "modelId": "@cf/zai-org/glm-4.7-flash",
+            "attemptId": "42e64c88-0fbf-403c-ad0f-9251bb572e2c",
+            "inferencePerformed": true,
+            "usage": {
+              "promptTokens": 2912,
+              "completionTokens": 343,
+              "totalTokens": 3255
+            },
+            "actualNeurons": null,
+            "stopReason": "stop",
+            "inputHash": "22b593ab8ea8dd4c3c585a72bce77e3bfa7139e1aa04b2a029e056c987c36e01",
+            "inputBytes": 10856,
+            "nonThinkingValidated": true,
+            "scene": {
+              "id": "r:528302d4866d4bf2:t2:s:scene",
+              "title": "山道岔口",
+              "location": "山道岔口",
+              "entities": [
+                {
+                  "id": "r:528302d4866d4bf2:t1:e:place_1",
+                  "name": "山道",
+                  "kind": "place"
+                },
+                {
+                  "id": "r:528302d4866d4bf2:t2:e:place_1",
+                  "name": "幽林小径",
+                  "kind": "place"
+                },
+                {
+                  "id": "r:528302d4866d4bf2:t2:e:place_2",
+                  "name": "悬崖峭壁",
+                  "kind": "place"
+                }
+              ],
+              "blocks": [
+                {
+                  "kind": "narration",
+                  "text": "你沿着蜿蜒的山道前行，脚下的碎石发出轻微的声响。三十天的跋涉让你对周围的环境更加熟悉，虽然依旧是一介凡人，但身体的耐力似乎比以前更强了一些。山道两旁古木参天，偶尔能听到远处传来的鸟鸣，显得格外幽静。"
+                },
+                {
+                  "kind": "dialogue",
+                  "speaker": "self",
+                  "text": "这山道走了许久，前面似乎有岔路。"
+                }
+              ],
+              "choices": [
+                {
+                  "id": "r:528302d4866d4bf2:t2:c:a",
+                  "label": "沿路前往幽林小径（谨慎）",
+                  "intent": "travel",
+                  "targetId": "r:528302d4866d4bf2:t2:e:place_1",
+                  "stake": "low",
+                  "approach": "road"
+                },
+                {
+                  "id": "r:528302d4866d4bf2:t2:c:b",
+                  "label": "沿路前往悬崖峭壁",
+                  "intent": "travel",
+                  "targetId": "r:528302d4866d4bf2:t2:e:place_2",
+                  "stake": "normal",
+                  "approach": "road"
+                },
+                {
+                  "id": "r:528302d4866d4bf2:t2:c:c",
+                  "label": "寻找灵石（谨慎）",
+                  "intent": "explore",
+                  "targetId": "stones",
+                  "stake": "low",
+                  "approach": "cautious"
+                }
+              ],
+              "memoryDeltas": []
+            }
+          }
+        },
+        {
+          "requestId": "883baca4-47d1-466d-a9f0-a6b3a5f9d9be",
+          "context": {
+            "schemaVersion": 1,
+            "phase": "opening",
+            "identity": {
+              "runId": "b6976f14-959b-46c0-b0a5-117bd6a18832",
+              "turnId": 1,
+              "baseRevision": 0,
+              "stateHash": "d673bc3fcd12ca240ad83dc22424b46373be003736ccff264bd74ab5c12591af",
+              "choiceId": null,
+              "rulesVersion": 1,
+              "promptVersion": 1,
+              "requestId": "883baca4-47d1-466d-a9f0-a6b3a5f9d9be"
+            },
+            "namespace": "r:34618253524e28b0",
+            "receipt": {
+              "kind": "opening",
+              "choiceId": null,
+              "action": null,
+              "elapsedDays": 0,
+              "itemChanges": {},
+              "relationChanges": {},
+              "random": {
+                "before": 3449879591,
+                "after": 3449879591,
+                "roll": null
+              },
+              "before": {
+                "ageDays": 5760,
+                "realm": "mortal",
+                "cultivation": 0,
+                "injury": 0
+              },
+              "after": {
+                "ageDays": 5760,
+                "realm": "mortal",
+                "cultivation": 0,
+                "injury": 0
+              },
+              "death": null,
+              "birth": {
+                "originId": "village",
+                "talentIds": [
+                  "keen-memory",
+                  "iron-bones"
+                ],
+                "attributes": {
+                  "constitution": 5,
+                  "insight": 2,
+                  "fortune": 5
+                }
+              }
+            },
+            "life": {
+              "name": "云归",
+              "ageDays": 5760,
+              "lifeLimit": 80,
+              "realm": "mortal",
+              "cultivation": 0,
+              "injury": 0,
+              "items": {
+                "supplies": 3,
+                "stones": 0
+              },
+              "relations": {},
+              "birth": {
+                "originId": "village",
+                "talentIds": [
+                  "keen-memory",
+                  "iron-bones"
+                ],
+                "attributes": {
+                  "constitution": 5,
+                  "insight": 2,
+                  "fortune": 5
+                }
+              }
+            },
+            "entities": [],
+            "memory": {
+              "facts": [],
+              "promises": [],
+              "clues": [],
+              "recent": [],
+              "summaries": []
+            },
+            "references": [],
+            "previousScene": null,
+            "relationshipVersion": 1,
+            "relationships": {},
+            "coverage": {
+              "policy": "relevance-v1",
+              "openTotal": 0,
+              "openIncluded": 0,
+              "openOmitted": 0
+            }
+          },
+          "rawCompletion": {
+            "model": "@cf/zai-org/glm-4.7-flash",
+            "choices": [
+              {
+                "finish_reason": "stop",
+                "message": {
+                  "content": "\n{\n  \"blocks\": [\n    {\n      \"kind\": \"narration\",\n      \"text\": \"你叫云归，今年十六岁，是个凡人。你出身于云溪村，身体强健，记忆力极佳，但家境贫寒。村口的老槐树下，你正望着远处连绵的青山发呆，手里紧紧攥着仅剩的半块干粮。\"\n    },\n    {\n      \"kind\": \"dialogue\",\n      \"speaker\": \"self\",\n      \"text\": \"这日子没法过了，我得出去闯闯。\"\n    },\n    {\n      \"kind\": \"narration\",\n      \"text\": \"你咬了一口干粮，眼神逐渐变得坚定。你决定离开村子，去外面的世界寻找出路。\"\n    }\n  ],\n  \"title\": \"云溪村口\",\n  \"location\": \"云溪村口\",\n  \"otherPeople\": [],\n  \"places\": [\n    {\n      \"id\": \"l1\",\n      \"name\": \"山道\"\n    },\n    {\n      \"id\": \"l2\",\n      \"name\": \"集市\"\n    }\n  ],\n  \"factions\": [],\n  \"choices\": [\n    {\n      \"action\": \"travel:road\",\n      \"targetId\": \"l1\",\n      \"stake\": \"low\"\n    },\n    {\n      \"action\": \"travel:road\",\n      \"targetId\": \"l2\",\n      \"stake\": \"low\"\n    },\n    {\n      \"action\": \"rest:recover\",\n      \"targetId\": \"self\",\n      \"stake\": \"low\"\n    }\n  ],\n  \"memoryDeltas\": []\n}\n",
+                  "reasoning_content": ""
+                }
+              }
+            ],
+            "usage": {
+              "prompt_tokens": 2775,
+              "completion_tokens": 353,
+              "total_tokens": 3128,
+              "prompt_tokens_details": {
+                "cached_tokens": 62
+              },
+              "completion_tokens_details": {
+                "reasoning_tokens": 0
+              }
+            }
+          },
+          "result": {
+            "status": "ready",
+            "accountingStatus": "complete",
+            "modelId": "@cf/zai-org/glm-4.7-flash",
+            "attemptId": "68163321-dd6d-4cdb-b8a3-4ec415eff0d8",
+            "inferencePerformed": true,
+            "usage": {
+              "promptTokens": 2775,
+              "completionTokens": 353,
+              "totalTokens": 3128
+            },
+            "actualNeurons": null,
+            "stopReason": "stop",
+            "inputHash": "34bea22b78d2f5e906fba9186979b365a7e5501a2d0c613a2af6f202d79757c1",
+            "inputBytes": 10569,
+            "nonThinkingValidated": true,
+            "scene": {
+              "id": "r:34618253524e28b0:t1:s:scene",
+              "title": "云溪村口",
+              "location": "云溪村口",
+              "entities": [
+                {
+                  "id": "r:34618253524e28b0:t1:e:place_1",
+                  "name": "山道",
+                  "kind": "place"
+                },
+                {
+                  "id": "r:34618253524e28b0:t1:e:place_2",
+                  "name": "集市",
+                  "kind": "place"
+                }
+              ],
+              "blocks": [
+                {
+                  "kind": "narration",
+                  "text": "你叫云归，今年十六岁，是个凡人。你出身于云溪村，身体强健，记忆力极佳，但家境贫寒。村口的老槐树下，你正望着远处连绵的青山发呆，手里紧紧攥着仅剩的半块干粮。"
+                },
+                {
+                  "kind": "dialogue",
+                  "speaker": "self",
+                  "text": "这日子没法过了，我得出去闯闯。"
+                },
+                {
+                  "kind": "narration",
+                  "text": "你咬了一口干粮，眼神逐渐变得坚定。你决定离开村子，去外面的世界寻找出路。"
+                }
+              ],
+              "choices": [
+                {
+                  "id": "r:34618253524e28b0:t1:c:a",
+                  "label": "沿路前往山道（谨慎）",
+                  "intent": "travel",
+                  "targetId": "r:34618253524e28b0:t1:e:place_1",
+                  "stake": "low",
+                  "approach": "road"
+                },
+                {
+                  "id": "r:34618253524e28b0:t1:c:b",
+                  "label": "沿路前往集市（谨慎）",
+                  "intent": "travel",
+                  "targetId": "r:34618253524e28b0:t1:e:place_2",
+                  "stake": "low",
+                  "approach": "road"
+                },
+                {
+                  "id": "r:34618253524e28b0:t1:c:c",
+                  "label": "歇息调养（谨慎）",
+                  "intent": "rest",
+                  "targetId": "self",
+                  "stake": "low",
+                  "approach": "recover"
+                }
+              ],
+              "memoryDeltas": []
+            }
+          }
+        }
+      ]
+    },
+    {
+      "caseId": "choice",
+      "mode": "browser-real-api",
+      "start": 9222.5,
+      "timeline": [
+        {
+          "atMs": 14486,
+          "chars": 1
+        },
+        {
+          "atMs": 14571,
+          "chars": 10
+        },
+        {
+          "atMs": 14638,
+          "chars": 15
+        },
+        {
+          "atMs": 14721,
+          "chars": 19
+        },
+        {
+          "atMs": 14786,
+          "chars": 27
+        },
+        {
+          "atMs": 14856,
+          "chars": 34
+        },
+        {
+          "atMs": 14938,
+          "chars": 38
+        },
+        {
+          "atMs": 15007,
+          "chars": 45
+        },
+        {
+          "atMs": 15073,
+          "chars": 50
+        },
+        {
+          "atMs": 15146,
+          "chars": 52
+        },
+        {
+          "atMs": 15355,
+          "chars": 76
+        },
+        {
+          "atMs": 15438,
+          "chars": 82
+        },
+        {
+          "atMs": 15537,
+          "chars": 86
+        },
+        {
+          "atMs": 15588,
+          "chars": 92
+        },
+        {
+          "atMs": 15872,
+          "chars": 98
+        },
+        {
+          "atMs": 15951,
+          "chars": 102
+        },
+        {
+          "atMs": 16030,
+          "chars": 107
+        },
+        {
+          "atMs": 16105,
+          "chars": 112
+        },
+        {
+          "atMs": 16173,
+          "chars": 117
+        },
+        {
+          "atMs": 16253,
+          "chars": 121
+        },
+        {
+          "atMs": 16330,
+          "chars": 127
+        },
+        {
+          "atMs": 16391,
+          "chars": 133
+        },
+        {
+          "atMs": 16472,
+          "chars": 137
+        },
+        {
+          "atMs": 16548,
+          "chars": 141
+        },
+        {
+          "atMs": 16595,
+          "chars": 143
+        },
+        {
+          "atMs": 16656,
+          "chars": 151
+        },
+        {
+          "atMs": 16740,
+          "chars": 156
+        },
+        {
+          "atMs": 16806,
+          "chars": 160
+        },
+        {
+          "atMs": 16889,
+          "chars": 163
+        }
+      ],
+      "firstBirthMs": null,
+      "lastText": "你沿着蜿蜒的山道前行，三十日的跋涉让你对周围的环境愈发熟悉。山道两旁古木参天，偶尔传来几声不知名鸟兽的啼鸣，更添几分幽静。虽然路途艰辛，但你的脚步并未停歇，心中始终怀揣着对修仙的渴望。\n\n行至一处山坳，你发现前方隐约有一座破败的山神庙，庙门半掩，似乎许久无人问津。庙内蛛网密布，但在神像后的供桌下，似乎散落着一些不知名的杂物。",
+      "doneMs": 19815,
+      "result": {
+        "protocolVersion": 1,
+        "status": "ready",
+        "requestId": "9904f9f8-b4a7-4c9a-a736-bfd11ad85005",
+        "attemptId": "682c1297-fa1b-4a64-bbeb-b52213dbf2a0",
+        "sessionRef": "sess_3cc2f30ea6a0836ed26f41fa3d782703",
+        "errorCode": null,
+        "retry": null,
+        "scene": {
+          "id": "r:34618253524e28b0:t2:s:scene",
+          "title": "山坳破庙",
+          "location": "山坳破庙",
+          "entities": [
+            {
+              "id": "r:34618253524e28b0:t1:e:place_1",
+              "name": "山道",
+              "kind": "place"
+            },
+            {
+              "id": "r:34618253524e28b0:t1:e:place_2",
+              "name": "集市",
+              "kind": "place"
+            }
+          ],
+          "blocks": [
+            {
+              "kind": "narration",
+              "text": "你沿着蜿蜒的山道前行，三十日的跋涉让你对周围的环境愈发熟悉。山道两旁古木参天，偶尔传来几声不知名鸟兽的啼鸣，更添几分幽静。虽然路途艰辛，但你的脚步并未停歇，心中始终怀揣着对修仙的渴望。"
+            },
+            {
+              "kind": "narration",
+              "text": "行至一处山坳，你发现前方隐约有一座破败的山神庙，庙门半掩，似乎许久无人问津。庙内蛛网密布，但在神像后的供桌下，似乎散落着一些不知名的杂物。"
+            }
+          ],
+          "choices": [
+            {
+              "id": "r:34618253524e28b0:t2:c:a",
+              "label": "寻找古修遗物（谨慎）",
+              "intent": "explore",
+              "targetId": "relic",
+              "stake": "low",
+              "approach": "cautious"
+            },
+            {
+              "id": "r:34618253524e28b0:t2:c:b",
+              "label": "寻找完整功法（谨慎）",
+              "intent": "explore",
+              "targetId": "manual",
+              "stake": "low",
+              "approach": "cautious"
+            },
+            {
+              "id": "r:34618253524e28b0:t2:c:c",
+              "label": "沿路前往山道（谨慎）",
+              "intent": "travel",
+              "targetId": "r:34618253524e28b0:t1:e:place_1",
+              "stake": "low",
+              "approach": "road"
+            }
+          ],
+          "memoryDeltas": []
+        }
+      },
+      "revision": 2,
+      "pending": false,
+      "posts": 2,
+      "diagnostics": [
+        {
+          "requestId": "2cbfcf82-1cc2-46ac-bc56-8141c01bc121",
+          "context": {
+            "schemaVersion": 1,
+            "phase": "opening",
+            "identity": {
+              "runId": "1b6685f3-1283-4861-9178-033e880d7c23",
+              "turnId": 1,
+              "baseRevision": 0,
+              "stateHash": "f47f0858a10bcb05da34f8eef814ddb4418e107ad125d28fe4e6100a3cb09f44",
+              "choiceId": null,
+              "rulesVersion": 1,
+              "promptVersion": 1,
+              "requestId": "2cbfcf82-1cc2-46ac-bc56-8141c01bc121"
+            },
+            "namespace": "r:528302d4866d4bf2",
+            "receipt": {
+              "kind": "opening",
+              "choiceId": null,
+              "action": null,
+              "elapsedDays": 0,
+              "itemChanges": {},
+              "relationChanges": {},
+              "random": {
+                "before": 1566245833,
+                "after": 1566245833,
+                "roll": null
+              },
+              "before": {
+                "ageDays": 5760,
+                "realm": "mortal",
+                "cultivation": 0,
+                "injury": 0
+              },
+              "after": {
+                "ageDays": 5760,
+                "realm": "mortal",
+                "cultivation": 0,
+                "injury": 0
+              },
+              "death": null,
+              "birth": {
+                "originId": "village",
+                "talentIds": [
+                  "keen-memory",
+                  "flash-wisdom"
+                ],
+                "attributes": {
+                  "constitution": 6,
+                  "insight": 1,
+                  "fortune": 5
+                }
+              }
+            },
+            "life": {
+              "name": "云归",
+              "ageDays": 5760,
+              "lifeLimit": 80,
+              "realm": "mortal",
+              "cultivation": 0,
+              "injury": 0,
+              "items": {
+                "supplies": 3,
+                "stones": 0
+              },
+              "relations": {},
+              "birth": {
+                "originId": "village",
+                "talentIds": [
+                  "keen-memory",
+                  "flash-wisdom"
+                ],
+                "attributes": {
+                  "constitution": 6,
+                  "insight": 1,
+                  "fortune": 5
+                }
+              }
+            },
+            "entities": [],
+            "memory": {
+              "facts": [],
+              "promises": [],
+              "clues": [],
+              "recent": [],
+              "summaries": []
+            },
+            "references": [],
+            "previousScene": null,
+            "relationshipVersion": 1,
+            "relationships": {},
+            "coverage": {
+              "policy": "relevance-v1",
+              "openTotal": 0,
+              "openIncluded": 0,
+              "openOmitted": 0
+            }
+          },
+          "rawCompletion": {
+            "model": "@cf/zai-org/glm-4.7-flash",
+            "choices": [
+              {
+                "finish_reason": "stop",
+                "message": {
+                  "content": "\n{\n  \"blocks\": [\n    {\n      \"kind\": \"narration\",\n      \"text\": \"你站在青云村口，晨雾还未散去。十六岁的云归，身形清瘦，眼神中透着与年龄不符的沉稳。你拥有过目不忘的天赋，这让你在村中显得有些格格不入。村长曾叹息，你的聪慧不属于这片土地。今天是你离开村庄的日子，也是你踏上修仙路的起点。\"\n    },\n    {\n      \"kind\": \"dialogue\",\n      \"speaker\": \"self\",\n      \"text\": \"我该动身了。\"\n    },\n    {\n      \"kind\": \"narration\",\n      \"text\": \"你背起简单的行囊，里面只有三天的干粮和一把磨得锋利的柴刀。村口的老槐树下，几位村民正目送你离开。你回过头，最后看了一眼这个生活了十六年的地方，转身踏上了通往外界的山道。\"\n    }\n  ],\n  \"title\": \"启程\",\n  \"location\": \"青云村口\",\n  \"otherPeople\": [],\n  \"places\": [\n    {\n      \"id\": \"l1\",\n      \"name\": \"山道\"\n    }\n  ],\n  \"factions\": [],\n  \"choices\": [\n    {\n      \"action\": \"travel:road\",\n      \"targetId\": \"l1\",\n      \"stake\": \"low\"\n    },\n    {\n      \"action\": \"rest:recover\",\n      \"targetId\": \"self\",\n      \"stake\": \"low\"\n    },\n    {\n      \"action\": \"explore:cautious\",\n      \"targetId\": \"stones\",\n      \"stake\": \"low\"\n    }\n  ],\n  \"memoryDeltas\": []\n}\n",
+                  "reasoning_content": ""
+                }
+              }
+            ],
+            "usage": {
+              "prompt_tokens": 2775,
+              "completion_tokens": 379,
+              "total_tokens": 3154,
+              "prompt_tokens_details": {
+                "cached_tokens": 61
+              },
+              "completion_tokens_details": {
+                "reasoning_tokens": 0
+              }
+            }
+          },
+          "result": {
+            "status": "ready",
+            "accountingStatus": "complete",
+            "modelId": "@cf/zai-org/glm-4.7-flash",
+            "attemptId": "6e02a76c-2d8d-4d6f-9c97-c0b977106467",
+            "inferencePerformed": true,
+            "usage": {
+              "promptTokens": 2775,
+              "completionTokens": 379,
+              "totalTokens": 3154
+            },
+            "actualNeurons": null,
+            "stopReason": "stop",
+            "inputHash": "9280d690ebc66917d6222a27eb4ddc49118098cf076e699bc34462e7c52ba00a",
+            "inputBytes": 10573,
+            "nonThinkingValidated": true,
+            "scene": {
+              "id": "r:528302d4866d4bf2:t1:s:scene",
+              "title": "启程",
+              "location": "青云村口",
+              "entities": [
+                {
+                  "id": "r:528302d4866d4bf2:t1:e:place_1",
+                  "name": "山道",
+                  "kind": "place"
+                }
+              ],
+              "blocks": [
+                {
+                  "kind": "narration",
+                  "text": "你站在青云村口，晨雾还未散去。十六岁的云归，身形清瘦，眼神中透着与年龄不符的沉稳。你拥有过目不忘的天赋，这让你在村中显得有些格格不入。村长曾叹息，你的聪慧不属于这片土地。今天是你离开村庄的日子，也是你踏上修仙路的起点。"
+                },
+                {
+                  "kind": "dialogue",
+                  "speaker": "self",
+                  "text": "我该动身了。"
+                },
+                {
+                  "kind": "narration",
+                  "text": "你背起简单的行囊，里面只有三天的干粮和一把磨得锋利的柴刀。村口的老槐树下，几位村民正目送你离开。你回过头，最后看了一眼这个生活了十六年的地方，转身踏上了通往外界的山道。"
+                }
+              ],
+              "choices": [
+                {
+                  "id": "r:528302d4866d4bf2:t1:c:a",
+                  "label": "沿路前往山道（谨慎）",
+                  "intent": "travel",
+                  "targetId": "r:528302d4866d4bf2:t1:e:place_1",
+                  "stake": "low",
+                  "approach": "road"
+                },
+                {
+                  "id": "r:528302d4866d4bf2:t1:c:b",
+                  "label": "歇息调养（谨慎）",
+                  "intent": "rest",
+                  "targetId": "self",
+                  "stake": "low",
+                  "approach": "recover"
+                },
+                {
+                  "id": "r:528302d4866d4bf2:t1:c:c",
+                  "label": "寻找灵石（谨慎）",
+                  "intent": "explore",
+                  "targetId": "stones",
+                  "stake": "low",
+                  "approach": "cautious"
+                }
+              ],
+              "memoryDeltas": []
+            }
+          }
+        },
+        {
+          "requestId": "c4f4a0e6-a297-4ce4-9e77-d2ff37ca44ca",
+          "context": {
+            "schemaVersion": 1,
+            "phase": "choice",
+            "identity": {
+              "runId": "1b6685f3-1283-4861-9178-033e880d7c23",
+              "turnId": 2,
+              "baseRevision": 1,
+              "stateHash": "3728cacb51794e5ec35fbba0d20ceb13fc76e26c2877a3e1fc8f226ba5d05bda",
+              "choiceId": "r:528302d4866d4bf2:t1:c:a",
+              "rulesVersion": 1,
+              "promptVersion": 1,
+              "requestId": "c4f4a0e6-a297-4ce4-9e77-d2ff37ca44ca"
+            },
+            "namespace": "r:528302d4866d4bf2",
+            "receipt": {
+              "kind": "choice",
+              "choiceId": "r:528302d4866d4bf2:t1:c:a",
+              "action": {
+                "id": "r:528302d4866d4bf2:t1:c:a",
+                "label": "沿路前往山道（谨慎）",
+                "intent": "travel",
+                "targetId": "r:528302d4866d4bf2:t1:e:place_1",
+                "stake": "low",
+                "approach": "road"
+              },
+              "elapsedDays": 30,
+              "itemChanges": {
+                "supplies": -1
+              },
+              "relationChanges": {},
+              "random": {
+                "before": 1566245833,
+                "after": 2620471956,
+                "roll": 56
+              },
+              "before": {
+                "ageDays": 5760,
+                "realm": "mortal",
+                "cultivation": 0,
+                "injury": 0
+              },
+              "after": {
+                "ageDays": 5790,
+                "realm": "mortal",
+                "cultivation": 0,
+                "injury": 0
+              },
+              "death": null,
+              "birth": null
+            },
+            "life": {
+              "name": "云归",
+              "ageDays": 5790,
+              "lifeLimit": 80,
+              "realm": "mortal",
+              "cultivation": 0,
+              "injury": 0,
+              "items": {
+                "supplies": 2,
+                "stones": 0
+              },
+              "relations": {},
+              "birth": {
+                "originId": "village",
+                "talentIds": [
+                  "keen-memory",
+                  "flash-wisdom"
+                ],
+                "attributes": {
+                  "constitution": 6,
+                  "insight": 1,
+                  "fortune": 5
+                }
+              }
+            },
+            "entities": [
+              {
+                "id": "r:528302d4866d4bf2:t1:e:place_1",
+                "name": "山道",
+                "kind": "place",
+                "status": "unknown"
+              }
+            ],
+            "memory": {
+              "facts": [],
+              "promises": [],
+              "clues": [],
+              "recent": [],
+              "summaries": []
+            },
+            "references": [],
+            "previousScene": {
+              "id": "r:528302d4866d4bf2:t1:s:scene",
+              "blocksHash": "14c5fd9a826e33e090a3996f9a5d9e14d41232633a85e44a2969ca50f4a4e266"
+            },
+            "relationshipVersion": 1,
+            "relationships": {},
+            "coverage": {
+              "policy": "relevance-v1",
+              "openTotal": 0,
+              "openIncluded": 0,
+              "openOmitted": 0
+            }
+          },
+          "rawCompletion": {
+            "model": "@cf/zai-org/glm-4.7-flash",
+            "choices": [
+              {
+                "finish_reason": "stop",
+                "message": {
+                  "content": "\n{\n  \"blocks\": [\n    {\n      \"kind\": \"narration\",\n      \"text\": \"你沿着蜿蜒的山道前行，脚下的碎石发出轻微的声响。三十天的跋涉让你对周围的环境更加熟悉，虽然依旧是一介凡人，但身体的耐力似乎比以前更强了一些。山道两旁古木参天，偶尔能听到远处传来的鸟鸣，显得格外幽静。\"\n    },\n    {\n      \"kind\": \"dialogue\",\n      \"speaker\": \"self\",\n      \"text\": \"这山道走了许久，前面似乎有岔路。\"\n    }\n  ],\n  \"title\": \"山道岔口\",\n  \"location\": \"山道岔口\",\n  \"otherPeople\": [],\n  \"places\": [\n    {\n      \"id\": \"k1\",\n      \"name\": \"山道\"\n    },\n    {\n      \"id\": \"l1\",\n      \"name\": \"幽林小径\"\n    },\n    {\n      \"id\": \"l2\",\n      \"name\": \"悬崖峭壁\"\n    }\n  ],\n  \"factions\": [],\n  \"choices\": [\n    {\n      \"action\": \"travel:road\",\n      \"targetId\": \"l1\",\n      \"stake\": \"low\"\n    },\n    {\n      \"action\": \"travel:road\",\n      \"targetId\": \"l2\",\n      \"stake\": \"normal\"\n    },\n    {\n      \"action\": \"explore:cautious\",\n      \"targetId\": \"stones\",\n      \"stake\": \"low\"\n    }\n  ],\n  \"memoryDeltas\": []\n}\n",
+                  "reasoning_content": ""
+                }
+              }
+            ],
+            "usage": {
+              "prompt_tokens": 2912,
+              "completion_tokens": 343,
+              "total_tokens": 3255,
+              "prompt_tokens_details": {
+                "cached_tokens": 1524
+              },
+              "completion_tokens_details": {
+                "reasoning_tokens": 0
+              }
+            }
+          },
+          "result": {
+            "status": "ready",
+            "accountingStatus": "complete",
+            "modelId": "@cf/zai-org/glm-4.7-flash",
+            "attemptId": "42e64c88-0fbf-403c-ad0f-9251bb572e2c",
+            "inferencePerformed": true,
+            "usage": {
+              "promptTokens": 2912,
+              "completionTokens": 343,
+              "totalTokens": 3255
+            },
+            "actualNeurons": null,
+            "stopReason": "stop",
+            "inputHash": "22b593ab8ea8dd4c3c585a72bce77e3bfa7139e1aa04b2a029e056c987c36e01",
+            "inputBytes": 10856,
+            "nonThinkingValidated": true,
+            "scene": {
+              "id": "r:528302d4866d4bf2:t2:s:scene",
+              "title": "山道岔口",
+              "location": "山道岔口",
+              "entities": [
+                {
+                  "id": "r:528302d4866d4bf2:t1:e:place_1",
+                  "name": "山道",
+                  "kind": "place"
+                },
+                {
+                  "id": "r:528302d4866d4bf2:t2:e:place_1",
+                  "name": "幽林小径",
+                  "kind": "place"
+                },
+                {
+                  "id": "r:528302d4866d4bf2:t2:e:place_2",
+                  "name": "悬崖峭壁",
+                  "kind": "place"
+                }
+              ],
+              "blocks": [
+                {
+                  "kind": "narration",
+                  "text": "你沿着蜿蜒的山道前行，脚下的碎石发出轻微的声响。三十天的跋涉让你对周围的环境更加熟悉，虽然依旧是一介凡人，但身体的耐力似乎比以前更强了一些。山道两旁古木参天，偶尔能听到远处传来的鸟鸣，显得格外幽静。"
+                },
+                {
+                  "kind": "dialogue",
+                  "speaker": "self",
+                  "text": "这山道走了许久，前面似乎有岔路。"
+                }
+              ],
+              "choices": [
+                {
+                  "id": "r:528302d4866d4bf2:t2:c:a",
+                  "label": "沿路前往幽林小径（谨慎）",
+                  "intent": "travel",
+                  "targetId": "r:528302d4866d4bf2:t2:e:place_1",
+                  "stake": "low",
+                  "approach": "road"
+                },
+                {
+                  "id": "r:528302d4866d4bf2:t2:c:b",
+                  "label": "沿路前往悬崖峭壁",
+                  "intent": "travel",
+                  "targetId": "r:528302d4866d4bf2:t2:e:place_2",
+                  "stake": "normal",
+                  "approach": "road"
+                },
+                {
+                  "id": "r:528302d4866d4bf2:t2:c:c",
+                  "label": "寻找灵石（谨慎）",
+                  "intent": "explore",
+                  "targetId": "stones",
+                  "stake": "low",
+                  "approach": "cautious"
+                }
+              ],
+              "memoryDeltas": []
+            }
+          }
+        },
+        {
+          "requestId": "883baca4-47d1-466d-a9f0-a6b3a5f9d9be",
+          "context": {
+            "schemaVersion": 1,
+            "phase": "opening",
+            "identity": {
+              "runId": "b6976f14-959b-46c0-b0a5-117bd6a18832",
+              "turnId": 1,
+              "baseRevision": 0,
+              "stateHash": "d673bc3fcd12ca240ad83dc22424b46373be003736ccff264bd74ab5c12591af",
+              "choiceId": null,
+              "rulesVersion": 1,
+              "promptVersion": 1,
+              "requestId": "883baca4-47d1-466d-a9f0-a6b3a5f9d9be"
+            },
+            "namespace": "r:34618253524e28b0",
+            "receipt": {
+              "kind": "opening",
+              "choiceId": null,
+              "action": null,
+              "elapsedDays": 0,
+              "itemChanges": {},
+              "relationChanges": {},
+              "random": {
+                "before": 3449879591,
+                "after": 3449879591,
+                "roll": null
+              },
+              "before": {
+                "ageDays": 5760,
+                "realm": "mortal",
+                "cultivation": 0,
+                "injury": 0
+              },
+              "after": {
+                "ageDays": 5760,
+                "realm": "mortal",
+                "cultivation": 0,
+                "injury": 0
+              },
+              "death": null,
+              "birth": {
+                "originId": "village",
+                "talentIds": [
+                  "keen-memory",
+                  "iron-bones"
+                ],
+                "attributes": {
+                  "constitution": 5,
+                  "insight": 2,
+                  "fortune": 5
+                }
+              }
+            },
+            "life": {
+              "name": "云归",
+              "ageDays": 5760,
+              "lifeLimit": 80,
+              "realm": "mortal",
+              "cultivation": 0,
+              "injury": 0,
+              "items": {
+                "supplies": 3,
+                "stones": 0
+              },
+              "relations": {},
+              "birth": {
+                "originId": "village",
+                "talentIds": [
+                  "keen-memory",
+                  "iron-bones"
+                ],
+                "attributes": {
+                  "constitution": 5,
+                  "insight": 2,
+                  "fortune": 5
+                }
+              }
+            },
+            "entities": [],
+            "memory": {
+              "facts": [],
+              "promises": [],
+              "clues": [],
+              "recent": [],
+              "summaries": []
+            },
+            "references": [],
+            "previousScene": null,
+            "relationshipVersion": 1,
+            "relationships": {},
+            "coverage": {
+              "policy": "relevance-v1",
+              "openTotal": 0,
+              "openIncluded": 0,
+              "openOmitted": 0
+            }
+          },
+          "rawCompletion": {
+            "model": "@cf/zai-org/glm-4.7-flash",
+            "choices": [
+              {
+                "finish_reason": "stop",
+                "message": {
+                  "content": "\n{\n  \"blocks\": [\n    {\n      \"kind\": \"narration\",\n      \"text\": \"你叫云归，今年十六岁，是个凡人。你出身于云溪村，身体强健，记忆力极佳，但家境贫寒。村口的老槐树下，你正望着远处连绵的青山发呆，手里紧紧攥着仅剩的半块干粮。\"\n    },\n    {\n      \"kind\": \"dialogue\",\n      \"speaker\": \"self\",\n      \"text\": \"这日子没法过了，我得出去闯闯。\"\n    },\n    {\n      \"kind\": \"narration\",\n      \"text\": \"你咬了一口干粮，眼神逐渐变得坚定。你决定离开村子，去外面的世界寻找出路。\"\n    }\n  ],\n  \"title\": \"云溪村口\",\n  \"location\": \"云溪村口\",\n  \"otherPeople\": [],\n  \"places\": [\n    {\n      \"id\": \"l1\",\n      \"name\": \"山道\"\n    },\n    {\n      \"id\": \"l2\",\n      \"name\": \"集市\"\n    }\n  ],\n  \"factions\": [],\n  \"choices\": [\n    {\n      \"action\": \"travel:road\",\n      \"targetId\": \"l1\",\n      \"stake\": \"low\"\n    },\n    {\n      \"action\": \"travel:road\",\n      \"targetId\": \"l2\",\n      \"stake\": \"low\"\n    },\n    {\n      \"action\": \"rest:recover\",\n      \"targetId\": \"self\",\n      \"stake\": \"low\"\n    }\n  ],\n  \"memoryDeltas\": []\n}\n",
+                  "reasoning_content": ""
+                }
+              }
+            ],
+            "usage": {
+              "prompt_tokens": 2775,
+              "completion_tokens": 353,
+              "total_tokens": 3128,
+              "prompt_tokens_details": {
+                "cached_tokens": 62
+              },
+              "completion_tokens_details": {
+                "reasoning_tokens": 0
+              }
+            }
+          },
+          "result": {
+            "status": "ready",
+            "accountingStatus": "complete",
+            "modelId": "@cf/zai-org/glm-4.7-flash",
+            "attemptId": "68163321-dd6d-4cdb-b8a3-4ec415eff0d8",
+            "inferencePerformed": true,
+            "usage": {
+              "promptTokens": 2775,
+              "completionTokens": 353,
+              "totalTokens": 3128
+            },
+            "actualNeurons": null,
+            "stopReason": "stop",
+            "inputHash": "34bea22b78d2f5e906fba9186979b365a7e5501a2d0c613a2af6f202d79757c1",
+            "inputBytes": 10569,
+            "nonThinkingValidated": true,
+            "scene": {
+              "id": "r:34618253524e28b0:t1:s:scene",
+              "title": "云溪村口",
+              "location": "云溪村口",
+              "entities": [
+                {
+                  "id": "r:34618253524e28b0:t1:e:place_1",
+                  "name": "山道",
+                  "kind": "place"
+                },
+                {
+                  "id": "r:34618253524e28b0:t1:e:place_2",
+                  "name": "集市",
+                  "kind": "place"
+                }
+              ],
+              "blocks": [
+                {
+                  "kind": "narration",
+                  "text": "你叫云归，今年十六岁，是个凡人。你出身于云溪村，身体强健，记忆力极佳，但家境贫寒。村口的老槐树下，你正望着远处连绵的青山发呆，手里紧紧攥着仅剩的半块干粮。"
+                },
+                {
+                  "kind": "dialogue",
+                  "speaker": "self",
+                  "text": "这日子没法过了，我得出去闯闯。"
+                },
+                {
+                  "kind": "narration",
+                  "text": "你咬了一口干粮，眼神逐渐变得坚定。你决定离开村子，去外面的世界寻找出路。"
+                }
+              ],
+              "choices": [
+                {
+                  "id": "r:34618253524e28b0:t1:c:a",
+                  "label": "沿路前往山道（谨慎）",
+                  "intent": "travel",
+                  "targetId": "r:34618253524e28b0:t1:e:place_1",
+                  "stake": "low",
+                  "approach": "road"
+                },
+                {
+                  "id": "r:34618253524e28b0:t1:c:b",
+                  "label": "沿路前往集市（谨慎）",
+                  "intent": "travel",
+                  "targetId": "r:34618253524e28b0:t1:e:place_2",
+                  "stake": "low",
+                  "approach": "road"
+                },
+                {
+                  "id": "r:34618253524e28b0:t1:c:c",
+                  "label": "歇息调养（谨慎）",
+                  "intent": "rest",
+                  "targetId": "self",
+                  "stake": "low",
+                  "approach": "recover"
+                }
+              ],
+              "memoryDeltas": []
+            }
+          }
+        },
+        {
+          "requestId": "9904f9f8-b4a7-4c9a-a736-bfd11ad85005",
+          "context": {
+            "schemaVersion": 1,
+            "phase": "choice",
+            "identity": {
+              "runId": "b6976f14-959b-46c0-b0a5-117bd6a18832",
+              "turnId": 2,
+              "baseRevision": 1,
+              "stateHash": "2537c503d6ff972237b33b34165a9f2f999136bfddd90168e86ec4911a364328",
+              "choiceId": "r:34618253524e28b0:t1:c:a",
+              "rulesVersion": 1,
+              "promptVersion": 1,
+              "requestId": "9904f9f8-b4a7-4c9a-a736-bfd11ad85005"
+            },
+            "namespace": "r:34618253524e28b0",
+            "receipt": {
+              "kind": "choice",
+              "choiceId": "r:34618253524e28b0:t1:c:a",
+              "action": {
+                "id": "r:34618253524e28b0:t1:c:a",
+                "label": "沿路前往山道（谨慎）",
+                "intent": "travel",
+                "targetId": "r:34618253524e28b0:t1:e:place_1",
+                "stake": "low",
+                "approach": "road"
+              },
+              "elapsedDays": 30,
+              "itemChanges": {
+                "supplies": -1
+              },
+              "relationChanges": {},
+              "random": {
+                "before": 3449879591,
+                "after": 1910655834,
+                "roll": 34
+              },
+              "before": {
+                "ageDays": 5760,
+                "realm": "mortal",
+                "cultivation": 0,
+                "injury": 0
+              },
+              "after": {
+                "ageDays": 5790,
+                "realm": "mortal",
+                "cultivation": 0,
+                "injury": 0
+              },
+              "death": null,
+              "birth": null
+            },
+            "life": {
+              "name": "云归",
+              "ageDays": 5790,
+              "lifeLimit": 80,
+              "realm": "mortal",
+              "cultivation": 0,
+              "injury": 0,
+              "items": {
+                "supplies": 2,
+                "stones": 0
+              },
+              "relations": {},
+              "birth": {
+                "originId": "village",
+                "talentIds": [
+                  "keen-memory",
+                  "iron-bones"
+                ],
+                "attributes": {
+                  "constitution": 5,
+                  "insight": 2,
+                  "fortune": 5
+                }
+              }
+            },
+            "entities": [
+              {
+                "id": "r:34618253524e28b0:t1:e:place_1",
+                "name": "山道",
+                "kind": "place",
+                "status": "unknown"
+              },
+              {
+                "id": "r:34618253524e28b0:t1:e:place_2",
+                "name": "集市",
+                "kind": "place",
+                "status": "unknown"
+              }
+            ],
+            "memory": {
+              "facts": [],
+              "promises": [],
+              "clues": [],
+              "recent": [],
+              "summaries": []
+            },
+            "references": [],
+            "previousScene": {
+              "id": "r:34618253524e28b0:t1:s:scene",
+              "blocksHash": "8087c3ec268384e6c50b8c4ec04956aaaf57d25903058c8d4ce2257f0da13cdd"
+            },
+            "relationshipVersion": 1,
+            "relationships": {},
+            "coverage": {
+              "policy": "relevance-v1",
+              "openTotal": 0,
+              "openIncluded": 0,
+              "openOmitted": 0
+            }
+          },
+          "rawCompletion": {
+            "model": "@cf/zai-org/glm-4.7-flash",
+            "choices": [
+              {
+                "finish_reason": "stop",
+                "message": {
+                  "content": "\n{\n  \"blocks\": [\n    {\n      \"kind\": \"narration\",\n      \"text\": \"你沿着蜿蜒的山道前行，三十日的跋涉让你对周围的环境愈发熟悉。山道两旁古木参天，偶尔传来几声不知名鸟兽的啼鸣，更添几分幽静。虽然路途艰辛，但你的脚步并未停歇，心中始终怀揣着对修仙的渴望。\"\n    },\n    {\n      \"kind\": \"narration\",\n      \"text\": \"行至一处山坳，你发现前方隐约有一座破败的山神庙，庙门半掩，似乎许久无人问津。庙内蛛网密布，但在神像后的供桌下，似乎散落着一些不知名的杂物。\"\n    }\n  ],\n  \"title\": \"山坳破庙\",\n  \"location\": \"山坳破庙\",\n  \"otherPeople\": [],\n  \"places\": [\n    {\n      \"id\": \"k1\",\n      \"name\": \"山道\"\n    },\n    {\n      \"id\": \"k2\",\n      \"name\": \"集市\"\n    }\n  ],\n  \"factions\": [],\n  \"choices\": [\n    {\n      \"action\": \"explore:cautious\",\n      \"targetId\": \"relic\",\n      \"stake\": \"low\"\n    },\n    {\n      \"action\": \"explore:cautious\",\n      \"targetId\": \"manual\",\n      \"stake\": \"low\"\n    },\n    {\n      \"action\": \"travel:road\",\n      \"targetId\": \"k1\",\n      \"stake\": \"low\"\n    }\n  ],\n  \"memoryDeltas\": []\n}\n",
+                  "reasoning_content": ""
+                }
+              }
+            ],
+            "usage": {
+              "prompt_tokens": 2929,
+              "completion_tokens": 363,
+              "total_tokens": 3292,
+              "prompt_tokens_details": {
+                "cached_tokens": 1524
+              },
+              "completion_tokens_details": {
+                "reasoning_tokens": 0
+              }
+            }
+          },
+          "result": {
+            "status": "ready",
+            "accountingStatus": "complete",
+            "modelId": "@cf/zai-org/glm-4.7-flash",
+            "attemptId": "682c1297-fa1b-4a64-bbeb-b52213dbf2a0",
+            "inferencePerformed": true,
+            "usage": {
+              "promptTokens": 2929,
+              "completionTokens": 363,
+              "totalTokens": 3292
+            },
+            "actualNeurons": null,
+            "stopReason": "stop",
+            "inputHash": "38318633bdfcccbbcb8974f1cbb12bbc546c8df12fbfe138fc1f4c60d28bcd85",
+            "inputBytes": 10953,
+            "nonThinkingValidated": true,
+            "scene": {
+              "id": "r:34618253524e28b0:t2:s:scene",
+              "title": "山坳破庙",
+              "location": "山坳破庙",
+              "entities": [
+                {
+                  "id": "r:34618253524e28b0:t1:e:place_1",
+                  "name": "山道",
+                  "kind": "place"
+                },
+                {
+                  "id": "r:34618253524e28b0:t1:e:place_2",
+                  "name": "集市",
+                  "kind": "place"
+                }
+              ],
+              "blocks": [
+                {
+                  "kind": "narration",
+                  "text": "你沿着蜿蜒的山道前行，三十日的跋涉让你对周围的环境愈发熟悉。山道两旁古木参天，偶尔传来几声不知名鸟兽的啼鸣，更添几分幽静。虽然路途艰辛，但你的脚步并未停歇，心中始终怀揣着对修仙的渴望。"
+                },
+                {
+                  "kind": "narration",
+                  "text": "行至一处山坳，你发现前方隐约有一座破败的山神庙，庙门半掩，似乎许久无人问津。庙内蛛网密布，但在神像后的供桌下，似乎散落着一些不知名的杂物。"
+                }
+              ],
+              "choices": [
+                {
+                  "id": "r:34618253524e28b0:t2:c:a",
+                  "label": "寻找古修遗物（谨慎）",
+                  "intent": "explore",
+                  "targetId": "relic",
+                  "stake": "low",
+                  "approach": "cautious"
+                },
+                {
+                  "id": "r:34618253524e28b0:t2:c:b",
+                  "label": "寻找完整功法（谨慎）",
+                  "intent": "explore",
+                  "targetId": "manual",
+                  "stake": "low",
+                  "approach": "cautious"
+                },
+                {
+                  "id": "r:34618253524e28b0:t2:c:c",
+                  "label": "沿路前往山道（谨慎）",
+                  "intent": "travel",
+                  "targetId": "r:34618253524e28b0:t1:e:place_1",
+                  "stake": "low",
+                  "approach": "road"
+                }
+              ],
+              "memoryDeltas": []
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "refreshed": {
+    "beforeRevision": 2,
+    "afterRevision": 2,
+    "sameRng": true,
+    "noNewPost": true
+  },
+  "errors": [],
+  "posts": 2
+}

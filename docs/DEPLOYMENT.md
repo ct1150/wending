@@ -10,6 +10,30 @@
 
 ## 构建与启用合同
 
+### 待验收的 GLM 流式接入（2026-10-29）
+
+4.3.0 开发代码按最新授权使用智谱免费 `glm-4.7-flash` 主路由，Cloudflare `@cf/zai-org/glm-4.7-flash` 备用。旧 Qwen 生产 profile 和真实验收记录保留；当前 GLM 仍未晋升。`candidateModelId` 表示下一候选，`activeModelId` 是包内规范化模型标识，实际物理提供方及模型看 `providerRoute`。默认构建仍关闭生成。
+
+在 Cloudflare Dashboard → Workers & Pages → `baishi-wending` → Settings → Variables and Secrets → Add，选择 **Secret**，名称为 `ZHIPU_API_KEY`，值为智谱开放平台标准 API Key，点击 Deploy。使用 [Cloudflare 官方 Secret 流程](https://developers.cloudflare.com/workers/configuration/secrets/)；不要将密钥写入仓库、浏览器、production policy 或聊天。后续代码上传须保留既有 secret binding。清单的 `optionalSecrets` 只声明名称；缺失时只尝试 Cloudflare 备用。
+
+智谱主请求固定发送到 `https://open.bigmodel.cn/api/paas/v4/chat/completions`，模型固定为免费 `glm-4.7-flash`，关闭思考；不接受客户端指定地址或模型。非成功 HTTP 响应、繁忙、网络故障或超时才允许切换一次 Cloudflare binding；错误场景、思考输出、模型身份或结构错误不会自动重新生成。当前主服务等待窗口为 45 秒，主备共享 90 秒总期限，按整个主请求计时。换源不携带智谱密钥。
+
+GLM 内部协议使用短引用与角色分组，正式 ID 由服务端分配；选项文字由实际 action/targetId/stake 生成，避免模型文字与执行目标分离。转回正式场景后仍执行原有身份、记忆、行动及收据校验。此协议仅适用于 GLM，旧 Qwen 和历史正式场景不变。
+
+新客户端通过 POST `Accept: text/event-stream` 读取 `status/reset/preview/result`。预览只提取 `blocks[].text`，在内存中显示并标记生成中；换源清空预览，断流后标记未完成，刷新不恢复半段文字。最终场景通过服务端校验与预算结算，再经客户端校验及本地存档 CAS 成功后才开放选项。结算未确认时流以未完成结束，不发送最终 result；原 attempt 保留供查询恢复。GET 和旧客户端 JSON 路径继续可用。
+
+主服务调用结果未知时，即使备用成功也保留 unknown 计量；不把备用成功等同于主服务零消耗。Cloudflare 返回 `4006` 只证明额度准入被拒绝，不能直接解释为当天已用完。当天 GraphQL 用量为 0 与原生接口 429/4006 的不一致证据保存在 [quota-recheck.json](evidence/stream-speed-2026-10-29/quota-recheck.json)。
+
+历史 Cloudflare 当日 quota 锁保留。只有服务端可信 GLM readiness 能为 reserve 指定独立的智谱主路由，绕过这一条 Cloudflare 锁；认证、单会话在途锁、预算、请求身份、显式重试和历史计量照常执行。浏览器不能提供此字段，不清空或迁移旧账本。
+
+受保护验收和正式生产包固定本次构建内嵌页面，避免旧频道缓存覆盖新前端；静态独立网关继续读取 release-channel。正式更新前端时必须同时重新构建、发布后端，核对同一个 main SHA 的 HTML 摘要和模块清单。
+
+2026-10-29 已确认 `ZHIPU_API_KEY` 加密绑定存在。最初真实调用被智谱 HTTP 429 / 1305 拒绝；[官方错误码](https://docs.bigmodel.cn/cn/api/api-code)将其定义为模型访问量过大。续测已取得有效正文及完整 usage，并完成真实 API/SQLite 的浏览器开局、选择、保存和刷新恢复。成功样本首段正文 1.1–14.5 秒，完整生成/保存 5.9–19.8 秒；仍有平台繁忙和无效场景，不代表稳定延迟。Cloudflare 原生绑定最新复测仍返回 4006，GLM 保持未晋升。完整边界和实测数据见 [续测报告](evidence/stream-speed-2026-10-29/glm-followup-summary.json)。
+
+验收使用原生产版本 100%、临时凭证保护的测试版本 0%；页面由本地当前构建提供，API 和 SQLite 在真实 Worker 执行。它没有验证正式发布入口或成功的 Cloudflare 主服务输出。测试发现并修复 Workers 不支持 `redirect:'error'` 的差异，改为 `manual` 且拒绝 3xx。结束已恢复原生产版本、关闭预览并删除本地测试凭证；用户配置的 secret 保留。
+
+测速使用 `node scripts/story-latency.js <样本.json> [...]`，区分累计 20 字可读正文、片段间最大停顿、完整校验/保存及读完后等选项。每秒 6 字是显式测试假设。当前有效样本的阅读时间覆盖了正文出现后的生成，但首段排队长尾仍不友好，建议评估阅读期间预测单个分支，暂不预生成所有分支。原协调器每会话只允许一个进行中回合，不能直接复用正式 turn 写入预测 pending；缓存身份、跨标签失效、命中率和额外推理量需独立验证，详见[设计](superpowers/specs/2026-10-29-glm-streaming-design.md)。预加载不能解决模型拒绝服务。
+
 先构建浏览器，再打包后端；`npm run release` 或 `npm run build` 会重建 `release/`。
 
 ```bash

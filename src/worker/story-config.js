@@ -12,6 +12,15 @@ export const CANDIDATE_PROFILE = Object.freeze({
   freeBoundaryEvidence:null,
   neuronRates:Object.freeze({ inputPerMillion:40909, outputPerMillion:290909, verifiedOn:'2026-10-28', source:'https://developers.cloudflare.com/workers-ai/platform/pricing/' }),
 });
+// Keep the immutable Qwen promotion separate from the newly selected provider.
+export const GLM_MODEL_ID = '@cf/zai-org/glm-4.7-flash';
+export const GLM_PROVIDER_ROUTE = Object.freeze({primary:'zhipu',primaryModelId:'glm-4.7-flash',fallback:'cloudflare',fallbackModelId:GLM_MODEL_ID});
+export const DEFAULT_STORY_MODEL_ID = GLM_MODEL_ID;
+export const GLM_PROFILE = Object.freeze({
+  ...CANDIDATE_PROFILE,modelId:GLM_MODEL_ID,validated:false,supportsStructuredOutput:null,
+  contextTokens:131072,providerRoute:GLM_PROVIDER_ROUTE,
+  neuronRates:Object.freeze({inputPerMillion:5500,outputPerMillion:36400,verifiedOn:'2026-10-29',source:'https://developers.cloudflare.com/workers-ai/platform/pricing/'}),
+});
 // A successful catalog lookup is not validation. Promotion requires reviewed real evidence.
 export const PRODUCTION_PROFILES = Object.freeze([
   Object.freeze({ ...CANDIDATE_PROFILE, validated:true, supportsStructuredOutput:true, validationEvidence:'docs/evidence/realtime-release-2026-10-28.json' }),
@@ -35,7 +44,8 @@ export function confirmFreeBoundaryEvidence(value, { now = Date.now() } = {}) {
 }
 
 export function assertProviderReady({ enabled = false, modelId = CANDIDATE_MODEL_ID, env, evidence, purpose = 'production', ledger, reservationNeurons = 0, now = Date.now() } = {}) {
-  if (modelId !== CANDIDATE_MODEL_ID) fail('MODEL_NOT_ALLOWED');
+  const candidate=modelId===CANDIDATE_MODEL_ID?CANDIDATE_PROFILE:modelId===GLM_MODEL_ID?GLM_PROFILE:null;
+  if (!candidate) fail('MODEL_NOT_ALLOWED');
   if (enabled !== true) fail('INFERENCE_DISABLED');
   if (typeof env?.AI?.run !== 'function') fail('AI_BINDING_MISSING');
   if (ledger) validateLedger(ledger);
@@ -48,11 +58,12 @@ export function assertProviderReady({ enabled = false, modelId = CANDIDATE_MODEL
     if (!profile) fail('MODEL_UNVALIDATED');
     return profile;
   }
-  return CANDIDATE_PROFILE;
+  return candidate;
 }
 
 export function estimateMaxNeurons(input, { modelId = CANDIDATE_MODEL_ID } = {}) {
-  if (modelId !== CANDIDATE_MODEL_ID) fail('MODEL_NOT_ALLOWED');
+  const candidate=modelId===CANDIDATE_MODEL_ID?CANDIDATE_PROFILE:modelId===GLM_MODEL_ID?GLM_PROFILE:null;
+  if (!candidate) fail('MODEL_NOT_ALLOWED');
   if (!input || typeof input !== 'object' || !Array.isArray(input.messages) || input.messages.length < 1 || input.messages.length > STORY_LIMITS.maxMessages || input.messages.some(message => !message || !['system','user','assistant'].includes(message.role) || typeof message.content !== 'string')) fail('INPUT_INVALID');
   if (!Number.isSafeInteger(input.max_tokens) || input.max_tokens < 1 || input.max_tokens > STORY_LIMITS.maxOutputTokens) fail('OUTPUT_TOO_LARGE');
   let serialized;
@@ -62,8 +73,8 @@ export function estimateMaxNeurons(input, { modelId = CANDIDATE_MODEL_ID } = {})
   // Byte-level token upper bound includes JSON/schema/system text; reserve extra chat framing.
   // No cache discounts. max_tokens must bound reasoning + visible output in the live probe.
   const inputTokens = inputBytes + 1024 + 64 * input.messages.length;
-  if (inputTokens + input.max_tokens > CANDIDATE_PROFILE.contextTokens) fail('CONTEXT_TOO_LARGE');
-  const rates=CANDIDATE_PROFILE.neuronRates;
+  if (inputTokens + input.max_tokens > candidate.contextTokens) fail('CONTEXT_TOO_LARGE');
+  const rates=candidate.neuronRates;
   return Math.ceil((inputTokens * rates.inputPerMillion + input.max_tokens * rates.outputPerMillion) / 1000000);
 }
 

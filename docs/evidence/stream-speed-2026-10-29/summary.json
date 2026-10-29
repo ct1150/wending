@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 1,
+  "sourceCommit": "1f5b9e18dae06e4b74e6d60403c46964cf45e1f9",
+  "checkedAt": "2026-10-29T03:04:47.980Z",
+  "status": "BLOCKED_BY_PROVIDER_QUOTA_ERROR_WITH_ZERO_REPORTED_TODAY_USAGE",
+  "modelId": "@cf/qwen/qwen3.8-27b",
+  "realInvocationAttempts": 1,
+  "successfulGenerations": 0,
+  "latencySamples": 0,
+  "providerErrorCode": 4006,
+  "providerReportedDailyFreeAllocation": 10000,
+  "quotaClaimCorrection": "The first error was initially interpreted as today's allowance being exhausted. A later official GraphQL query reports today's totalNeurons as 0 while independent REST calls to Qwen and GLM still return HTTP 429 / 4006. Actual exhaustion today is not established; admission and metering disagree. See quota-recheck.json.",
+  "streamSchemaCompatibility": "Not established; quota rejection preceded content generation.",
+  "performanceConclusion": "No measured first narrative latency, sustained output rate, or turn completion latency. The 155 ms quota rejection is not a generation speed sample.",
+  "invocationEvidence": "schema-opening-1.json",
+  "localPrefetchEvidence": "prefetch-local-check.json",
+  "localVerification": {
+    "probeSyntaxChecks": "passed",
+    "splitUtf8SseFixture": "passed: two content events, final stop reason and usage, no actual model calls",
+    "pureChoiceCandidates": "passed for three historical S1 choices; source state and RNG not mutated"
+  },
+  "temporaryWorker": {
+    "name": "wending-stream-probe-20261029-0305",
+    "aiBinding": "direct AI binding in the existing account",
+    "durableObjectsAttached": 0,
+    "deleted": true,
+    "cleanupConfirmedAt": "2026-10-29T03:03:37.160Z"
+  },
+  "production": {
+    "modified": false,
+    "deploymentBeforeAndAfter": "05ff07f4-f530-46c9-9ef3-b3459892b32e",
+    "versionBeforeAndAfter": "9d7e9fdb-12dc-4710-8283-7f4ca8608b27"
+  },
+  "nextMeasurement": {
+    "scope": "Same model and actual opening/branch contexts; model plus network timings, not yet production browser UI performance.",
+    "metrics": ["first meaningful narrative character", "first complete sentence", "narrative delivery gaps", "narrative characters per second", "complete output latency", "full-scene validation result", "usage and stop reason"],
+    "readingSimulationCharactersPerSecond": [3, 5, 8],
+    "readingSimulationCaveat": "Scenario assumptions, not a measured claim about human reading speed.",
+    "noAutomaticRetryAfterQuotaExhaustion": true,
+    "scheduled": false
+  },
+  "prefetchRecommendation": {
+    "current": "Defer model prefetch until actual stream timing establishes a need.",
+    "safeLocalWork": "Pure candidate and context preparation without committing state or calling inference.",
+    "ifNeeded": "Consider one branch with explicit selection intent, separate durable speculative reservations, invalidation and foreground priority.",
+    "constraints": ["one active inference reservation per session", "one official pending transaction per physical archive", "two to three generated branches consume two to three calls while usually only one is selected", "cancelling a request does not establish upstream cancellation or a quota refund", "state hash alone does not cover independent memory records"]
+  },
+  "relatedUxFinding": "The provider error mapper currently recognizes quota code 3036, but the actual refusal used code 4006; the eventual UX change should account for both without changing saved state."
+}

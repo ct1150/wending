@@ -1,0 +1,799 @@
+{
+  "caseId": "opening",
+  "mode": "primary",
+  "startedAt": "2026-10-29T04:39:59.776Z",
+  "sourceBase": "1f5b9e18dae06e4b74e6d60403c46964cf45e1f9",
+  "sourceStatus": "uncommitted GLM transport under test",
+  "firstPreviewMs": 63127,
+  "doneMs": 68851,
+  "timeline": [
+    {
+      "atMs": 570,
+      "serverMs": 179,
+      "reset": true
+    },
+    {
+      "atMs": 63127,
+      "serverMs": 62736,
+      "chars": 2
+    },
+    {
+      "atMs": 63127,
+      "serverMs": 62736,
+      "chars": 4
+    },
+    {
+      "atMs": 63147,
+      "serverMs": 62757,
+      "chars": 5
+    },
+    {
+      "atMs": 63148,
+      "serverMs": 62757,
+      "chars": 6
+    },
+    {
+      "atMs": 63170,
+      "serverMs": 62779,
+      "chars": 8
+    },
+    {
+      "atMs": 63170,
+      "serverMs": 62779,
+      "chars": 10
+    },
+    {
+      "atMs": 63192,
+      "serverMs": 62801,
+      "chars": 12
+    },
+    {
+      "atMs": 63218,
+      "serverMs": 62827,
+      "chars": 13
+    },
+    {
+      "atMs": 63251,
+      "serverMs": 62854,
+      "chars": 14
+    },
+    {
+      "atMs": 63251,
+      "serverMs": 62854,
+      "chars": 15
+    },
+    {
+      "atMs": 63251,
+      "serverMs": 62854,
+      "chars": 16
+    },
+    {
+      "atMs": 63267,
+      "serverMs": 62876,
+      "chars": 17
+    },
+    {
+      "atMs": 63292,
+      "serverMs": 62900,
+      "chars": 19
+    },
+    {
+      "atMs": 63313,
+      "serverMs": 62922,
+      "chars": 20
+    },
+    {
+      "atMs": 63313,
+      "serverMs": 62922,
+      "chars": 21
+    },
+    {
+      "atMs": 63337,
+      "serverMs": 62946,
+      "chars": 22
+    },
+    {
+      "atMs": 63337,
+      "serverMs": 62946,
+      "chars": 23
+    },
+    {
+      "atMs": 63361,
+      "serverMs": 62970,
+      "chars": 24
+    },
+    {
+      "atMs": 63361,
+      "serverMs": 62970,
+      "chars": 25
+    },
+    {
+      "atMs": 63386,
+      "serverMs": 62995,
+      "chars": 26
+    },
+    {
+      "atMs": 63386,
+      "serverMs": 62995,
+      "chars": 28
+    },
+    {
+      "atMs": 63410,
+      "serverMs": 63018,
+      "chars": 29
+    },
+    {
+      "atMs": 63434,
+      "serverMs": 63042,
+      "chars": 30
+    },
+    {
+      "atMs": 63459,
+      "serverMs": 63067,
+      "chars": 31
+    },
+    {
+      "atMs": 63459,
+      "serverMs": 63067,
+      "chars": 33
+    },
+    {
+      "atMs": 63483,
+      "serverMs": 63091,
+      "chars": 34
+    },
+    {
+      "atMs": 63486,
+      "serverMs": 63094,
+      "chars": 35
+    },
+    {
+      "atMs": 63507,
+      "serverMs": 63115,
+      "chars": 37
+    },
+    {
+      "atMs": 63534,
+      "serverMs": 63141,
+      "chars": 39
+    },
+    {
+      "atMs": 63534,
+      "serverMs": 63141,
+      "chars": 40
+    },
+    {
+      "atMs": 63534,
+      "serverMs": 63141,
+      "chars": 41
+    },
+    {
+      "atMs": 63552,
+      "serverMs": 63161,
+      "chars": 43
+    },
+    {
+      "atMs": 63578,
+      "serverMs": 63186,
+      "chars": 45
+    },
+    {
+      "atMs": 63601,
+      "serverMs": 63209,
+      "chars": 46
+    },
+    {
+      "atMs": 63601,
+      "serverMs": 63209,
+      "chars": 47
+    },
+    {
+      "atMs": 63626,
+      "serverMs": 63231,
+      "chars": 48
+    },
+    {
+      "atMs": 63626,
+      "serverMs": 63231,
+      "chars": 49
+    },
+    {
+      "atMs": 63626,
+      "serverMs": 63231,
+      "chars": 51
+    },
+    {
+      "atMs": 63650,
+      "serverMs": 63251,
+      "chars": 52
+    },
+    {
+      "atMs": 63670,
+      "serverMs": 63272,
+      "chars": 54
+    },
+    {
+      "atMs": 63692,
+      "serverMs": 63294,
+      "chars": 55
+    },
+    {
+      "atMs": 63692,
+      "serverMs": 63294,
+      "chars": 56
+    },
+    {
+      "atMs": 63737,
+      "serverMs": 63338,
+      "chars": 57
+    },
+    {
+      "atMs": 63737,
+      "serverMs": 63338,
+      "chars": 58
+    },
+    {
+      "atMs": 63737,
+      "serverMs": 63338,
+      "chars": 59
+    },
+    {
+      "atMs": 63797,
+      "serverMs": 63398,
+      "chars": 60
+    },
+    {
+      "atMs": 63797,
+      "serverMs": 63398,
+      "chars": 61
+    },
+    {
+      "atMs": 63829,
+      "serverMs": 63430,
+      "chars": 62
+    },
+    {
+      "atMs": 63833,
+      "serverMs": 63436,
+      "chars": 63
+    },
+    {
+      "atMs": 63861,
+      "serverMs": 63463,
+      "chars": 64
+    },
+    {
+      "atMs": 63861,
+      "serverMs": 63463,
+      "chars": 66
+    },
+    {
+      "atMs": 63886,
+      "serverMs": 63488,
+      "chars": 67
+    },
+    {
+      "atMs": 63912,
+      "serverMs": 63513,
+      "chars": 68
+    },
+    {
+      "atMs": 63912,
+      "serverMs": 63513,
+      "chars": 70
+    },
+    {
+      "atMs": 63935,
+      "serverMs": 63537,
+      "chars": 72
+    },
+    {
+      "atMs": 63935,
+      "serverMs": 63537,
+      "chars": 73
+    },
+    {
+      "atMs": 63936,
+      "serverMs": 63538,
+      "chars": 74
+    },
+    {
+      "atMs": 63961,
+      "serverMs": 63563,
+      "chars": 76
+    },
+    {
+      "atMs": 63962,
+      "serverMs": 63564,
+      "chars": 78
+    },
+    {
+      "atMs": 63986,
+      "serverMs": 63585,
+      "chars": 79
+    },
+    {
+      "atMs": 63986,
+      "serverMs": 63585,
+      "chars": 81
+    },
+    {
+      "atMs": 63986,
+      "serverMs": 63585,
+      "chars": 83
+    },
+    {
+      "atMs": 64079,
+      "serverMs": 63679,
+      "chars": 84
+    },
+    {
+      "atMs": 64079,
+      "serverMs": 63679,
+      "chars": 85
+    },
+    {
+      "atMs": 64080,
+      "serverMs": 63681,
+      "chars": 87
+    },
+    {
+      "atMs": 64080,
+      "serverMs": 63681,
+      "chars": 89
+    },
+    {
+      "atMs": 64085,
+      "serverMs": 63682,
+      "chars": 90
+    },
+    {
+      "atMs": 64085,
+      "serverMs": 63682,
+      "chars": 91
+    },
+    {
+      "atMs": 64085,
+      "serverMs": 63684,
+      "chars": 93
+    },
+    {
+      "atMs": 64104,
+      "serverMs": 63705,
+      "chars": 94
+    },
+    {
+      "atMs": 64104,
+      "serverMs": 63705,
+      "chars": 95
+    },
+    {
+      "atMs": 64129,
+      "serverMs": 63729,
+      "chars": 96
+    },
+    {
+      "atMs": 64129,
+      "serverMs": 63729,
+      "chars": 98
+    },
+    {
+      "atMs": 64153,
+      "serverMs": 63753,
+      "chars": 100
+    },
+    {
+      "atMs": 64181,
+      "serverMs": 63780,
+      "chars": 101
+    },
+    {
+      "atMs": 64181,
+      "serverMs": 63780,
+      "chars": 103
+    },
+    {
+      "atMs": 64204,
+      "serverMs": 63803,
+      "chars": 104
+    },
+    {
+      "atMs": 64204,
+      "serverMs": 63803,
+      "chars": 106
+    },
+    {
+      "atMs": 64228,
+      "serverMs": 63829,
+      "chars": 108
+    },
+    {
+      "atMs": 64253,
+      "serverMs": 63853,
+      "chars": 110
+    },
+    {
+      "atMs": 64278,
+      "serverMs": 63879,
+      "chars": 111
+    },
+    {
+      "atMs": 64302,
+      "serverMs": 63902,
+      "chars": 112
+    },
+    {
+      "atMs": 64330,
+      "serverMs": 63931,
+      "chars": 113
+    },
+    {
+      "atMs": 64356,
+      "serverMs": 63956,
+      "chars": 114
+    },
+    {
+      "atMs": 64356,
+      "serverMs": 63956,
+      "chars": 116
+    },
+    {
+      "atMs": 64377,
+      "serverMs": 63978,
+      "chars": 117
+    },
+    {
+      "atMs": 64377,
+      "serverMs": 63978,
+      "chars": 118
+    },
+    {
+      "atMs": 64545,
+      "serverMs": 64146,
+      "chars": 121
+    },
+    {
+      "atMs": 64570,
+      "serverMs": 64171,
+      "chars": 122
+    },
+    {
+      "atMs": 64572,
+      "serverMs": 64172,
+      "chars": 123
+    },
+    {
+      "atMs": 64572,
+      "serverMs": 64172,
+      "chars": 124
+    },
+    {
+      "atMs": 64780,
+      "serverMs": 64384,
+      "chars": 125
+    },
+    {
+      "atMs": 64780,
+      "serverMs": 64384,
+      "chars": 126
+    },
+    {
+      "atMs": 64785,
+      "serverMs": 64390,
+      "chars": 128
+    },
+    {
+      "atMs": 64787,
+      "serverMs": 64390,
+      "chars": 130
+    },
+    {
+      "atMs": 65132,
+      "serverMs": 64735,
+      "chars": 133
+    },
+    {
+      "atMs": 65136,
+      "serverMs": 64738,
+      "chars": 134
+    },
+    {
+      "atMs": 65136,
+      "serverMs": 64738,
+      "chars": 136
+    },
+    {
+      "atMs": 65138,
+      "serverMs": 64739,
+      "chars": 138
+    },
+    {
+      "atMs": 65138,
+      "serverMs": 64739,
+      "chars": 139
+    },
+    {
+      "atMs": 65138,
+      "serverMs": 64739,
+      "chars": 141
+    },
+    {
+      "atMs": 65142,
+      "serverMs": 64742,
+      "chars": 142
+    },
+    {
+      "atMs": 65142,
+      "serverMs": 64742,
+      "chars": 144
+    },
+    {
+      "atMs": 65168,
+      "serverMs": 64767,
+      "chars": 145
+    },
+    {
+      "atMs": 65191,
+      "serverMs": 64792,
+      "chars": 146
+    },
+    {
+      "atMs": 65191,
+      "serverMs": 64792,
+      "chars": 148
+    },
+    {
+      "atMs": 65191,
+      "serverMs": 64792,
+      "chars": 149
+    },
+    {
+      "atMs": 65215,
+      "serverMs": 64816,
+      "chars": 151
+    },
+    {
+      "atMs": 65239,
+      "serverMs": 64838,
+      "chars": 153
+    },
+    {
+      "atMs": 65239,
+      "serverMs": 64838,
+      "chars": 155
+    },
+    {
+      "atMs": 65264,
+      "serverMs": 64861,
+      "chars": 156
+    },
+    {
+      "atMs": 65285,
+      "serverMs": 64885,
+      "chars": 157
+    },
+    {
+      "atMs": 65285,
+      "serverMs": 64885,
+      "chars": 159
+    },
+    {
+      "atMs": 65313,
+      "serverMs": 64914,
+      "chars": 160
+    },
+    {
+      "atMs": 65350,
+      "serverMs": 64951,
+      "chars": 161
+    },
+    {
+      "atMs": 65354,
+      "serverMs": 64955,
+      "chars": 162
+    },
+    {
+      "atMs": 65374,
+      "serverMs": 64975,
+      "chars": 163
+    },
+    {
+      "atMs": 65394,
+      "serverMs": 64995,
+      "chars": 164
+    },
+    {
+      "atMs": 65394,
+      "serverMs": 64995,
+      "chars": 165
+    },
+    {
+      "atMs": 65427,
+      "serverMs": 65028,
+      "chars": 167
+    },
+    {
+      "atMs": 65447,
+      "serverMs": 65048,
+      "chars": 171
+    },
+    {
+      "atMs": 65470,
+      "serverMs": 65072,
+      "chars": 172
+    },
+    {
+      "atMs": 65494,
+      "serverMs": 65096,
+      "chars": 173
+    },
+    {
+      "atMs": 65494,
+      "serverMs": 65096,
+      "chars": 174
+    },
+    {
+      "atMs": 65517,
+      "serverMs": 65119,
+      "chars": 175
+    },
+    {
+      "atMs": 65517,
+      "serverMs": 65119,
+      "chars": 176
+    },
+    {
+      "atMs": 65543,
+      "serverMs": 65144,
+      "chars": 178
+    },
+    {
+      "atMs": 65543,
+      "serverMs": 65144,
+      "chars": 179
+    },
+    {
+      "atMs": 65543,
+      "serverMs": 65144,
+      "chars": 180
+    },
+    {
+      "atMs": 65569,
+      "serverMs": 65170,
+      "chars": 183
+    },
+    {
+      "atMs": 65595,
+      "serverMs": 65197,
+      "chars": 184
+    },
+    {
+      "atMs": 65732,
+      "serverMs": 65334,
+      "chars": 187
+    },
+    {
+      "atMs": 65756,
+      "serverMs": 65357,
+      "chars": 188
+    },
+    {
+      "atMs": 65756,
+      "serverMs": 65357,
+      "chars": 189
+    },
+    {
+      "atMs": 65756,
+      "serverMs": 65357,
+      "chars": 190
+    },
+    {
+      "atMs": 65785,
+      "serverMs": 65386,
+      "chars": 191
+    },
+    {
+      "atMs": 65813,
+      "serverMs": 65415,
+      "chars": 192
+    },
+    {
+      "atMs": 65833,
+      "serverMs": 65435,
+      "chars": 193
+    },
+    {
+      "atMs": 65859,
+      "serverMs": 65459,
+      "chars": 194
+    },
+    {
+      "atMs": 65859,
+      "serverMs": 65459,
+      "chars": 195
+    },
+    {
+      "atMs": 65877,
+      "serverMs": 65479,
+      "chars": 197
+    },
+    {
+      "atMs": 65877,
+      "serverMs": 65479,
+      "chars": 198
+    },
+    {
+      "atMs": 65902,
+      "serverMs": 65504,
+      "chars": 199
+    },
+    {
+      "atMs": 65924,
+      "serverMs": 65526,
+      "chars": 200
+    },
+    {
+      "atMs": 65924,
+      "serverMs": 65526,
+      "chars": 201
+    },
+    {
+      "atMs": 65924,
+      "serverMs": 65526,
+      "chars": 202
+    },
+    {
+      "atMs": 65951,
+      "serverMs": 65549,
+      "chars": 203
+    },
+    {
+      "atMs": 65974,
+      "serverMs": 65576,
+      "chars": 205
+    },
+    {
+      "atMs": 65996,
+      "serverMs": 65599,
+      "chars": 206
+    },
+    {
+      "atMs": 65997,
+      "serverMs": 65599,
+      "chars": 208
+    }
+  ],
+  "result": {
+    "status": "rejected",
+    "accountingStatus": "complete",
+    "modelId": "@cf/zai-org/glm-4.7-flash",
+    "attemptId": "glm-speed-opening",
+    "inferencePerformed": true,
+    "usage": {
+      "promptTokens": 3366,
+      "completionTokens": 691,
+      "totalTokens": 4057
+    },
+    "actualNeurons": null,
+    "stopReason": "stop",
+    "inputHash": "65e2293eedaaec394678e674bcf380da97516331868812ddfc782a36755e4815",
+    "inputBytes": 13279,
+    "nonThinkingValidated": true,
+    "structureDiagnostic": "IDENTIFIER_INVALID",
+    "errorCode": "GENERATED_SCENE_INVALID"
+  },
+  "source": "zhipu",
+  "httpStatus": 200,
+  "headersMs": 399,
+  "accountingUnknown": false,
+  "serverDoneMs": 68446,
+  "upstream": {
+    "httpStatus": 200
+  },
+  "primaryError": {
+    "name": "AiError",
+    "code": "",
+    "message": "4006: you have used up your daily free allocation of 10,000 neurons, please upgrade to Cloudflare's Workers Paid plan if you would like to continue usage."
+  },
+  "keyPresent": true
+}

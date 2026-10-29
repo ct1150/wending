@@ -1,0 +1,755 @@
+{
+  "caseId": "opening",
+  "mode": "backup",
+  "startedAt": "2026-10-29T05:23:00.168Z",
+  "sourceBase": "1f5b9e18dae06e4b74e6d60403c46964cf45e1f9",
+  "sourceStatus": "uncommitted GLM transport under test",
+  "firstPreviewMs": 1137,
+  "doneMs": 5940,
+  "timeline": [
+    {
+      "atMs": 279,
+      "serverMs": 0,
+      "reset": true
+    },
+    {
+      "atMs": 1137,
+      "serverMs": 869,
+      "chars": 1
+    },
+    {
+      "atMs": 1166,
+      "serverMs": 898,
+      "chars": 2
+    },
+    {
+      "atMs": 1194,
+      "serverMs": 926,
+      "chars": 3
+    },
+    {
+      "atMs": 1199,
+      "serverMs": 929,
+      "chars": 4
+    },
+    {
+      "atMs": 1199,
+      "serverMs": 929,
+      "chars": 5
+    },
+    {
+      "atMs": 1231,
+      "serverMs": 962,
+      "chars": 7
+    },
+    {
+      "atMs": 1263,
+      "serverMs": 983,
+      "chars": 9
+    },
+    {
+      "atMs": 1263,
+      "serverMs": 983,
+      "chars": 10
+    },
+    {
+      "atMs": 1263,
+      "serverMs": 984,
+      "chars": 11
+    },
+    {
+      "atMs": 1281,
+      "serverMs": 1011,
+      "chars": 13
+    },
+    {
+      "atMs": 1310,
+      "serverMs": 1040,
+      "chars": 14
+    },
+    {
+      "atMs": 1310,
+      "serverMs": 1041,
+      "chars": 15
+    },
+    {
+      "atMs": 1310,
+      "serverMs": 1041,
+      "chars": 16
+    },
+    {
+      "atMs": 1337,
+      "serverMs": 1068,
+      "chars": 17
+    },
+    {
+      "atMs": 1337,
+      "serverMs": 1068,
+      "chars": 19
+    },
+    {
+      "atMs": 1368,
+      "serverMs": 1096,
+      "chars": 20
+    },
+    {
+      "atMs": 1368,
+      "serverMs": 1096,
+      "chars": 21
+    },
+    {
+      "atMs": 1400,
+      "serverMs": 1127,
+      "chars": 22
+    },
+    {
+      "atMs": 1426,
+      "serverMs": 1153,
+      "chars": 23
+    },
+    {
+      "atMs": 1426,
+      "serverMs": 1153,
+      "chars": 24
+    },
+    {
+      "atMs": 1426,
+      "serverMs": 1154,
+      "chars": 26
+    },
+    {
+      "atMs": 1456,
+      "serverMs": 1186,
+      "chars": 27
+    },
+    {
+      "atMs": 1489,
+      "serverMs": 1218,
+      "chars": 28
+    },
+    {
+      "atMs": 1514,
+      "serverMs": 1244,
+      "chars": 29
+    },
+    {
+      "atMs": 1514,
+      "serverMs": 1244,
+      "chars": 31
+    },
+    {
+      "atMs": 1539,
+      "serverMs": 1268,
+      "chars": 33
+    },
+    {
+      "atMs": 1570,
+      "serverMs": 1297,
+      "chars": 35
+    },
+    {
+      "atMs": 1597,
+      "serverMs": 1326,
+      "chars": 36
+    },
+    {
+      "atMs": 1601,
+      "serverMs": 1330,
+      "chars": 37
+    },
+    {
+      "atMs": 1601,
+      "serverMs": 1330,
+      "chars": 39
+    },
+    {
+      "atMs": 1625,
+      "serverMs": 1354,
+      "chars": 40
+    },
+    {
+      "atMs": 1626,
+      "serverMs": 1355,
+      "chars": 41
+    },
+    {
+      "atMs": 1655,
+      "serverMs": 1383,
+      "chars": 43
+    },
+    {
+      "atMs": 1655,
+      "serverMs": 1384,
+      "chars": 45
+    },
+    {
+      "atMs": 1683,
+      "serverMs": 1411,
+      "chars": 46
+    },
+    {
+      "atMs": 1713,
+      "serverMs": 1440,
+      "chars": 47
+    },
+    {
+      "atMs": 1713,
+      "serverMs": 1441,
+      "chars": 49
+    },
+    {
+      "atMs": 1741,
+      "serverMs": 1469,
+      "chars": 51
+    },
+    {
+      "atMs": 1772,
+      "serverMs": 1499,
+      "chars": 52
+    },
+    {
+      "atMs": 1772,
+      "serverMs": 1499,
+      "chars": 53
+    },
+    {
+      "atMs": 1799,
+      "serverMs": 1527,
+      "chars": 55
+    },
+    {
+      "atMs": 1829,
+      "serverMs": 1555,
+      "chars": 56
+    },
+    {
+      "atMs": 1860,
+      "serverMs": 1589,
+      "chars": 57
+    },
+    {
+      "atMs": 1891,
+      "serverMs": 1617,
+      "chars": 59
+    },
+    {
+      "atMs": 1916,
+      "serverMs": 1645,
+      "chars": 60
+    },
+    {
+      "atMs": 1944,
+      "serverMs": 1673,
+      "chars": 61
+    },
+    {
+      "atMs": 1945,
+      "serverMs": 1674,
+      "chars": 62
+    },
+    {
+      "atMs": 1976,
+      "serverMs": 1705,
+      "chars": 63
+    },
+    {
+      "atMs": 1976,
+      "serverMs": 1705,
+      "chars": 67
+    },
+    {
+      "atMs": 2009,
+      "serverMs": 1737,
+      "chars": 68
+    },
+    {
+      "atMs": 2035,
+      "serverMs": 1763,
+      "chars": 69
+    },
+    {
+      "atMs": 2042,
+      "serverMs": 1770,
+      "chars": 70
+    },
+    {
+      "atMs": 2042,
+      "serverMs": 1770,
+      "chars": 72
+    },
+    {
+      "atMs": 2070,
+      "serverMs": 1798,
+      "chars": 74
+    },
+    {
+      "atMs": 2078,
+      "serverMs": 1804,
+      "chars": 75
+    },
+    {
+      "atMs": 2111,
+      "serverMs": 1838,
+      "chars": 76
+    },
+    {
+      "atMs": 2130,
+      "serverMs": 1846,
+      "chars": 77
+    },
+    {
+      "atMs": 2148,
+      "serverMs": 1875,
+      "chars": 79
+    },
+    {
+      "atMs": 2148,
+      "serverMs": 1875,
+      "chars": 82
+    },
+    {
+      "atMs": 2178,
+      "serverMs": 1905,
+      "chars": 83
+    },
+    {
+      "atMs": 2210,
+      "serverMs": 1938,
+      "chars": 84
+    },
+    {
+      "atMs": 2214,
+      "serverMs": 1941,
+      "chars": 85
+    },
+    {
+      "atMs": 2238,
+      "serverMs": 1964,
+      "chars": 86
+    },
+    {
+      "atMs": 2238,
+      "serverMs": 1964,
+      "chars": 88
+    },
+    {
+      "atMs": 2264,
+      "serverMs": 1992,
+      "chars": 89
+    },
+    {
+      "atMs": 2298,
+      "serverMs": 2025,
+      "chars": 90
+    },
+    {
+      "atMs": 2298,
+      "serverMs": 2025,
+      "chars": 92
+    },
+    {
+      "atMs": 2332,
+      "serverMs": 2057,
+      "chars": 93
+    },
+    {
+      "atMs": 2353,
+      "serverMs": 2081,
+      "chars": 94
+    },
+    {
+      "atMs": 2378,
+      "serverMs": 2086,
+      "chars": 95
+    },
+    {
+      "atMs": 2378,
+      "serverMs": 2086,
+      "chars": 97
+    },
+    {
+      "atMs": 2387,
+      "serverMs": 2112,
+      "chars": 99
+    },
+    {
+      "atMs": 2414,
+      "serverMs": 2138,
+      "chars": 100
+    },
+    {
+      "atMs": 2444,
+      "serverMs": 2173,
+      "chars": 101
+    },
+    {
+      "atMs": 2469,
+      "serverMs": 2197,
+      "chars": 103
+    },
+    {
+      "atMs": 2500,
+      "serverMs": 2227,
+      "chars": 104
+    },
+    {
+      "atMs": 2529,
+      "serverMs": 2258,
+      "chars": 105
+    },
+    {
+      "atMs": 2530,
+      "serverMs": 2258,
+      "chars": 107
+    },
+    {
+      "atMs": 2559,
+      "serverMs": 2286,
+      "chars": 108
+    },
+    {
+      "atMs": 2585,
+      "serverMs": 2313,
+      "chars": 109
+    },
+    {
+      "atMs": 2585,
+      "serverMs": 2313,
+      "chars": 110
+    },
+    {
+      "atMs": 2879,
+      "serverMs": 2606,
+      "chars": 114
+    },
+    {
+      "atMs": 2910,
+      "serverMs": 2634,
+      "chars": 116
+    },
+    {
+      "atMs": 2935,
+      "serverMs": 2662,
+      "chars": 117
+    },
+    {
+      "atMs": 2964,
+      "serverMs": 2690,
+      "chars": 118
+    },
+    {
+      "atMs": 2964,
+      "serverMs": 2690,
+      "chars": 119
+    },
+    {
+      "atMs": 2994,
+      "serverMs": 2719,
+      "chars": 121
+    },
+    {
+      "atMs": 2996,
+      "serverMs": 2721,
+      "chars": 122
+    },
+    {
+      "atMs": 3021,
+      "serverMs": 2747,
+      "chars": 123
+    },
+    {
+      "atMs": 3051,
+      "serverMs": 2778,
+      "chars": 126
+    },
+    {
+      "atMs": 3085,
+      "serverMs": 2810,
+      "chars": 127
+    },
+    {
+      "atMs": 3110,
+      "serverMs": 2836,
+      "chars": 128
+    },
+    {
+      "atMs": 3139,
+      "serverMs": 2866,
+      "chars": 130
+    },
+    {
+      "atMs": 3140,
+      "serverMs": 2866,
+      "chars": 131
+    },
+    {
+      "atMs": 3345,
+      "serverMs": 3070,
+      "chars": 134
+    },
+    {
+      "atMs": 3346,
+      "serverMs": 3071,
+      "chars": 135
+    },
+    {
+      "atMs": 3377,
+      "serverMs": 3101,
+      "chars": 136
+    },
+    {
+      "atMs": 3377,
+      "serverMs": 3101,
+      "chars": 139
+    },
+    {
+      "atMs": 3401,
+      "serverMs": 3125,
+      "chars": 140
+    },
+    {
+      "atMs": 3401,
+      "serverMs": 3125,
+      "chars": 141
+    },
+    {
+      "atMs": 3401,
+      "serverMs": 3126,
+      "chars": 142
+    },
+    {
+      "atMs": 3459,
+      "serverMs": 3184,
+      "chars": 144
+    },
+    {
+      "atMs": 3459,
+      "serverMs": 3184,
+      "chars": 146
+    },
+    {
+      "atMs": 3459,
+      "serverMs": 3184,
+      "chars": 147
+    },
+    {
+      "atMs": 3461,
+      "serverMs": 3186,
+      "chars": 148
+    },
+    {
+      "atMs": 3487,
+      "serverMs": 3212,
+      "chars": 149
+    },
+    {
+      "atMs": 3488,
+      "serverMs": 3213,
+      "chars": 150
+    },
+    {
+      "atMs": 3490,
+      "serverMs": 3214,
+      "chars": 151
+    },
+    {
+      "atMs": 3522,
+      "serverMs": 3246,
+      "chars": 153
+    },
+    {
+      "atMs": 3555,
+      "serverMs": 3278,
+      "chars": 154
+    },
+    {
+      "atMs": 3574,
+      "serverMs": 3299,
+      "chars": 155
+    },
+    {
+      "atMs": 3603,
+      "serverMs": 3328,
+      "chars": 156
+    },
+    {
+      "atMs": 3603,
+      "serverMs": 3328,
+      "chars": 157
+    },
+    {
+      "atMs": 3632,
+      "serverMs": 3356,
+      "chars": 158
+    },
+    {
+      "atMs": 3632,
+      "serverMs": 3357,
+      "chars": 160
+    },
+    {
+      "atMs": 3660,
+      "serverMs": 3385,
+      "chars": 161
+    },
+    {
+      "atMs": 3661,
+      "serverMs": 3385,
+      "chars": 162
+    },
+    {
+      "atMs": 3689,
+      "serverMs": 3414,
+      "chars": 164
+    },
+    {
+      "atMs": 3719,
+      "serverMs": 3443,
+      "chars": 165
+    },
+    {
+      "atMs": 3720,
+      "serverMs": 3444,
+      "chars": 166
+    },
+    {
+      "atMs": 3720,
+      "serverMs": 3444,
+      "chars": 167
+    },
+    {
+      "atMs": 3754,
+      "serverMs": 3476,
+      "chars": 169
+    },
+    {
+      "atMs": 3754,
+      "serverMs": 3476,
+      "chars": 170
+    },
+    {
+      "atMs": 3778,
+      "serverMs": 3503,
+      "chars": 172
+    },
+    {
+      "atMs": 3779,
+      "serverMs": 3504,
+      "chars": 174
+    },
+    {
+      "atMs": 3807,
+      "serverMs": 3531,
+      "chars": 175
+    }
+  ],
+  "result": {
+    "status": "ready",
+    "accountingStatus": "complete",
+    "modelId": "@cf/zai-org/glm-4.7-flash",
+    "attemptId": "glm-speed-opening",
+    "inferencePerformed": true,
+    "usage": {
+      "promptTokens": 2746,
+      "completionTokens": 386,
+      "totalTokens": 3132
+    },
+    "actualNeurons": null,
+    "stopReason": "stop",
+    "inputHash": "d91ed6fc0da36f42f66f9c90ff3d872715cf79e62d3d6e4ec92922d7d8d3f54e",
+    "inputBytes": 10473,
+    "nonThinkingValidated": true,
+    "scene": {
+      "id": "r:a8d440f51f9c62ee:t1:s:scene",
+      "title": "云溪村外",
+      "location": "云溪村外",
+      "entities": [
+        {
+          "id": "r:a8d440f51f9c62ee:t1:e:place_1",
+          "name": "山道",
+          "kind": "place"
+        },
+        {
+          "id": "r:a8d440f51f9c62ee:t1:e:place_2",
+          "name": "古林",
+          "kind": "place"
+        }
+      ],
+      "blocks": [
+        {
+          "kind": "narration",
+          "text": "你叫云归，今年十六岁，是个凡人。你出生在云溪村，父母早亡，靠着村里人的接济长大。你天生拥有过目不忘的本事和一副练武的好筋骨，但因为没有灵根，无法修炼仙法，只能做一个凡人。你看着村口的老槐树，心里想着，这日子总得有点盼头。"
+        },
+        {
+          "kind": "dialogue",
+          "speaker": "self",
+          "text": "我得出去闯闯，不能总待在这个小村子里。"
+        },
+        {
+          "kind": "narration",
+          "text": "你背起简单的行囊，里面只有几块干粮和一件旧衣裳。你沿着村后的小路，踏上了未知的旅程。"
+        }
+      ],
+      "choices": [
+        {
+          "id": "r:a8d440f51f9c62ee:t1:c:a",
+          "label": "沿路前往山道（谨慎）",
+          "intent": "travel",
+          "targetId": "r:a8d440f51f9c62ee:t1:e:place_1",
+          "stake": "low",
+          "approach": "road"
+        },
+        {
+          "id": "r:a8d440f51f9c62ee:t1:c:b",
+          "label": "穿行荒野前往古林（谨慎）",
+          "intent": "travel",
+          "targetId": "r:a8d440f51f9c62ee:t1:e:place_2",
+          "stake": "low",
+          "approach": "wilderness"
+        },
+        {
+          "id": "r:a8d440f51f9c62ee:t1:c:c",
+          "label": "歇息调养（谨慎）",
+          "intent": "rest",
+          "targetId": "self",
+          "stake": "low",
+          "approach": "recover"
+        }
+      ],
+      "memoryDeltas": []
+    }
+  },
+  "source": "zhipu",
+  "httpStatus": 200,
+  "headersMs": 278,
+  "accountingUnknown": false,
+  "serverDoneMs": 5642,
+  "upstream": {
+    "httpStatus": 200
+  },
+  "primaryError": null,
+  "rawCompletion": {
+    "model": "@cf/zai-org/glm-4.7-flash",
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "message": {
+          "content": "\n{\n  \"blocks\": [\n    {\n      \"kind\": \"narration\",\n      \"text\": \"你叫云归，今年十六岁，是个凡人。你出生在云溪村，父母早亡，靠着村里人的接济长大。你天生拥有过目不忘的本事和一副练武的好筋骨，但因为没有灵根，无法修炼仙法，只能做一个凡人。你看着村口的老槐树，心里想着，这日子总得有点盼头。\"\n    },\n    {\n      \"kind\": \"dialogue\",\n      \"speaker\": \"self\",\n      \"text\": \"我得出去闯闯，不能总待在这个小村子里。\"\n    },\n    {\n      \"kind\": \"narration\",\n      \"text\": \"你背起简单的行囊，里面只有几块干粮和一件旧衣裳。你沿着村后的小路，踏上了未知的旅程。\"\n    }\n  ],\n  \"title\": \"云溪村外\",\n  \"location\": \"云溪村外\",\n  \"otherPeople\": [],\n  \"places\": [\n    {\n      \"id\": \"l1\",\n      \"name\": \"山道\"\n    },\n    {\n      \"id\": \"l2\",\n      \"name\": \"古林\"\n    }\n  ],\n  \"factions\": [],\n  \"choices\": [\n    {\n      \"action\": \"travel:road\",\n      \"targetId\": \"l1\",\n      \"stake\": \"low\"\n    },\n    {\n      \"action\": \"travel:wilderness\",\n      \"targetId\": \"l2\",\n      \"stake\": \"low\"\n    },\n    {\n      \"action\": \"rest:recover\",\n      \"targetId\": \"self\",\n      \"stake\": \"low\"\n    }\n  ],\n  \"memoryDeltas\": []\n}\n",
+          "reasoning_content": ""
+        }
+      }
+    ],
+    "usage": {
+      "prompt_tokens": 2746,
+      "completion_tokens": 386,
+      "total_tokens": 3132,
+      "prompt_tokens_details": {
+        "cached_tokens": 2509
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0
+      }
+    }
+  },
+  "keyPresent": true
+}

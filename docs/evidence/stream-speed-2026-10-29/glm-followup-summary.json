@@ -1,0 +1,241 @@
+{
+  "schemaVersion": 1,
+  "recordedAt": "2026-10-29T05:37:31.847Z",
+  "status": "LOCAL_AND_PRIVATE_GAMEPLAY_VERIFIED_PRIMARY_ADMISSION_BLOCKED",
+  "sourceBase": "1f5b9e18dae06e4b74e6d60403c46964cf45e1f9",
+  "sourceStatus": "Uncommitted local changes; not a production release",
+  "fingerprints": {
+    "src/worker/story-glm-wire.js": "4e87a65ac2768db938fddcd5a5aea63a6d1627c5071121403d0ecc7ac02fc561",
+    "src/worker/story-glm-provider.js": "d093428117b66304c6f5e6fd498ab4735097be75a2d22914489f44215c4a0375",
+    "src/worker/story-provider-core.js": "e88f554a93fa0b01855e7d4bdb65fe7be6f408319583554403a3d84acf17ec3f",
+    "src/worker/story-provider.js": "cdba47590604ec0e38e86551e435e56afdc2e6a35b56553980e60023ddbd3178",
+    "src/worker/story-api.js": "5f5dbe40ecf77fb8152e987ddc4a7ed582227f0842b9e047b67bca9d907223c8",
+    "src/worker/story-config.js": "2f4a05b2b63a30d798b1b655f2d8ad182ba0d144e27fa63932935b5541820d50",
+    "src/ui/story-client.js": "741f526fee6a9745dc4964869c90310b245bbec4ad596685611b54ddc1ec9ca2",
+    "src/ui/live-session.js": "d42a8f91bd232016386763b12761132778343492305c0d54fd65746b6a736ece",
+    "src/ui/journey.js": "70912f70627a004d08fa9c911abe1e736f158221a5ed35c061b172e791f29a96",
+    "src/app.js": "9b4aa0675d0f323eb046bbc71a408e47a76c69252dc58782a1d8f228e9601667",
+    "src/game/cultivation/live/story-preview.js": "1ae676efb131af53191f366abb35e5410a82c6a4a987ee7f5fc1ec8bc2951f13",
+    "scripts/story-latency.js": "239e3d72a1c54bb208eba433c4e931fe1e09974334680f7489c6db036256ce67"
+  },
+  "supersedesHistoricalClaimsIn": "glm-integration-summary.json",
+  "implementation": {
+    "primary": "@cf/zai-org/glm-4.7-flash",
+    "backup": "glm-4.7-flash",
+    "endpoint": "https://open.bigmodel.cn/api/paas/v4/chat/completions",
+    "secretBinding": "ZHIPU_API_KEY",
+    "wire": "GLM-only typed alias lists and action triples; server owns persistent IDs and option labels; common final scene contract unchanged",
+    "stream": "POST SSE; provisional text only; validation, durable settlement and archive CAS precede choice activation"
+  },
+  "actualEvidence": {
+    "successfulScenes": 5,
+    "meaning": "One explicit backup probe plus two browser sessions of opening and choice; debugging samples, not a random or percentile benchmark",
+    "directBackup": {
+      "file": "glm-backup-opening-13.json",
+      "source": "zhipu",
+      "httpStatus": 200,
+      "status": "ready",
+      "usage": {
+        "promptTokens": 2746,
+        "completionTokens": 386,
+        "totalTokens": 3132
+      },
+      "latency": {
+        "usable": true,
+        "errorCode": null,
+        "firstAnyPreviewMs": 1137,
+        "firstReadableMs": 1368,
+        "completionMs": 5940,
+        "narrativeChars": 175,
+        "maxPreviewGapMs": 294,
+        "readingFinishEstimateMs": 30535,
+        "readingStallEstimateMs": 0,
+        "optionsWaitEstimateMs": 0,
+        "prefetchWorthEvaluating": false,
+        "assumptions": {
+          "readingCharsPerSecond": 6,
+          "readableChars": 20,
+          "targetWaitMs": 2000
+        }
+      }
+    },
+    "firstBrowser": {
+      "file": "glm-browser-two-turns-first.json",
+      "records": [
+        {
+          "caseId": "opening",
+          "status": "ready",
+          "revision": 1,
+          "firstPreviewMs": 1853,
+          "completionMs": 8278
+        },
+        {
+          "caseId": "choice",
+          "status": "ready",
+          "revision": 2,
+          "firstPreviewMs": 1681,
+          "completionMs": 6473
+        }
+      ],
+      "collectorLimit": "The first harness incorrectly required the title continue button after a reload that already restored the adventure; it also treated final preview removal as a source reset. Do not infer failed product refresh or reading-overlap metrics from this run. Preserved unchanged; real completions replay in regression tests."
+    },
+    "finalBrowser": {
+      "file": "glm-browser-acceptance.json",
+      "version": "118b46b6-4050-41b8-b4cd-203b1880d527",
+      "frontend": "Local current built HTML served by Playwright route; not a deployed frontend",
+      "api": "Actual Workers API and isolated durable SQLite coordinator",
+      "sourceLimit": "Browser diagnostics did not capture transport.source; do not use these successes to certify Cloudflare primary output",
+      "records": [
+        {
+          "caseId": "opening",
+          "revision": 1,
+          "pending": false,
+          "usable": true,
+          "errorCode": null,
+          "firstAnyPreviewMs": 3425,
+          "firstReadableMs": 3641,
+          "completionMs": 8787,
+          "narrativeChars": 132,
+          "maxPreviewGapMs": 363,
+          "readingFinishEstimateMs": 25641,
+          "readingStallEstimateMs": 0,
+          "optionsWaitEstimateMs": 0,
+          "prefetchWorthEvaluating": true,
+          "assumptions": {
+            "readingCharsPerSecond": 6,
+            "readableChars": 20,
+            "targetWaitMs": 2000
+          }
+        },
+        {
+          "caseId": "choice",
+          "revision": 2,
+          "pending": false,
+          "usable": true,
+          "errorCode": null,
+          "firstAnyPreviewMs": 14486,
+          "firstReadableMs": 14786,
+          "completionMs": 19815,
+          "narrativeChars": 163,
+          "maxPreviewGapMs": 284,
+          "readingFinishEstimateMs": 41953,
+          "readingStallEstimateMs": 0,
+          "optionsWaitEstimateMs": 0,
+          "prefetchWorthEvaluating": true,
+          "assumptions": {
+            "readingCharsPerSecond": 6,
+            "readableChars": 20,
+            "targetWaitMs": 2000
+          }
+        }
+      ],
+      "refresh": {
+        "beforeRevision": 2,
+        "afterRevision": 2,
+        "sameRng": true,
+        "noNewPost": true
+      },
+      "errors": [],
+      "turnPosts": 2,
+      "explicitRetriesInFinalRun": 0
+    },
+    "primaryLatest": {
+      "file": "glm-primary-opening-15.json",
+      "primaryError": {
+        "name": "AiError",
+        "code": "",
+        "message": "4006: you have used up your daily free allocation of 10,000 neurons, please upgrade to Cloudflare's Workers Paid plan if you would like to continue usage."
+      },
+      "sourceAfterFallback": "zhipu",
+      "backupStatus": {
+        "httpStatus": 429,
+        "code": "1305"
+      },
+      "status": "paused",
+      "errorCode": "PROVIDER_BUSY"
+    },
+    "failuresRetained": [
+      "glm-primary-opening-5.json",
+      "glm-backup-opening-7.json",
+      "glm-backup-opening-9.json",
+      "glm-backup-opening-11.json",
+      "glm-backup-opening-12.json",
+      "glm-backup-branch-a-14.json",
+      "glm-primary-opening-15.json",
+      "glm-browser-opening-rejected.json",
+      "glm-browser-opening-choice-rejected.json"
+    ]
+  },
+  "experience": {
+    "firstPreviewRangeMs": [
+      1137,
+      14486
+    ],
+    "completionRangeMs": [
+      5940,
+      19815
+    ],
+    "outputAfterStart": "Final browser maximum observed preview gaps 363ms and 284ms",
+    "readingAssumption": "6 Unicode characters/second; begin at 20 characters; 2000ms target wait; illustrative product thresholds, not a human study",
+    "readingOverlap": "No estimated stream starvation or post-reading options wait in the direct backup and final browser samples",
+    "verdict": "Streaming is usable after output starts; free-provider queue and 429/1305 prevent a stable fluent-play guarantee",
+    "prefetch": {
+      "enabled": false,
+      "recommendation": "Evaluate at most one predicted branch during reading, with separate admission, exact state/choice/version cache identity, invalidation and CAS only after actual selection",
+      "reason": "Could hide a hit branch queue delay; cannot solve provider refusal, misses waste inference and speculation must not block real demand",
+      "design": "../../superpowers/specs/2026-10-29-glm-streaming-design.md"
+    }
+  },
+  "validation": {
+    "windowsTargeted": {
+      "tests": 208,
+      "pass": 208,
+      "fail": 0,
+      "cancelled": 0
+    },
+    "command": "WENDING_BROWSER_EXECUTABLE=<installed Chrome> node --test tests/{glm-provider,story-glm-wire,story-stream,story-latency,live-app,journey-ui,story-api,workers-ai-provider,story-acceptance,story-generation-schema,story-player-identity,story-travel-target,story-choice-trade,story-choice-movement,story-choice-duration}.test.js",
+    "windowsRuntimeLimit": "A separate native production fixture fails to start Windows workerd with access violation 0xc0000005; it passes in WSL",
+    "wslNativeAndBuild": {
+      "tests": 28,
+      "pass": 28,
+      "fail": 0,
+      "command": "Ubuntu24: node --test tests/story-production.test.js tests/backend-build.test.js"
+    },
+    "syntaxFiles": 170,
+    "build": "npm run build and SOURCE_COMMIT=<base SHA> npm run build:gateway both passed; backend default disabled",
+    "review": "Read-only review findings about reference mapping and alias collisions were reproduced and fixed; final typed-list decoder and diff checked by main agent",
+    "finalUiDifference": "A later local one-line guard restricts the birth intro to awaitingOpening so the death view cannot show a new-life intro. Private browser evidence predates this guard; local renderer regression and rebuild cover it."
+  },
+  "production": {
+    "originalVersion": "f17816a1-da95-4095-b13d-406a2610a9c0",
+    "normalTrafficPercentDuringAcceptance": 100,
+    "temporaryVersionPercent": 0,
+    "acceptanceVersions": [
+      "39259806-893a-48ea-bef0-a2dea308eb4c",
+      "118b46b6-4050-41b8-b4cd-203b1880d527"
+    ],
+    "restoredDeployment": "72745ccd-3eca-4d5c-a546-a791ddc2a6d2",
+    "restoredVersions": [
+      {
+        "versionId": "f17816a1-da95-4095-b13d-406a2610a9c0",
+        "percent": 100
+      }
+    ],
+    "previewsEnabled": false,
+    "secretBindingPresent": true,
+    "secretValueExposed": false,
+    "localTemporaryTokenDeleted": true,
+    "isolatedAcceptanceCoordinator": "glm-stream-acceptance-20261029",
+    "productionCoordinatorUntouched": true,
+    "namespaceMigration": false,
+    "newModelPromoted": false,
+    "newFrontendOrBackendPublished": false
+  },
+  "limitations": [
+    "No successful Cloudflare primary output has been certified; 4006 contradicts the earlier zero-usage observation and does not prove today quota was consumed",
+    "Free backup remains intermittently overloaded; invalid model output can still be rejected without committing a turn",
+    "Small adaptive debugging sample; no P50/P95, success-rate guarantee or statistical human-readability claim",
+    "Explicit private acceptance bypassed the unpromoted candidate gate and used local frontend routing; this is not a production rollout",
+    "Existing legacy entity IDs that equal reserved self/resource/realm IDs are rejected rather than ambiguously aliased"
+  ]
+}

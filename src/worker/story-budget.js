@@ -54,6 +54,8 @@ export function createBudgetCoordinator({storage,now=Date.now,limits={}}){
     reserve(input){return tx(()=>{
       const time=now(),today=day(time),s=session(input,time);
       if(!s)return denied('SESSION_UNAVAILABLE');
+      const quotaProvider=input.quotaProvider??'cloudflare';
+      if(!['cloudflare','zhipu'].includes(quotaProvider))return denied('RESERVATION_INVALID');
       if(![input.attemptId,input.requestId,input.payloadHash,input.ipHash].every(validText)||!Number.isSafeInteger(input.reservedNeurons)||input.reservedNeurons<1||policy.dailyNeurons!==null&&input.reservedNeurons>policy.dailyNeurons)return denied('RESERVATION_INVALID');
       const contextHash=input.contextHash??input.payloadHash;
       if(!validText(contextHash))return denied('RESERVATION_INVALID');
@@ -96,7 +98,7 @@ export function createBudgetCoordinator({storage,now=Date.now,limits={}}){
       if(sql("SELECT 1 FROM ledger WHERE session_ref=? AND status='reserved' AND created>? LIMIT 1",s.ref,time-policy.pendingMs).length)return notAdmitted('ATTEMPT_IN_PROGRESS');
       // A foreign-session reference is accepted only for a request new to this
       // session. Never inspect that other session's result or private identity.
-      if(sql('SELECT day FROM quota WHERE day=?',today).length)return notAdmitted('FREE_QUOTA_EXHAUSTED');
+      if(quotaProvider==='cloudflare'&&sql('SELECT day FROM quota WHERE day=?',today).length)return notAdmitted('FREE_QUOTA_EXHAUSTED');
       if(policy.ipAttemptsPerDay!==null&&counter('ipAttempt',input.ipHash,today)>=policy.ipAttemptsPerDay)return notAdmitted('IP_ATTEMPT_LIMIT');
       if(policy.sessionAttemptsPerDay!==null&&counter('sessionAttempt',s.ref,today)>=policy.sessionAttemptsPerDay)return notAdmitted('SESSION_ATTEMPT_LIMIT');
       if(policy.dailyNeurons!==null){

@@ -5,15 +5,16 @@ const defaultEngine={createLiveGame,prepareOpening,prepareChoice,commitTurn,sett
 const copy=value=>value===undefined?undefined:JSON.parse(JSON.stringify(value));
 const id=()=>globalThis.crypto.randomUUID();
 const fault=code=>Object.assign(new Error(code),{code});
-export function createLiveSession({archive,client,engine=defaultEngine,onChange=()=>{}}) {
-  let loaded=null,busy=false,status='idle',errorCode=null;
-  function view(){return copy({...loaded,state:loaded?.state??null,pending:loaded?.pending??null,attempt:loaded?.attempt??null,status,errorCode,busy});}
+export function createLiveSession({archive,client,engine=defaultEngine,onChange=()=>{},onProgress=()=>{}}) {
+  let loaded=null,busy=false,status='idle',errorCode=null,preview=null,generationStatus='generating';
+  function view(){return copy({...loaded,state:loaded?.state??null,pending:loaded?.pending??null,attempt:loaded?.attempt??null,status,errorCode,busy,preview,generationStatus});}
   function emit(){onChange(view());}
   async function reload(expectedArchiveId) {
     const next=await archive.load();
     // A continuation belongs to the displayed physical archive, including
     // when another tab activates an imported copy of the same logical run.
     if(expectedArchiveId!==undefined&&(next?.archiveId??null)!==expectedArchiveId)throw fault('ARCHIVE_CONFLICT');
+    if(next?.archiveId!==loaded?.archiveId||next?.pending?.identity.requestId!==loaded?.pending?.identity.requestId||next?.attempt?.id!==loaded?.attempt?.id)preview=null;
     loaded=next;
     status=loaded?.pending?'paused':loaded?.state.phase==='dead'?'dead':loaded?'ready':'idle';
     errorCode=loaded?.pause??null;
@@ -60,6 +61,7 @@ export function createLiveSession({archive,client,engine=defaultEngine,onChange=
       memoryDelta:buildMemoryDelta(row.pending.receipt,scene),
       requestId:row.pending.identity.requestId,
     });
+    preview=null;
     status='ready';
     errorCode=null;
     emit();
@@ -79,6 +81,7 @@ export function createLiveSession({archive,client,engine=defaultEngine,onChange=
     return true;
   }
   async function generate(row,{reuseAttempt=false}={}) {
+    preview=null;generationStatus='generating';
     if(await death(row))return;
     const capability=await client.capabilities();
     if(!capability.available)throw fault(capability.errorCode||'SERVICE_UNAVAILABLE');
@@ -105,7 +108,18 @@ export function createLiveSession({archive,client,engine=defaultEngine,onChange=
     status='pending';
     errorCode=null;
     emit();
-    await apply(loaded,await client.requestTurn(row.pending,context,attempt),context);
+    let active=true;
+    try{
+      const result=await client.requestTurn(row.pending,context,attempt,{onProgress:event=>{
+        if(!active||loaded?.attempt?.id!==attempt.id||loaded?.pending?.identity.requestId!==row.pending.identity.requestId)return;
+        if(event.type==='reset')preview=null;
+        else if(event.type==='preview')preview={text:(preview?.text??'')+event.text};
+        else if(event.type==='status')generationStatus=event.status;
+        onProgress(view());
+      }});
+      active=false;
+      await apply(loaded,result,context);
+    }finally{active=false;}
   }
   async function run(operation) {
     if(busy)return view();
@@ -134,6 +148,7 @@ export function createLiveSession({archive,client,engine=defaultEngine,onChange=
       try { buildStoryContext(state,pending,[],{selection:'relevance-v1',openTotal:0}); }
       catch { throw fault('BIRTH_CONTEXT_INVALID'); }
       loaded=await archive.create({state,pending,expectedArchiveId});
+      preview=null;
       status='pending';
       emit();
       await generate(loaded);
@@ -149,6 +164,7 @@ export function createLiveSession({archive,client,engine=defaultEngine,onChange=
       try { buildStoryContext(state,pending,[],{selection:'relevance-v1',openTotal:0}); }
       catch { throw fault('BIRTH_CONTEXT_INVALID'); }
       loaded=await archive.create({state,pending,expectedArchiveId});
+      preview=null;
       status='pending';
       errorCode=null;
       emit();

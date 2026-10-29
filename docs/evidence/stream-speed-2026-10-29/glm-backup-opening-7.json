@@ -1,0 +1,623 @@
+{
+  "caseId": "opening",
+  "mode": "backup",
+  "startedAt": "2026-10-29T04:44:36.744Z",
+  "sourceBase": "1f5b9e18dae06e4b74e6d60403c46964cf45e1f9",
+  "sourceStatus": "uncommitted GLM transport under test",
+  "firstPreviewMs": 2469,
+  "doneMs": 7096,
+  "timeline": [
+    {
+      "atMs": 298,
+      "serverMs": 0,
+      "reset": true
+    },
+    {
+      "atMs": 2469,
+      "serverMs": 2177,
+      "chars": 2
+    },
+    {
+      "atMs": 2493,
+      "serverMs": 2201,
+      "chars": 4
+    },
+    {
+      "atMs": 2493,
+      "serverMs": 2201,
+      "chars": 5
+    },
+    {
+      "atMs": 2494,
+      "serverMs": 2201,
+      "chars": 6
+    },
+    {
+      "atMs": 2516,
+      "serverMs": 2224,
+      "chars": 8
+    },
+    {
+      "atMs": 2516,
+      "serverMs": 2224,
+      "chars": 10
+    },
+    {
+      "atMs": 2539,
+      "serverMs": 2247,
+      "chars": 12
+    },
+    {
+      "atMs": 2563,
+      "serverMs": 2270,
+      "chars": 13
+    },
+    {
+      "atMs": 2584,
+      "serverMs": 2291,
+      "chars": 14
+    },
+    {
+      "atMs": 2584,
+      "serverMs": 2291,
+      "chars": 15
+    },
+    {
+      "atMs": 2584,
+      "serverMs": 2291,
+      "chars": 16
+    },
+    {
+      "atMs": 2610,
+      "serverMs": 2318,
+      "chars": 17
+    },
+    {
+      "atMs": 2656,
+      "serverMs": 2364,
+      "chars": 19
+    },
+    {
+      "atMs": 2663,
+      "serverMs": 2369,
+      "chars": 20
+    },
+    {
+      "atMs": 2663,
+      "serverMs": 2369,
+      "chars": 21
+    },
+    {
+      "atMs": 2678,
+      "serverMs": 2384,
+      "chars": 22
+    },
+    {
+      "atMs": 2678,
+      "serverMs": 2384,
+      "chars": 23
+    },
+    {
+      "atMs": 2701,
+      "serverMs": 2407,
+      "chars": 24
+    },
+    {
+      "atMs": 2701,
+      "serverMs": 2407,
+      "chars": 25
+    },
+    {
+      "atMs": 2722,
+      "serverMs": 2430,
+      "chars": 26
+    },
+    {
+      "atMs": 2722,
+      "serverMs": 2430,
+      "chars": 28
+    },
+    {
+      "atMs": 2747,
+      "serverMs": 2454,
+      "chars": 29
+    },
+    {
+      "atMs": 2772,
+      "serverMs": 2479,
+      "chars": 30
+    },
+    {
+      "atMs": 2798,
+      "serverMs": 2505,
+      "chars": 31
+    },
+    {
+      "atMs": 2798,
+      "serverMs": 2505,
+      "chars": 32
+    },
+    {
+      "atMs": 2798,
+      "serverMs": 2505,
+      "chars": 34
+    },
+    {
+      "atMs": 2819,
+      "serverMs": 2526,
+      "chars": 35
+    },
+    {
+      "atMs": 2819,
+      "serverMs": 2526,
+      "chars": 36
+    },
+    {
+      "atMs": 2840,
+      "serverMs": 2547,
+      "chars": 37
+    },
+    {
+      "atMs": 2841,
+      "serverMs": 2547,
+      "chars": 39
+    },
+    {
+      "atMs": 2920,
+      "serverMs": 2571,
+      "chars": 40
+    },
+    {
+      "atMs": 2920,
+      "serverMs": 2595,
+      "chars": 41
+    },
+    {
+      "atMs": 2920,
+      "serverMs": 2595,
+      "chars": 43
+    },
+    {
+      "atMs": 2921,
+      "serverMs": 2617,
+      "chars": 44
+    },
+    {
+      "atMs": 2921,
+      "serverMs": 2617,
+      "chars": 46
+    },
+    {
+      "atMs": 2948,
+      "serverMs": 2639,
+      "chars": 48
+    },
+    {
+      "atMs": 2948,
+      "serverMs": 2639,
+      "chars": 50
+    },
+    {
+      "atMs": 2948,
+      "serverMs": 2639,
+      "chars": 51
+    },
+    {
+      "atMs": 2961,
+      "serverMs": 2649,
+      "chars": 52
+    },
+    {
+      "atMs": 2961,
+      "serverMs": 2649,
+      "chars": 53
+    },
+    {
+      "atMs": 2989,
+      "serverMs": 2680,
+      "chars": 54
+    },
+    {
+      "atMs": 2989,
+      "serverMs": 2680,
+      "chars": 55
+    },
+    {
+      "atMs": 3274,
+      "serverMs": 2977,
+      "chars": 57
+    },
+    {
+      "atMs": 3281,
+      "serverMs": 2983,
+      "chars": 58
+    },
+    {
+      "atMs": 3281,
+      "serverMs": 2983,
+      "chars": 59
+    },
+    {
+      "atMs": 3281,
+      "serverMs": 2983,
+      "chars": 60
+    },
+    {
+      "atMs": 3281,
+      "serverMs": 2983,
+      "chars": 62
+    },
+    {
+      "atMs": 3294,
+      "serverMs": 2989,
+      "chars": 63
+    },
+    {
+      "atMs": 3294,
+      "serverMs": 2989,
+      "chars": 65
+    },
+    {
+      "atMs": 3294,
+      "serverMs": 2989,
+      "chars": 66
+    },
+    {
+      "atMs": 3298,
+      "serverMs": 2998,
+      "chars": 67
+    },
+    {
+      "atMs": 3298,
+      "serverMs": 2998,
+      "chars": 68
+    },
+    {
+      "atMs": 3298,
+      "serverMs": 2998,
+      "chars": 69
+    },
+    {
+      "atMs": 3298,
+      "serverMs": 2998,
+      "chars": 71
+    },
+    {
+      "atMs": 3298,
+      "serverMs": 2998,
+      "chars": 73
+    },
+    {
+      "atMs": 3298,
+      "serverMs": 2998,
+      "chars": 74
+    },
+    {
+      "atMs": 3298,
+      "serverMs": 2998,
+      "chars": 76
+    },
+    {
+      "atMs": 3313,
+      "serverMs": 3006,
+      "chars": 78
+    },
+    {
+      "atMs": 3313,
+      "serverMs": 3006,
+      "chars": 79
+    },
+    {
+      "atMs": 3313,
+      "serverMs": 3006,
+      "chars": 80
+    },
+    {
+      "atMs": 3313,
+      "serverMs": 3006,
+      "chars": 82
+    },
+    {
+      "atMs": 3316,
+      "serverMs": 3010,
+      "chars": 84
+    },
+    {
+      "atMs": 3316,
+      "serverMs": 3010,
+      "chars": 85
+    },
+    {
+      "atMs": 3316,
+      "serverMs": 3010,
+      "chars": 86
+    },
+    {
+      "atMs": 3316,
+      "serverMs": 3010,
+      "chars": 87
+    },
+    {
+      "atMs": 3316,
+      "serverMs": 3010,
+      "chars": 88
+    },
+    {
+      "atMs": 3332,
+      "serverMs": 3026,
+      "chars": 90
+    },
+    {
+      "atMs": 3332,
+      "serverMs": 3026,
+      "chars": 91
+    },
+    {
+      "atMs": 3352,
+      "serverMs": 3045,
+      "chars": 93
+    },
+    {
+      "atMs": 3352,
+      "serverMs": 3045,
+      "chars": 94
+    },
+    {
+      "atMs": 3376,
+      "serverMs": 3068,
+      "chars": 96
+    },
+    {
+      "atMs": 3376,
+      "serverMs": 3068,
+      "chars": 97
+    },
+    {
+      "atMs": 3398,
+      "serverMs": 3091,
+      "chars": 98
+    },
+    {
+      "atMs": 3399,
+      "serverMs": 3092,
+      "chars": 99
+    },
+    {
+      "atMs": 3420,
+      "serverMs": 3114,
+      "chars": 101
+    },
+    {
+      "atMs": 3446,
+      "serverMs": 3139,
+      "chars": 102
+    },
+    {
+      "atMs": 3446,
+      "serverMs": 3139,
+      "chars": 103
+    },
+    {
+      "atMs": 3446,
+      "serverMs": 3139,
+      "chars": 105
+    },
+    {
+      "atMs": 3468,
+      "serverMs": 3162,
+      "chars": 106
+    },
+    {
+      "atMs": 3468,
+      "serverMs": 3162,
+      "chars": 108
+    },
+    {
+      "atMs": 3468,
+      "serverMs": 3162,
+      "chars": 110
+    },
+    {
+      "atMs": 3495,
+      "serverMs": 3189,
+      "chars": 112
+    },
+    {
+      "atMs": 3495,
+      "serverMs": 3189,
+      "chars": 113
+    },
+    {
+      "atMs": 3657,
+      "serverMs": 3350,
+      "chars": 116
+    },
+    {
+      "atMs": 3682,
+      "serverMs": 3374,
+      "chars": 117
+    },
+    {
+      "atMs": 3682,
+      "serverMs": 3374,
+      "chars": 118
+    },
+    {
+      "atMs": 3682,
+      "serverMs": 3374,
+      "chars": 119
+    },
+    {
+      "atMs": 3705,
+      "serverMs": 3397,
+      "chars": 121
+    },
+    {
+      "atMs": 3727,
+      "serverMs": 3419,
+      "chars": 123
+    },
+    {
+      "atMs": 3727,
+      "serverMs": 3419,
+      "chars": 124
+    },
+    {
+      "atMs": 3753,
+      "serverMs": 3442,
+      "chars": 125
+    },
+    {
+      "atMs": 3754,
+      "serverMs": 3442,
+      "chars": 126
+    },
+    {
+      "atMs": 3754,
+      "serverMs": 3442,
+      "chars": 127
+    },
+    {
+      "atMs": 3775,
+      "serverMs": 3465,
+      "chars": 129
+    },
+    {
+      "atMs": 3775,
+      "serverMs": 3465,
+      "chars": 130
+    },
+    {
+      "atMs": 3800,
+      "serverMs": 3490,
+      "chars": 131
+    },
+    {
+      "atMs": 3800,
+      "serverMs": 3490,
+      "chars": 132
+    },
+    {
+      "atMs": 3845,
+      "serverMs": 3536,
+      "chars": 134
+    },
+    {
+      "atMs": 3898,
+      "serverMs": 3536,
+      "chars": 135
+    },
+    {
+      "atMs": 3898,
+      "serverMs": 3536,
+      "chars": 137
+    },
+    {
+      "atMs": 3898,
+      "serverMs": 3536,
+      "chars": 138
+    },
+    {
+      "atMs": 3898,
+      "serverMs": 3557,
+      "chars": 139
+    },
+    {
+      "atMs": 3898,
+      "serverMs": 3557,
+      "chars": 140
+    },
+    {
+      "atMs": 3898,
+      "serverMs": 3581,
+      "chars": 141
+    },
+    {
+      "atMs": 3898,
+      "serverMs": 3583,
+      "chars": 142
+    },
+    {
+      "atMs": 3898,
+      "serverMs": 3583,
+      "chars": 143
+    },
+    {
+      "atMs": 3921,
+      "serverMs": 3605,
+      "chars": 144
+    },
+    {
+      "atMs": 3921,
+      "serverMs": 3605,
+      "chars": 145
+    },
+    {
+      "atMs": 3936,
+      "serverMs": 3628,
+      "chars": 147
+    },
+    {
+      "atMs": 3939,
+      "serverMs": 3629,
+      "chars": 148
+    },
+    {
+      "atMs": 3939,
+      "serverMs": 3629,
+      "chars": 149
+    }
+  ],
+  "result": {
+    "status": "rejected",
+    "accountingStatus": "complete",
+    "modelId": "@cf/zai-org/glm-4.7-flash",
+    "attemptId": "glm-speed-opening",
+    "inferencePerformed": true,
+    "usage": {
+      "promptTokens": 3366,
+      "completionTokens": 616,
+      "totalTokens": 3982
+    },
+    "actualNeurons": null,
+    "stopReason": "stop",
+    "inputHash": "65e2293eedaaec394678e674bcf380da97516331868812ddfc782a36755e4815",
+    "inputBytes": 13279,
+    "nonThinkingValidated": true,
+    "structureDiagnostic": "IDENTIFIER_INVALID",
+    "errorCode": "GENERATED_SCENE_INVALID"
+  },
+  "source": "zhipu",
+  "httpStatus": 200,
+  "headersMs": 297,
+  "accountingUnknown": false,
+  "serverDoneMs": 6778,
+  "upstream": {
+    "httpStatus": 200
+  },
+  "primaryError": null,
+  "rawCompletion": {
+    "model": "@cf/zai-org/glm-4.7-flash",
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "message": {
+          "content": "\n{\n  \"id\": \"r:a8d440f51f9c62ee:t1:s:scene\",\n  \"title\": \"云归的抉择\",\n  \"location\": \"青云村\",\n  \"entities\": [\n    {\n      \"id\": \"r:a8d440f51f9c62ee:t1:e:person_云归\",\n      \"name\": \"云归\",\n      \"kind\": \"person\",\n      \"status\": \"alive\"\n    },\n    {\n      \"id\": \"r:a8d440f51f9c62ee:t1:e:place_青云村\",\n      \"name\": \"青云村\",\n      \"kind\": \"place\"\n    }\n  ],\n  \"blocks\": [\n    {\n      \"kind\": \"narration\",\n      \"text\": \"十六岁的云归站在青云村的村口，晨雾还未散去。他生来便有一股异于常人的灵性，记忆过目不忘，骨骼更是隐隐透着剑意。今日是村中一年一度的“试剑日”，也是他正式踏入修仙界的门槛。村长正站在高台上，目光灼灼地望着他，似乎在等待他的决定。\"\n    },\n    {\n      \"kind\": \"dialogue\",\n      \"text\": \"云归，你可想好了？修仙路漫漫，九死一生，一旦踏出此门，便再无回头路。\",\n      \"speaker\": \"r:a8d440f51f9c62ee:t1:e:person_云归\"\n    }\n  ],\n  \"choices\": [\n    {\n      \"id\": \"r:a8d440f51f9c62ee:t1:c:a\",\n      \"label\": \"拜入青云宗\",\n      \"intent\": \"travel\",\n      \"targetId\": \"r:a8d440f51f9c62ee:t1:e:place_青云宗\",\n      \"stake\": \"normal\",\n      \"approach\": \"road\"\n    },\n    {\n      \"id\": \"r:a8d440f51f9c62ee:t1:c:b\",\n      \"label\": \"前往黑风寨\",\n      \"intent\": \"travel\",\n      \"targetId\": \"r:a8d440f51f9c62ee:t1:e:place_黑风寨\",\n      \"stake\": \"high\",\n      \"approach\": \"wilderness\"\n    },\n    {\n      \"id\": \"r:a8d440f51f9c62ee:t1:c:c\",\n      \"label\": \"独自游历\",\n      \"intent\": \"travel\",\n      \"targetId\": \"r:a8d440f51f9c62ee:t1:e:place_荒野\",\n      \"stake\": \"low\",\n      \"approach\": \"wilderness\"\n    }\n  ],\n  \"memoryDeltas\": []\n}\n",
+          "reasoning_content": ""
+        }
+      }
+    ],
+    "usage": {
+      "prompt_tokens": 3366,
+      "completion_tokens": 616,
+      "total_tokens": 3982,
+      "prompt_tokens_details": {
+        "cached_tokens": 3364
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0
+      }
+    }
+  },
+  "keyPresent": true
+}

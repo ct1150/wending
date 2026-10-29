@@ -1,0 +1,128 @@
+{
+  "recordedAt": "2026-10-29T05:22:50.764Z",
+  "version": "39259806-893a-48ea-bef0-a2dea308eb4c",
+  "frontendSource": "local current release HTML served by browser harness; API and SQLite are real Workers",
+  "records": [
+    {
+      "caseId": "opening",
+      "mode": "browser-real-api",
+      "start": 340.2999999523163,
+      "timeline": [
+        {
+          "atMs": 2677,
+          "chars": 1
+        },
+        {
+          "atMs": 2756,
+          "chars": 5
+        },
+        {
+          "atMs": 2823,
+          "chars": 7
+        },
+        {
+          "atMs": 2886,
+          "chars": 10
+        },
+        {
+          "atMs": 2953,
+          "chars": 14
+        },
+        {
+          "atMs": 3024,
+          "chars": 20
+        },
+        {
+          "atMs": 3085,
+          "chars": 24
+        },
+        {
+          "atMs": 3155,
+          "chars": 27
+        },
+        {
+          "atMs": 3222,
+          "chars": 30
+        },
+        {
+          "atMs": 3290,
+          "chars": 33
+        },
+        {
+          "atMs": 3356,
+          "chars": 38
+        },
+        {
+          "atMs": 3423,
+          "chars": 41
+        },
+        {
+          "atMs": 3480,
+          "chars": 46
+        },
+        {
+          "atMs": 3541,
+          "chars": 50
+        },
+        {
+          "atMs": 3618,
+          "chars": 56
+        },
+        {
+          "atMs": 3690,
+          "chars": 62
+        },
+        {
+          "atMs": 3753,
+          "chars": 65
+        },
+        {
+          "atMs": 3805,
+          "chars": 70
+        },
+        {
+          "atMs": 3873,
+          "chars": 78
+        },
+        {
+          "atMs": 3939,
+          "chars": 81
+        },
+        {
+          "atMs": 4016,
+          "chars": 82
+        },
+        {
+          "atMs": 4323,
+          "chars": 87
+        },
+        {
+          "atMs": 4388,
+          "chars": 91
+        },
+        {
+          "atMs": 4457,
+          "chars": 93
+        }
+      ],
+      "firstBirthMs": 78,
+      "lastText": "你站在青云村口，晨雾还未散去。十六岁的云归，身负剑骨与灵觉，却只是个凡人。村后的青石板路蜿蜒向山深处，那是通往外界的唯一路径。你摸了摸干瘪的行囊，里面只有三块干粮。\n\n这便是我的起点了。",
+      "doneMs": 7280,
+      "result": {
+        "protocolVersion": 1,
+        "status": "rejected",
+        "requestId": "5875aa39-af63-4585-8006-cd5475ee0fd4",
+        "attemptId": "02405dec-d7b2-4e45-86ec-4f8b964c8cfe",
+        "sessionRef": "sess_21a7164b931b14c51c4448421ede7a61",
+        "errorCode": "CHOICE_NOT_COMPILABLE",
+        "retry": null
+      },
+      "revision": 0,
+      "pending": true,
+      "posts": 1
+    }
+  ],
+  "refreshed": null,
+  "errors": [],
+  "posts": 1
+}

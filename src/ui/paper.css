@@ -482,3 +482,7 @@ select:focus-visible { outline: 2px solid var(--jade); outline-offset: 3px; }
 .live-toolbar { display: flex; flex-wrap: wrap; gap: .4rem; }
 .birth #live-name, .birth #live-origin { display: block; box-sizing: border-box; width: 100%; max-width: 100%; min-height: 44px; margin: .5rem 0 1.3rem; padding: .6rem; font: inherit; color: inherit; background: transparent; border: 1px solid currentColor; border-radius: .3rem; }
 .live-status, .journey-choice-reason { overflow-wrap: anywhere; }
+.live-preview { margin-block: 1.5rem; overflow-wrap: anywhere; }
+.live-preview [data-live-preview-text] { white-space: pre-wrap; }
+.live-preview-label { font-size: .8rem; opacity: .7; }
+.live-intro, .live-action-receipt { margin-block: 1rem; }

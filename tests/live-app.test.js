@@ -8,6 +8,30 @@ const copy=x=>structuredClone(x);
 function archiveFixture(){let row=null;return {fail:false,async load(){return copy(row);},async create({state,pending}){if(row)throw Error('conflict');row={archiveId:'a',state,pending,attempt:null,pause:null};return copy(row);},async prepare(p){if(p.identity.baseRevision!==row.state.revision||row.pending&&JSON.stringify(row.pending)!==JSON.stringify(p))throw Error('conflict');row.pending=copy(p);return copy(row);},async setAttempt({requestId,expectedAttemptId,attempt,pause}){if(row.pending?.identity.requestId!==requestId||(row.attempt?.id??null)!==expectedAttemptId)throw Error('conflict');row.attempt=copy(attempt);row.pause=pause;return copy(row);},async commit({expectedRevision,nextState,requestId,expectedAttemptId=null}){if(this.fail)throw Error('quota');if(row.state.revision!==expectedRevision||row.pending?.identity.requestId!==requestId||(row.attempt?.id??null)!==expectedAttemptId)throw Error('conflict');row={...row,state:copy(nextState),pending:null,attempt:null,pause:null};return copy(row);},async readRelated(){return [];},async readStoryRecords(){return {records:[],openTotal:0};}};}
 function scene(context){const p=context.namespace+':t'+context.identity.turnId+':';return {id:p+'s:one',title:'山路',location:'山间',blocks:[{kind:'narration',text:'你望见松影。'+context.identity.turnId}],entities:[],choices:[{id:p+'c:rest',label:'歇息',intent:'rest',targetId:'self',stake:'low',approach:'recover'},{id:p+'c:train',label:'修行',intent:'practice',targetId:'self',stake:'low',approach:'steady'}],memoryDeltas:[]};}
 function fixture(){assert.ok(sessionModule,'session module exists');const archive=archiveFixture(),calls={post:0,get:0,session:0};let result=null,hold=null;const client={async capabilities(){return {available:true};},async createSession(){calls.session++;return {sessionRef:'session-'+calls.session};},async requestTurn(p,c,a){calls.post++;if(hold)await hold;result={status:'ready',requestId:p.identity.requestId,attemptId:a.id,sessionRef:a.sessionRef,scene:scene(c)};return result;},async getTurn(p,a){calls.get++;return result??{status:'paused',errorCode:'SESSION_UNAVAILABLE',requestId:p.identity.requestId,attemptId:a.id,sessionRef:a.sessionRef};}};return {archive,client,calls,make:()=>sessionModule.createLiveSession({archive,client}),setHold(v){hold=v;},clearResult(){result=null;}};}
+
+test('stream previews stay transient and choices wait for durable commit; refresh never restores partial text',async()=>{
+  const f=fixture();let release,progress,oldProgress;
+  const gate=new Promise(resolve=>release=resolve),original=f.client.requestTurn;
+  f.client.requestTurn=async(p,c,a,options)=>{progress=options?.onProgress;await gate;return original(p,c,a);};
+  let renders=0,updates=0;const s=sessionModule.createLiveSession({archive:f.archive,client:f.client,onChange(){renders++;},onProgress(){updates++;}});
+  const starting=s.start({runId:'stream-run',seed:42});while(!progress&&!s.view().errorCode)await new Promise(resolve=>setTimeout(resolve,0));
+  assert.equal(typeof progress,'function');const before=renders;oldProgress=progress;
+  progress({type:'preview',text:'山风'});progress({type:'preview',text:'拂过。'});
+  assert.equal(s.view().preview.text,'山风拂过。');assert.equal(renders,before);assert.equal(updates,2);
+  assert.equal((await f.archive.load()).preview,undefined);assert.equal(s.view().state.currentScene,null);
+  const refreshed=f.make();await refreshed.resume();assert.equal(refreshed.view().preview,null);
+  progress({type:'reset'});assert.equal(s.view().preview,null);progress({type:'preview',text:'新故事'});
+  const commit=f.archive.commit;let save;const saving=new Promise(resolve=>save=resolve);
+  f.archive.commit=async args=>{await saving;return commit.call(f.archive,args);};release();
+  await new Promise(resolve=>setImmediate(resolve));assert.equal(s.view().state.revision,0);assert.ok(s.view().pending);
+  save();await starting;assert.equal(s.view().state.revision,1);assert.equal(s.view().preview,null);
+  oldProgress({type:'preview',text:'迟到正文'});assert.equal(s.view().preview,null);
+});
+
+test('a failed streaming turn keeps clearly incomplete text in memory and never commits it',async()=>{
+  const f=fixture();f.client.requestTurn=async(p,c,a,{onProgress}={})=>{onProgress?.({type:'preview',text:'未写完的故事'});throw Object.assign(Error('offline'),{code:'NETWORK_UNAVAILABLE'});};
+  const s=f.make();await s.start({runId:'failed-stream',seed:42});assert.equal(s.view().status,'paused');assert.equal(s.view().preview?.text,'未写完的故事');assert.equal(s.view().state.revision,0);assert.equal((await f.archive.load()).state.currentScene,null);
+});
 test('birth and pending opening are durable before HTTP; refresh queries and never rerolls',async()=>{const f=fixture();let release;f.setHold(new Promise(r=>release=r));const s=f.make(),starting=s.start({runId:'run',seed:42});while(!f.calls.post)await new Promise(r=>setTimeout(r,0));const before=await f.archive.load();assert.equal(before.state.revision,0);assert.equal(s.view().state.revision,0);const refreshed=f.make();await refreshed.resume();assert.equal(f.calls.post,1);assert.equal(f.calls.get,1);assert.deepEqual(refreshed.view().state.life.birth,before.state.life.birth);release();await starting;assert.equal(s.view().state.revision,1);});
 test('double clicks, old tabs and late ready responses never pay or commit twice',async()=>{const f=fixture(),s=f.make();await s.start({runId:'run',seed:42});const old=f.make();await old.resume();const before=s.view().state;let release;f.setHold(new Promise(r=>release=r));const command={choiceId:before.currentScene.choices[0].id,baseRevision:before.revision,stateHash:stateHash(before)};const choosing=s.choose(command);await s.choose(command);while(f.calls.post<2)await new Promise(r=>setTimeout(r,0));assert.deepEqual(s.view().state.life,before.life);await old.choose(command);assert.equal(f.calls.post,2);release();await choosing;await old.resume();assert.equal(old.view().state.revision,2);await old.choose(command);assert.equal((await f.archive.load()).state.revision,2);assert.equal(f.calls.post,2);});
 test('explicit retry queries old result before replacement; lost session preserves request and receipt',async()=>{const f=fixture(),s=f.make();f.client.requestTurn=async(p,c,a)=>{f.calls.post++;return {status:'paused',errorCode:'PROVIDER_TIMEOUT',requestId:p.identity.requestId,attemptId:a.id,sessionRef:a.sessionRef};};await s.start({runId:'run',seed:42});const before=await f.archive.load();await s.retry();const after=await f.archive.load();assert.equal(f.calls.get,1);assert.equal(f.calls.post,2);assert.deepEqual(after.pending,before.pending);assert.notEqual(after.attempt.id,before.attempt.id);assert.deepEqual(after.attempt.retryOf,{attemptId:before.attempt.id,sessionRef:before.attempt.sessionRef});});
@@ -101,6 +125,36 @@ async function delayedAppFixture(t) {
     read:()=>page.evaluate(async()=>{const {openLiveArchive}=await import('/src/game/live-archive.js');const archive=await openLiveArchive();try{return await archive.load();}finally{archive.close();}}),
   };
 }
+
+test('native streaming preview preserves nodes, focus and an open history dialog while final choices wait',async t=>{
+  const f=await delayedAppFixture(t),{page}=f;
+  await page.addInitScript(()=>{
+    const original=window.fetch;window.fetch=async(url,options)=>{
+      if(url!=='/api/story/turn')return original(url,options);
+      const {context,attempt}=JSON.parse(options.body);window.streamRequest={context,attempt};
+      return new Response(new ReadableStream({start(controller){window.streamPacket=(packet,close=false)=>{
+        const value={protocolVersion:1,requestId:context.identity.requestId,attemptId:attempt.id,sessionRef:attempt.sessionRef,...packet};
+        const bytes=new TextEncoder().encode('data: '+JSON.stringify(value)+'\r\n\r\n');
+        for(let i=0;i<bytes.length;i+=5)controller.enqueue(bytes.slice(i,i+5));if(close)controller.close();
+      };}}),{headers:{'content-type':'text/event-stream'}});
+    };
+  });
+  await page.reload();await page.locator('[data-live-start]:enabled').click();
+  await page.locator('[aria-label="本地开场"]').waitFor();await page.waitForFunction(()=>window.streamPacket);
+  assert.equal(await page.locator('[data-live-choice]:enabled').count(),0);
+  await page.locator('[data-history]').focus();await page.evaluate(()=>{window.originalPreview=document.querySelector('[data-live-preview-text]');window.originalHistory=document.activeElement;window.streamPacket({type:'preview',text:'<script>山风吹来。</script>'});});
+  await page.waitForFunction(()=>document.querySelector('[data-live-preview-text]').textContent.includes('山风'));
+  assert.equal(await page.evaluate(()=>window.originalPreview===document.querySelector('[data-live-preview-text]')&&window.originalHistory===document.activeElement),true);
+  assert.equal(await page.locator('[data-live-preview-text] script').count(),0);assert.equal((await f.read()).state.revision,0);
+  await page.locator('[data-history]').click();await page.locator('#dialog[open]').waitFor();
+  await page.evaluate(()=>{window.originalDialog=document.querySelector('#dialog');window.dialogFocus=document.activeElement;window.streamPacket({type:'reset'});window.streamPacket({type:'status',status:'switching'});window.streamPacket({type:'preview',text:'备用正文。'});});
+  await page.waitForFunction(()=>document.querySelector('[data-live-preview-text]').textContent==='备用正文。');
+  assert.equal(await page.evaluate(()=>window.originalDialog===document.querySelector('#dialog')&&window.originalDialog.open&&window.dialogFocus===document.activeElement),true);
+  await page.keyboard.press('Escape');const {context,attempt}=await page.evaluate(()=>window.streamRequest);
+  const result={protocolVersion:1,status:'ready',errorCode:null,retry:null,requestId:context.identity.requestId,attemptId:attempt.id,sessionRef:attempt.sessionRef,scene:scene(context)};
+  await page.evaluate(result=>window.streamPacket({type:'result',result},true),result);await f.waitRevision(1);
+  assert.equal(await page.locator('[data-live-preview]:visible').count(),0);assert.equal((await f.read()).state.revision,1);
+});
 
 for(const phase of ['opening','choice'])test(`native app focus: delayed ${phase} keeps the user's current stable control`,async t=>{
   const f=await delayedAppFixture(t),{page}=f;

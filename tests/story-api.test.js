@@ -6,7 +6,7 @@ import { createStoryWorker } from '../src/worker/index.js';
 import { createBudgetCoordinator } from '../src/worker/story-budget.js';
 import { generateScene } from '../src/worker/story-provider.js';
 import { generateAcceptanceScene } from '../src/worker/story-acceptance.js';
-import { CANDIDATE_PROFILE } from '../src/worker/story-config.js';
+import { CANDIDATE_PROFILE,GLM_MODEL_ID } from '../src/worker/story-config.js';
 import { createLiveGame,prepareOpening } from '../src/game/cultivation/live/engine.js';
 import { buildStoryContext } from '../src/game/cultivation/live/memory.js';
 import { canonicalStringify,sha256 } from '../src/game/cultivation/live/identity.js';
@@ -17,6 +17,24 @@ function fixture(provider,options={}){const db=new DatabaseSync(':memory:');cons
 const req=(path,body,cookie,headers={})=>new Request(origin+path,{method:body===undefined?'GET':'POST',headers:{origin,'content-type':'application/json','cf-connecting-ip':'192.0.2.5',...(cookie?{cookie}:{}),...headers},...(body===undefined?{}:{body:typeof body==='string'?body:JSON.stringify(body)})});
 async function session(f){const r=await f.api.fetch(req('/api/story/session',{protocolVersion:1}));return {data:await r.json(),cookie:r.headers.get('set-cookie')?.split(';')[0],setCookie:r.headers.get('set-cookie')};}
 const body=(s,id='attempt-1',retryOf=null)=>({context:context(),attempt:{id,sessionRef:s.data.sessionRef,retryOf}});
+
+test('switching to the trusted Zhipu route preserves old quota replies while allowing a new explicit attempt',async t=>{
+  const profile={modelId:'legacy-cloudflare'};let first=true;
+  const f=fixture(async(ai,p,c)=>{if(first){first=false;return {status:'paused',errorCode:'FREE_QUOTA_EXHAUSTED',accountingStatus:'complete'};}return {status:'ready',scene:scene(c),accountingStatus:'complete'};},{profile});t.after(()=>f.db.close());
+  const s=await session(f),prior=await(await f.api.fetch(req('/api/story/turn',body(s),s.cookie))).json();assert.equal(prior.errorCode,'FREE_QUOTA_EXHAUSTED');
+  profile.modelId=GLM_MODEL_ID;
+  const next=await(await f.api.fetch(req('/api/story/turn',body(s,'attempt-2',{sessionRef:s.data.sessionRef,attemptId:'attempt-1'}),s.cookie))).json();assert.equal(next.status,'ready');assert.equal(f.calls,2);
+  assert.deepEqual(await(await f.api.fetch(req('/api/story/turn',body(s),s.cookie))).json(),prior);assert.equal(f.db.prepare('SELECT COUNT(*) AS n FROM quota').get().n,1);assert.equal(f.db.prepare('SELECT COUNT(*) AS n FROM ledger').get().n,2);
+  const injected={...body(s,'injected'),quotaProvider:'zhipu'};assert.equal((await(await f.api.fetch(req('/api/story/turn',injected,s.cookie))).json()).status,'rejected');assert.equal(f.calls,2);
+});
+
+test('actual Cloudflare fallback exhaustion records its lock without blocking the independent Zhipu retry',async t=>{
+  const profile={modelId:GLM_MODEL_ID};let first=true;
+  const f=fixture(async(ai,p,c)=>{if(first){first=false;return {status:'paused',errorCode:'FREE_QUOTA_EXHAUSTED',providerSource:'cloudflare',accountingStatus:'complete'};}return {status:'ready',scene:scene(c),accountingStatus:'complete'};},{profile});t.after(()=>f.db.close());
+  const s=await session(f);assert.equal((await(await f.api.fetch(req('/api/story/turn',body(s),s.cookie))).json()).errorCode,'FREE_QUOTA_EXHAUSTED');assert.equal(f.db.prepare('SELECT COUNT(*) AS n FROM quota').get().n,1);
+  assert.equal((await(await f.api.fetch(req('/api/story/turn',body(s,'attempt-2',{sessionRef:s.data.sessionRef,attemptId:'attempt-1'}),s.cookie))).json()).status,'ready');
+  profile.modelId='legacy-cloudflare';const other=await session(f);assert.equal((await(await f.api.fetch(req('/api/story/turn',body(other),other.cookie))).json()).errorCode,'FREE_QUOTA_EXHAUSTED');assert.equal(f.calls,2);
+});
 
 test('default API watchdog pauses at 90 seconds and preserves the unknown reservation without retry',async t=>{
   let enter;

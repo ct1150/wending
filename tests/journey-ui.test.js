@@ -3,12 +3,22 @@ import assert from 'node:assert/strict';
 import { createJourney, getJourneyView, chooseJourney } from '../src/game/journey/engine.js';
 import { serializeGame, deserializeGame } from '../src/game/save-format.js';
 import { renderJourney, renderJourneyHistory } from '../src/ui/journey.js';
+import { renderLiveJourney } from '../src/ui/journey.js';
+import { createLiveGame,prepareOpening } from '../src/game/cultivation/live/engine.js';
 import { renderIdentityBar } from '../src/ui/character.js';
 import { startApp } from './helpers/app-harness.js';
 import { route, clinic } from './helpers/journey-routes.js';
 
 function command(state, choiceId) { const view = getJourneyView(state); return { revision: view.revision, sceneId: view.sceneId, choiceId }; }
 function clickChoice(app, state, choiceId) { const cmd = command(state, choiceId); app.click({ journeyChoice: cmd.choiceId, revision: String(cmd.revision), sceneId: cmd.sceneId }); }
+
+test('live opening immediately shows stable birth facts and escaped incomplete narrative without choices',()=>{
+  const state=createLiveGame({runId:'local-intro',seed:42}),pending=prepareOpening(state,{requestId:'intro'}),before=structuredClone(state);
+  const view={state,pending,busy:true,status:'pending',preview:{text:'<script>尚未落定</script>'}};
+  const html=renderLiveJourney(view,[]);
+  assert.match(html,/本地开场/);assert.match(html,/天赋/);assert.match(html,/data-live-preview-text/);assert.match(html,/&lt;script&gt;/);assert.doesNotMatch(html,/<script>|data-live-choice=/);assert.deepEqual(state,before);
+  assert.match(renderLiveJourney({...view,busy:false,status:'paused'},[]),/未完成/);
+});
 
 test('an existing v3 life still exposes a known injury before choosing without restoring routine accounting', () => {
   const source = route(clinic.slice(0, 10).map(id => id === 'continue-road' ? 'learn-method' : id), 4);

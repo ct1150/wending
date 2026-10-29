@@ -1,0 +1,204 @@
+{
+  "recordedAt": "2026-10-29T05:08:50.342Z",
+  "version": "7745adb3-cb6a-4349-a9f3-4668ab48eadd",
+  "frontendSource": "local current release HTML served by browser harness; API and SQLite are real Workers",
+  "records": [
+    {
+      "caseId": "opening",
+      "mode": "browser-real-api",
+      "start": 398.2000000476837,
+      "timeline": [
+        {
+          "atMs": 2993,
+          "chars": 1
+        },
+        {
+          "atMs": 3076,
+          "chars": 6
+        },
+        {
+          "atMs": 3141,
+          "chars": 8
+        },
+        {
+          "atMs": 3206,
+          "chars": 11
+        },
+        {
+          "atMs": 3275,
+          "chars": 16
+        },
+        {
+          "atMs": 3342,
+          "chars": 19
+        },
+        {
+          "atMs": 3410,
+          "chars": 23
+        },
+        {
+          "atMs": 3477,
+          "chars": 29
+        },
+        {
+          "atMs": 3542,
+          "chars": 34
+        },
+        {
+          "atMs": 3595,
+          "chars": 38
+        },
+        {
+          "atMs": 3844,
+          "chars": 53
+        },
+        {
+          "atMs": 3895,
+          "chars": 61
+        },
+        {
+          "atMs": 3959,
+          "chars": 67
+        },
+        {
+          "atMs": 4024,
+          "chars": 71
+        },
+        {
+          "atMs": 4071,
+          "chars": 74
+        },
+        {
+          "atMs": 4117,
+          "chars": 79
+        },
+        {
+          "atMs": 4194,
+          "chars": 85
+        },
+        {
+          "atMs": 4258,
+          "chars": 89
+        },
+        {
+          "atMs": 4324,
+          "chars": 95
+        },
+        {
+          "atMs": 4376,
+          "chars": 100
+        },
+        {
+          "atMs": 4443,
+          "chars": 105
+        },
+        {
+          "atMs": 4493,
+          "chars": 111
+        },
+        {
+          "atMs": 4561,
+          "chars": 117
+        },
+        {
+          "atMs": 4611,
+          "chars": 121
+        },
+        {
+          "atMs": 4946,
+          "chars": 127
+        },
+        {
+          "atMs": 5028,
+          "chars": 131
+        },
+        {
+          "atMs": 5093,
+          "chars": 135
+        },
+        {
+          "atMs": 5194,
+          "chars": 142
+        },
+        {
+          "atMs": 5259,
+          "chars": 151
+        },
+        {
+          "atMs": 5623,
+          "chars": 171
+        },
+        {
+          "atMs": 5694,
+          "chars": 176
+        },
+        {
+          "atMs": 5763,
+          "chars": 179
+        },
+        {
+          "atMs": 5827,
+          "chars": 184
+        },
+        {
+          "atMs": 5896,
+          "chars": 190
+        },
+        {
+          "atMs": 5962,
+          "chars": 195
+        },
+        {
+          "atMs": 6027,
+          "chars": 200
+        },
+        {
+          "atMs": 6073,
+          "chars": 205
+        },
+        {
+          "atMs": 6145,
+          "chars": 211
+        },
+        {
+          "atMs": 6193,
+          "chars": 216
+        },
+        {
+          "atMs": 6276,
+          "chars": 224
+        },
+        {
+          "atMs": 6331,
+          "chars": 227
+        },
+        {
+          "atMs": 6381,
+          "chars": 231
+        },
+        {
+          "atMs": 6446,
+          "chars": 235
+        }
+      ],
+      "firstBirthMs": 71,
+      "lastText": "云归站在青云村村口的青石碑旁，晨雾尚未散去。他今年十六岁，是个凡人，体内毫无灵力波动。他的身板硬朗，那是“铁骨”天赋带来的好处，但命运似乎总在暗处埋下伏笔。村口偶尔传来几声鸡鸣，远处山峦起伏，云归望着那条通往山外的蜿蜒小路，心中既迷茫又渴望。\n\n十六年了，这村子虽然安稳，但我总觉得该去看看外面的世界。\n\n云归深吸一口气，迈步踏上了那条通往山外的路。路途崎岖，但他凭借“铁骨”天赋，脚步稳健。走了约莫两个时辰，前方出现了一座破败的山神庙，庙门半掩，隐约透出一丝阴冷气息。",
+      "doneMs": 10426,
+      "result": {
+        "protocolVersion": 1,
+        "status": "rejected",
+        "requestId": "09fef30a-12e6-4912-a7a5-4e8950c6dd6b",
+        "attemptId": "1b8382da-b923-4905-9543-701b0d6612ff",
+        "sessionRef": "sess_edb68ef252722f9282199382893b32f0",
+        "errorCode": "GENERATED_SCENE_INVALID",
+        "retry": null
+      },
+      "revision": 0,
+      "pending": true,
+      "posts": 1
+    }
+  ],
+  "refreshed": null,
+  "errors": [],
+  "posts": 1
+}
