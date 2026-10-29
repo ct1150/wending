@@ -1,0 +1,16 @@
+{
+  "url": "https://baishi-wending.ct1150.workers.dev/baishi-wending-offline.html",
+  "startedAt": "2026-10-29T02:51:33.113Z",
+  "expected": {
+    "bytes": 1025064,
+    "sha256": "c77371e921886d3d2749af475388dc9108ac59eaf13e6b7d85f08a53bafe1856"
+  },
+  "error": {
+    "name": "TypeError",
+    "code": null,
+    "causeCode": "EAI_AGAIN"
+  },
+  "ok": false,
+  "elapsedMs": 5010,
+  "completedAt": "2026-10-29T02:51:38.123Z"
+}

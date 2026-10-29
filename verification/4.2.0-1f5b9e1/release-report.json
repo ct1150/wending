@@ -1,0 +1,300 @@
+{
+  "schemaVersion": 1,
+  "recordType": "release-report",
+  "preparedAt": "2026-10-29T03:01:13.684003+00:00",
+  "status": "published_real_ai_acceptance_blocked_by_provider_free_quota",
+  "release": {
+    "project": "百世问鼎",
+    "version": "4.2.0",
+    "repository": "https://github.com/ct1150/wending",
+    "liveUrl": "https://baishi-wending.ct1150.workers.dev/",
+    "baseCommit": "458816d14a2d48612f0e66a1f28e6f0045f4951b",
+    "candidateCommit": "8f9a8d1f914bdad688b07dc77096f91c8639e00a",
+    "sourceCommit": "1f5b9e18dae06e4b74e6d60403c46964cf45e1f9",
+    "tree": "64021cff31e00c0320f92d94580d57585306fade",
+    "candidateAndMainTreesMatch": true,
+    "pullRequest": {
+      "number": 15,
+      "url": "https://github.com/ct1150/wending/pull/15",
+      "state": "merged",
+      "stateEvidence": "Release coordinator confirmed merge; local main commit and source tree independently checked."
+    },
+    "candidateUrl": "https://github.com/ct1150/wending/commit/8f9a8d1f914bdad688b07dc77096f91c8639e00a",
+    "sourceUrl": "https://github.com/ct1150/wending/commit/1f5b9e18dae06e4b74e6d60403c46964cf45e1f9"
+  },
+  "artifact": {
+    "version": "4.2.0",
+    "htmlBytes": 1025064,
+    "htmlSha256": "c77371e921886d3d2749af475388dc9108ac59eaf13e6b7d85f08a53bafe1856",
+    "localPath": "release/baishi-wending-offline.html",
+    "verification": "Existing final-release log, candidate report, release metadata, actual local HTML byte length and SHA-256 agree; no rebuild performed.",
+    "candidateReport": "https://github.com/ct1150/wending/blob/1f5b9e18dae06e4b74e6d60403c46964cf45e1f9/docs/evidence/title-screen-4.2.0/release-candidate.json",
+    "releaseMetadataSha256": "81bf77f63c0bbf62c979c0049532ce8723b3c2be5a74ba86f0ad095da3baf90e"
+  },
+  "verification": {
+    "localRelease": {
+      "command": "WENDING_BROWSER_EXECUTABLE=<installed official Chrome> npm run release",
+      "reportedExitCode": 0,
+      "tests": 859,
+      "pass": 859,
+      "fail": 0,
+      "cancelled": 0,
+      "skipped": 0,
+      "todo": 0,
+      "syntaxChecked": 162,
+      "htmlBytesFromLog": 1025064,
+      "log": "https://github.com/ct1150/wending/blob/1f5b9e18dae06e4b74e6d60403c46964cf45e1f9/docs/evidence/title-screen-4.2.0/final-release.log",
+      "logSha256": "31f4435715762e822c30332dee32c616cb284a067c940226bce58e1bbf42d2f5",
+      "candidateReportCheckedAt": "2026-10-29T00:03:16.002207+00:00",
+      "verifiedFiles": {
+        "src/app.js": {
+          "sha256": "76bc44b372d58c262537346168db85aff6ed96ac0dbfbb6ccd949e25d97f7903",
+          "matchesCurrentFile": true
+        },
+        "src/game/journey-saves.js": {
+          "sha256": "3be85d47ccc2a976e04a89b0cc12231e71c8fef3a1a6c8b5223cec08601376bf",
+          "matchesCurrentFile": true
+        },
+        "src/ui/live-session.js": {
+          "sha256": "5f7eb0d7dbc14ce7540a919b132f613a2c35fe63cad6661da9105434deb479a5",
+          "matchesCurrentFile": true
+        },
+        "tests/live-journeys.test.js": {
+          "sha256": "806f2a620b1dfbec48778e94b33ba73bbc3a40364b35bc5a1d934d8e7a771cc0",
+          "matchesCurrentFile": true
+        },
+        "tests/offline-browser.test.js": {
+          "sha256": "1e0c5d659feed6f2e8828e019ba39583d6e7cafeea04272190bc15010ad025f2",
+          "matchesCurrentFile": true
+        },
+        "tests/journey-catalog-recovery.test.js": {
+          "sha256": "c14ce3a3e67a7e28fcb9abdfb712c0f6806c1d0ce70f6e4f9886b3a47e03ddc1",
+          "matchesCurrentFile": true
+        }
+      },
+      "nonFatalLogWarnings": [
+        "npm warns that the http-proxy environment configuration will become unsupported in a future npm release."
+      ]
+    },
+    "githubActions": {
+      "runId": 40807846811,
+      "url": "https://github.com/ct1150/wending/actions/runs/40807846811",
+      "sourceCommit": "1f5b9e18dae06e4b74e6d60403c46964cf45e1f9",
+      "status": "completed",
+      "conclusion": "success",
+      "validate": {
+        "jobId": 123230939159,
+        "url": "https://github.com/ct1150/wending/actions/runs/40807846811/job/123230939159",
+        "conclusion": "success"
+      },
+      "publish": {
+        "jobId": 123231570988,
+        "url": "https://github.com/ct1150/wending/actions/runs/40807846811/job/123231570988",
+        "conclusion": "success"
+      },
+      "evidenceSource": "Exact main workflow and job results retrieved through GitHub; see workflow.json."
+    },
+    "preservedPriorFailure": {
+      "url": "https://github.com/ct1150/wending/actions/runs/40789905615",
+      "jobUrl": "https://github.com/ct1150/wending/actions/runs/40789905615/job/123172248795",
+      "tests": 851,
+      "pass": 850,
+      "fail": 1,
+      "reason": "Immediate cross-tab file localStorage visibility assertion failed before the stale-page action.",
+      "sameTreeSuccessfulPushUrl": "https://github.com/ct1150/wending/actions/runs/40789900891",
+      "record": "https://github.com/ct1150/wending/blob/1f5b9e18dae06e4b74e6d60403c46964cf45e1f9/docs/evidence/title-screen-4.2.0/ci-storage-timing.json",
+      "originalFailureRetained": true
+    }
+  },
+  "fixes": [
+    {
+      "id": "offline-storage-propagation",
+      "summary": "离线双标签页回归先按完整存档字节等待原生存储传播，再执行旧人物动作；增加写入页自身的防覆盖断言。",
+      "effect": "保留旧人物内存状态、防覆盖、原档保留、错误提示、导出和刷新断言，不用固定延迟掩盖失败。",
+      "evidence": "https://github.com/ct1150/wending/blob/1f5b9e18dae06e4b74e6d60403c46964cf45e1f9/docs/evidence/title-screen-4.2.0/ci-storage-timing.json",
+      "verification": "Native Chromium reproduced a stale other-tab read after a completed write. Removing the save guard only in a temporary generated bundle still fails the strengthened regression.",
+      "limitation": "This repairs a test synchronization precondition; it does not add a cross-renderer atomic localStorage lock."
+    },
+    {
+      "id": "live-archive-retry-resume-identity",
+      "summary": "旧页面 retry/resume 先校验显示中的物理档案 ID；冲突时阻止读取回应、生成请求、attempt 写入及另一人物的死亡结算。实时导入后先同步会话再续接。",
+      "verification": {
+        "redTests": 4,
+        "redFailures": 4,
+        "liveJourneysPassed": 8,
+        "liveJourneysTotal": 8,
+        "compatibilityAndNativeImportPassed": 9,
+        "compatibilityAndNativeImportTotal": 9
+      },
+      "evidence": "https://github.com/ct1150/wending/blob/1f5b9e18dae06e4b74e6d60403c46964cf45e1f9/docs/evidence/title-screen-4.2.0/release-candidate.json"
+    },
+    {
+      "id": "damaged-offline-catalog-recovery",
+      "summary": "损坏离线目录提供原文导出；明确确认后先持久备份并读回完整原文，再保留可读取旅程并恢复目录。",
+      "effect": "检测到旧数据冲突、备份失败或写入失败时，不替换当前人物；坏目录原始字节继续可恢复。",
+      "verification": {
+        "redTests": 3,
+        "redFailures": 3,
+        "relatedPassed": 33,
+        "relatedTotal": 33
+      },
+      "redEvidence": "https://github.com/ct1150/wending/blob/1f5b9e18dae06e4b74e6d60403c46964cf45e1f9/docs/evidence/title-screen-4.2.0/catalog-red.json",
+      "greenEvidence": "https://github.com/ct1150/wending/blob/1f5b9e18dae06e4b74e6d60403c46964cf45e1f9/docs/evidence/title-screen-4.2.0/catalog-green.log"
+    }
+  ],
+  "compatibility": {
+    "primaryEntries": [
+      "踏入仙途",
+      "续写此生",
+      "游戏设置"
+    ],
+    "inGameNavigation": [
+      "历史对话",
+      "游戏设置",
+      "返回首页"
+    ],
+    "preserved": [
+      "Existing offline lives retain their original rules and save readers.",
+      "Live V5/CV4 archives and IndexedDB v2 remain readable.",
+      "Independent living journeys retain pending attempts, random state and full history when switched.",
+      "New-character drafts remain separate from the active save until confirmed and durably saved.",
+      "Exact original offline and corrupt recovery bytes are retained before replacement.",
+      "The offline single-file build remains available with no runtime dependencies."
+    ],
+    "versions": {
+      "protocol": 1,
+      "rules": 1,
+      "prompt": 1,
+      "save": 5,
+      "content": 4
+    },
+    "newVisits": "Show the read-only title screen without creating a life or generating a story.",
+    "sameTabReload": "Restores the current screen, creation draft or adventure.",
+    "releaseScope": "Frontend-only publication through GitHub release-channel and the existing Cloudflare gateway.",
+    "backendChangeScope": {
+      "changed": false,
+      "checkedPaths": [
+        "src/worker",
+        "config",
+        "scripts/build-gateway.js",
+        "wrangler.story.json"
+      ],
+      "comparisonBase": "458816d14a2d48612f0e66a1f28e6f0045f4951b",
+      "comparisonHead": "1f5b9e18dae06e4b74e6d60403c46964cf45e1f9"
+    },
+    "backendAndBilling": "No model, backend binding, protocol, plan, quota or inference billing-policy changes. The CI disabled backend artifact must not replace the existing production backend."
+  },
+  "coverage": {
+    "localBrowser": "Native Chromium; existing visual capture records version 156.0.8078.73.",
+    "titleViewportTests": {
+      "widths": [
+        320,
+        390,
+        1280
+      ],
+      "height": 740,
+      "source": "https://github.com/ct1150/wending/blob/1f5b9e18dae06e4b74e6d60403c46964cf45e1f9/tests/title-screen.test.js"
+    },
+    "liveViewportTests": {
+      "widths": [
+        320,
+        390,
+        1280
+      ],
+      "height": 900,
+      "source": "https://github.com/ct1150/wending/blob/1f5b9e18dae06e4b74e6d60403c46964cf45e1f9/tests/live-app.test.js"
+    },
+    "visualCapture": "https://github.com/ct1150/wending/blob/1f5b9e18dae06e4b74e6d60403c46964cf45e1f9/docs/evidence/title-screen-4.2.0/visual-check.json",
+    "ciCoverage": "The successful main validation runs the repository release suite, including native browser viewport coverage; CI status is attributed to the coordinator observation above.",
+    "limits": [
+      "Native browser viewport emulation is not testing on physical phones.",
+      "Screen-reader acceptance has not been performed.",
+      "This record does not claim acceptance across every browser engine or native Chinese IME.",
+      "Long-run deterministic fixtures do not represent 1000 real model calls or prove unlimited future narrative quality.",
+      "Worldwide simultaneous cache propagation is not established."
+    ]
+  },
+  "production": {
+    "deployment": "published",
+    "fullEndToEndAcceptance": "blocked",
+    "health": {
+      "observedAt": "2026-10-29T02:59:01.167Z",
+      "status": "ok",
+      "version": "4.2.0",
+      "sourceCommit": "1f5b9e18dae06e4b74e6d60403c46964cf45e1f9",
+      "htmlSha256": "c77371e921886d3d2749af475388dc9108ac59eaf13e6b7d85f08a53bafe1856",
+      "htmlBytes": 1025064,
+      "releaseSource": "remote-fetch",
+      "lastAttemptAt": 1793242729770,
+      "lastSuccessAt": 1793242729875,
+      "lastError": ""
+    },
+    "manifest": {
+      "schemaVersion": 1,
+      "version": "4.2.0",
+      "sourceCommit": "1f5b9e18dae06e4b74e6d60403c46964cf45e1f9",
+      "artifactCommit": "5f5804927e647e19b143e275e98148670e19c823",
+      "htmlSha256": "c77371e921886d3d2749af475388dc9108ac59eaf13e6b7d85f08a53bafe1856",
+      "htmlBytes": 1025064,
+      "artifactPath": "releases/c77371e921886d3d2749af475388dc9108ac59eaf13e6b7d85f08a53bafe1856.html"
+    },
+    "backend": {
+      "checkedBeforeAndAfter": true,
+      "mutationPerformed": false,
+      "id": "05ff07f4-f530-46c9-9ef3-b3459892b32e",
+      "versions": [
+        {
+          "version_id": "9d7e9fdb-12dc-4710-8283-7f4ca8608b27",
+          "percentage": 100
+        }
+      ],
+      "created_on": "2026-10-28T17:14:02.311561Z"
+    },
+    "legacySaveComparison": {
+      "legacy_before": {
+        "bytes": 743,
+        "sha256": "d25bccf10e5028317a380684b21693c5af834e3eab9936095a2da067896c0b3d"
+      },
+      "legacy_after": {
+        "bytes": 743,
+        "sha256": "d25bccf10e5028317a380684b21693c5af834e3eab9936095a2da067896c0b3d"
+      },
+      "legacy_unchanged": true
+    },
+    "passedObservations": [
+      "All three confirmed entries are visible on the 4.2.0 title screen.",
+      "Pre-upgrade offline save export is byte-identical immediately after upgrade.",
+      "Two independent live journeys were created and retained their pending opening states.",
+      "Legacy offline life and both live journeys coexist in the journey chooser.",
+      "Switching back, same-tab reload and a fresh tab preserve the selected character and title-entry behavior.",
+      "Legacy offline character can be restored after creating both live journeys."
+    ],
+    "blockedOrUnverified": [
+      "A new real AI opening and choice did not complete while the provider account returned its actual free-quota exhaustion error.",
+      "Generated-history switching in production could not be exercised without a generated opening.",
+      "The cloud browser complete live export showed an export-failed notice; its underlying exception was not exposed, and no complete export file was obtained.",
+      "Offline HTML and a later offline export download path did not yield actual files for independent byte checks; the CLI HTTP attempt was blocked by DNS."
+    ],
+    "serviceDiagnostic": "production-service-diagnostic.json",
+    "browserObservations": "browser-observations.json",
+    "screenshots": [
+      "production-home.jpg",
+      "live-A-pending.jpg"
+    ],
+    "builtArtifactDiagnostic": "built-artifact-diagnostic.json",
+    "providerReset": {
+      "documentedResetUTC": "00:00 daily",
+      "nextResetUTC": "2026-10-30T00:00:00Z",
+      "nextResetAsiaShanghai": "2026-10-30 08:00:00",
+      "source": "https://developers.cloudflare.com/workers-ai/platform/pricing/",
+      "automaticAcceptanceAfterResetScheduled": false
+    },
+    "scope": "Frontend-only release; existing AI worker deployment, plan, model and bindings unchanged."
+  },
+  "productionEvidenceStatus": "Published with explicit provider quota and cloud-export/download acceptance limitations; see production and README.md. No all-green production acceptance claim.",
+  "assembly": {
+    "source": "release-core.json plus exact main workflow, manifest, actual browser observations and read-only Cloudflare diagnostics",
+    "additionalFullTestRerun": false,
+    "sourceRepositoryChangedAfterMerge": false
+  }
+}

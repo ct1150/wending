@@ -1,0 +1,11 @@
+{
+  "legacy_before": {
+    "bytes": 743,
+    "sha256": "d25bccf10e5028317a380684b21693c5af834e3eab9936095a2da067896c0b3d"
+  },
+  "legacy_after": {
+    "bytes": 743,
+    "sha256": "d25bccf10e5028317a380684b21693c5af834e3eab9936095a2da067896c0b3d"
+  },
+  "legacy_unchanged": true
+}

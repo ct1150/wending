@@ -1,0 +1,38 @@
+{
+  "origin": "https://baishi-wending.ct1150.workers.dev",
+  "sourceHead": "1f5b9e1",
+  "startedAt": "2026-10-29T02:51:33.055Z",
+  "purpose": "isolated production release acceptance opening",
+  "maximumGenerationPosts": 1,
+  "generationPosts": 0,
+  "retries": 0,
+  "cookiePersisted": false,
+  "exchanges": [
+    {
+      "method": "GET",
+      "path": "/api/story/capabilities",
+      "startedAt": "2026-10-29T02:51:33.069Z",
+      "elapsedMs": 51,
+      "transportError": {
+        "name": "TypeError",
+        "code": null,
+        "causeCode": "EAI_AGAIN"
+      }
+    }
+  ],
+  "turnIdentity": {
+    "runId": "release-smoke-ac301720-20b9-43af-861d-bd073878833b",
+    "requestId": "6a651182-b29d-41b5-b545-2cae30c934ba",
+    "turnId": 1,
+    "baseRevision": 0,
+    "contextBytes": 1344
+  },
+  "capabilities": {
+    "protocolVersion": 1,
+    "status": "paused",
+    "errorCode": "NETWORK_UNAVAILABLE",
+    "available": false
+  },
+  "outcome": "capabilities-unavailable",
+  "completedAt": "2026-10-29T02:51:33.121Z"
+}

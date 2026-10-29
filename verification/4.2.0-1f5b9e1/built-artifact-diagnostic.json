@@ -1,0 +1,178 @@
+{
+  "schema_version": 1,
+  "title": "Wending 4.2.0 local built-artifact runtime diagnostic",
+  "diagnostic_date_utc": "2026-10-29",
+  "evidence_status": "Compiled from already completed diagnostics and their recorded output; no tests were rerun to create this file.",
+  "scope": {
+    "provider": "local mock provider",
+    "production_provider_used": false,
+    "production_site_accessed": false,
+    "network": "Playwright intercepted HTTPS requests for wending-artifact.test and returned local fixture responses. Requests to other hosts were aborted.",
+    "repository_modified": false,
+    "remote_publication_performed": false,
+    "full_test_suite_run": false,
+    "diagnostic_limitations": [
+      "A deterministic local provider fixture was used; these results do not establish production provider availability or production response correctness.",
+      "The cloud-browser export failure was not reproduced locally.",
+      "The native picker observation does not demonstrate either a successful save or a rejected picker call."
+    ]
+  },
+  "environment": {
+    "repository_path": "/workspace/scratch/bac5eb4348e7/wending",
+    "source_head_observed_before_diagnostics": "1f5b9e18dae06e4b74e6d60403c46964cf45e1f9",
+    "browser": "Headless Chrome controlled by Playwright",
+    "browser_executable": "/tmp/wending-chrome/opt/google/chrome/chrome",
+    "fixture_url": "https://wending-artifact.test/",
+    "exception_capture": "CDP Debugger.setPauseOnExceptions with state=all, including caught and uncaught exceptions; additional pageerror and download observers where applicable."
+  },
+  "artifact": {
+    "path": "/workspace/scratch/bac5eb4348e7/wending/dist/baishi-wending-offline.html",
+    "bytes": 1025064,
+    "sha256": "c77371e921886d3d2749af475388dc9108ac59eaf13e6b7d85f08a53bafe1856",
+    "release_metadata_path": "/workspace/scratch/bac5eb4348e7/wending/release/release.json",
+    "release_metadata": {
+      "version": "4.2.0",
+      "builtAt": "2026-10-29T00:02:31.815Z",
+      "offline_bytes": 1025064,
+      "offline_sha256": "c77371e921886d3d2749af475388dc9108ac59eaf13e6b7d85f08a53bafe1856"
+    },
+    "hash_matches_release_metadata": true,
+    "existing_artifact_used_without_rebuild_or_content_modification": true
+  },
+  "opening_comparison": {
+    "procedure": [
+      "Create an isolated browser context for the source-module variant and serve the existing index.html and source files through local HTTPS interception.",
+      "Click the title-screen new-journey action, enter 林照, and click the live birth confirmation.",
+      "Return the same valid deterministic opening scene from the local mock capabilities/session/turn endpoints.",
+      "Read the displayed UI and native IndexedDB runs/pending stores, and capture all exceptions and page errors.",
+      "Repeat the same single opening in a fresh isolated context using the exact existing offline HTML bytes served over HTTPS."
+    ],
+    "results": [
+      {
+        "variant": "source",
+        "turn_posts": 1,
+        "api_calls": [
+          {
+            "method": "GET",
+            "path": "/api/story/capabilities"
+          },
+          {
+            "method": "GET",
+            "path": "/api/story/capabilities"
+          },
+          {
+            "method": "POST",
+            "path": "/api/story/session"
+          },
+          {
+            "method": "POST",
+            "path": "/api/story/turn"
+          }
+        ],
+        "state_and_ui": {
+          "phase": "active",
+          "revision": 1,
+          "turnId": 1,
+          "title": "本地开场山路",
+          "pendingCount": 0,
+          "pending": [],
+          "choices": 2,
+          "status": "落下一念，故事才会继续。",
+          "ui": "山间\n\n本地开场山路\n\n你望见松影。1\n\n落下一念，故事才会继续。\n\n歇息\n30日\n修行\n360日"
+        },
+        "exceptions": [],
+        "page_errors": [],
+        "request_or_ui_failures": []
+      },
+      {
+        "variant": "built",
+        "turn_posts": 1,
+        "api_calls": [
+          {
+            "method": "GET",
+            "path": "/api/story/capabilities"
+          },
+          {
+            "method": "GET",
+            "path": "/api/story/capabilities"
+          },
+          {
+            "method": "POST",
+            "path": "/api/story/session"
+          },
+          {
+            "method": "POST",
+            "path": "/api/story/turn"
+          }
+        ],
+        "state_and_ui": {
+          "phase": "active",
+          "revision": 1,
+          "turnId": 1,
+          "title": "本地开场山路",
+          "pendingCount": 0,
+          "pending": [],
+          "choices": 2,
+          "status": "落下一念，故事才会继续。",
+          "ui": "山间\n\n本地开场山路\n\n你望见松影。1\n\n落下一念，故事才会继续。\n\n歇息\n30日\n修行\n360日"
+        },
+        "exceptions": [],
+        "page_errors": [],
+        "request_or_ui_failures": []
+      }
+    ],
+    "conclusion": "Both variants completed the local-mock live opening with the same phase, revision, turnId, pending count, choices, and visible scene. No custom-bundler runtime difference or opening failure was reproduced in this fixture."
+  },
+  "native_picker_single_attempt": {
+    "variant": "built",
+    "artifact_sha256": "c77371e921886d3d2749af475388dc9108ac59eaf13e6b7d85f08a53bafe1856",
+    "provider": "local mock provider, not production",
+    "setup": "A fresh isolated browser context completed a valid live opening for 林照, then opened 游戏设置 and clicked 导出完整存档 once.",
+    "picker_mocked_or_replaced": false,
+    "export_attempt_count": 1,
+    "before_click": {
+      "pickerType": "function",
+      "pickerSource": "function showSaveFilePicker() { [native code] }",
+      "secureContext": true,
+      "topLevel": true,
+      "toast": "",
+      "button": "导出完整存档"
+    },
+    "observation_timeout_ms": 10000,
+    "completion_observed_within_timeout": false,
+    "result": "pending_after_10_seconds",
+    "after_observation": {
+      "toast": "",
+      "toastClass": "toast",
+      "hasBeenActive": true,
+      "isActive": true
+    },
+    "export_exceptions": [],
+    "page_errors": [],
+    "downloads": [],
+    "successful_save_observed": false,
+    "error_toast_observed": false,
+    "security_error_or_not_allowed_error_observed": false,
+    "exception_stack": null,
+    "context_closed_after_observation": true,
+    "browser_closed_after_observation": true,
+    "conclusion": "The native picker call remained pending during the 10-second observation; no error, success message, or download was observed. The temporary browser context was then closed. The cloud-browser 导出未完成 failure was not reproduced locally, and no cloud failure type or stack can be inferred from this result."
+  },
+  "compatibility_assessment": {
+    "basis": "Read-only inspection of src/app.js exportLiveGame, observed at lines 929-942; no fix was implemented in this diagnostic.",
+    "current_behavior": "The export path checks whether showSaveFilePicker exists. Any non-AbortError from the picker/export block reaches the generic export-failure notification.",
+    "minimal_compatible_change": "If opening showSaveFilePicker rejects because the picker is unavailable in the browser environment, fall back to the existing Blob download before acquiring a file handle. An AbortError should return without downloading.",
+    "boundaries": [
+      "Do not automatically download merely because the picker is still waiting for user selection.",
+      "Do not silently convert archive read/validation failures or downstream writable/pipeTo failures into a second download attempt.",
+      "This assessment does not identify the actual cloud-browser error type; none was reproduced locally."
+    ]
+  },
+  "provenance": {
+    "original_scripts": "Executed as ephemeral node --input-type=module heredocs; no standalone diagnostic script files were saved.",
+    "opening_comparison_exec_session_id": 20630,
+    "native_picker_exec_session_id": 36076,
+    "raw_result_evidence": "The observed API calls, state/UI values, exception arrays, picker capability values, and timeout result are embedded above; external transient scripts or tool sessions are not the sole evidence.",
+    "this_file_created_without_additional_test_runs": true
+  }
+}

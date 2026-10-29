@@ -1,0 +1,12 @@
+{
+  "observedAt": "2026-10-29T02:59:01.167Z",
+  "status": "ok",
+  "version": "4.2.0",
+  "sourceCommit": "1f5b9e18dae06e4b74e6d60403c46964cf45e1f9",
+  "htmlSha256": "c77371e921886d3d2749af475388dc9108ac59eaf13e6b7d85f08a53bafe1856",
+  "htmlBytes": 1025064,
+  "releaseSource": "remote-fetch",
+  "lastAttemptAt": 1793242729770,
+  "lastSuccessAt": 1793242729875,
+  "lastError": ""
+}
