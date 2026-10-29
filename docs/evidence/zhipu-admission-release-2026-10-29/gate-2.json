@@ -1,0 +1,27 @@
+{
+  "checkedAt": "2026-10-29T07:35:33.799Z",
+  "task": "gate",
+  "probeVersion": "455b6c73-331a-4229-9f88-5b77b03d9f96",
+  "outerStatus": 200,
+  "result": {
+    "checkedAt": "2026-10-29T07:35:35.149Z",
+    "isolated": true,
+    "record": [
+      {
+        "method": "acquireProvider",
+        "httpStatus": 200,
+        "kind": "acquired"
+      },
+      {
+        "method": "acquireProvider",
+        "httpStatus": 200,
+        "kind": "waiting"
+      },
+      {
+        "method": "releaseProvider",
+        "httpStatus": 200,
+        "kind": "released"
+      }
+    ]
+  }
+}

@@ -91,7 +91,7 @@ export function buildStoryInput(profile,context) {
   validateProfile(profile);
   return providerInput(profile,context);
 }
-export const PROVIDER_ERROR_CODES=Object.freeze([...STORY_ERROR_CODES,'PROVIDER_PROFILE_INVALID','MODEL_NOT_ALLOWED','MODEL_UNVALIDATED','AI_BINDING_MISSING','PROVIDER_OPTIONS_INVALID','INPUT_TOO_LARGE','CONTEXT_TOO_LARGE','PROVIDER_TIMEOUT','PROVIDER_RESPONSE_INVALID','PROVIDER_RESPONSE_TOO_LARGE','MODEL_RESPONSE_MISMATCH','OUTPUT_TRUNCATED','STOP_REASON_INVALID','PROVIDER_USAGE_INVALID','OUTPUT_TOO_LARGE']);
+export const PROVIDER_ERROR_CODES=Object.freeze([...STORY_ERROR_CODES,'PROVIDER_PROFILE_INVALID','MODEL_NOT_ALLOWED','MODEL_UNVALIDATED','AI_BINDING_MISSING','PROVIDER_OPTIONS_INVALID','INPUT_TOO_LARGE','CONTEXT_TOO_LARGE','PROVIDER_TIMEOUT','PROVIDER_RESPONSE_INVALID','PROVIDER_RESPONSE_TOO_LARGE','MODEL_RESPONSE_MISMATCH','OUTPUT_TRUNCATED','STOP_REASON_INVALID','PROVIDER_USAGE_INVALID','OUTPUT_TOO_LARGE','BUDGET_UNAVAILABLE']);
 const ownCodes=new Set(PROVIDER_ERROR_CODES);
 function mappedCode(error) {
   // workerd binding errors carry the numeric code only in a leading message.
@@ -102,7 +102,7 @@ function mappedCode(error) {
   if(['PROVIDER_BUSY','PROVIDER_FAILED','FREE_QUOTA_EXHAUSTED'].includes(code))return code;
   return ownCodes.has(code)?code:'PROVIDER_FAILED';
 }
-const pausedCodes=new Set(['FREE_QUOTA_EXHAUSTED','PROVIDER_BUSY','PROVIDER_TIMEOUT','PROVIDER_FAILED']);
+const pausedCodes=new Set(['FREE_QUOTA_EXHAUSTED','PROVIDER_BUSY','PROVIDER_TIMEOUT','PROVIDER_FAILED','BUDGET_UNAVAILABLE']);
 
 export async function generateProviderScene(ai,profile,context,options={},assertProfileReady) {
   const result={status:'rejected',accountingStatus:'complete',modelId:null,attemptId:null,inferencePerformed:false,usage:null,actualNeurons:null,stopReason:null,inputHash:null,inputBytes:null,nonThinkingValidated:null};

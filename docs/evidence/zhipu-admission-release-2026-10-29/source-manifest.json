@@ -1,0 +1,45 @@
+{
+  "baseCommit": "f54214449b942ef407ea8f6d56f7b1a1d64f1f23",
+  "files": [
+    {
+      "path": "src/ui/journey.js",
+      "gitBlob": "8fa92d48488e2aeea4cdf9d57c0c39bf3e5d941f",
+      "rawSha256": "3986ca46a039c3382465836e5bcd7023b960318248d0a692dcdfdbd927b82ac4"
+    },
+    {
+      "path": "src/ui/story-client.js",
+      "gitBlob": "26aaf20e1974558a6c8986b5573d05d9f79b9e4c",
+      "rawSha256": "b6d330aa71d89f3a85ede667b93f276e4d8b733251b53a546d4694b4b0523943"
+    },
+    {
+      "path": "src/worker/index.js",
+      "gitBlob": "4d5c03e51bd25a8b9e3bdea52c71c0264c0b7775",
+      "rawSha256": "dcc537d56b85d9a56c826a10acc71235ad13d24a559e277aa23ac2fba4074cba"
+    },
+    {
+      "path": "src/worker/story-api.js",
+      "gitBlob": "cf6a4dfe5dca46550d76f1b80deff3c58dd76b17",
+      "rawSha256": "1b6e12b56c2bd8d147e86aa065e60ca39ee911f20d67fa35dc33e8216e363e7e"
+    },
+    {
+      "path": "src/worker/story-budget.js",
+      "gitBlob": "ecaa51f150b00ffeabce2cce1d3ba4ddcd302240",
+      "rawSha256": "246bb0080fa44b9240ad0c891ba080695b07c891e2acd72556b2d099920f8542"
+    },
+    {
+      "path": "src/worker/story-glm-provider.js",
+      "gitBlob": "a9a2701d04bde4c6cdfe417f3aad8aba1b02a8e2",
+      "rawSha256": "7c6bdc6aee1170075743798b51eefa8d547ff9f7179651a6e71e06b81f9696ef"
+    },
+    {
+      "path": "src/worker/story-provider-core.js",
+      "gitBlob": "a30c96a328146b735fb86716957c7ff9bcae88f5",
+      "rawSha256": "afaba8fa7f3ec2c0b6e19e39042ee4546c9d40b108e61c26c0df515dcbd16b61"
+    },
+    {
+      "path": "src/worker/story-provider.js",
+      "gitBlob": "0ade7c63da2766d67b7b2615afe9e0aa9de8415e",
+      "rawSha256": "344143d87f6c35d898c627d8d34143c3080029b5be956d10d87a0ea037b84947"
+    }
+  ]
+}

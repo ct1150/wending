@@ -39,7 +39,13 @@ test('packaged backend executes in local workerd: blocked outbound, static fallb
   assert.equal((await call(stub,'reserve',reservation)).kind,'reserved');
   const result={status:'paused',errorCode:'PROVIDER_TIMEOUT'};
   assert.equal((await call(stub,'settle',{...identity,attemptId:reservation.attemptId,status:'unknown',result})).kind,'settled');
+  assert.equal((await call(stub,'acquireProvider',{owner:'first-player'})).kind,'acquired');
+  assert.equal((await call(stub,'acquireProvider',{owner:'second-player'})).kind,'waiting');
   await mf.dispose();mf=new Miniflare(options);stub=await stubFor(mf);
+  assert.equal((await call(stub,'acquireProvider',{owner:'second-player'})).kind,'waiting','native SQLite provider lease survives restart');
+  assert.equal((await call(stub,'releaseProvider',{owner:'wrong-owner',outcome:'complete'})).kind,'denied');
+  assert.equal((await call(stub,'releaseProvider',{owner:'first-player',outcome:'complete'})).kind,'released');
+  assert.equal((await call(stub,'acquireProvider',{owner:'second-player'})).kind,'waiting','completion retains the spacing window');
   assert.equal((await call(stub,'getSession',identity)).kind,'session');
   assert.deepEqual(await call(stub,'reserve',reservation),{kind:'replay',result});
   const next={...reservation,attemptId:'next_attempt',requestId:'next_request',reservedNeurons:10000};

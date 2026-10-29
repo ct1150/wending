@@ -7,6 +7,39 @@ function fixture(limits={dailyNeurons:100,pendingMs:30000}){let now=Date.parse('
 const create=(b,id='s1',ip='ip')=>b.createSession({sessionRef:id,tokenHash:'token-'+id,ipHash:ip});
 const request=(id='a1',rest={})=>({sessionRef:'s1',tokenHash:'token-s1',attemptId:id,requestId:'req1',payloadHash:'hash1',reservedNeurons:40,retryOf:null,ipHash:'ip',...rest});
 
+test('Zhipu admission is account-wide and survives restart with stale releases fenced',()=>{
+  const f=fixture({});assert.equal(typeof f.b.acquireProvider,'function');
+  assert.equal(f.b.acquireProvider({owner:'first-player'}).kind,'acquired');
+  assert.equal(f.make().acquireProvider({owner:'second-player'}).kind,'waiting');
+  assert.equal(f.b.releaseProvider({owner:'wrong-owner',outcome:'complete'}).kind,'denied');
+  assert.equal(f.b.acquireProvider({owner:'second-player'}).kind,'waiting');
+  f.setNow('2026-10-27T12:02:01Z');assert.equal(f.make().acquireProvider({owner:'second-player'}).kind,'acquired');
+  assert.equal(f.b.releaseProvider({owner:'first-player',outcome:'complete'}).kind,'denied');
+  assert.equal(f.b.acquireProvider({owner:'third-player'}).kind,'waiting');
+});
+
+test('Zhipu completion and busy responses retain durable spacing and different cooldowns',()=>{
+  for(const [outcome,seconds] of [['complete',1],['rate-limited',5],['overloaded',15]]){
+    const f=fixture({});assert.equal(typeof f.b.acquireProvider,'function');
+    f.b.acquireProvider({owner:'first'});assert.equal(f.b.releaseProvider({owner:'first',outcome}).kind,'released');
+    f.b.cleanup();assert.equal(f.make().acquireProvider({owner:'second'}).kind,'waiting');
+    f.setNow('2026-10-27T12:00:'+String(seconds).padStart(2,'0')+'Z');
+    assert.equal(f.make().acquireProvider({owner:'second'}).kind,'acquired');
+  }
+});
+
+test('unknown Zhipu cancellation retains its original lease without erasing story accounting',()=>{
+  const f=fixture({});assert.equal(typeof f.b.acquireProvider,'function');create(f.b);f.b.reserve(request());
+  f.b.acquireProvider({owner:'first'});assert.equal(f.b.releaseProvider({owner:'first',outcome:'unknown'}).kind,'released');
+  assert.equal(f.b.releaseProvider({owner:'first',outcome:'complete'}).kind,'released');
+  f.setNow('2026-10-27T12:01:59Z');f.b.cleanup();assert.equal(f.make().acquireProvider({owner:'second'}).kind,'waiting');
+  assert.equal(f.disk.sql.exec('SELECT status FROM ledger').toArray()[0].status,'reserved');
+  f.setNow('2026-10-27T12:02:00Z');assert.equal(f.b.acquireProvider({owner:'second'}).kind,'acquired');
+  assert.equal(f.b.releaseProvider({owner:'second',outcome:'anything'}).code,'REQUEST_INVALID');
+  assert.equal(f.b.acquireProvider({owner:'third'}).kind,'waiting');
+  assert.equal(f.b.acquireProvider({owner:''}).code,'REQUEST_INVALID');
+});
+
 test('a trusted independent primary can reserve after a historical Cloudflare quota latch without erasing it',()=>{
   const f=fixture({});create(f.b);f.b.reserve(request());f.b.settle({sessionRef:'s1',attemptId:'a1',status:'unknown',quotaExhausted:true,result:{status:'paused',errorCode:'FREE_QUOTA_EXHAUSTED'}});
   const original=f.disk.sql.exec('SELECT * FROM ledger ORDER BY rowid').toArray();

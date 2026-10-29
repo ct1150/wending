@@ -1,0 +1,123 @@
+{
+  "schemaVersion": 1,
+  "recordedAt": "2026-10-29T07:43:20Z",
+  "status": "OPTIMIZATION_VERIFIED_AWAITING_ZHIPU_RECOVERY",
+  "sourceBase": "f54214449b942ef407ea8f6d56f7b1a1d64f1f23",
+  "sourceManifest": "source-manifest.json",
+  "validation": {
+    "core": {
+      "tests": 70,
+      "pass": 70,
+      "fail": 0
+    },
+    "nativeApiBuildBrowser": {
+      "tests": 171,
+      "pass": 171,
+      "fail": 0,
+      "log": "Local WSL /tmp/wending-admission-final-targeted.log"
+    },
+    "initialFullSuite": {
+      "tests": 917,
+      "pass": 915,
+      "fail": 1,
+      "cancelled": 1,
+      "failures": [
+        "live-archive: dynamic module import failed",
+        "live-long-run: 1000-turn test exceeded 240 seconds"
+      ]
+    },
+    "isolatedRerun": {
+      "tests": 16,
+      "pass": 16,
+      "fail": 0,
+      "longRunMs": 100849.097602
+    },
+    "finalCi": "To be checked on the frozen uploaded candidate and reported in PR #16"
+  },
+  "review": {
+    "independentReadOnly": true,
+    "importantFixes": [
+      "Bound gate RPCs and safely clear late unused admissions",
+      "Share absolute deadline and cancellation; guard both provider network calls",
+      "Conservative overload cooldown for unexpected status/oversized errors",
+      "Require a gate whenever a Zhipu key is used",
+      "Negotiate queue status for older SSE clients"
+    ],
+    "additionalFixes": [
+      "Sticky unknown lease even when a late complete is replayed",
+      "Late story reservation cannot begin inference"
+    ]
+  },
+  "nativeCloudGate": {
+    "sourceHash": "246bb0080fa44b9240ad0c891ba080695b07c891e2acd72556b2d099920f8542",
+    "temporaryWorker": "wending-admission-verify-20261029-0732",
+    "namespace": "11117a0bb0a44cc99e821eb4074aaae5",
+    "verification": "gate-2.json",
+    "priorZeroPercentLimitation": "gate-1.json",
+    "workerDeleted": {
+      "name": "wending-admission-verify-20261029-0732",
+      "namespace": "11117a0bb0a44cc99e821eb4074aaae5",
+      "success": true,
+      "status": 200
+    },
+    "namespaceCheck": {
+      "success": true,
+      "status": 200,
+      "temporaryNamespacePresent": false,
+      "productionNamespacePresent": true
+    }
+  },
+  "availability": {
+    "tinyRequests": 3,
+    "successfulTinyRequests": 0,
+    "errors": "Zhipu HTTP 429 / 1305",
+    "fullStory": "route-primary-opening-1.json",
+    "fullStoryReady": false,
+    "fallback": "Cloudflare AiError 4006",
+    "newLatencySampleUsable": false
+  },
+  "production": {
+    "deployment": {
+      "id": "e458508b-8861-4215-9e7f-564b9a20c467",
+      "versions": [
+        {
+          "version_id": "f17816a1-da95-4095-b13d-406a2610a9c0",
+          "percentage": 100
+        }
+      ]
+    },
+    "activeVersion": {
+      "id": "f17816a1-da95-4095-b13d-406a2610a9c0",
+      "bindings": [
+        {
+          "name": "AI",
+          "type": "ai"
+        },
+        {
+          "name": "STORY_BUDGET",
+          "type": "durable_object_namespace",
+          "namespace_id": "1de1df3929534a8d8d495d6db6604e99"
+        },
+        {
+          "name": "STORY_OPERATOR_TOKEN",
+          "type": "secret_text"
+        },
+        {
+          "name": "ZHIPU_API_KEY",
+          "type": "secret_text"
+        }
+      ]
+    },
+    "subdomain": {
+      "enabled": true,
+      "previews_enabled": false
+    }
+  },
+  "privateRouteRemoved": true,
+  "localTemporaryTokenDeleted": true,
+  "productionNamespaceReused": true,
+  "newProductionPublished": false,
+  "glmPromoted": false,
+  "preloadingEnabled": false,
+  "next": "Low-frequency recovery check in this thread; real primary opening/choice/save/refresh success, current CI and final package checks must precede authorized publication."
+}

@@ -1,0 +1,91 @@
+{
+  "schemaVersion": 1,
+  "accountId": "b266970852cbc371061c94c5b1fe76a9",
+  "analytics": {
+    "queriedAroundUtc": "2026-10-29T06:35:00Z",
+    "timestampPrecision": "approximate",
+    "todayUtc": [
+      "2026-10-29T00:00:00Z",
+      "2026-10-30T00:00:00Z"
+    ],
+    "yesterdayUtc": [
+      "2026-10-28T00:00:00Z",
+      "2026-10-29T00:00:00Z"
+    ],
+    "response": {
+      "success": true,
+      "status": 200,
+      "result": {
+        "viewer": {
+          "accounts": [
+            {
+              "today": [
+                {
+                  "count": 42,
+                  "sum": {
+                    "totalNeurons": 0
+                  }
+                }
+              ],
+              "yesterday": [
+                {
+                  "count": 73,
+                  "sum": {
+                    "totalNeurons": 10711.885996931458
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "errors": [],
+      "messages": []
+    }
+  },
+  "directProbes": [
+    {
+      "checkedAt": "2026-10-29T06:36:46.231Z",
+      "endpoint": "native REST /ai/run",
+      "model": "@cf/zai-org/glm-4.7-flash",
+      "maxTokens": 16,
+      "httpStatus": 429,
+      "errorCode": 4006,
+      "messageSummary": "Daily free allocation of 10,000 neurons exhausted",
+      "elapsedMs": 5694,
+      "requestId": "d7295e5f-05e7-4f7f-9e93-220527cf9e4f",
+      "uniqueDiagnosticNonce": true
+    },
+    {
+      "checkedAt": "2026-10-29T06:36:46.231Z",
+      "endpoint": "native REST /ai/run",
+      "model": "@cf/baai/bge-small-en-v1.5",
+      "input": {
+        "text": [
+          "probe"
+        ]
+      },
+      "httpStatus": 429,
+      "errorCode": 4006,
+      "messageSummary": "Daily free allocation of 10,000 neurons exhausted",
+      "elapsedMs": 7143,
+      "requestId": "87f8c7db-20b5-4ac7-bcda-9bee573925ed",
+      "uniqueDiagnosticNonce": true
+    },
+    {
+      "checkedAt": "2026-10-29T06:37:57.284Z",
+      "endpoint": "OpenAI-compatible /ai/v1/chat/completions",
+      "model": "@cf/zai-org/glm-4.7-flash",
+      "maxTokens": 16,
+      "stream": false,
+      "httpStatus": 429,
+      "errorCode": 4006,
+      "messageSummary": "Daily free allocation of 10,000 neurons exhausted",
+      "elapsedMs": 6372,
+      "requestId": "727449d8-e9af-4a65-a5c3-749177aff1b9",
+      "uniqueDiagnosticNonce": true
+    }
+  ],
+  "conclusion": "Quota rejection reproduced independently of game code, across two models and two API paths, while UTC-day analytics report zero neurons. Exact internal enforcement/reset or analytics cause is unconfirmed.",
+  "limits": "Billing/subscription details unavailable to this connector; no paid upgrade, quota reset or support submission performed. Public error documentation names daily quota code 3036; observed code was 4006 with the daily quota message."
+}

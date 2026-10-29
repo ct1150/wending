@@ -1,0 +1,42 @@
+{
+  "checkedAt": "2026-10-29T07:15:05.367Z",
+  "task": "stream-json",
+  "probeVersion": "2d70c6cb-5fa7-4066-bf3d-6488c652004b",
+  "outerStatus": 200,
+  "result": {
+    "caseId": "stream-json",
+    "status": 429,
+    "code": "1305",
+    "text": "{\"error\":{\"code\":\"1305\",\"message\":\"该模型当前访问量过大，请您稍后再试\"}}",
+    "headers": {
+      "cf-cache-status": "DYNAMIC",
+      "cf-ray": "a52063227909d309-HKG",
+      "date": "Thu, 29 Oct 2026 07:15:07 GMT",
+      "server": "cloudflare",
+      "x-log-id": "20261029151507be7263b9ac4f48a5",
+      "x-request-id": "8951583f-abc2-4525-9b75-c446ac48e785"
+    },
+    "headersMs": 530,
+    "elapsedMs": 530,
+    "checkedAt": "2026-10-29T07:15:07.797Z",
+    "ingressColo": "HKG",
+    "requestShape": {
+      "model": "glm-4.7-flash",
+      "messages": [
+        {
+          "role": "user",
+          "content": "只输出JSON：{\"ok\":true}"
+        }
+      ],
+      "stream": true,
+      "max_tokens": 32,
+      "thinking": {
+        "type": "disabled"
+      },
+      "response_format": {
+        "type": "json_object"
+      }
+    },
+    "keyPresent": true
+  }
+}

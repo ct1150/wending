@@ -7,7 +7,7 @@ export function storyBudgetCoordinator(env){
   const binding=env?.STORY_BUDGET;
   if(!binding?.idFromName||!binding?.get)return {};
   const stub=binding.get(binding.idFromName(STORY_COORDINATOR_NAME));
-  return Object.fromEntries(['getSession','admit','createSession','lookup','reserve','settle','cleanup'].map(method=>[method,async input=>{
+  return Object.fromEntries(['getSession','admit','createSession','lookup','reserve','settle','cleanup','acquireProvider','releaseProvider'].map(method=>[method,async input=>{
     const response=await stub.fetch(new Request('https://story-budget.internal/'+method,{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(input)}));
     if(!response.ok)throw Object.assign(new Error('BUDGET_UNAVAILABLE'),{code:'BUDGET_UNAVAILABLE'});
     return response.json();

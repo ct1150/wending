@@ -25,6 +25,7 @@ export function createBudgetCoordinator({storage,now=Date.now,limits={}}){
   sql('CREATE TABLE IF NOT EXISTS denied_admissions (session_ref TEXT NOT NULL, attempt_id TEXT NOT NULL, request_id TEXT NOT NULL, payload_hash TEXT NOT NULL, context_hash TEXT NOT NULL, expires INTEGER NOT NULL, PRIMARY KEY(session_ref,attempt_id))');
   sql('CREATE TABLE IF NOT EXISTS counters (kind TEXT NOT NULL, subject TEXT NOT NULL, bucket TEXT NOT NULL, count INTEGER NOT NULL, PRIMARY KEY(kind,subject,bucket))');
   sql('CREATE TABLE IF NOT EXISTS quota (day TEXT PRIMARY KEY)');
+  sql('CREATE TABLE IF NOT EXISTS provider_lease (provider TEXT PRIMARY KEY, owner TEXT, expires INTEGER NOT NULL, not_before INTEGER NOT NULL, uncertain INTEGER NOT NULL DEFAULT 0)');
   const tx=fn=>storage.transactionSync(fn);
   const session=(input,time)=>sql('SELECT ref,expires FROM sessions WHERE token_hash=? AND expires>?',input.tokenHash,time).find(row=>!input.sessionRef||row.ref===input.sessionRef);
   const counter=(kind,subject,bucket)=>sql('SELECT count FROM counters WHERE kind=? AND subject=? AND bucket=?',kind,subject,bucket)[0]?.count??0;
@@ -39,6 +40,22 @@ export function createBudgetCoordinator({storage,now=Date.now,limits={}}){
     return denied('ATTEMPT_IN_PROGRESS');
   };
   const api={
+    acquireProvider({owner}){if(!validText(owner))return denied('REQUEST_INVALID');return tx(()=>{
+      const time=now(),row=sql("SELECT * FROM provider_lease WHERE provider='zhipu'")[0];
+      if(row?.owner===owner&&row.expires>time)return {kind:'acquired',owner,expiresAt:row.expires};
+      if(row&&Math.max(row.expires,row.not_before)>time)return {kind:'waiting',retryAt:Math.max(row.expires,row.not_before)};
+      const expiresAt=time+BUDGET_LIMITS.pendingMs;
+      sql("INSERT INTO provider_lease(provider,owner,expires,not_before) VALUES('zhipu',?,?,0) ON CONFLICT(provider) DO UPDATE SET owner=excluded.owner,expires=excluded.expires,not_before=0,uncertain=0",owner,expiresAt);
+      return {kind:'acquired',owner,expiresAt};
+    });},
+    releaseProvider({owner,outcome}){if(!validText(owner)||!['complete','rate-limited','overloaded','unknown'].includes(outcome))return denied('REQUEST_INVALID');return tx(()=>{
+      const row=sql("SELECT * FROM provider_lease WHERE provider='zhipu'")[0];
+      if(!row||row.owner!==owner)return denied('PROVIDER_LEASE_MISMATCH');
+      // Cancellation does not prove the upstream released its concurrency slot.
+      if(outcome==='unknown')sql("UPDATE provider_lease SET uncertain=1 WHERE provider='zhipu' AND owner=?",owner);
+      else if(!row.uncertain)sql("UPDATE provider_lease SET owner=NULL,expires=0,not_before=? WHERE provider='zhipu' AND owner=?",Math.max(row.not_before,now()+({complete:1000,'rate-limited':5000,overloaded:15000}[outcome])),owner);
+      return {kind:'released'};
+    });},
     getSession(input){const found=session(input,now());return found?{kind:'session',sessionRef:found.ref,expiresAt:found.expires}:denied('SESSION_UNAVAILABLE');},
     admit({ipHash}){if(!validText(ipHash))return denied('REQUEST_INVALID');return tx(()=>{const bucket=String(Math.floor(now()/3600000));if(policy.ipRequestsPerHour!==null&&counter('request',ipHash,bucket)>=policy.ipRequestsPerHour)return denied('IP_REQUEST_LIMIT');increment('request',ipHash,bucket);return {kind:'admitted'};});},
     createSession({sessionRef,tokenHash,ipHash}){if(![sessionRef,tokenHash,ipHash].every(validText))return denied('REQUEST_INVALID');return tx(()=>{const time=now(),bucket=String(Math.floor(time/3600000));if(policy.ipSessionsPerHour!==null&&counter('session',ipHash,bucket)>=policy.ipSessionsPerHour)return denied('IP_SESSION_LIMIT');if(sql('SELECT ref FROM sessions WHERE ref=? OR token_hash=?',sessionRef,tokenHash).length)return denied('SESSION_CONFLICT');increment('session',ipHash,bucket);sql('INSERT INTO sessions(ref,token_hash,expires) VALUES(?,?,?)',sessionRef,tokenHash,time+policy.sessionMs);return {kind:'session',sessionRef,expiresAt:time+policy.sessionMs};});},
@@ -137,7 +154,7 @@ export class StoryBudget {
     // Reachable only through the singleton internal Durable Object binding.
     if(request.method!=='POST')return new Response(null,{status:405});
     const method=new URL(request.url).pathname.slice(1);
-    if(!['getSession','admit','createSession','lookup','reserve','settle','cleanup'].includes(method))return new Response(null,{status:404});
+    if(!['getSession','admit','createSession','lookup','reserve','settle','cleanup','acquireProvider','releaseProvider'].includes(method))return new Response(null,{status:404});
     try {if(Date.now()>=this.nextCleanup){this.coordinator.cleanup();this.nextCleanup=Date.now()+3600000;}return Response.json(this.coordinator[method](await request.json()));}catch{return Response.json({kind:'denied',code:'BUDGET_UNAVAILABLE'},{status:503});}
   }
 }

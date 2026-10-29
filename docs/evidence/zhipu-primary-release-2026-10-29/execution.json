@@ -1,0 +1,55 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-10-29",
+  "status": "CODE_VERIFIED_RELEASE_HELD_FOR_PROVIDER_AVAILABILITY",
+  "pullRequest": "https://github.com/ct1150/wending/pull/16",
+  "draft": true,
+  "candidateHead": "f54214449b942ef407ea8f6d56f7b1a1d64f1f23",
+  "sourceTree": "8aaaa84fe0ff077423c462acbe608d3f519765c2",
+  "sourceUpload": "Git HTTPS push authentication failed. The connected GitHub API uploaded a tree verified equal to the locally tested Git tree; local branch release/zhipu-primary tracks the resulting remote candidate. No credential was requested or exposed.",
+  "ci": {
+    "url": "https://github.com/ct1150/wending/actions/runs/40827828844",
+    "result": "success",
+    "mergeRef": "cb469b551269a26f9ad6bc5a16762ca901f54d6b",
+    "mergeParents": ["1f5b9e18dae06e4b74e6d60403c46964cf45e1f9", "f54214449b942ef407ea8f6d56f7b1a1d64f1f23"],
+    "verifiedTreeMatchesCandidate": true,
+    "tests": 907,
+    "pass": 907,
+    "fail": 0,
+    "syntaxFiles": 170,
+    "frontendBytes": 1031174,
+    "backend": "Default disabled artifact built successfully; not deployed",
+    "publication": "Skipped because this was a pull-request workflow, not main"
+  },
+  "liveAcceptance": {
+    "openingProbes": 8,
+    "readyScenes": 0,
+    "extraProbeFiles": ["route-primary-opening-7.json", "route-primary-opening-8.json"],
+    "primary": "Zhipu: HTTP 429 business code 1302/1305, or timeout before headers at the 45-second primary deadline",
+    "fallback": "Actual Cloudflare binding reached and rejected with AiError 4006",
+    "tinyRequest": "A separate 32-token request also returned HTTP 429/1305",
+    "browser": "Three explicit attempts; opening remained at revision 0 with pending preserved, no successful scene committed",
+    "passedReleaseGate": false,
+    "earlierSuccessIsHistorical": "Earlier BigModel scenes and save/refresh evidence are retained in the previous stream-speed report; they do not override the current failed release acceptance"
+  },
+  "production": {
+    "deployedCandidate": false,
+    "glmPromoted": false,
+    "restoredDeployment": "e0bbebd8-4b4a-4a76-9a44-9b3cf430d234",
+    "activeVersion": "f17816a1-da95-4095-b13d-406a2610a9c0",
+    "percentage": 100,
+    "temporaryZeroPercentVersionRemoved": true,
+    "previewsEnabled": false,
+    "bindingsPreserved": ["AI", "STORY_BUDGET", "STORY_OPERATOR_TOKEN", "ZHIPU_API_KEY"],
+    "storyBudgetNamespace": "1de1df3929534a8d8d495d6db6604e99",
+    "secretValueRead": false,
+    "localTemporaryTokenDeleted": true,
+    "publicHealth": {
+      "httpStatus": 200,
+      "version": "4.2.0",
+      "sourceCommit": "1f5b9e18dae06e4b74e6d60403c46964cf45e1f9",
+      "htmlSha256": "c77371e921886d3d2749af475388dc9108ac59eaf13e6b7d85f08a53bafe1856"
+    }
+  },
+  "remaining": "Fresh successful real opening, choice, save and refresh on the selected primary, followed by registry promotion, main validation/publication, explicit production build/deploy and public browser acceptance. No paid model, quota deletion or silent retry was introduced."
+}

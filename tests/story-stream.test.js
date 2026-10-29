@@ -5,10 +5,10 @@ import {createStoryClient} from '../src/ui/story-client.js';
 import {createLiveGame,prepareOpening} from '../src/game/cultivation/live/engine.js';
 import {buildStoryContext} from '../src/game/cultivation/live/memory.js';
 const origin='https://stream.test';
-function fixture(provider,{longIds=false,settleFailure=null}={}){
+function fixture(provider,{longIds=false,settleFailure=null,onReserve=()=>{}}={}){
   let outcome=null,reserved=false,settlement=null,calls=0;const state=createLiveGame({runId:'stream-api-run',seed:42}),pending=prepareOpening(state,{requestId:longIds?'r'.repeat(80):'stream-request'});
   const context=buildStoryContext(state,pending),attempt={id:longIds?'a'.repeat(80):'stream-attempt',sessionRef:longIds?'s'.repeat(80):'stream-session',retryOf:null};
-  const budget={async admit(){return {kind:'allowed'};},async getSession(){return {kind:'session',sessionRef:attempt.sessionRef};},async lookup(){return outcome?{kind:'replay',result:outcome}:{code:'ATTEMPT_NOT_FOUND'};},async reserve(){if(outcome)return {kind:'replay',result:outcome};if(reserved)return {code:'ATTEMPT_IN_PROGRESS'};reserved=true;return {kind:'reserved'};},async settle(value){settlement=value;if(settleFailure==='throw')throw Error('storage failed');if(settleFailure==='denied')return {kind:'denied'};outcome=value.result;return {kind:'settled'};}};
+  const budget={async admit(){return {kind:'allowed'};},async getSession(){return {kind:'session',sessionRef:attempt.sessionRef};},async lookup(){return outcome?{kind:'replay',result:outcome}:{code:'ATTEMPT_NOT_FOUND'};},async reserve(){if(outcome)return {kind:'replay',result:outcome};if(reserved)return {code:'ATTEMPT_IN_PROGRESS'};reserved=true;onReserve();return {kind:'reserved'};},async settle(value){settlement=value;if(settleFailure==='throw')throw Error('storage failed');if(settleFailure==='denied')return {kind:'denied'};outcome=value.result;return {kind:'settled'};}};
   const api=createStoryApi({budget,config:{readiness:()=>({modelId:'fixture'})},provider:async(...args)=>{assert.equal(reserved,true);calls++;return provider(...args);}});
   const request=()=>new Request(origin+'/api/story/turn',{method:'POST',headers:{origin,'content-type':'application/json',accept:'text/event-stream',cookie:'__Host-story_session='+'a'.repeat(64)},body:JSON.stringify({context,attempt})});
   return {api,request,pending,context,attempt,get settlement(){return settlement;},get calls(){return calls;}};
@@ -67,6 +67,26 @@ test('an interrupted or foreign-attempt SSE response cannot return a ready turn'
     const client=createStoryClient({location:{protocol:'https:'},fetch:async()=>new Response(encode.encode('data: '+JSON.stringify({protocolVersion:1,type:'preview',text:'未完成',requestId:f.pending.identity.requestId,attemptId:foreign?'other':f.attempt.id,sessionRef:f.attempt.sessionRef})+'\n\n'),{headers:{'content-type':'text/event-stream'}})});
     await assert.rejects(client.requestTurn(f.pending,f.context,f.attempt,{onProgress(){}}),{code:foreign?'RESPONSE_IDENTITY_MISMATCH':'NETWORK_UNAVAILABLE'});
   }
+});
+
+test('account queue status reaches the browser through SSE before a saved result',async()=>{
+  const events=[],f=fixture(async(ai,p,c,o,r)=>{r.onProgress({type:'status',status:'queued'});return {status:'ready',scene:scene(c),accountingStatus:'complete'};});
+  const client=createStoryClient({location:{protocol:'https:'},fetch:(path,options)=>{const request=f.request();if(options.headers['X-Story-Queue-Status'])request.headers.set('X-Story-Queue-Status',options.headers['X-Story-Queue-Status']);return f.api.fetch(request);}});
+  const result=await client.requestTurn(f.pending,f.context,f.attempt,{onProgress:e=>events.push(e)});
+  assert.equal(result.status,'ready');assert.ok(events.some(e=>e.type==='status'&&e.status==='queued'));
+});
+
+test('older SSE clients receive a compatible generating status while queued',async()=>{
+  const f=fixture(async(ai,p,c,o,r)=>{r.onProgress({type:'status',status:'queued'});return {status:'ready',scene:scene(c),accountingStatus:'complete'};});
+  const wire=await(await f.api.fetch(f.request())).text();assert.doesNotMatch(wire,/"status":"queued"/);assert.match(wire,/"status":"generating"/);
+});
+
+test('a reservation arriving beyond the shared deadline settles without starting inference',async t=>{
+  let clock=Date.now();t.mock.method(Date,'now',()=>clock);
+  const f=fixture(async(ai,p,c)=>({status:'ready',scene:scene(c),accountingStatus:'complete'}),{onReserve:()=>clock+=90001});
+  const client=createStoryClient({location:{protocol:'https:'},fetch:()=>f.api.fetch(f.request())});
+  const result=await client.requestTurn(f.pending,f.context,f.attempt,{onProgress(){}});
+  assert.equal(result.status,'paused');assert.equal(result.errorCode,'PROVIDER_TIMEOUT');assert.equal(f.calls,0);assert.equal(f.settlement.status,'unknown');
 });
 
 test('many tiny previews fit the bounded browser stream and the final result version is checked',async()=>{

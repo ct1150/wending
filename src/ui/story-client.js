@@ -12,7 +12,7 @@ export function createStoryClient({fetch:fetcher=globalThis.fetch,location=globa
     try {
       const serialized=body===undefined?undefined:JSON.stringify(body);
       if(serialized && new TextEncoder().encode(serialized).length>limits.maxRequestBytes)throw error('REQUEST_TOO_LARGE');
-      const response=await fetcher('/api/story/'+path,{method:body===undefined?'GET':'POST',credentials:'same-origin',cache:'no-store',signal:controller.signal,...(serialized?{headers:{'Content-Type':'application/json',...(streaming?{Accept:'text/event-stream'}:{})},body:serialized}:{})});
+      const response=await fetcher('/api/story/'+path,{method:body===undefined?'GET':'POST',credentials:'same-origin',cache:'no-store',signal:controller.signal,...(serialized?{headers:{'Content-Type':'application/json',...(streaming?{Accept:'text/event-stream','X-Story-Queue-Status':'1'}:{})},body:serialized}:{})});
       if(streaming&&response.ok&&response.headers.get('content-type')?.includes('text/event-stream')){
         reader=response.body?.getReader();if(!reader)throw error('PROTOCOL_MISMATCH');
         const decoder=new TextDecoder('utf-8',{fatal:true});let buffer='',length=0,result,previewLength=0;
@@ -26,7 +26,7 @@ export function createStoryClient({fetch:fetcher=globalThis.fetch,location=globa
           if(Object.keys(value).some(key=>!['protocolVersion','requestId','attemptId','sessionRef','type',...extra].includes(key)))throw error('PROTOCOL_MISMATCH');
           if(value.type==='result'){result=turn(value.result,{identity:{requestId:streaming.requestId}},{id:streaming.attemptId,sessionRef:streaming.sessionRef});if(result.requestId!==streaming.requestId||result.attemptId!==streaming.attemptId||result.sessionRef!==streaming.sessionRef)throw error('RESPONSE_IDENTITY_MISMATCH');}
           else {
-            if(value.type==='status'&&!['generating','switching'].includes(value.status))throw error('PROTOCOL_MISMATCH');
+            if(value.type==='status'&&!['generating','switching','queued'].includes(value.status))throw error('PROTOCOL_MISMATCH');
             if(value.type==='reset')previewLength=0;
             if(value.type==='preview'){if(typeof value.text!=='string')throw error('PROTOCOL_MISMATCH');previewLength+=value.text.length;if(previewLength>24000)throw error('RESPONSE_TOO_LARGE');}
             streaming.onProgress(value.type==='preview'?{type:'preview',text:value.text}:value.type==='status'?{type:'status',status:value.status}:{type:'reset'});
