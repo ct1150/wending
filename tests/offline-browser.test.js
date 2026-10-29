@@ -65,9 +65,15 @@ test('an old offline tab cannot autosave over a newly committed journey in anoth
   assert.equal(deserializeGame(replacementRaw).life.name, '沈渡');
   assert.equal(deserializeGame(replacementRaw).phase, 'playing');
   assert.notEqual(replacementRaw, originalRaw);
+  // A file tab can briefly retain its renderer's old localStorage cache after
+  // the other tab's write returns. Wait for the new save to reach that cache;
+  // the old tab's in-memory journey stays stale for the overwrite check below.
+  await first.waitForFunction(({ key, raw }) => localStorage.getItem(key) === raw,
+    { key: SAVE_KEY, raw: replacementRaw }, { timeout: 5000, polling: 20 });
   assert.equal(await first.evaluate(key => localStorage.getItem(key), SAVE_KEY), replacementRaw, 'both file tabs must share the actual active save');
 
   await first.locator('[data-journey-choice]:enabled').first().click();
+  assert.equal(await first.evaluate(key => localStorage.getItem(key), SAVE_KEY), replacementRaw, 'the conflicting tab must leave the active save untouched');
   assert.equal(await second.evaluate(key => localStorage.getItem(key), SAVE_KEY), replacementRaw, 'a stale tab must not overwrite the newly active journey');
   const preserved = await second.evaluate(key => JSON.parse(localStorage.getItem(key)).entries, JOURNEY_SAVES_KEY);
   assert.ok(preserved.some(entry => entry.raw === originalRaw && entry.originalRaw === originalRaw), 'the original alive journey remains available in the saved journeys');

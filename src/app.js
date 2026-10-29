@@ -135,6 +135,8 @@ function retainUnsavedOfflineLife() {
 
 function saveProblem(error) {
   if(error.code==='JOURNEY_STORAGE_CONFLICT')return '另一页面已更新这段旅程，请刷新后再操作。';
+  if(error.code==='JOURNEY_INVALID_LIBRARY')return '离线旅程目录暂时无法读取，请到游戏设置导出原始目录并恢复。当前人生保持不变。';
+  if(error.code==='JOURNEY_INVALID_RECOVERY_LIBRARY')return '原始恢复备份暂时无法读取，请先在游戏设置中导出备份。现有数据保持不变。';
   if(error.code==='JOURNEY_BLOCKED_SAVE')return '旧存档暂时无法读取，请先在游戏设置中备份原始存档。';
   if(error.code?.startsWith('JOURNEY_'))return '原有旅程尚未妥善保存，操作已停止。请检查浏览器存储空间并导出备份。';
   return error.message||'本地存储暂时不可用，原有旅程保持不变。';
@@ -147,9 +149,15 @@ function renderScreenShell(content,{title='百世问鼎',back='返回首页'}={}
 function renderSettingsPage() {
   const summary=currentJourneySummary();
   let recoveryCount=0;try{recoveryCount=offlineJourneys.listUnreadable().length;}catch{}
+  let catalogRecovery='';
+  try {
+    const corrupt=offlineJourneys.corruptLibrary(),backup=offlineJourneys.libraryRecoveryRaw();
+    if(corrupt!==null)catalogRecovery='<section class="settings-section"><h3>恢复离线旅程目录</h3><p role="alert">旅程目录暂时无法读取，当前人生仍保留。可先导出原始目录；确认恢复时会另存完整原文，并保留其中可读取的旅程。</p><div class="settings-actions"><button class="button" data-export-catalog>导出原始旅程目录</button><button class="button" data-recover-catalog>备份并恢复旅程目录</button></div></section>';
+    if(backup!==null)catalogRecovery+='<section class="settings-section"><h3>旅程目录恢复备份</h3><p>此前恢复时保留的完整原始目录仍可下载。</p><button class="button" data-export-catalog-recovery>导出目录恢复备份</button></section>';
+  } catch(error) {catalogRecovery=`<section class="settings-section"><p role="alert">${esc(saveProblem(error))}</p></section>`;}
   const body=`<p class="birth-kicker">收好行囊，再赴山河</p><h2 id="settings-title" tabindex="-1">游戏设置</h2>${renderReadingSettings(readingPreferences)}<section class="settings-section"><h3>旅程与存档</h3><p>${summary?`当前：${esc(summary.name)} · ${esc(summary.detail)}`:'尚未开启旅程。已有备份可以在这里导入。'}</p><div class="settings-actions"><button class="button" data-saves>切换存档</button><button class="button" data-export ${summary?'':'disabled'}>导出${activeMode==='live'?'完整':''}存档</button><button class="button" data-import>导入存档</button></div>${session.status==='blocked'?`<div class="notice error" role="alert"><p>${esc(session.error)} 原始存档已保留。</p>${session.rawCorruptSave!==null?'<button class="button" data-export-corrupt>备份原存档</button>':''}</div>`:''}${session.pendingLegacyRaw||session.backupError?'<div class="notice error"><p>发现待恢复的旧人生备份。</p><button class="button" data-recover-legacy>恢复较新旧人生／重试读取备份</button><button class="button" data-export-legacy>导出旧原档与交接备份</button></div>':''}<p class="save-info">进度保存在此浏览器。更换设备前，请导出备份。</p></section><section class="settings-section"><h3>入世须知</h3><p>岁月只在落下一项选择时前行。</p><div class="settings-actions"><button class="button" data-help>查看游戏说明</button>${window.location.protocol!=='file:'?'<a class="button" href="./baishi-wending-offline.html" download="百世问鼎-离线版.html">下载离线版</a>':''}</div><p class="save-info">新旅程默认联网续写。已保存的实时故事可离线阅读，原有离线旅程仍可继续。</p></section>`;
   const backups=`${recoveryCount?`<section class="settings-section"><h3>原始恢复备份</h3><p>恢复存档前保留了 ${recoveryCount} 份原始数据，可下载后妥善收藏。</p><button class="button" data-export-recovery>导出原始恢复备份</button></section>`:''}${session.legacyBackup||session.originalLegacyRaw?'<section class="settings-section"><h3>旧人生交接备份</h3><button class="button" data-export-legacy>导出旧原档与交接备份</button></section>':''}`;
-  renderScreenShell(body+backups,{title:'游戏设置',back:returnScreen==='new'?'返回角色创建':returnScreen==='adventure'?'返回当前剧情':returnScreen==='home'?'返回首页':'返回当前页面'});
+  renderScreenShell(body+catalogRecovery+backups,{title:'游戏设置',back:returnScreen==='new'?'返回角色创建':returnScreen==='adventure'?'返回当前剧情':returnScreen==='home'?'返回首页':'返回当前页面'});
 }
 
 function renderNewJourney() {
@@ -815,6 +823,22 @@ document.addEventListener('click', event => {
     return;
   }
   if ('export' in data) return exportGame();
+  if ('exportCatalog' in data || 'exportCatalogRecovery' in data) {
+    try {
+      const raw='exportCatalog' in data?offlineJourneys.corruptLibrary():offlineJourneys.libraryRecoveryRaw();
+      if(raw!==null)downloadText('百世问鼎-旅程目录原始备份.txt',raw,'text/plain;charset=utf-8');
+    } catch(error) {notify(saveProblem(error),true);}return;
+  }
+  if ('recoverCatalog' in data) {
+    try {
+      const raw=offlineJourneys.corruptLibrary();
+      if(raw===null)return renderSettingsPage();
+      return confirmAction('恢复旅程目录','将先在本机保存完整原始目录，再恢复其中可读取的旅程。无法读取的记录仍在原文备份中，当前人物与进度保持不变。',()=>{
+        try {offlineJourneys.recoverLibrary(raw);renderSettingsPage();notify('旅程目录已恢复，原始备份可在设置中导出。');}
+        catch(error){notify(saveProblem(error),true);}
+      },'保存备份并恢复');
+    } catch(error) {notify(saveProblem(error),true);}return;
+  }
   if ('exportRecovery' in data) {
     try {downloadText('百世问鼎-原始恢复备份.json',JSON.stringify({format:'wending-recovery-backups',entries:offlineJourneys.listUnreadable()},null,2));}
     catch(error){notify(saveProblem(error),true);}return;
@@ -833,7 +857,7 @@ $('#import-file').addEventListener('change', async event => {
       if(uiBusy||liveSnapshot?.busy)return notify('故事正在保存，请稍后导入。',true);
       if(!retainUnsavedOfflineLife())return;
       uiBusy=true;
-      try { await ensureLive(); const imported=await importLiveArchive(file.stream(),liveArchive); setActiveMode('live'); view='adventure'; liveSnapshot={...imported,status:imported.pending?'paused':'ready',errorCode:imported.pause,busy:false}; render(); await liveSession.resume(); notify('完整存档已校验并恢复。'); } catch(error) { notify('实时存档未能恢复，原进度保留。',true); }
+      try { await ensureLive(); await importLiveArchive(file.stream(),liveArchive); setActiveMode('live'); view='adventure'; await liveSession.load(); render(); await liveSession.resume(); notify('完整存档已校验并恢复。'); } catch(error) { notify('实时存档未能恢复，原进度保留。',true); }
       finally {uiBusy=false;render();}
     },'确认导入并续写');
     return;

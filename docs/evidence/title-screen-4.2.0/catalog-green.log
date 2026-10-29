@@ -1,0 +1,41 @@
+✔ explicit catalog recovery retains exact corrupt bytes, every valid journey and the active life (75.956922ms)
+✔ catalog recovery refuses stale input and never resets before a verified durable backup (3.811106ms)
+✔ settings exports and explicitly recovers a broken catalog so a new life can preserve and restore its predecessor (1468.350002ms)
+✔ title bootstrap with no save neither creates a life nor writes storage (0.388329ms)
+✔ offline library preserves exact source bytes, deduplicates, and restores both alive journeys (10.042831ms)
+✔ legacy handoff bytes travel with their original life and disappear when switching to a life without them (131.836937ms)
+✔ failed reads, preservation writes and active replacement retain original active bytes (48.354103ms)
+✔ unknown destination, corrupt active life and stale session cannot replace the active life (1.679721ms)
+✔ unsaved playable state and its previous exact storage bytes are both retained (1.533346ms)
+✔ prepared legacy migration survives switching without redrawing its handoff (109.580557ms)
+✔ failed active write rolls back exact legacy handoff; unverified preservation cannot replace current (48.461533ms)
+✔ an in-memory handoff whose backup write failed is preserved before leaving that life (62.726956ms)
+✔ unreadable primary saves retain exact raw strings independently from playable journeys (3.260619ms)
+✔ a corrupt legacy backup can be preserved exactly without admitting it to the playable library (0.727251ms)
+✔ raw recovery refuses read failures, quota failures, verification failures and stale sessions before replacement (1.815287ms)
+✔ raw recovery is independent of corrupt playable metadata and verifies bytes rather than a successful write return (0.842536ms)
+✔ a stale tab cannot supersede another tab's durable prepared migration when primary bytes did not change (40.955573ms)
+✔ an orphan legacy handoff refuses restore while keeping its sole exact copy (3.177031ms)
+✔ a modern primary with an unreadable retained handoff has an exact raw-only recovery path (0.874402ms)
+✔ a failed own handoff write from an existing backup retains the prepared target and exact source identity (21.6418ms)
+✔ an ordinary choice from stale offline A cannot overwrite newly committed B shared by two sessions (3.313071ms)
+✔ ordinary legacy saves and migration retries cannot overwrite a handoff prepared by another session (3.322573ms)
+✔ legacy recovery and prepared migration never replace a primary switched by another session (7.015399ms)
+✔ intentional legacy import uses current primary for stale checks and imported bytes for its handoff lineage across retry (3.013342ms)
+✔ entering a new offline life leaves the active save empty until birth is confirmed (362.79325ms)
+✔ name and dice drafts leave the old life and handoff untouched while settings export the active life (594.611481ms)
+✔ reload restores the exact edited offline draft and RNG even when settings was the current page (609.15645ms)
+✔ a normal visit with a prior tab draft opens home and continues the old active journey (286.32973ms)
+✔ returning from a new draft to an existing saved creation restores its own name and autosaves (244.361924ms)
+✔ a failed birth while preserving the original retains the exact draft and active save for retry (297.41435ms)
+✔ a failed birth while writing the new primary retains the exact draft and active save for retry (295.205849ms)
+✔ birth refuses to replace an externally changed primary save and keeps its draft (149.467561ms)
+✔ birth refuses to replace an externally changed legacy handoff and keeps its draft (133.604191ms)
+ℹ tests 33
+ℹ suites 0
+ℹ pass 33
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 5760.575161

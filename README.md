@@ -1,8 +1,8 @@
 # 百世问鼎 · 三界求仙篇
 
-**4.2.0：水墨开始画面、独立旅程续玩与阅读设置。** 新玩家从实时剧情启程，已有离线人生仍沿原规则继续。本分支正在完成最终复核与发布验证；下述 4.2 行为是当前实现，尚不代表公开入口已更新。
+**4.2.0：水墨开始画面、独立旅程续玩与阅读设置。** 新玩家从实时剧情启程，已有离线人生仍沿原规则继续。本次正式发布、精确源码和线上验收结果见 [4.2.0 发布记录](https://github.com/ct1150/wending/pull/15)。
 
-[线上游戏](https://baishi-wending.ct1150.workers.dev/) · [交付账本](docs/ROADMAP.md) · [验收证据](docs/QA_REPORT.md) · [部署说明](docs/DEPLOYMENT.md) · [4.1.0 发布执行记录](https://github.com/ct1150/wending/pull/14)
+[线上游戏](https://baishi-wending.ct1150.workers.dev/) · [交付账本](docs/ROADMAP.md) · [验收证据](docs/QA_REPORT.md) · [部署说明](docs/DEPLOYMENT.md) · [4.2.0 发布执行记录](https://github.com/ct1150/wending/pull/15)
 
 ## 开始游玩
 
@@ -14,13 +14,13 @@
 
 剧情下方直接显示 **「历史对话 · 游戏设置 · 返回首页」**；顶部保留人物概况与详情入口。重新打开页面先到首页，同一标签页内刷新则恢复所在页面、创建草稿或当前剧情。自然死亡后的「再入轮回」沿用真实结算，再回到人物创建。
 
-实时剧情继续由 Cloudflare Workers AI 的 `@cf/qwen/qwen3.8-27b` 生成，新剧情需要联网，玩家无需提供 API 密钥；模型与后端延续 4.1 的运行合同。本次界面更新不改变模型、协议、套餐、额度或计费策略。4.1 的真实生产与公开复验记录见[发布执行记录](https://github.com/ct1150/wending/pull/14)；4.2 的当前本地检查及待完成门禁见[验收记录](docs/QA_REPORT.md)。
+实时剧情继续由 Cloudflare Workers AI 的 `@cf/qwen/qwen3.8-27b` 生成，新剧情需要联网，玩家无需提供 API 密钥；模型与后端延续 4.1 的运行合同。本次界面更新不改变模型、协议、套餐、额度或计费策略。4.1 的真实生产与公开复验记录见[发布执行记录](https://github.com/ct1150/wending/pull/14)；4.2 的回归与发布证据见[验收记录](docs/QA_REPORT.md)和 [PR #15](https://github.com/ct1150/wending/pull/15)。
 
-## 4.2.0 实现与本地验证 — 2026-10-29（上海）
+## 4.2.0 验证记录 — 2026-10-29（上海）
 
 本轮已实现水墨标题页、显式创建与继续、独立旅程目录、可见剧情导航、阅读设置和存档恢复入口。[确认设计](docs/superpowers/specs/2026-10-29-title-screen-design.md)记录了入口与旧档保护要求。
 
-已记录的一轮本地 `npm run release` 为 **825/825 测试通过、158 个 JavaScript 文件语法检查通过，单文件离线版构建为 1,011,591 字节**。干净基线 `458816d` 为 805/805。桌面、移动与暗色截图已检查；这些是当前实现的阶段证据。存储复核修复和离线创建草稿隔离仍在收尾，最终完整复跑、精确提交 CI、合并、静态发行与生产复验均待完成，最终产物身份以完成后的记录为准。
+最终发布候选的 `npm run release` 为 **859/859 测试通过、162 个 JavaScript 文件语法检查通过，单文件离线版构建为 1,025,064 字节**，失败、取消和跳过均为 0。独立审查发现的旧标签续接对象错误、损坏离线目录缺少恢复入口均已通过失败→修复→通过的回归验证；离线双标签测试改为等待真实存储同步，并保留防覆盖断言。详细[候选报告](docs/evidence/title-screen-4.2.0/release-candidate.json)与[完整日志](docs/evidence/title-screen-4.2.0/final-release.log)已归档；精确提交 CI、合并、静态清单与生产现场结果统一记录在 [PR #15](https://github.com/ct1150/wending/pull/15)。
 
 ## 选择如何改变人生
 

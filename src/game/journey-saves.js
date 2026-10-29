@@ -4,6 +4,7 @@ import { bootstrapSession } from '../ui/session.js';
 
 export const JOURNEY_SAVES_KEY = `${SAVE_KEY}-journeys`;
 export const UNREADABLE_SAVES_KEY = `${SAVE_KEY}-unreadable`;
+const LIBRARY_RECOVERY_KEY = `${JOURNEY_SAVES_KEY}-recovery`;
 const fail=code=>{throw Object.assign(new Error(code),{code});};
 const sameState=(a,b)=>serializeGame(a)===serializeGame(b);
 
@@ -20,14 +21,58 @@ export function createJourneySaves(storage=globalThis.localStorage) {
   if(candidate.status==='blocked'||candidate.backupError)fail('JOURNEY_INVALID_SAVE');
   return {id:entry.id,state:candidate.state??state};
  }
- function read() {
-  const raw=storage.getItem(JOURNEY_SAVES_KEY);
+ function parseLibrary(raw) {
   if(raw===null)return [];
-  const data=JSON.parse(raw);
-  if(data?.version!==1||!Array.isArray(data.entries))fail('JOURNEY_INVALID_LIBRARY');
-  const ids=new Set();
-  for(const entry of data.entries){validate(entry);if(ids.has(entry.id))fail('JOURNEY_INVALID_LIBRARY');ids.add(entry.id);}
-  return data.entries;
+  try {
+   const data=JSON.parse(raw);
+   if(data?.version!==1||!Array.isArray(data.entries))throw Error();
+   const ids=new Set();
+   for(const entry of data.entries){validate(entry);if(ids.has(entry.id))throw Error();ids.add(entry.id);}
+   return data.entries;
+  } catch {fail('JOURNEY_INVALID_LIBRARY');}
+ }
+ function read() {return parseLibrary(storage.getItem(JOURNEY_SAVES_KEY));}
+ function corruptLibrary() {
+  const raw=storage.getItem(JOURNEY_SAVES_KEY);
+  try {parseLibrary(raw);return null;}
+  catch {return raw;}
+ }
+ function libraryRecoveryRaw() {return storage.getItem(LIBRARY_RECOVERY_KEY);}
+ function recoverLibrary(expectedRaw) {
+  // A recovery is explicit and tied to the bytes shown before confirmation.
+  // Preserve the entire damaged directory independently of its playable rows.
+  if(typeof expectedRaw!=='string'||storage.getItem(JOURNEY_SAVES_KEY)!==expectedRaw)fail('JOURNEY_STORAGE_CONFLICT');
+  if(corruptLibrary()===null)fail('JOURNEY_RECOVERY_NOT_REQUIRED');
+  const backupRaw=libraryRecoveryRaw();
+  let backups=[];
+  if(backupRaw!==null) {
+   try {
+    const data=JSON.parse(backupRaw),ids=new Set();
+    if(data?.version!==1||!Array.isArray(data.entries))throw Error();
+    for(const entry of data.entries) {
+     if(!entry||typeof entry.id!=='string'||!entry.id||typeof entry.raw!=='string'||ids.has(entry.id))throw Error();
+     ids.add(entry.id);
+    }
+    backups=data.entries;
+   } catch {fail('JOURNEY_INVALID_RECOVERY_LIBRARY');}
+  }
+  if(!backups.some(entry=>entry.raw===expectedRaw)) {
+   const saved=JSON.stringify({version:1,entries:[...backups,{id:globalThis.crypto.randomUUID(),raw:expectedRaw}]});
+   storage.setItem(LIBRARY_RECOVERY_KEY,saved);
+   if(libraryRecoveryRaw()!==saved)fail('JOURNEY_PRESERVE_FAILED');
+  }
+  const retained=[],ids=new Set();
+  try {
+   const data=JSON.parse(expectedRaw);
+   if(data?.version===1&&Array.isArray(data.entries))for(const entry of data.entries) {
+    try {validate(entry);if(!ids.has(entry.id)){retained.push(entry);ids.add(entry.id);}}catch{}
+   }
+  } catch { /* The exact unparseable source remains in the verified backup. */ }
+  if(storage.getItem(JOURNEY_SAVES_KEY)!==expectedRaw)fail('JOURNEY_STORAGE_CONFLICT');
+  const repaired=JSON.stringify({version:1,entries:retained});
+  storage.setItem(JOURNEY_SAVES_KEY,repaired);
+  if(storage.getItem(JOURNEY_SAVES_KEY)!==repaired)fail('JOURNEY_PRESERVE_FAILED');
+  return {retained:retained.length};
  }
  function capture(session) {
   if(session?.status==='blocked'||session?.backupError)fail('JOURNEY_BLOCKED_SAVE');
@@ -125,5 +170,5 @@ export function createJourneySaves(storage=globalThis.localStorage) {
   }
   return next;
  }
- return {list:()=>read().map(validate),preserve,restore,preserveUnreadable,listUnreadable};
+ return {list:()=>read().map(validate),preserve,restore,preserveUnreadable,listUnreadable,corruptLibrary,recoverLibrary,libraryRecoveryRaw};
 }

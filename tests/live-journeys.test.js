@@ -48,3 +48,99 @@ test('selecting a retained copy of an imported logical run restores its write bi
  });
  assert.notEqual(r.imported.archiveId,r.original.archiveId);assert.deepEqual(r.selected,r.original);assert.equal(r.committed.archiveId,r.original.archiveId);assert.equal(r.committed.state.revision,2);assert.equal(r.entries.length,2);
 });
+
+for(const method of ['retry','resume'])for(const replacement of ['new journey','imported copy']) {
+ test(`stale ${method} refuses another active archive (${replacement}) and the displayed journey can be selected again`,async t=>{
+  const {page}=await liveBrowser(t);
+  const result=await page.evaluate(async({method,replacement})=>{
+   const {createLiveSession}=await import('/src/ui/live-session.js');
+   const originalArchive=await open('stale-continuation'),otherArchive=await open('stale-continuation');
+   const posts=[],gets=[];
+   let cached=method==='resume';
+   const client={
+    async capabilities(){return {available:true};},
+    async createSession(){return {sessionRef:'continuation-session'};},
+    async requestTurn(pending){posts.push(pending.identity.runId);return {status:'paused',errorCode:'PROVIDER_TIMEOUT'};},
+    async getTurn(pending,attempt){
+     gets.push(pending.identity.runId);
+     return cached?{
+      status:'ready',requestId:pending.identity.requestId,attemptId:attempt.id,sessionRef:attempt.sessionRef,
+      scene:fixture({runId:pending.identity.runId,turnId:pending.identity.turnId-1}),
+     }:{status:'paused',errorCode:'PROVIDER_TIMEOUT'};
+    },
+   };
+   const original=createLiveSession({archive:originalArchive,client});
+   await original.startNew({runId:'displayed-life',seed:42},null);
+   const displayed=await originalArchive.load();
+   if(replacement==='new journey') {
+    const other=createLiveSession({archive:otherArchive,client});
+    await other.load();
+    await other.startNew({runId:'other-life',seed:7},displayed.archiveId);
+   } else {
+    const {exportLiveArchive,importLiveArchive}=await import('/src/game/live-save-format.js');
+    await importLiveArchive(exportLiveArchive(otherArchive),otherArchive);
+   }
+   const before=await otherArchive.load(),beforeCalls={posts:[...posts],gets:[...gets]};
+   const stale=await original[method]();
+   const after=await otherArchive.load(),afterCalls={posts:[...posts],gets:[...gets]};
+   // Select by physical archive ID: imported copies can share a logical run ID.
+   const selected=await original.selectJourney(displayed.archiveId,before.archiveId);
+   cached=true;
+   const recovered=await original.resume();
+   return {displayed,before,beforeCalls,stale,after,afterCalls,selected,recovered,posts,gets};
+  },{method,replacement});
+  assert.notEqual(result.before.archiveId,result.displayed.archiveId);
+  assert.equal(result.stale.errorCode,'ARCHIVE_CONFLICT');
+  assert.deepEqual(result.afterCalls,result.beforeCalls,'a stale continuation must not query or generate for the replacement');
+  assert.deepEqual(result.after,result.before,'the replacement pending, attempt and committed state must remain unchanged');
+  assert.equal(result.selected.archiveId,result.displayed.archiveId);
+  assert.deepEqual(result.selected.state,result.displayed.state);
+  assert.deepEqual(result.selected.pending,result.displayed.pending);
+  assert.deepEqual(result.selected.attempt,result.displayed.attempt);
+  assert.equal(result.recovered.state.runId,'displayed-life');
+  assert.equal(result.recovered.state.revision,1);
+  assert.equal(result.recovered.pending,null);
+  assert.deepEqual(result.posts,result.beforeCalls.posts);
+  assert.deepEqual(result.gets,['displayed-life']);
+ });
+}
+
+test('explicit reload after import binds the imported journey before cached resume',async t=>{
+ const {page}=await liveBrowser(t);
+ const result=await page.evaluate(async()=>{
+  const {createLiveSession}=await import('/src/ui/live-session.js');
+  const {exportLiveArchive,importLiveArchive}=await import('/src/game/live-save-format.js');
+  const archive=await open('import-continuation');let posts=0,gets=0,cached;
+  const client={
+   async capabilities(){return {available:true};},
+   async createSession(){return {sessionRef:'import-session'};},
+   async requestTurn(pending,context,attempt){
+    posts++;
+    cached={status:'ready',requestId:pending.identity.requestId,attemptId:attempt.id,sessionRef:attempt.sessionRef,scene:fixture({runId:pending.identity.runId,turnId:pending.identity.turnId-1})};
+    return {status:'paused',errorCode:'PROVIDER_TIMEOUT'};
+   },
+   async getTurn(){gets++;return cached;},
+  };
+  const session=createLiveSession({archive,client});
+  await session.startNew({runId:'import-life',seed:42},null);
+  const original=await archive.load();
+  const imported=await importLiveArchive(exportLiveArchive(archive),archive);
+  const displayed=session.view(),loaded=await session.load(),loadCalls={posts,gets};
+  const resumed=await session.resume();
+  const retained=await session.selectJourney(original.archiveId,imported.archiveId);
+  return {original,imported,displayed,loaded,loadCalls,resumed,retained,posts,gets};
+ });
+ assert.equal(result.displayed.archiveId,result.original.archiveId);
+ assert.notEqual(result.imported.archiveId,result.original.archiveId);
+ assert.equal(result.loaded.archiveId,result.imported.archiveId);
+ assert.deepEqual(result.loadCalls,{posts:1,gets:0});
+ assert.equal(result.resumed.archiveId,result.imported.archiveId);
+ assert.equal(result.resumed.state.revision,1);
+ assert.equal(result.resumed.pending,null);
+ assert.equal(result.resumed.errorCode,null);
+ assert.deepEqual(result.retained.state,result.original.state);
+ assert.deepEqual(result.retained.pending,result.original.pending);
+ assert.deepEqual(result.retained.attempt,result.original.attempt);
+ assert.equal(result.posts,1);
+ assert.equal(result.gets,1);
+});

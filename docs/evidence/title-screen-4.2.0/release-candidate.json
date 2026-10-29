@@ -1,0 +1,66 @@
+{
+  "checkedAt": "2026-10-29T00:03:16.002207+00:00",
+  "parentCommit": "56f297e9e9cb19a31668a43b013890b418533c1f",
+  "command": "WENDING_BROWSER_EXECUTABLE=<installed official Chrome> npm run release",
+  "result": {
+    "exitCode": 0,
+    "tests": 859,
+    "pass": 859,
+    "fail": 0,
+    "cancelled": 0,
+    "skipped": 0,
+    "syntaxChecked": 162
+  },
+  "frontend": {
+    "version": "4.2.0",
+    "htmlBytes": 1025064,
+    "htmlSha256": "c77371e921886d3d2749af475388dc9108ac59eaf13e6b7d85f08a53bafe1856"
+  },
+  "verifiedFiles": {
+    "src/app.js": "76bc44b372d58c262537346168db85aff6ed96ac0dbfbb6ccd949e25d97f7903",
+    "src/game/journey-saves.js": "3be85d47ccc2a976e04a89b0cc12231e71c8fef3a1a6c8b5223cec08601376bf",
+    "src/ui/live-session.js": "5f7eb0d7dbc14ce7540a919b132f613a2c35fe63cad6661da9105434deb479a5",
+    "tests/live-journeys.test.js": "806f2a620b1dfbec48778e94b33ba73bbc3a40364b35bc5a1d934d8e7a771cc0",
+    "tests/offline-browser.test.js": "1e0c5d659feed6f2e8828e019ba39583d6e7cafeea04272190bc15010ad025f2",
+    "tests/journey-catalog-recovery.test.js": "c14ce3a3e67a7e28fcb9abdfb712c0f6806c1d0ce70f6e4f9886b3a47e03ddc1"
+  },
+  "review": {
+    "critical": 0,
+    "important": 2,
+    "minor": 0,
+    "fixed": [
+      "Bind stale retry/resume to the displayed physical archive before network, attempt writes or death settlement; synchronize the imported session before resume.",
+      "Offer explicit damaged offline catalog export and verified raw backup before repair; retain valid entries and the active life."
+    ],
+    "targetedResults": {
+      "staleRetryResumeRed": {
+        "tests": 4,
+        "fail": 4
+      },
+      "liveJourneysGreen": {
+        "tests": 8,
+        "pass": 8
+      },
+      "liveAppCompatibility": {
+        "tests": 9,
+        "pass": 9
+      },
+      "catalogRed": {
+        "tests": 3,
+        "fail": 3
+      },
+      "catalogRelatedGreen": {
+        "tests": 33,
+        "pass": 33
+      }
+    }
+  },
+  "priorCiFailure": "https://github.com/ct1150/wending/actions/runs/40789905615",
+  "publicationRecord": "https://github.com/ct1150/wending/pull/15",
+  "scope": "Frontend-only release through existing GitHub release-channel and production gateway. Do not deploy the CI disabled backend artifact. No model, protocol or usage-limit changes.",
+  "limits": [
+    "This local candidate report does not establish production publication; exact-head CI and production observations are recorded in PR #15.",
+    "Native Chromium and viewport tests are not physical-device or screen-reader testing.",
+    "Long-run fixtures do not represent 1000 real model calls."
+  ]
+}

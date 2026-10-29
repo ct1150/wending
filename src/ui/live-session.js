@@ -9,8 +9,12 @@ export function createLiveSession({archive,client,engine=defaultEngine,onChange=
   let loaded=null,busy=false,status='idle',errorCode=null;
   function view(){return copy({...loaded,state:loaded?.state??null,pending:loaded?.pending??null,attempt:loaded?.attempt??null,status,errorCode,busy});}
   function emit(){onChange(view());}
-  async function reload() {
-    loaded=await archive.load();
+  async function reload(expectedArchiveId) {
+    const next=await archive.load();
+    // A continuation belongs to the displayed physical archive, including
+    // when another tab activates an imported copy of the same logical run.
+    if(expectedArchiveId!==undefined&&(next?.archiveId??null)!==expectedArchiveId)throw fault('ARCHIVE_CONFLICT');
+    loaded=next;
     status=loaded?.pending?'paused':loaded?.state.phase==='dead'?'dead':loaded?'ready':'idle';
     errorCode=loaded?.pause??null;
     emit();
@@ -175,8 +179,9 @@ export function createLiveSession({archive,client,engine=defaultEngine,onChange=
     });
   }
   function resume() {
+    const expectedArchiveId=loaded?.archiveId;
     return run(async()=>{
-      await reload();
+      await reload(expectedArchiveId);
       if(!loaded?.pending||await death(loaded))return;
       if(!loaded.attempt) {
         status='paused';
@@ -187,8 +192,9 @@ export function createLiveSession({archive,client,engine=defaultEngine,onChange=
     });
   }
   function retry() {
+    const expectedArchiveId=loaded?.archiveId;
     return run(async()=>{
-      await reload();
+      await reload(expectedArchiveId);
       if(!loaded?.pending||await death(loaded))return;
       const row=loaded;
       if(row.attempt) {

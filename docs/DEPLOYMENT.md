@@ -4,6 +4,10 @@
 
 生产模型为经过[实际样本和浏览器验收](evidence/realtime-release-2026-10-28.json)晋升的 `@cf/qwen/qwen3.8-27b`。保持 Workers Free、原存储和公开实时入口；不使用历史人为调用次数、Neuron 累计上限或首错停止规则。实际平台额度耗尽仍保留进度并暂停，不升级套餐或改走付费服务。
 
+## 4.2.0 标题页发布
+
+本次只通过 GitHub → release-channel → 现有 Cloudflare 网关更新前端 HTML。原 4.1.0 的正式实时 AI 后端继续提供相同协议，**不要部署 CI 默认关闭推理的 backend 产物**。最终源码、PR/main 检查、频道清单、生产 health/HTML 与实际浏览器结果统一记录于 [PR #15](https://github.com/ct1150/wending/pull/15)。本地最终候选报告为 [release-candidate.json](evidence/title-screen-4.2.0/release-candidate.json)。
+
 ## 构建与启用合同
 
 先构建浏览器，再打包后端；`npm run release` 或 `npm run build` 会重建 `release/`。
