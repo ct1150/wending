@@ -23,31 +23,41 @@ test('the new fate card offers origin choice, two independently lockable fates a
   assert.deepEqual(creation, before);
 });
 
-test('new application chooses and persists a different origin, locks one fate through reroll and restores it', async () => {
+test('new application retains its draft origin and locked fate across reroll and reload until birth', async () => {
   const app = await startApp();
-  const initial = deserializeGame(app.storage.raw);
+  const initial = deserializeGame(app.navigation.offlineDraft.raw);
   assert.equal(initial.contentVersion, 3);
   const other = initial.life.birth.originId === 'ferry' ? 'artisan' : 'ferry';
   app.input('birth-name', '沈照');
   app.clickRendered(`[data-birth-origin="${other}"]`);
-  const chosen = deserializeGame(app.storage.raw);
+  const chosen = deserializeGame(app.navigation.offlineDraft.raw);
   assert.equal(chosen.life.name, '沈照');
   assert.equal(chosen.life.birth.originId, other);
+  assert.equal(chosen.rng, initial.rng);
   const lock = chosen.life.birth.talentIds[1];
   app.input('birth-name', '沈照山');
   app.clickRendered(`[data-birth-lock="${lock}"]`);
-  assert.equal(deserializeGame(app.storage.raw).life.birth.lockedTalentId, lock);
+  assert.equal(deserializeGame(app.navigation.offlineDraft.raw).life.birth.lockedTalentId, lock);
   app.clickRendered('[data-birth-reroll]');
-  const rerolled = deserializeGame(app.storage.raw);
+  const rerolled = deserializeGame(app.navigation.offlineDraft.raw);
   assert.ok(rerolled.life.birth.talentIds.includes(lock));
+  assert.equal(rerolled.life.birth.lockedTalentId, lock);
   assert.equal(rerolled.life.birth.originId, other);
+  assert.notEqual(rerolled.rng, chosen.rng);
+  assert.equal(rerolled.life.birth.rollCount, 2);
   assert.equal(Object.values(rerolled.life.birth.attributes).reduce((a,b)=>a+b,0), 12);
-  const reload = await startApp({raw:app.storage.raw});
-  assert.deepEqual(deserializeGame(reload.storage.raw), rerolled);
+  assert.equal(app.storage.raw, null);
+  assert.equal(app.storage.writes, 0);
+  const reload = await startApp({ navigation: app.navigation, navigationType: 'reload' });
+  assert.deepEqual(deserializeGame(reload.navigation.offlineDraft.raw), rerolled);
+  assert.equal(reload.storage.raw, null);
+  assert.equal(reload.storage.writes, 0);
   reload.clickRendered('[data-birth-start]');
   const started = deserializeGame(reload.storage.raw);
   assert.equal(started.phase, 'playing');
   assert.equal(started.life.birth.originId, other);
+  assert.equal(started.rng, rerolled.rng);
+  assert.equal(reload.storage.writes, 1);
   assert.match(reload.html, /沈照山/);
   reload.click({ help: '' });
   assert.doesNotMatch(reload.dialog.innerHTML, /药谷/);

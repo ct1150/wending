@@ -100,8 +100,8 @@ test('the actual app bridge enters the dialogue without setup or a second autosa
  assert.match(app.html,/此生沿旧规继续/);assert.match(app.html,/data-legacy-bridge="new-life"/);
  app.click({legacyBridge:'new-life'});
  const next=deserializeGame(app.storage.raw);assert.equal(next.version,3);assert.equal(app.focus.at(-1),'#journey-current-title');
- assert.equal(app.storage.writes,2);assert.doesNotMatch(app.html,/dao-name|data-start/);
- app.click({view:'settings'});app.click({exportLegacy:''});
+ assert.equal(app.storage.writes,1);assert.equal(app.storage.writeCounts.get(LEGACY_BACKUP_KEY),1);assert.doesNotMatch(app.html,/dao-name|data-start/);
+ app.clickRendered('[data-view="settings"]');app.clickRendered('[data-export-legacy]');
  const blobs=app.downloads.filter(x=>x instanceof Blob);assert.equal(await blobs[0].text(),raw);assert.equal(blobs.length,3);
 });
 
@@ -194,7 +194,7 @@ test('actual app exposes pending old checkpoint for export and explicit recovery
  const app=await startApp({raw,legacyBackupRaw:storage.values.get(LEGACY_BACKUP_KEY)});
  assert.match(app.html,/data-recover-legacy/);assert.match(app.html,/较新旧人生/);
  assert.equal(app.storage.writes,0);app.click({storyChoice:'enter_help'});assert.equal(app.storage.writes,0);
- app.click({exportLegacy:''});const blobs=app.downloads.filter(x=>x instanceof Blob);
+ app.clickRendered('[data-export-legacy]');const blobs=app.downloads.filter(x=>x instanceof Blob);
  assert.ok((await Promise.all(blobs.map(b=>b.text()))).includes(serialize(newer)));
  app.click({recoverLegacy:''});assert.deepEqual(deserializeGame(app.storage.raw),newer);assert.equal(app.storage.writes,1);assert.doesNotMatch(app.html,/data-recover-legacy/);
 });

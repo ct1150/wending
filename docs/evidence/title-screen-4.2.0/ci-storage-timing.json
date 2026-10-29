@@ -1,0 +1,129 @@
+{
+  "checkedAt": "2026-10-28T23:57:16.177251+00:00",
+  "sourceCommit": "56f297e9e9cb19a31668a43b013890b418533c1f",
+  "ciFailure": {
+    "run": "https://github.com/ct1150/wending/actions/runs/40789905615",
+    "job": "https://github.com/ct1150/wending/actions/runs/40789905615/job/123172248795",
+    "failure": "tests/offline-browser.test.js:68 immediate cross-tab localStorage equality",
+    "tests": 851,
+    "pass": 850,
+    "fail": 1
+  },
+  "localOriginal": {
+    "checkedAt": "2026-10-28T23:54:48.082818+00:00",
+    "runs": [
+      {
+        "attempt": 1,
+        "exitCode": 0,
+        "failed": false
+      },
+      {
+        "attempt": 2,
+        "exitCode": 0,
+        "failed": false
+      },
+      {
+        "attempt": 3,
+        "exitCode": 0,
+        "failed": false
+      },
+      {
+        "attempt": 4,
+        "exitCode": 0,
+        "failed": false
+      },
+      {
+        "attempt": 5,
+        "exitCode": 0,
+        "failed": false
+      },
+      {
+        "attempt": 6,
+        "exitCode": 0,
+        "failed": false
+      },
+      {
+        "attempt": 7,
+        "exitCode": 0,
+        "failed": false
+      },
+      {
+        "attempt": 8,
+        "exitCode": 0,
+        "failed": false
+      },
+      {
+        "attempt": 9,
+        "exitCode": 0,
+        "failed": false
+      },
+      {
+        "attempt": 10,
+        "exitCode": 0,
+        "failed": false
+      },
+      {
+        "attempt": 11,
+        "exitCode": 0,
+        "failed": false
+      },
+      {
+        "attempt": 12,
+        "exitCode": 0,
+        "failed": false
+      }
+    ]
+  },
+  "nativeStorageObservation": {
+    "browser": "156.0.8078.73",
+    "staleReads": [
+      {
+        "target": "137",
+        "written": {
+          "at": 1793231766637,
+          "value": "137"
+        },
+        "read": {
+          "at": 1793231766639,
+          "value": "136",
+          "lastEvent": {
+            "value": "136",
+            "at": 1793231766634
+          }
+        },
+        "after": {
+          "at": 1793231766683,
+          "value": "137",
+          "lastEvent": {
+            "value": "137",
+            "at": 1793231766640
+          }
+        }
+      }
+    ],
+    "samples": 138
+  },
+  "fix": {
+    "file": "tests/offline-browser.test.js",
+    "changes": [
+      "wait for first tab exact active save bytes with bounded polling before stale in-memory action",
+      "assert writing tab active bytes are unchanged immediately after attempted stale autosave",
+      "retain all original cross-tab, preserved journey, warning, export and reload assertions"
+    ],
+    "sha256": "1e0c5d659feed6f2e8828e019ba39583d6e7cafeea04272190bc15010ad025f2"
+  },
+  "verification": {
+    "fixedExitCode": 0,
+    "fixedPass": 1,
+    "mutationExitCode": 1,
+    "mutationReason": "the conflicting tab must leave the active save untouched",
+    "mutationScope": "Only a temporary generated app bundle bypasses assertCurrentSource; repository production files unchanged",
+    "diffCheck": "passed"
+  },
+  "limits": [
+    "CI failure was observed in captured GitHub logs; local original full-game scenario passed twelve isolated runs",
+    "A separate real Chromium file-storage characterization reproduced stale read after completed other-tab write and its later storage event",
+    "The change addresses test precondition synchronization; no atomic multi-renderer storage-lock guarantee is claimed",
+    "Full candidate release passed 859/859; see release-candidate.json and final-release.log."
+  ]
+}

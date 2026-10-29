@@ -2,7 +2,19 @@
 
 Plans: [first release](superpowers/plans/2026-10-24-first-release.md) · [1.1.0 narrative upgrade](superpowers/plans/2026-10-25-narrative-adventure.md)
 
-Current documentation date: 2026-10-27 (Shanghai). The new [roadmap](ROADMAP.md) plans choice-driven, real-time Workers AI stories until actual character death. 4.0.0 remains the delivered runtime; historical publication claims below remain tied to their original versions.
+## 4.2.0 开始画面与独立旅程 — 2026-10-29（上海）
+
+- 已确认并实现水墨首页三个入口「踏入仙途 / 续写此生 / 游戏设置」。首页只读取存档，不创建人物、掷骰或生成剧情；新玩家默认实时人生，继续入口恢复上次选择的旅程，旧离线人生继续遵循原规则。
+- 活着的角色可另开独立旅程，原角色、历史和待续事务保留，可在「切换存档」中恢复；新开不伪造死亡结算或轮回奖励。剧情下方直接显示「历史对话 · 游戏设置 · 返回首页」，人物概况和详情仍在顶部。
+- 阅读设置提供跟随系统／纸白／夜读与标准／较大字号。存档导入需要明确确认，原旅程或损坏原始字节先持久保留；切换旅程不隐式生成或重试。重新打开从首页开始，同标签刷新恢复页面、创建草稿或剧情，单文件离线游戏保留。
+- 收尾完整 `npm run release`：859/859、0 失败/取消/跳过，162 个 JS 文件语法检查，1,025,064 字节离线 HTML。原 825 项结果保留为历史阶段证据，最终报告和原始日志见 [QA](QA_REPORT.md)。
+- 独立审查的两项 Important 问题均以回归修复：旧页续接必须绑定显示的物理档案，损坏离线目录必须先可导出并持久备份再明确恢复。离线双标签 CI 时序问题也已复现并修复测试同步，覆盖防护未削弱。
+- [桌面](evidence/title-screen-4.2.0/desktop.png)、[移动](evidence/title-screen-4.2.0/mobile.png)、[移动暗色](evidence/title-screen-4.2.0/mobile-dark.png)与[暗色设置](evidence/title-screen-4.2.0/settings-dark.png)为本地视觉证据。精确提交 CI、PR 合并、静态频道与生产现场记录集中维护于 [4.2.0 发布 PR #15](https://github.com/ct1150/wending/pull/15)。
+- 本次范围不改变模型、后端、协议、套餐、额度或计费。设计见[已确认方案](superpowers/specs/2026-10-29-title-screen-design.md)，当前证据及限制见[验收记录](QA_REPORT.md)。
+
+下列各节保留对应日期、版本和发布观察；其中的“当前”仅指该历史检查点。
+
+Historical documentation checkpoint: 2026-10-27 (Shanghai). The new [roadmap](ROADMAP.md) plans choice-driven, real-time Workers AI stories until actual character death. 4.0.0 remains the delivered runtime; historical publication claims below remain tied to their original versions.
 
 ## 实时剧情新规划 — 2026-10-27（北京时间）
 

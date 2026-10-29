@@ -9,8 +9,12 @@ export function createLiveSession({archive,client,engine=defaultEngine,onChange=
   let loaded=null,busy=false,status='idle',errorCode=null;
   function view(){return copy({...loaded,state:loaded?.state??null,pending:loaded?.pending??null,attempt:loaded?.attempt??null,status,errorCode,busy});}
   function emit(){onChange(view());}
-  async function reload() {
-    loaded=await archive.load();
+  async function reload(expectedArchiveId) {
+    const next=await archive.load();
+    // A continuation belongs to the displayed physical archive, including
+    // when another tab activates an imported copy of the same logical run.
+    if(expectedArchiveId!==undefined&&(next?.archiveId??null)!==expectedArchiveId)throw fault('ARCHIVE_CONFLICT');
+    loaded=next;
     status=loaded?.pending?'paused':loaded?.state.phase==='dead'?'dead':loaded?'ready':'idle';
     errorCode=loaded?.pause??null;
     emit();
@@ -135,6 +139,33 @@ export function createLiveSession({archive,client,engine=defaultEngine,onChange=
       await generate(loaded);
     });
   }
+  function startNew(options={},expectedArchiveId=null) {
+    if(busy)return Promise.resolve({...view(),errorCode:'SESSION_BUSY'});
+    return run(async()=>{
+      await reload();
+      if((loaded?.archiveId??null)!==expectedArchiveId)throw fault('ARCHIVE_CONFLICT');
+      const state=engine.createLiveGame(options);
+      const pending=engine.prepareOpening(state,{requestId:id()});
+      try { buildStoryContext(state,pending,[],{selection:'relevance-v1',openTotal:0}); }
+      catch { throw fault('BIRTH_CONTEXT_INVALID'); }
+      loaded=await archive.create({state,pending,expectedArchiveId});
+      status='pending';
+      errorCode=null;
+      emit();
+      await generate(loaded);
+    });
+  }
+  function load() {
+    if(busy)return Promise.resolve({...view(),errorCode:'SESSION_BUSY'});
+    return run(reload);
+  }
+  function selectJourney(archiveId,expectedArchiveId) {
+    if(busy)return Promise.resolve({...view(),errorCode:'SESSION_BUSY'});
+    return run(async()=>{
+      await archive.selectJourney(archiveId,expectedArchiveId);
+      await reload();
+    });
+  }
   function choose(command) {
     return run(async()=>{
       await reload();
@@ -148,8 +179,9 @@ export function createLiveSession({archive,client,engine=defaultEngine,onChange=
     });
   }
   function resume() {
+    const expectedArchiveId=loaded?.archiveId;
     return run(async()=>{
-      await reload();
+      await reload(expectedArchiveId);
       if(!loaded?.pending||await death(loaded))return;
       if(!loaded.attempt) {
         status='paused';
@@ -160,8 +192,9 @@ export function createLiveSession({archive,client,engine=defaultEngine,onChange=
     });
   }
   function retry() {
+    const expectedArchiveId=loaded?.archiveId;
     return run(async()=>{
-      await reload();
+      await reload(expectedArchiveId);
       if(!loaded?.pending||await death(loaded))return;
       const row=loaded;
       if(row.attempt) {
@@ -176,5 +209,5 @@ export function createLiveSession({archive,client,engine=defaultEngine,onChange=
       await generate(row);
     });
   }
-  return {start,choose,resume,retry,view};
+  return {start,startNew,load,selectJourney,choose,resume,retry,view};
 }
