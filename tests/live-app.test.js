@@ -32,6 +32,29 @@ test('a failed streaming turn keeps clearly incomplete text in memory and never 
   const f=fixture();f.client.requestTurn=async(p,c,a,{onProgress}={})=>{onProgress?.({type:'preview',text:'未写完的故事'});throw Object.assign(Error('offline'),{code:'NETWORK_UNAVAILABLE'});};
   const s=f.make();await s.start({runId:'failed-stream',seed:42});assert.equal(s.view().status,'paused');assert.equal(s.view().preview?.text,'未写完的故事');assert.equal(s.view().state.revision,0);assert.equal((await f.archive.load()).state.currentScene,null);
 });
+
+test('structured dialogue and choice previews update in memory only and remain blocked until commit',async()=>{
+  const f=fixture();let release,progress,save;const generated=new Promise(resolve=>release=resolve),saving=new Promise(resolve=>save=resolve),original=f.client.requestTurn,commit=f.archive.commit;
+  f.client.requestTurn=async(p,c,a,options)=>{progress=options.onProgress;await generated;return original(p,c,a);};
+  f.archive.commit=async args=>{await saving;return commit.call(f.archive,args);};
+  let renders=0,updates=0;const s=sessionModule.createLiveSession({archive:f.archive,client:f.client,onChange(){renders++;},onProgress(){updates++;}});
+  const started=s.start({runId:'structured-stream-run',seed:42});
+  while(!progress&&!s.view().errorCode)await new Promise(resolve=>setImmediate(resolve));
+  const before=renders;
+  try{
+    progress({type:'block',index:0,kind:'dialogue',speaker:'陈叔',text:'山中有',complete:false});
+    progress({type:'choice',index:0,label:'询问陈叔：山中',complete:false});
+    progress({type:'choice',index:0,label:'询问陈叔：山中是谁呼救',complete:true});
+    assert.deepEqual(s.view().preview,{blocks:[{kind:'dialogue',speaker:'陈叔',text:'山中有',complete:false}],choices:[{label:'询问陈叔：山中是谁呼救',complete:true}]});
+    assert.equal(renders,before);assert.equal(updates,3);assert.ok(s.view().pending);assert.equal(s.view().state.currentScene,null);
+    assert.equal((await f.archive.load()).preview,undefined);
+    progress({type:'reset'});assert.equal(s.view().preview,null);
+    progress({type:'block',index:0,kind:'narration',text:'林外传来脚步。',complete:true});
+    release();await new Promise(resolve=>setImmediate(resolve));assert.equal(s.view().state.revision,0);assert.ok(s.view().pending);
+  }finally{release();save();await started;}
+  assert.equal(s.view().preview,null);assert.equal(s.view().state.revision,1);
+  progress({type:'choice',index:0,label:'迟到的选项',complete:true});assert.equal(s.view().preview,null);
+});
 test('birth and pending opening are durable before HTTP; refresh queries and never rerolls',async()=>{const f=fixture();let release;f.setHold(new Promise(r=>release=r));const s=f.make(),starting=s.start({runId:'run',seed:42});while(!f.calls.post)await new Promise(r=>setTimeout(r,0));const before=await f.archive.load();assert.equal(before.state.revision,0);assert.equal(s.view().state.revision,0);const refreshed=f.make();await refreshed.resume();assert.equal(f.calls.post,1);assert.equal(f.calls.get,1);assert.deepEqual(refreshed.view().state.life.birth,before.state.life.birth);release();await starting;assert.equal(s.view().state.revision,1);});
 test('double clicks, old tabs and late ready responses never pay or commit twice',async()=>{const f=fixture(),s=f.make();await s.start({runId:'run',seed:42});const old=f.make();await old.resume();const before=s.view().state;let release;f.setHold(new Promise(r=>release=r));const command={choiceId:before.currentScene.choices[0].id,baseRevision:before.revision,stateHash:stateHash(before)};const choosing=s.choose(command);await s.choose(command);while(f.calls.post<2)await new Promise(r=>setTimeout(r,0));assert.deepEqual(s.view().state.life,before.life);await old.choose(command);assert.equal(f.calls.post,2);release();await choosing;await old.resume();assert.equal(old.view().state.revision,2);await old.choose(command);assert.equal((await f.archive.load()).state.revision,2);assert.equal(f.calls.post,2);});
 test('explicit retry queries old result before replacement; lost session preserves request and receipt',async()=>{const f=fixture(),s=f.make();f.client.requestTurn=async(p,c,a)=>{f.calls.post++;return {status:'paused',errorCode:'PROVIDER_TIMEOUT',requestId:p.identity.requestId,attemptId:a.id,sessionRef:a.sessionRef};};await s.start({runId:'run',seed:42});const before=await f.archive.load();await s.retry();const after=await f.archive.load();assert.equal(f.calls.get,1);assert.equal(f.calls.post,2);assert.deepEqual(after.pending,before.pending);assert.notEqual(after.attempt.id,before.attempt.id);assert.deepEqual(after.attempt.retryOf,{attemptId:before.attempt.id,sessionRef:before.attempt.sessionRef});});

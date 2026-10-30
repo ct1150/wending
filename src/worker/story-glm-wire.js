@@ -2,6 +2,7 @@ import {SCENE_SCHEMA,exactKeys} from '../game/cultivation/live/schema.js';
 import {assertPlainData,canonicalStringify} from '../game/cultivation/live/identity.js';
 import {ITEMS,REALMS,INTENTS,ORIGINS,TALENTS} from '../game/cultivation/live/model.js';
 import {normalizeNamedScene} from './story-named-targets.js';
+import {formatStoryChoiceLabel} from '../game/cultivation/live/story-choice-label.js';
 
 // GLM writes local references. The server owns persistent scene/choice IDs;
 // only declared, typed aliases may become new entity IDs for this exact turn.
@@ -89,7 +90,7 @@ export function buildGlmWire(context,system,{storyActions=false}={}){
 输出顶层只允许blocks、choices、title、location、otherPeople、places、factions、memoryDeltas这8项；不要复制输入资料。
 ${settled}${context.life.birth?'出身：'+ORIGINS[context.life.birth.originId]+'；命格：'+context.life.birth.talentIds.map(id=>TALENTS[id]).join('、')+'。\n':''}life和receipt是唯一机械事实。开局写当前年龄的冒险；后续先回应receipt.action.label的具体目的和收据结果，不能跳过玩家选择。正文用第二人称“你”，对白speaker=self或活人别名；旁白不写speaker。不要编造额外物品、数值奖励、交易、修为、伤势或死亡，不为玩家或选项凭空添加木棍、武器等未持有的装备；NPC物品和眼前环境物件不等于玩家已获得。玩家活着就继续，不设置固定回合终点。
 memory.recent包含已发生的近期场景。承接当前地点、人物和未解决事件，不重复上一场，不把未选旅行、战斗或援助写成已经发生。交谈或援助的对象必须先在本场正文出场。允许结束互动，不强迫玩家返回，不把离开自动当成完成或违背承诺。
-先写blocks，再写choices，最后填写名单。给2-3个围绕眼前事件、目的不同的具体选择，至少两个按当前资源可执行，其中必须有一个可执行的interact:decline拒绝当前请求、interact:leave结束互动、travel离开地点或evade脱险；危险时不能用拒绝或结束交谈代替脱险。每项只写action、targetId、stake、purpose、anchor，不写label。purpose用50字以内写本次具体问题、应对目的或方法，不重复动作名和姓名，不写奖励或固定时长，不保证目的必定达成。服务端按真实动作和目标生成前半句，再拼接purpose，例如“询问陈叔：求救声从哪里来”。anchor是依据段落在本场blocks中的下标（第1段=0），必须指向本场段落，不能引用旧场景。
+先写blocks，再写choices，最后填写名单。给2-3个围绕眼前事件、目的不同的具体选择，至少两个按当前资源可执行，其中必须有一个可执行的interact:decline拒绝当前请求、interact:leave结束互动或evade脱险；travel前往任务地点不等于退出，不能代替拒绝或告辞；危险时必须用evade，不能用拒绝或结束交谈代替脱险。每项只写action、targetId、stake、purpose、anchor，不写label。purpose用50字以内写本次具体问题、应对目的或方法，不重复动作名和姓名，不写奖励或固定时长，不保证目的必定达成。服务端按真实动作和目标生成前半句，再拼接purpose，例如“询问陈叔：求救声从哪里来”。anchor是依据段落在本场blocks中的下标（第1段=0），必须指向本场段落，不能引用旧场景。每个purpose都回应该段已经出现的人物、物件、线索或冲突，点明要问什么、查看哪里、如何回应；只提供适合眼前事件的不同应对，不能填入无关修炼、休息、找资源的日常菜单。拒绝或告辞也写清放下哪件事，不用“暂不介入此事”“留意周围的动静”等通用句凑数。选项全部由你生成，服务端不会补写缺失选项；不能只给拒绝和告辞两个退出选项。下一回合必须回答玩家实际选中的这个具体目的。
 动作和targetId必须对应实际对象：攻击野兽就声明该野兽作为目标，不能指向旁边猎户；fight/evade的purpose必须完整写出实际攻击或躲避对象的name，不能把旁边的人当成危险物件。人物/势力用本场相关角色，同日短时互动可继续与上一幕附近人物交谈，不必每段重写其出场。
 询问、打听、确认用interact:ask，普通问答不能使用negotiate；询问路线不是旅行。调查眼前痕迹、水源、动静用interact:observe，周围用self，人物须在purpose写其全名，地点只能是当前location；远处地点先旅行，不是零日观察或搜寻物资。只有实际动身前往另一地点才用travel:road或travel:wilderness；targetId必须是目的地，label完整包含目的地name，目的地不能等于location。leave只结束当前互动，不是旅行或脱险。
 explore:cautious/bold仅用于实际寻找目标资源，label明确写出该资源名称：${Object.entries(ITEMS).filter(([id])=>id!=='talisman').map(([id,name])=>id+'='+name).join('，')}。不得用explore:relic表示一般调查。negotiate只用于实际资源交涉，不能承诺购买或赠送具体物品；practice修行、craft制作、fight战斗、evade脱险、rest调养均按对应规则，不包装成短时问答。
@@ -166,20 +167,8 @@ export function decodeGlmScene(wire,context,{storyActions=false}={}){
       }
       const targetId=aliases.get(choice.targetId)??(literalTargets.has(choice.targetId)?choice.targetId:null);if(!targetId)throw Error();
       const target=entities.find(entity=>entity.id===targetId)?.name??ITEMS[targetId]??REALMS[targetId]?.name??'';
-      const actionLabel={
-        'practice:steady':'凝神修行','practice:intensive':'闭关苦修','practice:breakthrough':'尝试突破'+target,
-        'rest:recover':'歇息调养','rest:retire':'静心休养',
-        'explore:cautious':'寻找'+target,'explore:bold':'深入探索寻找'+target,
-        'negotiate:cooperate':'与'+target+'商谈','negotiate:bargain':'向'+target+'讨价还价','negotiate:pressure':'向'+target+'施压',
-        'fight:guard':'谨慎迎战'+target,'fight:assault':'向'+target+'发起攻势','fight:desperate':'与'+target+'拼死一搏',
-        'evade:withdraw':'避开'+target,'evade:conceal':'隐匿行踪躲开'+target,
-        'travel:road':'沿路前往'+target,'travel:wilderness':'穿行荒野前往'+target,
-        'craft:study':'研读完整功法','craft:forge':'锻制护符',
-        'interact:ask':'询问'+target,'interact:observe':targetId==='self'?'仔细观察':'观察'+target,
-        'interact:help':'援助'+target,'interact:decline':'婉拒'+target,'interact:leave':targetId==='self'?'结束当前互动':'结束与'+target+'的互动',
-      }[choice.action];
-      const executable=intent==='fight'?'迎战'+target+'，'+({guard:'稳守',assault:'强攻',desperate:'搏命'})[approach]:intent==='evade'?'避开'+target+'，'+(approach==='withdraw'?'后撤':'藏身'):actionLabel;
-      const label=purposeful?executable+'：'+choice.purpose.trim():described&&storyActions?choice.label:actionLabel+(choice.stake==='high'?'（冒险）':choice.stake==='low'?'（谨慎）':'');
+      const label=described&&storyActions&&!purposeful?choice.label:formatStoryChoiceLabel({action:choice.action,targetId,targetName:target,stake:choice.stake,...(purposeful?{purpose:choice.purpose}:{})});
+      if(!label)throw Error();
       return {id:prefix+'c:'+['a','b','c'][index],label,intent,targetId,stake:choice.stake,approach};
     });
     const memoryDeltas=wire.memoryDeltas.map(delta=>{

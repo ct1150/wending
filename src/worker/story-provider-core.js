@@ -178,34 +178,18 @@ export async function generateProviderScene(ai,profile,context,options={},assert
     const selected=context.receipt.action,closed=context.previousScene?.id===context.namespace+':t'+(context.identity.turnId-1)+':s:closed',endedTarget=selected?.intent==='interact'&&selected.approach==='leave'?selected.targetId:closed?(context.memory.recent.find(record=>record.kind==='turn'&&record.turnId===context.identity.turnId-1)?.entityIds[0]??context.memory.facts.find(record=>record.id==='decision:'+(context.identity.turnId-1)&&record.turnId===context.identity.turnId-1&&record.kind==='fact'&&record.source==='rules')?.entityId??'self'):null,ended=endedTarget!==null;
     const endedTargets=endedTarget==='self'&&closed?context.entities.filter(entity=>['person','faction'].includes(entity.kind)).map(entity=>entity.id):endedTarget&&endedTarget!=='self'?[endedTarget]:[];
     if(profile.storyActions===true){
-      scene.choices=scene.choices.filter((proposal,index)=>{
-        if(['fight','evade'].includes(proposal.intent)){const target=scene.entities.find(entity=>entity.id===proposal.targetId);return target&&purposes[index].includes(target.name);}
-        if(proposal.intent==='interact'&&proposal.approach==='help')return /行粮|干粮|口粮|食物|吃的|充饥|饱腹/u.test(purposes[index])&&!/包扎|止血|处理伤口|治疗|治愈|医治|急救|疗伤|复活/u.test(purposes[index]);
+      // The draft and accepted menu describe the same model proposals. A bad
+      // action rejects this generation; never replace it with a canned option.
+      for(const [index,proposal]of scene.choices.entries()){
+        if(['fight','evade'].includes(proposal.intent)){const target=scene.entities.find(entity=>entity.id===proposal.targetId);if(!target||!purposes[index].includes(target.name))fail('CHOICE_NOT_COMPILABLE');}
+        if(proposal.intent==='interact'&&proposal.approach==='help'&&(!/行粮|干粮|口粮|食物|吃的|充饥|饱腹/u.test(purposes[index])||/包扎|止血|处理伤口|治疗|治愈|医治|急救|疗伤|复活/u.test(purposes[index])))fail('CHOICE_NOT_COMPILABLE');
         if(proposal.intent==='interact'&&proposal.approach==='observe'&&proposal.targetId!=='self'){
           const target=scene.entities.find(entity=>entity.id===proposal.targetId);
-          return target&&(target.kind==='place'?target.name===scene.location:target.name.length>50||purposes[index].includes(target.name));
+          if(!target||!(target.kind==='place'?target.name===scene.location:target.name.length>50||purposes[index].includes(target.name)))fail('CHOICE_NOT_COMPILABLE');
         }
-        return true;
-      });
-      if(ended){
-        scene.choices=scene.choices.filter(proposal=>proposal.intent!=='interact'||!endedTargets.includes(proposal.targetId));
-        const observation=scene.choices.find(proposal=>proposal.intent==='interact'&&proposal.approach==='observe'&&proposal.targetId==='self')??{id:context.namespace+':t'+context.identity.turnId+':c:observe',label:'仔细观察：留意周围的动静',intent:'interact',targetId:'self',approach:'observe',stake:'low'};
-        const escape=scene.choices.find(proposal=>proposal.intent==='evade'),fight=escape&&scene.choices.find(proposal=>proposal.intent==='fight'&&proposal.targetId===escape.targetId);
-        scene.choices=escape?[observation,...(fight?[fight]:[]),escape]:[observation,...scene.choices.filter(proposal=>proposal.id!==observation.id).slice(0,1)];
-      }else if(scene.choices.length<2)fail('CHOICE_NOT_COMPILABLE');
-      if(!scene.choices.some(proposal=>proposal.intent==='interact'&&['decline','leave'].includes(proposal.approach)||proposal.intent==='evade')){
-        if(scene.choices.length===3){const duplicate=scene.choices.findIndex((proposal,index)=>index>0&&scene.choices.slice(0,index).some(previous=>previous.intent===proposal.intent&&previous.approach===proposal.approach&&previous.targetId===proposal.targetId));scene.choices.splice(duplicate<0?2:duplicate,1);}
-        const available=scene.entities.filter(entity=>{
-          if(entity.status==='dead')return false;
-          if(endedTargets.includes(entity.id))return false;
-          if(entity.kind==='place')return entity.name===scene.location;
-          const present=scene.blocks.some(block=>block.kind==='dialogue'&&block.speaker===entity.id||(context.receipt.action?.intent!=='travel'||entity.kind==='faction')&&block.text.includes(entity.name));
-          const nearby=context.receipt.elapsedDays===0&&context.memory.recent.some(record=>record.kind==='turn'&&record.turnId===context.identity.turnId-1&&record.text.includes(entity.name));
-          return present||nearby;
-        });
-        const target=available.find(entity=>entity.id===context.receipt.action?.targetId)??available.find(entity=>['person','faction'].includes(entity.kind))??available.find(entity=>entity.kind==='place');
-        scene.choices.push({id:context.namespace+':t'+context.identity.turnId+':c:leave',label:'结束当前互动：暂不介入此事',intent:'interact',targetId:target?.id??'self',approach:'leave',stake:'low'});
+        if(ended&&proposal.intent==='interact'&&endedTargets.includes(proposal.targetId))fail('CHOICE_NOT_COMPILABLE');
       }
+      if(scene.choices.every(proposal=>proposal.intent==='interact'&&['decline','leave'].includes(proposal.approach)))fail('CHOICE_NOT_COMPILABLE');
     }
     if(profile.storyActions===true&&context.phase==='opening'&&scene.blocks.some(block=>block.kind==='dialogue'&&block.speaker==='self'))fail('GENERATED_SCENE_INVALID');
     if(profile.storyActions===true){
@@ -218,14 +202,6 @@ export async function generateProviderScene(ai,profile,context,options={},assert
     if(profile.storyActions===true&&selected?.intent==='interact'&&['decline','leave'].includes(selected.approach)){
       if(scene.blocks.length!==1||scene.blocks[0].kind!=='narration')fail('GENERATED_SCENE_INVALID');
     }
-    let addObservation=profile.storyActions===true&&scene.choices.every(proposal=>proposal.intent==='interact'&&['decline','leave'].includes(proposal.approach));
-    if(addObservation)scene.choices=scene.choices.slice(0,1);
-    if(profile.storyActions===true&&selected?.intent==='interact'&&selected.approach==='ask'){
-      const count=scene.choices.length;
-      scene.choices=scene.choices.filter(proposal=>!(proposal.intent===selected.intent&&proposal.approach===selected.approach&&proposal.targetId===selected.targetId&&proposal.label.trim()===selected.label.trim()));
-      if(scene.choices.length<count&&scene.choices.length===1)addObservation=true;
-    }
-    if(addObservation)scene.choices.push({id:context.namespace+':t'+context.identity.turnId+':c:observe',label:'仔细观察：留意周围的动静',intent:'interact',targetId:'self',approach:'observe',stake:'low'});
     try {
       const validated=validateGeneratedScene(scene,context,{checkNextContext:next=>providerInput(profile,next),continuity:profile.storyActions===true,requireExit:profile.storyActions===true});
       if(profile.storyActions===true){

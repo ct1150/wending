@@ -1,18 +1,18 @@
 import {GLM_MODEL_ID,STORY_LIMITS} from './story-config.js';
-import {readStoryPreview} from '../game/cultivation/live/story-preview.js';
+import {readStoryPreview,readStoryPresentation} from '../game/cultivation/live/story-preview.js';
 const encoder=new TextEncoder();
 const fault=code=>Object.assign(new Error(code),{code});
 const numericCode=error=>Number(error?.code??error?.errors?.[0]?.code??error?.status??/^(3036|4006|3040|429): /.exec(error?.message??'')?.[1]);
 
 // A trusted server-only transport. It returns one ordinary completion to the
 // existing validator; no partial scene can reach the archive commit path.
-export function createGlmTransport({ai,onProgress=()=>{},deadlineAt=Infinity,signal,timeoutMs=STORY_LIMITS.timeoutMs}={}) {
+export function createGlmTransport({ai,context,onProgress=()=>{},deadlineAt=Infinity,signal,timeoutMs=STORY_LIMITS.timeoutMs}={}) {
   let accountingUnknown=false;
   const started=Date.now(),endsAt=Math.min(started+timeoutMs,deadlineAt);
   function assertActive(){if(signal?.aborted||Date.now()>=endsAt)throw fault('PROVIDER_TIMEOUT');}
   async function consume(factory,model,deadline){
     const controller=new AbortController();let reader,timer,abort,active=true;
-    let text='',preview='',byteLength=0,usage,finishReason,reasoning='',modelSeen=false,ended=false;
+    let text='',preview='',presentation='{"blocks":[],"choices":[]}',byteLength=0,usage,finishReason,reasoning='',modelSeen=false,ended=false;
     const operation=(async()=>{
       assertActive();const stream=await factory(controller.signal);
       if(!active){await stream?.cancel?.().catch(()=>{});throw fault('PROVIDER_TIMEOUT');}
@@ -45,8 +45,11 @@ export function createGlmTransport({ai,onProgress=()=>{},deadlineAt=Infinity,sig
           if(typeof delta.content!=='string')throw fault('PROVIDER_RESPONSE_INVALID');
           text+=delta.content;
           if(encoder.encode(text).length>STORY_LIMITS.maxResponseBytes)throw fault('PROVIDER_RESPONSE_TOO_LARGE');
-          const next=readStoryPreview(text);
-          if(/<\/?(?:think|thinking|analysis|reasoning)(?:\s|>)/iu.test(next))throw fault('PROVIDER_RESPONSE_INVALID');
+          const next=readStoryPreview(text),draft=readStoryPresentation(text,context),serialized=JSON.stringify(draft);
+          if(/<\/?(?:think|thinking|analysis|reasoning)(?:\s|>)/iu.test(next+'\n'+draft.blocks.map(block=>(block.speaker??'')+'\n'+block.text).join('\n')+'\n'+draft.choices.map(choice=>choice.label).join('\n')))throw fault('PROVIDER_RESPONSE_INVALID');
+          // Structured consumers receive the row's type and speaker before any
+          // text-only compatibility event can reach an older renderer.
+          if(active&&modelSeen&&serialized!==presentation){presentation=serialized;onProgress({type:'presentation',...draft});}
           if(active&&modelSeen&&next!==preview){preview=next;onProgress({type:'preview',text:preview});}
         }
       }

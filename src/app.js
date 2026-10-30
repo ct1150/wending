@@ -6,7 +6,7 @@ import { compileChoices } from './game/cultivation/live/engine.js';
 import { stateHash } from './game/cultivation/live/identity.js';
 import { REALMS as LIVE_REALMS, ORIGINS as LIVE_ORIGINS, TALENTS as LIVE_TALENTS, ITEMS as LIVE_ITEMS } from './game/cultivation/live/model.js';
 import { liveCharacterSummary } from './ui/character.js';
-import { renderLiveJourney, renderLiveHistory, updateLivePreview } from './ui/journey.js';
+import { renderLiveJourney, renderLiveHistory, updateLivePreview, updateLiveJourney } from './ui/journey.js';
 import { readLegacyBackup, SAVE_KEY, LEGACY_BACKUP_KEY } from './game/persistence.js';
 import { REALMS, PATHS, ORIGINS, WORLDS, ITEMS, LEGACIES, EVENTS, ENEMIES, CHALLENGES, WORLD_FLAGS } from './game/content.js';
 import { getStats, getActionInfo, act, getEventChoices, chooseEvent, combatAction, equipItem, selectLegacy, getStoryView, chooseStory } from './game/engine.js';
@@ -919,8 +919,12 @@ function renderLiveApp() {
   const focus = !$('#dialog').open && $('#app').contains(document.activeElement) ? captureFocusTarget() : null;
   const snapshot=liveSnapshot,liveState=snapshot?.state;
   const header=liveState?renderIdentityBar(liveCharacterSummary(liveState,liveCatalogs)):'<h1>百世问鼎 · 实时人生</h1>';
-  const content=liveState?renderLiveJourney({...snapshot,stateHash:stateHash(liveState),itemNames:LIVE_ITEMS},liveState.phase==='active'?compileChoices(liveState,liveState.currentScene.choices):[]):'<p role="status">正在读取旅程…</p>';
-  $('#app').innerHTML=`<div class="paper-page paper-page-immersive"><header class="paper-top paper-top-immersive">${header}</header><main id="main-content" class="paper-main" tabindex="-1">${liveError?`<p class="notice" role="status">${esc(liveError)}</p>`:''}${content}</main>${renderGameNavigation({history:Boolean(liveState)})}<footer class="paper-footer">进度保存在本机 · 已缓存内容离线可读</footer></div>`;
+  const storyView=liveState?{...snapshot,stateHash:stateHash(liveState),itemNames:LIVE_ITEMS}:null;
+  const choices=liveState?.phase==='active'?compileChoices(liveState,liveState.currentScene.choices):[];
+  const previousStory=$('#app').querySelector('[data-live-story]');
+  const content=storyView?renderLiveJourney(storyView,choices):'<p role="status">正在读取旅程…</p>';
+  $('#app').innerHTML=`<div class="paper-page paper-page-immersive"><header class="paper-top paper-top-immersive">${header}</header><main id="main-content" class="paper-main" tabindex="-1">${liveError?`<p class="notice" role="status">${esc(liveError)}</p>`:''}${content}</main>${renderGameNavigation({history:Boolean(liveState)})}</div>`;
+  if(previousStory&&storyView&&updateLiveJourney(previousStory,storyView,choices))$('#app').querySelector('[data-live-story]').replaceWith(previousStory);
   resolveFocusTarget(focus)?.focus({ preventScroll: true });
 }
 async function showLiveHistory(first) {

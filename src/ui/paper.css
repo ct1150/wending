@@ -397,8 +397,11 @@ dialog.paper-drawer[open] { display: flex; flex-direction: column; }
 [data-legacy-bridge] { white-space: normal; min-height: 44px; }
 [data-legacy-bridge] .tiny { display: block; }
 
-/* Live mode retains the reading width and the committed character display. */
-.live-status { margin: 1.4rem 0; padding: 1rem; border: 1px solid currentColor; border-radius: .5rem; }
+/* Live prose and draft choices use the same reading surface as saved scenes. */
+.live-status { margin: 1rem 0; color: var(--muted); font-size: 13px; }
+.live-journey [hidden] { display: none; }
+.live-sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; border: 0; }
+.live-journey .live-choice-draft:disabled { color: var(--text); background: transparent; border: 1px solid var(--line2); }
 
 /* The title is a quiet entry to the story; all three actions remain in view. */
 .title-shell { position: relative; isolation: isolate; min-height: 100svh; display: flex; flex-direction: column; align-items: center; overflow: hidden; padding: 64px 24px 24px; background: var(--bg); }
@@ -482,7 +485,4 @@ select:focus-visible { outline: 2px solid var(--jade); outline-offset: 3px; }
 .live-toolbar { display: flex; flex-wrap: wrap; gap: .4rem; }
 .birth #live-name, .birth #live-origin { display: block; box-sizing: border-box; width: 100%; max-width: 100%; min-height: 44px; margin: .5rem 0 1.3rem; padding: .6rem; font: inherit; color: inherit; background: transparent; border: 1px solid currentColor; border-radius: .3rem; }
 .live-status, .journey-choice-reason { overflow-wrap: anywhere; }
-.live-preview { margin-block: 1.5rem; overflow-wrap: anywhere; }
-.live-preview [data-live-preview-text] { white-space: pre-wrap; }
-.live-preview-label { font-size: .8rem; opacity: .7; }
-.live-intro, .live-action-receipt { margin-block: 1rem; }
+.live-intro { margin-block: 1rem; }

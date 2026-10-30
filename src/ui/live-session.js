@@ -121,6 +121,11 @@ export function createLiveSession({archive,client,engine=defaultEngine,onChange=
         if(!active||loaded?.attempt?.id!==attempt.id||loaded?.pending?.identity.requestId!==row.pending.identity.requestId)return;
         if(event.type==='reset')preview=null;
         else if(event.type==='preview')preview={text:(preview?.text??'')+event.text};
+        else if(event.type==='block'||event.type==='choice'){
+          if(!preview?.blocks)preview={blocks:[],choices:[]};
+          if(event.type==='block')preview.blocks[event.index]={kind:event.kind,text:event.text,...(event.speaker?{speaker:event.speaker}:{}),complete:event.complete};
+          else preview.choices[event.index]={label:event.label,complete:event.complete};
+        }
         else if(event.type==='status')generationStatus=event.status;
         onProgress(view());
       }});
