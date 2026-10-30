@@ -191,11 +191,16 @@ export function createLiveSession({archive,client,engine=defaultEngine,onChange=
     });
   }
   function choose(command) {
+    const expectedArchiveId=loaded?.archiveId;
     return run(async()=>{
-      await reload();
+      await reload(expectedArchiveId);
       if(!loaded||loaded.pending)throw fault('TURN_ALREADY_PENDING');
       if(command.baseRevision!==loaded.state.revision||command.stateHash!==stateHash(loaded.state))throw fault('STALE_CHOICE');
       const pending=engine.prepareChoice(loaded.state,{...command,requestId:id()});
+      if(pending.receipt.action?.intent==='interact'&&['decline','leave'].includes(pending.receipt.action.approach)){
+        loaded=await archive.commitInteraction({expectedArchiveId:loaded.archiveId,expectedRevision:loaded.state.revision,pending});
+        preview=null;status='ready';errorCode=null;emit();return;
+      }
       loaded=await archive.prepare(pending);
       status='pending';
       emit();

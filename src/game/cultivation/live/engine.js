@@ -89,6 +89,18 @@ function verifiedPending(state,pending) {
  const expected=pending.kind==='opening'?prepareOpening(state,{requestId:pending.identity.requestId}):pending.kind==='choice'?prepareChoice(state,{requestId:pending.identity.requestId,choiceId:pending.identity.choiceId}):null;
  if(!expected||!same(pending,expected))throw new Error('待提交行动已过期或收据遭到修改。');return expected;
 }
+export function resolveImmediateInteraction(state,pending) {
+ const fixed=verifiedPending(state,pending),action=fixed.receipt.action;
+ if(action?.intent!=='interact'||!['decline','leave'].includes(action.approach)||fixed.receipt.death)throw new Error('此行动须继续生成剧情。');
+ const prefix='r:'+sha256(state.runId).slice(0,16)+':t'+fixed.identity.turnId+':',location=state.currentScene.location,actor=state.relatedEntities.find(entity=>entity.id===action.targetId),routes=state.currentScene.choices.filter(choice=>choice.intent==='travel'&&state.relatedEntities.some(entity=>entity.id===choice.targetId&&entity.kind==='place'&&entity.name!==location)&&compileChoices(state,[choice])[0].enabled).slice(0,2);
+ const choices=[{id:prefix+'c:observe',label:'观察周围：寻找新的线索',intent:'interact',targetId:'self',stake:'low',approach:'observe'},...routes.map((choice,index)=>({...copy(choice),id:prefix+'c:travel'+index}))];
+ if(choices.length===1)choices.push({id:prefix+'c:rest',label:'留在原地休整',intent:'rest',targetId:'self',stake:'low',approach:'recover'});
+ const entities=state.relatedEntities.filter(entity=>entity.id===action.targetId||routes.some(choice=>choice.targetId===entity.id));
+ const decision=actor&&['person','faction'].includes(actor.kind)?(action.approach==='decline'?'你婉拒了'+actor.name+'的请求，结束了这次交谈。':'你向'+actor.name+'告辞，结束了这次交谈。'):'你结束了眼前的互动。';
+ let text=decision+'你仍在原处，接下来可以自行观察或行动。';
+ if(same(state.currentScene.blocks,[{kind:'narration',text}]))text+='此事暂且搁下，你可以按自己的打算行动。';
+ return validateGeneratedScene({id:prefix+'s:closed',title:'暂别此事',location,blocks:[{kind:'narration',text}],entities:copy(entities),choices,memoryDeltas:[]});
+}
 // Only the scene's bounded working set enters snapshots and their hashes.
 // Restored values come from indexed rule records, never narrative descriptions.
 export function projectRelations(life,entities,restored={}) {

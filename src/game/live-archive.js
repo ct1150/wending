@@ -1,6 +1,6 @@
 import { canonicalStringify, sha256, stateHash, assertPlainData } from './cultivation/live/identity.js';
 import { validateLiveState } from './cultivation/live/validation.js';
-import { prepareOpening, prepareChoice, commitTurn, settleDeath } from './cultivation/live/engine.js';
+import { prepareOpening, prepareChoice, commitTurn, settleDeath, resolveImmediateInteraction } from './cultivation/live/engine.js';
 import { buildStoryContext, validateGeneratedScene, buildMemoryDelta, validateStoryContext, sceneTurnRecord } from './cultivation/live/memory.js';
 
 export const CHUNK_TURNS = 128;
@@ -296,7 +296,17 @@ class Archive {
   ident(requestId);validateLiveState(nextState);const c=await this._capture(nextState.runId);check(c&&(!this.bound||this.bound===c.run.archiveId)&&c.run.state.revision===expectedRevision&&c.pending?.pending.identity.requestId===requestId);
   if(scene!==null)check((c.pending.attempt?.id??null)===expectedAttemptId,'ARCHIVE_ATTEMPT_CONFLICT');
   const derived=await this._derived(c,scene,memoryDelta);check(same(nextState,derived.state),'ARCHIVE_INVALID_STATE');
-  const entry={identity:clone(c.pending.pending.identity),receipt:clone(c.pending.pending.receipt),scene:clone(scene),stateHash:stateHash(nextState)};
+  return this._commitCaptured(c,c.pending.pending,scene,derived);
+ }
+ async commitInteraction({expectedArchiveId,expectedRevision,pending}) {
+  assertPlainData(pending);pending=clone(pending);
+  const c=await this._capture(pending?.identity?.runId);check(c&&c.run.archiveId===expectedArchiveId&&(!this.bound||this.bound===c.run.archiveId)&&c.run.state.revision===expectedRevision&&!c.pending);
+  verifyPending(c.run.state,pending);const scene=resolveImmediateInteraction(c.run.state,pending);
+  const derived=await this._derived({...c,pending:pendingRow(c.run.archiveId,pending)},scene,buildMemoryDelta(pending.receipt,scene));
+  return this._commitCaptured(c,pending,scene,derived);
+ }
+ async _commitCaptured(c,pending,scene,derived) {
+  const nextState=derived.state,entry={identity:clone(pending.identity),receipt:clone(pending.receipt),scene:clone(scene),stateHash:stateHash(nextState)};
   let chunk=makeChunk(c.tail?.index??0,c.tail?.previousHash??ZERO,[...(c.tail?.entries??[]),entry]);
   if(chunk.entries.length>CHUNK_TURNS||encodedBytes(chunk)>CHUNK_BYTES)chunk=makeChunk((c.tail?.index??-1)+1,c.tail?.hash??ZERO,[entry]);verifyChunk(chunk);
   const run={...c.run,state:clone(nextState),hash:entry.stateHash,tailIndex:chunk.index,headHash:chunk.hash};

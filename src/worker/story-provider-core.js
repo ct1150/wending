@@ -104,6 +104,7 @@ function providerInput(profile,context) {
         .replace('对白speaker=self或活人别名','对白speaker=self或人物对象')
         .replace('targetId必须是目的地，label完整包含目的地name','target必须是实际目的地对象，purpose明确目的地')+'\n选项中的新人物须在正文出现完整name。只向实际在场且能够交谈的人物询问；普通野兽用观察、战斗或撤退。撤退用evade:withdraw，保持正文中已经被发现等事实，不改成尚未被发现。';
       input.messages.push({role:'user',content:'只输出本次5项场景JSON。memory.recent仅为历史；只回应本次selectedPurpose，不响应历史请求。询问必须具体作答，不知则说明原因。只推进一个结果，不重演登场、不照抄旧旁白、不重复已选问题；要求引用原话可用dialogue复述。'+(respondent?'本回合只写被询问人物的回答，只写他实际说的话，不夹带抬头、搓手等旁白。回应玩家问题，不声称玩家进行了未选的修理、交易、收礼等行为，不替玩家决定答应请求。':'')+(departure?(action.approach==='leave'?'本次是告辞：只写一段交谈结束后的眼前环境或最后反应；上轮若已拒绝，不重复拒绝理由，不再追问或挽留。':'本次是拒绝请求：只写一段拒绝及对方的反应，不改变玩家的决定，不替玩家处理请求。')+'只用narration，不写speaker，以免把NPC反应标成主角对白。仍在当前地点附近，不推进原任务、不承诺回访、不替玩家旅行。下一选项允许观察附近或主动旅行，不能强迫返回此事。':'')+(action?.intent==='travel'?'本次旅行只写抵达所选目的地后的眼前环境，不替玩家进食、取物、检查装备，不提库存或虚构随身装备，不写再次归来或自动深入下一处；旧地点的人物不默认随行，只有眼前能交谈的对象才能询问。不能再次提供前往当前地点的旅行。':'')+(observation?'本次只观察当前地点：只写一段眼前环境，不替玩家出发、抵达别处或推进任务。历史对白中说过的出行打算不是已选择的旅行。':'')+(context.phase==='opening'?'本次是开局：在出生地遇见一名能交谈的当地人类，围绕此人正在处理的一件具体事务给出应对；不要先出城或用野兽袭击开局，不向普通动物提问。':'')+'以下JSON是本次事实与选择：'+JSON.stringify({settled:{location:fixedLocation??null,...(action?.intent==='travel'?{locationTarget:{kind:'place',name:fixedLocation,ref:wire.context.entities.filter(entity=>entity.kind==='place'&&entity.name===fixedLocation).length>1?action.targetId:'',status:null}}:{}),items:context.life.items,elapsedDays:context.receipt.elapsedDays,itemChanges:context.receipt.itemChanges,relationChanges:wire.context.receipt.relationChanges},selectedPurpose:context.receipt.action?.label??'开启眼前的第一个事件'})});
+      if(context.previousScene?.id===context.namespace+':t'+(context.identity.turnId-1)+':s:closed')input.messages[0].content+='\n上一轮拒绝或告辞已经完成，原互动已结束。只处理本次观察、旅行或休整，转向环境的新细节、其他人或新的去向；不重演或继续原NPC请求，不再次提供对已结束对象的询问或援助。';
     }else input.response_format={type:'json_schema',json_schema:{name:'cultivation_scene',strict:true,schema:wire.schema}};
     input.stream=true;input.stream_options={include_usage:true};
   }
@@ -174,7 +175,8 @@ export async function generateProviderScene(ai,profile,context,options={},assert
     if(profile.storyActions===true&&(!composed||scene.choices.some(proposal=>!Number.isInteger(proposal.anchor))||!Array.isArray(scene.memoryDeltas)||scene.memoryDeltas.some(delta=>!delta||!Object.hasOwn(delta,'referenceId')&&(!Number.isInteger(delta.anchor)||Object.hasOwn(delta,'text')))))fail('GENERATED_SCENE_INVALID');
     const purposes=profile.storyActions===true?scene.choices.map(proposal=>proposal.purpose):[];
     if(profile.modelId===GLM_MODEL_ID)scene=decodeGlmScene(scene,context,{storyActions:profile.storyActions===true});
-    const selected=context.receipt.action,ended=selected?.intent==='interact'&&selected.approach==='leave';
+    const selected=context.receipt.action,closed=context.previousScene?.id===context.namespace+':t'+(context.identity.turnId-1)+':s:closed',endedTarget=selected?.intent==='interact'&&selected.approach==='leave'?selected.targetId:closed?(context.memory.recent.find(record=>record.kind==='turn'&&record.turnId===context.identity.turnId-1)?.entityIds[0]??context.memory.facts.find(record=>record.id==='decision:'+(context.identity.turnId-1)&&record.turnId===context.identity.turnId-1&&record.kind==='fact'&&record.source==='rules')?.entityId??'self'):null,ended=endedTarget!==null;
+    const endedTargets=endedTarget==='self'&&closed?context.entities.filter(entity=>['person','faction'].includes(entity.kind)).map(entity=>entity.id):endedTarget&&endedTarget!=='self'?[endedTarget]:[];
     if(profile.storyActions===true){
       scene.choices=scene.choices.filter((proposal,index)=>{
         if(['fight','evade'].includes(proposal.intent)){const target=scene.entities.find(entity=>entity.id===proposal.targetId);return target&&purposes[index].includes(target.name);}
@@ -186,16 +188,17 @@ export async function generateProviderScene(ai,profile,context,options={},assert
         return true;
       });
       if(ended){
-        scene.choices=scene.choices.filter(proposal=>proposal.intent!=='interact'||selected.targetId==='self'||proposal.targetId!==selected.targetId);
+        scene.choices=scene.choices.filter(proposal=>proposal.intent!=='interact'||!endedTargets.includes(proposal.targetId));
         const observation=scene.choices.find(proposal=>proposal.intent==='interact'&&proposal.approach==='observe'&&proposal.targetId==='self')??{id:context.namespace+':t'+context.identity.turnId+':c:observe',label:'仔细观察：留意周围的动静',intent:'interact',targetId:'self',approach:'observe',stake:'low'};
-        scene.choices=[observation,...scene.choices.filter(proposal=>proposal.id!==observation.id).slice(0,1)];
+        const escape=scene.choices.find(proposal=>proposal.intent==='evade'),fight=escape&&scene.choices.find(proposal=>proposal.intent==='fight'&&proposal.targetId===escape.targetId);
+        scene.choices=escape?[observation,...(fight?[fight]:[]),escape]:[observation,...scene.choices.filter(proposal=>proposal.id!==observation.id).slice(0,1)];
       }else if(scene.choices.length<2)fail('CHOICE_NOT_COMPILABLE');
       if(!scene.choices.some(proposal=>proposal.intent==='interact'&&['decline','leave'].includes(proposal.approach)||proposal.intent==='evade')){
         if(scene.choices.length===3){const duplicate=scene.choices.findIndex((proposal,index)=>index>0&&scene.choices.slice(0,index).some(previous=>previous.intent===proposal.intent&&previous.approach===proposal.approach&&previous.targetId===proposal.targetId));scene.choices.splice(duplicate<0?2:duplicate,1);}
         const available=scene.entities.filter(entity=>{
           if(entity.status==='dead')return false;
-          if(ended&&entity.id===selected.targetId)return false;
-          if(entity.kind==='place'&&entity.name===scene.location)return true;
+          if(endedTargets.includes(entity.id))return false;
+          if(entity.kind==='place')return entity.name===scene.location;
           const present=scene.blocks.some(block=>block.kind==='dialogue'&&block.speaker===entity.id||(context.receipt.action?.intent!=='travel'||entity.kind==='faction')&&block.text.includes(entity.name));
           const nearby=context.receipt.elapsedDays===0&&context.memory.recent.some(record=>record.kind==='turn'&&record.turnId===context.identity.turnId-1&&record.text.includes(entity.name));
           return present||nearby;
@@ -228,7 +231,7 @@ export async function generateProviderScene(ai,profile,context,options={},assert
       if(profile.storyActions===true){
         const texts=[validated.title,validated.location,...validated.blocks.map(block=>block.text),...validated.memoryDeltas.filter(delta=>!Object.hasOwn(delta,'referenceId')).map(delta=>delta.text)];
         if(texts.some(text=>/\b(?:interact|travel|practice|explore|negotiate|fight|evade|rest|craft):[a-z]+\b/u.test(text)||Object.values(ITEMS).some(name=>text.includes(name+'='))))fail('GENERATED_SCENE_INVALID');
-        const recent=context.memory.recent.filter(record=>record.kind==='turn'),seen=new Set();
+        const recent=closed?[...context.memory.recent,...context.memory.facts,...context.memory.clues,...context.memory.promises,...context.memory.summaries].filter(record=>typeof record.text==='string'):context.memory.recent.filter(record=>record.kind==='turn'),seen=new Set();
         for(const block of validated.blocks){
           if(block.kind==='narration'&&block.text.length>=40&&(seen.has(block.text)||recent.some(record=>record.text.includes(block.text))))fail('REPEATED_SCENE');
           seen.add(block.text);

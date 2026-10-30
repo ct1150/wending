@@ -1,0 +1,43 @@
+{
+  "schemaVersion": 1,
+  "status": "USER_AUTHORIZED_DIRECT_RELEASE_WITH_INCOMPLETE_ACCEPTANCE",
+  "recordedAt": "2026-10-30T17:24:58.458Z",
+  "userInstruction": "别测了，直接提交并发布",
+  "sourceBeforeReleaseNotes": "0c575402e3fa5087b7129c2689ef4250fc0eeca4",
+  "supersedes": "The earlier requirement to wait for six actual AI scenes and further gameplay/browser tests",
+  "implemented": [
+    "Event-related choices and bounded recent scene/decision context",
+    "Atomic rule-only refusal and farewell with no AI request",
+    "Independent continuation after closing an interaction, preserving real retreat",
+    "Frozen request/attempt recovery, existing live save and IndexedDB v3 compatibility"
+  ],
+  "existingVerification": {
+    "fullRuntimeSource": "21582ddad30b3b9d73d6366ea042d24e94198f03",
+    "fullTestsPassed": 1009,
+    "syntaxFiles": 179,
+    "buildPassed": true,
+    "subsequentReviewFixesRelatedTestsPassed": 83,
+    "finalCommitFullAcceptance": false
+  },
+  "knownLimitations": [
+    "Six actual AI scenes acceptance is incomplete",
+    "Ordinary non-speaking beasts can still receive an ask proposal; actor capability work was not implemented",
+    "AI waiting time varies; stable fluent play is not proven",
+    "IndexedDB v3 requires a compatible rollback reader"
+  ],
+  "policy": {
+    "primaryModel": "@cf/zai-org/glm-4.7-flash",
+    "cloudflareFreeOnly": true,
+    "paidFallback": false,
+    "preloading": false,
+    "namespaceId": "1de1df3929534a8d8d495d6db6604e99",
+    "unknownAccountingPreserved": true
+  },
+  "deployment": {
+    "status": "AUTHORIZED_NOT_YET_REPORTED_COMPLETE",
+    "baselineVersion": "cad2a140-240f-4465-a837-e53f054c2589",
+    "baselineDeployment": "050f0802-8b7b-47f9-8713-636a2c869584",
+    "executionRecord": "https://github.com/ct1150/wending/pull/17"
+  },
+  "checksAfterInstruction": "Deployment state and public release identity only; no additional game/model/browser tests"
+}

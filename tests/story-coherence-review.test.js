@@ -1,7 +1,7 @@
 import {namedGlmFixture} from './helpers/named-glm-fixture.js';
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {createLiveGame,prepareOpening,commitTurn,prepareChoice} from '../src/game/cultivation/live/engine.js';
+import {createLiveGame,prepareOpening,commitTurn,prepareChoice,resolveImmediateInteraction} from '../src/game/cultivation/live/engine.js';
 import {buildStoryContext,validateGeneratedScene,sceneTurnRecord} from '../src/game/cultivation/live/memory.js';
 import {buildGlmWire,decodeGlmScene} from '../src/worker/story-glm-wire.js';
 import {buildStoryInput,generateProviderScene} from '../src/worker/story-provider-core.js';
@@ -14,6 +14,19 @@ function fixture(){
   const run=value=>generateProviderScene({run:async(_model,input)=>({model:GLM_PROFILE.modelId,choices:[{finish_reason:'stop',message:{content:JSON.stringify(namedGlmFixture(value,input))}}],usage:{prompt_tokens:100,completion_tokens:100,total_tokens:200}})},{...GLM_PROFILE,storyActions:true},context);
   return {state,pending,context,wire,run};
 }
+
+test('observing after a local closure keeps independent choices and cannot replay an old request from a clue',async()=>{
+  for(const approach of ['decline','leave']){
+    const f=fixture();f.wire.choices[1].action='interact:'+approach;f.wire.blocks[0].text+='陈叔拿着绳子在林边来回踱步，不时望向山道，等你决定是否参与这件事情。';const opening=decodeGlmScene(f.wire,f.context,{storyActions:true}),active=commitTurn(f.state,f.pending,opening),p=prepareChoice(active,{requestId:'close-'+approach,choiceId:opening.choices[1].id}),closed=resolveImmediateInteraction(active,p),ended=commitTurn(active,p,closed),record=sceneTurnRecord(closed,{runId:ended.runId,turnId:ended.turnId,action:p.receipt.action});
+    assert.deepEqual(record.entityIds,[opening.entities[0].id]);const oldClue={id:'old-clue',runId:ended.runId,turnId:1,source:'narrative',kind:'clue',entityId:opening.entities[0].id,text:opening.blocks[0].text,status:'open'},context=buildStoryContext(ended,prepareChoice(ended,{requestId:'after-close-'+approach,choiceId:closed.choices[0].id}),[oldClue]),alias=buildGlmWire(context,'',{storyActions:true}).context.entities.find(entity=>entity.kind==='person').id;
+    const reply=structuredClone(f.wire);reply.blocks=[{kind:'narration',text:'你转向村外的河岸，注意到泥地里有新留下的脚印。'}];reply.otherPeople=[{id:alias}];reply.places=[{id:'l1',name:'河岸'}];reply.choices.forEach(choice=>choice.targetId=alias);reply.choices.push({action:'travel:road',targetId:'l1',stake:'low',purpose:'前往河岸查看脚印',anchor:0});
+    const run=(inputContext=context)=>generateProviderScene({run:async(_model,input)=>({model:GLM_PROFILE.modelId,choices:[{finish_reason:'stop',message:{content:JSON.stringify(namedGlmFixture(reply,input))}}],usage:{prompt_tokens:100,completion_tokens:100,total_tokens:200}})},{...GLM_PROFILE,storyActions:true},inputContext),fresh=await run();assert.equal(fresh.status,'ready');assert.ok(fresh.scene.choices.every(choice=>choice.intent!=='interact'||choice.targetId!==opening.entities[0].id));assert.ok(fresh.scene.choices.some(choice=>choice.intent==='travel'));assert.equal(fresh.scene.choices.find(choice=>choice.approach==='leave')?.targetId,'self');
+    const legacyContext=structuredClone(context);legacyContext.memory.recent.find(row=>row.turnId===ended.turnId).entityIds=[];legacyContext.memory.facts.push({id:'decision:'+ended.turnId,runId:ended.runId,turnId:ended.turnId,source:'rules',kind:'fact',entityId:opening.entities[0].id,text:'你已结束这次交谈。'});legacyContext.references.push('decision:'+ended.turnId);let legacy=await run(legacyContext);assert.equal(legacy.status,'ready');assert.ok(legacy.scene.choices.every(choice=>choice.intent!=='interact'||choice.targetId!==opening.entities[0].id));const unknownContext=structuredClone(context);unknownContext.memory.recent.find(row=>row.turnId===ended.turnId).entityIds=[];legacy=await run(unknownContext);assert.equal(legacy.status,'ready');assert.ok(legacy.scene.choices.every(choice=>choice.intent!=='interact'||choice.targetId!==opening.entities[0].id));
+    reply.blocks=[{kind:'narration',text:oldClue.text}];assert.equal((await run()).errorCode,'REPEATED_SCENE');
+    reply.blocks=[{kind:'narration',text:'你转过身，看到河岸草丛中一头青狼向你逼近，必须决定如何应对。'}];reply.otherPeople=[{id:'p2',name:'青狼'}];reply.places=[];reply.choices=[{action:'fight:guard',targetId:'p2',stake:'low',purpose:'挡住青狼的攻击',anchor:0},{action:'evade:withdraw',targetId:'p2',stake:'low',purpose:'避开青狼并撤出攻击范围',anchor:0}];const danger=await run();assert.equal(danger.status,'ready');assert.ok(danger.scene.choices.some(choice=>choice.intent==='evade'));assert.ok(!danger.scene.choices.some(choice=>choice.approach==='leave'));
+    reply.places=[{id:'l1',name:'河岸'}];reply.choices=[{action:'travel:road',targetId:'l1',stake:'low',purpose:'前往河岸查看脚印',anchor:0},{action:'interact:observe',targetId:'self',stake:'low',purpose:'观察草丛中的动静',anchor:0},reply.choices[1]];const retreat=await run();assert.equal(retreat.status,'ready');assert.ok(retreat.scene.choices.some(choice=>choice.intent==='evade'));assert.ok(!retreat.scene.choices.some(choice=>choice.approach==='leave'));
+  }
+});
 
 test('new inference requires purposeful choices and anchored memories; historical decoding stays compatible',async()=>{
   const {wire,context,run}=fixture();assert.equal((await run(wire)).status,'ready');

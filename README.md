@@ -1,6 +1,6 @@
 # 百世问鼎 · 三界求仙篇
 
-**4.4.0 候选：选项承接当前剧情。** 同一次 AI 请求生成正文和具体选择，下一段先回应所选目的。询问、观察、拒绝和结束交谈可以在同一天进行；旅行和援助按实际规则耗时。正文流式展示，完整校验并保存后开放选项。
+**4.4.0：选项承接当前剧情，拒绝和告辞立即完成。** 新剧情仍由同一次 AI 请求生成正文和具体选择；拒绝、告辞由规则原子保存，不等待 AI。随后观察、旅行等行动继续生成新场景。正文流式展示，完整校验并保存后开放选项。
 
 [线上游戏](https://baishi-wending.ct1150.workers.dev/) · [交付账本](docs/ROADMAP.md) · [验收证据](docs/QA_REPORT.md) · [部署说明](docs/DEPLOYMENT.md) · [4.2.0 发布执行记录](https://github.com/ct1150/wending/pull/15)
 
@@ -14,7 +14,7 @@
 
 剧情下方直接显示 **「历史对话 · 游戏设置 · 返回首页」**；顶部保留人物概况与详情入口。重新打开页面先到首页，同一标签页内刷新则恢复所在页面、创建草稿或当前剧情。自然死亡后的「再入轮回」沿用真实结算，再回到人物创建。
 
-4.4.0 候选使用 Cloudflare Workers AI 的 `@cf/zai-org/glm-4.7-flash`，仅通过原 AI binding 调用，不读取智谱密钥，不接入 Gemini 或付费后备。新剧情需要联网，玩家无需提供 API 密钥。本次实测连续保存四回合，随后的告辞连续重复上一段而被校验拒绝，尚未通过六回合发布门槛。成功回合首段约 2.5–24 秒、完整保存约 12.6–40.5 秒，不代表稳定流畅；预加载关闭。详见[候选阻碍与实际记录](docs/evidence/story-coherence-2026-10-30/release-blocked-2026-10-31.json)。线上仍为 4.3.0，其[历史验收](docs/evidence/cf-glm-promotion-final-2026-10-30.json)保留。
+4.4.0 使用 Cloudflare Workers AI 的 `@cf/zai-org/glm-4.7-flash`，仅通过原 AI binding 调用，不读取智谱密钥，不接入 Gemini 或付费后备。新剧情需要联网，玩家无需提供 API 密钥。按用户最新要求停止继续测试并直接发布，六个 AI 场景的完整验收未完成；模型仍可能提出“询问普通野兽”等不合理选择。已有样本的 AI 等待差异较大，预加载关闭，不宣称稳定流畅。发布边界与已有验证见[直接发布授权记录](docs/evidence/story-coherence-2026-10-30/direct-release-2026-10-31.json)，此前[失败记录](docs/evidence/story-coherence-2026-10-30/release-blocked-2026-10-31.json)及[4.3 历史验收](docs/evidence/cf-glm-promotion-final-2026-10-30.json)保留。
 
 ## 4.2.0 验证记录 — 2026-10-29（上海）
 

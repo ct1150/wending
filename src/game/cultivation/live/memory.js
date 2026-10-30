@@ -92,7 +92,8 @@ export function sceneTurnRecord(scene,{runId,turnId,action=null}) {
   for(const character of Array.from(scene.blocks.map(block=>block.text).join('\n')).reverse()){
     if(length+character.length>500)break;tail.unshift(character);length+=character.length;
   }
-  return {id:'turn:'+turnId,runId,turnId,source:'narrative',kind:'turn',text:(prefix+tail.join('')).trim(),entityIds:[]};
+  const ended=scene.id==='r:'+sha256(runId).slice(0,16)+':t'+turnId+':s:closed'&&action?.intent==='interact'&&['decline','leave'].includes(action.approach);
+  return {id:'turn:'+turnId,runId,turnId,source:'narrative',kind:'turn',text:(prefix+tail.join('')).trim(),entityIds:ended&&scene.entities.some(entity=>entity.id===action.targetId)?[action.targetId]:[]};
 }
 
 export function buildStoryContext(state,pending,relatedRecords=[],options={}) {
