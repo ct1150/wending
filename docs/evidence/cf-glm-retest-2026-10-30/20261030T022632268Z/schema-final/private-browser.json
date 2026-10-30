@@ -1,0 +1,1609 @@
+{
+  "recordedAt": "2026-10-30T02:51:15.032Z",
+  "sourceCommit": "4097cda64407f27fdb4f53038a3dfc1bc2013a75",
+  "version": "f956d217-7b60-4cbc-8d2f-5f8de71f73c8",
+  "frontendSource": "local current release HTML served by browser harness; API and SQLite are real Workers",
+  "records": [
+    {
+      "caseId": "opening",
+      "mode": "browser-real-api",
+      "start": 373.39999999990687,
+      "timeline": [
+        {
+          "atMs": 6159,
+          "chars": 1
+        },
+        {
+          "atMs": 6237,
+          "chars": 3
+        },
+        {
+          "atMs": 6300,
+          "chars": 9
+        },
+        {
+          "atMs": 6379,
+          "chars": 14
+        },
+        {
+          "atMs": 6456,
+          "chars": 17
+        },
+        {
+          "atMs": 6520,
+          "chars": 22
+        },
+        {
+          "atMs": 6598,
+          "chars": 25
+        },
+        {
+          "atMs": 6676,
+          "chars": 27
+        },
+        {
+          "atMs": 6754,
+          "chars": 30
+        },
+        {
+          "atMs": 6832,
+          "chars": 33
+        },
+        {
+          "atMs": 6894,
+          "chars": 35
+        },
+        {
+          "atMs": 6972,
+          "chars": 38
+        },
+        {
+          "atMs": 7050,
+          "chars": 40
+        },
+        {
+          "atMs": 7113,
+          "chars": 42
+        },
+        {
+          "atMs": 7191,
+          "chars": 45
+        },
+        {
+          "atMs": 7253,
+          "chars": 48
+        },
+        {
+          "atMs": 7332,
+          "chars": 54
+        },
+        {
+          "atMs": 7409,
+          "chars": 57
+        },
+        {
+          "atMs": 7470,
+          "chars": 59
+        },
+        {
+          "atMs": 7533,
+          "chars": 62
+        },
+        {
+          "atMs": 7596,
+          "chars": 66
+        },
+        {
+          "atMs": 7690,
+          "chars": 69
+        },
+        {
+          "atMs": 7753,
+          "chars": 71
+        },
+        {
+          "atMs": 7815,
+          "chars": 76
+        },
+        {
+          "atMs": 7877,
+          "chars": 80
+        },
+        {
+          "atMs": 7954,
+          "chars": 82
+        },
+        {
+          "atMs": 8033,
+          "chars": 86
+        },
+        {
+          "atMs": 8111,
+          "chars": 88
+        },
+        {
+          "atMs": 8158,
+          "chars": 92
+        },
+        {
+          "atMs": 8219,
+          "chars": 95
+        },
+        {
+          "atMs": 8376,
+          "chars": 100
+        },
+        {
+          "atMs": 8391,
+          "chars": 105
+        },
+        {
+          "atMs": 8469,
+          "chars": 108
+        },
+        {
+          "atMs": 8533,
+          "chars": 111
+        },
+        {
+          "atMs": 8596,
+          "chars": 115
+        },
+        {
+          "atMs": 8659,
+          "chars": 119
+        },
+        {
+          "atMs": 8720,
+          "chars": 124
+        },
+        {
+          "atMs": 8800,
+          "chars": 126
+        },
+        {
+          "atMs": 9097,
+          "chars": 127
+        },
+        {
+          "atMs": 9813,
+          "chars": 131
+        },
+        {
+          "atMs": 9859,
+          "chars": 133
+        },
+        {
+          "atMs": 9920,
+          "chars": 135
+        },
+        {
+          "atMs": 9968,
+          "chars": 138
+        },
+        {
+          "atMs": 10063,
+          "chars": 141
+        },
+        {
+          "atMs": 10140,
+          "chars": 143
+        },
+        {
+          "atMs": 10188,
+          "chars": 147
+        },
+        {
+          "atMs": 10282,
+          "chars": 151
+        },
+        {
+          "atMs": 10344,
+          "chars": 154
+        },
+        {
+          "atMs": 10389,
+          "chars": 156
+        },
+        {
+          "atMs": 10451,
+          "chars": 161
+        },
+        {
+          "atMs": 10890,
+          "chars": 166
+        },
+        {
+          "atMs": 10937,
+          "chars": 168
+        },
+        {
+          "atMs": 10985,
+          "chars": 175
+        },
+        {
+          "atMs": 11049,
+          "chars": 179
+        },
+        {
+          "atMs": 11112,
+          "chars": 184
+        },
+        {
+          "atMs": 11190,
+          "chars": 189
+        },
+        {
+          "atMs": 11252,
+          "chars": 192
+        },
+        {
+          "atMs": 11314,
+          "chars": 195
+        },
+        {
+          "atMs": 11501,
+          "chars": 200
+        },
+        {
+          "atMs": 11563,
+          "chars": 204
+        },
+        {
+          "atMs": 11626,
+          "chars": 208
+        },
+        {
+          "atMs": 11687,
+          "chars": 213
+        },
+        {
+          "atMs": 11859,
+          "chars": 219
+        },
+        {
+          "atMs": 11889,
+          "chars": 221
+        },
+        {
+          "atMs": 11951,
+          "chars": 223
+        },
+        {
+          "atMs": 12030,
+          "chars": 228
+        },
+        {
+          "atMs": 12091,
+          "chars": 229
+        },
+        {
+          "atMs": 12138,
+          "chars": 232
+        },
+        {
+          "atMs": 12199,
+          "chars": 236
+        }
+      ],
+      "firstBirthMs": 83,
+      "choicesEnabledDuringPreview": false,
+      "lastText": "你叫云归，今年十六岁，是个凡人。你出生在青云村，生来便带着两样天赋：过目不忘和命带煞运。过目不忘让你读书识字极快，命带煞运却让你在村中并不讨喜，总觉得你身上带着晦气。你身无长物，只有三天的行粮和几枚铜钱，此刻正站在村口的古槐树下，望着蜿蜒向外的山道发呆。\n\n“这世道，凡人如草芥，我若不出去闯闯，怕是连这点行粮也守不住。”\n\n你摸了摸干瘪的口袋，那里只有几枚铜钱，那是你全部的家当。你决定先去镇上看看，或许能找到什么机会，或者至少换点吃的。你迈开步子，沿着山道向镇上走去。",
+      "doneMs": 28499,
+      "result": {
+        "protocolVersion": 1,
+        "status": "ready",
+        "requestId": "6fe11e9c-ae23-4c8c-893c-aadef5ddbde0",
+        "attemptId": "0abbb429-5cd1-4a48-81e2-4860e142e72a",
+        "sessionRef": "sess_114047c0fbc899a5de3e0c0c2e3d48e1",
+        "errorCode": null,
+        "retry": null,
+        "scene": {
+          "id": "r:ad5fb31b7c84e036:t1:s:scene",
+          "title": "青云村口",
+          "location": "青云村口",
+          "entities": [
+            {
+              "id": "r:ad5fb31b7c84e036:t1:e:place_1",
+              "name": "山道",
+              "kind": "place"
+            },
+            {
+              "id": "r:ad5fb31b7c84e036:t1:e:place_2",
+              "name": "青石镇",
+              "kind": "place"
+            }
+          ],
+          "blocks": [
+            {
+              "kind": "narration",
+              "text": "你叫云归，今年十六岁，是个凡人。你出生在青云村，生来便带着两样天赋：过目不忘和命带煞运。过目不忘让你读书识字极快，命带煞运却让你在村中并不讨喜，总觉得你身上带着晦气。你身无长物，只有三天的行粮和几枚铜钱，此刻正站在村口的古槐树下，望着蜿蜒向外的山道发呆。"
+            },
+            {
+              "kind": "dialogue",
+              "text": "“这世道，凡人如草芥，我若不出去闯闯，怕是连这点行粮也守不住。”",
+              "speaker": "self"
+            },
+            {
+              "kind": "narration",
+              "text": "你摸了摸干瘪的口袋，那里只有几枚铜钱，那是你全部的家当。你决定先去镇上看看，或许能找到什么机会，或者至少换点吃的。你迈开步子，沿着山道向镇上走去。"
+            }
+          ],
+          "choices": [
+            {
+              "id": "r:ad5fb31b7c84e036:t1:c:a",
+              "label": "沿路前往山道（谨慎）",
+              "intent": "travel",
+              "targetId": "r:ad5fb31b7c84e036:t1:e:place_1",
+              "stake": "low",
+              "approach": "road"
+            },
+            {
+              "id": "r:ad5fb31b7c84e036:t1:c:b",
+              "label": "沿路前往青石镇（谨慎）",
+              "intent": "travel",
+              "targetId": "r:ad5fb31b7c84e036:t1:e:place_2",
+              "stake": "low",
+              "approach": "road"
+            }
+          ],
+          "memoryDeltas": []
+        }
+      },
+      "revision": 1,
+      "pending": false,
+      "posts": 1,
+      "diagnostics": [
+        {
+          "requestId": "6fe11e9c-ae23-4c8c-893c-aadef5ddbde0",
+          "context": {
+            "schemaVersion": 1,
+            "phase": "opening",
+            "identity": {
+              "runId": "00bee7e0-0da2-4d5f-8201-9907adfaebe0",
+              "turnId": 1,
+              "baseRevision": 0,
+              "stateHash": "bc36e35de20f44b6cb3266c6dffc9a44b395338f9b377c067a1bb281d04d66df",
+              "choiceId": null,
+              "rulesVersion": 1,
+              "promptVersion": 1,
+              "requestId": "6fe11e9c-ae23-4c8c-893c-aadef5ddbde0"
+            },
+            "namespace": "r:ad5fb31b7c84e036",
+            "receipt": {
+              "kind": "opening",
+              "choiceId": null,
+              "action": null,
+              "elapsedDays": 0,
+              "itemChanges": {},
+              "relationChanges": {},
+              "random": {
+                "before": 2144930479,
+                "after": 2144930479,
+                "roll": null
+              },
+              "before": {
+                "ageDays": 5760,
+                "realm": "mortal",
+                "cultivation": 0,
+                "injury": 0
+              },
+              "after": {
+                "ageDays": 5760,
+                "realm": "mortal",
+                "cultivation": 0,
+                "injury": 0
+              },
+              "death": null,
+              "birth": {
+                "originId": "village",
+                "talentIds": [
+                  "keen-memory",
+                  "fortune-debt"
+                ],
+                "attributes": {
+                  "constitution": 5,
+                  "insight": 4,
+                  "fortune": 3
+                }
+              }
+            },
+            "life": {
+              "name": "云归",
+              "ageDays": 5760,
+              "lifeLimit": 80,
+              "realm": "mortal",
+              "cultivation": 0,
+              "injury": 0,
+              "items": {
+                "supplies": 3,
+                "stones": 0
+              },
+              "relations": {},
+              "birth": {
+                "originId": "village",
+                "talentIds": [
+                  "keen-memory",
+                  "fortune-debt"
+                ],
+                "attributes": {
+                  "constitution": 5,
+                  "insight": 4,
+                  "fortune": 3
+                }
+              }
+            },
+            "entities": [],
+            "memory": {
+              "facts": [],
+              "promises": [],
+              "clues": [],
+              "recent": [],
+              "summaries": []
+            },
+            "references": [],
+            "previousScene": null,
+            "relationshipVersion": 1,
+            "relationships": {},
+            "coverage": {
+              "policy": "relevance-v1",
+              "openTotal": 0,
+              "openIncluded": 0,
+              "openOmitted": 0
+            }
+          },
+          "rawCompletion": {
+            "model": "@cf/zai-org/glm-4.7-flash",
+            "choices": [
+              {
+                "finish_reason": "stop",
+                "message": {
+                  "content": "{\n  \"blocks\": [\n    {\n      \"kind\": \"narration\",\n      \"text\": \"你叫云归，今年十六岁，是个凡人。你出生在青云村，生来便带着两样天赋：过目不忘和命带煞运。过目不忘让你读书识字极快，命带煞运却让你在村中并不讨喜，总觉得你身上带着晦气。你身无长物，只有三天的行粮和几枚铜钱，此刻正站在村口的古槐树下，望着蜿蜒向外的山道发呆。\"\n    },\n    {\n      \"kind\": \"dialogue\",\n      \"text\": \"“这世道，凡人如草芥，我若不出去闯闯，怕是连这点行粮也守不住。”\",\n      \"speaker\": \"self\"\n    },\n    {\n      \"kind\": \"narration\",\n      \"text\": \"你摸了摸干瘪的口袋，那里只有几枚铜钱，那是你全部的家当。你决定先去镇上看看，或许能找到什么机会，或者至少换点吃的。你迈开步子，沿着山道向镇上走去。\"\n    }\n  ],\n  \"title\": \"青云村口\",\n  \"location\": \"青云村口\",\n  \"otherPeople\": [],\n  \"places\": [\n    {\n      \"id\": \"l1\",\n      \"name\": \"山道\"\n    },\n    {\n      \"id\": \"l2\",\n      \"name\": \"青石镇\"\n    }\n  ],\n  \"factions\": [],\n  \"choices\": [\n    {\n      \"action\": \"travel:road\",\n      \"targetId\": \"l1\",\n      \"stake\": \"low\"\n    },\n    {\n      \"action\": \"travel:road\",\n      \"targetId\": \"l2\",\n      \"stake\": \"low\"\n    }\n  ],\n  \"memoryDeltas\": []\n}",
+                  "reasoning_content": ""
+                }
+              }
+            ],
+            "usage": {
+              "prompt_tokens": 1385,
+              "completion_tokens": 410,
+              "total_tokens": 1795,
+              "prompt_tokens_details": {
+                "cached_tokens": 0
+              },
+              "neurons": 22.541500000000173
+            }
+          },
+          "result": {
+            "status": "ready",
+            "accountingStatus": "complete",
+            "modelId": "@cf/zai-org/glm-4.7-flash",
+            "attemptId": "0abbb429-5cd1-4a48-81e2-4860e142e72a",
+            "inferencePerformed": true,
+            "usage": {
+              "promptTokens": 1385,
+              "completionTokens": 410,
+              "totalTokens": 1795
+            },
+            "actualNeurons": null,
+            "stopReason": "stop",
+            "inputHash": "d35c5df398cd92f7c1d6a6fe55dcd7341a0656325577724e9a0d64ec599681ba",
+            "inputBytes": 16013,
+            "nonThinkingValidated": true,
+            "scene": {
+              "id": "r:ad5fb31b7c84e036:t1:s:scene",
+              "title": "青云村口",
+              "location": "青云村口",
+              "entities": [
+                {
+                  "id": "r:ad5fb31b7c84e036:t1:e:place_1",
+                  "name": "山道",
+                  "kind": "place"
+                },
+                {
+                  "id": "r:ad5fb31b7c84e036:t1:e:place_2",
+                  "name": "青石镇",
+                  "kind": "place"
+                }
+              ],
+              "blocks": [
+                {
+                  "kind": "narration",
+                  "text": "你叫云归，今年十六岁，是个凡人。你出生在青云村，生来便带着两样天赋：过目不忘和命带煞运。过目不忘让你读书识字极快，命带煞运却让你在村中并不讨喜，总觉得你身上带着晦气。你身无长物，只有三天的行粮和几枚铜钱，此刻正站在村口的古槐树下，望着蜿蜒向外的山道发呆。"
+                },
+                {
+                  "kind": "dialogue",
+                  "text": "“这世道，凡人如草芥，我若不出去闯闯，怕是连这点行粮也守不住。”",
+                  "speaker": "self"
+                },
+                {
+                  "kind": "narration",
+                  "text": "你摸了摸干瘪的口袋，那里只有几枚铜钱，那是你全部的家当。你决定先去镇上看看，或许能找到什么机会，或者至少换点吃的。你迈开步子，沿着山道向镇上走去。"
+                }
+              ],
+              "choices": [
+                {
+                  "id": "r:ad5fb31b7c84e036:t1:c:a",
+                  "label": "沿路前往山道（谨慎）",
+                  "intent": "travel",
+                  "targetId": "r:ad5fb31b7c84e036:t1:e:place_1",
+                  "stake": "low",
+                  "approach": "road"
+                },
+                {
+                  "id": "r:ad5fb31b7c84e036:t1:c:b",
+                  "label": "沿路前往青石镇（谨慎）",
+                  "intent": "travel",
+                  "targetId": "r:ad5fb31b7c84e036:t1:e:place_2",
+                  "stake": "low",
+                  "approach": "road"
+                }
+              ],
+              "memoryDeltas": []
+            },
+            "providerSource": "cloudflare"
+          },
+          "source": "cloudflare"
+        }
+      ],
+      "wireEvents": [
+        {
+          "type": "status",
+          "status": "generating"
+        },
+        {
+          "type": "status",
+          "status": "generating"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "status",
+          "status": "generating"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "status",
+          "status": "generating"
+        },
+        {
+          "type": "result"
+        }
+      ]
+    },
+    {
+      "caseId": "choice",
+      "mode": "browser-real-api",
+      "start": 29011.69999999972,
+      "timeline": [
+        {
+          "atMs": 5048,
+          "chars": 1
+        },
+        {
+          "atMs": 5125,
+          "chars": 5
+        },
+        {
+          "atMs": 5185,
+          "chars": 10
+        },
+        {
+          "atMs": 5231,
+          "chars": 14
+        },
+        {
+          "atMs": 5308,
+          "chars": 16
+        },
+        {
+          "atMs": 5371,
+          "chars": 20
+        },
+        {
+          "atMs": 5433,
+          "chars": 24
+        },
+        {
+          "atMs": 5512,
+          "chars": 28
+        },
+        {
+          "atMs": 5665,
+          "chars": 35
+        },
+        {
+          "atMs": 5696,
+          "chars": 41
+        },
+        {
+          "atMs": 5759,
+          "chars": 44
+        },
+        {
+          "atMs": 5929,
+          "chars": 50
+        },
+        {
+          "atMs": 5959,
+          "chars": 54
+        },
+        {
+          "atMs": 6034,
+          "chars": 59
+        },
+        {
+          "atMs": 6081,
+          "chars": 63
+        },
+        {
+          "atMs": 6142,
+          "chars": 67
+        },
+        {
+          "atMs": 6205,
+          "chars": 68
+        },
+        {
+          "atMs": 6298,
+          "chars": 69
+        },
+        {
+          "atMs": 6439,
+          "chars": 72
+        },
+        {
+          "atMs": 6798,
+          "chars": 73
+        },
+        {
+          "atMs": 7289,
+          "chars": 75
+        },
+        {
+          "atMs": 7946,
+          "chars": 77
+        },
+        {
+          "atMs": 8978,
+          "chars": 79
+        },
+        {
+          "atMs": 9694,
+          "chars": 81
+        },
+        {
+          "atMs": 10795,
+          "chars": 83
+        },
+        {
+          "atMs": 12042,
+          "chars": 85
+        },
+        {
+          "atMs": 13459,
+          "chars": 86
+        },
+        {
+          "atMs": 15018,
+          "chars": 88
+        },
+        {
+          "atMs": 16733,
+          "chars": 90
+        },
+        {
+          "atMs": 18617,
+          "chars": 91
+        },
+        {
+          "atMs": 20624,
+          "chars": 92
+        },
+        {
+          "atMs": 22790,
+          "chars": 94
+        },
+        {
+          "atMs": 23675,
+          "chars": 96
+        },
+        {
+          "atMs": 23936,
+          "chars": 101
+        },
+        {
+          "atMs": 23997,
+          "chars": 104
+        },
+        {
+          "atMs": 24059,
+          "chars": 109
+        },
+        {
+          "atMs": 24406,
+          "chars": 112
+        },
+        {
+          "atMs": 24484,
+          "chars": 113
+        },
+        {
+          "atMs": 24565,
+          "chars": 116
+        },
+        {
+          "atMs": 24640,
+          "chars": 118
+        },
+        {
+          "atMs": 24701,
+          "chars": 120
+        },
+        {
+          "atMs": 24764,
+          "chars": 123
+        },
+        {
+          "atMs": 24827,
+          "chars": 127
+        },
+        {
+          "atMs": 24890,
+          "chars": 130
+        }
+      ],
+      "firstBirthMs": null,
+      "choicesEnabledDuringPreview": false,
+      "lastText": "你沿着蜿蜒的山道前行，脚下的石阶被岁月磨得光滑。四周古木参天，偶尔传来几声不知名的鸟鸣。三十天的跋涉让你对这陌生的山林有了些许熟悉，但前路依旧迷雾重重。你并未发现什么异常，只是更加确信自己需要寻找更多的资源来提升实力。\n\n这山道似乎通向青石镇，但不知还有多远。",
+      "doneMs": 27464,
+      "result": {
+        "protocolVersion": 1,
+        "status": "ready",
+        "requestId": "88f6ac26-cc35-4424-a8a9-ea6a270ee435",
+        "attemptId": "09c4f710-5201-4ead-a012-066fd44cfb39",
+        "sessionRef": "sess_114047c0fbc899a5de3e0c0c2e3d48e1",
+        "errorCode": null,
+        "retry": null,
+        "scene": {
+          "id": "r:ad5fb31b7c84e036:t2:s:scene",
+          "title": "山道",
+          "location": "山道",
+          "entities": [
+            {
+              "id": "r:ad5fb31b7c84e036:t1:e:place_1",
+              "name": "山道",
+              "kind": "place"
+            },
+            {
+              "id": "r:ad5fb31b7c84e036:t1:e:place_2",
+              "name": "青石镇",
+              "kind": "place"
+            }
+          ],
+          "blocks": [
+            {
+              "kind": "narration",
+              "text": "你沿着蜿蜒的山道前行，脚下的石阶被岁月磨得光滑。四周古木参天，偶尔传来几声不知名的鸟鸣。三十天的跋涉让你对这陌生的山林有了些许熟悉，但前路依旧迷雾重重。你并未发现什么异常，只是更加确信自己需要寻找更多的资源来提升实力。"
+            },
+            {
+              "kind": "dialogue",
+              "text": "这山道似乎通向青石镇，但不知还有多远。",
+              "speaker": "self"
+            }
+          ],
+          "choices": [
+            {
+              "id": "r:ad5fb31b7c84e036:t2:c:a",
+              "label": "沿路前往青石镇（谨慎）",
+              "intent": "travel",
+              "targetId": "r:ad5fb31b7c84e036:t1:e:place_2",
+              "stake": "low",
+              "approach": "road"
+            },
+            {
+              "id": "r:ad5fb31b7c84e036:t2:c:b",
+              "label": "凝神修行（谨慎）",
+              "intent": "practice",
+              "targetId": "self",
+              "stake": "low",
+              "approach": "steady"
+            },
+            {
+              "id": "r:ad5fb31b7c84e036:t2:c:c",
+              "label": "歇息调养（谨慎）",
+              "intent": "rest",
+              "targetId": "self",
+              "stake": "low",
+              "approach": "recover"
+            }
+          ],
+          "memoryDeltas": []
+        }
+      },
+      "revision": 2,
+      "pending": false,
+      "posts": 2,
+      "diagnostics": [
+        {
+          "requestId": "6fe11e9c-ae23-4c8c-893c-aadef5ddbde0",
+          "context": {
+            "schemaVersion": 1,
+            "phase": "opening",
+            "identity": {
+              "runId": "00bee7e0-0da2-4d5f-8201-9907adfaebe0",
+              "turnId": 1,
+              "baseRevision": 0,
+              "stateHash": "bc36e35de20f44b6cb3266c6dffc9a44b395338f9b377c067a1bb281d04d66df",
+              "choiceId": null,
+              "rulesVersion": 1,
+              "promptVersion": 1,
+              "requestId": "6fe11e9c-ae23-4c8c-893c-aadef5ddbde0"
+            },
+            "namespace": "r:ad5fb31b7c84e036",
+            "receipt": {
+              "kind": "opening",
+              "choiceId": null,
+              "action": null,
+              "elapsedDays": 0,
+              "itemChanges": {},
+              "relationChanges": {},
+              "random": {
+                "before": 2144930479,
+                "after": 2144930479,
+                "roll": null
+              },
+              "before": {
+                "ageDays": 5760,
+                "realm": "mortal",
+                "cultivation": 0,
+                "injury": 0
+              },
+              "after": {
+                "ageDays": 5760,
+                "realm": "mortal",
+                "cultivation": 0,
+                "injury": 0
+              },
+              "death": null,
+              "birth": {
+                "originId": "village",
+                "talentIds": [
+                  "keen-memory",
+                  "fortune-debt"
+                ],
+                "attributes": {
+                  "constitution": 5,
+                  "insight": 4,
+                  "fortune": 3
+                }
+              }
+            },
+            "life": {
+              "name": "云归",
+              "ageDays": 5760,
+              "lifeLimit": 80,
+              "realm": "mortal",
+              "cultivation": 0,
+              "injury": 0,
+              "items": {
+                "supplies": 3,
+                "stones": 0
+              },
+              "relations": {},
+              "birth": {
+                "originId": "village",
+                "talentIds": [
+                  "keen-memory",
+                  "fortune-debt"
+                ],
+                "attributes": {
+                  "constitution": 5,
+                  "insight": 4,
+                  "fortune": 3
+                }
+              }
+            },
+            "entities": [],
+            "memory": {
+              "facts": [],
+              "promises": [],
+              "clues": [],
+              "recent": [],
+              "summaries": []
+            },
+            "references": [],
+            "previousScene": null,
+            "relationshipVersion": 1,
+            "relationships": {},
+            "coverage": {
+              "policy": "relevance-v1",
+              "openTotal": 0,
+              "openIncluded": 0,
+              "openOmitted": 0
+            }
+          },
+          "rawCompletion": {
+            "model": "@cf/zai-org/glm-4.7-flash",
+            "choices": [
+              {
+                "finish_reason": "stop",
+                "message": {
+                  "content": "{\n  \"blocks\": [\n    {\n      \"kind\": \"narration\",\n      \"text\": \"你叫云归，今年十六岁，是个凡人。你出生在青云村，生来便带着两样天赋：过目不忘和命带煞运。过目不忘让你读书识字极快，命带煞运却让你在村中并不讨喜，总觉得你身上带着晦气。你身无长物，只有三天的行粮和几枚铜钱，此刻正站在村口的古槐树下，望着蜿蜒向外的山道发呆。\"\n    },\n    {\n      \"kind\": \"dialogue\",\n      \"text\": \"“这世道，凡人如草芥，我若不出去闯闯，怕是连这点行粮也守不住。”\",\n      \"speaker\": \"self\"\n    },\n    {\n      \"kind\": \"narration\",\n      \"text\": \"你摸了摸干瘪的口袋，那里只有几枚铜钱，那是你全部的家当。你决定先去镇上看看，或许能找到什么机会，或者至少换点吃的。你迈开步子，沿着山道向镇上走去。\"\n    }\n  ],\n  \"title\": \"青云村口\",\n  \"location\": \"青云村口\",\n  \"otherPeople\": [],\n  \"places\": [\n    {\n      \"id\": \"l1\",\n      \"name\": \"山道\"\n    },\n    {\n      \"id\": \"l2\",\n      \"name\": \"青石镇\"\n    }\n  ],\n  \"factions\": [],\n  \"choices\": [\n    {\n      \"action\": \"travel:road\",\n      \"targetId\": \"l1\",\n      \"stake\": \"low\"\n    },\n    {\n      \"action\": \"travel:road\",\n      \"targetId\": \"l2\",\n      \"stake\": \"low\"\n    }\n  ],\n  \"memoryDeltas\": []\n}",
+                  "reasoning_content": ""
+                }
+              }
+            ],
+            "usage": {
+              "prompt_tokens": 1385,
+              "completion_tokens": 410,
+              "total_tokens": 1795,
+              "prompt_tokens_details": {
+                "cached_tokens": 0
+              },
+              "neurons": 22.541500000000173
+            }
+          },
+          "result": {
+            "status": "ready",
+            "accountingStatus": "complete",
+            "modelId": "@cf/zai-org/glm-4.7-flash",
+            "attemptId": "0abbb429-5cd1-4a48-81e2-4860e142e72a",
+            "inferencePerformed": true,
+            "usage": {
+              "promptTokens": 1385,
+              "completionTokens": 410,
+              "totalTokens": 1795
+            },
+            "actualNeurons": null,
+            "stopReason": "stop",
+            "inputHash": "d35c5df398cd92f7c1d6a6fe55dcd7341a0656325577724e9a0d64ec599681ba",
+            "inputBytes": 16013,
+            "nonThinkingValidated": true,
+            "scene": {
+              "id": "r:ad5fb31b7c84e036:t1:s:scene",
+              "title": "青云村口",
+              "location": "青云村口",
+              "entities": [
+                {
+                  "id": "r:ad5fb31b7c84e036:t1:e:place_1",
+                  "name": "山道",
+                  "kind": "place"
+                },
+                {
+                  "id": "r:ad5fb31b7c84e036:t1:e:place_2",
+                  "name": "青石镇",
+                  "kind": "place"
+                }
+              ],
+              "blocks": [
+                {
+                  "kind": "narration",
+                  "text": "你叫云归，今年十六岁，是个凡人。你出生在青云村，生来便带着两样天赋：过目不忘和命带煞运。过目不忘让你读书识字极快，命带煞运却让你在村中并不讨喜，总觉得你身上带着晦气。你身无长物，只有三天的行粮和几枚铜钱，此刻正站在村口的古槐树下，望着蜿蜒向外的山道发呆。"
+                },
+                {
+                  "kind": "dialogue",
+                  "text": "“这世道，凡人如草芥，我若不出去闯闯，怕是连这点行粮也守不住。”",
+                  "speaker": "self"
+                },
+                {
+                  "kind": "narration",
+                  "text": "你摸了摸干瘪的口袋，那里只有几枚铜钱，那是你全部的家当。你决定先去镇上看看，或许能找到什么机会，或者至少换点吃的。你迈开步子，沿着山道向镇上走去。"
+                }
+              ],
+              "choices": [
+                {
+                  "id": "r:ad5fb31b7c84e036:t1:c:a",
+                  "label": "沿路前往山道（谨慎）",
+                  "intent": "travel",
+                  "targetId": "r:ad5fb31b7c84e036:t1:e:place_1",
+                  "stake": "low",
+                  "approach": "road"
+                },
+                {
+                  "id": "r:ad5fb31b7c84e036:t1:c:b",
+                  "label": "沿路前往青石镇（谨慎）",
+                  "intent": "travel",
+                  "targetId": "r:ad5fb31b7c84e036:t1:e:place_2",
+                  "stake": "low",
+                  "approach": "road"
+                }
+              ],
+              "memoryDeltas": []
+            },
+            "providerSource": "cloudflare"
+          },
+          "source": "cloudflare"
+        },
+        {
+          "requestId": "88f6ac26-cc35-4424-a8a9-ea6a270ee435",
+          "context": {
+            "schemaVersion": 1,
+            "phase": "choice",
+            "identity": {
+              "runId": "00bee7e0-0da2-4d5f-8201-9907adfaebe0",
+              "turnId": 2,
+              "baseRevision": 1,
+              "stateHash": "29c95f3d0590e8c725c7a55707d6f55bb7546ac1689033ddaa4d6980e42128a6",
+              "choiceId": "r:ad5fb31b7c84e036:t1:c:a",
+              "rulesVersion": 1,
+              "promptVersion": 1,
+              "requestId": "88f6ac26-cc35-4424-a8a9-ea6a270ee435"
+            },
+            "namespace": "r:ad5fb31b7c84e036",
+            "receipt": {
+              "kind": "choice",
+              "choiceId": "r:ad5fb31b7c84e036:t1:c:a",
+              "action": {
+                "id": "r:ad5fb31b7c84e036:t1:c:a",
+                "label": "沿路前往山道（谨慎）",
+                "intent": "travel",
+                "targetId": "r:ad5fb31b7c84e036:t1:e:place_1",
+                "stake": "low",
+                "approach": "road"
+              },
+              "elapsedDays": 30,
+              "itemChanges": {
+                "supplies": -1
+              },
+              "relationChanges": {},
+              "random": {
+                "before": 2144930479,
+                "after": 1070413890,
+                "roll": 90
+              },
+              "before": {
+                "ageDays": 5760,
+                "realm": "mortal",
+                "cultivation": 0,
+                "injury": 0
+              },
+              "after": {
+                "ageDays": 5790,
+                "realm": "mortal",
+                "cultivation": 0,
+                "injury": 0
+              },
+              "death": null,
+              "birth": null
+            },
+            "life": {
+              "name": "云归",
+              "ageDays": 5790,
+              "lifeLimit": 80,
+              "realm": "mortal",
+              "cultivation": 0,
+              "injury": 0,
+              "items": {
+                "supplies": 2,
+                "stones": 0
+              },
+              "relations": {},
+              "birth": {
+                "originId": "village",
+                "talentIds": [
+                  "keen-memory",
+                  "fortune-debt"
+                ],
+                "attributes": {
+                  "constitution": 5,
+                  "insight": 4,
+                  "fortune": 3
+                }
+              }
+            },
+            "entities": [
+              {
+                "id": "r:ad5fb31b7c84e036:t1:e:place_1",
+                "name": "山道",
+                "kind": "place",
+                "status": "unknown"
+              },
+              {
+                "id": "r:ad5fb31b7c84e036:t1:e:place_2",
+                "name": "青石镇",
+                "kind": "place",
+                "status": "unknown"
+              }
+            ],
+            "memory": {
+              "facts": [],
+              "promises": [],
+              "clues": [],
+              "recent": [],
+              "summaries": []
+            },
+            "references": [],
+            "previousScene": {
+              "id": "r:ad5fb31b7c84e036:t1:s:scene",
+              "blocksHash": "3d91e473ae0d17df4ac2b517b805c0ea63a152f0ea6bd7f8800e01c00b8edf50"
+            },
+            "relationshipVersion": 1,
+            "relationships": {},
+            "coverage": {
+              "policy": "relevance-v1",
+              "openTotal": 0,
+              "openIncluded": 0,
+              "openOmitted": 0
+            }
+          },
+          "rawCompletion": {
+            "model": "@cf/zai-org/glm-4.7-flash",
+            "choices": [
+              {
+                "finish_reason": "stop",
+                "message": {
+                  "content": "{\"blocks\":[{\"kind\":\"narration\",\"text\":\"你沿着蜿蜒的山道前行，脚下的石阶被岁月磨得光滑。四周古木参天，偶尔传来几声不知名的鸟鸣。三十天的跋涉让你对这陌生的山林有了些许熟悉，但前路依旧迷雾重重。你并未发现什么异常，只是更加确信自己需要寻找更多的资源来提升实力。\"},{\"kind\":\"dialogue\",\"text\":\"这山道似乎通向青石镇，但不知还有多远。\",\"speaker\":\"self\"}],\"title\":\"山道\",\"location\":\"山道\",\"otherPeople\":[],\"places\":[{\"id\":\"k1\",\"name\":\"山道\"},{\"id\":\"k2\",\"name\":\"青石镇\"}],\"factions\":[],\"choices\":[{\"action\":\"travel:road\",\"targetId\":\"k2\",\"stake\":\"low\"},{\"action\":\"practice:steady\",\"targetId\":\"self\",\"stake\":\"low\"},{\"action\":\"rest:recover\",\"targetId\":\"self\",\"stake\":\"low\"}],\"memoryDeltas\":[]}",
+                  "reasoning_content": ""
+                }
+              }
+            ],
+            "usage": {
+              "prompt_tokens": 1527,
+              "completion_tokens": 213,
+              "total_tokens": 1740,
+              "prompt_tokens_details": {
+                "cached_tokens": 0
+              },
+              "neurons": 16.15170000000009
+            }
+          },
+          "result": {
+            "status": "ready",
+            "accountingStatus": "complete",
+            "modelId": "@cf/zai-org/glm-4.7-flash",
+            "attemptId": "09c4f710-5201-4ead-a012-066fd44cfb39",
+            "inferencePerformed": true,
+            "usage": {
+              "promptTokens": 1527,
+              "completionTokens": 213,
+              "totalTokens": 1740
+            },
+            "actualNeurons": null,
+            "stopReason": "stop",
+            "inputHash": "017ed2aeba85f60a499c23b7e85edf4ece33c62019bffaef3a636a44a25f6759",
+            "inputBytes": 16665,
+            "nonThinkingValidated": true,
+            "scene": {
+              "id": "r:ad5fb31b7c84e036:t2:s:scene",
+              "title": "山道",
+              "location": "山道",
+              "entities": [
+                {
+                  "id": "r:ad5fb31b7c84e036:t1:e:place_1",
+                  "name": "山道",
+                  "kind": "place"
+                },
+                {
+                  "id": "r:ad5fb31b7c84e036:t1:e:place_2",
+                  "name": "青石镇",
+                  "kind": "place"
+                }
+              ],
+              "blocks": [
+                {
+                  "kind": "narration",
+                  "text": "你沿着蜿蜒的山道前行，脚下的石阶被岁月磨得光滑。四周古木参天，偶尔传来几声不知名的鸟鸣。三十天的跋涉让你对这陌生的山林有了些许熟悉，但前路依旧迷雾重重。你并未发现什么异常，只是更加确信自己需要寻找更多的资源来提升实力。"
+                },
+                {
+                  "kind": "dialogue",
+                  "text": "这山道似乎通向青石镇，但不知还有多远。",
+                  "speaker": "self"
+                }
+              ],
+              "choices": [
+                {
+                  "id": "r:ad5fb31b7c84e036:t2:c:a",
+                  "label": "沿路前往青石镇（谨慎）",
+                  "intent": "travel",
+                  "targetId": "r:ad5fb31b7c84e036:t1:e:place_2",
+                  "stake": "low",
+                  "approach": "road"
+                },
+                {
+                  "id": "r:ad5fb31b7c84e036:t2:c:b",
+                  "label": "凝神修行（谨慎）",
+                  "intent": "practice",
+                  "targetId": "self",
+                  "stake": "low",
+                  "approach": "steady"
+                },
+                {
+                  "id": "r:ad5fb31b7c84e036:t2:c:c",
+                  "label": "歇息调养（谨慎）",
+                  "intent": "rest",
+                  "targetId": "self",
+                  "stake": "low",
+                  "approach": "recover"
+                }
+              ],
+              "memoryDeltas": []
+            },
+            "providerSource": "cloudflare"
+          },
+          "source": "cloudflare"
+        }
+      ],
+      "wireEvents": [
+        {
+          "type": "status",
+          "status": "generating"
+        },
+        {
+          "type": "status",
+          "status": "generating"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "status",
+          "status": "generating"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "status",
+          "status": "generating"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "result"
+        }
+      ]
+    }
+  ],
+  "refreshed": {
+    "beforeRevision": 2,
+    "afterRevision": 2,
+    "sameRng": true,
+    "sameState": true,
+    "noNewPost": true
+  },
+  "errors": [],
+  "posts": 2
+}

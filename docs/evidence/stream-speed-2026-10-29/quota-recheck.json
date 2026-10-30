@@ -1,0 +1,42 @@
+{
+  "schemaVersion": 1,
+  "checkedOn": "2026-10-29",
+  "accountId": "b266970852cbc371061c94c5b1fe76a9",
+  "status": "ADMISSION_AND_REPORTED_USAGE_DISAGREE",
+  "reasonForRecheck": "User observed Neurons used today: 0/10k in the dashboard.",
+  "officialGraphql": {
+    "httpStatus": 200,
+    "dataset": "aiInferenceAdaptiveGroups",
+    "metric": "sum.totalNeurons",
+    "timeFilter": "UTC datetimeHour_geq inclusive / datetimeHour_lt exclusive",
+    "today": {"start":"2026-10-29T00:00:00Z","end":"2026-10-30T00:00:00Z","count":8,"totalNeurons":0},
+    "yesterday": {"start":"2026-10-28T00:00:00Z","end":"2026-10-29T00:00:00Z","count":73,"totalNeurons":10711.885996931458}
+  },
+  "independentRestChecks": {
+    "checkedAt": "2026-10-29T03:14:21.171Z",
+    "route": "POST /accounts/{accountId}/ai/run/{model}",
+    "bypassesTemporaryWorkerAndGameApi": true,
+    "input": {"messages":[{"role":"user","content":"只回复一个字：好"}],"max_tokens":16,"stream":false,"chat_template_kwargs":{"enable_thinking":false}},
+    "results": [
+      {"model":"@cf/qwen/qwen3.8-27b","httpStatus":429,"errorCode":4006,"providerMessage":"you have used up your daily free allocation of 10,000 neurons","requestId":"3b515a8b-9778-4bbc-8277-06bf1c3b3d8e","elapsedMs":7066},
+      {"model":"@cf/zai-org/glm-4.7-flash","httpStatus":429,"errorCode":4006,"providerMessage":"you have used up your daily free allocation of 10,000 neurons","requestId":"de306887-d966-42c4-91fa-87c13d510626","elapsedMs":6430}
+    ]
+  },
+  "confirmed": [
+    "The current dashboard value of zero agrees with the official analytics API.",
+    "The rejection is returned by Cloudflare's native inference API, independently of the game's transport and stream probe.",
+    "Changing from Qwen to GLM did not remove the rejection in these two checks.",
+    "No successful output was generated in these checks; their timings are not generation latency samples."
+  ],
+  "notEstablished": [
+    "Today's actual allowance has been exhausted.",
+    "Whether this is a delayed reset, stale admission counter, analytics lag or another Cloudflare enforcement problem.",
+    "A precise time at which calls will resume; the documented daily UTC reset did not by itself establish current availability."
+  ],
+  "workingHypothesis": "Yesterday's greater-than-10000 usage and today's zero usage make a reset/enforcement synchronization issue plausible, but do not prove it.",
+  "nextActionBoundary": "Do not upgrade billing or change production based on this discrepancy. Preserve account/date/model/request identifiers for provider-side investigation.",
+  "officialReferences": [
+    "https://developers.cloudflare.com/workers-ai/platform/pricing/",
+    "https://developers.cloudflare.com/workers-ai/platform/errors/"
+  ]
+}

@@ -6,6 +6,51 @@ function storage(db=new DatabaseSync(':memory:')) { return {sql:{exec(sql,...arg
 function fixture(limits={dailyNeurons:100,pendingMs:30000}){let now=Date.parse('2026-10-27T12:00:00Z');const disk=storage();const make=()=>createBudgetCoordinator({storage:disk,now:()=>now,limits});const b=make();return {b,make,disk,setNow:t=>now=Date.parse(t),get now(){return now;}};}
 const create=(b,id='s1',ip='ip')=>b.createSession({sessionRef:id,tokenHash:'token-'+id,ipHash:ip});
 const request=(id='a1',rest={})=>({sessionRef:'s1',tokenHash:'token-s1',attemptId:id,requestId:'req1',payloadHash:'hash1',reservedNeurons:40,retryOf:null,ipHash:'ip',...rest});
+
+test('Zhipu admission is account-wide and survives restart with stale releases fenced',()=>{
+  const f=fixture({});assert.equal(typeof f.b.acquireProvider,'function');
+  assert.equal(f.b.acquireProvider({owner:'first-player'}).kind,'acquired');
+  assert.equal(f.make().acquireProvider({owner:'second-player'}).kind,'waiting');
+  assert.equal(f.b.releaseProvider({owner:'wrong-owner',outcome:'complete'}).kind,'denied');
+  assert.equal(f.b.acquireProvider({owner:'second-player'}).kind,'waiting');
+  f.setNow('2026-10-27T12:02:01Z');assert.equal(f.make().acquireProvider({owner:'second-player'}).kind,'acquired');
+  assert.equal(f.b.releaseProvider({owner:'first-player',outcome:'complete'}).kind,'denied');
+  assert.equal(f.b.acquireProvider({owner:'third-player'}).kind,'waiting');
+});
+
+test('Zhipu completion and busy responses retain durable spacing and different cooldowns',()=>{
+  for(const [outcome,seconds] of [['complete',1],['rate-limited',5],['overloaded',15]]){
+    const f=fixture({});assert.equal(typeof f.b.acquireProvider,'function');
+    f.b.acquireProvider({owner:'first'});assert.equal(f.b.releaseProvider({owner:'first',outcome}).kind,'released');
+    f.b.cleanup();assert.equal(f.make().acquireProvider({owner:'second'}).kind,'waiting');
+    f.setNow('2026-10-27T12:00:'+String(seconds).padStart(2,'0')+'Z');
+    assert.equal(f.make().acquireProvider({owner:'second'}).kind,'acquired');
+  }
+});
+
+test('unknown Zhipu cancellation retains its original lease without erasing story accounting',()=>{
+  const f=fixture({});assert.equal(typeof f.b.acquireProvider,'function');create(f.b);f.b.reserve(request());
+  f.b.acquireProvider({owner:'first'});assert.equal(f.b.releaseProvider({owner:'first',outcome:'unknown'}).kind,'released');
+  assert.equal(f.b.releaseProvider({owner:'first',outcome:'complete'}).kind,'released');
+  f.setNow('2026-10-27T12:01:59Z');f.b.cleanup();assert.equal(f.make().acquireProvider({owner:'second'}).kind,'waiting');
+  assert.equal(f.disk.sql.exec('SELECT status FROM ledger').toArray()[0].status,'reserved');
+  f.setNow('2026-10-27T12:02:00Z');assert.equal(f.b.acquireProvider({owner:'second'}).kind,'acquired');
+  assert.equal(f.b.releaseProvider({owner:'second',outcome:'anything'}).code,'REQUEST_INVALID');
+  assert.equal(f.b.acquireProvider({owner:'third'}).kind,'waiting');
+  assert.equal(f.b.acquireProvider({owner:''}).code,'REQUEST_INVALID');
+});
+
+test('a trusted independent primary can reserve after a historical Cloudflare quota latch without erasing it',()=>{
+  const f=fixture({});create(f.b);f.b.reserve(request());f.b.settle({sessionRef:'s1',attemptId:'a1',status:'unknown',quotaExhausted:true,result:{status:'paused',errorCode:'FREE_QUOTA_EXHAUSTED'}});
+  const original=f.disk.sql.exec('SELECT * FROM ledger ORDER BY rowid').toArray();
+  assert.equal(f.b.reserve(request('a2',{requestId:'req2'})).code,'FREE_QUOTA_EXHAUSTED');
+  assert.equal(f.b.reserve(request('invalid',{requestId:'invalid',quotaProvider:'anything'})).code,'RESERVATION_INVALID');
+  assert.equal(f.make().reserve(request('a2',{requestId:'req2',quotaProvider:'zhipu'})).kind,'reserved');
+  assert.equal(f.b.reserve(request('a3',{requestId:'req3',quotaProvider:'zhipu'})).code,'ATTEMPT_IN_PROGRESS');
+  f.b.settle({sessionRef:'s1',attemptId:'a2',status:'complete',result:{status:'ready'}});
+  assert.equal(f.make().reserve(request('a3',{requestId:'req3'})).code,'FREE_QUOTA_EXHAUSTED');
+  assert.deepEqual(f.disk.sql.exec('SELECT * FROM ledger ORDER BY rowid').toArray().slice(0,1),original);assert.equal(f.disk.sql.exec('SELECT * FROM quota').toArray().length,1);
+});
 test('SQLite durable reservation is atomic and duplicate replay never spends twice across restart',()=>{const f=fixture();create(f.b);const a=f.b.reserve(request());assert.equal(a.kind,'reserved');assert.equal(f.b.reserve(request()).code,'ATTEMPT_IN_PROGRESS');assert.equal(f.make().reserve(request()).code,'ATTEMPT_IN_PROGRESS');assert.equal(f.b.reserve(request('a1',{payloadHash:'changed'})).code,'ATTEMPT_PAYLOAD_MISMATCH');f.b.settle({sessionRef:'s1',attemptId:'a1',status:'complete',actualNeurons:null,result:{status:'ready',scene:{id:'scene'}}});assert.equal(f.make().reserve(request()).kind,'replay');assert.equal(f.b.reserve(request('a2',{requestId:'req2',reservedNeurons:61})).code,'DAILY_BUDGET_EXHAUSTED');});
 test('lookup and result retention require credential, survive restart and retain entire session lifetime',()=>{const f=fixture();create(f.b);f.b.reserve(request());f.b.settle({sessionRef:'s1',attemptId:'a1',status:'complete',result:{status:'ready'}});assert.equal(f.b.lookup(request('a1',{tokenHash:'wrong'})).code,'SESSION_UNAVAILABLE');f.setNow('2026-10-28T11:59:00Z');f.b.cleanup();assert.equal(f.make().lookup(request()).kind,'replay');f.setNow('2026-10-28T12:00:01Z');assert.equal(f.b.lookup(request()).code,'SESSION_UNAVAILABLE');f.b.cleanup();assert.equal(f.b.reserve(request()).code,'SESSION_UNAVAILABLE');});
 test('unknown commitments survive rollover and cleanup while old completed charges leave a finite daily policy',()=>{const f=fixture();create(f.b);f.b.reserve(request());f.b.settle({sessionRef:'s1',attemptId:'a1',status:'unknown',result:{status:'paused'}});f.b.reserve(request('a2',{requestId:'req2',reservedNeurons:60}));f.b.settle({sessionRef:'s1',attemptId:'a2',status:'complete',result:{status:'ready'}});f.setNow('2026-10-29T01:00:00Z');f.b.cleanup();create(f.b,'s2');assert.equal(f.make().reserve(request('a3',{sessionRef:'s2',tokenHash:'token-s2',reservedNeurons:61})).code,'DAILY_BUDGET_EXHAUSTED');assert.equal(f.b.reserve(request('a3',{sessionRef:'s2',tokenHash:'token-s2',reservedNeurons:60})).kind,'reserved');});

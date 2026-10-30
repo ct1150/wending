@@ -1,0 +1,844 @@
+{
+  "recordedAt": "2026-10-29T05:48:47.640Z",
+  "version": "1696182b-d836-4ab7-9a9a-808fbc3791ac",
+  "frontendSource": "local current release HTML served by browser harness; API and SQLite are real Workers",
+  "records": [
+    {
+      "caseId": "opening",
+      "mode": "browser-real-api",
+      "start": 386.59999990463257,
+      "timeline": [],
+      "firstBirthMs": 82,
+      "lastText": "",
+      "doneMs": 1839,
+      "result": {
+        "protocolVersion": 1,
+        "status": "paused",
+        "requestId": "887d9eea-a213-4ffb-9725-1bc522f69171",
+        "attemptId": "2122c52e-5991-40ad-b660-7c4b83718fbb",
+        "sessionRef": "sess_4d8c6db703afa45de0a7819301b8fce7",
+        "errorCode": "FREE_QUOTA_EXHAUSTED",
+        "retry": {
+          "explicit": true,
+          "afterMs": 0,
+          "previousAttemptId": "2122c52e-5991-40ad-b660-7c4b83718fbb",
+          "previousSessionRef": "sess_4d8c6db703afa45de0a7819301b8fce7"
+        }
+      },
+      "revision": 0,
+      "pending": true,
+      "posts": 1,
+      "diagnostics": [
+        {
+          "requestId": "887d9eea-a213-4ffb-9725-1bc522f69171",
+          "context": {
+            "schemaVersion": 1,
+            "phase": "opening",
+            "identity": {
+              "runId": "404081be-1c33-43d7-b679-38ef748ccc67",
+              "turnId": 1,
+              "baseRevision": 0,
+              "stateHash": "8b1fd6d935fba76b538f166324a4a494763aeb1b2c874da3bc9b66e0542e45f6",
+              "choiceId": null,
+              "rulesVersion": 1,
+              "promptVersion": 1,
+              "requestId": "887d9eea-a213-4ffb-9725-1bc522f69171"
+            },
+            "namespace": "r:f2f6a9179447017d",
+            "receipt": {
+              "kind": "opening",
+              "choiceId": null,
+              "action": null,
+              "elapsedDays": 0,
+              "itemChanges": {},
+              "relationChanges": {},
+              "random": {
+                "before": 3887544175,
+                "after": 3887544175,
+                "roll": null
+              },
+              "before": {
+                "ageDays": 5760,
+                "realm": "mortal",
+                "cultivation": 0,
+                "injury": 0
+              },
+              "after": {
+                "ageDays": 5760,
+                "realm": "mortal",
+                "cultivation": 0,
+                "injury": 0
+              },
+              "death": null,
+              "birth": {
+                "originId": "village",
+                "talentIds": [
+                  "flash-wisdom",
+                  "keen-memory"
+                ],
+                "attributes": {
+                  "constitution": 1,
+                  "insight": 6,
+                  "fortune": 5
+                }
+              }
+            },
+            "life": {
+              "name": "云归",
+              "ageDays": 5760,
+              "lifeLimit": 80,
+              "realm": "mortal",
+              "cultivation": 0,
+              "injury": 0,
+              "items": {
+                "supplies": 3,
+                "stones": 0
+              },
+              "relations": {},
+              "birth": {
+                "originId": "village",
+                "talentIds": [
+                  "flash-wisdom",
+                  "keen-memory"
+                ],
+                "attributes": {
+                  "constitution": 1,
+                  "insight": 6,
+                  "fortune": 5
+                }
+              }
+            },
+            "entities": [],
+            "memory": {
+              "facts": [],
+              "promises": [],
+              "clues": [],
+              "recent": [],
+              "summaries": []
+            },
+            "references": [],
+            "previousScene": null,
+            "relationshipVersion": 1,
+            "relationships": {},
+            "coverage": {
+              "policy": "relevance-v1",
+              "openTotal": 0,
+              "openIncluded": 0,
+              "openOmitted": 0
+            }
+          },
+          "rawCompletion": null,
+          "result": {
+            "status": "paused",
+            "accountingStatus": "complete",
+            "modelId": "@cf/zai-org/glm-4.7-flash",
+            "attemptId": "2122c52e-5991-40ad-b660-7c4b83718fbb",
+            "inferencePerformed": true,
+            "usage": null,
+            "actualNeurons": null,
+            "stopReason": null,
+            "inputHash": "a236d62a596d0501dce468dce0d0f63e153fb7ab9382fd02ba93d384513a140e",
+            "inputBytes": 10573,
+            "nonThinkingValidated": null,
+            "errorCode": "FREE_QUOTA_EXHAUSTED"
+          },
+          "source": "cloudflare"
+        }
+      ],
+      "wireEvents": [
+        {
+          "type": "status",
+          "status": "generating"
+        },
+        {
+          "type": "status",
+          "status": "generating"
+        },
+        {
+          "type": "reset"
+        },
+        {
+          "type": "status",
+          "status": "switching"
+        },
+        {
+          "type": "result"
+        }
+      ]
+    },
+    {
+      "caseId": "opening-explicit-retry-1",
+      "mode": "browser-real-api",
+      "start": 17359.39999985695,
+      "timeline": [],
+      "firstBirthMs": 14,
+      "lastText": "",
+      "doneMs": 844,
+      "result": {
+        "protocolVersion": 1,
+        "status": "paused",
+        "requestId": "887d9eea-a213-4ffb-9725-1bc522f69171",
+        "attemptId": "83fb136a-8e39-45f7-b295-ce96ab4be630",
+        "sessionRef": "sess_4d8c6db703afa45de0a7819301b8fce7",
+        "errorCode": "FREE_QUOTA_EXHAUSTED",
+        "retry": {
+          "explicit": true,
+          "afterMs": 0,
+          "previousAttemptId": "83fb136a-8e39-45f7-b295-ce96ab4be630",
+          "previousSessionRef": "sess_4d8c6db703afa45de0a7819301b8fce7"
+        }
+      },
+      "revision": 0,
+      "pending": true,
+      "posts": 2,
+      "diagnostics": [
+        {
+          "requestId": "887d9eea-a213-4ffb-9725-1bc522f69171",
+          "context": {
+            "schemaVersion": 1,
+            "phase": "opening",
+            "identity": {
+              "runId": "404081be-1c33-43d7-b679-38ef748ccc67",
+              "turnId": 1,
+              "baseRevision": 0,
+              "stateHash": "8b1fd6d935fba76b538f166324a4a494763aeb1b2c874da3bc9b66e0542e45f6",
+              "choiceId": null,
+              "rulesVersion": 1,
+              "promptVersion": 1,
+              "requestId": "887d9eea-a213-4ffb-9725-1bc522f69171"
+            },
+            "namespace": "r:f2f6a9179447017d",
+            "receipt": {
+              "kind": "opening",
+              "choiceId": null,
+              "action": null,
+              "elapsedDays": 0,
+              "itemChanges": {},
+              "relationChanges": {},
+              "random": {
+                "before": 3887544175,
+                "after": 3887544175,
+                "roll": null
+              },
+              "before": {
+                "ageDays": 5760,
+                "realm": "mortal",
+                "cultivation": 0,
+                "injury": 0
+              },
+              "after": {
+                "ageDays": 5760,
+                "realm": "mortal",
+                "cultivation": 0,
+                "injury": 0
+              },
+              "death": null,
+              "birth": {
+                "originId": "village",
+                "talentIds": [
+                  "flash-wisdom",
+                  "keen-memory"
+                ],
+                "attributes": {
+                  "constitution": 1,
+                  "insight": 6,
+                  "fortune": 5
+                }
+              }
+            },
+            "life": {
+              "name": "云归",
+              "ageDays": 5760,
+              "lifeLimit": 80,
+              "realm": "mortal",
+              "cultivation": 0,
+              "injury": 0,
+              "items": {
+                "supplies": 3,
+                "stones": 0
+              },
+              "relations": {},
+              "birth": {
+                "originId": "village",
+                "talentIds": [
+                  "flash-wisdom",
+                  "keen-memory"
+                ],
+                "attributes": {
+                  "constitution": 1,
+                  "insight": 6,
+                  "fortune": 5
+                }
+              }
+            },
+            "entities": [],
+            "memory": {
+              "facts": [],
+              "promises": [],
+              "clues": [],
+              "recent": [],
+              "summaries": []
+            },
+            "references": [],
+            "previousScene": null,
+            "relationshipVersion": 1,
+            "relationships": {},
+            "coverage": {
+              "policy": "relevance-v1",
+              "openTotal": 0,
+              "openIncluded": 0,
+              "openOmitted": 0
+            }
+          },
+          "rawCompletion": null,
+          "result": {
+            "status": "paused",
+            "accountingStatus": "complete",
+            "modelId": "@cf/zai-org/glm-4.7-flash",
+            "attemptId": "2122c52e-5991-40ad-b660-7c4b83718fbb",
+            "inferencePerformed": true,
+            "usage": null,
+            "actualNeurons": null,
+            "stopReason": null,
+            "inputHash": "a236d62a596d0501dce468dce0d0f63e153fb7ab9382fd02ba93d384513a140e",
+            "inputBytes": 10573,
+            "nonThinkingValidated": null,
+            "errorCode": "FREE_QUOTA_EXHAUSTED"
+          },
+          "source": "cloudflare"
+        },
+        {
+          "requestId": "887d9eea-a213-4ffb-9725-1bc522f69171",
+          "context": {
+            "schemaVersion": 1,
+            "phase": "opening",
+            "identity": {
+              "runId": "404081be-1c33-43d7-b679-38ef748ccc67",
+              "turnId": 1,
+              "baseRevision": 0,
+              "stateHash": "8b1fd6d935fba76b538f166324a4a494763aeb1b2c874da3bc9b66e0542e45f6",
+              "choiceId": null,
+              "rulesVersion": 1,
+              "promptVersion": 1,
+              "requestId": "887d9eea-a213-4ffb-9725-1bc522f69171"
+            },
+            "namespace": "r:f2f6a9179447017d",
+            "receipt": {
+              "kind": "opening",
+              "choiceId": null,
+              "action": null,
+              "elapsedDays": 0,
+              "itemChanges": {},
+              "relationChanges": {},
+              "random": {
+                "before": 3887544175,
+                "after": 3887544175,
+                "roll": null
+              },
+              "before": {
+                "ageDays": 5760,
+                "realm": "mortal",
+                "cultivation": 0,
+                "injury": 0
+              },
+              "after": {
+                "ageDays": 5760,
+                "realm": "mortal",
+                "cultivation": 0,
+                "injury": 0
+              },
+              "death": null,
+              "birth": {
+                "originId": "village",
+                "talentIds": [
+                  "flash-wisdom",
+                  "keen-memory"
+                ],
+                "attributes": {
+                  "constitution": 1,
+                  "insight": 6,
+                  "fortune": 5
+                }
+              }
+            },
+            "life": {
+              "name": "云归",
+              "ageDays": 5760,
+              "lifeLimit": 80,
+              "realm": "mortal",
+              "cultivation": 0,
+              "injury": 0,
+              "items": {
+                "supplies": 3,
+                "stones": 0
+              },
+              "relations": {},
+              "birth": {
+                "originId": "village",
+                "talentIds": [
+                  "flash-wisdom",
+                  "keen-memory"
+                ],
+                "attributes": {
+                  "constitution": 1,
+                  "insight": 6,
+                  "fortune": 5
+                }
+              }
+            },
+            "entities": [],
+            "memory": {
+              "facts": [],
+              "promises": [],
+              "clues": [],
+              "recent": [],
+              "summaries": []
+            },
+            "references": [],
+            "previousScene": null,
+            "relationshipVersion": 1,
+            "relationships": {},
+            "coverage": {
+              "policy": "relevance-v1",
+              "openTotal": 0,
+              "openIncluded": 0,
+              "openOmitted": 0
+            }
+          },
+          "rawCompletion": null,
+          "result": {
+            "status": "paused",
+            "accountingStatus": "complete",
+            "modelId": "@cf/zai-org/glm-4.7-flash",
+            "attemptId": "83fb136a-8e39-45f7-b295-ce96ab4be630",
+            "inferencePerformed": true,
+            "usage": null,
+            "actualNeurons": null,
+            "stopReason": null,
+            "inputHash": "a236d62a596d0501dce468dce0d0f63e153fb7ab9382fd02ba93d384513a140e",
+            "inputBytes": 10573,
+            "nonThinkingValidated": null,
+            "errorCode": "FREE_QUOTA_EXHAUSTED"
+          },
+          "source": "cloudflare"
+        }
+      ],
+      "wireEvents": [
+        {
+          "type": "status",
+          "status": "generating"
+        },
+        {
+          "type": "status",
+          "status": "generating"
+        },
+        {
+          "type": "reset"
+        },
+        {
+          "type": "status",
+          "status": "switching"
+        },
+        {
+          "type": "result"
+        }
+      ]
+    },
+    {
+      "caseId": "opening-explicit-retry-2",
+      "mode": "browser-real-api",
+      "start": 33323.89999985695,
+      "timeline": [],
+      "firstBirthMs": 16,
+      "lastText": "",
+      "doneMs": 1248,
+      "result": {
+        "protocolVersion": 1,
+        "status": "paused",
+        "requestId": "887d9eea-a213-4ffb-9725-1bc522f69171",
+        "attemptId": "32455b94-a935-428e-a9d4-73d65a6a647a",
+        "sessionRef": "sess_4d8c6db703afa45de0a7819301b8fce7",
+        "errorCode": "FREE_QUOTA_EXHAUSTED",
+        "retry": {
+          "explicit": true,
+          "afterMs": 0,
+          "previousAttemptId": "32455b94-a935-428e-a9d4-73d65a6a647a",
+          "previousSessionRef": "sess_4d8c6db703afa45de0a7819301b8fce7"
+        }
+      },
+      "revision": 0,
+      "pending": true,
+      "posts": 3,
+      "diagnostics": [
+        {
+          "requestId": "887d9eea-a213-4ffb-9725-1bc522f69171",
+          "context": {
+            "schemaVersion": 1,
+            "phase": "opening",
+            "identity": {
+              "runId": "404081be-1c33-43d7-b679-38ef748ccc67",
+              "turnId": 1,
+              "baseRevision": 0,
+              "stateHash": "8b1fd6d935fba76b538f166324a4a494763aeb1b2c874da3bc9b66e0542e45f6",
+              "choiceId": null,
+              "rulesVersion": 1,
+              "promptVersion": 1,
+              "requestId": "887d9eea-a213-4ffb-9725-1bc522f69171"
+            },
+            "namespace": "r:f2f6a9179447017d",
+            "receipt": {
+              "kind": "opening",
+              "choiceId": null,
+              "action": null,
+              "elapsedDays": 0,
+              "itemChanges": {},
+              "relationChanges": {},
+              "random": {
+                "before": 3887544175,
+                "after": 3887544175,
+                "roll": null
+              },
+              "before": {
+                "ageDays": 5760,
+                "realm": "mortal",
+                "cultivation": 0,
+                "injury": 0
+              },
+              "after": {
+                "ageDays": 5760,
+                "realm": "mortal",
+                "cultivation": 0,
+                "injury": 0
+              },
+              "death": null,
+              "birth": {
+                "originId": "village",
+                "talentIds": [
+                  "flash-wisdom",
+                  "keen-memory"
+                ],
+                "attributes": {
+                  "constitution": 1,
+                  "insight": 6,
+                  "fortune": 5
+                }
+              }
+            },
+            "life": {
+              "name": "云归",
+              "ageDays": 5760,
+              "lifeLimit": 80,
+              "realm": "mortal",
+              "cultivation": 0,
+              "injury": 0,
+              "items": {
+                "supplies": 3,
+                "stones": 0
+              },
+              "relations": {},
+              "birth": {
+                "originId": "village",
+                "talentIds": [
+                  "flash-wisdom",
+                  "keen-memory"
+                ],
+                "attributes": {
+                  "constitution": 1,
+                  "insight": 6,
+                  "fortune": 5
+                }
+              }
+            },
+            "entities": [],
+            "memory": {
+              "facts": [],
+              "promises": [],
+              "clues": [],
+              "recent": [],
+              "summaries": []
+            },
+            "references": [],
+            "previousScene": null,
+            "relationshipVersion": 1,
+            "relationships": {},
+            "coverage": {
+              "policy": "relevance-v1",
+              "openTotal": 0,
+              "openIncluded": 0,
+              "openOmitted": 0
+            }
+          },
+          "rawCompletion": null,
+          "result": {
+            "status": "paused",
+            "accountingStatus": "complete",
+            "modelId": "@cf/zai-org/glm-4.7-flash",
+            "attemptId": "2122c52e-5991-40ad-b660-7c4b83718fbb",
+            "inferencePerformed": true,
+            "usage": null,
+            "actualNeurons": null,
+            "stopReason": null,
+            "inputHash": "a236d62a596d0501dce468dce0d0f63e153fb7ab9382fd02ba93d384513a140e",
+            "inputBytes": 10573,
+            "nonThinkingValidated": null,
+            "errorCode": "FREE_QUOTA_EXHAUSTED"
+          },
+          "source": "cloudflare"
+        },
+        {
+          "requestId": "887d9eea-a213-4ffb-9725-1bc522f69171",
+          "context": {
+            "schemaVersion": 1,
+            "phase": "opening",
+            "identity": {
+              "runId": "404081be-1c33-43d7-b679-38ef748ccc67",
+              "turnId": 1,
+              "baseRevision": 0,
+              "stateHash": "8b1fd6d935fba76b538f166324a4a494763aeb1b2c874da3bc9b66e0542e45f6",
+              "choiceId": null,
+              "rulesVersion": 1,
+              "promptVersion": 1,
+              "requestId": "887d9eea-a213-4ffb-9725-1bc522f69171"
+            },
+            "namespace": "r:f2f6a9179447017d",
+            "receipt": {
+              "kind": "opening",
+              "choiceId": null,
+              "action": null,
+              "elapsedDays": 0,
+              "itemChanges": {},
+              "relationChanges": {},
+              "random": {
+                "before": 3887544175,
+                "after": 3887544175,
+                "roll": null
+              },
+              "before": {
+                "ageDays": 5760,
+                "realm": "mortal",
+                "cultivation": 0,
+                "injury": 0
+              },
+              "after": {
+                "ageDays": 5760,
+                "realm": "mortal",
+                "cultivation": 0,
+                "injury": 0
+              },
+              "death": null,
+              "birth": {
+                "originId": "village",
+                "talentIds": [
+                  "flash-wisdom",
+                  "keen-memory"
+                ],
+                "attributes": {
+                  "constitution": 1,
+                  "insight": 6,
+                  "fortune": 5
+                }
+              }
+            },
+            "life": {
+              "name": "云归",
+              "ageDays": 5760,
+              "lifeLimit": 80,
+              "realm": "mortal",
+              "cultivation": 0,
+              "injury": 0,
+              "items": {
+                "supplies": 3,
+                "stones": 0
+              },
+              "relations": {},
+              "birth": {
+                "originId": "village",
+                "talentIds": [
+                  "flash-wisdom",
+                  "keen-memory"
+                ],
+                "attributes": {
+                  "constitution": 1,
+                  "insight": 6,
+                  "fortune": 5
+                }
+              }
+            },
+            "entities": [],
+            "memory": {
+              "facts": [],
+              "promises": [],
+              "clues": [],
+              "recent": [],
+              "summaries": []
+            },
+            "references": [],
+            "previousScene": null,
+            "relationshipVersion": 1,
+            "relationships": {},
+            "coverage": {
+              "policy": "relevance-v1",
+              "openTotal": 0,
+              "openIncluded": 0,
+              "openOmitted": 0
+            }
+          },
+          "rawCompletion": null,
+          "result": {
+            "status": "paused",
+            "accountingStatus": "complete",
+            "modelId": "@cf/zai-org/glm-4.7-flash",
+            "attemptId": "83fb136a-8e39-45f7-b295-ce96ab4be630",
+            "inferencePerformed": true,
+            "usage": null,
+            "actualNeurons": null,
+            "stopReason": null,
+            "inputHash": "a236d62a596d0501dce468dce0d0f63e153fb7ab9382fd02ba93d384513a140e",
+            "inputBytes": 10573,
+            "nonThinkingValidated": null,
+            "errorCode": "FREE_QUOTA_EXHAUSTED"
+          },
+          "source": "cloudflare"
+        },
+        {
+          "requestId": "887d9eea-a213-4ffb-9725-1bc522f69171",
+          "context": {
+            "schemaVersion": 1,
+            "phase": "opening",
+            "identity": {
+              "runId": "404081be-1c33-43d7-b679-38ef748ccc67",
+              "turnId": 1,
+              "baseRevision": 0,
+              "stateHash": "8b1fd6d935fba76b538f166324a4a494763aeb1b2c874da3bc9b66e0542e45f6",
+              "choiceId": null,
+              "rulesVersion": 1,
+              "promptVersion": 1,
+              "requestId": "887d9eea-a213-4ffb-9725-1bc522f69171"
+            },
+            "namespace": "r:f2f6a9179447017d",
+            "receipt": {
+              "kind": "opening",
+              "choiceId": null,
+              "action": null,
+              "elapsedDays": 0,
+              "itemChanges": {},
+              "relationChanges": {},
+              "random": {
+                "before": 3887544175,
+                "after": 3887544175,
+                "roll": null
+              },
+              "before": {
+                "ageDays": 5760,
+                "realm": "mortal",
+                "cultivation": 0,
+                "injury": 0
+              },
+              "after": {
+                "ageDays": 5760,
+                "realm": "mortal",
+                "cultivation": 0,
+                "injury": 0
+              },
+              "death": null,
+              "birth": {
+                "originId": "village",
+                "talentIds": [
+                  "flash-wisdom",
+                  "keen-memory"
+                ],
+                "attributes": {
+                  "constitution": 1,
+                  "insight": 6,
+                  "fortune": 5
+                }
+              }
+            },
+            "life": {
+              "name": "云归",
+              "ageDays": 5760,
+              "lifeLimit": 80,
+              "realm": "mortal",
+              "cultivation": 0,
+              "injury": 0,
+              "items": {
+                "supplies": 3,
+                "stones": 0
+              },
+              "relations": {},
+              "birth": {
+                "originId": "village",
+                "talentIds": [
+                  "flash-wisdom",
+                  "keen-memory"
+                ],
+                "attributes": {
+                  "constitution": 1,
+                  "insight": 6,
+                  "fortune": 5
+                }
+              }
+            },
+            "entities": [],
+            "memory": {
+              "facts": [],
+              "promises": [],
+              "clues": [],
+              "recent": [],
+              "summaries": []
+            },
+            "references": [],
+            "previousScene": null,
+            "relationshipVersion": 1,
+            "relationships": {},
+            "coverage": {
+              "policy": "relevance-v1",
+              "openTotal": 0,
+              "openIncluded": 0,
+              "openOmitted": 0
+            }
+          },
+          "rawCompletion": null,
+          "result": {
+            "status": "paused",
+            "accountingStatus": "complete",
+            "modelId": "@cf/zai-org/glm-4.7-flash",
+            "attemptId": "32455b94-a935-428e-a9d4-73d65a6a647a",
+            "inferencePerformed": true,
+            "usage": null,
+            "actualNeurons": null,
+            "stopReason": null,
+            "inputHash": "a236d62a596d0501dce468dce0d0f63e153fb7ab9382fd02ba93d384513a140e",
+            "inputBytes": 10573,
+            "nonThinkingValidated": null,
+            "errorCode": "FREE_QUOTA_EXHAUSTED"
+          },
+          "source": "cloudflare"
+        }
+      ],
+      "wireEvents": [
+        {
+          "type": "status",
+          "status": "generating"
+        },
+        {
+          "type": "status",
+          "status": "generating"
+        },
+        {
+          "type": "reset"
+        },
+        {
+          "type": "status",
+          "status": "switching"
+        },
+        {
+          "type": "result"
+        }
+      ]
+    }
+  ],
+  "refreshed": null,
+  "errors": [],
+  "posts": 3
+}

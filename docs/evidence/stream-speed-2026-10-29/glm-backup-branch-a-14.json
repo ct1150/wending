@@ -1,0 +1,42 @@
+{
+  "caseId": "branch-a",
+  "mode": "backup",
+  "startedAt": "2026-10-29T05:23:55.541Z",
+  "sourceBase": "1f5b9e18dae06e4b74e6d60403c46964cf45e1f9",
+  "sourceStatus": "uncommitted GLM transport under test",
+  "firstPreviewMs": null,
+  "doneMs": 595,
+  "timeline": [
+    {
+      "atMs": 268,
+      "serverMs": 0,
+      "reset": true
+    }
+  ],
+  "result": {
+    "status": "paused",
+    "accountingStatus": "complete",
+    "modelId": "@cf/zai-org/glm-4.7-flash",
+    "attemptId": "glm-speed-branch-a",
+    "inferencePerformed": true,
+    "usage": null,
+    "actualNeurons": null,
+    "stopReason": null,
+    "inputHash": "180efa74b5d62a63eedf6c1d4b6c3627cc2f2a9206d8feccd5b355a4773ad5f7",
+    "inputBytes": 11773,
+    "nonThinkingValidated": null,
+    "errorCode": "PROVIDER_BUSY"
+  },
+  "source": "zhipu",
+  "httpStatus": 200,
+  "headersMs": 267,
+  "accountingUnknown": false,
+  "serverDoneMs": 340,
+  "upstream": {
+    "httpStatus": 429,
+    "code": "1305"
+  },
+  "primaryError": null,
+  "rawCompletion": null,
+  "keyPresent": true
+}

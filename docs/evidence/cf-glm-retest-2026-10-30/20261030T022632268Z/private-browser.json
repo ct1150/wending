@@ -1,0 +1,192 @@
+{
+  "recordedAt": "2026-10-30T02:32:26.496Z",
+  "sourceCommit": "9863a32313eaa70b26d2dc0df538b69e1b0cfba4",
+  "version": "021ad3cf-7abc-4709-8842-6475a7980d46",
+  "frontendSource": "local current release HTML served by browser harness; API and SQLite are real Workers",
+  "records": [
+    {
+      "caseId": "opening",
+      "mode": "browser-real-api",
+      "start": 464.10000000009313,
+      "timeline": [],
+      "firstBirthMs": 86,
+      "choicesEnabledDuringPreview": false,
+      "lastText": "",
+      "doneMs": 19009,
+      "result": {
+        "protocolVersion": 1,
+        "status": "rejected",
+        "requestId": "2093ea7a-bd99-4230-8e6d-e323eb4aa37e",
+        "attemptId": "85b9824f-4424-4fd3-8bee-36197829b3b7",
+        "sessionRef": "sess_63c5aba24ecb4607f0790777f7caec8f",
+        "errorCode": "PROVIDER_RESPONSE_INVALID",
+        "retry": null
+      },
+      "revision": 0,
+      "pending": true,
+      "posts": 1,
+      "diagnostics": [
+        {
+          "requestId": "2093ea7a-bd99-4230-8e6d-e323eb4aa37e",
+          "context": {
+            "schemaVersion": 1,
+            "phase": "opening",
+            "identity": {
+              "runId": "54ead88d-9dc4-4a9b-8c7c-e11d022fe9ec",
+              "turnId": 1,
+              "baseRevision": 0,
+              "stateHash": "45e2b70d3a97a58436223ded41236a2efb2938ef8ac6a3bf68f6d743c4a0f017",
+              "choiceId": null,
+              "rulesVersion": 1,
+              "promptVersion": 1,
+              "requestId": "2093ea7a-bd99-4230-8e6d-e323eb4aa37e"
+            },
+            "namespace": "r:dd4681fdb880803a",
+            "receipt": {
+              "kind": "opening",
+              "choiceId": null,
+              "action": null,
+              "elapsedDays": 0,
+              "itemChanges": {},
+              "relationChanges": {},
+              "random": {
+                "before": 439940495,
+                "after": 439940495,
+                "roll": null
+              },
+              "before": {
+                "ageDays": 5760,
+                "realm": "mortal",
+                "cultivation": 0,
+                "injury": 0
+              },
+              "after": {
+                "ageDays": 5760,
+                "realm": "mortal",
+                "cultivation": 0,
+                "injury": 0
+              },
+              "death": null,
+              "birth": {
+                "originId": "village",
+                "talentIds": [
+                  "flash-wisdom",
+                  "keen-memory"
+                ],
+                "attributes": {
+                  "constitution": 3,
+                  "insight": 6,
+                  "fortune": 3
+                }
+              }
+            },
+            "life": {
+              "name": "云归",
+              "ageDays": 5760,
+              "lifeLimit": 80,
+              "realm": "mortal",
+              "cultivation": 0,
+              "injury": 0,
+              "items": {
+                "supplies": 3,
+                "stones": 0
+              },
+              "relations": {},
+              "birth": {
+                "originId": "village",
+                "talentIds": [
+                  "flash-wisdom",
+                  "keen-memory"
+                ],
+                "attributes": {
+                  "constitution": 3,
+                  "insight": 6,
+                  "fortune": 3
+                }
+              }
+            },
+            "entities": [],
+            "memory": {
+              "facts": [],
+              "promises": [],
+              "clues": [],
+              "recent": [],
+              "summaries": []
+            },
+            "references": [],
+            "previousScene": null,
+            "relationshipVersion": 1,
+            "relationships": {},
+            "coverage": {
+              "policy": "relevance-v1",
+              "openTotal": 0,
+              "openIncluded": 0,
+              "openOmitted": 0
+            }
+          },
+          "rawCompletion": {
+            "model": "@cf/zai-org/glm-4.7-flash",
+            "choices": [
+              {
+                "finish_reason": "stop",
+                "message": {
+                  "content": "```json\n{\n  \"blocks\": [\n    {\n      \"kind\": \"narration\",\n      \"text\": \"你叫云归，今年十六岁，是个凡人。你出生在青云村，自幼便有着过目不忘的天赋，但也因此常被村里的长辈视为异类。你并不像其他孩子那样贪玩，而是喜欢独自坐在村口的石碑旁，望着远处的青云山脉发呆。\"\n    },\n    {\n      \"kind\": \"narration\",\n      \"text\": \"今日清晨，你照例来到石碑旁。村长王大伯正蹲在旁边抽旱烟，见你来了，咳嗽了两声说道：“云归啊，你也十六了，该去外面的世界看看了。这青云村虽然安逸，但终究不是长久之地。听说山外的修仙者经常路过，或许你也能沾染点仙气。”\"\n    },\n    {\n      \"kind\": \"dialogue\",\n      \"speaker\": \"self\",\n      \"text\": \"修仙者？那不是传说中飞天遁地的人物吗？\"\n    },\n    {\n      \"kind\": \"narration\",\n      \"text\": \"王大伯眯起眼睛，指了指山道尽头：“那是自然。只是那山道凶险，你若想去，得先备好干粮。我这里还有几块灵石，虽然不多，但路上或许能派上用场。”说着，他从怀里摸出一块灰扑扑的石头递给你。\"\n    },\n    {\n      \"kind\": \"dialogue\",\n      \"speaker\": \"self\",\n      \"text\": \"谢谢王大伯。我这就收拾东西出发。\"\n    }\n  ],\n  \"title\": \"青云村口\",\n  \"location\": \"青云村口\",\n  \"otherPeople\": [\n    {\n      \"id\": \"p1\",\n      \"name\": \"王大伯\",\n      \"status\": \"alive\"\n    }\n  ],\n  \"places\": [\n    {\n      \"id\": \"l1\",\n      \"name\": \"山道\"\n    }\n  ],\n  \"factions\": [],\n  \"choices\": [\n    {\n      \"action\": \"travel:road\",\n      \"targetId\": \"l1\",\n      \"stake\": \"low\"\n    },\n    {\n      \"action\": \"explore:cautious\",\n      \"targetId\": \"stones\",\n      \"stake\": \"low\"\n    },\n    {\n      \"action\": \"rest:recover\",\n      \"targetId\": \"self\",\n      \"stake\": \"low\"\n    }\n  ],\n  \"memoryDeltas\": [\n    {\n      \"entityId\": \"p1\",\n      \"kind\": \"relationship\",\n      \"text\": \"王大伯赠送了一块灵石给云归。\",\n      \"status\": \"open\"\n    }\n  ]\n}\n```",
+                  "reasoning_content": ""
+                }
+              }
+            ],
+            "usage": {
+              "prompt_tokens": 2715,
+              "completion_tokens": 598,
+              "total_tokens": 3313,
+              "prompt_tokens_details": {
+                "cached_tokens": 0
+              },
+              "neurons": 36.699700000000256
+            }
+          },
+          "result": {
+            "status": "rejected",
+            "accountingStatus": "complete",
+            "modelId": "@cf/zai-org/glm-4.7-flash",
+            "attemptId": "85b9824f-4424-4fd3-8bee-36197829b3b7",
+            "inferencePerformed": true,
+            "usage": {
+              "promptTokens": 2715,
+              "completionTokens": 598,
+              "totalTokens": 3313
+            },
+            "actualNeurons": null,
+            "stopReason": "stop",
+            "inputHash": "cc3a790dcaab9bbc16ffc4c73835ee15cf2e36afcd10b1920487d93a1820badb",
+            "inputBytes": 10571,
+            "nonThinkingValidated": true,
+            "errorCode": "PROVIDER_RESPONSE_INVALID",
+            "providerSource": "cloudflare"
+          },
+          "source": "cloudflare"
+        }
+      ],
+      "wireEvents": [
+        {
+          "type": "status",
+          "status": "generating"
+        },
+        {
+          "type": "status",
+          "status": "generating"
+        },
+        {
+          "type": "status",
+          "status": "generating"
+        },
+        {
+          "type": "result"
+        }
+      ]
+    }
+  ],
+  "refreshed": null,
+  "errors": [],
+  "posts": 1
+}

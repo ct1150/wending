@@ -137,7 +137,7 @@ test('candidate submits the named strict schema envelope and fixes thinking cont
 
 test('foreign model IDs and malformed profile metadata cannot reach inference',async()=>{
   let calls=0,evaluated=0;const ai={run:async()=>{calls++;return response();}};
-  for(const modelId of ['@cf/qwen/qwen3-30b-a3b-fp8','qwen3.8-27b','@cf/zai-org/glm-4.7-flash','paid/model']){
+  for(const modelId of ['@cf/qwen/qwen3-30b-a3b-fp8','qwen3.8-27b','paid/model']){
     const result=await generateScene(ai,{...promotedFixtureProfile,modelId},context());
     assert.equal(result.errorCode,'MODEL_NOT_ALLOWED');assert.equal(result.inferencePerformed,false);
   }

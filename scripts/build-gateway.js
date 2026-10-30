@@ -3,7 +3,7 @@ import {createHash} from 'node:crypto';
 import path from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {parse} from 'acorn';
-import {CANDIDATE_MODEL_ID} from '../src/worker/story-config.js';
+import {DEFAULT_STORY_MODEL_ID,GLM_MODEL_ID,GLM_PROVIDER_ROUTE} from '../src/worker/story-config.js';
 import {validateStoryStagePolicy} from '../src/worker/story-stage.js';
 import {STORY_EXPERIMENT_COORDINATOR_NAME,STORY_EXPERIMENT_NAMESPACE_ID} from '../src/worker/story-experiment.js';
 import {validateStoryProductionPolicy,STORY_PRODUCTION_VERSIONS,STORY_BUDGET_NAMESPACE_ID} from '../src/worker/story-production.js';
@@ -46,6 +46,7 @@ function moduleDependencies(source,file){
   inspect(ast);return dependencies;
 }
 async function buildBackend({root,sourceCommit,fallback,icon,acceptance,production}){
+  root=await realpath(root);
   const entry=path.join(root,'src/worker/index.js');
   const output=path.join(root,'release/backend');
   await rm(output,{recursive:true,force:true});
@@ -86,10 +87,10 @@ async function buildBackend({root,sourceCommit,fallback,icon,acceptance,producti
   await visit(entry);await visit(path.join(root,'src/worker/release-gateway.js'));
   if(stage)await visit(path.join(root,'src/worker/story-stage.js'));
   if(live)await visit(path.join(root,'src/worker/story-production.js'));
-  const activation={enabled:stage!==null||live!==null,publicEnabled:live!==null,accessMode:stage?'tester-only':live?'production':'disabled',candidateModelId:CANDIDATE_MODEL_ID,modelValidated:live!==null};
+  const activation={enabled:stage!==null||live!==null,publicEnabled:live!==null,accessMode:stage?'tester-only':live?'production':'disabled',candidateModelId:stage?.modelId??DEFAULT_STORY_MODEL_ID,activeModelId:live?.modelId??null,modelValidated:live!==null,providerRoute:(live?.modelId??stage?.modelId??DEFAULT_STORY_MODEL_ID)===GLM_MODEL_ID?GLM_PROVIDER_ROUTE:null};
   const identity={sourceCommit,...VERSIONS,...activation};
   const factory=stage?'createStoryStageWorker':live?'createStoryProductionWorker':'createStoryWorker',factoryModule=stage?'story-stage.js':live?'story-production.js':'index.js';
-  const code=`import {createReleaseGateway} from './src/worker/release-gateway.js';\nimport {${factory}} from './src/worker/${factoryModule}';\nexport {StoryBudget} from './src/worker/index.js';\nexport const backendIdentity=Object.freeze(${JSON.stringify(identity)});\nconst gateway=createReleaseGateway(${JSON.stringify({fallback,icon,...(stage?{embeddedOnly:true}:{})})});\nexport default ${factory}({staticFetch:(request,env,ctx)=>gateway.fetch(request,env,ctx),config:${JSON.stringify(stage??live??{enabled:false})}});\n`;
+  const code=`import {createReleaseGateway} from './src/worker/release-gateway.js';\nimport {${factory}} from './src/worker/${factoryModule}';\nexport {StoryBudget} from './src/worker/index.js';\nexport const backendIdentity=Object.freeze(${JSON.stringify(identity)});\nconst gateway=createReleaseGateway(${JSON.stringify({fallback,icon,...(stage||live?{embeddedOnly:true}:{})})});\nexport default ${factory}({staticFetch:(request,env,ctx)=>gateway.fetch(request,env,ctx),config:${JSON.stringify(stage??live??{enabled:false})}});\n`;
   modules.set('entry.mjs',code);
   await mkdir(output,{recursive:true});
   const description=[];
@@ -99,7 +100,7 @@ async function buildBackend({root,sourceCommit,fallback,icon,acceptance,producti
   }
   const bindings=[{name:'AI',type:'ai'},{name:'STORY_BUDGET',type:'durable_object_namespace',class_name:'StoryBudget',...(stage||live?{namespace_id:STORY_BUDGET_NAMESPACE_ID}:{})}];
   if(stage)bindings.push({name:'STORY_EXPERIMENT',type:'durable_object_namespace',namespace_id:STORY_EXPERIMENT_NAMESPACE_ID});
-  const manifest={schemaVersion:1,main_module:'entry.mjs',compatibility_date:'2026-07-30',sourceCommit,frontend:{version:fallback.version,htmlSha256:fallback.htmlSha256},versions:VERSIONS,...activation,coordinatorName:'story-budget-v1-global',bindings,migrations:stage||live?[]:[{tag:'story-budget-v1',new_sqlite_classes:['StoryBudget']}],...(stage?{experimentCoordinatorName:STORY_EXPERIMENT_COORDINATOR_NAME,requiredSecrets:['STORY_OPERATOR_TOKEN']}:{ }),modules:description};
+  const manifest={schemaVersion:1,main_module:'entry.mjs',compatibility_date:'2026-07-30',sourceCommit,frontend:{version:fallback.version,htmlSha256:fallback.htmlSha256},versions:VERSIONS,...activation,coordinatorName:'story-budget-v1-global',bindings,migrations:stage||live?[]:[{tag:'story-budget-v1',new_sqlite_classes:['StoryBudget']}],optionalSecrets:[],...(stage?{experimentCoordinatorName:STORY_EXPERIMENT_COORDINATOR_NAME,requiredSecrets:['STORY_OPERATOR_TOKEN']}:{ }),modules:description};
   await writeFile(path.join(output,'deployment.json'),JSON.stringify(manifest,null,2)+'\n');
   return {mainModule:manifest.main_module,moduleCount:description.length,manifestSha256:digest(JSON.stringify(manifest,null,2)+'\n')};
 }

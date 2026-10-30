@@ -1,0 +1,53 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-10-29",
+  "releaseCandidate": "4.3.0",
+  "status": "LOCAL_VERIFIED_WAITING_FOR_LIVE_PRIMARY",
+  "sourceBase": "1f5b9e18dae06e4b74e6d60403c46964cf45e1f9",
+  "sourceStatus": "Candidate changes captured before their Git commit; not a production source identity",
+  "route": {
+    "primary": "zhipu",
+    "primaryModel": "glm-4.7-flash",
+    "fallback": "cloudflare",
+    "fallbackModel": "@cf/zai-org/glm-4.7-flash",
+    "primaryWindowMs": 45000,
+    "totalWindowMs": 90000,
+    "fallbackAttempts": 1,
+    "paidModelFallback": false,
+    "clientMayChooseProvider": false
+  },
+  "implementation": [
+    "Zhipu HTTP or network failures and timeout switch once to the direct Cloudflare GLM binding",
+    "Missing Zhipu credentials use Cloudflare; credentials never enter binding input",
+    "Partial and unknown costs remain unknown even after a fallback; malformed frames, reasoning and contradictory finish markers reject without reroll",
+    "SSE settlement failures end the stream without a final result, preserving the original pending attempt",
+    "Historical Cloudflare quota rows remain intact; server-selected Zhipu reservations bypass only that provider-specific latch",
+    "Production and protected acceptance packages pin the same built frontend instead of accepting old channel caches"
+  ],
+  "validation": {
+    "targeted": {"total": 240, "pass": 240, "fail": 0},
+    "reviewedProviderApiBudgetRegression": {"total": 95, "pass": 95, "fail": 0},
+    "wslNativeAndBuild": {"total": 132, "pass": 132, "fail": 0},
+    "windowsFullEarlierInCandidate": {"total": 895, "pass": 884, "fail": 11, "notes": "8 Windows workerd access violations, 2 symlink permission failures, 1 Windows path boundary assertion; all corresponding files passed later in WSL"},
+    "syntaxFiles": 170,
+    "build": "Frontend and default-disabled backend built successfully; base SHA labels are diagnostic only and are not a release identity",
+    "reviewFixes": ["Malformed null frame must not become a transport failure", "Conflicting terminal markers must not overwrite truncation", "No final SSE result before confirmed settlement"]
+  },
+  "realCalls": {
+    "successfulScenesThisRouteAttempt": 0,
+    "probeFiles": ["route-primary-opening-1.json", "route-primary-opening-2.json", "route-primary-opening-3.json", "route-primary-opening-4.json", "route-primary-opening-5.json", "route-primary-opening-6.json"],
+    "zhipu": "Observed whole-request timeouts at 45 seconds and HTTP 429 business codes 1302/1305",
+    "tinyStream": "tiny-stream.json: a 32-token JSON request also returned 429/1305, independently of the game scene protocol",
+    "cloudflare": "Every attempted fallback was reached but the real binding rejected with AiError 4006",
+    "privateBrowser": "private-browser.json: three explicit attempts, no successful opening; revision 0 and pending preserved",
+    "earlierEvidence": "../stream-speed-2026-10-29/glm-followup-summary.json contains earlier successful BigModel output before this route change; it is not claimed as the current route live acceptance",
+    "businessCodeSource": "https://docs.bigmodel.cn/cn/api/api-code"
+  },
+  "releaseGate": {
+    "glmRegistryPromoted": false,
+    "normalTrafficChanged": false,
+    "baselineVersion": "f17816a1-da95-4095-b13d-406a2610a9c0",
+    "baselinePercentage": 100,
+    "requirement": "A fresh successful real opening, choice, save and refresh on the Zhipu primary before promotion, merge, production deploy and public acceptance"
+  }
+}

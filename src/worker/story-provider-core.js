@@ -1,14 +1,15 @@
-import { CANDIDATE_MODEL_ID, STORY_LIMITS } from './story-config.js';
+import { CANDIDATE_MODEL_ID, GLM_MODEL_ID, STORY_LIMITS } from './story-config.js';
 import { idField, exactKeys, validateGeneratedScene as validateStructure } from '../game/cultivation/live/schema.js';
 import { assertPlainData, canonicalStringify, sha256 } from '../game/cultivation/live/identity.js';
 import { validateStoryContext, validateGeneratedScene, STORY_ERROR_CODES } from '../game/cultivation/live/memory.js';
 import { REALMS, DAYS_PER_YEAR, ITEMS } from '../game/cultivation/live/model.js';
 import { buildGenerationSchema } from './story-generation-schema.js';
+import { buildGlmWire,decodeGlmScene } from './story-glm-wire.js';
 
 // Shared server-only input/transport/parser. Production supplies its validation
 // gate; operator acceptance fixes the unpromoted candidate in a separate module.
 // The calling controller must verify proof and durably reserve before inference.
-const ALLOWED_MODELS=Object.freeze([CANDIDATE_MODEL_ID]);
+const ALLOWED_MODELS=Object.freeze([CANDIDATE_MODEL_ID,GLM_MODEL_ID]);
 const encoder=new TextEncoder();
 const size=value=>encoder.encode(JSON.stringify(value)).length;
 const fail=code=>{throw Object.assign(new Error(code),{code});};
@@ -67,10 +68,18 @@ function providerInput(profile,context) {
   validateStoryContext(context);
   const prefix=`${context.namespace}:t${context.identity.turnId}:`;
   const nextRealm=Object.values(REALMS).find(realm=>realm.rank===REALMS[context.life.realm].rank+1)?.id??'disabled';
-  const schema=buildGenerationSchema(context.namespace,context.identity.turnId,{nextRealm,knownEntities:context.entities});
+  const schema=profile.modelId===GLM_MODEL_ID?null:buildGenerationSchema(context.namespace,context.identity.turnId,{nextRealm,knownEntities:context.entities});
   const facts=`当前主角${Math.floor(context.life.ageDays/DAYS_PER_YEAR)}岁，境界${REALMS[context.life.realm].name}；本场必须以此当前状态展开。`;
   const system=facts+'\n'+SYSTEM.replaceAll('namespace:t本回合:',prefix).replace('NEXT_REALM',nextRealm);
   const input={messages:[{role:'system',content:system},{role:'user',content:JSON.stringify(context)}],stream:false,temperature:0.3,max_tokens:Math.min(profile.maxOutput,STORY_LIMITS.maxOutputTokens),response_format:{type:'json_schema',json_schema:{name:'cultivation_scene',strict:true,schema}},chat_template_kwargs:{enable_thinking:false}};
+  if(profile.modelId===GLM_MODEL_ID){
+    // This GLM endpoint accepts OpenAI JSON Schema with streaming. Final
+    // validation still rejects mechanically invalid or inconsistent scenes.
+    const wire=buildGlmWire(context,system);
+    input.messages[0].content=wire.instructions;input.messages[1].content=JSON.stringify(wire.context);
+    input.response_format={type:'json_schema',json_schema:{name:'cultivation_scene',strict:true,schema:wire.schema}};
+    input.stream=true;input.stream_options={include_usage:true};
+  }
   const inputBytes=size(input);
   if(inputBytes>Math.min(profile.maxInput,STORY_LIMITS.maxInputBytes)||size({model:profile.modelId,input})>STORY_LIMITS.maxRequestBytes)fail('INPUT_TOO_LARGE');
   // Match conservative Task1 accounting, including framing/system/schema and
@@ -82,17 +91,18 @@ export function buildStoryInput(profile,context) {
   validateProfile(profile);
   return providerInput(profile,context);
 }
-export const PROVIDER_ERROR_CODES=Object.freeze([...STORY_ERROR_CODES,'PROVIDER_PROFILE_INVALID','MODEL_NOT_ALLOWED','MODEL_UNVALIDATED','AI_BINDING_MISSING','PROVIDER_OPTIONS_INVALID','INPUT_TOO_LARGE','CONTEXT_TOO_LARGE','PROVIDER_TIMEOUT','PROVIDER_RESPONSE_INVALID','PROVIDER_RESPONSE_TOO_LARGE','MODEL_RESPONSE_MISMATCH','OUTPUT_TRUNCATED','STOP_REASON_INVALID','PROVIDER_USAGE_INVALID','OUTPUT_TOO_LARGE']);
+export const PROVIDER_ERROR_CODES=Object.freeze([...STORY_ERROR_CODES,'PROVIDER_PROFILE_INVALID','MODEL_NOT_ALLOWED','MODEL_UNVALIDATED','AI_BINDING_MISSING','PROVIDER_OPTIONS_INVALID','INPUT_TOO_LARGE','CONTEXT_TOO_LARGE','PROVIDER_TIMEOUT','PROVIDER_RESPONSE_INVALID','PROVIDER_RESPONSE_TOO_LARGE','MODEL_RESPONSE_MISMATCH','OUTPUT_TRUNCATED','STOP_REASON_INVALID','PROVIDER_USAGE_INVALID','OUTPUT_TOO_LARGE','BUDGET_UNAVAILABLE']);
 const ownCodes=new Set(PROVIDER_ERROR_CODES);
 function mappedCode(error) {
   // workerd binding errors carry the numeric code only in a leading message.
   // Inspect a bounded prefix; structured codes keep precedence, even unknown ones.
-  const code=error?.code??error?.errors?.[0]?.code??error?.status??(typeof error?.message==='string'?/^(3036|3040|429): /.exec(error.message.slice(0,16))?.[1]:undefined);
-  if(Number(code)===3036)return 'FREE_QUOTA_EXHAUSTED';
+  const code=error?.code??error?.errors?.[0]?.code??error?.status??(typeof error?.message==='string'?/^(3036|4006|3040|429): /.exec(error.message.slice(0,16))?.[1]:undefined);
+  if([3036,4006].includes(Number(code)))return 'FREE_QUOTA_EXHAUSTED';
   if([3040,429].includes(Number(code)))return 'PROVIDER_BUSY';
+  if(['PROVIDER_BUSY','PROVIDER_FAILED','FREE_QUOTA_EXHAUSTED'].includes(code))return code;
   return ownCodes.has(code)?code:'PROVIDER_FAILED';
 }
-const pausedCodes=new Set(['FREE_QUOTA_EXHAUSTED','PROVIDER_BUSY','PROVIDER_TIMEOUT','PROVIDER_FAILED']);
+const pausedCodes=new Set(['FREE_QUOTA_EXHAUSTED','PROVIDER_BUSY','PROVIDER_TIMEOUT','PROVIDER_FAILED','BUDGET_UNAVAILABLE']);
 
 export async function generateProviderScene(ai,profile,context,options={},assertProfileReady) {
   const result={status:'rejected',accountingStatus:'complete',modelId:null,attemptId:null,inferencePerformed:false,usage:null,actualNeurons:null,stopReason:null,inputHash:null,inputBytes:null,nonThinkingValidated:null};
@@ -132,6 +142,7 @@ export async function generateProviderScene(ai,profile,context,options={},assert
     });
     if(!result.nonThinkingValidated)fail('PROVIDER_RESPONSE_INVALID');
     let scene;try { scene=JSON.parse(choice.message.content); } catch { fail('PROVIDER_RESPONSE_INVALID'); }
+    if(profile.modelId===GLM_MODEL_ID)scene=decodeGlmScene(scene,context);
     try {
       const validated=validateGeneratedScene(scene,context);
       // Apply this narrative check only to new provider output. Canonical scene

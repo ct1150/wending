@@ -1,4 +1,4 @@
-import { STORY_LIMITS, CANDIDATE_PROFILE, assertProviderReady } from './story-config.js';
+import { STORY_LIMITS, CANDIDATE_PROFILE, GLM_PROFILE, assertProviderReady } from './story-config.js';
 import { generateScene, PROVIDER_ERROR_CODES } from './story-provider.js';
 import { validateStoryContext,validateGeneratedScene } from '../game/cultivation/live/memory.js';
 import { canonicalStringify,sha256 } from '../game/cultivation/live/identity.js';
@@ -13,7 +13,7 @@ export const STORY_COOKIE='__Host-story_session';
 export const STORY_API_LIMITS=Object.freeze({maxRequestBytes:32768,maxResponseBytes:65536,maxContextBytes:7000,timeoutMs:105000});
 // Reserve the full permitted serialized prompt, including schema/system fields,
 // maximum message framing and output. No client chooses a model/rate/budget.
-export const TURN_RESERVATION_NEURONS=Math.ceil(((STORY_LIMITS.maxInputBytes+1024+64*STORY_LIMITS.maxMessages)*CANDIDATE_PROFILE.neuronRates.inputPerMillion+STORY_LIMITS.maxOutputTokens*CANDIDATE_PROFILE.neuronRates.outputPerMillion)/1000000);
+export const TURN_RESERVATION_NEURONS=Math.ceil(Math.max(...[CANDIDATE_PROFILE,GLM_PROFILE].map(profile=>((STORY_LIMITS.maxInputBytes+1024+64*STORY_LIMITS.maxMessages)*profile.neuronRates.inputPerMillion+STORY_LIMITS.maxOutputTokens*profile.neuronRates.outputPerMillion)/1000000)));
 const encoder=new TextEncoder();
 const allowedCodes=new Set([...PROVIDER_ERROR_CODES,'INFERENCE_DISABLED','MODEL_NOT_ALLOWED','MODEL_UNVALIDATED','AI_BINDING_MISSING','FREE_BOUNDARY_UNVERIFIED','ACCOUNT_QUOTA_UNAVAILABLE','INPUT_TOO_LARGE','CONTEXT_TOO_LARGE','OUTPUT_TOO_LARGE','PROVIDER_PROFILE_INVALID','PROVIDER_OPTIONS_INVALID','PROVIDER_TIMEOUT','PROVIDER_RESPONSE_INVALID','PROVIDER_RESPONSE_TOO_LARGE','MODEL_RESPONSE_MISMATCH','OUTPUT_TRUNCATED','STOP_REASON_INVALID','PROVIDER_USAGE_INVALID','FREE_QUOTA_EXHAUSTED','PROVIDER_BUSY','PROVIDER_FAILED','GENERATED_SCENE_INVALID','NEXT_CONTEXT_TOO_LARGE','BUDGET_UNAVAILABLE']);
 for(const code of ['TESTER_PERMIT_REQUIRED','STORY_STAGE_CONFIGURATION_INVALID','STORY_PRODUCTION_CONFIGURATION_INVALID','EXPERIMENT_BUDGET_UNAVAILABLE','EXPERIMENT_BUDGET_EXHAUSTED','EXPERIMENT_LEDGER_INVALID','EXPERIMENT_ATTEMPT_INVALID','EXPERIMENT_ATTEMPT_ALREADY_ADMITTED','TASK8_ADMISSION_CONFLICT','TASK8_ADMISSION_MISSING','TASK8_SETTLEMENT_CONFLICT','ACCEPTANCE_STORAGE_LIMIT','LEDGER_PERSIST_FAILED'])allowedCodes.add(code);
@@ -70,6 +70,8 @@ export function createStoryApi({provider=generateScene,budget,config={},experime
         return json(repeated.kind==='replay'?repeated.result:envelope(repeated.code==='ATTEMPT_PAYLOAD_MISMATCH'?'rejected':'paused',repeated.code,identity));
       }
       try{profile=await readiness(env);}catch(error){return json(envelope('paused',codeOf(error),identity));}
+      reservationInput.quotaProvider='cloudflare';
+      const providerDeadline=Date.now()+STORY_LIMITS.timeoutMs;
       const reserved=await callBudget('reserve',reservationInput);
       if(reserved.kind!=='reserved')return json(reserved.kind==='replay'?reserved.result:envelope(['ATTEMPT_PAYLOAD_MISMATCH','RETRY_INVALID'].includes(reserved.code)?'rejected':'paused',reserved.code,identity));
       if(experiment){
@@ -83,12 +85,17 @@ export function createStoryApi({provider=generateScene,budget,config={},experime
           return json(settled.kind==='settled'?result:envelope('paused','BUDGET_UNAVAILABLE',identity));
         }
       }
-      let generated,timer;
+      async function complete(onProgress=()=>{}){
+      let generated,timer,providerActive=true;const controller=new AbortController();
       const providerStartedAt=Date.now();
-      try {generated=await Promise.race([Promise.resolve().then(()=>provider(env.AI,profile,body.context,{attemptId:identity.attemptId})),new Promise(resolve=>{timer=setTimeout(()=>resolve({status:'paused',errorCode:'PROVIDER_TIMEOUT',accountingStatus:'unknown',inferencePerformed:true}),STORY_LIMITS.timeoutMs);})]);}catch{generated={status:'paused',errorCode:'PROVIDER_FAILED',accountingStatus:'unknown',inferencePerformed:true};}finally{clearTimeout(timer);}
+      try {
+        if(Date.now()>=providerDeadline)generated={status:'paused',errorCode:'PROVIDER_TIMEOUT',accountingStatus:'unknown',inferencePerformed:false};
+        else generated=await Promise.race([Promise.resolve().then(()=>{
+          if(controller.signal.aborted||Date.now()>=providerDeadline)throw Object.assign(Error('PROVIDER_TIMEOUT'),{code:'PROVIDER_TIMEOUT'});
+          return provider(env.AI,profile,body.context,{attemptId:identity.attemptId},{deadlineAt:providerDeadline,signal:controller.signal,onProgress:event=>{if(providerActive)onProgress(event);}});
+        }),new Promise(resolve=>{timer=setTimeout(()=>{controller.abort();resolve({status:'paused',errorCode:'PROVIDER_TIMEOUT',accountingStatus:'unknown',inferencePerformed:true});},Math.max(1,providerDeadline-Date.now()));})]);
+      }catch(error){generated={status:'paused',errorCode:error?.code==='PROVIDER_TIMEOUT'?'PROVIDER_TIMEOUT':'PROVIDER_FAILED',accountingStatus:'unknown',inferencePerformed:true};}finally{providerActive=false;clearTimeout(timer);controller.abort();}
       const latencyMs=Date.now()-providerStartedAt;
-      // Account exhaustion survives a later bridge error changing the public
-      // envelope; that presentation must not reopen the current day's quota.
       const quotaExhausted=generated?.errorCode==='FREE_QUOTA_EXHAUSTED';
       let result,observationStage='provider',apiDiagnostic;
       if(generated?.status==='ready'){
@@ -103,7 +110,7 @@ export function createStoryApi({provider=generateScene,budget,config={},experime
       else result=envelope('paused','PROVIDER_FAILED',identity);
       // Provider completion is trusted server metadata, independent of the public
       // error vocabulary. An unclassified transport outcome stays conservative.
-      let status=generated?.accountingStatus==='complete'||generated?.status==='ready'?'complete':'unknown';
+      let status=generated?.accountingStatus==='unknown'?'unknown':generated?.accountingStatus==='complete'||generated?.status==='ready'?'complete':'unknown';
       if(experiment){
         const experimentStatus=status==='unknown'?'unknown':result.status==='ready'?'complete':'failed';
         // Attest only the scene accepted by this server's strict validation.
@@ -116,9 +123,41 @@ export function createStoryApi({provider=generateScene,budget,config={},experime
           status='unknown';result=envelope('paused','EXPERIMENT_BUDGET_UNAVAILABLE',identity);
         }
       }
-      const settled=await callBudget('settle',{sessionRef:identity.sessionRef,attemptId:identity.attemptId,status,actualNeurons:null,result,quotaExhausted});
-      if(settled.kind!=='settled')return json(envelope('paused','BUDGET_UNAVAILABLE',identity));
-      return json(result);
+      let settled;
+      try{settled=await callBudget('settle',{sessionRef:identity.sessionRef,attemptId:identity.attemptId,status,actualNeurons:null,result,quotaExhausted});}
+      catch{throw Object.assign(Error('BUDGET_UNAVAILABLE'),{code:'BUDGET_UNAVAILABLE'});}
+      if(settled.kind!=='settled')throw Object.assign(Error('BUDGET_UNAVAILABLE'),{code:'BUDGET_UNAVAILABLE'});
+      return result;
+      }
+      if(!request.headers.get('accept')?.includes('text/event-stream'))return json(await complete());
+      let disconnected=false;
+      const stream=new ReadableStream({
+        start(controller){
+          let preview='',queued='',previewTimer,finished=false,wireBytes=0;
+          const send=packet=>{
+            if(disconnected||finished)return false;
+            const bytes=encoder.encode('data: '+JSON.stringify({protocolVersion:1,...identity,...packet})+'\n\n');
+            // Reserve a full final envelope even for token-by-token providers.
+            if(packet.type!=='result'&&wireBytes+bytes.length>STORY_LIMITS.maxResponseBytes*3-1024)return false;
+            try{controller.enqueue(bytes);wireBytes+=bytes.length;return true;}catch{disconnected=true;return false;}
+          };
+          const flush=()=>{clearTimeout(previewTimer);previewTimer=null;const delta=queued.slice(preview.length);if(delta&&send({type:'preview',text:delta}))preview=queued;};
+          const progress=event=>{
+            if(event?.type==='reset'){clearTimeout(previewTimer);previewTimer=null;preview=queued='';send({type:'reset'});}
+            else if(event?.type==='status'&&['generating','switching','queued'].includes(event.status))send({type:'status',status:event.status==='queued'&&request.headers.get('X-Story-Queue-Status')!=='1'?'generating':event.status});
+            else if(event?.type==='preview'&&typeof event.text==='string'){
+              const text=event.text.slice(0,24000);if(!text.startsWith(preview)){send({type:'reset'});preview='';}
+              queued=text;if(!preview)flush();else if(!previewTimer)previewTimer=setTimeout(flush,50);
+            }
+          };
+          send({type:'status',status:'generating'});
+          const heartbeat=setInterval(()=>send({type:'status',status:'generating'}),10000);
+          const work=complete(progress).then(result=>{flush();send({type:'result',result});}).catch(()=>{if(!disconnected)controller.error(new Error('STORY_STREAM_INCOMPLETE'));disconnected=true;}).finally(()=>{clearTimeout(previewTimer);clearInterval(heartbeat);finished=true;if(!disconnected)controller.close();});
+          ctx?.waitUntil?.(work);
+        },
+        cancel(){disconnected=true;}
+      });
+      return new Response(stream,{headers:{'content-type':'text/event-stream; charset=utf-8','cache-control':'no-store, no-transform','x-content-type-options':'nosniff'}});
     }catch(error){return json(envelope(error?.httpStatus?'rejected':'paused',error?.httpStatus?error.code:codeOf(error),identity),error?.httpStatus??200);}
   }};
 }

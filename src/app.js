@@ -6,7 +6,7 @@ import { compileChoices } from './game/cultivation/live/engine.js';
 import { stateHash } from './game/cultivation/live/identity.js';
 import { REALMS as LIVE_REALMS, ORIGINS as LIVE_ORIGINS, TALENTS as LIVE_TALENTS, ITEMS as LIVE_ITEMS } from './game/cultivation/live/model.js';
 import { liveCharacterSummary } from './ui/character.js';
-import { renderLiveJourney, renderLiveHistory } from './ui/journey.js';
+import { renderLiveJourney, renderLiveHistory, updateLivePreview } from './ui/journey.js';
 import { readLegacyBackup, SAVE_KEY, LEGACY_BACKUP_KEY } from './game/persistence.js';
 import { REALMS, PATHS, ORIGINS, WORLDS, ITEMS, LEGACIES, EVENTS, ENEMIES, CHALLENGES, WORLD_FLAGS } from './game/content.js';
 import { getStats, getActionInfo, act, getEventChoices, chooseEvent, combatAction, equipItem, selectLegacy, getStoryView, chooseStory } from './game/engine.js';
@@ -890,7 +890,10 @@ async function ensureLive() {
   if(liveSession)return;
   if(!liveInitialization)liveInitialization=(async()=>{
     liveArchive=await openLiveArchive();
-    liveSession=createLiveSession({archive:liveArchive,client:liveClient,onChange:snapshot=>{
+    liveSession=createLiveSession({archive:liveArchive,client:liveClient,onProgress:snapshot=>{
+      liveSnapshot=snapshot;
+      if(activeMode==='live'&&view==='adventure')updateLivePreview($('#app'),snapshot);
+    },onChange:snapshot=>{
       liveSnapshot=snapshot;
       if(creatingRunId&&snapshot.state?.runId===creatingRunId){setActiveMode('live');if(view==='new')view='adventure';}
       render();
@@ -904,8 +907,7 @@ async function beginLiveLife() {
   const name=$('#live-name')?.value?.trim()??liveBirthDraft.name,originId=$('#live-origin')?.value??liveBirthDraft.originId;
   liveBirthDraft={...liveBirthDraft,name,originId};uiBusy=true;liveError='';render();
   try {
-    await ensureLive();const capabilities=await liveClient.capabilities();
-    if(!capabilities.available){liveError='此刻无法连接实时剧情，尚未创建新人生。请稍后再试；已有旅程仍可继续。';return;}
+    await ensureLive();
     creatingRunId=window.crypto.randomUUID();
     const result=await liveSession.startNew({runId:creatingRunId,name,originId,seed:newSeed()},liveBirthDraft.expectedArchiveId);
     if(result.state?.runId===creatingRunId){setActiveMode('live');if(view==='new')view='adventure';}

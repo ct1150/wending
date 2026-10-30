@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {CANDIDATE_MODEL_ID} from '../src/worker/story-config.js';
+import {CANDIDATE_MODEL_ID,DEFAULT_STORY_MODEL_ID} from '../src/worker/story-config.js';
 import {mkdtemp,mkdir,readFile,writeFile,rm,cp,readdir,symlink} from 'node:fs/promises';
 import {tmpdir} from 'node:os';
 import path from 'node:path';
@@ -29,6 +29,7 @@ test('backend package includes deterministic complete ESM graph, named DO export
   assert.equal(manifest.main_module,'entry.mjs');assert.equal(manifest.sourceCommit,sourceCommit);
   assert.deepEqual(manifest.versions,{protocolVersion:1,rulesVersion:1,promptVersion:1,saveVersion:5,contentVersion:4});
   assert.equal(manifest.enabled,false);
+  assert.equal(manifest.candidateModelId,DEFAULT_STORY_MODEL_ID);assert.equal(manifest.activeModelId,null);assert.deepEqual(manifest.optionalSecrets,[]);
   assert.ok(manifest.modules.some(m=>m.name==='src/worker/story-budget.js'));
   assert.ok(manifest.modules.some(m=>m.name==='src/game/cultivation/live/identity.js'));
   assert.equal(manifest.modules.some(m=>m.name.startsWith('src/ui/')),false);
@@ -200,7 +201,7 @@ test('production build arguments cannot bypass the checked-in switch or mix test
   await setFixtureProductionProfiles(root,[UNVALIDATED_PROFILE]);
   await mkdir(path.join(root,'scripts'));
   await cp(path.join(repository,'scripts/build-gateway.js'),path.join(root,'scripts/build-gateway.js'));
-  await symlink(path.join(repository,'node_modules'),path.join(root,'node_modules'),'dir');
+  await symlink(path.join(repository,'node_modules'),path.join(root,'node_modules'),process.platform==='win32'?'junction':'dir');
   const isolatedBuild=(await import(pathToFileURL(path.join(root,'scripts/build-gateway.js')).href)).buildGateway;
   await assert.rejects(isolatedBuild({root,sourceCommit,production}),/MODEL_UNVALIDATED/);
 });

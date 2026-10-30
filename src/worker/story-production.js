@@ -2,7 +2,7 @@
 // profile, proof, account, or acceptance provider.
 import {createStoryApi} from './story-api.js';
 import {storyBudgetCoordinator} from './index.js';
-import {CANDIDATE_MODEL_ID,PRODUCTION_PROFILES,assertProviderReady,restoreFreeBoundaryEvidence} from './story-config.js';
+import {CANDIDATE_MODEL_ID,GLM_MODEL_ID,PRODUCTION_PROFILES,assertProviderReady,restoreFreeBoundaryEvidence} from './story-config.js';
 import {assertPlainData} from '../game/cultivation/live/identity.js';
 import {exactKeys} from '../game/cultivation/live/schema.js';
 
@@ -18,7 +18,7 @@ function readPolicy(value){
     exactKeys(value.freeBoundaryProof,['accountId','source','plan','hardLimit','noGatewayCredits','directBinding','accountUsageVerified','storageFreeVerified','remainingNeurons','checkedAt']);
     if(value.enabled!==true||value.mode!=='production'||Object.entries(STORY_PRODUCTION_VERSIONS).some(([key,version])=>value[key]!==version))throw Error('invalid production policy');
   }catch{fail('STORY_PRODUCTION_CONFIGURATION_INVALID');}
-  if(value.modelId!==CANDIDATE_MODEL_ID)fail('MODEL_NOT_ALLOWED');
+  if(![CANDIDATE_MODEL_ID,GLM_MODEL_ID].includes(value.modelId))fail('MODEL_NOT_ALLOWED');
   // Preserve the original observation time. Production verifies the account's
   // current hard Free boundary, not a newly measured five-minute probe balance.
   const evidence=restoreFreeBoundaryEvidence(value.freeBoundaryProof,{bindingAccountId:value.bindingAccountId,currentPlan:value.currentPlan});

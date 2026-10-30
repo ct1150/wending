@@ -7,7 +7,7 @@ import {fileURLToPath,pathToFileURL} from 'node:url';
 import {Miniflare} from 'miniflare';
 import {createLiveGame,prepareOpening} from '../src/game/cultivation/live/engine.js';
 import {buildStoryContext} from '../src/game/cultivation/live/memory.js';
-import {CANDIDATE_MODEL_ID,PRODUCTION_PROFILES} from '../src/worker/story-config.js';
+import {CANDIDATE_MODEL_ID,DEFAULT_STORY_MODEL_ID,GLM_MODEL_ID,GLM_PROFILE,GLM_PROVIDER_ROUTE,PRODUCTION_PROFILES} from '../src/worker/story-config.js';
 import {execFile} from 'node:child_process';
 import {promisify} from 'node:util';
 import {setFixtureProductionProfiles,UNVALIDATED_PROFILE,VALIDATED_FIXTURE_PROFILE} from './helpers/production-profiles.js';
@@ -31,7 +31,7 @@ async function fixture(t,{profiles=[VALIDATED_FIXTURE_PROFILE]}={}){
   // Fixture admission is independent of the real release's promotion state.
   await setFixtureProductionProfiles(root,profiles);
   await cp(path.join(repository,'scripts/build-gateway.js'),path.join(root,'scripts/build-gateway.js'));
-  await symlink(path.join(repository,'node_modules'),path.join(root,'node_modules'),'dir');
+  await symlink(path.join(repository,'node_modules'),path.join(root,'node_modules'),process.platform==='win32'?'junction':'dir');
   return {root,module:await import(pathToFileURL(path.join(root,'src/worker/story-production.js')).href),build: (await import(pathToFileURL(path.join(root,'scripts/build-gateway.js')).href)).buildGateway};
 }
 
@@ -39,6 +39,17 @@ test('an unvalidated fixture registry cannot be promoted by a supplied policy pr
   const f=await fixture(t,{profiles:[UNVALIDATED_PROFILE]});
   assert.throws(()=>f.module.validateStoryProductionPolicy(policy()),{code:'MODEL_UNVALIDATED'});
   assert.throws(()=>f.module.validateStoryProductionPolicy({...policy(),profile:{modelId,validated:true,supportsStructuredOutput:true}}),{code:'STORY_PRODUCTION_CONFIGURATION_INVALID'});
+});
+
+test('GLM production uses its evidence-backed CF-only profile and no external secret',async t=>{
+  assert.equal(productionModule.validateStoryProductionPolicy({...policy(),modelId:GLM_MODEL_ID}).modelId,GLM_MODEL_ID);
+  const profile={...GLM_PROFILE,validated:true,supportsStructuredOutput:true,validationEvidence:'test-fixture-only'},f=await fixture(t,{profiles:[profile]});
+  await f.build({root:f.root,sourceCommit:'d'.repeat(40),production:{...policy(),modelId:GLM_MODEL_ID}});
+  const manifest=JSON.parse(await readFile(path.join(f.root,'release/backend/deployment.json'),'utf8'));
+  assert.equal(manifest.candidateModelId,GLM_MODEL_ID);assert.equal(manifest.activeModelId,GLM_MODEL_ID);assert.equal(manifest.modelValidated,true);assert.deepEqual(manifest.optionalSecrets,[]);
+  const worker=await import(pathToFileURL(path.join(f.root,'release/backend/entry.mjs')).href);
+  const health=await(await worker.default.fetch(new Request('https://game.test/healthz'))).json();assert.equal(health.sourceCommit,'d'.repeat(40));assert.equal(health.releaseSource,'embedded');assert.deepEqual(manifest.providerRoute,{primary:'cloudflare',primaryModelId:GLM_MODEL_ID});
+  const caps=await(await worker.default.fetch(new Request('https://game.test/api/story/capabilities'),{AI:{run:async()=>{throw Error('not needed');}}})).json();assert.equal(caps.available,true);
 });
 
 test('production policy binds exact versions, current Free plan and original account proof without renewing probe balance',async t=>{
@@ -76,7 +87,7 @@ for(const promoted of [false,true])test(`default CLI builds a disabled backend w
   const worker=await import(pathToFileURL(path.join(output,'entry.mjs')).href);let calls=0;
   const capabilities=await(await worker.default.fetch(new Request('https://game.test/api/story/capabilities'),{AI:{run(){calls++;throw Error('disabled artifact must not infer');}}})).json();
   assert.equal(capabilities.available,false);assert.equal(capabilities.errorCode,'INFERENCE_DISABLED');assert.equal(calls,0);
-  assert.deepEqual(worker.backendIdentity,{sourceCommit,...versions,enabled:false,publicEnabled:false,accessMode:'disabled',candidateModelId:modelId,modelValidated:false});
+  assert.deepEqual(worker.backendIdentity,{sourceCommit,...versions,enabled:false,publicEnabled:false,accessMode:'disabled',candidateModelId:DEFAULT_STORY_MODEL_ID,activeModelId:null,modelValidated:false,providerRoute:GLM_PROVIDER_ROUTE});
 });
 
 test('isolated production package has no tester bridge or secrets and executes public API with durable budget and cached recovery', {timeout:30000},async t=>{
@@ -114,7 +125,7 @@ export default {async fetch(request,env,ctx){
     assert.equal(capabilities.available,errorCode===null,variant??'public production');assert.equal(capabilities.errorCode,errorCode);
   }
   const initialStatus=await getStatus();assert.equal(initialStatus.aiCalls,0);
-  assert.deepEqual(initialStatus.backendIdentity,{sourceCommit,...versions,enabled:true,publicEnabled:true,accessMode:'production',candidateModelId:modelId,modelValidated:true});
+  assert.deepEqual(initialStatus.backendIdentity,{sourceCommit,...versions,enabled:true,publicEnabled:true,accessMode:'production',candidateModelId:DEFAULT_STORY_MODEL_ID,activeModelId:modelId,modelValidated:true,providerRoute:null});
   assert.equal(await(await mf.dispatchFetch('https://game.test/')).text(),await readFile(path.join(f.root,'release/baishi-wending-offline.html'),'utf8'));
   const health=await(await mf.dispatchFetch('https://game.test/healthz')).json();assert.equal(health.sourceCommit,sourceCommit);assert.equal(health.htmlSha256,manifest.frontend.htmlSha256);
   const origin='https://game.test',sessionResponse=await mf.dispatchFetch(origin+'/api/story/session',{method:'POST',headers:{origin,'content-type':'application/json'},body:'{"protocolVersion":1}'}),session=await sessionResponse.json();
@@ -136,6 +147,6 @@ export default {async fetch(request,env,ctx){
   const nextState=createLiveGame({runId:'production-blocked',seed:43}),nextPending=prepareOpening(nextState,{requestId:'production-blocked-opening'});
   const blocked=await(await post({context:buildStoryContext(nextState,nextPending),attempt:{id:'production-blocked-attempt',sessionRef:session.sessionRef,retryOf:null}})).json();
   assert.equal(blocked.errorCode,'FREE_QUOTA_EXHAUSTED');
-  const status=await getStatus();assert.equal(status.aiCalls,0);assert.ok(status.coordinatorNames.length>0);assert.deepEqual([...new Set(status.coordinatorNames)],['story-budget-v1-global']);assert.equal(outbound,1,'only the blocked static release check, with no inference egress');
+  const status=await getStatus();assert.equal(status.aiCalls,0);assert.ok(status.coordinatorNames.length>0);assert.deepEqual([...new Set(status.coordinatorNames)],['story-budget-v1-global']);assert.equal(outbound,0,'pinned production frontend and direct binding need no outbound fetch');
   assert.equal(await readFile(path.join(repository,'config/story-deployment.json'),'utf8'),originalPolicy);assert.equal(JSON.stringify(PRODUCTION_PROFILES),originalRegistry);
 });

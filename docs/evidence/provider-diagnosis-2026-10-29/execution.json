@@ -1,0 +1,74 @@
+{
+  "schemaVersion": 1,
+  "checkedAt": "2026-10-29T06:45:56Z",
+  "accountModelLimit": {
+    "provider": "zhipu",
+    "model": "glm-4.7-flash",
+    "concurrency": 1,
+    "otherApplicationsUsingKey": false,
+    "source": "User inspected dashboard and confirmed in this conversation",
+    "rpm": null,
+    "tpm": null
+  },
+  "streamJsonProbe": {
+    "status": "CLIENT_CONNECT_FAILED_NO_PROVIDER_RESULT",
+    "clientError": "UND_ERR_CONNECT_TIMEOUT",
+    "timeoutMs": 10000,
+    "target": "baishi-wending.ct1150.workers.dev:443",
+    "note": "Do not count as a provider rejection, model timeout or stream comparison sample."
+  },
+  "production": {
+    "deployment": {
+      "id": "df645318-33ff-4ffe-8ffc-a3dadfc681b1",
+      "versions": [
+        {
+          "version_id": "f17816a1-da95-4095-b13d-406a2610a9c0",
+          "percentage": 100
+        }
+      ]
+    },
+    "bindings": [
+      {
+        "name": "AI",
+        "type": "ai"
+      },
+      {
+        "name": "STORY_BUDGET",
+        "type": "durable_object_namespace",
+        "namespace_id": "1de1df3929534a8d8d495d6db6604e99"
+      },
+      {
+        "name": "STORY_OPERATOR_TOKEN",
+        "type": "secret_text"
+      },
+      {
+        "name": "ZHIPU_API_KEY",
+        "type": "secret_text"
+      }
+    ],
+    "subdomain": {
+      "enabled": true,
+      "previews_enabled": false
+    },
+    "success": [
+      true,
+      true,
+      true
+    ],
+    "privateVersionRemovedFromActiveDeployment": true,
+    "localTemporaryTokenDeleted": true,
+    "health": {
+      "httpStatus": 200,
+      "version": "4.2.0",
+      "sourceCommit": "1f5b9e18dae06e4b74e6d60403c46964cf45e1f9",
+      "htmlSha256": "c77371e921886d3d2749af475388dc9108ac59eaf13e6b7d85f08a53bafe1856"
+    }
+  },
+  "sourceCodeChanged": false,
+  "newCandidatePublished": false,
+  "limits": [
+    "1302 request overlap is plausible given concurrency 1; the exact earlier overlap was not proven.",
+    "Two isolated non-streaming requests returned 1305 after full gameplay probes had stopped. Platform overload remains independently observed.",
+    "No new successful story or performance sample; release acceptance remains failed."
+  ]
+}

@@ -1,0 +1,1117 @@
+{
+  "caseId": "opening",
+  "mode": "backup",
+  "startedAt": "2026-10-29T05:11:31.200Z",
+  "sourceBase": "1f5b9e18dae06e4b74e6d60403c46964cf45e1f9",
+  "sourceStatus": "uncommitted GLM transport under test",
+  "firstPreviewMs": 1699,
+  "doneMs": 9787,
+  "timeline": [
+    {
+      "atMs": 364,
+      "serverMs": 0,
+      "reset": true
+    },
+    {
+      "atMs": 1699,
+      "serverMs": 1350,
+      "chars": 1
+    },
+    {
+      "atMs": 1738,
+      "serverMs": 1389,
+      "chars": 2
+    },
+    {
+      "atMs": 1745,
+      "serverMs": 1395,
+      "chars": 4
+    },
+    {
+      "atMs": 1767,
+      "serverMs": 1418,
+      "chars": 6
+    },
+    {
+      "atMs": 1803,
+      "serverMs": 1454,
+      "chars": 7
+    },
+    {
+      "atMs": 1838,
+      "serverMs": 1489,
+      "chars": 8
+    },
+    {
+      "atMs": 1885,
+      "serverMs": 1536,
+      "chars": 10
+    },
+    {
+      "atMs": 1910,
+      "serverMs": 1560,
+      "chars": 11
+    },
+    {
+      "atMs": 1948,
+      "serverMs": 1599,
+      "chars": 12
+    },
+    {
+      "atMs": 1948,
+      "serverMs": 1599,
+      "chars": 13
+    },
+    {
+      "atMs": 2209,
+      "serverMs": 1861,
+      "chars": 14
+    },
+    {
+      "atMs": 2212,
+      "serverMs": 1864,
+      "chars": 15
+    },
+    {
+      "atMs": 2212,
+      "serverMs": 1864,
+      "chars": 17
+    },
+    {
+      "atMs": 2219,
+      "serverMs": 1870,
+      "chars": 19
+    },
+    {
+      "atMs": 2224,
+      "serverMs": 1876,
+      "chars": 21
+    },
+    {
+      "atMs": 2234,
+      "serverMs": 1886,
+      "chars": 22
+    },
+    {
+      "atMs": 2237,
+      "serverMs": 1889,
+      "chars": 24
+    },
+    {
+      "atMs": 2241,
+      "serverMs": 1892,
+      "chars": 25
+    },
+    {
+      "atMs": 2266,
+      "serverMs": 1915,
+      "chars": 26
+    },
+    {
+      "atMs": 2266,
+      "serverMs": 1915,
+      "chars": 28
+    },
+    {
+      "atMs": 2296,
+      "serverMs": 1947,
+      "chars": 29
+    },
+    {
+      "atMs": 2296,
+      "serverMs": 1947,
+      "chars": 30
+    },
+    {
+      "atMs": 2298,
+      "serverMs": 1948,
+      "chars": 32
+    },
+    {
+      "atMs": 2334,
+      "serverMs": 1984,
+      "chars": 33
+    },
+    {
+      "atMs": 2334,
+      "serverMs": 1984,
+      "chars": 34
+    },
+    {
+      "atMs": 2334,
+      "serverMs": 1984,
+      "chars": 36
+    },
+    {
+      "atMs": 2373,
+      "serverMs": 2022,
+      "chars": 38
+    },
+    {
+      "atMs": 2373,
+      "serverMs": 2023,
+      "chars": 39
+    },
+    {
+      "atMs": 2373,
+      "serverMs": 2023,
+      "chars": 40
+    },
+    {
+      "atMs": 2410,
+      "serverMs": 2060,
+      "chars": 41
+    },
+    {
+      "atMs": 2410,
+      "serverMs": 2060,
+      "chars": 42
+    },
+    {
+      "atMs": 2410,
+      "serverMs": 2060,
+      "chars": 43
+    },
+    {
+      "atMs": 2449,
+      "serverMs": 2099,
+      "chars": 45
+    },
+    {
+      "atMs": 2484,
+      "serverMs": 2134,
+      "chars": 48
+    },
+    {
+      "atMs": 2487,
+      "serverMs": 2137,
+      "chars": 50
+    },
+    {
+      "atMs": 2519,
+      "serverMs": 2168,
+      "chars": 51
+    },
+    {
+      "atMs": 2705,
+      "serverMs": 2356,
+      "chars": 52
+    },
+    {
+      "atMs": 2706,
+      "serverMs": 2357,
+      "chars": 53
+    },
+    {
+      "atMs": 2718,
+      "serverMs": 2369,
+      "chars": 54
+    },
+    {
+      "atMs": 2721,
+      "serverMs": 2372,
+      "chars": 55
+    },
+    {
+      "atMs": 2721,
+      "serverMs": 2372,
+      "chars": 56
+    },
+    {
+      "atMs": 2728,
+      "serverMs": 2379,
+      "chars": 57
+    },
+    {
+      "atMs": 2738,
+      "serverMs": 2388,
+      "chars": 58
+    },
+    {
+      "atMs": 2738,
+      "serverMs": 2388,
+      "chars": 59
+    },
+    {
+      "atMs": 2747,
+      "serverMs": 2397,
+      "chars": 60
+    },
+    {
+      "atMs": 2747,
+      "serverMs": 2397,
+      "chars": 61
+    },
+    {
+      "atMs": 2747,
+      "serverMs": 2397,
+      "chars": 62
+    },
+    {
+      "atMs": 2753,
+      "serverMs": 2403,
+      "chars": 64
+    },
+    {
+      "atMs": 2770,
+      "serverMs": 2420,
+      "chars": 65
+    },
+    {
+      "atMs": 2773,
+      "serverMs": 2422,
+      "chars": 66
+    },
+    {
+      "atMs": 2773,
+      "serverMs": 2422,
+      "chars": 68
+    },
+    {
+      "atMs": 2801,
+      "serverMs": 2450,
+      "chars": 69
+    },
+    {
+      "atMs": 2801,
+      "serverMs": 2450,
+      "chars": 70
+    },
+    {
+      "atMs": 2801,
+      "serverMs": 2451,
+      "chars": 72
+    },
+    {
+      "atMs": 2838,
+      "serverMs": 2486,
+      "chars": 73
+    },
+    {
+      "atMs": 2869,
+      "serverMs": 2519,
+      "chars": 75
+    },
+    {
+      "atMs": 2909,
+      "serverMs": 2558,
+      "chars": 76
+    },
+    {
+      "atMs": 2909,
+      "serverMs": 2558,
+      "chars": 77
+    },
+    {
+      "atMs": 2959,
+      "serverMs": 2608,
+      "chars": 79
+    },
+    {
+      "atMs": 2988,
+      "serverMs": 2637,
+      "chars": 80
+    },
+    {
+      "atMs": 2994,
+      "serverMs": 2643,
+      "chars": 82
+    },
+    {
+      "atMs": 3019,
+      "serverMs": 2667,
+      "chars": 83
+    },
+    {
+      "atMs": 3019,
+      "serverMs": 2667,
+      "chars": 84
+    },
+    {
+      "atMs": 3019,
+      "serverMs": 2667,
+      "chars": 86
+    },
+    {
+      "atMs": 3047,
+      "serverMs": 2696,
+      "chars": 87
+    },
+    {
+      "atMs": 3047,
+      "serverMs": 2696,
+      "chars": 88
+    },
+    {
+      "atMs": 3085,
+      "serverMs": 2734,
+      "chars": 89
+    },
+    {
+      "atMs": 3085,
+      "serverMs": 2734,
+      "chars": 90
+    },
+    {
+      "atMs": 3089,
+      "serverMs": 2736,
+      "chars": 91
+    },
+    {
+      "atMs": 3120,
+      "serverMs": 2769,
+      "chars": 93
+    },
+    {
+      "atMs": 3162,
+      "serverMs": 2810,
+      "chars": 95
+    },
+    {
+      "atMs": 3193,
+      "serverMs": 2841,
+      "chars": 96
+    },
+    {
+      "atMs": 3193,
+      "serverMs": 2841,
+      "chars": 98
+    },
+    {
+      "atMs": 3193,
+      "serverMs": 2841,
+      "chars": 99
+    },
+    {
+      "atMs": 3231,
+      "serverMs": 2880,
+      "chars": 100
+    },
+    {
+      "atMs": 3234,
+      "serverMs": 2883,
+      "chars": 101
+    },
+    {
+      "atMs": 3267,
+      "serverMs": 2915,
+      "chars": 102
+    },
+    {
+      "atMs": 3270,
+      "serverMs": 2918,
+      "chars": 103
+    },
+    {
+      "atMs": 3303,
+      "serverMs": 2951,
+      "chars": 104
+    },
+    {
+      "atMs": 3303,
+      "serverMs": 2951,
+      "chars": 107
+    },
+    {
+      "atMs": 3336,
+      "serverMs": 2985,
+      "chars": 108
+    },
+    {
+      "atMs": 3341,
+      "serverMs": 2989,
+      "chars": 109
+    },
+    {
+      "atMs": 3375,
+      "serverMs": 3023,
+      "chars": 110
+    },
+    {
+      "atMs": 3375,
+      "serverMs": 3023,
+      "chars": 111
+    },
+    {
+      "atMs": 3377,
+      "serverMs": 3024,
+      "chars": 113
+    },
+    {
+      "atMs": 3412,
+      "serverMs": 3060,
+      "chars": 114
+    },
+    {
+      "atMs": 3413,
+      "serverMs": 3060,
+      "chars": 116
+    },
+    {
+      "atMs": 3447,
+      "serverMs": 3094,
+      "chars": 118
+    },
+    {
+      "atMs": 3488,
+      "serverMs": 3136,
+      "chars": 120
+    },
+    {
+      "atMs": 3524,
+      "serverMs": 3171,
+      "chars": 122
+    },
+    {
+      "atMs": 3564,
+      "serverMs": 3211,
+      "chars": 123
+    },
+    {
+      "atMs": 3564,
+      "serverMs": 3211,
+      "chars": 125
+    },
+    {
+      "atMs": 3628,
+      "serverMs": 3276,
+      "chars": 127
+    },
+    {
+      "atMs": 3628,
+      "serverMs": 3276,
+      "chars": 129
+    },
+    {
+      "atMs": 3673,
+      "serverMs": 3319,
+      "chars": 130
+    },
+    {
+      "atMs": 3673,
+      "serverMs": 3319,
+      "chars": 131
+    },
+    {
+      "atMs": 3710,
+      "serverMs": 3358,
+      "chars": 134
+    },
+    {
+      "atMs": 3747,
+      "serverMs": 3395,
+      "chars": 136
+    },
+    {
+      "atMs": 3747,
+      "serverMs": 3395,
+      "chars": 137
+    },
+    {
+      "atMs": 3780,
+      "serverMs": 3428,
+      "chars": 138
+    },
+    {
+      "atMs": 3780,
+      "serverMs": 3428,
+      "chars": 140
+    },
+    {
+      "atMs": 3815,
+      "serverMs": 3464,
+      "chars": 141
+    },
+    {
+      "atMs": 4147,
+      "serverMs": 3795,
+      "chars": 145
+    },
+    {
+      "atMs": 4179,
+      "serverMs": 3825,
+      "chars": 147
+    },
+    {
+      "atMs": 4212,
+      "serverMs": 3860,
+      "chars": 148
+    },
+    {
+      "atMs": 4214,
+      "serverMs": 3862,
+      "chars": 149
+    },
+    {
+      "atMs": 4251,
+      "serverMs": 3899,
+      "chars": 151
+    },
+    {
+      "atMs": 4258,
+      "serverMs": 3905,
+      "chars": 153
+    },
+    {
+      "atMs": 4292,
+      "serverMs": 3939,
+      "chars": 155
+    },
+    {
+      "atMs": 4292,
+      "serverMs": 3939,
+      "chars": 156
+    },
+    {
+      "atMs": 4292,
+      "serverMs": 3939,
+      "chars": 157
+    },
+    {
+      "atMs": 4555,
+      "serverMs": 4203,
+      "chars": 160
+    },
+    {
+      "atMs": 4578,
+      "serverMs": 4225,
+      "chars": 161
+    },
+    {
+      "atMs": 4578,
+      "serverMs": 4226,
+      "chars": 162
+    },
+    {
+      "atMs": 4618,
+      "serverMs": 4266,
+      "chars": 163
+    },
+    {
+      "atMs": 4619,
+      "serverMs": 4267,
+      "chars": 164
+    },
+    {
+      "atMs": 4654,
+      "serverMs": 4301,
+      "chars": 165
+    },
+    {
+      "atMs": 4654,
+      "serverMs": 4301,
+      "chars": 166
+    },
+    {
+      "atMs": 4657,
+      "serverMs": 4302,
+      "chars": 168
+    },
+    {
+      "atMs": 4690,
+      "serverMs": 4337,
+      "chars": 169
+    },
+    {
+      "atMs": 4730,
+      "serverMs": 4377,
+      "chars": 170
+    },
+    {
+      "atMs": 4767,
+      "serverMs": 4414,
+      "chars": 172
+    },
+    {
+      "atMs": 4803,
+      "serverMs": 4450,
+      "chars": 173
+    },
+    {
+      "atMs": 4805,
+      "serverMs": 4453,
+      "chars": 174
+    },
+    {
+      "atMs": 4805,
+      "serverMs": 4453,
+      "chars": 175
+    },
+    {
+      "atMs": 4833,
+      "serverMs": 4480,
+      "chars": 176
+    },
+    {
+      "atMs": 4868,
+      "serverMs": 4515,
+      "chars": 178
+    },
+    {
+      "atMs": 4868,
+      "serverMs": 4516,
+      "chars": 179
+    },
+    {
+      "atMs": 4908,
+      "serverMs": 4555,
+      "chars": 180
+    },
+    {
+      "atMs": 4944,
+      "serverMs": 4591,
+      "chars": 182
+    },
+    {
+      "atMs": 4982,
+      "serverMs": 4629,
+      "chars": 184
+    },
+    {
+      "atMs": 4985,
+      "serverMs": 4632,
+      "chars": 186
+    },
+    {
+      "atMs": 5023,
+      "serverMs": 4671,
+      "chars": 187
+    },
+    {
+      "atMs": 5036,
+      "serverMs": 4684,
+      "chars": 188
+    },
+    {
+      "atMs": 5060,
+      "serverMs": 4703,
+      "chars": 189
+    },
+    {
+      "atMs": 5091,
+      "serverMs": 4733,
+      "chars": 190
+    },
+    {
+      "atMs": 5091,
+      "serverMs": 4734,
+      "chars": 191
+    },
+    {
+      "atMs": 5126,
+      "serverMs": 4769,
+      "chars": 193
+    },
+    {
+      "atMs": 5126,
+      "serverMs": 4769,
+      "chars": 194
+    },
+    {
+      "atMs": 5193,
+      "serverMs": 4838,
+      "chars": 195
+    },
+    {
+      "atMs": 5193,
+      "serverMs": 4838,
+      "chars": 197
+    },
+    {
+      "atMs": 5232,
+      "serverMs": 4876,
+      "chars": 198
+    },
+    {
+      "atMs": 5267,
+      "serverMs": 4912,
+      "chars": 199
+    },
+    {
+      "atMs": 5271,
+      "serverMs": 4914,
+      "chars": 200
+    },
+    {
+      "atMs": 5271,
+      "serverMs": 4914,
+      "chars": 201
+    },
+    {
+      "atMs": 5310,
+      "serverMs": 4955,
+      "chars": 202
+    },
+    {
+      "atMs": 5311,
+      "serverMs": 4955,
+      "chars": 204
+    },
+    {
+      "atMs": 5345,
+      "serverMs": 4989,
+      "chars": 205
+    },
+    {
+      "atMs": 5345,
+      "serverMs": 4989,
+      "chars": 206
+    },
+    {
+      "atMs": 5382,
+      "serverMs": 5026,
+      "chars": 208
+    },
+    {
+      "atMs": 5416,
+      "serverMs": 5061,
+      "chars": 209
+    },
+    {
+      "atMs": 5416,
+      "serverMs": 5061,
+      "chars": 210
+    },
+    {
+      "atMs": 5417,
+      "serverMs": 5061,
+      "chars": 211
+    },
+    {
+      "atMs": 5456,
+      "serverMs": 5100,
+      "chars": 212
+    },
+    {
+      "atMs": 5456,
+      "serverMs": 5100,
+      "chars": 213
+    },
+    {
+      "atMs": 5492,
+      "serverMs": 5137,
+      "chars": 214
+    },
+    {
+      "atMs": 5492,
+      "serverMs": 5137,
+      "chars": 215
+    },
+    {
+      "atMs": 5527,
+      "serverMs": 5171,
+      "chars": 216
+    },
+    {
+      "atMs": 5527,
+      "serverMs": 5171,
+      "chars": 217
+    },
+    {
+      "atMs": 5565,
+      "serverMs": 5210,
+      "chars": 220
+    },
+    {
+      "atMs": 5601,
+      "serverMs": 5245,
+      "chars": 222
+    },
+    {
+      "atMs": 5601,
+      "serverMs": 5245,
+      "chars": 224
+    },
+    {
+      "atMs": 5637,
+      "serverMs": 5280,
+      "chars": 225
+    },
+    {
+      "atMs": 5670,
+      "serverMs": 5313,
+      "chars": 226
+    },
+    {
+      "atMs": 5670,
+      "serverMs": 5313,
+      "chars": 227
+    },
+    {
+      "atMs": 5708,
+      "serverMs": 5351,
+      "chars": 228
+    },
+    {
+      "atMs": 5744,
+      "serverMs": 5387,
+      "chars": 229
+    },
+    {
+      "atMs": 5745,
+      "serverMs": 5387,
+      "chars": 231
+    },
+    {
+      "atMs": 5779,
+      "serverMs": 5422,
+      "chars": 232
+    },
+    {
+      "atMs": 5779,
+      "serverMs": 5422,
+      "chars": 233
+    },
+    {
+      "atMs": 5812,
+      "serverMs": 5456,
+      "chars": 234
+    },
+    {
+      "atMs": 5849,
+      "serverMs": 5492,
+      "chars": 235
+    },
+    {
+      "atMs": 5849,
+      "serverMs": 5492,
+      "chars": 237
+    },
+    {
+      "atMs": 5887,
+      "serverMs": 5529,
+      "chars": 238
+    },
+    {
+      "atMs": 5887,
+      "serverMs": 5529,
+      "chars": 239
+    },
+    {
+      "atMs": 5887,
+      "serverMs": 5530,
+      "chars": 240
+    },
+    {
+      "atMs": 5922,
+      "serverMs": 5564,
+      "chars": 241
+    },
+    {
+      "atMs": 5922,
+      "serverMs": 5564,
+      "chars": 242
+    },
+    {
+      "atMs": 5922,
+      "serverMs": 5564,
+      "chars": 244
+    },
+    {
+      "atMs": 5962,
+      "serverMs": 5605,
+      "chars": 246
+    },
+    {
+      "atMs": 5962,
+      "serverMs": 5605,
+      "chars": 248
+    },
+    {
+      "atMs": 5995,
+      "serverMs": 5638,
+      "chars": 250
+    },
+    {
+      "atMs": 5995,
+      "serverMs": 5639,
+      "chars": 251
+    },
+    {
+      "atMs": 6035,
+      "serverMs": 5679,
+      "chars": 252
+    },
+    {
+      "atMs": 6036,
+      "serverMs": 5679,
+      "chars": 253
+    },
+    {
+      "atMs": 6036,
+      "serverMs": 5679,
+      "chars": 255
+    },
+    {
+      "atMs": 6067,
+      "serverMs": 5710,
+      "chars": 256
+    },
+    {
+      "atMs": 6067,
+      "serverMs": 5710,
+      "chars": 257
+    },
+    {
+      "atMs": 6104,
+      "serverMs": 5748,
+      "chars": 258
+    },
+    {
+      "atMs": 6108,
+      "serverMs": 5750,
+      "chars": 260
+    },
+    {
+      "atMs": 6142,
+      "serverMs": 5785,
+      "chars": 262
+    },
+    {
+      "atMs": 6145,
+      "serverMs": 5788,
+      "chars": 263
+    },
+    {
+      "atMs": 6145,
+      "serverMs": 5788,
+      "chars": 265
+    },
+    {
+      "atMs": 6184,
+      "serverMs": 5827,
+      "chars": 266
+    },
+    {
+      "atMs": 6184,
+      "serverMs": 5827,
+      "chars": 268
+    },
+    {
+      "atMs": 6216,
+      "serverMs": 5859,
+      "chars": 269
+    },
+    {
+      "atMs": 6216,
+      "serverMs": 5860,
+      "chars": 271
+    },
+    {
+      "atMs": 6217,
+      "serverMs": 5860,
+      "chars": 272
+    },
+    {
+      "atMs": 6248,
+      "serverMs": 5892,
+      "chars": 274
+    },
+    {
+      "atMs": 6288,
+      "serverMs": 5931,
+      "chars": 275
+    },
+    {
+      "atMs": 6288,
+      "serverMs": 5931,
+      "chars": 277
+    },
+    {
+      "atMs": 6328,
+      "serverMs": 5972,
+      "chars": 279
+    },
+    {
+      "atMs": 6329,
+      "serverMs": 5972,
+      "chars": 281
+    },
+    {
+      "atMs": 6329,
+      "serverMs": 5972,
+      "chars": 282
+    },
+    {
+      "atMs": 6357,
+      "serverMs": 6001,
+      "chars": 283
+    },
+    {
+      "atMs": 6360,
+      "serverMs": 6004,
+      "chars": 284
+    },
+    {
+      "atMs": 6363,
+      "serverMs": 6007,
+      "chars": 285
+    },
+    {
+      "atMs": 6402,
+      "serverMs": 6046,
+      "chars": 286
+    },
+    {
+      "atMs": 6438,
+      "serverMs": 6081,
+      "chars": 288
+    },
+    {
+      "atMs": 6438,
+      "serverMs": 6081,
+      "chars": 289
+    }
+  ],
+  "result": {
+    "status": "rejected",
+    "accountingStatus": "complete",
+    "modelId": "@cf/zai-org/glm-4.7-flash",
+    "attemptId": "glm-speed-opening",
+    "inferencePerformed": true,
+    "usage": {
+      "promptTokens": 2719,
+      "completionTokens": 514,
+      "totalTokens": 3233
+    },
+    "actualNeurons": null,
+    "stopReason": "stop",
+    "inputHash": "e800b9510054c9615ac9e107496f25f0f5a1d93d385473d9f2d0a8b45e3521de",
+    "inputBytes": 10155,
+    "nonThinkingValidated": true,
+    "errorCode": "ENTITY_IDENTITY_CONFLICT"
+  },
+  "source": "zhipu",
+  "httpStatus": 200,
+  "headersMs": 363,
+  "accountingUnknown": false,
+  "serverDoneMs": 9420,
+  "upstream": {
+    "httpStatus": 200
+  },
+  "primaryError": null,
+  "rawCompletion": {
+    "model": "@cf/zai-org/glm-4.7-flash",
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "message": {
+          "content": "\n{\n  \"blocks\": [\n    {\n      \"kind\": \"narration\",\n      \"text\": \"云归站在青云村村口的青石碑旁，十六岁的少年身形单薄，眼神却透着一股与年龄不符的沉静。他低头看了看手中紧攥的半块干硬的行粮，又抬头望向远处连绵起伏的青山。村子里静悄悄的，只有几声鸡鸣和远处偶尔传来的犬吠。他深吸一口气，握紧了拳头，决定离开这个生活了十六年的地方，去外面的世界闯荡一番。\"\n    },\n    {\n      \"kind\": \"dialogue\",\n      \"speaker\": \"self\",\n      \"text\": \"十六年了，是时候离开这里了。\"\n    },\n    {\n      \"kind\": \"narration\",\n      \"text\": \"云归迈开步子，沿着村外的小路向山里走去。山里的空气清新而凛冽，路边的野草长得比人还高。走了约莫两个时辰，天色渐晚，他来到了一处名为‘落云谷’的山口。谷口杂草丛生，隐约可见一条蜿蜒的小径通向深处。云归停下脚步，警惕地观察着四周，决定先找个地方休息一晚，再作打算。\"\n    }\n  ],\n  \"title\": \"初入山野\",\n  \"location\": \"落云谷口\",\n  \"entities\": [\n    {\n      \"id\": \"p1\",\n      \"name\": \"云归\",\n      \"kind\": \"person\",\n      \"status\": \"alive\"\n    },\n    {\n      \"id\": \"l1\",\n      \"name\": \"落云谷口\",\n      \"kind\": \"place\"\n    },\n    {\n      \"id\": \"l2\",\n      \"name\": \"青云村\",\n      \"kind\": \"place\"\n    }\n  ],\n  \"choices\": [\n    {\n      \"action\": \"rest:recover\",\n      \"targetId\": \"self\",\n      \"stake\": \"low\"\n    },\n    {\n      \"action\": \"explore:cautious\",\n      \"targetId\": \"supplies\",\n      \"stake\": \"low\"\n    },\n    {\n      \"action\": \"travel:road\",\n      \"targetId\": \"l1\",\n      \"stake\": \"normal\"\n    }\n  ],\n  \"memoryDeltas\": []\n}\n",
+          "reasoning_content": ""
+        }
+      }
+    ],
+    "usage": {
+      "prompt_tokens": 2719,
+      "completion_tokens": 514,
+      "total_tokens": 3233,
+      "prompt_tokens_details": {
+        "cached_tokens": 61
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0
+      }
+    }
+  },
+  "keyPresent": true
+}

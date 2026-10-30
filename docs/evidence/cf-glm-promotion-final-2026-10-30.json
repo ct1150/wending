@@ -1,0 +1,122 @@
+{
+  "schemaVersion": 1,
+  "modelId": "@cf/zai-org/glm-4.7-flash",
+  "sourceCommit": "006fed94523e63ec79bf539e001b90ae3d094f20",
+  "verifiedAt": "2026-10-30T03:18:35.842Z",
+  "status": "PRIVATE_CF_STREAMING_ACCEPTANCE_PASSED",
+  "providerRoute": {
+    "primary": "cloudflare",
+    "primaryModelId": "@cf/zai-org/glm-4.7-flash"
+  },
+  "acceptance": {
+    "opening": {
+      "passed": true,
+      "evidence": "docs/evidence/cf-glm-retest-2026-10-30/20261030T022632268Z/schema-hydrated/private-browser.json",
+      "requestId": "d073236b-ece0-4184-97bb-e7f434776b04",
+      "revision": 1
+    },
+    "branches": {
+      "passed": true,
+      "evidence": "docs/evidence/cf-glm-retest-2026-10-30/20261030T022632268Z/schema-hydrated/private-browser.json",
+      "actualUserChoices": 1,
+      "requestId": "b1f45821-17c3-4b6e-99aa-b3348bd07e83",
+      "revision": 2,
+      "scope": "One actual browser choice; every offered living action also passes the unchanged server next-context checks."
+    },
+    "browserSaveRefresh": {
+      "passed": true,
+      "evidence": "docs/evidence/cf-glm-retest-2026-10-30/20261030T022632268Z/schema-hydrated/private-browser.json",
+      "beforeRevision": 2,
+      "afterRevision": 2,
+      "sameRng": true,
+      "sameState": true,
+      "noNewPost": true,
+      "choicesEnabledDuringPreview": false
+    }
+  },
+  "samples": [
+    {
+      "caseId": "opening",
+      "requestId": "d073236b-ece0-4184-97bb-e7f434776b04",
+      "revision": 1,
+      "usage": {
+        "promptTokens": 1414,
+        "completionTokens": 411,
+        "totalTokens": 1825
+      },
+      "neurons": 22.737400000000175,
+      "usable": true,
+      "errorCode": null,
+      "firstAnyPreviewMs": 3031,
+      "firstReadableMs": 3406,
+      "completionMs": 12383,
+      "narrativeChars": 227,
+      "maxPreviewGapMs": 481,
+      "readingFinishEstimateMs": 41239,
+      "readingStallEstimateMs": 0,
+      "optionsWaitEstimateMs": 0,
+      "prefetchWorthEvaluating": true,
+      "assumptions": {
+        "readingCharsPerSecond": 6,
+        "readableChars": 20,
+        "targetWaitMs": 2000
+      }
+    },
+    {
+      "caseId": "choice",
+      "requestId": "b1f45821-17c3-4b6e-99aa-b3348bd07e83",
+      "revision": 2,
+      "usage": {
+        "promptTokens": 1538,
+        "completionTokens": 424,
+        "totalTokens": 1962
+      },
+      "neurons": 23.892600000000183,
+      "usable": true,
+      "errorCode": null,
+      "firstAnyPreviewMs": 5154,
+      "firstReadableMs": 5357,
+      "completionMs": 12237,
+      "narrativeChars": 240,
+      "maxPreviewGapMs": 356,
+      "readingFinishEstimateMs": 45357,
+      "readingStallEstimateMs": 0,
+      "optionsWaitEstimateMs": 0,
+      "prefetchWorthEvaluating": true,
+      "assumptions": {
+        "readingCharsPerSecond": 6,
+        "readableChars": 20,
+        "targetWaitMs": 2000
+      }
+    }
+  ],
+  "scope": {
+    "frontend": "Current local 4.3.0 HTML served by browser harness; not yet a published frontend",
+    "api": "Actual Cloudflare Worker, native AI binding and durable SQLite isolated object",
+    "privateWorkerVersion": "40d066aa-5f01-4f60-8b3d-d6db244faeeb",
+    "normalProduction": "Original version f17816a1-da95-4095-b13d-406a2610a9c0 stayed at 100%; candidate at 0%",
+    "coordinator": "Uses existing budget methods through the original namespace; new account-admission methods are not needed by CF-only routing",
+    "preloadEnabled": false,
+    "automaticProviderRetries": false
+  },
+  "retainedFailures": [
+    {
+      "evidence": "docs/evidence/cf-glm-retest-2026-10-30/20261030T022632268Z/private-browser.json",
+      "reason": "9863a32 plain streamed output returned Markdown-wrapped JSON; rejected, not saved"
+    },
+    {
+      "evidence": "docs/evidence/cf-glm-retest-2026-10-30/20261030T022632268Z/schema-spike-result.json",
+      "reason": "Private JSON Schema streaming spike; narration speaker rejected; this was not the production input"
+    },
+    {
+      "evidence": "docs/evidence/cf-glm-retest-2026-10-30/20261030T022632268Z/schema-fixed/private-browser.json",
+      "reason": "4ef9c08 opening saved but choice fact.status was rejected; raw failed sample retained"
+    }
+  ],
+  "limitations": [
+    "Two final successful turns are not a random benchmark or a percentile guarantee. Prior variants and rejected scenes remain archived, including the schema-budget and schema-closure choices.",
+    "Latency samples are small and first preview is slower than the 2-second target; reading-time estimates use 6 characters/second. Prefetch remains off.",
+    "Cross-field declarations, duplicate choices, mechanics and all final identity checks remain authoritative runtime validation.",
+    "Public production entry and original global budget object still require validation after actual deployment."
+  ]
+}

@@ -1,0 +1,46 @@
+{
+  "caseId": "opening",
+  "mode": "primary",
+  "startedAt": "2026-10-29T06:04:35.779Z",
+  "sourceBase": "1f5b9e18dae06e4b74e6d60403c46964cf45e1f9",
+  "sourceStatus": "Zhipu-primary route under test",
+  "firstPreviewMs": null,
+  "doneMs": 1209,
+  "timeline": [
+    {
+      "atMs": 1066,
+      "serverMs": 575,
+      "reset": true
+    }
+  ],
+  "result": {
+    "status": "paused",
+    "accountingStatus": "complete",
+    "modelId": "@cf/zai-org/glm-4.7-flash",
+    "attemptId": "glm-speed-opening",
+    "inferencePerformed": true,
+    "usage": null,
+    "actualNeurons": null,
+    "stopReason": null,
+    "inputHash": "d91ed6fc0da36f42f66f9c90ff3d872715cf79e62d3d6e4ec92922d7d8d3f54e",
+    "inputBytes": 10473,
+    "nonThinkingValidated": null,
+    "errorCode": "FREE_QUOTA_EXHAUSTED"
+  },
+  "source": "cloudflare",
+  "httpStatus": 200,
+  "headersMs": 506,
+  "accountingUnknown": false,
+  "serverDoneMs": 713,
+  "upstream": {
+    "httpStatus": 429,
+    "code": "1305"
+  },
+  "primaryError": {
+    "name": "AiError",
+    "code": "",
+    "message": "4006: you have used up your daily free allocation of 10,000 neurons, please upgrade to Cloudflare's Workers Paid plan if you would like to continue usage."
+  },
+  "rawCompletion": null,
+  "keyPresent": true
+}

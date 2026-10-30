@@ -1,0 +1,112 @@
+{
+  "schemaVersion": 1,
+  "recordedAt": "2026-10-29T04:15:11.515Z",
+  "status": "LOCAL_IMPLEMENTATION_VERIFIED_LIVE_GENERATION_BLOCKED",
+  "sourceBase": "1f5b9e18dae06e4b74e6d60403c46964cf45e1f9",
+  "sourceStatus": "uncommitted changes; not a production release",
+  "fingerprints": {
+    "src/worker/story-glm-provider.js": "d093428117b66304c6f5e6fd498ab4735097be75a2d22914489f44215c4a0375",
+    "src/worker/story-provider.js": "cdba47590604ec0e38e86551e435e56afdc2e6a35b56553980e60023ddbd3178",
+    "src/worker/story-provider-core.js": "293e15b6cc642834f93bf4fece39fb9b44ac2ae18950866d8718efa43f0fc539",
+    "src/worker/story-api.js": "5f5dbe40ecf77fb8152e987ddc4a7ed582227f0842b9e047b67bca9d907223c8",
+    "src/worker/story-config.js": "2f4a05b2b63a30d798b1b655f2d8ad182ba0d144e27fa63932935b5541820d50",
+    "src/ui/story-client.js": "741f526fee6a9745dc4964869c90310b245bbec4ad596685611b54ddc1ec9ca2",
+    "src/ui/live-session.js": "d42a8f91bd232016386763b12761132778343492305c0d54fd65746b6a736ece",
+    "src/ui/journey.js": "5901a516437bba245658abcf8d3608cbe7336b296ee6a4cd85a8da3640d63b2f",
+    "src/app.js": "9b4aa0675d0f323eb046bbc71a408e47a76c69252dc58782a1d8f228e9601667"
+  },
+  "providers": {
+    "primary": "@cf/zai-org/glm-4.7-flash",
+    "backup": "glm-4.7-flash",
+    "backupEndpoint": "https://open.bigmodel.cn/api/paas/v4/chat/completions",
+    "secretBinding": {
+      "name": "ZHIPU_API_KEY",
+      "type": "secret_text",
+      "present": true,
+      "valueExposedToAgentOrExported": false
+    }
+  },
+  "actualCalls": {
+    "successfulScenes": 0,
+    "firstReadablePreviewMs": null,
+    "completionMs": null,
+    "backup": {
+      "httpStatus": 429,
+      "businessCode": "1305",
+      "meaning": "model currently overloaded",
+      "source": "https://docs.bigmodel.cn/cn/api/api-code",
+      "evidence": [
+        "glm-backup-opening-4.json",
+        "glm-primary-opening-2.json"
+      ]
+    },
+    "compatibilityFinding": {
+      "evidence": "glm-backup-opening-3.json",
+      "category": "REDIRECT_UNSUPPORTED",
+      "fix": "manual redirects; all non-2xx responses rejected"
+    },
+    "cloudflareQuotaDiscrepancy": "quota-recheck.json"
+  },
+  "production": {
+    "baselineAfterUserSecretConfiguration": "f17816a1-da95-4095-b13d-406a2610a9c0",
+    "temporaryProbeVersions": [
+      "924fcd2f-b282-4724-819a-5711fd5b7003",
+      "a9e1fafe-1c03-4e6f-ba04-e1c1347ec060",
+      "33cd7293-8f80-481f-b50b-512c9bd6a5cb",
+      "9584f625-196d-48a0-9c61-db7dc47ecaab"
+    ],
+    "normalTrafficPercentageDuringTests": 100,
+    "probeTrafficPercentageDuringTests": 0,
+    "restoredDeploymentId": "126f0976-c247-41ae-9c7f-b69fb904a7e3",
+    "restoredVersions": [
+      {
+        "versionId": "f17816a1-da95-4095-b13d-406a2610a9c0",
+        "percentage": 100
+      }
+    ],
+    "previewsEnabled": false,
+    "probePrivateTokenDeleted": true,
+    "probeUsesGameCoordinator": false,
+    "newModelPromoted": false,
+    "newFrontendOrBackendPublished": false
+  },
+  "validation": {
+    "windowsFullBeforeReviewHardening": {
+      "total": 870,
+      "passed": 859,
+      "failed": 11,
+      "description": "8 native workerd access violations; 2 file symlink permission failures; 1 Windows short-path boundary assertion"
+    },
+    "windowsTargeted": {
+      "total": 169,
+      "passed": 169,
+      "failed": 0
+    },
+    "additionalProtocolRegression": {
+      "total": 49,
+      "passed": 49,
+      "failed": 0
+    },
+    "wslRuntimeAndBuild": {
+      "total": 26,
+      "passed": 26,
+      "failed": 0
+    },
+    "wslOperatorRuntime": {
+      "total": 58,
+      "passed": 58,
+      "failed": 0
+    },
+    "syntax": {
+      "files": 166
+    },
+    "browser": "real Chrome: streamed text keeps existing nodes, focus, open history dialog; no choices before commit",
+    "build": "browser bundle and disabled backend package built locally; sourceCommit field is the base SHA, current edits remain uncommitted"
+  },
+  "limitations": [
+    "No successful real GLM generation; no trustworthy stream-speed or playability conclusion",
+    "GLM production profile remains unpromoted",
+    "Prefetch is not enabled; provider availability must be resolved before latency tradeoffs can be measured",
+    "Actual producer wire format, usage and end markers still require successful live acceptance"
+  ]
+}

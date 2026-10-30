@@ -1,0 +1,122 @@
+{
+  "schemaVersion": 1,
+  "modelId": "@cf/zai-org/glm-4.7-flash",
+  "sourceCommit": "4097cda64407f27fdb4f53038a3dfc1bc2013a75",
+  "verifiedAt": "2026-10-30T02:56:08.592Z",
+  "status": "PRIVATE_CF_STREAMING_ACCEPTANCE_PASSED",
+  "providerRoute": {
+    "primary": "cloudflare",
+    "primaryModelId": "@cf/zai-org/glm-4.7-flash"
+  },
+  "acceptance": {
+    "opening": {
+      "passed": true,
+      "evidence": "docs/evidence/cf-glm-retest-2026-10-30/20261030T022632268Z/schema-final/private-browser.json",
+      "requestId": "6fe11e9c-ae23-4c8c-893c-aadef5ddbde0",
+      "revision": 1
+    },
+    "branches": {
+      "passed": true,
+      "evidence": "docs/evidence/cf-glm-retest-2026-10-30/20261030T022632268Z/schema-final/private-browser.json",
+      "actualUserChoices": 1,
+      "requestId": "88f6ac26-cc35-4424-a8a9-ea6a270ee435",
+      "revision": 2,
+      "scope": "One actual browser choice; every offered living action also passes the unchanged server next-context checks."
+    },
+    "browserSaveRefresh": {
+      "passed": true,
+      "evidence": "docs/evidence/cf-glm-retest-2026-10-30/20261030T022632268Z/schema-final/private-browser.json",
+      "beforeRevision": 2,
+      "afterRevision": 2,
+      "sameRng": true,
+      "sameState": true,
+      "noNewPost": true,
+      "choicesEnabledDuringPreview": false
+    }
+  },
+  "samples": [
+    {
+      "caseId": "opening",
+      "requestId": "6fe11e9c-ae23-4c8c-893c-aadef5ddbde0",
+      "revision": 1,
+      "usage": {
+        "promptTokens": 1385,
+        "completionTokens": 410,
+        "totalTokens": 1795
+      },
+      "neurons": 22.541500000000173,
+      "usable": true,
+      "errorCode": null,
+      "firstAnyPreviewMs": 6159,
+      "firstReadableMs": 6520,
+      "completionMs": 28499,
+      "narrativeChars": 236,
+      "maxPreviewGapMs": 716,
+      "readingFinishEstimateMs": 45853,
+      "readingStallEstimateMs": 0,
+      "optionsWaitEstimateMs": 0,
+      "prefetchWorthEvaluating": true,
+      "assumptions": {
+        "readingCharsPerSecond": 6,
+        "readableChars": 20,
+        "targetWaitMs": 2000
+      }
+    },
+    {
+      "caseId": "choice",
+      "requestId": "88f6ac26-cc35-4424-a8a9-ea6a270ee435",
+      "revision": 2,
+      "usage": {
+        "promptTokens": 1527,
+        "completionTokens": 213,
+        "totalTokens": 1740
+      },
+      "neurons": 16.15170000000009,
+      "usable": true,
+      "errorCode": null,
+      "firstAnyPreviewMs": 5048,
+      "firstReadableMs": 5371,
+      "completionMs": 27464,
+      "narrativeChars": 130,
+      "maxPreviewGapMs": 2166,
+      "readingFinishEstimateMs": 29675,
+      "readingStallEstimateMs": 2637,
+      "optionsWaitEstimateMs": 0,
+      "prefetchWorthEvaluating": true,
+      "assumptions": {
+        "readingCharsPerSecond": 6,
+        "readableChars": 20,
+        "targetWaitMs": 2000
+      }
+    }
+  ],
+  "scope": {
+    "frontend": "Current local 4.3.0 HTML served by browser harness; not yet a published frontend",
+    "api": "Actual Cloudflare Worker, native AI binding and durable SQLite isolated object",
+    "privateWorkerVersion": "f956d217-7b60-4cbc-8d2f-5f8de71f73c8",
+    "normalProduction": "Original version f17816a1-da95-4095-b13d-406a2610a9c0 stayed at 100%; candidate at 0%",
+    "coordinator": "Uses existing budget methods through the original namespace; new account-admission methods are not needed by CF-only routing",
+    "preloadEnabled": false,
+    "automaticProviderRetries": false
+  },
+  "retainedFailures": [
+    {
+      "evidence": "docs/evidence/cf-glm-retest-2026-10-30/20261030T022632268Z/private-browser.json",
+      "reason": "9863a32 plain streamed output returned Markdown-wrapped JSON; rejected, not saved"
+    },
+    {
+      "evidence": "docs/evidence/cf-glm-retest-2026-10-30/20261030T022632268Z/schema-spike-result.json",
+      "reason": "Private JSON Schema streaming spike; narration speaker rejected; this was not the production input"
+    },
+    {
+      "evidence": "docs/evidence/cf-glm-retest-2026-10-30/20261030T022632268Z/schema-fixed/private-browser.json",
+      "reason": "4ef9c08 opening saved but choice fact.status was rejected; raw failed sample retained"
+    }
+  ],
+  "limitations": [
+    "Two final successful turns are not a random benchmark or a percentile guarantee. Across the three earlier variants there were three rejected scenes and one ready scene.",
+    "First narrative still takes about 5-6 seconds. Under the explicit 6 characters/second assumption, the choice sample has 2.637 seconds estimated reading starvation; prefetch deserves separate evaluation and remains off.",
+    "Cross-field declarations, duplicate choices, mechanics and all final identity checks remain authoritative runtime validation.",
+    "Public production entry and original global budget object still require validation after actual deployment."
+  ]
+}

@@ -4,20 +4,21 @@ import assert from 'node:assert/strict';
 import {readFile,stat,realpath} from 'node:fs/promises';
 import path from 'node:path';
 import {fileURLToPath} from 'node:url';
-import {CANDIDATE_MODEL_ID,PRODUCTION_PROFILES,confirmFreeBoundaryEvidence,assertProviderReady} from '../src/worker/story-config.js';
+import {CANDIDATE_MODEL_ID,GLM_MODEL_ID,PRODUCTION_PROFILES,confirmFreeBoundaryEvidence,assertProviderReady} from '../src/worker/story-config.js';
 
 const repository=fileURLToPath(new URL('../',import.meta.url));
 
 test('the real promoted registry provides the immutable structured-output profile used by production admission',()=>{
   assert.ok(Object.isFrozen(PRODUCTION_PROFILES));
   assert.ok(PRODUCTION_PROFILES.length>0,'production promotion requires a checked-in validated profile');
+  assert.deepEqual(new Set(PRODUCTION_PROFILES.map(profile=>profile.modelId)),new Set([CANDIDATE_MODEL_ID,GLM_MODEL_ID]));
   assert.equal(new Set(PRODUCTION_PROFILES.map(profile=>profile.modelId)).size,PRODUCTION_PROFILES.length);
   const now=Date.parse('2026-10-28T10:00:00Z');
   const evidence=confirmFreeBoundaryEvidence({source:'operator-account-verification',plan:'workers-free',hardLimit:true,noGatewayCredits:true,directBinding:true,accountUsageVerified:true,storageFreeVerified:true,remainingNeurons:0,checkedAt:new Date(now).toISOString()},{now});
   let calls=0;
   for(const profile of PRODUCTION_PROFILES){
     assert.ok(Object.isFrozen(profile));
-    assert.equal(profile.modelId,CANDIDATE_MODEL_ID);
+    assert.ok([CANDIDATE_MODEL_ID,GLM_MODEL_ID].includes(profile.modelId));
     assert.equal(profile.validated,true);assert.equal(profile.supportsStructuredOutput,true);
     assert.equal(profile.requestFormat,'workers-ai-messages');assert.equal(profile.responseFormat,'json_schema');
     assert.deepEqual(profile.usageFields,['usage.prompt_tokens','usage.completion_tokens','usage.total_tokens']);

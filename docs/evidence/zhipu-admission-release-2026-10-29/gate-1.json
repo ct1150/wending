@@ -1,0 +1,15 @@
+{
+  "checkedAt": "2026-10-29T07:12:57.954Z",
+  "task": "gate",
+  "probeVersion": "2d70c6cb-5fa7-4066-bf3d-6488c652004b",
+  "outerStatus": 200,
+  "result": {
+    "checkedAt": "2026-10-29T07:12:59.601Z",
+    "record": [
+      {
+        "method": "acquireProvider",
+        "httpStatus": 404
+      }
+    ]
+  }
+}
