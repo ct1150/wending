@@ -70,6 +70,10 @@ export function buildNamedSceneSchema(source,context,{blocks,location}={}){
     const speaker=variant.properties.speaker,known=typeof speaker.const==='string'?context.entities.find(entity=>entity.id===speaker.const):null;
     if(known)variant.properties.speaker={type:'object',additionalProperties:false,required:['kind','name','ref','status'],properties:{kind:{const:'person'},name:{const:known.name},ref:{const:known.id},status:{const:null}}};
     else variant.properties.speaker=speaker.const==='self'?{const:'self'}:speaker.enum?.includes('self')?{oneOf:[{const:'self'},{$ref:'#/$defs/personTarget'}]}:{$ref:'#/$defs/personTarget'};
+    // Native JSON generation follows property order. Resolve the name before
+    // prose so a dialogue starts in its final presentation shape.
+    variant.properties={kind:variant.properties.kind,speaker:variant.properties.speaker,text:variant.properties.text};
+    variant.required=['kind','speaker','text'];
   }
   const choices={type:'array',minItems:2,maxItems:3,items:{oneOf:source.properties.choices.items.oneOf.map(group=>{
     const values=group.properties.targetId.enum,kinds=new Set(),strings=[];

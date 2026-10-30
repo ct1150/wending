@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 1,
+  "version": "4.5.0",
+  "date": "2026-10-31",
+  "timezone": "Asia/Shanghai",
+  "baselineSource": "fa19e7d0f2d510c5efd14c5dc2284c5472e6b7ec",
+  "status": "LOCAL_RELEASE_GATE_PASSED",
+  "verification": {
+    "command": "npm run release",
+    "tests": 1025,
+    "passed": 1025,
+    "failed": 0,
+    "cancelled": 0,
+    "skipped": 0,
+    "syntaxFiles": 182,
+    "htmlBytes": 1048010,
+    "testBrowser": "Chromium 134.0.6998.35 via WENDING_BROWSER_EXECUTABLE; project dependencies unchanged"
+  },
+  "regressions": [
+    "Structured narration, speaker identity and model choice purposes arrive before final JSON and settlement",
+    "Partial choices have no execution IDs and remain disabled through durable archive commit",
+    "Actual HTTPS/SSE browser retains paragraph/button nodes, text, typography, position, focus and mobile width across commit",
+    "Reset, identity mismatch, oversized/invalid rows, interruption and late events remain bounded and transient",
+    "Legacy text SSE and JSON replay remain compatible",
+    "Invalid modern menus reject without generic observation/leave substitution"
+  ],
+  "independentReview": {
+    "verdict": "ready_to_merge",
+    "critical": 0,
+    "important": 0,
+    "minor": 0,
+    "additionalJsonPrefixBoundariesVerified": 964
+  },
+  "policy": {
+    "modelId": "@cf/zai-org/glm-4.7-flash",
+    "cloudflareOnly": true,
+    "paidFallback": false,
+    "saveVersion": 5,
+    "contentVersion": 4,
+    "indexedDbVersion": 3,
+    "finalProtocolVersion": 1,
+    "structuredPreviewRequestHeader": "X-Story-Preview: 2"
+  },
+  "limitsOfEvidence": [
+    "Deterministic model fixtures verify the actual provider/API/browser pipeline; they do not measure live model narrative quality or rejection frequency",
+    "Historical six-scene real-model acceptance was not restarted",
+    "Production identity and deployment evidence are recorded separately in the release pull request"
+  ]
+}

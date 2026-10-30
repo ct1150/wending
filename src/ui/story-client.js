@@ -12,24 +12,35 @@ export function createStoryClient({fetch:fetcher=globalThis.fetch,location=globa
     try {
       const serialized=body===undefined?undefined:JSON.stringify(body);
       if(serialized && new TextEncoder().encode(serialized).length>limits.maxRequestBytes)throw error('REQUEST_TOO_LARGE');
-      const response=await fetcher('/api/story/'+path,{method:body===undefined?'GET':'POST',credentials:'same-origin',cache:'no-store',signal:controller.signal,headers:{...(serialized?{'Content-Type':'application/json'}:{}),...(storyActions?{'X-Story-Actions':'1'}:{}),...(streaming?{Accept:'text/event-stream','X-Story-Queue-Status':'1'}:{})},...(serialized?{body:serialized}:{})});
+      const response=await fetcher('/api/story/'+path,{method:body===undefined?'GET':'POST',credentials:'same-origin',cache:'no-store',signal:controller.signal,headers:{...(serialized?{'Content-Type':'application/json'}:{}),...(storyActions?{'X-Story-Actions':'1'}:{}),...(streaming?{Accept:'text/event-stream','X-Story-Queue-Status':'1','X-Story-Preview':'2'}:{})},...(serialized?{body:serialized}:{})});
       if(streaming&&response.ok&&response.headers.get('content-type')?.includes('text/event-stream')){
         reader=response.body?.getReader();if(!reader)throw error('PROTOCOL_MISMATCH');
         const decoder=new TextDecoder('utf-8',{fatal:true});let buffer='',length=0,result,previewLength=0;
+        let blocks=[],choices=[];
+        const displayText=(value,max)=>typeof value==='string'&&value.length<=max&&!/[\x00-\x08\x0b\x0c\x0e-\x1f]/.test(value);
         function packet(frame){
           const data=frame.split('\n').filter(line=>line.startsWith('data:')).map(line=>line.slice(5).trimStart()).join('\n');
           if(!data)return;
           let value;try{value=JSON.parse(data);}catch{throw error('PROTOCOL_MISMATCH');}
-          if(value?.protocolVersion!==1||!['status','reset','preview','result'].includes(value.type)||result)throw error('PROTOCOL_MISMATCH');
+          if(value?.protocolVersion!==1||!['status','reset','preview','block','choice','result'].includes(value.type)||result)throw error('PROTOCOL_MISMATCH');
           if(value.requestId!==streaming.requestId||value.attemptId!==streaming.attemptId||value.sessionRef!==streaming.sessionRef)throw error('RESPONSE_IDENTITY_MISMATCH');
-          const extra=value.type==='status'?['status']:value.type==='preview'?['text']:value.type==='result'?['result']:[];
+          const extra=value.type==='status'?['status']:value.type==='preview'?['text']:value.type==='block'?['index','kind','text','speaker','complete']:value.type==='choice'?['index','label','complete']:value.type==='result'?['result']:[];
           if(Object.keys(value).some(key=>!['protocolVersion','requestId','attemptId','sessionRef','type',...extra].includes(key)))throw error('PROTOCOL_MISMATCH');
           if(value.type==='result'){result=turn(value.result,{identity:{requestId:streaming.requestId}},{id:streaming.attemptId,sessionRef:streaming.sessionRef});if(result.requestId!==streaming.requestId||result.attemptId!==streaming.attemptId||result.sessionRef!==streaming.sessionRef)throw error('RESPONSE_IDENTITY_MISMATCH');}
           else {
             if(value.type==='status'&&!['generating','switching','queued'].includes(value.status))throw error('PROTOCOL_MISMATCH');
-            if(value.type==='reset')previewLength=0;
+            if(value.type==='reset'){previewLength=0;blocks=[];choices=[];}
             if(value.type==='preview'){if(typeof value.text!=='string')throw error('PROTOCOL_MISMATCH');previewLength+=value.text.length;if(previewLength>24000)throw error('RESPONSE_TOO_LARGE');}
-            streaming.onProgress(value.type==='preview'?{type:'preview',text:value.text}:value.type==='status'?{type:'status',status:value.status}:{type:'reset'});
+            if(value.type==='block'){
+              if(!Number.isSafeInteger(value.index)||value.index<0||value.index>=12||value.index>blocks.length||!['narration','dialogue'].includes(value.kind)||!displayText(value.text,2000)||typeof value.complete!=='boolean'||(value.kind==='dialogue'?(!displayText(value.speaker,60)||!value.speaker.trim()):Object.hasOwn(value,'speaker')))throw error('PROTOCOL_MISMATCH');
+              const row={kind:value.kind,text:value.text,...(value.kind==='dialogue'?{speaker:value.speaker}:{}),complete:value.complete};
+              blocks[value.index]=row;
+              streaming.onProgress({type:'block',index:value.index,...row});
+            }else if(value.type==='choice'){
+              if(!Number.isSafeInteger(value.index)||value.index<0||value.index>=3||value.index>choices.length||!displayText(value.label,120)||typeof value.complete!=='boolean')throw error('PROTOCOL_MISMATCH');
+              const row={label:value.label,complete:value.complete};choices[value.index]=row;
+              streaming.onProgress({type:'choice',index:value.index,...row});
+            }else streaming.onProgress(value.type==='preview'?{type:'preview',text:value.text}:value.type==='status'?{type:'status',status:value.status}:{type:'reset'});
           }
         }
         for(;;){

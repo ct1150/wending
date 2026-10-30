@@ -219,7 +219,7 @@ test('modern prose guards do not reject the unchanged text of an old obligation 
   assert.equal(result.status,'ready');assert.equal(result.scene.memoryDeltas[0].text,promise.text);
 });
 
-test('modern generation rejects copied prose and replaces an already selected question with a grounded observation',async()=>{
+test('modern generation rejects copied prose and an already selected question without replacing it',async()=>{
   const {state,scene}=encounter('林中传来急切的求救声，陈叔站在岔路旁，详细说明他听到声音的方向和刚刚见过的脚印。');
   state.currentScene.choices[0]={...scene.choices[0],label:'询问陈叔：脚印的方向',intent:'interact',targetId:scene.entities[0].id,stake:'low',approach:'ask'};
   const pending=prepareChoice(state,{requestId:'follow-up',choiceId:scene.choices[0].id}),c=memory.buildStoryContext(state,pending),wire=sceneWire(true);wire.location=scene.location;wire.otherPeople=[{id:'k1'}];wire.choices.forEach(choice=>choice.targetId='k1');
@@ -229,9 +229,9 @@ test('modern generation rejects copied prose and replaces an already selected qu
   const observingContext=memory.buildStoryContext(observing,prepareChoice(observing,{requestId:'repeat-observation',choiceId:scene.choices[0].id}));
   assert.equal((await run(repeated,observingContext)).errorCode,'REPEATED_SCENE');
   const question=structuredClone(wire);question.blocks=[{kind:'dialogue',speaker:'k1',text:'脚印朝林东的小路去了，泥痕很新，我却还没看见留下脚印的人。'}];question.choices[0].purpose='脚印的方向';
-  const result=await run(question);assert.equal(result.status,'ready');assert.equal(result.scene.choices.length,2);
-  assert.ok(result.scene.choices.some(choice=>choice.intent==='interact'&&choice.approach==='leave'));
-  const observation=result.scene.choices.find(choice=>choice.approach==='observe');assert.equal(observation.targetId,'self');assert.equal(observation.label,'仔细观察：留意周围的动静');
+  const result=await run(question);assert.equal(result.status,'rejected');assert.equal(result.errorCode,'CHOICE_NOT_COMPILABLE');assert.equal(result.scene,undefined);
+  question.choices[0]={action:'interact:observe',targetId:'self',stake:'low',purpose:'辨认林东小路的新泥痕',anchor:0};
+  const changed=await run(question);assert.equal(changed.status,'ready');assert.equal(changed.scene.choices[0].label,'仔细观察：辨认林东小路的新泥痕');
 });
 
 test('modern actor choices compose their actual target and reject free executable labels',async()=>{

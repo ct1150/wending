@@ -139,6 +139,8 @@ export function createStoryApi({provider=generateScene,budget,config={},experime
       const stream=new ReadableStream({
         start(controller){
           let preview='',queued='',previewTimer,finished=false,wireBytes=0;
+          const structured=request.headers.get('X-Story-Preview')==='2';
+          let presentation={blocks:[],choices:[]},queuedPresentation={blocks:[],choices:[]};
           const send=packet=>{
             if(disconnected||finished)return false;
             const bytes=encoder.encode('data: '+JSON.stringify({protocolVersion:1,...identity,...packet})+'\n\n');
@@ -146,11 +148,32 @@ export function createStoryApi({provider=generateScene,budget,config={},experime
             if(packet.type!=='result'&&wireBytes+bytes.length>STORY_LIMITS.maxResponseBytes*3-1024)return false;
             try{controller.enqueue(bytes);wireBytes+=bytes.length;return true;}catch{disconnected=true;return false;}
           };
-          const flush=()=>{clearTimeout(previewTimer);previewTimer=null;const delta=queued.slice(preview.length);if(delta&&send({type:'preview',text:delta}))preview=queued;};
+          const flush=()=>{
+            clearTimeout(previewTimer);previewTimer=null;
+            if(!structured){const delta=queued.slice(preview.length);if(delta&&send({type:'preview',text:delta}))preview=queued;return;}
+            for(const [collection,type]of [['blocks','block'],['choices','choice']])for(const [index,row]of queuedPresentation[collection].entries()){
+              if(JSON.stringify(row)===JSON.stringify(presentation[collection][index]))continue;
+              if(!send({type,index,...row}))return;
+              presentation[collection][index]=row;
+            }
+          };
+          const reset=()=>{clearTimeout(previewTimer);previewTimer=null;preview=queued='';presentation={blocks:[],choices:[]};queuedPresentation={blocks:[],choices:[]};send({type:'reset'});};
           const progress=event=>{
-            if(event?.type==='reset'){clearTimeout(previewTimer);previewTimer=null;preview=queued='';send({type:'reset'});}
+            if(event?.type==='reset')reset();
             else if(event?.type==='status'&&['generating','switching','queued'].includes(event.status))send({type:'status',status:event.status==='queued'&&request.headers.get('X-Story-Queue-Status')!=='1'?'generating':event.status});
-            else if(event?.type==='preview'&&typeof event.text==='string'){
+            else if(structured&&event?.type==='presentation'){
+              if(!Array.isArray(event.blocks)||event.blocks.length>12||!Array.isArray(event.choices)||event.choices.length>3)return;
+              const blocks=[],choices=[];
+              for(const row of event.blocks){
+                if(!row||!['narration','dialogue'].includes(row.kind)||typeof row.text!=='string'||row.text.length>2000||typeof row.complete!=='boolean'||row.kind==='dialogue'&&(typeof row.speaker!=='string'||!row.speaker.trim()||row.speaker.length>60))return;
+                blocks.push({kind:row.kind,text:row.text,...(row.kind==='dialogue'?{speaker:row.speaker}:{}),complete:row.complete});
+              }
+              for(const row of event.choices){if(!row||typeof row.label!=='string'||row.label.length>120||typeof row.complete!=='boolean')return;choices.push({label:row.label,complete:row.complete});}
+              if(blocks.length<presentation.blocks.length||choices.length<presentation.choices.length)reset();
+              queuedPresentation={blocks,choices};
+              if(!presentation.blocks.length&&!presentation.choices.length)flush();else if(!previewTimer)previewTimer=setTimeout(flush,50);
+            }
+            else if(!structured&&event?.type==='preview'&&typeof event.text==='string'){
               const text=event.text.slice(0,24000);if(!text.startsWith(preview)){send({type:'reset'});preview='';}
               queued=text;if(!preview)flush();else if(!previewTimer)previewTimer=setTimeout(flush,50);
             }

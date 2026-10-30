@@ -20,7 +20,10 @@ test('observing after a local closure keeps independent choices and cannot repla
     const f=fixture();f.wire.choices[1].action='interact:'+approach;f.wire.blocks[0].text+='陈叔拿着绳子在林边来回踱步，不时望向山道，等你决定是否参与这件事情。';const opening=decodeGlmScene(f.wire,f.context,{storyActions:true}),active=commitTurn(f.state,f.pending,opening),p=prepareChoice(active,{requestId:'close-'+approach,choiceId:opening.choices[1].id}),closed=resolveImmediateInteraction(active,p),ended=commitTurn(active,p,closed),record=sceneTurnRecord(closed,{runId:ended.runId,turnId:ended.turnId,action:p.receipt.action});
     assert.deepEqual(record.entityIds,[opening.entities[0].id]);const oldClue={id:'old-clue',runId:ended.runId,turnId:1,source:'narrative',kind:'clue',entityId:opening.entities[0].id,text:opening.blocks[0].text,status:'open'},context=buildStoryContext(ended,prepareChoice(ended,{requestId:'after-close-'+approach,choiceId:closed.choices[0].id}),[oldClue]),alias=buildGlmWire(context,'',{storyActions:true}).context.entities.find(entity=>entity.kind==='person').id;
     const reply=structuredClone(f.wire);reply.blocks=[{kind:'narration',text:'你转向村外的河岸，注意到泥地里有新留下的脚印。'}];reply.otherPeople=[{id:alias}];reply.places=[{id:'l1',name:'河岸'}];reply.choices.forEach(choice=>choice.targetId=alias);reply.choices.push({action:'travel:road',targetId:'l1',stake:'low',purpose:'前往河岸查看脚印',anchor:0});
-    const run=(inputContext=context)=>generateProviderScene({run:async(_model,input)=>({model:GLM_PROFILE.modelId,choices:[{finish_reason:'stop',message:{content:JSON.stringify(namedGlmFixture(reply,input))}}],usage:{prompt_tokens:100,completion_tokens:100,total_tokens:200}})},{...GLM_PROFILE,storyActions:true},inputContext),fresh=await run();assert.equal(fresh.status,'ready');assert.ok(fresh.scene.choices.every(choice=>choice.intent!=='interact'||choice.targetId!==opening.entities[0].id));assert.ok(fresh.scene.choices.some(choice=>choice.intent==='travel'));assert.equal(fresh.scene.choices.find(choice=>choice.approach==='leave')?.targetId,'self');
+    const run=(inputContext=context)=>generateProviderScene({run:async(_model,input)=>({model:GLM_PROFILE.modelId,choices:[{finish_reason:'stop',message:{content:JSON.stringify(namedGlmFixture(reply,input))}}],usage:{prompt_tokens:100,completion_tokens:100,total_tokens:200}})},{...GLM_PROFILE,storyActions:true},inputContext);
+    assert.equal((await run()).errorCode,'CHOICE_NOT_COMPILABLE','do not silently replace options reopening a closed conversation');
+    reply.otherPeople=[];reply.choices=[{action:'interact:observe',targetId:'self',stake:'low',purpose:'辨认通往河岸的脚印',anchor:0},{action:'travel:road',targetId:'l1',stake:'low',purpose:'前往河岸查看脚印',anchor:0},{action:'interact:leave',targetId:'self',stake:'low',purpose:'暂且放下河岸脚印的线索',anchor:0}];
+    const fresh=await run();assert.equal(fresh.status,'ready');assert.ok(fresh.scene.choices.every(choice=>choice.intent!=='interact'||choice.targetId!==opening.entities[0].id));assert.ok(fresh.scene.choices.some(choice=>choice.intent==='travel'));assert.equal(fresh.scene.choices.find(choice=>choice.approach==='leave')?.targetId,'self');
     const legacyContext=structuredClone(context);legacyContext.memory.recent.find(row=>row.turnId===ended.turnId).entityIds=[];legacyContext.memory.facts.push({id:'decision:'+ended.turnId,runId:ended.runId,turnId:ended.turnId,source:'rules',kind:'fact',entityId:opening.entities[0].id,text:'你已结束这次交谈。'});legacyContext.references.push('decision:'+ended.turnId);let legacy=await run(legacyContext);assert.equal(legacy.status,'ready');assert.ok(legacy.scene.choices.every(choice=>choice.intent!=='interact'||choice.targetId!==opening.entities[0].id));const unknownContext=structuredClone(context);unknownContext.memory.recent.find(row=>row.turnId===ended.turnId).entityIds=[];legacy=await run(unknownContext);assert.equal(legacy.status,'ready');assert.ok(legacy.scene.choices.every(choice=>choice.intent!=='interact'||choice.targetId!==opening.entities[0].id));
     reply.blocks=[{kind:'narration',text:oldClue.text}];assert.equal((await run()).errorCode,'REPEATED_SCENE');
     reply.blocks=[{kind:'narration',text:'你转过身，看到河岸草丛中一头青狼向你逼近，必须决定如何应对。'}];reply.otherPeople=[{id:'p2',name:'青狼'}];reply.places=[];reply.choices=[{action:'fight:guard',targetId:'p2',stake:'low',purpose:'挡住青狼的攻击',anchor:0},{action:'evade:withdraw',targetId:'p2',stake:'low',purpose:'避开青狼并撤出攻击范围',anchor:0}];const danger=await run();assert.equal(danger.status,'ready');assert.ok(danger.scene.choices.some(choice=>choice.intent==='evade'));assert.ok(!danger.scene.choices.some(choice=>choice.approach==='leave'));
@@ -48,22 +51,24 @@ test('an explicitly rejected request does not create an open promise',()=>{
 
 test('a fresh event keeps an executable way to end the current interaction',async()=>{
   const {wire,run}=fixture();wire.choices[1]={action:'interact:observe',targetId:'self',stake:'low',purpose:'看看林边的动静',anchor:0};
-  const noExit=await run(wire);assert.equal(noExit.status,'ready');assert.ok(noExit.scene.choices.some(choice=>choice.id.endsWith(':c:leave')&&choice.intent==='interact'&&choice.approach==='leave'&&choice.targetId===noExit.scene.entities[0].id));
+  const noExit=await run(wire);assert.equal(noExit.status,'rejected');assert.equal(noExit.errorCode,'CHOICE_NOT_COMPILABLE');assert.equal(noExit.scene,undefined);
   wire.choices[1]={action:'interact:leave',targetId:'self',stake:'low',purpose:'结束这次交谈',anchor:0};assert.equal((await run(wire)).status,'ready');
   wire.choices[1]={action:'interact:decline',targetId:'p1',stake:'low',purpose:'拒绝这次请求，不再介入',anchor:0};assert.equal((await run(wire)).status,'ready','refusing the current request is a valid way out of it');
 });
 
-test('automatic opt-out uses self when a newly declared actor is absent from the prose',async()=>{
+test('an absent actor cannot cause a generic opt-out to be invented',async()=>{
   const {wire,run}=fixture();wire.blocks=[{kind:'narration',text:'荒坡上只有一只黑熊，四下没有其他人。'}];wire.otherPeople[0].name='王大伯';wire.choices=[{action:'interact:observe',targetId:'self',stake:'low',purpose:'观察黑熊的动静',anchor:0},{action:'rest:recover',targetId:'self',stake:'low',purpose:'在原地稍作休息',anchor:0}];
-  const result=await run(wire);assert.equal(result.status,'ready');assert.equal(result.scene.choices.find(choice=>choice.approach==='leave').targetId,'self');
+  const result=await run(wire);assert.equal(result.status,'rejected');assert.equal(result.errorCode,'CHOICE_NOT_COMPILABLE');assert.equal(result.scene,undefined);
 });
 
 test('following a quest destination does not replace the option to stop engaging',async()=>{
   const {wire,run}=fixture();wire.blocks[0].text='陈叔指向山道，说那边有人呼救，你可以进一步询问、前去，也可以不介入。';
   wire.choices=[wire.choices[0],{...wire.choices[0],purpose:'求助者在什么方位'},{action:'travel:road',targetId:'l1',stake:'low',purpose:'前往山道查看线索',anchor:0}];
+  assert.equal((await run(wire)).errorCode,'CHOICE_NOT_COMPILABLE','a journey towards the request is not an opt-out');
+  wire.choices[1]={action:'interact:decline',targetId:'p1',stake:'low',purpose:'不接下山道寻人的请求',anchor:0};
   const result=await run(wire);assert.equal(result.status,'ready');assert.equal(result.scene.choices.length,3);
   assert.equal(result.scene.choices.filter(choice=>choice.approach==='ask').length,1);assert.ok(result.scene.choices.some(choice=>choice.intent==='travel'));
-  const exit=result.scene.choices.find(choice=>choice.id.endsWith(':c:leave'));assert.equal(exit.approach,'leave');assert.equal(exit.targetId,result.scene.entities.find(entity=>entity.kind==='person').id);
+  const exit=result.scene.choices.find(choice=>choice.approach==='decline');assert.equal(exit.label,'婉拒陈叔：不接下山道寻人的请求');assert.equal(exit.targetId,result.scene.entities.find(entity=>entity.kind==='person').id);
 });
 
 test('a disabled escape does not satisfy a fresh event exit requirement',()=>{
@@ -122,7 +127,7 @@ test('a zero-day question to a person permits only that person answering, withou
 test('a dangerous purpose must name its actual rule target rather than redirect onto a nearby ally',async()=>{
   const {wire,run}=fixture();wire.blocks[0].text='陈叔站在一旁，地上的废铁冰冷刺骨。';
   wire.choices.push({action:'evade:withdraw',targetId:'p1',stake:'low',purpose:'收回手，避免被废铁沾染煞气',anchor:0});
-  const result=await run(wire);assert.equal(result.status,'ready');assert.equal(result.scene.choices.length,2);assert.equal(result.scene.choices.some(choice=>choice.intent==='evade'),false);
+  const result=await run(wire);assert.equal(result.status,'rejected');assert.equal(result.errorCode,'CHOICE_NOT_COMPILABLE');assert.equal(result.scene,undefined);
   wire.choices=wire.choices.slice(1);assert.equal((await run(wire)).errorCode,'CHOICE_NOT_COMPILABLE','do not invent a free escape when too few valid model options remain');
 });
 
@@ -133,14 +138,14 @@ test('a real combat escape remains available instead of being replaced by a free
 
 test('food help cannot be used for an ordinary question that should cost zero days',async()=>{
   const {wire,run}=fixture();wire.choices.push({action:'interact:help',targetId:'p1',stake:'low',purpose:'询问是否需要帮忙处理这块废铁',anchor:0});
-  const result=await run(wire);assert.equal(result.status,'ready');assert.equal(result.scene.choices.length,2);assert.equal(result.scene.choices.some(choice=>choice.approach==='help'),false);
+  const result=await run(wire);assert.equal(result.status,'rejected');assert.equal(result.errorCode,'CHOICE_NOT_COMPILABLE');
   wire.choices[2].purpose='分出行粮，让陈叔先吃些东西';assert.equal((await run(wire)).scene.choices[2].approach,'help');
-  wire.choices[2].purpose='拿出1行粮给陈叔处理伤口';assert.equal((await run(wire)).scene.choices.some(choice=>choice.approach==='help'),false,'food assistance cannot perform medical treatment');
+  wire.choices[2].purpose='拿出1行粮给陈叔处理伤口';assert.equal((await run(wire)).errorCode,'CHOICE_NOT_COMPILABLE','food assistance cannot perform medical treatment');
 });
 
 test('observation cannot stand in for travelling to a remote place or looking at another actor',async()=>{
   const {wire,run}=fixture();wire.choices.push({action:'interact:observe',targetId:'l1',stake:'low',purpose:'去山道附近查看痕迹',anchor:0});
-  assert.equal((await run(wire)).scene.choices.length,2);wire.choices[2]={action:'interact:observe',targetId:'p1',stake:'low',purpose:'观察远处黑熊的动作',anchor:0};assert.equal((await run(wire)).scene.choices.length,2);
+  assert.equal((await run(wire)).errorCode,'CHOICE_NOT_COMPILABLE');wire.choices[2]={action:'interact:observe',targetId:'p1',stake:'low',purpose:'观察远处黑熊的动作',anchor:0};assert.equal((await run(wire)).errorCode,'CHOICE_NOT_COMPILABLE');
   wire.choices[2].purpose='观察陈叔手上的伤势';assert.ok((await run(wire)).scene.choices.some(choice=>choice.approach==='observe'&&choice.targetId!=='self'));
   wire.otherPeople[0].name='陈'.repeat(51);wire.blocks[0].text=wire.otherPeople[0].name+'正在查看林边的动静。';wire.choices[2].purpose='观察这位村民的神情';assert.ok((await run(wire)).scene.choices.some(choice=>choice.approach==='observe'&&choice.targetId!=='self'),'a legal 51-character name cannot fit inside a 50-character purpose');
 });
@@ -164,19 +169,18 @@ test('ending an interaction keeps the current place and only states the player d
   const automaticTravel=structuredClone(reply);automaticTravel.blocks=[{kind:'dialogue',speaker:'self',text:'陈叔见你转身，急忙拉住你继续请求。'}];assert.equal((await run(automaticTravel)).errorCode,'GENERATED_SCENE_INVALID');
 });
 
-test('an exit-only model menu retains one exit and adds observation of the current surroundings',async()=>{
+test('an exit-only model menu is rejected without inventing an observation',async()=>{
   const {wire,run}=fixture();wire.choices[0]={action:'interact:decline',targetId:'p1',stake:'low',purpose:'拒绝当前请求',anchor:0};
-  const result=await run(wire);assert.equal(result.status,'ready');assert.equal(result.scene.choices.length,2);
-  assert.equal(result.scene.choices.filter(choice=>['decline','leave'].includes(choice.approach)).length,1);
-  const observation=result.scene.choices.find(choice=>choice.approach==='observe');assert.equal(observation.targetId,'self');assert.equal(observation.label,'仔细观察：留意周围的动静');
+  const result=await run(wire);assert.equal(result.status,'rejected');assert.equal(result.errorCode,'CHOICE_NOT_COMPILABLE');assert.equal(result.scene,undefined);
+  wire.choices[0]={action:'interact:observe',targetId:'self',stake:'low',purpose:'确认林边求救声的方向',anchor:0};
   wire.location='山'.repeat(110);const long=await run(wire);assert.equal(long.status,'ready');assert.ok(long.scene.choices.every(choice=>choice.label.length<=120));
 });
 
-test('leaving closes that persons interaction and offers independent local observation',async()=>{
+test('leaving closes that persons interaction and rejects model options that reopen it',async()=>{
   const f=fixture(),opening=decodeGlmScene(f.wire,f.context,{storyActions:true}),active=commitTurn(f.state,f.pending,opening),c=buildStoryContext(active,prepareChoice(active,{requestId:'end-conversation',choiceId:opening.choices[1].id}));
   const reply={...structuredClone(f.wire),otherPeople:[{id:'k1'}],places:[],location:opening.location,blocks:[{kind:'narration',text:'你告辞后留在林边，陈叔继续处理自己的事。'}],choices:[{action:'interact:ask',targetId:'k1',stake:'low',purpose:'再次询问是否需要帮忙',anchor:0},{action:'interact:decline',targetId:'k1',stake:'low',purpose:'再次拒绝挽留',anchor:0}]};
   const result=await generateProviderScene({run:async(_model,input)=>({model:GLM_PROFILE.modelId,choices:[{finish_reason:'stop',message:{content:JSON.stringify(namedGlmFixture(reply,input))}}],usage:{prompt_tokens:100,completion_tokens:100,total_tokens:200}})},{...GLM_PROFILE,storyActions:true},c);
-  assert.equal(result.status,'ready');assert.ok(result.scene.choices.every(choice=>choice.targetId==='self'));assert.ok(result.scene.choices.some(choice=>choice.approach==='observe'));assert.ok(result.scene.choices.some(choice=>choice.approach==='leave'));
+  assert.equal(result.status,'rejected');assert.equal(result.errorCode,'CHOICE_NOT_COMPILABLE');assert.equal(result.scene,undefined);
 });
 
 test('a short observation stays at the current place and cannot append an unselected journey',async()=>{
@@ -202,7 +206,7 @@ test('an actual travel receipt fixes the scene to its selected destination',asyn
   reply.blocks[0].text='你告别了陈叔，独自抵达山道，这里的气味与陈叔描述的如出一辙。';assert.equal((await run(reply)).errorCode,'CHOICE_NOT_COMPILABLE','mentioning an absent person as background is not evidence they are here');
   reply.blocks=[{kind:'dialogue',speaker:'k1',text:'我已经先到山道，在这里等你。'}];assert.equal((await run(reply)).status,'ready','a returning known character can actually speak in the arrival scene');reply.blocks=[{kind:'narration',text:'你告别了陈叔，独自抵达山道，眼前有许多脚印。'}];
   reply.choices[0]={action:'interact:observe',targetId:'self',stake:'low',purpose:'留意山道两侧的动静',anchor:0};reply.memoryDeltas=[{entityId:'k1',kind:'clue',anchor:0,status:'open'}];assert.equal((await run(reply)).errorCode,'GENERATED_SCENE_INVALID','new local clues must not silently attach to an absent known person');
-  reply.memoryDeltas=[];reply.choices[1]={action:'rest:recover',targetId:'self',stake:'low',purpose:'在路边稍作休息',anchor:0};const quit=(await run(reply)).scene.choices.find(choice=>choice.approach==='leave');assert.equal(quit.targetId,'self','the safe exit must not invent an interaction with an absent person');
+  reply.memoryDeltas=[];reply.choices[1]={action:'rest:recover',targetId:'self',stake:'low',purpose:'在路边稍作休息',anchor:0};assert.equal((await run(reply)).errorCode,'CHOICE_NOT_COMPILABLE','a missing opt-out cannot invent an interaction with an absent person');
 });
 
 test('named native targets preserve every action kind and crowded legacy travel fits',()=>{

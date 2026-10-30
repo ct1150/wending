@@ -12,11 +12,13 @@ import { route, clinic } from './helpers/journey-routes.js';
 function command(state, choiceId) { const view = getJourneyView(state); return { revision: view.revision, sceneId: view.sceneId, choiceId }; }
 function clickChoice(app, state, choiceId) { const cmd = command(state, choiceId); app.click({ journeyChoice: cmd.choiceId, revision: String(cmd.revision), sceneId: cmd.sceneId }); }
 
-test('live opening immediately shows stable birth facts and escaped incomplete narrative without choices',()=>{
+test('live opening shows birth facts until escaped streamed prose takes over without choices',()=>{
   const state=createLiveGame({runId:'local-intro',seed:42}),pending=prepareOpening(state,{requestId:'intro'}),before=structuredClone(state);
   const view={state,pending,busy:true,status:'pending',preview:{text:'<script>尚未落定</script>'}};
   const html=renderLiveJourney(view,[]);
-  assert.match(html,/本地开场/);assert.match(html,/天赋/);assert.match(html,/data-live-preview-text/);assert.match(html,/&lt;script&gt;/);assert.doesNotMatch(html,/<script>|data-live-choice=/);assert.deepEqual(state,before);
+  const waiting=renderLiveJourney({...view,preview:null},[]);
+  assert.match(waiting,/本地开场/);assert.match(waiting,/天赋/);
+  assert.doesNotMatch(html,/天赋/);assert.match(html,/data-live-preview-text/);assert.match(html,/&lt;script&gt;/);assert.doesNotMatch(html,/<script>|data-live-choice=/);assert.deepEqual(state,before);
   assert.match(renderLiveJourney({...view,busy:false,status:'paused'},[]),/未完成/);
 });
 

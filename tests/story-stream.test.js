@@ -5,6 +5,51 @@ import {createStoryClient} from '../src/ui/story-client.js';
 import {createLiveGame,prepareOpening} from '../src/game/cultivation/live/engine.js';
 import {buildStoryContext} from '../src/game/cultivation/live/memory.js';
 const origin='https://stream.test';
+
+test('structured stream negotiates presentation rows and shows model choices before the result',async()=>{
+  const f=fixture(()=>{}),events=[],encoder=new TextEncoder();let sink,headers,resolved=false;
+  const client=createStoryClient({location:{protocol:'https:'},fetch:async(path,options)=>{headers=options.headers;return new Response(new ReadableStream({start(controller){sink=controller;}}),{headers:{'content-type':'text/event-stream'}});}});
+  const packet=value=>sink.enqueue(encoder.encode('data: '+JSON.stringify({protocolVersion:1,requestId:f.pending.identity.requestId,attemptId:f.attempt.id,sessionRef:f.attempt.sessionRef,...value})+'\n\n'));
+  const request=client.requestTurn(f.pending,f.context,f.attempt,{onProgress:event=>events.push(event)}).then(result=>{resolved=true;return result;});request.catch(()=>{});
+  await new Promise(resolve=>setImmediate(resolve));
+  const narration={type:'block',index:0,kind:'narration',text:'陈叔站在林外。',complete:true};
+  const dialogue={type:'block',index:1,kind:'dialogue',speaker:'陈叔',text:'里面传来了求救声',complete:false};
+  const choice={type:'choice',index:0,label:'询问陈叔：求救声从',complete:false};
+  packet(narration);packet(dialogue);packet(choice);
+  await new Promise(resolve=>setImmediate(resolve));
+  try{
+    assert.equal(headers['X-Story-Preview'],'2');
+    assert.deepEqual(events,[narration,dialogue,choice]);assert.equal(resolved,false);
+    packet({...choice,label:'询问陈叔：求救声从哪里来',complete:true});
+    const result={protocolVersion:1,status:'ready',errorCode:null,requestId:f.pending.identity.requestId,attemptId:f.attempt.id,sessionRef:f.attempt.sessionRef,scene:scene(f.context),retry:null};
+    packet({type:'result',result});sink.close();assert.deepEqual(await request,result);
+    assert.equal(events.at(-1).label,'询问陈叔：求救声从哪里来');
+  }finally{try{sink.close();}catch{}await request.catch(()=>{});}
+});
+
+test('structured stream validates row bounds and identities before exposing draft text',async()=>{
+  const f=fixture(()=>{}),encoder=new TextEncoder();
+  for(const [invalid,code] of [
+    [{type:'choice',index:0,label:'山'.repeat(121),complete:false},'PROTOCOL_MISMATCH'],
+    [{type:'choice',index:3,label:'询问',complete:false},'PROTOCOL_MISMATCH'],
+    [{type:'choice',index:1,label:'跳过首项',complete:false},'PROTOCOL_MISMATCH'],
+    [{type:'block',index:0,kind:'dialogue',speaker:'陈'.repeat(61),text:'山风',complete:false},'PROTOCOL_MISMATCH'],
+    [{type:'block',index:0,kind:'narration',text:'山风',complete:'yes'},'PROTOCOL_MISMATCH'],
+    [{type:'block',index:0,kind:'narration',text:'山风',complete:false,action:'fight'},'PROTOCOL_MISMATCH'],
+    [{type:'block',index:0,kind:'narration',text:'山风',complete:false,attemptId:'foreign'},'RESPONSE_IDENTITY_MISMATCH'],
+  ]){
+    const wire={protocolVersion:1,requestId:f.pending.identity.requestId,attemptId:f.attempt.id,sessionRef:f.attempt.sessionRef,...invalid},events=[];
+    const client=createStoryClient({location:{protocol:'https:'},fetch:async()=>new Response(encoder.encode('data: '+JSON.stringify(wire)+'\n\n'),{headers:{'content-type':'text/event-stream'}})});
+    await assert.rejects(client.requestTurn(f.pending,f.context,f.attempt,{onProgress:event=>events.push(event)}),{code});assert.deepEqual(events,[]);
+  }
+});
+
+test('structured reset permits a fresh first row and interruption never produces a ready result',async()=>{
+  const f=fixture(()=>{}),events=[],identity={protocolVersion:1,requestId:f.pending.identity.requestId,attemptId:f.attempt.id,sessionRef:f.attempt.sessionRef};
+  const packets=[{type:'block',index:0,kind:'narration',text:'旧草稿',complete:false},{type:'choice',index:0,label:'旧选择',complete:false},{type:'reset'},{type:'block',index:0,kind:'dialogue',speaker:'陈叔',text:'新回应',complete:false}];
+  const client=createStoryClient({location:{protocol:'https:'},fetch:async()=>new Response(packets.map(packet=>'data: '+JSON.stringify({...identity,...packet})+'\n\n').join(''),{headers:{'content-type':'text/event-stream'}})});
+  await assert.rejects(client.requestTurn(f.pending,f.context,f.attempt,{onProgress:event=>events.push(event)}),{code:'NETWORK_UNAVAILABLE'});assert.deepEqual(events,packets);
+});
 function fixture(provider,{longIds=false,settleFailure=null,onReserve=()=>{}}={}){
   let outcome=null,reserved=false,settlement=null,calls=0;const state=createLiveGame({runId:'stream-api-run',seed:42}),pending=prepareOpening(state,{requestId:longIds?'r'.repeat(80):'stream-request'});
   const context=buildStoryContext(state,pending),attempt={id:longIds?'a'.repeat(80):'stream-attempt',sessionRef:longIds?'s'.repeat(80):'stream-session',retryOf:null};
