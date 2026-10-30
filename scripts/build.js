@@ -2,6 +2,7 @@ import { cp, mkdir, readFile, realpath, rm, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { createHash } from 'node:crypto';
+import { stampAppVersion } from './app-version.js';
 
 const projectRoot = fileURLToPath(new URL('../', import.meta.url));
 const identifier = /^[A-Za-z_$][\w$]*$/;
@@ -227,7 +228,10 @@ async function inlineCss(css, file, root) {
 }
 
 export async function build(root = projectRoot) {
-  const htmlFile = path.join(root, 'index.html'); let html = await readFile(htmlFile, 'utf8');
+  const pkg = JSON.parse(await readFile(path.join(root, 'package.json'), 'utf8'));
+  const htmlFile = path.join(root, 'index.html');
+  const staticHtml = stampAppVersion(await readFile(htmlFile, 'utf8'), pkg.version);
+  let html = staticHtml;
   const scriptMatches = [...html.matchAll(/<script\b([^>]*)\bsrc\s*=\s*(['"])([^'"]+)\2([^>]*)>\s*<\/script>/gi)];
   if (scriptMatches.length !== 1 || !/\btype\s*=\s*['"]module['"]/i.test(scriptMatches[0][1] + scriptMatches[0][4])) throw new Error('index.html must contain exactly one external module entry script');
   const bundle = await bundleModules(root, scriptMatches[0][3]);
@@ -245,12 +249,11 @@ export async function build(root = projectRoot) {
   const dist = path.join(root, 'dist'); const release = path.join(root, 'release');
   await rm(dist, { recursive: true, force: true }); await rm(release, { recursive: true, force: true });
   await mkdir(dist, { recursive: true }); await mkdir(release, { recursive: true });
-  await cp(htmlFile, path.join(dist, 'index.html'));
+  await writeFile(path.join(dist, 'index.html'), staticHtml);
   for (const directory of ['src', 'assets']) await cp(path.join(root, directory), path.join(dist, directory), { recursive: true, filter: source => source !== path.join(root, 'src/worker') });
   await writeFile(path.join(dist, '.nojekyll'), '');
   const filename = 'baishi-wending-offline.html';
   await writeFile(path.join(release, filename), html); await writeFile(path.join(dist, filename), html);
-  const pkg = JSON.parse(await readFile(path.join(root, 'package.json'), 'utf8'));
   const metadata = { name: pkg.name, version: pkg.version, builtAt: new Date().toISOString(), offline: { file: filename, bytes: Buffer.byteLength(html), sha256: createHash('sha256').update(html).digest('hex') }, staticDirectory: 'dist', runtimeDependencies: 0 };
   await writeFile(path.join(release, 'release.json'), JSON.stringify(metadata, null, 2) + '\n');
   return metadata;

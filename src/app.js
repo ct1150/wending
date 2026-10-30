@@ -26,6 +26,7 @@ import { renderCombatActions } from './ui/combat.js';
 import { getPrimaryResult, renderStoryScene, renderStoryRecords, renderStoryOutcome, renderStoryInterruption } from './ui/story.js';
 
 const $ = selector => document.querySelector(selector);
+const appVersion = $('meta[name="application-version"]')?.content || 'dev';
 const esc = value => String(value ?? '').replace(/[&<>"']/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[char]);
 const row = (rows, id) => rows.find(item => item.id === id);
 const num = value => Math.round(value || 0).toLocaleString('zh-CN');
@@ -462,7 +463,7 @@ function showHelp() {
 function render({ resetSupport = false, focusSelector = null } = {}) {
   rememberScreen();
   if(view==='home') {
-    $('#app').innerHTML=renderTitleScreen({summary:currentJourneySummary(),loading:!homeReady,error:liveError||saveError,hasOtherSaves:Boolean(state||liveSnapshot?.state)});
+    $('#app').innerHTML=renderTitleScreen({summary:currentJourneySummary(),loading:!homeReady,error:liveError||saveError,hasOtherSaves:Boolean(state||liveSnapshot?.state),version:appVersion});
     return;
   }
   if(view==='settings')return renderSettingsPage();
