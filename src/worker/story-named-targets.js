@@ -1,17 +1,19 @@
 import {exactKeys,textField} from '../game/cultivation/live/schema.js';
 import {assertPlainData} from '../game/cultivation/live/identity.js';
 import {ITEMS,REALMS} from '../game/cultivation/live/model.js';
+import {isV7Life,realmCatalogFor} from '../game/cultivation/live/cultivation-rules.js';
 
 // The model names an object next to its intended action. The server resolves
 // existing identity or allocates a local wire reference; it never trusts a
 // model-provided ID that disagrees with the complete name and kind.
 export function normalizeNamedScene(wire,context){
-  assertPlainData(wire);exactKeys(wire,['blocks','choices','title','location','memoryDeltas']);
+  const directed=isV7Life(context.life)&&context.director?.version===7;
+  assertPlainData(wire);exactKeys(wire,['blocks','choices','title','location','memoryDeltas',...(directed?['story']:[])]);
   if(!Array.isArray(wire.blocks)||wire.blocks.length<1||wire.blocks.length>12||!Array.isArray(wire.choices)||wire.choices.length<2||wire.choices.length>3||!Array.isArray(wire.memoryDeltas)||wire.memoryDeltas.length>16)throw Error('Invalid named scene');
   // ref belongs only to the aliases visible in the model input. Formal IDs
   // are a different namespace and can coincidentally equal another alias.
   const knownRefs=new Map(context.entities.map((entity,index)=>['k'+(index+1)+'_'+entity.kind+'_'+Array.from(entity.name).slice(0,4).join(''),entity]));
-  const declarations=new Map(),counts={person:0,place:0,faction:0},literals=new Set(['self',...Object.keys(ITEMS),...Object.keys(REALMS)]);
+  const declarations=new Map(),counts={person:0,place:0,faction:0},literals=new Set(['self',...Object.keys(ITEMS),...Object.keys(realmCatalogFor(context.life))]);
   function resolve(target){
     exactKeys(target,['kind','name','ref','status']);
     if(!['person','place','faction'].includes(target.kind)||target.ref!==null&&typeof target.ref!=='string'||target.status!==null&&(!['alive','dead'].includes(target.status)||target.kind!=='person'))throw Error('Invalid named target');
@@ -51,12 +53,14 @@ export function normalizeNamedScene(wire,context){
     }
     return {entityId,kind:delta.kind,anchor:delta.anchor,...(Object.hasOwn(delta,'status')?{status:delta.status}:{})};
   });
-  const result={blocks,choices,title:wire.title,location:wire.location,otherPeople:[],places:[],factions:[],memoryDeltas};
+  const story=directed?{...wire.story,...(wire.story?.npcs!==undefined?{npcs:wire.story.npcs.map(npc=>{exactKeys(npc,['target','anchor','title','signatureSpell','habit','obsession']);const {target,...traits}=npc;return {...traits,entityId:resolve(target)};})}:{})}:undefined;
+  const result={blocks,choices,title:wire.title,location:wire.location,otherPeople:[],places:[],factions:[],memoryDeltas,...(directed?{story}:{})};
   for(const declaration of declarations.values()){const {kind,...entity}=declaration;result[({person:'otherPeople',place:'places',faction:'factions'})[kind]].push(entity);}
   return result;
 }
 
 export function buildNamedSceneSchema(source,context,{blocks,location}={}){
+  const directed=isV7Life(context.life)&&context.director?.version===7;
   const named={};for(const kind of ['person','place','faction']){
     const ambiguous=context.entities.some((entity,index)=>entity.kind===kind&&context.entities.slice(0,index).some(previous=>previous.kind===kind&&previous.name===entity.name));
     named[kind]={type:'object',additionalProperties:false,required:['kind','name','ref','status'],properties:{kind:{const:kind},name:{type:'string',minLength:1,maxLength:60},ref:ambiguous?{type:'string',maxLength:80}:{const:''},status:{const:null}}};
@@ -75,7 +79,7 @@ export function buildNamedSceneSchema(source,context,{blocks,location}={}){
     variant.properties={kind:variant.properties.kind,speaker:variant.properties.speaker,text:variant.properties.text};
     variant.required=['kind','speaker','text'];
   }
-  const choices={type:'array',minItems:2,maxItems:3,items:{oneOf:source.properties.choices.items.oneOf.map(group=>{
+  const choices={type:'array',minItems:directed?3:2,maxItems:3,items:{oneOf:source.properties.choices.items.oneOf.map(group=>{
     const values=group.properties.targetId.enum,kinds=new Set(),strings=[];
     for(const id of values){const known=context.entities.find(entity=>entity.id===id),fresh=/^([plf])\d+$/u.exec(id);if(known)kinds.add(known.kind);else if(fresh)kinds.add(({p:'person',l:'place',f:'faction'})[fresh[1]]);else strings.push(id);}
     const alternatives=[...(strings.length?[{enum:strings}]:[]),...[...kinds].map(kind=>({$ref:'#/$defs/'+kind+'Target'}))],target=alternatives.length===1?alternatives[0]:{oneOf:alternatives};
@@ -83,6 +87,10 @@ export function buildNamedSceneSchema(source,context,{blocks,location}={}){
   })}};
   const anchor={type:'integer',minimum:0,maximum:(body.maxItems??4)-1};
   const memoryDeltas={type:'array',maxItems:16,items:{oneOf:[{type:'object',additionalProperties:false,required:['target','kind','anchor'],properties:{target:{$ref:'#/$defs/entityTarget'},kind:{enum:['fact','relationship','death']},anchor}},{type:'object',additionalProperties:false,required:['target','kind','anchor','status'],properties:{target:{$ref:'#/$defs/entityTarget'},kind:{enum:['promise','clue']},anchor,status:{const:'open'}}},{type:'object',additionalProperties:false,required:['referenceId','status'],properties:{referenceId:{type:'string'},status:{enum:['resolved','broken']}}}]}};
-  const properties={blocks:body,choices,title:source.properties.title,location:location??source.properties.location,memoryDeltas};
+  const properties={blocks:body,choices,title:source.properties.title,location:location??source.properties.location,memoryDeltas,...(directed?{story:structuredClone(source.properties.story)}:{})};
+  if(directed){
+    properties.story.properties.anchors.items.maximum=(body.maxItems??4)-1;
+    const traits=properties.story.properties.npcs.items;delete traits.properties.entityId;traits.properties={target:{$ref:'#/$defs/personTarget'},...traits.properties};traits.required=traits.required.map(key=>key==='entityId'?'target':key);traits.properties.anchor.maximum=(body.maxItems??4)-1;
+  }
   return {type:'object',additionalProperties:false,required:Object.keys(properties),properties,$defs:definitions};
 }

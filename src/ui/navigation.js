@@ -9,6 +9,7 @@ function navigation(value) {
     name:typeof value.draft.name==='string'?value.draft.name.slice(0,24):'云归',
     originId:typeof value.draft.originId==='string'?value.draft.originId:'village',
     expectedArchiveId:typeof value.draft.expectedArchiveId==='string'?value.draft.expectedArchiveId:null,
+    ...(typeof value.draft.reincarnationRunId==='string'&&value.draft.reincarnationRunId.length<=80&&Array.isArray(value.draft.reincarnationRewardIds)&&value.draft.reincarnationRewardIds.length<=4&&value.draft.reincarnationRewardIds.every(id=>typeof id==='string'&&id.length<=80)?{reincarnationRunId:value.draft.reincarnationRunId,reincarnationRewardIds:[...new Set(value.draft.reincarnationRewardIds)]}:{}),
   } : null;
   const pending=value.offlineDraft;
   const offlineDraft=pending&&typeof pending.raw==='string'&&typeof pending.name==='string'&&(pending.expectedRaw===null||typeof pending.expectedRaw==='string')&&(pending.expectedBackupRaw===null||typeof pending.expectedBackupRaw==='string')?{raw:pending.raw,name:pending.name.slice(0,24),expectedRaw:pending.expectedRaw,expectedBackupRaw:pending.expectedBackupRaw}:null;

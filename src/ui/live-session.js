@@ -1,6 +1,7 @@
 import { createLiveGame, prepareOpening, prepareChoice, commitTurn, settleDeath } from '../game/cultivation/live/engine.js';
 import { buildStoryContext, validateGeneratedScene, buildMemoryDelta } from '../game/cultivation/live/memory.js';
 import { stateHash } from '../game/cultivation/live/identity.js';
+import { buildRebirthOptions } from '../game/cultivation/live/reincarnation.js';
 const defaultEngine={createLiveGame,prepareOpening,prepareChoice,commitTurn,settleDeath};
 const copy=value=>value===undefined?undefined:JSON.parse(JSON.stringify(value));
 const id=()=>globalThis.crypto.randomUUID();
@@ -33,9 +34,12 @@ export function createLiveSession({archive,client,engine=defaultEngine,onChange=
       return buildStoryContext(row.state,row.pending,records,{continuity:false});
     }
     const entityIds=[...new Set([
-      ...row.state.relatedEntities.map(entity=>entity.id),
       row.pending.receipt.action?.targetId,
-    ].filter(Boolean))];
+      row.state.director?.mainQuest?.entityId,
+      ...(row.state.director?.sideQuests??[]).map(quest=>quest.entityId),
+      ...(row.state.director?.memory?.clues??[]).map(clue=>clue.entityId),
+      ...row.state.relatedEntities.map(entity=>entity.id),
+    ].filter(Boolean))].slice(0,25);
     const selected=await archive.readStoryRecords(row.state.runId,{entityIds,recent:continuity});
     return buildStoryContext(row.state,row.pending,selected.records,{
       selection:'relevance-v1',
@@ -142,7 +146,7 @@ export function createLiveSession({archive,client,engine=defaultEngine,onChange=
       await operation();
     } catch(error) {
       try { await reload(); } catch {}
-      status='paused';
+      status=error.code==='CUSTOM_ACTION_UNSUPPORTED'&&!loaded?.pending?'ready':'paused';
       errorCode=error.code||'STORAGE_OR_STATE_CONFLICT';
     } finally {
       busy=false;
@@ -184,6 +188,21 @@ export function createLiveSession({archive,client,engine=defaultEngine,onChange=
       await generate(loaded);
     });
   }
+  function reincarnate(options={},rewardIds=[],expectedArchiveId=null) {
+    if(busy)return Promise.resolve({...view(),errorCode:'SESSION_BUSY'});
+    return run(async()=>{
+      await reload(expectedArchiveId);
+      if(loaded?.reincarnatedTo)throw fault('REINCARNATION_ALREADY_CLAIMED');
+      if(!loaded||loaded.pending||loaded.state.phase!=='dead')throw fault('REINCARNATION_REQUIRES_DEATH');
+      const state=engine.createLiveGame({...options,...buildRebirthOptions(loaded.state,rewardIds)});
+      const pending=engine.prepareOpening(state,{requestId:id()});
+      try { buildStoryContext(state,pending,[],{selection:'relevance-v1',openTotal:0}); }
+      catch { throw fault('BIRTH_CONTEXT_INVALID'); }
+      loaded=await archive.reincarnate({state,pending,rewardIds,expectedArchiveId});
+      preview=null;status='pending';errorCode=null;emit();
+      await generate(loaded);
+    });
+  }
   function load() {
     if(busy)return Promise.resolve({...view(),errorCode:'SESSION_BUSY'});
     return run(reload);
@@ -202,7 +221,7 @@ export function createLiveSession({archive,client,engine=defaultEngine,onChange=
       if(!loaded||loaded.pending)throw fault('TURN_ALREADY_PENDING');
       if(command.baseRevision!==loaded.state.revision||command.stateHash!==stateHash(loaded.state))throw fault('STALE_CHOICE');
       const pending=engine.prepareChoice(loaded.state,{...command,requestId:id()});
-      if(pending.receipt.action?.intent==='interact'&&['decline','leave'].includes(pending.receipt.action.approach)){
+      if(loaded.state.life.cultivationProfile?.version!==7&&pending.receipt.action?.intent==='interact'&&['decline','leave'].includes(pending.receipt.action.approach)){
         loaded=await archive.commitInteraction({expectedArchiveId:loaded.archiveId,expectedRevision:loaded.state.revision,pending});
         preview=null;status='ready';errorCode=null;emit();return;
       }
@@ -251,5 +270,5 @@ export function createLiveSession({archive,client,engine=defaultEngine,onChange=
       await generate(row);
     });
   }
-  return {start,startNew,load,selectJourney,choose,resume,retry,view};
+  return {start,startNew,reincarnate,load,selectJourney,choose,resume,retry,view};
 }

@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import { liveBrowser } from './helpers/live-browser.js';
 import { createLiveGame, prepareOpening } from '../src/game/cultivation/live/engine.js';
 import { renderLiveJourney } from '../src/ui/journey.js';
+import { cultivationFixtureProse } from './helpers/live-story-fixture.js';
 
 test('structured preview presents the current dialogue and model choices without actionable commands', () => {
   const state = createLiveGame({ runId: 'structured-preview', seed: 42 });
@@ -106,11 +107,12 @@ test('the app keeps streamed dialogue and choice nodes through completion and du
   await page.locator('[data-title-new]:enabled').click();
   await page.locator('[data-live-start]:enabled').click();
   await page.waitForFunction(() => window.streamPacket);
-  await page.evaluate(() => {
-    window.streamPacket({ type: 'block', index: 0, kind: 'narration', text: '你沿着山路走近渡口。', complete: true });
+  const firstNarration = cultivationFixtureProse('你沿着山路走近渡口。', 1);
+  await page.evaluate(text => {
+    window.streamPacket({ type: 'block', index: 0, kind: 'narration', text, complete: true });
     window.streamPacket({ type: 'block', index: 1, kind: 'dialogue', speaker: '渡者', text: '“前方渡口封了，你要去', complete: false });
     window.streamPacket({ type: 'choice', index: 0, label: '询问渡者：渡口为何', complete: false });
-  });
+  }, firstNarration);
   await page.locator('[data-live-choice-preview]').waitFor();
   assert.equal(await page.locator('.journey-dialogue').textContent(), '渡者：“前方渡口封了，你要去');
   assert.equal(await page.locator('[aria-label="本地开场"]:visible').count(), 0);
@@ -122,8 +124,9 @@ test('the app keeps streamed dialogue and choice nodes through completion and du
     window.streamPacket({ type: 'block', index: 1, kind: 'dialogue', speaker: '渡者', text: '“前方渡口封了，你要去哪里？”', complete: true });
     window.streamPacket({ type: 'choice', index: 0, label: '询问渡者：渡口为何封闭', complete: true });
     window.streamPacket({ type: 'choice', index: 1, label: '告辞渡者：结束交谈', complete: true });
+    window.streamPacket({ type: 'choice', index: 2, label: '留在岸边观察渡口的动静', complete: true });
   });
-  await page.waitForFunction(() => document.querySelectorAll('[data-live-choice-preview]').length === 2);
+  await page.waitForFunction(() => document.querySelectorAll('[data-live-choice-preview]').length === 3);
   const before = await page.evaluate(() => {
     const block = document.querySelector('.journey-dialogue'), choice = document.querySelector('[data-live-choice-preview]');
     const style = getComputedStyle(block);
@@ -133,13 +136,14 @@ test('the app keeps streamed dialogue and choice nodes through completion and du
   const prefix = `${context.namespace}:t${context.identity.turnId}:`, person = prefix + 'e:ferry';
   const scene = {
     id: prefix + 's:scene', title: '渡口问路', location: '河畔',
-    blocks: [{ kind: 'narration', text: '你沿着山路走近渡口。' }, { kind: 'dialogue', speaker: person, text: '“前方渡口封了，你要去哪里？”' }],
+    blocks: [{ kind: 'narration', text: firstNarration }, { kind: 'dialogue', speaker: person, text: '“前方渡口封了，你要去哪里？”' }],
     entities: [{ id: person, name: '渡者', kind: 'person' }],
     choices: [
       { id: prefix + 'c:ask', label: '询问渡者：渡口为何封闭', intent: 'interact', targetId: person, stake: 'low', approach: 'ask' },
       { id: prefix + 'c:leave', label: '告辞渡者：结束交谈', intent: 'interact', targetId: person, stake: 'low', approach: 'leave' },
+      { id: prefix + 'c:observe', label: '留在岸边观察渡口的动静', intent: 'interact', targetId: 'self', stake: 'low', approach: 'observe' },
     ],
-    memoryDeltas: [],
+    memoryDeltas: [], story: { pattern: 'journey', beat: 'progress', anchors: [0] },
   };
   await page.evaluate(result => window.streamPacket({ type: 'result', result }, true), { protocolVersion: 1, status: 'ready', errorCode: null, retry: null, requestId: context.identity.requestId, attemptId: attempt.id, sessionRef: attempt.sessionRef, scene });
   await page.locator('[data-live-choice]:enabled').first().waitFor();

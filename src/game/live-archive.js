@@ -2,6 +2,8 @@ import { canonicalStringify, sha256, stateHash, assertPlainData } from './cultiv
 import { validateLiveState } from './cultivation/live/validation.js';
 import { prepareOpening, prepareChoice, commitTurn, settleDeath, resolveImmediateInteraction } from './cultivation/live/engine.js';
 import { buildStoryContext, validateGeneratedScene, buildMemoryDelta, validateStoryContext, sceneTurnRecord } from './cultivation/live/memory.js';
+import { customActionCommand } from './cultivation/live/custom-actions.js';
+import { buildRebirthOptions, reincarnationClaimForChild, validateReincarnationClaim } from './cultivation/live/reincarnation.js';
 
 export const CHUNK_TURNS = 128;
 export const CHUNK_BYTES = 256 * 1024;
@@ -16,7 +18,7 @@ function bounded(value,max) { assertPlainData(value);check(encodedBytes(value)<=
 function ident(value) { check(typeof value==='string'&&/^[A-Za-z0-9][A-Za-z0-9:_-]{0,79}$/.test(value),'ARCHIVE_INVALID_ID'); }
 function keys(value,required) { assertPlainData(value);check(value&&typeof value==='object'&&!Array.isArray(value)&&Object.keys(value).sort().join('|')===[...required].sort().join('|'),'ARCHIVE_INVALID_FIELDS'); }
 export function verifyPending(state,pending) {
- const expected=pending?.kind==='opening'?prepareOpening(state,{requestId:pending.identity.requestId}):prepareChoice(state,{requestId:pending?.identity?.requestId,choiceId:pending?.identity?.choiceId});
+ const expected=pending?.kind==='opening'?prepareOpening(state,{requestId:pending.identity.requestId}):prepareChoice(state,customActionCommand(pending));
  check(same(expected,pending),'ARCHIVE_INVALID_PENDING');return pending;
 }
 export function validateAttempt(attempt) {
@@ -43,7 +45,17 @@ export function verifyChunk(chunk) {
 }
 function keysShallow(v,expected) {check(v&&Object.getPrototypeOf(v)===Object.prototype&&Object.keys(v).sort().join('|')===[...expected].sort().join('|'),'ARCHIVE_INVALID_FIELDS');}
 const ZERO='0'.repeat(64);
-function loaded(run,pending) {validateGeneration(pending?.generation,pending?.pending);return run?{archiveId:run.archiveId,state:clone(run.state),pending:pending?.pending??null,attempt:pending?.attempt??null,pause:pending?.pause??null,...(pending?.generation?{generation:clone(pending.generation)}:{})}:null;}
+function loaded(run,pending) {validateGeneration(pending?.generation,pending?.pending);return run?{archiveId:run.archiveId,state:clone(run.state),pending:pending?.pending??null,attempt:pending?.attempt??null,pause:pending?.pause??null,...(pending?.generation?{generation:clone(pending.generation)}:{}),...(run.reincarnatedTo?{reincarnatedTo:run.reincarnatedTo}:{})}:null;}
+const claimKey=runId=>'@rebirth:'+sha256(runId);
+function writeClaims(stores,get,claims,finish) {
+  const remaining=claims.filter(Boolean);
+  const next=()=>{
+    if(!remaining.length){finish();return;}
+    const claim=validateReincarnationClaim(remaining.shift()),archiveId=claimKey(claim.parentRunId),record={archiveId,...claim};
+    get(stores.runs,archiveId,existing=>{check(!existing||same(existing,record),'REINCARNATION_ALREADY_CLAIMED');if(!existing)stores.runs.add(record);next();});
+  };
+  next();
+}
 // Never await inside a transaction. All work here is synchronous or chained from
 // native request callbacks; only transaction.oncomplete resolves the operation.
 function transaction(db,mode,body) {
@@ -88,7 +100,7 @@ class Archive {
  async _capture(runId,physical=null) {
   return transaction(this.db,'readonly',(s,get,done)=>{
    get(s.runs,ACTIVE,active=>{const select=physical?{archiveId:physical}:null;
-    const fetch=pointer=>{if(!pointer){done(null);return;}get(s.runs,pointer.archiveId,run=>{if(!run){done(null);return;}get(s.pending,run.archiveId,pending=>{const finish=tail=>done({run,pending:pending??null,tail:tail?.chunk??null,active:active?.target??null});if(run.tailIndex<0)finish(null);else get(s.history,[run.archiveId,run.tailIndex],finish);});});};
+    const fetch=pointer=>{if(!pointer){done(null);return;}get(s.runs,pointer.archiveId,run=>{if(!run){done(null);return;}get(s.pending,run.archiveId,pending=>{const finish=tail=>get(s.runs,claimKey(run.runId),stored=>{const claim=stored?Object.fromEntries(Object.entries(stored).filter(([key])=>key!=='archiveId')):run.reincarnationClaim??null;done({run:claim?{...run,reincarnatedTo:claim.childRunId}:run,pending:pending??null,tail:tail?.chunk??null,active:active?.target??null,reincarnationClaim:claim});});if(run.tailIndex<0)finish(null);else get(s.history,[run.archiveId,run.tailIndex],finish);});});};
     if(select)fetch(select);else if(runId)get(s.runs,'@run:'+runId,p=>fetch(p?{archiveId:p.target}:null));else fetch(active?{archiveId:active.target}:null);
    });
   });
@@ -133,9 +145,25 @@ class Archive {
   this.bound=archiveId;return selected;
  }
  async create({state,pending,expectedArchiveId=null}) {
-  validateLiveState(state);check(state.revision===0&&state.archiveCursor===0,'ARCHIVE_INVALID_BIRTH');verifyPending(state,pending);
+  validateLiveState(state);check(!state.reincarnation&&!state.life.birth.cultivationProfile?.inheritedBenefits?.length,'REINCARNATION_REQUIRES_SETTLEMENT');check(state.revision===0&&state.archiveCursor===0,'ARCHIVE_INVALID_BIRTH');verifyPending(state,pending);
   const archiveId=crypto.randomUUID(),run={archiveId,runId:state.runId,state:clone(state),birth:clone(state),hash:stateHash(state),tailIndex:-1,headHash:ZERO,status:'active'};
   const p=pendingRow(archiveId,clone(pending));await transaction(this.db,'readwrite',(s,get,done)=>get(s.runs,ACTIVE,active=>{check((active?.target??null)===expectedArchiveId);get(s.runs,'@run:'+state.runId,existing=>{check(!existing);s.runs.add(run);s.pending.add(p);s.runs.put({archiveId:ACTIVE,target:archiveId});s.runs.put({archiveId:'@run:'+state.runId,target:archiveId});done();});}));this.bound=archiveId;return loaded(run,p);
+ }
+ async reincarnate({state,pending,rewardIds=[],expectedArchiveId}) {
+  validateLiveState(state);check(state.revision===0&&state.archiveCursor===0,'ARCHIVE_INVALID_BIRTH');verifyPending(state,pending);
+  const c=await this._capture();check(c&&c.run.archiveId===expectedArchiveId&&!c.pending&&c.run.state.phase==='dead','REINCARNATION_REQUIRES_DEATH');
+  check(!c.reincarnationClaim,'REINCARNATION_ALREADY_CLAIMED');
+  const expected=buildRebirthOptions(c.run.state,rewardIds);
+  check(same(state.reincarnation,expected.reincarnation)&&same(state.life.birth.cultivationProfile?.inheritedBenefits,expected.inheritedBenefits),'REINCARNATION_INVALID_STATE');
+  const claim=reincarnationClaimForChild(state);validateReincarnationClaim(claim,c.run.state);
+  const archiveId=crypto.randomUUID(),run={archiveId,runId:state.runId,state:clone(state),birth:clone(state),hash:stateHash(state),tailIndex:-1,headHash:ZERO,status:'active'},p=pendingRow(archiveId,clone(pending));
+  await transaction(this.db,'readwrite',(s,get)=>this._cas(s,get,c,()=>get(s.runs,claimKey(c.run.runId),old=>{
+    check(!old,'REINCARNATION_ALREADY_CLAIMED');
+    get(s.runs,'@run:'+state.runId,existing=>{check(!existing);writeClaims(s,get,[claim],()=>{
+      s.runs.add(run);s.pending.add(p);s.runs.put({...c.run,reincarnatedTo:state.runId});s.runs.put({archiveId:ACTIVE,target:archiveId});s.runs.put({archiveId:'@run:'+state.runId,target:archiveId});
+    });});
+  })));
+  this.bound=archiveId;return loaded(run,p);
  }
  _cas(s,get,c,fn,{staging=false}={}) {
   get(s.runs,ACTIVE,active=>{check(staging||active?.target===c.run.archiveId);get(s.runs,c.run.archiveId,run=>{check(run&&run.hash===c.run.hash&&run.headHash===c.run.headHash&&run.state.revision===c.run.state.revision);get(s.pending,c.run.archiveId,p=>{check(same(p??null,c.pending));fn(run,p);});});});
@@ -322,19 +350,22 @@ class Archive {
  }
  async _readChunk(archiveId,index) {return transaction(this.db,'readonly',(s,get,done)=>get(s.history,[archiveId,index],r=>done(r?.chunk??null)));}
  async _stage(birth) {
-  validateLiveState(birth);check(birth.revision===0&&birth.archiveCursor===0,'ARCHIVE_INVALID_BIRTH');const archiveId=crypto.randomUUID(),run={archiveId,runId:birth.runId,state:clone(birth),birth:clone(birth),hash:stateHash(birth),tailIndex:-1,headHash:ZERO,status:'staging'};await transaction(this.db,'readwrite',s=>s.runs.add(run));return archiveId;
+  validateLiveState(birth);check(birth.reincarnation||!birth.life.birth.cultivationProfile?.inheritedBenefits?.length,'REINCARNATION_REQUIRES_SETTLEMENT');check(birth.revision===0&&birth.archiveCursor===0,'ARCHIVE_INVALID_BIRTH');const archiveId=crypto.randomUUID(),run={archiveId,runId:birth.runId,state:clone(birth),birth:clone(birth),hash:stateHash(birth),tailIndex:-1,headHash:ZERO,status:'staging'};await transaction(this.db,'readwrite',s=>s.runs.add(run));return archiveId;
  }
  async _stageEntry(archiveId,entry) {
   keys(entry,['identity','receipt','scene','stateHash']);const c=await this._capture(null,archiveId);check(c?.run.status==='staging');const identity=entry.identity;
-  const p=c.run.state.phase==='awaitingOpening'?prepareOpening(c.run.state,{requestId:identity.requestId}):prepareChoice(c.run.state,{requestId:identity.requestId,choiceId:identity.choiceId});check(same(p.identity,identity)&&same(p.receipt,entry.receipt),'ARCHIVE_INVALID_HISTORY');c.pending=pendingRow(archiveId,p);
+  const p=c.run.state.phase==='awaitingOpening'?prepareOpening(c.run.state,{requestId:identity.requestId}):prepareChoice(c.run.state,customActionCommand(entry));check(same(p.identity,identity)&&same(p.receipt,entry.receipt),'ARCHIVE_INVALID_HISTORY');c.pending=pendingRow(archiveId,p);
   const d=await this._derived(c,entry.scene,entry.scene?buildMemoryDelta(p.receipt,entry.scene):null);check(stateHash(d.state)===entry.stateHash,'ARCHIVE_BAD_HASH');
   await transaction(this.db,'readwrite',(s,get)=>get(s.runs,archiveId,run=>{check(run.status==='staging'&&run.hash===c.run.hash);this._writeMemory(s.memory,archiveId,d.records);s.runs.put({...run,state:d.state,hash:entry.stateHash});}));
  }
  async _stageChunk(archiveId,chunk) {verifyChunk(chunk);await transaction(this.db,'readwrite',(s,get)=>get(s.runs,archiveId,run=>{check(run.status==='staging'&&chunk.index===run.tailIndex+1&&chunk.previousHash===run.headHash);s.history.add({archiveId,index:chunk.index,chunk});s.runs.put({...run,tailIndex:chunk.index,headHash:chunk.hash});}));}
- async _validateStage(archiveId,state,pending,attempt,generation) {
+ async _validateStage(archiveId,state,pending,attempt,generation,reincarnationClaim=null) {
   validateGeneration(generation,pending);
+  // A claimed logical life stays spent when an earlier physical backup is
+  // restored; only a new settlement requires the exact final death snapshot.
+  if(reincarnationClaim)validateReincarnationClaim(reincarnationClaim,state,{matchDeathSnapshot:false});
   validateLiveState(state);validateAttempt(attempt);const c=await this._capture(null,archiveId);check(same(c.run.state,state),'ARCHIVE_INVALID_SNAPSHOT');if(pending)verifyPending(state,pending);else check(attempt===null,'ARCHIVE_INVALID_ATTEMPT');
-  await transaction(this.db,'readwrite',(s,get)=>get(s.runs,archiveId,run=>{check(run.status==='staging');s.runs.put({...run,status:'validated'});if(pending)s.pending.put(pendingRow(archiveId,pending,attempt,'SESSION_UNAVAILABLE',generation));}));
+  await transaction(this.db,'readwrite',(s,get)=>get(s.runs,archiveId,run=>{check(run.status==='staging');s.runs.put({...run,status:'validated',...(reincarnationClaim?{reincarnationClaim}: {})});if(pending)s.pending.put(pendingRow(archiveId,pending,attempt,'SESSION_UNAVAILABLE',generation));}));
  }
  async _discardStage(archiveId) {
   return transaction(this.db,'readwrite',(s,get)=>get(s.runs,archiveId,run=>{
@@ -346,7 +377,7 @@ class Archive {
  async activate(archiveId,expectedArchiveId,expectedSnapshot=null) {
   await transaction(this.db,'readwrite',(s,get)=>get(s.runs,ACTIVE,active=>{
    check((active?.target??null)===expectedArchiveId);
-   const switchPointer=()=>get(s.runs,archiveId,run=>{check(run?.status==='validated','ARCHIVE_NOT_VALIDATED');s.runs.put({...run,status:'active'});s.runs.put({archiveId:ACTIVE,target:archiveId});s.runs.put({archiveId:'@run:'+run.runId,target:archiveId});});
+   const switchPointer=()=>get(s.runs,archiveId,run=>{check(run?.status==='validated','ARCHIVE_NOT_VALIDATED');writeClaims(s,get,[reincarnationClaimForChild(run.state),run.reincarnationClaim],()=>{s.runs.put({...run,status:'active'});s.runs.put({archiveId:ACTIVE,target:archiveId});s.runs.put({archiveId:'@run:'+run.runId,target:archiveId});});});
    if(expectedSnapshot)get(s.runs,expectedArchiveId,run=>{check(run?.hash===expectedSnapshot.run.hash&&run?.headHash===expectedSnapshot.run.headHash);get(s.pending,expectedArchiveId,p=>{check(same(p??null,expectedSnapshot.pending));switchPointer();});});else switchPointer();
   }));this.bound=archiveId;return this.load();
  }

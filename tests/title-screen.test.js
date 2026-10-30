@@ -3,10 +3,11 @@ import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 import { resolve, extname } from 'node:path';
 import { liveBrowser } from './helpers/live-browser.js';
+import { liveStoryFixture } from './helpers/live-story-fixture.js';
 
 function story(context) {
   const p=context.namespace+':t'+context.identity.turnId+':';
-  return {id:p+'s:path',title:'古道松声',location:'青山古道',blocks:[{kind:'narration',text:'你沿着古道前行，松风从山间掠过。'}],entities:[],choices:[{id:p+'c:rest',label:'在松下歇息',intent:'rest',targetId:'self',stake:'low',approach:'recover'},{id:p+'c:practice',label:'静心吐纳',intent:'practice',targetId:'self',stake:'low',approach:'steady'}],memoryDeltas:[]};
+  return liveStoryFixture({id:p+'s:path',title:'古道松声',location:'青山古道',blocks:[{kind:'narration',text:'你沿着古道前行，松风从山间掠过。'}],entities:[],choices:[{id:p+'c:rest',label:'在松下歇息',intent:'rest',targetId:'self',stake:'low',approach:'recover'},{id:p+'c:practice',label:'静心吐纳',intent:'practice',targetId:'self',stake:'low',approach:'steady'}],memoryDeltas:[]},context);
 }
 async function fixture(t) {
   const {page,context}=await liveBrowser(t),responses=new Map();let posts=0,paused=false;

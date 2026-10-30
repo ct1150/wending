@@ -37,3 +37,13 @@ test('retained legacy pages and their settings return target survive a same-tab 
     assert.equal(module.loadNavigation(storage,'reload').returnScreen,screen);
   }
 });
+
+test('a reincarnation name draft retains its parent and selected rewards across reload without starting a life', () => {
+  const storage=memory();
+  module.saveNavigation(storage,{screen:'new',mode:'live',draft:{name:'沈渡',originId:'ferry',expectedArchiveId:'dead-archive',reincarnationRunId:'old-life',reincarnationRewardIds:['past-memory','causal-compass']}});
+  const reload=module.loadNavigation(storage,'reload');
+  assert.equal(reload.draft.reincarnationRunId,'old-life');
+  assert.deepEqual(reload.draft.reincarnationRewardIds,['past-memory','causal-compass']);
+  assert.equal(reload.draft.expectedArchiveId,'dead-archive');
+  assert.equal(module.loadNavigation(storage,'navigate').draft,null);
+});
