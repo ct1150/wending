@@ -2,6 +2,7 @@ import { createServer } from 'node:http';
 import { readFile, realpath, stat } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { stampAppVersion } from './app-version.js';
 
 const defaultRoot = fileURLToPath(new URL('../', import.meta.url));
 const mime = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascript; charset=utf-8', '.css': 'text/css; charset=utf-8', '.svg': 'image/svg+xml', '.json': 'application/json; charset=utf-8', '.png': 'image/png', '.ico': 'image/x-icon', '.webp': 'image/webp' };
@@ -28,7 +29,11 @@ export async function createRequestHandler(root = defaultRoot) {
       if (file !== base && !file.startsWith(base + path.sep)) { response.writeHead(403).end('Forbidden'); return; }
       if ((await stat(file)).isDirectory()) file = await realpath(path.join(file, 'index.html'));
       if (file !== base && !file.startsWith(base + path.sep)) { response.writeHead(403).end('Forbidden'); return; }
-      const content = await readFile(file);
+      let content = await readFile(file);
+      if (file === path.join(base, 'index.html') && content.includes('<meta name="application-version" content="dev" />')) {
+        const pkg = JSON.parse(await readFile(path.join(base, 'package.json'), 'utf8'));
+        content = stampAppVersion(content.toString(), pkg.version);
+      }
       response.writeHead(200, { 'Content-Type': mime[path.extname(file)] || 'application/octet-stream', 'Cache-Control': 'no-store', 'X-Content-Type-Options': 'nosniff' });
       response.end(request.method === 'HEAD' ? undefined : content);
     } catch (error) {
