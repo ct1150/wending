@@ -44,11 +44,16 @@ test('an old offline tab cannot autosave over a newly committed journey in anoth
   const born = chooseCultivation(creation, { revision: creation.revision, sceneId: creation.scene.nodeId, choiceId: 'birth-start' });
   assert.equal(born.kind, 'applied');
   const originalRaw = serializeGame(born.state);
-  await context.addInitScript(({ key, raw }) => {
-    if (location.protocol === 'file:' && localStorage.getItem(key) === null) localStorage.setItem(key, raw);
-  }, { key: SAVE_KEY, raw: originalRaw });
+  // Persist the existing save before opening the two competing pages. Seeding
+  // each page's initialization can create separate stale file: storage caches.
+  const url = pathToFileURL(file).href, seedPage = await context.newPage();
+  await seedPage.goto(url);
+  await seedPage.evaluate(({ key, raw }) => localStorage.setItem(key, raw), { key: SAVE_KEY, raw: originalRaw });
+  await seedPage.reload();
+  assert.equal(await seedPage.evaluate(key => localStorage.getItem(key), SAVE_KEY), originalRaw);
+  await seedPage.close();
 
-  const first = await context.newPage(), url = pathToFileURL(file).href;
+  const first = await context.newPage();
   await first.goto(url);
   await first.locator('[data-title-continue]:enabled').click();
   await first.locator('[data-journey-choice]:enabled').first().waitFor();
@@ -84,6 +89,7 @@ test('an old offline tab cannot autosave over a newly committed journey in anoth
 
   await first.reload();
   await first.locator('[data-journey-choice]:enabled').first().waitFor();
+  await first.waitForFunction(name => document.querySelector('#app')?.textContent.includes(name), '沈渡');
   assert.match(await first.locator('#app').innerText(), /沈渡/);
   assert.equal(await first.evaluate(key => localStorage.getItem(key), SAVE_KEY), replacementRaw);
   assert.deepEqual(errors, []);

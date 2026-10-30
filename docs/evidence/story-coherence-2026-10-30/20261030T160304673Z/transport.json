@@ -1,0 +1,114 @@
+[
+  {
+    "path": "/api/story/capabilities",
+    "status": 200,
+    "cookiePresent": false,
+    "actionMode": null,
+    "setCookiePresent": false
+  },
+  {
+    "path": "/api/story/capabilities",
+    "status": 200,
+    "cookiePresent": false,
+    "actionMode": null,
+    "setCookiePresent": false
+  },
+  {
+    "path": "/api/story/session",
+    "status": 200,
+    "cookiePresent": false,
+    "actionMode": null,
+    "setCookiePresent": true
+  },
+  {
+    "path": "/api/story/turn",
+    "status": 200,
+    "cookiePresent": true,
+    "actionMode": "1",
+    "setCookiePresent": false
+  },
+  {
+    "path": "/api/story/capabilities",
+    "status": 200,
+    "cookiePresent": true,
+    "actionMode": null,
+    "setCookiePresent": false
+  },
+  {
+    "path": "/api/story/session",
+    "status": 200,
+    "cookiePresent": true,
+    "actionMode": null,
+    "setCookiePresent": false
+  },
+  {
+    "path": "/api/story/turn",
+    "status": 200,
+    "cookiePresent": true,
+    "actionMode": "1",
+    "setCookiePresent": false
+  },
+  {
+    "path": "/api/story/capabilities",
+    "status": 200,
+    "cookiePresent": true,
+    "actionMode": null,
+    "setCookiePresent": false
+  },
+  {
+    "path": "/api/story/session",
+    "status": 200,
+    "cookiePresent": true,
+    "actionMode": null,
+    "setCookiePresent": false
+  },
+  {
+    "path": "/api/story/turn",
+    "status": 200,
+    "cookiePresent": true,
+    "actionMode": "1",
+    "setCookiePresent": false
+  },
+  {
+    "path": "/api/story/capabilities",
+    "status": 200,
+    "cookiePresent": true,
+    "actionMode": null,
+    "setCookiePresent": false
+  },
+  {
+    "path": "/api/story/session",
+    "status": 200,
+    "cookiePresent": true,
+    "actionMode": null,
+    "setCookiePresent": false
+  },
+  {
+    "path": "/api/story/turn",
+    "status": 200,
+    "cookiePresent": true,
+    "actionMode": "1",
+    "setCookiePresent": false
+  },
+  {
+    "path": "/api/story/capabilities",
+    "status": 200,
+    "cookiePresent": true,
+    "actionMode": null,
+    "setCookiePresent": false
+  },
+  {
+    "path": "/api/story/session",
+    "status": 200,
+    "cookiePresent": true,
+    "actionMode": null,
+    "setCookiePresent": false
+  },
+  {
+    "path": "/api/story/turn",
+    "status": 200,
+    "cookiePresent": true,
+    "actionMode": "1",
+    "setCookiePresent": false
+  }
+]

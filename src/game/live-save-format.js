@@ -1,5 +1,5 @@
 import { sha256, assertPlainData } from './cultivation/live/identity.js';
-import { verifyChunk, validateAttempt, verifyPending } from './live-archive.js';
+import { verifyChunk, validateAttempt, verifyPending, validateGeneration } from './live-archive.js';
 import { validateLiveState } from './cultivation/live/validation.js';
 export const MAX_LIVE_RECORD_BYTES = 512 * 1024;
 const FORMAT='wending-live-jsonl';
@@ -10,7 +10,7 @@ export function exportLiveArchive(archive,runId) {
  let capture,header,index=0,manifest,done=false;
  const encode=value=>{const text=JSON.stringify(value);requireValue(new TextEncoder().encode(text).length<=MAX_LIVE_RECORD_BYTES);return new TextEncoder().encode(text+'\n');};
  return new ReadableStream({async pull(controller){try{
-  if(!capture){capture=await archive._capture(runId);requireValue(capture);header={type:'header',format:FORMAT,version:1,memoryVersion:1,birth:capture.run.birth,state:capture.run.state,pending:capture.pending?.pending??null,attempt:capture.pending?.attempt??null};manifest=digest(header);controller.enqueue(encode(header));return;}
+  if(!capture){capture=await archive._capture(runId);requireValue(capture);validateGeneration(capture.pending?.generation,capture.pending?.pending);header={type:'header',format:FORMAT,version:capture.pending?.generation?2:1,memoryVersion:1,birth:capture.run.birth,state:capture.run.state,pending:capture.pending?.pending??null,attempt:capture.pending?.attempt??null,...(capture.pending?.generation?{generation:capture.pending.generation}:{})};manifest=digest(header);controller.enqueue(encode(header));return;}
   if(index<=capture.run.tailIndex){const chunk=index===capture.run.tailIndex?capture.tail:await archive._readChunk(capture.run.archiveId,index);verifyChunk(chunk);const row={type:'chunk',chunk};manifest=sha256(manifest+chunk.hash);index++;controller.enqueue(encode(row));return;}
   if(!done){done=true;controller.enqueue(encode({type:'footer',chunks:index,turns:capture.run.state.turnId,headHash:capture.run.headHash,manifest}));controller.close();}
  }catch(e){controller.error(e);}}});
@@ -27,10 +27,10 @@ export async function importLiveArchive(stream,archive) {
  try {
  for await(const line of lines(stream)){
   requireValue(!footer);const row=JSON.parse(line);
-  if(!header){keys(row,['type','format','version','memoryVersion','birth','state','pending','attempt']);requireValue(row.type==='header'&&row.format===FORMAT&&row.version===1&&row.memoryVersion===1);assertPlainData(row);validateLiveState(row.birth);validateLiveState(row.state);requireValue(row.birth.runId===row.state.runId);validateAttempt(row.attempt);if(row.pending)verifyPending(row.state,row.pending);else requireValue(row.attempt===null);header=row;manifest=digest(row);archiveId=await archive._stage(row.birth);continue;}
+  if(!header){keys(row,['type','format','version','memoryVersion','birth','state','pending','attempt',...(row.version===2?['generation']:[])]);requireValue(row.type==='header'&&row.format===FORMAT&&[1,2].includes(row.version)&&row.memoryVersion===1);assertPlainData(row);validateLiveState(row.birth);validateLiveState(row.state);requireValue(row.birth.runId===row.state.runId);validateAttempt(row.attempt);if(row.pending)verifyPending(row.state,row.pending);else requireValue(row.attempt===null);validateGeneration(row.generation,row.pending);header=row;manifest=digest(row);archiveId=await archive._stage(row.birth);continue;}
   if(row.type==='chunk'){keys(row,['type','chunk']);verifyChunk(row.chunk);requireValue(row.chunk.index===count&&row.chunk.previousHash===previousHash);for(const entry of row.chunk.entries){requireValue(entry.identity.turnId===++turns);await archive._stageEntry(archiveId,entry);}await archive._stageChunk(archiveId,row.chunk);previousHash=row.chunk.hash;manifest=sha256(manifest+previousHash);count++;continue;}
   keys(row,['type','chunks','turns','headHash','manifest']);requireValue(row.type==='footer'&&row.chunks===count&&row.turns===turns&&row.turns===header.state.turnId&&row.headHash===previousHash&&row.manifest===manifest);footer=true;
  }
- requireValue(header&&footer);await archive._validateStage(archiveId,header.state,header.pending,header.attempt);return await archive.activate(archiveId,expectedActive,original);
+ requireValue(header&&footer);await archive._validateStage(archiveId,header.state,header.pending,header.attempt,header.generation);return await archive.activate(archiveId,expectedActive,original);
  }catch(error){if(archiveId)await archive._discardStage(archiveId).catch(()=>{});throw error;}
 }

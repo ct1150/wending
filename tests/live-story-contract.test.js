@@ -173,8 +173,23 @@ function continuationScene(nameLength=1,longIds=false) {
 }
 function nextContext(state,choice) {
   const pending=prepareChoice(state,{requestId:'r'.repeat(80),choiceId:choice.id});
-  return pending.receipt.death?null:buildStoryContext(state,pending,[],{selection:'relevance-v1',openTotal:Number.MAX_SAFE_INTEGER});
+  return pending.receipt.death?null:buildStoryContext(state,pending,[],{selection:'relevance-v1',openTotal:Number.MAX_SAFE_INTEGER,continuity:false});
 }
+
+test('dense legacy journeys can continue even when a current-scene record cannot fit',()=>{
+  const born=createLiveGame({runId:'story-run',seed:42}),opening=prepareOpening(born,{requestId:'opening'}),c=buildStoryContext(born,opening);let found=false;
+  for(let length=1;length<=58;length++){
+    const value=continuationScene(length);value.blocks=[{kind:'narration',text:'山'.repeat(500)}];
+    const active=commitTurn(born,opening,value),pending=prepareChoice(active,{requestId:'r'.repeat(80),choiceId:value.choices[0].id});
+    try{nextContext(active,value.choices[0]);}catch{continue;}
+    const context=buildStoryContext(active,pending,[],{selection:'relevance-v1',openTotal:Number.MAX_SAFE_INTEGER});
+    if(!context.memory.recent.some(record=>record.kind==='turn'&&record.turnId===active.turnId)){
+      assert.deepEqual(validateGeneratedScene(value,c),value);
+      assert.throws(()=>validateGeneratedScene(value,c,{continuity:true}),{code:'NEXT_CONTEXT_TOO_LARGE'});found=true;break;
+    }
+  }
+  assert.equal(found,true,'a legal old context fits while its new prose record requires compatibility fallback');
+});
 test('continuation admission accepts fitting24 entities and rejects legal mandatory next-context overflow before ready',async()=>{
   const born=createLiveGame({runId:'story-run',seed:42}),opening=prepareOpening(born,{requestId:'opening'}),c=buildStoryContext(born,opening);
   const narrow=continuationScene();

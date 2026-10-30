@@ -1,0 +1,1 @@
+{"at":"2026-10-30T16:05:10.527Z","decision":{"index":0,"reason":"正文王大伯正处理夹伤黄鼠狼，询问伤处与血迹直接关联眼前事件，另有拒绝回答的出口；先询问，核对下一段具体回答而非重演。","selected":{"id":"r:be5aee0d0cc6999a:t1:c:a","label":"询问王大伯：询问黄鼠狼腿断的具体位置和血迹流向","intent":"interact","targetId":"r:be5aee0d0cc6999a:t1:e:person_1","stake":"low","approach":"ask"}}}

@@ -34,7 +34,7 @@ export function buildGenerationSchema(namespace,turnId,{nextRealm='disabled',kno
   const speaker=reference(['person'],{self:true,living:true});
   const targets={rest:['self'],explore:['supplies','stones','manual','crystal','core','soulseal','skykey','relic','iron']};
   const action=(intent,approaches,target)=>object({...choice.properties,intent:enumeration([intent]),approach:enumeration(approaches),targetId:target?enumeration(target):intent==='travel'?place:actor});
-  schema.properties.choices.items=alternatives(Object.entries(INTENTS).flatMap(([intent,approaches])=>{
+  schema.properties.choices.items=alternatives(Object.entries(INTENTS).filter(([intent])=>intent!=='interact').flatMap(([intent,approaches])=>{
     if(intent==='practice')return [action(intent,['steady','intensive'],['self']),...(nextRealm==='disabled'?[]:[action(intent,['breakthrough'],[nextRealm])])];
     if(intent==='craft')return [action(intent,['study'],['manual']),action(intent,['forge'],['talisman'])];
     return [action(intent,approaches,targets[intent])];

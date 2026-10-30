@@ -5,6 +5,7 @@ import { validateStoryContext, validateGeneratedScene, STORY_ERROR_CODES } from 
 import { REALMS, DAYS_PER_YEAR, ITEMS } from '../game/cultivation/live/model.js';
 import { buildGenerationSchema } from './story-generation-schema.js';
 import { buildGlmWire,decodeGlmScene } from './story-glm-wire.js';
+import { buildNamedSceneSchema } from './story-named-targets.js';
 
 // Shared server-only input/transport/parser. Production supplies its validation
 // gate; operator acceptance fixes the unpromoted candidate in a separate module.
@@ -73,11 +74,38 @@ function providerInput(profile,context) {
   const system=facts+'\n'+SYSTEM.replaceAll('namespace:t本回合:',prefix).replace('NEXT_REALM',nextRealm);
   const input={messages:[{role:'system',content:system},{role:'user',content:JSON.stringify(context)}],stream:false,temperature:0.3,max_tokens:Math.min(profile.maxOutput,STORY_LIMITS.maxOutputTokens),response_format:{type:'json_schema',json_schema:{name:'cultivation_scene',strict:true,schema}},chat_template_kwargs:{enable_thinking:false}};
   if(profile.modelId===GLM_MODEL_ID){
-    // This GLM endpoint accepts OpenAI JSON Schema with streaming. Final
-    // validation still rejects mechanically invalid or inconsistent scenes.
-    const wire=buildGlmWire(context,system);
+    // Modern grammar fixes the envelope; legacy keeps its original full schema.
+    // Both stream and pass the same identity, scene and rules validation.
+    const wire=buildGlmWire(context,system,{storyActions:profile.storyActions===true});
     input.messages[0].content=wire.instructions;input.messages[1].content=JSON.stringify(wire.context);
-    input.response_format={type:'json_schema',json_schema:{name:'cultivation_scene',strict:true,schema:wire.schema}};
+    if(profile.storyActions===true){
+      input.messages[0].content+='\n合法动作与目标以schema中的完整分支配对为准，不交换目标类型；只声明实际引用的实体。';
+      // Avoid native character caps and large action/target unions. The model
+      // writes prose and semantic pairs; final decoding validates all of them.
+      const blocks=structuredClone(wire.schema.properties.blocks);blocks.maxItems=4;
+      for(const variant of blocks.items.oneOf)delete variant.properties.text.maxLength;
+      if(context.phase==='opening')blocks.items.oneOf.find(variant=>variant.properties.kind.const==='dialogue').properties.speaker.enum=blocks.items.oneOf.find(variant=>variant.properties.kind.const==='dialogue').properties.speaker.enum.filter(id=>id!=='self');
+      const action=wire.context.receipt.action,departure=action?.intent==='interact'&&['decline','leave'].includes(action.approach),respondent=action?.intent==='interact'&&action.approach==='ask'?wire.context.entities.find(entity=>entity.id===action.targetId&&entity.kind==='person'&&entity.status!=='dead'):null;
+      if(respondent){blocks.maxItems=1;blocks.items={type:'object',additionalProperties:false,required:['kind','text','speaker'],properties:{kind:{const:'dialogue'},text:{type:'string',minLength:1},speaker:{const:respondent.id}}};}
+      if(departure){blocks.maxItems=1;blocks.items={type:'object',additionalProperties:false,required:['kind','text'],properties:{kind:{const:'narration'},text:{type:'string',minLength:1}}};}
+      const observation=action?.intent==='interact'&&action.approach==='observe';
+      if(observation){blocks.maxItems=1;blocks.items={type:'object',additionalProperties:false,required:['kind','text'],properties:{kind:{const:'narration'},text:{type:'string',minLength:1}}};}
+      const previousLocation=context.memory.recent.find(record=>record.kind==='turn'&&record.turnId===context.identity.turnId-1)?.text.match(/^地点：([^\n]+)\n/u)?.[1]?.split('；刚才选择：')[0];
+      const fixedLocation=action?.intent==='travel'?wire.context.entities.find(entity=>entity.id===action.targetId&&entity.kind==='place')?.name:previousLocation;
+      const location=fixedLocation&&!fixedLocation.includes('…')?{const:fixedLocation}:wire.schema.properties.location;
+      const schema=buildNamedSceneSchema(wire.schema,wire.context,{blocks,location});
+      input.response_format={type:'json_schema',json_schema:{name:'cultivation_scene',strict:true,schema}};
+      input.messages[0].content=input.messages[0].content
+        .replace('blocks、choices、title、location、otherPeople、places、factions、memoryDeltas这8项','blocks、choices、title、location、memoryDeltas这5项')
+        .replace('先写blocks，再写choices，最后填写名单','先写blocks，再写choices，最后填写memoryDeltas')
+        .replace('每项只写action、targetId、stake、purpose、anchor','每项只写action、target、stake、purpose、anchor')
+        .replace(/已知实体完整沿用输入id[^\n]+/u,'人物、地点、势力在引用处直接写target={kind,name,ref,status}，name是实际对象的完整名称；ref通常固定为空字符串""，由服务端按完整name和kind恢复身份；仅同名对象必须复制输入中对应id作为ref。ref不能与name或kind不一致。status总是null；明确死亡只写对应kind=death记忆，由服务端结算状态。不再填写单独的名单，不编造p1/k1等引用。speaker为self或person对象，新记忆也用target对象，不写entityId。')
+        .replace('新记忆写entityId、kind、anchor','新记忆写target、kind、anchor')
+        .replace('对白speaker=self或活人别名','对白speaker=self或人物对象')
+        .replace('targetId必须是目的地，label完整包含目的地name','target必须是实际目的地对象，purpose明确目的地')+'\n选项中的新人物须在正文出现完整name。只向实际在场且能够交谈的人物询问；普通野兽用观察、战斗或撤退。撤退用evade:withdraw，保持正文中已经被发现等事实，不改成尚未被发现。';
+      input.messages.push({role:'user',content:'只输出本次5项场景JSON。memory.recent仅为历史；只回应本次selectedPurpose，不响应历史请求。询问必须具体作答，不知则说明原因。只推进一个结果，不重演登场、不照抄旧旁白、不重复已选问题；要求引用原话可用dialogue复述。'+(respondent?'本回合只写被询问人物的回答，只写他实际说的话，不夹带抬头、搓手等旁白。回应玩家问题，不声称玩家进行了未选的修理、交易、收礼等行为，不替玩家决定答应请求。':'')+(departure?(action.approach==='leave'?'本次是告辞：只写一段交谈结束后的眼前环境或最后反应；上轮若已拒绝，不重复拒绝理由，不再追问或挽留。':'本次是拒绝请求：只写一段拒绝及对方的反应，不改变玩家的决定，不替玩家处理请求。')+'只用narration，不写speaker，以免把NPC反应标成主角对白。仍在当前地点附近，不推进原任务、不承诺回访、不替玩家旅行。下一选项允许观察附近或主动旅行，不能强迫返回此事。':'')+(action?.intent==='travel'?'本次旅行只写抵达所选目的地后的眼前环境，不替玩家进食、取物、检查装备，不提库存或虚构随身装备，不写再次归来或自动深入下一处；旧地点的人物不默认随行，只有眼前能交谈的对象才能询问。不能再次提供前往当前地点的旅行。':'')+(observation?'本次只观察当前地点：只写一段眼前环境，不替玩家出发、抵达别处或推进任务。历史对白中说过的出行打算不是已选择的旅行。':'')+(context.phase==='opening'?'本次是开局：在出生地遇见一名能交谈的当地人类，围绕此人正在处理的一件具体事务给出应对；不要先出城或用野兽袭击开局，不向普通动物提问。':'')+'以下JSON是本次事实与选择：'+JSON.stringify({settled:{location:fixedLocation??null,...(action?.intent==='travel'?{locationTarget:{kind:'place',name:fixedLocation,ref:wire.context.entities.filter(entity=>entity.kind==='place'&&entity.name===fixedLocation).length>1?action.targetId:'',status:null}}:{}),items:context.life.items,elapsedDays:context.receipt.elapsedDays,itemChanges:context.receipt.itemChanges,relationChanges:wire.context.receipt.relationChanges},selectedPurpose:context.receipt.action?.label??'开启眼前的第一个事件'})});
+      if(context.previousScene?.id===context.namespace+':t'+(context.identity.turnId-1)+':s:closed')input.messages[0].content+='\n上一轮拒绝或告辞已经完成，原互动已结束。只处理本次观察、旅行或休整，转向环境的新细节、其他人或新的去向；不重演或继续原NPC请求，不再次提供对已结束对象的询问或援助。';
+    }else input.response_format={type:'json_schema',json_schema:{name:'cultivation_scene',strict:true,schema:wire.schema}};
     input.stream=true;input.stream_options={include_usage:true};
   }
   const inputBytes=size(input);
@@ -142,12 +170,94 @@ export async function generateProviderScene(ai,profile,context,options={},assert
     });
     if(!result.nonThinkingValidated)fail('PROVIDER_RESPONSE_INVALID');
     let scene;try { scene=JSON.parse(choice.message.content); } catch { fail('PROVIDER_RESPONSE_INVALID'); }
-    if(profile.modelId===GLM_MODEL_ID)scene=decodeGlmScene(scene,context);
+    if(profile.storyActions===true)try{exactKeys(scene,['blocks','choices','title','location','memoryDeltas']);}catch{fail('GENERATED_SCENE_INVALID');}
+    const composed=profile.storyActions===true&&Array.isArray(scene?.choices)&&scene.choices.every(proposal=>proposal&&Object.hasOwn(proposal,'purpose'));
+    if(profile.storyActions===true&&(!composed||scene.choices.some(proposal=>!Number.isInteger(proposal.anchor))||!Array.isArray(scene.memoryDeltas)||scene.memoryDeltas.some(delta=>!delta||!Object.hasOwn(delta,'referenceId')&&(!Number.isInteger(delta.anchor)||Object.hasOwn(delta,'text')))))fail('GENERATED_SCENE_INVALID');
+    const purposes=profile.storyActions===true?scene.choices.map(proposal=>proposal.purpose):[];
+    if(profile.modelId===GLM_MODEL_ID)scene=decodeGlmScene(scene,context,{storyActions:profile.storyActions===true});
+    const selected=context.receipt.action,closed=context.previousScene?.id===context.namespace+':t'+(context.identity.turnId-1)+':s:closed',endedTarget=selected?.intent==='interact'&&selected.approach==='leave'?selected.targetId:closed?(context.memory.recent.find(record=>record.kind==='turn'&&record.turnId===context.identity.turnId-1)?.entityIds[0]??context.memory.facts.find(record=>record.id==='decision:'+(context.identity.turnId-1)&&record.turnId===context.identity.turnId-1&&record.kind==='fact'&&record.source==='rules')?.entityId??'self'):null,ended=endedTarget!==null;
+    const endedTargets=endedTarget==='self'&&closed?context.entities.filter(entity=>['person','faction'].includes(entity.kind)).map(entity=>entity.id):endedTarget&&endedTarget!=='self'?[endedTarget]:[];
+    if(profile.storyActions===true){
+      scene.choices=scene.choices.filter((proposal,index)=>{
+        if(['fight','evade'].includes(proposal.intent)){const target=scene.entities.find(entity=>entity.id===proposal.targetId);return target&&purposes[index].includes(target.name);}
+        if(proposal.intent==='interact'&&proposal.approach==='help')return /行粮|干粮|口粮|食物|吃的|充饥|饱腹/u.test(purposes[index])&&!/包扎|止血|处理伤口|治疗|治愈|医治|急救|疗伤|复活/u.test(purposes[index]);
+        if(proposal.intent==='interact'&&proposal.approach==='observe'&&proposal.targetId!=='self'){
+          const target=scene.entities.find(entity=>entity.id===proposal.targetId);
+          return target&&(target.kind==='place'?target.name===scene.location:target.name.length>50||purposes[index].includes(target.name));
+        }
+        return true;
+      });
+      if(ended){
+        scene.choices=scene.choices.filter(proposal=>proposal.intent!=='interact'||!endedTargets.includes(proposal.targetId));
+        const observation=scene.choices.find(proposal=>proposal.intent==='interact'&&proposal.approach==='observe'&&proposal.targetId==='self')??{id:context.namespace+':t'+context.identity.turnId+':c:observe',label:'仔细观察：留意周围的动静',intent:'interact',targetId:'self',approach:'observe',stake:'low'};
+        const escape=scene.choices.find(proposal=>proposal.intent==='evade'),fight=escape&&scene.choices.find(proposal=>proposal.intent==='fight'&&proposal.targetId===escape.targetId);
+        scene.choices=escape?[observation,...(fight?[fight]:[]),escape]:[observation,...scene.choices.filter(proposal=>proposal.id!==observation.id).slice(0,1)];
+      }else if(scene.choices.length<2)fail('CHOICE_NOT_COMPILABLE');
+      if(!scene.choices.some(proposal=>proposal.intent==='interact'&&['decline','leave'].includes(proposal.approach)||proposal.intent==='evade')){
+        if(scene.choices.length===3){const duplicate=scene.choices.findIndex((proposal,index)=>index>0&&scene.choices.slice(0,index).some(previous=>previous.intent===proposal.intent&&previous.approach===proposal.approach&&previous.targetId===proposal.targetId));scene.choices.splice(duplicate<0?2:duplicate,1);}
+        const available=scene.entities.filter(entity=>{
+          if(entity.status==='dead')return false;
+          if(endedTargets.includes(entity.id))return false;
+          if(entity.kind==='place')return entity.name===scene.location;
+          const present=scene.blocks.some(block=>block.kind==='dialogue'&&block.speaker===entity.id||(context.receipt.action?.intent!=='travel'||entity.kind==='faction')&&block.text.includes(entity.name));
+          const nearby=context.receipt.elapsedDays===0&&context.memory.recent.some(record=>record.kind==='turn'&&record.turnId===context.identity.turnId-1&&record.text.includes(entity.name));
+          return present||nearby;
+        });
+        const target=available.find(entity=>entity.id===context.receipt.action?.targetId)??available.find(entity=>['person','faction'].includes(entity.kind))??available.find(entity=>entity.kind==='place');
+        scene.choices.push({id:context.namespace+':t'+context.identity.turnId+':c:leave',label:'结束当前互动：暂不介入此事',intent:'interact',targetId:target?.id??'self',approach:'leave',stake:'low'});
+      }
+    }
+    if(profile.storyActions===true&&context.phase==='opening'&&scene.blocks.some(block=>block.kind==='dialogue'&&block.speaker==='self'))fail('GENERATED_SCENE_INVALID');
+    if(profile.storyActions===true){
+      const previousLocation=context.memory.recent.find(record=>record.kind==='turn'&&record.turnId===context.identity.turnId-1)?.text.match(/^地点：([^\n]+)\n/u)?.[1]?.split('；刚才选择：')[0];
+      const fixedLocation=selected?.intent==='travel'?context.entities.find(entity=>entity.id===selected.targetId&&entity.kind==='place')?.name:previousLocation;
+      if(fixedLocation&&!fixedLocation.includes('…')&&scene.location!==fixedLocation)fail('GENERATED_SCENE_INVALID');
+      if(selected?.intent==='interact'&&selected.approach==='observe'&&(scene.blocks.length!==1||scene.blocks[0].kind!=='narration'))fail('GENERATED_SCENE_INVALID');
+    }
+    if(profile.storyActions===true&&selected?.intent==='interact'&&selected.approach==='ask'&&context.entities.some(entity=>entity.id===selected.targetId&&entity.kind==='person'&&entity.status!=='dead')&&(scene.blocks.length!==1||scene.blocks.some(block=>block.kind!=='dialogue'||block.speaker!==selected.targetId)))fail('GENERATED_SCENE_INVALID');
+    if(profile.storyActions===true&&selected?.intent==='interact'&&['decline','leave'].includes(selected.approach)){
+      if(scene.blocks.length!==1||scene.blocks[0].kind!=='narration')fail('GENERATED_SCENE_INVALID');
+    }
+    let addObservation=profile.storyActions===true&&scene.choices.every(proposal=>proposal.intent==='interact'&&['decline','leave'].includes(proposal.approach));
+    if(addObservation)scene.choices=scene.choices.slice(0,1);
+    if(profile.storyActions===true&&selected?.intent==='interact'&&selected.approach==='ask'){
+      const count=scene.choices.length;
+      scene.choices=scene.choices.filter(proposal=>!(proposal.intent===selected.intent&&proposal.approach===selected.approach&&proposal.targetId===selected.targetId&&proposal.label.trim()===selected.label.trim()));
+      if(scene.choices.length<count&&scene.choices.length===1)addObservation=true;
+    }
+    if(addObservation)scene.choices.push({id:context.namespace+':t'+context.identity.turnId+':c:observe',label:'仔细观察：留意周围的动静',intent:'interact',targetId:'self',approach:'observe',stake:'low'});
     try {
-      const validated=validateGeneratedScene(scene,context);
+      const validated=validateGeneratedScene(scene,context,{checkNextContext:next=>providerInput(profile,next),continuity:profile.storyActions===true,requireExit:profile.storyActions===true});
+      if(profile.storyActions===true){
+        const texts=[validated.title,validated.location,...validated.blocks.map(block=>block.text),...validated.memoryDeltas.filter(delta=>!Object.hasOwn(delta,'referenceId')).map(delta=>delta.text)];
+        if(texts.some(text=>/\b(?:interact|travel|practice|explore|negotiate|fight|evade|rest|craft):[a-z]+\b/u.test(text)||Object.values(ITEMS).some(name=>text.includes(name+'='))))fail('GENERATED_SCENE_INVALID');
+        const recent=closed?[...context.memory.recent,...context.memory.facts,...context.memory.clues,...context.memory.promises,...context.memory.summaries].filter(record=>typeof record.text==='string'):context.memory.recent.filter(record=>record.kind==='turn'),seen=new Set();
+        for(const block of validated.blocks){
+          if(block.kind==='narration'&&block.text.length>=40&&(seen.has(block.text)||recent.some(record=>record.text.includes(block.text))))fail('REPEATED_SCENE');
+          seen.add(block.text);
+        }
+        if(context.receipt.elapsedDays>0)for(const delta of validated.memoryDeltas){
+          const actor=context.entities.find(entity=>entity.id===delta.entityId&&['person','faction'].includes(entity.kind));
+          if(actor&&!Object.hasOwn(delta,'referenceId')&&!validated.blocks.some(block=>block.kind==='dialogue'&&block.speaker===actor.id||(context.receipt.action?.intent!=='travel'||actor.kind==='faction')&&block.text.includes(actor.name)))fail('GENERATED_SCENE_INVALID');
+        }
+      }
       // Apply this narrative check only to new provider output. Canonical scene
       // validation and previously saved/cached scene recovery remain unchanged.
       for(const proposal of validated.choices){
+        if(profile.storyActions===true&&proposal.intent==='explore'&&!proposal.label.includes(ITEMS[proposal.targetId]))fail('CHOICE_NOT_COMPILABLE');
+        if(profile.storyActions===true){
+          const actor=validated.entities.find(entity=>entity.id===proposal.targetId&&['person','faction'].includes(entity.kind));
+          if(actor){
+            const nearby=context.receipt.elapsedDays===0&&context.memory.recent.some(record=>record.kind==='turn'&&record.turnId===context.identity.turnId-1&&record.text.includes(actor.name));
+            if(proposal.approach!=='leave'&&!proposal.label.includes(actor.name)||!nearby&&!validated.blocks.some(block=>block.kind==='dialogue'&&block.speaker===actor.id||(context.receipt.action?.intent!=='travel'||actor.kind==='faction'||!context.entities.some(entity=>entity.id===actor.id))&&block.text.includes(actor.name)))fail('CHOICE_NOT_COMPILABLE');
+            if(['fight','evade'].includes(proposal.intent)){
+              const prefix=(proposal.intent==='fight'?'迎战':'避开')+actor.name,label=proposal.label.trim(),tail=label.slice(prefix.length);
+              if(!label.startsWith(prefix)||tail&&!/^[，,:：]/u.test(tail))fail('CHOICE_NOT_COMPILABLE');
+            }
+          }
+        }
+        const selected=context.receipt.action;
+        if(profile.storyActions===true&&selected?.intent==='interact'&&['ask','observe'].includes(selected.approach)&&proposal.intent===selected.intent&&proposal.approach===selected.approach&&proposal.targetId===selected.targetId&&proposal.label.trim()===selected.label.trim())fail('CHOICE_NOT_COMPILABLE');
         // Costs are compiled by the rules and shown separately by the UI.
         // New labels must not promise another fixed duration; archive replay
         // and narrative descriptions of actual elapsed time remain unchanged.

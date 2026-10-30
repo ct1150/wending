@@ -124,5 +124,5 @@ test('native v1 database upgrades additively without changing active run, pendin
   const upgraded=await open('native-v1-upgrade');
   return {before,after:await dump(upgraded),loaded,restored:await upgraded.load(),version:upgraded.db.version,selection:await upgraded.readStoryRecords(loaded.state.runId,{entityIds:[entity.id]})};
  });
- assert.equal(result.version,2);assert.deepEqual(result.after,result.before);assert.deepEqual(result.restored,result.loaded);assert.equal(result.selection.openTotal,1);assert.equal(result.selection.records.filter(row=>row.kind==='promise'&&row.status==='open').length,1);
+ assert.equal(result.version,3);assert.deepEqual(result.after,result.before);assert.deepEqual(result.restored,result.loaded);assert.equal(result.selection.openTotal,1);assert.equal(result.selection.records.filter(row=>row.kind==='promise'&&row.status==='open').length,1);
 });

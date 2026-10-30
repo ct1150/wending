@@ -1,0 +1,2972 @@
+{
+  "sourceCommit": "f8610b8fb91638c768c658182e78666cccae566c",
+  "version": "4b4339f5-3922-40af-a0f0-c449a4824996",
+  "recordedAt": "2026-10-30T16:07:50.556Z",
+  "continuedFrom": null,
+  "records": [
+    {
+      "caseId": "opening",
+      "start": 1200.3999999985099,
+      "timeline": [
+        {
+          "atMs": 2506,
+          "chars": 1
+        },
+        {
+          "atMs": 2595,
+          "chars": 5
+        },
+        {
+          "atMs": 2690,
+          "chars": 6
+        },
+        {
+          "atMs": 2749,
+          "chars": 8
+        },
+        {
+          "atMs": 2816,
+          "chars": 9
+        },
+        {
+          "atMs": 2856,
+          "chars": 11
+        },
+        {
+          "atMs": 2919,
+          "chars": 14
+        },
+        {
+          "atMs": 3200,
+          "chars": 15
+        },
+        {
+          "atMs": 3227,
+          "chars": 18
+        },
+        {
+          "atMs": 3290,
+          "chars": 20
+        },
+        {
+          "atMs": 3384,
+          "chars": 24
+        },
+        {
+          "atMs": 3478,
+          "chars": 26
+        },
+        {
+          "atMs": 3554,
+          "chars": 29
+        },
+        {
+          "atMs": 3647,
+          "chars": 30
+        },
+        {
+          "atMs": 3710,
+          "chars": 32
+        },
+        {
+          "atMs": 3787,
+          "chars": 33
+        },
+        {
+          "atMs": 3845,
+          "chars": 35
+        },
+        {
+          "atMs": 3937,
+          "chars": 36
+        },
+        {
+          "atMs": 3996,
+          "chars": 37
+        },
+        {
+          "atMs": 4059,
+          "chars": 38
+        },
+        {
+          "atMs": 4105,
+          "chars": 41
+        },
+        {
+          "atMs": 4166,
+          "chars": 44
+        },
+        {
+          "atMs": 4272,
+          "chars": 45
+        },
+        {
+          "atMs": 4319,
+          "chars": 46
+        },
+        {
+          "atMs": 4365,
+          "chars": 50
+        },
+        {
+          "atMs": 4471,
+          "chars": 52
+        },
+        {
+          "atMs": 4550,
+          "chars": 53
+        },
+        {
+          "atMs": 4615,
+          "chars": 54
+        },
+        {
+          "atMs": 4677,
+          "chars": 55
+        },
+        {
+          "atMs": 4736,
+          "chars": 57
+        },
+        {
+          "atMs": 4799,
+          "chars": 58
+        },
+        {
+          "atMs": 4845,
+          "chars": 62
+        },
+        {
+          "atMs": 4953,
+          "chars": 64
+        },
+        {
+          "atMs": 5062,
+          "chars": 67
+        },
+        {
+          "atMs": 5167,
+          "chars": 68
+        },
+        {
+          "atMs": 5240,
+          "chars": 70
+        },
+        {
+          "atMs": 5303,
+          "chars": 74
+        },
+        {
+          "atMs": 5397,
+          "chars": 75
+        },
+        {
+          "atMs": 5458,
+          "chars": 77
+        },
+        {
+          "atMs": 5505,
+          "chars": 78
+        },
+        {
+          "atMs": 5568,
+          "chars": 79
+        },
+        {
+          "atMs": 5628,
+          "chars": 80
+        },
+        {
+          "atMs": 5689,
+          "chars": 81
+        },
+        {
+          "atMs": 5751,
+          "chars": 82
+        },
+        {
+          "atMs": 5812,
+          "chars": 84
+        },
+        {
+          "atMs": 5919,
+          "chars": 85
+        },
+        {
+          "atMs": 5965,
+          "chars": 86
+        },
+        {
+          "atMs": 6026,
+          "chars": 88
+        },
+        {
+          "atMs": 6133,
+          "chars": 89
+        },
+        {
+          "atMs": 6192,
+          "chars": 91
+        },
+        {
+          "atMs": 6252,
+          "chars": 92
+        },
+        {
+          "atMs": 6299,
+          "chars": 96
+        },
+        {
+          "atMs": 6362,
+          "chars": 97
+        },
+        {
+          "atMs": 6409,
+          "chars": 100
+        },
+        {
+          "atMs": 6499,
+          "chars": 105
+        },
+        {
+          "atMs": 6593,
+          "chars": 107
+        },
+        {
+          "atMs": 6655,
+          "chars": 110
+        },
+        {
+          "atMs": 6764,
+          "chars": 113
+        },
+        {
+          "atMs": 6807,
+          "chars": 114
+        }
+      ],
+      "choicesEnabledDuringPreview": false,
+      "lastText": "你站在自家破旧的木屋前，手里攥着一把卷了刃的猎刀。村口的老槐树下，王大伯正蹲在地上，手里摆弄着一只被猎夹夹断腿的黄鼠狼，嘴里念叨着晦气话。他抬头看见你，把那血淋淋的畜生往地上一扔，抹了把脸上的灰，问你有没有看见什么不干净的东西。",
+      "doneMs": 12907,
+      "result": {
+        "protocolVersion": 1,
+        "status": "ready",
+        "requestId": "14481a5d-ced5-487a-9eb1-2d553b95180d",
+        "attemptId": "9d7bc40b-1f75-44cd-9b9b-afbbc2fe992f",
+        "sessionRef": "sess_d86f3e815406efcfe6363a1cd3a614cd",
+        "errorCode": null,
+        "retry": null,
+        "scene": {
+          "id": "r:be5aee0d0cc6999a:t1:s:scene",
+          "title": "猎户的晦气事",
+          "location": "山村猎户家",
+          "entities": [
+            {
+              "id": "r:be5aee0d0cc6999a:t1:e:person_1",
+              "name": "王大伯",
+              "kind": "person"
+            }
+          ],
+          "blocks": [
+            {
+              "kind": "narration",
+              "text": "你站在自家破旧的木屋前，手里攥着一把卷了刃的猎刀。村口的老槐树下，王大伯正蹲在地上，手里摆弄着一只被猎夹夹断腿的黄鼠狼，嘴里念叨着晦气话。他抬头看见你，把那血淋淋的畜生往地上一扔，抹了把脸上的灰，问你有没有看见什么不干净的东西。"
+            }
+          ],
+          "choices": [
+            {
+              "id": "r:be5aee0d0cc6999a:t1:c:a",
+              "label": "询问王大伯：询问黄鼠狼腿断的具体位置和血迹流向",
+              "intent": "interact",
+              "targetId": "r:be5aee0d0cc6999a:t1:e:person_1",
+              "stake": "low",
+              "approach": "ask"
+            },
+            {
+              "id": "r:be5aee0d0cc6999a:t1:c:c",
+              "label": "婉拒王大伯：拒绝回答并转身回屋",
+              "intent": "interact",
+              "targetId": "r:be5aee0d0cc6999a:t1:e:person_1",
+              "stake": "low",
+              "approach": "decline"
+            }
+          ],
+          "memoryDeltas": [
+            {
+              "entityId": "r:be5aee0d0cc6999a:t1:e:person_1",
+              "kind": "clue",
+              "text": "你站在自家破旧的木屋前，手里攥着一把卷了刃的猎刀。村口的老槐树下，王大伯正蹲在地上，手里摆弄着一只被猎夹夹断腿的黄鼠狼，嘴里念叨着晦气话。他抬头看见你，把那血淋淋的畜生往地上一扔，抹了把脸上的灰，问你有没有看见什么不干净的东西。",
+              "status": "open"
+            }
+          ]
+        }
+      },
+      "request": {
+        "context": {
+          "schemaVersion": 1,
+          "phase": "opening",
+          "identity": {
+            "runId": "2fc58ac0-c011-423c-9cde-2595b15bb929",
+            "turnId": 1,
+            "baseRevision": 0,
+            "stateHash": "9f3732f893643e6a694a45f76536192a69d6fd792e5f64e19045c3eba01c1cc7",
+            "choiceId": null,
+            "rulesVersion": 1,
+            "promptVersion": 1,
+            "requestId": "14481a5d-ced5-487a-9eb1-2d553b95180d"
+          },
+          "namespace": "r:be5aee0d0cc6999a",
+          "receipt": {
+            "kind": "opening",
+            "choiceId": null,
+            "action": null,
+            "elapsedDays": 0,
+            "itemChanges": {},
+            "relationChanges": {},
+            "random": {
+              "before": 2507699840,
+              "after": 2507699840,
+              "roll": null
+            },
+            "before": {
+              "ageDays": 5760,
+              "realm": "mortal",
+              "cultivation": 0,
+              "injury": 0
+            },
+            "after": {
+              "ageDays": 5760,
+              "realm": "mortal",
+              "cultivation": 0,
+              "injury": 0
+            },
+            "death": null,
+            "birth": {
+              "originId": "village",
+              "talentIds": [
+                "fortune-debt",
+                "keen-memory"
+              ],
+              "attributes": {
+                "constitution": 3,
+                "insight": 4,
+                "fortune": 5
+              }
+            }
+          },
+          "life": {
+            "name": "云归",
+            "ageDays": 5760,
+            "lifeLimit": 80,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0,
+            "items": {
+              "supplies": 3,
+              "stones": 0
+            },
+            "relations": {},
+            "birth": {
+              "originId": "village",
+              "talentIds": [
+                "fortune-debt",
+                "keen-memory"
+              ],
+              "attributes": {
+                "constitution": 3,
+                "insight": 4,
+                "fortune": 5
+              }
+            }
+          },
+          "entities": [],
+          "memory": {
+            "facts": [],
+            "promises": [],
+            "clues": [],
+            "recent": [],
+            "summaries": []
+          },
+          "references": [],
+          "previousScene": null,
+          "relationshipVersion": 1,
+          "relationships": {},
+          "coverage": {
+            "policy": "relevance-v1",
+            "openTotal": 0,
+            "openIncluded": 0,
+            "openOmitted": 0
+          }
+        },
+        "attempt": {
+          "id": "9d7bc40b-1f75-44cd-9b9b-afbbc2fe992f",
+          "sessionRef": "sess_d86f3e815406efcfe6363a1cd3a614cd",
+          "retryOf": null
+        },
+        "storyActions": true
+      },
+      "decision": null,
+      "choices": [
+        {
+          "id": "r:be5aee0d0cc6999a:t1:c:a",
+          "enabled": true,
+          "label": "询问王大伯：询问黄鼠狼腿断的具体位置和血迹流向",
+          "cost": "0日"
+        },
+        {
+          "id": "r:be5aee0d0cc6999a:t1:c:c",
+          "enabled": true,
+          "label": "婉拒王大伯：拒绝回答并转身回屋",
+          "cost": "0日"
+        }
+      ],
+      "traces": [
+        {
+          "model": "@cf/zai-org/glm-4.7-flash",
+          "inputHash": "947d7a061be8d44e6f3cb3f0e367ab3f6430526b539828b1df7c3824ddaa13fd",
+          "inputBytes": 14790,
+          "startedAt": 1793376274571,
+          "bindingReturnedAt": 1793376274984,
+          "liveRawBytes": 125185,
+          "captureComplete": true,
+          "response": {
+            "model": "@cf/zai-org/glm-4.7-flash",
+            "choices": [
+              {
+                "finish_reason": "stop",
+                "message": {
+                  "content": "{\n  \"blocks\": [\n    {\n      \"kind\": \"narration\",\n      \"text\": \"你站在自家破旧的木屋前，手里攥着一把卷了刃的猎刀。村口的老槐树下，王大伯正蹲在地上，手里摆弄着一只被猎夹夹断腿的黄鼠狼，嘴里念叨着晦气话。他抬头看见你，把那血淋淋的畜生往地上一扔，抹了把脸上的灰，问你有没有看见什么不干净的东西。\"\n    }\n  ],\n  \"choices\": [\n    {\n      \"action\": \"interact:ask\",\n      \"target\": {\n        \"kind\": \"person\",\n        \"name\": \"王大伯\",\n        \"ref\": \"\",\n        \"status\": null\n      },\n      \"stake\": \"low\",\n      \"purpose\": \"询问黄鼠狼腿断的具体位置和血迹流向\",\n      \"anchor\": 0\n    },\n    {\n      \"action\": \"interact:help\",\n      \"target\": {\n        \"kind\": \"person\",\n        \"name\": \"王大伯\",\n        \"ref\": \"\",\n        \"status\": null\n      },\n      \"stake\": \"low\",\n      \"purpose\": \"拿出1行粮援助王大伯处理伤口\",\n      \"anchor\": 0\n    },\n    {\n      \"action\": \"interact:decline\",\n      \"target\": {\n        \"kind\": \"person\",\n        \"name\": \"王大伯\",\n        \"ref\": \"\",\n        \"status\": null\n      },\n      \"stake\": \"low\",\n      \"purpose\": \"拒绝回答并转身回屋\",\n      \"anchor\": 0\n    }\n  ],\n  \"title\": \"猎户的晦气事\",\n  \"location\": \"山村猎户家\",\n  \"memoryDeltas\": [\n    {\n      \"target\": {\n        \"kind\": \"person\",\n        \"name\": \"王大伯\",\n        \"ref\": \"\",\n        \"status\": null\n      },\n      \"kind\": \"clue\",\n      \"anchor\": 0\n   ,\n      \"status\": \"open\"\n    }\n  ]\n}",
+                  "reasoning_content": ""
+                }
+              }
+            ],
+            "usage": {
+              "prompt_tokens": 1941,
+              "completion_tokens": 454,
+              "total_tokens": 2395,
+              "prompt_tokens_details": {
+                "cached_tokens": 0
+              },
+              "neurons": 27.201100000000196
+            }
+          },
+          "rawSseBytes": 125185
+        }
+      ],
+      "revision": 1,
+      "pending": false,
+      "state": {
+        "relationshipVersion": 1,
+        "version": 5,
+        "mode": "cultivation",
+        "contentVersion": 4,
+        "rulesVersion": 1,
+        "promptVersion": 1,
+        "runId": "2fc58ac0-c011-423c-9cde-2595b15bb929",
+        "revision": 1,
+        "turnId": 1,
+        "phase": "active",
+        "rng": 2507699840,
+        "life": {
+          "name": "云归",
+          "ageDays": 5760,
+          "lifeLimit": 80,
+          "realm": "mortal",
+          "cultivation": 0,
+          "injury": 0,
+          "items": {
+            "supplies": 3,
+            "stones": 0
+          },
+          "relations": {},
+          "birth": {
+            "originId": "village",
+            "talentIds": [
+              "fortune-debt",
+              "keen-memory"
+            ],
+            "attributes": {
+              "constitution": 3,
+              "insight": 4,
+              "fortune": 5
+            }
+          }
+        },
+        "birthReceipt": {
+          "kind": "opening",
+          "choiceId": null,
+          "action": null,
+          "elapsedDays": 0,
+          "itemChanges": {},
+          "relationChanges": {},
+          "random": {
+            "before": 2507699840,
+            "after": 2507699840,
+            "roll": null
+          },
+          "before": {
+            "ageDays": 5760,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "after": {
+            "ageDays": 5760,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "death": null,
+          "birth": {
+            "originId": "village",
+            "talentIds": [
+              "fortune-debt",
+              "keen-memory"
+            ],
+            "attributes": {
+              "constitution": 3,
+              "insight": 4,
+              "fortune": 5
+            }
+          }
+        },
+        "currentScene": {
+          "id": "r:be5aee0d0cc6999a:t1:s:scene",
+          "title": "猎户的晦气事",
+          "location": "山村猎户家",
+          "entities": [
+            {
+              "id": "r:be5aee0d0cc6999a:t1:e:person_1",
+              "name": "王大伯",
+              "kind": "person"
+            }
+          ],
+          "blocks": [
+            {
+              "kind": "narration",
+              "text": "你站在自家破旧的木屋前，手里攥着一把卷了刃的猎刀。村口的老槐树下，王大伯正蹲在地上，手里摆弄着一只被猎夹夹断腿的黄鼠狼，嘴里念叨着晦气话。他抬头看见你，把那血淋淋的畜生往地上一扔，抹了把脸上的灰，问你有没有看见什么不干净的东西。"
+            }
+          ],
+          "choices": [
+            {
+              "id": "r:be5aee0d0cc6999a:t1:c:a",
+              "label": "询问王大伯：询问黄鼠狼腿断的具体位置和血迹流向",
+              "intent": "interact",
+              "targetId": "r:be5aee0d0cc6999a:t1:e:person_1",
+              "stake": "low",
+              "approach": "ask"
+            },
+            {
+              "id": "r:be5aee0d0cc6999a:t1:c:c",
+              "label": "婉拒王大伯：拒绝回答并转身回屋",
+              "intent": "interact",
+              "targetId": "r:be5aee0d0cc6999a:t1:e:person_1",
+              "stake": "low",
+              "approach": "decline"
+            }
+          ],
+          "memoryDeltas": [
+            {
+              "entityId": "r:be5aee0d0cc6999a:t1:e:person_1",
+              "kind": "clue",
+              "text": "你站在自家破旧的木屋前，手里攥着一把卷了刃的猎刀。村口的老槐树下，王大伯正蹲在地上，手里摆弄着一只被猎夹夹断腿的黄鼠狼，嘴里念叨着晦气话。他抬头看见你，把那血淋淋的畜生往地上一扔，抹了把脸上的灰，问你有没有看见什么不干净的东西。",
+              "status": "open"
+            }
+          ]
+        },
+        "lastReceipt": {
+          "kind": "opening",
+          "choiceId": null,
+          "action": null,
+          "elapsedDays": 0,
+          "itemChanges": {},
+          "relationChanges": {},
+          "random": {
+            "before": 2507699840,
+            "after": 2507699840,
+            "roll": null
+          },
+          "before": {
+            "ageDays": 5760,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "after": {
+            "ageDays": 5760,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "death": null,
+          "birth": {
+            "originId": "village",
+            "talentIds": [
+              "fortune-debt",
+              "keen-memory"
+            ],
+            "attributes": {
+              "constitution": 3,
+              "insight": 4,
+              "fortune": 5
+            }
+          }
+        },
+        "relatedEntities": [
+          {
+            "id": "r:be5aee0d0cc6999a:t1:e:person_1",
+            "name": "王大伯",
+            "kind": "person"
+          }
+        ],
+        "archiveCursor": 0
+      },
+      "posts": 1,
+      "latency": {
+        "usable": true,
+        "errorCode": null,
+        "firstAnyPreviewMs": 2506,
+        "firstReadableMs": 3290,
+        "completionMs": 12907,
+        "narrativeChars": 114,
+        "maxPreviewGapMs": 281,
+        "readingFinishEstimateMs": 22290,
+        "readingStallEstimateMs": 0,
+        "optionsWaitEstimateMs": 0,
+        "prefetchWorthEvaluating": true,
+        "assumptions": {
+          "readingCharsPerSecond": 6,
+          "readableChars": 20,
+          "targetWaitMs": 2000
+        }
+      }
+    },
+    {
+      "caseId": "choice-1",
+      "start": 38156,
+      "timeline": [
+        {
+          "atMs": 23961,
+          "chars": 2
+        },
+        {
+          "atMs": 24054,
+          "chars": 4
+        },
+        {
+          "atMs": 24271,
+          "chars": 6
+        },
+        {
+          "atMs": 24396,
+          "chars": 10
+        },
+        {
+          "atMs": 24505,
+          "chars": 11
+        },
+        {
+          "atMs": 24565,
+          "chars": 12
+        },
+        {
+          "atMs": 24625,
+          "chars": 15
+        },
+        {
+          "atMs": 24673,
+          "chars": 16
+        },
+        {
+          "atMs": 24783,
+          "chars": 18
+        },
+        {
+          "atMs": 24873,
+          "chars": 19
+        },
+        {
+          "atMs": 24951,
+          "chars": 20
+        },
+        {
+          "atMs": 25008,
+          "chars": 21
+        },
+        {
+          "atMs": 25055,
+          "chars": 22
+        },
+        {
+          "atMs": 25100,
+          "chars": 24
+        },
+        {
+          "atMs": 25193,
+          "chars": 29
+        },
+        {
+          "atMs": 25300,
+          "chars": 31
+        },
+        {
+          "atMs": 25422,
+          "chars": 34
+        },
+        {
+          "atMs": 25518,
+          "chars": 37
+        },
+        {
+          "atMs": 25611,
+          "chars": 40
+        },
+        {
+          "atMs": 25705,
+          "chars": 42
+        },
+        {
+          "atMs": 25783,
+          "chars": 44
+        },
+        {
+          "atMs": 25874,
+          "chars": 46
+        },
+        {
+          "atMs": 25951,
+          "chars": 47
+        },
+        {
+          "atMs": 25997,
+          "chars": 48
+        },
+        {
+          "atMs": 26055,
+          "chars": 50
+        },
+        {
+          "atMs": 26117,
+          "chars": 51
+        },
+        {
+          "atMs": 26194,
+          "chars": 52
+        },
+        {
+          "atMs": 26257,
+          "chars": 54
+        },
+        {
+          "atMs": 26336,
+          "chars": 55
+        },
+        {
+          "atMs": 26383,
+          "chars": 57
+        },
+        {
+          "atMs": 26448,
+          "chars": 59
+        },
+        {
+          "atMs": 26539,
+          "chars": 62
+        }
+      ],
+      "choicesEnabledDuringPreview": false,
+      "lastText": "王大伯直起腰，用满是老茧的手指了指黄鼠狼左后腿的根部，那里断口参差不齐，血正顺着草根往外渗，渗进泥土里，把几只蚂蚁都引来了。",
+      "doneMs": 40519,
+      "result": {
+        "protocolVersion": 1,
+        "status": "ready",
+        "requestId": "b5149a94-265e-48bb-b4e7-746521cd923f",
+        "attemptId": "0bdc3b47-0105-4744-950c-69b7e6bbea6d",
+        "sessionRef": "sess_d86f3e815406efcfe6363a1cd3a614cd",
+        "errorCode": null,
+        "retry": null,
+        "scene": {
+          "id": "r:be5aee0d0cc6999a:t2:s:scene",
+          "title": "断腿的黄鼠狼",
+          "location": "山村猎户家",
+          "entities": [
+            {
+              "id": "r:be5aee0d0cc6999a:t1:e:person_1",
+              "name": "王大伯",
+              "kind": "person"
+            }
+          ],
+          "blocks": [
+            {
+              "kind": "dialogue",
+              "text": "王大伯直起腰，用满是老茧的手指了指黄鼠狼左后腿的根部，那里断口参差不齐，血正顺着草根往外渗，渗进泥土里，把几只蚂蚁都引来了。",
+              "speaker": "r:be5aee0d0cc6999a:t1:e:person_1"
+            }
+          ],
+          "choices": [
+            {
+              "id": "r:be5aee0d0cc6999a:t2:c:a",
+              "label": "询问王大伯：询问黄鼠狼是否在断腿前发出过怪声或异动",
+              "intent": "interact",
+              "targetId": "r:be5aee0d0cc6999a:t1:e:person_1",
+              "stake": "low",
+              "approach": "ask"
+            },
+            {
+              "id": "r:be5aee0d0cc6999a:t2:c:b",
+              "label": "询问王大伯：询问这猎夹是何时夹住黄鼠狼的",
+              "intent": "interact",
+              "targetId": "r:be5aee0d0cc6999a:t1:e:person_1",
+              "stake": "low",
+              "approach": "ask"
+            },
+            {
+              "id": "r:be5aee0d0cc6999a:t2:c:c",
+              "label": "婉拒王大伯：拒绝回答并转身离开",
+              "intent": "interact",
+              "targetId": "r:be5aee0d0cc6999a:t1:e:person_1",
+              "stake": "low",
+              "approach": "decline"
+            }
+          ],
+          "memoryDeltas": [
+            {
+              "entityId": "r:be5aee0d0cc6999a:t1:e:person_1",
+              "kind": "clue",
+              "text": "王大伯直起腰，用满是老茧的手指了指黄鼠狼左后腿的根部，那里断口参差不齐，血正顺着草根往外渗，渗进泥土里，把几只蚂蚁都引来了。",
+              "status": "open"
+            }
+          ]
+        }
+      },
+      "request": {
+        "context": {
+          "schemaVersion": 1,
+          "phase": "choice",
+          "identity": {
+            "runId": "2fc58ac0-c011-423c-9cde-2595b15bb929",
+            "turnId": 2,
+            "baseRevision": 1,
+            "stateHash": "12c48108901f39c3c370afc04ebb065e0f5e60e5e98401f7b76bd0d633486a61",
+            "choiceId": "r:be5aee0d0cc6999a:t1:c:a",
+            "rulesVersion": 1,
+            "promptVersion": 1,
+            "requestId": "b5149a94-265e-48bb-b4e7-746521cd923f"
+          },
+          "namespace": "r:be5aee0d0cc6999a",
+          "receipt": {
+            "kind": "choice",
+            "choiceId": "r:be5aee0d0cc6999a:t1:c:a",
+            "action": {
+              "id": "r:be5aee0d0cc6999a:t1:c:a",
+              "label": "询问王大伯：询问黄鼠狼腿断的具体位置和血迹流向",
+              "intent": "interact",
+              "targetId": "r:be5aee0d0cc6999a:t1:e:person_1",
+              "stake": "low",
+              "approach": "ask"
+            },
+            "elapsedDays": 0,
+            "itemChanges": {},
+            "relationChanges": {},
+            "random": {
+              "before": 2507699840,
+              "after": 1698953183,
+              "roll": 83
+            },
+            "before": {
+              "ageDays": 5760,
+              "realm": "mortal",
+              "cultivation": 0,
+              "injury": 0
+            },
+            "after": {
+              "ageDays": 5760,
+              "realm": "mortal",
+              "cultivation": 0,
+              "injury": 0
+            },
+            "death": null,
+            "birth": null
+          },
+          "life": {
+            "name": "云归",
+            "ageDays": 5760,
+            "lifeLimit": 80,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0,
+            "items": {
+              "supplies": 3,
+              "stones": 0
+            },
+            "relations": {},
+            "birth": {
+              "originId": "village",
+              "talentIds": [
+                "fortune-debt",
+                "keen-memory"
+              ],
+              "attributes": {
+                "constitution": 3,
+                "insight": 4,
+                "fortune": 5
+              }
+            }
+          },
+          "entities": [
+            {
+              "id": "r:be5aee0d0cc6999a:t1:e:person_1",
+              "name": "王大伯",
+              "kind": "person",
+              "status": "unknown"
+            }
+          ],
+          "memory": {
+            "facts": [],
+            "promises": [],
+            "clues": [
+              {
+                "id": "m:c407f728aab2a893229bf4d73bdc3bdf",
+                "source": "narrative",
+                "kind": "clue",
+                "entityId": "r:be5aee0d0cc6999a:t1:e:person_1",
+                "text": "你站在自家破旧的木屋前，手里攥着一把卷了刃的猎刀。村口的老槐树下，王大伯正蹲在地上，手里摆弄着一只被猎夹夹断腿的黄鼠狼，嘴里念叨着晦气话。他抬头看见你，把那血淋淋的畜生往地上一扔，抹了把脸上的灰，问你有没有看见什么不干净的东西。",
+                "status": "open",
+                "runId": "2fc58ac0-c011-423c-9cde-2595b15bb929",
+                "turnId": 1
+              }
+            ],
+            "recent": [
+              {
+                "id": "turn:1",
+                "runId": "2fc58ac0-c011-423c-9cde-2595b15bb929",
+                "turnId": 1,
+                "source": "narrative",
+                "kind": "turn",
+                "text": "地点：山村猎户家\n你站在自家破旧的木屋前，手里攥着一把卷了刃的猎刀。村口的老槐树下，王大伯正蹲在地上，手里摆弄着一只被猎夹夹断腿的黄鼠狼，嘴里念叨着晦气话。他抬头看见你，把那血淋淋的畜生往地上一扔，抹了把脸上的灰，问你有没有看见什么不干净的东西。",
+                "entityIds": []
+              }
+            ],
+            "summaries": []
+          },
+          "references": [
+            "m:c407f728aab2a893229bf4d73bdc3bdf",
+            "turn:1"
+          ],
+          "previousScene": {
+            "id": "r:be5aee0d0cc6999a:t1:s:scene",
+            "blocksHash": "cfa6af8d34890bd65e3b98c3729bd9c9d3482583362373be4026ea9788b61a01"
+          },
+          "relationshipVersion": 1,
+          "relationships": {},
+          "coverage": {
+            "policy": "relevance-v1",
+            "openTotal": 1,
+            "openIncluded": 1,
+            "openOmitted": 0
+          }
+        },
+        "attempt": {
+          "id": "0bdc3b47-0105-4744-950c-69b7e6bbea6d",
+          "sessionRef": "sess_d86f3e815406efcfe6363a1cd3a614cd",
+          "retryOf": null
+        },
+        "storyActions": true
+      },
+      "decision": {
+        "index": 0,
+        "reason": "正文王大伯正处理夹伤黄鼠狼，询问伤处与血迹直接关联眼前事件，另有拒绝回答的出口；先询问，核对下一段具体回答而非重演。",
+        "selected": {
+          "id": "r:be5aee0d0cc6999a:t1:c:a",
+          "label": "询问王大伯：询问黄鼠狼腿断的具体位置和血迹流向",
+          "intent": "interact",
+          "targetId": "r:be5aee0d0cc6999a:t1:e:person_1",
+          "stake": "low",
+          "approach": "ask"
+        }
+      },
+      "choices": [
+        {
+          "id": "r:be5aee0d0cc6999a:t2:c:a",
+          "enabled": true,
+          "label": "询问王大伯：询问黄鼠狼是否在断腿前发出过怪声或异动",
+          "cost": "0日"
+        },
+        {
+          "id": "r:be5aee0d0cc6999a:t2:c:b",
+          "enabled": true,
+          "label": "询问王大伯：询问这猎夹是何时夹住黄鼠狼的",
+          "cost": "0日"
+        },
+        {
+          "id": "r:be5aee0d0cc6999a:t2:c:c",
+          "enabled": true,
+          "label": "婉拒王大伯：拒绝回答并转身离开",
+          "cost": "0日"
+        }
+      ],
+      "traces": [
+        {
+          "model": "@cf/zai-org/glm-4.7-flash",
+          "inputHash": "384844964b7d7c8e7ebbf0683a5a2e58d15e8312e4c6943d9fd24aa62055e6c6",
+          "inputBytes": 16276,
+          "startedAt": 1793376310938,
+          "bindingReturnedAt": 1793376311279,
+          "liveRawBytes": 122521,
+          "captureComplete": true,
+          "response": {
+            "model": "@cf/zai-org/glm-4.7-flash",
+            "choices": [
+              {
+                "finish_reason": "stop",
+                "message": {
+                  "content": "{\n  \"blocks\": [\n    {\n      \"kind\": \"dialogue\",\n      \"text\": \"王大伯直起腰，用满是老茧的手指了指黄鼠狼左后腿的根部，那里断口参差不齐，血正顺着草根往外渗，渗进泥土里，把几只蚂蚁都引来了。\",\n      \"speaker\": {\n        \"kind\": \"person\",\n        \"name\": \"王大伯\",\n        \"ref\": \"k1_person_王大伯\"\n     ,\n        \"status\": null\n      }\n    }\n  ],\n  \"choices\": [\n    {\n      \"action\": \"interact:ask\",\n      \"target\": {\n        \"kind\": \"person\",\n        \"name\": \"王大伯\",\n        \"ref\": \"\",\n        \"status\": null\n      },\n      \"stake\": \"low\",\n      \"purpose\": \"询问黄鼠狼是否在断腿前发出过怪声或异动\",\n      \"anchor\": 0\n    },\n    {\n      \"action\": \"interact:ask\",\n      \"target\": {\n        \"kind\": \"person\",\n        \"name\": \"王大伯\",\n        \"ref\": \"\",\n        \"status\": null\n      },\n      \"stake\": \"low\",\n      \"purpose\": \"询问这猎夹是何时夹住黄鼠狼的\",\n      \"anchor\": 0\n    },\n    {\n      \"action\": \"interact:decline\",\n      \"target\": {\n        \"kind\": \"person\",\n        \"name\": \"王大伯\",\n        \"ref\": \"\",\n        \"status\": null\n      },\n      \"stake\": \"low\",\n      \"purpose\": \"拒绝回答并转身离开\",\n      \"anchor\": 0\n    }\n  ],\n  \"title\": \"断腿的黄鼠狼\",\n  \"location\": \"山村猎户家\",\n  \"memoryDeltas\": [\n    {\n      \"target\": {\n        \"kind\": \"person\",\n        \"name\": \"王大伯\",\n        \"ref\": \"\",\n        \"status\": null\n      },\n      \"kind\": \"clue\",\n      \"anchor\": 0,\n      \"status\": \"open\"\n    }\n  ]\n}",
+                  "reasoning_content": ""
+                }
+              }
+            ],
+            "usage": {
+              "prompt_tokens": 2427,
+              "completion_tokens": 462,
+              "total_tokens": 2889,
+              "prompt_tokens_details": {
+                "cached_tokens": 0
+              },
+              "neurons": 30.165300000000197
+            }
+          },
+          "rawSseBytes": 122521
+        }
+      ],
+      "revision": 2,
+      "pending": false,
+      "state": {
+        "relationshipVersion": 1,
+        "version": 5,
+        "mode": "cultivation",
+        "contentVersion": 4,
+        "rulesVersion": 1,
+        "promptVersion": 1,
+        "runId": "2fc58ac0-c011-423c-9cde-2595b15bb929",
+        "revision": 2,
+        "turnId": 2,
+        "phase": "active",
+        "rng": 1698953183,
+        "life": {
+          "name": "云归",
+          "ageDays": 5760,
+          "lifeLimit": 80,
+          "realm": "mortal",
+          "cultivation": 0,
+          "injury": 0,
+          "items": {
+            "supplies": 3,
+            "stones": 0
+          },
+          "relations": {},
+          "birth": {
+            "originId": "village",
+            "talentIds": [
+              "fortune-debt",
+              "keen-memory"
+            ],
+            "attributes": {
+              "constitution": 3,
+              "insight": 4,
+              "fortune": 5
+            }
+          }
+        },
+        "birthReceipt": {
+          "kind": "opening",
+          "choiceId": null,
+          "action": null,
+          "elapsedDays": 0,
+          "itemChanges": {},
+          "relationChanges": {},
+          "random": {
+            "before": 2507699840,
+            "after": 2507699840,
+            "roll": null
+          },
+          "before": {
+            "ageDays": 5760,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "after": {
+            "ageDays": 5760,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "death": null,
+          "birth": {
+            "originId": "village",
+            "talentIds": [
+              "fortune-debt",
+              "keen-memory"
+            ],
+            "attributes": {
+              "constitution": 3,
+              "insight": 4,
+              "fortune": 5
+            }
+          }
+        },
+        "currentScene": {
+          "id": "r:be5aee0d0cc6999a:t2:s:scene",
+          "title": "断腿的黄鼠狼",
+          "location": "山村猎户家",
+          "entities": [
+            {
+              "id": "r:be5aee0d0cc6999a:t1:e:person_1",
+              "name": "王大伯",
+              "kind": "person"
+            }
+          ],
+          "blocks": [
+            {
+              "kind": "dialogue",
+              "text": "王大伯直起腰，用满是老茧的手指了指黄鼠狼左后腿的根部，那里断口参差不齐，血正顺着草根往外渗，渗进泥土里，把几只蚂蚁都引来了。",
+              "speaker": "r:be5aee0d0cc6999a:t1:e:person_1"
+            }
+          ],
+          "choices": [
+            {
+              "id": "r:be5aee0d0cc6999a:t2:c:a",
+              "label": "询问王大伯：询问黄鼠狼是否在断腿前发出过怪声或异动",
+              "intent": "interact",
+              "targetId": "r:be5aee0d0cc6999a:t1:e:person_1",
+              "stake": "low",
+              "approach": "ask"
+            },
+            {
+              "id": "r:be5aee0d0cc6999a:t2:c:b",
+              "label": "询问王大伯：询问这猎夹是何时夹住黄鼠狼的",
+              "intent": "interact",
+              "targetId": "r:be5aee0d0cc6999a:t1:e:person_1",
+              "stake": "low",
+              "approach": "ask"
+            },
+            {
+              "id": "r:be5aee0d0cc6999a:t2:c:c",
+              "label": "婉拒王大伯：拒绝回答并转身离开",
+              "intent": "interact",
+              "targetId": "r:be5aee0d0cc6999a:t1:e:person_1",
+              "stake": "low",
+              "approach": "decline"
+            }
+          ],
+          "memoryDeltas": [
+            {
+              "entityId": "r:be5aee0d0cc6999a:t1:e:person_1",
+              "kind": "clue",
+              "text": "王大伯直起腰，用满是老茧的手指了指黄鼠狼左后腿的根部，那里断口参差不齐，血正顺着草根往外渗，渗进泥土里，把几只蚂蚁都引来了。",
+              "status": "open"
+            }
+          ]
+        },
+        "lastReceipt": {
+          "kind": "choice",
+          "choiceId": "r:be5aee0d0cc6999a:t1:c:a",
+          "action": {
+            "id": "r:be5aee0d0cc6999a:t1:c:a",
+            "label": "询问王大伯：询问黄鼠狼腿断的具体位置和血迹流向",
+            "intent": "interact",
+            "targetId": "r:be5aee0d0cc6999a:t1:e:person_1",
+            "stake": "low",
+            "approach": "ask"
+          },
+          "elapsedDays": 0,
+          "itemChanges": {},
+          "relationChanges": {},
+          "random": {
+            "before": 2507699840,
+            "after": 1698953183,
+            "roll": 83
+          },
+          "before": {
+            "ageDays": 5760,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "after": {
+            "ageDays": 5760,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "death": null,
+          "birth": null
+        },
+        "relatedEntities": [
+          {
+            "id": "r:be5aee0d0cc6999a:t1:e:person_1",
+            "name": "王大伯",
+            "kind": "person"
+          }
+        ],
+        "archiveCursor": 0
+      },
+      "posts": 2,
+      "latency": {
+        "usable": true,
+        "errorCode": null,
+        "firstAnyPreviewMs": 23961,
+        "firstReadableMs": 24951,
+        "completionMs": 40519,
+        "narrativeChars": 62,
+        "maxPreviewGapMs": 217,
+        "readingFinishEstimateMs": 35284,
+        "readingStallEstimateMs": 0,
+        "optionsWaitEstimateMs": 5235,
+        "prefetchWorthEvaluating": true,
+        "assumptions": {
+          "readingCharsPerSecond": 6,
+          "readableChars": 20,
+          "targetWaitMs": 2000
+        }
+      }
+    },
+    {
+      "caseId": "choice-2",
+      "start": 96218.89999999851,
+      "timeline": [
+        {
+          "atMs": 3007,
+          "chars": 2
+        },
+        {
+          "atMs": 3083,
+          "chars": 5
+        },
+        {
+          "atMs": 3159,
+          "chars": 9
+        },
+        {
+          "atMs": 3238,
+          "chars": 12
+        },
+        {
+          "atMs": 3303,
+          "chars": 15
+        },
+        {
+          "atMs": 3352,
+          "chars": 19
+        },
+        {
+          "atMs": 3428,
+          "chars": 22
+        },
+        {
+          "atMs": 3509,
+          "chars": 28
+        },
+        {
+          "atMs": 3556,
+          "chars": 35
+        },
+        {
+          "atMs": 3633,
+          "chars": 39
+        },
+        {
+          "atMs": 3678,
+          "chars": 43
+        },
+        {
+          "atMs": 3739,
+          "chars": 49
+        },
+        {
+          "atMs": 3787,
+          "chars": 52
+        },
+        {
+          "atMs": 3864,
+          "chars": 54
+        },
+        {
+          "atMs": 3939,
+          "chars": 58
+        },
+        {
+          "atMs": 3987,
+          "chars": 62
+        },
+        {
+          "atMs": 4064,
+          "chars": 66
+        },
+        {
+          "atMs": 4138,
+          "chars": 69
+        },
+        {
+          "atMs": 4215,
+          "chars": 72
+        },
+        {
+          "atMs": 4293,
+          "chars": 76
+        },
+        {
+          "atMs": 4372,
+          "chars": 79
+        },
+        {
+          "atMs": 4419,
+          "chars": 83
+        },
+        {
+          "atMs": 4498,
+          "chars": 87
+        },
+        {
+          "atMs": 4561,
+          "chars": 91
+        },
+        {
+          "atMs": 4638,
+          "chars": 96
+        },
+        {
+          "atMs": 4699,
+          "chars": 100
+        },
+        {
+          "atMs": 4746,
+          "chars": 103
+        }
+      ],
+      "choicesEnabledDuringPreview": false,
+      "lastText": "王大伯把烟袋锅子在鞋底磕了磕，眯着眼往那畜生身上瞅了半天，才慢吞吞地说：“断腿前没听见啥动静，就是那夹子‘咔嚓’一声，脆得很。不过这畜生怪，断腿后没跑，就在那草窝里缩着，眼珠子直勾勾地盯着这边，也不叫唤。”",
+      "doneMs": 12555,
+      "result": {
+        "protocolVersion": 1,
+        "status": "ready",
+        "requestId": "a3c26124-7692-4e9a-b4e7-9f05f01f1bdd",
+        "attemptId": "49b8da83-2433-4f9e-b55e-4cee2bba6ec8",
+        "sessionRef": "sess_d86f3e815406efcfe6363a1cd3a614cd",
+        "errorCode": null,
+        "retry": null,
+        "scene": {
+          "id": "r:be5aee0d0cc6999a:t3:s:scene",
+          "title": "山村猎户家",
+          "location": "山村猎户家",
+          "entities": [
+            {
+              "id": "r:be5aee0d0cc6999a:t1:e:person_1",
+              "name": "王大伯",
+              "kind": "person"
+            }
+          ],
+          "blocks": [
+            {
+              "kind": "dialogue",
+              "text": "王大伯把烟袋锅子在鞋底磕了磕，眯着眼往那畜生身上瞅了半天，才慢吞吞地说：“断腿前没听见啥动静，就是那夹子‘咔嚓’一声，脆得很。不过这畜生怪，断腿后没跑，就在那草窝里缩着，眼珠子直勾勾地盯着这边，也不叫唤。”",
+              "speaker": "r:be5aee0d0cc6999a:t1:e:person_1"
+            }
+          ],
+          "choices": [
+            {
+              "id": "r:be5aee0d0cc6999a:t3:c:a",
+              "label": "询问王大伯：询问黄鼠狼盯着这边看是否有深意",
+              "intent": "interact",
+              "targetId": "r:be5aee0d0cc6999a:t1:e:person_1",
+              "stake": "low",
+              "approach": "ask"
+            },
+            {
+              "id": "r:be5aee0d0cc6999a:t3:c:b",
+              "label": "婉拒王大伯：不想再听这晦气话，转身离开",
+              "intent": "interact",
+              "targetId": "r:be5aee0d0cc6999a:t1:e:person_1",
+              "stake": "low",
+              "approach": "decline"
+            },
+            {
+              "id": "r:be5aee0d0cc6999a:t3:c:c",
+              "label": "结束与王大伯的互动：结束与王大伯的交谈",
+              "intent": "interact",
+              "targetId": "r:be5aee0d0cc6999a:t1:e:person_1",
+              "stake": "low",
+              "approach": "leave"
+            }
+          ],
+          "memoryDeltas": [
+            {
+              "entityId": "r:be5aee0d0cc6999a:t1:e:person_1",
+              "kind": "clue",
+              "text": "王大伯把烟袋锅子在鞋底磕了磕，眯着眼往那畜生身上瞅了半天，才慢吞吞地说：“断腿前没听见啥动静，就是那夹子‘咔嚓’一声，脆得很。不过这畜生怪，断腿后没跑，就在那草窝里缩着，眼珠子直勾勾地盯着这边，也不叫唤。”",
+              "status": "open"
+            }
+          ]
+        }
+      },
+      "request": {
+        "context": {
+          "schemaVersion": 1,
+          "phase": "choice",
+          "identity": {
+            "runId": "2fc58ac0-c011-423c-9cde-2595b15bb929",
+            "turnId": 3,
+            "baseRevision": 2,
+            "stateHash": "2110b84ed233206b28199b3c94761eab7da91ddc24ce1a549076b218568589a4",
+            "choiceId": "r:be5aee0d0cc6999a:t2:c:a",
+            "rulesVersion": 1,
+            "promptVersion": 1,
+            "requestId": "a3c26124-7692-4e9a-b4e7-9f05f01f1bdd"
+          },
+          "namespace": "r:be5aee0d0cc6999a",
+          "receipt": {
+            "kind": "choice",
+            "choiceId": "r:be5aee0d0cc6999a:t2:c:a",
+            "action": {
+              "id": "r:be5aee0d0cc6999a:t2:c:a",
+              "label": "询问王大伯：询问黄鼠狼是否在断腿前发出过怪声或异动",
+              "intent": "interact",
+              "targetId": "r:be5aee0d0cc6999a:t1:e:person_1",
+              "stake": "low",
+              "approach": "ask"
+            },
+            "elapsedDays": 0,
+            "itemChanges": {},
+            "relationChanges": {},
+            "random": {
+              "before": 1698953183,
+              "after": 2859230130,
+              "roll": 30
+            },
+            "before": {
+              "ageDays": 5760,
+              "realm": "mortal",
+              "cultivation": 0,
+              "injury": 0
+            },
+            "after": {
+              "ageDays": 5760,
+              "realm": "mortal",
+              "cultivation": 0,
+              "injury": 0
+            },
+            "death": null,
+            "birth": null
+          },
+          "life": {
+            "name": "云归",
+            "ageDays": 5760,
+            "lifeLimit": 80,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0,
+            "items": {
+              "supplies": 3,
+              "stones": 0
+            },
+            "relations": {},
+            "birth": {
+              "originId": "village",
+              "talentIds": [
+                "fortune-debt",
+                "keen-memory"
+              ],
+              "attributes": {
+                "constitution": 3,
+                "insight": 4,
+                "fortune": 5
+              }
+            }
+          },
+          "entities": [
+            {
+              "id": "r:be5aee0d0cc6999a:t1:e:person_1",
+              "name": "王大伯",
+              "kind": "person",
+              "status": "unknown"
+            }
+          ],
+          "memory": {
+            "facts": [
+              {
+                "id": "decision:2",
+                "runId": "2fc58ac0-c011-423c-9cde-2595b15bb929",
+                "turnId": 2,
+                "source": "rules",
+                "kind": "fact",
+                "entityId": "r:be5aee0d0cc6999a:t1:e:person_1",
+                "text": "你在山村猎户家选择了“询问王大伯：询问黄鼠狼腿断的具体位置和血迹流向”。"
+              }
+            ],
+            "promises": [],
+            "clues": [
+              {
+                "id": "m:52e80f0de07aab251ede488cd81542a9",
+                "source": "narrative",
+                "kind": "clue",
+                "entityId": "r:be5aee0d0cc6999a:t1:e:person_1",
+                "text": "王大伯直起腰，用满是老茧的手指了指黄鼠狼左后腿的根部，那里断口参差不齐，血正顺着草根往外渗，渗进泥土里，把几只蚂蚁都引来了。",
+                "status": "open",
+                "runId": "2fc58ac0-c011-423c-9cde-2595b15bb929",
+                "turnId": 2
+              },
+              {
+                "id": "m:c407f728aab2a893229bf4d73bdc3bdf",
+                "source": "narrative",
+                "kind": "clue",
+                "entityId": "r:be5aee0d0cc6999a:t1:e:person_1",
+                "text": "你站在自家破旧的木屋前，手里攥着一把卷了刃的猎刀。村口的老槐树下，王大伯正蹲在地上，手里摆弄着一只被猎夹夹断腿的黄鼠狼，嘴里念叨着晦气话。他抬头看见你，把那血淋淋的畜生往地上一扔，抹了把脸上的灰，问你有没有看见什么不干净的东西。",
+                "status": "open",
+                "runId": "2fc58ac0-c011-423c-9cde-2595b15bb929",
+                "turnId": 1
+              }
+            ],
+            "recent": [
+              {
+                "id": "turn:2",
+                "runId": "2fc58ac0-c011-423c-9cde-2595b15bb929",
+                "turnId": 2,
+                "source": "narrative",
+                "kind": "turn",
+                "text": "地点：山村猎户家；刚才选择：询问王大伯：询问黄鼠狼腿断的具体位置和血迹流向\n王大伯直起腰，用满是老茧的手指了指黄鼠狼左后腿的根部，那里断口参差不齐，血正顺着草根往外渗，渗进泥土里，把几只蚂蚁都引来了。",
+                "entityIds": []
+              },
+              {
+                "id": "turn:1",
+                "runId": "2fc58ac0-c011-423c-9cde-2595b15bb929",
+                "turnId": 1,
+                "source": "narrative",
+                "kind": "turn",
+                "text": "地点：山村猎户家\n你站在自家破旧的木屋前，手里攥着一把卷了刃的猎刀。村口的老槐树下，王大伯正蹲在地上，手里摆弄着一只被猎夹夹断腿的黄鼠狼，嘴里念叨着晦气话。他抬头看见你，把那血淋淋的畜生往地上一扔，抹了把脸上的灰，问你有没有看见什么不干净的东西。",
+                "entityIds": []
+              }
+            ],
+            "summaries": []
+          },
+          "references": [
+            "decision:2",
+            "m:52e80f0de07aab251ede488cd81542a9",
+            "m:c407f728aab2a893229bf4d73bdc3bdf",
+            "turn:2",
+            "turn:1"
+          ],
+          "previousScene": {
+            "id": "r:be5aee0d0cc6999a:t2:s:scene",
+            "blocksHash": "1356735a7b35e86d14d89efec3564de59d23630841f4989c4a3586e922e01bee"
+          },
+          "relationshipVersion": 1,
+          "relationships": {},
+          "coverage": {
+            "policy": "relevance-v1",
+            "openTotal": 2,
+            "openIncluded": 2,
+            "openOmitted": 0
+          }
+        },
+        "attempt": {
+          "id": "49b8da83-2433-4f9e-b55e-4cee2bba6ec8",
+          "sessionRef": "sess_d86f3e815406efcfe6363a1cd3a614cd",
+          "retryOf": null
+        },
+        "storyActions": true
+      },
+      "decision": {
+        "index": 0,
+        "reason": "已具体回答左后腿根部伤处及血渗入草根泥土，时间和资源未变；继续问夹伤前是否有怪声异动，检验连续追问能补充新信息。",
+        "selected": {
+          "id": "r:be5aee0d0cc6999a:t2:c:a",
+          "label": "询问王大伯：询问黄鼠狼是否在断腿前发出过怪声或异动",
+          "intent": "interact",
+          "targetId": "r:be5aee0d0cc6999a:t1:e:person_1",
+          "stake": "low",
+          "approach": "ask"
+        }
+      },
+      "choices": [
+        {
+          "id": "r:be5aee0d0cc6999a:t3:c:a",
+          "enabled": true,
+          "label": "询问王大伯：询问黄鼠狼盯着这边看是否有深意",
+          "cost": "0日"
+        },
+        {
+          "id": "r:be5aee0d0cc6999a:t3:c:b",
+          "enabled": true,
+          "label": "婉拒王大伯：不想再听这晦气话，转身离开",
+          "cost": "0日"
+        },
+        {
+          "id": "r:be5aee0d0cc6999a:t3:c:c",
+          "enabled": true,
+          "label": "结束与王大伯的互动：结束与王大伯的交谈",
+          "cost": "0日"
+        }
+      ],
+      "traces": [
+        {
+          "model": "@cf/zai-org/glm-4.7-flash",
+          "inputHash": "419be8289659da88fb8409b6161691944a34225176778a6310a361fb5cda3913",
+          "inputBytes": 17444,
+          "startedAt": 1793376368964,
+          "bindingReturnedAt": 1793376369300,
+          "liveRawBytes": 128497,
+          "captureComplete": true,
+          "response": {
+            "model": "@cf/zai-org/glm-4.7-flash",
+            "choices": [
+              {
+                "finish_reason": "stop",
+                "message": {
+                  "content": "{\n  \"blocks\": [\n    {\n      \"kind\": \"dialogue\",\n      \"text\": \"王大伯把烟袋锅子在鞋底磕了磕，眯着眼往那畜生身上瞅了半天，才慢吞吞地说：“断腿前没听见啥动静，就是那夹子‘咔嚓’一声，脆得很。不过这畜生怪，断腿后没跑，就在那草窝里缩着，眼珠子直勾勾地盯着这边，也不叫唤。”\",\n      \"speaker\": {\n        \"kind\": \"person\",\n        \"name\": \"王大伯\",\n        \"ref\": \"k1_person_王大伯\",\n        \"status\": null\n      }\n    }\n  ],\n  \"choices\": [\n    {\n      \"action\": \"interact:ask\",\n      \"target\": {\n        \"kind\": \"person\",\n        \"name\": \"王大伯\",\n        \"ref\": \"\",\n        \"status\": null\n      },\n      \"stake\": \"low\",\n      \"purpose\": \"询问黄鼠狼盯着这边看是否有深意\",\n      \"anchor\": 0\n    },\n    {\n      \"action\": \"interact:decline\",\n      \"target\": {\n        \"kind\": \"person\",\n        \"name\": \"王大伯\",\n        \"ref\": \"\",\n        \"status\": null\n      },\n      \"stake\": \"low\",\n      \"purpose\": \"不想再听这晦气话，转身离开\",\n      \"anchor\": 0\n    },\n    {\n      \"action\": \"interact:leave\",\n      \"target\": {\n        \"kind\": \"person\",\n        \"name\": \"王大伯\",\n        \"ref\": \"\",\n        \"status\": null\n      },\n      \"stake\": \"low\",\n      \"purpose\": \"结束与王大伯的交谈\",\n      \"anchor\": 0\n    }\n  ],\n  \"title\": \"山村猎户家\",\n  \"location\": \"山村猎户家\",\n  \"memoryDeltas\": [\n    {\n      \"target\": {\n        \"kind\": \"person\",\n        \"name\": \"王大伯\",\n        \"ref\": \"\",\n        \"status\": null\n      },\n      \"kind\": \"clue\",\n      \"anchor\": 0,\n      \"status\": \"open\"\n    }\n  ]\n}",
+                  "reasoning_content": ""
+                }
+              }
+            ],
+            "usage": {
+              "prompt_tokens": 2788,
+              "completion_tokens": 490,
+              "total_tokens": 3278,
+              "prompt_tokens_details": {
+                "cached_tokens": 0
+              },
+              "neurons": 33.17000000000021
+            }
+          },
+          "rawSseBytes": 128497
+        }
+      ],
+      "revision": 3,
+      "pending": false,
+      "state": {
+        "relationshipVersion": 1,
+        "version": 5,
+        "mode": "cultivation",
+        "contentVersion": 4,
+        "rulesVersion": 1,
+        "promptVersion": 1,
+        "runId": "2fc58ac0-c011-423c-9cde-2595b15bb929",
+        "revision": 3,
+        "turnId": 3,
+        "phase": "active",
+        "rng": 2859230130,
+        "life": {
+          "name": "云归",
+          "ageDays": 5760,
+          "lifeLimit": 80,
+          "realm": "mortal",
+          "cultivation": 0,
+          "injury": 0,
+          "items": {
+            "supplies": 3,
+            "stones": 0
+          },
+          "relations": {},
+          "birth": {
+            "originId": "village",
+            "talentIds": [
+              "fortune-debt",
+              "keen-memory"
+            ],
+            "attributes": {
+              "constitution": 3,
+              "insight": 4,
+              "fortune": 5
+            }
+          }
+        },
+        "birthReceipt": {
+          "kind": "opening",
+          "choiceId": null,
+          "action": null,
+          "elapsedDays": 0,
+          "itemChanges": {},
+          "relationChanges": {},
+          "random": {
+            "before": 2507699840,
+            "after": 2507699840,
+            "roll": null
+          },
+          "before": {
+            "ageDays": 5760,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "after": {
+            "ageDays": 5760,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "death": null,
+          "birth": {
+            "originId": "village",
+            "talentIds": [
+              "fortune-debt",
+              "keen-memory"
+            ],
+            "attributes": {
+              "constitution": 3,
+              "insight": 4,
+              "fortune": 5
+            }
+          }
+        },
+        "currentScene": {
+          "id": "r:be5aee0d0cc6999a:t3:s:scene",
+          "title": "山村猎户家",
+          "location": "山村猎户家",
+          "entities": [
+            {
+              "id": "r:be5aee0d0cc6999a:t1:e:person_1",
+              "name": "王大伯",
+              "kind": "person"
+            }
+          ],
+          "blocks": [
+            {
+              "kind": "dialogue",
+              "text": "王大伯把烟袋锅子在鞋底磕了磕，眯着眼往那畜生身上瞅了半天，才慢吞吞地说：“断腿前没听见啥动静，就是那夹子‘咔嚓’一声，脆得很。不过这畜生怪，断腿后没跑，就在那草窝里缩着，眼珠子直勾勾地盯着这边，也不叫唤。”",
+              "speaker": "r:be5aee0d0cc6999a:t1:e:person_1"
+            }
+          ],
+          "choices": [
+            {
+              "id": "r:be5aee0d0cc6999a:t3:c:a",
+              "label": "询问王大伯：询问黄鼠狼盯着这边看是否有深意",
+              "intent": "interact",
+              "targetId": "r:be5aee0d0cc6999a:t1:e:person_1",
+              "stake": "low",
+              "approach": "ask"
+            },
+            {
+              "id": "r:be5aee0d0cc6999a:t3:c:b",
+              "label": "婉拒王大伯：不想再听这晦气话，转身离开",
+              "intent": "interact",
+              "targetId": "r:be5aee0d0cc6999a:t1:e:person_1",
+              "stake": "low",
+              "approach": "decline"
+            },
+            {
+              "id": "r:be5aee0d0cc6999a:t3:c:c",
+              "label": "结束与王大伯的互动：结束与王大伯的交谈",
+              "intent": "interact",
+              "targetId": "r:be5aee0d0cc6999a:t1:e:person_1",
+              "stake": "low",
+              "approach": "leave"
+            }
+          ],
+          "memoryDeltas": [
+            {
+              "entityId": "r:be5aee0d0cc6999a:t1:e:person_1",
+              "kind": "clue",
+              "text": "王大伯把烟袋锅子在鞋底磕了磕，眯着眼往那畜生身上瞅了半天，才慢吞吞地说：“断腿前没听见啥动静，就是那夹子‘咔嚓’一声，脆得很。不过这畜生怪，断腿后没跑，就在那草窝里缩着，眼珠子直勾勾地盯着这边，也不叫唤。”",
+              "status": "open"
+            }
+          ]
+        },
+        "lastReceipt": {
+          "kind": "choice",
+          "choiceId": "r:be5aee0d0cc6999a:t2:c:a",
+          "action": {
+            "id": "r:be5aee0d0cc6999a:t2:c:a",
+            "label": "询问王大伯：询问黄鼠狼是否在断腿前发出过怪声或异动",
+            "intent": "interact",
+            "targetId": "r:be5aee0d0cc6999a:t1:e:person_1",
+            "stake": "low",
+            "approach": "ask"
+          },
+          "elapsedDays": 0,
+          "itemChanges": {},
+          "relationChanges": {},
+          "random": {
+            "before": 1698953183,
+            "after": 2859230130,
+            "roll": 30
+          },
+          "before": {
+            "ageDays": 5760,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "after": {
+            "ageDays": 5760,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "death": null,
+          "birth": null
+        },
+        "relatedEntities": [
+          {
+            "id": "r:be5aee0d0cc6999a:t1:e:person_1",
+            "name": "王大伯",
+            "kind": "person"
+          }
+        ],
+        "archiveCursor": 0
+      },
+      "posts": 3,
+      "latency": {
+        "usable": true,
+        "errorCode": null,
+        "firstAnyPreviewMs": 3007,
+        "firstReadableMs": 3428,
+        "completionMs": 12555,
+        "narrativeChars": 103,
+        "maxPreviewGapMs": 81,
+        "readingFinishEstimateMs": 20595,
+        "readingStallEstimateMs": 0,
+        "optionsWaitEstimateMs": 0,
+        "prefetchWorthEvaluating": true,
+        "assumptions": {
+          "readingCharsPerSecond": 6,
+          "readableChars": 20,
+          "targetWaitMs": 2000
+        }
+      }
+    },
+    {
+      "caseId": "choice-3",
+      "start": 122869.69999999553,
+      "timeline": [
+        {
+          "atMs": 9335,
+          "chars": 3
+        },
+        {
+          "atMs": 9415,
+          "chars": 6
+        },
+        {
+          "atMs": 9492,
+          "chars": 10
+        },
+        {
+          "atMs": 9552,
+          "chars": 13
+        },
+        {
+          "atMs": 9800,
+          "chars": 17
+        },
+        {
+          "atMs": 9876,
+          "chars": 21
+        },
+        {
+          "atMs": 9958,
+          "chars": 22
+        },
+        {
+          "atMs": 10021,
+          "chars": 25
+        },
+        {
+          "atMs": 10100,
+          "chars": 28
+        },
+        {
+          "atMs": 10194,
+          "chars": 30
+        },
+        {
+          "atMs": 10240,
+          "chars": 33
+        },
+        {
+          "atMs": 10316,
+          "chars": 37
+        },
+        {
+          "atMs": 10376,
+          "chars": 42
+        },
+        {
+          "atMs": 10441,
+          "chars": 45
+        },
+        {
+          "atMs": 10517,
+          "chars": 49
+        },
+        {
+          "atMs": 10580,
+          "chars": 52
+        },
+        {
+          "atMs": 10642,
+          "chars": 55
+        },
+        {
+          "atMs": 10720,
+          "chars": 58
+        },
+        {
+          "atMs": 10785,
+          "chars": 61
+        },
+        {
+          "atMs": 10860,
+          "chars": 64
+        },
+        {
+          "atMs": 10922,
+          "chars": 67
+        }
+      ],
+      "choicesEnabledDuringPreview": false,
+      "lastText": "你不想再听这晦气话，转身便走。王大伯在身后嘟囔了几句，见你头也不回，便不再纠缠，只是把烟袋锅子往腰间一别，继续在那畜生尸体旁摆弄起来。",
+      "doneMs": 18112,
+      "result": {
+        "protocolVersion": 1,
+        "status": "ready",
+        "requestId": "e4769eaa-54e8-47e4-b54e-b364210ecd1a",
+        "attemptId": "ba8c6d4e-6e14-4ba5-b176-6a376cc9390a",
+        "sessionRef": "sess_d86f3e815406efcfe6363a1cd3a614cd",
+        "errorCode": null,
+        "retry": null,
+        "scene": {
+          "id": "r:be5aee0d0cc6999a:t4:s:scene",
+          "title": "山村猎户家",
+          "location": "山村猎户家",
+          "entities": [
+            {
+              "id": "r:be5aee0d0cc6999a:t1:e:person_1",
+              "name": "王大伯",
+              "kind": "person"
+            },
+            {
+              "id": "r:be5aee0d0cc6999a:t4:e:place_1",
+              "name": "后山",
+              "kind": "place"
+            }
+          ],
+          "blocks": [
+            {
+              "kind": "narration",
+              "text": "你不想再听这晦气话，转身便走。王大伯在身后嘟囔了几句，见你头也不回，便不再纠缠，只是把烟袋锅子往腰间一别，继续在那畜生尸体旁摆弄起来。"
+            }
+          ],
+          "choices": [
+            {
+              "id": "r:be5aee0d0cc6999a:t4:c:a",
+              "label": "询问王大伯：询问王大伯：这畜生盯着这边看，是不是因为腿断了疼得厉害",
+              "intent": "interact",
+              "targetId": "r:be5aee0d0cc6999a:t1:e:person_1",
+              "stake": "low",
+              "approach": "ask"
+            },
+            {
+              "id": "r:be5aee0d0cc6999a:t4:c:b",
+              "label": "观察王大伯：观察王大伯的神色和动作，看他是否在隐瞒什么",
+              "intent": "interact",
+              "targetId": "r:be5aee0d0cc6999a:t1:e:person_1",
+              "stake": "low",
+              "approach": "observe"
+            },
+            {
+              "id": "r:be5aee0d0cc6999a:t4:c:leave",
+              "label": "结束当前互动：暂不介入此事",
+              "intent": "interact",
+              "targetId": "r:be5aee0d0cc6999a:t1:e:person_1",
+              "approach": "leave",
+              "stake": "low"
+            }
+          ],
+          "memoryDeltas": [
+            {
+              "entityId": "r:be5aee0d0cc6999a:t1:e:person_1",
+              "kind": "fact",
+              "text": "你不想再听这晦气话，转身便走。王大伯在身后嘟囔了几句，见你头也不回，便不再纠缠，只是把烟袋锅子往腰间一别，继续在那畜生尸体旁摆弄起来。"
+            }
+          ]
+        }
+      },
+      "request": {
+        "context": {
+          "schemaVersion": 1,
+          "phase": "choice",
+          "identity": {
+            "runId": "2fc58ac0-c011-423c-9cde-2595b15bb929",
+            "turnId": 4,
+            "baseRevision": 3,
+            "stateHash": "782a98284a7fb6ffd4adcaf077afdf472d8a1eda11f623ac68f0018dedc1f5a9",
+            "choiceId": "r:be5aee0d0cc6999a:t3:c:b",
+            "rulesVersion": 1,
+            "promptVersion": 1,
+            "requestId": "e4769eaa-54e8-47e4-b54e-b364210ecd1a"
+          },
+          "namespace": "r:be5aee0d0cc6999a",
+          "receipt": {
+            "kind": "choice",
+            "choiceId": "r:be5aee0d0cc6999a:t3:c:b",
+            "action": {
+              "id": "r:be5aee0d0cc6999a:t3:c:b",
+              "label": "婉拒王大伯：不想再听这晦气话，转身离开",
+              "intent": "interact",
+              "targetId": "r:be5aee0d0cc6999a:t1:e:person_1",
+              "stake": "low",
+              "approach": "decline"
+            },
+            "elapsedDays": 0,
+            "itemChanges": {},
+            "relationChanges": {},
+            "random": {
+              "before": 2859230130,
+              "after": 3490377577,
+              "roll": 77
+            },
+            "before": {
+              "ageDays": 5760,
+              "realm": "mortal",
+              "cultivation": 0,
+              "injury": 0
+            },
+            "after": {
+              "ageDays": 5760,
+              "realm": "mortal",
+              "cultivation": 0,
+              "injury": 0
+            },
+            "death": null,
+            "birth": null
+          },
+          "life": {
+            "name": "云归",
+            "ageDays": 5760,
+            "lifeLimit": 80,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0,
+            "items": {
+              "supplies": 3,
+              "stones": 0
+            },
+            "relations": {},
+            "birth": {
+              "originId": "village",
+              "talentIds": [
+                "fortune-debt",
+                "keen-memory"
+              ],
+              "attributes": {
+                "constitution": 3,
+                "insight": 4,
+                "fortune": 5
+              }
+            }
+          },
+          "entities": [
+            {
+              "id": "r:be5aee0d0cc6999a:t1:e:person_1",
+              "name": "王大伯",
+              "kind": "person",
+              "status": "unknown"
+            }
+          ],
+          "memory": {
+            "facts": [
+              {
+                "id": "decision:3",
+                "runId": "2fc58ac0-c011-423c-9cde-2595b15bb929",
+                "turnId": 3,
+                "source": "rules",
+                "kind": "fact",
+                "entityId": "r:be5aee0d0cc6999a:t1:e:person_1",
+                "text": "你在山村猎户家选择了“询问王大伯：询问黄鼠狼是否在断腿前发出过怪声或异动”。"
+              },
+              {
+                "id": "decision:2",
+                "runId": "2fc58ac0-c011-423c-9cde-2595b15bb929",
+                "turnId": 2,
+                "source": "rules",
+                "kind": "fact",
+                "entityId": "r:be5aee0d0cc6999a:t1:e:person_1",
+                "text": "你在山村猎户家选择了“询问王大伯：询问黄鼠狼腿断的具体位置和血迹流向”。"
+              }
+            ],
+            "promises": [],
+            "clues": [
+              {
+                "id": "m:a73f5cdec6ff6c3b85748760652cf6c7",
+                "source": "narrative",
+                "kind": "clue",
+                "entityId": "r:be5aee0d0cc6999a:t1:e:person_1",
+                "text": "王大伯把烟袋锅子在鞋底磕了磕，眯着眼往那畜生身上瞅了半天，才慢吞吞地说：“断腿前没听见啥动静，就是那夹子‘咔嚓’一声，脆得很。不过这畜生怪，断腿后没跑，就在那草窝里缩着，眼珠子直勾勾地盯着这边，也不叫唤。”",
+                "status": "open",
+                "runId": "2fc58ac0-c011-423c-9cde-2595b15bb929",
+                "turnId": 3
+              },
+              {
+                "id": "m:52e80f0de07aab251ede488cd81542a9",
+                "source": "narrative",
+                "kind": "clue",
+                "entityId": "r:be5aee0d0cc6999a:t1:e:person_1",
+                "text": "王大伯直起腰，用满是老茧的手指了指黄鼠狼左后腿的根部，那里断口参差不齐，血正顺着草根往外渗，渗进泥土里，把几只蚂蚁都引来了。",
+                "status": "open",
+                "runId": "2fc58ac0-c011-423c-9cde-2595b15bb929",
+                "turnId": 2
+              },
+              {
+                "id": "m:c407f728aab2a893229bf4d73bdc3bdf",
+                "source": "narrative",
+                "kind": "clue",
+                "entityId": "r:be5aee0d0cc6999a:t1:e:person_1",
+                "text": "你站在自家破旧的木屋前，手里攥着一把卷了刃的猎刀。村口的老槐树下，王大伯正蹲在地上，手里摆弄着一只被猎夹夹断腿的黄鼠狼，嘴里念叨着晦气话。他抬头看见你，把那血淋淋的畜生往地上一扔，抹了把脸上的灰，问你有没有看见什么不干净的东西。",
+                "status": "open",
+                "runId": "2fc58ac0-c011-423c-9cde-2595b15bb929",
+                "turnId": 1
+              }
+            ],
+            "recent": [
+              {
+                "id": "turn:3",
+                "runId": "2fc58ac0-c011-423c-9cde-2595b15bb929",
+                "turnId": 3,
+                "source": "narrative",
+                "kind": "turn",
+                "text": "地点：山村猎户家；刚才选择：询问王大伯：询问黄鼠狼是否在断腿前发出过怪声或异动\n王大伯把烟袋锅子在鞋底磕了磕，眯着眼往那畜生身上瞅了半天，才慢吞吞地说：“断腿前没听见啥动静，就是那夹子‘咔嚓’一声，脆得很。不过这畜生怪，断腿后没跑，就在那草窝里缩着，眼珠子直勾勾地盯着这边，也不叫唤。”",
+                "entityIds": []
+              },
+              {
+                "id": "turn:2",
+                "runId": "2fc58ac0-c011-423c-9cde-2595b15bb929",
+                "turnId": 2,
+                "source": "narrative",
+                "kind": "turn",
+                "text": "地点：山村猎户家；刚才选择：询问王大伯：询问黄鼠狼腿断的具体位置和血迹流向\n王大伯直起腰，用满是老茧的手指了指黄鼠狼左后腿的根部，那里断口参差不齐，血正顺着草根往外渗，渗进泥土里，把几只蚂蚁都引来了。",
+                "entityIds": []
+              }
+            ],
+            "summaries": []
+          },
+          "references": [
+            "decision:3",
+            "decision:2",
+            "m:a73f5cdec6ff6c3b85748760652cf6c7",
+            "m:52e80f0de07aab251ede488cd81542a9",
+            "m:c407f728aab2a893229bf4d73bdc3bdf",
+            "turn:3",
+            "turn:2"
+          ],
+          "previousScene": {
+            "id": "r:be5aee0d0cc6999a:t3:s:scene",
+            "blocksHash": "962f3cec49b3b54ea15e45bfa4bacea5397fc1513a8cd651cc0c7b30655bf2cf"
+          },
+          "relationshipVersion": 1,
+          "relationships": {},
+          "coverage": {
+            "policy": "relevance-v1",
+            "openTotal": 3,
+            "openIncluded": 3,
+            "openOmitted": 0
+          }
+        },
+        "attempt": {
+          "id": "ba8c6d4e-6e14-4ba5-b176-6a376cc9390a",
+          "sessionRef": "sess_d86f3e815406efcfe6363a1cd3a614cd",
+          "retryOf": null
+        },
+        "storyActions": true
+      },
+      "decision": {
+        "index": 1,
+        "reason": "连续追问明确答复断腿前无怪声，补充断腿后盯人不叫的现象；此时拒绝继续听，不替玩家处理黄鼠狼、不产生收益或旅行。",
+        "selected": {
+          "id": "r:be5aee0d0cc6999a:t3:c:b",
+          "label": "婉拒王大伯：不想再听这晦气话，转身离开",
+          "intent": "interact",
+          "targetId": "r:be5aee0d0cc6999a:t1:e:person_1",
+          "stake": "low",
+          "approach": "decline"
+        }
+      },
+      "choices": [
+        {
+          "id": "r:be5aee0d0cc6999a:t4:c:a",
+          "enabled": true,
+          "label": "询问王大伯：询问王大伯：这畜生盯着这边看，是不是因为腿断了疼得厉害",
+          "cost": "0日"
+        },
+        {
+          "id": "r:be5aee0d0cc6999a:t4:c:b",
+          "enabled": true,
+          "label": "观察王大伯：观察王大伯的神色和动作，看他是否在隐瞒什么",
+          "cost": "0日"
+        },
+        {
+          "id": "r:be5aee0d0cc6999a:t4:c:leave",
+          "enabled": true,
+          "label": "结束当前互动：暂不介入此事",
+          "cost": "0日"
+        }
+      ],
+      "traces": [
+        {
+          "model": "@cf/zai-org/glm-4.7-flash",
+          "inputHash": "b758525639e3425bc8d69ecb2aa92c287f7fd308d8c8493f054c8421ccab5e69",
+          "inputBytes": 18173,
+          "startedAt": 1793376395566,
+          "bindingReturnedAt": 1793376395885,
+          "liveRawBytes": 108795,
+          "captureComplete": true,
+          "response": {
+            "model": "@cf/zai-org/glm-4.7-flash",
+            "choices": [
+              {
+                "finish_reason": "stop",
+                "message": {
+                  "content": "{\n  \"blocks\": [\n    {\n      \"kind\": \"narration\",\n      \"text\": \"你不想再听这晦气话，转身便走。王大伯在身后嘟囔了几句，见你头也不回，便不再纠缠，只是把烟袋锅子往腰间一别，继续在那畜生尸体旁摆弄起来。\"\n    }\n  ],\n  \"choices\": [\n    {\n      \"action\": \"interact:ask\",\n      \"target\": {\n        \"kind\": \"person\",\n        \"name\": \"王大伯\",\n        \"ref\": \"\",\n        \"status\": null\n      },\n      \"stake\": \"low\",\n      \"purpose\": \"询问王大伯：这畜生盯着这边看，是不是因为腿断了疼得厉害\",\n      \"anchor\": 0\n    },\n    {\n      \"action\": \"interact:observe\",\n      \"target\": {\n        \"kind\": \"person\",\n        \"name\": \"王大伯\",\n        \"ref\": \"\",\n        \"status\": null\n      },\n      \"stake\": \"low\",\n      \"purpose\": \"观察王大伯的神色和动作，看他是否在隐瞒什么\",\n      \"anchor\": 0\n    },\n    {\n      \"action\": \"travel:wilderness\",\n      \"target\": {\n        \"kind\": \"place\",\n        \"name\": \"后山\",\n        \"ref\": \"\",\n        \"status\": null\n      },\n      \"stake\": \"low\",\n      \"purpose\": \"离开村子去后山寻找猎物\",\n      \"anchor\": 0\n    }\n  ],\n  \"title\": \"山村猎户家\",\n  \"location\": \"山村猎户家\",\n  \"memoryDeltas\": [\n    {\n      \"target\": {\n        \"kind\": \"person\",\n        \"name\": \"王大伯\",\n        \"ref\": \"\",\n        \"status\": null\n      },\n      \"kind\": \"fact\",\n      \"anchor\": 0\n    }\n  ]\n}",
+                  "reasoning_content": ""
+                }
+              }
+            ],
+            "usage": {
+              "prompt_tokens": 3078,
+              "completion_tokens": 421,
+              "total_tokens": 3499,
+              "prompt_tokens_details": {
+                "cached_tokens": 0
+              },
+              "neurons": 32.25340000000018
+            }
+          },
+          "rawSseBytes": 108795
+        }
+      ],
+      "revision": 4,
+      "pending": false,
+      "state": {
+        "relationshipVersion": 1,
+        "version": 5,
+        "mode": "cultivation",
+        "contentVersion": 4,
+        "rulesVersion": 1,
+        "promptVersion": 1,
+        "runId": "2fc58ac0-c011-423c-9cde-2595b15bb929",
+        "revision": 4,
+        "turnId": 4,
+        "phase": "active",
+        "rng": 3490377577,
+        "life": {
+          "name": "云归",
+          "ageDays": 5760,
+          "lifeLimit": 80,
+          "realm": "mortal",
+          "cultivation": 0,
+          "injury": 0,
+          "items": {
+            "supplies": 3,
+            "stones": 0
+          },
+          "relations": {},
+          "birth": {
+            "originId": "village",
+            "talentIds": [
+              "fortune-debt",
+              "keen-memory"
+            ],
+            "attributes": {
+              "constitution": 3,
+              "insight": 4,
+              "fortune": 5
+            }
+          }
+        },
+        "birthReceipt": {
+          "kind": "opening",
+          "choiceId": null,
+          "action": null,
+          "elapsedDays": 0,
+          "itemChanges": {},
+          "relationChanges": {},
+          "random": {
+            "before": 2507699840,
+            "after": 2507699840,
+            "roll": null
+          },
+          "before": {
+            "ageDays": 5760,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "after": {
+            "ageDays": 5760,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "death": null,
+          "birth": {
+            "originId": "village",
+            "talentIds": [
+              "fortune-debt",
+              "keen-memory"
+            ],
+            "attributes": {
+              "constitution": 3,
+              "insight": 4,
+              "fortune": 5
+            }
+          }
+        },
+        "currentScene": {
+          "id": "r:be5aee0d0cc6999a:t4:s:scene",
+          "title": "山村猎户家",
+          "location": "山村猎户家",
+          "entities": [
+            {
+              "id": "r:be5aee0d0cc6999a:t1:e:person_1",
+              "name": "王大伯",
+              "kind": "person"
+            },
+            {
+              "id": "r:be5aee0d0cc6999a:t4:e:place_1",
+              "name": "后山",
+              "kind": "place"
+            }
+          ],
+          "blocks": [
+            {
+              "kind": "narration",
+              "text": "你不想再听这晦气话，转身便走。王大伯在身后嘟囔了几句，见你头也不回，便不再纠缠，只是把烟袋锅子往腰间一别，继续在那畜生尸体旁摆弄起来。"
+            }
+          ],
+          "choices": [
+            {
+              "id": "r:be5aee0d0cc6999a:t4:c:a",
+              "label": "询问王大伯：询问王大伯：这畜生盯着这边看，是不是因为腿断了疼得厉害",
+              "intent": "interact",
+              "targetId": "r:be5aee0d0cc6999a:t1:e:person_1",
+              "stake": "low",
+              "approach": "ask"
+            },
+            {
+              "id": "r:be5aee0d0cc6999a:t4:c:b",
+              "label": "观察王大伯：观察王大伯的神色和动作，看他是否在隐瞒什么",
+              "intent": "interact",
+              "targetId": "r:be5aee0d0cc6999a:t1:e:person_1",
+              "stake": "low",
+              "approach": "observe"
+            },
+            {
+              "id": "r:be5aee0d0cc6999a:t4:c:leave",
+              "label": "结束当前互动：暂不介入此事",
+              "intent": "interact",
+              "targetId": "r:be5aee0d0cc6999a:t1:e:person_1",
+              "approach": "leave",
+              "stake": "low"
+            }
+          ],
+          "memoryDeltas": [
+            {
+              "entityId": "r:be5aee0d0cc6999a:t1:e:person_1",
+              "kind": "fact",
+              "text": "你不想再听这晦气话，转身便走。王大伯在身后嘟囔了几句，见你头也不回，便不再纠缠，只是把烟袋锅子往腰间一别，继续在那畜生尸体旁摆弄起来。"
+            }
+          ]
+        },
+        "lastReceipt": {
+          "kind": "choice",
+          "choiceId": "r:be5aee0d0cc6999a:t3:c:b",
+          "action": {
+            "id": "r:be5aee0d0cc6999a:t3:c:b",
+            "label": "婉拒王大伯：不想再听这晦气话，转身离开",
+            "intent": "interact",
+            "targetId": "r:be5aee0d0cc6999a:t1:e:person_1",
+            "stake": "low",
+            "approach": "decline"
+          },
+          "elapsedDays": 0,
+          "itemChanges": {},
+          "relationChanges": {},
+          "random": {
+            "before": 2859230130,
+            "after": 3490377577,
+            "roll": 77
+          },
+          "before": {
+            "ageDays": 5760,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "after": {
+            "ageDays": 5760,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "death": null,
+          "birth": null
+        },
+        "relatedEntities": [
+          {
+            "id": "r:be5aee0d0cc6999a:t1:e:person_1",
+            "name": "王大伯",
+            "kind": "person"
+          },
+          {
+            "id": "r:be5aee0d0cc6999a:t4:e:place_1",
+            "name": "后山",
+            "kind": "place"
+          }
+        ],
+        "archiveCursor": 0
+      },
+      "posts": 4,
+      "latency": {
+        "usable": true,
+        "errorCode": null,
+        "firstAnyPreviewMs": 9335,
+        "firstReadableMs": 9876,
+        "completionMs": 18112,
+        "narrativeChars": 67,
+        "maxPreviewGapMs": 248,
+        "readingFinishEstimateMs": 21043,
+        "readingStallEstimateMs": 0,
+        "optionsWaitEstimateMs": 0,
+        "prefetchWorthEvaluating": true,
+        "assumptions": {
+          "readingCharsPerSecond": 6,
+          "readableChars": 20,
+          "targetWaitMs": 2000
+        }
+      }
+    },
+    {
+      "caseId": "choice-4",
+      "start": 178630.3999999985,
+      "timeline": [
+        {
+          "atMs": 3459,
+          "chars": 3
+        },
+        {
+          "atMs": 3693,
+          "chars": 23
+        },
+        {
+          "atMs": 3740,
+          "chars": 28
+        },
+        {
+          "atMs": 3797,
+          "chars": 33
+        },
+        {
+          "atMs": 3860,
+          "chars": 39
+        },
+        {
+          "atMs": 3936,
+          "chars": 44
+        },
+        {
+          "atMs": 4002,
+          "chars": 48
+        },
+        {
+          "atMs": 4049,
+          "chars": 51
+        },
+        {
+          "atMs": 4099,
+          "chars": 57
+        },
+        {
+          "atMs": 4165,
+          "chars": 58
+        },
+        {
+          "atMs": 4443,
+          "chars": 67
+        }
+      ],
+      "choicesEnabledDuringPreview": false,
+      "lastText": "你不想再听这晦气话，转身便走。王大伯在身后嘟囔了几句，见你头也不回，便不再纠缠，只是把烟袋锅子往腰间一别，继续在那畜生尸体旁摆弄起来。",
+      "doneMs": 19361,
+      "result": {
+        "protocolVersion": 1,
+        "status": "rejected",
+        "requestId": "b6b972ac-caa6-4dc9-8fc4-0dde0fc57376",
+        "attemptId": "c3492852-cd70-4ae2-bb9b-b98a43b51a6a",
+        "sessionRef": "sess_d86f3e815406efcfe6363a1cd3a614cd",
+        "errorCode": "REPEATED_SCENE",
+        "retry": null
+      },
+      "request": {
+        "context": {
+          "schemaVersion": 1,
+          "phase": "choice",
+          "identity": {
+            "runId": "2fc58ac0-c011-423c-9cde-2595b15bb929",
+            "turnId": 5,
+            "baseRevision": 4,
+            "stateHash": "3bfdac266509aaad4e66c4a26b77f1fa54dc5b445049e1429e3c4d7dc4fc416a",
+            "choiceId": "r:be5aee0d0cc6999a:t4:c:leave",
+            "rulesVersion": 1,
+            "promptVersion": 1,
+            "requestId": "b6b972ac-caa6-4dc9-8fc4-0dde0fc57376"
+          },
+          "namespace": "r:be5aee0d0cc6999a",
+          "receipt": {
+            "kind": "choice",
+            "choiceId": "r:be5aee0d0cc6999a:t4:c:leave",
+            "action": {
+              "id": "r:be5aee0d0cc6999a:t4:c:leave",
+              "label": "结束当前互动：暂不介入此事",
+              "intent": "interact",
+              "targetId": "r:be5aee0d0cc6999a:t1:e:person_1",
+              "approach": "leave",
+              "stake": "low"
+            },
+            "elapsedDays": 0,
+            "itemChanges": {},
+            "relationChanges": {},
+            "random": {
+              "before": 3490377577,
+              "after": 2309091764,
+              "roll": 64
+            },
+            "before": {
+              "ageDays": 5760,
+              "realm": "mortal",
+              "cultivation": 0,
+              "injury": 0
+            },
+            "after": {
+              "ageDays": 5760,
+              "realm": "mortal",
+              "cultivation": 0,
+              "injury": 0
+            },
+            "death": null,
+            "birth": null
+          },
+          "life": {
+            "name": "云归",
+            "ageDays": 5760,
+            "lifeLimit": 80,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0,
+            "items": {
+              "supplies": 3,
+              "stones": 0
+            },
+            "relations": {},
+            "birth": {
+              "originId": "village",
+              "talentIds": [
+                "fortune-debt",
+                "keen-memory"
+              ],
+              "attributes": {
+                "constitution": 3,
+                "insight": 4,
+                "fortune": 5
+              }
+            }
+          },
+          "entities": [
+            {
+              "id": "r:be5aee0d0cc6999a:t1:e:person_1",
+              "name": "王大伯",
+              "kind": "person",
+              "status": "unknown"
+            },
+            {
+              "id": "r:be5aee0d0cc6999a:t4:e:place_1",
+              "name": "后山",
+              "kind": "place",
+              "status": "unknown"
+            }
+          ],
+          "memory": {
+            "facts": [
+              {
+                "id": "decision:4",
+                "runId": "2fc58ac0-c011-423c-9cde-2595b15bb929",
+                "turnId": 4,
+                "source": "rules",
+                "kind": "fact",
+                "entityId": "r:be5aee0d0cc6999a:t1:e:person_1",
+                "text": "你在山村猎户家选择了“婉拒王大伯：不想再听这晦气话，转身离开”。"
+              },
+              {
+                "id": "m:42cf8ac93f6b2285412e1be7eecf3e5e",
+                "source": "narrative",
+                "kind": "fact",
+                "entityId": "r:be5aee0d0cc6999a:t1:e:person_1",
+                "text": "你不想再听这晦气话，转身便走。王大伯在身后嘟囔了几句，见你头也不回，便不再纠缠，只是把烟袋锅子往腰间一别，继续在那畜生尸体旁摆弄起来。",
+                "runId": "2fc58ac0-c011-423c-9cde-2595b15bb929",
+                "turnId": 4
+              }
+            ],
+            "promises": [],
+            "clues": [
+              {
+                "id": "m:a73f5cdec6ff6c3b85748760652cf6c7",
+                "source": "narrative",
+                "kind": "clue",
+                "entityId": "r:be5aee0d0cc6999a:t1:e:person_1",
+                "text": "王大伯把烟袋锅子在鞋底磕了磕，眯着眼往那畜生身上瞅了半天，才慢吞吞地说：“断腿前没听见啥动静，就是那夹子‘咔嚓’一声，脆得很。不过这畜生怪，断腿后没跑，就在那草窝里缩着，眼珠子直勾勾地盯着这边，也不叫唤。”",
+                "status": "open",
+                "runId": "2fc58ac0-c011-423c-9cde-2595b15bb929",
+                "turnId": 3
+              },
+              {
+                "id": "m:52e80f0de07aab251ede488cd81542a9",
+                "source": "narrative",
+                "kind": "clue",
+                "entityId": "r:be5aee0d0cc6999a:t1:e:person_1",
+                "text": "王大伯直起腰，用满是老茧的手指了指黄鼠狼左后腿的根部，那里断口参差不齐，血正顺着草根往外渗，渗进泥土里，把几只蚂蚁都引来了。",
+                "status": "open",
+                "runId": "2fc58ac0-c011-423c-9cde-2595b15bb929",
+                "turnId": 2
+              },
+              {
+                "id": "m:c407f728aab2a893229bf4d73bdc3bdf",
+                "source": "narrative",
+                "kind": "clue",
+                "entityId": "r:be5aee0d0cc6999a:t1:e:person_1",
+                "text": "你站在自家破旧的木屋前，手里攥着一把卷了刃的猎刀。村口的老槐树下，王大伯正蹲在地上，手里摆弄着一只被猎夹夹断腿的黄鼠狼，嘴里念叨着晦气话。他抬头看见你，把那血淋淋的畜生往地上一扔，抹了把脸上的灰，问你有没有看见什么不干净的东西。",
+                "status": "open",
+                "runId": "2fc58ac0-c011-423c-9cde-2595b15bb929",
+                "turnId": 1
+              }
+            ],
+            "recent": [
+              {
+                "id": "turn:4",
+                "runId": "2fc58ac0-c011-423c-9cde-2595b15bb929",
+                "turnId": 4,
+                "source": "narrative",
+                "kind": "turn",
+                "text": "地点：山村猎户家；刚才选择：婉拒王大伯：不想再听这晦气话，转身离开\n你不想再听这晦气话，转身便走。王大伯在身后嘟囔了几句，见你头也不回，便不再纠缠，只是把烟袋锅子往腰间一别，继续在那畜生尸体旁摆弄起来。",
+                "entityIds": []
+              },
+              {
+                "id": "turn:3",
+                "runId": "2fc58ac0-c011-423c-9cde-2595b15bb929",
+                "turnId": 3,
+                "source": "narrative",
+                "kind": "turn",
+                "text": "地点：山村猎户家；刚才选择：询问王大伯：询问黄鼠狼是否在断腿前发出过怪声或异动\n王大伯把烟袋锅子在鞋底磕了磕，眯着眼往那畜生身上瞅了半天，才慢吞吞地说：“断腿前没听见啥动静，就是那夹子‘咔嚓’一声，脆得很。不过这畜生怪，断腿后没跑，就在那草窝里缩着，眼珠子直勾勾地盯着这边，也不叫唤。”",
+                "entityIds": []
+              }
+            ],
+            "summaries": []
+          },
+          "references": [
+            "decision:4",
+            "m:42cf8ac93f6b2285412e1be7eecf3e5e",
+            "m:a73f5cdec6ff6c3b85748760652cf6c7",
+            "m:52e80f0de07aab251ede488cd81542a9",
+            "m:c407f728aab2a893229bf4d73bdc3bdf",
+            "turn:4",
+            "turn:3"
+          ],
+          "previousScene": {
+            "id": "r:be5aee0d0cc6999a:t4:s:scene",
+            "blocksHash": "35cbcb5acc2b801e3d075dfb358a8840cd092d2161fa9f57c7d6e26ec94a3c32"
+          },
+          "relationshipVersion": 1,
+          "relationships": {},
+          "coverage": {
+            "policy": "relevance-v1",
+            "openTotal": 3,
+            "openIncluded": 3,
+            "openOmitted": 0
+          }
+        },
+        "attempt": {
+          "id": "c3492852-cd70-4ae2-bb9b-b98a43b51a6a",
+          "sessionRef": "sess_d86f3e815406efcfe6363a1cd3a614cd",
+          "retryOf": null
+        },
+        "storyActions": true
+      },
+      "decision": {
+        "index": 2,
+        "reason": "拒绝后王大伯不再纠缠，玩家未被强迫帮忙；保留追问先前异常、观察及主动结束。选择结束这场交谈，下一场必须脱离同一NPC菜单。正文背景动物死亡不是玩家收益或规则人物复活。",
+        "selected": {
+          "id": "r:be5aee0d0cc6999a:t4:c:leave",
+          "label": "结束当前互动：暂不介入此事",
+          "intent": "interact",
+          "targetId": "r:be5aee0d0cc6999a:t1:e:person_1",
+          "approach": "leave",
+          "stake": "low"
+        }
+      },
+      "choices": [
+        {
+          "id": "r:be5aee0d0cc6999a:t4:c:a",
+          "enabled": false,
+          "label": "询问王大伯：询问王大伯：这畜生盯着这边看，是不是因为腿断了疼得厉害",
+          "cost": "0日"
+        },
+        {
+          "id": "r:be5aee0d0cc6999a:t4:c:b",
+          "enabled": false,
+          "label": "观察王大伯：观察王大伯的神色和动作，看他是否在隐瞒什么",
+          "cost": "0日"
+        },
+        {
+          "id": "r:be5aee0d0cc6999a:t4:c:leave",
+          "enabled": false,
+          "label": "结束当前互动：暂不介入此事",
+          "cost": "0日"
+        }
+      ],
+      "traces": [
+        {
+          "model": "@cf/zai-org/glm-4.7-flash",
+          "inputHash": "4feb8d4bb045eec431a46734c8e6e7cc36f3b8014c9754935423883605733add",
+          "inputBytes": 18394,
+          "startedAt": 1793376451357,
+          "bindingReturnedAt": 1793376451725,
+          "liveRawBytes": 117896,
+          "captureComplete": true,
+          "response": {
+            "model": "@cf/zai-org/glm-4.7-flash",
+            "choices": [
+              {
+                "finish_reason": "stop",
+                "message": {
+                  "content": "{\n  \"blocks\": [\n    {\n      \"kind\": \"narration\",\n      \"text\": \"你不想再听这晦气话，转身便走。王大伯在身后嘟囔了几句，见你头也不回，便不再纠缠，只是把烟袋锅子往腰间一别，继续在那畜生尸体旁摆弄起来。\"\n    }\n  ],\n  \"choices\": [\n    {\n      \"action\": \"travel:wilderness\",\n      \"target\": {\n        \"kind\": \"place\",\n        \"name\": \"后山\",\n        \"ref\": \"\",\n        \"status\": null\n      },\n      \"stake\": \"low\",\n      \"purpose\": \"前往后山深处寻找新的猎物或线索\",\n      \"anchor\": 0\n    },\n    {\n      \"action\": \"interact:ask\",\n      \"target\": {\n        \"kind\": \"person\",\n        \"name\": \"王大伯\",\n        \"ref\": \"\",\n        \"status\": null\n      },\n      \"stake\": \"low\",\n      \"purpose\": \"询问王大伯关于那只黄鼠狼断腿后的具体位置\",\n      \"anchor\": 0\n    },\n    {\n      \"action\": \"interact:observe\",\n      \"target\": {\n        \"kind\": \"person\",\n        \"name\": \"王大伯\",\n        \"ref\": \"\",\n        \"status\": null\n      },\n      \"stake\": \"low\",\n      \"purpose\": \"观察王大伯处理尸体的手法和周围环境\",\n      \"anchor\": 0\n    }\n  ],\n  \"title\": \"山村猎户家\",\n  \"location\": \"山村猎户家\",\n  \"memoryDeltas\": [\n    {\n      \"target\": {\n        \"kind\": \"person\",\n        \"name\": \"王大伯\",\n        \"ref\": \"\",\n        \"status\": null\n      },\n      \"kind\": \"fact\",\n      \"anchor\": 0\n    },\n    {\n      \"target\": {\n        \"kind\": \"person\",\n        \"name\": \"王大伯\",\n        \"ref\": \"\",\n        \"status\": null\n      },\n      \"kind\": \"clue\",\n      \"anchor\": 0\n   ,\n      \"status\": \"open\"\n    }\n  ]\n}",
+                  "reasoning_content": ""
+                }
+              }
+            ],
+            "usage": {
+              "prompt_tokens": 3171,
+              "completion_tokens": 477,
+              "total_tokens": 3648,
+              "prompt_tokens_details": {
+                "cached_tokens": 0
+              },
+              "neurons": 34.803300000000206
+            }
+          },
+          "rawSseBytes": 117896
+        }
+      ],
+      "revision": 4,
+      "pending": true,
+      "state": {
+        "relationshipVersion": 1,
+        "version": 5,
+        "mode": "cultivation",
+        "contentVersion": 4,
+        "rulesVersion": 1,
+        "promptVersion": 1,
+        "runId": "2fc58ac0-c011-423c-9cde-2595b15bb929",
+        "revision": 4,
+        "turnId": 4,
+        "phase": "active",
+        "rng": 3490377577,
+        "life": {
+          "name": "云归",
+          "ageDays": 5760,
+          "lifeLimit": 80,
+          "realm": "mortal",
+          "cultivation": 0,
+          "injury": 0,
+          "items": {
+            "supplies": 3,
+            "stones": 0
+          },
+          "relations": {},
+          "birth": {
+            "originId": "village",
+            "talentIds": [
+              "fortune-debt",
+              "keen-memory"
+            ],
+            "attributes": {
+              "constitution": 3,
+              "insight": 4,
+              "fortune": 5
+            }
+          }
+        },
+        "birthReceipt": {
+          "kind": "opening",
+          "choiceId": null,
+          "action": null,
+          "elapsedDays": 0,
+          "itemChanges": {},
+          "relationChanges": {},
+          "random": {
+            "before": 2507699840,
+            "after": 2507699840,
+            "roll": null
+          },
+          "before": {
+            "ageDays": 5760,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "after": {
+            "ageDays": 5760,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "death": null,
+          "birth": {
+            "originId": "village",
+            "talentIds": [
+              "fortune-debt",
+              "keen-memory"
+            ],
+            "attributes": {
+              "constitution": 3,
+              "insight": 4,
+              "fortune": 5
+            }
+          }
+        },
+        "currentScene": {
+          "id": "r:be5aee0d0cc6999a:t4:s:scene",
+          "title": "山村猎户家",
+          "location": "山村猎户家",
+          "entities": [
+            {
+              "id": "r:be5aee0d0cc6999a:t1:e:person_1",
+              "name": "王大伯",
+              "kind": "person"
+            },
+            {
+              "id": "r:be5aee0d0cc6999a:t4:e:place_1",
+              "name": "后山",
+              "kind": "place"
+            }
+          ],
+          "blocks": [
+            {
+              "kind": "narration",
+              "text": "你不想再听这晦气话，转身便走。王大伯在身后嘟囔了几句，见你头也不回，便不再纠缠，只是把烟袋锅子往腰间一别，继续在那畜生尸体旁摆弄起来。"
+            }
+          ],
+          "choices": [
+            {
+              "id": "r:be5aee0d0cc6999a:t4:c:a",
+              "label": "询问王大伯：询问王大伯：这畜生盯着这边看，是不是因为腿断了疼得厉害",
+              "intent": "interact",
+              "targetId": "r:be5aee0d0cc6999a:t1:e:person_1",
+              "stake": "low",
+              "approach": "ask"
+            },
+            {
+              "id": "r:be5aee0d0cc6999a:t4:c:b",
+              "label": "观察王大伯：观察王大伯的神色和动作，看他是否在隐瞒什么",
+              "intent": "interact",
+              "targetId": "r:be5aee0d0cc6999a:t1:e:person_1",
+              "stake": "low",
+              "approach": "observe"
+            },
+            {
+              "id": "r:be5aee0d0cc6999a:t4:c:leave",
+              "label": "结束当前互动：暂不介入此事",
+              "intent": "interact",
+              "targetId": "r:be5aee0d0cc6999a:t1:e:person_1",
+              "approach": "leave",
+              "stake": "low"
+            }
+          ],
+          "memoryDeltas": [
+            {
+              "entityId": "r:be5aee0d0cc6999a:t1:e:person_1",
+              "kind": "fact",
+              "text": "你不想再听这晦气话，转身便走。王大伯在身后嘟囔了几句，见你头也不回，便不再纠缠，只是把烟袋锅子往腰间一别，继续在那畜生尸体旁摆弄起来。"
+            }
+          ]
+        },
+        "lastReceipt": {
+          "kind": "choice",
+          "choiceId": "r:be5aee0d0cc6999a:t3:c:b",
+          "action": {
+            "id": "r:be5aee0d0cc6999a:t3:c:b",
+            "label": "婉拒王大伯：不想再听这晦气话，转身离开",
+            "intent": "interact",
+            "targetId": "r:be5aee0d0cc6999a:t1:e:person_1",
+            "stake": "low",
+            "approach": "decline"
+          },
+          "elapsedDays": 0,
+          "itemChanges": {},
+          "relationChanges": {},
+          "random": {
+            "before": 2859230130,
+            "after": 3490377577,
+            "roll": 77
+          },
+          "before": {
+            "ageDays": 5760,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "after": {
+            "ageDays": 5760,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "death": null,
+          "birth": null
+        },
+        "relatedEntities": [
+          {
+            "id": "r:be5aee0d0cc6999a:t1:e:person_1",
+            "name": "王大伯",
+            "kind": "person"
+          },
+          {
+            "id": "r:be5aee0d0cc6999a:t4:e:place_1",
+            "name": "后山",
+            "kind": "place"
+          }
+        ],
+        "archiveCursor": 0
+      },
+      "posts": 5,
+      "latency": {
+        "usable": false,
+        "errorCode": "REPEATED_SCENE",
+        "firstAnyPreviewMs": 3459,
+        "firstReadableMs": 3693,
+        "completionMs": 19361,
+        "narrativeChars": 67,
+        "maxPreviewGapMs": 278,
+        "readingFinishEstimateMs": null,
+        "readingStallEstimateMs": null,
+        "optionsWaitEstimateMs": null,
+        "prefetchWorthEvaluating": null,
+        "assumptions": {
+          "readingCharsPerSecond": 6,
+          "readableChars": 20,
+          "targetWaitMs": 2000
+        }
+      }
+    }
+  ],
+  "errors": [
+    "Native turn did not pass"
+  ],
+  "posts": 5,
+  "refreshed": null
+}

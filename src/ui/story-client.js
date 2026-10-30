@@ -4,7 +4,7 @@ const error = code => Object.assign(new Error(code), {code});
 const identifier = value => typeof value === 'string' && /^[A-Za-z0-9][A-Za-z0-9:_-]{0,79}$/.test(value);
 export function createStoryClient({fetch:fetcher=globalThis.fetch,location=globalThis.location,timeoutMs=LIMITS.timeoutMs}={}) {
   let limits={...LIMITS};
-  async function json(path,body,streaming) {
+  async function json(path,body,streaming,storyActions=false) {
     if(location?.protocol!=='https:') throw error('SERVICE_UNAVAILABLE');
     const controller=new AbortController();
     const timer=setTimeout(()=>controller.abort(),Math.min(timeoutMs,limits.timeoutMs));
@@ -12,7 +12,7 @@ export function createStoryClient({fetch:fetcher=globalThis.fetch,location=globa
     try {
       const serialized=body===undefined?undefined:JSON.stringify(body);
       if(serialized && new TextEncoder().encode(serialized).length>limits.maxRequestBytes)throw error('REQUEST_TOO_LARGE');
-      const response=await fetcher('/api/story/'+path,{method:body===undefined?'GET':'POST',credentials:'same-origin',cache:'no-store',signal:controller.signal,...(serialized?{headers:{'Content-Type':'application/json',...(streaming?{Accept:'text/event-stream','X-Story-Queue-Status':'1'}:{})},body:serialized}:{})});
+      const response=await fetcher('/api/story/'+path,{method:body===undefined?'GET':'POST',credentials:'same-origin',cache:'no-store',signal:controller.signal,headers:{...(serialized?{'Content-Type':'application/json'}:{}),...(storyActions?{'X-Story-Actions':'1'}:{}),...(streaming?{Accept:'text/event-stream','X-Story-Queue-Status':'1'}:{})},...(serialized?{body:serialized}:{})});
       if(streaming&&response.ok&&response.headers.get('content-type')?.includes('text/event-stream')){
         reader=response.body?.getReader();if(!reader)throw error('PROTOCOL_MISMATCH');
         const decoder=new TextDecoder('utf-8',{fatal:true});let buffer='',length=0,result,previewLength=0;
@@ -63,7 +63,7 @@ export function createStoryClient({fetch:fetcher=globalThis.fetch,location=globa
     if(value.status==='ready'&&(value.errorCode!==null||!matches||!value.scene||value.retry!==null))throw error('RESPONSE_IDENTITY_MISMATCH');
     return value;
   }
-  async function requestTurn(pending,context,attempt,{onProgress}={}){if(new TextEncoder().encode(JSON.stringify(context)).length>limits.maxContextBytes)throw error('REQUEST_TOO_LARGE');return turn(await json('turn',{context,attempt},typeof onProgress==='function'?{requestId:pending.identity.requestId,attemptId:attempt.id,sessionRef:attempt.sessionRef,onProgress}:null),pending,attempt);}
-  async function getTurn(pending,attempt){return turn(await json('turn/'+encodeURIComponent(pending.identity.requestId)+'?attemptId='+encodeURIComponent(attempt.id)),pending,attempt);}
+  async function requestTurn(pending,context,attempt,{onProgress,storyActions=false}={}){if(new TextEncoder().encode(JSON.stringify(context)).length>limits.maxContextBytes)throw error('REQUEST_TOO_LARGE');return turn(await json('turn',{context,attempt,...(storyActions===true?{storyActions:true}:{})},typeof onProgress==='function'?{requestId:pending.identity.requestId,attemptId:attempt.id,sessionRef:attempt.sessionRef,onProgress}:null,storyActions===true),pending,attempt);}
+  async function getTurn(pending,attempt){return turn(await json('turn/'+encodeURIComponent(pending.identity.requestId)+'?attemptId='+encodeURIComponent(attempt.id),undefined,null,true),pending,attempt);}
   return {capabilities,createSession,requestTurn,getTurn};
 }

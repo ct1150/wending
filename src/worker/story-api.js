@@ -23,7 +23,7 @@ const randomHex=length=>Array.from(crypto.getRandomValues(new Uint8Array(length)
 function cookieHash(request){const values=(request.headers.get('cookie')??'').split(';').map(s=>s.trim()).filter(s=>s.startsWith(STORY_COOKIE+'='));if(values.length!==1)return null;const token=values[0].slice(STORY_COOKIE.length+1);return /^[a-f0-9]{64}$/.test(token)?sha256(token):null;}
 function envelope(status,errorCode=null,identity={}){const {requestId=null,attemptId=null,sessionRef=null}=identity;return {protocolVersion:1,status,requestId,attemptId,sessionRef,errorCode,retry:status==='paused'?{explicit:true,afterMs:errorCode==='ATTEMPT_IN_PROGRESS'?30000:errorCode==='PROVIDER_BUSY'?5000:0,previousAttemptId:attemptId,previousSessionRef:sessionRef}:null};}
 function json(value,status=200,extra={}){const text=JSON.stringify(value);if(encoder.encode(text).length>STORY_LIMITS.maxResponseBytes)return json(envelope('rejected','RESPONSE_TOO_LARGE'),200);return new Response(text,{status,headers:{'content-type':'application/json; charset=utf-8','cache-control':'no-store','x-content-type-options':'nosniff',...extra}});}
-function validateTurn(body){try {exactKeys(body,['context','attempt']);validateStoryContext(body.context);exactKeys(body.attempt,['id','sessionRef','retryOf']);idField(body.attempt.id);idField(body.attempt.sessionRef);if(body.attempt.retryOf!==null){exactKeys(body.attempt.retryOf,['attemptId','sessionRef']);idField(body.attempt.retryOf.attemptId);idField(body.attempt.retryOf.sessionRef);}}catch{fail('REQUEST_INVALID');}}
+function validateTurn(body,storyActions){try {exactKeys(body,['context','attempt'],['storyActions']);if(Object.hasOwn(body,'storyActions')&&(body.storyActions!==true||!storyActions))fail('REQUEST_INVALID');validateStoryContext(body.context);exactKeys(body.attempt,['id','sessionRef','retryOf']);idField(body.attempt.id);idField(body.attempt.sessionRef);if(body.attempt.retryOf!==null){exactKeys(body.attempt.retryOf,['attemptId','sessionRef']);idField(body.attempt.retryOf.attemptId);idField(body.attempt.retryOf.sessionRef);}}catch{fail('REQUEST_INVALID');}}
 
 // These dependencies are trusted server composition seams. index.js and the
 // explicit tester-only entry fix their provider/readiness policies; browser
@@ -40,7 +40,7 @@ export function createStoryApi({provider=generateScene,budget,config={},experime
       const method=capabilities||lookupPath?'GET':'POST';if(request.method!==method)return json(envelope('rejected','METHOD_NOT_ALLOWED'),405,{allow:method});
       if(url.protocol!=='https:'||request.headers.get('sec-fetch-site')==='cross-site'||request.headers.has('origin')&&request.headers.get('origin')!==url.origin||method==='POST'&&request.headers.get('origin')!==url.origin)return json(envelope('rejected','ORIGIN_INVALID'),403);
       if(!lookupPath&&url.search)return json(envelope('rejected','REQUEST_INVALID'),400);
-      if(capabilities){let errorCode=null;try{await readiness(env);}catch(error){errorCode=codeOf(error);}return json({protocolVersion:1,available:errorCode===null,status:errorCode?'paused':'ready',errorCode,limits:STORY_API_LIMITS});}
+      if(capabilities){let errorCode=null;try{await readiness(env);}catch(error){errorCode=codeOf(error);}return json({protocolVersion:1,available:errorCode===null,status:errorCode?'paused':'ready',errorCode,storyActions:true,limits:STORY_API_LIMITS});}
       const ipHash=sha256(request.headers.get('cf-connecting-ip')??'unknown');
       const admission=await callBudget('admit',{ipHash});if(admission.kind==='denied')return json(envelope('paused',admission.code),429);
       let body;if(method==='POST')body=await readStoryJson(request);
@@ -53,26 +53,30 @@ export function createStoryApi({provider=generateScene,budget,config={},experime
         if(created.kind==='denied')return json(envelope('paused',created.code),429);
         return json({protocolVersion:1,status:'ready',sessionRef,expiresAt:created.expiresAt},200,{'set-cookie':`${STORY_COOKIE}=${token}; Path=/; Max-Age=86400; HttpOnly; Secure; SameSite=Strict`});
       }
-      if(turnPath){validateTurn(body);identity={requestId:body.context.identity.requestId,attemptId:body.attempt.id,sessionRef:body.attempt.sessionRef};}
+      if(turnPath){validateTurn(body,request.headers.get('X-Story-Actions')==='1');identity={requestId:body.context.identity.requestId,attemptId:body.attempt.id,sessionRef:body.attempt.sessionRef};}
       else {try{identity.requestId=decodeURIComponent(path.slice('/api/story/turn/'.length));identity.attemptId=url.searchParams.get('attemptId');idField(identity.requestId);idField(identity.attemptId);if([...url.searchParams].length!==1||!url.searchParams.has('attemptId'))fail('REQUEST_INVALID');}catch{fail('REQUEST_INVALID');}}
       const tokenHash=cookieHash(request);if(!tokenHash)return json(envelope('paused','SESSION_UNAVAILABLE',identity));
+      const storyActions=request.headers.get('X-Story-Actions')==='1';
       const authenticated=await callBudget('getSession',{tokenHash,...(turnPath?{sessionRef:identity.sessionRef}:{})});
       if(authenticated.kind!=='session')return json(envelope('paused','SESSION_UNAVAILABLE',identity));
       identity.sessionRef=authenticated.sessionRef;
       const lookup=await callBudget('lookup',{...identity,tokenHash});
+      if(lookup.kind==='replay'&&!storyActions&&lookup.result?.scene?.choices.some(choice=>choice.intent==='interact'))return json(envelope('paused','CLIENT_UPDATE_REQUIRED',identity));
       if(lookupPath)return json(lookup.kind==='replay'?lookup.result:envelope('paused',lookup.code,identity));
-      const reservationInput={...identity,tokenHash,ipHash,payloadHash:sha256(canonicalStringify(body)),contextHash:sha256(canonicalStringify(body.context)),reservedNeurons:TURN_RESERVATION_NEURONS,retryOf:body.attempt.retryOf};
+      const reservationInput={...identity,tokenHash,ipHash,payloadHash:sha256(canonicalStringify(storyActions?{...body,storyActions:true}:body)),contextHash:sha256(canonicalStringify(storyActions?{context:body.context,storyActions:true}:body.context)),reservedNeurons:TURN_RESERVATION_NEURONS,retryOf:body.attempt.retryOf};
       // Check duplicate payload before readiness, so cached results remain readable
       // when inference is disabled. reserve never adds another existing attempt.
       let profile;
       if(!['ATTEMPT_NOT_FOUND','ATTEMPT_NOT_ADMITTED'].includes(lookup.code)){
         const repeated=await callBudget('reserve',reservationInput);
+        if(repeated.kind==='replay'&&!storyActions&&repeated.result?.scene?.choices.some(choice=>choice.intent==='interact'))return json(envelope('paused','CLIENT_UPDATE_REQUIRED',identity));
         return json(repeated.kind==='replay'?repeated.result:envelope(repeated.code==='ATTEMPT_PAYLOAD_MISMATCH'?'rejected':'paused',repeated.code,identity));
       }
       try{profile=await readiness(env);}catch(error){return json(envelope('paused',codeOf(error),identity));}
       reservationInput.quotaProvider='cloudflare';
       const providerDeadline=Date.now()+STORY_LIMITS.timeoutMs;
       const reserved=await callBudget('reserve',reservationInput);
+      if(reserved.kind==='replay'&&!storyActions&&reserved.result?.scene?.choices.some(choice=>choice.intent==='interact'))return json(envelope('paused','CLIENT_UPDATE_REQUIRED',identity));
       if(reserved.kind!=='reserved')return json(reserved.kind==='replay'?reserved.result:envelope(['ATTEMPT_PAYLOAD_MISMATCH','RETRY_INVALID'].includes(reserved.code)?'rejected':'paused',reserved.code,identity));
       if(experiment){
         let admitted;try{admitted=await experiment.reserve(reservationInput);}catch{}
@@ -92,7 +96,7 @@ export function createStoryApi({provider=generateScene,budget,config={},experime
         if(Date.now()>=providerDeadline)generated={status:'paused',errorCode:'PROVIDER_TIMEOUT',accountingStatus:'unknown',inferencePerformed:false};
         else generated=await Promise.race([Promise.resolve().then(()=>{
           if(controller.signal.aborted||Date.now()>=providerDeadline)throw Object.assign(Error('PROVIDER_TIMEOUT'),{code:'PROVIDER_TIMEOUT'});
-          return provider(env.AI,profile,body.context,{attemptId:identity.attemptId},{deadlineAt:providerDeadline,signal:controller.signal,onProgress:event=>{if(providerActive)onProgress(event);}});
+          return provider(env.AI,profile,body.context,{attemptId:identity.attemptId},{storyActions,deadlineAt:providerDeadline,signal:controller.signal,onProgress:event=>{if(providerActive)onProgress(event);}});
         }),new Promise(resolve=>{timer=setTimeout(()=>{controller.abort();resolve({status:'paused',errorCode:'PROVIDER_TIMEOUT',accountingStatus:'unknown',inferencePerformed:true});},Math.max(1,providerDeadline-Date.now()));})]);
       }catch(error){generated={status:'paused',errorCode:error?.code==='PROVIDER_TIMEOUT'?'PROVIDER_TIMEOUT':'PROVIDER_FAILED',accountingStatus:'unknown',inferencePerformed:true};}finally{providerActive=false;clearTimeout(timer);controller.abort();}
       const latencyMs=Date.now()-providerStartedAt;
@@ -100,6 +104,7 @@ export function createStoryApi({provider=generateScene,budget,config={},experime
       let result,observationStage='provider',apiDiagnostic;
       if(generated?.status==='ready'){
         try {
+          if(!storyActions&&generated.scene?.choices.some(choice=>choice.intent==='interact'))fail('GENERATED_SCENE_INVALID');
           const scene=validateGeneratedScene(generated.scene,body.context);result={...envelope('ready',null,identity),scene};
           if(encoder.encode(JSON.stringify(result)).length>STORY_LIMITS.maxResponseBytes){observationStage='api-envelope';result=envelope('rejected','GENERATED_SCENE_INVALID',identity);}
         }catch(error){

@@ -1,0 +1,147 @@
+{
+  "status": "RELEASE_BLOCKED_NOT_PUBLISHED",
+  "recordedAt": "2026-10-30T16:21:49.349Z",
+  "runtimeEquivalentTo": "f8610b8fb91638c768c658182e78666cccae566c",
+  "successfulConsecutiveSavedScenes": 4,
+  "requiredSuccessfulScenes": 6,
+  "gatePassed": false,
+  "captures": [
+    {
+      "evidence": "docs/evidence/story-coherence-2026-10-30/20261030T160304673Z/turn-0.json",
+      "providerInput": "docs/evidence/story-coherence-2026-10-30/20261030T160304673Z/turn-0-provider-input.json",
+      "sourceCommit": "f8610b8fb91638c768c658182e78666cccae566c",
+      "inputHash": "947d7a061be8d44e6f3cb3f0e367ab3f6430526b539828b1df7c3824ddaa13fd",
+      "status": "ready",
+      "errorCode": null,
+      "revision": 1,
+      "pending": false,
+      "firstPreviewMs": 2506,
+      "completionMs": 12907
+    },
+    {
+      "evidence": "docs/evidence/story-coherence-2026-10-30/20261030T160304673Z/turn-1.json",
+      "providerInput": "docs/evidence/story-coherence-2026-10-30/20261030T160304673Z/turn-1-provider-input.json",
+      "sourceCommit": "f8610b8fb91638c768c658182e78666cccae566c",
+      "inputHash": "384844964b7d7c8e7ebbf0683a5a2e58d15e8312e4c6943d9fd24aa62055e6c6",
+      "status": "ready",
+      "errorCode": null,
+      "revision": 2,
+      "pending": false,
+      "firstPreviewMs": 23961,
+      "completionMs": 40519
+    },
+    {
+      "evidence": "docs/evidence/story-coherence-2026-10-30/20261030T160304673Z/turn-2.json",
+      "providerInput": "docs/evidence/story-coherence-2026-10-30/20261030T160304673Z/turn-2-provider-input.json",
+      "sourceCommit": "f8610b8fb91638c768c658182e78666cccae566c",
+      "inputHash": "419be8289659da88fb8409b6161691944a34225176778a6310a361fb5cda3913",
+      "status": "ready",
+      "errorCode": null,
+      "revision": 3,
+      "pending": false,
+      "firstPreviewMs": 3007,
+      "completionMs": 12555
+    },
+    {
+      "evidence": "docs/evidence/story-coherence-2026-10-30/20261030T160304673Z/turn-3.json",
+      "providerInput": "docs/evidence/story-coherence-2026-10-30/20261030T160304673Z/turn-3-provider-input.json",
+      "sourceCommit": "f8610b8fb91638c768c658182e78666cccae566c",
+      "inputHash": "b758525639e3425bc8d69ecb2aa92c287f7fd308d8c8493f054c8421ccab5e69",
+      "status": "ready",
+      "errorCode": null,
+      "revision": 4,
+      "pending": false,
+      "firstPreviewMs": 9335,
+      "completionMs": 18112
+    },
+    {
+      "evidence": "docs/evidence/story-coherence-2026-10-30/20261030T160304673Z/turn-4.json",
+      "providerInput": "docs/evidence/story-coherence-2026-10-30/20261030T160304673Z/turn-4-provider-input.json",
+      "sourceCommit": "f8610b8fb91638c768c658182e78666cccae566c",
+      "inputHash": "4feb8d4bb045eec431a46734c8e6e7cc36f3b8014c9754935423883605733add",
+      "status": "rejected",
+      "errorCode": "REPEATED_SCENE",
+      "revision": 4,
+      "pending": true,
+      "firstPreviewMs": 3459,
+      "completionMs": 19361
+    },
+    {
+      "evidence": "docs/evidence/story-coherence-2026-10-30/20261030T160304673Z/farewell-retry/turn-4.json",
+      "providerInput": "docs/evidence/story-coherence-2026-10-30/20261030T160304673Z/farewell-retry/turn-4-provider-input.json",
+      "sourceCommit": "f8610b8fb91638c768c658182e78666cccae566c",
+      "inputHash": "4feb8d4bb045eec431a46734c8e6e7cc36f3b8014c9754935423883605733add",
+      "status": "rejected",
+      "errorCode": "REPEATED_SCENE",
+      "revision": 4,
+      "pending": true,
+      "firstPreviewMs": 4987,
+      "completionMs": 11152
+    },
+    {
+      "evidence": "docs/evidence/story-coherence-2026-10-30/20261030T161036761Z/turn-4.json",
+      "providerInput": "docs/evidence/story-coherence-2026-10-30/20261030T161036761Z/turn-4-provider-input.json",
+      "sourceCommit": "009d4f9f05cc47757de1f3c133ad7dd7f292b764",
+      "inputHash": "cdd8420e8f60fc05be776b2eef892f69f21a4e67d3e300652cc9e2f07210271b",
+      "status": "rejected",
+      "errorCode": "REPEATED_SCENE",
+      "revision": 4,
+      "pending": true,
+      "firstPreviewMs": 10435,
+      "completionMs": 16655
+    },
+    {
+      "evidence": "docs/evidence/story-coherence-2026-10-30/20261030T161522885Z/turn-4.json",
+      "providerInput": "docs/evidence/story-coherence-2026-10-30/20261030T161522885Z/turn-4-provider-input.json",
+      "sourceCommit": "de20c4806ee42e9f0b1c6f0a5808f34d822515e9",
+      "inputHash": "b30605cb8dafe93a051197881155b6d857cd7c9417f550e778b15bc190fb251e",
+      "status": "rejected",
+      "errorCode": "REPEATED_SCENE",
+      "revision": 4,
+      "pending": true,
+      "firstPreviewMs": 1563,
+      "completionMs": 12927
+    }
+  ],
+  "observations": [
+    "Two concrete questions received specific answers; refusing the request did not grant items, advance days or force assistance.",
+    "All four attempts at the following farewell copied the preceding refusal exactly. REPEATED_SCENE rejected them before commit; revision4 and the pending turn were retained.",
+    "The preceding decline choice already included turning away. Overlap between that purpose and the subsequent farewell is an observed contributing context, not a proven sole cause.",
+    "An explicit current-action prefix and combining consecutive user messages each failed to prevent copying. Both experimental changes were removed.",
+    "Actual saved-turn first preview ranged from 2.506 to 23.961 seconds; save completion ranged from 12.555 to 40.519 seconds. Stable fluent play is not proven."
+  ],
+  "candidateVerification": {
+    "fullTests": {
+      "passed": 1005,
+      "failed": 0,
+      "runtimeSource": "f8610b8fb91638c768c658182e78666cccae566c",
+      "command": "node --test --test-concurrency=2 tests/*.test.js",
+      "syntaxFiles": 178,
+      "buildPassed": true
+    },
+    "postRestorationRelated": {
+      "passed": 80,
+      "failed": 0
+    },
+    "sourceAndTestsIdenticalToTestedRuntime": true
+  },
+  "providerPolicy": {
+    "modelId": "@cf/zai-org/glm-4.7-flash",
+    "route": "cloudflare-only",
+    "paidFallback": false,
+    "preload": false,
+    "namespaceId": "1de1df3929534a8d8d495d6db6604e99",
+    "accountPlanEvidence": "Retained operator snapshot from 2026-10-28; no fresh billing verification claimed"
+  },
+  "production": {
+    "published": false,
+    "sourceCommit": "c00f56781dc120394c7d96785350d2e583c55207",
+    "version": "cad2a140-240f-4465-a837-e53f054c2589",
+    "percentage": 100,
+    "cleanupDeployment": "8b7a6b83-0731-4549-9815-f8761361bd34",
+    "newWorkers": 0,
+    "newNamespaces": 0,
+    "ledgerReset": false
+  },
+  "nextDecision": "Whether refusal/farewell may be completed immediately by rules, leaving AI for the next observation or journey. No change to the approved design is assumed without an answer."
+}

@@ -75,6 +75,7 @@ test('dense valid GLM contexts remain inside the actual serialized request budge
     const total=c.memory.promises.length+c.memory.clues.length;c.coverage={policy:'relevance-v1',openTotal:total,openIncluded:total,openOmitted:0};
     validateStoryContext(c);assert.ok(Buffer.byteLength(JSON.stringify(c))<=7000);
     let input;assert.doesNotThrow(()=>{input=buildStoryInput(GLM_PROFILE,c);},'valid context with '+count+' additional NPCs and obligations');assert.ok(Buffer.byteLength(JSON.stringify(input))<=24576);
+    assert.doesNotThrow(()=>buildStoryInput({...GLM_PROFILE,storyActions:true},c),'modern story actions also fit the unchanged request budget');
   }
 });
 
@@ -115,13 +116,18 @@ test('the captured real identifier failure remains rejected and a player alias c
   assert.throws(()=>validateGeneratedScene(module.decodeGlmScene(s,c),c),{code:'ENTITY_IDENTITY_CONFLICT'});
 });
 
+test('legacy generated labels cannot override the executable target',()=>{
+  const value=wire();value.choices[0]={action:'fight:assault',targetId:'p1',stake:'low',label:'射杀野猪',anchor:'陈叔指向远处的山道'};
+  assert.equal(module.decodeGlmScene(value,context()).choices[0].label,'向陈叔发起攻势（谨慎）');
+});
+
 test('wire action codes produce labels from the actual target and reject unknown action pairs',()=>{
   const c=context(),s=wire();s.choices[0].action='travel:recover';assert.throws(()=>module.decodeGlmScene(s,c),{code:'GENERATED_SCENE_INVALID'});
   const input=buildStoryInput(GLM_PROFILE,c);assert.match(input.messages[0].content,/"action"/);assert.doesNotMatch(input.messages[0].content,/"required":\["id","label"/);
 });
 
 test('packing maps only typed references even when IDs collide with field names, prose and record IDs',()=>{
-  const c=knownContext(),old=c.entities[0].id;c.entities[0].id='identity';c.entities[0].name='identity';c.memory.promises[0].id='identity';c.memory.promises[0].entityId='identity';c.memory.promises[0].text='identity';c.references=['identity'];
+  const c=knownContext(),old=c.entities[0].id;c.memory.recent=[];c.entities[0].id='identity';c.entities[0].name='identity';c.memory.promises[0].id='identity';c.memory.promises[0].entityId='identity';c.memory.promises[0].text='identity';c.references=['identity'];
   c.relationships.identity=c.relationships[old];delete c.relationships[old];c.life.relations.identity=c.life.relations[old];delete c.life.relations[old];validateStoryContext(c);
   const packed=module.buildGlmWire(c,'base').context;
   assert.equal(packed.identity,undefined);assert.equal(packed.entities[0].id,'k1');assert.equal(packed.entities[0].name,'identity');assert.equal(packed.memory.promises[0].id,'m1');assert.equal(packed.memory.promises[0].entityId,'k1');assert.equal(packed.memory.promises[0].text,'identity');assert.equal(packed.references[0],'m1');assert.doesNotMatch(JSON.stringify(packed),/stateHash/);

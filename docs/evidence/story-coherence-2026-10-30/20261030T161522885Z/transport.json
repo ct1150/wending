@@ -1,0 +1,44 @@
+[
+  {
+    "path": "/api/story/capabilities",
+    "status": 200,
+    "cookiePresent": true,
+    "actionMode": null,
+    "setCookiePresent": false
+  },
+  {
+    "path": "/api/story/turn/b6b972ac-caa6-4dc9-8fc4-0dde0fc57376",
+    "status": 200,
+    "cookiePresent": true,
+    "actionMode": "1",
+    "setCookiePresent": false
+  },
+  {
+    "path": "/api/story/turn/b6b972ac-caa6-4dc9-8fc4-0dde0fc57376",
+    "status": 200,
+    "cookiePresent": true,
+    "actionMode": "1",
+    "setCookiePresent": false
+  },
+  {
+    "path": "/api/story/capabilities",
+    "status": 200,
+    "cookiePresent": true,
+    "actionMode": null,
+    "setCookiePresent": false
+  },
+  {
+    "path": "/api/story/session",
+    "status": 200,
+    "cookiePresent": true,
+    "actionMode": null,
+    "setCookiePresent": false
+  },
+  {
+    "path": "/api/story/turn",
+    "status": 200,
+    "cookiePresent": true,
+    "actionMode": "1",
+    "setCookiePresent": false
+  }
+]
