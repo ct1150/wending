@@ -2,6 +2,8 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { createLiveGame,prepareOpening,prepareChoice,commitTurn } from '../src/game/cultivation/live/engine.js';
 import { buildStoryContext } from '../src/game/cultivation/live/memory.js';
+import { SCENE_SCHEMA,validateGeneratedScene as validateSceneStructure } from '../src/game/cultivation/live/schema.js';
+import { sha256 } from '../src/game/cultivation/live/identity.js';
 import { buildGlmWire,decodeGlmScene } from '../src/worker/story-glm-wire.js';
 import { buildNamedSceneSchema } from '../src/worker/story-named-targets.js';
 import { createStoryDirector,buildDirectorContext } from '../src/game/cultivation/live/story-director.js';
@@ -38,6 +40,24 @@ test('v7 named generation preserves story annotations after the streamed choices
   assert.match(built.instructions,/200[—–-]400/);
 });
 
+test('v7 GLM input omits unsupported anchor uniqueness without weakening the canonical schema',()=>{
+  const input=buildStoryInput({...GLM_PROFILE,storyActions:true},context());
+  const schema=input.response_format.json_schema.schema;
+  assert.deepEqual(schema.properties.story.properties.anchors,{type:'array',minItems:1,maxItems:2,items:{type:'integer',minimum:0,maximum:3}});
+  assert.ok(!JSON.stringify(schema).includes('"uniqueItems"'),'native XGrammar prevalidation rejects this keyword before generating');
+  assert.equal(SCENE_SCHEMA.properties.story.properties.anchors.uniqueItems,true,'provider projection must not mutate the authoritative schema');
+});
+
+test('v7 provider rejects duplicate story anchors even when native grammar cannot enforce uniqueness',async()=>{
+  const c=context(),wire=wireFixture();wire.story.anchors=[0,0];
+  const decoded=decodeGlmScene(wire,c,{storyActions:true});
+  assert.throws(()=>validateSceneStructure(decoded),{code:'STORY_ANNOTATION_INVALID'});
+  const result=await generateProviderScene({run:async()=>({model:GLM_MODEL_ID,choices:[{finish_reason:'stop',message:{content:JSON.stringify(wire)}}],usage:{prompt_tokens:400,completion_tokens:450,total_tokens:850}})},{...GLM_PROFILE,storyActions:true},c);
+  assert.equal(result.status,'rejected');
+  assert.equal(result.errorCode,'GENERATED_SCENE_INVALID');
+  assert.equal(result.scene,undefined,'invalid metadata cannot reach the commit boundary');
+});
+
 test('v7 schemas expose only paired executable craft resources and the next higher realm',()=>{
   const c=context();c.life.realm='spirit';
   const schema=buildGlmWire(c,'',{storyActions:true}).schema;
@@ -57,6 +77,9 @@ test('legacy named wire keeps its original two-choice contract and never request
   assert.ok(!schema.required.includes('story'));
   assert.ok(!JSON.stringify(schema).includes('practice:forbidden'));
   assert.ok(!JSON.stringify(schema).includes('voidstone'));
+  // Independently reproduced from the released 4.5.1 source at aa758e1.
+  const submitted=buildStoryInput({...GLM_PROFILE,storyActions:true},c).response_format.json_schema.schema;
+  assert.equal(sha256(JSON.stringify(submitted)),'477a559f18c58363dab44506792c758e784e99511fa8880080816ed305506907');
 });
 
 test('a complete v7 provider turn carries its durable director within the existing request budget',async()=>{

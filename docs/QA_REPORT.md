@@ -1,3 +1,11 @@
+# 百世问鼎 · 5.0.1 模型结构兼容修复
+
+5.0.0 的[精确合并提交 CI](https://github.com/ct1150/wending/actions/runs/41145978135)通过 1090 项测试、200 项 JavaScript 语法检查和前后端构建。公开页面与健康检查已对应该构建，但首个实际 v7 开局在约 1.09 秒返回 `paused / PROVIDER_FAILED`，因此不能将基础设施健康当成模型开局已通过。
+
+实际失败上下文通过同一个 `generateScene → createGlmTransport → generateProviderScene` 链路的本地 SSE 验证，输入 20,824 字节，没有重现前置或流式解析异常。使用 [SGLang 上游纯校验器](https://github.com/sgl-project/sglang/blob/main/python/sglang/srt/constrained/json_schema_validation.py)（读取时 blob SHA `976e68e7e0d0045f8dcb2080e28cf932a7decb83`）离线验证：旧版结构通过，实际 v7 结构在 `#/properties/story/properties/anchors` 因 `uniqueItems` 被拒绝，仅删除该字段后的同一结构通过。Cloudflare 的[模型部署说明](https://blog.cloudflare.com/smaller-faster-safer-models/)说明使用 SGLang，但实际线上构建版本并不可见。
+
+修复只调整发给 GLM 的生成结构，保留原始 `SCENE_SCHEMA` 的唯一性声明和 `validateStoryAnnotation` 的重复检查。新增回归同时检查实际 provider 输入与重复锚点拒绝；旧版生成结构保持一致。正式精确提交 CI、部署和实际模型结果集中记录在本次修复 PR，未完成检查不记为通过。
+
 # 百世问鼎 · 5.0.0 凡人流 v7 验证
 
 本轮实现范围见[设计](superpowers/specs/2026-10-31-cultivation-v7-design.md)与[计划](superpowers/plans/2026-10-31-cultivation-v7.md)。新增规则测试覆盖普通时间与寿元上限分离、折寿与延寿、九境材料门槛与失败、四艺、黑市、跨界和旧引擎重放；集成测试覆盖自定义输入、导演上下文和轮回传承。
