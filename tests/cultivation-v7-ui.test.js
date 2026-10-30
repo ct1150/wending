@@ -27,6 +27,7 @@ function fixture() {
 test('v7 identity shows elapsed age over the maximum instead of remaining life in all accessible copy', () => {
   const { state } = fixture();
   const summary = character.liveCharacterSummary(state, { REALMS, ORIGINS, TALENTS, ITEMS });
+  assert.ok(summary.attributes.every(attribute=>attribute.name!=='气运'),'v7 fortune remains hidden');
   const html = character.renderIdentityBar(summary) + character.renderCharacterDetails(summary);
   assert.match(html, /16\.5\s*\/\s*80/);
   assert.doesNotMatch(html, /余寿|剩余寿|63\.5/);
