@@ -43,6 +43,12 @@ function actionRule(state,p) {
  case 'evade':target(entity&&entity.status!=='dead'&&['person','faction'].includes(entity.kind));rule.days=p.approach==='withdraw'?14:30;rule.risk=p.approach==='withdraw'?15:0;rule.relationship=-1;break;
  case 'travel':target(entity&&entity.kind==='place');rule.days=p.approach==='road'?30:60;rule.items.supplies=1;rule.risk=p.approach==='wilderness'?25:0;break;
  case 'craft':target((p.targetId==='manual'&&p.approach==='study')||(p.targetId==='talisman'&&p.approach==='forge'));rule.days=p.approach==='study'?180:30;rule.items.stones=p.approach==='study'?2:1;if(p.approach==='forge')rule.items.iron=2;rule.gain[p.targetId]=1;break;
+ case 'interact':
+  target(p.stake==='low');rule.days=p.approach==='help'?1:0;
+  if(p.approach==='ask'||p.approach==='decline')target(entity&&entity.status!=='dead'&&['person','faction'].includes(entity.kind));
+  else if(p.approach==='help'){target(entity&&entity.kind==='person'&&entity.status!=='dead');rule.items.supplies=1;rule.relationship=2;}
+  else target(p.targetId==='self'||entity&&(p.approach==='observe'||entity.status!=='dead'));
+  break;
  }
  for(const [id,n] of Object.entries(rule.items))if((life.items[id]??0)<n)rule.reason='缺少'+ITEMS[id]+'。';
  for(const [id,n] of Object.entries(rule.gain))if((life.items[id]??0)-(rule.items[id]??0)+n>9999)rule.reason='行囊已经装不下。';
@@ -97,7 +103,7 @@ export function commitTurn(state,pending,scene,restoredRelations={}) {
  // Every current target and memory reference must have an explicit stable entity.
  for(const m of scene.memoryDeltas)if(!relatedEntities.some(e=>e.id===m.entityId))throw new Error('记忆引用未知实体。');
  const life=copy(fixed.nextLife);life.relations=projectRelations(life,relatedEntities,state.relationshipVersion===1?restoredRelations:{});
- const next={...copy(state),revision:state.revision+1,turnId:state.turnId+1,phase:'active',life,rng:fixed.nextRng,lastReceipt:copy(fixed.receipt),currentScene:copy(scene),relatedEntities};
+ const next={...copy(state),...(scene.choices.some(choice=>choice.intent==='interact')?{relationshipVersion:1}:{}),revision:state.revision+1,turnId:state.turnId+1,phase:'active',life,rng:fixed.nextRng,lastReceipt:copy(fixed.receipt),currentScene:copy(scene),relatedEntities};
  const choices=compileChoices(next,scene.choices);if(!choices.some(p=>p.enabled))throw new Error('场景必须保留可执行行动。');return validateLiveState(next);
 }
 export function settleDeath(state,pending) {const fixed=verifiedPending(state,pending);if(!fixed.receipt.death)throw new Error('尚未真实死亡。');return validateLiveState({...copy(state),revision:state.revision+1,turnId:state.turnId+1,phase:'dead',life:copy(fixed.nextLife),rng:fixed.nextRng,lastReceipt:copy(fixed.receipt),currentScene:null});}

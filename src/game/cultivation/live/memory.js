@@ -85,11 +85,23 @@ function latestRecords(records,state) {
   return [...rows.values()].sort((a,b)=>b.turnId-a.turnId||(a.id<b.id?-1:a.id>b.id?1:0));
 }
 
+export function sceneTurnRecord(scene,{runId,turnId,action=null}) {
+  idField(runId);whole(turnId,1);validateStructure(scene);
+  const prefix=Array.from('地点：'+scene.location+(action?'；刚才选择：'+action.label:'')+'\n').slice(0,120).join('');
+  const tail=[];let length=prefix.length;
+  for(const character of Array.from(scene.blocks.map(block=>block.text).join('\n')).reverse()){
+    if(length+character.length>500)break;tail.unshift(character);length+=character.length;
+  }
+  return {id:'turn:'+turnId,runId,turnId,source:'narrative',kind:'turn',text:(prefix+tail.join('')).trim(),entityIds:[]};
+}
+
 export function buildStoryContext(state,pending,relatedRecords=[],options={}) {
   inspect(options);
-  exactKeys(options,[],['selection','openTotal']);
+  exactKeys(options,[],['selection','openTotal','continuity']);
+  if(options.continuity!==undefined&&typeof options.continuity!=='boolean')fail('STORY_CONTEXT_INVALID');
+  const continuity=options.continuity!==false;
   const selecting=options.selection==='relevance-v1';
-  if(Object.keys(options).length && (!selecting || !Number.isSafeInteger(options.openTotal) || options.openTotal<0))fail('STORY_CONTEXT_INVALID');
+  if((options.selection!==undefined||options.openTotal!==undefined) && (!selecting || !Number.isSafeInteger(options.openTotal) || options.openTotal<0))fail('STORY_CONTEXT_INVALID');
   inspect(state);inspect(pending);inspect(relatedRecords,256*1024);
   if(!Array.isArray(relatedRecords)||relatedRecords.length>256)fail('MEMORY_RETRIEVAL_TOO_LARGE');
   let fixed;
@@ -98,7 +110,8 @@ export function buildStoryContext(state,pending,relatedRecords=[],options={}) {
     if(!fixed||!equal(fixed,pending))fail('ACTION_RECEIPT_MISMATCH');
   } catch { fail('ACTION_RECEIPT_MISMATCH'); }
   if(fixed.receipt.death)fail('DEATH_REQUIRES_LOCAL_SETTLEMENT');
-  const records=latestRecords(relatedRecords,state),entities=new Map();
+  const current=continuity&&state.currentScene?sceneTurnRecord(state.currentScene,{runId:state.runId,turnId:state.turnId,action:state.lastReceipt?.action}):null;
+  const records=latestRecords([...relatedRecords,...(current?[current]:[])],state),entities=new Map();
   const addEntity=(entity,status)=>{
     const old=entities.get(entity.id),next={id:entity.id,name:entity.name,kind:entity.kind,status};
     if(old){if(old.name!==next.name||old.kind!==next.kind)fail('ENTITY_IDENTITY_CONFLICT');if(old.status==='dead'||next.status==='dead')next.status='dead';else if(next.status==='unknown')next.status=old.status;}
@@ -123,7 +136,7 @@ export function buildStoryContext(state,pending,relatedRecords=[],options={}) {
     result.relationships=projectRelations(fixed.nextLife,result.entities,restored);
   }
   if(selecting) {
-    selectRelevantMemory(result,records,state,entities,options.openTotal);
+    selectRelevantMemory(result,records,state,entities,options.openTotal,current?.id);
     validateStoryContext(result);
     return freeze(result);
   }
@@ -139,7 +152,7 @@ export function buildStoryContext(state,pending,relatedRecords=[],options={}) {
 
 // Selection changes only prompt coverage. Immutable rows and unresolved statuses
 // remain in the archive; the same fixed action and candidates give the same DTO.
-function selectRelevantMemory(result,records,state,entities,openTotal) {
+function selectRelevantMemory(result,records,state,entities,openTotal,currentTurnId) {
   const currentIds=new Set(state.relatedEntities.map(entity=>entity.id));
   const openCandidates=records.filter(row=>['promise','clue'].includes(row.kind)&&row.status==='open');
   if(openCandidates.length>openTotal)fail('STORY_CONTEXT_INVALID');
@@ -161,7 +174,7 @@ function selectRelevantMemory(result,records,state,entities,openTotal) {
   if(!fits())fail('MEMORY_CONTEXT_TOO_LARGE');
   const target=result.receipt.action?.targetId;
   const relevance=row=>row.entityId===target?0:currentIds.has(row.entityId)?1:2;
-  const priority=row=>['promise','clue'].includes(row.kind)&&row.status==='open'?0:row.kind==='death'?1:['fact','relationship','receipt'].includes(row.kind)?2:3;
+  const priority=row=>row.id===currentTurnId?-1:['promise','clue'].includes(row.kind)&&row.status==='open'?0:row.kind==='death'?1:['fact','relationship','receipt'].includes(row.kind)?2:3;
   const ordered=[...records].sort((a,b)=>priority(a)-priority(b)||relevance(a)-relevance(b)||b.turnId-a.turnId||(a.id<b.id?-1:a.id>b.id?1:0));
   const groups={receipt:'facts',fact:'facts',relationship:'facts',death:'facts',promise:'promises',clue:'clues',turn:'recent',summary:'summaries'};
   const limits={facts:16,promises:12,clues:12,recent:4,summaries:2};
@@ -170,12 +183,17 @@ function selectRelevantMemory(result,records,state,entities,openTotal) {
     if(!group||result.memory[group].length>=limits[group])continue;
     if(row.kind==='summary'&&row.references.some(id=>!result.references.includes(id)))continue;
     const previousEntities=result.entities;
-    const required=row.entityId?[row.entityId]:row.kind==='turn'?row.entityIds:[];
+    const required=row.entityId?[row.entityId]:row.kind==='turn'?[...new Set([...row.entityIds,...(row.id===currentTurnId?[]:[...entities.values()].filter(entity=>row.text.includes(entity.name)).map(entity=>entity.id))])]:[];
     const missing=required.filter(id=>!result.entities.some(entity=>entity.id===id));
     if(missing.some(id=>!entities.has(id)))continue;
     result.entities=[...result.entities,...missing.map(id=>entities.get(id))];
     result.memory[group].push(row);
     refresh();
+    if(row.id===currentTurnId){
+      while(!fits()&&row.text.length>40){const characters=Array.from(row.text);row.text=characters.slice(0,10).join('')+'…'+characters.slice(20).join('');}
+      // Old legal scenes may leave no room even for the record envelope.
+      // Keep their authoritative identities/receipt and omit optional prose.
+    }
     if(!fits()) {
       result.memory[group].pop();
       result.entities=previousEntities;
@@ -259,10 +277,10 @@ function compilationState(c,scene) {
   // Mirror commitTurn's bounded active relation set while keeping the complete
   // immutable relationChanges receipt available for permanent archive storage.
   const life=copy(c.life);life.relations=projectRelations(life,scene.entities,c.relationshipVersion===1?c.relationships:{});
-  return {...(c.relationshipVersion===1?{relationshipVersion:1}:{}),version:5,mode:'cultivation',contentVersion:4,rulesVersion:1,promptVersion:1,runId:c.identity.runId,revision:c.identity.turnId,turnId:c.identity.turnId,phase:'active',rng:c.receipt.random.after,life,birthReceipt,currentScene:scene,lastReceipt:c.receipt,relatedEntities:scene.entities,archiveCursor:0};
+  return {...(c.relationshipVersion===1||scene.choices.some(choice=>choice.intent==='interact')?{relationshipVersion:1}:{}),version:5,mode:'cultivation',contentVersion:4,rulesVersion:1,promptVersion:1,runId:c.identity.runId,revision:c.identity.turnId,turnId:c.identity.turnId,phase:'active',rng:c.receipt.random.after,life,birthReceipt,currentScene:scene,lastReceipt:c.receipt,relatedEntities:scene.entities,archiveCursor:0};
 }
 
-export function validateGeneratedScene(raw,context) {
+export function validateGeneratedScene(raw,context,{checkNextContext,continuity=false,requireExit=false}={}) {
   inspect(raw);validateStoryContext(context);
   try { validateStructure(raw); } catch { fail('GENERATED_SCENE_INVALID'); }
   const prefix=turnPrefix(context);
@@ -308,6 +326,7 @@ export function validateGeneratedScene(raw,context) {
   } catch { fail('CHOICE_NOT_COMPILABLE'); }
   const enabled=choices.filter(choice=>choice.enabled);
   if(!enabled.length)fail('NO_EXECUTABLE_CHOICE');
+  if(requireExit&&(enabled.length<2||!enabled.some(choice=>choice.intent==='interact'&&['decline','leave'].includes(choice.approach)||choice.intent==='evade')))fail('CHOICE_NOT_COMPILABLE');
   for(const choice of enabled) {
     const pending=prepareChoice(prospective,{choiceId:choice.id,requestId:'r'.repeat(80)});
     if(pending.receipt.death)continue;
@@ -315,12 +334,15 @@ export function validateGeneratedScene(raw,context) {
       // Admit the scene only if every living next action can carry its required
       // identity/receipt data. Optional history remains independently selected.
       // Reserve the largest request ID and coverage counters, not a fixed NPC cap.
-      buildStoryContext(prospective,pending,[],{
+      const nextContext=buildStoryContext(prospective,pending,[],{
         selection:'relevance-v1',
         openTotal:Number.MAX_SAFE_INTEGER,
+        continuity,
       });
+      if(continuity&&!nextContext.memory.recent.some(record=>record.kind==='turn'&&record.turnId===prospective.turnId))fail('NEXT_CONTEXT_TOO_LARGE');
+      checkNextContext?.(nextContext);
     } catch(error) {
-      if(error.code==='MEMORY_CONTEXT_TOO_LARGE'||error.code==='STORY_DATA_TOO_LARGE')fail('NEXT_CONTEXT_TOO_LARGE');
+      if(['MEMORY_CONTEXT_TOO_LARGE','STORY_DATA_TOO_LARGE','INPUT_TOO_LARGE','CONTEXT_TOO_LARGE'].includes(error.code))fail('NEXT_CONTEXT_TOO_LARGE');
       throw error;
     }
   }

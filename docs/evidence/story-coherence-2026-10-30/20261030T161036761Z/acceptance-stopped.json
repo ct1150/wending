@@ -1,0 +1,11 @@
+{
+  "status": "NOT_ACCEPTED",
+  "sourceCommit": "009d4f9f05cc47757de1f3c133ad7dd7f292b764",
+  "rejected": [
+    "turn-4.json"
+  ],
+  "reason": "Explicit current action in a second consecutive user message did not prevent copied refusal; source-specific input/response retained",
+  "cleanupDeployment": "b051155f-1094-4a5a-a2c8-06397d2def0d",
+  "normalVersion": "cad2a140-240f-4465-a837-e53f054c2589",
+  "at": "2026-10-30T16:15:22.149Z"
+}

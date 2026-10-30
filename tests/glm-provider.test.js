@@ -1,9 +1,11 @@
+import {namedGlmFixture} from './helpers/named-glm-fixture.js';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import * as config from '../src/worker/story-config.js';
 import {generateScene} from '../src/worker/story-provider.js';
 import {createLiveGame,prepareOpening} from '../src/game/cultivation/live/engine.js';
 import {buildStoryContext} from '../src/game/cultivation/live/memory.js';
+import {buildStoryInput} from '../src/worker/story-provider-core.js';
 const previewModule=await import('../src/game/cultivation/live/story-preview.js').catch(()=>null);
 const context=()=>{const state=createLiveGame({runId:'glm-fixture-run',seed:42});return buildStoryContext(state,prepareOpening(state,{requestId:'glm-opening'}));};
 const scene=c=>({id:c.namespace+':t1:s:scene',title:'山风',location:'山下',entities:[],blocks:[{kind:'narration',text:'山风拂过，你望向远山。'}],choices:[{id:c.namespace+':t1:c:a',label:'歇息调养（谨慎）',intent:'rest',targetId:'self',stake:'low',approach:'recover'},{id:c.namespace+':t1:c:b',label:'凝神修行（谨慎）',intent:'practice',targetId:'self',stake:'low',approach:'steady'}],memoryDeltas:[]});
@@ -16,6 +18,32 @@ function stream(value,{model=config.GLM_MODEL_ID,usage={prompt_tokens:100,comple
   const bytes=encode.encode(frames.map(x=>'data: '+JSON.stringify(x)+'\r\n\r\n').join('')+'data: [DONE]\r\n\r\n');let offset=0;
   return new ReadableStream({pull(controller){if(offset>=bytes.length)return controller.close();controller.enqueue(bytes.slice(offset,offset+7));offset+=7;}});
 }
+
+test('the production GLM wrapper carries negotiated story actions into format guidance and final decoding',async()=>{
+  const c=context(),wire={blocks:[{kind:'narration',text:'陈叔请你先留意林中的求救声。'}],title:'林间求救',location:'林外',otherPeople:[{id:'p1',name:'陈叔'}],places:[],factions:[],choices:[{action:'interact:ask',targetId:'p1',stake:'low',purpose:'求救声从何而来',anchor:0},{action:'interact:leave',targetId:'p1',stake:'low',purpose:'结束这次交谈',anchor:0}],memoryDeltas:[]};
+  for(const storyActions of [false,true]){
+    let input;const result=await generateScene({run:async(model,value)=>{input=value;return stream(namedGlmFixture(wire,value));}},profile(),c,{}, {storyActions});
+    assert.equal(input.response_format.type,'json_schema');
+    if(storyActions)assert.ok(input.response_format.json_schema.schema.properties.choices.items.oneOf.some(row=>row.properties.action.enum.includes('interact:ask')));
+    else assert.equal(input.response_format.json_schema.schema.properties.choices.items.oneOf.some(row=>row.properties.action.enum.some(action=>action.startsWith('interact:'))),false);
+    assert.equal(result.status,storyActions?'ready':'rejected');if(storyActions)assert.equal(result.scene.choices[0].label,'询问陈叔：'+wire.choices[0].purpose);
+  }
+});
+
+test('production streaming composes the canonical action and the generated concrete purpose',async()=>{
+  const c=context(),wire={blocks:[{kind:'narration',text:'陈叔指向林中，等你决定是否调查。'}],title:'林边',location:'林外',otherPeople:[{id:'p1',name:'陈叔'}],places:[],factions:[],choices:[{action:'interact:ask',targetId:'p1',stake:'low',purpose:'林中刚才发生了什么',anchor:0},{action:'interact:leave',targetId:'p1',stake:'low',purpose:'结束这次交谈，继续原定行程',anchor:0}],memoryDeltas:[]},events=[];let input;
+  const result=await generateScene({run:async(model,value)=>{input=value;return stream(namedGlmFixture(wire,value));}},profile(),c,{}, {storyActions:true,onProgress:event=>events.push(event)});
+  assert.equal(result.status,'ready');assert.equal(result.scene.choices[0].label,'询问陈叔：林中刚才发生了什么');assert.equal(input.messages.length,3);
+  assert.ok(input.response_format.json_schema.schema.properties.choices.items.oneOf.every(row=>row.required.includes('purpose')));assert.ok(events.some(event=>event.type==='preview'));
+});
+
+test('a new provider scene is rejected before ready if its next actual input exceeds the validated profile',async()=>{
+  const c=context(),wire=wireScene(scene(c));
+  wire.choices[0]={...wire.choices[0],purpose:'在林边歇息并留意众人的反应',anchor:0};wire.choices[1]={action:'interact:leave',targetId:'self',stake:'low',purpose:'结束这次交谈',anchor:0};
+  const firstBytes=Buffer.byteLength(JSON.stringify(buildStoryInput({...profile(),storyActions:true},c)));let calls=0;
+  const result=await generateScene({run:async(_model,input)=>{calls++;return stream(namedGlmFixture(wire,input));}}, {...profile(),maxInput:firstBytes+10},c,{}, {storyActions:true});
+  assert.equal(calls,1);assert.equal(result.status,'rejected');assert.equal(result.errorCode,'NEXT_CONTEXT_TOO_LARGE');
+});
 
 test('GLM keeps its candidate gate separate from the evidence-backed CF and historical Qwen release profiles',()=>{
   assert.equal(config.GLM_MODEL_ID,'@cf/zai-org/glm-4.7-flash');

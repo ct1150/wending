@@ -1,0 +1,16 @@
+{
+  "status": "NOT_ACCEPTED",
+  "sourceCommit": "de20c4806ee42e9f0b1c6f0a5808f34d822515e9",
+  "errorCode": "REPEATED_SCENE",
+  "evidence": "turn-4.json",
+  "cleanup": {
+    "deployment": "8b7a6b83-0731-4549-9815-f8761361bd34",
+    "normalVersion": "cad2a140-240f-4465-a837-e53f054c2589",
+    "percentage": 100,
+    "ownCredentialFilesRemoved": 18,
+    "probeInfoStatus": 404,
+    "probeTracesStatus": 404
+  },
+  "fullTests": 1005,
+  "at": "2026-10-30T16:22:24.443Z"
+}

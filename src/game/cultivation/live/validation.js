@@ -50,7 +50,9 @@ export function validateReceipt(row) {
     if (row.choiceId !== null || row.action !== null || row.elapsedDays !== 0 || Object.keys(row.itemChanges).length || Object.keys(row.relationChanges).length || row.death !== null || row.random.before !== row.random.after || row.random.roll !== null || !same(row.before, row.after)) throw new Error('出生收据不能包含行动结果。');
   } else {
     validateProposal(row.action);
-    if (row.choiceId !== row.action.id || row.birth !== null || row.elapsedDays < 1 || row.random.roll === null) throw new Error('行动收据无效。');
+    const immediate=row.action.intent==='interact'&&['ask','observe','decline','leave'].includes(row.action.approach)&&row.action.stake==='low';
+    if (row.choiceId !== row.action.id || row.birth !== null || row.elapsedDays < (immediate?0:1) || row.random.roll === null) throw new Error('行动收据无效。');
+    if(immediate&&(row.elapsedDays!==0||Object.keys(row.itemChanges).length||Object.keys(row.relationChanges).length||!same(row.before,row.after)||row.death!==null))throw new Error('短时互动不能产生资源或数值变化。');
     if (row.before.injury >= 10 || row.before.ageDays >= REALMS[row.before.realm].lifeLimit * DAYS_PER_YEAR) throw new Error('死亡后不能产生行动收据。');
     const expectedRandom = (Math.imul(row.random.before, 1664525) + 1013904223) >>> 0;
     if (row.random.after !== expectedRandom || row.random.roll !== expectedRandom % 100) throw new Error('行动随机收据不一致。');
@@ -120,5 +122,8 @@ function validateContextualTarget(state,p) {
  if(['negotiate','fight','evade'].includes(p.intent))valid=entity&&entity.status!=='dead'&&['person','faction'].includes(entity.kind);
  if(p.intent==='travel')valid=entity&&entity.kind==='place';
  if(p.intent==='craft')valid=p.targetId==='manual'&&p.approach==='study'||p.targetId==='talisman'&&p.approach==='forge';
+ if(p.intent==='interact'){
+  valid=p.stake==='low'&&(p.approach==='help'?entity&&entity.kind==='person'&&entity.status!=='dead':['ask','decline'].includes(p.approach)?entity&&entity.status!=='dead'&&['person','faction'].includes(entity.kind):p.targetId==='self'||entity&&(p.approach==='observe'||entity.status!=='dead'));
+ }
  if(!valid)throw new Error('存档行动目标无效。');
 }
