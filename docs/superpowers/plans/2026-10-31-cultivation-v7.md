@@ -51,7 +51,7 @@ Files: live/custom-actions.js, reincarnation.js, live-archive.js and integration
 - [x] Test clear mappings, ambiguous/impossible input rejection and deterministic pending replay.
 - [x] Preserve submitted intent in rule receipt and immutable generation input.
 - [x] Derive genuine death settlement, affordable rewards and archive-backed single claim.
-- [ ] Verify JSONL export/import and competing archive writes.
+- [x] Verify JSONL export/import and competing archive writes.
 
 ## Task 4: Continuous game presentation
 
@@ -60,11 +60,13 @@ Files: app.js, ui/journey.js, character.js, live-session.js, paper.css and focus
 - [x] Apply exact startup copy and current/max lifespan.
 - [x] Present feedback, changed stats and actual checks without empty noise; preserve stream DOM.
 - [x] Wire numbered choices/custom action, v7 model exits, death settlement and explicit rebirth.
-- [ ] Verify invalid-input recovery, mobile layout, stream completion and legacy entry points.
+- [x] Verify invalid-input recovery, mobile layout, stream completion and legacy entry points.
 
 ## Task 5: Integration, review and release
 
 - [x] Integrate director hooks and cross-module helpers; review broad changes against the spec.
-- [ ] Run relevant regression suite, syntax check and frontend/backend builds; resolve concrete failures.
+- [x] Run relevant regression suite, syntax check and frontend/backend builds; resolve concrete failures.
 - [ ] Publish reviewable GitHub branch/PR, verify exact commit checks and merge when passing.
 - [ ] Deploy compatible Cloudflare backend on existing bindings; verify public release identity and retain truthful limitations.
+
+Implementation and native regression checks are complete. Final exact-commit CI, merge and deployment execution is recorded in [PR #20](https://github.com/ct1150/wending/pull/20); repository checkboxes above reflect the pre-release snapshot.

@@ -303,8 +303,8 @@ test('contract vocabulary is complete and accounting is independent of public er
   const {STORY_ERROR_CODES}=await import('../src/game/cultivation/live/memory.js');
   const {PROVIDER_ERROR_CODES}=await import('../src/worker/story-provider.js');
   const {readFile}=await import('node:fs/promises');
-  const source=await readFile(new URL('../src/game/cultivation/live/memory.js',import.meta.url),'utf8');
-  assert.deepEqual([...new Set([...source.matchAll(/fail\('([A-Z_]+)'\)/g)].map(m=>m[1]))].sort(),[...STORY_ERROR_CODES].sort());
+  const source=(await Promise.all(['memory.js','story-director.js','story-annotation.js'].map(file=>readFile(new URL('../src/game/cultivation/live/'+file,import.meta.url),'utf8')))).join('\n');
+  assert.deepEqual([...new Set([...source.matchAll(/(?:fail|new Error)\('([A-Z_]+)'\)/g)].map(m=>m[1]))].sort(),[...STORY_ERROR_CODES].sort());
   for(const code of [...STORY_ERROR_CODES,'SECRET_INTERNAL_FAILURE']) {
     if(code!=='SECRET_INTERNAL_FAILURE')assert.ok(PROVIDER_ERROR_CODES.includes(code));
     const f=fixture(async()=>({status:'rejected',accountingStatus:'complete',errorCode:code}));t.after(()=>f.db.close());const s=await session(f);
