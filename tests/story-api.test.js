@@ -18,22 +18,32 @@ const req=(path,body,cookie,headers={})=>new Request(origin+path,{method:body===
 async function session(f){const r=await f.api.fetch(req('/api/story/session',{protocolVersion:1}));return {data:await r.json(),cookie:r.headers.get('set-cookie')?.split(';')[0],setCookie:r.headers.get('set-cookie')};}
 const body=(s,id='attempt-1',retryOf=null)=>({context:context(),attempt:{id,sessionRef:s.data.sessionRef,retryOf}});
 
-test('switching to the trusted Zhipu route preserves old quota replies while allowing a new explicit attempt',async t=>{
+test('switching to CF GLM preserves old quota replies and cannot bypass the Cloudflare daily lock',async t=>{
   const profile={modelId:'legacy-cloudflare'};let first=true;
   const f=fixture(async(ai,p,c)=>{if(first){first=false;return {status:'paused',errorCode:'FREE_QUOTA_EXHAUSTED',accountingStatus:'complete'};}return {status:'ready',scene:scene(c),accountingStatus:'complete'};},{profile});t.after(()=>f.db.close());
   const s=await session(f),prior=await(await f.api.fetch(req('/api/story/turn',body(s),s.cookie))).json();assert.equal(prior.errorCode,'FREE_QUOTA_EXHAUSTED');
   profile.modelId=GLM_MODEL_ID;
-  const next=await(await f.api.fetch(req('/api/story/turn',body(s,'attempt-2',{sessionRef:s.data.sessionRef,attemptId:'attempt-1'}),s.cookie))).json();assert.equal(next.status,'ready');assert.equal(f.calls,2);
-  assert.deepEqual(await(await f.api.fetch(req('/api/story/turn',body(s),s.cookie))).json(),prior);assert.equal(f.db.prepare('SELECT COUNT(*) AS n FROM quota').get().n,1);assert.equal(f.db.prepare('SELECT COUNT(*) AS n FROM ledger').get().n,2);
+  const retry=body(s,'attempt-2',{sessionRef:s.data.sessionRef,attemptId:'attempt-1'});
+  const next=await(await f.api.fetch(req('/api/story/turn',retry,s.cookie))).json();assert.equal(next.errorCode,'FREE_QUOTA_EXHAUSTED');assert.equal(f.calls,1);
+  assert.deepEqual(await(await f.api.fetch(req('/api/story/turn',body(s),s.cookie))).json(),prior);assert.equal(f.db.prepare('SELECT COUNT(*) AS n FROM quota').get().n,1);assert.equal(f.db.prepare('SELECT COUNT(*) AS n FROM ledger').get().n,1);
+  f.setNow(Date.parse('2026-10-28T00:00:00.000Z'));
+  assert.equal((await(await f.api.fetch(req('/api/story/turn',retry,s.cookie))).json()).status,'ready');assert.equal(f.calls,2);
+  assert.deepEqual(await(await f.api.fetch(req('/api/story/turn',body(s),s.cookie))).json(),prior);
   const injected={...body(s,'injected'),quotaProvider:'zhipu'};assert.equal((await(await f.api.fetch(req('/api/story/turn',injected,s.cookie))).json()).status,'rejected');assert.equal(f.calls,2);
 });
 
-test('actual Cloudflare fallback exhaustion records its lock without blocking the independent Zhipu retry',async t=>{
+test('CF-only GLM quota errors set the daily lock even without a redundant source annotation',async t=>{
   const profile={modelId:GLM_MODEL_ID};let first=true;
-  const f=fixture(async(ai,p,c)=>{if(first){first=false;return {status:'paused',errorCode:'FREE_QUOTA_EXHAUSTED',providerSource:'cloudflare',accountingStatus:'complete'};}return {status:'ready',scene:scene(c),accountingStatus:'complete'};},{profile});t.after(()=>f.db.close());
+  const f=fixture(async(ai,p,c)=>{if(first){first=false;return {status:'paused',errorCode:'FREE_QUOTA_EXHAUSTED',accountingStatus:'complete'};}return {status:'ready',scene:scene(c),accountingStatus:'complete'};},{profile});t.after(()=>f.db.close());
   const s=await session(f);assert.equal((await(await f.api.fetch(req('/api/story/turn',body(s),s.cookie))).json()).errorCode,'FREE_QUOTA_EXHAUSTED');assert.equal(f.db.prepare('SELECT COUNT(*) AS n FROM quota').get().n,1);
-  assert.equal((await(await f.api.fetch(req('/api/story/turn',body(s,'attempt-2',{sessionRef:s.data.sessionRef,attemptId:'attempt-1'}),s.cookie))).json()).status,'ready');
-  profile.modelId='legacy-cloudflare';const other=await session(f);assert.equal((await(await f.api.fetch(req('/api/story/turn',body(other),other.cookie))).json()).errorCode,'FREE_QUOTA_EXHAUSTED');assert.equal(f.calls,2);
+  assert.equal((await(await f.api.fetch(req('/api/story/turn',body(s,'attempt-2',{sessionRef:s.data.sessionRef,attemptId:'attempt-1'}),s.cookie))).json()).errorCode,'FREE_QUOTA_EXHAUSTED');
+  profile.modelId='legacy-cloudflare';const other=await session(f);assert.equal((await(await f.api.fetch(req('/api/story/turn',body(other),other.cookie))).json()).errorCode,'FREE_QUOTA_EXHAUSTED');assert.equal(f.calls,1);
+});
+
+test('the story API never reads the old Zhipu secret for a CF-only turn',async t=>{
+  const f=fixture();t.after(()=>f.db.close());const s=await session(f);
+  const env={get ZHIPU_API_KEY(){throw Error('unused secret must not be read');}};
+  assert.equal((await(await f.api.fetch(req('/api/story/turn',body(s),s.cookie),env)).json()).status,'ready');assert.equal(f.calls,1);
 });
 
 test('default API watchdog pauses at 90 seconds and preserves the unknown reservation without retry',async t=>{
@@ -42,7 +52,7 @@ test('default API watchdog pauses at 90 seconds and preserves the unknown reserv
   const f=fixture(async()=>{enter();return new Promise(()=>{});});
   t.after(()=>f.db.close());
   const s=await session(f),turn=body(s);
-  t.mock.timers.enable({apis:['setTimeout']});
+  t.mock.timers.enable({apis:['setTimeout','Date'],now:Date.now()});
   let settled=false;
   const pending=f.api.fetch(req('/api/story/turn',turn,s.cookie));
   pending.then(()=>{settled=true;},()=>{settled=true;});

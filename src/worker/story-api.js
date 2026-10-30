@@ -1,4 +1,4 @@
-import { STORY_LIMITS, CANDIDATE_PROFILE, GLM_MODEL_ID, GLM_PROFILE, assertProviderReady } from './story-config.js';
+import { STORY_LIMITS, CANDIDATE_PROFILE, GLM_PROFILE, assertProviderReady } from './story-config.js';
 import { generateScene, PROVIDER_ERROR_CODES } from './story-provider.js';
 import { validateStoryContext,validateGeneratedScene } from '../game/cultivation/live/memory.js';
 import { canonicalStringify,sha256 } from '../game/cultivation/live/identity.js';
@@ -70,9 +70,7 @@ export function createStoryApi({provider=generateScene,budget,config={},experime
         return json(repeated.kind==='replay'?repeated.result:envelope(repeated.code==='ATTEMPT_PAYLOAD_MISMATCH'?'rejected':'paused',repeated.code,identity));
       }
       try{profile=await readiness(env);}catch(error){return json(envelope('paused',codeOf(error),identity));}
-      // This is server metadata. A historical Cloudflare-only quota latch must
-      // not prevent the independent Zhipu primary; replay remains unchanged.
-      reservationInput.quotaProvider=profile.modelId===GLM_MODEL_ID?'zhipu':'cloudflare';
+      reservationInput.quotaProvider='cloudflare';
       const providerDeadline=Date.now()+STORY_LIMITS.timeoutMs;
       const reserved=await callBudget('reserve',reservationInput);
       if(reserved.kind!=='reserved')return json(reserved.kind==='replay'?reserved.result:envelope(['ATTEMPT_PAYLOAD_MISMATCH','RETRY_INVALID'].includes(reserved.code)?'rejected':'paused',reserved.code,identity));
@@ -94,13 +92,11 @@ export function createStoryApi({provider=generateScene,budget,config={},experime
         if(Date.now()>=providerDeadline)generated={status:'paused',errorCode:'PROVIDER_TIMEOUT',accountingStatus:'unknown',inferencePerformed:false};
         else generated=await Promise.race([Promise.resolve().then(()=>{
           if(controller.signal.aborted||Date.now()>=providerDeadline)throw Object.assign(Error('PROVIDER_TIMEOUT'),{code:'PROVIDER_TIMEOUT'});
-          return provider(env.AI,profile,body.context,{attemptId:identity.attemptId},{apiKey:env.ZHIPU_API_KEY,providerGate:budget,deadlineAt:providerDeadline,signal:controller.signal,onProgress:event=>{if(providerActive)onProgress(event);}});
+          return provider(env.AI,profile,body.context,{attemptId:identity.attemptId},{deadlineAt:providerDeadline,signal:controller.signal,onProgress:event=>{if(providerActive)onProgress(event);}});
         }),new Promise(resolve=>{timer=setTimeout(()=>{controller.abort();resolve({status:'paused',errorCode:'PROVIDER_TIMEOUT',accountingStatus:'unknown',inferencePerformed:true});},Math.max(1,providerDeadline-Date.now()));})]);
       }catch(error){generated={status:'paused',errorCode:error?.code==='PROVIDER_TIMEOUT'?'PROVIDER_TIMEOUT':'PROVIDER_FAILED',accountingStatus:'unknown',inferencePerformed:true};}finally{providerActive=false;clearTimeout(timer);controller.abort();}
       const latencyMs=Date.now()-providerStartedAt;
-      // Preserve the Cloudflare-specific latch even when reached as fallback.
-      // An independent Zhipu primary is admitted through its own quota scope.
-      const quotaExhausted=generated?.errorCode==='FREE_QUOTA_EXHAUSTED'&&(profile.modelId!==GLM_MODEL_ID||generated?.providerSource==='cloudflare');
+      const quotaExhausted=generated?.errorCode==='FREE_QUOTA_EXHAUSTED';
       let result,observationStage='provider',apiDiagnostic;
       if(generated?.status==='ready'){
         try {

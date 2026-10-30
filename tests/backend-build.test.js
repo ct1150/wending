@@ -29,7 +29,7 @@ test('backend package includes deterministic complete ESM graph, named DO export
   assert.equal(manifest.main_module,'entry.mjs');assert.equal(manifest.sourceCommit,sourceCommit);
   assert.deepEqual(manifest.versions,{protocolVersion:1,rulesVersion:1,promptVersion:1,saveVersion:5,contentVersion:4});
   assert.equal(manifest.enabled,false);
-  assert.equal(manifest.candidateModelId,DEFAULT_STORY_MODEL_ID);assert.equal(manifest.activeModelId,null);assert.deepEqual(manifest.optionalSecrets,['ZHIPU_API_KEY']);
+  assert.equal(manifest.candidateModelId,DEFAULT_STORY_MODEL_ID);assert.equal(manifest.activeModelId,null);assert.deepEqual(manifest.optionalSecrets,[]);
   assert.ok(manifest.modules.some(m=>m.name==='src/worker/story-budget.js'));
   assert.ok(manifest.modules.some(m=>m.name==='src/game/cultivation/live/identity.js'));
   assert.equal(manifest.modules.some(m=>m.name.startsWith('src/ui/')),false);

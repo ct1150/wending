@@ -28,15 +28,39 @@ export function buildGlmWire(context,system){
   delete schema.properties.id;schema.required=schema.required.filter(key=>key!=='id');
   const entityProperties=schema.properties.entities.items.properties;
   delete schema.properties.entities;
-  for(const [field,kind,letter]of [['otherPeople','person','p'],['places','place','l'],['factions','faction','f']])schema.properties[field]={type:'array',maxItems:24,items:{type:'object',additionalProperties:false,required:['id','name'],properties:{id:{enum:[...context.entities.flatMap((entity,index)=>entity.kind===kind?['k'+(index+1)]:[]),...Array.from({length:24},(_,index)=>letter+(index+1))]},name:{...entityProperties.name,...(kind==='person'?{not:{enum:[context.life.name]}}:{})},...(kind==='person'?{status:entityProperties.status}:{})}}};
+  for(const [field,kind,letter]of [['otherPeople','person','p'],['places','place','l'],['factions','faction','f']])schema.properties[field]={type:'array',maxItems:24,items:{oneOf:[
+    ...context.entities.flatMap((entity,index)=>entity.kind===kind?[{type:'object',additionalProperties:false,required:['id','name',...(kind==='person'&&entity.status==='dead'?['status']:[])],properties:{id:{const:'k'+(index+1)},name:{const:entity.name},...(kind==='person'?{status:entity.status==='dead'?{const:'dead'}:entityProperties.status}:{})}}]:[]),
+    {type:'object',additionalProperties:false,required:['id','name'],properties:{id:{enum:Array.from({length:24},(_,index)=>letter+(index+1))},name:{...entityProperties.name,...(kind==='person'?{not:{enum:[context.life.name]}}:{})},...(kind==='person'?{status:entityProperties.status}:{})}},
+  ]}};
   const choiceProperties=schema.properties.choices.items.properties;
-  schema.properties.choices.items.required=['action','targetId','stake'];
-  schema.properties.choices.items.properties={action:{enum:Object.entries(INTENTS).flatMap(([intent,approaches])=>approaches.map(approach=>intent+':'+approach))},targetId:choiceProperties.targetId,stake:choiceProperties.stake};
-  schema.properties.blocks.items.properties.speaker={enum:['self',...context.entities.flatMap((entity,index)=>entity.kind==='person'?['k'+(index+1)]:[]),...Array.from({length:24},(_,index)=>'p'+(index+1))]};
-  schema.properties.choices.items.properties.targetId={enum:['self',...Object.keys(ITEMS),...Object.keys(REALMS),...entityAliases]};
-  schema.properties.memoryDeltas.items.properties.entityId={enum:entityAliases};
-  if(obligations.length)schema.properties.memoryDeltas.items.properties.referenceId={enum:obligations.map((_,index)=>'m'+(index+1))};
-  else delete schema.properties.memoryDeltas.items.properties.referenceId;
+  const actors=[...context.entities.flatMap((entity,index)=>['person','faction'].includes(entity.kind)&&entity.status!=='dead'?['k'+(index+1)]:[]),...['p','f'].flatMap(letter=>Array.from({length:24},(_,index)=>letter+(index+1)))];
+  const arrived=context.receipt.action?.intent==='travel'?context.receipt.action.targetId:null;
+  const places=[...context.entities.flatMap((entity,index)=>entity.kind==='place'&&entity.id!==arrived?['k'+(index+1)]:[]),...Array.from({length:24},(_,index)=>'l'+(index+1))];
+  const nextRealm=Object.values(REALMS).find(realm=>realm.rank===REALMS[context.life.realm].rank+1)?.id;
+  const actionGroups=new Map();
+  for(const [intent,approaches]of Object.entries(INTENTS))for(const approach of approaches){
+    const targets=intent==='travel'?places:['negotiate','fight','evade'].includes(intent)?actors:intent==='explore'?Object.keys(ITEMS).filter(id=>id!=='talisman'):intent==='craft'?[approach==='study'?'manual':'talisman']:intent==='practice'&&approach==='breakthrough'?(nextRealm?[nextRealm]:[]):['self'];
+    if(!targets.length)continue;
+    const key=JSON.stringify(targets),group=actionGroups.get(key)??{targets,actions:[]};group.actions.push(intent+':'+approach);actionGroups.set(key,group);
+  }
+  schema.properties.choices.items={oneOf:[...actionGroups.values()].map(group=>({type:'object',additionalProperties:false,required:['action','targetId','stake'],properties:{action:{enum:group.actions},targetId:{enum:group.targets},stake:choiceProperties.stake}}))};
+  const text=schema.properties.blocks.items.properties.text;
+  schema.properties.blocks.items={oneOf:[
+    {type:'object',additionalProperties:false,required:['kind','text'],properties:{kind:{const:'narration'},text}},
+    {type:'object',additionalProperties:false,required:['kind','text','speaker'],properties:{kind:{const:'dialogue'},text,speaker:{enum:['self',...context.entities.flatMap((entity,index)=>entity.kind==='person'&&entity.status!=='dead'?['k'+(index+1)]:[]),...Array.from({length:24},(_,index)=>'p'+(index+1))]}}},
+  ]};
+  // Share the long alias list between memory kinds instead of copying it into
+  // each grammar alternative as the remembered cast grows.
+  schema.$defs={entityRef:{enum:entityAliases}};
+  const memoryBase={entityId:{$ref:'#/$defs/entityRef'},text:schema.properties.memoryDeltas.items.properties.text};
+  schema.properties.memoryDeltas.items={oneOf:[
+    {type:'object',additionalProperties:false,required:['entityId','kind','text'],properties:{...memoryBase,kind:{enum:['fact','relationship','death']}}},
+    {type:'object',additionalProperties:false,required:['entityId','kind','text','status'],properties:{...memoryBase,kind:{enum:['promise','clue']},status:{const:'open'}}},
+    ...['promise','clue'].flatMap(kind=>{
+      const ids=obligations.flatMap((record,index)=>record.kind===kind&&record.status==='open'&&aliases.has(record.entityId)?['m'+(index+1)]:[]);
+      return ids.length?[{type:'object',additionalProperties:false,required:['referenceId','status'],properties:{referenceId:{enum:ids},status:{enum:kind==='promise'?['resolved','broken']:['resolved']}}}]:[];
+    }),
+  ]};
   schema.properties=Object.fromEntries(['blocks','title','location','otherPeople','places','factions','choices','memoryDeltas'].map(key=>[key,schema.properties[key]]));
   schema.required=Object.keys(schema.properties);
   const identityGuide='Known entities keep input aliases k1,k2...; new person IDs=p1,p2...; new place IDs=l1,l2...; new faction IDs=f1,f2... (1-24). Scene and choices have NO id field: the server assigns their IDs. NPC death requires status dead and a death memory.';
@@ -46,8 +70,8 @@ export function buildGlmWire(context,system){
     .replace('label必须完整包含该目的地的name，且','')
     .replace(/^choices\.label.*$/m,'choices仅写action、targetId、stake。action=意图:方式，如rest:recover、practice:steady、travel:road。选项文字由服务端按实际目标生成，不输出label、intent、approach或id。')
     .replaceAll('entities','名单(otherPeople/places/factions)')
-    +'\n正文采用第二人称“你”，主角对白speaker只用self。otherPeople只列主角以外的NPC，只有主角出场时otherPeople=[]。places只列地点，factions只列势力。名单中不写kind；仅NPC可写status。禁止把life.name、你、玩家或主角列为NPC。新人物只用p1等，地点只用l1等，势力只用f1等；不得使用中文ID或自行编造其他别名。所有speaker和人物/地点targetId必须在相应名单中声明。travel必须另选一个尚未抵达的目的地，其name不能等于location。格式片段示例：主角对白={"kind":"dialogue","speaker":"self","text":"我该动身了。"}；location="村口"时可前往places=[{"id":"l1","name":"山道"}]，动作={"action":"travel:road","targetId":"l1","stake":"low"}。关闭已有约定/线索只用输入m1等referenceId，原文保持不变。先写blocks，再写其余字段。\nJSON Schema: '+JSON.stringify(schema);
-  return {context:packed,instructions};
+    +'\n正文采用第二人称“你”，主角对白speaker只用self。otherPeople只列主角以外的NPC，只有主角出场时otherPeople=[]。places只列地点，factions只列势力。名单中不写kind；仅NPC可写status。禁止把life.name、你、玩家或主角列为NPC。新人物只用p1等，地点只用l1等，势力只用f1等；不得使用中文ID或自行编造其他别名。所有speaker和人物/地点targetId必须在相应名单中声明。travel必须另选一个尚未抵达的目的地，其name不能等于location。格式片段示例：主角对白={"kind":"dialogue","speaker":"self","text":"我该动身了。"}；location="村口"时可前往places=[{"id":"l1","name":"山道"}]，动作={"action":"travel:road","targetId":"l1","stake":"low"}。关闭已有约定/线索只用输入m1等referenceId，原文保持不变。先写blocks，再写其余字段。';
+  return {context:packed,instructions:instructions.replace('关闭已有约定/线索只用输入m1等referenceId，原文保持不变。','关闭已有约定/线索仅写输入m1等referenceId和status，不写entityId/kind/text，服务端恢复原始记录；对应实体仍须在名单声明。'),schema};
 }
 
 export function decodeGlmScene(wire,context){
@@ -66,6 +90,19 @@ export function decodeGlmScene(wire,context){
       else throw Error();
       aliases.set(entity.id,id);return {...entity,id};
     });
+    // Known references already have authoritative identities in the context.
+    // Restore only referenced declarations; fresh aliases still require a name.
+    const obligations=[...context.memory.promises,...context.memory.clues];
+    const mentioned=[...wire.blocks.map(row=>row?.speaker),...wire.choices.map(row=>row?.targetId),...wire.memoryDeltas.flatMap(row=>{
+      const match=typeof row?.referenceId==='string'?/^m([1-9]\d*)$/.exec(row.referenceId):null,record=match?obligations[Number(match[1])-1]:null;
+      return [row?.entityId,...(record?['k'+(context.entities.findIndex(entity=>entity.id===record.entityId)+1)]:[])];
+    })];
+    for(const alias of new Set(mentioned)){
+      if(typeof alias!=='string'||aliases.has(alias))continue;
+      const match=/^k([1-9]\d*)$/.exec(alias),known=match?context.entities[Number(match[1])-1]:null;if(!known)continue;
+      aliases.set(alias,known.id);entities.push({id:known.id,name:known.name,kind:known.kind,...(known.kind==='person'&&['alive','dead'].includes(known.status)?{status:known.status}:{})});
+    }
+    if(entities.length>24)throw Error();
     const blocks=wire.blocks.map(block=>{
       exactKeys(block,block.kind==='dialogue'?['kind','text','speaker']:['kind','text']);
       if(block.kind!=='dialogue')return {...block};
@@ -90,13 +127,16 @@ export function decodeGlmScene(wire,context){
       }[choice.action]+(choice.stake==='high'?'（冒险）':choice.stake==='low'?'（谨慎）':'');
       return {id:prefix+'c:'+['a','b','c'][index],label,intent,targetId,stake:choice.stake,approach};
     });
-    const obligations=[...context.memory.promises,...context.memory.clues];
     const memoryDeltas=wire.memoryDeltas.map(delta=>{
-      exactKeys(delta,['entityId','kind','text'],['referenceId','status']);const entityId=aliases.get(delta.entityId);if(!entityId)throw Error();
-      if(!Object.hasOwn(delta,'referenceId'))return {...delta,entityId};
+      const closing=Object.hasOwn(delta,'referenceId');
+      exactKeys(delta,closing?['referenceId','status']:['entityId','kind','text'],closing?['entityId','kind','text']:['status']);
+      if(!closing){const entityId=aliases.get(delta.entityId);if(!entityId)throw Error();return {...delta,entityId};}
       if(typeof delta.referenceId!=='string')throw Error();
       const match=/^m([1-9]\d*)$/.exec(delta.referenceId),record=match?obligations[Number(match[1])-1]:null;if(!record)throw Error();
-      return {...delta,entityId,referenceId:record.id};
+      const entityId=Object.hasOwn(delta,'entityId')?aliases.get(delta.entityId):record.entityId;if(!entityId)throw Error();
+      // A closure identifies an existing record; the server supplies its facts.
+      // Older wire samples may repeat them, and final validation checks equality.
+      return {entityId,kind:Object.hasOwn(delta,'kind')?delta.kind:record.kind,text:Object.hasOwn(delta,'text')?delta.text:record.text,referenceId:record.id,status:delta.status};
     });
     return {id:prefix+'s:scene',title:wire.title,location:wire.location,entities,blocks,choices,memoryDeltas};
   }catch{throw Object.assign(Error('GENERATED_SCENE_INVALID'),{code:'GENERATED_SCENE_INVALID'});}

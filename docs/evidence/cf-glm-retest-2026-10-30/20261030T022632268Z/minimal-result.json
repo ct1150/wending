@@ -1,0 +1,74 @@
+{
+  "runId": "20261030T022632268Z",
+  "startedAt": "2026-10-30T02:27:52.576Z",
+  "sourceCommit": "9863a32313eaa70b26d2dc0df538b69e1b0cfba4",
+  "probeVersion": "57047fd3-cbf0-42a8-bf6c-f8e21fea7bbc",
+  "provider": "cloudflare",
+  "modelId": "@cf/zai-org/glm-4.7-flash",
+  "requestCount": 1,
+  "outerStatus": 200,
+  "response": {
+    "runId": "20261030T022632268Z",
+    "sourceCommit": "9863a32313eaa70b26d2dc0df538b69e1b0cfba4",
+    "modelId": "@cf/zai-org/glm-4.7-flash",
+    "expiresAt": 1793328992273,
+    "checkedAt": "2026-10-30T02:27:52.528Z",
+    "elapsedMs": 487,
+    "ingressColo": "HKG",
+    "input": {
+      "messages": [
+        {
+          "role": "user",
+          "content": "你好，只回复好。"
+        }
+      ],
+      "max_tokens": 32,
+      "temperature": 0,
+      "stream": false,
+      "chat_template_kwargs": {
+        "enable_thinking": false
+      }
+    },
+    "result": {
+      "id": "chatcmpl-aa2122036a98f9c5",
+      "object": "chat.completion",
+      "created": 1793327272,
+      "model": "@cf/zai-org/glm-4.7-flash",
+      "choices": [
+        {
+          "index": 0,
+          "message": {
+            "role": "assistant",
+            "content": "好",
+            "refusal": null,
+            "annotations": null,
+            "audio": null,
+            "function_call": null,
+            "tool_calls": [],
+            "reasoning": null,
+            "reasoning_content": null
+          },
+          "logprobs": null,
+          "finish_reason": "stop",
+          "stop_reason": 154827,
+          "token_ids": null
+        }
+      ],
+      "service_tier": null,
+      "system_fingerprint": null,
+      "usage": {
+        "prompt_tokens": 11,
+        "completion_tokens": 2,
+        "total_tokens": 13,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        },
+        "neurons": 0.1333
+      },
+      "prompt_logprobs": null,
+      "prompt_token_ids": null,
+      "kv_transfer_params": null
+    }
+  },
+  "clientElapsedMs": 594
+}

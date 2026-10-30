@@ -14,7 +14,7 @@ export const CANDIDATE_PROFILE = Object.freeze({
 });
 // Keep the immutable Qwen promotion separate from the newly selected provider.
 export const GLM_MODEL_ID = '@cf/zai-org/glm-4.7-flash';
-export const GLM_PROVIDER_ROUTE = Object.freeze({primary:'zhipu',primaryModelId:'glm-4.7-flash',fallback:'cloudflare',fallbackModelId:GLM_MODEL_ID});
+export const GLM_PROVIDER_ROUTE = Object.freeze({primary:'cloudflare',primaryModelId:GLM_MODEL_ID});
 export const DEFAULT_STORY_MODEL_ID = GLM_MODEL_ID;
 export const GLM_PROFILE = Object.freeze({
   ...CANDIDATE_PROFILE,modelId:GLM_MODEL_ID,validated:false,supportsStructuredOutput:null,
@@ -24,6 +24,7 @@ export const GLM_PROFILE = Object.freeze({
 // A successful catalog lookup is not validation. Promotion requires reviewed real evidence.
 export const PRODUCTION_PROFILES = Object.freeze([
   Object.freeze({ ...CANDIDATE_PROFILE, validated:true, supportsStructuredOutput:true, validationEvidence:'docs/evidence/realtime-release-2026-10-28.json' }),
+  Object.freeze({ ...GLM_PROFILE, validated:true, supportsStructuredOutput:true, validationEvidence:'docs/evidence/cf-glm-promotion-final-2026-10-30.json' }),
 ]);
 const trustedEvidence = new WeakSet();
 const encoder = new TextEncoder();

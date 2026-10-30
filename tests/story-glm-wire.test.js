@@ -27,6 +27,64 @@ test('GLM request puts narrative first and keeps birth facts without asking the 
   assert.match(input.messages[0].content,/先写blocks/);assert.match(input.messages[0].content,/主角.*self/);assert.deepEqual(c,before);
 });
 
+test('CF GLM streams against its wire schema and narration cannot be constrained to include a speaker',()=>{
+  const c=context(),input=buildStoryInput(GLM_PROFILE,c),request=module.buildGlmWire(c,'instructions');
+  assert.equal(input.stream,true);assert.equal(input.response_format?.type,'json_schema');
+  assert.equal(input.response_format.json_schema.strict,true);
+  assert.deepEqual(input.response_format.json_schema.schema,request.schema);
+  const blocks=request.schema.properties.blocks.items.oneOf;
+  const narration=blocks.find(block=>block.properties.kind.const==='narration'),dialogue=blocks.find(block=>block.properties.kind.const==='dialogue');
+  assert.equal(narration.additionalProperties,false);assert.deepEqual(narration.required,['kind','text']);assert.equal(narration.properties.speaker,undefined);
+  assert.ok(dialogue.required.includes('speaker'));assert.ok(dialogue.properties.speaker.enum.includes('self'));
+  const invalid=wire();invalid.blocks[0].speaker='self';assert.throws(()=>module.decodeGlmScene(invalid,c),{code:'GENERATED_SCENE_INVALID'});
+  assert.doesNotMatch(input.messages[0].content,/JSON Schema:/,'the constrained schema is sent once rather than duplicated in the prompt');
+});
+
+test('wire memory schema keeps fact fields separate from new and closing obligations',()=>{
+  const c=knownContext(),variants=module.buildGlmWire(c,'instructions').schema.properties.memoryDeltas.items.oneOf;
+  assert.ok(Array.isArray(variants),'memory kinds require separate constrained field sets');
+  const fact=variants.find(value=>value.properties.kind.enum?.includes('fact'));
+  assert.equal(fact.properties.status,undefined);assert.equal(fact.properties.referenceId,undefined);assert.equal(fact.additionalProperties,false);
+  const fresh=variants.find(value=>value.properties.status?.const==='open');assert.equal(fresh.properties.referenceId,undefined);
+  const closed=variants.find(value=>value.properties.referenceId?.enum?.includes('m1'));
+  assert.deepEqual(closed.required,['referenceId','status']);assert.deepEqual(closed.properties.status.enum,['resolved','broken']);assert.equal(closed.properties.text,undefined);
+  const closing=wire();closing.otherPeople[0]={id:'k1',name:'陈叔'};closing.places[0].id='k2';closing.choices[0].targetId='k2';closing.blocks[0].text='陈叔提醒你归还旧书。';closing.blocks[1].speaker='k1';closing.memoryDeltas=[{referenceId:'m1',status:'resolved'}];
+  const restored=module.decodeGlmScene(closing,c);assert.deepEqual(restored.memoryDeltas,[{entityId:c.entities[0].id,kind:'promise',text:'明日还书',referenceId:c.memory.promises[0].id,status:'resolved'}]);validateGeneratedScene(restored,c);
+  const invalid=wire();invalid.otherPeople[0]={id:'k1',name:'陈叔'};invalid.blocks[1].speaker='k1';invalid.memoryDeltas=[{entityId:'k1',kind:'fact',text:'陈叔提起旧事',status:'open'}];
+  assert.throws(()=>validateGeneratedScene(module.decodeGlmScene(invalid,c),c),{code:'GENERATED_SCENE_INVALID'});
+});
+
+test('wire guidance constrains action target kinds and preserves known dead identities',()=>{
+  const c=knownContext();c.entities[0].status='dead';
+  const schema=module.buildGlmWire(c,'instructions').schema,choices=schema.properties.choices.items.oneOf;
+  assert.ok(Array.isArray(choices),'each action requires its own target set');
+  const travel=choices.find(row=>row.properties.action.enum.includes('travel:road'));assert.ok(travel.properties.targetId.enum.includes('k2'));assert.equal(travel.properties.targetId.enum.includes('self'),false);assert.equal(travel.properties.targetId.enum.includes('k1'),false);
+  const talk=choices.find(row=>row.properties.action.enum.includes('negotiate:cooperate'));assert.equal(talk.properties.targetId.enum.includes('k1'),false);
+  const person=schema.properties.otherPeople.items.oneOf.find(row=>row.properties.id.const==='k1');assert.equal(person.properties.name.const,'陈叔');assert.equal(person.properties.status.const,'dead');assert.ok(person.required.includes('status'));
+  const dialogue=schema.properties.blocks.items.oneOf.find(row=>row.properties.kind.const==='dialogue');assert.equal(dialogue.properties.speaker.enum.includes('k1'),false);
+});
+
+test('dense valid GLM contexts remain inside the actual serialized request budget',()=>{
+  for(const count of [8,12,16]){
+    const c=knownContext(),template=c.memory.promises[0];
+    for(let index=1;index<=count;index++){
+      const id='dense_person_'+index;c.entities.push({id,name:'N'+index,kind:'person',status:'alive'});
+      const kind=index%2?'promise':'clue',record={...template,id:'dense_memory_'+index,entityId:id,kind,text:'记住山中约定与线索，此事需要再打听'+index,status:'open'};
+      c.memory[kind==='promise'?'promises':'clues'].push(record);c.references.push(record.id);
+    }
+    const total=c.memory.promises.length+c.memory.clues.length;c.coverage={policy:'relevance-v1',openTotal:total,openIncluded:total,openOmitted:0};
+    validateStoryContext(c);assert.ok(Buffer.byteLength(JSON.stringify(c))<=7000);
+    let input;assert.doesNotThrow(()=>{input=buildStoryInput(GLM_PROFILE,c);},'valid context with '+count+' additional NPCs and obligations');assert.ok(Buffer.byteLength(JSON.stringify(input))<=24576);
+  }
+});
+
+test('travel follow-up excludes the destination already reached by its receipt',()=>{
+  const c=knownContext();c.receipt.action={...c.receipt.action,intent:'travel',approach:'road',targetId:c.entities[1].id};
+  const choices=module.buildGlmWire(c,'instructions').schema.properties.choices.items.oneOf;
+  const travel=choices.find(row=>row.properties.action.enum.includes('travel:road'));
+  assert.equal(travel.properties.targetId.enum.includes('k2'),false);assert.ok(travel.properties.targetId.enum.includes('l1'));
+});
+
 test('known identities and promise closures round-trip through aliases without changing their facts',()=>{
   assert.ok(module);const c=knownContext(),known=c.entities[0].id,reference=c.memory.promises[0].id;validateStoryContext(c);
   const request=module.buildGlmWire(c,'base instructions'),packed=request.context;
@@ -34,6 +92,14 @@ test('known identities and promise closures round-trip through aliases without c
   const value=wire();value.otherPeople[0]={id:'k1',name:'陈叔'};value.places[0].id='k2';value.choices[0].targetId='k2';value.blocks[0].text='你歇息过后，陈叔提醒了你们的约定。';value.blocks[1].speaker='k1';value.memoryDeltas=[{entityId:'k1',kind:'promise',text:'明日还书',referenceId:'m1',status:'resolved'}];
   const scene=module.decodeGlmScene(value,c);assert.equal(scene.entities[0].id,known);assert.equal(scene.memoryDeltas[0].referenceId,reference);assert.equal(scene.memoryDeltas[0].entityId,known);assert.deepEqual(validateGeneratedScene(scene,c),scene);
   const changed=structuredClone(value);changed.memoryDeltas[0].text='改写约定';assert.throws(()=>validateGeneratedScene(module.decodeGlmScene(changed,c),c),{code:'MEMORY_REFERENCE_CONFLICT'});
+});
+
+test('known references restore trusted declarations while undeclared new aliases remain invalid',()=>{
+  const c=knownContext(),value=wire();value.otherPeople=[];value.places=[];value.blocks[0].text='陈叔提醒你归还旧书。';value.blocks[1].speaker='k1';value.choices[0].targetId='k2';value.memoryDeltas=[{referenceId:'m1',status:'resolved'}];
+  const scene=module.decodeGlmScene(value,c);assert.equal(scene.entities.find(e=>e.id===c.entities[0].id).name,'陈叔');assert.equal(scene.entities.find(e=>e.id===c.entities[1].id).name,'古道');validateGeneratedScene(scene,c);
+  const missing=structuredClone(value);missing.blocks[1].speaker='p1';assert.throws(()=>module.decodeGlmScene(missing,c),{code:'GENERATED_SCENE_INVALID'});
+  const changed=structuredClone(value);changed.otherPeople=[{id:'k1',name:'冒名者'}];assert.throws(()=>validateGeneratedScene(module.decodeGlmScene(changed,c),c),{code:'ENTITY_IDENTITY_CONFLICT'});
+  c.entities[0].status='dead';assert.throws(()=>validateGeneratedScene(module.decodeGlmScene(value,c),c),{code:'ENTITY_DEATH_CONFLICT'});
 });
 
 test('wire cannot inject authoritative IDs, unknown aliases, wrong kinds, extra fields or undeclared targets',()=>{

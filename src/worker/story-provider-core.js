@@ -73,11 +73,11 @@ function providerInput(profile,context) {
   const system=facts+'\n'+SYSTEM.replaceAll('namespace:t本回合:',prefix).replace('NEXT_REALM',nextRealm);
   const input={messages:[{role:'system',content:system},{role:'user',content:JSON.stringify(context)}],stream:false,temperature:0.3,max_tokens:Math.min(profile.maxOutput,STORY_LIMITS.maxOutputTokens),response_format:{type:'json_schema',json_schema:{name:'cultivation_scene',strict:true,schema}},chat_template_kwargs:{enable_thinking:false}};
   if(profile.modelId===GLM_MODEL_ID){
-    // Workers AI JSON Mode does not promise streaming. Keep the exact schema in
-    // the prompt and retain all existing final server-side validation.
+    // This GLM endpoint accepts OpenAI JSON Schema with streaming. Final
+    // validation still rejects mechanically invalid or inconsistent scenes.
     const wire=buildGlmWire(context,system);
     input.messages[0].content=wire.instructions;input.messages[1].content=JSON.stringify(wire.context);
-    delete input.response_format;
+    input.response_format={type:'json_schema',json_schema:{name:'cultivation_scene',strict:true,schema:wire.schema}};
     input.stream=true;input.stream_options={include_usage:true};
   }
   const inputBytes=size(input);

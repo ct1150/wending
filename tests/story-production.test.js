@@ -41,14 +41,14 @@ test('an unvalidated fixture registry cannot be promoted by a supplied policy pr
   assert.throws(()=>f.module.validateStoryProductionPolicy({...policy(),profile:{modelId,validated:true,supportsStructuredOutput:true}}),{code:'STORY_PRODUCTION_CONFIGURATION_INVALID'});
 });
 
-test('GLM uses separate reviewed metadata and a server secret binding; its real unpromoted profile stays closed',async t=>{
-  assert.throws(()=>productionModule.validateStoryProductionPolicy({...policy(),modelId:GLM_MODEL_ID}),{code:'MODEL_UNVALIDATED'});
+test('GLM production uses its evidence-backed CF-only profile and no external secret',async t=>{
+  assert.equal(productionModule.validateStoryProductionPolicy({...policy(),modelId:GLM_MODEL_ID}).modelId,GLM_MODEL_ID);
   const profile={...GLM_PROFILE,validated:true,supportsStructuredOutput:true,validationEvidence:'test-fixture-only'},f=await fixture(t,{profiles:[profile]});
   await f.build({root:f.root,sourceCommit:'d'.repeat(40),production:{...policy(),modelId:GLM_MODEL_ID}});
   const manifest=JSON.parse(await readFile(path.join(f.root,'release/backend/deployment.json'),'utf8'));
-  assert.equal(manifest.candidateModelId,GLM_MODEL_ID);assert.equal(manifest.activeModelId,GLM_MODEL_ID);assert.equal(manifest.modelValidated,true);assert.deepEqual(manifest.optionalSecrets,['ZHIPU_API_KEY']);
+  assert.equal(manifest.candidateModelId,GLM_MODEL_ID);assert.equal(manifest.activeModelId,GLM_MODEL_ID);assert.equal(manifest.modelValidated,true);assert.deepEqual(manifest.optionalSecrets,[]);
   const worker=await import(pathToFileURL(path.join(f.root,'release/backend/entry.mjs')).href);
-  const health=await(await worker.default.fetch(new Request('https://game.test/healthz'))).json();assert.equal(health.sourceCommit,'d'.repeat(40));assert.equal(health.releaseSource,'embedded');assert.deepEqual(manifest.providerRoute,{primary:'zhipu',primaryModelId:'glm-4.7-flash',fallback:'cloudflare',fallbackModelId:GLM_MODEL_ID});
+  const health=await(await worker.default.fetch(new Request('https://game.test/healthz'))).json();assert.equal(health.sourceCommit,'d'.repeat(40));assert.equal(health.releaseSource,'embedded');assert.deepEqual(manifest.providerRoute,{primary:'cloudflare',primaryModelId:GLM_MODEL_ID});
   const caps=await(await worker.default.fetch(new Request('https://game.test/api/story/capabilities'),{AI:{run:async()=>{throw Error('not needed');}}})).json();assert.equal(caps.available,true);
 });
 

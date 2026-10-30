@@ -14,7 +14,7 @@ export async function generateScene(ai,profile,context,options={},runtime={}) {
   try{assertPlainData(profile);assertPlainData(options);}catch{return generateProviderScene(ai,profile,context,options,assertValidatedProfile);}
   if(!options||typeof options!=='object')return generateProviderScene(ai,profile,context,options,assertValidatedProfile);
   if(profile?.modelId===GLM_MODEL_ID){
-    const transport=createGlmTransport({ai,apiKey:runtime.apiKey,fetch:runtime.fetch,onProgress:runtime.onProgress,providerGate:runtime.providerGate,queueTimeoutMs:runtime.queueTimeoutMs,gateRpcTimeoutMs:runtime.gateRpcTimeoutMs,deadlineAt:runtime.deadlineAt,signal:runtime.signal,timeoutMs:options.timeoutMs,primaryTimeoutMs:runtime.primaryTimeoutMs});
+    const transport=createGlmTransport({ai,onProgress:runtime.onProgress,deadlineAt:runtime.deadlineAt,signal:runtime.signal,timeoutMs:options.timeoutMs});
     const result=await generateProviderScene(transport,profile,context,options,assertValidatedProfile);
     if(transport.accountingUnknown)result.accountingStatus='unknown';
     if(result.inferencePerformed)result.providerSource=transport.source;

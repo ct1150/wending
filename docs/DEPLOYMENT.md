@@ -1,4 +1,8 @@
-# 百世问鼎 · 4.1.0 部署
+# 百世问鼎 · 4.3.0 部署
+
+> 2026-10-30：仅保留 Cloudflare `@cf/zai-org/glm-4.7-flash`，不读取智谱密钥，不接入 Gemini 或付费后备。真实原生开局、选择和保存刷新已通过，见[最终私有验收](evidence/cf-glm-promotion-final-2026-10-30.json)；正式 CI、发布与公开复验以 [PR #16](https://github.com/ct1150/wending/pull/16) 为准。流式正文为临时预览，完整校验和保存后开放选项，unknown 计量保留。正式清单仅有 Cloudflare 主路由、`optionalSecrets:[]`；预加载关闭，原生产 namespace 和回滚版本保留。本次一次复测后删除原自动化，不安排下一轮。下文智谱和 Qwen 发布过程均为历史记录，不代表当前路由。
+
+当前 GLM 使用原生流式 JSON Schema；旁白与对白分别约束，动作按合法目标分组。已知实体引用、旧约定/线索的关闭由服务端恢复原始身份和文本，新实体必须声明；最终身份、机械规则、记忆与所有下一步选项校验仍生效。旧记忆不在 Schema 重复整段原文，实际序列化输入仍受 24 KiB 上限约束。最终实测首段约 3.0–5.2 秒，完整保存约 12 秒；不宣称稳定流畅，预加载需单独设计和验收。
 
 正式地址：[baishi-wending.ct1150.workers.dev](https://baishi-wending.ct1150.workers.dev/)。GitHub 验证并发布静态 HTML，Cloudflare 后端单独用显式生产包部署。[PR #14 发布执行记录](https://github.com/ct1150/wending/pull/14)记录最终 main/CI、静态 manifest、后端 deployment/version、模块读回和公开浏览器结果；本文件提供可复核的操作合同，不预先声明上线完成。
 

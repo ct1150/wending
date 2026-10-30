@@ -100,7 +100,7 @@ async function buildBackend({root,sourceCommit,fallback,icon,acceptance,producti
   }
   const bindings=[{name:'AI',type:'ai'},{name:'STORY_BUDGET',type:'durable_object_namespace',class_name:'StoryBudget',...(stage||live?{namespace_id:STORY_BUDGET_NAMESPACE_ID}:{})}];
   if(stage)bindings.push({name:'STORY_EXPERIMENT',type:'durable_object_namespace',namespace_id:STORY_EXPERIMENT_NAMESPACE_ID});
-  const manifest={schemaVersion:1,main_module:'entry.mjs',compatibility_date:'2026-07-30',sourceCommit,frontend:{version:fallback.version,htmlSha256:fallback.htmlSha256},versions:VERSIONS,...activation,coordinatorName:'story-budget-v1-global',bindings,migrations:stage||live?[]:[{tag:'story-budget-v1',new_sqlite_classes:['StoryBudget']}],optionalSecrets:['ZHIPU_API_KEY'],...(stage?{experimentCoordinatorName:STORY_EXPERIMENT_COORDINATOR_NAME,requiredSecrets:['STORY_OPERATOR_TOKEN']}:{ }),modules:description};
+  const manifest={schemaVersion:1,main_module:'entry.mjs',compatibility_date:'2026-07-30',sourceCommit,frontend:{version:fallback.version,htmlSha256:fallback.htmlSha256},versions:VERSIONS,...activation,coordinatorName:'story-budget-v1-global',bindings,migrations:stage||live?[]:[{tag:'story-budget-v1',new_sqlite_classes:['StoryBudget']}],optionalSecrets:[],...(stage?{experimentCoordinatorName:STORY_EXPERIMENT_COORDINATOR_NAME,requiredSecrets:['STORY_OPERATOR_TOKEN']}:{ }),modules:description};
   await writeFile(path.join(output,'deployment.json'),JSON.stringify(manifest,null,2)+'\n');
   return {mainModule:manifest.main_module,moduleCount:description.length,manifestSha256:digest(JSON.stringify(manifest,null,2)+'\n')};
 }

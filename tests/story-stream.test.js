@@ -26,8 +26,8 @@ test('POST SSE previews precede completion; final validated result is settled on
   const replay=await f.api.fetch(f.request());assert.match(replay.headers.get('content-type'),/application\/json/);assert.equal((await replay.json()).status,'ready');assert.equal(f.calls,1);
 });
 
-test('a ready backup result retains unknown primary accounting and does not block the whole game for quota',async()=>{
-  const f=fixture(async(ai,p,c)=>({status:'ready',scene:scene(c),accountingStatus:'unknown',providerSource:'zhipu'}));
+test('a ready result retains unknown accounting without incorrectly marking Cloudflare quota exhausted',async()=>{
+  const f=fixture(async(ai,p,c)=>({status:'ready',scene:scene(c),accountingStatus:'unknown',providerSource:'cloudflare'}));
   await(await f.api.fetch(f.request())).text();assert.equal(f.settlement.status,'unknown');assert.equal(f.settlement.quotaExhausted,false);
 });
 

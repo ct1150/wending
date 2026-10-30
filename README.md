@@ -1,6 +1,6 @@
 # 百世问鼎 · 三界求仙篇
 
-**4.2.0：水墨开始画面、独立旅程续玩与阅读设置。** 新玩家从实时剧情启程，已有离线人生仍沿原规则继续。本次正式发布、精确源码和线上验收结果见 [4.2.0 发布记录](https://github.com/ct1150/wending/pull/15)。
+**4.3.0 候选：Cloudflare GLM 实时流式剧情。** 点击后立即显示本地开场，AI 正文边生成边阅读，完整校验和保存后才开放选项。已通过真实私有开局、选择及刷新验收；正式发布状态与公开复验见 [PR #16](https://github.com/ct1150/wending/pull/16)。
 
 [线上游戏](https://baishi-wending.ct1150.workers.dev/) · [交付账本](docs/ROADMAP.md) · [验收证据](docs/QA_REPORT.md) · [部署说明](docs/DEPLOYMENT.md) · [4.2.0 发布执行记录](https://github.com/ct1150/wending/pull/15)
 
@@ -14,7 +14,7 @@
 
 剧情下方直接显示 **「历史对话 · 游戏设置 · 返回首页」**；顶部保留人物概况与详情入口。重新打开页面先到首页，同一标签页内刷新则恢复所在页面、创建草稿或当前剧情。自然死亡后的「再入轮回」沿用真实结算，再回到人物创建。
 
-实时剧情继续由 Cloudflare Workers AI 的 `@cf/qwen/qwen3.8-27b` 生成，新剧情需要联网，玩家无需提供 API 密钥；模型与后端延续 4.1 的运行合同。本次界面更新不改变模型、协议、套餐、额度或计费策略。4.1 的真实生产与公开复验记录见[发布执行记录](https://github.com/ct1150/wending/pull/14)；4.2 的回归与发布证据见[验收记录](docs/QA_REPORT.md)和 [PR #15](https://github.com/ct1150/wending/pull/15)。
+4.3.0 使用 Cloudflare Workers AI 的 `@cf/zai-org/glm-4.7-flash`，仅通过原 AI binding 调用，不读取智谱密钥，不接入 Gemini 或付费后备。新剧情需要联网，玩家无需提供 API 密钥。私有真实样本首段正文约 3.0–5.2 秒、完整保存约 12 秒，样本很少，不代表稳定延迟；预加载关闭。实测和保留的失败记录见[CF 验收证据](docs/evidence/cf-glm-promotion-final-2026-10-30.json)。4.2 已发布界面的历史记录见 [PR #15](https://github.com/ct1150/wending/pull/15)。
 
 ## 4.2.0 验证记录 — 2026-10-29（上海）
 

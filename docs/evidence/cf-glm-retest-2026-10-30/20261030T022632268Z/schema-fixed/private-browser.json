@@ -1,0 +1,1311 @@
+{
+  "recordedAt": "2026-10-30T02:43:25.652Z",
+  "sourceCommit": "4ef9c08e2726d12d5558c65dcdf16db108a609df",
+  "version": "7739d404-da58-4f31-9df8-c521c7d90947",
+  "frontendSource": "local current release HTML served by browser harness; API and SQLite are real Workers",
+  "records": [
+    {
+      "caseId": "opening",
+      "mode": "browser-real-api",
+      "start": 617.9000000003725,
+      "timeline": [
+        {
+          "atMs": 6467,
+          "chars": 1
+        },
+        {
+          "atMs": 6542,
+          "chars": 2
+        },
+        {
+          "atMs": 6589,
+          "chars": 4
+        },
+        {
+          "atMs": 6669,
+          "chars": 7
+        },
+        {
+          "atMs": 7121,
+          "chars": 20
+        },
+        {
+          "atMs": 7168,
+          "chars": 23
+        },
+        {
+          "atMs": 7245,
+          "chars": 27
+        },
+        {
+          "atMs": 7304,
+          "chars": 31
+        },
+        {
+          "atMs": 7397,
+          "chars": 35
+        },
+        {
+          "atMs": 7459,
+          "chars": 38
+        },
+        {
+          "atMs": 7535,
+          "chars": 40
+        },
+        {
+          "atMs": 7626,
+          "chars": 42
+        },
+        {
+          "atMs": 7722,
+          "chars": 45
+        },
+        {
+          "atMs": 7796,
+          "chars": 47
+        },
+        {
+          "atMs": 7873,
+          "chars": 52
+        },
+        {
+          "atMs": 8042,
+          "chars": 58
+        },
+        {
+          "atMs": 8087,
+          "chars": 62
+        },
+        {
+          "atMs": 8260,
+          "chars": 71
+        },
+        {
+          "atMs": 8305,
+          "chars": 74
+        },
+        {
+          "atMs": 8379,
+          "chars": 78
+        },
+        {
+          "atMs": 8455,
+          "chars": 81
+        },
+        {
+          "atMs": 8534,
+          "chars": 84
+        },
+        {
+          "atMs": 8612,
+          "chars": 88
+        },
+        {
+          "atMs": 8688,
+          "chars": 92
+        },
+        {
+          "atMs": 8751,
+          "chars": 95
+        },
+        {
+          "atMs": 8811,
+          "chars": 100
+        },
+        {
+          "atMs": 8872,
+          "chars": 101
+        },
+        {
+          "atMs": 8917,
+          "chars": 106
+        },
+        {
+          "atMs": 8994,
+          "chars": 109
+        },
+        {
+          "atMs": 9044,
+          "chars": 111
+        },
+        {
+          "atMs": 9086,
+          "chars": 114
+        },
+        {
+          "atMs": 9152,
+          "chars": 117
+        },
+        {
+          "atMs": 9211,
+          "chars": 121
+        },
+        {
+          "atMs": 9288,
+          "chars": 127
+        },
+        {
+          "atMs": 9352,
+          "chars": 131
+        },
+        {
+          "atMs": 9505,
+          "chars": 137
+        },
+        {
+          "atMs": 9720,
+          "chars": 142
+        },
+        {
+          "atMs": 9767,
+          "chars": 145
+        },
+        {
+          "atMs": 9827,
+          "chars": 147
+        },
+        {
+          "atMs": 9888,
+          "chars": 149
+        },
+        {
+          "atMs": 9935,
+          "chars": 151
+        },
+        {
+          "atMs": 10013,
+          "chars": 156
+        },
+        {
+          "atMs": 10090,
+          "chars": 159
+        },
+        {
+          "atMs": 10143,
+          "chars": 163
+        },
+        {
+          "atMs": 10229,
+          "chars": 164
+        },
+        {
+          "atMs": 10304,
+          "chars": 168
+        },
+        {
+          "atMs": 10383,
+          "chars": 169
+        },
+        {
+          "atMs": 10600,
+          "chars": 173
+        },
+        {
+          "atMs": 10663,
+          "chars": 177
+        }
+      ],
+      "firstBirthMs": 77,
+      "choicesEnabledDuringPreview": false,
+      "lastText": "你叫云归，今年十六岁，是个凡人。你出生在青云村，父母早亡，靠着村里的接济长大。你生来便带着两样奇怪的特质：一是命格中似乎背负着某种因果债，二是你拥有过目不忘的惊人天赋。十六年来，你从未踏入过山门，只在村口的老树下听过修仙者飞过的声音。今天，你决定离开这里，去寻找属于自己的路。村口的老槐树下，你背起行囊，望着蜿蜒的山道，心中既忐忑又期待。\n\n我该动身了。",
+      "doneMs": 13463,
+      "result": {
+        "protocolVersion": 1,
+        "status": "ready",
+        "requestId": "1b34de37-a1d9-479b-828a-ff05ddd9bb3b",
+        "attemptId": "bdb58625-7f5b-42b1-99a3-254f136789df",
+        "sessionRef": "sess_a7271e9d11a2a16b9df92a45853ecd39",
+        "errorCode": null,
+        "retry": null,
+        "scene": {
+          "id": "r:59a5e2217385dfcb:t1:s:scene",
+          "title": "青云村口",
+          "location": "青云村",
+          "entities": [
+            {
+              "id": "r:59a5e2217385dfcb:t1:e:place_1",
+              "name": "山道",
+              "kind": "place"
+            }
+          ],
+          "blocks": [
+            {
+              "kind": "narration",
+              "text": "你叫云归，今年十六岁，是个凡人。你出生在青云村，父母早亡，靠着村里的接济长大。你生来便带着两样奇怪的特质：一是命格中似乎背负着某种因果债，二是你拥有过目不忘的惊人天赋。十六年来，你从未踏入过山门，只在村口的老树下听过修仙者飞过的声音。今天，你决定离开这里，去寻找属于自己的路。村口的老槐树下，你背起行囊，望着蜿蜒的山道，心中既忐忑又期待。"
+            },
+            {
+              "kind": "dialogue",
+              "text": "我该动身了。",
+              "speaker": "self"
+            }
+          ],
+          "choices": [
+            {
+              "id": "r:59a5e2217385dfcb:t1:c:a",
+              "label": "沿路前往山道（谨慎）",
+              "intent": "travel",
+              "targetId": "r:59a5e2217385dfcb:t1:e:place_1",
+              "stake": "low",
+              "approach": "road"
+            },
+            {
+              "id": "r:59a5e2217385dfcb:t1:c:b",
+              "label": "凝神修行（谨慎）",
+              "intent": "practice",
+              "targetId": "self",
+              "stake": "low",
+              "approach": "steady"
+            },
+            {
+              "id": "r:59a5e2217385dfcb:t1:c:c",
+              "label": "歇息调养（谨慎）",
+              "intent": "rest",
+              "targetId": "self",
+              "stake": "low",
+              "approach": "recover"
+            }
+          ],
+          "memoryDeltas": [
+            {
+              "entityId": "r:59a5e2217385dfcb:t1:e:place_1",
+              "kind": "fact",
+              "text": "云归离开了青云村，踏上了通往山外的山道。"
+            }
+          ]
+        }
+      },
+      "revision": 1,
+      "pending": false,
+      "posts": 1,
+      "diagnostics": [
+        {
+          "requestId": "1b34de37-a1d9-479b-828a-ff05ddd9bb3b",
+          "context": {
+            "schemaVersion": 1,
+            "phase": "opening",
+            "identity": {
+              "runId": "d342e617-ac3e-412d-b03f-eb2fea4d4fd9",
+              "turnId": 1,
+              "baseRevision": 0,
+              "stateHash": "a85649c4cd140ea1d7570b118bbbdf453b4caddd7af6da3857f478f67fc96795",
+              "choiceId": null,
+              "rulesVersion": 1,
+              "promptVersion": 1,
+              "requestId": "1b34de37-a1d9-479b-828a-ff05ddd9bb3b"
+            },
+            "namespace": "r:59a5e2217385dfcb",
+            "receipt": {
+              "kind": "opening",
+              "choiceId": null,
+              "action": null,
+              "elapsedDays": 0,
+              "itemChanges": {},
+              "relationChanges": {},
+              "random": {
+                "before": 1212890354,
+                "after": 1212890354,
+                "roll": null
+              },
+              "before": {
+                "ageDays": 5760,
+                "realm": "mortal",
+                "cultivation": 0,
+                "injury": 0
+              },
+              "after": {
+                "ageDays": 5760,
+                "realm": "mortal",
+                "cultivation": 0,
+                "injury": 0
+              },
+              "death": null,
+              "birth": {
+                "originId": "village",
+                "talentIds": [
+                  "fortune-debt",
+                  "flash-wisdom"
+                ],
+                "attributes": {
+                  "constitution": 3,
+                  "insight": 4,
+                  "fortune": 5
+                }
+              }
+            },
+            "life": {
+              "name": "云归",
+              "ageDays": 5760,
+              "lifeLimit": 80,
+              "realm": "mortal",
+              "cultivation": 0,
+              "injury": 0,
+              "items": {
+                "supplies": 3,
+                "stones": 0
+              },
+              "relations": {},
+              "birth": {
+                "originId": "village",
+                "talentIds": [
+                  "fortune-debt",
+                  "flash-wisdom"
+                ],
+                "attributes": {
+                  "constitution": 3,
+                  "insight": 4,
+                  "fortune": 5
+                }
+              }
+            },
+            "entities": [],
+            "memory": {
+              "facts": [],
+              "promises": [],
+              "clues": [],
+              "recent": [],
+              "summaries": []
+            },
+            "references": [],
+            "previousScene": null,
+            "relationshipVersion": 1,
+            "relationships": {},
+            "coverage": {
+              "policy": "relevance-v1",
+              "openTotal": 0,
+              "openIncluded": 0,
+              "openOmitted": 0
+            }
+          },
+          "rawCompletion": {
+            "model": "@cf/zai-org/glm-4.7-flash",
+            "choices": [
+              {
+                "finish_reason": "stop",
+                "message": {
+                  "content": "{\"blocks\":[{\"kind\":\"narration\",\"text\":\"你叫云归，今年十六岁，是个凡人。你出生在青云村，父母早亡，靠着村里的接济长大。你生来便带着两样奇怪的特质：一是命格中似乎背负着某种因果债，二是你拥有过目不忘的惊人天赋。十六年来，你从未踏入过山门，只在村口的老树下听过修仙者飞过的声音。今天，你决定离开这里，去寻找属于自己的路。村口的老槐树下，你背起行囊，望着蜿蜒的山道，心中既忐忑又期待。\"},{\"kind\":\"dialogue\",\"text\":\"我该动身了。\",\"speaker\":\"self\"}],\"title\":\"青云村口\",\"location\":\"青云村\",\"otherPeople\":[],\"places\":[{\"id\":\"l1\",\"name\":\"山道\"}],\"factions\":[],\"choices\":[{\"action\":\"travel:road\",\"targetId\":\"l1\",\"stake\":\"low\"},{\"action\":\"practice:steady\",\"targetId\":\"self\",\"stake\":\"low\"},{\"action\":\"rest:recover\",\"targetId\":\"self\",\"stake\":\"low\"}],\"memoryDeltas\":[{\"entityId\":\"l1\",\"kind\":\"fact\",\"text\":\"云归离开了青云村，踏上了通往山外的山道。\"}]}",
+                  "reasoning_content": ""
+                }
+              }
+            ],
+            "usage": {
+              "prompt_tokens": 1389,
+              "completion_tokens": 272,
+              "total_tokens": 1661,
+              "prompt_tokens_details": {
+                "cached_tokens": 0
+              },
+              "neurons": 17.540300000000116
+            }
+          },
+          "result": {
+            "status": "ready",
+            "accountingStatus": "complete",
+            "modelId": "@cf/zai-org/glm-4.7-flash",
+            "attemptId": "bdb58625-7f5b-42b1-99a3-254f136789df",
+            "inferencePerformed": true,
+            "usage": {
+              "promptTokens": 1389,
+              "completionTokens": 272,
+              "totalTokens": 1661
+            },
+            "actualNeurons": null,
+            "stopReason": "stop",
+            "inputHash": "a166ad964752db0f41ad2ba752d2141a36a7185b478dfae1a95fca682c75c4a1",
+            "inputBytes": 9963,
+            "nonThinkingValidated": true,
+            "scene": {
+              "id": "r:59a5e2217385dfcb:t1:s:scene",
+              "title": "青云村口",
+              "location": "青云村",
+              "entities": [
+                {
+                  "id": "r:59a5e2217385dfcb:t1:e:place_1",
+                  "name": "山道",
+                  "kind": "place"
+                }
+              ],
+              "blocks": [
+                {
+                  "kind": "narration",
+                  "text": "你叫云归，今年十六岁，是个凡人。你出生在青云村，父母早亡，靠着村里的接济长大。你生来便带着两样奇怪的特质：一是命格中似乎背负着某种因果债，二是你拥有过目不忘的惊人天赋。十六年来，你从未踏入过山门，只在村口的老树下听过修仙者飞过的声音。今天，你决定离开这里，去寻找属于自己的路。村口的老槐树下，你背起行囊，望着蜿蜒的山道，心中既忐忑又期待。"
+                },
+                {
+                  "kind": "dialogue",
+                  "text": "我该动身了。",
+                  "speaker": "self"
+                }
+              ],
+              "choices": [
+                {
+                  "id": "r:59a5e2217385dfcb:t1:c:a",
+                  "label": "沿路前往山道（谨慎）",
+                  "intent": "travel",
+                  "targetId": "r:59a5e2217385dfcb:t1:e:place_1",
+                  "stake": "low",
+                  "approach": "road"
+                },
+                {
+                  "id": "r:59a5e2217385dfcb:t1:c:b",
+                  "label": "凝神修行（谨慎）",
+                  "intent": "practice",
+                  "targetId": "self",
+                  "stake": "low",
+                  "approach": "steady"
+                },
+                {
+                  "id": "r:59a5e2217385dfcb:t1:c:c",
+                  "label": "歇息调养（谨慎）",
+                  "intent": "rest",
+                  "targetId": "self",
+                  "stake": "low",
+                  "approach": "recover"
+                }
+              ],
+              "memoryDeltas": [
+                {
+                  "entityId": "r:59a5e2217385dfcb:t1:e:place_1",
+                  "kind": "fact",
+                  "text": "云归离开了青云村，踏上了通往山外的山道。"
+                }
+              ]
+            },
+            "providerSource": "cloudflare"
+          },
+          "source": "cloudflare"
+        }
+      ],
+      "wireEvents": [
+        {
+          "type": "status",
+          "status": "generating"
+        },
+        {
+          "type": "status",
+          "status": "generating"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "status",
+          "status": "generating"
+        },
+        {
+          "type": "result"
+        }
+      ]
+    },
+    {
+      "caseId": "choice",
+      "mode": "browser-real-api",
+      "start": 14307.5,
+      "timeline": [
+        {
+          "atMs": 5421,
+          "chars": 1
+        },
+        {
+          "atMs": 5500,
+          "chars": 5
+        },
+        {
+          "atMs": 5559,
+          "chars": 10
+        },
+        {
+          "atMs": 5633,
+          "chars": 14
+        },
+        {
+          "atMs": 5695,
+          "chars": 16
+        },
+        {
+          "atMs": 5959,
+          "chars": 21
+        },
+        {
+          "atMs": 6005,
+          "chars": 26
+        },
+        {
+          "atMs": 6083,
+          "chars": 30
+        },
+        {
+          "atMs": 6167,
+          "chars": 34
+        },
+        {
+          "atMs": 6223,
+          "chars": 38
+        },
+        {
+          "atMs": 6287,
+          "chars": 41
+        },
+        {
+          "atMs": 6333,
+          "chars": 45
+        },
+        {
+          "atMs": 6423,
+          "chars": 48
+        },
+        {
+          "atMs": 6483,
+          "chars": 49
+        },
+        {
+          "atMs": 6546,
+          "chars": 51
+        },
+        {
+          "atMs": 6611,
+          "chars": 55
+        },
+        {
+          "atMs": 6676,
+          "chars": 60
+        },
+        {
+          "atMs": 6735,
+          "chars": 63
+        },
+        {
+          "atMs": 6812,
+          "chars": 67
+        },
+        {
+          "atMs": 6969,
+          "chars": 71
+        },
+        {
+          "atMs": 6998,
+          "chars": 75
+        },
+        {
+          "atMs": 7181,
+          "chars": 78
+        },
+        {
+          "atMs": 7277,
+          "chars": 80
+        },
+        {
+          "atMs": 7341,
+          "chars": 84
+        },
+        {
+          "atMs": 7402,
+          "chars": 92
+        },
+        {
+          "atMs": 7623,
+          "chars": 97
+        },
+        {
+          "atMs": 7701,
+          "chars": 102
+        },
+        {
+          "atMs": 7765,
+          "chars": 106
+        },
+        {
+          "atMs": 7983,
+          "chars": 110
+        },
+        {
+          "atMs": 8062,
+          "chars": 112
+        },
+        {
+          "atMs": 8124,
+          "chars": 114
+        },
+        {
+          "atMs": 8184,
+          "chars": 117
+        },
+        {
+          "atMs": 8248,
+          "chars": 119
+        },
+        {
+          "atMs": 8311,
+          "chars": 125
+        },
+        {
+          "atMs": 8374,
+          "chars": 126
+        }
+      ],
+      "firstBirthMs": null,
+      "choicesEnabledDuringPreview": false,
+      "lastText": "你沿着蜿蜒的山道前行，四周是郁郁葱葱的林木，偶尔传来几声不知名的鸟鸣。走了约莫半个时辰，你在一处山坳中停下脚步，感到有些口渴和疲惫。你从行囊中取出干粮，一边啃食一边观察四周的环境，寻找是否有水源或可以休息的地方。\n\n这荒山野岭的，连个卖水的地方都没有。",
+      "doneMs": 18923,
+      "result": {
+        "protocolVersion": 1,
+        "status": "rejected",
+        "requestId": "e87c0e8d-95cd-41d9-981a-67253ebf402f",
+        "attemptId": "7965282f-a507-4ec3-b098-a57c0e1ba769",
+        "sessionRef": "sess_a7271e9d11a2a16b9df92a45853ecd39",
+        "errorCode": "GENERATED_SCENE_INVALID",
+        "retry": null
+      },
+      "revision": 1,
+      "pending": true,
+      "posts": 2,
+      "diagnostics": [
+        {
+          "requestId": "1b34de37-a1d9-479b-828a-ff05ddd9bb3b",
+          "context": {
+            "schemaVersion": 1,
+            "phase": "opening",
+            "identity": {
+              "runId": "d342e617-ac3e-412d-b03f-eb2fea4d4fd9",
+              "turnId": 1,
+              "baseRevision": 0,
+              "stateHash": "a85649c4cd140ea1d7570b118bbbdf453b4caddd7af6da3857f478f67fc96795",
+              "choiceId": null,
+              "rulesVersion": 1,
+              "promptVersion": 1,
+              "requestId": "1b34de37-a1d9-479b-828a-ff05ddd9bb3b"
+            },
+            "namespace": "r:59a5e2217385dfcb",
+            "receipt": {
+              "kind": "opening",
+              "choiceId": null,
+              "action": null,
+              "elapsedDays": 0,
+              "itemChanges": {},
+              "relationChanges": {},
+              "random": {
+                "before": 1212890354,
+                "after": 1212890354,
+                "roll": null
+              },
+              "before": {
+                "ageDays": 5760,
+                "realm": "mortal",
+                "cultivation": 0,
+                "injury": 0
+              },
+              "after": {
+                "ageDays": 5760,
+                "realm": "mortal",
+                "cultivation": 0,
+                "injury": 0
+              },
+              "death": null,
+              "birth": {
+                "originId": "village",
+                "talentIds": [
+                  "fortune-debt",
+                  "flash-wisdom"
+                ],
+                "attributes": {
+                  "constitution": 3,
+                  "insight": 4,
+                  "fortune": 5
+                }
+              }
+            },
+            "life": {
+              "name": "云归",
+              "ageDays": 5760,
+              "lifeLimit": 80,
+              "realm": "mortal",
+              "cultivation": 0,
+              "injury": 0,
+              "items": {
+                "supplies": 3,
+                "stones": 0
+              },
+              "relations": {},
+              "birth": {
+                "originId": "village",
+                "talentIds": [
+                  "fortune-debt",
+                  "flash-wisdom"
+                ],
+                "attributes": {
+                  "constitution": 3,
+                  "insight": 4,
+                  "fortune": 5
+                }
+              }
+            },
+            "entities": [],
+            "memory": {
+              "facts": [],
+              "promises": [],
+              "clues": [],
+              "recent": [],
+              "summaries": []
+            },
+            "references": [],
+            "previousScene": null,
+            "relationshipVersion": 1,
+            "relationships": {},
+            "coverage": {
+              "policy": "relevance-v1",
+              "openTotal": 0,
+              "openIncluded": 0,
+              "openOmitted": 0
+            }
+          },
+          "rawCompletion": {
+            "model": "@cf/zai-org/glm-4.7-flash",
+            "choices": [
+              {
+                "finish_reason": "stop",
+                "message": {
+                  "content": "{\"blocks\":[{\"kind\":\"narration\",\"text\":\"你叫云归，今年十六岁，是个凡人。你出生在青云村，父母早亡，靠着村里的接济长大。你生来便带着两样奇怪的特质：一是命格中似乎背负着某种因果债，二是你拥有过目不忘的惊人天赋。十六年来，你从未踏入过山门，只在村口的老树下听过修仙者飞过的声音。今天，你决定离开这里，去寻找属于自己的路。村口的老槐树下，你背起行囊，望着蜿蜒的山道，心中既忐忑又期待。\"},{\"kind\":\"dialogue\",\"text\":\"我该动身了。\",\"speaker\":\"self\"}],\"title\":\"青云村口\",\"location\":\"青云村\",\"otherPeople\":[],\"places\":[{\"id\":\"l1\",\"name\":\"山道\"}],\"factions\":[],\"choices\":[{\"action\":\"travel:road\",\"targetId\":\"l1\",\"stake\":\"low\"},{\"action\":\"practice:steady\",\"targetId\":\"self\",\"stake\":\"low\"},{\"action\":\"rest:recover\",\"targetId\":\"self\",\"stake\":\"low\"}],\"memoryDeltas\":[{\"entityId\":\"l1\",\"kind\":\"fact\",\"text\":\"云归离开了青云村，踏上了通往山外的山道。\"}]}",
+                  "reasoning_content": ""
+                }
+              }
+            ],
+            "usage": {
+              "prompt_tokens": 1389,
+              "completion_tokens": 272,
+              "total_tokens": 1661,
+              "prompt_tokens_details": {
+                "cached_tokens": 0
+              },
+              "neurons": 17.540300000000116
+            }
+          },
+          "result": {
+            "status": "ready",
+            "accountingStatus": "complete",
+            "modelId": "@cf/zai-org/glm-4.7-flash",
+            "attemptId": "bdb58625-7f5b-42b1-99a3-254f136789df",
+            "inferencePerformed": true,
+            "usage": {
+              "promptTokens": 1389,
+              "completionTokens": 272,
+              "totalTokens": 1661
+            },
+            "actualNeurons": null,
+            "stopReason": "stop",
+            "inputHash": "a166ad964752db0f41ad2ba752d2141a36a7185b478dfae1a95fca682c75c4a1",
+            "inputBytes": 9963,
+            "nonThinkingValidated": true,
+            "scene": {
+              "id": "r:59a5e2217385dfcb:t1:s:scene",
+              "title": "青云村口",
+              "location": "青云村",
+              "entities": [
+                {
+                  "id": "r:59a5e2217385dfcb:t1:e:place_1",
+                  "name": "山道",
+                  "kind": "place"
+                }
+              ],
+              "blocks": [
+                {
+                  "kind": "narration",
+                  "text": "你叫云归，今年十六岁，是个凡人。你出生在青云村，父母早亡，靠着村里的接济长大。你生来便带着两样奇怪的特质：一是命格中似乎背负着某种因果债，二是你拥有过目不忘的惊人天赋。十六年来，你从未踏入过山门，只在村口的老树下听过修仙者飞过的声音。今天，你决定离开这里，去寻找属于自己的路。村口的老槐树下，你背起行囊，望着蜿蜒的山道，心中既忐忑又期待。"
+                },
+                {
+                  "kind": "dialogue",
+                  "text": "我该动身了。",
+                  "speaker": "self"
+                }
+              ],
+              "choices": [
+                {
+                  "id": "r:59a5e2217385dfcb:t1:c:a",
+                  "label": "沿路前往山道（谨慎）",
+                  "intent": "travel",
+                  "targetId": "r:59a5e2217385dfcb:t1:e:place_1",
+                  "stake": "low",
+                  "approach": "road"
+                },
+                {
+                  "id": "r:59a5e2217385dfcb:t1:c:b",
+                  "label": "凝神修行（谨慎）",
+                  "intent": "practice",
+                  "targetId": "self",
+                  "stake": "low",
+                  "approach": "steady"
+                },
+                {
+                  "id": "r:59a5e2217385dfcb:t1:c:c",
+                  "label": "歇息调养（谨慎）",
+                  "intent": "rest",
+                  "targetId": "self",
+                  "stake": "low",
+                  "approach": "recover"
+                }
+              ],
+              "memoryDeltas": [
+                {
+                  "entityId": "r:59a5e2217385dfcb:t1:e:place_1",
+                  "kind": "fact",
+                  "text": "云归离开了青云村，踏上了通往山外的山道。"
+                }
+              ]
+            },
+            "providerSource": "cloudflare"
+          },
+          "source": "cloudflare"
+        },
+        {
+          "requestId": "e87c0e8d-95cd-41d9-981a-67253ebf402f",
+          "context": {
+            "schemaVersion": 1,
+            "phase": "choice",
+            "identity": {
+              "runId": "d342e617-ac3e-412d-b03f-eb2fea4d4fd9",
+              "turnId": 2,
+              "baseRevision": 1,
+              "stateHash": "93feccef5893a76c6f5c73a702be3d1dc0c32c936f3b7371f4cb0ec5500a9147",
+              "choiceId": "r:59a5e2217385dfcb:t1:c:a",
+              "rulesVersion": 1,
+              "promptVersion": 1,
+              "requestId": "e87c0e8d-95cd-41d9-981a-67253ebf402f"
+            },
+            "namespace": "r:59a5e2217385dfcb",
+            "receipt": {
+              "kind": "choice",
+              "choiceId": "r:59a5e2217385dfcb:t1:c:a",
+              "action": {
+                "id": "r:59a5e2217385dfcb:t1:c:a",
+                "label": "沿路前往山道（谨慎）",
+                "intent": "travel",
+                "targetId": "r:59a5e2217385dfcb:t1:e:place_1",
+                "stake": "low",
+                "approach": "road"
+              },
+              "elapsedDays": 30,
+              "itemChanges": {
+                "supplies": -1
+              },
+              "relationChanges": {},
+              "random": {
+                "before": 1212890354,
+                "after": 3593172905,
+                "roll": 5
+              },
+              "before": {
+                "ageDays": 5760,
+                "realm": "mortal",
+                "cultivation": 0,
+                "injury": 0
+              },
+              "after": {
+                "ageDays": 5790,
+                "realm": "mortal",
+                "cultivation": 0,
+                "injury": 0
+              },
+              "death": null,
+              "birth": null
+            },
+            "life": {
+              "name": "云归",
+              "ageDays": 5790,
+              "lifeLimit": 80,
+              "realm": "mortal",
+              "cultivation": 0,
+              "injury": 0,
+              "items": {
+                "supplies": 2,
+                "stones": 0
+              },
+              "relations": {},
+              "birth": {
+                "originId": "village",
+                "talentIds": [
+                  "fortune-debt",
+                  "flash-wisdom"
+                ],
+                "attributes": {
+                  "constitution": 3,
+                  "insight": 4,
+                  "fortune": 5
+                }
+              }
+            },
+            "entities": [
+              {
+                "id": "r:59a5e2217385dfcb:t1:e:place_1",
+                "name": "山道",
+                "kind": "place",
+                "status": "unknown"
+              }
+            ],
+            "memory": {
+              "facts": [
+                {
+                  "id": "m:7073968d6788d573eaf9c7461c3f6611",
+                  "source": "narrative",
+                  "kind": "fact",
+                  "entityId": "r:59a5e2217385dfcb:t1:e:place_1",
+                  "text": "云归离开了青云村，踏上了通往山外的山道。",
+                  "runId": "d342e617-ac3e-412d-b03f-eb2fea4d4fd9",
+                  "turnId": 1
+                }
+              ],
+              "promises": [],
+              "clues": [],
+              "recent": [],
+              "summaries": []
+            },
+            "references": [
+              "m:7073968d6788d573eaf9c7461c3f6611"
+            ],
+            "previousScene": {
+              "id": "r:59a5e2217385dfcb:t1:s:scene",
+              "blocksHash": "2bfd483d2fa8d2c8ea4087cfbb5e9ce815f88e4b9df460bd7ddb0448fd1f148c"
+            },
+            "relationshipVersion": 1,
+            "relationships": {},
+            "coverage": {
+              "policy": "relevance-v1",
+              "openTotal": 0,
+              "openIncluded": 0,
+              "openOmitted": 0
+            }
+          },
+          "rawCompletion": {
+            "model": "@cf/zai-org/glm-4.7-flash",
+            "choices": [
+              {
+                "finish_reason": "stop",
+                "message": {
+                  "content": "{\"blocks\":[{\"kind\":\"narration\",\"text\":\"你沿着蜿蜒的山道前行，四周是郁郁葱葱的林木，偶尔传来几声不知名的鸟鸣。走了约莫半个时辰，你在一处山坳中停下脚步，感到有些口渴和疲惫。你从行囊中取出干粮，一边啃食一边观察四周的环境，寻找是否有水源或可以休息的地方。\"},{\"kind\":\"dialogue\",\"text\":\"这荒山野岭的，连个卖水的地方都没有。\",\"speaker\":\"self\"}],\"title\":\"山坳\",\"location\":\"山坳\",\"otherPeople\":[],\"places\":[{\"id\":\"k1\",\"name\":\"山道\"}],\"factions\":[],\"choices\":[{\"action\":\"travel:road\",\"targetId\":\"k1\",\"stake\":\"low\"},{\"action\":\"practice:steady\",\"targetId\":\"self\",\"stake\":\"low\"},{\"action\":\"explore:bold\",\"targetId\":\"supplies\",\"stake\":\"low\"}],\"memoryDeltas\":[{\"entityId\":\"k1\",\"kind\":\"fact\",\"text\":\"云归在山坳中短暂停留，观察了周围环境。\",\"status\":\"open\"}]}",
+                  "reasoning_content": ""
+                }
+              }
+            ],
+            "usage": {
+              "prompt_tokens": 1633,
+              "completion_tokens": 240,
+              "total_tokens": 1873,
+              "prompt_tokens_details": {
+                "cached_tokens": 0
+              },
+              "neurons": 17.7175000000001
+            }
+          },
+          "result": {
+            "status": "rejected",
+            "accountingStatus": "complete",
+            "modelId": "@cf/zai-org/glm-4.7-flash",
+            "attemptId": "7965282f-a507-4ec3-b098-a57c0e1ba769",
+            "inferencePerformed": true,
+            "usage": {
+              "promptTokens": 1633,
+              "completionTokens": 240,
+              "totalTokens": 1873
+            },
+            "actualNeurons": null,
+            "stopReason": "stop",
+            "inputHash": "7af167f16abb13eb4b91a5453c89fdcf07c4c4bdf089059dc35e2f45de436f32",
+            "inputBytes": 10524,
+            "nonThinkingValidated": true,
+            "structureDiagnostic": "FIELD_SET_INVALID",
+            "errorCode": "GENERATED_SCENE_INVALID",
+            "providerSource": "cloudflare"
+          },
+          "source": "cloudflare"
+        }
+      ],
+      "wireEvents": [
+        {
+          "type": "status",
+          "status": "generating"
+        },
+        {
+          "type": "status",
+          "status": "generating"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "status",
+          "status": "generating"
+        },
+        {
+          "type": "result"
+        }
+      ]
+    }
+  ],
+  "refreshed": null,
+  "errors": [],
+  "posts": 2
+}

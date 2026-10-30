@@ -1,0 +1,1645 @@
+{
+  "recordedAt": "2026-10-30T03:17:57.160Z",
+  "sourceCommit": "006fed94523e63ec79bf539e001b90ae3d094f20",
+  "version": "40d066aa-5f01-4f60-8b3d-d6db244faeeb",
+  "frontendSource": "local current release HTML served by browser harness; API and SQLite are real Workers",
+  "records": [
+    {
+      "caseId": "opening",
+      "mode": "browser-real-api",
+      "start": 554,
+      "timeline": [
+        {
+          "atMs": 3031,
+          "chars": 1
+        },
+        {
+          "atMs": 3184,
+          "chars": 7
+        },
+        {
+          "atMs": 3216,
+          "chars": 12
+        },
+        {
+          "atMs": 3262,
+          "chars": 15
+        },
+        {
+          "atMs": 3339,
+          "chars": 19
+        },
+        {
+          "atMs": 3406,
+          "chars": 22
+        },
+        {
+          "atMs": 3467,
+          "chars": 25
+        },
+        {
+          "atMs": 3513,
+          "chars": 29
+        },
+        {
+          "atMs": 3623,
+          "chars": 32
+        },
+        {
+          "atMs": 3699,
+          "chars": 36
+        },
+        {
+          "atMs": 3762,
+          "chars": 41
+        },
+        {
+          "atMs": 3840,
+          "chars": 45
+        },
+        {
+          "atMs": 3915,
+          "chars": 51
+        },
+        {
+          "atMs": 3977,
+          "chars": 56
+        },
+        {
+          "atMs": 4208,
+          "chars": 65
+        },
+        {
+          "atMs": 4239,
+          "chars": 70
+        },
+        {
+          "atMs": 4300,
+          "chars": 73
+        },
+        {
+          "atMs": 4360,
+          "chars": 77
+        },
+        {
+          "atMs": 4423,
+          "chars": 81
+        },
+        {
+          "atMs": 4482,
+          "chars": 85
+        },
+        {
+          "atMs": 4558,
+          "chars": 95
+        },
+        {
+          "atMs": 4649,
+          "chars": 101
+        },
+        {
+          "atMs": 4970,
+          "chars": 105
+        },
+        {
+          "atMs": 5019,
+          "chars": 107
+        },
+        {
+          "atMs": 5080,
+          "chars": 111
+        },
+        {
+          "atMs": 5142,
+          "chars": 115
+        },
+        {
+          "atMs": 5189,
+          "chars": 118
+        },
+        {
+          "atMs": 5248,
+          "chars": 120
+        },
+        {
+          "atMs": 5291,
+          "chars": 122
+        },
+        {
+          "atMs": 5772,
+          "chars": 125
+        },
+        {
+          "atMs": 5877,
+          "chars": 128
+        },
+        {
+          "atMs": 5939,
+          "chars": 132
+        },
+        {
+          "atMs": 6010,
+          "chars": 135
+        },
+        {
+          "atMs": 6074,
+          "chars": 139
+        },
+        {
+          "atMs": 6136,
+          "chars": 143
+        },
+        {
+          "atMs": 6199,
+          "chars": 147
+        },
+        {
+          "atMs": 6257,
+          "chars": 153
+        },
+        {
+          "atMs": 6336,
+          "chars": 155
+        },
+        {
+          "atMs": 6428,
+          "chars": 159
+        },
+        {
+          "atMs": 6505,
+          "chars": 163
+        },
+        {
+          "atMs": 6582,
+          "chars": 167
+        },
+        {
+          "atMs": 6660,
+          "chars": 170
+        },
+        {
+          "atMs": 6722,
+          "chars": 173
+        },
+        {
+          "atMs": 6906,
+          "chars": 179
+        },
+        {
+          "atMs": 6950,
+          "chars": 184
+        },
+        {
+          "atMs": 7031,
+          "chars": 186
+        },
+        {
+          "atMs": 7104,
+          "chars": 188
+        },
+        {
+          "atMs": 7180,
+          "chars": 189
+        },
+        {
+          "atMs": 7273,
+          "chars": 192
+        },
+        {
+          "atMs": 7489,
+          "chars": 197
+        },
+        {
+          "atMs": 7551,
+          "chars": 204
+        },
+        {
+          "atMs": 7627,
+          "chars": 206
+        },
+        {
+          "atMs": 7705,
+          "chars": 211
+        },
+        {
+          "atMs": 7769,
+          "chars": 213
+        },
+        {
+          "atMs": 7832,
+          "chars": 218
+        },
+        {
+          "atMs": 7910,
+          "chars": 224
+        },
+        {
+          "atMs": 7987,
+          "chars": 227
+        }
+      ],
+      "firstBirthMs": 74,
+      "choicesEnabledDuringPreview": false,
+      "lastText": "你叫云归，今年十六岁。你出生在青云村，是个凡人。你自幼体质孱弱，但心思灵巧，对周围的声音和气息格外敏感。今日清晨，你站在村口的古槐树下，望着蜿蜒向外的山道，心中涌起一股莫名的冲动，想要去看看外面的世界。\n\n爹，娘，孩儿要去山里看看，过几日便回。\n\n屋内传来母亲担忧的叹息声，父亲则沉默不语，只是默默为你整理行囊。你背上简单的行囊，里面装着三天的干粮，便踏上了前往山外的路。山道崎岖，你小心翼翼地前行，不知不觉间，周围的景色已从熟悉的村庄变成了陌生的山林。",
+      "doneMs": 12383,
+      "result": {
+        "protocolVersion": 1,
+        "status": "ready",
+        "requestId": "d073236b-ece0-4184-97bb-e7f434776b04",
+        "attemptId": "63c4a17e-ee86-4054-9938-743e16be4b1d",
+        "sessionRef": "sess_f7a2602657605fded6507d3951d90c7b",
+        "errorCode": null,
+        "retry": null,
+        "scene": {
+          "id": "r:f41158dc14512351:t1:s:scene",
+          "title": "山道初行",
+          "location": "山道",
+          "entities": [
+            {
+              "id": "r:f41158dc14512351:t1:e:place_1",
+              "name": "青云村",
+              "kind": "place"
+            },
+            {
+              "id": "r:f41158dc14512351:t1:e:place_2",
+              "name": "黑风林",
+              "kind": "place"
+            }
+          ],
+          "blocks": [
+            {
+              "kind": "narration",
+              "text": "你叫云归，今年十六岁。你出生在青云村，是个凡人。你自幼体质孱弱，但心思灵巧，对周围的声音和气息格外敏感。今日清晨，你站在村口的古槐树下，望着蜿蜒向外的山道，心中涌起一股莫名的冲动，想要去看看外面的世界。"
+            },
+            {
+              "kind": "dialogue",
+              "text": "爹，娘，孩儿要去山里看看，过几日便回。",
+              "speaker": "self"
+            },
+            {
+              "kind": "narration",
+              "text": "屋内传来母亲担忧的叹息声，父亲则沉默不语，只是默默为你整理行囊。你背上简单的行囊，里面装着三天的干粮，便踏上了前往山外的路。山道崎岖，你小心翼翼地前行，不知不觉间，周围的景色已从熟悉的村庄变成了陌生的山林。"
+            }
+          ],
+          "choices": [
+            {
+              "id": "r:f41158dc14512351:t1:c:a",
+              "label": "沿路前往黑风林（谨慎）",
+              "intent": "travel",
+              "targetId": "r:f41158dc14512351:t1:e:place_2",
+              "stake": "low",
+              "approach": "road"
+            },
+            {
+              "id": "r:f41158dc14512351:t1:c:b",
+              "label": "歇息调养（谨慎）",
+              "intent": "rest",
+              "targetId": "self",
+              "stake": "low",
+              "approach": "recover"
+            },
+            {
+              "id": "r:f41158dc14512351:t1:c:c",
+              "label": "寻找灵石（谨慎）",
+              "intent": "explore",
+              "targetId": "stones",
+              "stake": "low",
+              "approach": "cautious"
+            }
+          ],
+          "memoryDeltas": []
+        }
+      },
+      "revision": 1,
+      "pending": false,
+      "posts": 1,
+      "diagnostics": [
+        {
+          "requestId": "d073236b-ece0-4184-97bb-e7f434776b04",
+          "context": {
+            "schemaVersion": 1,
+            "phase": "opening",
+            "identity": {
+              "runId": "30cb3a33-0090-478c-b633-9d07dbea0c00",
+              "turnId": 1,
+              "baseRevision": 0,
+              "stateHash": "68a811efd98c3e60b6e6f2723d07c37660dc8048c44fdc0d311e624f423c42af",
+              "choiceId": null,
+              "rulesVersion": 1,
+              "promptVersion": 1,
+              "requestId": "d073236b-ece0-4184-97bb-e7f434776b04"
+            },
+            "namespace": "r:f41158dc14512351",
+            "receipt": {
+              "kind": "opening",
+              "choiceId": null,
+              "action": null,
+              "elapsedDays": 0,
+              "itemChanges": {},
+              "relationChanges": {},
+              "random": {
+                "before": 4243955281,
+                "after": 4243955281,
+                "roll": null
+              },
+              "before": {
+                "ageDays": 5760,
+                "realm": "mortal",
+                "cultivation": 0,
+                "injury": 0
+              },
+              "after": {
+                "ageDays": 5760,
+                "realm": "mortal",
+                "cultivation": 0,
+                "injury": 0
+              },
+              "death": null,
+              "birth": {
+                "originId": "village",
+                "talentIds": [
+                  "flash-wisdom",
+                  "sensitive-breath"
+                ],
+                "attributes": {
+                  "constitution": 3,
+                  "insight": 5,
+                  "fortune": 4
+                }
+              }
+            },
+            "life": {
+              "name": "云归",
+              "ageDays": 5760,
+              "lifeLimit": 80,
+              "realm": "mortal",
+              "cultivation": 0,
+              "injury": 0,
+              "items": {
+                "supplies": 3,
+                "stones": 0
+              },
+              "relations": {},
+              "birth": {
+                "originId": "village",
+                "talentIds": [
+                  "flash-wisdom",
+                  "sensitive-breath"
+                ],
+                "attributes": {
+                  "constitution": 3,
+                  "insight": 5,
+                  "fortune": 4
+                }
+              }
+            },
+            "entities": [],
+            "memory": {
+              "facts": [],
+              "promises": [],
+              "clues": [],
+              "recent": [],
+              "summaries": []
+            },
+            "references": [],
+            "previousScene": null,
+            "relationshipVersion": 1,
+            "relationships": {},
+            "coverage": {
+              "policy": "relevance-v1",
+              "openTotal": 0,
+              "openIncluded": 0,
+              "openOmitted": 0
+            }
+          },
+          "rawCompletion": {
+            "model": "@cf/zai-org/glm-4.7-flash",
+            "choices": [
+              {
+                "finish_reason": "stop",
+                "message": {
+                  "content": "{\n  \"blocks\": [\n    {\n      \"kind\": \"narration\",\n      \"text\": \"你叫云归，今年十六岁。你出生在青云村，是个凡人。你自幼体质孱弱，但心思灵巧，对周围的声音和气息格外敏感。今日清晨，你站在村口的古槐树下，望着蜿蜒向外的山道，心中涌起一股莫名的冲动，想要去看看外面的世界。\"\n    },\n    {\n      \"kind\": \"dialogue\",\n      \"text\": \"爹，娘，孩儿要去山里看看，过几日便回。\",\n      \"speaker\": \"self\"\n    },\n    {\n      \"kind\": \"narration\",\n      \"text\": \"屋内传来母亲担忧的叹息声，父亲则沉默不语，只是默默为你整理行囊。你背上简单的行囊，里面装着三天的干粮，便踏上了前往山外的路。山道崎岖，你小心翼翼地前行，不知不觉间，周围的景色已从熟悉的村庄变成了陌生的山林。\"\n    }\n  ],\n  \"title\": \"山道初行\",\n  \"location\": \"山道\",\n  \"otherPeople\": [],\n  \"places\": [\n    {\n      \"id\": \"l1\",\n      \"name\": \"青云村\"\n    },\n    {\n      \"id\": \"l2\",\n      \"name\": \"黑风林\"\n    }\n  ],\n  \"factions\": [],\n  \"choices\": [\n    {\n      \"action\": \"travel:road\",\n      \"targetId\": \"l2\",\n      \"stake\": \"low\"\n    },\n    {\n      \"action\": \"rest:recover\",\n      \"targetId\": \"self\",\n      \"stake\": \"low\"\n    },\n    {\n      \"action\": \"explore:cautious\",\n      \"targetId\": \"stones\",\n      \"stake\": \"low\"\n    }\n  ],\n  \"memoryDeltas\": []\n}",
+                  "reasoning_content": ""
+                }
+              }
+            ],
+            "usage": {
+              "prompt_tokens": 1414,
+              "completion_tokens": 411,
+              "total_tokens": 1825,
+              "prompt_tokens_details": {
+                "cached_tokens": 0
+              },
+              "neurons": 22.737400000000175
+            }
+          },
+          "result": {
+            "status": "ready",
+            "accountingStatus": "complete",
+            "modelId": "@cf/zai-org/glm-4.7-flash",
+            "attemptId": "63c4a17e-ee86-4054-9938-743e16be4b1d",
+            "inferencePerformed": true,
+            "usage": {
+              "promptTokens": 1414,
+              "completionTokens": 411,
+              "totalTokens": 1825
+            },
+            "actualNeurons": null,
+            "stopReason": "stop",
+            "inputHash": "00f63edd2b6866ebb491e70904b2a91c3557bfc9c49e72ccf2799cf64e71c9fa",
+            "inputBytes": 11428,
+            "nonThinkingValidated": true,
+            "scene": {
+              "id": "r:f41158dc14512351:t1:s:scene",
+              "title": "山道初行",
+              "location": "山道",
+              "entities": [
+                {
+                  "id": "r:f41158dc14512351:t1:e:place_1",
+                  "name": "青云村",
+                  "kind": "place"
+                },
+                {
+                  "id": "r:f41158dc14512351:t1:e:place_2",
+                  "name": "黑风林",
+                  "kind": "place"
+                }
+              ],
+              "blocks": [
+                {
+                  "kind": "narration",
+                  "text": "你叫云归，今年十六岁。你出生在青云村，是个凡人。你自幼体质孱弱，但心思灵巧，对周围的声音和气息格外敏感。今日清晨，你站在村口的古槐树下，望着蜿蜒向外的山道，心中涌起一股莫名的冲动，想要去看看外面的世界。"
+                },
+                {
+                  "kind": "dialogue",
+                  "text": "爹，娘，孩儿要去山里看看，过几日便回。",
+                  "speaker": "self"
+                },
+                {
+                  "kind": "narration",
+                  "text": "屋内传来母亲担忧的叹息声，父亲则沉默不语，只是默默为你整理行囊。你背上简单的行囊，里面装着三天的干粮，便踏上了前往山外的路。山道崎岖，你小心翼翼地前行，不知不觉间，周围的景色已从熟悉的村庄变成了陌生的山林。"
+                }
+              ],
+              "choices": [
+                {
+                  "id": "r:f41158dc14512351:t1:c:a",
+                  "label": "沿路前往黑风林（谨慎）",
+                  "intent": "travel",
+                  "targetId": "r:f41158dc14512351:t1:e:place_2",
+                  "stake": "low",
+                  "approach": "road"
+                },
+                {
+                  "id": "r:f41158dc14512351:t1:c:b",
+                  "label": "歇息调养（谨慎）",
+                  "intent": "rest",
+                  "targetId": "self",
+                  "stake": "low",
+                  "approach": "recover"
+                },
+                {
+                  "id": "r:f41158dc14512351:t1:c:c",
+                  "label": "寻找灵石（谨慎）",
+                  "intent": "explore",
+                  "targetId": "stones",
+                  "stake": "low",
+                  "approach": "cautious"
+                }
+              ],
+              "memoryDeltas": []
+            },
+            "providerSource": "cloudflare"
+          },
+          "source": "cloudflare"
+        }
+      ],
+      "wireEvents": [
+        {
+          "type": "status",
+          "status": "generating"
+        },
+        {
+          "type": "status",
+          "status": "generating"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "result"
+        }
+      ]
+    },
+    {
+      "caseId": "choice",
+      "mode": "browser-real-api",
+      "start": 13038,
+      "timeline": [
+        {
+          "atMs": 5154,
+          "chars": 3
+        },
+        {
+          "atMs": 5230,
+          "chars": 10
+        },
+        {
+          "atMs": 5294,
+          "chars": 18
+        },
+        {
+          "atMs": 5357,
+          "chars": 24
+        },
+        {
+          "atMs": 5434,
+          "chars": 28
+        },
+        {
+          "atMs": 5499,
+          "chars": 34
+        },
+        {
+          "atMs": 5579,
+          "chars": 38
+        },
+        {
+          "atMs": 5642,
+          "chars": 40
+        },
+        {
+          "atMs": 5687,
+          "chars": 43
+        },
+        {
+          "atMs": 5752,
+          "chars": 46
+        },
+        {
+          "atMs": 5815,
+          "chars": 50
+        },
+        {
+          "atMs": 5878,
+          "chars": 54
+        },
+        {
+          "atMs": 5927,
+          "chars": 57
+        },
+        {
+          "atMs": 5985,
+          "chars": 59
+        },
+        {
+          "atMs": 6047,
+          "chars": 63
+        },
+        {
+          "atMs": 6094,
+          "chars": 66
+        },
+        {
+          "atMs": 6155,
+          "chars": 68
+        },
+        {
+          "atMs": 6218,
+          "chars": 69
+        },
+        {
+          "atMs": 6436,
+          "chars": 72
+        },
+        {
+          "atMs": 6518,
+          "chars": 75
+        },
+        {
+          "atMs": 6560,
+          "chars": 77
+        },
+        {
+          "atMs": 6763,
+          "chars": 88
+        },
+        {
+          "atMs": 6794,
+          "chars": 95
+        },
+        {
+          "atMs": 6875,
+          "chars": 102
+        },
+        {
+          "atMs": 6935,
+          "chars": 105
+        },
+        {
+          "atMs": 7013,
+          "chars": 111
+        },
+        {
+          "atMs": 7289,
+          "chars": 118
+        },
+        {
+          "atMs": 7351,
+          "chars": 123
+        },
+        {
+          "atMs": 7415,
+          "chars": 127
+        },
+        {
+          "atMs": 7771,
+          "chars": 136
+        },
+        {
+          "atMs": 7833,
+          "chars": 142
+        },
+        {
+          "atMs": 7909,
+          "chars": 147
+        },
+        {
+          "atMs": 7971,
+          "chars": 150
+        },
+        {
+          "atMs": 8140,
+          "chars": 158
+        },
+        {
+          "atMs": 8171,
+          "chars": 161
+        },
+        {
+          "atMs": 8234,
+          "chars": 164
+        },
+        {
+          "atMs": 8308,
+          "chars": 168
+        },
+        {
+          "atMs": 8448,
+          "chars": 174
+        },
+        {
+          "atMs": 8475,
+          "chars": 178
+        },
+        {
+          "atMs": 8534,
+          "chars": 182
+        },
+        {
+          "atMs": 8579,
+          "chars": 185
+        },
+        {
+          "atMs": 8641,
+          "chars": 189
+        },
+        {
+          "atMs": 8688,
+          "chars": 192
+        },
+        {
+          "atMs": 8748,
+          "chars": 194
+        },
+        {
+          "atMs": 8839,
+          "chars": 197
+        },
+        {
+          "atMs": 8899,
+          "chars": 200
+        },
+        {
+          "atMs": 8941,
+          "chars": 202
+        },
+        {
+          "atMs": 8998,
+          "chars": 205
+        },
+        {
+          "atMs": 9059,
+          "chars": 209
+        },
+        {
+          "atMs": 9122,
+          "chars": 215
+        },
+        {
+          "atMs": 9186,
+          "chars": 221
+        },
+        {
+          "atMs": 9232,
+          "chars": 224
+        },
+        {
+          "atMs": 9294,
+          "chars": 230
+        },
+        {
+          "atMs": 9356,
+          "chars": 232
+        },
+        {
+          "atMs": 9466,
+          "chars": 236
+        },
+        {
+          "atMs": 9511,
+          "chars": 239
+        },
+        {
+          "atMs": 9573,
+          "chars": 240
+        }
+      ],
+      "firstBirthMs": null,
+      "choicesEnabledDuringPreview": false,
+      "lastText": "你沿着蜿蜒的山道前行，四周的景色逐渐从熟悉的农田变成了荒凉的灌木丛。三十天的跋涉让你对这片未知的区域有了初步的印象。黑风林就在前方，树影婆娑，透着一股阴森的气息。你放慢了脚步，时刻警惕着四周的动静，手中的行粮也消耗了不少。\n\n这林子看着不简单，得小心点。\n\n你站在黑风林的边缘，犹豫着是否要深入。林中偶尔传来几声不知名野兽的嘶吼，让人心惊肉跳。虽然你只是个凡人，但求生的本能让你不敢掉以轻心。你决定先在林子边缘观察一下，看看有没有什么可以利用的线索，或者有没有什么危险生物的踪迹。",
+      "doneMs": 12237,
+      "result": {
+        "protocolVersion": 1,
+        "status": "ready",
+        "requestId": "b1f45821-17c3-4b6e-99aa-b3348bd07e83",
+        "attemptId": "17aeb9b3-c514-4fb9-bdee-438e92576a61",
+        "sessionRef": "sess_f7a2602657605fded6507d3951d90c7b",
+        "errorCode": null,
+        "retry": null,
+        "scene": {
+          "id": "r:f41158dc14512351:t2:s:scene",
+          "title": "黑风林边缘",
+          "location": "黑风林边缘",
+          "entities": [
+            {
+              "id": "r:f41158dc14512351:t1:e:place_1",
+              "name": "青云村",
+              "kind": "place"
+            },
+            {
+              "id": "r:f41158dc14512351:t1:e:place_2",
+              "name": "黑风林",
+              "kind": "place"
+            }
+          ],
+          "blocks": [
+            {
+              "kind": "narration",
+              "text": "你沿着蜿蜒的山道前行，四周的景色逐渐从熟悉的农田变成了荒凉的灌木丛。三十天的跋涉让你对这片未知的区域有了初步的印象。黑风林就在前方，树影婆娑，透着一股阴森的气息。你放慢了脚步，时刻警惕着四周的动静，手中的行粮也消耗了不少。"
+            },
+            {
+              "kind": "dialogue",
+              "text": "这林子看着不简单，得小心点。",
+              "speaker": "self"
+            },
+            {
+              "kind": "narration",
+              "text": "你站在黑风林的边缘，犹豫着是否要深入。林中偶尔传来几声不知名野兽的嘶吼，让人心惊肉跳。虽然你只是个凡人，但求生的本能让你不敢掉以轻心。你决定先在林子边缘观察一下，看看有没有什么可以利用的线索，或者有没有什么危险生物的踪迹。"
+            }
+          ],
+          "choices": [
+            {
+              "id": "r:f41158dc14512351:t2:c:a",
+              "label": "寻找行粮（谨慎）",
+              "intent": "explore",
+              "targetId": "supplies",
+              "stake": "low",
+              "approach": "cautious"
+            },
+            {
+              "id": "r:f41158dc14512351:t2:c:b",
+              "label": "寻找灵石（谨慎）",
+              "intent": "explore",
+              "targetId": "stones",
+              "stake": "low",
+              "approach": "cautious"
+            },
+            {
+              "id": "r:f41158dc14512351:t2:c:c",
+              "label": "寻找完整功法（谨慎）",
+              "intent": "explore",
+              "targetId": "manual",
+              "stake": "low",
+              "approach": "cautious"
+            }
+          ],
+          "memoryDeltas": []
+        }
+      },
+      "revision": 2,
+      "pending": false,
+      "posts": 2,
+      "diagnostics": [
+        {
+          "requestId": "d073236b-ece0-4184-97bb-e7f434776b04",
+          "context": {
+            "schemaVersion": 1,
+            "phase": "opening",
+            "identity": {
+              "runId": "30cb3a33-0090-478c-b633-9d07dbea0c00",
+              "turnId": 1,
+              "baseRevision": 0,
+              "stateHash": "68a811efd98c3e60b6e6f2723d07c37660dc8048c44fdc0d311e624f423c42af",
+              "choiceId": null,
+              "rulesVersion": 1,
+              "promptVersion": 1,
+              "requestId": "d073236b-ece0-4184-97bb-e7f434776b04"
+            },
+            "namespace": "r:f41158dc14512351",
+            "receipt": {
+              "kind": "opening",
+              "choiceId": null,
+              "action": null,
+              "elapsedDays": 0,
+              "itemChanges": {},
+              "relationChanges": {},
+              "random": {
+                "before": 4243955281,
+                "after": 4243955281,
+                "roll": null
+              },
+              "before": {
+                "ageDays": 5760,
+                "realm": "mortal",
+                "cultivation": 0,
+                "injury": 0
+              },
+              "after": {
+                "ageDays": 5760,
+                "realm": "mortal",
+                "cultivation": 0,
+                "injury": 0
+              },
+              "death": null,
+              "birth": {
+                "originId": "village",
+                "talentIds": [
+                  "flash-wisdom",
+                  "sensitive-breath"
+                ],
+                "attributes": {
+                  "constitution": 3,
+                  "insight": 5,
+                  "fortune": 4
+                }
+              }
+            },
+            "life": {
+              "name": "云归",
+              "ageDays": 5760,
+              "lifeLimit": 80,
+              "realm": "mortal",
+              "cultivation": 0,
+              "injury": 0,
+              "items": {
+                "supplies": 3,
+                "stones": 0
+              },
+              "relations": {},
+              "birth": {
+                "originId": "village",
+                "talentIds": [
+                  "flash-wisdom",
+                  "sensitive-breath"
+                ],
+                "attributes": {
+                  "constitution": 3,
+                  "insight": 5,
+                  "fortune": 4
+                }
+              }
+            },
+            "entities": [],
+            "memory": {
+              "facts": [],
+              "promises": [],
+              "clues": [],
+              "recent": [],
+              "summaries": []
+            },
+            "references": [],
+            "previousScene": null,
+            "relationshipVersion": 1,
+            "relationships": {},
+            "coverage": {
+              "policy": "relevance-v1",
+              "openTotal": 0,
+              "openIncluded": 0,
+              "openOmitted": 0
+            }
+          },
+          "rawCompletion": {
+            "model": "@cf/zai-org/glm-4.7-flash",
+            "choices": [
+              {
+                "finish_reason": "stop",
+                "message": {
+                  "content": "{\n  \"blocks\": [\n    {\n      \"kind\": \"narration\",\n      \"text\": \"你叫云归，今年十六岁。你出生在青云村，是个凡人。你自幼体质孱弱，但心思灵巧，对周围的声音和气息格外敏感。今日清晨，你站在村口的古槐树下，望着蜿蜒向外的山道，心中涌起一股莫名的冲动，想要去看看外面的世界。\"\n    },\n    {\n      \"kind\": \"dialogue\",\n      \"text\": \"爹，娘，孩儿要去山里看看，过几日便回。\",\n      \"speaker\": \"self\"\n    },\n    {\n      \"kind\": \"narration\",\n      \"text\": \"屋内传来母亲担忧的叹息声，父亲则沉默不语，只是默默为你整理行囊。你背上简单的行囊，里面装着三天的干粮，便踏上了前往山外的路。山道崎岖，你小心翼翼地前行，不知不觉间，周围的景色已从熟悉的村庄变成了陌生的山林。\"\n    }\n  ],\n  \"title\": \"山道初行\",\n  \"location\": \"山道\",\n  \"otherPeople\": [],\n  \"places\": [\n    {\n      \"id\": \"l1\",\n      \"name\": \"青云村\"\n    },\n    {\n      \"id\": \"l2\",\n      \"name\": \"黑风林\"\n    }\n  ],\n  \"factions\": [],\n  \"choices\": [\n    {\n      \"action\": \"travel:road\",\n      \"targetId\": \"l2\",\n      \"stake\": \"low\"\n    },\n    {\n      \"action\": \"rest:recover\",\n      \"targetId\": \"self\",\n      \"stake\": \"low\"\n    },\n    {\n      \"action\": \"explore:cautious\",\n      \"targetId\": \"stones\",\n      \"stake\": \"low\"\n    }\n  ],\n  \"memoryDeltas\": []\n}",
+                  "reasoning_content": ""
+                }
+              }
+            ],
+            "usage": {
+              "prompt_tokens": 1414,
+              "completion_tokens": 411,
+              "total_tokens": 1825,
+              "prompt_tokens_details": {
+                "cached_tokens": 0
+              },
+              "neurons": 22.737400000000175
+            }
+          },
+          "result": {
+            "status": "ready",
+            "accountingStatus": "complete",
+            "modelId": "@cf/zai-org/glm-4.7-flash",
+            "attemptId": "63c4a17e-ee86-4054-9938-743e16be4b1d",
+            "inferencePerformed": true,
+            "usage": {
+              "promptTokens": 1414,
+              "completionTokens": 411,
+              "totalTokens": 1825
+            },
+            "actualNeurons": null,
+            "stopReason": "stop",
+            "inputHash": "00f63edd2b6866ebb491e70904b2a91c3557bfc9c49e72ccf2799cf64e71c9fa",
+            "inputBytes": 11428,
+            "nonThinkingValidated": true,
+            "scene": {
+              "id": "r:f41158dc14512351:t1:s:scene",
+              "title": "山道初行",
+              "location": "山道",
+              "entities": [
+                {
+                  "id": "r:f41158dc14512351:t1:e:place_1",
+                  "name": "青云村",
+                  "kind": "place"
+                },
+                {
+                  "id": "r:f41158dc14512351:t1:e:place_2",
+                  "name": "黑风林",
+                  "kind": "place"
+                }
+              ],
+              "blocks": [
+                {
+                  "kind": "narration",
+                  "text": "你叫云归，今年十六岁。你出生在青云村，是个凡人。你自幼体质孱弱，但心思灵巧，对周围的声音和气息格外敏感。今日清晨，你站在村口的古槐树下，望着蜿蜒向外的山道，心中涌起一股莫名的冲动，想要去看看外面的世界。"
+                },
+                {
+                  "kind": "dialogue",
+                  "text": "爹，娘，孩儿要去山里看看，过几日便回。",
+                  "speaker": "self"
+                },
+                {
+                  "kind": "narration",
+                  "text": "屋内传来母亲担忧的叹息声，父亲则沉默不语，只是默默为你整理行囊。你背上简单的行囊，里面装着三天的干粮，便踏上了前往山外的路。山道崎岖，你小心翼翼地前行，不知不觉间，周围的景色已从熟悉的村庄变成了陌生的山林。"
+                }
+              ],
+              "choices": [
+                {
+                  "id": "r:f41158dc14512351:t1:c:a",
+                  "label": "沿路前往黑风林（谨慎）",
+                  "intent": "travel",
+                  "targetId": "r:f41158dc14512351:t1:e:place_2",
+                  "stake": "low",
+                  "approach": "road"
+                },
+                {
+                  "id": "r:f41158dc14512351:t1:c:b",
+                  "label": "歇息调养（谨慎）",
+                  "intent": "rest",
+                  "targetId": "self",
+                  "stake": "low",
+                  "approach": "recover"
+                },
+                {
+                  "id": "r:f41158dc14512351:t1:c:c",
+                  "label": "寻找灵石（谨慎）",
+                  "intent": "explore",
+                  "targetId": "stones",
+                  "stake": "low",
+                  "approach": "cautious"
+                }
+              ],
+              "memoryDeltas": []
+            },
+            "providerSource": "cloudflare"
+          },
+          "source": "cloudflare"
+        },
+        {
+          "requestId": "b1f45821-17c3-4b6e-99aa-b3348bd07e83",
+          "context": {
+            "schemaVersion": 1,
+            "phase": "choice",
+            "identity": {
+              "runId": "30cb3a33-0090-478c-b633-9d07dbea0c00",
+              "turnId": 2,
+              "baseRevision": 1,
+              "stateHash": "c74b6031aa07969e91bd7c082b254c10810eb1f4c73b343929d9eb007dcbcdb4",
+              "choiceId": "r:f41158dc14512351:t1:c:a",
+              "rulesVersion": 1,
+              "promptVersion": 1,
+              "requestId": "b1f45821-17c3-4b6e-99aa-b3348bd07e83"
+            },
+            "namespace": "r:f41158dc14512351",
+            "receipt": {
+              "kind": "choice",
+              "choiceId": "r:f41158dc14512351:t1:c:a",
+              "action": {
+                "id": "r:f41158dc14512351:t1:c:a",
+                "label": "沿路前往黑风林（谨慎）",
+                "intent": "travel",
+                "targetId": "r:f41158dc14512351:t1:e:place_2",
+                "stake": "low",
+                "approach": "road"
+              },
+              "elapsedDays": 30,
+              "itemChanges": {
+                "supplies": -1
+              },
+              "relationChanges": {},
+              "random": {
+                "before": 4243955281,
+                "after": 1743078268,
+                "roll": 68
+              },
+              "before": {
+                "ageDays": 5760,
+                "realm": "mortal",
+                "cultivation": 0,
+                "injury": 0
+              },
+              "after": {
+                "ageDays": 5790,
+                "realm": "mortal",
+                "cultivation": 0,
+                "injury": 0
+              },
+              "death": null,
+              "birth": null
+            },
+            "life": {
+              "name": "云归",
+              "ageDays": 5790,
+              "lifeLimit": 80,
+              "realm": "mortal",
+              "cultivation": 0,
+              "injury": 0,
+              "items": {
+                "supplies": 2,
+                "stones": 0
+              },
+              "relations": {},
+              "birth": {
+                "originId": "village",
+                "talentIds": [
+                  "flash-wisdom",
+                  "sensitive-breath"
+                ],
+                "attributes": {
+                  "constitution": 3,
+                  "insight": 5,
+                  "fortune": 4
+                }
+              }
+            },
+            "entities": [
+              {
+                "id": "r:f41158dc14512351:t1:e:place_1",
+                "name": "青云村",
+                "kind": "place",
+                "status": "unknown"
+              },
+              {
+                "id": "r:f41158dc14512351:t1:e:place_2",
+                "name": "黑风林",
+                "kind": "place",
+                "status": "unknown"
+              }
+            ],
+            "memory": {
+              "facts": [],
+              "promises": [],
+              "clues": [],
+              "recent": [],
+              "summaries": []
+            },
+            "references": [],
+            "previousScene": {
+              "id": "r:f41158dc14512351:t1:s:scene",
+              "blocksHash": "c54078701bdc74156249130e7a984cc19f28fce17f60c9ffcb82f8809a0af950"
+            },
+            "relationshipVersion": 1,
+            "relationships": {},
+            "coverage": {
+              "policy": "relevance-v1",
+              "openTotal": 0,
+              "openIncluded": 0,
+              "openOmitted": 0
+            }
+          },
+          "rawCompletion": {
+            "model": "@cf/zai-org/glm-4.7-flash",
+            "choices": [
+              {
+                "finish_reason": "stop",
+                "message": {
+                  "content": "{\n  \"blocks\": [\n    {\n      \"kind\": \"narration\",\n      \"text\": \"你沿着蜿蜒的山道前行，四周的景色逐渐从熟悉的农田变成了荒凉的灌木丛。三十天的跋涉让你对这片未知的区域有了初步的印象。黑风林就在前方，树影婆娑，透着一股阴森的气息。你放慢了脚步，时刻警惕着四周的动静，手中的行粮也消耗了不少。\"\n    },\n    {\n      \"kind\": \"dialogue\",\n      \"text\": \"这林子看着不简单，得小心点。\",\n      \"speaker\": \"self\"\n    },\n    {\n      \"kind\": \"narration\",\n      \"text\": \"你站在黑风林的边缘，犹豫着是否要深入。林中偶尔传来几声不知名野兽的嘶吼，让人心惊肉跳。虽然你只是个凡人，但求生的本能让你不敢掉以轻心。你决定先在林子边缘观察一下，看看有没有什么可以利用的线索，或者有没有什么危险生物的踪迹。\"\n    }\n  ],\n  \"title\": \"黑风林边缘\",\n  \"location\": \"黑风林边缘\",\n  \"otherPeople\": [],\n  \"places\": [\n    {\n      \"id\": \"k1\",\n      \"name\": \"青云村\"\n    },\n    {\n      \"id\": \"k2\",\n      \"name\": \"黑风林\"\n    }\n  ],\n  \"factions\": [],\n  \"choices\": [\n    {\n      \"action\": \"explore:cautious\",\n      \"targetId\": \"supplies\",\n      \"stake\": \"low\"\n    },\n    {\n      \"action\": \"explore:cautious\",\n      \"targetId\": \"stones\",\n      \"stake\": \"low\"\n    },\n    {\n      \"action\": \"explore:cautious\",\n      \"targetId\": \"manual\",\n      \"stake\": \"low\"\n    }\n  ],\n  \"memoryDeltas\": []\n}",
+                  "reasoning_content": ""
+                }
+              }
+            ],
+            "usage": {
+              "prompt_tokens": 1538,
+              "completion_tokens": 424,
+              "total_tokens": 1962,
+              "prompt_tokens_details": {
+                "cached_tokens": 0
+              },
+              "neurons": 23.892600000000183
+            }
+          },
+          "result": {
+            "status": "ready",
+            "accountingStatus": "complete",
+            "modelId": "@cf/zai-org/glm-4.7-flash",
+            "attemptId": "17aeb9b3-c514-4fb9-bdee-438e92576a61",
+            "inferencePerformed": true,
+            "usage": {
+              "promptTokens": 1538,
+              "completionTokens": 424,
+              "totalTokens": 1962
+            },
+            "actualNeurons": null,
+            "stopReason": "stop",
+            "inputHash": "674b0e5e0b7dea8e4e9e8c1be2872477ef52f04d745c95004eb9337007b66c01",
+            "inputBytes": 12059,
+            "nonThinkingValidated": true,
+            "scene": {
+              "id": "r:f41158dc14512351:t2:s:scene",
+              "title": "黑风林边缘",
+              "location": "黑风林边缘",
+              "entities": [
+                {
+                  "id": "r:f41158dc14512351:t1:e:place_1",
+                  "name": "青云村",
+                  "kind": "place"
+                },
+                {
+                  "id": "r:f41158dc14512351:t1:e:place_2",
+                  "name": "黑风林",
+                  "kind": "place"
+                }
+              ],
+              "blocks": [
+                {
+                  "kind": "narration",
+                  "text": "你沿着蜿蜒的山道前行，四周的景色逐渐从熟悉的农田变成了荒凉的灌木丛。三十天的跋涉让你对这片未知的区域有了初步的印象。黑风林就在前方，树影婆娑，透着一股阴森的气息。你放慢了脚步，时刻警惕着四周的动静，手中的行粮也消耗了不少。"
+                },
+                {
+                  "kind": "dialogue",
+                  "text": "这林子看着不简单，得小心点。",
+                  "speaker": "self"
+                },
+                {
+                  "kind": "narration",
+                  "text": "你站在黑风林的边缘，犹豫着是否要深入。林中偶尔传来几声不知名野兽的嘶吼，让人心惊肉跳。虽然你只是个凡人，但求生的本能让你不敢掉以轻心。你决定先在林子边缘观察一下，看看有没有什么可以利用的线索，或者有没有什么危险生物的踪迹。"
+                }
+              ],
+              "choices": [
+                {
+                  "id": "r:f41158dc14512351:t2:c:a",
+                  "label": "寻找行粮（谨慎）",
+                  "intent": "explore",
+                  "targetId": "supplies",
+                  "stake": "low",
+                  "approach": "cautious"
+                },
+                {
+                  "id": "r:f41158dc14512351:t2:c:b",
+                  "label": "寻找灵石（谨慎）",
+                  "intent": "explore",
+                  "targetId": "stones",
+                  "stake": "low",
+                  "approach": "cautious"
+                },
+                {
+                  "id": "r:f41158dc14512351:t2:c:c",
+                  "label": "寻找完整功法（谨慎）",
+                  "intent": "explore",
+                  "targetId": "manual",
+                  "stake": "low",
+                  "approach": "cautious"
+                }
+              ],
+              "memoryDeltas": []
+            },
+            "providerSource": "cloudflare"
+          },
+          "source": "cloudflare"
+        }
+      ],
+      "wireEvents": [
+        {
+          "type": "status",
+          "status": "generating"
+        },
+        {
+          "type": "status",
+          "status": "generating"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "status",
+          "status": "generating"
+        },
+        {
+          "type": "result"
+        }
+      ]
+    }
+  ],
+  "refreshed": {
+    "beforeRevision": 2,
+    "afterRevision": 2,
+    "sameRng": true,
+    "sameState": true,
+    "noNewPost": true
+  },
+  "errors": [],
+  "posts": 2
+}
