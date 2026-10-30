@@ -1,4 +1,5 @@
-import {ORIGINS,TALENTS,DAYS_PER_YEAR} from '../game/cultivation/live/model.js';
+import {ORIGINS,TALENTS,ITEMS,REALMS,DAYS_PER_YEAR} from '../game/cultivation/live/model.js';
+import {getReincarnationSettlement,REINCARNATION_REWARDS} from '../game/cultivation/live/reincarnation.js';
 const esc = value => String(value ?? '').replace(/[&<>"']/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[char]);
 
 const endings = { retired: '归隐', lifespan: '寿尽', battle: '陨落', victory: '问鼎', burned: '燃命而终' };
@@ -113,17 +114,76 @@ function renderLiveBlock(block, index) {
 
 function renderLiveChoice(choice, view, index, presentation) {
   const draft = presentation.preview;
+  const numbered = view.state.life.cultivationProfile?.version === 7;
   const details = draft ? [] : [
     !choice.enabled && choice.reason ? choice.reason : '',
     choice.costs?.days > 0 ? `${choice.costs.days}日` : '',
     ...Object.entries(choice.costs?.items ?? {}).filter(([, count]) => count > 0).map(([id, count]) => `${view.itemNames?.[id] ?? id} ${count}`),
     ...(choice.warnings ?? []),
   ].filter(Boolean);
-  return `<button type="button" class="journey-choice${draft ? ' live-choice-draft' : ''}" data-live-choice-index="${index}"${draft ? ' data-live-choice-preview' : ` data-live-choice="${esc(choice.id)}" data-revision="${view.state.revision}" data-state-hash="${esc(view.stateHash)}"`}${draft || presentation.pending || !choice.enabled ? ' disabled' : ''}${details.length ? ` aria-describedby="live-cost-${index}"` : ''}><span class="journey-choice-label">${esc(choice.label)}</span><span class="journey-choice-reason" id="live-cost-${index}"${details.length ? '' : ' hidden'}>${esc(details.join(' · '))}</span></button>`;
+  return `<button type="button" class="journey-choice${draft ? ' live-choice-draft' : ''}" data-live-choice-index="${index}"${draft ? ' data-live-choice-preview' : ` data-live-choice="${esc(choice.id)}" data-revision="${view.state.revision}" data-state-hash="${esc(view.stateHash)}"`}${draft || presentation.pending || !choice.enabled ? ' disabled' : ''}${details.length ? ` aria-describedby="live-cost-${index}"` : ''}><span class="journey-choice-label">${numbered ? `<span class="live-choice-number">${index + 1}. </span>` : ''}${esc(choice.label)}</span><span class="journey-choice-reason" id="live-cost-${index}"${details.length ? '' : ' hidden'}>${esc(details.join(' · '))}</span></button>`;
+}
+
+function renderCustomAction(view, presentation) {
+  const draft = view.customAction ?? {}, disabled = presentation.pending || presentation.preview || view.state.phase !== 'active';
+  return `<section class="live-custom-action" data-live-custom${view.state.phase === 'dead' ? ' hidden' : ''}><button type="button" class="journey-choice" data-live-custom-toggle aria-expanded="${Boolean(draft.open)}" aria-controls="live-custom-form"${disabled ? ' disabled' : ''}><span class="journey-choice-label"><span class="live-choice-number">4. </span>自定义行动</span></button><form id="live-custom-form"${draft.open ? '' : ' hidden'}><label for="live-custom-action">你打算如何行动？</label><textarea id="live-custom-action" data-live-custom-field name="action" rows="2" maxlength="120" autocomplete="off" aria-describedby="live-custom-error"${disabled ? ' disabled' : ''}>${esc(draft.text ?? '')}</textarea><p id="live-custom-error" class="live-action-error" role="status"${draft.error ? '' : ' hidden'}>${esc(draft.error ?? '')}</p><button type="submit" class="button primary" data-live-custom-submit${disabled ? ' disabled' : ''}>落下此念</button></form></section>`;
+}
+
+function renderLiveOutcome(receipt, view = {}) {
+  const active = receipt?.kind === 'choice' && receipt.action;
+  const changes = [], before = receipt?.before ?? {}, after = receipt?.after ?? {};
+  const delta = (label, difference, suffix = '') => { if (Number.isFinite(difference) && difference !== 0) changes.push(`${label} ${difference > 0 ? '+' : ''}${difference}${suffix}`); };
+  if (active) {
+    if (receipt.elapsedDays > 0) delta('岁月', receipt.elapsedDays % DAYS_PER_YEAR === 0 ? receipt.elapsedDays / DAYS_PER_YEAR : receipt.elapsedDays, receipt.elapsedDays % DAYS_PER_YEAR === 0 ? '年' : '日');
+    delta('修为', after.cultivation - before.cultivation);
+    delta('气血', (before.injury - after.injury) * 10, '%');
+    delta('寿命上限', after.lifeLimit - before.lifeLimit, '年');
+    delta('灵力', after.cultivationProfile?.spirit - before.cultivationProfile?.spirit);
+    delta('灵力上限', after.cultivationProfile?.maxSpirit - before.cultivationProfile?.maxSpirit);
+    delta('身份暴露', after.cultivationProfile?.exposure - before.cultivationProfile?.exposure);
+    for (const [id, name] of Object.entries({ alchemy: '炼丹', forging: '炼器', formations: '阵法', talismans: '符箓' })) delta(name, (after.cultivationProfile?.arts?.[id] ?? 0) - (before.cultivationProfile?.arts?.[id] ?? 0));
+    for (const [id, count] of Object.entries(receipt.itemChanges ?? {})) delta(view.itemNames?.[id] ?? ITEMS[id] ?? id, count);
+    for (const [id, count] of Object.entries(receipt.relationChanges ?? {})) {
+      const name = view.state?.relatedEntities?.find(entity => entity.id === id)?.name;
+      if (name) delta(`${name}好感`, count);
+    }
+  }
+  const check = active ? receipt.cultivationResult?.check : null;
+  const checkName = check?.label ?? ({ practice: '修行判定', breakthrough: '破境判定', exploration: '探索判定', combat: '交锋判定', forbidden: '禁术判定', 'black-market': '黑市交易判定', 'world-crossing': '跨界判定', craft: '炼制判定' })[check?.kind] ?? '行动判定';
+  return `<p class="live-turn-feedback" data-live-feedback${active ? '' : ' hidden'}>${active ? `你选择了：${esc(receipt.action.label)}` : ''}</p><p class="live-turn-changes" data-live-changes aria-label="本次变化"${changes.length ? '' : ' hidden'}>${changes.map(esc).join(' · ')}</p><p class="live-turn-check" data-live-check aria-label="判定结果"${check ? '' : ' hidden'}>${check ? `${esc(checkName)}：${check.success ? '成功' : '失败'}` : ''}</p>`;
+}
+
+function renderLiveState(view) {
+  const life = view.state.life, summary = view.characterSummary;
+  const realm = summary?.realmName ?? REALMS[life.realm]?.name ?? life.realm;
+  const goal = summary?.currentGoal ?? view.state.director?.currentGoal ?? view.state.director?.mainQuest?.text ?? view.state.director?.mystery?.question ?? view.state.director?.destiny?.text;
+  const lifespan = `${(life.ageDays / DAYS_PER_YEAR).toFixed(1)} / ${life.lifeLimit}岁`;
+  const facts = [
+    ['气血', `${Math.max(0, 10 - life.injury) * 10}%`],
+    ...(Number.isFinite(life.cultivationProfile?.spirit) ? [['灵力', `${life.cultivationProfile.spirit} / ${life.cultivationProfile.maxSpirit}`]] : []),
+    ['灵石', life.items.stones ?? 0],
+    ['所在地', view.state.currentScene?.location ?? (view.state.phase === 'dead' ? '此生已尽' : '尚未入世')],
+    ...(goal ? [['当前目标', goal]] : []),
+  ];
+  return `<details class="live-turn-state" data-live-state data-live-preserve-open${view.state.phase === 'dead' ? ' hidden' : ''}><summary><span>${esc(realm)}</span><span>寿元 ${esc(lifespan)}</span><span class="live-state-hint">当前状态</span></summary><dl>${facts.map(([name, value]) => `<div><dt>${esc(name)}</dt><dd>${esc(value)}</dd></div>`).join('')}</dl></details>`;
+}
+
+function renderLiveEnding(view) {
+  const state = view.state;
+  if (state.phase !== 'dead') return '';
+  if (state.life.cultivationProfile?.version !== 7) return `<h3>${state.lastReceipt?.death?.cause === 'lifespan' ? '寿尽' : '伤重而终'}</h3><button type="button" class="button" data-live-new>再入轮回</button>`;
+  const settlement = getReincarnationSettlement(state);
+  if (!settlement) return '<h3>此生已尽</h3>';
+  const selected = new Set(view.selectedReincarnationRewards ?? []);
+  const spent = REINCARNATION_REWARDS.reduce((sum, reward) => sum + (selected.has(reward.id) ? reward.cost : 0), 0);
+  const balance = settlement.availablePoints - spent, blocked = view.busy || Boolean(view.reincarnatedTo);
+  const rewards = REINCARNATION_REWARDS.map(reward => `<button type="button" class="journey-choice" data-live-reward="${esc(reward.id)}" aria-pressed="${selected.has(reward.id)}"${blocked || !selected.has(reward.id) && reward.cost > balance ? ' disabled' : ''}><span class="live-reward-name"><strong>${esc(reward.name)}</strong><span>${reward.cost} 因果点</span></span><span class="live-reward-description">${esc(reward.description)}</span></button>`).join('');
+  return `<div class="live-reincarnation"><h3>此生结算</h3><p>${esc(settlement.summary)}</p><blockquote class="live-epitaph">${esc(settlement.epitaph)}</blockquote><p class="live-causal-points">因果点 ${settlement.availablePoints} · 本世所得 ${settlement.earnedPoints} · 前世结余 ${settlement.carriedPoints}</p><h4>六道轮回商店</h4><div class="live-reward-list" role="group" aria-label="选择来世传承">${rewards}</div><p class="live-causal-points">已选 ${spent} · 来世结余 ${balance}</p>${view.reincarnatedTo ? '<p class="live-causal-points">此生已经步入轮回，可从存档中续写下一世。</p>' : ''}<button type="button" class="button primary" data-live-reincarnate${blocked || balance < 0 ? ' disabled' : ''}>步入轮回</button></div>`;
 }
 
 export function renderLiveJourney(view, choices) {
   const state = view.state, scene = state.currentScene, presentation = livePresentation(view, choices);
+  const v7 = state.life.cultivationProfile?.version === 7;
   const opening = state.phase === 'awaitingOpening' && !presentation.preview;
   const intro = opening ? `<p>${esc(state.life.name)}，${Math.floor(state.life.ageDays / DAYS_PER_YEAR)}岁，出身${esc(ORIGINS[state.life.birth.originId])}。</p><p>天赋：${state.life.birth.talentIds.map(id => esc(TALENTS[id])).join('、')}。</p>` : '';
   const message = view.status === 'paused' && !view.busy ? liveMessages[view.errorCode] ?? '故事未完成，请重试。'
@@ -131,7 +191,7 @@ export function renderLiveJourney(view, choices) {
       : view.busy && view.generationStatus === 'switching' ? '重新续写…' : '';
   const retry = Boolean(view.pending && !view.busy);
   const status = message ? esc(message) : view.busy ? '<span aria-hidden="true">…</span><span class="live-sr-only">正在续写</span>' : '';
-  return `<article class="journey live-journey" data-live-story data-live-run="${esc(state.runId)}" aria-label="此生故事"><section class="journey-current" aria-labelledby="journey-current-title"><h2 id="journey-current-title" class="live-sr-only" tabindex="-1">${esc(state.phase === 'dead' ? '此生已尽' : scene?.title ?? '此生故事')}</h2><section class="live-intro" aria-label="本地开场"${opening ? '' : ' hidden'}>${intro}</section><div class="journey-prose" data-live-prose data-live-preview-text${presentation.preview ? ' data-live-preview' : ''} aria-busy="${Boolean(view.busy)}">${presentation.blocks.map(renderLiveBlock).join('')}</div><div class="journey-choices" data-live-choices role="group" aria-label="眼前的选择"${presentation.choices.length ? '' : ' hidden'}>${presentation.choices.map((choice, index) => renderLiveChoice(choice, view, index, presentation)).join('')}</div><section class="live-status" aria-live="polite" aria-atomic="true"${status || retry ? '' : ' hidden'}><p data-live-progress-status>${status}</p><div data-live-recovery${retry ? '' : ' hidden'}><button type="button" class="button primary" data-live-retry>重试续接</button><button type="button" class="button" data-live-resume>检查已有回应</button></div></section><section class="journey-ending"${state.phase === 'dead' ? '' : ' hidden'}>${state.phase === 'dead' ? `<h3>${state.lastReceipt?.death?.cause === 'lifespan' ? '寿尽' : '伤重而终'}</h3><button type="button" class="button" data-live-new>再入轮回</button>` : ''}</section></section></article>`;
+  return `<article class="journey live-journey${v7 ? ' live-cultivation-v7' : ''}" data-live-story data-live-run="${esc(state.runId)}" aria-label="此生故事"><section class="journey-current" aria-labelledby="journey-current-title"><h2 id="journey-current-title" class="live-sr-only" tabindex="-1">${esc(state.phase === 'dead' ? '此生已尽' : scene?.title ?? '此生故事')}</h2><section class="live-intro" aria-label="本地开场"${opening ? '' : ' hidden'}>${intro}</section>${v7 ? renderLiveOutcome(view.pending?.receipt ?? state.lastReceipt, view) : ''}<div class="journey-prose" data-live-prose data-live-preview-text${presentation.preview ? ' data-live-preview' : ''} aria-busy="${Boolean(view.busy)}">${presentation.blocks.map(renderLiveBlock).join('')}</div>${v7 ? renderLiveState(view) : ''}<div class="journey-choices" data-live-choices role="group" aria-label="眼前的选择"${presentation.choices.length ? '' : ' hidden'}>${presentation.choices.map((choice, index) => renderLiveChoice(choice, view, index, presentation)).join('')}</div>${v7 ? renderCustomAction(view, presentation) : ''}<section class="live-status" aria-live="polite" aria-atomic="true"${status || retry ? '' : ' hidden'}><p data-live-progress-status>${status}</p><div data-live-recovery${retry ? '' : ' hidden'}><button type="button" class="button primary" data-live-retry>重试续接</button><button type="button" class="button" data-live-resume>检查已有回应</button></div></section><section class="journey-ending"${state.phase === 'dead' ? '' : ' hidden'}>${renderLiveEnding(view)}</section></section></article>`;
 }
 
 // The live reading surface keeps its paragraph and choice nodes as text arrives
@@ -145,11 +205,12 @@ function syncLiveNode(current, next) {
     if (current.nodeValue !== next.nodeValue) current.nodeValue = next.nodeValue;
     return;
   }
-  for (const attribute of [...current.attributes]) if (!next.hasAttribute(attribute.name)) current.removeAttribute(attribute.name);
+  for (const attribute of [...current.attributes]) if (!next.hasAttribute(attribute.name) && !(attribute.name === 'open' && current.hasAttribute('data-live-preserve-open'))) current.removeAttribute(attribute.name);
   for (const attribute of [...next.attributes]) if (current.getAttribute(attribute.name) !== attribute.value) current.setAttribute(attribute.name, attribute.value);
   const children = [...current.childNodes], nextChildren = [...next.childNodes];
   nextChildren.forEach((child, index) => children[index] ? syncLiveNode(children[index], child) : current.append(child.cloneNode(true)));
   for (const child of children.slice(nextChildren.length)) child.remove();
+  if (current.nodeName === 'TEXTAREA' && current.value !== next.value) current.value = next.value;
 }
 
 export function updateLiveJourney(root, view, choices = []) {

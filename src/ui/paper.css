@@ -486,3 +486,36 @@ select:focus-visible { outline: 2px solid var(--jade); outline-offset: 3px; }
 .birth #live-name, .birth #live-origin { display: block; box-sizing: border-box; width: 100%; max-width: 100%; min-height: 44px; margin: .5rem 0 1.3rem; padding: .6rem; font: inherit; color: inherit; background: transparent; border: 1px solid currentColor; border-radius: .3rem; }
 .live-status, .journey-choice-reason { overflow-wrap: anywhere; }
 .live-intro { margin-block: 1rem; }
+.live-birth-greeting { margin: 10px 0 28px; font: 21px/1.9 var(--serif); }
+.live-birth form > label { display: block; margin: 18px 0 8px; font-size: 14px; }
+.live-birth form > .birth-start { width: 100%; margin-top: 16px; }
+.live-turn-feedback { margin: 0 0 8px; font: 15px/1.8 var(--serif); color: var(--muted); overflow-wrap: anywhere; }
+.live-turn-changes, .live-turn-check { margin: 6px 0; font: 13px/1.8 var(--sans); color: var(--muted); overflow-wrap: anywhere; }
+.live-turn-check { color: var(--jade); margin-bottom: 18px; }
+.live-turn-state { border-block: 1px solid var(--line); margin-top: 24px; padding-block: 9px; color: var(--muted); font-size: 13px; }
+.live-turn-state summary { cursor: pointer; min-height: 36px; line-height: 2.5; }
+.live-turn-state summary > span { margin-right: 15px; }
+.live-turn-state summary .live-state-hint { font-size: 12px; color: var(--dim); }
+.live-turn-state dl { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px 20px; margin: 10px 0; }
+.live-turn-state dl > div { min-width: 0; }
+.live-turn-state dt { color: var(--dim); font-size: 12px; }
+.live-turn-state dd { margin: 3px 0 0; color: var(--text); overflow-wrap: anywhere; }
+.live-turn-state dl > div:last-child { grid-column: 1 / -1; }
+.live-choice-number { font-variant-numeric: tabular-nums; }
+.live-custom-action { margin-top: 10px; }
+.live-custom-action > .journey-choice:disabled { color: var(--text); background: transparent; border: 1px solid var(--line2); }
+.live-custom-action form { margin-top: 14px; }
+.live-custom-action label { display: block; margin-bottom: 8px; color: var(--muted); font-size: 14px; }
+.live-custom-action textarea { display: block; box-sizing: border-box; width: 100%; min-height: 88px; resize: vertical; padding: 12px; border: 1px solid var(--line2); border-radius: 4px; color: var(--text); background: transparent; font: 16px/1.8 var(--serif); }
+.live-custom-action textarea:focus { outline: 2px solid var(--jade); outline-offset: 2px; }
+.live-custom-action form .button { margin-top: 10px; }
+.live-action-error { color: var(--red); font-size: 13px; line-height: 1.7; margin: 8px 0; }
+.live-reincarnation { margin-top: 24px; }
+.live-reincarnation h3 { font: 23px/1.5 var(--serif); }
+.live-epitaph { margin: 18px 0; padding-left: 16px; border-left: 2px solid var(--line2); font: 17px/1.8 var(--serif); color: var(--muted); }
+.live-causal-points { font-size: 14px; line-height: 1.9; color: var(--muted); }
+.live-reward-list { display: grid; gap: 10px; margin: 16px 0; }
+.live-reward-list .journey-choice[aria-pressed="true"] { border-color: var(--jade); background: var(--paper-hover); }
+.live-reward-name { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
+.live-reward-description { display: block; margin-top: 6px; font-size: 13px; color: var(--muted); }
+.live-reincarnation > .button { min-height: 44px; width: 100%; margin-top: 12px; }

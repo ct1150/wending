@@ -3,6 +3,9 @@ import { exactKeys, idField, textField, validateEntities, validateGeneratedScene
 import { validateLife, validateReceipt } from './validation.js';
 import { prepareOpening, prepareChoice, compileChoices, projectRelations } from './engine.js';
 import { DAYS_PER_YEAR, ITEMS, REALMS } from './model.js';
+import { isV7Life, summarizeLife, initialItemsForBirth, initialLifeForBirth, realmCatalogFor } from './cultivation-rules.js';
+import { advanceStoryDirector, buildDirectorContext, validateStoryDirector, validateDirectorScene } from './story-director.js';
+import { customActionCommand } from './custom-actions.js';
 
 const encoder = new TextEncoder();
 const bytes = value => encoder.encode(JSON.stringify(value)).length;
@@ -18,6 +21,8 @@ export const STORY_ERROR_CODES=Object.freeze([
   'NEXT_CONTEXT_TOO_LARGE', 'NO_EXECUTABLE_CHOICE', 'REPEATED_SCENE',
   'SCENE_ID_SCOPE_INVALID', 'SPEAKER_REFERENCE_INVALID', 'STORY_CONTEXT_INVALID',
   'STORY_DATA_INVALID', 'STORY_DATA_TOO_LARGE', 'UNSAFE_STORY_TEXT',
+  'STORY_DIRECTOR_INVALID', 'STORY_DIRECTOR_TOO_LARGE', 'STORY_ANNOTATION_INVALID',
+  'STORY_LENGTH_INVALID', 'STORY_BEAT_INVALID', 'REPEATED_STORY_ARC',
 ]);
 const fail = code => { throw Object.assign(new Error(code), {code}); };
 const namespace = runId => 'r:' + sha256(runId).slice(0,16);
@@ -107,7 +112,7 @@ export function buildStoryContext(state,pending,relatedRecords=[],options={}) {
   if(!Array.isArray(relatedRecords)||relatedRecords.length>256)fail('MEMORY_RETRIEVAL_TOO_LARGE');
   let fixed;
   try {
-    fixed=pending.kind==='opening'?prepareOpening(state,{requestId:pending.identity.requestId}):pending.kind==='choice'?prepareChoice(state,{requestId:pending.identity.requestId,choiceId:pending.identity.choiceId}):null;
+    fixed=pending.kind==='opening'?prepareOpening(state,{requestId:pending.identity.requestId}):pending.kind==='choice'?prepareChoice(state,customActionCommand(pending)):null;
     if(!fixed||!equal(fixed,pending))fail('ACTION_RECEIPT_MISMATCH');
   } catch { fail('ACTION_RECEIPT_MISMATCH'); }
   if(fixed.receipt.death)fail('DEATH_REQUIRES_LOCAL_SETTLEMENT');
@@ -131,6 +136,7 @@ export function buildStoryContext(state,pending,relatedRecords=[],options={}) {
   // silently dropping obligations/facts when that relevant set cannot fit.
   if(!selecting&&(facts.length>16||promises.length>12||clues.length>12))fail('MEMORY_CONTEXT_TOO_LARGE');
   const result={schemaVersion:1,phase:fixed.kind,identity:copy(fixed.identity),namespace:namespace(state.runId),receipt:copy(fixed.receipt),life:copy(fixed.nextLife),entities:[...entities.values()],memory:{facts,promises,clues,recent:records.filter(r=>r.kind==='turn').slice(0,4),summaries:records.filter(r=>r.kind==='summary').slice(0,2)},references:[],previousScene:state.currentScene?{id:state.currentScene.id,blocksHash:sha256(canonicalStringify(state.currentScene.blocks))}:null};
+  if(isV7Life(state.life)&&state.director)result.director=buildDirectorContext(state.director,fixed.nextLife,fixed.receipt,fixed.identity.turnId);
   if(state.relationshipVersion===1) {
     const restored=Object.fromEntries(records.filter(r=>r.kind==='ruleRelation').map(r=>[r.entityId,r.value]));
     result.relationshipVersion=1;
@@ -174,8 +180,9 @@ function selectRelevantMemory(result,records,state,entities,openTotal,currentTur
   const fits=()=>result.entities.length<=24&&bytes(result)<=7000&&bytes(JSON.stringify(result))<=7000;
   if(!fits())fail('MEMORY_CONTEXT_TOO_LARGE');
   const target=result.receipt.action?.targetId;
+  const directedReferences=new Set([state.director?.mainQuest,...(state.director?.sideQuests??[]),...(state.director?.memory.clues??[])].filter(Boolean).map(row=>row.id));
   const relevance=row=>row.entityId===target?0:currentIds.has(row.entityId)?1:2;
-  const priority=row=>row.id===currentTurnId?-1:['promise','clue'].includes(row.kind)&&row.status==='open'?0:row.kind==='death'?1:['fact','relationship','receipt'].includes(row.kind)?2:3;
+  const priority=row=>row.id===currentTurnId?-2:directedReferences.has(row.id)?-1:['promise','clue'].includes(row.kind)&&row.status==='open'?0:row.kind==='death'?1:['fact','relationship','receipt'].includes(row.kind)?2:3;
   const ordered=[...records].sort((a,b)=>priority(a)-priority(b)||relevance(a)-relevance(b)||b.turnId-a.turnId||(a.id<b.id?-1:a.id>b.id?1:0));
   const groups={receipt:'facts',fact:'facts',relationship:'facts',death:'facts',promise:'promises',clue:'clues',turn:'recent',summary:'summaries'};
   const limits={facts:16,promises:12,clues:12,recent:4,summaries:2};
@@ -207,15 +214,17 @@ function selectRelevantMemory(result,records,state,entities,openTotal,currentTur
 // builder re-derives pending; this checks consistency, not account authentication.
 export function validateStoryContext(c) {
   inspect(c,7000);
-  exactKeys(c,['schemaVersion','phase','identity','namespace','receipt','life','entities','memory','references','previousScene'],['coverage','relationshipVersion','relationships']);
+  exactKeys(c,['schemaVersion','phase','identity','namespace','receipt','life','entities','memory','references','previousScene'],['coverage','relationshipVersion','relationships','director']);
   if(c.schemaVersion!==1||!['opening','choice'].includes(c.phase))fail('STORY_CONTEXT_INVALID');
   exactKeys(c.identity,['runId','turnId','baseRevision','stateHash','choiceId','rulesVersion','promptVersion','requestId']);
   idField(c.identity.runId);idField(c.identity.requestId);whole(c.identity.turnId,1);whole(c.identity.baseRevision);
   if(c.namespace!==namespace(c.identity.runId)||!/^[a-f0-9]{64}$/.test(c.identity.stateHash)||c.identity.rulesVersion!==1||c.identity.promptVersion!==1||c.identity.turnId!==c.identity.baseRevision+1)fail('STORY_CONTEXT_INVALID');
   if(c.phase==='opening'&&c.identity.baseRevision!==0||c.phase==='choice'&&c.identity.baseRevision<1)fail('STORY_CONTEXT_INVALID');
   validateLife(c.life);validateReceipt(c.receipt);
-  if(c.receipt.kind!==c.phase||c.identity.choiceId!==c.receipt.choiceId||c.receipt.death||!equal(c.receipt.after,{ageDays:c.life.ageDays,realm:c.life.realm,cultivation:c.life.cultivation,injury:c.life.injury})||c.phase==='opening'&&!equal(c.receipt.birth,c.life.birth))fail('ACTION_RECEIPT_MISMATCH');
-  if(c.phase==='opening'&&(!equal(c.life.items,{supplies:3,stones:0})||Object.keys(c.life.relations).length))fail('ACTION_RECEIPT_MISMATCH');
+  if(c.receipt.kind!==c.phase||c.identity.choiceId!==c.receipt.choiceId||c.receipt.death||!equal(c.receipt.after,summarizeLife(c.life))||c.phase==='opening'&&!equal(c.receipt.birth,c.life.birth))fail('ACTION_RECEIPT_MISMATCH');
+  if(c.phase==='opening'&&(!equal(c.life.items,initialItemsForBirth(c.life.birth))||Object.keys(c.life.relations).length))fail('ACTION_RECEIPT_MISMATCH');
+  if(c.director!==undefined){if(!isV7Life(c.life))fail('STORY_CONTEXT_INVALID');validateStoryDirector(c.director,{turnId:c.identity.baseRevision});}
+  else if(isV7Life(c.life))fail('STORY_DIRECTOR_INVALID');
   if(!Array.isArray(c.entities)||c.entities.length>24)fail('STORY_CONTEXT_INVALID');
   const seen=new Set();for(const e of c.entities){exactKeys(e,['id','name','kind','status']);validateEntities([{id:e.id,name:e.name,kind:e.kind}]);if(seen.has(e.id)||!['unknown','alive','dead'].includes(e.status)||e.kind!=='person'&&e.status!=='unknown')fail('STORY_CONTEXT_INVALID');seen.add(e.id);}
   if(c.relationshipVersion!==undefined||c.relationships!==undefined){
@@ -259,7 +268,7 @@ function numberWord(text) {
 function checkMechanicalClaims(text,c) {
   const numerals='([0-9零〇一二两三四五六七八九十百千万]+)';
   for(const m of text.matchAll(new RegExp('你(?:如今|现在|今年)?(?:已经|已|年满)?'+numerals+'岁','g')))if(numberWord(m[1])!==Math.floor(c.life.ageDays/DAYS_PER_YEAR))fail('MECHANICAL_FACT_CONFLICT');
-  for(const [id,realm] of Object.entries(REALMS)){
+  for(const [id,realm] of Object.entries(realmCatalogFor(c.life))){
     const escaped=realm.name.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');
     if(new RegExp('你(?:如今|现在)?(?:已经|已)?(?:是|成为|突破至|踏入|晋入|达到)'+escaped).test(text)&&c.life.realm!==id)fail('MECHANICAL_FACT_CONFLICT');
   }
@@ -273,12 +282,12 @@ function checkMechanicalClaims(text,c) {
   }
 }
 function compilationState(c,scene) {
-  const birthSummary={ageDays:5760,realm:'mortal',cultivation:0,injury:0};
-  const birthReceipt=c.phase==='opening'?c.receipt:{kind:'opening',choiceId:null,action:null,elapsedDays:0,itemChanges:{},relationChanges:{},random:{before:0,after:0,roll:null},before:birthSummary,after:birthSummary,death:null,birth:c.life.birth};
+  const birthSummary=summarizeLife(initialLifeForBirth(c.life.name,c.life.birth));
+  const birthReceipt=c.phase==='opening'?c.receipt:{kind:'opening',choiceId:null,action:null,elapsedDays:0,itemChanges:{},relationChanges:{},random:{before:0,after:0,roll:null},before:birthSummary,after:birthSummary,death:null,birth:c.life.birth,...(isV7Life(c.life)?{cultivationResult:{version:7,check:null,lifespanChange:{years:0,cause:null}}}:{})};
   // Mirror commitTurn's bounded active relation set while keeping the complete
   // immutable relationChanges receipt available for permanent archive storage.
   const life=copy(c.life);life.relations=projectRelations(life,scene.entities,c.relationshipVersion===1?c.relationships:{});
-  return {...(c.relationshipVersion===1||scene.choices.some(choice=>choice.intent==='interact')?{relationshipVersion:1}:{}),version:5,mode:'cultivation',contentVersion:4,rulesVersion:1,promptVersion:1,runId:c.identity.runId,revision:c.identity.turnId,turnId:c.identity.turnId,phase:'active',rng:c.receipt.random.after,life,birthReceipt,currentScene:scene,lastReceipt:c.receipt,relatedEntities:scene.entities,archiveCursor:0};
+  return {...(c.relationshipVersion===1||scene.choices.some(choice=>choice.intent==='interact')?{relationshipVersion:1}:{}),...(c.director?{director:advanceStoryDirector(c.director,life,c.receipt,scene,c.identity.turnId)}:{}),version:5,mode:'cultivation',contentVersion:4,rulesVersion:1,promptVersion:1,runId:c.identity.runId,revision:c.identity.turnId,turnId:c.identity.turnId,phase:'active',rng:c.receipt.random.after,life,birthReceipt,currentScene:scene,lastReceipt:c.receipt,relatedEntities:scene.entities,archiveCursor:0};
 }
 
 export function validateGeneratedScene(raw,context,{checkNextContext,continuity=false,requireExit=false}={}) {
@@ -327,6 +336,7 @@ export function validateGeneratedScene(raw,context,{checkNextContext,continuity=
   } catch { fail('CHOICE_NOT_COMPILABLE'); }
   const enabled=choices.filter(choice=>choice.enabled);
   if(!enabled.length)fail('NO_EXECUTABLE_CHOICE');
+  validateDirectorScene(raw,context,choices);
   if(requireExit&&(enabled.length<2||!enabled.some(choice=>choice.intent==='interact'&&['decline','leave'].includes(choice.approach)||choice.intent==='evade')))fail('CHOICE_NOT_COMPILABLE');
   for(const choice of enabled) {
     const pending=prepareChoice(prospective,{choiceId:choice.id,requestId:'r'.repeat(80)});

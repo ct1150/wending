@@ -1,10 +1,12 @@
 import { SCENE_SCHEMA } from '../game/cultivation/live/schema.js';
-import { INTENTS } from '../game/cultivation/live/model.js';
+import { INTENTS, LEGACY_INTENTS } from '../game/cultivation/live/model.js';
+import { isV7Life, V7_EXPLORE_TARGETS } from '../game/cultivation/live/cultivation-rules.js';
 
 // Generation guidance for an already validated run/turn. Runtime validation
 // remains authoritative for references, mechanics, cross-item uniqueness and
 // UTF-16 text lengths (JSON Schema maxLength counts Unicode code points).
-export function buildGenerationSchema(namespace,turnId,{nextRealm='disabled',knownEntities=[]}={}) {
+export function buildGenerationSchema(namespace,turnId,{nextRealm='disabled',knownEntities=[],life=null,directed=false}={}) {
+  const modern=isV7Life(life),intents=modern?INTENTS:LEGACY_INTENTS;
   const schema=structuredClone(SCENE_SCHEMA),prefix=`${namespace}:t${turnId}:`;
   const block=schema.properties.blocks.items,entity=schema.properties.entities.items;
   const choice=schema.properties.choices.items,memory=schema.properties.memoryDeltas.items;
@@ -32,11 +34,12 @@ export function buildGenerationSchema(namespace,turnId,{nextRealm='disabled',kno
   };
   const actor=reference(['person','faction'],{living:true}),place=reference(['place']);
   const speaker=reference(['person'],{self:true,living:true});
-  const targets={rest:['self'],explore:['supplies','stones','manual','crystal','core','soulseal','skykey','relic','iron']};
+  const targets={rest:['self'],explore:modern?[...V7_EXPLORE_TARGETS]:['supplies','stones','manual','crystal','core','soulseal','skykey','relic','iron']};
   const action=(intent,approaches,target)=>object({...choice.properties,intent:enumeration([intent]),approach:enumeration(approaches),targetId:target?enumeration(target):intent==='travel'?place:actor});
-  schema.properties.choices.items=alternatives(Object.entries(INTENTS).filter(([intent])=>intent!=='interact').flatMap(([intent,approaches])=>{
-    if(intent==='practice')return [action(intent,['steady','intensive'],['self']),...(nextRealm==='disabled'?[]:[action(intent,['breakthrough'],[nextRealm])])];
-    if(intent==='craft')return [action(intent,['study'],['manual']),action(intent,['forge'],['talisman'])];
+  schema.properties.choices.items=alternatives(Object.entries(intents).filter(([intent])=>intent!=='interact'||directed).flatMap(([intent,approaches])=>{
+    if(intent==='practice')return [action(intent,modern?['steady','intensive','forbidden']:['steady','intensive'],['self']),...(nextRealm==='disabled'?[]:[action(intent,['breakthrough'],[nextRealm])])];
+    if(intent==='craft')return [action(intent,['study'],['manual']),action(intent,['forge'],modern?['talisman','artifact']:['talisman']),...(modern?[action(intent,['alchemy'],['medicine','elixir']),action(intent,['formation'],['array']),action(intent,['talisman'],['talisman'])]:[])];
+    if(intent==='interact')return [object({...choice.properties,intent:enumeration(['interact']),stake:enumeration(['low']),approach:enumeration(['ask','decline']),targetId:actor}),object({...choice.properties,intent:enumeration(['interact']),stake:enumeration(['low']),approach:enumeration(['help']),targetId:reference(['person'],{living:true})}),object({...choice.properties,intent:enumeration(['interact']),stake:enumeration(['low']),approach:enumeration(['observe','leave']),targetId:reference(['person','place','faction'],{self:true,living:true})})];
     return [action(intent,approaches,targets[intent])];
   }));
   schema.properties.blocks.items=alternatives([
@@ -56,7 +59,8 @@ export function buildGenerationSchema(namespace,turnId,{nextRealm='disabled',kno
     object({...memoryBase,kind:enumeration(['clue']),referenceId:memory.properties.referenceId,status:enumeration(['resolved'])}),
   ]);
   // Put declarations before their references in the provider's object grammar.
-  const order=['id','title','location','entities','blocks','choices','memoryDeltas'];
+  if(directed){schema.properties.choices.minItems=3;schema.properties.blocks.maxItems=4;}
+  const order=['id','title','location','entities','blocks','choices','memoryDeltas',...(directed?['story']:[])];
   schema.properties=Object.fromEntries(order.map(key=>[key,schema.properties[key]]));
   schema.required=order;
   // Share primitives and string unions, processing children first so union

@@ -1,3 +1,4 @@
+import { realmFor, ROOTS, PHYSIQUES, RELICS, TECHNIQUES, WORLD_TIERS, INHERITED_BENEFITS, ART_NAMES } from '../game/cultivation/live/cultivation-rules.js';
 const esc = value => String(value ?? '').replace(/[&<>"']/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[char]);
 const realmNames = { mortal: '凡人', qi: '炼气', foundation: '筑基', golden: '金丹', nascent: '元婴' };
 const injuryNames = { 0: '无碍', 1: '轻伤', 2: '内伤', 3: '重伤', none: '无碍', well: '无碍', healthy: '无碍', hurt: '受伤', severe: '重伤' };
@@ -9,6 +10,7 @@ function identity(summary) {
     realm: summary.realmName ?? realmNames[summary.realm] ?? summary.realm ?? '未入仙途',
     age: summary.ageText ?? `${summary.age}岁`,
     remaining: summary.remainingLifeText ?? `${Math.max(0, summary.remainingLife ?? 0)}年`,
+    lifespan: summary.lifespanText,
   };
 }
 
@@ -28,8 +30,9 @@ function renderTalents(talents) {
 
 export function renderIdentityBar(summary) {
   const person = identity(summary);
-  const label = `查看人物详情：${person.generation}，${person.name}，${person.realm}，${person.age}，余寿${person.remaining}`;
-  return `<button type="button" class="journey-identity-bar" data-character aria-haspopup="dialog" aria-label="${esc(label)}"><span class="journey-identity-name"><span class="journey-generation">${esc(person.generation)}</span><strong class="journey-name">${esc(person.name)}</strong><span class="journey-identity-hint" aria-hidden="true">⌄</span></span><span class="journey-identity-facts"><span>${esc(person.realm)}</span><span>${esc(person.age)}</span><span>余寿${esc(person.remaining)}</span></span></button>`;
+  const life = person.lifespan ? `寿元 ${person.lifespan}` : `${person.age}，余寿${person.remaining}`;
+  const label = `查看人物详情：${person.generation}，${person.name}，${person.realm}，${life}`;
+  return `<button type="button" class="journey-identity-bar" data-character aria-haspopup="dialog" aria-label="${esc(label)}"><span class="journey-identity-name"><span class="journey-generation">${esc(person.generation)}</span><strong class="journey-name">${esc(person.name)}</strong><span class="journey-identity-hint" aria-hidden="true">⌄</span></span><span class="journey-identity-facts"><span>${esc(person.realm)}</span>${person.lifespan ? `<span>寿元 ${esc(person.lifespan)}</span>` : `<span>${esc(person.age)}</span><span>余寿${esc(person.remaining)}</span>`}</span></button>`;
 }
 
 export function renderCharacterDetails(summary) {
@@ -37,13 +40,22 @@ export function renderCharacterDetails(summary) {
   const attributes = summary.attributes ?? [], talents = summary.talents ?? [];
   const abilities = summary.abilities ?? [], items = summary.items ?? [];
   const facts = [
-    ['境界', person.realm], ['年龄', person.age], ['余寿', person.remaining],
-    ['寿限', yearsText(summary.lifeLimit)], ['命损', yearsText(summary.lifeDamage)],
-    ['伤势', summary.injuryName ?? injuryNames[summary.injury] ?? summary.injury ?? '无碍'],
+    ['境界', person.realm],
+    ...(person.lifespan ? [['寿元', person.lifespan]] : [['年龄', person.age], ['余寿', person.remaining], ['寿限', yearsText(summary.lifeLimit)], ['命损', yearsText(summary.lifeDamage)]]),
+    ...(person.lifespan ? [] : [['伤势', summary.injuryName ?? injuryNames[summary.injury] ?? summary.injury ?? '无碍']]),
+    ...(summary.statusFacts ?? []),
     ...(summary.origin ? [['出身', summary.origin.name]] : []),
     ...(summary.year === undefined ? [] : [['道历', `${summary.year}年`]]),
   ];
-  return `<div class="character-details"><p class="character-intro"><strong>${esc(person.name)}</strong><span>${esc(person.generation)}</span></p><dl class="character-facts">${facts.map(([label, value]) => `<div><dt>${esc(label)}</dt><dd>${esc(value)}</dd></div>`).join('')}</dl>${attributes.length || talents.length ? `<section class="character-section" aria-label="此生天资"><h3>此生天资</h3>${attributes.length ? renderAttributes(attributes) : ''}${talents.length ? `<div class="character-talents"><h3>天赋</h3>${renderTalents(talents)}</div>` : ''}</section>` : ''}<section class="character-section"><h3>随身物品</h3>${items.length ? `<dl class="character-inventory">${items.map(item => `<div><dt>${esc(item.name)}</dt><dd>× ${esc(item.count)}</dd></div>`).join('')}</dl>` : '<p class="character-empty">行囊里还没有留下什么。</p>'}</section><section class="character-section"><h3>已学本领</h3>${abilities.length ? `<ul class="character-abilities">${abilities.map(ability => `<li><strong>${esc(ability.name)}</strong>${ability.description ? `<p>${esc(ability.description)}</p>` : ''}</li>`).join('')}</ul>` : '<p class="character-empty">尚未学成法门。</p>'}</section><section class="character-section"><h3>今生传承</h3>${summary.legacy ? `<p><strong>${esc(summary.legacy.name)}</strong></p>${summary.legacy.description ? `<p>${esc(summary.legacy.description)}</p>` : ''}` : '<p class="character-empty">只携记忆，重新问道。</p>'}</section></div>`;
+  const traits = summary.birthTraits ?? [], inherited = summary.inheritedBenefits ?? [];
+  const inventory = items.length || !person.lifespan ? `<section class="character-section"><h3>随身物品</h3>${items.length ? `<dl class="character-inventory">${items.map(item => `<div><dt>${esc(item.name)}</dt><dd>× ${esc(item.count)}</dd></div>`).join('')}</dl>` : '<p class="character-empty">行囊里还没有留下什么。</p>'}</section>` : '';
+  const skills = abilities.length || !person.lifespan ? `<section class="character-section"><h3>已学本领</h3>${abilities.length ? `<ul class="character-abilities">${abilities.map(ability => `<li><strong>${esc(ability.name)}</strong>${ability.description ? `<p>${esc(ability.description)}</p>` : ''}</li>`).join('')}</ul>` : '<p class="character-empty">尚未学成法门。</p>'}</section>` : '';
+  const legacy = inherited.length ? `<section class="character-section"><h3>今生传承</h3>${renderTalents(inherited)}</section>` : summary.legacy || !person.lifespan ? `<section class="character-section"><h3>今生传承</h3>${summary.legacy ? `<p><strong>${esc(summary.legacy.name)}</strong></p>${summary.legacy.description ? `<p>${esc(summary.legacy.description)}</p>` : ''}` : '<p class="character-empty">只携记忆，重新问道。</p>'}</section>` : '';
+  return `<div class="character-details"><p class="character-intro"><strong>${esc(person.name)}</strong><span>${esc(person.generation)}</span></p><dl class="character-facts">${facts.map(([label, value]) => `<div><dt>${esc(label)}</dt><dd>${esc(value)}</dd></div>`).join('')}</dl>${traits.length ? `<section class="character-section"><h3>此生根基</h3>${renderTalents(traits)}</section>` : ''}${attributes.length || talents.length ? `<section class="character-section" aria-label="此生天资"><h3>此生天资</h3>${attributes.length ? renderAttributes(attributes) : ''}${talents.length ? `<div class="character-talents"><h3>天赋</h3>${renderTalents(talents)}</div>` : ''}</section>` : ''}${inventory}${skills}${legacy}</div>`;
+}
+
+export function renderLiveBirth({ name = '', originId = 'village', origins = {}, available = false, busy = false, invalid = false, error = '' } = {}) {
+  return `<section class="birth live-birth"><h2 id="journey-current-title" class="live-sr-only" tabindex="-1">留下名讳</h2><p class="live-birth-greeting">大道无情，仙路崎岖。 凡人，留下你的名讳，准备踏入这残酷而浩瀚的修仙界：</p><form id="live-birth-form"><label for="live-name">名讳</label><input id="live-name" name="name" autocomplete="off" spellcheck="false" maxlength="24" aria-required="true" value="${esc(name)}"><label for="live-origin">从何处来</label><select id="live-origin">${Object.entries(origins).map(([id, value]) => `<option value="${esc(id)}"${id === originId ? ' selected' : ''}>${esc(typeof value === 'string' ? value : value.name)}</option>`).join('')}</select>${invalid ? '<p class="notice error" role="alert">姓名无法用于故事，请修改后重新开始。支持中文姓名与常用标点。</p>' : ''}${error ? `<p class="notice error" role="status">${esc(error)}</p>` : ''}<button type="submit" class="button primary birth-start" data-live-start${!available || busy ? ' disabled' : ''}>${busy ? '正在安放此身…' : '就以此身，入世'}</button></form></section>`;
 }
 
 export function renderBirth(creation) {
@@ -60,6 +72,16 @@ function renderCampaignBirth(creation) {
 }
 
 export function liveCharacterSummary(state, catalogs) {
-  const life=state.life,days=life.ageDays;
-  return {name:life.name,generationLabel:'实时人生',generation:1,realmName:catalogs.REALMS[life.realm].name,ageText:`${Math.floor(days/360)}岁${days%360?`${days%360}日`:''}`,remainingLifeText:yearsText((life.lifeLimit*360-days)/360),lifeLimit:life.lifeLimit,lifeDamage:0,injuryName:life.injury?`伤势 ${life.injury} / 10`:'无碍',origin:{name:catalogs.ORIGINS[life.birth.originId]},attributes:Object.entries(life.birth.attributes).map(([id,value])=>({name:({constitution:'根骨',insight:'悟性',fortune:'气运'})[id],value})),talents:life.birth.talentIds.map(id=>({name:catalogs.TALENTS[id]})),items:Object.entries(life.items).filter(([,count])=>count>0).map(([id,count])=>({name:catalogs.ITEMS[id],count}))};
+  const life=state.life,days=life.ageDays,profile=life.cultivationProfile,birth=life.birth.cultivationProfile;
+  const v7=profile?.version===7,generation=state.reincarnation?.generation??1;
+  const currentGoal=state.director?.currentGoal??state.director?.mainQuest?.text??state.director?.mystery?.question??state.director?.destiny?.text;
+  const details=v7?{
+    lifespanText:`${(days/360).toFixed(1)} / ${life.lifeLimit}岁`,
+    currentGoal,
+    statusFacts:[['气血',`${Math.max(0,10-life.injury)*10}%`],...(Number.isFinite(profile.spirit)?[['灵力',`${profile.spirit} / ${profile.maxSpirit}`]]:[]),['修为',String(life.cultivation)],['灵石',String(life.items.stones??0)],...(WORLD_TIERS[profile.worldTier]?[['天地',WORLD_TIERS[profile.worldTier]]]:[]),...(profile.exposure?[['身份暴露',String(profile.exposure)]]:[]),...(state.currentScene?.location?[['所在地',state.currentScene.location]]:[]),...(currentGoal?[['当前目标',currentGoal]]:[])],
+    birthTraits:[ROOTS[birth?.rootId],PHYSIQUES[birth?.physiqueId],RELICS[birth?.relicId],TECHNIQUES[birth?.techniqueId]].filter(Boolean),
+    inheritedBenefits:(birth?.inheritedBenefits??[]).map(id=>INHERITED_BENEFITS[id]).filter(Boolean),
+    abilities:Object.entries(profile.arts??{}).filter(([,level])=>level>0).map(([id,level])=>({name:ART_NAMES[id],description:`造诣 ${level}`})),
+  }:{remainingLifeText:yearsText((life.lifeLimit*360-days)/360)};
+  return {name:life.name,generationLabel:v7?`第${generation}世`:'实时人生',generation,realmName:realmFor(life)?.name??catalogs.REALMS[life.realm]?.name??life.realm,ageText:`${Math.floor(days/360)}岁${days%360?`${days%360}日`:''}`,...details,lifeLimit:life.lifeLimit,lifeDamage:0,injuryName:life.injury?`伤势 ${life.injury} / 10`:'无碍',origin:{name:catalogs.ORIGINS[life.birth.originId]},attributes:Object.entries(life.birth.attributes).filter(([id])=>!v7||id!=='fortune').map(([id,value])=>({name:({constitution:'根骨',insight:'悟性',fortune:'气运'})[id],value})),talents:life.birth.talentIds.map(id=>({name:catalogs.TALENTS[id]})),items:Object.entries(life.items).filter(([,count])=>count>0).map(([id,count])=>({name:catalogs.ITEMS[id]??id,count}))};
 }

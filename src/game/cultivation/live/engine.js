@@ -1,14 +1,20 @@
-import { DAYS_PER_YEAR, ORIGINS, TALENTS, ITEMS, REALMS } from './model.js';
+import { DAYS_PER_YEAR, ORIGINS, TALENTS, ITEMS, REALMS, LEGACY_INTENTS } from './model.js';
+import { isV7Life, summarizeLife, createCultivationBirthProfile, initialLifeForBirth, v7ActionRule, resolveV7Action } from './cultivation-rules.js';
 import { assertPlainData, canonicalStringify, sha256, stateHash } from './identity.js';
 import { exactKeys, idField, textField, validateProposal, validateGeneratedScene } from './schema.js';
 import { validateLiveState } from './validation.js';
+import { resolveCustomAction, customActionCommand, CUSTOM_ACTION_MESSAGE } from './custom-actions.js';
+import { createStoryDirector, advanceStoryDirector } from './story-director.js';
+import { validateReincarnation } from './reincarnation.js';
 const copy = value => JSON.parse(JSON.stringify(value));
 const nextRandom = value => (Math.imul(value,1664525)+1013904223)>>>0;
-const summary = life => ({ageDays:life.ageDays,realm:life.realm,cultivation:life.cultivation,injury:life.injury});
+const summary = summarizeLife;
 const same = (a,b) => canonicalStringify(a)===canonicalStringify(b);
 function requireActive(state) { validateLiveState(state);if(state.phase!=='active')throw new Error('此生尚未开场或已经死亡。'); }
 export function createLiveGame(options={}) {
- assertPlainData(options);exactKeys(options,[],['runId','seed','name','originId']);
+ assertPlainData(options);exactKeys(options,[],['runId','seed','name','originId','engineVersion','inheritedBenefits','reincarnation']);
+ if(options.engineVersion!==undefined&&options.engineVersion!==7||options.inheritedBenefits!==undefined&&options.engineVersion!==7)throw new Error('修行引擎版本无效。');
+ if(options.reincarnation!==undefined){if(options.engineVersion!==7)throw new Error('轮回须进入新的修行人生。');validateReincarnation(options.reincarnation);}
  const name=(options.name??'云归').trim();textField(name,24);if(/[\r\n]/.test(name))throw new Error('姓名不能换行。');
  const originId=options.originId??'village';if(!Object.hasOwn(ORIGINS,originId))throw new Error('出身无效。');
  const runId=options.runId??globalThis.crypto.randomUUID();idField(runId);
@@ -16,12 +22,16 @@ export function createLiveGame(options={}) {
  let rng=parseInt(sha256(String(seed)).slice(0,8),16);const draw=limit=>{rng=nextRandom(rng);return rng%limit;};
  const attributes={constitution:1,insight:1,fortune:1},names=Object.keys(attributes);for(let n=0;n<9;n++){const eligible=names.filter(id=>attributes[id]<6);attributes[eligible[draw(eligible.length)]]++;}
  const talents=Object.keys(TALENTS),first=talents.splice(draw(talents.length),1)[0],birth={originId,talentIds:[first,talents[draw(talents.length)]],attributes};
- const life={name,ageDays:16*DAYS_PER_YEAR,lifeLimit:80,realm:'mortal',cultivation:0,injury:0,items:{supplies:3,stones:0},relations:{},birth};
+ if(options.engineVersion===7)birth.cultivationProfile=createCultivationBirthProfile(draw,options.inheritedBenefits??[]);
+ const life=initialLifeForBirth(name,birth);
  const birthReceipt={kind:'opening',choiceId:null,action:null,elapsedDays:0,itemChanges:{},relationChanges:{},random:{before:rng,after:rng,roll:null},before:summary(life),after:summary(life),death:null,birth:copy(birth)};
- return validateLiveState({relationshipVersion:1,version:5,mode:'cultivation',contentVersion:4,rulesVersion:1,promptVersion:1,runId,revision:0,turnId:0,phase:'awaitingOpening',rng,life,birthReceipt,currentScene:null,lastReceipt:null,relatedEntities:[],archiveCursor:0});
+ if(isV7Life(life))birthReceipt.cultivationResult={version:7,check:null,lifespanChange:{years:0,cause:null}};
+ return validateLiveState({relationshipVersion:1,version:5,mode:'cultivation',contentVersion:4,rulesVersion:1,promptVersion:1,runId,revision:0,turnId:0,phase:'awaitingOpening',rng,life,birthReceipt,currentScene:null,lastReceipt:null,relatedEntities:[],archiveCursor:0,...(isV7Life(life)?{director:createStoryDirector(life,rng)}:{}),...(options.reincarnation?{reincarnation:copy(options.reincarnation)}:{})});
 }
 function actionRule(state,p) {
  validateProposal(p);
+ if(isV7Life(state.life))return v7ActionRule(state,p);
+ if(!LEGACY_INTENTS[p.intent]?.includes(p.approach))throw new Error('此生尚无此种行动。');
  const life=state.life,rule={days:30,items:{},gain:{},cultivation:0,injury:0,relationship:0,risk:0,realm:null},entity=state.relatedEntities.find(e=>e.id===p.targetId);
  const target=(ok)=>{if(!ok)throw new Error('行动目标不属于可执行规则。');};
  const factor=p.stake==='high'?2:p.stake==='low'?0:1;
@@ -57,17 +67,29 @@ function actionRule(state,p) {
 }
 export function compileChoices(state,proposals) {
  validateLiveState(state);assertPlainData(proposals);if(!Array.isArray(proposals)||proposals.length>3)throw new Error('行动数量无效。');const seen=new Set();
- return proposals.map(p=>{if(seen.has(p.id))throw new Error('行动标识重复。');seen.add(p.id);const rule=actionRule(state,p),warnings=[];if(rule.risk)warnings.push('历练受伤基础风险'+rule.risk+'%，根骨与坚韧筋骨可降低风险。');if(rule.injury>0)warnings.push('将增加'+rule.injury+'点伤势；伤势达到10即死亡。');if(state.life.ageDays+rule.days>=state.life.lifeLimit*DAYS_PER_YEAR)warnings.push('余寿不足，将在途中寿尽，得不到行动成果。');return {...copy(p),enabled:!rule.reason,reason:rule.reason??null,costs:{days:rule.days,items:copy(rule.items)},warnings};});
+ return proposals.map(p=>{if(seen.has(p.id))throw new Error('行动标识重复。');seen.add(p.id);const rule=actionRule(state,p),warnings=[];
+  if(isV7Life(state.life))return {...copy(p),enabled:!rule.reason,reason:rule.reason??null,costs:{days:rule.days,items:copy(rule.items),spirit:rule.spiritCost,lifeYears:rule.lifeLoss},warnings:[...rule.warnings]};
+  if(rule.risk)warnings.push('历练受伤基础风险'+rule.risk+'%，根骨与坚韧筋骨可降低风险。');if(rule.injury>0)warnings.push('将增加'+rule.injury+'点伤势；伤势达到10即死亡。');if(state.life.ageDays+rule.days>=state.life.lifeLimit*DAYS_PER_YEAR)warnings.push('余寿不足，将在途中寿尽，得不到行动成果。');return {...copy(p),enabled:!rule.reason,reason:rule.reason??null,costs:{days:rule.days,items:copy(rule.items)},warnings};});
 }
 function identity(state,requestId,choiceId) {idField(requestId);return {runId:state.runId,turnId:state.turnId+1,baseRevision:state.revision,stateHash:stateHash(state),choiceId,rulesVersion:state.rulesVersion,promptVersion:state.promptVersion,requestId};}
 export function prepareOpening(state,command) {validateLiveState(state);assertPlainData(command);exactKeys(command,['requestId']);if(state.phase!=='awaitingOpening')throw new Error('出生已经开场。');return {kind:'opening',identity:identity(state,command.requestId,null),receipt:copy(state.birthReceipt),nextLife:copy(state.life),nextRng:state.rng};}
 export function prepareChoice(state,command) {
- requireActive(state);assertPlainData(command);exactKeys(command,['requestId','choiceId'],['baseRevision','stateHash']);idField(command.choiceId);
+ requireActive(state);assertPlainData(command);exactKeys(command,['requestId'],['choiceId','customAction','baseRevision','stateHash']);
+ const custom=Object.hasOwn(command,'customAction');
+ if(command.choiceId!==undefined)idField(command.choiceId);
+ if(custom&&!isV7Life(state.life))throw Object.assign(new Error(CUSTOM_ACTION_MESSAGE),{code:'CUSTOM_ACTION_UNSUPPORTED'});
  if(command.baseRevision!==undefined&&command.baseRevision!==state.revision||command.stateHash!==undefined&&command.stateHash!==stateHash(state))throw new Error('行动基准已经过期。');
- const action=state.currentScene.choices.find(p=>p.id===command.choiceId);if(!action)throw new Error('当前场景没有此行动。');const rule=actionRule(state,action);if(rule.reason)throw new Error(rule.reason);
- const nextLife=copy(state.life),nextRng=nextRandom(state.rng),roll=nextRng%100,remaining=nextLife.lifeLimit*DAYS_PER_YEAR-nextLife.ageDays,elapsedDays=Math.min(remaining,rule.days);
+ const action=custom?resolveCustomAction(state,command.customAction):state.currentScene.choices.find(p=>p.id===command.choiceId);if(!action)throw new Error('当前场景没有此行动。');
+ if(custom&&command.choiceId!==undefined&&command.choiceId!==action.id)throw Object.assign(new Error(CUSTOM_ACTION_MESSAGE),{code:'CUSTOM_ACTION_UNSUPPORTED'});
+ let rule;try{rule=actionRule(state,action);}catch(error){if(custom)throw Object.assign(new Error(CUSTOM_ACTION_MESSAGE),{code:'CUSTOM_ACTION_UNSUPPORTED'});throw error;}
+ if(rule.reason){if(custom)throw Object.assign(new Error(CUSTOM_ACTION_MESSAGE),{code:'CUSTOM_ACTION_UNSUPPORTED'});throw new Error(rule.reason);}
+ const nextRng=nextRandom(state.rng),roll=nextRng%100;
+ let nextLife,elapsedDays,death,cultivationResult;
+ if(isV7Life(state.life))({nextLife,elapsedDays,death,result:cultivationResult}=resolveV7Action(state.life,action,rule,roll));
+ else {
+ nextLife=copy(state.life);const remaining=nextLife.lifeLimit*DAYS_PER_YEAR-nextLife.ageDays;elapsedDays=Math.min(remaining,rule.days);
  for(const [id,n] of Object.entries(rule.items))nextLife.items[id]-=n;
- nextLife.ageDays+=elapsedDays;let death=elapsedDays>=remaining?{cause:'lifespan'}:null;
+ nextLife.ageDays+=elapsedDays;death=elapsedDays>=remaining?{cause:'lifespan'}:null;
  if(!death){
   const protection=nextLife.birth.attributes.constitution+(nextLife.birth.talentIds.includes('iron-bones')?10:0);
   nextLife.injury=Math.max(0,Math.min(10,nextLife.injury+rule.injury+(roll<Math.max(0,rule.risk-protection)?1:0)));
@@ -79,14 +101,16 @@ export function prepareChoice(state,command) {
    if(rule.relationship)nextLife.relations[action.targetId]=Math.max(-100,Math.min(100,(nextLife.relations[action.targetId]??0)+rule.relationship));
   }
  }
+ }
  const itemChanges={};for(const id of Object.keys(ITEMS)){const delta=(nextLife.items[id]??0)-(state.life.items[id]??0);if(delta)itemChanges[id]=delta;}
  const relationChanges={};for(const [id,n] of Object.entries(nextLife.relations)){const delta=n-(state.life.relations[id]??0);if(delta)relationChanges[id]=delta;}
  const receipt={kind:'choice',choiceId:action.id,action:copy(action),elapsedDays,itemChanges,relationChanges,random:{before:state.rng,after:nextRng,roll},before:summary(state.life),after:summary(nextLife),death,birth:null};
+ if(cultivationResult)receipt.cultivationResult=cultivationResult;
  return {kind:'choice',identity:identity(state,command.requestId,action.id),receipt,nextLife,nextRng};
 }
 function verifiedPending(state,pending) {
  validateLiveState(state);assertPlainData(pending);exactKeys(pending,['kind','identity','receipt','nextLife','nextRng']);exactKeys(pending.identity,['runId','turnId','baseRevision','stateHash','choiceId','rulesVersion','promptVersion','requestId']);
- const expected=pending.kind==='opening'?prepareOpening(state,{requestId:pending.identity.requestId}):pending.kind==='choice'?prepareChoice(state,{requestId:pending.identity.requestId,choiceId:pending.identity.choiceId}):null;
+ const expected=pending.kind==='opening'?prepareOpening(state,{requestId:pending.identity.requestId}):pending.kind==='choice'?prepareChoice(state,customActionCommand(pending)):null;
  if(!expected||!same(pending,expected))throw new Error('待提交行动已过期或收据遭到修改。');return expected;
 }
 export function resolveImmediateInteraction(state,pending) {
@@ -116,6 +140,7 @@ export function commitTurn(state,pending,scene,restoredRelations={}) {
  for(const m of scene.memoryDeltas)if(!relatedEntities.some(e=>e.id===m.entityId))throw new Error('记忆引用未知实体。');
  const life=copy(fixed.nextLife);life.relations=projectRelations(life,relatedEntities,state.relationshipVersion===1?restoredRelations:{});
  const next={...copy(state),...(scene.choices.some(choice=>choice.intent==='interact')?{relationshipVersion:1}:{}),revision:state.revision+1,turnId:state.turnId+1,phase:'active',life,rng:fixed.nextRng,lastReceipt:copy(fixed.receipt),currentScene:copy(scene),relatedEntities};
+ if(state.director)next.director=advanceStoryDirector(state.director,life,fixed.receipt,scene,next.turnId);
  const choices=compileChoices(next,scene.choices);if(!choices.some(p=>p.enabled))throw new Error('场景必须保留可执行行动。');return validateLiveState(next);
 }
-export function settleDeath(state,pending) {const fixed=verifiedPending(state,pending);if(!fixed.receipt.death)throw new Error('尚未真实死亡。');return validateLiveState({...copy(state),revision:state.revision+1,turnId:state.turnId+1,phase:'dead',life:copy(fixed.nextLife),rng:fixed.nextRng,lastReceipt:copy(fixed.receipt),currentScene:null});}
+export function settleDeath(state,pending) {const fixed=verifiedPending(state,pending);if(!fixed.receipt.death)throw new Error('尚未真实死亡。');return validateLiveState({...copy(state),revision:state.revision+1,turnId:state.turnId+1,phase:'dead',life:copy(fixed.nextLife),rng:fixed.nextRng,lastReceipt:copy(fixed.receipt),currentScene:null,...(state.director?{director:advanceStoryDirector(state.director,fixed.nextLife,fixed.receipt,null,state.turnId+1)}:{})});}

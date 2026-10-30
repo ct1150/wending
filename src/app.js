@@ -4,9 +4,10 @@ import { createLiveSession } from './ui/live-session.js';
 import { createStoryClient } from './ui/story-client.js';
 import { compileChoices } from './game/cultivation/live/engine.js';
 import { stateHash } from './game/cultivation/live/identity.js';
+import { getReincarnationSettlement, REINCARNATION_REWARDS, buildRebirthOptions } from './game/cultivation/live/reincarnation.js';
 import { REALMS as LIVE_REALMS, ORIGINS as LIVE_ORIGINS, TALENTS as LIVE_TALENTS, ITEMS as LIVE_ITEMS } from './game/cultivation/live/model.js';
 import { liveCharacterSummary } from './ui/character.js';
-import { renderLiveJourney, renderLiveHistory, updateLivePreview, updateLiveJourney } from './ui/journey.js';
+import { renderLiveJourney, renderLiveHistory, updateLiveJourney } from './ui/journey.js';
 import { readLegacyBackup, SAVE_KEY, LEGACY_BACKUP_KEY } from './game/persistence.js';
 import { REALMS, PATHS, ORIGINS, WORLDS, ITEMS, LEGACIES, EVENTS, ENEMIES, CHALLENGES, WORLD_FLAGS } from './game/content.js';
 import { getStats, getActionInfo, act, getEventChoices, chooseEvent, combatAction, equipItem, selectLegacy, getStoryView, chooseStory } from './game/engine.js';
@@ -16,7 +17,7 @@ import { serializeGame, deserializeGame } from './game/save-format.js';
 import { MAX_SAVE_FILE_BYTES } from './game/save-size.js';
 import { getLegacyBridgeChoices } from './game/journey/migration.js';
 import { renderJourney, renderJourneyHistory } from './ui/journey.js';
-import { renderIdentityBar, renderCharacterDetails, renderBirth } from './ui/character.js';
+import { renderIdentityBar, renderCharacterDetails, renderBirth, renderLiveBirth } from './ui/character.js';
 import { bootstrapSession, persistSession, migrateSession, recoverLegacySession } from './ui/session.js';
 import { createJourneySaves } from './game/journey-saves.js';
 import { loadNavigation, saveNavigation, loadPreferences, savePreferences } from './ui/navigation.js';
@@ -52,6 +53,8 @@ try { navigationStorage=window.sessionStorage; } catch {}
 const navigation=loadNavigation(navigationStorage,window.performance?.getEntriesByType?.('navigation')?.[0]?.type);
 let liveBirthDraft=navigation.draft??{name:'云归',originId:'village',expectedArchiveId:null};
 let liveArchive=null, liveSession=null, liveSnapshot=null, liveError='', liveHistoryCursor=null, liveHistoryRun=null;
+let liveActionDraft={key:null,open:false,text:'',error:''};
+const unsupportedAction='【该行动超出当前场景能力范围，请重新选择。】';
 let liveInitialization=null,homeReady=false,uiBusy=false,creatingRunId=null,returnScreen=navigation.returnScreen;
 let savedJourneys=[],savedCursor=null,savedError='',savedLoading=false;
 const offlineJourneys=createJourneySaves(storage);
@@ -162,14 +165,14 @@ function renderSettingsPage() {
 }
 
 function renderNewJourney() {
-  if(window.location.protocol==='file:') {
+  if(window.location.protocol==='file:'&&!liveBirthDraft.reincarnationRunId) {
     if(!offlineBirthDraft){view='home';return render();}
     birthNameDraft=offlineBirthDraft.name;
     const journey=getNarrativeView(offlineBirthDraft.state);
     return renderScreenShell(`${renderBirth({...journey.creation,name:birthNameDraft,revision:journey.revision,sceneId:journey.sceneId})}<p class="birth-preservation">确认入世后才切换旅程；原有旅程会保留，随时可以切回。</p><nav class="game-navigation" aria-label="创建期间的设置"><button class="small-button" data-view="settings">游戏设置</button></nav>`,{title:'踏入仙途'});
   }
   const invalid=liveSnapshot?.errorCode==='BIRTH_CONTEXT_INVALID';
-  renderScreenShell(`<section class="birth live-birth"><p class="birth-kicker">一纸姓名，一世山河</p><h2 id="journey-current-title" tabindex="-1">此生，你是谁？</h2><p class="section-intro">十六岁，山外的路还很长。留下你的名字，踏上自己的仙途。</p><label for="live-name">此生姓名</label><input id="live-name" autocomplete="off" maxlength="24" value="${esc(liveBirthDraft.name)}"><label for="live-origin">从何处来</label><select id="live-origin">${Object.entries(LIVE_ORIGINS).map(([id,name])=>`<option value="${id}" ${id===liveBirthDraft.originId?'selected':''}>${esc(name)}</option>`).join('')}</select>${invalid?'<p class="notice error" role="alert">姓名无法用于故事，请修改后重新开始。支持中文姓名与常用标点。</p>':''}${liveError?`<p class="notice error" role="status">${esc(liveError)}</p>`:''}<p class="birth-preservation">已有旅程会保留，随时可以切回。</p><button class="button primary birth-start" data-live-start ${!liveSession||uiBusy?'disabled':''}>${uiBusy?'正在安放此身…':'就以此身，入世'}</button><p class="save-info">新剧情需要联网；生成时会发送必要的人物与剧情上下文，完整历史留在本机。</p></section>`,{title:'踏入仙途'});
+  renderScreenShell(renderLiveBirth({...liveBirthDraft,origins:LIVE_ORIGINS,available:Boolean(liveSession),busy:uiBusy,invalid,error:liveError}),{title:liveBirthDraft.reincarnationRunId?'步入轮回':'踏入仙途',back:liveBirthDraft.reincarnationRunId?'返回此生结算':'返回首页'});
 }
 
 async function initializeScreens() {
@@ -408,7 +411,7 @@ function captureFocusTarget(element = document.activeElement) {
   // Action identity survives a redraw; revision/state metadata does not.
   const attributes = [...element.attributes].filter(({ name }) => name.startsWith('data-') && !['data-revision', 'data-state-hash', 'data-scene-id'].includes(name));
   const selector = element.id ? `#${CSS.escape(element.id)}` : attributes.length ? element.localName + attributes.map(({ name, value }) => `[${name}="${CSS.escape(value)}"]`).join('') : null;
-  return { element, selector, sceneFallback: element.matches('[data-live-choice], [data-live-start], [data-live-new], [data-live-retry], [data-live-resume]') };
+  return { element, selector, sceneFallback: element.matches('[data-live-choice], [data-live-start], [data-live-new], [data-live-retry], [data-live-resume], [data-live-custom-toggle], [data-live-custom-submit], [data-live-custom-field], [data-live-reincarnate]') };
 }
 
 function resolveFocusTarget(target) {
@@ -702,6 +705,7 @@ function chooseBirth(choiceId, data) {
 
 document.addEventListener('input', event => {
   if(event.target.id==='live-name'){liveBirthDraft.name=event.target.value;saveCreationDraft();}
+  if(event.target.id==='live-custom-action'){const draft=currentLiveActionDraft();draft.text=event.target.value;draft.error='';const error=$('#live-custom-error');if(error){error.textContent='';error.hidden=true;}}
   if (event.target.id === 'dao-name') setup.name = event.target.value;
   if (event.target.id === 'birth-name' && isCreating(currentBirth())) {
     birthNameDraft = event.target.value;
@@ -722,10 +726,21 @@ document.addEventListener('compositionend', event => {
   if (event.target.id === 'birth-name') { birthComposing = false; birthNameDraft = event.target.value; saveBirthName(); }
 });
 document.addEventListener('submit', event => {
+  if(event.target?.id==='live-birth-form'){event.preventDefault();return beginLiveLife();}
+  if(event.target?.id==='live-custom-form'){event.preventDefault();return submitLiveCustomAction();}
   if (event.target?.id !== 'birth-form') return;
   event.preventDefault();
   const button = $('[data-birth-start]');
   if (button) chooseBirth('birth-start', button.dataset);
+});
+
+document.addEventListener('keydown', event => {
+  if(event.defaultPrevented||event.repeat||event.isComposing||event.altKey||event.ctrlKey||event.metaKey||event.shiftKey||activeMode!=='live'||view!=='adventure'||$('#dialog').open||liveSnapshot?.busy||liveSnapshot?.pending||liveSnapshot?.state?.life.cultivationProfile?.version!==7)return;
+  if(event.target?.closest?.('input,textarea,select,[contenteditable="true"]'))return;
+  if(!/^[1-4]$/.test(event.key))return;
+  const button=event.key==='4'?$('[data-live-custom-toggle]'):$(`[data-live-choice-index="${Number(event.key)-1}"][data-live-choice]`);
+  if(!button||button.disabled)return;
+  event.preventDefault();button.click();
 });
 
 document.addEventListener('click', event => {
@@ -741,12 +756,15 @@ document.addEventListener('click', event => {
   if ('savesNext' in data)return openSavedJourneys(true);
   if ('selectLive' in data)return selectSavedJourney(data.selectLive,'live');
   if ('selectOffline' in data)return selectSavedJourney(data.selectOffline,'offline');
-  if ('menuBack' in data) {if(view==='new')return goHome();if(returnScreen==='adventure')return continueJourney();if(returnScreen==='new'){view='new';returnScreen='home';render();return;}if(['inventory','worlds','legacies','chronicle'].includes(returnScreen)){view=returnScreen;render();return;}return goHome();}
-  if ('liveStart' in data) return beginLiveLife();
+  if ('menuBack' in data) {if(view==='new'){if(liveBirthDraft.reincarnationRunId){view='adventure';setActiveMode('live');render();return;}return goHome();}if(returnScreen==='adventure')return continueJourney();if(returnScreen==='new'){view='new';returnScreen='home';render();return;}if(['inventory','worlds','legacies','chronicle'].includes(returnScreen)){view=returnScreen;render();return;}return goHome();}
+  if ('liveStart' in data) {event.preventDefault();return beginLiveLife();}
   if ('liveNew' in data) return prepareNewJourney();
+  if ('liveReward' in data) return selectReincarnationReward(data.liveReward);
+  if ('liveReincarnate' in data) return prepareReincarnation();
   if ('liveRetry' in data) return liveSession?.retry();
   if ('liveResume' in data) return liveSession?.resume();
-  if ('liveChoice' in data) return liveSession?.choose({choiceId:data.liveChoice,baseRevision:Number(data.revision),stateHash:data.stateHash});
+  if ('liveChoice' in data) {currentLiveActionDraft().error='';return liveSession?.choose({choiceId:data.liveChoice,baseRevision:Number(data.revision),stateHash:data.stateHash});}
+  if ('liveCustomToggle' in data) {const draft=currentLiveActionDraft();draft.open=!draft.open;render();if(draft.open)$('#live-custom-action')?.focus({preventScroll:true});return;}
   if ('liveHistoryNext' in data) return showLiveHistory(false);
   if ('liveHistoryFirst' in data) return showLiveHistory(true);
   if ('character' in data) return showCharacter();
@@ -893,7 +911,7 @@ async function ensureLive() {
     liveArchive=await openLiveArchive();
     liveSession=createLiveSession({archive:liveArchive,client:liveClient,onProgress:snapshot=>{
       liveSnapshot=snapshot;
-      if(activeMode==='live'&&view==='adventure')updateLivePreview($('#app'),snapshot);
+      if(activeMode==='live'&&view==='adventure')updateLiveJourney($('#app'),liveStoryView(snapshot));
     },onChange:snapshot=>{
       liveSnapshot=snapshot;
       if(creatingRunId&&snapshot.state?.runId===creatingRunId){setActiveMode('live');if(view==='new')view='adventure';}
@@ -910,17 +928,69 @@ async function beginLiveLife() {
   try {
     await ensureLive();
     creatingRunId=window.crypto.randomUUID();
-    const result=await liveSession.startNew({runId:creatingRunId,name,originId,seed:newSeed()},liveBirthDraft.expectedArchiveId);
-    if(result.state?.runId===creatingRunId){setActiveMode('live');if(view==='new')view='adventure';}
+    const options={runId:creatingRunId,name,originId,seed:newSeed(),engineVersion:7};
+    if(liveBirthDraft.reincarnationRunId&&liveSnapshot?.state?.runId!==liveBirthDraft.reincarnationRunId)throw Error('reincarnation parent changed');
+    const result=liveBirthDraft.reincarnationRunId
+      ?await liveSession.reincarnate(options,liveBirthDraft.reincarnationRewardIds??[],liveBirthDraft.expectedArchiveId)
+      :await liveSession.startNew(options,liveBirthDraft.expectedArchiveId);
+    if(result.state?.runId===creatingRunId){setActiveMode('live');if(view==='new')view='adventure';liveBirthDraft={name,originId,expectedArchiveId:result.archiveId};}
+    else if(result.errorCode==='REINCARNATION_ALREADY_CLAIMED')liveError='此生已经步入轮回，请从存档中续写下一世。';
+    else if(result.errorCode==='REINCARNATION_INSUFFICIENT_POINTS')liveError='因果点不足，请返回此生结算重新选择传承。';
     else if(result.errorCode!=='BIRTH_CONTEXT_INVALID')liveError='另一页面可能已切换旅程，或本地存档无法保存。请返回首页后重新创建，原进度保持不变。';
   } catch { liveError='无法开始，请检查本地存储与网络。原有旅程保持不变。'; }
   finally {uiBusy=false;creatingRunId=null;render();}
 }
+
+function currentLiveActionDraft(snapshot=liveSnapshot) {
+  const key=JSON.stringify([snapshot?.archiveId,snapshot?.state?.runId,snapshot?.state?.revision]);
+  if(liveActionDraft.key!==key)liveActionDraft={key,open:false,text:'',error:''};
+  return liveActionDraft;
+}
+
+function liveStoryView(snapshot) {
+  if(!snapshot?.state)return null;
+  return {...snapshot,stateHash:stateHash(snapshot.state),itemNames:LIVE_ITEMS,characterSummary:liveCharacterSummary(snapshot.state,liveCatalogs),customAction:currentLiveActionDraft(snapshot),selectedReincarnationRewards:liveBirthDraft.reincarnationRunId===snapshot.state.runId?liveBirthDraft.reincarnationRewardIds??[]:[]};
+}
+
+function selectReincarnationReward(rewardId) {
+  const snapshot=liveSnapshot;
+  if(!snapshot?.state||snapshot.busy||snapshot.pending||snapshot.reincarnatedTo||!getReincarnationSettlement(snapshot.state))return;
+  if(!REINCARNATION_REWARDS.some(reward=>reward.id===rewardId))return;
+  const current=liveBirthDraft.reincarnationRunId===snapshot.state.runId?liveBirthDraft.reincarnationRewardIds??[]:[];
+  const selected=current.includes(rewardId)?current.filter(id=>id!==rewardId):[...current,rewardId];
+  try {buildRebirthOptions(snapshot.state,selected);}catch{return notify('因果点不足，无法携入这项传承。',true);}
+  liveBirthDraft={name:liveBirthDraft.reincarnationRunId===snapshot.state.runId?liveBirthDraft.name:snapshot.state.life.name,originId:liveBirthDraft.reincarnationRunId===snapshot.state.runId?liveBirthDraft.originId:'village',expectedArchiveId:snapshot.archiveId,reincarnationRunId:snapshot.state.runId,reincarnationRewardIds:selected};
+  saveCreationDraft();render();
+}
+
+function prepareReincarnation() {
+  const snapshot=liveSnapshot;
+  if(uiBusy||!snapshot?.state||snapshot.busy||snapshot.pending||snapshot.reincarnatedTo||!getReincarnationSettlement(snapshot.state))return;
+  const sameParent=liveBirthDraft.reincarnationRunId===snapshot.state.runId;
+  const selected=sameParent?liveBirthDraft.reincarnationRewardIds??[]:[];
+  try {buildRebirthOptions(snapshot.state,selected);}catch{return notify('因果点不足，请重新选择来世传承。',true);}
+  liveBirthDraft={name:sameParent?liveBirthDraft.name:snapshot.state.life.name,originId:sameParent?liveBirthDraft.originId:'village',expectedArchiveId:snapshot.archiveId,reincarnationRunId:snapshot.state.runId,reincarnationRewardIds:selected};
+  liveError='';view='new';returnScreen='adventure';saveCreationDraft();render();$('#live-name')?.focus({preventScroll:true});
+}
+
+async function submitLiveCustomAction() {
+  const snapshot=liveSnapshot;
+  if(!liveSession||snapshot?.busy||snapshot?.pending||snapshot?.state?.phase!=='active'||snapshot.state.life.cultivationProfile?.version!==7)return;
+  const draft=currentLiveActionDraft(),text=$('#live-custom-action')?.value??draft.text;
+  draft.text=text;draft.error='';draft.open=true;
+  if(!text.trim()||text.length>120){draft.error=unsupportedAction;render();$('#live-custom-action')?.focus({preventScroll:true});return;}
+  const numeric=text.trim().match(/^[1-3]$/),choice=numeric?snapshot.state.currentScene.choices[Number(numeric[0])-1]:null;
+  const result=await liveSession.choose({...(choice?{choiceId:choice.id}:{customAction:text}),baseRevision:snapshot.state.revision,stateHash:stateHash(snapshot.state)});
+  if(result.errorCode==='CUSTOM_ACTION_UNSUPPORTED'){
+    draft.error=unsupportedAction;render();$('#live-custom-action')?.focus({preventScroll:true});
+  }
+}
+
 function renderLiveApp() {
   const focus = !$('#dialog').open && $('#app').contains(document.activeElement) ? captureFocusTarget() : null;
   const snapshot=liveSnapshot,liveState=snapshot?.state;
   const header=liveState?renderIdentityBar(liveCharacterSummary(liveState,liveCatalogs)):'<h1>百世问鼎 · 实时人生</h1>';
-  const storyView=liveState?{...snapshot,stateHash:stateHash(liveState),itemNames:LIVE_ITEMS}:null;
+  const storyView=liveStoryView(snapshot);
   const choices=liveState?.phase==='active'?compileChoices(liveState,liveState.currentScene.choices):[];
   const previousStory=$('#app').querySelector('[data-live-story]');
   const content=storyView?renderLiveJourney(storyView,choices):'<p role="status">正在读取旅程…</p>';
