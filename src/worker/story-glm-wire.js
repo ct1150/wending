@@ -29,6 +29,9 @@ export function buildGlmWire(context,system,{storyActions=false}={}){
   const packed=pack(context);delete packed.identity;delete packed.namespace;packed.turn=context.identity.turnId;
   const entityAliases=[...aliases.values(),...['p','l','f'].flatMap(kind=>Array.from({length:24},(_,index)=>kind+(index+1)))];
   const schema=structuredClone(SCENE_SCHEMA);
+  // Native XGrammar rejects this keyword; canonical scene validation still
+  // enforces unique anchors after generation.
+  if(directed)delete schema.properties.story.properties.anchors.uniqueItems;
   delete schema.properties.id;schema.required=schema.required.filter(key=>key!=='id');
   const entityProperties=schema.properties.entities.items.properties;
   delete schema.properties.entities;

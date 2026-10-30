@@ -2,6 +2,12 @@
 
 Plans: [first release](superpowers/plans/2026-10-24-first-release.md) · [1.1.0 narrative upgrade](superpowers/plans/2026-10-25-narrative-adventure.md)
 
+## 5.0.1 模型结构输出兼容修复 — 2026-10-31（上海）
+
+- 5.0.0 实际开局出现 `paused / PROVIDER_FAILED`。同一上下文可通过本地完整流式链路，但新增 `story.anchors.uniqueItems` 被上游 SGLang 的纯 JSON Schema 校验器拒绝。
+- 仅从 GLM 请求的结构定义中移除该不受支持的生成约束；服务端与客户端仍严格拒绝重复锚点，保留原始场景契约和全部数值规则。
+- 真实云端后端版本不可见；本次本地复现证明结构兼容问题，实际上线结果另记于发布 PR，不把 fixture 通过当成模型调用成功。
+
 ## 5.0.0 凡人流修仙推演引擎 v7 — 2026-10-31（上海）
 
 - 基于用户完整 v7 提示词实现新建实时人生：九境、灵根与体质、伴生遗物、真实材料与风险、四艺、黑市和界域跃迁。
