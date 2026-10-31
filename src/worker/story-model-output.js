@@ -4,6 +4,7 @@ import {assertSafeStoryStrings} from '../game/cultivation/live/memory.js';
 import {isV7Life} from '../game/cultivation/live/cultivation-rules.js';
 import {createNamedTargetLookup} from './story-named-targets.js';
 import {normalizeWireAnnotation} from './story-wire-annotation.js';
+import {STORY_PATTERNS,STORY_BEATS,STORY_NPC_TRAITS} from '../game/cultivation/live/story-annotation.js';
 import {normalizeV7Presentation} from './story-v7-presentation.js';
 import {buildStoryChoicePlan,materializeStoryChoices} from './story-choice-plan.js';
 
@@ -13,43 +14,104 @@ const formalId=/^r:[\w-]+:t\d+:/u,knownAlias=/^k\d/u,localAlias=/^(?:p|person|np
 const stateFields=['life','receipt','retrieval','rng','cultivationResult','itemChanges','relationChanges','death'];
 const forbidden=()=>{throw Error('Invalid model authority');};
 
-// Only a complete dialogue speaker field can introduce a person here. A
-// narration never supplies an inferred participant; never repair missing text.
+// Read only the protocol fields we consume, never an arbitrary model property
+// or accessor. This projection applies only to fresh engine-owned menus.
+function own(value,key,strict=false){
+  if(!value||typeof value!=='object')return undefined;
+  const d=Object.getOwnPropertyDescriptor(value,key);
+  if(!d)return undefined;
+  if(!d.enumerable||!Object.hasOwn(d,'value')){if(strict)forbidden();return undefined;}
+  return d.value;
+}
+function identityTarget(value){
+  if(!object(value))return value;
+  const result={};
+  for(const key of ['kind','name','ref','status']){
+    const v=own(value,key,true);
+    if(v!==undefined){if(v!==null&&typeof v!=='string')forbidden();result[key]=v;}
+  }
+  return result;
+}
+function optionalText(value,max){
+  if(typeof value!=='string'||formalId.test(value))return undefined;
+  try{textField(value,max);assertSafeStoryStrings(value);return value;}catch{return undefined;}
+}
 function authoredBlocks(rows,context){
   if(!Array.isArray(rows)||!rows.length||rows.length>4)throw Error('Invalid authored blocks');
-  const identify=createNamedTargetLookup(context);
-  return rows.map(row=>{
-    exactKeys(row,row?.kind==='dialogue'?['kind','speaker','text']:['kind','text']);textField(row.text,2000);
-    if(row.kind==='narration')return row;
-    if(row.kind!=='dialogue')throw Error('Invalid block kind');
-    let speaker=row.speaker;if(speaker==='self')return row;
-    if(typeof speaker==='string'&&!knownAlias.test(speaker)){
-      textField(speaker,60);
-      if(/[:/\\]|^(?:p|l|f|npc|person|place|faction|m)\d/u.test(speaker))forbidden();
-      const matches=context.entities.filter(e=>e.name===speaker);if(matches.length>1)forbidden();
-      speaker=matches.length?'k'+(context.entities.indexOf(matches[0])+1):{kind:'person',name:speaker};
+  const identify=createNamedTargetLookup(context),blocks=[];
+  for(let i=0;i<rows.length;i++){
+    const row=own(rows,i,true),kind=own(row,'kind',true),text=own(row,'text',true);
+    textField(text,2000);assertSafeStoryStrings(text);
+    if(kind==='narration'){blocks.push({kind,text});continue;}
+    if(kind!=='dialogue')throw Error('Invalid block kind');
+    let speaker=identityTarget(own(row,'speaker',true));
+    if(speaker!=='self'){
+      if(typeof speaker==='string'&&!knownAlias.test(speaker)){
+        textField(speaker,60);
+        if(/[:/\\]|^(?:p|l|f|npc|person|place|faction|m)\d/u.test(speaker))forbidden();
+        const matches=context.entities.filter(e=>e.name===speaker);if(matches.length>1)forbidden();
+        speaker=matches.length?'k'+(context.entities.indexOf(matches[0])+1):{kind:'person',name:speaker};
+      }
+      const actor=identify(speaker);
+      if(actor.kind!=='person'||actor.status!==null||actor.known?.status==='dead'||[context.life.name,'你','主角','玩家'].includes(actor.name))forbidden();
+      assertSafeStoryStrings(speaker);
     }
-    const actor=identify(speaker);
-    if(actor.kind!=='person'||actor.status!==null||actor.known?.status==='dead'||[context.life.name,'你','主角','玩家'].includes(actor.name))forbidden();
-    return speaker===row.speaker?row:{...row,speaker};
-  });
-}
-
-export function adaptV7EngineMenuOutput(wire,context){
-  if(!isV7Life(context.life)||context.director?.version!==7)throw Error('Engine menu requires a v7 context');
-  exactKeys(wire,['blocks'],['choices','title','location','story','memoryDeltas']);
-  // Copy only fields used by the game. Stray model choices, including their
-  // targets and any purported effects, are never read, rendered or persisted.
-  const authored={};
-  for(const key of ['blocks','title','location','story','memoryDeltas']){
-    const descriptor=Object.getOwnPropertyDescriptor(wire,key);if(!descriptor)continue;
-    if(!descriptor.enumerable||!Object.hasOwn(descriptor,'value'))forbidden();
-    authored[key]=descriptor.value;
+    blocks.push({kind,text,speaker});
   }
-  assertPlainData(authored);assertSafeStoryStrings(authored);
-  const blocks=authoredBlocks(authored.blocks,context);
+  return blocks;
+}
+function editorialStory(raw,blocks){
+  const result={};
+  const p=own(raw,'pattern'),b=own(raw,'beat'),anchors=own(raw,'anchors');
+  if(STORY_PATTERNS.includes(p)&&STORY_BEATS.includes(b)&&Array.isArray(anchors)){
+    result.pattern=p;result.beat=b;result.anchors=[];
+    for(let i=0;i<Math.min(anchors.length,2);i++){const n=own(anchors,i);if(Number.isInteger(n)&&n>=0&&n<blocks.length)result.anchors.push(n);}
+  }
+  const notes=own(raw,'npcs');
+  if(Array.isArray(notes))for(let i=0;i<Math.min(2,notes.length);i++){
+    const input=own(notes,i),anchor=own(input,'anchor');
+    if(!Number.isInteger(anchor)||anchor<0||anchor>=blocks.length)continue;
+    const traits={};
+    for(const key of STORY_NPC_TRAITS){const value=optionalText(own(input,key),28);if(value&&blocks[anchor].text.includes(value))traits[key]=value;}
+    if(!Object.keys(traits).length)continue;
+    const target=own(input,'target');if(typeof target!=='string'&&!object(target))continue;
+    (result.npcs??=[]).push({target:identityTarget(target),anchor,...traits});
+  }
+  return result;
+}
+function authoredMemory(raw,blocks){
+  if(!Array.isArray(raw))return [];
+  // The ordinary response byte limit already bounds parsed JSON; do not walk
+  // a fabricated enormous sparse JS array supplied directly to this boundary.
+  if(raw.length>65536)throw Error('Memory array exceeds response limit');
+  const rows=[];
+  for(let i=0;i<raw.length;i++){
+    const input=own(raw,i);if(!object(input))continue;
+    const kind=own(input,'kind'),referenceId=own(input,'referenceId',true),status=own(input,'status'),anchor=own(input,'anchor');
+    const mandatory=referenceId!==undefined||kind==='death'||kind==='promise'||['resolved','broken'].includes(status);
+    if(!mandatory&&(!['fact','relationship','clue'].includes(kind)||!Number.isInteger(anchor)||anchor<0||anchor>=blocks.length))continue;
+    const row={},target=own(input,'target',mandatory);
+    if(target!==undefined)row.target=identityTarget(target);
+    // Consumed scalar fields keep their original types or fail. A closure's
+    // reference/status is always validated against server-owned obligations.
+    if(referenceId!==undefined){if(typeof referenceId!=='string')forbidden();row.referenceId=referenceId;}
+    if(kind!==undefined){if(typeof kind!=='string')forbidden();row.kind=kind;}
+    if(anchor!==undefined){if(!Number.isInteger(anchor))forbidden();row.anchor=anchor;}
+    if(status!==undefined){if(typeof status!=='string'){if(mandatory)forbidden();continue;}row.status=status;}
+    rows.push(row);
+  }
+  return rows;
+}
+export function adaptV7EngineMenuOutput(wire,context){
+  if(!isV7Life(context.life)||context.director?.version!==7||!object(wire))throw Error('Engine menu requires a v7 scene');
+  const blocks=authoredBlocks(own(wire,'blocks',true),context);
   const choices=materializeStoryChoices(buildStoryChoicePlan(context),context,blocks);
-  return adaptV7ModelOutput({...authored,blocks,choices},context);
+  const authored={blocks,choices,story:editorialStory(own(wire,'story'),blocks),memoryDeltas:authoredMemory(own(wire,'memoryDeltas'),blocks)};
+  const title=optionalText(own(wire,'title'),120);if(title)authored.title=title;
+  // Later turns already have a location fixed by the prior scene/settled
+  // travel receipt. An optional model caption must never move the player.
+  if(context.phase==='opening'){const place=optionalText(own(wire,'location'),120);if(place)authored.location=place;}
+  return adaptV7ModelOutput(authored,context);
 }
 
 // For freshly generated, named v7 output only. Never use as an archive

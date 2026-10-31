@@ -88,5 +88,48 @@
     ],
     "rawTextRecorded": false,
     "scope": "One normal budgeted turn from a dedicated synthetic life. The allowlisted shape establishes a complete narrative and three unrecognized action codes. It does not establish what the arbitrary fields or action strings were."
+  },
+  "candidate116": {
+    "sourceCommit": "64797432b7d93a9d5fe6b454a09d74030b02022d",
+    "ordinaryTrafficPercent": 0,
+    "status": "rejected",
+    "stage": "Browser SSE final result / PROVIDER_RESPONSE_INVALID",
+    "completePresentedBlocks": [
+      {
+        "kind": "narration",
+        "characters": 202
+      },
+      {
+        "kind": "dialogue",
+        "characters": 61
+      }
+    ],
+    "draftChoiceCount": 0,
+    "savedRevision": 0,
+    "scope": "Two complete authored blocks were visible in an ordinary synthetic browser session against this clean version. This sample alone does not establish the native raw token sequence, full-document validity, stop reason or usage."
+  },
+  "scopedDiagnostic117": {
+    "sourceCommit": "64797432b7d93a9d5fe6b454a09d74030b02022d",
+    "ordinaryTrafficPercent": 0,
+    "status": "rejected",
+    "stage": "JSON_PARSED / ENGINE_MENU_ADAPTER / top-level exactKeys",
+    "parsed": true,
+    "stream": {
+      "done": true,
+      "stop": "stop",
+      "usagePresent": true,
+      "decodedBytes": 1856,
+      "wireBytes": 167014
+    },
+    "completePresentedBlocks": 3,
+    "authoredLengths": [
+      144,
+      110,
+      113
+    ],
+    "draftChoices": 0,
+    "extraRootFields": 2,
+    "extraRootFieldNamesRecorded": false,
+    "scope": "A separate dedicated synthetic life, with normal reservation and settlement. Three complete blocks and a typed NPC speaker reached the adapter. Two surplus properties on the parsed top-level object caused rejection. The exact surplus keys and original text were not captured."
   }
 }

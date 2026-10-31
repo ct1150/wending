@@ -22,8 +22,13 @@ function readWire(source,bodyContext){
   try{JSON.parse(source);return null;}catch{/* Valid completions use the ordinary path. */}
   try{
     const skip=i=>{while(i<source.length&&space(source[i]))i++;return i;};
-    const start=skip(0);if(source[start]!=='{')return null;
-    const ends=new Map(),stack=[];let closed=false;
+    let start=skip(0);
+    if(bodyContext&&source.startsWith('```',start)){
+      const fence=/^```(?:json)?[ \t]*\r?\n([\s\S]*?)\r?\n```[ \t\r\n]*$/iu.exec(source.slice(start));
+      if(!fence)return null;JSON.parse(fence[1]);source=fence[1];start=skip(0);
+    }
+    if(source[start]!=='{')return null;
+    const ends=new Map(),unfinished=new Map(),keyOwners=new Map(),stack=[];let closed=false;
     // Index complete containers and strings in one bounded pass. Also inspect
     // the unused tail: a second document or an explicit authority field must
     // never be hidden by dropping an unfinished third choice or optional note.
@@ -31,11 +36,19 @@ function readWire(source,bodyContext){
       const ch=source[i];if(closed){if(!space(ch))bad();continue;}
       if(ch==='"'){
         const begin=i;let done=false;
-        while(++i<source.length){if(source[i]==='\\'){i++;continue;}if(source.charCodeAt(i)<32)bad();if(source[i]==='"'){done=true;break;}}
-        if(done){ends.set(begin,i+1);if(!bodyContext&&source[skip(i+1)]===':'&&reserved.has(JSON.parse(source.slice(begin,i+1))))bad();}
+        while(++i<source.length){if(source[i]==='\\'){i++;continue;}if(!bodyContext&&source.charCodeAt(i)<32)bad();if(source[i]==='"'){done=true;break;}}
+        if(done){ends.set(begin,i+1);if(source[skip(i+1)]===':'){
+          if(bodyContext)keyOwners.set(begin,stack.at(-1)?.[1]);else if(reserved.has(JSON.parse(source.slice(begin,i+1))))bad();
+        }}
       }else if(ch==='{'||ch==='['){stack.push([ch,i]);if(stack.length>32)bad();}
       else if(ch==='}'||ch===']'){
-        const open=stack.pop();if(!open||open[0]!==({'}':'{',']':'['})[ch])bad();
+        const type=({'}':'{',']':'['})[ch];let open=stack.pop();
+        if(!open||open[0]!==type){
+          // One omitted inner terminator: discard that unfinished value, but
+          // keep the real outer boundary so later memory records are still read.
+          if(!bodyContext||!open||stack.at(-1)?.[0]!==type)bad();
+          unfinished.set(open[1],i);open=stack.pop();
+        }
         ends.set(open[1],i+1);if(!stack.length)closed=true;
       }
       if(ends.size>12000)bad();
@@ -46,12 +59,42 @@ function readWire(source,bodyContext){
       let j=at;while(j<source.length&&!space(source[j])&&!(',}]'.includes(source[j])))j++;return j>at?j:undefined;
     };
     const read=(a,b)=>JSON.parse(source.slice(a,b));
-    function ignoreMenu(){
-      // The model does not own choices. Ignore their contents, including bad
-      // punctuation, only when the complete value's boundary is unambiguous.
-      const end=span(i);if(end===undefined)bad();
-      if(!['[','{','"'].includes(source[i]))read(i,end);
-      i=end;
+    function partialConsequence(at,until){
+      for(const [begin,end]of ends){
+        if(begin<at||begin>=until||source[begin]!=='"'||source[skip(end)]!==':')continue;
+        const key=read(begin,end);if(key==='referenceId')return true;
+        if(key!=='kind'&&key!=='status')continue;
+        const value=skip(skip(end)+1),stop=ends.get(value);
+        if(source[value]==='"'&&stop&&['death','promise','resolved','broken'].includes(read(value,stop)))return true;
+      }
+      return false;
+    }
+    function takeRecords(key,limit){
+      // Only immediate, individually closed records count. Never synthesize
+      // a quote, finish a block or search nested objects for substitute prose.
+      if(source[i]!=='[')bad();const cutoff=unfinished.get(i)??source.length;i=skip(i+1);const rows=[];
+      while(i<cutoff&&source[i]!==']'){
+        if(source[i]!=='{')bad();const end=ends.get(i);
+        if(end===undefined){
+          const stop=unfinished.get(i)??cutoff;
+          if(key==='memoryDeltas'&&partialConsequence(i,stop))bad();
+          i=stop;break;
+        }
+        if(rows.length>=limit)bad();let row=read(i,end);
+        if(key==='blocks'){
+          if(!record(row)||!nonempty(row.text)||!['narration','dialogue'].includes(row.kind)||row.kind==='dialogue'&&!Object.hasOwn(row,'speaker'))bad();
+          row=row.kind==='dialogue'?{kind:row.kind,speaker:row.speaker,text:row.text}:{kind:row.kind,text:row.text};
+        }
+        rows.push(row);i=skip(end);
+        if(i===cutoff||source[i]===']')break;
+        if(source[i]!==',')bad();i=skip(i+1);
+      }
+      if(source[i]===']')i++;output[key]=rows;
+    }
+    function ignoreField(){
+      // Neither suggestions nor unsolicited annotations are game inputs. Skip
+      // their entire value; never search inside it for blocks or consequences.
+      i=span(i)??unfinished.get(i)??source.length;
     }
     function takeChoices(){
       if(source[i]!=='[')bad();i=skip(i+1);const rows=[];let count=0;
@@ -69,13 +112,17 @@ function readWire(source,bodyContext){
       if(rows.length<2)bad();if(source[i]===']')i++;output.choices=rows;
     }
     while(i<source.length&&source[i]!=='}'){
-      if(source[i]!=='"'||!ends.has(i))bad();const end=ends.get(i),key=read(i,end);
-      if(!fields.has(key)||seen.has(key))bad();seen.add(key);i=skip(end);if(source[i]!==':')bad();i=skip(i+1);
-      if(key==='choices'){if(bodyContext)ignoreMenu();else takeChoices();}
+      if(source[i]!=='"'||!ends.has(i)||bodyContext&&keyOwners.get(i)!==start)bad();const end=ends.get(i),key=read(i,end);
+      const retained=fields.has(key)&&!(bodyContext&&key==='choices');
+      if(!bodyContext&&!retained||retained&&seen.has(key))bad();seen.add(key);i=skip(end);if(source[i]!==':')bad();i=skip(i+1);
+      if(bodyContext&&(!fields.has(key)||key==='choices'))ignoreField();
+      else if(bodyContext&&key==='blocks')takeRecords(key,4);
+      else if(bodyContext&&key==='memoryDeltas'&&source[i]==='[')takeRecords(key,16);
+      else if(key==='choices')takeChoices();
       else{
         const valueEnd=span(i);
-        if(valueEnd===undefined){if(bodyContext||i<source.length&&!['[','{','"'].includes(source[i]))bad();break;}
-        let value;try{value=read(i,valueEnd);}catch{if(bodyContext||key==='blocks')bad();}
+        if(valueEnd===undefined){if(bodyContext&&key==='memoryDeltas'||i<source.length&&!['[','{','"'].includes(source[i]))bad();break;}
+        let value;try{value=read(i,valueEnd);}catch{if(key==='blocks'||bodyContext&&key==='memoryDeltas')bad();}
         if(value!==undefined)output[key]=value;i=valueEnd;
       }
       i=skip(i);if(i===source.length||source[i]==='}')break;
