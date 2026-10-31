@@ -19,12 +19,21 @@ test('unrecognized screens, modes, preferences and broken storage have usable de
   const denied={getItem(){throw Error('denied');},setItem(){throw Error('quota');}};
   assert.equal(module.loadNavigation(denied,'reload').screen,'home');
   assert.equal(module.saveNavigation(denied,{screen:'adventure',mode:'live'}),false);
-  assert.deepEqual(module.loadPreferences(denied),{theme:'system',textSize:'standard'});
+  assert.deepEqual(module.loadPreferences(denied),{theme:'cinematic',textSize:'standard'});
   const store=memory();
   assert.equal(module.savePreferences(store,{theme:'dark',textSize:'large'}),true);
   assert.deepEqual(module.loadPreferences(store),{theme:'dark',textSize:'large'});
   module.savePreferences(store,{theme:'evil',textSize:'huge'});
-  assert.deepEqual(module.loadPreferences(store),{theme:'system',textSize:'standard'});
+  assert.deepEqual(module.loadPreferences(store),{theme:'cinematic',textSize:'standard'});
+});
+
+test('cinematic is the default while saved reading preferences keep their meaning', () => {
+  const store=memory();
+  assert.deepEqual(module.loadPreferences(store),{theme:'cinematic',textSize:'standard'});
+  for(const theme of ['cinematic','system','light','dark']) {
+    assert.equal(module.savePreferences(store,{theme,textSize:'large'}),true);
+    assert.deepEqual(module.loadPreferences(store),{theme,textSize:'large'});
+  }
 });
 
 test('retained legacy pages and their settings return target survive a same-tab reload', () => {

@@ -28,7 +28,7 @@ export function saveNavigation(storage,value) {
 }
 
 function preferences(value) {
-  return {theme:['system','light','dark'].includes(value?.theme)?value.theme:'system',textSize:value?.textSize==='large'?'large':'standard'};
+  return {theme:['cinematic','system','light','dark'].includes(value?.theme)?value.theme:'cinematic',textSize:value?.textSize==='large'?'large':'standard'};
 }
 
 export function loadPreferences(storage) {

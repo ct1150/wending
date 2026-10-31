@@ -1,0 +1,15 @@
+{
+  "errors": [],
+  "mode": "local deterministic story fixture",
+  "viewports": [
+    {
+      "width": 390,
+      "height": 844
+    },
+    {
+      "width": 1440,
+      "height": 1080
+    }
+  ],
+  "reducedMotion": "reduce"
+}
