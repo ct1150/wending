@@ -55,6 +55,15 @@
 - [ ] 轮回后当前指针更新，前世可以只读；验证旧标签无法覆盖新人物。
 - [ ] 更新受需求变化影响的界面测试，保留底层旧档/导入/CAS 覆盖；提交并审查。
 
+#### 上游接入：从规则源头生成可执行选择（I1）
+
+开发期间，同仓库 PR #27 更新到已整合5.4.0与RAG的5.4.1候选 `68611ec`。在新成长规则引入以前接入这批代码，保留其来源及回归；本分支的资料库降级和只读存档继续生效。
+
+- [x] 区分已退役的字数/节拍/篇章错误码与当前会产生的错误码。保留旧请求缓存和记账兼容；针对GitHub首轮1190项中唯一失败的断言完成红→绿验证。
+- [ ] 将规则允许的行动、目标与代价组合传入原生成请求的 schema，减少模型输出不可执行选项的机会。新人物、旧实体别名和真实资源须按各自约束解码。
+- [ ] 结构要求三个选项，方向、差异及谨慎路径从生成源头引导；若完整回应仍有至少一个合法行动，不因自然称谓、可选人物特征或重复写法丢弃整轮。数值和死亡只由真实规则收据结算，任何叙述不能发放资源。
+- [ ] 合并阶段验证原126字场景、三个原选择、单次模型调用、真实规则预选、RAG成功和降级路径、旧回放及24KiB请求上限；独立审查。候选接入开发分支不代表其生产上线。
+
 ### Task 3: 为新成长和事件时钟建立兼容合同
 
 **Files:** Modify `src/game/cultivation/live/cultivation-rules.js`, `src/game/cultivation/live/engine.js`, `src/game/cultivation/live/validation.js`, `src/game/cultivation/live/memory.js`, `src/game/cultivation/live/story-director.js`, `src/worker/story-api.js`, `src/ui/live-session.js`; Create `src/game/cultivation/live/experience.js`, `tests/experience-compatibility.test.js`.
