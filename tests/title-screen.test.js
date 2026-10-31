@@ -13,7 +13,7 @@ async function fixture(t) {
   const {page,context}=await liveBrowser(t),responses=new Map();let posts=0,paused=false;
   const errors=[];page.on('pageerror',error=>errors.push(error.message));
   await page.addInitScript(()=>{window.showSaveFilePicker=undefined;});
-  await page.route('https://wending-title.test/**',async route=>{
+  await context.route('https://wending-title.test/**',async route=>{
     const url=new URL(route.request().url()),json=value=>route.fulfill({status:200,contentType:'application/json',body:JSON.stringify(value)});
     if(url.pathname==='/api/story/capabilities')return json({protocolVersion:1,available:true,status:'ready',errorCode:null,limits:{maxRequestBytes:32768,maxResponseBytes:65536,maxContextBytes:7000,timeoutMs:30000}});
     if(url.pathname==='/api/story/session')return json({protocolVersion:1,status:'ready',sessionRef:'title-session',expiresAt:Date.now()+86400000});
@@ -304,4 +304,62 @@ test('the start entrance continues the current life and restart is explicit in s
   await page.locator('#dialog[open]').waitFor();
   assert.match(await page.locator('#dialog').innerText(),/不会.*轮回奖励/);
   await page.keyboard.press('Escape');assert.equal((await f.read()).archiveId,before.archiveId);
+});
+
+async function replaceFromOtherTab(f,name='另一页的人',importCurrent=false) {
+  const other=await f.context.newPage();
+  await other.goto('https://wending-title.test/');
+  return other.evaluate(async({name,importCurrent})=>{
+    const {openLiveArchive}=await import('/src/game/live-archive.js');
+    const {createLiveGame,prepareOpening}=await import('/src/game/cultivation/live/engine.js');
+    const archive=await openLiveArchive();
+    try{
+      if(importCurrent){const {exportLiveArchive,importLiveArchive}=await import('/src/game/live-save-format.js');return await importLiveArchive(exportLiveArchive(archive),archive);}
+      const current=await archive.load(),state=createLiveGame({runId:crypto.randomUUID(),name,seed:42,engineVersion:7});
+      return await archive.create({state,pending:prepareOpening(state,{requestId:crypto.randomUUID()}),expectedArchiveId:current?.archiveId??null});
+    }finally{archive.close();}
+  },{name,importCurrent});
+}
+
+test('a stale empty title continues a life created in another tab without authorizing replacement',async t=>{
+  const f=await fixture(t),{page}=f;
+  await page.locator('[data-title-new]:enabled').waitFor();
+  const current=await replaceFromOtherTab(f);
+  await page.locator('[data-title-new]').click();
+  await page.locator('#live-name, [data-live-story]').first().waitFor();
+  assert.equal(await page.locator('#live-name').count(),0,'fresh creation must never adopt an existing life as a replacement target');
+  await page.locator('[data-live-retry]').waitFor();
+  assert.deepEqual(await f.read(),current);assert.equal(f.posts,0);
+});
+
+for(const timing of ['before restart request','during confirmation','same-life import during confirmation','after draft']) {
+  test(`settings restart cannot adopt another tab's new life ${timing}`,async t=>{
+    const f=await fixture(t),{page}=f;
+    await page.locator('[data-title-new]:enabled').click();await page.locator('[data-live-start]:enabled').click();
+    await page.locator('[data-live-choice]:enabled').first().waitFor();
+    await page.locator('[data-view="settings"]').click();
+    if(timing!=='before restart request')await page.locator('[data-restart]').click();
+    if(timing==='after draft')await page.locator('[data-confirm]').click();
+    const replacement=await replaceFromOtherTab(f,'另一页的人',timing==='same-life import during confirmation');
+    if(timing==='before restart request')await page.locator('[data-restart]').click();
+    if(timing!=='after draft') {
+      await page.locator('[data-confirm]').click();
+      await page.locator('#live-name, #toast.error').first().waitFor();
+      assert.equal(await page.locator('#live-name').count(),0,'a confirmation for the displayed old life cannot authorize replacement of another physical archive');
+      await page.getByText('当前人物已在另一页面更新，请重新确认后再开始。',{exact:true}).waitFor();
+    } else {
+      await page.locator('#live-name').fill('过期草稿的人');await page.locator('[data-live-start]:enabled').click();
+      await page.locator('#live-birth-form .notice.error').waitFor();
+    }
+    assert.deepEqual(await f.read(),replacement);assert.equal(f.posts,1);
+  });
+}
+
+
+test('an empty-slot creation draft cannot replace a life created later in another tab',async t=>{
+  const f=await fixture(t),{page}=f;
+  await page.locator('[data-title-new]:enabled').click();await page.locator('#live-name').fill('过期的新生');
+  const replacement=await replaceFromOtherTab(f);
+  await page.locator('[data-live-start]:enabled').click();await page.locator('#live-birth-form .notice.error').waitFor();
+  assert.deepEqual(await f.read(),replacement);assert.equal(f.posts,0);
 });
