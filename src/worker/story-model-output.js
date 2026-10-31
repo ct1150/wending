@@ -136,7 +136,11 @@ function authoredMemory(raw,{positions,sourceCount}){
 export function adaptV7EngineMenuOutput(wire,context){
   if(!isV7Life(context.life)||context.director?.version!==7||!object(wire))throw Error('Engine menu requires a v7 scene');
   const source=authoredBlocks(own(wire,'blocks',true),context),{blocks}=source;
-  const choices=materializeStoryChoices(buildStoryChoicePlan(context),context,blocks);
+  // A cue can name a detail in one surviving paragraph. It never supplies an action or target.
+  const note=own(wire,'decisionDetail'),anchor=source.positions.get(own(note,'anchor')),quote=own(note,'quote');
+  const detail=anchor!==undefined&&typeof quote==='string'&&/^[\p{Script=Han}]{2,18}$/u.test(quote)&&blocks[anchor].text.includes(quote)
+    ?{anchor,quote}:undefined;
+  const choices=materializeStoryChoices(buildStoryChoicePlan(context),context,blocks,detail);
   const authored={blocks,choices,story:editorialStory(own(wire,'story'),source,context),memoryDeltas:authoredMemory(own(wire,'memoryDeltas'),source)};
   const title=optionalText(own(wire,'title'),120);if(title)authored.title=title;
   // Later turns already have a location fixed by the prior scene/settled

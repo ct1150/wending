@@ -1,3 +1,4 @@
+import { currentStoryGoal } from '../game/cultivation/live/story-director.js';
 import {ORIGINS,TALENTS,ITEMS,DAYS_PER_YEAR} from '../game/cultivation/live/model.js';
 import {describeEcho,getReincarnationSettlement,REINCARNATION_REWARDS} from '../game/cultivation/live/reincarnation.js';
 import {buildOpeningBrief} from '../game/cultivation/live/experience-story.js';
@@ -195,7 +196,9 @@ function renderLiveBirthFacts(view) {
 
 function renderLiveState(view) {
   const life = view.state.life, summary = view.characterSummary;
-  const goal = summary?.currentGoal ?? view.state.director?.currentGoal ?? view.state.director?.mainQuest?.text ?? view.state.director?.mystery?.question ?? view.state.director?.destiny?.text;
+  const goal = summary?.currentGoal ?? currentStoryGoal(view.state.director);
+  const scene = view.state.currentScene;
+  const situation = [scene?.location, scene?.title !== scene?.location && scene?.title !== '眼前所见' && scene?.title].filter(Boolean).join(' · ');
 
   const facts = [
     ['气血', `${Math.max(0, 10 - life.injury) * 10}%`],
@@ -205,7 +208,7 @@ function renderLiveState(view) {
 
     ...(view.state.reincarnation?.version===2?[['前世回响',view.state.reincarnation.echoes.map(describeEcho).join('')]]:[]),
   ];
-  return `<details class="live-turn-state" data-live-state data-live-preserve-open${view.state.phase === 'dead' ? ' hidden' : ''}><summary><span class="live-state-hint">${goal?'当前目标':'当前处境'}</span><span data-live-goal>${esc(goal??'查看随身资源')}</span></summary><dl>${facts.map(([name, value]) => `<div><dt>${esc(name)}</dt><dd>${esc(value)}</dd></div>`).join('')}</dl></details>`;
+  return `<details class="live-turn-state" data-live-state data-live-preserve-open${view.state.phase === 'dead' ? ' hidden' : ''}><summary><span class="live-state-hint">${goal?'当前目标':'当前处境'}</span><span data-live-goal>${esc(goal || situation || '查看随身资源')}</span></summary><dl>${facts.map(([name, value]) => `<div><dt>${esc(name)}</dt><dd>${esc(value)}</dd></div>`).join('')}</dl></details>`;
 }
 
 function renderLiveEnding(view) {

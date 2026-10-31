@@ -61,7 +61,7 @@ function readAuthoredPrefix(source){
     if(source[at]!=='"')return usable();
     const key=valueAt(at);if(!key)return usable();at=skip(key.end);
     if(source[at++]!==':')return usable();at=skip(at);
-    const name=key.value,keep=fields.has(name)&&name!=='choices';
+    const name=key.value,keep=name==='decisionDetail'||fields.has(name)&&name!=='choices';
     if(keep){if(seen.has(name))return null;seen.add(name);}
     if(name==='blocks'||name==='memoryDeltas'&&source[at]==='['){
       const arrayStart=at;if(source[at++]!=='[')return null;
@@ -184,9 +184,9 @@ function readWire(source,bodyContext){
     }
     while(i<source.length&&source[i]!=='}'){
       if(source[i]!=='"'||!ends.has(i)||bodyContext&&keyOwners.get(i)!==start)bad();const end=ends.get(i),key=read(i,end);
-      const retained=fields.has(key)&&!(bodyContext&&key==='choices');
+      const retained=bodyContext&&key==='decisionDetail'||fields.has(key)&&!(bodyContext&&key==='choices');
       if(!bodyContext&&!retained||retained&&seen.has(key))bad();seen.add(key);i=skip(end);if(source[i]!==':')bad();i=skip(i+1);
-      if(bodyContext&&(!fields.has(key)||key==='choices'))ignoreField();
+      if(bodyContext&&!retained)ignoreField();
       else if(bodyContext&&key==='blocks')takeRecords(key,4);
       else if(bodyContext&&key==='memoryDeltas'&&source[i]==='[')takeRecords(key,16);
       else if(key==='choices')takeChoices();

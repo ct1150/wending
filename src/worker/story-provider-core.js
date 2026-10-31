@@ -112,7 +112,7 @@ function narrativePrompt(system,context,wire,location,plan,canClose,opening,canD
   if(canDisclose)focus+='若本场明确揭示对手，可用 story.opponent 记录：旁白写“姓名已入境界名”，目的、破绽须来自同段；不确定就省略。';
   if(context.previousScene?.id===context.namespace+':t'+(context.identity.turnId-1)+':s:closed')focus+='先前互动已经结束；不再推进那件请求。';
   return [
-    system+'\n先在 blocks 中用原创正文回应本次选择的实际结果。一至三段自然旁白或对白即可；一句话能答清就收住，不凑字数，不罗列额外资料。旁白无 speaker；对白 speaker 用输入中的活人别名或新人物 {kind:"person",name:"实际姓名"}。姓名是数据，不自行编造身份标识或生死状态。\n玩家的备选决定由游戏提供。possibleNextSteps 描述可以做、还没有做的事；让场景自然承接这些可能性，停在玩家决定前，不列菜单、不代选、不把任何备选当成已经发生的事实。\n只需写完 blocks 即可结束。位置、行囊与数值以 receipt 和 life 为准。'+(canClose?'如果这场确实解决了输入中的旧约定或线索，可另写 memoryDeltas，仅给对应的 referenceId 与合法状态；未解决就省略。':''),
+    system+'\n先在 blocks 中用原创正文回应本次选择的实际结果。一至三段自然旁白或对白即可；一句话能答清就收住，不凑字数，不罗列额外资料。旁白无 speaker；对白 speaker 用输入中的活人别名或新人物 {kind:"person",name:"实际姓名"}。姓名是数据，不自行编造身份标识或生死状态。\n玩家的备选决定由游戏提供。possibleNextSteps 描述可以做、还没有做的事；让场景自然承接这些可能性，停在玩家决定前，不列菜单、不代选、不把任何备选当成已经发生的事实。让人物留下一句可追问的话，或让局势留下利弊不同的应对。如果正文出现值得查验的物件或痕迹，可用 decisionDetail 标出段落下标 anchor（从0开始），quote 逐字摘录其中2到18个汉字组成的物件或痕迹名，不要整句、动作指令或泛称。\n只需写完 blocks 即可结束。位置、行囊与数值以 receipt 和 life 为准。'+(canClose?'如果这场确实解决了输入中的旧约定或线索，可另写 memoryDeltas，仅给对应的 referenceId 与合法状态；未解决就省略。':''),
     JSON.stringify({selectedPurpose:selected?.label??'开启眼前的第一个事件',focus,settled:{location:location??null,items:context.life.items,elapsedDays:context.receipt.elapsedDays,itemChanges:context.receipt.itemChanges,relationChanges:wire.context.receipt.relationChanges},possibleNextSteps:plan.cues}),
   ];
 }
@@ -413,7 +413,7 @@ export async function generateProviderScene(ai,profile,context,options={},assert
       };
       try{result.scene=validate(wire);}
       catch(fullError){
-        if(!wire||!['memoryDeltas','story','title','location'].some(k=>Object.hasOwn(wire,k)))throw fullError;
+        if(!wire||!['memoryDeltas','story','title','location','decisionDetail'].some(k=>Object.hasOwn(wire,k)))throw fullError;
         let retained={blocks:wire.blocks};
         result.scene=validate(retained); // No recovery from a failed playable core.
         function propose(patch){
@@ -427,7 +427,7 @@ export async function generateProviderScene(ai,profile,context,options={},assert
           // later proposals cannot override earlier accepted consequences.
           for(const row of rows.slice(0,16))propose({memoryDeltas:[...(retained.memoryDeltas??[]),row]});
         }
-        const notes=Object.fromEntries(['title','location','story'].filter(k=>Object.hasOwn(wire,k)).map(k=>[k,wire[k]]));
+        const notes=Object.fromEntries(['title','location','story','decisionDetail'].filter(k=>Object.hasOwn(wire,k)).map(k=>[k,wire[k]]));
         if(Object.keys(notes).length&&!propose(notes))for(const key of Object.keys(notes))propose({[key]:notes[key]});
       }
       delete result.structureDiagnostic;

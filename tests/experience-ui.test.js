@@ -31,7 +31,10 @@ test('large-type mobile story shows one identity, birth stakes and actual costs;
  await page.locator('#live-name').fill('云归');await page.locator('[data-live-start]').click();await page.locator('[data-live-choice]:enabled').first().waitFor();
  const expected=await page.evaluate(async()=>{const {openLiveArchive}=await import('/src/game/live-archive.js'),a=await openLiveArchive(),{state}=await a.load(),{compileChoices}=await import('/src/game/cultivation/live/engine.js');a.close();const cost=compileChoices(state,state.currentScene.choices)[0].costs;return {cost,goal:state.director.currentGoal,advantage:state.life.birth.cultivationProfile.advantages[0]};});
  assert.equal(posts,1);assert.equal(await page.locator('[data-character]').count(),1);assert.doesNotMatch(await page.locator('[data-live-state]').innerText(),/寿元\s*16/);
- assert.ok((await page.locator('[data-live-goal]').innerText()).includes(expected.goal));
+ if(expected.goal==='辨明眼前变化，自定下一步'){
+   assert.equal(await page.locator('.live-state-hint').innerText(),'当前处境');
+   assert.equal(await page.locator('[data-live-goal]').innerText(),'松溪 · 渡口');
+ }else assert.equal(await page.locator('[data-live-goal]').innerText(),expected.goal);
  assert.ok((await page.locator('[data-live-birth-facts]').innerText()).includes(expected.advantage));
  assert.match(await page.locator('[data-live-birth-facts]').innerText(),/代价/);
  assert.ok((await page.locator('#live-cost-0').innerText()).includes('灵力 '+expected.cost.spirit));

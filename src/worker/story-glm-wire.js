@@ -1,3 +1,4 @@
+import {currentStoryGoal} from '../game/cultivation/live/story-director.js';
 import {advancesEvent,isExperienceLife,GROWTH_TERMS} from '../game/cultivation/live/experience.js';
 import {SCENE_SCHEMA,exactKeys} from '../game/cultivation/live/schema.js';
 import {assertPlainData,canonicalStringify} from '../game/cultivation/live/identity.js';
@@ -55,6 +56,11 @@ export function buildGlmWire(context,system,{storyActions=false}={}){
     return value;
   }
   const packed=pack(context);delete packed.identity;delete packed.namespace;packed.turn=context.identity.turnId;
+  if(packed.director){
+    const goal=currentStoryGoal(packed.director);
+    if(goal)packed.director.currentGoal=goal;
+    else delete packed.director.currentGoal;
+  }
   const entityAliases=[...aliases.values(),...['p','l','f'].flatMap(kind=>Array.from({length:24},(_,index)=>kind+(index+1)))];
   const schema=structuredClone(SCENE_SCHEMA);
   // Native XGrammar rejects this keyword. The decoder removes duplicate

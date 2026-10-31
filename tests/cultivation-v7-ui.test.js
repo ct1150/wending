@@ -35,6 +35,25 @@ test('v7 identity shows elapsed age over the maximum instead of remaining life i
   assert.match(html, /查明渡口为何封闭/);
 });
 
+test('a saved turn without a goal shows the current scene without assigning the player a task', () => {
+  const { state, view, choices } = fixture();
+  state.currentScene.title = '渡口封船';
+  for (const placeholder of ['辨明眼前变化，自定下一步', '已结束当前互动，自定下一步']) {
+    state.director.currentGoal = placeholder;
+    const summary = character.liveCharacterSummary(state, { REALMS, ORIGINS, TALENTS, ITEMS });
+    assert.equal(summary.currentGoal, undefined);
+    assert.ok(!summary.statusFacts.some(([name]) => name === '当前目标'));
+    for (const characterSummary of [undefined, summary]) {
+      const html = renderLiveJourney({ ...view, characterSummary }, choices);
+      assert.match(html, /当前处境<\/span><span data-live-goal>柳溪渡口 · 渡口封船</);
+      assert.ok(!html.includes(placeholder));
+    }
+    assert.equal(state.director.currentGoal, placeholder, 'rendering preserves the saved state');
+  }
+  state.currentScene.title = '眼前所见';
+  assert.match(renderLiveJourney(view, choices), /data-live-goal>柳溪渡口</);
+});
+
 test('v7 presents exactly three numbered story choices followed by a separate custom action form', () => {
   const { view, choices } = fixture();
   const html = renderLiveJourney({ ...view, customAction: { open: true, text: '在茶棚听听来客的议论', error: '' } }, choices);

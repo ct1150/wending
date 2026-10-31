@@ -1,13 +1,19 @@
 import {advancesEvent,GROWTH_TERMS,isExperienceLife} from '../game/cultivation/live/experience.js';
 import {ITEMS} from '../game/cultivation/live/model.js';
-import {isV7Life,nextRealmFor,v7ActionRule,V7_EXPLORE_TARGETS,V7_REALMS,WORLD_TIERS,WORLD_TRAVEL_APPROACHES} from '../game/cultivation/live/cultivation-rules.js';
+import {isV7Life,nextRealmFor,TECHNIQUES,v7ActionRule,V7_EXPLORE_TARGETS,V7_REALMS,WORLD_TIERS,WORLD_TRAVEL_APPROACHES} from '../game/cultivation/live/cultivation-rules.js';
 import {formatStoryChoiceLabel} from '../game/cultivation/live/story-choice-label.js';
 import {createNamedTargetLookup} from './story-named-targets.js';
 
 const SPEAKER='@speaker',nearby=['青石驿','柳湾渡','松风岭','落雁集','长溪铺','南屏镇'];
 const row=(action,target,purpose,stake='low')=>({action,target,purpose,stake});
-const observe=()=>row('interact:observe','self','辨清眼前的细节，再决定下一步');
-const rest=()=>row('rest:recover','self','先在此歇息，恢复精力');
+const observe=()=>row('interact:observe','self','查验本场新出现的疑点');
+function recoveryChoice(life){
+  const profile=life.cultivationProfile;
+  if(life.injury>0)return row('rest:recover','self','先调养身上的伤势');
+  if(profile.spirit<profile.maxSpirit)return row('rest:recover','self','静坐调息，补回耗去的灵力');
+  if(profile.exposure>0)return row('rest:recover','self','暂时隐去行踪，等风声过去');
+  return null;
+}
 const pick=(rows,index)=>rows.length?rows[index%rows.length]:null;
 const alias=(c,entity)=>'k'+(c.entities.indexOf(entity)+1);
 function location(c){
@@ -68,7 +74,8 @@ export function buildStoryChoicePlan(c){
   const quest=!isClosed&&(c.director.mainQuest??c.director.sideQuests?.[0]),topic=typeof quest?.text==='string'?Array.from(quest.text.trim()).slice(0,16).join(''):'';
   const ask=row('interact:ask',actor,topic?'问清“'+topic+'”的来龙去脉':'请对方说明事情的来由'),leave=row('interact:leave',actor,'结束这次交谈，另作打算');
   const inspect=topic?row('interact:observe','self','细看眼前有无线索能印证“'+topic+'”'):observe();
-  const practice=row('practice:steady','self','梳理气息，继续积累修为');
+  const technique=c.life.cultivationProfile.experience?.activeTechniqueId??c.life.birth.cultivationProfile.techniqueId;
+  const practice=row('practice:steady','self','按《'+TECHNIQUES[technique].name+'》的行功法门积累修为');
   const breakthrough=next&&row('practice:breakthrough',next.id,'用现有材料尝试冲关');
   const localName=pick(nearby.filter(name=>name!==here),turnIndex),farName=tier<2?WORLD_TIERS[tier+1]+'云津':null;
   const places=c.entities.filter(e=>e.kind==='place'&&e.name!==here).map(e=>alias(c,e));
@@ -85,7 +92,11 @@ export function buildStoryChoicePlan(c){
   const fights=conflict?['guard','assault','desperate'].map(a=>row('fight:'+a,actor,'应对眼前的交锋',a==='guard'?'low':'high')):[];
   const evasions=conflict?['withdraw','conceal','blood'].map(a=>row('evade:'+a,actor,'避开眼前的冲突')):[];
   const practiceSet=[practice,row('practice:intensive','self','收束杂念，专心磨炼功法'),row('practice:forbidden','self','自行承担禁术的代价','high')];
-  const recovery=[rest(),row('rest:medicine','self','用现有丹药调养伤势'),row('rest:extend','self','服丹延续此身寿元'),row('rest:retire','self','退居一处静养')];
+  const rest=recoveryChoice(c.life);
+  const spentSpirit=c.life.cultivationProfile.spirit<c.life.cultivationProfile.maxSpirit;
+  const medicine=(c.life.injury>0||spentSpirit)&&row('rest:medicine','self',c.life.injury>0?'用现有丹药调养伤势':'服用现有丹药，补回灵力');
+  const retire=rest&&row('rest:retire','self',rest.purpose);
+  const recovery=[rest,medicine,row('rest:extend','self','服丹延续此身寿元'),retire];
   const families=[practiceSet,explore,routes,crafts,social,recovery,crossings,[breakthrough],fights,evasions].map(rows=>rows.filter(r=>runnable(c,r))).filter(rows=>rows.length);
   const family=pick(families,turnIndex),opportunity=pick(family,Math.floor(turnIndex/families.length));
   const eligible=rows=>rows.find(r=>runnable(c,r));
@@ -95,11 +106,11 @@ export function buildStoryChoicePlan(c){
     let focus=ask;
     if(isClosed)focus=observe();
     else if(conflict)focus=eligible(fights)??observe();
-    else if(selected?.intent==='evade')focus=eligible([rest(),...routes])??observe();
-    else if(selected?.intent==='practice')focus=eligible([breakthrough,...practiceSet])??rest();
+    else if(selected?.intent==='evade')focus=eligible([rest,...routes])??observe();
+    else if(selected?.intent==='practice')focus=eligible([breakthrough,...practiceSet])??rest;
     else if(selected?.intent==='craft')focus=eligible([crafts.find(r=>r.target===selected.targetId),...crafts,...explore])??observe();
     else if(selected?.intent==='explore')focus=eligible([breakthrough,...crafts,...routes])??observe();
-    else if(selected?.intent==='rest')focus=eligible([c.life.injury>0&&recovery[1],breakthrough,practice])??observe();
+    else if(selected?.intent==='rest')focus=eligible([medicine,breakthrough,practice])??observe();
     else if(selected?.intent==='travel'||selected?.intent==='interact'&&selected.approach==='ask')focus=inspect;
     candidates=conflict?[pick(fights.filter(r=>runnable(c,r)),turnIndex)??focus,pick(evasions.filter(r=>runnable(c,r)),turnIndex),observe()]:[focus,opportunity,focus?.action==='interact:observe'&&!isClosed?leave:inspect];
   }
@@ -107,35 +118,83 @@ export function buildStoryChoicePlan(c){
     const growth=growthOptions(c).filter(r=>runnable(c,r));
     if(growth.length)candidates=growth[0].action==='craft:diagnose'?[candidates[0],...growth,...candidates.slice(1)]:[...growth,...candidates];
   }
-  const fallback=[observe(),rest(),practice,...explore.slice(0,2)].filter(r=>runnable(c,r));
+  const setAside=!isClosed&&!conflict&&row('interact:leave','self','搁下这条线索');
+  const knownRoads=routes.filter(r=>r.action==='travel:road'&&typeof r.target==='string'&&!conflict);
+  const fallback=[inspect,setAside,rest,practice,...explore.slice(0,2)].filter(r=>runnable(c,r));
   const slots=[],seen=new Set();for(const r of [...candidates,...fallback]){if(runnable(c,r)&&!seen.has(identity(r))){seen.add(identity(r));slots.push({id:['a','b','c'][slots.length],...r});if(slots.length===3)break;}}
-  return {slots,fallback,cues:slots.map(r=>r.action==='craft:pledge'?cue(c,r)+'。若在场人愿意指点，可由本人提议：“'+offerCue+'”':cue(c,r))};
+  return {slots,fallback,knownRoads,topic,cues:slots.map(r=>r.action==='craft:pledge'?cue(c,r)+'。若在场人愿意指点，可由本人提议：“'+offerCue+'”':cue(c,r))};
 }
 
-// Binding is restricted to a real dialogue speaker. A mention in free prose
-// never creates an actor, an action, a risk level, a destination or an item.
-export function materializeStoryChoices(plan,c,blocks){
-  const lookup=createNamedTargetLookup(c),cast=[];
-  for(const b of Array.isArray(blocks)?blocks:[]){if(b?.kind!=='dialogue'||b.speaker==='self')continue;
-    try{const t=lookup(b.speaker);if(t.kind!=='person'||t.known?.status==='dead'||t.name===c.life.name)continue;
-      cast.push({target:t.known?alias(c,t.known):{kind:'person',name:t.name},text:b.text});}catch{/* Only confirmed speakers can bind a slot. */}
+// Quote the visible scene. A turn-ending pause is often the
+// final sentence; prefer the preceding evidence when the author supplies it.
+function excerpt(text,last=false){
+  const clauses=text.split(/[。！？；，、：,.!?:;“”「」『』‘’"'\n]/u).map(s=>s.trim());
+  const placeholder=/^(?:(?:眼前|面前|周围|四周)(?:的?(?:细节|变化|动静|情况))?|下一步|这件事|此事|事情|细节)$/u;
+  const idle=/等(?:待)?(?:着)?你.{0,6}(?:决定|选择|作答|答复|开口)|你(?:还没|尚未|仍未|并未|没有)(?:有)?(?:动手|作答|答复|开口|决定|选择|表态)|(?:由你|任你)(?:自己|自行)?(?:决定|选择)/u;
+  const meaningful=clauses.filter(s=>s&&!placeholder.test(s)&&!idle.test(s));
+  const clause=last?meaningful.at(-1):meaningful[0];
+  if(!clause)return '';
+  const chars=Array.from(clause);
+  return chars.slice(0,16).join('')+(chars.length>16?'…':'');
+}
+function sceneDetail(body){
+  let spoken;
+  for(let anchor=body.length-1;anchor>=0;anchor--){
+    const block=body[anchor],quote=excerpt(block.text,true);
+    if(!quote)continue;
+    if(block.kind==='narration')return {anchor,quote};
+    spoken??={anchor,quote};
   }
+  return spoken;
+}
+// A mention can highlight an already affordable road. Only a confirmed
+// dialogue speaker can bind an actor; prose never creates a target or cost.
+export function materializeStoryChoices(plan,c,blocks,detail){
+  const lookup=createNamedTargetLookup(c),cast=[];
+  const body=Array.isArray(blocks)?blocks:[];
+  for(const [anchor,b] of body.entries()){if(b?.kind!=='dialogue'||b.speaker==='self')continue;
+    try{const t=lookup(b.speaker);if(t.kind!=='person'||t.known?.status==='dead'||t.name===c.life.name)continue;
+      cast.push({target:t.known?alias(c,t.known):{kind:'person',name:t.name},text:b.text,anchor});}catch{/* Only confirmed speakers can bind a slot. */}
+  }
+  const authored=detail&&excerpt(detail.quote)?detail:null;
+  const sign=authored??sceneDetail(body);
   const result=[],seen=new Set();
   function add(slot){
+    if(!sign&&!plan.topic&&(slot.action.startsWith('interact:')||slot.action.startsWith('travel:')))return;
     let target=slot.target,speaker;
     if(target===SPEAKER||typeof target==='string'&&/^k\d+$/u.test(target)&&entity(c,target)?.kind==='person'){
       speaker=slot.action==='craft:pledge'?cast.find(x=>offersRepair(x.text)&&runnable(c,{...slot,target:x.target})):target===SPEAKER?cast[0]:cast.find(x=>x.target===target);if(!speaker)return;target=speaker.target;
     }
-    let purpose=slot.purpose;
-    if(slot.action==='interact:ask'&&slot.purpose==='请对方说明事情的来由'&&typeof speaker?.text==='string'){
-      // Quoting a short exact passage narrows the question without converting
-      // free text into a command. The original body still belongs to the author.
-      const clause=speaker.text.trim().replace(/^[“「『‘"'\s]+/u,'').split(/[。！？；，、：,.!?：“”「」『』\n]/u).find(part=>part.trim())?.trim()??'';
-      const chars=Array.from(clause);if(chars.length)purpose='问问“'+chars.slice(0,16).join('')+(chars.length>16?'…':'')+'”是怎么回事';
+    let purpose=slot.purpose,anchor=speaker?.anchor??slot.anchor??0;
+    if(speaker&&['interact:ask','interact:decline','interact:leave'].includes(slot.action)){
+      const quote=authored?.anchor===anchor?authored.quote:excerpt(speaker.text);
+      if(quote){
+        if(slot.action==='interact:ask'&&slot.purpose==='请对方说明事情的来由')purpose='问问“'+quote+'”是怎么回事';
+        if(slot.action==='interact:decline'||slot.action==='interact:leave')purpose='听过“'+quote+'”，暂不接这件事';
+      }
+    }else if(sign&&slot.target==='self'){
+      if(slot.action==='interact:observe'){
+        anchor=sign.anchor;
+        const block=body[anchor];
+        if(block.kind==='dialogue'&&block.speaker!=='self')purpose='留意对方说到“'+sign.quote+'”时的神色';
+        else if(authored)purpose='查验'+sign.quote;
+        else purpose='查证“'+sign.quote+'”的来由';
+      }
+      if(slot.action==='interact:leave'){anchor=sign.anchor;purpose='暂不追查“'+sign.quote+'”';}
     }
-    const r={action:slot.action,target,stake:slot.stake,purpose,anchor:0},id=identity(r);if(!runnable(c,r)||seen.has(id))return;seen.add(id);result.push(r);
+    if(!sign&&plan.topic&&slot.target==='self'&&slot.action==='interact:leave')purpose='暂缓追查“'+plan.topic+'”';
+    const r={action:slot.action,target,stake:slot.stake,purpose,anchor},id=identity(r);if(!runnable(c,r)||seen.has(id))return;seen.add(id);result.push(r);
   }
   for(const slot of plan.slots)add(slot);
+  if(result.length<2){
+    for(const road of plan.knownRoads){
+      const place=entity(c,road.target);
+      const anchor=body.findIndex(block=>block.text.includes(place.name));
+      if(anchor<0)continue;
+      add({...road,purpose:'到当地查证这条线索',anchor});
+      if(result.length>=2)break;
+    }
+  }
   for(const slot of plan.fallback){if(result.length>=2)break;add(slot);}
   return result;
 }

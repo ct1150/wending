@@ -54,10 +54,82 @@ test('a quoted NPC remark yields a readable question about one clause',()=>{
   assert.equal(ask.purpose,'问问“这东西邪门得很”是怎么回事');
 });
 
-test('a narration-only opening has a real playable menu without inventing a speaker',()=>{
-  const c=context(),body=[{kind:'narration',text:'渡口无人，唯见水纹荡开。'}],rows=materializeStoryChoices(buildStoryChoicePlan(c),c,body),scene=sceneFor(c,rows,body);
-  assert.ok(rows.length>=2);assert.ok(scene.choices.some(x=>x.intent==='interact'&&x.approach==='observe'&&x.targetId==='self'));assert.ok(!scene.entities.some(x=>x.kind==='person'));
-  commitTurn(state,opening,scene);
+test('an NPC-free opening lets you investigate or set aside this specific sign without spending a month',async()=>{
+  for(const [seed,experience] of [[42,{}],[5,{experienceVersion:1}]]){
+    const born=createLiveGame({runId:'plan-at-birth',seed,engineVersion:7,...experience});
+    const pending=prepareOpening(born,{requestId:'open'}),c=buildStoryContext(born,pending);
+    const body=[{kind:'narration',text:'渡口空无一人。'},{kind:'narration',text:'桥桩背面留着半枚湿鞋印。'}];
+    const rows=materializeStoryChoices(buildStoryChoicePlan(c),c,body);
+    assert.deepEqual(rows.map(r=>r.action),['interact:observe','interact:leave']);
+    assert.ok(rows.every(r=>r.anchor===1&&r.target==='self'&&r.purpose.includes('湿鞋印')));
+    const saved=await commitAuthoredTurn(born,pending,body);
+    assert.ok(!saved.currentScene.entities.some(x=>x.kind==='person'));
+    for(const choice of saved.currentScene.choices){
+      assert.match(choice.label,/湿鞋印/u);
+      assert.equal(prepareChoice(saved,{requestId:'act',choiceId:choice.id}).receipt.elapsedDays,0);
+    }
+  }
+});
+
+test('an authored detail narrows observation to the indicated block without changing the planned action',()=>{
+  const c=context(),body=[{kind:'narration',text:'石门上留着两行刻痕。'},{kind:'narration',text:'阶前的铜铃响了一声。'},{kind:'narration',text:'你还没动手，摊主等你自己决定。'}];
+  const plan=buildStoryChoicePlan(c),rows=materializeStoryChoices(plan,c,body,{anchor:0,quote:'两行刻痕'});
+  const observe=rows.find(r=>r.action==='interact:observe');
+  assert.equal(observe.anchor,0);assert.equal(observe.purpose,'查验两行刻痕');
+  const ordinary=materializeStoryChoices(plan,c,body);
+  assert.deepEqual(rows.map(r=>r.action),ordinary.map(r=>r.action));
+  assert.match(ordinary[0].purpose,/铜铃/u);
+});
+
+test('a decision pause uses actual supplies and training needs instead of inventing a lead',async()=>{
+  const born=createLiveGame({runId:'quiet-turn',seed:42,engineVersion:7}),pending=prepareOpening(born,{requestId:'open'});
+  const body=[{kind:'narration',text:'他等着你答复。'}],saved=await commitAuthoredTurn(born,pending,body);
+  assert.deepEqual(saved.currentScene.choices.map(r=>r.intent),['practice','explore']);
+  for(const choice of saved.currentScene.choices)assert.ok(prepareChoice(saved,{requestId:'quiet',choiceId:choice.id}).receipt.elapsedDays>0);
+  const c=context();c.life.cultivationProfile.spirit=0;c.life.items.supplies=0;
+  const exhausted=materializeStoryChoices(buildStoryChoicePlan(c),c,body);
+  assert.deepEqual(exhausted.map(r=>r.action),['rest:recover','explore:cautious']);assert.equal(exhausted[1].target,'supplies');
+});
+
+test('an authored pause or placeholder cannot displace an actual clue',()=>{
+  const c=context(),plan=buildStoryChoicePlan(c),body=[{kind:'narration',text:'铜环上结着青霜。'},{kind:'narration',text:'你还没动手。眼前的细节。面前。'}];
+  for(const quote of ['你还没动手','眼前的细节','面前']){
+    const rows=materializeStoryChoices(plan,c,body,{anchor:1,quote});
+    assert.ok(rows.every(r=>r.anchor===0&&r.purpose.includes('青霜')));
+  }
+});
+
+test('a destination mentioned in the current prose offers a real road trip before a generic exit',()=>{
+  const c=context();
+  c.entities=[{kind:'place',name:'东桥集',id:'old:market',status:'unknown'},{kind:'place',name:'杉木渡',id:'old:ferry',status:'unknown'}];
+  const plan=buildStoryChoicePlan(c),body=[{kind:'narration',text:'桥头一张路引歪挂在木桩上。'},{kind:'narration',text:'路引上盖着杉木渡的印。'}];
+  const rows=materializeStoryChoices(plan,c,body);
+  const trip=rows.find(r=>r.action==='travel:road');
+  assert.ok(trip);assert.equal(trip.target,'k2');assert.equal(trip.anchor,1);
+  assert.ok(!rows.some(r=>r.action==='interact:leave'||r.target==='k1'));
+  c.life.items.supplies=0;
+  const onFoot=materializeStoryChoices(buildStoryChoicePlan(c),c,body);
+  assert.ok(onFoot.every(r=>r.action!=='travel:road'));
+  assert.ok(onFoot.some(r=>r.action==='interact:leave'));
+});
+
+test('ordinary recovery only takes a menu slot when injury or spent spirit gives it a purpose',()=>{
+  const c=context();c.phase='choice';c.receipt.action={intent:'interact',approach:'observe',targetId:'self'};
+  c.life.items.medicine=1;
+  const set=new Set();
+  for(const injury of [0,2]){
+    c.life.injury=injury;
+    for(let turn=2;turn<=64;turn++){
+      c.identity.turnId=turn;
+      const rows=materializeStoryChoices(buildStoryChoicePlan(c),c,blocks);
+      if(!injury)assert.ok(rows.every(r=>!['rest:recover','rest:retire','rest:medicine'].includes(r.action)));
+      const rest=rows.find(r=>r.action==='rest:recover');
+      if(rest){assert.equal(injury,2);assert.match(rest.purpose,/伤/u);set.add(injury);}
+    }
+  }
+  assert.ok(set.has(2));
+  c.life.injury=0;c.life.cultivationProfile.exposure=15;
+  assert.ok(buildStoryChoicePlan(c).fallback.find(r=>r.action==='rest:recover')?.purpose.includes('行踪'));
 });
 
 test('affordable progression and world routes remain reachable over later turns; every materialized row uses the actual rules',()=>{

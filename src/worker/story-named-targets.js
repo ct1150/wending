@@ -224,7 +224,10 @@ export function buildNamedSceneSchema(source,context,{blocks,location,engineMenu
   }
   const closures=directed?source.properties.memoryDeltas.items.oneOf.filter(row=>row.properties.referenceId).map(row=>structuredClone(row)):[{type:'object',additionalProperties:false,required:['referenceId','status'],properties:{referenceId:{type:'string'},status:{enum:['resolved','broken']}}}];
   if(narrativeOnly){
-    const properties={blocks:body};
+    const decisionDetail={type:'object',additionalProperties:false,required:['anchor','quote'],properties:{
+      anchor:{type:'integer',minimum:0,maximum:(body.maxItems??4)-1},quote:{type:'string',minLength:2,maxLength:18},
+    }};
+    const properties={blocks:body,decisionDetail};
     // A normal turn needs prose only. When the frozen context provides an
     // actual open record, allow an optional decision about exactly that record.
     if(closures.length)properties.memoryDeltas={type:'array',maxItems:16,items:closures.length===1?closures[0]:{oneOf:closures}};

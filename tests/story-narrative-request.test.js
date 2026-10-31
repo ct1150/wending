@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import {createLiveGame,prepareOpening,commitTurn,prepareChoice} from '../src/game/cultivation/live/engine.js';
 import {buildStoryContext} from '../src/game/cultivation/live/memory.js';
 import {buildStoryInput,generateProviderScene} from '../src/worker/story-provider-core.js';
+import {readCompleteV7Body} from '../src/worker/story-readable-wire.js';
 import {GLM_MODEL_ID,GLM_PROFILE,STORY_LIMITS} from '../src/worker/story-config.js';
 
 const profile={...GLM_PROFILE,storyActions:true,engineMenu:true};
@@ -14,7 +15,9 @@ function fixture(v7=true){
 test('new v7 GLM generation requires only narrative blocks and provides future decisions as input data',()=>{
   const {c}=fixture(),saved=structuredClone(c),input=buildStoryInput(profile,c),schema=input.response_format.json_schema.schema;
   assert.deepEqual(schema.required,['blocks']);assert.equal(schema.additionalProperties,false);
-  assert.deepEqual(Object.keys(schema.properties),['blocks']);
+  assert.deepEqual(Object.keys(schema.properties),['blocks','decisionDetail']);
+  assert.deepEqual(schema.properties.decisionDetail.required,['anchor','quote']);
+  assert.match(input.messages[0].content,/decisionDetail/);
   assert.doesNotMatch(JSON.stringify(schema),/"choices"|"purpose"|"stake"|"action"|interact:ask|choicePurpose/);
   const facts=JSON.parse(input.messages.at(-1).content);
   assert.ok(facts.possibleNextSteps.length>=2);assert.ok(facts.possibleNextSteps.every(cue=>typeof cue==='string'&&cue.trim()));
@@ -90,11 +93,37 @@ async function deliver(wire,c){
 
 test('only existing open obligations expose an optional, scoped closure field on the narrative request',()=>{
   const {c}=trip(),schema=buildStoryInput(profile,c).response_format.json_schema.schema;
-  assert.deepEqual(Object.keys(schema.properties),['blocks','memoryDeltas']);assert.deepEqual(schema.required,['blocks']);
+  assert.deepEqual(Object.keys(schema.properties),['blocks','decisionDetail','memoryDeltas']);assert.deepEqual(schema.required,['blocks']);
   const item=schema.properties.memoryDeltas.items,variants=item.oneOf??[item];
   assert.ok(variants.every(v=>v.required.length===2&&v.required.includes('referenceId')&&v.required.includes('status')));
   assert.deepEqual(variants.flatMap(v=>v.properties.referenceId.enum),['m1']);
   assert.deepEqual(variants.flatMap(v=>v.properties.status.enum),['resolved']);
+});
+
+test('an optional literal detail grounds the next observation and its receipt, even if earlier prose is dropped',async()=>{
+  const {state,pending,c}=fixture();
+  const blocks=[
+    {kind:'dialogue',speaker:'k999',text:'这段无主对白会被丢弃。'},
+    {kind:'narration',text:'雾贴着河面。'},
+    {kind:'narration',text:'船桩半埋在沙里。木桩底下，断绳上的红泥还没干，旁边多了一串脚印。'},
+  ];
+  const baseline=await deliver({blocks},c);
+  const authored={blocks,decisionDetail:{anchor:2,quote:'断绳上的红泥'}};
+  const grounded=await deliver(authored,c);
+  assert.equal(grounded.status,'ready',grounded.errorCode);
+  const saved=commitTurn(state,pending,grounded.scene);
+  const observation=saved.currentScene.choices.find(choice=>choice.approach==='observe');
+  assert.match(observation.label,/断绳上的红泥/u);
+  const follow=prepareChoice(saved,{choiceId:observation.id,requestId:'inspect-red-clay'});
+  assert.equal(follow.receipt.elapsedDays,0);
+  const input=buildStoryInput(profile,buildStoryContext(saved,follow));
+  assert.equal(JSON.parse(input.messages.at(-1).content).selectedPurpose,observation.label);
+  const recovered=readCompleteV7Body(JSON.stringify(authored).slice(0,-1)+',"memoryDeltas":[',c);
+  assert.deepEqual(recovered.decisionDetail,authored.decisionDetail);
+  assert.deepEqual((await deliver(recovered,c)).scene,grounded.scene);
+  for(const detail of [{anchor:0,quote:'无主对白'},{anchor:1,quote:'断绳上的红泥'},{anchor:2,quote:'门后的暗格'},{anchor:2,quote:{action:'travel:road'}}]){
+    assert.deepEqual((await deliver({blocks,decisionDetail:detail},c)).scene,baseline.scene);
+  }
 });
 
 test('a settled trip keeps the same prose, choices, receipt and valid records when other proposals are inadmissible',async()=>{
