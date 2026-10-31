@@ -1,5 +1,5 @@
 import {ORIGINS,TALENTS,ITEMS,REALMS,DAYS_PER_YEAR} from '../game/cultivation/live/model.js';
-import {getReincarnationSettlement,REINCARNATION_REWARDS} from '../game/cultivation/live/reincarnation.js';
+import {describeEcho,getReincarnationSettlement,REINCARNATION_REWARDS} from '../game/cultivation/live/reincarnation.js';
 const esc = value => String(value ?? '').replace(/[&<>"']/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[char]);
 
 const endings = { retired: '归隐', lifespan: '寿尽', battle: '陨落', victory: '问鼎', burned: '燃命而终' };
@@ -164,6 +164,7 @@ function renderLiveState(view) {
     ['灵石', life.items.stones ?? 0],
     ['所在地', view.state.currentScene?.location ?? (view.state.phase === 'dead' ? '此生已尽' : '尚未入世')],
     ...(goal ? [['当前目标', goal]] : []),
+    ...(view.state.reincarnation?.version===2?[['前世回响',view.state.reincarnation.echoes.map(describeEcho).join('')]]:[]),
   ];
   return `<details class="live-turn-state" data-live-state data-live-preserve-open${view.state.phase === 'dead' ? ' hidden' : ''}><summary><span>${esc(realm)}</span><span>寿元 ${esc(lifespan)}</span><span class="live-state-hint">当前状态</span></summary><dl>${facts.map(([name, value]) => `<div><dt>${esc(name)}</dt><dd>${esc(value)}</dd></div>`).join('')}</dl></details>`;
 }
@@ -177,8 +178,9 @@ function renderLiveEnding(view) {
   const selected = new Set(view.selectedReincarnationRewards ?? []);
   const spent = REINCARNATION_REWARDS.reduce((sum, reward) => sum + (selected.has(reward.id) ? reward.cost : 0), 0);
   const balance = settlement.availablePoints - spent, blocked = view.busy || Boolean(view.reincarnatedTo);
-  const rewards = REINCARNATION_REWARDS.map(reward => `<button type="button" class="journey-choice" data-live-reward="${esc(reward.id)}" aria-pressed="${selected.has(reward.id)}"${blocked || !selected.has(reward.id) && reward.cost > balance ? ' disabled' : ''}><span class="live-reward-name"><strong>${esc(reward.name)}</strong><span>${reward.cost} 因果点</span></span><span class="live-reward-description">${esc(reward.description)}</span></button>`).join('');
-  return `<div class="live-reincarnation"><h3>此生结算</h3><p>${esc(settlement.summary)}</p><blockquote class="live-epitaph">${esc(settlement.epitaph)}</blockquote><p class="live-causal-points">因果点 ${settlement.availablePoints} · 本世所得 ${settlement.earnedPoints} · 前世结余 ${settlement.carriedPoints}</p><h4>六道轮回商店</h4><div class="live-reward-list" role="group" aria-label="选择来世传承">${rewards}</div><p class="live-causal-points">已选 ${spent} · 来世结余 ${balance}</p>${view.reincarnatedTo ? '<p class="live-causal-points">此生传承已领取。请恢复下一世备份，或返回首页重新开始。</p>' : ''}<button type="button" class="button primary" data-live-reincarnate${blocked || balance < 0 ? ' disabled' : ''}>步入轮回</button></div>`;
+  const rewards = REINCARNATION_REWARDS.map(reward => `<button type="button" class="journey-choice" data-live-reward="${esc(reward.id)}" aria-pressed="${selected.has(reward.id)}"${blocked || !selected.has(reward.id) && (reward.cost > balance || selected.size>=settlement.selectionLimit) ? ' disabled' : ''}><span class="live-reward-name"><strong>${esc(reward.name)}</strong><span>${reward.cost} 因果点</span></span><span class="live-reward-description">${esc(reward.description)}</span></button>`).join('');
+  const history=settlement.echoes?'<h4>生平抉择</h4><ul>'+settlement.decisions.map(text=>'<li>'+esc(text)+'</li>').join('')+'</ul><p>遗留事项：'+esc(settlement.unfinished.join('')||'没有未履行的校法之约。')+'</p>':'';
+  return `<div class="live-reincarnation"><h3>此生结算</h3><p>${esc(settlement.summary)}</p>${settlement.echoes?history:'<blockquote class="live-epitaph">'+esc(settlement.epitaph)+'</blockquote>'}<p class="live-causal-points">因果点 ${settlement.availablePoints} · 本世所得 ${settlement.earnedPoints} · 前世结余 ${settlement.carriedPoints}</p><h4>六道轮回商店</h4>${settlement.selectionLimit?'<p>最多两项，也可不选；未用因果点留给来世。</p>':''}<div class="live-reward-list" role="group" aria-label="选择来世传承">${rewards}</div><p class="live-causal-points">已选 ${spent} · 来世结余 ${balance}</p>${view.reincarnatedTo ? '<p class="live-causal-points">此生传承已领取。请恢复下一世备份，或返回首页重新开始。</p>' : ''}<button type="button" class="button primary" data-live-reincarnate${blocked || balance < 0 || selected.size>settlement.selectionLimit ? ' disabled' : ''}>步入轮回</button></div>`;
 }
 
 export function renderLiveJourney(view, choices) {

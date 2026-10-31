@@ -46,7 +46,7 @@ test('marked death cannot lose its experience contract or consume its only claim
     if(n>30)throw Error('combat fixture did not reach actual death');
   }while(row.state.phase!=='dead');
   const parent=row,opts=buildRebirthOptions(parent.state,[]),bad={...opts,runId:'downgraded'};delete bad.experienceVersion;
-  const child=engine.createLiveGame(bad);let archiveCode=null;try{await a.reincarnate({state:child,pending:engine.prepareOpening(child,{requestId:'bad'}),expectedArchiveId:parent.archiveId,rewardIds:[]});}catch(e){archiveCode=e.code;}
+  let archiveCode=null;try{const child=engine.createLiveGame(bad);await a.reincarnate({state:child,pending:engine.prepareOpening(child,{requestId:'bad'}),expectedArchiveId:parent.archiveId,rewardIds:[]});}catch(e){archiveCode=e.code;}
   let version,posts=0;
   const client={async capabilities(){return {available:true,storyActions:true,experienceVersion:version};},async createSession(){return {sessionRef:'session'};},async requestTurn(){posts++;return {status:'paused',errorCode:'PROVIDER_TIMEOUT'};}};
   const ss=createLiveSession({archive:a,client});await ss.load();const refused=await ss.reincarnate({runId:'new-life'},[],parent.archiveId);

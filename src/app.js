@@ -301,7 +301,7 @@ function selectReincarnationReward(rewardId) {
   if(!REINCARNATION_REWARDS.some(reward=>reward.id===rewardId))return;
   const current=liveBirthDraft.reincarnationRunId===snapshot.state.runId?liveBirthDraft.reincarnationRewardIds??[]:[];
   const selected=current.includes(rewardId)?current.filter(id=>id!==rewardId):[...current,rewardId];
-  try {buildRebirthOptions(snapshot.state,selected);}catch{return notify('因果点不足，无法携入这项传承。',true);}
+  try {buildRebirthOptions(snapshot.state,selected);}catch(error){return notify(error.code==='REINCARNATION_SELECTION_LIMIT'?'每世最多携入两项传承。':'因果点不足，无法携入这项传承。',true);}
   liveBirthDraft={name:liveBirthDraft.reincarnationRunId===snapshot.state.runId?liveBirthDraft.name:snapshot.state.life.name,originId:liveBirthDraft.reincarnationRunId===snapshot.state.runId?liveBirthDraft.originId:'village',expectedArchiveId:snapshot.archiveId,reincarnationRunId:snapshot.state.runId,reincarnationRewardIds:selected};
   saveCreationDraft();render();
 }

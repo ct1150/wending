@@ -134,6 +134,7 @@ export function validateLiveState(state) {
   if(state.director!==undefined){if(!isV7Life(state.life))throw new Error('旧人生不能静默切换世界规则。');validateStoryDirector(state.director,{turnId:state.turnId,life:state.life});}
   if(state.reincarnation!==undefined){
     validateReincarnation(state.reincarnation);
+    if(state.reincarnation.version===2&&!isExperienceLife(state.life))throw Object.assign(new Error('轮回传承与出生事实不符。'),{code:'REINCARNATION_INVALID_STATE'});
     if(!isV7Life(state.life)||state.reincarnation.parentRunId===state.runId||!same(state.reincarnation.purchases,state.life.birth.cultivationProfile.inheritedBenefits))throw new Error('轮回传承与出生事实不符。');
   }
   validateReceipt(state.birthReceipt);

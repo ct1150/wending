@@ -1,3 +1,4 @@
+import {echoNotes,validEchoNotes} from './reincarnation.js';
 import {isExperienceLife} from './experience.js';
 import {checkActorScene} from './actor-insight.js';
 import { assertPlainData, canonicalStringify, sha256 } from './identity.js';
@@ -149,6 +150,7 @@ export function buildStoryContext(state,pending,relatedRecords=[],options={}) {
   }
   if(selecting) {
     selectRelevantMemory(result,records,state,entities,options.openTotal,current?.id);
+    addEchoNotes(result,state);
     addRetrievalProjection(result,state.retrieval,true);
     validateStoryContext(result);
     return freeze(result);
@@ -159,9 +161,20 @@ export function buildStoryContext(state,pending,relatedRecords=[],options={}) {
     if(result.memory.summaries.length)result.memory.summaries.pop();else result.memory.recent.pop();updateReferences();
   }
   if(bytes(result)>7000)fail('MEMORY_CONTEXT_TOO_LARGE');
+  addEchoNotes(result,state);
   addRetrievalProjection(result,state.retrieval,false);
   validateStoryContext(result);
   return freeze(result);
+}
+
+// History already selected for this action takes priority over flavor from
+// the previous life. The complete sources stay in the child's immutable row.
+function addEchoNotes(context,state){
+ const notes=echoNotes(state.reincarnation);
+ if(!notes.length)return;
+ context.previousLife=notes;
+ while(notes.length&&(bytes(context)>7000||bytes(JSON.stringify(context))>7000))notes.pop();
+ if(!notes.length)delete context.previousLife;
 }
 
 function addRetrievalProjection(context,memory,serialized) {
@@ -266,7 +279,8 @@ function selectRelevantMemory(result,records,state,entities,openTotal,currentTur
 // builder re-derives pending; this checks consistency, not account authentication.
 export function validateStoryContext(c) {
   inspect(c,7000);
-  exactKeys(c,['schemaVersion','phase','identity','namespace','receipt','life','entities','memory','references','previousScene'],['coverage','relationshipVersion','relationships','director','retrieval']);
+  exactKeys(c,['schemaVersion','phase','identity','namespace','receipt','life','entities','memory','references','previousScene'],['coverage','relationshipVersion','relationships','director','retrieval','previousLife']);
+  if(c.previousLife!==undefined&&(!isExperienceLife(c.life)||!validEchoNotes(c.previousLife)))fail('STORY_CONTEXT_INVALID');
   if(c.retrieval!==undefined)validateRetrievalMemory(c.retrieval);
   if(c.schemaVersion!==1||!['opening','choice'].includes(c.phase))fail('STORY_CONTEXT_INVALID');
   exactKeys(c.identity,['runId','turnId','baseRevision','stateHash','choiceId','rulesVersion','promptVersion','requestId']);

@@ -2,7 +2,7 @@ import { canonicalStringify, sha256, stateHash, assertPlainData } from './cultiv
 import { validateLiveState } from './cultivation/live/validation.js';
 import { prepareOpening, prepareRecordedChoice, commitTurn, settleDeath, resolveImmediateInteraction } from './cultivation/live/engine.js';
 import { buildStoryContext, validateGeneratedScene, buildMemoryDelta, validateStoryContext, sceneTurnRecord } from './cultivation/live/memory.js';
-import { buildRebirthOptions, reincarnationClaimForChild, validateReincarnationClaim } from './cultivation/live/reincarnation.js';
+import { echoNotes, buildRebirthOptions, reincarnationClaimForChild, validateReincarnationClaim } from './cultivation/live/reincarnation.js';
 
 export const CHUNK_TURNS = 128;
 export const CHUNK_BYTES = 256 * 1024;
@@ -25,9 +25,11 @@ export function validateAttempt(attempt) {
  if(attempt.retryOf!==null){keys(attempt.retryOf,['attemptId','sessionRef']);ident(attempt.retryOf.attemptId);ident(attempt.retryOf.sessionRef);check(attempt.retryOf.attemptId!==attempt.id,'ARCHIVE_INVALID_ATTEMPT');}return attempt;
 }
 function pauseValue(value) { check(value===null||typeof value==='string'&&/^[A-Z][A-Z0-9_]{0,79}$/.test(value),'ARCHIVE_INVALID_PAUSE'); }
-export function validateGeneration(generation,pending) {
+export function validateGeneration(generation,pending,state) {
  if(generation===undefined)return;
  keys(generation,['storyActions','context']);check(typeof generation.storyActions==='boolean','ARCHIVE_INVALID_GENERATION');validateStoryContext(generation.context);
+ const previous=generation.context.previousLife;
+ if(state&&previous!==undefined)check(same(previous,echoNotes(state.reincarnation).slice(0,previous.length)),'ARCHIVE_INVALID_GENERATION');
  check(pending&&same(generation.context.identity,pending.identity)&&same(generation.context.receipt,pending.receipt),'ARCHIVE_INVALID_GENERATION');
 }
 function pendingRow(archiveId,pending,attempt=null,pause=null,generation) {validateAttempt(attempt);pauseValue(pause);validateGeneration(generation,pending);check(generation===undefined||attempt!==null,'ARCHIVE_INVALID_GENERATION');return bounded({archiveId,pending,attempt,pause,...(generation===undefined?{}:{generation})},65536);}
@@ -44,7 +46,7 @@ export function verifyChunk(chunk) {
 }
 function keysShallow(v,expected) {check(v&&Object.getPrototypeOf(v)===Object.prototype&&Object.keys(v).sort().join('|')===[...expected].sort().join('|'),'ARCHIVE_INVALID_FIELDS');}
 const ZERO='0'.repeat(64);
-function loaded(run,pending) {validateGeneration(pending?.generation,pending?.pending);return run?{archiveId:run.archiveId,state:clone(run.state),pending:pending?.pending??null,attempt:pending?.attempt??null,pause:pending?.pause??null,...(pending?.generation?{generation:clone(pending.generation)}:{}),...(run.reincarnatedTo?{reincarnatedTo:run.reincarnatedTo}:{})}:null;}
+function loaded(run,pending) {validateGeneration(pending?.generation,pending?.pending,run?.state);return run?{archiveId:run.archiveId,state:clone(run.state),pending:pending?.pending??null,attempt:pending?.attempt??null,pause:pending?.pause??null,...(pending?.generation?{generation:clone(pending.generation)}:{}),...(run.reincarnatedTo?{reincarnatedTo:run.reincarnatedTo}:{})}:null;}
 function verifyReadableRun(run) {
  check(run?.status==='active','ARCHIVE_NOT_READABLE');ident(run.archiveId);ident(run.runId);
  validateLiveState(run.birth);validateLiveState(run.state);
@@ -59,6 +61,25 @@ function writeClaims(stores,get,claims,finish) {
     get(stores.runs,archiveId,existing=>{check(!existing||same(existing,record),'REINCARNATION_ALREADY_CLAIMED');if(!existing)stores.runs.add(record);next();});
   };
   next();
+}
+// A portable child can be the only surviving backup. If this database also
+// knows its original child birth or exact parent death, check the echo and
+// purchases against those durable facts before activating any imported copy.
+function verifyImportedLineage(stores,get,run,finish) {
+ const row=run.birth.reincarnation;
+ const readKnown=(id,done)=>get(stores.runs,'@run:'+id,pointer=>pointer?get(stores.runs,pointer.target,done):done(null));
+ readKnown(run.runId,old=>{
+   if(old&&(old.birth?.reincarnation?.version===2||row?.version===2))
+     check(same(old.birth.reincarnation??null,row??null),'REINCARNATION_INVALID_STATE');
+   if(row?.version!==2){finish();return;}
+   readKnown(row.parentRunId,parent=>{
+     if(parent?.hash===row.parentStateHash){
+       const expected=buildRebirthOptions(parent.state,row.purchases);
+       check(same(row,expected.reincarnation),'REINCARNATION_INVALID_STATE');
+     }
+     finish();
+   });
+ });
 }
 // Never await inside a transaction. All work here is synchronous or chained from
 // native request callbacks; only transaction.oncomplete resolves the operation.
@@ -115,7 +136,7 @@ class Archive {
   if(physical!==null)ident(physical);
   const c=await this._capture(runId,physical);check(c,'ARCHIVE_NOT_READABLE');verifyReadableRun(c.run);
   check((!runId||c.run.runId===runId)&&(!physical||c.run.archiveId===physical),'ARCHIVE_INVALID_SNAPSHOT');
-  if(c.pending){check(c.pending.archiveId===c.run.archiveId,'ARCHIVE_INVALID_SNAPSHOT');verifyPending(c.run.state,c.pending.pending);validateAttempt(c.pending.attempt);validateGeneration(c.pending.generation,c.pending.pending);}
+  if(c.pending){check(c.pending.archiveId===c.run.archiveId,'ARCHIVE_INVALID_SNAPSHOT');verifyPending(c.run.state,c.pending.pending);validateAttempt(c.pending.attempt);validateGeneration(c.pending.generation,c.pending.pending,c.run.state);}
   if(c.tail){verifyChunk(c.tail);check(c.tail.index===c.run.tailIndex&&c.tail.hash===c.run.headHash,'ARCHIVE_BAD_HASH');}
   return c;
  }
@@ -176,6 +197,7 @@ class Archive {
  }
  async setAttempt({runId,requestId,expectedAttemptId,attempt,pause=null,generation}) {
   ident(runId);ident(requestId);validateAttempt(attempt);pauseValue(pause);const c=await this._capture(runId);check(c&&(!this.bound||this.bound===c.run.archiveId)&&c.pending?.pending.identity.requestId===requestId&&(c.pending.attempt?.id??null)===expectedAttemptId);
+  validateGeneration(generation,c.pending.pending,c.run.state);
   const old=c.pending.attempt,freezing=old&&generation!==undefined&&c.pending.generation===undefined&&same(attempt,old);if(attempt&&!freezing){check(attempt.id!==old?.id);check(old?same(attempt.retryOf,{attemptId:old.id,sessionRef:old.sessionRef}):attempt.retryOf===null,'ARCHIVE_INVALID_ATTEMPT');}else if(!attempt)check(!old);
   if(c.pending.generation!==undefined&&generation!==undefined)check(same(c.pending.generation,generation),'ARCHIVE_GENERATION_CONFLICT');
   const p=pendingRow(c.run.archiveId,c.pending.pending,clone(attempt),pause,clone(generation??c.pending.generation));await transaction(this.db,'readwrite',(s,get)=>this._cas(s,get,c,()=>s.pending.put(p)));return loaded(c.run,p);
@@ -361,7 +383,7 @@ class Archive {
  }
  async _stageChunk(archiveId,chunk) {verifyChunk(chunk);await transaction(this.db,'readwrite',(s,get)=>get(s.runs,archiveId,run=>{check(run.status==='staging'&&chunk.index===run.tailIndex+1&&chunk.previousHash===run.headHash);s.history.add({archiveId,index:chunk.index,chunk});s.runs.put({...run,tailIndex:chunk.index,headHash:chunk.hash});}));}
  async _validateStage(archiveId,state,pending,attempt,generation,reincarnationClaim=null) {
-  validateGeneration(generation,pending);
+  validateGeneration(generation,pending,state);
   // A claimed logical life stays spent when an earlier physical backup is
   // restored; only a new settlement requires the exact final death snapshot.
   if(reincarnationClaim)validateReincarnationClaim(reincarnationClaim,state,{matchDeathSnapshot:false});
@@ -378,7 +400,7 @@ class Archive {
  async activate(archiveId,expectedArchiveId,expectedSnapshot=null) {
   await transaction(this.db,'readwrite',(s,get)=>get(s.runs,ACTIVE,active=>{
    check((active?.target??null)===expectedArchiveId);
-   const switchPointer=()=>get(s.runs,archiveId,run=>{check(run?.status==='validated','ARCHIVE_NOT_VALIDATED');writeClaims(s,get,[reincarnationClaimForChild(run.state),run.reincarnationClaim],()=>{s.runs.put({...run,status:'active'});s.runs.put({archiveId:ACTIVE,target:archiveId});s.runs.put({archiveId:'@run:'+run.runId,target:archiveId});});});
+   const switchPointer=()=>get(s.runs,archiveId,run=>{check(run?.status==='validated','ARCHIVE_NOT_VALIDATED');verifyImportedLineage(s,get,run,()=>writeClaims(s,get,[reincarnationClaimForChild(run.state),run.reincarnationClaim],()=>{s.runs.put({...run,status:'active'});s.runs.put({archiveId:ACTIVE,target:archiveId});s.runs.put({archiveId:'@run:'+run.runId,target:archiveId});}));});
    if(expectedSnapshot)get(s.runs,expectedArchiveId,run=>{check(run?.hash===expectedSnapshot.run.hash&&run?.headHash===expectedSnapshot.run.headHash);get(s.pending,expectedArchiveId,p=>{check(same(p??null,expectedSnapshot.pending));switchPointer();});});else switchPointer();
   }));this.bound=archiveId;return this.load();
  }

@@ -140,6 +140,17 @@ function buildProviderRequest(profile,context,knowledgeBundle) {
     }else input.response_format={type:'json_schema',json_schema:{name:'cultivation_scene',strict:true,schema:wire.schema}};
     input.stream=true;input.stream_options={include_usage:true};
   }
+  if(context.previousLife){
+    const prompt=JSON.parse(input.messages[1].content);
+    delete prompt.previousLife;
+    prompt['前世回响（仅作线索，不带来物品或今世义务）']=[...context.previousLife];
+    const key='前世回响（仅作线索，不带来物品或今世义务）';
+    for(;;){
+      input.messages[1].content=JSON.stringify(prompt);
+      if(size(input)<=Math.min(profile.maxInput,STORY_LIMITS.maxInputBytes)||!prompt[key])break;
+      prompt[key].pop();if(!prompt[key].length)delete prompt[key];
+    }
+  }
   let receipt=null;
   if(knowledgeBundle!==undefined&&knowledgeBundle!==null){
     ({input,receipt}=packStoryReferences(input,context,knowledgeBundle,{maxBytes:Math.min(profile.maxInput,STORY_LIMITS.maxInputBytes)}));
