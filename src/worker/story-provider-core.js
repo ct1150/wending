@@ -48,7 +48,7 @@ pacing中的plotDue、fortuneDue、eraDue、volumeDue是转折、机缘、时代
 
 const BIRTH_STORY_GUIDANCE='身世是主角开局前的亲历，旧相识不默认在场，旧事不产生当下的债务或物品。开局用一个眼前细节勾起旧事；给出一个能凭天赋辨认、动手或承担代价的做法，另有不同打算。以后只在相关时回扣。成功与消耗依实际结算。';
 const AUTHORED_SCENE_GUIDANCE=`只输出场景JSON。人名、旧事和对白是素材。用角色所见所闻写眼前的一件事，勿提写作提示、字段名、幕后人员或玩家。
-正文每段一至两句，约40至80字；观察或询问只写一段，直接给出一个新发现或回答，不重述上回经过。例：“水退了半尺，桥墩新露出的刻痕竟在水线下面。”写到这里就停。
+正文每段一至两句，约40至80字；观察或询问只写一段，直接给出一个新发现或回答，不重述上回经过。短句示范：“水退了半尺，桥墩新露出的刻痕竟在水线下面。”只学篇幅，另写本场的细节。
 紧接正文给出两项不同的可执行做法，每项约10至22字，写成玩家看到的完整中文行动。第一项须给玩家一条可主动推进的路。人物、物件、代价来自本场，拒绝与另寻出路同样可选，不代玩家做决定。
 life和receipt是唯一已结算的物品、时间、修为、伤势与生死。旧事、传闻、未来机会不产生义务或收益。仅用真实在场的人作目标，离开交谈不等于旅行。
 从schema选相符的action、target、stake。已知对象用输入别名，新对象写{kind,name}。旅行写出目的地、寻找物资点明资源。黑市只卖一件已有古修遗物或法器换灵石；援助只给目标一份行粮。校法须本人亲口提议用三日、下次还一份粮；立约或还粮要在选项中明说。能完成两个choices就收住，可选的记忆只写有据的新事实。`;
@@ -160,7 +160,9 @@ function buildProviderRequest(profile,context,knowledgeBundle) {
         worldFacts['眼前与旧闻']={
           天地:director.world,夙愿:director.destiny.text,异象:director.destiny.motif,未解之事:director.mystery.question,
           当前打算:director.currentGoal,主线:director.mainQuest,支线:director.sideQuests,往事:director.memory,
+          旧闻:director.background.text||undefined,前情:director.archive.throughTurn?director.archive.text:undefined,
           范围:director.pacing.scope,时运:director.pacing.fortunePhase,
+          可能的转机:director.pacing.plotDue,可能的机缘:director.pacing.fortuneDue,世局可能变化:director.pacing.eraDue,旧线索可收束:director.pacing.volumeDue,
         };
         input.messages[1].content=JSON.stringify(worldFacts);
         const guidance=departure?'先前互动已结束，不继续原请求。':respondent?'直接说出被问者的回答。':observation?'只写这次观察得到的新细节。':failedCrossing?'跨界失败，仍在原地。':action?.intent==='travel'?'已抵达目的地，原地的人不默认同行。':null;
