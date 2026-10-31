@@ -315,12 +315,22 @@ test('native workerd revised recipe preserves the failed opening and resumes onl
   assert.equal(a.recipeVersion,2);assert.equal(b.recipeVersion,2);assert.equal(f.egress,0);
 });
 
-test('v3 uses one new opening and two counterfactual branches while preserving all six earlier commitments',async()=>{
+test('v3 uses one new opening and two counterfactual branches while preserving all six earlier commitments',async t=>{
+  for(const winningAttempt of ['v3-opening','v3-duplicate'])await t.test(`${winningAttempt} reserves first`,async()=>{
   const original=failedRevisedRecord(),f=await fixture(undefined,original);
   for(const id of scopeCorrectedCaseIds.slice(1))assert.equal((await call(f,id,'early-'+id)).errorCode,'ACCEPTANCE_PREREQUISITE_MISSING');
   assert.equal(f.inputs.length,0);
-  const openings=await Promise.all([call(f,scopeCorrectedCaseIds[0],'v3-opening'),call(f,scopeCorrectedCaseIds[0],'v3-duplicate')]);
+  // Authentication and body reads precede the durable queue. Either request
+  // can reach it first; gate one body to exercise both orders without sleeps.
+  const waitingAttempt=winningAttempt==='v3-opening'?'v3-duplicate':'v3-opening';
+  const waitingRequest=req(scopeCorrectedCaseIds[0],waitingAttempt),body=await waitingRequest.text();
+  let releaseBody;
+  const stream=new ReadableStream({start(controller){releaseBody=()=>{controller.enqueue(new TextEncoder().encode(body));controller.close();};}});
+  const waiting=f.object.fetch(new Request(waitingRequest.url,{method:'POST',headers:waitingRequest.headers,body:stream,duplex:'half'})).then(response=>response.json());
+  const winner=call(f,scopeCorrectedCaseIds[0],winningAttempt).finally(releaseBody);
+  const openings=await Promise.all([waiting,winner]);
   assert.equal(openings[0].status,'ready');assert.deepEqual(openings[1],openings[0]);assert.equal(f.inputs.length,1);
+  assert.equal(openings[0].attemptId,winningAttempt);
   let record=await f.storage.get('experiment-v1');const opening=structuredClone(record.acceptance.cases[scopeCorrectedCaseIds[0]]);
   assert.equal(opening.recipeVersion,3);assert.equal(opening.state.revision,1);
   assert.deepEqual(opening.receipt,original.acceptance.cases['task7-opening-v2'].receipt);
@@ -346,8 +356,9 @@ test('v3 uses one new opening and two counterfactual branches while preserving a
   assert.deepEqual(f.inputs[1].context.memory,f.inputs[2].context.memory);
   assert.equal(f.inputs[1].context.memory.promises[0].text,'替守山人留意山路。');
   for(const id of ['task7-opening','task7-opening-v2',...scopeCorrectedCaseIds])assert.equal((await call(f,id,'do-not-reinfer')).attemptId,record.acceptance.cases[id].attemptId);
-  assert.equal((await call(f,scopeCorrectedCaseIds[1],'v3-opening')).errorCode,'ACCEPTANCE_ATTEMPT_CONFLICT');
+  assert.equal((await call(f,scopeCorrectedCaseIds[1],opening.attemptId)).errorCode,'ACCEPTANCE_ATTEMPT_CONFLICT');
   assert.equal(f.inputs.length,3);
+  });
 });
 
 test('v3 admission requires the matching permanent v2 scope failure, original failure and immutable association',async()=>{

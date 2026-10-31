@@ -14,7 +14,7 @@ test('packaged backend executes in local workerd: blocked outbound, static fallb
   await cp(path.join(repository,'config'),path.join(root,'config'),{recursive:true});
   for(const dir of ['release','assets'])await mkdir(path.join(root,dir),{recursive:true});
   const html='<!doctype html>\r\n<title>workerd 本地回退</title>';
-  await writeFile(path.join(root,'release/baishi-wending-offline.html'),html);
+  await writeFile(path.join(root,'release/baishi-wending-web.html'),html);
   await writeFile(path.join(root,'assets/seal.svg'),'<svg/>');await writeFile(path.join(root,'package.json'),'{"version":"4.0.0"}');
   await buildGateway({root,sourceCommit:'d'.repeat(40)});
   const output=path.join(root,'release/backend'),manifest=JSON.parse(await readFile(path.join(output,'deployment.json'),'utf8'));
@@ -23,7 +23,7 @@ test('packaged backend executes in local workerd: blocked outbound, static fallb
   let mf=new Miniflare(options);t.after(()=>mf.dispose());
   const home=await mf.dispatchFetch('https://game.test/');assert.equal(home.status,200);assert.equal(await home.text(),html);
   assert.equal(outgoing.length,1);assert.match(outgoing[0].url,/^https:\/\/raw\.githubusercontent\.com\/ct1150\/wending\/release-channel\//);
-  const download=await mf.dispatchFetch('https://game.test/baishi-wending-offline.html');assert.equal(await download.text(),html);
+  const download=await mf.dispatchFetch('https://game.test/baishi-wending-offline.html');assert.equal(download.status,410);assert.equal(download.headers.get('Content-Disposition'),null);assert.doesNotMatch(await download.text(),/<!doctype|<script/i);
   const health=await (await mf.dispatchFetch('https://game.test/healthz')).json();assert.equal(health.htmlSha256,manifest.frontend.htmlSha256);assert.equal(health.releaseSource,'embedded');
   const capabilities=await (await mf.dispatchFetch('https://game.test/api/story/capabilities')).json();assert.equal(capabilities.available,false);assert.equal(capabilities.errorCode,'INFERENCE_DISABLED');
   const session=await (await mf.dispatchFetch('https://game.test/api/story/session',{method:'POST',headers:{origin:'https://game.test','content-type':'application/json'},body:'{"protocolVersion":1}'})).json();assert.equal(session.errorCode,'INFERENCE_DISABLED');

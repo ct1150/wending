@@ -13,7 +13,7 @@ export async function buildGateway(options={}){
   const {root=fileURLToPath(new URL('../',import.meta.url)),sourceCommit=process.env.SOURCE_COMMIT,acceptance,production}=options;
   if(acceptance!==undefined&&production!==undefined)throw new Error('Tester and production modes are mutually exclusive');
   if(typeof sourceCommit!=='string'||!/^[a-f0-9]{40}$/.test(sourceCommit))throw new Error('A full source commit is required');
-  const [html,icon,implementation,pkg]=await Promise.all([readFile(path.join(root,'release/baishi-wending-offline.html'),'utf8'),readFile(path.join(root,'assets/seal.svg'),'utf8'),readFile(path.join(root,'src/worker/release-gateway.js'),'utf8'),readFile(path.join(root,'package.json'),'utf8')]);
+  const [html,icon,implementation,pkg]=await Promise.all([readFile(path.join(root,'release/baishi-wending-web.html'),'utf8'),readFile(path.join(root,'assets/seal.svg'),'utf8'),readFile(path.join(root,'src/worker/release-gateway.js'),'utf8'),readFile(path.join(root,'package.json'),'utf8')]);
   const fallback={html,version:JSON.parse(pkg).version,sourceCommit,htmlSha256:createHash('sha256').update(html).digest('hex')};
   if(!implementation.includes('export function createReleaseGateway('))throw new Error('Gateway implementation export is missing');
   const code=implementation.replace('export function createReleaseGateway(','function createReleaseGateway(')+`\nconst gateway = createReleaseGateway(${JSON.stringify({fallback,icon})});\nexport default gateway;\n`;

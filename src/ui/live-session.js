@@ -157,7 +157,7 @@ export function createLiveSession({archive,client,engine=defaultEngine,onChange=
   function start(options={}) {
     return run(async()=>{
       await reload();
-      if(loaded&&loaded.state.phase!=='dead')return;
+      if(loaded)return;
       const expectedArchiveId=loaded?.archiveId??null;
       const state=engine.createLiveGame(options);
       const pending=engine.prepareOpening(state,{requestId:id()});
@@ -206,13 +206,6 @@ export function createLiveSession({archive,client,engine=defaultEngine,onChange=
   function load() {
     if(busy)return Promise.resolve({...view(),errorCode:'SESSION_BUSY'});
     return run(reload);
-  }
-  function selectJourney(archiveId,expectedArchiveId) {
-    if(busy)return Promise.resolve({...view(),errorCode:'SESSION_BUSY'});
-    return run(async()=>{
-      await archive.selectJourney(archiveId,expectedArchiveId);
-      await reload();
-    });
   }
   function choose(command) {
     const expectedArchiveId=loaded?.archiveId;
@@ -270,5 +263,5 @@ export function createLiveSession({archive,client,engine=defaultEngine,onChange=
       await generate(row);
     });
   }
-  return {start,startNew,reincarnate,load,selectJourney,choose,resume,retry,view};
+  return {start,startNew,reincarnate,load,choose,resume,retry,view};
 }

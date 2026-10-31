@@ -10,12 +10,12 @@ export async function buildWorker({ root = projectRoot, sourceCommit = process.e
     throw new Error('SOURCE_COMMIT must be a full 40-character Git commit SHA');
   }
   const [htmlBytes, iconBytes] = await Promise.all([
-    readFile(path.join(root, 'release', 'baishi-wending-offline.html')),
+    readFile(path.join(root, 'release', 'baishi-wending-web.html')),
     readFile(path.join(root, 'assets', 'seal.svg')),
   ]);
   const htmlSha256 = createHash('sha256').update(htmlBytes).digest('hex');
   const commit = sourceCommit.toLowerCase();
-  const code = `// Temporary Worker distribution of the verified offline release.
+  const code = `// Temporary Worker distribution of the verified web release.
 const html = ${JSON.stringify(htmlBytes.toString('utf8'))};
 const icon = ${JSON.stringify(iconBytes.toString('utf8'))};
 const health = ${JSON.stringify(JSON.stringify({ status: 'ok', sourceCommit: commit, htmlSha256 }))};
@@ -30,7 +30,7 @@ export default {
     if (request.method !== 'GET' && !head) return respond('Method not allowed', 405, 'text/plain; charset=utf-8', { Allow: 'GET, HEAD' });
     const pathname = new URL(request.url).pathname;
     if (pathname === '/' || pathname === '/index.html') return respond(html, 200, 'text/html; charset=utf-8');
-    if (pathname === '/baishi-wending-offline.html') return respond(html, 200, 'text/html; charset=utf-8', { 'Content-Disposition': 'attachment; filename="baishi-wending-offline.html"' });
+    if (pathname === '/baishi-wending-offline.html') return respond('离线版已停止提供，请返回首页在线游玩。', 410, 'text/plain; charset=utf-8');
     if (pathname === '/favicon.svg' || pathname === '/favicon.ico') return respond(icon, 200, 'image/svg+xml');
     if (pathname === '/healthz') return respond(health, 200, 'application/json; charset=utf-8');
     return respond('Not found', 404, 'text/plain; charset=utf-8');
