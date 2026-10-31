@@ -182,7 +182,6 @@ function addRetrievalProjection(context,memory,serialized) {
 function selectRelevantMemory(result,records,state,entities,openTotal,currentTurnId) {
   const currentIds=new Set(state.relatedEntities.map(entity=>entity.id));
   const creditor=result.life.cultivationProfile?.experience?.commitment;
-  if(creditor?.status==='owed'&&currentIds.size<24&&entities.has(creditor.entityId))currentIds.add(creditor.entityId);
   const openCandidates=records.filter(row=>['promise','clue'].includes(row.kind)&&row.status==='open');
   if(openCandidates.length>openTotal)fail('STORY_CONTEXT_INVALID');
   result.entities=[...entities.values()].filter(entity=>currentIds.has(entity.id));
@@ -221,7 +220,23 @@ function selectRelevantMemory(result,records,state,entities,openTotal,currentTur
   const ordered=[...records].sort((a,b)=>priority(a)-priority(b)||relevance(a)-relevance(b)||b.turnId-a.turnId||(a.id<b.id?-1:a.id>b.id?1:0));
   const groups={receipt:'facts',fact:'facts',relationship:'facts',death:'facts',promise:'promises',clue:'clues',turn:'recent',summary:'summaries'};
   const limits={facts:16,promises:12,clues:12,recent:4,summaries:2};
+  // A creditor remains in the paid, hashed life even when their off-scene
+  // archive identity cannot fit. First honor the preflighted latest turn;
+  // then try to include the person, before spending space on older details.
+  let returning=creditor?.status==='owed'?entities.get(creditor.entityId):null;
+  const offerReturning=()=>{
+    if(!returning)return;
+    const entity=returning;returning=null;
+    if(result.entities.length>=24||result.entities.some(e=>e.id===entity.id))return;
+    const previous=result.entities,originalDirector=result.director;
+    result.entities=[...previous,entity];refresh();
+    if(!fits()){
+      result.director=copy(originalDirector);makeRoom();
+      if(!fits()){result.entities=previous;result.director=originalDirector;refresh();}
+    }
+  };
   for(const row of ordered) {
+    if(row.id!==currentTurnId)offerReturning();
     const group=groups[row.kind];
     if(!group||result.memory[group].length>=limits[group])continue;
     if(row.kind==='summary'&&row.references.some(id=>!result.references.includes(id)))continue;
@@ -244,6 +259,7 @@ function selectRelevantMemory(result,records,state,entities,openTotal,currentTur
       refresh();
     }
   }
+  offerReturning();
 }
 
 // Public context is untrusted portable JSON at the HTTP boundary. The local

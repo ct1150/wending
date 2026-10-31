@@ -55,3 +55,24 @@ test('only an explicit named offer incurs a real debt; generic help, refusal, pa
  const help=pending(s,'帮助陈砚');assert.equal(help.nextLife.cultivationProfile.experience.commitment.status,'owed');
  const paid=pending(s,'向陈砚归还行粮');assert.deepEqual(paid.receipt.itemChanges,{supplies:-1});assert.equal(paid.receipt.elapsedDays,1);assert.equal(paid.nextLife.cultivationProfile.experience.commitment.status,'fulfilled');s=step(s,paid);assert.throws(()=>pending(s,'向陈砚归还行粮'));
 });
+for(const [risk,actorChars,count,placeChars] of [['block a preflighted turn',59,6,35],['displace the latest turn',48,4,53]])test('an off-scene creditor may not '+risk,()=>{
+  let s=life(badSeed),p=prepareOpening(s,{requestId:'birth'});
+  const renamed={...subject,name:'溪'.repeat(actorChars)+'客'};
+  function introduce(offer){
+    const raw=scene(s,p,{offer});raw.entities[0]=renamed;raw.blocks[0].text=raw.blocks[0].text.replace(subject.name,renamed.name);s=commitTurn(s,p,raw);
+  }
+  introduce(false);p=pending(s,'验看本命功法');introduce(true);p=prepareChoice(s,{requestId:'pledge',choiceId:s.currentScene.choices[1].id});
+  const context=ctx(s,p),raw=scene(s,p,{omit:true});
+  raw.entities=Array.from({length:count},(_,i)=>({id:context.namespace+':t3:e:place_'+(i+1),kind:'place',name:String.fromCodePoint(0x4e00+i)+'支流'+'洞'.repeat(placeChars)}));
+  raw.blocks[0].text='你到了河边，望见石刻记下的几处水道：'+raw.entities.map(e=>e.name).join('、')+'。';
+  raw.memoryDeltas=raw.entities.map(e=>({kind:'fact',entityId:e.id,text:e.name}));
+  validateGeneratedScene(raw,context,{continuity:true});
+  s=commitTurn(s,p,raw);const next=prepareChoice(s,{choiceId:s.currentScene.choices[0].id,requestId:'n'.repeat(36)});
+  const opt={selection:'relevance-v1',openTotal:0,continuity:true},base=buildStoryContext(s,next,[],opt);
+  const creditor={id:'entity:'+renamed.id,runId:s.runId,turnId:2,kind:'entity',source:'narrative',entity:renamed,status:'alive'};
+  const recovered=buildStoryContext(s,next,[creditor],opt);
+  assert.ok(base.memory.recent.some(row=>row.turnId===s.turnId));assert.deepEqual(recovered.memory.recent,base.memory.recent);
+  assert.ok(!recovered.entities.some(e=>e.id===renamed.id));assert.deepEqual(recovered.entities,base.entities);
+  assert.deepEqual(recovered.receipt,base.receipt);assert.deepEqual(recovered.life.cultivationProfile.experience.commitment,base.life.cultivationProfile.experience.commitment);
+  assert.ok(Buffer.byteLength(JSON.stringify(JSON.stringify(recovered)))<=7000);
+});
