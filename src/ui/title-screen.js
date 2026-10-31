@@ -23,8 +23,8 @@ export function renderTitleScreen({summary=null,loading=false,error='',version='
       <h1 class="title-name" aria-label="百世问鼎"><span class="title-name-prelude" aria-hidden="true">百世</span><span class="title-name-main" aria-hidden="true">问鼎</span><span class="title-seal" aria-hidden="true">凡人<br>问道</span></h1>
       <p class="title-prologue">纵有千世风霜，仍赴一场长生。</p>
       <nav class="title-menu" aria-label="开始游戏">
-        <button class="title-option${summary?'':' is-primary'}" data-title-new ${loading?'disabled':''}><span class="title-option-index" aria-hidden="true">壹</span><span class="title-option-copy"><span class="title-option-name">踏入仙途</span><span class="title-option-note">一纸姓名，开启你的修仙人生</span></span>${arrow}</button>
-        <button class="title-option${summary?' is-primary':''}" data-title-continue ${!summary||loading?'disabled':''}><span class="title-option-index" aria-hidden="true">贰</span><span class="title-option-copy"><span class="title-option-name">续写此生</span><span class="title-option-note">${detail}</span></span>${arrow}</button>
+        <button class="title-option is-primary" data-title-new ${loading?'disabled':''}><span class="title-option-index" aria-hidden="true">壹</span><span class="title-option-copy"><span class="title-option-name">踏入仙途</span><span class="title-option-note">${summary?'继续当前人物的修仙人生':'一纸姓名，开启你的修仙人生'}</span></span>${arrow}</button>
+        <button class="title-option" data-title-continue ${!summary||loading?'disabled':''}><span class="title-option-index" aria-hidden="true">贰</span><span class="title-option-copy"><span class="title-option-name">续写此生</span><span class="title-option-note">${detail}</span></span>${arrow}</button>
         <button class="title-option" data-view="settings"><span class="title-option-index" aria-hidden="true">叁</span><span class="title-option-copy"><span class="title-option-name">游戏设置</span><span class="title-option-note">画面与阅读偏好</span></span>${arrow}</button>
       </nav>
       ${error?`<p class="title-error" role="status">${esc(error)}</p>`:''}

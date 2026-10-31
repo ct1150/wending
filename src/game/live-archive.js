@@ -45,6 +45,11 @@ export function verifyChunk(chunk) {
 function keysShallow(v,expected) {check(v&&Object.getPrototypeOf(v)===Object.prototype&&Object.keys(v).sort().join('|')===[...expected].sort().join('|'),'ARCHIVE_INVALID_FIELDS');}
 const ZERO='0'.repeat(64);
 function loaded(run,pending) {validateGeneration(pending?.generation,pending?.pending);return run?{archiveId:run.archiveId,state:clone(run.state),pending:pending?.pending??null,attempt:pending?.attempt??null,pause:pending?.pause??null,...(pending?.generation?{generation:clone(pending.generation)}:{}),...(run.reincarnatedTo?{reincarnatedTo:run.reincarnatedTo}:{})}:null;}
+function verifyReadableRun(run) {
+ check(run?.status==='active','ARCHIVE_NOT_READABLE');ident(run.archiveId);ident(run.runId);
+ validateLiveState(run.birth);validateLiveState(run.state);
+ check(run.birth.runId===run.runId&&run.state.runId===run.runId&&stateHash(run.state)===run.hash,'ARCHIVE_INVALID_SNAPSHOT');
+}
 const claimKey=runId=>'@rebirth:'+sha256(runId);
 function writeClaims(stores,get,claims,finish) {
   const remaining=claims.filter(Boolean);
@@ -105,6 +110,41 @@ class Archive {
   });
  }
  async load(runId) {const c=await this._capture(runId);if(c)this.bound=c.run.archiveId;return c?loaded(c.run,c.pending):null;}
+ // These views never bind the session or change either active/run pointer.
+ async _captureReadable(runId,physical=null) {
+  if(physical!==null)ident(physical);
+  const c=await this._capture(runId,physical);check(c,'ARCHIVE_NOT_READABLE');verifyReadableRun(c.run);
+  check((!runId||c.run.runId===runId)&&(!physical||c.run.archiveId===physical),'ARCHIVE_INVALID_SNAPSHOT');
+  if(c.pending){check(c.pending.archiveId===c.run.archiveId,'ARCHIVE_INVALID_SNAPSHOT');verifyPending(c.run.state,c.pending.pending);validateAttempt(c.pending.attempt);validateGeneration(c.pending.generation,c.pending.pending);}
+  if(c.tail){verifyChunk(c.tail);check(c.tail.index===c.run.tailIndex&&c.tail.hash===c.run.headHash,'ARCHIVE_BAD_HASH');}
+  return c;
+ }
+ async listRetainedArchives(cursor=null,limit=12) {
+  check(Number.isInteger(limit)&&limit>=1&&limit<=32,'ARCHIVE_INVALID_QUERY');
+  check(cursor===null||typeof cursor==='string'&&cursor.length>0&&cursor.length<=160,'ARCHIVE_INVALID_CURSOR');
+  return transaction(this.db,'readonly',(s,get,done,guard)=>get(s.runs,ACTIVE,active=>{
+   const entries=[];let visited=0;
+   const request=s.runs.openCursor(cursor?IDBKeyRange.lowerBound(cursor,true):null);
+   request.onsuccess=guard(()=>{
+    const row=request.result;
+    if(!row){done({entries,cursor:null});return;}
+    const run=row.value;visited++;
+    if(run.status==='active'&&run.archiveId!==active?.target){
+     verifyReadableRun(run);
+     entries.push({archiveId:run.archiveId,runId:run.runId,name:run.state.life.name,phase:run.state.phase,turnId:run.state.turnId,revision:run.state.revision});
+    }
+    // Bound both returned snapshots and scanned metadata/staging records.
+    if(entries.length===limit||visited>=128){done({entries,cursor:row.key});return;}
+    row.continue();
+   });
+  }));
+ }
+ async readRetainedArchive(archiveId) {ident(archiveId);const c=await this._captureReadable(null,archiveId);return loaded(c.run,c.pending);}
+ async readRetainedHistory(archiveId,cursor=null,limit=32) {
+  ident(archiveId);const c=await this._captureReadable(null,archiveId);
+  return this.readHistory(c.run.runId,cursor,limit,archiveId);
+ }
+
  async create({state,pending,expectedArchiveId=null}) {
   validateLiveState(state);check(!state.reincarnation&&!state.life.birth.cultivationProfile?.inheritedBenefits?.length,'REINCARNATION_REQUIRES_SETTLEMENT');check(state.revision===0&&state.archiveCursor===0,'ARCHIVE_INVALID_BIRTH');verifyPending(state,pending);
   const archiveId=crypto.randomUUID(),run={archiveId,runId:state.runId,state:clone(state),birth:clone(state),hash:stateHash(state),tailIndex:-1,headHash:ZERO,status:'active'};
@@ -301,8 +341,8 @@ class Archive {
   const run={...c.run,state:clone(nextState),hash:entry.stateHash,tailIndex:chunk.index,headHash:chunk.hash};
   await transaction(this.db,'readwrite',(s,get)=>this._cas(s,get,c,()=>{s.history.put({archiveId:run.archiveId,index:chunk.index,chunk});this._writeMemory(s.memory,run.archiveId,derived.records);s.runs.put(run);s.pending.delete(run.archiveId);}));return loaded(run,null);
  }
- async readHistory(runId,cursor=null,limit=32) {
-  check(Number.isInteger(limit)&&limit>=1&&limit<=128,'ARCHIVE_INVALID_QUERY');const c=await this._capture(runId);if(!c)return {entries:[],cursor:null};
+ async readHistory(runId,cursor=null,limit=32,physical=null) {
+  check(Number.isInteger(limit)&&limit>=1&&limit<=128,'ARCHIVE_INVALID_QUERY');const c=await this._capture(runId,physical);if(!c)return {entries:[],cursor:null};
   let index=0,offset=0;if(cursor){keys(cursor,['archiveId','index','offset']);check(cursor.archiveId===c.run.archiveId&&Number.isSafeInteger(cursor.index)&&cursor.index>=0&&Number.isSafeInteger(cursor.offset)&&cursor.offset>=0,'ARCHIVE_INVALID_CURSOR');index=cursor.index;offset=cursor.offset;}
   return transaction(this.db,'readonly',(s,get,done)=>{
    const entries=[];let bytes=0;
