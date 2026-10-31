@@ -186,7 +186,8 @@ test('creation, reading, drawers and custom actions stay legible at phone and de
     await assertFits(page, `${width}px creation`);
     await assertReadable(page, '.live-birth-greeting', `${width}px creation introduction`);
     await assertReadable(page, '#live-name', `${width}px name input`);
-    await assertReadable(page, '#live-origin', `${width}px origin selector`);
+    await assertReadable(page, '[data-live-reroll]', `${width}px reroll control`);
+    await assertReadable(page, '[data-live-lock]', `${width}px talent lock`);
   }
   await enterStory(page);
   for (const width of [320, 390, 1440]) {

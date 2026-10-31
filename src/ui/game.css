@@ -195,6 +195,19 @@ body { background: #101d24; }
 .menu-page h2, .birth-heading h2 { color: var(--text); letter-spacing: .12em; }
 .menu-page .birth-kicker, .birth-heading .birth-kicker { color: var(--gold); letter-spacing: .19em; }
 .live-birth-greeting { margin: 12px 0 28px; font: 25px/1.85 var(--serif); letter-spacing: .09em; }
+.live-birth-roll { padding-block: 12px; border-block: 1px solid var(--line2); }
+.live-birth-roll .birth-fate-heading { flex-wrap: wrap; }
+.live-roll-facts { display: grid; grid-template-columns: 1.4fr 1fr 1fr; gap: 8px; margin: 0; }
+.live-roll-facts dt, .live-roll-facts small { color: var(--muted); font: 12px/1.6 var(--sans); }
+.live-roll-facts dd { margin: 2px 0 0; font: 18px/1.5 var(--serif); }
+.live-roll-root { margin: 12px 0; padding-inline-start: 12px; border-inline-start: 2px solid var(--gold); }
+.live-roll-root strong { display: block; color: var(--gold); font: 17px/1.7 var(--serif); }
+.live-roll-root span { color: var(--text); font: 14px/1.75 var(--serif); }
+.live-birth-roll .birth-lock-help { margin-bottom: 6px; }
+.live-roll-talents { display: flex; flex-wrap: wrap; gap: 6px 8px; }
+.live-roll-talents .birth-lock { color: var(--text); font: 15px/1.5 var(--serif); }
+.live-roll-talents small { margin-inline-start: 8px; font: 12px/1.5 var(--sans); color: var(--muted); }
+.live-roll-talents [aria-pressed='true'] small { color: var(--gold); }
 .birth #live-name, .birth #live-origin, .birth-name-field input,
 .reading-controls select, .live-birth select {
   border: 1px solid var(--line2); background: var(--control-surface); color: var(--text);
@@ -288,7 +301,7 @@ dialog::backdrop { background: #030b14b8; backdrop-filter: blur(5px); }
   .menu-page-header p { font-size: 14px; letter-spacing: .1em; }
   .menu-page-header .small-button { font-size: 12px; }
   .menu-page h2, .birth-heading h2 { font-size: 25px; }
-  .live-birth-greeting { font-size: 22px; letter-spacing: .04em; }
+  .live-birth-greeting { margin-bottom: 16px; font-size: 19px; line-height: 1.7; letter-spacing: .04em; }
   .reading-controls { gap: 12px; }
   .reading-controls select { padding-inline: 8px; }
   dialog.paper-drawer { width: calc(100vw - 16px); max-width: calc(100vw - 16px); height: calc(100dvh - 16px); max-height: calc(100dvh - 16px); margin: 8px; }

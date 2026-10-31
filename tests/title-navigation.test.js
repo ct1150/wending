@@ -62,3 +62,12 @@ test('a reincarnation name draft retains its parent and selected rewards across 
   assert.equal(reload.draft.expectedArchiveId,'dead-archive');
   assert.equal(module.loadNavigation(storage,'navigate').draft,null);
 });
+
+test('a reload preserves the displayed hand separately from the talent held for the next roll', () => {
+  const storage = memory();
+  const draft = {name:'林照', seed:'4217', rolledTalentId:'iron-bones', lockedTalentId:'sword-bone', expectedArchiveId:null};
+  module.saveNavigation(storage, {screen:'new', draft});
+  assert.deepEqual(module.loadNavigation(storage, 'reload').draft, draft);
+  module.saveNavigation(storage, {screen:'new', draft:{...draft, originId:'bad', seed:{}, lockedTalentId:'toString', rolledTalentId:'unknown'}});
+  assert.deepEqual(module.loadNavigation(storage, 'reload').draft, {name:'林照', expectedArchiveId:null});
+});
