@@ -1,4 +1,5 @@
 import {checkActorScene} from './actor-insight.js';
+import {ORIGIN_BACKGROUNDS} from './birth-stories.js';
 import { assertPlainData, canonicalStringify } from './identity.js';
 import { DAYS_PER_YEAR, ORIGINS, TALENTS, ITEMS, REALMS, LEGACY_ITEMS, LEGACY_INTENTS } from './model.js';
 import { exactKeys, idField, textField, validateProposal, validateEntities, validateGeneratedScene } from './schema.js';
@@ -9,7 +10,15 @@ import { validateReincarnation } from './reincarnation.js';
 import { validateRetrievalMemory } from './retrieval-memory.js';
 export { assertPlainData };
 export function integer(value,min=0,max=Number.MAX_SAFE_INTEGER-1) { if(!Number.isSafeInteger(value)||value<min||value>max)throw new Error('数值字段无效。'); }
-export function validateBirth(birth) { exactKeys(birth,['originId','talentIds','attributes'],['cultivationProfile']);if(Object.hasOwn(birth,'cultivationProfile'))validateV7BirthProfile(birth.cultivationProfile);if(!Object.hasOwn(ORIGINS,birth.originId)||!Array.isArray(birth.talentIds)||birth.talentIds.length!==2||new Set(birth.talentIds).size!==2||birth.talentIds.some(id=>!Object.hasOwn(TALENTS,id)))throw new Error('出生条件无效。');exactKeys(birth.attributes,['constitution','insight','fortune']);let total=0;for(const n of Object.values(birth.attributes)){integer(n,1,6);total+=n;}if(total!==12)throw new Error('资质必须合计十二点。'); }
+export function validateBirth(birth) {
+ exactKeys(birth,['originId','talentIds','attributes'],['cultivationProfile','backgroundId']);
+ if(Object.hasOwn(birth,'cultivationProfile'))validateV7BirthProfile(birth.cultivationProfile);
+ if(typeof birth.originId!=='string'||!Object.hasOwn(ORIGINS,birth.originId)||!Array.isArray(birth.talentIds)||birth.talentIds.length!==2||new Set(birth.talentIds).size!==2||birth.talentIds.some(id=>typeof id!=='string'||!Object.hasOwn(TALENTS,id)))throw new Error('出生条件无效。');
+ if(Object.hasOwn(birth,'backgroundId')&&(!isV7Birth(birth)||typeof birth.backgroundId!=='string'||!Object.hasOwn(ORIGIN_BACKGROUNDS[birth.originId],birth.backgroundId)))throw new Error('出身与经历不符。');
+ exactKeys(birth.attributes,['constitution','insight','fortune']);
+ let total=0;for(const n of Object.values(birth.attributes)){integer(n,1,6);total+=n;}
+ if(total!==12)throw new Error('资质必须合计十二点。');
+}
 export function validateLife(life) {
  exactKeys(life,['name','ageDays','lifeLimit','realm','cultivation','injury','items','relations','birth'],['cultivationProfile']);textField(life.name,24);validateBirth(life.birth);
  if(Object.hasOwn(life,'cultivationProfile'))validateV7Profile(life.cultivationProfile);
@@ -33,7 +42,7 @@ function validateSummary(row) {
 }
 function same(left, right) { return canonicalStringify(left) === canonicalStringify(right); }
 const lifeSummary=summarizeLife;
-export function validateReceipt(row,{turnId}={}) {
+export function validateReceipt(row,{turnId,birth}={}) {
   exactKeys(row, ['kind','choiceId','action','elapsedDays','itemChanges','relationChanges','random','before','after','death','birth'],['cultivationResult']);
   const modern=Object.hasOwn(row.before??{},'cultivationProfile');
   if(modern!==Object.hasOwn(row.after??{},'cultivationProfile')||modern!==Object.hasOwn(row,'cultivationResult'))throw new Error('收据规则版本不一致。');
@@ -51,9 +60,13 @@ export function validateReceipt(row,{turnId}={}) {
   validateSummary(row.after);
   const beforeExperience=row.before.cultivationProfile?.experience,afterExperience=row.after.cultivationProfile?.experience;
   const growth=row.action?.intent==='craft'&&GROWTH_TERMS[row.action.approach];
+  const selfRestore=row.action?.intent==='craft'&&row.action.approach==='restore'&&row.action.targetId==='self';
+  const discounted=row.cultivationResult?.talentId==='keen-memory';
+  if(Object.hasOwn(row.cultivationResult??{},'talentId')&&(!selfRestore||!discounted))throw new Error('行动与天赋不符。');
+  if(birth&&discounted!==Boolean(selfRestore&&birth.backgroundId&&birth.talentIds.includes('keen-memory')))throw new Error('收据天赋与出生条件不符。');
   if(growth){
     if(!beforeExperience)throw new Error('旧人生没有这项修行行动。');
-    if(!row.death&&(row.elapsedDays!==growth.days||row.after.cultivationProfile.spirit!==row.before.cultivationProfile.spirit-growth.spiritCost||
+    if(!row.death&&(row.elapsedDays!==(discounted?Math.ceil(growth.days/2):growth.days)||row.after.cultivationProfile.spirit!==row.before.cultivationProfile.spirit-growth.spiritCost||
       !same(row.itemChanges,row.action.approach==='repay'?{supplies:-1}:{})))throw new Error('修行代价与行动不符。');
   }
   if(Boolean(beforeExperience)!==Boolean(afterExperience)||beforeExperience&&!same(experienceAfterAction(beforeExperience,row.before.realm!==row.after.realm,{action:row.action,death:row.death,turnId:turnId??afterExperience?.commitment?.acceptedTurn}),afterExperience))throw new Error('修行经历与行动不符。');
@@ -87,7 +100,7 @@ export function validateReceipt(row,{turnId}={}) {
 
 function validateCultivationResult(receipt){
   const result=receipt.cultivationResult,before=receipt.before,after=receipt.after;
-  exactKeys(result,['version','check','lifespanChange']);
+  exactKeys(result,['version','check','lifespanChange'],['talentId']);
   if(result.version!==7)throw new Error('修行判定版本无效。');
   exactKeys(result.lifespanChange,['years','cause']);integer(result.lifespanChange.years,-1000000,1000000);
   const {years,cause}=result.lifespanChange;
@@ -147,7 +160,7 @@ export function validateLiveState(state) {
     validateUnchangedBirth(state);
   } else {
     if (state.revision < 1 || state.lastReceipt === null) throw new Error('已提交回合缺少收据。');
-    validateReceipt(state.lastReceipt,{turnId:state.turnId});
+    validateReceipt(state.lastReceipt,{turnId:state.turnId,birth:state.life.birth});
     if (!same(state.lastReceipt.after, lifeSummary(state.life)) || state.lastReceipt.random.after !== state.rng) throw new Error('人物快照与最后收据不一致。');
     if (state.revision === 1) {
       if (!same(state.lastReceipt, state.birthReceipt)) throw new Error('首个提交必须是原始出生收据。');

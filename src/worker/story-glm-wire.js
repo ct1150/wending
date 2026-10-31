@@ -7,11 +7,18 @@ import {createNamedTargetLookup,normalizeNamedScene} from './story-named-targets
 import {normalizeWireAnnotation} from './story-wire-annotation.js';
 import {formatStoryChoiceLabel} from '../game/cultivation/live/story-choice-label.js';
 
+// A refusal in a birth story ends this interaction for the immediate next
+// menu. The actor remains in history and may appear in later scenes.
+export function endsSelectedInteraction(context){
+  const action=context.receipt.action;
+  return action?.intent==='interact'&&(action.approach==='leave'||action.approach==='decline'&&Boolean(context.life.birth.backgroundId));
+}
+
 // Generation uses the same post-action life and rule calculation as the menu.
 // Fresh identities stand in only for their type; actual names remain the model's.
 function availableVariants(context,aliases,intent,approach,targets){
   const selected=context.receipt.action,closed=context.previousScene?.id===context.namespace+':t'+(context.identity.turnId-1)+':s:closed';
-  const endedTarget=selected?.intent==='interact'&&selected.approach==='leave'?selected.targetId:closed?(context.memory.recent.find(record=>record.kind==='turn'&&record.turnId===context.identity.turnId-1)?.entityIds[0]??context.memory.facts.find(record=>record.id==='decision:'+(context.identity.turnId-1)&&record.kind==='fact'&&record.source==='rules')?.entityId??'self'):null;
+  const endedTarget=endsSelectedInteraction(context)?selected.targetId:closed?(context.memory.recent.find(record=>record.kind==='turn'&&record.turnId===context.identity.turnId-1)?.entityIds[0]??context.memory.facts.find(record=>record.id==='decision:'+(context.identity.turnId-1)&&record.kind==='fact'&&record.source==='rules')?.entityId??'self'):null;
   const failedCrossing=context.receipt.cultivationResult?.check?.kind==='world-crossing'&&context.receipt.cultivationResult.check.success===false;
   const location=selected?.intent==='travel'&&!failedCrossing?context.entities.find(entity=>entity.id===selected.targetId)?.name:context.phase==='choice'?context.director.world.location:null;
   const candidates=new Map(context.entities.map(entity=>[aliases.get(entity.id),entity]));

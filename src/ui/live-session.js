@@ -96,6 +96,7 @@ export function createLiveSession({archive,client,engine=defaultEngine,onChange=
     const capability=await client.capabilities();
     if(!capability.available)throw fault(capability.errorCode||'SERVICE_UNAVAILABLE');
     const supported=capability.experienceVersion===EXPERIENCE_VERSION;
+    if(options.originStories && (!supported || capability.originStories!==true || capability.storyActions!==true))throw fault('EXPERIENCE_UNSUPPORTED');
     if(!supported&&(required||Object.hasOwn(options,'experienceVersion')))throw fault('EXPERIENCE_UNSUPPORTED');
     return {options:supported?{...options,experienceVersion:EXPERIENCE_VERSION}:options,capability};
   }
@@ -105,6 +106,7 @@ export function createLiveSession({archive,client,engine=defaultEngine,onChange=
     const capability=knownCapability??await client.capabilities();
     if(!capability.available)throw fault(capability.errorCode||'SERVICE_UNAVAILABLE');
     if(isExperienceLife(row.state.life)&&capability.experienceVersion!==EXPERIENCE_VERSION)throw fault('EXPERIENCE_UNSUPPORTED');
+    if(row.state.life.birth.backgroundId && (capability.originStories!==true || capability.storyActions!==true))throw fault('EXPERIENCE_UNSUPPORTED');
     const storyActions=!row.attempt&&capability.storyActions===true;
     if(capability.storyActions!==true&&(row.generation?.storyActions||row.pending.receipt.action?.intent==='interact'))throw fault('SERVICE_UNAVAILABLE');
     const generation=row.generation??{storyActions,context:await contextFor(row,null,storyActions)};

@@ -1,10 +1,11 @@
-import {ITEMS,INTENTS} from '../game/cultivation/live/model.js';
+import {ITEMS,INTENTS,GROWTH_APPROACHES} from '../game/cultivation/live/model.js';
 import {isV7Life,validV7Target,v7ActionRule,V7_REALMS} from '../game/cultivation/live/cultivation-rules.js';
 import {formatStoryChoiceLabel} from '../game/cultivation/live/story-choice-label.js';
 import {createNamedTargetLookup} from './story-named-targets.js';
 
 const object=value=>value!==null&&typeof value==='object'&&!Array.isArray(value);
 const actions=new Set(Object.entries(INTENTS).flatMap(([intent,approaches])=>approaches.map(approach=>intent+':'+approach)));
+const birthActions=new Set([...actions,...GROWTH_APPROACHES.map(approach=>'craft:'+approach)]);
 export const isFixedV7Interaction=action=>typeof action==='string'&&actions.has(action)&&action.startsWith('interact:');
 const decoration=new Set(['id','label','description','title','role','alias']);
 function changed(rows,fn){let next;for(const [i,row]of rows.entries()){const item=fn(row);if(item!==row){next??=rows.slice();next[i]=item;}}return next??rows;}
@@ -52,7 +53,7 @@ export function normalizeV7Presentation(wire,context){
     return {targetId,targetName};
   }
   const finalBlocks=changed(blocks,b=>b?.kind==='dialogue'?replace(b,'speaker',named(b.speaker,null)):b),finalChoices=changed(choices,row=>{
-    if(!object(row)||!actions.has(row.action))return row;
+    if(!object(row)||!(context.life.birth.backgroundId?birthActions:actions).has(row.action))return row;
     // A nested object in a supposed scalar is not a fixed rule field: never
     // overwrite it and thereby conceal an explicit authority or identity claim.
     if(row.anchor!==null&&typeof row.anchor==='object'||isFixedV7Interaction(row.action)&&row.stake!==null&&typeof row.stake==='object')throw Error('Invalid mechanical field');

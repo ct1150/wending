@@ -1,5 +1,4 @@
-import { generateProviderScene, validateProviderOptions } from './story-provider-core.js';
-import { isV7Life } from '../game/cultivation/live/cultivation-rules.js';
+import { generateProviderScene, validateProviderOptions, usesEngineMenu } from './story-provider-core.js';
 import { GLM_MODEL_ID } from './story-config.js';
 import { createGlmTransport } from './story-glm-provider.js';
 import { assertPlainData } from '../game/cultivation/live/identity.js';
@@ -35,8 +34,9 @@ export async function generateScene(ai,profile,context,options={},runtime={}) {
     }
   }
   if(profile?.modelId===GLM_MODEL_ID){
-    // The HTTP server opts in; client payloads and model output cannot choose who owns the menu.
-    const engineMenu=runtime.engineMenu===true&&runtime.storyActions===true&&context?.director?.version===7&&isV7Life(context.life);
+    // The server keeps the engine menu for older lives. New birth stories
+    // require the author's own scene-specific decisions through final decoding.
+    const engineMenu=usesEngineMenu(runtime,context);
     const transport=createGlmTransport({ai,context,engineMenu,onProgress:runtime.onProgress,deadlineAt:runtime.deadlineAt,signal:runtime.signal,timeoutMs:options.timeoutMs});
     const result=await generateProviderScene(transport,{...profile,storyActions:runtime.storyActions===true,engineMenu},context,options,assertValidatedProfile,knowledgeBundle);
     if(transport.accountingUnknown)result.accountingStatus='unknown';

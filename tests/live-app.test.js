@@ -76,7 +76,7 @@ test('native app: HTTPS fixture, pending refresh/import, pages, legacy preservat
   const legacyRaw = serializeGame(createCultivation({ seed: 'browser-legacy', characterCreation: true }));
   await page.addInitScript(raw=>{window.showSaveFilePicker=undefined;if(localStorage.getItem('baishi-wending-save-v1')===null)localStorage.setItem('baishi-wending-save-v1',raw);},legacyRaw);
   let posts=0,nextPaused=false;const results=new Map(),contexts=[];
-  const caps={protocolVersion:1,available:true,status:'ready',errorCode:null,limits:{maxRequestBytes:32768,maxResponseBytes:65536,maxContextBytes:7000,timeoutMs:30000}};
+  const caps={protocolVersion:1,available:true,status:'ready',errorCode:null,storyActions:true,experienceVersion:1,originStories:true,limits:{maxRequestBytes:32768,maxResponseBytes:65536,maxContextBytes:7000,timeoutMs:30000}};
   await page.route('https://wending.test/**',async route=>{
     const url=new URL(route.request().url());
     const json=value=>route.fulfill({status:200,contentType:'application/json',body:JSON.stringify(value)});
@@ -130,7 +130,7 @@ async function delayedAppFixture(t) {
   const {page}=await liveBrowser(t),requests=[],errors=[],releases=[];
   page.on('pageerror',error=>errors.push(error.message));
   let nextGate=null;
-  const caps={protocolVersion:1,available:true,status:'ready',errorCode:null,limits:{maxRequestBytes:32768,maxResponseBytes:65536,maxContextBytes:7000,timeoutMs:30000}};
+  const caps={protocolVersion:1,available:true,status:'ready',errorCode:null,storyActions:true,experienceVersion:1,originStories:true,limits:{maxRequestBytes:32768,maxResponseBytes:65536,maxContextBytes:7000,timeoutMs:30000}};
   await page.route('https://wending-focus.test/**',async route=>{
     const url=new URL(route.request().url());
     const json=value=>route.fulfill({status:200,contentType:'application/json',body:JSON.stringify(value)});

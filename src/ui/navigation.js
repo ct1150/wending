@@ -9,6 +9,7 @@ function navigation(value) {
   if (!value || typeof value !== 'object') return defaults();
   const draft=value.draft && typeof value.draft==='object' ? {
     name:typeof value.draft.name==='string'?value.draft.name.slice(0,24):'云归',
+    ...(value.draft.originStories===true ? {originStories:true} : {}),
     ...(typeof value.draft.originId==='string' && Object.hasOwn(ORIGINS,value.draft.originId) ? {originId:value.draft.originId} : {}),
     ...(typeof value.draft.seed==='string' && /^\d{1,16}$/.test(value.draft.seed) ? {seed:value.draft.seed} : {}),
     ...(typeof value.draft.lockedTalentId==='string' && Object.hasOwn(TALENTS,value.draft.lockedTalentId) ? {lockedTalentId:value.draft.lockedTalentId} : {}),

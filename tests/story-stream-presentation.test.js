@@ -89,7 +89,7 @@ test('the app keeps streamed dialogue and choice nodes through completion and du
   await page.addInitScript(() => {
     const original = window.fetch;
     window.fetch = async (url, options) => {
-      if (url === '/api/story/capabilities') return Response.json({ protocolVersion: 1, available: true, status: 'ready', errorCode: null, storyActions: true, limits: { maxRequestBytes: 32768, maxResponseBytes: 65536, maxContextBytes: 7000, timeoutMs: 30000 } });
+      if (url === '/api/story/capabilities') return Response.json({ protocolVersion: 1, available: true, status: 'ready', errorCode: null, storyActions: true, experienceVersion: 1, originStories: true, limits: { maxRequestBytes: 32768, maxResponseBytes: 65536, maxContextBytes: 7000, timeoutMs: 30000 } });
       if (url === '/api/story/session') return Response.json({ protocolVersion: 1, status: 'ready', sessionRef: 'presentation-session', expiresAt: Date.now() + 86400000 });
       if (url !== '/api/story/turn') return original(url, options);
       const { context, attempt } = JSON.parse(options.body);
