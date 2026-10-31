@@ -369,11 +369,14 @@ export async function generateProviderScene(ai,profile,context,options={},assert
           // past years or times; it cannot override the separately compiled cost.
           if(!directed&&/[0-9零〇一二两三四五六七八九十百千万半]+\s*(?:个\s*)?(?:年|月|天|日|晚|夜|周|星期|时辰|小时|分钟|刻钟|炷香)/u.test(proposal.label))fail('CHOICE_NOT_COMPILABLE');
           if(proposal.intent==='negotiate'){
+            const v7=isV7Life(context.life),purpose=composed?purposes[index]:proposal.label;
+            // Engine labels include the speaker's name. Only the planned
+            // purpose describes a transaction; older menus keep their label checks.
+            const tradeText=engineMenu?purpose:proposal.label;
             // Asking about a route is dialogue; a label beginning with an actual
             // journey must use a travel action instead of negotiation mechanics.
-            if(/^(?:返回|前往|赶往|赶赴|启程|出发|跟随|搭车|乘车|乘船)/u.test(proposal.label))fail('CHOICE_NOT_COMPILABLE');
-            if(/购买|买下|买走|买入|购入/u.test(proposal.label))fail('CHOICE_NOT_COMPILABLE');
-            const v7=isV7Life(context.life),purpose=composed?purposes[index]:proposal.label;
+            if(/^(?:返回|前往|赶往|赶赴|启程|出发|跟随|搭车|乘车|乘船)/u.test(tradeText))fail('CHOICE_NOT_COMPILABLE');
+            if(/购买|买下|买走|买入|购入/u.test(tradeText))fail('CHOICE_NOT_COMPILABLE');
             if(v7&&proposal.approach==='black-market'){
               // Black-market rules sell one held relic, or an artifact only when
               // no relic is held. Require an explicit single-item sale so a
@@ -381,8 +384,8 @@ export async function generateProviderScene(ai,profile,context,options={},assert
               const sold=(context.life.items.relic??0)>0?'relic':'artifact';
               const sale=/^(?:出售|卖出|卖掉)(?:[一1](?:件|个|枚|份))?(古修遗物|法器)(?:[，,]?(?:换取|换得|兑换)灵石)?[。！!]*$/u.exec(purpose.trim());
               if(!(context.life.items[sold]>0)||sale?.[1]!==ITEMS[sold])fail('CHOICE_NOT_COMPILABLE');
-            }else if(/卖出|卖掉|出售/u.test(proposal.label)||v7&&/^(?:买|购|收购|卖|出售|售出)/u.test(purpose.trim()))fail('CHOICE_NOT_COMPILABLE');
-            const exchange=/(?:换取|换得|兑换)(.+)$/u.exec(proposal.label);
+            }else if(/卖出|卖掉|出售/u.test(tradeText)||v7&&/^(?:买|购|收购|卖|出售|售出)/u.test(purpose.trim()))fail('CHOICE_NOT_COMPILABLE');
+            const exchange=/(?:换取|换得|兑换)(.+)$/u.exec(tradeText);
             // Negotiation rules grant only stones (cooperate/pressure) or
             // supplies (bargain), never the named object offered by an NPC.
             const resource=ITEMS[proposal.approach==='bargain'?'supplies':'stones'];
