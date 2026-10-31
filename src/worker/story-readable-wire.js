@@ -14,7 +14,78 @@ const bad=()=>{throw Error('Unreadable scene fragment');};
 export function readCompleteV7Wire(source){return readWire(source,null);}
 export function readCompleteV7Body(source,context){
   if(context?.director?.version!==7||context.life?.cultivationProfile?.version!==7)return null;
-  return readWire(source,context);
+  return readWire(source,context)??readAuthoredPrefix(source);
+}
+
+// Last resort for the prose-only contract. Walk from the first root, never
+// search a corrupt suffix for a convenient paragraph. Each value is parsed
+// from its own ORIGINAL slice before the next byte can affect it. The full
+// reader above gets first refusal so it can retain later recoverable records.
+function readAuthoredPrefix(source){
+  if(typeof source!=='string'||source.length>STORY_LIMITS.maxResponseBytes||encoder.encode(source).length>STORY_LIMITS.maxResponseBytes)return null;
+  try{JSON.parse(source);return null;}catch{/* Valid documents use the ordinary path. */}
+  const skip=at=>{while(at<source.length&&space(source[at]))at++;return at;};
+  function stringEnd(at){
+    for(let j=at+1;j<source.length;j++){
+      if(source[j]==='\\'){j++;continue;}
+      if(source[j]==='"')return j+1;if(source.charCodeAt(j)<32)return -1;
+    }
+    return -1;
+  }
+  function valueAt(at){
+    let end=at;const first=source[at];
+    if(first==='"')end=stringEnd(at);
+    else if(first==='{'||first==='['){
+      const stack=[];
+      for(let j=at;j<source.length;j++){
+        const ch=source[j];
+        if(ch==='"'){const stop=stringEnd(j);if(stop<0)return null;j=stop-1;}
+        else if(ch==='{'||ch==='['){stack.push(ch);if(stack.length>32)return null;}
+        else if(ch==='}'||ch===']'){
+          if(stack.pop()!==(ch==='}'?'{':'['))return null;
+          if(!stack.length){end=j+1;break;}
+        }
+      }
+    }else while(end<source.length&&!space(source[end])&&!(',}]'.includes(source[end])))end++;
+    if(end<=at)return null;
+    try{return {value:JSON.parse(source.slice(at,end)),end};}catch{return null;}
+  }
+  let at=skip(0);if(source[at++]!=='{')return null;
+  const result={},seen=new Set(),usable=()=>result.blocks?.length?result:null;
+  for(;;){
+    at=skip(at);if(at===source.length)return usable();
+    if(source[at]==='}')return skip(at+1)===source.length?usable():null; // never join two documents
+    if(source[at]!=='"')return usable();
+    const key=valueAt(at);if(!key)return usable();at=skip(key.end);
+    if(source[at++]!==':')return usable();at=skip(at);
+    const name=key.value,keep=fields.has(name)&&name!=='choices';
+    if(keep){if(seen.has(name))return null;seen.add(name);}
+    if(name==='blocks'||name==='memoryDeltas'&&source[at]==='['){
+      if(source[at++]!=='[')return null;
+      const rows=[];result[name]=rows;at=skip(at);
+      while(at<source.length&&source[at]!==']'){
+        const isBody=name==='blocks';
+        if(source[at]!=='{')return isBody?usable():null;
+        const entry=valueAt(at);
+        if(!entry)return isBody?usable():null; // an undecodable obligation cannot be silently discarded
+        if(rows.length>=(isBody?4:16))return null;
+        const v=entry.value;
+        if(isBody){
+          if(!record(v)||!nonempty(v.text)||!['narration','dialogue'].includes(v.kind)||v.kind==='dialogue'&&!Object.hasOwn(v,'speaker'))return null;
+          rows.push(v.kind==='dialogue'?{kind:v.kind,speaker:v.speaker,text:v.text}:{kind:v.kind,text:v.text});
+        }else rows.push(v);
+        at=skip(entry.end);if(source[at]===']')break;
+        if(source[at]!==',')return usable();at=skip(at+1);
+      }
+      if(source[at]!==']')return usable();at++;
+    }else{
+      const entry=valueAt(at);if(!entry)return name==='memoryDeltas'?null:usable();
+      if(keep)result[name]=entry.value;at=entry.end;
+    }
+    at=skip(at);if(source[at]===','){at++;continue;}
+    if(source[at]==='}')return skip(at+1)===source.length?usable():null;
+    return usable();
+  }
 }
 
 function readWire(source,bodyContext){

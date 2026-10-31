@@ -148,5 +148,15 @@
     "forwardedTurns": 3,
     "extraOrAutomaticTurns": 0,
     "scope": "Actual browser, native GLM, persistent archive. Public error explicitly conveys the length stop; original raw completion tail was unavailable."
+  },
+  "candidate119": {
+    "sourceCommit": "909a61347be919b26ed19ff5a13ea7b64b7c93c8",
+    "ordinaryTrafficPercent": 0,
+    "status": "rejected",
+    "stage": "Browser SSE final result / PROVIDER_RESPONSE_INVALID",
+    "completedNarrationCharacters": 129,
+    "afterCompleteBlock": "reset, then result",
+    "finalDraftChoices": 0,
+    "scope": "This ordinary synthetic browser received one complete narration block before the partial renderer reset. Native source bytes and stop reason for this sample were unavailable. The regression models a damaged suffix; it does not assert which byte the real model wrote."
   }
 }

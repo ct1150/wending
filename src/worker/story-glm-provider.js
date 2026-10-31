@@ -34,7 +34,7 @@ export function createGlmTransport({ai,context,engineMenu=false,onProgress=()=>{
         event.set(bytes,used);used=required;
       }
       function decode(bytes){try{return decoder.decode(bytes);}catch{throw fault('PROVIDER_RESPONSE_INVALID');}}
-      let inspectedBytes=-1,inspectedAt=0,inspectedModel=false;
+      let inspectedBytes=-1,inspectedAt=0,inspectedModel=false,displayedBlocks=[];
       function previewContent(force=false){
         if(contentBytes===inspectedBytes&&modelSeen===inspectedModel)return;
         const now=Date.now();
@@ -47,8 +47,22 @@ export function createGlmTransport({ai,context,engineMenu=false,onProgress=()=>{
         if(engineMenu)draft.choices=[];
         const serialized=JSON.stringify(draft);
         if(/<\/?(?:think|thinking|analysis|reasoning)(?:\s|>)/iu.test(next+'\n'+draft.blocks.map(block=>(block.speaker??'')+'\n'+block.text).join('\n')+'\n'+draft.choices.map(choice=>choice.label).join('\n')))throw fault('PROVIDER_RESPONSE_INVALID');
-        if(active&&modelSeen&&serialized!==presentation){presentation=serialized;onProgress({type:'presentation',...draft});}
-        if(active&&modelSeen&&next!==preview){preview=next;onProgress({type:'preview',text:preview});}
+        if(!active||!modelSeen)return;
+        // The HTTP writer resets all rows if a snapshot shrinks. A damaged
+        // later field must not retract already displayed, individually closed
+        // blocks. An unfinished row stays a draft until the parser closes it.
+        const hasClosed=engineMenu&&displayedBlocks.some(row=>row.complete);
+        if(hasClosed&&(draft.blocks.length<displayedBlocks.length||displayedBlocks.some((row,i)=>{
+          const now=draft.blocks[i];
+          return row.complete&&(!now?.complete||now.kind!==row.kind||now.speaker!==row.speaker||now.text!==row.text);
+        })))return;
+        if(serialized!==presentation){
+          presentation=serialized;
+          if(engineMenu)displayedBlocks=draft.blocks.map(row=>({...row}));
+          onProgress({type:'presentation',...draft});
+        }
+        // Text-only subscribers also interpret a non-prefix update as reset.
+        if(next!==preview&&(!hasClosed||next.startsWith(preview))){preview=next;onProgress({type:'preview',text:preview});}
       }
       function frame(raw){
         const data=raw.split('\n').filter(line=>line.startsWith('data:')).map(line=>line.slice(5).trimStart()).join('\n');
