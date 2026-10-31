@@ -10,6 +10,16 @@ const living = entity => entity.status !== 'dead';
 // Parsing is intentionally conservative: it recognizes executable intentions,
 // never guesses a different action or creates a target/resource from prose.
 export function resolveCustomAction(state,input) {
+  return parseCustomAction(state,input,true);
+}
+
+// Saved receipts keep the canonical interpretation used when they were made.
+// Only fresh-input trade admission is skipped; all original grammar checks stay.
+export function replayCustomAction(state,input) {
+  return parseCustomAction(state,input,false);
+}
+
+function parseCustomAction(state,input,freshInput) {
   if(typeof input!=='string'||!state.currentScene||state.phase!=='active')unsupported();
   const label=input.trim();
   if(!label||label.length>120||/[<>\x00-\x1f]/u.test(label))unsupported();
@@ -46,7 +56,15 @@ export function resolveCustomAction(state,input) {
     if(candidates.length!==1)unsupported();
     return candidates[0].id;
   }
-  const proposal=(intent,approach,targetId='self',stake='low')=>({id:customId(state,label),label,intent,targetId,approach,stake});
+  const proposal=(intent,approach,targetId='self',stake='low')=>{
+    if(freshInput&&intent==='negotiate'&&approach!=='black-market'){
+      const actor=entities.find(entity=>entity.id===targetId),purpose=actor?text.split(actor.name).join(''):text;
+      // Ordinary negotiation has fixed resource exchanges. Never discard an
+      // explicit purchase/sale tail and execute those different rules instead.
+      if(/[买卖购售]|销赃/u.test(purpose))unsupported();
+    }
+    return {id:customId(state,label),label,intent,targetId,approach,stake};
+  };
   if(/^(?:询问|请教|打听|问|向.{1,60}(?:询问|请教|打听))/u.test(text)) {
     const targetId=target('actor');
     const actor=entities.find(entity=>entity.id===targetId);

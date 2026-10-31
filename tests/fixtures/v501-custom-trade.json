@@ -1,0 +1,272 @@
+{
+  "capturedFrom": "e9c6e0a4a2bf9795ca2a4d0e3812508f661a688f",
+  "options": {
+    "runId": "v501-custom-trade",
+    "seed": 42,
+    "originId": "artisan",
+    "engineVersion": 7
+  },
+  "openingRequestId": "v501-opening",
+  "openingScene": {
+    "id": "r:36960363406a5e19:t1:s:scene",
+    "title": "渡头旧事",
+    "location": "落苇渡",
+    "blocks": [
+      {
+        "kind": "narration",
+        "text": "第1次停步，陈砚仍站在落苇渡的旧桥旁。远处的水声遮住了低语，桥栏的刻痕却留下几处值得分辨的线索。你仍能自行决定是否追问，或在原地观察局势。远处的水声遮住了低语，桥栏的刻痕却留下几处值得分辨的线索。你仍能自行决定是否追问，或在原地观察局势。远处的水声遮住了低语，桥栏的刻痕却留下几处值得分辨的线索。你仍能自行决定是否追问，或在原地观察局势。远处的水声遮住了低语，桥栏的刻痕却留下几处值得分辨的线索。你仍能自行决定是否追问，或在原地观察局势。"
+      }
+    ],
+    "entities": [
+      {
+        "id": "r:36960363406a5e19:t1:e:chen",
+        "name": "陈砚",
+        "kind": "person"
+      }
+    ],
+    "choices": [
+      {
+        "id": "r:36960363406a5e19:t1:c:a",
+        "label": "观察旧桥的刻痕",
+        "intent": "interact",
+        "targetId": "self",
+        "approach": "observe",
+        "stake": "low"
+      },
+      {
+        "id": "r:36960363406a5e19:t1:c:b",
+        "label": "询问陈砚渡头的旧事",
+        "intent": "interact",
+        "targetId": "r:36960363406a5e19:t1:e:chen",
+        "approach": "ask",
+        "stake": "low"
+      },
+      {
+        "id": "r:36960363406a5e19:t1:c:c",
+        "label": "婉拒陈砚，暂不追索旧事",
+        "intent": "interact",
+        "targetId": "r:36960363406a5e19:t1:e:chen",
+        "approach": "decline",
+        "stake": "low"
+      }
+    ],
+    "memoryDeltas": [],
+    "story": {
+      "pattern": "investigation",
+      "beat": "progress",
+      "anchors": [
+        0
+      ]
+    }
+  },
+  "continuationScene": {
+    "id": "r:36960363406a5e19:t2:s:scene",
+    "title": "渡头旧事",
+    "location": "落苇渡",
+    "blocks": [
+      {
+        "kind": "narration",
+        "text": "第2次停步，陈砚仍站在落苇渡的旧桥旁。远处的水声遮住了低语，桥栏的刻痕却留下几处值得分辨的线索。你仍能自行决定是否追问，或在原地观察局势。远处的水声遮住了低语，桥栏的刻痕却留下几处值得分辨的线索。你仍能自行决定是否追问，或在原地观察局势。远处的水声遮住了低语，桥栏的刻痕却留下几处值得分辨的线索。你仍能自行决定是否追问，或在原地观察局势。远处的水声遮住了低语，桥栏的刻痕却留下几处值得分辨的线索。你仍能自行决定是否追问，或在原地观察局势。"
+      }
+    ],
+    "entities": [
+      {
+        "id": "r:36960363406a5e19:t1:e:chen",
+        "name": "陈砚",
+        "kind": "person"
+      }
+    ],
+    "choices": [
+      {
+        "id": "r:36960363406a5e19:t2:c:a",
+        "label": "观察旧桥的刻痕",
+        "intent": "interact",
+        "targetId": "self",
+        "approach": "observe",
+        "stake": "low"
+      },
+      {
+        "id": "r:36960363406a5e19:t2:c:b",
+        "label": "询问陈砚渡头的旧事",
+        "intent": "interact",
+        "targetId": "r:36960363406a5e19:t1:e:chen",
+        "approach": "ask",
+        "stake": "low"
+      },
+      {
+        "id": "r:36960363406a5e19:t2:c:c",
+        "label": "婉拒陈砚，暂不追索旧事",
+        "intent": "interact",
+        "targetId": "r:36960363406a5e19:t1:e:chen",
+        "approach": "decline",
+        "stake": "low"
+      }
+    ],
+    "memoryDeltas": [],
+    "story": {
+      "pattern": "investigation",
+      "beat": "progress",
+      "anchors": [
+        0
+      ]
+    }
+  },
+  "pending": {
+    "kind": "choice",
+    "identity": {
+      "runId": "v501-custom-trade",
+      "turnId": 2,
+      "baseRevision": 1,
+      "stateHash": "2b06a03b7cd86dcf714b7e91a50de843c95c1d26e94827efa40168b7ffc003a8",
+      "choiceId": "r:36960363406a5e19:t2:c:custom_4ef6a7aa23e1",
+      "rulesVersion": 1,
+      "promptVersion": 1,
+      "requestId": "v501-typed-trade"
+    },
+    "receipt": {
+      "kind": "choice",
+      "choiceId": "r:36960363406a5e19:t2:c:custom_4ef6a7aa23e1",
+      "action": {
+        "id": "r:36960363406a5e19:t2:c:custom_4ef6a7aa23e1",
+        "label": "议价：出售法器",
+        "intent": "negotiate",
+        "targetId": "r:36960363406a5e19:t1:e:chen",
+        "approach": "bargain",
+        "stake": "normal"
+      },
+      "elapsedDays": 7,
+      "itemChanges": {
+        "stones": -1,
+        "supplies": 2
+      },
+      "relationChanges": {
+        "r:36960363406a5e19:t1:e:chen": 1
+      },
+      "random": {
+        "before": 3123853561,
+        "after": 1140854276,
+        "roll": 76
+      },
+      "before": {
+        "ageDays": 5760,
+        "realm": "mortal",
+        "cultivation": 0,
+        "injury": 0,
+        "lifeLimit": 80,
+        "cultivationProfile": {
+          "version": 7,
+          "lifespanBonus": 0,
+          "lifespanLoss": 0,
+          "spirit": 110,
+          "maxSpirit": 110,
+          "exposure": 0,
+          "worldTier": 0,
+          "arts": {
+            "alchemy": 0,
+            "forging": 0,
+            "formations": 0,
+            "talismans": 0
+          }
+        }
+      },
+      "after": {
+        "ageDays": 5767,
+        "realm": "mortal",
+        "cultivation": 0,
+        "injury": 0,
+        "lifeLimit": 80,
+        "cultivationProfile": {
+          "version": 7,
+          "lifespanBonus": 0,
+          "lifespanLoss": 0,
+          "spirit": 110,
+          "maxSpirit": 110,
+          "exposure": 0,
+          "worldTier": 0,
+          "arts": {
+            "alchemy": 0,
+            "forging": 0,
+            "formations": 0,
+            "talismans": 0
+          }
+        }
+      },
+      "death": null,
+      "birth": null,
+      "cultivationResult": {
+        "version": 7,
+        "check": null,
+        "lifespanChange": {
+          "years": 0,
+          "cause": null
+        }
+      }
+    },
+    "nextLife": {
+      "name": "云归",
+      "ageDays": 5767,
+      "lifeLimit": 80,
+      "realm": "mortal",
+      "cultivation": 0,
+      "injury": 0,
+      "items": {
+        "supplies": 4,
+        "stones": 3,
+        "iron": 1
+      },
+      "relations": {
+        "r:36960363406a5e19:t1:e:chen": 1
+      },
+      "birth": {
+        "originId": "artisan",
+        "talentIds": [
+          "keen-memory",
+          "sword-bone"
+        ],
+        "attributes": {
+          "constitution": 4,
+          "insight": 6,
+          "fortune": 2
+        },
+        "cultivationProfile": {
+          "version": 7,
+          "rootId": "frost-water",
+          "physiqueId": "ember",
+          "relicId": "root-seed",
+          "techniqueId": "torn-meridian",
+          "inheritedBenefits": [],
+          "advantages": [
+            "寒水归息：休养额外恢复伤势。",
+            "留焰体：炼丹更稳，灵力略多。",
+            "枯壳灵种：炼丹判定更稳。",
+            "回脉旧法：仍可积累修为。"
+          ],
+          "defects": [
+            "寒气反冲：强攻多承受一分伤势。",
+            "残焰扰心：突破稍难。",
+            "温养灵种：修炼额外消耗灵力。",
+            "功法残页：修行耗时增加两成。"
+          ]
+        }
+      },
+      "cultivationProfile": {
+        "version": 7,
+        "lifespanBonus": 0,
+        "lifespanLoss": 0,
+        "spirit": 110,
+        "maxSpirit": 110,
+        "exposure": 0,
+        "worldTier": 0,
+        "arts": {
+          "alchemy": 0,
+          "forging": 0,
+          "formations": 0,
+          "talismans": 0
+        }
+      }
+    },
+    "nextRng": 1140854276
+  },
+  "pendingHash": "5d89a9b23e8ae38ef96153762ff9e750cf4f54f92048e7d51b4900d99a52ffe4",
+  "committedStateHash": "30bbe08db8d8136f4206db7cdf8cd0cb8207c63735ace031f6c02fadcee3fa65"
+}

@@ -1,8 +1,7 @@
 import { canonicalStringify, sha256, stateHash, assertPlainData } from './cultivation/live/identity.js';
 import { validateLiveState } from './cultivation/live/validation.js';
-import { prepareOpening, prepareChoice, commitTurn, settleDeath, resolveImmediateInteraction } from './cultivation/live/engine.js';
+import { prepareOpening, prepareRecordedChoice, commitTurn, settleDeath, resolveImmediateInteraction } from './cultivation/live/engine.js';
 import { buildStoryContext, validateGeneratedScene, buildMemoryDelta, validateStoryContext, sceneTurnRecord } from './cultivation/live/memory.js';
-import { customActionCommand } from './cultivation/live/custom-actions.js';
 import { buildRebirthOptions, reincarnationClaimForChild, validateReincarnationClaim } from './cultivation/live/reincarnation.js';
 
 export const CHUNK_TURNS = 128;
@@ -18,7 +17,7 @@ function bounded(value,max) { assertPlainData(value);check(encodedBytes(value)<=
 function ident(value) { check(typeof value==='string'&&/^[A-Za-z0-9][A-Za-z0-9:_-]{0,79}$/.test(value),'ARCHIVE_INVALID_ID'); }
 function keys(value,required) { assertPlainData(value);check(value&&typeof value==='object'&&!Array.isArray(value)&&Object.keys(value).sort().join('|')===[...required].sort().join('|'),'ARCHIVE_INVALID_FIELDS'); }
 export function verifyPending(state,pending) {
- const expected=pending?.kind==='opening'?prepareOpening(state,{requestId:pending.identity.requestId}):prepareChoice(state,customActionCommand(pending));
+ const expected=pending?.kind==='opening'?prepareOpening(state,{requestId:pending.identity.requestId}):prepareRecordedChoice(state,pending);
  check(same(expected,pending),'ARCHIVE_INVALID_PENDING');return pending;
 }
 export function validateAttempt(attempt) {
@@ -354,7 +353,7 @@ class Archive {
  }
  async _stageEntry(archiveId,entry) {
   keys(entry,['identity','receipt','scene','stateHash']);const c=await this._capture(null,archiveId);check(c?.run.status==='staging');const identity=entry.identity;
-  const p=c.run.state.phase==='awaitingOpening'?prepareOpening(c.run.state,{requestId:identity.requestId}):prepareChoice(c.run.state,customActionCommand(entry));check(same(p.identity,identity)&&same(p.receipt,entry.receipt),'ARCHIVE_INVALID_HISTORY');c.pending=pendingRow(archiveId,p);
+  const p=c.run.state.phase==='awaitingOpening'?prepareOpening(c.run.state,{requestId:identity.requestId}):prepareRecordedChoice(c.run.state,entry);check(same(p.identity,identity)&&same(p.receipt,entry.receipt),'ARCHIVE_INVALID_HISTORY');c.pending=pendingRow(archiveId,p);
   const d=await this._derived(c,entry.scene,entry.scene?buildMemoryDelta(p.receipt,entry.scene):null);check(stateHash(d.state)===entry.stateHash,'ARCHIVE_BAD_HASH');
   await transaction(this.db,'readwrite',(s,get)=>get(s.runs,archiveId,run=>{check(run.status==='staging'&&run.hash===c.run.hash);this._writeMemory(s.memory,archiveId,d.records);s.runs.put({...run,state:d.state,hash:entry.stateHash});}));
  }

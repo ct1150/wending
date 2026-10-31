@@ -54,6 +54,33 @@ test('native v7 custom pending and committed intent roundtrip with director and 
  assert.deepEqual(r.restored.pending,r.pending);assert.equal(r.after.state.lastReceipt.action.label,r.pending.receipt.action.label);assert.deepEqual(r.again.state,r.after.state);assert.equal(r.history.entries.length,2);assert.equal(r.after.state.director.turnId,2);
 });
 
+test('captured 5.0.1 custom trade-tail pending and committed JSONL replay byte-identically',async t=>{
+ const {page}=await setup(t);
+ const r=await page.evaluate(async()=>{
+   const captured=await (await fetch('/tests/fixtures/v501-custom-trade.json')).json();
+   const a=await open('v501-trade-source'),birth=engine.createLiveGame(captured.options),opening=engine.prepareOpening(birth,{requestId:captured.openingRequestId});
+   await a.create({state:birth,pending:opening});
+   const state=engine.commitTurn(birth,opening,captured.openingScene);
+   await a.commit({expectedRevision:birth.revision,nextState:state,scene:captured.openingScene,memoryDelta:memory.buildMemoryDelta(opening.receipt,captured.openingScene),requestId:opening.identity.requestId});
+   const before=JSON.stringify(await a.load());let freshCode;
+   try{engine.prepareChoice(state,{requestId:captured.pending.identity.requestId,customAction:captured.pending.receipt.action.label});}catch(error){freshCode=error.code;}
+   const refusedUnchanged=JSON.stringify(await a.load())===before;
+   await a.prepare(captured.pending);
+   const pendingText=await new Response(format.exportLiveArchive(a)).text(),b=await open('v501-trade-pending-import');
+   const restored=await format.importLiveArchive(new Blob([pendingText]).stream(),b),pendingTextAgain=await new Response(format.exportLiveArchive(b)).text();
+   const nextState=engine.commitTurn(restored.state,restored.pending,captured.continuationScene);
+   const committed=await b.commit({expectedRevision:restored.state.revision,nextState,scene:captured.continuationScene,memoryDelta:memory.buildMemoryDelta(restored.pending.receipt,captured.continuationScene),requestId:restored.pending.identity.requestId});
+   const historyText=await new Response(format.exportLiveArchive(b)).text(),c=await open('v501-trade-history-import');
+   const replayed=await format.importLiveArchive(new Blob([historyText]).stream(),c),historyTextAgain=await new Response(format.exportLiveArchive(c)).text();
+   return {captured,freshCode,refusedUnchanged,restored,committed,replayed,pendingBytesEqual:pendingTextAgain===pendingText,historyBytesEqual:historyTextAgain===historyText,committedHash:identity.stateHash(committed.state),history:await c.readHistory(state.runId)};
+ });
+ assert.equal(r.freshCode,'CUSTOM_ACTION_UNSUPPORTED');assert.equal(r.refusedUnchanged,true);
+ assert.deepEqual(r.restored.pending,r.captured.pending);assert.equal(r.pendingBytesEqual,true);
+ assert.equal(r.committedHash,r.captured.committedStateHash);assert.equal(r.historyBytesEqual,true);
+ assert.deepEqual(r.replayed.state,r.committed.state);assert.equal(r.replayed.pending,null);
+ assert.deepEqual(r.history.entries.at(-1).receipt,r.captured.pending.receipt);
+});
+
 test('native reincarnation claims once across competing tabs and preserves dead history',async t=>{
  const {page}=await setup(t);
  const r=await page.evaluate(async()=>{
