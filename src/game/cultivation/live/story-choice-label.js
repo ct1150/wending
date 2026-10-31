@@ -10,6 +10,7 @@ export function formatStoryChoiceLabel({action,targetId,targetName='',purpose,st
     'evade:withdraw':'避开'+targetName,'evade:conceal':'隐匿行踪躲开'+targetName,'evade:blood':'燃寿遁逃避开'+targetName,
     'travel:road':'沿路前往'+targetName,'travel:wilderness':'穿行荒野前往'+targetName,
     'travel:ascend':'尝试飞升前往'+targetName,'travel:smuggle':'尝试偷渡前往'+targetName,'travel:rift':'穿越裂隙前往'+targetName,'travel:ancient-array':'借古阵前往'+targetName,
+    'craft:diagnose':'验看本命功法','craft:restore':'自行推演残法','craft:pledge':'接受'+targetName+'校法并约定还粮','craft:repay':'向'+targetName+'归还一份行粮',
     'craft:study':'研读完整功法','craft:forge':'锻制'+(targetName||'护符'),'craft:alchemy':'炼制'+targetName,'craft:formation':'布设阵法','craft:talisman':'绘制护符',
     'interact:ask':'询问'+targetName,'interact:observe':targetId==='self'?'仔细观察':'观察'+targetName,
     'interact:help':'援助'+targetName,'interact:decline':'婉拒'+targetName,'interact:leave':targetId==='self'?'结束当前互动':'结束与'+targetName+'的互动',

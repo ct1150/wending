@@ -1,7 +1,9 @@
+import {checkActorScene} from './actor-insight.js';
 import { assertPlainData, canonicalStringify } from './identity.js';
 import { DAYS_PER_YEAR, ORIGINS, TALENTS, ITEMS, REALMS, LEGACY_ITEMS, LEGACY_INTENTS } from './model.js';
 import { exactKeys, idField, textField, validateProposal, validateEntities, validateGeneratedScene } from './schema.js';
 import { V7_REALMS, isV7Life, isV7Birth, summarizeLife, initialLifeForBirth, initialItemsForBirth, validateV7BirthProfile, validateV7Profile, realmFor, lifespanLimitFor, maximumSpiritFor, validV7Target } from './cultivation-rules.js';
+import { isExperienceLife, validateExperienceState, experienceAfterAction, GROWTH_TERMS } from './experience.js';
 import { validateStoryDirector } from './story-director.js';
 import { validateReincarnation } from './reincarnation.js';
 import { validateRetrievalMemory } from './retrieval-memory.js';
@@ -11,6 +13,7 @@ export function validateBirth(birth) { exactKeys(birth,['originId','talentIds','
 export function validateLife(life) {
  exactKeys(life,['name','ageDays','lifeLimit','realm','cultivation','injury','items','relations','birth'],['cultivationProfile']);textField(life.name,24);validateBirth(life.birth);
  if(Object.hasOwn(life,'cultivationProfile'))validateV7Profile(life.cultivationProfile);
+ validateExperienceState(life);
  if(isV7Life(life)!==isV7Birth(life.birth)||/[\r\n]/.test(life.name)||!realmFor(life)||life.lifeLimit!==lifespanLimitFor(life))throw new Error('人物境界或寿元无效。');
  if(isV7Life(life)&&life.cultivationProfile.maxSpirit!==maximumSpiritFor(life))throw new Error('灵力上限与此身不符。');
  integer(life.ageDays,16*DAYS_PER_YEAR,isV7Life(life)?1032000*DAYS_PER_YEAR:life.lifeLimit*DAYS_PER_YEAR);integer(life.cultivation,0,9999);integer(life.injury,0,10);
@@ -30,7 +33,7 @@ function validateSummary(row) {
 }
 function same(left, right) { return canonicalStringify(left) === canonicalStringify(right); }
 const lifeSummary=summarizeLife;
-export function validateReceipt(row) {
+export function validateReceipt(row,{turnId}={}) {
   exactKeys(row, ['kind','choiceId','action','elapsedDays','itemChanges','relationChanges','random','before','after','death','birth'],['cultivationResult']);
   const modern=Object.hasOwn(row.before??{},'cultivationProfile');
   if(modern!==Object.hasOwn(row.after??{},'cultivationProfile')||modern!==Object.hasOwn(row,'cultivationResult'))throw new Error('收据规则版本不一致。');
@@ -46,6 +49,14 @@ export function validateReceipt(row) {
   if (row.random.roll !== null) integer(row.random.roll, 0, 99);
   validateSummary(row.before);
   validateSummary(row.after);
+  const beforeExperience=row.before.cultivationProfile?.experience,afterExperience=row.after.cultivationProfile?.experience;
+  const growth=row.action?.intent==='craft'&&GROWTH_TERMS[row.action.approach];
+  if(growth){
+    if(!beforeExperience)throw new Error('旧人生没有这项修行行动。');
+    if(!row.death&&(row.elapsedDays!==growth.days||row.after.cultivationProfile.spirit!==row.before.cultivationProfile.spirit-growth.spiritCost||
+      !same(row.itemChanges,row.action.approach==='repay'?{supplies:-1}:{})))throw new Error('修行代价与行动不符。');
+  }
+  if(Boolean(beforeExperience)!==Boolean(afterExperience)||beforeExperience&&!same(experienceAfterAction(beforeExperience,row.before.realm!==row.after.realm,{action:row.action,death:row.death,turnId:turnId??afterExperience?.commitment?.acceptedTurn}),afterExperience))throw new Error('修行经历与行动不符。');
   if (row.death !== null) {
     exactKeys(row.death, ['cause']);
     if (!['lifespan', 'injury'].includes(row.death.cause)) throw new Error('死亡原因无效。');
@@ -119,13 +130,15 @@ export function validateLiveState(state) {
   integer(state.archiveCursor);
   integer(state.rng, 0, 4294967295);
   validateLife(state.life);
-  if(state.director!==undefined){if(!isV7Life(state.life))throw new Error('旧人生不能静默切换世界规则。');validateStoryDirector(state.director,{turnId:state.turnId});}
+  if(isExperienceLife(state.life)&&!state.director)throw new Error('新人生缺少事件时钟。');
+  if(state.director!==undefined){if(!isV7Life(state.life))throw new Error('旧人生不能静默切换世界规则。');validateStoryDirector(state.director,{turnId:state.turnId,life:state.life});}
   if(state.reincarnation!==undefined){
     validateReincarnation(state.reincarnation);
+    if(state.reincarnation.version===2&&!isExperienceLife(state.life))throw Object.assign(new Error('轮回传承与出生事实不符。'),{code:'REINCARNATION_INVALID_STATE'});
     if(!isV7Life(state.life)||state.reincarnation.parentRunId===state.runId||!same(state.reincarnation.purchases,state.life.birth.cultivationProfile.inheritedBenefits))throw new Error('轮回传承与出生事实不符。');
   }
   validateReceipt(state.birthReceipt);
-  validateEntities(state.relatedEntities);
+  validateEntities(state.relatedEntities);if(!isExperienceLife(state.life)&&state.relatedEntities.some(e=>e.experience))throw new Error('旧人生不能写入对手境界。');
   if (state.birthReceipt.kind !== 'opening' || !same(state.life.birth, state.birthReceipt.birth)) throw new Error('出生事实不可改写。');
   const expired = state.life.ageDays >= state.life.lifeLimit * DAYS_PER_YEAR;
   const injured = state.life.injury >= 10;
@@ -134,7 +147,7 @@ export function validateLiveState(state) {
     validateUnchangedBirth(state);
   } else {
     if (state.revision < 1 || state.lastReceipt === null) throw new Error('已提交回合缺少收据。');
-    validateReceipt(state.lastReceipt);
+    validateReceipt(state.lastReceipt,{turnId:state.turnId});
     if (!same(state.lastReceipt.after, lifeSummary(state.life)) || state.lastReceipt.random.after !== state.rng) throw new Error('人物快照与最后收据不一致。');
     if (state.revision === 1) {
       if (!same(state.lastReceipt, state.birthReceipt)) throw new Error('首个提交必须是原始出生收据。');
@@ -146,7 +159,7 @@ export function validateLiveState(state) {
       if ((!expired && !injured) || state.currentScene !== null || !state.lastReceipt.death) throw new Error('只有真实死亡才能终结。');
     } else {
       if (expired || injured || state.lastReceipt.death !== null) throw new Error('死亡人物不能继续行动。');
-      validateGeneratedScene(state.currentScene);
+      validateGeneratedScene(state.currentScene);checkActorScene(state.currentScene,isExperienceLife(state.life),state.relatedEntities,false);
       if (!same(state.currentScene.entities, state.relatedEntities)) throw new Error('场景实体不一致。');
       for (const proposal of state.currentScene.choices) validateContextualTarget(state, proposal);
       for (const memory of state.currentScene.memoryDeltas) {

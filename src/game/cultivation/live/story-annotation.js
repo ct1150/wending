@@ -1,3 +1,4 @@
+import {validateInsightShape} from './actor-insight.js';
 import { assertPlainData } from './identity.js';
 
 // Scene annotations describe prose that already exists. Keeping their schema
@@ -10,7 +11,8 @@ const fail=()=>{throw Object.assign(new Error('STORY_ANNOTATION_INVALID'),{code:
 function keys(value,required,optional=[]){if(!value||typeof value!=='object'||Array.isArray(value)||required.some(key=>!Object.hasOwn(value,key))||Object.keys(value).some(key=>!required.includes(key)&&!optional.includes(key)))fail();}
 
 export function validateStoryAnnotation(story,blockCount) {
-  assertPlainData(story);keys(story,['pattern','beat','anchors'],['npcs']);
+  assertPlainData(story);keys(story,['pattern','beat','anchors'],['npcs','opponent']);
+  if(story.opponent!==undefined){validateInsightShape(story.opponent,'entityId',blockCount);if(typeof story.opponent.entityId!=='string'||!/^[A-Za-z0-9][A-Za-z0-9:_-]{0,79}$/u.test(story.opponent.entityId))fail();}
   const anchor=value=>Number.isInteger(value)&&value>=0&&value<blockCount;
   if(!STORY_PATTERNS.includes(story.pattern)||!STORY_BEATS.includes(story.beat)||!Array.isArray(story.anchors)||story.anchors.length<1||story.anchors.length>2||new Set(story.anchors).size!==story.anchors.length||story.anchors.some(value=>!anchor(value)))fail();
   if(story.npcs!==undefined){

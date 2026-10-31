@@ -43,11 +43,11 @@ test('rolling back to legacy production ignores a retained knowledge binding and
   assert.equal(result.scene.retrieval,undefined);
 });
 
-test('explicit production knowledge still requires the selected shard after verifying its completion marker',async()=>{
+test('valid production continues with one model call when the selected knowledge shard is missing',async()=>{
   const f=turnFixture(policy(),{get:async key=>key===manifest.manifestKey?marker:null});
   const result=await(await f.turn()).json();
-  assert.equal(result.status,'paused');assert.equal(result.errorCode,'KNOWLEDGE_UNAVAILABLE');assert.equal(f.calls,0);
-  assert.equal(f.reads[0],manifest.manifestKey);assert.ok(f.reads.some(key=>key!==manifest.manifestKey));
+  assert.equal(result.status,'ready',result.errorCode);assert.equal(f.calls,1);
+  assert.equal(result.scene.retrieval,undefined);assert.ok(f.reads.some(key=>key!==manifest.manifestKey));
 });
 
 test('a hung completion-marker read expires, clears its shared check and permits recovery',async()=>{
@@ -63,10 +63,11 @@ test('a hung completion-marker read expires, clears its shared check and permits
   assert.equal(reads,2);
 });
 
-test('hung marker readiness returns bounded public paused responses before any inference',async()=>{
+test('hung knowledge health remains paused while valid production capabilities stay available',async()=>{
   const store={get(){return new Promise(()=>{});}},worker=createStoryProductionWorker({config:policy()});
   const [capabilities,knowledge]=await Promise.all(['/api/story/capabilities','/api/story/knowledge'].map(async path=>(await worker.fetch(request(path),{AI:noAi,STORY_KNOWLEDGE:store})).json()));
-  for(const result of [capabilities,knowledge]){
+  assert.equal(capabilities.available,true);assert.equal(capabilities.errorCode,null);
+  for(const result of [knowledge]){
     assert.equal(result.available,false);assert.equal(result.status,'paused');assert.equal(result.errorCode,'KNOWLEDGE_UNAVAILABLE');
     assert.equal(JSON.stringify(result).includes(manifest.manifestKey),false);
   }
@@ -82,11 +83,27 @@ test('production pins the full corpus version and explicit private KV binding',(
   assert.deepEqual(validateStoryProductionPolicy(legacy),legacy,'existing production policy remains valid');
 });
 
-test('new production refuses inference when private knowledge is absent, partial or mismatched',async()=>{
+test('valid production capabilities permit missing or corrupt knowledge while knowledge health stays truthful',async()=>{
   for(const store of [undefined,{}, {get:async()=>null},{get:async()=>marker+' '},{get:async()=>marker.replace(manifest.contentVersion,'wrong-version')},{get:async()=>{throw Error('storage unavailable');}}]){
     const worker=createStoryProductionWorker({config:policy()}),env={AI:noAi,...(store?{STORY_KNOWLEDGE:store}:{})};
     const result=await(await worker.fetch(request('/api/story/capabilities'),env)).json();
-    assert.equal(result.available,false);assert.equal(result.errorCode,'KNOWLEDGE_UNAVAILABLE');
+    assert.equal(result.available,true);assert.equal(result.errorCode,null);
+    const health=await(await worker.fetch(request('/api/story/knowledge'),env)).json();
+    assert.equal(health.available,false);assert.equal(health.errorCode,'KNOWLEDGE_UNAVAILABLE');
+  }
+});
+
+test('optional knowledge never relaxes invalid production policy or the hard Free boundary',async()=>{
+  for(const [config,errorCode]of [
+    [{...policy(),knowledge:{...policy().knowledge,corpusVersion:'wrong'}},'STORY_PRODUCTION_CONFIGURATION_INVALID'],
+    [{...policy(),currentPlan:{...policy().currentPlan,plan:'workers-paid'}},'FREE_BOUNDARY_UNVERIFIED'],
+    [{...policy(),freeBoundaryProof:{...policy().freeBoundaryProof,hardLimit:false}},'FREE_BOUNDARY_UNVERIFIED'],
+  ]){
+    const f=turnFixture(config,{get(){throw Error('invalid policy must not read knowledge');}});
+    const capabilities=await(await f.worker.fetch(request('/api/story/capabilities'),f.env)).json();
+    assert.equal(capabilities.available,false);assert.equal(capabilities.errorCode,errorCode);
+    const result=await(await f.turn()).json();
+    assert.equal(result.errorCode,errorCode);assert.equal(f.calls,0);assert.deepEqual(f.reads,[]);
   }
 });
 

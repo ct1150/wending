@@ -1,3 +1,4 @@
+import {advancesEvent,GROWTH_TERMS,isExperienceLife} from '../game/cultivation/live/experience.js';
 import {ITEMS} from '../game/cultivation/live/model.js';
 import {isV7Life,nextRealmFor,v7ActionRule,V7_EXPLORE_TARGETS,V7_REALMS,WORLD_TIERS,WORLD_TRAVEL_APPROACHES} from '../game/cultivation/live/cultivation-rules.js';
 import {formatStoryChoiceLabel} from '../game/cultivation/live/story-choice-label.js';
@@ -22,12 +23,39 @@ function entity(c,target){
 function runnable(c,choice,here=location(c)){
   if(!choice)return false;const [intent,approach]=choice.action.split(':'),e=entity(c,choice.target);
   if(intent==='travel'&&e?.name===here||intent==='interact'&&closed(c)&&e)return false;
-  try{return !v7ActionRule({life:c.life,turnId:c.identity.turnId,relatedEntities:e?[e]:[]},{intent,approach,targetId:e?.id??choice.target,stake:choice.stake}).reason;}catch{return false;}
+  const director=isExperienceLife(c.life)?{...c.director,eventCount:c.director.eventCount+(advancesEvent(c.receipt)?1:0)}:c.director;
+  try{return !v7ActionRule({life:c.life,turnId:c.identity.turnId,director,relatedEntities:e?[e]:[]},{intent,approach,targetId:e?.id??choice.target,stake:choice.stake}).reason;}catch{return false;}
 }
 const identity=r=>JSON.stringify([r.action,r.target,r.stake]);
 function cue(c,r){
   const e=entity(c,r.target),targetName=e?.name??ITEMS[r.target]??V7_REALMS[r.target]?.name??'';
   return formatStoryChoiceLabel({action:r.action,targetId:e?.id??r.target,targetName,stake:r.stake,purpose:r.purpose});
+}
+
+// The proposed terms are fixed by the rules, never by a model menu. A pledge
+// additionally needs a live speaker who actually offers those terms in person.
+const offerCue='我愿用'+GROWTH_TERMS.pledge.days+'日替你校法，下次见面还我'+GROWTH_TERMS.repay.items.supplies+'份行粮。';
+function offersRepair(text){
+  if(typeof text!=='string')return false;
+  const line=text.trim().replace(/^[“「『‘"']|[”」』’"']$/gu,'');
+  // Use a direct affirmative offer, not a report, refusal, price negotiation
+  // or a promise inferred from a nearby name or from other speakers' words.
+  if(!/^我(?:愿意?|可以|能|可)/u.test(line)||line.length>160||/不|否|没|无需|无须|免|据说|听说|转述|也许|[“”「」『』？?]/u.test(line))return false;
+  const duration=/(?<![0-9零〇一二两三四五六七八九十百千])(?:三|3)(?:日|天)/u,work=/(?:替|帮|为|给|教|带)你[^。！？]{0,12}(?:校法|校正.{0,6}功法|修补.{0,6}残法)/u;
+  const later=/(?:下次|下回|再见|日后|改日|来日|往后)/u,grain=/(?:还我|给我|带给我|带来|归还)(?:一|1)份(?:行粮|口粮)|(?<![0-9零〇一二两三四五六七八九十百千])(?:一|1)份(?:行粮|口粮)(?:还我|给我|即可归还)/u;
+  return duration.test(line)&&work.test(line)&&later.test(line)&&grain.test(line);
+}
+function growthOptions(c){
+  if(!isExperienceLife(c.life))return [];
+  const e=c.life.cultivationProfile.experience,debt=e.commitment;
+  if(debt?.status==='owed'){
+    const who=c.entities.find(x=>x.id===debt.entityId&&x.kind==='person'&&x.status!=='dead');
+    return who&&!closed(c)?[row('craft:repay',alias(c,who),'向订约之人归还一份行粮')]:[];
+  }
+  if(e.repaired)return [];
+  if(!e.lessons.includes('diagnosed'))return [row('craft:diagnose','self','验明本命功法的缺处')];
+  const terms=row('craft:pledge',SPEAKER,'用三日接受校法，约定下次相见时还一份行粮');
+  return [...(!closed(c)?[terms]:[]),row('craft:restore','self','花时间自己推演，不欠别人行粮')];
 }
 
 // Build choices before asking for narration. Family rotation keeps mechanics
@@ -75,9 +103,13 @@ export function buildStoryChoicePlan(c){
     else if(selected?.intent==='travel'||selected?.intent==='interact'&&selected.approach==='ask')focus=inspect;
     candidates=conflict?[pick(fights.filter(r=>runnable(c,r)),turnIndex)??focus,pick(evasions.filter(r=>runnable(c,r)),turnIndex),observe()]:[focus,opportunity,focus?.action==='interact:observe'&&!isClosed?leave:inspect];
   }
+  if(!conflict){
+    const growth=growthOptions(c).filter(r=>runnable(c,r));
+    if(growth.length)candidates=growth[0].action==='craft:diagnose'?[candidates[0],...growth,...candidates.slice(1)]:[...growth,...candidates];
+  }
   const fallback=[observe(),rest(),practice,...explore.slice(0,2)].filter(r=>runnable(c,r));
   const slots=[],seen=new Set();for(const r of [...candidates,...fallback]){if(runnable(c,r)&&!seen.has(identity(r))){seen.add(identity(r));slots.push({id:['a','b','c'][slots.length],...r});if(slots.length===3)break;}}
-  return {slots,fallback,cues:slots.map(r=>cue(c,r))};
+  return {slots,fallback,cues:slots.map(r=>r.action==='craft:pledge'?cue(c,r)+'。若在场人愿意指点，可由本人提议：“'+offerCue+'”':cue(c,r))};
 }
 
 // Binding is restricted to a real dialogue speaker. A mention in free prose
@@ -92,7 +124,7 @@ export function materializeStoryChoices(plan,c,blocks){
   function add(slot){
     let target=slot.target,speaker;
     if(target===SPEAKER||typeof target==='string'&&/^k\d+$/u.test(target)&&entity(c,target)?.kind==='person'){
-      speaker=target===SPEAKER?cast[0]:cast.find(x=>x.target===target);if(!speaker)return;target=speaker.target;
+      speaker=slot.action==='craft:pledge'?cast.find(x=>offersRepair(x.text)&&runnable(c,{...slot,target:x.target})):target===SPEAKER?cast[0]:cast.find(x=>x.target===target);if(!speaker)return;target=speaker.target;
     }
     let purpose=slot.purpose;
     if(slot.action==='interact:ask'&&slot.purpose==='请对方说明事情的来由'&&typeof speaker?.text==='string'){

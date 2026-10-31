@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { createLiveGame,prepareOpening,prepareChoice,commitTurn } from '../src/game/cultivation/live/engine.js';
-import { buildStoryContext } from '../src/game/cultivation/live/memory.js';
+import { buildStoryContext,validateGeneratedScene as validateSceneForContext } from '../src/game/cultivation/live/memory.js';
 import { SCENE_SCHEMA,validateGeneratedScene as validateSceneStructure } from '../src/game/cultivation/live/schema.js';
 import { sha256 } from '../src/game/cultivation/live/identity.js';
 import { buildGlmWire,decodeGlmScene } from '../src/worker/story-glm-wire.js';
@@ -39,6 +39,40 @@ test('v7 named generation puts two or three playable choices before optional sto
   assert.equal(scene.memoryDeltas[0].text,scene.blocks[0].text);
   assert.match(built.instructions,/独立的固定安全规则/,'the modern prompt must retain its supplied system contract');
   assert.match(built.instructions,/短问题直接回答，不凑字数/);
+  assert.match(buildStoryInput({...GLM_PROFILE,storyActions:true},c).messages[0].content,/不是已发生事实或强制任务/,'pacing guidance in the actual provider request must not override the player');
+});
+
+test('a short v7 answer commits without padding while invalid identity, anchors and actions still fail',async()=>{
+  const state=createLiveGame({runId:'short-answer',seed:42,engineVersion:7});
+  const opening=prepareOpening(state,{requestId:'short-opening'}),firstWire=wireFixture();
+  firstWire.blocks[0].text='江陌站在渡口，指给你看水流改道后露出的旧桩。';firstWire.memoryDeltas=[];
+  const opened=commitTurn(state,opening,decodeGlmScene(firstWire,buildStoryContext(state,opening),{storyActions:true}));
+  const pending=prepareChoice(opened,{requestId:'short-question',choiceId:opened.currentScene.choices[0].id}),c=buildStoryContext(opened,pending);
+  const answer=wireFixture();answer.blocks=[{kind:'dialogue',speaker:answer.choices[0].target,text:'水流是昨夜开始改道的，旧桩也是那时露出来的。'}];answer.memoryDeltas=[];answer.choices[0].purpose='昨夜河岸可曾有人经过';
+  const before=JSON.stringify(c),result=await generateProviderScene({run:async()=>({model:GLM_MODEL_ID,choices:[{finish_reason:'stop',message:{content:JSON.stringify(answer)}}],usage:{prompt_tokens:100,completion_tokens:80,total_tokens:180}})},{...GLM_PROFILE,storyActions:true},c);
+  assert.equal(result.status,'ready',result.errorCode);
+  assert.equal(result.scene.blocks[0].text,answer.blocks[0].text);
+  assert.equal(JSON.stringify(c),before);
+  const committed=commitTurn(opened,pending,result.scene);
+  assert.equal(committed.currentScene.blocks[0].text,answer.blocks[0].text);
+  assert.equal(committed.life.ageDays,opened.life.ageDays);
+  assert.throws(()=>validateSceneForContext({...result.scene,id:'foreign-scene'},c));
+  assert.throws(()=>commitTurn(opened,pending,{...result.scene,story:{...result.scene.story,anchors:[7]}}));
+  assert.throws(()=>commitTurn(opened,pending,{...result.scene,choices:result.scene.choices.map(choice=>({...choice,intent:'fight',targetId:'self'}))}));
+});
+
+for(const [name,text,beat,pacing]of [
+  ['long prose','江陌指着渡口旧桩。'+'水边仍留着可供核对的刻痕。'.repeat(52),'progress',{}],
+  ['early climax','江陌指着渡口旧桩，昨夜水道改线的谜底终于说清。'+'河岸旧痕与水流的变化都在眼前，需要由你决定如何回应。'.repeat(8),'climax',{}],
+  ['overdue progress','江陌指着渡口旧桩，只把昨夜水流的去向再讲清楚。'+'河岸旧痕与水流的变化都在眼前，需要由你决定如何回应。'.repeat(8),'progress',{beatOverdue:true,opportunityRequired:true}],
+  ['same arc type','江陌指着渡口旧桩，水道改线的缘由已经说清。'+'河岸旧痕与水流的变化都在眼前，需要由你决定如何回应。'.repeat(8),'resolution',{completedPatterns:['investigation']}],
+  ['unrecorded reversal','江陌指着渡口旧桩，眼前水流却转向了另一条支流。'+'河岸旧痕与水流的变化都在眼前，需要由你决定如何回应。'.repeat(8),'reversal',{}],
+])test(`a valid v7 ${name} can complete the provider and commit boundary`,async()=>{
+  const state=createLiveGame({runId:'editorial-'+name.replaceAll(' ','-'),seed:42,engineVersion:7}),pending=prepareOpening(state,{requestId:'editorial-open'}),c=structuredClone(buildStoryContext(state,pending)),wire=wireFixture();
+  wire.blocks[0].text=text;wire.story.beat=beat;if(name!=='same arc type')wire.memoryDeltas=[];Object.assign(c.director.pacing,pacing);
+  const result=await generateProviderScene({run:async()=>({model:GLM_MODEL_ID,choices:[{finish_reason:'stop',message:{content:JSON.stringify(wire)}}],usage:{prompt_tokens:100,completion_tokens:80,total_tokens:180}})},{...GLM_PROFILE,storyActions:true},c);
+  assert.equal(result.status,'ready',result.errorCode);
+  assert.equal(commitTurn(state,pending,result.scene).currentScene.blocks[0].text,text);
 });
 
 test('v7 GLM input omits unsupported anchor uniqueness without weakening the canonical schema',()=>{

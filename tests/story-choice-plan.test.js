@@ -4,8 +4,11 @@ import {buildStoryChoicePlan,materializeStoryChoices} from '../src/worker/story-
 import {createLiveGame,prepareOpening,commitTurn,prepareChoice} from '../src/game/cultivation/live/engine.js';
 import {buildStoryContext} from '../src/game/cultivation/live/memory.js';
 import {decodeGlmScene} from '../src/worker/story-glm-wire.js';
-import {v7ActionRule} from '../src/game/cultivation/live/cultivation-rules.js';
+import {v7ActionRule,TECHNIQUES} from '../src/game/cultivation/live/cultivation-rules.js';
 import {ITEMS} from '../src/game/cultivation/live/model.js';
+import {GROWTH_TERMS} from '../src/game/cultivation/live/experience.js';
+import {generateProviderScene} from '../src/worker/story-provider-core.js';
+import {GLM_PROFILE} from '../src/worker/story-config.js';
 
 const state=createLiveGame({runId:'plan-at-birth',seed:42,engineVersion:7}),opening=prepareOpening(state,{requestId:'open'});
 const context=()=>structuredClone(buildStoryContext(state,opening));
@@ -61,4 +64,36 @@ test('an active clue grounds the next question, while exhausted resources never 
   for(const id of Object.keys(c.life.items))c.life.items[id]=0;c.life.cultivationProfile.spirit=0;
   const rows=materializeStoryChoices(buildStoryChoicePlan(c),c,blocks);assert.ok(rows.some(r=>r.purpose.includes('断桥下的陶罐')));
   for(let turn=2;turn<24;turn++){c.identity.turnId=turn;const next=materializeStoryChoices(buildStoryChoicePlan(c),c,[]);assert.ok(next.length>=2);for(const r of next)assert.ok(!r.action.startsWith('craft:')&&!r.action.startsWith('travel:')&&r.action!=='practice:breakthrough');}
+});
+
+test('marked life can accept or decline a quoted repair offer, and only repay the original present creditor',async()=>{
+  const born=n=>createLiveGame({runId:'growth-menu',seed:n,engineVersion:7,experienceVersion:1});
+  let first;for(let i=1;i<=100;i++){const s=born(i);if(TECHNIQUES[s.life.cultivationProfile.experience.activeTechniqueId].defective&&s.life.items.supplies>=1){first=s;break;}}
+  assert.ok(first);const rows=(c,b)=>materializeStoryChoices(buildStoryChoicePlan(c),c,b);
+  const commit=async(state,p,blocks)=>{
+    let calls=0;
+    const ai={run:async model=>{calls++;return {model,choices:[{finish_reason:'stop',message:{content:JSON.stringify({blocks})}}],usage:{prompt_tokens:100,completion_tokens:100,total_tokens:200}};}};
+    const generated=await generateProviderScene(ai,{...GLM_PROFILE,storyActions:true,engineMenu:true},buildStoryContext(state,p));
+    assert.equal(calls,1);assert.equal(generated.status,'ready',generated.errorCode);return commitTurn(state,p,generated.scene);
+  };
+  const choose=(s,approach)=>{const choice=s.currentScene.choices.find(x=>x.approach===approach);assert.ok(choice,approach);return prepareChoice(s,{requestId:'take-'+approach,choiceId:choice.id});};
+  const open=prepareOpening(first,{requestId:'open'}),s1=await commit(first,open,blocks),diagnosis=choose(s1,'diagnose'),ctx=buildStoryContext(s1,diagnosis);
+  assert.equal(diagnosis.receipt.elapsedDays,GROWTH_TERMS.diagnose.days);
+  const name='渡口药师',offer={kind:'dialogue',speaker:{kind:'person',name},text:'我愿用三日替你校法，下次见面还我一份行粮。'};
+  const other={kind:'dialogue',speaker:{kind:'person',name:'卖油翁'},text:'你来买油么？'};
+  assert.ok(!rows(ctx,blocks).some(r=>r.action==='craft:pledge'),'a speaker who made no offer is not a creditor');
+  for(const text of ['我不愿用三日替你校法，下次见面还我一份行粮。','我愿用13天替你校法，下次见面还我一份行粮。','我愿用三日替你校法，下次见面拿十一份口粮还我。'])assert.ok(!rows(ctx,[{...offer,text}]).some(r=>r.action==='craft:pledge'));
+  assert.ok(rows(ctx,[{...offer,text:'我可以替你校正这门功法，花三天便成；改日再见时，带一份口粮还我即可。'}]).some(r=>r.action==='craft:pledge'));
+  const s2=await commit(s1,diagnosis,[other,offer]),restore=choose(s2,'restore'),pledge=choose(s2,'pledge');
+  assert.equal(restore.receipt.elapsedDays,GROWTH_TERMS.restore.days);assert.equal(restore.nextLife.cultivationProfile.experience.repaired,true);assert.equal(restore.nextLife.cultivationProfile.experience.commitment,undefined);
+  const creditor=s2.currentScene.entities.find(x=>x.name===name);
+  assert.equal(pledge.receipt.action.targetId,creditor.id);assert.equal(pledge.receipt.elapsedDays,GROWTH_TERMS.pledge.days);assert.equal(s2.life.cultivationProfile.experience.commitment,undefined);
+  assert.equal(pledge.nextLife.cultivationProfile.experience.commitment.entityId,creditor.id);
+  const due=buildStoryContext(s2,pledge),idx=due.entities.findIndex(x=>x.id===creditor.id),repayable={...offer,speaker:'k'+(idx+1),text:'渡船已经靠岸。'};
+  assert.ok(idx>=0);assert.ok(!rows(due,[other]).some(r=>r.action==='craft:repay'),'an absent creditor cannot receive supplies');
+  const twin=structuredClone(due);twin.entities.push({id:'another-person',kind:'person',name});assert.ok(!rows(twin,[{...repayable,speaker:'k'+twin.entities.length}]).some(r=>r.action==='craft:repay'),'even a namesake cannot receive payment');
+  const s3=await commit(s2,pledge,[other,repayable]),repay=choose(s3,'repay');
+  assert.equal(repay.receipt.action.targetId,creditor.id);assert.deepEqual(repay.receipt.itemChanges,{supplies:-GROWTH_TERMS.repay.items.supplies});assert.equal(repay.nextLife.cultivationProfile.experience.commitment.status,'fulfilled');
+  assert.ok(!rows(buildStoryContext(s3,repay),[repayable]).some(r=>r.action==='craft:repay'));
+  assert.ok(!rows(context(),[offer]).some(r=>r.action.split(':')[1] in GROWTH_TERMS),'old lives do not acquire the new actions');
 });

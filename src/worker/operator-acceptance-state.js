@@ -13,7 +13,7 @@ export function rememberAcceptanceTurn(previous,pending,scene) {
   for (const row of delta.records) add({...row,...common});
   for (const entity of scene.entities) {
     const id = 'e:'+sha256(entity.id).slice(0,40), prior = rows.get(id);
-    add({id,...common,source:'narrative',kind:'entity',entity:{id:entity.id,name:entity.name,kind:entity.kind},status:prior?.status === 'dead' ? 'dead' : entity.status ?? prior?.status ?? 'unknown'});
+    add({id,...common,source:'narrative',kind:'entity',entity:{id:entity.id,name:entity.name,kind:entity.kind,...(entity.experience?{experience:copy(entity.experience)}:{})},status:prior?.status === 'dead' ? 'dead' : entity.status ?? prior?.status ?? 'unknown'});
   }
   for (const entityId of Object.keys(pending.receipt.relationChanges)) add({id:'q:'+sha256(entityId).slice(0,40),...common,source:'rules',kind:'ruleRelation',entityId,value:pending.nextLife.relations[entityId]});
   if (rows.size > 256) fail('ACCEPTANCE_STORAGE_LIMIT');

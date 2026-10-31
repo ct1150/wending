@@ -1,6 +1,7 @@
 import { createLiveGame, prepareOpening, prepareChoice, commitTurn, settleDeath } from '../game/cultivation/live/engine.js';
 import { buildStoryContext, validateGeneratedScene, buildMemoryDelta } from '../game/cultivation/live/memory.js';
 import { stateHash } from '../game/cultivation/live/identity.js';
+import { isExperienceLife, EXPERIENCE_VERSION } from '../game/cultivation/live/experience.js';
 import { buildRebirthOptions } from '../game/cultivation/live/reincarnation.js';
 const defaultEngine={createLiveGame,prepareOpening,prepareChoice,commitTurn,settleDeath};
 const copy=value=>value===undefined?undefined:JSON.parse(JSON.stringify(value));
@@ -35,6 +36,7 @@ export function createLiveSession({archive,client,engine=defaultEngine,onChange=
     }
     const entityIds=[...new Set([
       row.pending.receipt.action?.targetId,
+      row.state.life.cultivationProfile?.experience?.commitment?.entityId,
       row.state.director?.mainQuest?.entityId,
       ...(row.state.director?.sideQuests??[]).map(quest=>quest.entityId),
       ...(row.state.director?.memory?.clues??[]).map(clue=>clue.entityId),
@@ -86,11 +88,23 @@ export function createLiveSession({archive,client,engine=defaultEngine,onChange=
     emit();
     return true;
   }
-  async function generate(row,{reuseAttempt=false}={}) {
-    preview=null;generationStatus='generating';
-    if(await death(row))return;
+  // Decide the immutable birth contract BEFORE creating/replacing a physical
+  // archive. Older available servers still support their original unmarked V7.
+  async function birthContract(options,required=false){
+    if(options.engineVersion!==7&&!Object.hasOwn(options,'experienceVersion'))return {options};
+    if(Object.hasOwn(options,'experienceVersion')&&(options.engineVersion!==7||options.experienceVersion!==EXPERIENCE_VERSION))throw fault('EXPERIENCE_UNSUPPORTED');
     const capability=await client.capabilities();
     if(!capability.available)throw fault(capability.errorCode||'SERVICE_UNAVAILABLE');
+    const supported=capability.experienceVersion===EXPERIENCE_VERSION;
+    if(!supported&&(required||Object.hasOwn(options,'experienceVersion')))throw fault('EXPERIENCE_UNSUPPORTED');
+    return {options:supported?{...options,experienceVersion:EXPERIENCE_VERSION}:options,capability};
+  }
+  async function generate(row,{reuseAttempt=false,capability:knownCapability}={}) {
+    preview=null;generationStatus='generating';
+    if(await death(row))return;
+    const capability=knownCapability??await client.capabilities();
+    if(!capability.available)throw fault(capability.errorCode||'SERVICE_UNAVAILABLE');
+    if(isExperienceLife(row.state.life)&&capability.experienceVersion!==EXPERIENCE_VERSION)throw fault('EXPERIENCE_UNSUPPORTED');
     const storyActions=!row.attempt&&capability.storyActions===true;
     if(capability.storyActions!==true&&(row.generation?.storyActions||row.pending.receipt.action?.intent==='interact'))throw fault('SERVICE_UNAVAILABLE');
     const generation=row.generation??{storyActions,context:await contextFor(row,null,storyActions)};
@@ -159,7 +173,8 @@ export function createLiveSession({archive,client,engine=defaultEngine,onChange=
       await reload();
       if(loaded)return;
       const expectedArchiveId=loaded?.archiveId??null;
-      const state=engine.createLiveGame(options);
+      const birth=await birthContract(options);
+      const state=engine.createLiveGame(birth.options);
       const pending=engine.prepareOpening(state,{requestId:id()});
       // Validate the exact opening DTO before activating immutable birth facts.
       try { buildStoryContext(state,pending,[],{selection:'relevance-v1',openTotal:0}); }
@@ -168,7 +183,7 @@ export function createLiveSession({archive,client,engine=defaultEngine,onChange=
       preview=null;
       status='pending';
       emit();
-      await generate(loaded);
+      await generate(loaded,{capability:birth.capability});
     });
   }
   function startNew(options={},expectedArchiveId=null) {
@@ -176,7 +191,8 @@ export function createLiveSession({archive,client,engine=defaultEngine,onChange=
     return run(async()=>{
       await reload();
       if((loaded?.archiveId??null)!==expectedArchiveId)throw fault('ARCHIVE_CONFLICT');
-      const state=engine.createLiveGame(options);
+      const birth=await birthContract(options);
+      const state=engine.createLiveGame(birth.options);
       const pending=engine.prepareOpening(state,{requestId:id()});
       try { buildStoryContext(state,pending,[],{selection:'relevance-v1',openTotal:0}); }
       catch { throw fault('BIRTH_CONTEXT_INVALID'); }
@@ -185,7 +201,7 @@ export function createLiveSession({archive,client,engine=defaultEngine,onChange=
       status='pending';
       errorCode=null;
       emit();
-      await generate(loaded);
+      await generate(loaded,{capability:birth.capability});
     });
   }
   function reincarnate(options={},rewardIds=[],expectedArchiveId=null) {
@@ -194,13 +210,14 @@ export function createLiveSession({archive,client,engine=defaultEngine,onChange=
       await reload(expectedArchiveId);
       if(loaded?.reincarnatedTo)throw fault('REINCARNATION_ALREADY_CLAIMED');
       if(!loaded||loaded.pending||loaded.state.phase!=='dead')throw fault('REINCARNATION_REQUIRES_DEATH');
-      const state=engine.createLiveGame({...options,...buildRebirthOptions(loaded.state,rewardIds)});
+      const birth=await birthContract({...options,...buildRebirthOptions(loaded.state,rewardIds)},isExperienceLife(loaded.state.life));
+      const state=engine.createLiveGame(birth.options);
       const pending=engine.prepareOpening(state,{requestId:id()});
       try { buildStoryContext(state,pending,[],{selection:'relevance-v1',openTotal:0}); }
       catch { throw fault('BIRTH_CONTEXT_INVALID'); }
       loaded=await archive.reincarnate({state,pending,rewardIds,expectedArchiveId});
       preview=null;status='pending';errorCode=null;emit();
-      await generate(loaded);
+      await generate(loaded,{capability:birth.capability});
     });
   }
   function load() {

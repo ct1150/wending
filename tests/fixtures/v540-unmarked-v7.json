@@ -1,0 +1,74 @@
+{
+  "sourceCommit": "e5f3cc287b4bdf106748924abf433aeca5f20274",
+  "options": {
+    "runId": "v7-mechanics",
+    "seed": 42,
+    "engineVersion": 7
+  },
+  "openingRequestId": "frozen-opening",
+  "scene": {
+    "id": "r:88d5c5505f1d09bb:t1:s:bridge",
+    "title": "旧桥的水痕",
+    "location": "落苇渡",
+    "blocks": [
+      {
+        "kind": "narration",
+        "text": "陈砚在落苇渡等雨停。桥腹的旧刻痕露出水面，尚无人解释它的来历。沿水而下的细沙还在桥脚缓缓堆积，你可以留下休整，也可以问清旧事再决定去留。沿水而下的细沙还在桥脚缓缓堆积，你可以留下休整，也可以问清旧事再决定去留。沿水而下的细沙还在桥脚缓缓堆积，你可以留下休整，也可以问清旧事再决定去留。沿水而下的细沙还在桥脚缓缓堆积，你可以留下休整，也可以问清旧事再决定去留。沿水而下的细沙还在桥脚缓缓堆积，你可以留下休整，也可以问清旧事再决定去留。沿水而下的细沙还在桥脚缓缓堆积，你可以留下休整，也可以问清旧事再决定去留。"
+      }
+    ],
+    "entities": [
+      {
+        "id": "r:88d5c5505f1d09bb:t1:e:chen",
+        "name": "陈砚",
+        "kind": "person"
+      }
+    ],
+    "choices": [
+      {
+        "id": "r:88d5c5505f1d09bb:t1:c:rest",
+        "label": "在渡口休整",
+        "intent": "rest",
+        "targetId": "self",
+        "approach": "recover",
+        "stake": "low"
+      },
+      {
+        "id": "r:88d5c5505f1d09bb:t1:c:ask",
+        "label": "询问陈砚旧痕的来历",
+        "intent": "interact",
+        "targetId": "r:88d5c5505f1d09bb:t1:e:chen",
+        "approach": "ask",
+        "stake": "low"
+      },
+      {
+        "id": "r:88d5c5505f1d09bb:t1:c:look",
+        "label": "观察桥腹水痕",
+        "intent": "interact",
+        "targetId": "self",
+        "approach": "observe",
+        "stake": "low"
+      }
+    ],
+    "memoryDeltas": [],
+    "story": {
+      "pattern": "investigation",
+      "beat": "progress",
+      "anchors": [
+        0
+      ]
+    }
+  },
+  "choiceRequestId": "frozen-rest",
+  "choiceId": "r:88d5c5505f1d09bb:t1:c:rest",
+  "expected": {
+    "birthState": "9b97b2847828e012f09b75b131cffd62c92bcd46b930649c2a93d90cf964dde3",
+    "birthRng": 3123853561,
+    "opening": "33e6a28d7579c19a655b0462d1804a06a92d7eb26592bf2d3df936b205aafb75",
+    "openingState": "17b5e20c8f123f67b0b34056e9df2b4e50a85c40896ce49e34bf6198956ab795",
+    "openingDirector": "55c0cfea78d93ba927919ab7a7038ba11e8ee462a9c2d95effb3eeb5f0337a7e",
+    "pendingAction": "1569d5d73be35ca123d955e354cd74d0725334a8c739cff8dfe7d522c6639046",
+    "actionReceipt": "6340212978f3fc072a2f9b12f4fc885d50622f1803551c93897d2f071dbf5b56",
+    "nextLife": "fa684b30e1e5c0b86d1cd9d2e926a4e3290624c845302af3c90806f6a5781a35",
+    "nextRng": 1140854276
+  }
+}

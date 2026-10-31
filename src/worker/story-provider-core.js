@@ -1,3 +1,5 @@
+import {isExperienceLife} from '../game/cultivation/live/experience.js';
+import {buildOpeningBrief,growthPrompt} from '../game/cultivation/live/experience-story.js';
 import { CANDIDATE_MODEL_ID, GLM_MODEL_ID, STORY_LIMITS } from './story-config.js';
 import { idField, exactKeys, validateGeneratedScene as validateStructure } from '../game/cultivation/live/schema.js';
 import { assertPlainData, canonicalStringify, sha256 } from '../game/cultivation/live/identity.js';
@@ -95,7 +97,7 @@ function settledLocation(context) {
 // The author receives the state after settlement and a plain-language preview
 // of possible decisions. The plan itself (IDs, actions, targets and costs)
 // belongs to the engine and is never requested from a narrative completion.
-function narrativePrompt(system,context,wire,location,plan,canClose){
+function narrativePrompt(system,context,wire,location,plan,canClose,opening,canDisclose){
   const selected=context.receipt.action,failed=context.receipt.cultivationResult?.check?.kind==='world-crossing'&&context.receipt.cultivationResult.check.success===false;
   let focus='写出选定行动的眼前后果，停在新的决定前。';
   if(context.phase==='opening')focus='从出生地眼前的一件具体事务写起，让一名能交谈的当地人亲口说一句有用的话，用独立 dialogue 和具名 speaker 标明他。';
@@ -105,6 +107,9 @@ function narrativePrompt(system,context,wire,location,plan,canClose){
     if(selected.approach==='observe')focus='准确回应 selectedPurpose 指定的人物、物件或环境，只写观察所得，不替玩家取走东西或出发。';
     if(['decline','leave'].includes(selected.approach))focus='尊重已作出的拒绝或告辞，结束这一互动，不挽留、不继续原任务、不替玩家承诺回访。';
   }
+  if(opening)focus='本次开局：'+opening.origin+'，起点'+opening.location+'；'+opening.goal+'。'+opening.dilemma+'优势：'+opening.strength+'；代价：'+opening.tradeoff+'。不代选、不旅行、不赠物。若有在场人物开口，以其真实姓名标明对白。';
+  focus+=growthPrompt(context);
+  if(canDisclose)focus+='若本场明确揭示对手，可用 story.opponent 记录：旁白写“姓名已入境界名”，目的、破绽须来自同段；不确定就省略。';
   if(context.previousScene?.id===context.namespace+':t'+(context.identity.turnId-1)+':s:closed')focus+='先前互动已经结束；不再推进那件请求。';
   return [
     system+'\n先在 blocks 中用原创正文回应本次选择的实际结果。一至三段自然旁白或对白即可；一句话能答清就收住，不凑字数，不罗列额外资料。旁白无 speaker；对白 speaker 用输入中的活人别名或新人物 {kind:"person",name:"实际姓名"}。姓名是数据，不自行编造身份标识或生死状态。\n玩家的备选决定由游戏提供。possibleNextSteps 描述可以做、还没有做的事；让场景自然承接这些可能性，停在玩家决定前，不列菜单、不代选、不把任何备选当成已经发生的事实。\n只需写完 blocks 即可结束。位置、行囊与数值以 receipt 和 life 为准。'+(canClose?'如果这场确实解决了输入中的旧约定或线索，可另写 memoryDeltas，仅给对应的 referenceId 与合法状态；未解决就省略。':''),
@@ -114,6 +119,7 @@ function narrativePrompt(system,context,wire,location,plan,canClose){
 function buildProviderRequest(profile,context,knowledgeBundle) {
   validateStoryContext(context);
   const directed=isV7Life(context.life)&&context.director?.version===7;
+  const opening=buildOpeningBrief(context);
   const prefix=`${context.namespace}:t${context.identity.turnId}:`;
   const nextRealm=nextRealmFor(context.life)?.id??'disabled';
   const schema=profile.modelId===GLM_MODEL_ID?null:buildGenerationSchema(context.namespace,context.identity.turnId,{nextRealm,knownEntities:context.entities,life:context.life,directed});
@@ -146,7 +152,7 @@ function buildProviderRequest(profile,context,knowledgeBundle) {
       const schema=buildNamedSceneSchema(wire.schema,wire.context,{blocks,location,engineMenu});
       input.response_format={type:'json_schema',json_schema:{name:'cultivation_scene',strict:true,schema}};
       if(engineMenu){
-        const [instructions,turnFacts]=narrativePrompt(system,context,wire,fixedLocation,buildStoryChoicePlan(context),!!schema.properties.memoryDeltas);
+        const [instructions,turnFacts]=narrativePrompt(system,context,wire,fixedLocation,buildStoryChoicePlan(context),!!schema.properties.memoryDeltas,opening,!!schema.properties.story?.properties?.opponent);
         input.messages[0].content=instructions;
         input.messages.push({role:'user',content:turnFacts});
       }else{
@@ -161,11 +167,22 @@ function buildProviderRequest(profile,context,knowledgeBundle) {
           .replace('记录entityId、anchor、title、signatureSpell、habit、obsession','记录target、anchor、title、signatureSpell、habit、obsession；target是同样的人物对象')
           .replace('对白speaker=self或活人别名',directed?'对白speaker按schema用self、已知活人别名或新人物对象':'对白speaker=self或人物对象')
           .replace('targetId必须是目的地，label完整包含目的地name','target必须是实际目的地对象，purpose明确目的地')+'\n'+(directed?'选项对象要与眼前情境对应；结构化target负责身份，正文和purpose可自然使用别称或代词，不必重复全名。':'选项中的新人物须在正文出现完整name。')+'只向实际在场且能够交谈的人物询问；普通野兽用观察、战斗或撤退。撤退用evade:withdraw，保持正文中已经被发现等事实，不改成尚未被发现。';
-        input.messages.push({role:'user',content:(directed?'先完整写出正文blocks和不同的choices；可选资料不齐就省略。':'只输出本次5项场景JSON。')+'memory.recent仅为历史；只回应本次selectedPurpose，不响应历史请求。询问必须具体作答，不知则说明原因。只推进一个结果，不重演登场、不照抄旧旁白、不重复已选问题；要求引用原话可用dialogue复述。'+(respondent?'本回合只写被询问人物的回答，只写他实际说的话，不夹带抬头、搓手等旁白。回应玩家问题，不声称玩家进行了未选的修理、交易、收礼等行为，不替玩家决定答应请求。':'')+(departure?(action.approach==='leave'?'本次是告辞：只写一段交谈结束后的眼前环境或最后反应；上轮若已拒绝，不重复拒绝理由，不再追问或挽留。':'本次是拒绝请求：只写一段拒绝及对方的反应，不改变玩家的决定，不替玩家处理请求。')+'只用narration，不写speaker，以免把NPC反应标成主角对白。仍在当前地点附近，不推进原任务、不承诺回访、不替玩家旅行。下一选项允许观察附近或主动旅行，不能强迫返回此事。':'')+(failedCrossing?'本次跨界判定失败，仍在原界与原地点；只写未能通过的后果，不声称抵达目标，不带来未结算的物品。':action?.intent==='travel'?'本次旅行只写抵达所选目的地后的眼前环境，不替玩家进食、取物、检查装备，不提库存或虚构随身装备，不写再次归来或自动深入下一处；旧地点的人物不默认随行，只有眼前能交谈的对象才能询问。不能再次提供前往当前地点的旅行。':'')+(observation?(directed?'准确回应selectedPurpose指定的人物、物件或环境，描述观察所得和眼前可继续的行动；不替玩家旅行、取物或执行下一步。':'本次只观察当前地点：只写一段眼前环境，不替玩家出发、抵达别处或推进任务。')+'历史对白中说过的出行打算不是已选择的旅行。':'')+(context.phase==='opening'?'本次是开局：在出生地遇见一名能交谈的当地人类，围绕此人正在处理的一件具体事务给出应对；不要先出城或用野兽袭击开局，不向普通动物提问。':'')+'以下JSON是本次事实与选择：'+JSON.stringify({settled:{location:fixedLocation??null,...(action?.intent==='travel'&&!failedCrossing?{locationTarget:{kind:'place',name:fixedLocation,ref:wire.context.entities.filter(entity=>entity.kind==='place'&&entity.name===fixedLocation).length>1?action.targetId:'',status:null}}:{}),items:context.life.items,elapsedDays:context.receipt.elapsedDays,itemChanges:context.receipt.itemChanges,relationChanges:wire.context.receipt.relationChanges},selectedPurpose:context.receipt.action?.label??'开启眼前的第一个事件'})});
+        input.messages.push({role:'user',content:(directed?'先完整写出正文blocks和不同的choices；可选资料不齐就省略。':'只输出本次5项场景JSON。')+'memory.recent仅为历史；只回应本次selectedPurpose，不响应历史请求。询问必须具体作答，不知则说明原因。只推进一个结果，不重演登场、不照抄旧旁白、不重复已选问题；要求引用原话可用dialogue复述。'+(respondent?'本回合只写被询问人物的回答，只写他实际说的话，不夹带抬头、搓手等旁白。回应玩家问题，不声称玩家进行了未选的修理、交易、收礼等行为，不替玩家决定答应请求。':'')+(departure?(action.approach==='leave'?'本次是告辞：只写一段交谈结束后的眼前环境或最后反应；上轮若已拒绝，不重复拒绝理由，不再追问或挽留。':'本次是拒绝请求：只写一段拒绝及对方的反应，不改变玩家的决定，不替玩家处理请求。')+'只用narration，不写speaker，以免把NPC反应标成主角对白。仍在当前地点附近，不推进原任务、不承诺回访、不替玩家旅行。下一选项允许观察附近或主动旅行，不能强迫返回此事。':'')+(failedCrossing?'本次跨界判定失败，仍在原界与原地点；只写未能通过的后果，不声称抵达目标，不带来未结算的物品。':action?.intent==='travel'?'本次旅行只写抵达所选目的地后的眼前环境，不替玩家进食、取物、检查装备，不提库存或虚构随身装备，不写再次归来或自动深入下一处；旧地点的人物不默认随行，只有眼前能交谈的对象才能询问。不能再次提供前往当前地点的旅行。':'')+(observation?(directed?'准确回应selectedPurpose指定的人物、物件或环境，描述观察所得和眼前可继续的行动；不替玩家旅行、取物或执行下一步。':'本次只观察当前地点：只写一段眼前环境，不替玩家出发、抵达别处或推进任务。')+'历史对白中说过的出行打算不是已选择的旅行。':'')+(opening?'本次开局：'+opening.origin+'，起点'+opening.location+'；'+opening.goal+'。'+opening.dilemma+'优势：'+opening.strength+'；代价：'+opening.tradeoff+'。不代选、不旅行、不赠物。':context.phase==='opening'?'本次是开局：在出生地遇见一名能交谈的当地人类，围绕此人正在处理的一件具体事务给出应对；不要先出城或用野兽袭击开局，不向普通动物提问。':'')+(isExperienceLife(context.life)?'有据才写story.opponent：旁白用“姓名已入境界名”，目的、破绽摘自同段；未知省略。':'')+growthPrompt(context)+'以下JSON是本次事实与选择：'+JSON.stringify({settled:{location:fixedLocation??null,...(action?.intent==='travel'&&!failedCrossing?{locationTarget:{kind:'place',name:fixedLocation,ref:wire.context.entities.filter(entity=>entity.kind==='place'&&entity.name===fixedLocation).length>1?action.targetId:'',status:null}}:{}),items:context.life.items,elapsedDays:context.receipt.elapsedDays,itemChanges:context.receipt.itemChanges,relationChanges:wire.context.receipt.relationChanges},selectedPurpose:context.receipt.action?.label??'开启眼前的第一个事件'})});
         if(context.previousScene?.id===context.namespace+':t'+(context.identity.turnId-1)+':s:closed')input.messages[0].content+='\n上一轮拒绝或告辞已经完成，原互动已结束。只处理本次观察、旅行或休整，转向环境的新细节、其他人或新的去向；不重演或继续原NPC请求，不再次提供对已结束对象的询问或援助。';
       }
     }else input.response_format={type:'json_schema',json_schema:{name:'cultivation_scene',strict:true,schema:wire.schema}};
     input.stream=true;input.stream_options={include_usage:true};
+  }
+  if(context.previousLife){
+    const prompt=JSON.parse(input.messages[1].content);
+    delete prompt.previousLife;
+    prompt['前世回响（仅作线索，不带来物品或今世义务）']=[...context.previousLife];
+    const key='前世回响（仅作线索，不带来物品或今世义务）';
+    for(;;){
+      input.messages[1].content=JSON.stringify(prompt);
+      if(size(input)<=Math.min(profile.maxInput,STORY_LIMITS.maxInputBytes)||!prompt[key])break;
+      prompt[key].pop();if(!prompt[key].length)delete prompt[key];
+    }
   }
   let receipt=null;
   if(knowledgeBundle!==undefined&&knowledgeBundle!==null){

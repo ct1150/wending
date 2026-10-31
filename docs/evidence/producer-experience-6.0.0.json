@@ -1,0 +1,110 @@
+{
+  "schemaVersion": 1,
+  "version": "6.0.0",
+  "scope": "producer-experience-release-candidate",
+  "verifiedSource": {
+    "localCommit": "dabda3536f03e756bc81658c6ce78848378f172e",
+    "githubCommit": "f6d11662237c0804eeafb88d0429900cb3e4b42b",
+    "gitTree": "c4be0465f603e77d5076d094666f1097b6d6b902",
+    "sourceCommitUrl": "https://github.com/ct1150/wending/commit/f6d11662237c0804eeafb88d0429900cb3e4b42b"
+  },
+  "environment": {
+    "node": "v24.22.1",
+    "npm": "11.9.0",
+    "browser": "Local headless Chromium through WENDING_BROWSER_EXECUTABLE",
+    "mode": "Isolated Git worktree; ephemeral localhost and native IndexedDB; controlled model fixtures"
+  },
+  "localRelease": {
+    "command": "npm run release",
+    "exitCode": 0,
+    "tests": {
+      "tests": 1267,
+      "suites": 0,
+      "pass": 1267,
+      "fail": 0,
+      "cancelled": 0,
+      "skipped": 0,
+      "todo": 0
+    },
+    "durationMs": 134980.890118,
+    "syntaxFiles": 231,
+    "html": {
+      "bytes": 919011,
+      "sha256": "f1215e7869a0e8d8d6fa2ff66f5f2d4dba1a7c1f3801242d864f252644b1d157"
+    }
+  },
+  "localGateway": {
+    "command": "SOURCE_COMMIT=<verifiedSource.githubCommit> npm run build:gateway",
+    "exitCode": 0,
+    "gatewaySha256": "820aa1c7388137c21a8e361e03039ad3cb2fc09b81fc05bcbae28390fcb0ff6e",
+    "backendManifestSha256": "07dd1bc68dcf4aee6244c38883203ce5276622926d403573791be2df2731710b",
+    "backendAccessMode": "disabled",
+    "publicEnabled": false,
+    "activeModelId": null,
+    "moduleCount": 35
+  },
+  "coverage": {
+    "realBrowserPaidActor": {
+      "cases": 5,
+      "maxFrozenQuotedBytes": 6941,
+      "maxModelInputBytes": 19020
+    },
+    "realBrowserRebornOpeningAndChoice": {
+      "cases": 2,
+      "maxFrozenQuotedBytes": 5636,
+      "maxModelInputBytes": 17816
+    },
+    "syntheticProviderStress": [
+      {
+        "contextBytes": 6830,
+        "modelInputBytes": 23052,
+        "withReferencesBytes": 24288,
+        "capBytes": 24576,
+        "birthExperience": "unmarked"
+      },
+      {
+        "contextBytes": 6888,
+        "modelInputBytes": 23310,
+        "withReferencesBytes": 24546,
+        "capBytes": 24576,
+        "birthExperience": "version1"
+      }
+    ],
+    "interpretation": "Browser + actual local archive with fixture model responses. Synthetic provider-only pressure does not constitute a real player session."
+  },
+  "acceptanceGuide": "../PRODUCER_ACCEPTANCE_6.0.0.md",
+  "pullRequest": "https://github.com/ct1150/wending/pull/28",
+  "ci": "See PR checks for the exact published head; a subsequent evidence-only commit has a different commit/tree identity.",
+  "externalChecks": {
+    "productionDeployment": "not performed",
+    "productionGLM": "not exercised for this candidate",
+    "productionCorpus": "not uploaded or changed by this work; production status not probed",
+    "humanLongPlay": "not evaluated; checklist in acceptance guide"
+  },
+  "independentReview": {
+    "verifiedTree": "c4be0465f603e77d5076d094666f1097b6d6b902",
+    "result": "pass",
+    "unresolvedP0ToP2": 0,
+    "finalCrossTaskCases": 12,
+    "checkedDocumentationLinks": 28,
+    "gitDiffCheck": "pass",
+    "priorFindings": [
+      "A stale empty title/restart confirmation was re-bound to the displayed physical archive.",
+      "An optional off-scene creditor could crowd out a required turn.",
+      "Questions, hearsay, or another actor’s trait could change the wrong combat preview.",
+      "An imported child could bypass an already-known marked parent by hash substitution or legacy downgrade; incoming parent death now also reconciles a previously imported portable child."
+    ],
+    "portableBackupBoundary": "Native storage checks the available matching local lineage in either import order; a lone portable backup on a new device is not a signed account-level proof."
+  },
+  "remoteSourceCI": {
+    "runId": 41162760385,
+    "jobId": 124423880129,
+    "url": "https://github.com/ct1150/wending/actions/runs/41162760385",
+    "scope": "GitHub check for verified product-source head; later evidence-only commits have their own CI.",
+    "conclusion": "success",
+    "validationJob": "success",
+    "staticGatewayAndDisabledBackendPackaging": "success",
+    "artifactUpload": "success",
+    "productionPublish": "skipped (pull request)"
+  }
+}

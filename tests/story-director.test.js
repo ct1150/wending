@@ -184,6 +184,24 @@ test('repeated arc patterns and prose remain pacing observations instead of dire
   assert.equal(director.advanceStoryDirector(state,current,receipt(11),nextScene,11).turnId,11);
 });
 
+test('editorial length and pacing advice never rejects structurally valid playable scenes',()=>{
+  const c={director:director.buildDirectorContext(start(),life(),receipt(1),1),life:life(),receipt:receipt(1),identity:{turnId:1}};
+  const base=scene(1);
+  base.choices=[{id:'a',label:'询问渡者',intent:'interact',approach:'ask',stake:'low',enabled:true},{id:'b',label:'观察河岸',intent:'interact',approach:'observe',stake:'low',enabled:true},{id:'c',label:'婉拒求助',intent:'interact',approach:'decline',stake:'low',enabled:true}];
+  for(const [name,patch,pacing]of [
+    ['short answer',{blocks:[{kind:'narration',text:'渡者说，水流是昨夜改道的。'}]},{}],
+    ['long scene',{blocks:[{kind:'narration',text:'河岸的痕迹仍待辨认。'.repeat(65)}]},{}],
+    ['early climax',{story:{...base.story,beat:'climax'},memoryDeltas:[]},{}],
+    ['overdue progress',{}, {beatOverdue:true,opportunityRequired:true}],
+    ['consecutive resolution',{story:{...base.story,beat:'resolution'},memoryDeltas:[]},{completedPatterns:['investigation']}],
+  ]){
+    const s={...base,...patch},context=structuredClone(c);Object.assign(context.director.pacing,pacing);
+    assert.equal(director.validateDirectorScene(s,context,s.choices),s,name);
+  }
+  assert.throws(()=>director.validateDirectorScene({...base,story:{...base.story,anchors:[9]}},c,base.choices),{code:'STORY_ANNOTATION_INVALID'});
+  assert.throws(()=>director.validateDirectorScene(base,{...c,director:{...c.director,turnId:1}},base.choices),{code:'STORY_DIRECTOR_INVALID'});
+});
+
 test('canonical scenes retain versioned story annotations without requiring them on legacy history',()=>{
   const s=scene(1);
   s.choices=[{id:'a',label:'观察河岸',intent:'interact',targetId:'self',approach:'observe',stake:'low'},{id:'b',label:'留在渡口休整',intent:'rest',targetId:'self',approach:'recover',stake:'low'}];

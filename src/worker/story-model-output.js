@@ -2,6 +2,8 @@ import {assertPlainData} from '../game/cultivation/live/identity.js';
 import {exactKeys,textField} from '../game/cultivation/live/schema.js';
 import {assertSafeStoryStrings} from '../game/cultivation/live/memory.js';
 import {isV7Life} from '../game/cultivation/live/cultivation-rules.js';
+import {isExperienceLife} from '../game/cultivation/live/experience.js';
+import {V7_REALMS} from '../game/cultivation/live/actor-insight.js';
 import {createNamedTargetLookup} from './story-named-targets.js';
 import {normalizeWireAnnotation} from './story-wire-annotation.js';
 import {STORY_PATTERNS,STORY_BEATS,STORY_NPC_TRAITS} from '../game/cultivation/live/story-annotation.js';
@@ -67,12 +69,27 @@ function authoredBlocks(rows,context){
   if(!blocks.length)throw Error('No verified authored blocks');
   return {blocks,positions,sourceCount:rows.length};
 }
-function editorialStory(raw,{blocks,positions}){
+function editorialStory(raw,{blocks,positions},context){
   const result={};
   const p=own(raw,'pattern'),b=own(raw,'beat'),anchors=own(raw,'anchors');
   if(STORY_PATTERNS.includes(p)&&STORY_BEATS.includes(b)&&Array.isArray(anchors)){
     result.pattern=p;result.beat=b;result.anchors=[];
     for(let i=0;i<Math.min(anchors.length,2);i++){const n=positions.get(own(anchors,i));if(n!==undefined)result.anchors.push(n);}
+  }
+  // A 6.0 disclosure is a proposal about one actual block. Omit unmarked
+  // histories and lost anchors; the shared insight validator decides what
+  // that block proves about its actor before any realm enters the save.
+  if(isExperienceLife(context.life)){
+    const note=own(raw,'opponent'),anchor=positions.get(own(note,'anchor'));
+    if(anchor!==undefined){
+      const fields={},realm=own(note,'realmId');
+      if(typeof realm==='string'&&Object.hasOwn(V7_REALMS,realm))fields.realmId=realm;
+      for(const key of ['purpose','condition']){const value=optionalText(own(note,key),24);if(value)fields[key]=value;}
+      if(Object.keys(fields).length){
+        const target=own(note,'target');
+        if(typeof target==='string'||object(target))result.opponent={target:identityTarget(target),anchor,...fields};
+      }
+    }
   }
   const notes=own(raw,'npcs');
   if(Array.isArray(notes))for(let i=0;i<Math.min(2,notes.length);i++){
@@ -120,7 +137,7 @@ export function adaptV7EngineMenuOutput(wire,context){
   if(!isV7Life(context.life)||context.director?.version!==7||!object(wire))throw Error('Engine menu requires a v7 scene');
   const source=authoredBlocks(own(wire,'blocks',true),context),{blocks}=source;
   const choices=materializeStoryChoices(buildStoryChoicePlan(context),context,blocks);
-  const authored={blocks,choices,story:editorialStory(own(wire,'story'),source),memoryDeltas:authoredMemory(own(wire,'memoryDeltas'),source)};
+  const authored={blocks,choices,story:editorialStory(own(wire,'story'),source,context),memoryDeltas:authoredMemory(own(wire,'memoryDeltas'),source)};
   const title=optionalText(own(wire,'title'),120);if(title)authored.title=title;
   // Later turns already have a location fixed by the prior scene/settled
   // travel receipt. An optional model caption must never move the player.

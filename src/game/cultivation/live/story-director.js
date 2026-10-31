@@ -1,4 +1,6 @@
 import { assertPlainData, canonicalStringify, sha256 } from './identity.js';
+import {buildOpeningBrief,advanceExperienceStory} from './experience-story.js';
+import { isExperienceLife, advancesEvent } from './experience.js';
 import { DAYS_PER_YEAR } from './model.js';
 import { ROOTS, RELICS, TECHNIQUES, realmFor, fortuneCycleModifier } from './cultivation-rules.js';
 import { STORY_PATTERNS, STORY_BEATS, STORY_NPC_TRAITS as TRAITS, STORY_ANNOTATION_SCHEMA, validateStoryAnnotation } from './story-annotation.js';
@@ -28,14 +30,16 @@ const rowId=(scene,index)=>scene.memoryDeltas[index].referenceId??'m:'+sha256(sc
 const openingSeed=(life,seed)=>parseInt(sha256(String(seed)+':'+(life.birth?.originId??'wanderer')).slice(0,8),16)>>>0;
 
 function schedule(d,life,turnId,receipt) {
-  const luck=life.birth?.cultivationProfile?fortuneCycleModifier({life,turnId:turnId-1}):((Math.floor((turnId-1)/20)+d.seed)%5-2)*3,check=receipt?.cultivationResult?.check,streak=check?(check.success?0:d.pacing.setbackStreak+1):d.pacing.setbackStreak;
-  return {...d.pacing,turnId,volume:Math.floor((turnId-1)/50)+1,plotDue:turnId>=d.pacing.nextBeat,beatOverdue:turnId-d.pacing.lastBeat>=20,fortuneDue:turnId>1&&(turnId-1)%20===0,eraDue:Math.floor(turnId/30)>Math.floor(d.pacing.lastEra/30),volumeDue:turnId%50===0,canClimax:turnId-d.pacing.lastBeat>=10,fortunePhase:luck>0?'机缘初露':luck<0?'代价浮现':'局势松动',fortuneBand:luck>0?'high':luck<0?'low':'recovering',opportunityDue:streak>=3,opportunityRequired:streak>=5,scope:SCOPES[life.realm]??'当前地域'};
+  const marked=isExperienceLife(life),clock=marked?d.eventCount+(advancesEvent(receipt)?1:0):turnId;
+  const luck=life.birth?.cultivationProfile?fortuneCycleModifier({life,turnId:turnId-1,director:{eventCount:clock}}):((Math.floor((turnId-1)/20)+d.seed)%5-2)*3,check=receipt?.cultivationResult?.check,streak=check?(check.success?0:d.pacing.setbackStreak+1):d.pacing.setbackStreak;
+  const fortuneClock=marked?clock:clock-1;
+  return {...d.pacing,turnId,volume:Math.floor(fortuneClock/50)+1,plotDue:clock>=d.pacing.nextBeat,beatOverdue:clock-d.pacing.lastBeat>=20,fortuneDue:fortuneClock>0&&fortuneClock%20===0,eraDue:Math.floor(clock/30)>Math.floor(d.pacing.lastEra/30),volumeDue:clock>0&&clock%50===0,canClimax:clock-d.pacing.lastBeat>=10,fortunePhase:luck>0?'机缘初露':luck<0?'代价浮现':'局势松动',fortuneBand:luck>0?'high':luck<0?'low':'recovering',opportunityDue:streak>=3,opportunityRequired:streak>=5,scope:SCOPES[life.realm]??'当前地域'};
 }
 
 export function createStoryDirector(life,seed=0) {
   assertPlainData(life);integer(seed,0,4294967295);integer(life.ageDays);
   const seeded=openingSeed(life,seed),theme=SEEDS[seeded%SEEDS.length],birth=life.birth?.cultivationProfile,relic=RELICS[birth?.relicId],root=ROOTS[birth?.rootId];
-  const d={version:7,seed:seeded,turnId:0,resolvedCount:0,
+  const d={version:7,seed:seeded,turnId:0,resolvedCount:0,...(isExperienceLife(life)?{eventCount:0}:{}),
     destiny:{id:'destiny:'+seeded,text:clip((relic?'伴生的'+relic.name+'牵动旧因果；':'')+theme.destiny,60),motif:theme.motif},
     mystery:{id:'mystery:'+seeded,question:clip(relic?`为何${relic.name}会回应${theme.motif}，而你的${root?.name??'灵根'}能感知其回声？`:theme.mystery,80),progress:0},
     currentGoal:'先辨清眼前局势，再决定去留',mainQuest:null,sideQuests:[],memory:{causes:[],npcs:[],enemies:[],clues:[]},
@@ -44,6 +48,7 @@ export function createStoryDirector(life,seed=0) {
     pacing:{turnId:1,arc:1,startedAt:1,lastBeat:0,nextBeat:10+seeded%11,lastEra:0,pattern:'discovery',completedPatterns:[],sceneHashes:[],setbackStreak:0,pressure:0},
   };
   d.pacing=schedule(d,life,1);
+  if(isExperienceLife(life))d.currentGoal=buildOpeningBrief({life,director:d,phase:'opening'}).goal;
   return validateStoryDirector(d);
 }
 
@@ -60,8 +65,10 @@ function groundedTraits(scene) {
   return traits;
 }
 
-export function validateStoryDirector(d,{turnId}={}) {
-  assertPlainData(d);keys(d,['version','seed','turnId','resolvedCount','destiny','mystery','currentGoal','mainQuest','sideQuests','memory','background','world','archive','pacing']);
+export function validateStoryDirector(d,{turnId,life}={}) {
+  assertPlainData(d);keys(d,['version','seed','turnId','resolvedCount','destiny','mystery','currentGoal','mainQuest','sideQuests','memory','background','world','archive','pacing'],['eventCount']);
+  if(life&&isExperienceLife(life)!==Object.hasOwn(d,'eventCount'))fail('STORY_DIRECTOR_INVALID');
+  if(Object.hasOwn(d,'eventCount'))integer(d.eventCount,0,Math.max(0,d.turnId-1));
   if(d.version!==7)fail('STORY_DIRECTOR_INVALID');integer(d.seed,0,4294967295);integer(d.turnId);integer(d.resolvedCount);if(turnId!==undefined&&d.turnId!==turnId)fail('STORY_DIRECTOR_INVALID');
   keys(d.destiny,['id','text','motif']);id(d.destiny.id);text(d.destiny.text,60);text(d.destiny.motif,12);
   keys(d.mystery,['id','question','progress']);id(d.mystery.id);text(d.mystery.question,80);integer(d.mystery.progress,0,9);
@@ -87,7 +94,7 @@ export function validateStoryDirector(d,{turnId}={}) {
   keys(d.world,['year','tier','location','faction','summary']);integer(d.world.year);integer(d.world.tier,0,2);text(d.world.location,120);text(d.world.faction,60);text(d.world.summary,200);
   keys(d.archive,['throughTurn','text','reasons']);integer(d.archive.throughTurn,0,d.turnId);text(d.archive.text,300);if(!Array.isArray(d.archive.reasons)||d.archive.reasons.some(reason=>!['periodic','volume','context-pressure'].includes(reason)))fail('STORY_DIRECTOR_INVALID');
   const p=d.pacing;keys(p,['turnId','arc','startedAt','lastBeat','nextBeat','lastEra','pattern','completedPatterns','sceneHashes','volume','plotDue','beatOverdue','fortuneDue','eraDue','volumeDue','canClimax','fortunePhase','fortuneBand','scope','setbackStreak','pressure','opportunityDue','opportunityRequired']);
-  integer(p.turnId,1);integer(p.arc,1);integer(p.startedAt,1,p.turnId);integer(p.lastBeat,0,d.turnId);integer(p.nextBeat,p.lastBeat+10,p.lastBeat+20);integer(p.lastEra,0,d.turnId);integer(p.volume,1);
+  integer(p.turnId,1);integer(p.arc,1);integer(p.startedAt,1,(d.eventCount??d.turnId)+1);integer(p.lastBeat,0,d.eventCount??d.turnId);integer(p.nextBeat,p.lastBeat+10,p.lastBeat+20);integer(p.lastEra,0,d.eventCount??d.turnId);integer(p.volume,1);
   if(p.turnId!==d.turnId+1||!STORY_PATTERNS.includes(p.pattern)||!Array.isArray(p.completedPatterns)||p.completedPatterns.length>3||p.completedPatterns.some(pattern=>!STORY_PATTERNS.includes(pattern))||!Array.isArray(p.sceneHashes)||p.sceneHashes.length>4||p.sceneHashes.some(hash=>!/^[a-f0-9]{64}$/u.test(hash)))fail('STORY_DIRECTOR_INVALID');
   integer(p.setbackStreak,0,10);integer(p.pressure,0,10);if(!['high','low','recovering','settling'].includes(p.fortuneBand))fail('STORY_DIRECTOR_INVALID');
   for(const key of ['plotDue','beatOverdue','fortuneDue','eraDue','volumeDue','canClimax','opportunityDue','opportunityRequired'])if(typeof p[key]!=='boolean')fail('STORY_DIRECTOR_INVALID');
@@ -125,8 +132,10 @@ function annualSummary(d,life,result,range) {
 }
 
 export function advanceStoryDirector(director,life,receipt,scene,turnId) {
-  validateStoryDirector(director);assertPlainData(life);assertPlainData(receipt);if(turnId!==director.turnId+1)fail('STORY_DIRECTOR_INVALID');
+  validateStoryDirector(director,{life});assertPlainData(life);assertPlainData(receipt);if(turnId!==director.turnId+1)fail('STORY_DIRECTOR_INVALID');
   const d=copy(director);d.turnId=turnId;
+  const marked=isExperienceLife(life),event=marked&&advancesEvent(receipt,scene);if(event)d.eventCount++;
+  const clock=marked?d.eventCount:turnId,advance=!marked||event;
   const check=receipt.cultivationResult?.check;
   if(check){d.pacing.setbackStreak=check.success?0:Math.min(10,d.pacing.setbackStreak+1);d.pacing.pressure=Math.max(0,Math.min(10,d.pacing.pressure+(check.success?-2:1)));}
   d.world.tier=life.cultivationProfile?.worldTier??0;
@@ -163,24 +172,26 @@ export function advanceStoryDirector(director,life,receipt,scene,turnId) {
       }else if(fresh.includes(row)){
         const bounded={id:reference,entityId:row.entityId,text:clip(row.text,90),turnId};
         if(row.kind==='clue')upsert(d,'clues',{...bounded,status:'open'});
-        addQuest(d,{...bounded,kind:row.kind});
+        // An offered favor or clue is information. Only a player's paid pledge binds a marked life.
+        if(!marked||row.kind==='clue')addQuest(d,{...bounded,kind:row.kind});
       }
     }
     if(!d.mainQuest&&d.sideQuests.length)d.mainQuest=d.sideQuests.shift();
     d.currentGoal=clip(d.mainQuest?.text??(receipt.action?.intent==='interact'&&['decline','leave'].includes(receipt.action.approach)?'已结束当前互动，自定下一步':'辨明眼前变化，自定下一步'),60);
+    if(marked)d.currentGoal=clip(advanceExperienceStory(d.currentGoal,receipt,scene,life),60);
     const anchors=annotation.anchors.map(anchor=>blocks[anchor]).join('\n');
     if(['revelation','resolution'].includes(annotation.beat)&&anchors.includes(d.destiny.motif)&&fresh.some(row=>row.kind==='clue'&&anchors.includes(row.text)))d.mystery.progress=Math.min(9,d.mystery.progress+1);
-    if(turnId-d.pacing.lastBeat>=10&&annotation.beat!=='progress'){
-      d.pacing.lastBeat=turnId;d.pacing.nextBeat=turnId+10+(d.seed+d.pacing.arc)%11;
+    if(advance&&clock-d.pacing.lastBeat>=10&&annotation.beat!=='progress'){
+      d.pacing.lastBeat=clock;d.pacing.nextBeat=clock+10+(d.seed+d.pacing.arc)%11;
       if(annotation.beat==='resolution'){
-        d.pacing.completedPatterns=[...d.pacing.completedPatterns,annotation.pattern].slice(-3);d.pacing.arc++;d.pacing.startedAt=turnId+1;
+        d.pacing.completedPatterns=[...d.pacing.completedPatterns,annotation.pattern].slice(-3);d.pacing.arc++;d.pacing.startedAt=clock+1;
       }
     }
     d.pacing.pattern=annotation.pattern;
     const worldFacts=fresh.filter(row=>scene.entities.some(entity=>entity.id===row.entityId&&['faction','place'].includes(entity.kind)));
     d.world.location=scene.location;
     const faction=scene.entities.find(entity=>entity.kind==='faction'&&body.includes(entity.name));if(faction)d.world.faction=faction.name;
-    if(Math.floor(turnId/30)>Math.floor(d.pacing.lastEra/30)&&worldFacts.length&&annotation.beat!=='progress')d.pacing.lastEra=turnId;
+    if(advance&&Math.floor(clock/30)>Math.floor(d.pacing.lastEra/30)&&worldFacts.length&&annotation.beat!=='progress')d.pacing.lastEra=clock;
     if(lifeYear(life)!==d.world.year){
       const from=d.world.year+1,to=lifeYear(life),range=from===to?String(to):from+'至'+to;
       d.world={...d.world,year:to,summary:annualSummary(d,life,worldFacts.map(row=>row.text).join('；')||result,range)};
@@ -190,7 +201,7 @@ export function advanceStoryDirector(director,life,receipt,scene,turnId) {
     d.memory.causes.push({turnId,text:receipt.death.cause==='lifespan'?'此生在真实寿元耗尽后结束。':'此生在真实伤势达到终局后结束。'});
     if(d.memory.causes.length>10)background(d,d.memory.causes.splice(0,d.memory.causes.length-10),'causes');
   }
-  const reasons=[...(turnId%30===0?['periodic']:[]),...(turnId%50===0?['volume']:[]),...(bytes(d)>3000?['context-pressure']:[])];
+  const reasons=[...(advance&&clock%30===0?['periodic']:[]),...(advance&&clock%50===0?['volume']:[]),...(bytes(d)>3000?['context-pressure']:[])];
   if(reasons.length)d.archive={throughTurn:turnId,text:archiveText(d,life,scene),reasons};
   if(bytes(d)>14000){for(const rows of Object.values(d.memory))for(const row of rows)row.text=clip(row.text,60);for(const npc of d.memory.npcs)for(const key of TRAITS)npc[key]=clip(npc[key],24);}
   while(bytes(d)>15500&&d.memory.causes.length)background(d,d.memory.causes.splice(0,1),'causes');
@@ -199,7 +210,7 @@ export function advanceStoryDirector(director,life,receipt,scene,turnId) {
 }
 
 export function buildDirectorContext(director,life,receipt,turnId) {
-  validateStoryDirector(director);if(turnId!==director.turnId+1)fail('STORY_DIRECTOR_INVALID');
+  validateStoryDirector(director,{life});if(turnId!==director.turnId+1)fail('STORY_DIRECTOR_INVALID');
   const d=copy(director);d.pacing=schedule(d,life,turnId,receipt);
   // Model input is a compact projection, never a replacement of saved history.
   d.archive.text=clip(d.archive.text,100);d.world.summary=clip(d.world.summary,80);d.background.text=clip(d.background.text,60);

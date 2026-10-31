@@ -1,3 +1,6 @@
+import {echoNotes,validEchoNotes} from './reincarnation.js';
+import {isExperienceLife} from './experience.js';
+import {checkActorScene} from './actor-insight.js';
 import { assertPlainData, canonicalStringify, sha256 } from './identity.js';
 import { exactKeys, idField, textField, validateEntities, validateGeneratedScene as validateStructure } from './schema.js';
 import { validateLife, validateReceipt } from './validation.js';
@@ -55,7 +58,7 @@ function validateRecord(record,state) {
     idField(record.entityId);if(record.source!=='rules'||!Number.isInteger(record.value)||record.value < -100||record.value > 100)fail('MEMORY_RECORD_INVALID');
   } else if(record.kind==='receipt'){if(record.source!=='rules')fail('MEMORY_RECORD_INVALID');validateReceipt(record.receipt);}
   else if(record.kind==='entity'){
-    exactKeys(record.entity,['id','name','kind']);validateEntities([record.entity]);if(!['rules','narrative'].includes(record.source)||!['unknown','alive','dead'].includes(record.status)||record.entity.kind!=='person'&&record.status!=='unknown')fail('MEMORY_RECORD_INVALID');
+    exactKeys(record.entity,['id','name','kind'],['experience']);if(record.entity.experience&&!isExperienceLife(state.life))fail('MEMORY_RECORD_INVALID');validateEntities([record.entity]);if(!['rules','narrative'].includes(record.source)||!['unknown','alive','dead'].includes(record.status)||record.entity.kind!=='person'&&record.status!=='unknown')fail('MEMORY_RECORD_INVALID');
   } else {
     textField(record.text,500);
     if(record.kind==='summary'){
@@ -80,10 +83,11 @@ function latestRecords(records,state) {
         if(!equal(payload(old),payload(row)))fail('MEMORY_RECORD_CONFLICT');
       }
       if(['clue','promise','ruleRelation'].includes(row.kind)&&(old.entityId!==row.entityId||old.text!==row.text))fail('MEMORY_RECORD_CONFLICT');
-      if(row.kind==='entity'&&!equal(old.entity,row.entity))fail('MEMORY_RECORD_CONFLICT');
+      if(row.kind==='entity'&&(old.entity.id!==row.entity.id||old.entity.name!==row.entity.name||old.entity.kind!==row.entity.kind))fail('MEMORY_RECORD_CONFLICT');
       if(old.turnId===row.turnId&&!equal(old,row))fail('MEMORY_RECORD_CONFLICT');
       const earlier=old.turnId<row.turnId?old:row,later=old.turnId<row.turnId?row:old;
       if(['clue','promise'].includes(row.kind)&&earlier.status!=='open'&&later.status!==earlier.status)fail('MEMORY_RECORD_CONFLICT');
+      if(row.kind==='entity'&&earlier.entity.experience&&!equal(earlier.entity.experience,later.entity.experience))fail('MEMORY_RECORD_CONFLICT');
       if(row.kind==='entity'&&earlier.status==='dead'&&later.status!=='dead')fail('MEMORY_RECORD_CONFLICT');
     }
     if(!old||old.turnId<row.turnId)rows.set(row.id,copy(row));
@@ -121,8 +125,8 @@ export function buildStoryContext(state,pending,relatedRecords=[],options={}) {
   const current=continuity&&state.currentScene?sceneTurnRecord(state.currentScene,{runId:state.runId,turnId:state.turnId,action:state.lastReceipt?.action}):null;
   const records=latestRecords([...relatedRecords,...(current?[current]:[])],state),entities=new Map();
   const addEntity=(entity,status)=>{
-    const old=entities.get(entity.id),next={id:entity.id,name:entity.name,kind:entity.kind,status};
-    if(old){if(old.name!==next.name||old.kind!==next.kind)fail('ENTITY_IDENTITY_CONFLICT');if(old.status==='dead'||next.status==='dead')next.status='dead';else if(next.status==='unknown')next.status=old.status;}
+    const old=entities.get(entity.id),next={id:entity.id,name:entity.name,kind:entity.kind,status,...(entity.experience?{experience:copy(entity.experience)}:{})};
+    if(old){if(old.experience&&next.experience&&!equal(old.experience,next.experience))fail('ENTITY_IDENTITY_CONFLICT');if(old.experience&&!next.experience)next.experience=old.experience;if(old.name!==next.name||old.kind!==next.kind)fail('ENTITY_IDENTITY_CONFLICT');if(old.status==='dead'||next.status==='dead')next.status='dead';else if(next.status==='unknown')next.status=old.status;}
     entities.set(entity.id,next);
   };
   for(const e of state.relatedEntities)addEntity(e,e.status??'unknown');
@@ -146,6 +150,7 @@ export function buildStoryContext(state,pending,relatedRecords=[],options={}) {
   }
   if(selecting) {
     selectRelevantMemory(result,records,state,entities,options.openTotal,current?.id);
+    addEchoNotes(result,state);
     addRetrievalProjection(result,state.retrieval,true);
     validateStoryContext(result);
     return freeze(result);
@@ -156,9 +161,20 @@ export function buildStoryContext(state,pending,relatedRecords=[],options={}) {
     if(result.memory.summaries.length)result.memory.summaries.pop();else result.memory.recent.pop();updateReferences();
   }
   if(bytes(result)>7000)fail('MEMORY_CONTEXT_TOO_LARGE');
+  addEchoNotes(result,state);
   addRetrievalProjection(result,state.retrieval,false);
   validateStoryContext(result);
   return freeze(result);
+}
+
+// History already selected for this action takes priority over flavor from
+// the previous life. The complete sources stay in the child's immutable row.
+function addEchoNotes(context,state){
+ const notes=echoNotes(state.reincarnation);
+ if(!notes.length)return;
+ context.previousLife=notes;
+ while(notes.length&&(bytes(context)>7000||bytes(JSON.stringify(context))>7000))notes.pop();
+ if(!notes.length)delete context.previousLife;
 }
 
 function addRetrievalProjection(context,memory,serialized) {
@@ -178,6 +194,7 @@ function addRetrievalProjection(context,memory,serialized) {
 // remain in the archive; the same fixed action and candidates give the same DTO.
 function selectRelevantMemory(result,records,state,entities,openTotal,currentTurnId) {
   const currentIds=new Set(state.relatedEntities.map(entity=>entity.id));
+  const creditor=result.life.cultivationProfile?.experience?.commitment;
   const openCandidates=records.filter(row=>['promise','clue'].includes(row.kind)&&row.status==='open');
   if(openCandidates.length>openTotal)fail('STORY_CONTEXT_INVALID');
   result.entities=[...entities.values()].filter(entity=>currentIds.has(entity.id));
@@ -195,7 +212,20 @@ function selectRelevantMemory(result,records,state,entities,openTotal,currentTur
   // The context is itself serialized as a user-message string. Account for
   // that second JSON escaping layer, leaving room for fixed system/schema data.
   const fits=()=>result.entities.length<=24&&bytes(result)<=7000&&bytes(JSON.stringify(result))<=7000;
-  if(!fits())fail('MEMORY_CONTEXT_TOO_LARGE');
+  // All durable receipts, actors and accepted promises stay intact. Only on
+  // marked lives, give the latest actual turn/open record precedence over
+  // duplicate director prose and hashes in this particular model projection.
+  function makeRoom(){
+    const d=result.director;if(d?.eventCount===undefined||result.entities.length>24||fits())return;
+    for(const rows of [d.pacing.sceneHashes,d.memory.causes,d.memory.npcs,d.memory.enemies,d.memory.clues]){
+      while(rows.length&&!fits())rows.shift();
+      if(fits())return;
+    }
+    for(const [obj,key,max] of [[d.background,'text',0],[d.archive,'text',24],[d.world,'summary',24]]){
+      obj[key]=Array.from(obj[key]).slice(0,max).join('');if(fits())return;
+    }
+  }
+  makeRoom();if(!fits())fail('MEMORY_CONTEXT_TOO_LARGE');
   const target=result.receipt.action?.targetId;
   const directedReferences=new Set([state.director?.mainQuest,...(state.director?.sideQuests??[]),...(state.director?.memory.clues??[])].filter(Boolean).map(row=>row.id));
   const relevance=row=>row.entityId===target?0:currentIds.has(row.entityId)?1:2;
@@ -203,7 +233,23 @@ function selectRelevantMemory(result,records,state,entities,openTotal,currentTur
   const ordered=[...records].sort((a,b)=>priority(a)-priority(b)||relevance(a)-relevance(b)||b.turnId-a.turnId||(a.id<b.id?-1:a.id>b.id?1:0));
   const groups={receipt:'facts',fact:'facts',relationship:'facts',death:'facts',promise:'promises',clue:'clues',turn:'recent',summary:'summaries'};
   const limits={facts:16,promises:12,clues:12,recent:4,summaries:2};
+  // A creditor remains in the paid, hashed life even when their off-scene
+  // archive identity cannot fit. First honor the preflighted latest turn;
+  // then try to include the person, before spending space on older details.
+  let returning=creditor?.status==='owed'?entities.get(creditor.entityId):null;
+  const offerReturning=()=>{
+    if(!returning)return;
+    const entity=returning;returning=null;
+    if(result.entities.length>=24||result.entities.some(e=>e.id===entity.id))return;
+    const previous=result.entities,originalDirector=result.director;
+    result.entities=[...previous,entity];refresh();
+    if(!fits()){
+      result.director=copy(originalDirector);makeRoom();
+      if(!fits()){result.entities=previous;result.director=originalDirector;refresh();}
+    }
+  };
   for(const row of ordered) {
+    if(row.id!==currentTurnId)offerReturning();
     const group=groups[row.kind];
     if(!group||result.memory[group].length>=limits[group])continue;
     if(row.kind==='summary'&&row.references.some(id=>!result.references.includes(id)))continue;
@@ -214,6 +260,7 @@ function selectRelevantMemory(result,records,state,entities,openTotal,currentTur
     result.entities=[...result.entities,...missing.map(id=>entities.get(id))];
     result.memory[group].push(row);
     refresh();
+    if(row.id===currentTurnId||(['promise','clue'].includes(row.kind)&&row.status==='open'))makeRoom();
     if(row.id===currentTurnId){
       while(!fits()&&row.text.length>40){const characters=Array.from(row.text);row.text=characters.slice(0,10).join('')+'…'+characters.slice(20).join('');}
       // Old legal scenes may leave no room even for the record envelope.
@@ -225,26 +272,28 @@ function selectRelevantMemory(result,records,state,entities,openTotal,currentTur
       refresh();
     }
   }
+  offerReturning();
 }
 
 // Public context is untrusted portable JSON at the HTTP boundary. The local
 // builder re-derives pending; this checks consistency, not account authentication.
 export function validateStoryContext(c) {
   inspect(c,7000);
-  exactKeys(c,['schemaVersion','phase','identity','namespace','receipt','life','entities','memory','references','previousScene'],['coverage','relationshipVersion','relationships','director','retrieval']);
+  exactKeys(c,['schemaVersion','phase','identity','namespace','receipt','life','entities','memory','references','previousScene'],['coverage','relationshipVersion','relationships','director','retrieval','previousLife']);
+  if(c.previousLife!==undefined&&(!isExperienceLife(c.life)||!validEchoNotes(c.previousLife)))fail('STORY_CONTEXT_INVALID');
   if(c.retrieval!==undefined)validateRetrievalMemory(c.retrieval);
   if(c.schemaVersion!==1||!['opening','choice'].includes(c.phase))fail('STORY_CONTEXT_INVALID');
   exactKeys(c.identity,['runId','turnId','baseRevision','stateHash','choiceId','rulesVersion','promptVersion','requestId']);
   idField(c.identity.runId);idField(c.identity.requestId);whole(c.identity.turnId,1);whole(c.identity.baseRevision);
   if(c.namespace!==namespace(c.identity.runId)||!/^[a-f0-9]{64}$/.test(c.identity.stateHash)||c.identity.rulesVersion!==1||c.identity.promptVersion!==1||c.identity.turnId!==c.identity.baseRevision+1)fail('STORY_CONTEXT_INVALID');
   if(c.phase==='opening'&&c.identity.baseRevision!==0||c.phase==='choice'&&c.identity.baseRevision<1)fail('STORY_CONTEXT_INVALID');
-  validateLife(c.life);validateReceipt(c.receipt);
+  validateLife(c.life);validateReceipt(c.receipt,{turnId:c.identity.turnId});
   if(c.receipt.kind!==c.phase||c.identity.choiceId!==c.receipt.choiceId||c.receipt.death||!equal(c.receipt.after,summarizeLife(c.life))||c.phase==='opening'&&!equal(c.receipt.birth,c.life.birth))fail('ACTION_RECEIPT_MISMATCH');
   if(c.phase==='opening'&&(!equal(c.life.items,initialItemsForBirth(c.life.birth))||Object.keys(c.life.relations).length))fail('ACTION_RECEIPT_MISMATCH');
-  if(c.director!==undefined){if(!isV7Life(c.life))fail('STORY_CONTEXT_INVALID');validateStoryDirector(c.director,{turnId:c.identity.baseRevision});}
+  if(c.director!==undefined){if(!isV7Life(c.life))fail('STORY_CONTEXT_INVALID');validateStoryDirector(c.director,{turnId:c.identity.baseRevision,life:c.life});}
   else if(isV7Life(c.life))fail('STORY_DIRECTOR_INVALID');
   if(!Array.isArray(c.entities)||c.entities.length>24)fail('STORY_CONTEXT_INVALID');
-  const seen=new Set();for(const e of c.entities){exactKeys(e,['id','name','kind','status']);validateEntities([{id:e.id,name:e.name,kind:e.kind}]);if(seen.has(e.id)||!['unknown','alive','dead'].includes(e.status)||e.kind!=='person'&&e.status!=='unknown')fail('STORY_CONTEXT_INVALID');seen.add(e.id);}
+  const seen=new Set();for(const e of c.entities){exactKeys(e,['id','name','kind','status'],['experience']);if(e.experience&&!isExperienceLife(c.life))fail('STORY_CONTEXT_INVALID');const {status,...entity}=e;validateEntities([entity]);if(seen.has(e.id)||!['unknown','alive','dead'].includes(e.status)||e.kind!=='person'&&e.status!=='unknown')fail('STORY_CONTEXT_INVALID');seen.add(e.id);}
   if(c.relationshipVersion!==undefined||c.relationships!==undefined){
     if(c.relationshipVersion!==1||c.relationships===undefined)fail('STORY_CONTEXT_INVALID');
     const projected=projectRelations({relations:{}},c.entities,c.relationships);
@@ -312,6 +361,7 @@ function compilationState(c,scene) {
 export function validateGeneratedScene(raw,context,{checkNextContext,continuity=false,requireExit=false}={}) {
   inspect(raw);validateStoryContext(context);
   try { validateStructure(raw); } catch { fail('GENERATED_SCENE_INVALID'); }
+  checkActorScene(raw,isExperienceLife(context.life),context.entities);
   const prefix=turnPrefix(context);
   if(!raw.id.startsWith(prefix+'s:')||raw.choices.some(p=>!p.id.startsWith(prefix+'c:')))fail('SCENE_ID_SCOPE_INVALID');
   const known=new Map(context.entities.map(e=>[e.id,e])),current=new Map(raw.entities.map(e=>[e.id,e]));

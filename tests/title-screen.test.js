@@ -13,7 +13,7 @@ async function fixture(t) {
   const {page,context}=await liveBrowser(t),responses=new Map();let posts=0,paused=false;
   const errors=[];page.on('pageerror',error=>errors.push(error.message));
   await page.addInitScript(()=>{window.showSaveFilePicker=undefined;});
-  await page.route('https://wending-title.test/**',async route=>{
+  await context.route('https://wending-title.test/**',async route=>{
     const url=new URL(route.request().url()),json=value=>route.fulfill({status:200,contentType:'application/json',body:JSON.stringify(value)});
     if(url.pathname==='/api/story/capabilities')return json({protocolVersion:1,available:true,status:'ready',errorCode:null,limits:{maxRequestBytes:32768,maxResponseBytes:65536,maxContextBytes:7000,timeoutMs:30000}});
     if(url.pathname==='/api/story/session')return json({protocolVersion:1,status:'ready',sessionRef:'title-session',expiresAt:Date.now()+86400000});
@@ -91,26 +91,39 @@ test('new-game warning and cancelled creation preserve the current save until a 
   await page.locator('[data-live-choice]:enabled').first().waitFor();
   await page.locator('[data-live-choice]').first().click();await page.locator('[data-live-choice][data-revision="2"]:enabled').first().waitFor();
   const original=await f.read();assert.equal(f.posts,2);
-  await page.locator('[data-home]').click();await page.locator('[data-title-new]').click();
+  await page.locator('[data-view="settings"]').click();await page.locator('[data-restart]').click();
   const warning=page.locator('#dialog[open]');
   assert.match(await warning.innerText(),/只有一个存档/);assert.match(await warning.innerText(),/覆盖当前进度/);
   assert.doesNotMatch(await warning.innerText(),/随时.*切回|各自保存/);
   assert.deepEqual((await f.read()).state,original.state);
   await warning.locator('[data-close-dialog]').first().click();
   assert.deepEqual((await f.read()).state,original.state);assert.equal(f.posts,2);
-  await page.locator('[data-title-new]').click();await page.locator('[data-confirm]').click();
+  await page.locator('[data-restart]').click();await page.locator('[data-confirm]').click();
   await page.locator('#live-name').fill('未入世的人');
   assert.deepEqual((await f.read()).state,original.state);assert.equal(f.posts,2);
   await page.reload();assert.equal(await page.locator('#live-name').inputValue(),'未入世的人');
   assert.equal((await f.read()).archiveId,original.archiveId);assert.deepEqual((await f.read()).state,original.state);
   await page.locator('[data-menu-back]').click();await page.locator('[data-title-continue]:enabled').click();
   await page.locator('[data-live-choice][data-revision="2"]:enabled').first().waitFor();assert.equal(f.posts,2);
-  await page.locator('[data-home]').click();await page.locator('[data-title-new]').click();await page.locator('[data-confirm]').click();
+  await page.locator('[data-view="settings"]').click();await page.locator('[data-restart]').click();await page.locator('[data-confirm]').click();
   await page.locator('#live-name').fill('沈渡');await page.locator('[data-live-start]:enabled').click();
   await page.locator('[data-live-choice][data-revision="1"]:enabled').first().waitFor();
-  const replacement=await f.read();assert.notEqual(replacement.archiveId,original.archiveId);assert.equal(replacement.state.life.name,'沈渡');assert.equal(f.posts,3);
+  const replacement=await f.read();assert.notEqual(replacement.archiveId,original.archiveId);assert.equal(replacement.state.life.name,'沈渡');assert.equal(replacement.state.reincarnation,undefined);assert.deepEqual(replacement.state.life.birth.cultivationProfile.inheritedBenefits,[]);assert.equal(f.posts,3);
   await page.reload();await page.locator('[data-live-choice][data-revision="1"]:enabled').first().waitFor();
   assert.equal((await f.read()).archiveId,replacement.archiveId);assert.deepEqual((await f.read()).state,replacement.state);assert.equal(f.posts,3);
+  await page.locator('[data-view="settings"]').click();await page.locator('.save-backup > summary').click();await page.locator('[data-retained]').click();
+  const oldRow=page.locator(`[data-retained-row="${original.archiveId}"]`);
+  await page.waitForFunction(()=>document.querySelector('#dialog[open] [data-retained-row]'),null,{timeout:3000});
+  assert.match(await oldRow.innerText(),/林照/);assert.equal(await oldRow.locator('[data-select-live], [data-play]').count(),0);
+  await oldRow.locator('[data-retained-read]').click();
+  await page.locator('#dialog .journey-block').first().waitFor();
+  assert.match(await page.locator('#dialog').innerText(),/林照/);
+  assert.equal(await page.locator('#dialog [data-character], #dialog [data-live-choice]').count(),0,'read-only history exposes no controls for the current character');
+  const downloading=page.waitForEvent('download');await page.locator('#dialog [data-retained-export]').click();
+  const oldBackup=await readFile(await (await downloading).path());
+  assert.deepEqual(JSON.parse(oldBackup.toString().split('\n')[0]).state,original.state);
+  assert.equal((await f.read()).archiveId,replacement.archiveId);assert.deepEqual((await f.read()).state,replacement.state);assert.equal(f.posts,3);
+  await page.keyboard.press('Escape');await page.locator('[data-menu-back]').click();
   await page.locator('[data-home]').click();await page.locator('[data-title-continue]:enabled').click();
   await page.locator('[data-live-choice]:enabled').first().waitFor();assert.match(await page.locator('#app').innerText(),/沈渡/);
   assert.equal(await page.locator('[data-saves], [data-select-live], [data-select-offline]').count(),0);
@@ -120,7 +133,7 @@ test('a rejected replacement transaction leaves the current journey playable and
   const f=await fixture(t),{page}=f;
   await page.locator('[data-title-new]:enabled').click();await page.locator('#live-name').fill('林照');await page.locator('[data-live-start]:enabled').click();
   await page.locator('[data-live-choice]:enabled').first().waitFor();const original=await f.read();
-  await page.locator('[data-home]').click();await page.locator('[data-title-new]').click();await page.locator('[data-confirm]').click();
+  await page.locator('[data-view="settings"]').click();await page.locator('[data-restart]').click();await page.locator('[data-confirm]').click();
   await page.locator('#live-name').fill('沈渡');
   await page.evaluate(()=>{
     const transaction=IDBDatabase.prototype.transaction;
@@ -169,7 +182,7 @@ test('the current online backup restores only after confirmation; cancelled and 
   const download=await downloading,backup=await readFile(await download.path());
   assert.match(download.suggestedFilename(),/\.wending\.jsonl$/);assert.match(backup.toString(),/wending-live-jsonl/);
   assert.deepEqual((await f.read()).state,original.state);assert.equal(f.posts,2);
-  await page.goto('https://wending-title.test/');await page.locator('[data-title-new]:enabled').click();await page.locator('[data-confirm]').click();
+  await page.goto('https://wending-title.test/');await page.locator('[data-view="settings"]').click();await page.locator('[data-restart]').click();await page.locator('[data-confirm]').click();
   await page.locator('#live-name').fill('沈渡');await page.locator('[data-live-start]:enabled').click();
   await page.locator('[data-live-choice][data-revision="1"]:enabled').first().waitFor();const replacement=await f.read();
   await page.locator('[data-view="settings"]').click();
@@ -217,7 +230,7 @@ test('continuing a completed life preserves its settlement until an explicit rei
       throw Error('the deterministic battle fixture did not settle');
     } finally {archive.close();}
   });
-  await page.reload();await page.locator('[data-title-continue]:enabled').click();await page.locator('[data-live-reincarnate]:enabled').waitFor();
+  await page.reload();await page.locator('[data-title-new]:enabled').click();await page.locator('[data-live-reincarnate]:enabled').waitFor();
   assert.match(await page.locator('.live-reincarnation').innerText(),/此生结算/);assert.deepEqual((await f.read()).state,parent.state);assert.equal(f.posts,0);
   await page.reload();await page.locator('[data-live-reincarnate]:enabled').waitFor();
   assert.equal((await f.read()).archiveId,parent.archiveId);assert.deepEqual((await f.read()).state,parent.state);assert.equal(f.posts,0);
@@ -232,6 +245,11 @@ test('continuing a completed life preserves its settlement until an explicit rei
   assert.notEqual(child.archiveId,parent.archiveId);assert.equal(child.state.life.name,'沈渡');assert.equal(child.state.reincarnation.parentRunId,parent.state.runId);
   assert.equal(child.state.reincarnation.generation,2);assert.deepEqual(child.state.reincarnation.purchases,['past-memory']);assert.equal(f.posts,1);
   await page.reload();await page.locator('[data-live-choice]:enabled').first().waitFor();
+  assert.equal((await f.read()).archiveId,child.archiveId);assert.deepEqual((await f.read()).state,child.state);assert.equal(f.posts,1);
+  await page.locator('[data-view="settings"]').click();await page.locator('.save-backup > summary').click();await page.locator('[data-retained]').click();
+  await page.locator(`[data-retained-read="${parent.archiveId}"]`).click();
+  await page.getByRole('heading',{name:'林照 · 只读历史',exact:true}).waitFor();
+  assert.equal(await page.locator('#dialog [data-live-reincarnate], #dialog [data-live-choice]').count(),0);
   assert.equal((await f.read()).archiveId,child.archiveId);assert.deepEqual((await f.read()).state,child.state);assert.equal(f.posts,1);
 });
 
@@ -271,4 +289,77 @@ test('failure to retain a live creation draft gives a visible warning without cr
   await page.locator('#live-origin').selectOption('ferry');
   assert.match(await page.locator('#toast').textContent(),/创建草稿暂时无法保存/);
   assert.equal(await f.read(),null);assert.equal(f.posts,0);
+});
+
+
+test('the start entrance continues the current life and restart is explicit in settings',async t=>{
+  const f=await fixture(t),{page}=f;
+  await page.locator('[data-title-new]:enabled').click();await page.locator('#live-name').fill('林照');await page.locator('[data-live-start]:enabled').click();
+  await page.locator('[data-live-choice]:enabled').first().waitFor();const before=await f.read();
+  await page.locator('[data-home]').click();await page.locator('[data-title-new]:enabled').click();
+  await page.locator('[data-live-choice]:enabled').first().waitFor();
+  assert.equal(await page.locator('#dialog[open], #live-name').count(),0);
+  assert.deepEqual((await f.read()).state,before.state);assert.equal(f.posts,1);
+  await page.locator('[data-view="settings"]').click();await page.locator('[data-restart]').click();
+  await page.locator('#dialog[open]').waitFor();
+  assert.match(await page.locator('#dialog').innerText(),/不会.*轮回奖励/);
+  await page.keyboard.press('Escape');assert.equal((await f.read()).archiveId,before.archiveId);
+});
+
+async function replaceFromOtherTab(f,name='另一页的人',importCurrent=false) {
+  const other=await f.context.newPage();
+  await other.goto('https://wending-title.test/');
+  return other.evaluate(async({name,importCurrent})=>{
+    const {openLiveArchive}=await import('/src/game/live-archive.js');
+    const {createLiveGame,prepareOpening}=await import('/src/game/cultivation/live/engine.js');
+    const archive=await openLiveArchive();
+    try{
+      if(importCurrent){const {exportLiveArchive,importLiveArchive}=await import('/src/game/live-save-format.js');return await importLiveArchive(exportLiveArchive(archive),archive);}
+      const current=await archive.load(),state=createLiveGame({runId:crypto.randomUUID(),name,seed:42,engineVersion:7});
+      return await archive.create({state,pending:prepareOpening(state,{requestId:crypto.randomUUID()}),expectedArchiveId:current?.archiveId??null});
+    }finally{archive.close();}
+  },{name,importCurrent});
+}
+
+test('a stale empty title continues a life created in another tab without authorizing replacement',async t=>{
+  const f=await fixture(t),{page}=f;
+  await page.locator('[data-title-new]:enabled').waitFor();
+  const current=await replaceFromOtherTab(f);
+  await page.locator('[data-title-new]').click();
+  await page.locator('#live-name, [data-live-story]').first().waitFor();
+  assert.equal(await page.locator('#live-name').count(),0,'fresh creation must never adopt an existing life as a replacement target');
+  await page.locator('[data-live-retry]').waitFor();
+  assert.deepEqual(await f.read(),current);assert.equal(f.posts,0);
+});
+
+for(const timing of ['before restart request','during confirmation','same-life import during confirmation','after draft']) {
+  test(`settings restart cannot adopt another tab's new life ${timing}`,async t=>{
+    const f=await fixture(t),{page}=f;
+    await page.locator('[data-title-new]:enabled').click();await page.locator('[data-live-start]:enabled').click();
+    await page.locator('[data-live-choice]:enabled').first().waitFor();
+    await page.locator('[data-view="settings"]').click();
+    if(timing!=='before restart request')await page.locator('[data-restart]').click();
+    if(timing==='after draft')await page.locator('[data-confirm]').click();
+    const replacement=await replaceFromOtherTab(f,'另一页的人',timing==='same-life import during confirmation');
+    if(timing==='before restart request')await page.locator('[data-restart]').click();
+    if(timing!=='after draft') {
+      await page.locator('[data-confirm]').click();
+      await page.locator('#live-name, #toast.error').first().waitFor();
+      assert.equal(await page.locator('#live-name').count(),0,'a confirmation for the displayed old life cannot authorize replacement of another physical archive');
+      await page.getByText('当前人物已在另一页面更新，请重新确认后再开始。',{exact:true}).waitFor();
+    } else {
+      await page.locator('#live-name').fill('过期草稿的人');await page.locator('[data-live-start]:enabled').click();
+      await page.locator('#live-birth-form .notice.error').waitFor();
+    }
+    assert.deepEqual(await f.read(),replacement);assert.equal(f.posts,1);
+  });
+}
+
+
+test('an empty-slot creation draft cannot replace a life created later in another tab',async t=>{
+  const f=await fixture(t),{page}=f;
+  await page.locator('[data-title-new]:enabled').click();await page.locator('#live-name').fill('过期的新生');
+  const replacement=await replaceFromOtherTab(f);
+  await page.locator('[data-live-start]:enabled').click();await page.locator('#live-birth-form .notice.error').waitFor();
+  assert.deepEqual(await f.read(),replacement);assert.equal(f.posts,0);
 });
