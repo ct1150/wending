@@ -1,3 +1,4 @@
+import {advancesEvent} from '../game/cultivation/live/experience.js';
 import {SCENE_SCHEMA,exactKeys} from '../game/cultivation/live/schema.js';
 import {assertPlainData,canonicalStringify} from '../game/cultivation/live/identity.js';
 import {ITEMS,REALMS,INTENTS,LEGACY_ITEMS,LEGACY_INTENTS,ORIGINS,TALENTS} from '../game/cultivation/live/model.js';
@@ -14,6 +15,7 @@ function availableVariants(context,aliases,intent,approach,targets){
   const failedCrossing=context.receipt.cultivationResult?.check?.kind==='world-crossing'&&context.receipt.cultivationResult.check.success===false;
   const location=selected?.intent==='travel'&&!failedCrossing?context.entities.find(entity=>entity.id===selected.targetId)?.name:context.phase==='choice'?context.director.world.location:null;
   const candidates=new Map(context.entities.map(entity=>[aliases.get(entity.id),entity]));
+  const ruleState={life:context.life,turnId:context.identity.turnId,director:context.director.eventCount===undefined?context.director:{...context.director,eventCount:context.director.eventCount+(advancesEvent(context.receipt)?1:0)}};
   const crossing=intent==='travel'&&WORLD_TRAVEL_APPROACHES.includes(approach),variants=new Map();
   for(const stake of intent==='interact'?['low']:['low','normal','high']){
     const usable=targets.filter(targetId=>{
@@ -22,7 +24,7 @@ function availableVariants(context,aliases,intent,approach,targets){
       if(intent==='travel'&&known?.name===location)return false;
       const entity=known??(fresh?{id:targetId,kind:({p:'person',l:'place',f:'faction'})[fresh[1]],name:crossing?(WORLD_TIERS[context.life.cultivationProfile.worldTier+1]??'无下一界')+'新去处':'眼前新对象',status:'alive'}:null);
       if(intent==='interact'&&approach==='observe'&&entity?.kind==='place'&&(!known||entity.name!==location))return false;
-      const state={life:context.life,turnId:context.identity.turnId,relatedEntities:entity?[entity]:[]};
+      const state={...ruleState,relatedEntities:entity?[entity]:[]};
       try{return !v7ActionRule(state,{intent,approach,targetId:entity?.id??targetId,stake}).reason;}catch{return false;}
     });
     if(!usable.length)continue;

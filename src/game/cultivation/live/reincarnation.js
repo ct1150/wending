@@ -1,5 +1,6 @@
 import { stateHash, assertPlainData } from './identity.js';
 import { DAYS_PER_YEAR } from './model.js';
+import { isExperienceLife, EXPERIENCE_VERSION } from './experience.js';
 import { realmFor } from './cultivation-rules.js';
 
 export const REINCARNATION_REWARDS = Object.freeze([
@@ -45,7 +46,7 @@ export function buildRebirthOptions(deadState,rewardIds=[]) {
   const spent=costOf(rewardIds);
   if(spent>settlement.availablePoints)fail('REINCARNATION_INSUFFICIENT_POINTS');
   const purchases=[...rewardIds].sort();
-  return {engineVersion:7,inheritedBenefits:purchases,reincarnation:{
+  return {engineVersion:7,...(isExperienceLife(deadState.life)?{experienceVersion:EXPERIENCE_VERSION}:{}),inheritedBenefits:purchases,reincarnation:{
     version:1,lineageId:deadState.reincarnation?.lineageId??deadState.runId,
     generation:settlement.generation+1,parentRunId:deadState.runId,parentStateHash:stateHash(deadState),
     earnedPoints:settlement.earnedPoints,balance:settlement.availablePoints-spent,purchases,

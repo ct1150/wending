@@ -13,8 +13,9 @@ const summary = summarizeLife;
 const same = (a,b) => canonicalStringify(a)===canonicalStringify(b);
 function requireActive(state) { validateLiveState(state);if(state.phase!=='active')throw new Error('此生尚未开场或已经死亡。'); }
 export function createLiveGame(options={}) {
- assertPlainData(options);exactKeys(options,[],['runId','seed','name','originId','engineVersion','inheritedBenefits','reincarnation']);
+ assertPlainData(options);exactKeys(options,[],['runId','seed','name','originId','engineVersion','inheritedBenefits','reincarnation','experienceVersion']);
  if(options.engineVersion!==undefined&&options.engineVersion!==7||options.inheritedBenefits!==undefined&&options.engineVersion!==7)throw new Error('修行引擎版本无效。');
+ if(Object.hasOwn(options,'experienceVersion')&&(options.experienceVersion!==1||options.engineVersion!==7))throw new Error('新体验版本无效。');
  if(options.reincarnation!==undefined){if(options.engineVersion!==7)throw new Error('轮回须进入新的修行人生。');validateReincarnation(options.reincarnation);}
  const name=(options.name??'云归').trim();textField(name,24);if(/[\r\n]/.test(name))throw new Error('姓名不能换行。');
  const originId=options.originId??'village';if(!Object.hasOwn(ORIGINS,originId))throw new Error('出身无效。');
@@ -23,7 +24,7 @@ export function createLiveGame(options={}) {
  let rng=parseInt(sha256(String(seed)).slice(0,8),16);const draw=limit=>{rng=nextRandom(rng);return rng%limit;};
  const attributes={constitution:1,insight:1,fortune:1},names=Object.keys(attributes);for(let n=0;n<9;n++){const eligible=names.filter(id=>attributes[id]<6);attributes[eligible[draw(eligible.length)]]++;}
  const talents=Object.keys(TALENTS),first=talents.splice(draw(talents.length),1)[0],birth={originId,talentIds:[first,talents[draw(talents.length)]],attributes};
- if(options.engineVersion===7)birth.cultivationProfile=createCultivationBirthProfile(draw,options.inheritedBenefits??[]);
+ if(options.engineVersion===7)birth.cultivationProfile=createCultivationBirthProfile(draw,options.inheritedBenefits??[],options.experienceVersion);
  const life=initialLifeForBirth(name,birth);
  const birthReceipt={kind:'opening',choiceId:null,action:null,elapsedDays:0,itemChanges:{},relationChanges:{},random:{before:rng,after:rng,roll:null},before:summary(life),after:summary(life),death:null,birth:copy(birth)};
  if(isV7Life(life))birthReceipt.cultivationResult={version:7,check:null,lifespanChange:{years:0,cause:null}};

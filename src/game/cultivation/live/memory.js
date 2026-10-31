@@ -241,7 +241,7 @@ export function validateStoryContext(c) {
   validateLife(c.life);validateReceipt(c.receipt);
   if(c.receipt.kind!==c.phase||c.identity.choiceId!==c.receipt.choiceId||c.receipt.death||!equal(c.receipt.after,summarizeLife(c.life))||c.phase==='opening'&&!equal(c.receipt.birth,c.life.birth))fail('ACTION_RECEIPT_MISMATCH');
   if(c.phase==='opening'&&(!equal(c.life.items,initialItemsForBirth(c.life.birth))||Object.keys(c.life.relations).length))fail('ACTION_RECEIPT_MISMATCH');
-  if(c.director!==undefined){if(!isV7Life(c.life))fail('STORY_CONTEXT_INVALID');validateStoryDirector(c.director,{turnId:c.identity.baseRevision});}
+  if(c.director!==undefined){if(!isV7Life(c.life))fail('STORY_CONTEXT_INVALID');validateStoryDirector(c.director,{turnId:c.identity.baseRevision,life:c.life});}
   else if(isV7Life(c.life))fail('STORY_DIRECTOR_INVALID');
   if(!Array.isArray(c.entities)||c.entities.length>24)fail('STORY_CONTEXT_INVALID');
   const seen=new Set();for(const e of c.entities){exactKeys(e,['id','name','kind','status']);validateEntities([{id:e.id,name:e.name,kind:e.kind}]);if(seen.has(e.id)||!['unknown','alive','dead'].includes(e.status)||e.kind!=='person'&&e.status!=='unknown')fail('STORY_CONTEXT_INVALID');seen.add(e.id);}

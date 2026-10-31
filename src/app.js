@@ -277,6 +277,8 @@ async function beginLiveLife() {
     if(result.state?.runId===creatingRunId){if(view==='new')view='adventure';liveBirthDraft={name,originId,expectedArchiveId:result.archiveId};}
     else if(result.errorCode==='REINCARNATION_ALREADY_CLAIMED')liveError='此生传承已领取。请恢复下一世备份，或返回首页重新开始。';
     else if(result.errorCode==='REINCARNATION_INSUFFICIENT_POINTS')liveError='因果点不足，请返回此生结算重新选择传承。';
+    else if(result.errorCode==='EXPERIENCE_UNSUPPORTED')liveError='故事服务暂不支持这次轮回的修行规则。原存档已保留，请稍后再试。';
+    else if(['NETWORK_UNAVAILABLE','AI_DISABLED','SERVICE_UNAVAILABLE','PROTOCOL_MISMATCH'].includes(result.errorCode))liveError='暂时无法确认故事服务可用。原存档已保留，请稍后再试。';
     else if(result.errorCode!=='BIRTH_CONTEXT_INVALID')liveError='另一页面可能已更新存档，或本地存档无法保存。请返回首页后重新创建，原进度保持不变。';
   } catch { liveError='无法开始，请检查本地存储与网络。原有旅程保持不变。'; }
   finally {uiBusy=false;creatingRunId=null;render();}

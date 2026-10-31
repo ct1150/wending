@@ -2,6 +2,7 @@ import { assertPlainData, canonicalStringify } from './identity.js';
 import { DAYS_PER_YEAR, ORIGINS, TALENTS, ITEMS, REALMS, LEGACY_ITEMS, LEGACY_INTENTS } from './model.js';
 import { exactKeys, idField, textField, validateProposal, validateEntities, validateGeneratedScene } from './schema.js';
 import { V7_REALMS, isV7Life, isV7Birth, summarizeLife, initialLifeForBirth, initialItemsForBirth, validateV7BirthProfile, validateV7Profile, realmFor, lifespanLimitFor, maximumSpiritFor, validV7Target } from './cultivation-rules.js';
+import { isExperienceLife, validateExperienceState, experienceAfterAction } from './experience.js';
 import { validateStoryDirector } from './story-director.js';
 import { validateReincarnation } from './reincarnation.js';
 import { validateRetrievalMemory } from './retrieval-memory.js';
@@ -11,6 +12,7 @@ export function validateBirth(birth) { exactKeys(birth,['originId','talentIds','
 export function validateLife(life) {
  exactKeys(life,['name','ageDays','lifeLimit','realm','cultivation','injury','items','relations','birth'],['cultivationProfile']);textField(life.name,24);validateBirth(life.birth);
  if(Object.hasOwn(life,'cultivationProfile'))validateV7Profile(life.cultivationProfile);
+ validateExperienceState(life);
  if(isV7Life(life)!==isV7Birth(life.birth)||/[\r\n]/.test(life.name)||!realmFor(life)||life.lifeLimit!==lifespanLimitFor(life))throw new Error('人物境界或寿元无效。');
  if(isV7Life(life)&&life.cultivationProfile.maxSpirit!==maximumSpiritFor(life))throw new Error('灵力上限与此身不符。');
  integer(life.ageDays,16*DAYS_PER_YEAR,isV7Life(life)?1032000*DAYS_PER_YEAR:life.lifeLimit*DAYS_PER_YEAR);integer(life.cultivation,0,9999);integer(life.injury,0,10);
@@ -46,6 +48,8 @@ export function validateReceipt(row) {
   if (row.random.roll !== null) integer(row.random.roll, 0, 99);
   validateSummary(row.before);
   validateSummary(row.after);
+  const beforeExperience=row.before.cultivationProfile?.experience,afterExperience=row.after.cultivationProfile?.experience;
+  if(Boolean(beforeExperience)!==Boolean(afterExperience)||beforeExperience&&!same(experienceAfterAction(beforeExperience,row.before.realm!==row.after.realm),afterExperience))throw new Error('修行经历与行动不符。');
   if (row.death !== null) {
     exactKeys(row.death, ['cause']);
     if (!['lifespan', 'injury'].includes(row.death.cause)) throw new Error('死亡原因无效。');
@@ -119,7 +123,8 @@ export function validateLiveState(state) {
   integer(state.archiveCursor);
   integer(state.rng, 0, 4294967295);
   validateLife(state.life);
-  if(state.director!==undefined){if(!isV7Life(state.life))throw new Error('旧人生不能静默切换世界规则。');validateStoryDirector(state.director,{turnId:state.turnId});}
+  if(isExperienceLife(state.life)&&!state.director)throw new Error('新人生缺少事件时钟。');
+  if(state.director!==undefined){if(!isV7Life(state.life))throw new Error('旧人生不能静默切换世界规则。');validateStoryDirector(state.director,{turnId:state.turnId,life:state.life});}
   if(state.reincarnation!==undefined){
     validateReincarnation(state.reincarnation);
     if(!isV7Life(state.life)||state.reincarnation.parentRunId===state.runId||!same(state.reincarnation.purchases,state.life.birth.cultivationProfile.inheritedBenefits))throw new Error('轮回传承与出生事实不符。');

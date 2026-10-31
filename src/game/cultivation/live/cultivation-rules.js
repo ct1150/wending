@@ -1,6 +1,8 @@
 import { DAYS_PER_YEAR, ITEMS, REALMS, ORIGINS } from './model.js';
 import { exactKeys } from './schema.js';
 
+import {EXPERIENCE_VERSION,isExperienceLife,createExperienceState,validateExperienceProfile,experienceAfterAction} from './experience.js';
+
 const clone=value=>JSON.parse(JSON.stringify(value));
 const bounded=(value,min,max)=>Number.isSafeInteger(value)&&value>=min&&value<=max;
 const requireValue=(condition,message='修行规则数据无效。')=>{if(!condition)throw new Error(message);};
@@ -74,7 +76,7 @@ export function realmFor(life){return realmCatalogFor(life)[life.realm];}
 export function nextRealmFor(life){const current=realmFor(life);return current?Object.values(realmCatalogFor(life)).find(realm=>realm.rank===current.rank+1)??null:null;}
 export function worldTierForPlaceName(name){const matches=WORLD_TIERS.map((label,index)=>String(name).includes(label)?index:-1).filter(index=>index>=0);return matches.length===1?matches[0]:null;}
 export function fortuneCycleModifier(state){
-  const profile=state.life.birth.cultivationProfile,band=(Math.floor(state.turnId/20)+state.life.birth.attributes.fortune+Object.keys(ROOTS).indexOf(profile.rootId))%5;
+  const profile=state.life.birth.cultivationProfile,band=(Math.floor((isExperienceLife(state.life)?state.director.eventCount:state.turnId)/20)+state.life.birth.attributes.fortune+Object.keys(ROOTS).indexOf(profile.rootId))%5;
   return (band-2)*3;
 }
 export function summarizeLife(life){
@@ -90,14 +92,15 @@ function descriptions(profile){
   const selected=[ROOTS[profile.rootId],PHYSIQUES[profile.physiqueId],RELICS[profile.relicId],TECHNIQUES[profile.techniqueId]];
   return {advantages:[...selected.map(row=>row.advantage),...profile.inheritedBenefits.map(id=>INHERITED_BENEFITS[id].description)],defects:selected.map(row=>row.defect)};
 }
-export function createCultivationBirthProfile(draw,inheritedBenefits=[]){
+export function createCultivationBirthProfile(draw,inheritedBenefits=[],experienceVersion){
   validateInheritedBenefits(inheritedBenefits);
   const select=table=>Object.keys(table)[draw(Object.keys(table).length)];
   const profile={version:7,rootId:select(ROOTS),physiqueId:select(PHYSIQUES),relicId:select(RELICS),techniqueId:select(TECHNIQUES),inheritedBenefits:[...inheritedBenefits]};
-  return {...profile,...descriptions(profile)};
+  return {...profile,...descriptions(profile),...(experienceVersion===undefined?{}:{experienceVersion})};
 }
 export function validateV7BirthProfile(profile){
-  exactKeys(profile,BIRTH_KEYS);
+  exactKeys(profile,BIRTH_KEYS,['experienceVersion']);
+  if(Object.hasOwn(profile,'experienceVersion'))requireValue(profile.experienceVersion===EXPERIENCE_VERSION);
   requireValue(profile.version===7&&Object.hasOwn(ROOTS,profile.rootId)&&Object.hasOwn(PHYSIQUES,profile.physiqueId)&&Object.hasOwn(RELICS,profile.relicId)&&Object.hasOwn(TECHNIQUES,profile.techniqueId),'灵根、体质、伴生遗物或功法无效。');
   validateInheritedBenefits(profile.inheritedBenefits);
   const expected=descriptions(profile);
@@ -105,7 +108,8 @@ export function validateV7BirthProfile(profile){
   return profile;
 }
 export function validateV7Profile(profile){
-  exactKeys(profile,PROFILE_KEYS);
+  exactKeys(profile,PROFILE_KEYS,['experience']);
+  if(Object.hasOwn(profile,'experience')){validateExperienceProfile(profile.experience);requireValue(Object.hasOwn(TECHNIQUES,profile.experience.activeTechniqueId));}
   requireValue(profile.version===7&&bounded(profile.lifespanBonus,0,1000000)&&bounded(profile.lifespanLoss,0,1000000)&&bounded(profile.maxSpirit,1,1000)&&bounded(profile.spirit,0,profile.maxSpirit)&&bounded(profile.exposure,0,100)&&bounded(profile.worldTier,0,2));
   exactKeys(profile.arts,Object.keys(ART_NAMES));for(const value of Object.values(profile.arts))requireValue(bounded(value,0,20));
   return profile;
@@ -129,6 +133,7 @@ export function initialLifeForBirth(name,birth){
   const life={name,ageDays:16*DAYS_PER_YEAR,lifeLimit:80,realm:'mortal',cultivation:0,injury:0,items:initialItemsForBirth(birth),relations:{},birth:clone(birth)};
   if(isV7Birth(birth)){
     life.cultivationProfile={version:7,lifespanBonus:0,lifespanLoss:0,spirit:100,maxSpirit:100,exposure:0,worldTier:0,arts:{alchemy:0,forging:0,formations:0,talismans:0}};
+    if(isExperienceLife(life))life.cultivationProfile.experience=createExperienceState(birth);
     life.cultivationProfile.maxSpirit=maximumSpiritFor(life);life.cultivationProfile.spirit=life.cultivationProfile.maxSpirit;
     if(hasBenefit(birth,'past-memory'))life.cultivation=1;
   }
@@ -353,6 +358,7 @@ export function resolveV7Action(life,action,rule,roll){
       if(rule.relationship)next.relations[action.targetId]=clamp((next.relations[action.targetId]??0)+rule.relationship,-100,100);
     }
   }
+  if(isExperienceLife(life))profile.experience=experienceAfterAction(profile.experience,next.realm!==life.realm);
   const result={version:7,check,lifespanChange:{years:next.lifeLimit-life.lifeLimit,cause}};
   return {nextLife:next,elapsedDays,death,result};
 }

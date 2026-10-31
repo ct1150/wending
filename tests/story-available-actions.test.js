@@ -196,8 +196,8 @@ test('a dense v7 context keeps its complete target constraints inside the provid
   for(const schema of Object.values(built.named.$defs))if(schema?.properties?.name?.pattern)assert.doesNotMatch(schema.properties.name.pattern,/\(\?[=!<]/u,'native generation does not support lookaround');
 });
 
-test('a near-full v7 continuation preserves its complete action grammar when references share the request budget',t=>{
-  const state=createLiveGame({runId:'rich-continuation',seed:42,engineVersion:7}),pending=prepareOpening(state,{requestId:'rich-opening'}),openingContext=buildStoryContext(state,pending);
+for(const marked of [false,true])test((marked?'marked':'original')+' near-full v7 continuation preserves its complete action grammar when references share the request budget',t=>{
+  const state=createLiveGame({runId:'rich-continuation',seed:42,engineVersion:7,...(marked?{experienceVersion:1}:{})}),pending=prepareOpening(state,{requestId:'rich-opening'}),openingContext=buildStoryContext(state,pending);
   const scene=decodeGlmScene({blocks:[{kind:'narration',text:'村口的古井旁留下新鲜泥痕，来路尚待辨认。'}],choices:[choice('interact:observe','self','low','查看古井边缘'),choice('interact:observe','self','low','查看地上泥痕'),choice('interact:leave','self','low','暂且放下井边异状')],title:'井边异状',location:'村口',memoryDeltas:[],story:{pattern:'investigation',beat:'progress',anchors:[0]}},openingContext,{storyActions:true});
   const active=commitTurn(state,pending,scene),c=structuredClone(buildStoryContext(active,prepareChoice(active,{requestId:'rich-next',choiceId:scene.choices[0].id})));
   rich(c);c.life.lifeLimit=V7_REALMS[c.life.realm].lifeLimit;c.life.cultivationProfile.maxSpirit=maximumSpiritFor(c.life);c.life.cultivationProfile.spirit=c.life.cultivationProfile.maxSpirit;c.receipt.before=summarizeLife(c.life);c.receipt.after=summarizeLife(c.life);
