@@ -1,3 +1,4 @@
+import {isExperienceLife} from '../game/cultivation/live/experience.js';
 import {exactKeys,textField} from '../game/cultivation/live/schema.js';
 import {assertPlainData} from '../game/cultivation/live/identity.js';
 import {ITEMS,REALMS} from '../game/cultivation/live/model.js';
@@ -74,7 +75,8 @@ export function normalizeNamedScene(wire,context){
     }
     return {entityId,kind:delta.kind,anchor:delta.anchor,...(Object.hasOwn(delta,'status')?{status:delta.status}:{})};
   });
-  const story=directed?{...wire.story,...(wire.story?.npcs!==undefined?{npcs:wire.story.npcs.map(npc=>{exactKeys(npc,['target','anchor','title','signatureSpell','habit','obsession']);const {target,...traits}=npc;return {...traits,entityId:resolve(target)};})}:{})}:undefined;
+  const {target:observedTarget,...observation}=wire.story?.opponent??{};
+  const story=directed?{...wire.story,...(observedTarget?{opponent:{...observation,entityId:resolve(observedTarget)}}:{}),...(wire.story?.npcs!==undefined?{npcs:wire.story.npcs.map(npc=>{exactKeys(npc,['target','anchor','title','signatureSpell','habit','obsession']);const {target,...traits}=npc;return {...traits,entityId:resolve(target)};})}:{})}:undefined;
   const result={blocks,choices,title:wire.title,location:wire.location,otherPeople:[],places:[],factions:[],memoryDeltas,...(directed?{story}:{})};
   for(const declaration of declarations.values()){const {kind,...entity}=declaration;result[({person:'otherPeople',place:'places',faction:'factions'})[kind]].push(entity);}
   return result;
@@ -199,8 +201,23 @@ export function buildNamedSceneSchema(source,context,{blocks,location}={}){
   const properties={blocks:body,choices,title:source.properties.title,location:location??source.properties.location,memoryDeltas,...(directed?{story:structuredClone(source.properties.story)}:{})};
   if(directed){
     properties.story.properties.anchors.items.maximum=(body.maxItems??4)-1;
+    const note=properties.story.properties.opponent;
+    if(note){delete note.properties.entityId;note.properties={target:{oneOf:[{$ref:'#/$defs/personTarget'},{$ref:'#/$defs/factionTarget'}]},...note.properties};note.required=['target','anchor'];note.properties.anchor={$ref:'#/$defs/blockAnchor'};}
     const traits=properties.story.properties.npcs.items;delete traits.properties.entityId;traits.properties={target:{$ref:'#/$defs/personTarget'},...traits.properties};traits.required=['target','anchor'];traits.properties.anchor.maximum=(body.maxItems??4)-1;
     for(const field of ['title','signatureSpell','habit','obsession'])traits.properties[field].minLength=1;
   }
-  return {type:'object',additionalProperties:false,required:Object.keys(properties),properties,$defs:definitions};
+  const schema={type:'object',additionalProperties:false,required:Object.keys(properties),properties,$defs:definitions};
+  if(isExperienceLife(context.life)){
+    // Definitions are private grammar symbols, never generated data. Shorten
+    // their names, preserving the complete action constraints and game facts.
+    const symbols=new Map(Object.keys(definitions).map((name,i)=>[name,'d'+i.toString(36)]));
+    const visited=new Set();
+    function link(node){
+      if(!node||typeof node!=='object'||visited.has(node))return;visited.add(node);
+      if(Object.hasOwn(node,'$ref')){const id=symbols.get(node.$ref.slice(8));if(!id)throw Error('Unresolved named grammar reference');node.$ref='#/$defs/'+id;}
+      else for(const child of Object.values(node))link(child);
+    }
+    link(schema);schema.$defs=Object.fromEntries(Object.entries(definitions).map(([key,value])=>[symbols.get(key),value]));
+  }
+  return schema;
 }

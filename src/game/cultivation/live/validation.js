@@ -1,3 +1,4 @@
+import {checkActorScene} from './actor-insight.js';
 import { assertPlainData, canonicalStringify } from './identity.js';
 import { DAYS_PER_YEAR, ORIGINS, TALENTS, ITEMS, REALMS, LEGACY_ITEMS, LEGACY_INTENTS } from './model.js';
 import { exactKeys, idField, textField, validateProposal, validateEntities, validateGeneratedScene } from './schema.js';
@@ -136,7 +137,7 @@ export function validateLiveState(state) {
     if(!isV7Life(state.life)||state.reincarnation.parentRunId===state.runId||!same(state.reincarnation.purchases,state.life.birth.cultivationProfile.inheritedBenefits))throw new Error('轮回传承与出生事实不符。');
   }
   validateReceipt(state.birthReceipt);
-  validateEntities(state.relatedEntities);
+  validateEntities(state.relatedEntities);if(!isExperienceLife(state.life)&&state.relatedEntities.some(e=>e.experience))throw new Error('旧人生不能写入对手境界。');
   if (state.birthReceipt.kind !== 'opening' || !same(state.life.birth, state.birthReceipt.birth)) throw new Error('出生事实不可改写。');
   const expired = state.life.ageDays >= state.life.lifeLimit * DAYS_PER_YEAR;
   const injured = state.life.injury >= 10;
@@ -157,7 +158,7 @@ export function validateLiveState(state) {
       if ((!expired && !injured) || state.currentScene !== null || !state.lastReceipt.death) throw new Error('只有真实死亡才能终结。');
     } else {
       if (expired || injured || state.lastReceipt.death !== null) throw new Error('死亡人物不能继续行动。');
-      validateGeneratedScene(state.currentScene);
+      validateGeneratedScene(state.currentScene);checkActorScene(state.currentScene,isExperienceLife(state.life),state.relatedEntities,false);
       if (!same(state.currentScene.entities, state.relatedEntities)) throw new Error('场景实体不一致。');
       for (const proposal of state.currentScene.choices) validateContextualTarget(state, proposal);
       for (const memory of state.currentScene.memoryDeltas) {

@@ -1,3 +1,5 @@
+import {validateInsightShape,groundedInsight} from '../game/cultivation/live/actor-insight.js';
+import {isExperienceLife} from '../game/cultivation/live/experience.js';
 import {exactKeys} from '../game/cultivation/live/schema.js';
 import {STORY_PATTERNS,STORY_BEATS,STORY_NPC_TRAITS} from '../game/cultivation/live/story-annotation.js';
 import {assertSafeStoryStrings} from '../game/cultivation/live/memory.js';
@@ -6,7 +8,7 @@ import {assertSafeStoryStrings} from '../game/cultivation/live/memory.js';
 // registered. Saves and accepted scenes continue to use the strict validator.
 export function normalizeWireAnnotation(story,blocks,context,field,lookup){
   assertSafeStoryStrings(story);
-  exactKeys(story,[],['pattern','beat','anchors','npcs']);
+  exactKeys(story,[],['pattern','beat','anchors','npcs',...(isExperienceLife(context.life)?['opponent']:[])]);
   for(const key of ['pattern','beat'])if(Object.hasOwn(story,key)&&typeof story[key]!=='string')throw Error('Invalid story tag');
   if(!Array.isArray(blocks)||!blocks.length)throw Error('Missing scene blocks');
   const anchors=story.anchors??[];
@@ -19,6 +21,12 @@ export function normalizeWireAnnotation(story,blocks,context,field,lookup){
     beat:actual.length&&STORY_BEATS.includes(story.beat)?story.beat:'progress',
     anchors:actual.length?actual:[0],
   };
+  if(story.opponent!==undefined){
+    const n=story.opponent;validateInsightShape(n,field,4);
+    const actor=lookup(n[field],true),block=blocks[n.anchor],speaker=block?.kind==='dialogue'&&block.speaker!=='self'&&lookup(block.speaker,false)?.key===actor?.key;
+    const obs=groundedInsight(n,block,actor,{speaker,ambiguous:actor?.ambiguous});
+    if(obs)result.opponent={[field]:n[field],...obs};
+  }
   if(story.npcs===undefined)return result;
   if(!Array.isArray(story.npcs)||story.npcs.length>2)throw Error('Invalid NPC annotations');
   const byIdentity=new Map();

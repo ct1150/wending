@@ -11,18 +11,8 @@ const hasBenefit=(birth,id)=>birth.cultivationProfile.inheritedBenefits.includes
 
 // The original REALMS table remains untouched: existing archive receipts replay
 // against their original rules. Only explicitly marked new lives use this table.
-export const V7_REALMS=Object.freeze(Object.fromEntries([
-  ['mortal','凡人',80,0,null,0,1,30],
-  ['qi','炼气',120,2,'manual',2,1,90],
-  ['foundation','筑基',240,6,'crystal',3,3,360],
-  ['golden','结丹',480,10,'core',8,6,720],
-  ['nascent','元婴',1000,16,'soulseal',20,12,1800],
-  ['spirit','化神',2000,24,'skykey',50,25,3600],
-  ['void','炼虚',4000,36,'voidstone',120,60,7200],
-  ['unity','合体',8000,48,'unityjade',300,120,14400],
-  ['mahayana','大乘',16000,64,'daofruit',600,250,28800],
-  ['tribulation','渡劫',32000,80,'thunderseal',1200,500,57600],
-].map(([id,name,lifeLimit,threshold,material,minYears,practiceYears,exploreDays],rank)=>[id,Object.freeze({id,name,rank,lifeLimit,threshold,material,minYears,practiceYears,exploreDays})])));
+import {V7_REALMS} from './actor-insight.js';
+export {V7_REALMS};
 
 export const ROOTS=Object.freeze({
   'mixed-five':{id:'mixed-five',name:'五行伪灵根',category:'伪灵根',description:'五种灵息皆有感应，寻物敏锐，破境却较艰难。',advantage:'五行感应：探索判定更敏锐。',defect:'灵根驳杂：突破较难。',breakthrough:-5,exploration:8},
@@ -156,9 +146,15 @@ export function validV7Target(state,proposal){
   return false;
 }
 
+export function effectiveTechniqueFor(life){
+  const e=life.cultivationProfile.experience,t=TECHNIQUES[isExperienceLife(life)?e.activeTechniqueId:life.birth.cultivationProfile.techniqueId];
+  if(!isExperienceLife(life)||!e.repaired||!t.defective)return t;
+  // Only mechanically negative properties of the equipped method yield.
+  return {...t,timePercent:100,spiritCost:0,risk:0,exposure:0,breakthrough:Math.max(0,t.breakthrough??0)};
+}
 function modifiers(life){
   const birth=life.birth,profile=birth.cultivationProfile;
-  return {root:ROOTS[profile.rootId],body:PHYSIQUES[profile.physiqueId],relic:profile.relicId,technique:TECHNIQUES[profile.techniqueId],
+  return {root:ROOTS[profile.rootId],body:PHYSIQUES[profile.physiqueId],relic:profile.relicId,technique:effectiveTechniqueFor(life),
     protection:birth.attributes.constitution+(birth.talentIds.includes('iron-bones')?10:0)+(PHYSIQUES[profile.physiqueId].protection??0)+(hasBenefit(birth,'resilient-body')?10:0),
     fortune:birth.attributes.fortune,insight:birth.attributes.insight,
     exposed:life.cultivationProfile.exposure>=80?20:life.cultivationProfile.exposure>=50?10:0};
@@ -315,6 +311,20 @@ export function v7ActionRule(state,p){
       rule.days=p.approach==='help'?1:0;
       if(p.approach==='help'){rule.items.supplies=1;rule.relationship=2;}
       break;
+  }
+  if(isExperienceLife(life)&&(p.intent==='fight'||p.intent==='evade'||p.intent==='negotiate'&&p.approach==='pressure')){
+    const foe=state.relatedEntities.find(row=>row.id===p.targetId),rank=foe.experience?.realmId,known=rank!==undefined;
+    // An unknown opponent never acquires an invented realm; use a conservative
+    // baseline until a scene explicitly establishes their absolute strength.
+    const gap=known?clamp(realm.rank-V7_REALMS[rank].rank,-4,4):-1;
+    if(rule.checkKind){
+      rule.chance=clamp(rule.chance+gap*14,5,99);
+      rule.failureInjury=clamp(rule.failureInjury-gap,1,6);
+      if(rule.checkKind==='combat')rule.injury=clamp(rule.injury-gap,0,9);
+    }
+    const band=!known?'unknown':!rule.checkKind||rule.chance>=78?'favorable':rule.chance>=48?'even':'dangerous';
+    const note=state.currentScene?.story?.opponent;
+    rule.outlook={band,reason:!known?'未辨明对手境界，按谨慎估计行动。':('对手'+V7_REALMS[rank].name+'，你是'+realm.name+'。'+(!rule.checkKind?'此法以实际代价避开较量。':gap>0?'境界占优。':gap<0?'对方境界更高。':'双方境界相当。')),...(note?.entityId===foe.id?Object.fromEntries(['purpose','condition'].filter(k=>note[k]).map(k=>[k,note[k]])):{})};
   }
   for(const [id,count] of Object.entries(rule.items))if((life.items[id]??0)<count)rule.reason='缺少'+ITEMS[id]+'。';
   for(const [id,count] of Object.entries(rule.gain))if((life.items[id]??0)-(rule.items[id]??0)+count>9999)rule.reason='行囊已经装不下。';

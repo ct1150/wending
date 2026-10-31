@@ -1,3 +1,4 @@
+import {validateActorRank} from './actor-insight.js';
 import { assertPlainData } from './identity.js';
 import { INTENTS, EXPERIENCE_INTENTS } from './model.js';
 import { STORY_ANNOTATION_SCHEMA, validateStoryAnnotation } from './story-annotation.js';
@@ -8,7 +9,7 @@ export function exactKeys(value, keys, optional=[]) {
 export function textField(value,max=200) { if(typeof value!=='string'||!value.trim()||value.length>max||/[\x00-\x08\x0b\x0c\x0e-\x1f]/.test(value))throw new Error('文字字段无效。'); }
 export function idField(value) { if(typeof value!=='string'||!/^[A-Za-z0-9][A-Za-z0-9:_-]{0,79}$/.test(value))throw new Error('标识无效。'); }
 export function validateProposal(p) { assertPlainData(p);exactKeys(p,['id','label','intent','targetId','stake','approach']);idField(p.id);textField(p.label,120);idField(p.targetId);if(!Object.hasOwn(EXPERIENCE_INTENTS,p.intent)||!EXPERIENCE_INTENTS[p.intent].includes(p.approach)||!['low','normal','high'].includes(p.stake))throw new Error('未知行动意图。');return p; }
-export function validateEntities(entities) { if(!Array.isArray(entities)||entities.length>24)throw new Error('关联人物过多。');const seen=new Set();for(const e of entities){exactKeys(e,['id','name','kind'],['status']);if(Object.hasOwn(e,'status')&&(e.kind!=='person'||!['alive','dead'].includes(e.status)))throw new Error('人物生死状态无效。');idField(e.id);textField(e.name,60);if(seen.has(e.id)||!['person','place','faction'].includes(e.kind))throw new Error('实体无效。');seen.add(e.id);} }
+export function validateEntities(entities) { if(!Array.isArray(entities)||entities.length>24)throw new Error('关联人物过多。');const seen=new Set();for(const e of entities){exactKeys(e,['id','name','kind'],['status','experience']);if(Object.hasOwn(e,'experience'))validateActorRank(e);if(Object.hasOwn(e,'status')&&(e.kind!=='person'||!['alive','dead'].includes(e.status)))throw new Error('人物生死状态无效。');idField(e.id);textField(e.name,60);if(seen.has(e.id)||!['person','place','faction'].includes(e.kind))throw new Error('实体无效。');seen.add(e.id);} }
 export function validateGeneratedScene(scene) {
  assertPlainData(scene);exactKeys(scene,['id','title','location','blocks','entities','choices','memoryDeltas'],['story','retrieval']);idField(scene.id);textField(scene.title,120);textField(scene.location,120);validateEntities(scene.entities);
  if(!Array.isArray(scene.blocks)||scene.blocks.length<1||scene.blocks.length>12)throw new Error('正文段落数量无效。');for(const block of scene.blocks){exactKeys(block,block.kind==='dialogue'?['kind','text','speaker']:['kind','text']);if(!['narration','dialogue'].includes(block.kind))throw new Error('正文类型无效。');textField(block.text,2000);if(block.kind==='dialogue')textField(block.speaker,80);}

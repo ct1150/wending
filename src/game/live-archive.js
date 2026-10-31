@@ -306,7 +306,7 @@ class Archive {
   const context=buildStoryContext(c.run.state,p,related);validateGeneratedScene(scene,context);
   const expected=buildMemoryDelta(p.receipt,scene);check(same(expected,memoryDelta),'ARCHIVE_INVALID_MEMORY');
   const turnId=p.identity.turnId,common={runId:c.run.runId,turnId};
-  const records=[{id:'receipt:'+turnId,...common,source:'rules',kind:'receipt',receipt:clone(p.receipt)},...expected.records.map(r=>({...r,...common})),...scene.entities.map(e=>{const prior=related.find(r=>r.kind==='entity'&&r.entity.id===e.id);return {id:'e:'+sha256(e.id).slice(0,40),...common,source:'narrative',kind:'entity',entity:{id:e.id,name:e.name,kind:e.kind},status:prior?.status==='dead'?'dead':e.status??prior?.status??'unknown'};})];
+  const records=[{id:'receipt:'+turnId,...common,source:'rules',kind:'receipt',receipt:clone(p.receipt)},...expected.records.map(r=>({...r,...common})),...scene.entities.map(e=>{const prior=related.find(r=>r.kind==='entity'&&r.entity.id===e.id);return {id:'e:'+sha256(e.id).slice(0,40),...common,source:'narrative',kind:'entity',entity:{id:e.id,name:e.name,kind:e.kind,...(e.experience?{experience:clone(e.experience)}:{})},status:prior?.status==='dead'?'dead':e.status??prior?.status??'unknown'};})];
   const nextState=commitTurn(c.run.state,p,scene,context.relationships);
   if(nextState.relationshipVersion===1) {
    for(const entityId of Object.keys(c.run.state.relationshipVersion===1?p.receipt.relationChanges:p.nextLife.relations))records.push({

@@ -1,3 +1,5 @@
+import {isExperienceLife} from './experience.js';
+import {checkActorScene} from './actor-insight.js';
 import { assertPlainData, canonicalStringify, sha256 } from './identity.js';
 import { exactKeys, idField, textField, validateEntities, validateGeneratedScene as validateStructure } from './schema.js';
 import { validateLife, validateReceipt } from './validation.js';
@@ -55,7 +57,7 @@ function validateRecord(record,state) {
     idField(record.entityId);if(record.source!=='rules'||!Number.isInteger(record.value)||record.value < -100||record.value > 100)fail('MEMORY_RECORD_INVALID');
   } else if(record.kind==='receipt'){if(record.source!=='rules')fail('MEMORY_RECORD_INVALID');validateReceipt(record.receipt);}
   else if(record.kind==='entity'){
-    exactKeys(record.entity,['id','name','kind']);validateEntities([record.entity]);if(!['rules','narrative'].includes(record.source)||!['unknown','alive','dead'].includes(record.status)||record.entity.kind!=='person'&&record.status!=='unknown')fail('MEMORY_RECORD_INVALID');
+    exactKeys(record.entity,['id','name','kind'],['experience']);if(record.entity.experience&&!isExperienceLife(state.life))fail('MEMORY_RECORD_INVALID');validateEntities([record.entity]);if(!['rules','narrative'].includes(record.source)||!['unknown','alive','dead'].includes(record.status)||record.entity.kind!=='person'&&record.status!=='unknown')fail('MEMORY_RECORD_INVALID');
   } else {
     textField(record.text,500);
     if(record.kind==='summary'){
@@ -80,10 +82,11 @@ function latestRecords(records,state) {
         if(!equal(payload(old),payload(row)))fail('MEMORY_RECORD_CONFLICT');
       }
       if(['clue','promise','ruleRelation'].includes(row.kind)&&(old.entityId!==row.entityId||old.text!==row.text))fail('MEMORY_RECORD_CONFLICT');
-      if(row.kind==='entity'&&!equal(old.entity,row.entity))fail('MEMORY_RECORD_CONFLICT');
+      if(row.kind==='entity'&&(old.entity.id!==row.entity.id||old.entity.name!==row.entity.name||old.entity.kind!==row.entity.kind))fail('MEMORY_RECORD_CONFLICT');
       if(old.turnId===row.turnId&&!equal(old,row))fail('MEMORY_RECORD_CONFLICT');
       const earlier=old.turnId<row.turnId?old:row,later=old.turnId<row.turnId?row:old;
       if(['clue','promise'].includes(row.kind)&&earlier.status!=='open'&&later.status!==earlier.status)fail('MEMORY_RECORD_CONFLICT');
+      if(row.kind==='entity'&&earlier.entity.experience&&!equal(earlier.entity.experience,later.entity.experience))fail('MEMORY_RECORD_CONFLICT');
       if(row.kind==='entity'&&earlier.status==='dead'&&later.status!=='dead')fail('MEMORY_RECORD_CONFLICT');
     }
     if(!old||old.turnId<row.turnId)rows.set(row.id,copy(row));
@@ -121,8 +124,8 @@ export function buildStoryContext(state,pending,relatedRecords=[],options={}) {
   const current=continuity&&state.currentScene?sceneTurnRecord(state.currentScene,{runId:state.runId,turnId:state.turnId,action:state.lastReceipt?.action}):null;
   const records=latestRecords([...relatedRecords,...(current?[current]:[])],state),entities=new Map();
   const addEntity=(entity,status)=>{
-    const old=entities.get(entity.id),next={id:entity.id,name:entity.name,kind:entity.kind,status};
-    if(old){if(old.name!==next.name||old.kind!==next.kind)fail('ENTITY_IDENTITY_CONFLICT');if(old.status==='dead'||next.status==='dead')next.status='dead';else if(next.status==='unknown')next.status=old.status;}
+    const old=entities.get(entity.id),next={id:entity.id,name:entity.name,kind:entity.kind,status,...(entity.experience?{experience:copy(entity.experience)}:{})};
+    if(old){if(old.experience&&next.experience&&!equal(old.experience,next.experience))fail('ENTITY_IDENTITY_CONFLICT');if(old.experience&&!next.experience)next.experience=old.experience;if(old.name!==next.name||old.kind!==next.kind)fail('ENTITY_IDENTITY_CONFLICT');if(old.status==='dead'||next.status==='dead')next.status='dead';else if(next.status==='unknown')next.status=old.status;}
     entities.set(entity.id,next);
   };
   for(const e of state.relatedEntities)addEntity(e,e.status??'unknown');
@@ -260,7 +263,7 @@ export function validateStoryContext(c) {
   if(c.director!==undefined){if(!isV7Life(c.life))fail('STORY_CONTEXT_INVALID');validateStoryDirector(c.director,{turnId:c.identity.baseRevision,life:c.life});}
   else if(isV7Life(c.life))fail('STORY_DIRECTOR_INVALID');
   if(!Array.isArray(c.entities)||c.entities.length>24)fail('STORY_CONTEXT_INVALID');
-  const seen=new Set();for(const e of c.entities){exactKeys(e,['id','name','kind','status']);validateEntities([{id:e.id,name:e.name,kind:e.kind}]);if(seen.has(e.id)||!['unknown','alive','dead'].includes(e.status)||e.kind!=='person'&&e.status!=='unknown')fail('STORY_CONTEXT_INVALID');seen.add(e.id);}
+  const seen=new Set();for(const e of c.entities){exactKeys(e,['id','name','kind','status'],['experience']);if(e.experience&&!isExperienceLife(c.life))fail('STORY_CONTEXT_INVALID');const {status,...entity}=e;validateEntities([entity]);if(seen.has(e.id)||!['unknown','alive','dead'].includes(e.status)||e.kind!=='person'&&e.status!=='unknown')fail('STORY_CONTEXT_INVALID');seen.add(e.id);}
   if(c.relationshipVersion!==undefined||c.relationships!==undefined){
     if(c.relationshipVersion!==1||c.relationships===undefined)fail('STORY_CONTEXT_INVALID');
     const projected=projectRelations({relations:{}},c.entities,c.relationships);
@@ -328,6 +331,7 @@ function compilationState(c,scene) {
 export function validateGeneratedScene(raw,context,{checkNextContext,continuity=false,requireExit=false}={}) {
   inspect(raw);validateStoryContext(context);
   try { validateStructure(raw); } catch { fail('GENERATED_SCENE_INVALID'); }
+  checkActorScene(raw,isExperienceLife(context.life),context.entities);
   const prefix=turnPrefix(context);
   if(!raw.id.startsWith(prefix+'s:')||raw.choices.some(p=>!p.id.startsWith(prefix+'c:')))fail('SCENE_ID_SCOPE_INVALID');
   const known=new Map(context.entities.map(e=>[e.id,e])),current=new Map(raw.entities.map(e=>[e.id,e]));

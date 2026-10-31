@@ -1,3 +1,5 @@
+import {checkActorScene} from './actor-insight.js';
+import {isExperienceLife} from './experience.js';
 import { DAYS_PER_YEAR, ORIGINS, TALENTS, ITEMS, REALMS, LEGACY_INTENTS } from './model.js';
 import { isV7Life, summarizeLife, createCultivationBirthProfile, initialLifeForBirth, v7ActionRule, resolveV7Action } from './cultivation-rules.js';
 import { assertPlainData, canonicalStringify, sha256, stateHash } from './identity.js';
@@ -70,7 +72,7 @@ function actionRule(state,p) {
 export function compileChoices(state,proposals) {
  validateLiveState(state);assertPlainData(proposals);if(!Array.isArray(proposals)||proposals.length>3)throw new Error('行动数量无效。');const seen=new Set();
  return proposals.map(p=>{if(seen.has(p.id))throw new Error('行动标识重复。');seen.add(p.id);const rule=actionRule(state,p),warnings=[];
-  if(isV7Life(state.life))return {...copy(p),enabled:!rule.reason,reason:rule.reason??null,costs:{days:rule.days,items:copy(rule.items),spirit:rule.spiritCost,lifeYears:rule.lifeLoss},warnings:[...rule.warnings]};
+  if(isV7Life(state.life))return {...copy(p),enabled:!rule.reason,reason:rule.reason??null,costs:{days:rule.days,items:copy(rule.items),spirit:rule.spiritCost,lifeYears:rule.lifeLoss},warnings:[...rule.warnings],...(rule.outlook?{outlook:copy(rule.outlook)}:{})};
   if(rule.risk)warnings.push('历练受伤基础风险'+rule.risk+'%，根骨与坚韧筋骨可降低风险。');if(rule.injury>0)warnings.push('将增加'+rule.injury+'点伤势；伤势达到10即死亡。');if(state.life.ageDays+rule.days>=state.life.lifeLimit*DAYS_PER_YEAR)warnings.push('余寿不足，将在途中寿尽，得不到行动成果。');return {...copy(p),enabled:!rule.reason,reason:rule.reason??null,costs:{days:rule.days,items:copy(rule.items)},warnings};});
 }
 function identity(state,requestId,choiceId) {idField(requestId);return {runId:state.runId,turnId:state.turnId+1,baseRevision:state.revision,stateHash:stateHash(state),choiceId,rulesVersion:state.rulesVersion,promptVersion:state.promptVersion,requestId};}
@@ -145,7 +147,7 @@ export function projectRelations(life,entities,restored={}) {
  return Object.fromEntries(Object.entries({...restored,...life.relations}).filter(([id])=>entities.some(e=>e.id===id)));
 }
 export function commitTurn(state,pending,scene,restoredRelations={}) {
- const fixed=verifiedPending(state,pending);if(fixed.receipt.death)throw new Error('真实死亡须本地结算。');validateGeneratedScene(scene);
+ const fixed=verifiedPending(state,pending);if(fixed.receipt.death)throw new Error('真实死亡须本地结算。');validateGeneratedScene(scene);checkActorScene(scene,isExperienceLife(state.life),state.relatedEntities,false);
  const relatedEntities=copy(scene.entities);
  // Every current target and memory reference must have an explicit stable entity.
  for(const m of scene.memoryDeltas)if(!relatedEntities.some(e=>e.id===m.entityId))throw new Error('记忆引用未知实体。');

@@ -60,6 +60,7 @@ export function buildGlmWire(context,system,{storyActions=false}={}){
   // Native XGrammar rejects this keyword. The decoder removes duplicate
   // anchors before strict canonical scene validation.
   if(directed)delete schema.properties.story.properties.anchors.uniqueItems;
+  if(directed&&isExperienceLife(context.life))schema.properties.story.properties.opponent={type:'object',additionalProperties:false,required:['entityId','anchor'],properties:{entityId:{type:'string'},anchor:{type:'integer',minimum:0,maximum:3},realmId:{enum:Object.keys(realms)},purpose:{type:'string',minLength:1,maxLength:24},condition:{type:'string',minLength:1,maxLength:24}}};
   delete schema.properties.id;schema.required=schema.required.filter(key=>key!=='id');
   const entityProperties=schema.properties.entities.items.properties;
   delete schema.properties.entities;
@@ -165,7 +166,7 @@ export function decodeGlmScene(wire,context,{storyActions=false}={}){
         const lookup=(target,isNote)=>{
           const {kind,name,known,status}=identify(target);
           if(isNote&&(status!==null||kind==='person'&&name===context.life.name))throw Error('Invalid NPC annotation target');
-          return {kind,name,key:known?.id??JSON.stringify([kind,name]),ambiguous:context.entities.filter(entity=>entity.kind===kind&&entity.name===name).length>1};
+          return {kind,name,status:known?.status??status,key:known?.id??JSON.stringify([kind,name]),ambiguous:context.entities.filter(entity=>entity.kind===kind&&entity.name===name).length>1};
         };
         wire={...wire,story:normalizeWireAnnotation(wire.story,wire.blocks,context,'target',lookup)};
       }
@@ -199,7 +200,7 @@ export function decodeGlmScene(wire,context,{storyActions=false}={}){
       if(known){if(known.kind!==entity.kind)throw Error();id=known.id;}
       else if(fresh&&({p:'person',l:'place',f:'faction'})[fresh[1]]===entity.kind){id=prefix+'e:'+entity.kind+'_'+fresh[2];if(context.entities.some(known=>known.id===id))throw Error();}
       else throw Error();
-      aliases.set(entity.id,id);return {...entity,id};
+      aliases.set(entity.id,id);return {...entity,id,...(known?.experience?{experience:{...known.experience}}:{})};
     });
     // Known references already have authoritative identities in the context.
     // Restore only referenced declarations; fresh aliases still require a name.
@@ -212,7 +213,7 @@ export function decodeGlmScene(wire,context,{storyActions=false}={}){
       if(typeof alias!=='string'||aliases.has(alias))continue;
       const known=knownAliases.get(alias);if(!known)continue;
       if(entities.some(entity=>entity.id===known.id)){aliases.set(alias,known.id);continue;}
-      aliases.set(alias,known.id);entities.push({id:known.id,name:known.name,kind:known.kind,...(known.kind==='person'&&['alive','dead'].includes(known.status)?{status:known.status}:{})});
+      aliases.set(alias,known.id);entities.push({id:known.id,name:known.name,kind:known.kind,...(known.experience?{experience:{...known.experience}}:{}),...(known.kind==='person'&&['alive','dead'].includes(known.status)?{status:known.status}:{})});
     }
     if(entities.length>24)throw Error();
     const blocks=wire.blocks.map(block=>{
@@ -272,7 +273,13 @@ export function decodeGlmScene(wire,context,{storyActions=false}={}){
         return {...entity,key:entity.id,ambiguous:entities.some(row=>row.id!==entity.id&&row.kind===entity.kind&&row.name===entity.name)};
       };
       const notes=named?wire.story:normalizeWireAnnotation(wire.story,wire.blocks,context,'entityId',lookup);
-      story={...notes,...(notes.npcs?{npcs:notes.npcs.map(npc=>({...npc,entityId:aliases.get(npc.entityId)}))}:{})};
+      story={...notes,...(notes.opponent?{opponent:{...notes.opponent,entityId:aliases.get(notes.opponent.entityId)}}:{}),...(notes.npcs?{npcs:notes.npcs.map(npc=>({...npc,entityId:aliases.get(npc.entityId)}))}:{})};
+    }
+    const intel=story?.opponent;
+    if(intel?.realmId){
+      const e=entities.find(row=>row.id===intel.entityId);
+      if(!e||!['person','faction'].includes(e.kind)||e.status==='dead'||e.experience&&e.experience.realmId!==intel.realmId)throw Error('Conflicting opponent disclosure');
+      e.experience={version:1,realmId:intel.realmId};
     }
     return {id:prefix+'s:scene',title:wire.title,location:wire.location,entities,blocks,choices,memoryDeltas,...(directed?{story}:{})};
   }catch{throw Object.assign(Error('GENERATED_SCENE_INVALID'),{code:'GENERATED_SCENE_INVALID'});}
