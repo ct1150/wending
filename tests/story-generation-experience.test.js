@@ -90,7 +90,7 @@ test('observation guidance preserves the selected pot as the focus without chang
 });
 
 test('relaxed editorial requirements still reject broken metadata and conflicting named identities', async () => {
-  const broken = capturedStoryWire(); broken.story.anchors = [0, 0];
+  const broken = capturedStoryWire(); broken.story.receipt = { elapsedDays: 0 };
   assert.equal((await run(broken)).errorCode, 'GENERATED_SCENE_INVALID');
   const missing = capturedStoryWire(); missing.choices[0].target.ref = 'unknown-person';
   assert.equal((await run(missing)).errorCode, 'GENERATED_SCENE_INVALID');
@@ -115,4 +115,15 @@ test('an accepted opening uses one durable inference and replays without spendin
   assert.equal(ledger.length, 1);
   assert.equal(ledger[0].status, 'complete');
   assert.equal(ledger[0].charge, TURN_RESERVATION_NEURONS);
+});
+
+test('an exact repeated menu item leaves both distinct original choices playable', async () => {
+  const {state,pending,context}=fixture(),wire=capturedStoryWire();
+  wire.choices[1]=structuredClone(wire.choices[0]);
+  const result=await run(wire,context);
+  assert.equal(result.status,'ready',result.errorCode);
+  assert.deepEqual(result.scene.choices.map(p=>p.approach),['ask','decline']);
+  assert.deepEqual(result.scene.choices.map(p=>p.id.split(':').at(-1)),['a','c']);
+  const committed=commitTurn(state,pending,result.scene);
+  for(const choice of result.scene.choices)assert.deepEqual(prepareChoice(committed,{choiceId:choice.id,requestId:'dedup-'+choice.approach}).receipt.action,choice);
 });

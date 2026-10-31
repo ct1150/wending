@@ -46,7 +46,7 @@ async function setup(t){
       const ai={async run(model,input){
         f.inferences.push({model,input});
         const context=f.posts.at(-1).context,wire=context.phase==='opening'?capturedStoryWire():continuation(context);
-        if(f.corrupt)wire.story.anchors=[0,0];
+        if(f.corrupt)wire.story.receipt={elapsedDays:0};
         return new ReadableStream({start(controller){
           controller.enqueue(frame({model:GLM_MODEL_ID,choices:[{index:0,delta:{content:JSON.stringify(wire)}}]}));
           const finish=()=>{controller.enqueue(frame({model:GLM_MODEL_ID,choices:[{index:0,delta:{},finish_reason:'stop'}],usage:{prompt_tokens:400,completion_tokens:450,total_tokens:850}}));controller.enqueue(encoder.encode('data: [DONE]\n\n'));controller.close();};

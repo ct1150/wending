@@ -211,8 +211,18 @@ export async function generateProviderScene(ai,profile,context,options={},assert
     if(profile.storyActions===true)try{exactKeys(scene,['blocks','choices','title','location','memoryDeltas',...(context.director?['story']:[])]);}catch{fail('GENERATED_SCENE_INVALID');}
     const composed=profile.storyActions===true&&Array.isArray(scene?.choices)&&scene.choices.every(proposal=>proposal&&Object.hasOwn(proposal,'purpose'));
     if(profile.storyActions===true&&(!composed||scene.choices.some(proposal=>!Number.isInteger(proposal.anchor))||!Array.isArray(scene.memoryDeltas)||scene.memoryDeltas.some(delta=>!delta||!Object.hasOwn(delta,'referenceId')&&(!Number.isInteger(delta.anchor)||Object.hasOwn(delta,'text')))))fail('GENERATED_SCENE_INVALID');
-    const purposes=profile.storyActions===true?scene.choices.map(proposal=>proposal.purpose):[];
+    let purposes=profile.storyActions===true?scene.choices.map(proposal=>proposal.purpose):[];
     if(profile.modelId===GLM_MODEL_ID)scene=decodeGlmScene(scene,context,{storyActions:profile.storyActions===true});
+    if(directed&&composed&&scene.choices.length===3){
+      // Collapse only an exact duplicate after identity resolution. Distinct
+      // player purposes survive, and retained choices keep their original IDs.
+      const seen=new Set(),keep=[];
+      for(const [i,c] of scene.choices.entries()){
+        const key=JSON.stringify([c.intent,c.approach,c.targetId,c.stake,c.label,purposes[i]]);
+        if(!seen.has(key)){seen.add(key);keep.push(i);}
+      }
+      if(keep.length===2){scene.choices=keep.map(i=>scene.choices[i]);purposes=keep.map(i=>purposes[i]);}
+    }
     if(retrievalReceipt!==null&&context.retrieval?.version===1)scene.retrieval=structuredClone(retrievalReceipt);
     const selected=context.receipt.action,closed=context.previousScene?.id===context.namespace+':t'+(context.identity.turnId-1)+':s:closed',endedTarget=selected?.intent==='interact'&&selected.approach==='leave'?selected.targetId:closed?(context.memory.recent.find(record=>record.kind==='turn'&&record.turnId===context.identity.turnId-1)?.entityIds[0]??context.memory.facts.find(record=>record.id==='decision:'+(context.identity.turnId-1)&&record.turnId===context.identity.turnId-1&&record.kind==='fact'&&record.source==='rules')?.entityId??'self'):null,ended=endedTarget!==null;
     const endedTargets=endedTarget==='self'&&closed?context.entities.filter(entity=>['person','faction'].includes(entity.kind)).map(entity=>entity.id):endedTarget&&endedTarget!=='self'?[endedTarget]:[];

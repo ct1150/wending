@@ -41,6 +41,38 @@ const target=(kind,name,ref='')=>({kind,name,ref,status:null});
 const choice=(action,target,stake='low',purpose='辨明眼前情况')=>({action,target,stake,purpose,anchor:0});
 const allows=(built,value)=>accepts(built.named,built.named.properties.choices.items,value);
 
+test('v7 named memory offers only real open references with the allowed closure, and only people can die',()=>{
+  const c=context(),actor=target('person','渡者'),place=target('place','渡口');
+  const permits=(built,row)=>accepts(built.named,built.named.properties.memoryDeltas.items,row);
+  const opening=generation(c);
+  assert.equal(permits(opening,{referenceId:'m1',status:'resolved'}),false,'a new life has no obligation to close');
+  assert.equal(permits(opening,{kind:'death',target:place,anchor:0}),false);
+  assert.equal(permits(opening,{kind:'death',target:actor,anchor:0}),true);
+  assert.equal(permits(opening,{kind:'fact',target:place,anchor:0}),true);
+  c.entities=[{id:'old:host',kind:'person',name:'渡者',status:'alive'}];
+  c.memory.promises=[{id:'first',kind:'promise',entityId:'old:host',status:'open'},{id:'old',kind:'promise',entityId:'old:host',status:'resolved'}];
+  c.memory.clues=[{id:'third',kind:'clue',entityId:'old:host',status:'open'}];
+  const next=generation(c);
+  for(const [id,status,valid]of [['m1','broken',true],['m1','resolved',true],['m2','resolved',false],['m3','broken',false],['m3','resolved',true],['m4','resolved',false]])assert.equal(permits(next,{referenceId:id,status}),valid,id+'/'+status);
+});
+
+test('v7 choice anchors always name an existing block, and optional NPC traits can be omitted individually',()=>{
+  const built=generation(context()),schema=built.named;
+  assert.equal(allows(built,choice('interact:observe','self')),true);
+  assert.equal(allows(built,{...choice('interact:observe','self'),anchor:3}),false);
+  assert.equal(accepts(schema,schema.properties.story.properties.npcs.items,{target:target('person','渡者'),anchor:0,habit:'盘绳'}),true);
+});
+
+test('a missing optional memory anchor does not create an entity or move death and promises to another paragraph',()=>{
+  const c=context(),actor=target('person','渡者'),stranger=target('person','过客'),blocks=[{kind:'narration',text:'渡者望着江面。'},{kind:'narration',text:'渡者承诺，等对岸来船时便通知你。'}];
+  const wire={blocks,title:'渡口',location:'渡口',choices:[choice('interact:ask',actor),choice('interact:observe','self'),choice('interact:decline',actor)],memoryDeltas:[{target:stranger,kind:'death',anchor:2},{target:actor,kind:'promise',anchor:3,status:'open'},{target:actor,kind:'promise',anchor:1,status:'open'}],story:{pattern:'relationship',beat:'progress',anchors:[1]}};
+  const scene=decodeGlmScene(wire,c,{storyActions:true});
+  assert.deepEqual(scene.entities.map(entity=>entity.name),['渡者']);assert.deepEqual(scene.memoryDeltas.map(row=>[row.kind,row.text]),[['promise',blocks[1].text]]);
+  for(const bad of [{target:{...actor,ref:'k99'},kind:'death',anchor:2},{target:target('place','码头'),kind:'death',anchor:2},{target:stranger,kind:'death',anchor:2,unexpected:true},{target:stranger,kind:'bogus',anchor:2}]){
+    assert.throws(()=>decodeGlmScene({...wire,memoryDeltas:[bad]},c,{storyActions:true}),{code:'GENERATED_SCENE_INVALID'});
+  }
+});
+
 test('v7 generation offers only action, target and stake combinations executable with the actual resources',()=>{
   for(const exhausted of [true,false]){
     const c=rich(context());

@@ -33,15 +33,15 @@ function freeze(value) { if(value && typeof value === 'object'){Object.values(va
 
 // This is defense in depth, never an execution or permission boundary. All text
 // stays JSON data under a fixed system message; arbitrary prose is not a rule.
-function safeStrings(value) {
+export function assertSafeStoryStrings(value) {
   if(typeof value === 'string') {
     if(/<\s*[a-z!/?][^>]*>|&(?:lt|#0*60|#x0*3c);|\[\/?(?:INST|SYSTEM)\]|<\|(?:im_start|system|assistant)/i.test(value) || /(?:ignore|disregard)\s+(?:all\s+|the\s+|any\s+)?(?:previous|prior|system)\s+(?:instructions?|prompts?)|(?:^|\n)\s*(?:system|developer)\s*:|忽略(?:指令|规则)|忽略(?:此前|之前|先前|以上|所有|系统|开发者)[^。\n]{0,24}(?:指令|规则|提示)|(?:覆盖|改写|绕过)[^。\n]{0,12}(?:系统|规则|收据)/i.test(value)) fail('UNSAFE_STORY_TEXT');
-  } else if(value && typeof value === 'object') Object.values(value).forEach(safeStrings);
+  } else if(value && typeof value === 'object') Object.values(value).forEach(assertSafeStoryStrings);
 }
 function inspect(value,maxBytes=65536) {
   try { assertPlainData(value); } catch { fail('STORY_DATA_INVALID'); }
   if(bytes(value)>maxBytes)fail('STORY_DATA_TOO_LARGE');
-  safeStrings(value);
+  assertSafeStoryStrings(value);
 }
 function whole(value,min=0) { if(!Number.isSafeInteger(value)||value<min)fail('STORY_DATA_INVALID'); }
 

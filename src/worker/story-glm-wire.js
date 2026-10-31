@@ -2,7 +2,8 @@ import {SCENE_SCHEMA,exactKeys} from '../game/cultivation/live/schema.js';
 import {assertPlainData,canonicalStringify} from '../game/cultivation/live/identity.js';
 import {ITEMS,REALMS,INTENTS,LEGACY_ITEMS,LEGACY_INTENTS,ORIGINS,TALENTS} from '../game/cultivation/live/model.js';
 import {isV7Life,realmCatalogFor,nextRealmFor,V7_EXPLORE_TARGETS,v7ActionRule,WORLD_TIERS,WORLD_TRAVEL_APPROACHES} from '../game/cultivation/live/cultivation-rules.js';
-import {normalizeNamedScene} from './story-named-targets.js';
+import {createNamedTargetLookup,normalizeNamedScene} from './story-named-targets.js';
+import {normalizeWireAnnotation} from './story-wire-annotation.js';
 import {formatStoryChoiceLabel} from '../game/cultivation/live/story-choice-label.js';
 
 // Generation uses the same post-action life and rule calculation as the menu.
@@ -54,8 +55,8 @@ export function buildGlmWire(context,system,{storyActions=false}={}){
   const packed=pack(context);delete packed.identity;delete packed.namespace;packed.turn=context.identity.turnId;
   const entityAliases=[...aliases.values(),...['p','l','f'].flatMap(kind=>Array.from({length:24},(_,index)=>kind+(index+1)))];
   const schema=structuredClone(SCENE_SCHEMA);
-  // Native XGrammar rejects this keyword; canonical scene validation still
-  // enforces unique anchors after generation.
+  // Native XGrammar rejects this keyword. The decoder removes duplicate
+  // anchors before strict canonical scene validation.
   if(directed)delete schema.properties.story.properties.anchors.uniqueItems;
   delete schema.properties.id;schema.required=schema.required.filter(key=>key!=='id');
   const entityProperties=schema.properties.entities.items.properties;
@@ -155,7 +156,19 @@ export function decodeGlmScene(wire,context,{storyActions=false}={}){
   try{
     const directed=isV7Life(context.life)&&context.director?.version===7,realms=realmCatalogFor(context.life);
     assertPlainData(wire);
-    if(storyActions&&!Object.hasOwn(wire,'otherPeople'))wire=normalizeNamedScene(wire,context);
+    const named=storyActions&&!Object.hasOwn(wire,'otherPeople');
+    if(named){
+      if(directed){
+        const identify=createNamedTargetLookup(context);
+        const lookup=(target,isNote)=>{
+          const {kind,name,known,status}=identify(target);
+          if(isNote&&(status!==null||kind==='person'&&name===context.life.name))throw Error('Invalid NPC annotation target');
+          return {kind,name,key:known?.id??JSON.stringify([kind,name]),ambiguous:context.entities.filter(entity=>entity.kind===kind&&entity.name===name).length>1};
+        };
+        wire={...wire,story:normalizeWireAnnotation(wire.story,wire.blocks,context,'target',lookup)};
+      }
+      wire=normalizeNamedScene(wire,context);
+    }
     const fields=['blocks','title','location','otherPeople','places','factions','choices','memoryDeltas',...(directed?['story']:[])];
     if(storyActions&&Object.keys(wire).some(key=>!fields.includes(key))){
       // JSON mode can echo input data. Only structurally identical input
@@ -246,7 +259,19 @@ export function decodeGlmScene(wire,context,{storyActions=false}={}){
       // Older wire samples may repeat them, and final validation checks equality.
       return {entityId,kind:Object.hasOwn(delta,'kind')?delta.kind:record.kind,text:Object.hasOwn(delta,'text')?delta.text:record.text,referenceId:record.id,status:delta.status};
     });
-    const story=directed?{...wire.story,...(wire.story?.npcs!==undefined?{npcs:wire.story.npcs.map(npc=>{const entityId=aliases.get(npc.entityId);if(!entityId)throw Error();return {...npc,entityId};})}:{})}:undefined;
+    let story;
+    if(directed){
+      const lookup=ref=>{
+        const entity=entities.find(row=>row.id===aliases.get(ref));
+        if(!entity){
+          if(typeof ref==='string'&&/^p(?:[1-9]|1\d|2[0-4])$/u.test(ref))return null;
+          throw Error('Invalid NPC annotation reference');
+        }
+        return {...entity,key:entity.id,ambiguous:entities.some(row=>row.id!==entity.id&&row.kind===entity.kind&&row.name===entity.name)};
+      };
+      const notes=named?wire.story:normalizeWireAnnotation(wire.story,wire.blocks,context,'entityId',lookup);
+      story={...notes,...(notes.npcs?{npcs:notes.npcs.map(npc=>({...npc,entityId:aliases.get(npc.entityId)}))}:{})};
+    }
     return {id:prefix+'s:scene',title:wire.title,location:wire.location,entities,blocks,choices,memoryDeltas,...(directed?{story}:{})};
   }catch{throw Object.assign(Error('GENERATED_SCENE_INVALID'),{code:'GENERATED_SCENE_INVALID'});}
 }
