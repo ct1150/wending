@@ -6,7 +6,7 @@ Plans: [first release](superpowers/plans/2026-10-24-first-release.md) · [1.1.0 
 
 制作人评审已落实为新人生规则：四种开局、两种能完成的修法路径、绑定具体人物的承诺、依据真实实力的交锋、带来源的生平与轮回。首页优先继续当前人物；曾经的物理存档可只读与备份。已有无标记人生和冻结回合维持原有协议。
 
-[体验验收方法与实际范围](PRODUCER_ACCEPTANCE_6.0.0.md) · [任务与修复轨迹](PRODUCER_TODO.md) · [开发 PR #28 / 当前 CI](https://github.com/ct1150/wending/pull/28)。本轮源码、静态发行、后端部署和真人体验分开记录；以下为此前版本的历史证据。
+[完整候选证据](evidence/producer-experience-6.0.0.json) · [体验验收方法与实际范围](PRODUCER_ACCEPTANCE_6.0.0.md) · [任务与修复轨迹](PRODUCER_TODO.md) · [开发 PR #28 / 当前 CI](https://github.com/ct1150/wending/pull/28)。本轮源码、静态发行、后端部署和真人体验分开记录；以下为此前版本的历史证据。
 
 ## 5.4.1 从源头生成可执行选项 — 2026-10-31
 

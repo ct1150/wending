@@ -2,6 +2,8 @@
 
 本页说明如何验证候选源码。用例以受控剧情回答驱动真实规则、流式解析、浏览器与 IndexedDB；没有为本轮调用线上模型，也没有以自动点击代替真人体验。[实施计划](superpowers/plans/2026-10-31-producer-experience.md) · [交付账本](PRODUCER_TODO.md) · [PR #28](https://github.com/ct1150/wending/pull/28)。
 
+[6.0.0 固定源码的完整发行结果](evidence/producer-experience-6.0.0.json)记录了本轮全套测试、网页/后端产物摘要及下列压力数据。
+
 ## 能观察到的游戏结果
 
 | 场景 | 通过条件 | 仓库中的可重复用例 |
