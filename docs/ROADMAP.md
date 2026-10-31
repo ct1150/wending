@@ -1,5 +1,15 @@
 # 问鼎待办与交付账本
 
+## 当前主线：制作人体验改造（2026-10-31）
+
+以5.3.0为基线，按“顺畅选择 → 单存档 → 成长与因果 → 轮回与验收”推进。
+
+- [当前TODO](PRODUCER_TODO.md)
+- [设计](superpowers/specs/2026-10-31-producer-experience-design.md)
+- [逐步开发计划](superpowers/plans/2026-10-31-producer-experience.md)
+
+以下是历史版本交付记录，不能替代上述当前TODO的实现、验证或部署状态。
+
 ## 4.1.0：可选的持续实时人生
 
 保留原有离线游戏和存档，加入由真实选择推动的 Cloudflare Workers AI 剧情。登仙、问鼎后继续生活，只有实际死亡才结算；不设固定回合、章节或时长。应用不施加历史测试次数、分任务次数、Neuron 累计上限或“失败一次即停止整个任务”的规则。Workers Free 及平台真实额度约束继续保留。
