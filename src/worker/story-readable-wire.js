@@ -11,7 +11,13 @@ const bad=()=>{throw Error('Unreadable scene fragment');};
 // The caller checks the finish reason, usage, thinking and response limit first.
 // This recovers only slices from one damaged v7 envelope. No display preview,
 // guessed string terminator, invented target, title or decision enters it.
-export function readCompleteV7Wire(source){
+export function readCompleteV7Wire(source){return readWire(source,null);}
+export function readCompleteV7Body(source,context){
+  if(context?.director?.version!==7||context.life?.cultivationProfile?.version!==7)return null;
+  return readWire(source,context);
+}
+
+function readWire(source,bodyContext){
   if(typeof source!=='string'||source.length>STORY_LIMITS.maxResponseBytes||encoder.encode(source).length>STORY_LIMITS.maxResponseBytes)return null;
   try{JSON.parse(source);return null;}catch{/* Valid completions use the ordinary path. */}
   try{
@@ -26,7 +32,7 @@ export function readCompleteV7Wire(source){
       if(ch==='"'){
         const begin=i;let done=false;
         while(++i<source.length){if(source[i]==='\\'){i++;continue;}if(source.charCodeAt(i)<32)bad();if(source[i]==='"'){done=true;break;}}
-        if(done){ends.set(begin,i+1);if(source[skip(i+1)]===':'&&reserved.has(JSON.parse(source.slice(begin,i+1))))bad();}
+        if(done){ends.set(begin,i+1);if(!bodyContext&&source[skip(i+1)]===':'&&reserved.has(JSON.parse(source.slice(begin,i+1))))bad();}
       }else if(ch==='{'||ch==='['){stack.push([ch,i]);if(stack.length>32)bad();}
       else if(ch==='}'||ch===']'){
         const open=stack.pop();if(!open||open[0]!==({'}':'{',']':'['})[ch])bad();
@@ -40,6 +46,13 @@ export function readCompleteV7Wire(source){
       let j=at;while(j<source.length&&!space(source[j])&&!(',}]'.includes(source[j])))j++;return j>at?j:undefined;
     };
     const read=(a,b)=>JSON.parse(source.slice(a,b));
+    function ignoreMenu(){
+      // The model does not own choices. Ignore their contents, including bad
+      // punctuation, only when the complete value's boundary is unambiguous.
+      const end=span(i);if(end===undefined)bad();
+      if(!['[','{','"'].includes(source[i]))read(i,end);
+      i=end;
+    }
     function takeChoices(){
       if(source[i]!=='[')bad();i=skip(i+1);const rows=[];let count=0;
       while(i<source.length&&source[i]!==']'){
@@ -58,18 +71,18 @@ export function readCompleteV7Wire(source){
     while(i<source.length&&source[i]!=='}'){
       if(source[i]!=='"'||!ends.has(i))bad();const end=ends.get(i),key=read(i,end);
       if(!fields.has(key)||seen.has(key))bad();seen.add(key);i=skip(end);if(source[i]!==':')bad();i=skip(i+1);
-      if(key==='choices')takeChoices();
+      if(key==='choices'){if(bodyContext)ignoreMenu();else takeChoices();}
       else{
         const valueEnd=span(i);
-        if(valueEnd===undefined){if(i<source.length&&!['[','{','"'].includes(source[i]))bad();break;}
-        let value;try{value=read(i,valueEnd);}catch{if(key==='blocks')bad();}
+        if(valueEnd===undefined){if(bodyContext||i<source.length&&!['[','{','"'].includes(source[i]))bad();break;}
+        let value;try{value=read(i,valueEnd);}catch{if(bodyContext||key==='blocks')bad();}
         if(value!==undefined)output[key]=value;i=valueEnd;
       }
       i=skip(i);if(i===source.length||source[i]==='}')break;
       if(source[i]!==',')bad();i=skip(i+1);
     }
     const blocks=output.blocks;
-    if(!Array.isArray(blocks)||!blocks.length||blocks.length>4||!blocks.every(row=>record(row)&&nonempty(row.text)&&(row.kind==='narration'&&Object.keys(row).length===2||row.kind==='dialogue'&&Object.keys(row).length===3&&Object.hasOwn(row,'speaker')))||!output.choices)return null;
+    if(!Array.isArray(blocks)||!blocks.length||blocks.length>4||!blocks.every(row=>record(row)&&nonempty(row.text)&&(row.kind==='narration'&&Object.keys(row).length===2||row.kind==='dialogue'&&Object.keys(row).length===3&&Object.hasOwn(row,'speaker')))||!bodyContext&&!output.choices)return null;
     return output;
   }catch{return null;}
 }

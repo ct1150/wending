@@ -1,16 +1,56 @@
 import {assertPlainData} from '../game/cultivation/live/identity.js';
-import {exactKeys} from '../game/cultivation/live/schema.js';
+import {exactKeys,textField} from '../game/cultivation/live/schema.js';
 import {assertSafeStoryStrings} from '../game/cultivation/live/memory.js';
 import {isV7Life} from '../game/cultivation/live/cultivation-rules.js';
 import {createNamedTargetLookup} from './story-named-targets.js';
 import {normalizeWireAnnotation} from './story-wire-annotation.js';
 import {normalizeV7Presentation} from './story-v7-presentation.js';
+import {buildStoryChoicePlan,materializeStoryChoices} from './story-choice-plan.js';
 
 const object=value=>value!==null&&typeof value==='object'&&!Array.isArray(value);
 const consequential=row=>object(row)&&(Object.hasOwn(row,'referenceId')||row.kind==='death'||row.kind==='promise'||['resolved','broken'].includes(row.status));
 const formalId=/^r:[\w-]+:t\d+:/u,knownAlias=/^k\d/u,localAlias=/^(?:p|person|npc|l|place|f|faction)(?:[1-9]|1\d|2[0-4])$/u;
 const stateFields=['life','receipt','retrieval','rng','cultivationResult','itemChanges','relationChanges','death'];
 const forbidden=()=>{throw Error('Invalid model authority');};
+
+// Only a complete dialogue speaker field can introduce a person here. A
+// narration never supplies an inferred participant; never repair missing text.
+function authoredBlocks(rows,context){
+  if(!Array.isArray(rows)||!rows.length||rows.length>4)throw Error('Invalid authored blocks');
+  const identify=createNamedTargetLookup(context);
+  return rows.map(row=>{
+    exactKeys(row,row?.kind==='dialogue'?['kind','speaker','text']:['kind','text']);textField(row.text,2000);
+    if(row.kind==='narration')return row;
+    if(row.kind!=='dialogue')throw Error('Invalid block kind');
+    let speaker=row.speaker;if(speaker==='self')return row;
+    if(typeof speaker==='string'&&!knownAlias.test(speaker)){
+      textField(speaker,60);
+      if(/[:/\\]|^(?:p|l|f|npc|person|place|faction|m)\d/u.test(speaker))forbidden();
+      const matches=context.entities.filter(e=>e.name===speaker);if(matches.length>1)forbidden();
+      speaker=matches.length?'k'+(context.entities.indexOf(matches[0])+1):{kind:'person',name:speaker};
+    }
+    const actor=identify(speaker);
+    if(actor.kind!=='person'||actor.status!==null||actor.known?.status==='dead'||[context.life.name,'你','主角','玩家'].includes(actor.name))forbidden();
+    return speaker===row.speaker?row:{...row,speaker};
+  });
+}
+
+export function adaptV7EngineMenuOutput(wire,context){
+  if(!isV7Life(context.life)||context.director?.version!==7)throw Error('Engine menu requires a v7 context');
+  exactKeys(wire,['blocks'],['choices','title','location','story','memoryDeltas']);
+  // Copy only fields used by the game. Stray model choices, including their
+  // targets and any purported effects, are never read, rendered or persisted.
+  const authored={};
+  for(const key of ['blocks','title','location','story','memoryDeltas']){
+    const descriptor=Object.getOwnPropertyDescriptor(wire,key);if(!descriptor)continue;
+    if(!descriptor.enumerable||!Object.hasOwn(descriptor,'value'))forbidden();
+    authored[key]=descriptor.value;
+  }
+  assertPlainData(authored);assertSafeStoryStrings(authored);
+  const blocks=authoredBlocks(authored.blocks,context);
+  const choices=materializeStoryChoices(buildStoryChoicePlan(context),context,blocks);
+  return adaptV7ModelOutput({...authored,blocks,choices},context);
+}
 
 // For freshly generated, named v7 output only. Never use as an archive
 // migration. The prose and choices still go through the ordinary strict

@@ -65,5 +65,28 @@
       "fineFramingBytes": 330855,
       "fineFrames": 1165
     }
+  },
+  "scopedDiagnostic115": {
+    "sourceCommit": "42215e4cd707678dfcf0a118d238a750ac24acf1",
+    "ordinaryTrafficPercent": 0,
+    "status": "rejected",
+    "settlement": "confirmed",
+    "stage": "JSON_PARSED / ADAPTER_OK / MENU_FULL_REJECT",
+    "blocks": 3,
+    "blockCharacters": [
+      349,
+      100,
+      188
+    ],
+    "dialoguePerson": true,
+    "choices": 3,
+    "choicesOutsideSuppliedCatalog": 3,
+    "unknownFieldsPerChoice": [
+      1,
+      1,
+      1
+    ],
+    "rawTextRecorded": false,
+    "scope": "One normal budgeted turn from a dedicated synthetic life. The allowlisted shape establishes a complete narrative and three unrecognized action codes. It does not establish what the arbitrary fields or action strings were."
   }
 }

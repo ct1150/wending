@@ -195,8 +195,9 @@ function directedTargets(context){
   return {definitions,fromIds};
 }
 
-export function buildNamedSceneSchema(source,context,{blocks,location}={}){
+export function buildNamedSceneSchema(source,context,{blocks,location,engineMenu=false}={}){
   const directed=isV7Life(context.life)&&context.director?.version===7;
+  const narrativeOnly=directed&&engineMenu;
   const scoped=directed?directedTargets(context):null;
   const named={};for(const kind of ['person','place','faction']){
     const ambiguous=context.entities.some((entity,index)=>entity.kind===kind&&context.entities.slice(0,index).some(previous=>previous.kind===kind&&previous.name===entity.name));
@@ -218,8 +219,12 @@ export function buildNamedSceneSchema(source,context,{blocks,location}={}){
     variant.required=['kind','speaker','text'];
   }
   const anchor={type:'integer',minimum:0,maximum:(body.maxItems??4)-1};
-  if(scoped){definitions.choicePurpose={type:'string',minLength:1,maxLength:50};definitions.blockAnchor=anchor;definitions.stakes={enum:['low','normal','high']};}
-  const choices={type:'array',minItems:2,maxItems:3,items:{oneOf:source.properties.choices.items.oneOf.map(group=>{
+  if(scoped){
+    if(!narrativeOnly)definitions.choicePurpose={type:'string',minLength:1,maxLength:50};
+    definitions.blockAnchor=anchor;
+    if(!narrativeOnly)definitions.stakes={enum:['low','normal','high']};
+  }
+  const choices=narrativeOnly?null:{type:'array',minItems:2,maxItems:3,items:{oneOf:source.properties.choices.items.oneOf.map(group=>{
     if(scoped){
       const actions=group.properties.action.enum,travel=actions.some(action=>action.startsWith('travel:'))?(actions.some(action=>WORLD_TRAVEL_APPROACHES.includes(action.split(':')[1]))?'crossing':'local'):null;
       // Only actual decisions go on the model wire. The adapter supplies the
@@ -235,11 +240,11 @@ export function buildNamedSceneSchema(source,context,{blocks,location}={}){
   const evidence=(kind,entity='entityTarget',open=false)=>({type:'object',additionalProperties:false,required:['target','kind','anchor',...(open?['status']:[])],properties:{target:{$ref:'#/$defs/'+entity},kind,anchor:directed?{$ref:'#/$defs/blockAnchor'}:anchor,...(open?{status:{const:'open'}}:{})}});
   const closures=directed?source.properties.memoryDeltas.items.oneOf.filter(row=>row.properties.referenceId).map(row=>structuredClone(row)):[{type:'object',additionalProperties:false,required:['referenceId','status'],properties:{referenceId:{type:'string'},status:{enum:['resolved','broken']}}}];
   const memoryDeltas={type:'array',maxItems:16,items:{oneOf:[evidence({enum:directed?['fact','relationship']:['fact','relationship','death']}),...(directed?[evidence({const:'death'},'personTarget')]:[]),evidence({enum:['promise','clue']},'entityTarget',true),...closures]}};
-  const properties={blocks:body,choices,title:source.properties.title,location:location??source.properties.location,memoryDeltas,...(directed?{story:structuredClone(source.properties.story)}:{})};
+  const properties={blocks:body,...(choices?{choices}:{}),title:source.properties.title,location:location??source.properties.location,memoryDeltas,...(directed?{story:structuredClone(source.properties.story)}:{})};
   if(directed){
     properties.story.properties.anchors.items.maximum=(body.maxItems??4)-1;
     const traits=properties.story.properties.npcs.items;delete traits.properties.entityId;traits.properties={target:{$ref:'#/$defs/personTarget'},...traits.properties};traits.required=['target','anchor'];traits.properties.anchor.maximum=(body.maxItems??4)-1;
     for(const field of ['title','signatureSpell','habit','obsession'])traits.properties[field].minLength=1;
   }
-  return {type:'object',additionalProperties:false,required:directed?['blocks','choices']:Object.keys(properties),properties,$defs:definitions};
+  return {type:'object',additionalProperties:false,required:narrativeOnly?['blocks']:directed?['blocks','choices']:Object.keys(properties),properties,$defs:definitions};
 }

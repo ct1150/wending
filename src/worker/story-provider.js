@@ -1,4 +1,5 @@
 import { generateProviderScene, validateProviderOptions } from './story-provider-core.js';
+import { isV7Life } from '../game/cultivation/live/cultivation-rules.js';
 import { GLM_MODEL_ID } from './story-config.js';
 import { createGlmTransport } from './story-glm-provider.js';
 import { assertPlainData } from '../game/cultivation/live/identity.js';
@@ -27,8 +28,10 @@ export async function generateScene(ai,profile,context,options={},runtime={}) {
     catch{return {status:'paused',errorCode:'KNOWLEDGE_UNAVAILABLE',accountingStatus:'complete',modelId:profile.modelId,attemptId:options.attemptId??context.identity.requestId,inferencePerformed:false,usage:null,actualNeurons:null,stopReason:null,inputHash:null,inputBytes:null,nonThinkingValidated:null};}
   }
   if(profile?.modelId===GLM_MODEL_ID){
-    const transport=createGlmTransport({ai,context,onProgress:runtime.onProgress,deadlineAt:runtime.deadlineAt,signal:runtime.signal,timeoutMs:options.timeoutMs});
-    const result=await generateProviderScene(transport,{...profile,storyActions:runtime.storyActions===true},context,options,assertValidatedProfile,knowledgeBundle);
+    // The HTTP server opts in; client payloads and model output cannot choose who owns the menu.
+    const engineMenu=runtime.engineMenu===true&&runtime.storyActions===true&&context?.director?.version===7&&isV7Life(context.life);
+    const transport=createGlmTransport({ai,context,engineMenu,onProgress:runtime.onProgress,deadlineAt:runtime.deadlineAt,signal:runtime.signal,timeoutMs:options.timeoutMs});
+    const result=await generateProviderScene(transport,{...profile,storyActions:runtime.storyActions===true,engineMenu},context,options,assertValidatedProfile,knowledgeBundle);
     if(transport.accountingUnknown)result.accountingStatus='unknown';
     if(result.inferencePerformed)result.providerSource=transport.source;
     return result;
