@@ -1,6 +1,8 @@
 import { DAYS_PER_YEAR, ITEMS, REALMS, ORIGINS } from './model.js';
 import { exactKeys } from './schema.js';
 
+import {EXPERIENCE_VERSION,isExperienceLife,createExperienceState,validateExperienceProfile,experienceAfterAction,GROWTH_TERMS} from './experience.js';
+
 const clone=value=>JSON.parse(JSON.stringify(value));
 const bounded=(value,min,max)=>Number.isSafeInteger(value)&&value>=min&&value<=max;
 const requireValue=(condition,message='修行规则数据无效。')=>{if(!condition)throw new Error(message);};
@@ -9,18 +11,8 @@ const hasBenefit=(birth,id)=>birth.cultivationProfile.inheritedBenefits.includes
 
 // The original REALMS table remains untouched: existing archive receipts replay
 // against their original rules. Only explicitly marked new lives use this table.
-export const V7_REALMS=Object.freeze(Object.fromEntries([
-  ['mortal','凡人',80,0,null,0,1,30],
-  ['qi','炼气',120,2,'manual',2,1,90],
-  ['foundation','筑基',240,6,'crystal',3,3,360],
-  ['golden','结丹',480,10,'core',8,6,720],
-  ['nascent','元婴',1000,16,'soulseal',20,12,1800],
-  ['spirit','化神',2000,24,'skykey',50,25,3600],
-  ['void','炼虚',4000,36,'voidstone',120,60,7200],
-  ['unity','合体',8000,48,'unityjade',300,120,14400],
-  ['mahayana','大乘',16000,64,'daofruit',600,250,28800],
-  ['tribulation','渡劫',32000,80,'thunderseal',1200,500,57600],
-].map(([id,name,lifeLimit,threshold,material,minYears,practiceYears,exploreDays],rank)=>[id,Object.freeze({id,name,rank,lifeLimit,threshold,material,minYears,practiceYears,exploreDays})])));
+import {V7_REALMS} from './actor-insight.js';
+export {V7_REALMS};
 
 export const ROOTS=Object.freeze({
   'mixed-five':{id:'mixed-five',name:'五行伪灵根',category:'伪灵根',description:'五种灵息皆有感应，寻物敏锐，破境却较艰难。',advantage:'五行感应：探索判定更敏锐。',defect:'灵根驳杂：突破较难。',breakthrough:-5,exploration:8},
@@ -74,7 +66,7 @@ export function realmFor(life){return realmCatalogFor(life)[life.realm];}
 export function nextRealmFor(life){const current=realmFor(life);return current?Object.values(realmCatalogFor(life)).find(realm=>realm.rank===current.rank+1)??null:null;}
 export function worldTierForPlaceName(name){const matches=WORLD_TIERS.map((label,index)=>String(name).includes(label)?index:-1).filter(index=>index>=0);return matches.length===1?matches[0]:null;}
 export function fortuneCycleModifier(state){
-  const profile=state.life.birth.cultivationProfile,band=(Math.floor(state.turnId/20)+state.life.birth.attributes.fortune+Object.keys(ROOTS).indexOf(profile.rootId))%5;
+  const profile=state.life.birth.cultivationProfile,band=(Math.floor((isExperienceLife(state.life)?state.director.eventCount:state.turnId)/20)+state.life.birth.attributes.fortune+Object.keys(ROOTS).indexOf(profile.rootId))%5;
   return (band-2)*3;
 }
 export function summarizeLife(life){
@@ -90,14 +82,15 @@ function descriptions(profile){
   const selected=[ROOTS[profile.rootId],PHYSIQUES[profile.physiqueId],RELICS[profile.relicId],TECHNIQUES[profile.techniqueId]];
   return {advantages:[...selected.map(row=>row.advantage),...profile.inheritedBenefits.map(id=>INHERITED_BENEFITS[id].description)],defects:selected.map(row=>row.defect)};
 }
-export function createCultivationBirthProfile(draw,inheritedBenefits=[]){
+export function createCultivationBirthProfile(draw,inheritedBenefits=[],experienceVersion){
   validateInheritedBenefits(inheritedBenefits);
   const select=table=>Object.keys(table)[draw(Object.keys(table).length)];
   const profile={version:7,rootId:select(ROOTS),physiqueId:select(PHYSIQUES),relicId:select(RELICS),techniqueId:select(TECHNIQUES),inheritedBenefits:[...inheritedBenefits]};
-  return {...profile,...descriptions(profile)};
+  return {...profile,...descriptions(profile),...(experienceVersion===undefined?{}:{experienceVersion})};
 }
 export function validateV7BirthProfile(profile){
-  exactKeys(profile,BIRTH_KEYS);
+  exactKeys(profile,BIRTH_KEYS,['experienceVersion']);
+  if(Object.hasOwn(profile,'experienceVersion'))requireValue(profile.experienceVersion===EXPERIENCE_VERSION);
   requireValue(profile.version===7&&Object.hasOwn(ROOTS,profile.rootId)&&Object.hasOwn(PHYSIQUES,profile.physiqueId)&&Object.hasOwn(RELICS,profile.relicId)&&Object.hasOwn(TECHNIQUES,profile.techniqueId),'灵根、体质、伴生遗物或功法无效。');
   validateInheritedBenefits(profile.inheritedBenefits);
   const expected=descriptions(profile);
@@ -105,7 +98,8 @@ export function validateV7BirthProfile(profile){
   return profile;
 }
 export function validateV7Profile(profile){
-  exactKeys(profile,PROFILE_KEYS);
+  exactKeys(profile,PROFILE_KEYS,['experience']);
+  if(Object.hasOwn(profile,'experience')){validateExperienceProfile(profile.experience);requireValue(Object.hasOwn(TECHNIQUES,profile.experience.activeTechniqueId)&&(!profile.experience.lessons.includes('diagnosed')||TECHNIQUES[profile.experience.activeTechniqueId].defective));}
   requireValue(profile.version===7&&bounded(profile.lifespanBonus,0,1000000)&&bounded(profile.lifespanLoss,0,1000000)&&bounded(profile.maxSpirit,1,1000)&&bounded(profile.spirit,0,profile.maxSpirit)&&bounded(profile.exposure,0,100)&&bounded(profile.worldTier,0,2));
   exactKeys(profile.arts,Object.keys(ART_NAMES));for(const value of Object.values(profile.arts))requireValue(bounded(value,0,20));
   return profile;
@@ -129,6 +123,7 @@ export function initialLifeForBirth(name,birth){
   const life={name,ageDays:16*DAYS_PER_YEAR,lifeLimit:80,realm:'mortal',cultivation:0,injury:0,items:initialItemsForBirth(birth),relations:{},birth:clone(birth)};
   if(isV7Birth(birth)){
     life.cultivationProfile={version:7,lifespanBonus:0,lifespanLoss:0,spirit:100,maxSpirit:100,exposure:0,worldTier:0,arts:{alchemy:0,forging:0,formations:0,talismans:0}};
+    if(isExperienceLife(life))life.cultivationProfile.experience=createExperienceState(birth);
     life.cultivationProfile.maxSpirit=maximumSpiritFor(life);life.cultivationProfile.spirit=life.cultivationProfile.maxSpirit;
     if(hasBenefit(birth,'past-memory'))life.cultivation=1;
   }
@@ -137,6 +132,10 @@ export function initialLifeForBirth(name,birth){
 
 export function validV7Target(state,proposal){
   const p=proposal,entity=state.relatedEntities.find(row=>row.id===p.targetId),actor=entity&&entity.status!=='dead'&&['person','faction'].includes(entity.kind);
+  if(p.intent==='craft'&&Object.hasOwn(GROWTH_TERMS,p.approach)){
+    if(!isExperienceLife(state.life)||p.stake!=='low')return false;
+    return ['pledge','repay'].includes(p.approach)?entity?.kind==='person'&&entity.status!=='dead'&&!/野兽|黄鼠狼|野狼|猛虎|野猪|毒蛇|蟒蛇/u.test(entity.name):p.targetId==='self';
+  }
   if(p.intent==='practice')return p.approach==='breakthrough'?nextRealmFor(state.life)?.id===p.targetId:p.targetId==='self';
   if(p.intent==='rest')return p.targetId==='self';
   if(p.intent==='explore')return V7_EXPLORE_TARGETS.includes(p.targetId);
@@ -147,9 +146,15 @@ export function validV7Target(state,proposal){
   return false;
 }
 
+export function effectiveTechniqueFor(life){
+  const e=life.cultivationProfile.experience,t=TECHNIQUES[isExperienceLife(life)?e.activeTechniqueId:life.birth.cultivationProfile.techniqueId];
+  if(!isExperienceLife(life)||!e.repaired||!t.defective)return t;
+  // Only mechanically negative properties of the equipped method yield.
+  return {...t,timePercent:100,spiritCost:0,risk:0,exposure:0,breakthrough:Math.max(0,t.breakthrough??0)};
+}
 function modifiers(life){
   const birth=life.birth,profile=birth.cultivationProfile;
-  return {root:ROOTS[profile.rootId],body:PHYSIQUES[profile.physiqueId],relic:profile.relicId,technique:TECHNIQUES[profile.techniqueId],
+  return {root:ROOTS[profile.rootId],body:PHYSIQUES[profile.physiqueId],relic:profile.relicId,technique:effectiveTechniqueFor(life),
     protection:birth.attributes.constitution+(birth.talentIds.includes('iron-bones')?10:0)+(PHYSIQUES[profile.physiqueId].protection??0)+(hasBenefit(birth,'resilient-body')?10:0),
     fortune:birth.attributes.fortune,insight:birth.attributes.insight,
     exposed:life.cultivationProfile.exposure>=80?20:life.cultivationProfile.exposure>=50?10:0};
@@ -281,6 +286,16 @@ export function v7ActionRule(state,p){
       break;
     }
     case 'craft':{
+      if(Object.hasOwn(GROWTH_TERMS,p.approach)){
+        const e=profile.experience,how=p.approach;
+        Object.assign(rule,GROWTH_TERMS[how],{items:{...GROWTH_TERMS[how].items}});
+        if(how==='repay'){
+          if(e.commitment?.status!=='owed'||e.commitment.entityId!==p.targetId)rule.reason='须向当初校法之人归还约定的一份行粮。';
+        }else if(!TECHNIQUES[e.activeTechniqueId].defective||e.repaired)rule.reason='当前功法无需修补。';
+        else if((how==='diagnose')===e.lessons.includes('diagnosed'))rule.reason=how==='diagnose'?'脉络已经验明。':'须先验明功法缺处。';
+        if(how==='pledge')rule.warnings.push('接受校法后，须向此人归还一份行粮。');
+        break;
+      }
       if(p.approach==='study'){rule.days=180;rule.items.stones=2;rule.gain.manual=1;rule.spiritCost=5;break;}
       const art=p.approach==='alchemy'?'alchemy':p.approach==='formation'?'formations':p.approach==='talisman'?'talismans':'forging';
       rule.art=art;rule.days=Math.max(30,realm.rank>=5?realm.practiceYears*30:30);rule.spiritCost=15;rule.gain[p.targetId]=1;
@@ -297,6 +312,20 @@ export function v7ActionRule(state,p){
       if(p.approach==='help'){rule.items.supplies=1;rule.relationship=2;}
       break;
   }
+  if(isExperienceLife(life)&&(p.intent==='fight'||p.intent==='evade'||p.intent==='negotiate'&&p.approach==='pressure')){
+    const foe=state.relatedEntities.find(row=>row.id===p.targetId),rank=foe.experience?.realmId,known=rank!==undefined;
+    // An unknown opponent never acquires an invented realm; use a conservative
+    // baseline until a scene explicitly establishes their absolute strength.
+    const gap=known?clamp(realm.rank-V7_REALMS[rank].rank,-4,4):-1;
+    if(rule.checkKind){
+      rule.chance=clamp(rule.chance+gap*14,5,99);
+      rule.failureInjury=clamp(rule.failureInjury-gap,1,6);
+      if(rule.checkKind==='combat')rule.injury=clamp(rule.injury-gap,0,9);
+    }
+    const band=!known?'unknown':!rule.checkKind||rule.chance>=78?'favorable':rule.chance>=48?'even':'dangerous';
+    const note=state.currentScene?.story?.opponent;
+    rule.outlook={band,reason:!known?'未辨明对手境界，按谨慎估计行动。':('对手'+V7_REALMS[rank].name+'，你是'+realm.name+'。'+(!rule.checkKind?'此法以实际代价避开较量。':gap>0?'境界占优。':gap<0?'对方境界更高。':'双方境界相当。')),...(note?.entityId===foe.id?Object.fromEntries(['purpose','condition'].filter(k=>note[k]).map(k=>[k,note[k]])):{})};
+  }
   for(const [id,count] of Object.entries(rule.items))if((life.items[id]??0)<count)rule.reason='缺少'+ITEMS[id]+'。';
   for(const [id,count] of Object.entries(rule.gain))if((life.items[id]??0)-(rule.items[id]??0)+count>9999)rule.reason='行囊已经装不下。';
   if(rule.cultivation>0&&life.cultivation+rule.cultivation>9999)rule.reason='当前修为已积累至上限。';
@@ -308,7 +337,7 @@ export function v7ActionRule(state,p){
   return rule;
 }
 
-export function resolveV7Action(life,action,rule,roll){
+export function resolveV7Action(life,action,rule,roll,turnId){
   const next=clone(life),profile=next.cultivationProfile;
   for(const [id,count] of Object.entries(rule.items))next.items[id]-=count;
   profile.spirit-=rule.spiritCost;
@@ -353,6 +382,7 @@ export function resolveV7Action(life,action,rule,roll){
       if(rule.relationship)next.relations[action.targetId]=clamp((next.relations[action.targetId]??0)+rule.relationship,-100,100);
     }
   }
+  if(isExperienceLife(life))profile.experience=experienceAfterAction(profile.experience,next.realm!==life.realm,{action,turnId,death});
   const result={version:7,check,lifespanChange:{years:next.lifeLimit-life.lifeLimit,cause}};
   return {nextLife:next,elapsedDays,death,result};
 }

@@ -1,3 +1,4 @@
+import {isExperienceLife} from './experience.js';
 import { sha256 } from './identity.js';
 import { ITEMS, REALMS } from './model.js';
 import { nextRealmFor, V7_REALMS } from './cultivation-rules.js';
@@ -65,6 +66,17 @@ function parseCustomAction(state,input,freshInput) {
     }
     return {id:customId(state,label),label,intent,targetId,approach,stake};
   };
+  if(isExperienceLife(state.life)){
+    if(/^验看本命功法[。！!]?$/u.test(text))return proposal('craft','diagnose');
+    if(/^自行推演残法[。！!]?$/u.test(text))return proposal('craft','restore');
+    const accept=/^接受(.{1,60})的校法之约[。！!]?$/u.exec(text),pay=/^向(.{1,60})归还行粮[。！!]?$/u.exec(text);
+    if(accept||pay){
+      const matches=entities.filter(e=>e.kind==='person'&&living(e)&&e.name===(accept??pay)[1]);if(matches.length!==1)unsupported();
+      const targetId=matches[0].id;
+      if(accept&&!state.currentScene.choices.some(c=>c.intent==='craft'&&c.approach==='pledge'&&c.targetId===targetId))unsupported();
+      return proposal('craft',accept?'pledge':'repay',targetId);
+    }
+  }
   if(/^(?:询问|请教|打听|问|向.{1,60}(?:询问|请教|打听))/u.test(text)) {
     const targetId=target('actor');
     const actor=entities.find(entity=>entity.id===targetId);

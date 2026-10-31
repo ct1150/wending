@@ -2,7 +2,8 @@ import { canonicalStringify, sha256, stateHash, assertPlainData } from './cultiv
 import { validateLiveState } from './cultivation/live/validation.js';
 import { prepareOpening, prepareRecordedChoice, commitTurn, settleDeath, resolveImmediateInteraction } from './cultivation/live/engine.js';
 import { buildStoryContext, validateGeneratedScene, buildMemoryDelta, validateStoryContext, sceneTurnRecord } from './cultivation/live/memory.js';
-import { buildRebirthOptions, reincarnationClaimForChild, validateReincarnationClaim } from './cultivation/live/reincarnation.js';
+import { isExperienceLife } from './cultivation/live/experience.js';
+import { echoNotes, buildRebirthOptions, reincarnationClaimForChild, validateReincarnationClaim } from './cultivation/live/reincarnation.js';
 
 export const CHUNK_TURNS = 128;
 export const CHUNK_BYTES = 256 * 1024;
@@ -25,9 +26,11 @@ export function validateAttempt(attempt) {
  if(attempt.retryOf!==null){keys(attempt.retryOf,['attemptId','sessionRef']);ident(attempt.retryOf.attemptId);ident(attempt.retryOf.sessionRef);check(attempt.retryOf.attemptId!==attempt.id,'ARCHIVE_INVALID_ATTEMPT');}return attempt;
 }
 function pauseValue(value) { check(value===null||typeof value==='string'&&/^[A-Z][A-Z0-9_]{0,79}$/.test(value),'ARCHIVE_INVALID_PAUSE'); }
-export function validateGeneration(generation,pending) {
+export function validateGeneration(generation,pending,state) {
  if(generation===undefined)return;
  keys(generation,['storyActions','context']);check(typeof generation.storyActions==='boolean','ARCHIVE_INVALID_GENERATION');validateStoryContext(generation.context);
+ const previous=generation.context.previousLife;
+ if(state&&previous!==undefined)check(same(previous,echoNotes(state.reincarnation).slice(0,previous.length)),'ARCHIVE_INVALID_GENERATION');
  check(pending&&same(generation.context.identity,pending.identity)&&same(generation.context.receipt,pending.receipt),'ARCHIVE_INVALID_GENERATION');
 }
 function pendingRow(archiveId,pending,attempt=null,pause=null,generation) {validateAttempt(attempt);pauseValue(pause);validateGeneration(generation,pending);check(generation===undefined||attempt!==null,'ARCHIVE_INVALID_GENERATION');return bounded({archiveId,pending,attempt,pause,...(generation===undefined?{}:{generation})},65536);}
@@ -44,7 +47,12 @@ export function verifyChunk(chunk) {
 }
 function keysShallow(v,expected) {check(v&&Object.getPrototypeOf(v)===Object.prototype&&Object.keys(v).sort().join('|')===[...expected].sort().join('|'),'ARCHIVE_INVALID_FIELDS');}
 const ZERO='0'.repeat(64);
-function loaded(run,pending) {validateGeneration(pending?.generation,pending?.pending);return run?{archiveId:run.archiveId,state:clone(run.state),pending:pending?.pending??null,attempt:pending?.attempt??null,pause:pending?.pause??null,...(pending?.generation?{generation:clone(pending.generation)}:{}),...(run.reincarnatedTo?{reincarnatedTo:run.reincarnatedTo}:{})}:null;}
+function loaded(run,pending) {validateGeneration(pending?.generation,pending?.pending,run?.state);return run?{archiveId:run.archiveId,state:clone(run.state),pending:pending?.pending??null,attempt:pending?.attempt??null,pause:pending?.pause??null,...(pending?.generation?{generation:clone(pending.generation)}:{}),...(run.reincarnatedTo?{reincarnatedTo:run.reincarnatedTo}:{})}:null;}
+function verifyReadableRun(run) {
+ check(run?.status==='active','ARCHIVE_NOT_READABLE');ident(run.archiveId);ident(run.runId);
+ validateLiveState(run.birth);validateLiveState(run.state);
+ check(run.birth.runId===run.runId&&run.state.runId===run.runId&&stateHash(run.state)===run.hash,'ARCHIVE_INVALID_SNAPSHOT');
+}
 const claimKey=runId=>'@rebirth:'+sha256(runId);
 function writeClaims(stores,get,claims,finish) {
   const remaining=claims.filter(Boolean);
@@ -54,6 +62,70 @@ function writeClaims(stores,get,claims,finish) {
     get(stores.runs,archiveId,existing=>{check(!existing||same(existing,record),'REINCARNATION_ALREADY_CLAIMED');if(!existing)stores.runs.add(record);next();});
   };
   next();
+}
+// Portable backups can stand alone, but cannot contradict a local birth,
+// spend a local parent by downgrading the wire version, or supersede a claim.
+// Check the local parent's rules, not the version/hash asserted by the child.
+function verifyImportedLineage(stores,get,run,finish) {
+ const row=run.birth.reincarnation,invalid='REINCARNATION_INVALID_STATE';
+ const readKnown=(id,done)=>get(stores.runs,'@run:'+id,pointer=>pointer?get(stores.runs,pointer.target,done):done(null));
+ const recordFor=claim=>({archiveId:claimKey(claim.parentRunId),...claim});
+ const checkSettlement=(parent,birth)=>{
+   const record=birth.reincarnation;
+   check(record&&parent.state.phase==='dead'&&parent.hash===record.parentStateHash,invalid);
+   check(record.version===(isExperienceLife(parent.state.life)?2:1),invalid);
+   let expected;try{expected=buildRebirthOptions(parent.state,record.purchases);}catch{fail(invalid);}
+   check(same(record,expected.reincarnation)&&same(birth.life.birth.cultivationProfile.inheritedBenefits,expected.inheritedBenefits),invalid);
+ };
+ readKnown(run.runId,old=>{
+   const marked=old&&isExperienceLife(old.birth.life)||isExperienceLife(run.birth.life);
+   if(old&&marked)check(same(old.birth,run.birth),invalid);
+   const verifyChild=()=>{
+     if(!row){finish();return;}
+     readKnown(row.parentRunId,parent=>{
+       if(!parent){finish(false);return;} // Authenticity outside this database is not attested.
+       if(row.version!==2&&!isExperienceLife(parent.state.life)){finish();return;} // historical v1 parent + child
+       if(parent.state.phase==='dead'&&parent.hash===row.parentStateHash){
+         checkSettlement(parent,run.birth);finish(true);return;
+       }
+       // @run may now select an earlier physical copy. Only a child already
+       // recorded here with this exact birth AND spent claim may be restored
+       // without verifying its settlement against the actual death again.
+       check(old?.verifiedParentHash===row.parentStateHash&&same(old.birth,run.birth),invalid);
+       const claim=reincarnationClaimForChild(run.birth);
+       get(stores.runs,claimKey(row.parentRunId),proof=>{check(proof&&same(proof,recordFor(claim)),invalid);finish(true);});
+     });
+   };
+   // The other half of the same check: an independently imported child
+   // may already have installed a *portable* claim before this parent exists.
+   // Only the matching real death can substantiate it. Promotion is local
+   // (never exported) and rolls back atomically if this import later fails.
+   get(stores.runs,claimKey(run.runId),proof=>{
+     if(old&&marked&&run.reincarnationClaim)
+       check(proof&&same(proof,recordFor(run.reincarnationClaim)),invalid);
+     if(!proof){verifyChild();return;}
+     readKnown(proof.childRunId,child=>{
+       if(!marked&&child?.birth?.reincarnation?.version!==2){verifyChild();return;}
+       if(!child){
+         // A claimed-parent-only backup may legitimately arrive by itself.
+         // If a death snapshot is present the claimed hash must already match.
+         if(run.state.phase==='dead')check(run.hash===proof.parentStateHash,invalid);
+         verifyChild();return;
+       }
+       const claim=reincarnationClaimForChild(child.birth);
+       check(claim&&same(proof,recordFor(claim)),invalid);
+       if(run.state.phase==='dead'){
+         checkSettlement(run,child.birth);
+         if(child.verifiedParentHash!==run.hash)stores.runs.put({...child,verifiedParentHash:run.hash});
+       }else{
+         // A living earlier copy proves no settlement. It may display a
+         // previously verified child's spent claim, never promote a new one.
+         check(child.verifiedParentHash===claim.parentStateHash,invalid);
+       }
+       verifyChild();
+     });
+   });
+ });
 }
 // Never await inside a transaction. All work here is synchronous or chained from
 // native request callbacks; only transaction.oncomplete resolves the operation.
@@ -105,6 +177,41 @@ class Archive {
   });
  }
  async load(runId) {const c=await this._capture(runId);if(c)this.bound=c.run.archiveId;return c?loaded(c.run,c.pending):null;}
+ // These views never bind the session or change either active/run pointer.
+ async _captureReadable(runId,physical=null) {
+  if(physical!==null)ident(physical);
+  const c=await this._capture(runId,physical);check(c,'ARCHIVE_NOT_READABLE');verifyReadableRun(c.run);
+  check((!runId||c.run.runId===runId)&&(!physical||c.run.archiveId===physical),'ARCHIVE_INVALID_SNAPSHOT');
+  if(c.pending){check(c.pending.archiveId===c.run.archiveId,'ARCHIVE_INVALID_SNAPSHOT');verifyPending(c.run.state,c.pending.pending);validateAttempt(c.pending.attempt);validateGeneration(c.pending.generation,c.pending.pending,c.run.state);}
+  if(c.tail){verifyChunk(c.tail);check(c.tail.index===c.run.tailIndex&&c.tail.hash===c.run.headHash,'ARCHIVE_BAD_HASH');}
+  return c;
+ }
+ async listRetainedArchives(cursor=null,limit=12) {
+  check(Number.isInteger(limit)&&limit>=1&&limit<=32,'ARCHIVE_INVALID_QUERY');
+  check(cursor===null||typeof cursor==='string'&&cursor.length>0&&cursor.length<=160,'ARCHIVE_INVALID_CURSOR');
+  return transaction(this.db,'readonly',(s,get,done,guard)=>get(s.runs,ACTIVE,active=>{
+   const entries=[];let visited=0;
+   const request=s.runs.openCursor(cursor?IDBKeyRange.lowerBound(cursor,true):null);
+   request.onsuccess=guard(()=>{
+    const row=request.result;
+    if(!row){done({entries,cursor:null});return;}
+    const run=row.value;visited++;
+    if(run.status==='active'&&run.archiveId!==active?.target){
+     verifyReadableRun(run);
+     entries.push({archiveId:run.archiveId,runId:run.runId,name:run.state.life.name,phase:run.state.phase,turnId:run.state.turnId,revision:run.state.revision});
+    }
+    // Bound both returned snapshots and scanned metadata/staging records.
+    if(entries.length===limit||visited>=128){done({entries,cursor:row.key});return;}
+    row.continue();
+   });
+  }));
+ }
+ async readRetainedArchive(archiveId) {ident(archiveId);const c=await this._captureReadable(null,archiveId);return loaded(c.run,c.pending);}
+ async readRetainedHistory(archiveId,cursor=null,limit=32) {
+  ident(archiveId);const c=await this._captureReadable(null,archiveId);
+  return this.readHistory(c.run.runId,cursor,limit,archiveId);
+ }
+
  async create({state,pending,expectedArchiveId=null}) {
   validateLiveState(state);check(!state.reincarnation&&!state.life.birth.cultivationProfile?.inheritedBenefits?.length,'REINCARNATION_REQUIRES_SETTLEMENT');check(state.revision===0&&state.archiveCursor===0,'ARCHIVE_INVALID_BIRTH');verifyPending(state,pending);
   const archiveId=crypto.randomUUID(),run={archiveId,runId:state.runId,state:clone(state),birth:clone(state),hash:stateHash(state),tailIndex:-1,headHash:ZERO,status:'active'};
@@ -115,9 +222,9 @@ class Archive {
   const c=await this._capture();check(c&&c.run.archiveId===expectedArchiveId&&!c.pending&&c.run.state.phase==='dead','REINCARNATION_REQUIRES_DEATH');
   check(!c.reincarnationClaim,'REINCARNATION_ALREADY_CLAIMED');
   const expected=buildRebirthOptions(c.run.state,rewardIds);
-  check(same(state.reincarnation,expected.reincarnation)&&same(state.life.birth.cultivationProfile?.inheritedBenefits,expected.inheritedBenefits),'REINCARNATION_INVALID_STATE');
+  check((expected.experienceVersion===undefined||state.life.birth.cultivationProfile?.experienceVersion===expected.experienceVersion)&&same(state.reincarnation,expected.reincarnation)&&same(state.life.birth.cultivationProfile?.inheritedBenefits,expected.inheritedBenefits),'REINCARNATION_INVALID_STATE');
   const claim=reincarnationClaimForChild(state);validateReincarnationClaim(claim,c.run.state);
-  const archiveId=crypto.randomUUID(),run={archiveId,runId:state.runId,state:clone(state),birth:clone(state),hash:stateHash(state),tailIndex:-1,headHash:ZERO,status:'active'},p=pendingRow(archiveId,clone(pending));
+  const archiveId=crypto.randomUUID(),run={archiveId,runId:state.runId,state:clone(state),birth:clone(state),hash:stateHash(state),tailIndex:-1,headHash:ZERO,status:'active',...(state.reincarnation.version===2?{verifiedParentHash:c.run.hash}:{})},p=pendingRow(archiveId,clone(pending));
   await transaction(this.db,'readwrite',(s,get)=>this._cas(s,get,c,()=>get(s.runs,claimKey(c.run.runId),old=>{
     check(!old,'REINCARNATION_ALREADY_CLAIMED');
     get(s.runs,'@run:'+state.runId,existing=>{check(!existing);writeClaims(s,get,[claim],()=>{
@@ -136,6 +243,7 @@ class Archive {
  }
  async setAttempt({runId,requestId,expectedAttemptId,attempt,pause=null,generation}) {
   ident(runId);ident(requestId);validateAttempt(attempt);pauseValue(pause);const c=await this._capture(runId);check(c&&(!this.bound||this.bound===c.run.archiveId)&&c.pending?.pending.identity.requestId===requestId&&(c.pending.attempt?.id??null)===expectedAttemptId);
+  validateGeneration(generation,c.pending.pending,c.run.state);
   const old=c.pending.attempt,freezing=old&&generation!==undefined&&c.pending.generation===undefined&&same(attempt,old);if(attempt&&!freezing){check(attempt.id!==old?.id);check(old?same(attempt.retryOf,{attemptId:old.id,sessionRef:old.sessionRef}):attempt.retryOf===null,'ARCHIVE_INVALID_ATTEMPT');}else if(!attempt)check(!old);
   if(c.pending.generation!==undefined&&generation!==undefined)check(same(c.pending.generation,generation),'ARCHIVE_GENERATION_CONFLICT');
   const p=pendingRow(c.run.archiveId,c.pending.pending,clone(attempt),pause,clone(generation??c.pending.generation));await transaction(this.db,'readwrite',(s,get)=>this._cas(s,get,c,()=>s.pending.put(p)));return loaded(c.run,p);
@@ -266,7 +374,7 @@ class Archive {
   const context=buildStoryContext(c.run.state,p,related);validateGeneratedScene(scene,context);
   const expected=buildMemoryDelta(p.receipt,scene);check(same(expected,memoryDelta),'ARCHIVE_INVALID_MEMORY');
   const turnId=p.identity.turnId,common={runId:c.run.runId,turnId};
-  const records=[{id:'receipt:'+turnId,...common,source:'rules',kind:'receipt',receipt:clone(p.receipt)},...expected.records.map(r=>({...r,...common})),...scene.entities.map(e=>{const prior=related.find(r=>r.kind==='entity'&&r.entity.id===e.id);return {id:'e:'+sha256(e.id).slice(0,40),...common,source:'narrative',kind:'entity',entity:{id:e.id,name:e.name,kind:e.kind},status:prior?.status==='dead'?'dead':e.status??prior?.status??'unknown'};})];
+  const records=[{id:'receipt:'+turnId,...common,source:'rules',kind:'receipt',receipt:clone(p.receipt)},...expected.records.map(r=>({...r,...common})),...scene.entities.map(e=>{const prior=related.find(r=>r.kind==='entity'&&r.entity.id===e.id);return {id:'e:'+sha256(e.id).slice(0,40),...common,source:'narrative',kind:'entity',entity:{id:e.id,name:e.name,kind:e.kind,...(e.experience?{experience:clone(e.experience)}:{})},status:prior?.status==='dead'?'dead':e.status??prior?.status??'unknown'};})];
   const nextState=commitTurn(c.run.state,p,scene,context.relationships);
   if(nextState.relationshipVersion===1) {
    for(const entityId of Object.keys(c.run.state.relationshipVersion===1?p.receipt.relationChanges:p.nextLife.relations))records.push({
@@ -301,8 +409,8 @@ class Archive {
   const run={...c.run,state:clone(nextState),hash:entry.stateHash,tailIndex:chunk.index,headHash:chunk.hash};
   await transaction(this.db,'readwrite',(s,get)=>this._cas(s,get,c,()=>{s.history.put({archiveId:run.archiveId,index:chunk.index,chunk});this._writeMemory(s.memory,run.archiveId,derived.records);s.runs.put(run);s.pending.delete(run.archiveId);}));return loaded(run,null);
  }
- async readHistory(runId,cursor=null,limit=32) {
-  check(Number.isInteger(limit)&&limit>=1&&limit<=128,'ARCHIVE_INVALID_QUERY');const c=await this._capture(runId);if(!c)return {entries:[],cursor:null};
+ async readHistory(runId,cursor=null,limit=32,physical=null) {
+  check(Number.isInteger(limit)&&limit>=1&&limit<=128,'ARCHIVE_INVALID_QUERY');const c=await this._capture(runId,physical);if(!c)return {entries:[],cursor:null};
   let index=0,offset=0;if(cursor){keys(cursor,['archiveId','index','offset']);check(cursor.archiveId===c.run.archiveId&&Number.isSafeInteger(cursor.index)&&cursor.index>=0&&Number.isSafeInteger(cursor.offset)&&cursor.offset>=0,'ARCHIVE_INVALID_CURSOR');index=cursor.index;offset=cursor.offset;}
   return transaction(this.db,'readonly',(s,get,done)=>{
    const entries=[];let bytes=0;
@@ -321,7 +429,7 @@ class Archive {
  }
  async _stageChunk(archiveId,chunk) {verifyChunk(chunk);await transaction(this.db,'readwrite',(s,get)=>get(s.runs,archiveId,run=>{check(run.status==='staging'&&chunk.index===run.tailIndex+1&&chunk.previousHash===run.headHash);s.history.add({archiveId,index:chunk.index,chunk});s.runs.put({...run,tailIndex:chunk.index,headHash:chunk.hash});}));}
  async _validateStage(archiveId,state,pending,attempt,generation,reincarnationClaim=null) {
-  validateGeneration(generation,pending);
+  validateGeneration(generation,pending,state);
   // A claimed logical life stays spent when an earlier physical backup is
   // restored; only a new settlement requires the exact final death snapshot.
   if(reincarnationClaim)validateReincarnationClaim(reincarnationClaim,state,{matchDeathSnapshot:false});
@@ -338,7 +446,7 @@ class Archive {
  async activate(archiveId,expectedArchiveId,expectedSnapshot=null) {
   await transaction(this.db,'readwrite',(s,get)=>get(s.runs,ACTIVE,active=>{
    check((active?.target??null)===expectedArchiveId);
-   const switchPointer=()=>get(s.runs,archiveId,run=>{check(run?.status==='validated','ARCHIVE_NOT_VALIDATED');writeClaims(s,get,[reincarnationClaimForChild(run.state),run.reincarnationClaim],()=>{s.runs.put({...run,status:'active'});s.runs.put({archiveId:ACTIVE,target:archiveId});s.runs.put({archiveId:'@run:'+run.runId,target:archiveId});});});
+   const switchPointer=()=>get(s.runs,archiveId,run=>{check(run?.status==='validated','ARCHIVE_NOT_VALIDATED');verifyImportedLineage(s,get,run,verified=>writeClaims(s,get,[reincarnationClaimForChild(run.state),run.reincarnationClaim],()=>{s.runs.put({...run,status:'active',...(verified?{verifiedParentHash:run.birth.reincarnation.parentStateHash}:{})});s.runs.put({archiveId:ACTIVE,target:archiveId});s.runs.put({archiveId:'@run:'+run.runId,target:archiveId});}));});
    if(expectedSnapshot)get(s.runs,expectedArchiveId,run=>{check(run?.hash===expectedSnapshot.run.hash&&run?.headHash===expectedSnapshot.run.headHash);get(s.pending,expectedArchiveId,p=>{check(same(p??null,expectedSnapshot.pending));switchPointer();});});else switchPointer();
   }));this.bound=archiveId;return this.load();
  }

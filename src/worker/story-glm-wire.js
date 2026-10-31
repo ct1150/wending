@@ -1,16 +1,44 @@
+import {advancesEvent,isExperienceLife,GROWTH_TERMS} from '../game/cultivation/live/experience.js';
 import {SCENE_SCHEMA,exactKeys} from '../game/cultivation/live/schema.js';
 import {assertPlainData,canonicalStringify} from '../game/cultivation/live/identity.js';
-import {ITEMS,REALMS,INTENTS,LEGACY_ITEMS,LEGACY_INTENTS,ORIGINS,TALENTS} from '../game/cultivation/live/model.js';
-import {isV7Life,realmCatalogFor,nextRealmFor,V7_EXPLORE_TARGETS} from '../game/cultivation/live/cultivation-rules.js';
-import {normalizeNamedScene} from './story-named-targets.js';
+import {ITEMS,REALMS,INTENTS,EXPERIENCE_INTENTS,LEGACY_ITEMS,LEGACY_INTENTS,ORIGINS,TALENTS} from '../game/cultivation/live/model.js';
+import {isV7Life,realmCatalogFor,nextRealmFor,V7_EXPLORE_TARGETS,v7ActionRule,WORLD_TIERS,WORLD_TRAVEL_APPROACHES} from '../game/cultivation/live/cultivation-rules.js';
+import {createNamedTargetLookup,normalizeNamedScene} from './story-named-targets.js';
+import {normalizeWireAnnotation} from './story-wire-annotation.js';
 import {formatStoryChoiceLabel} from '../game/cultivation/live/story-choice-label.js';
+
+// Generation uses the same post-action life and rule calculation as the menu.
+// Fresh identities stand in only for their type; actual names remain the model's.
+function availableVariants(context,aliases,intent,approach,targets){
+  const selected=context.receipt.action,closed=context.previousScene?.id===context.namespace+':t'+(context.identity.turnId-1)+':s:closed';
+  const endedTarget=selected?.intent==='interact'&&selected.approach==='leave'?selected.targetId:closed?(context.memory.recent.find(record=>record.kind==='turn'&&record.turnId===context.identity.turnId-1)?.entityIds[0]??context.memory.facts.find(record=>record.id==='decision:'+(context.identity.turnId-1)&&record.kind==='fact'&&record.source==='rules')?.entityId??'self'):null;
+  const failedCrossing=context.receipt.cultivationResult?.check?.kind==='world-crossing'&&context.receipt.cultivationResult.check.success===false;
+  const location=selected?.intent==='travel'&&!failedCrossing?context.entities.find(entity=>entity.id===selected.targetId)?.name:context.phase==='choice'?context.director.world.location:null;
+  const candidates=new Map(context.entities.map(entity=>[aliases.get(entity.id),entity]));
+  const ruleState={life:context.life,turnId:context.identity.turnId,director:context.director.eventCount===undefined?context.director:{...context.director,eventCount:context.director.eventCount+(advancesEvent(context.receipt)?1:0)}};
+  const crossing=intent==='travel'&&WORLD_TRAVEL_APPROACHES.includes(approach),variants=new Map();
+  for(const stake of intent==='interact'?['low']:['low','normal','high']){
+    const usable=targets.filter(targetId=>{
+      const fresh=/^([plf])\d+$/u.exec(targetId),known=candidates.get(targetId);
+      if(intent==='interact'&&known&&(known.id===endedTarget||endedTarget==='self'&&closed&&['person','faction'].includes(known.kind)))return false;
+      if(intent==='travel'&&known?.name===location)return false;
+      const entity=known??(fresh?{id:targetId,kind:({p:'person',l:'place',f:'faction'})[fresh[1]],name:crossing?(WORLD_TIERS[context.life.cultivationProfile.worldTier+1]??'无下一界')+'新去处':'眼前新对象',status:'alive'}:null);
+      if(intent==='interact'&&approach==='observe'&&entity?.kind==='place'&&(!known||entity.name!==location))return false;
+      const state={...ruleState,relatedEntities:entity?[entity]:[]};
+      try{return !v7ActionRule(state,{intent,approach,targetId:entity?.id??targetId,stake}).reason;}catch{return false;}
+    });
+    if(!usable.length)continue;
+    const key=JSON.stringify(usable),variant=variants.get(key)??{targets:usable,stakes:[]};variant.stakes.push(stake);variants.set(key,variant);
+  }
+  return [...variants.values()];
+}
 
 // GLM writes local references. The server owns persistent scene/choice IDs;
 // only declared, typed aliases may become new entity IDs for this exact turn.
 export function buildGlmWire(context,system,{storyActions=false}={}){
-  const directed=isV7Life(context.life)&&context.director?.version===7,items=isV7Life(context.life)?ITEMS:LEGACY_ITEMS,intents=isV7Life(context.life)?INTENTS:LEGACY_INTENTS,realms=realmCatalogFor(context.life);
+  const directed=isV7Life(context.life)&&context.director?.version===7,items=isV7Life(context.life)?ITEMS:LEGACY_ITEMS,intents=isExperienceLife(context.life)?EXPERIENCE_INTENTS:isV7Life(context.life)?INTENTS:LEGACY_INTENTS,realms=realmCatalogFor(context.life);
   if(context.entities.some(entity=>['self',...Object.keys(items),...Object.keys(realms)].includes(entity.id)))throw Object.assign(Error('STORY_CONTEXT_INVALID'),{code:'STORY_CONTEXT_INVALID'});
-  const aliases=new Map(context.entities.map((entity,index)=>[entity.id,'k'+(index+1)+(storyActions?'_'+entity.kind+'_'+Array.from(entity.name).slice(0,4).join(''):'')]));
+  const aliases=new Map(context.entities.map((entity,index)=>[entity.id,'k'+(index+1)+(storyActions&&!directed?'_'+entity.kind+'_'+Array.from(entity.name).slice(0,4).join(''):'')]));
   const obligations=[...context.memory.promises,...context.memory.clues];
   const references=new Map(obligations.map((record,index)=>[record.id,'m'+(index+1)]));
   function pack(value,field=''){
@@ -29,9 +57,10 @@ export function buildGlmWire(context,system,{storyActions=false}={}){
   const packed=pack(context);delete packed.identity;delete packed.namespace;packed.turn=context.identity.turnId;
   const entityAliases=[...aliases.values(),...['p','l','f'].flatMap(kind=>Array.from({length:24},(_,index)=>kind+(index+1)))];
   const schema=structuredClone(SCENE_SCHEMA);
-  // Native XGrammar rejects this keyword; canonical scene validation still
-  // enforces unique anchors after generation.
+  // Native XGrammar rejects this keyword. The decoder removes duplicate
+  // anchors before strict canonical scene validation.
   if(directed)delete schema.properties.story.properties.anchors.uniqueItems;
+  if(directed&&isExperienceLife(context.life))schema.properties.story.properties.opponent={type:'object',additionalProperties:false,required:['entityId','anchor'],properties:{entityId:{type:'string'},anchor:{type:'integer',minimum:0,maximum:3},realmId:{enum:Object.keys(realms)},purpose:{type:'string',minLength:1,maxLength:24},condition:{type:'string',minLength:1,maxLength:24}}};
   delete schema.properties.id;schema.required=schema.required.filter(key=>key!=='id');
   const entityProperties=schema.properties.entities.items.properties;
   delete schema.properties.entities;
@@ -53,12 +82,21 @@ export function buildGlmWire(context,system,{storyActions=false}={}){
   const actionGroups=new Map();
   for(const [intent,approaches]of Object.entries(intents))for(const approach of approaches){
     if(intent==='interact'&&!storyActions)continue;
-    const craftTargets=approach==='study'?['manual']:approach==='alchemy'?['medicine','elixir']:approach==='formation'?['array']:approach==='forge'&&isV7Life(context.life)?['talisman','artifact']:['talisman'];
+    const craftTargets=Object.hasOwn(GROWTH_TERMS,approach)?(['pledge','repay'].includes(approach)?people:['self']):approach==='study'?['manual']:approach==='alchemy'?['medicine','elixir']:approach==='formation'?['array']:approach==='forge'&&isV7Life(context.life)?['talisman','artifact']:['talisman'];
     const targets=intent==='interact'?(approach==='help'?people:['ask','decline'].includes(approach)?actors:['self',...(approach==='observe'?entityAliases:livingAliases)]):intent==='travel'?places:['negotiate','fight','evade'].includes(intent)?actors:intent==='explore'?(isV7Life(context.life)?[...V7_EXPLORE_TARGETS]:Object.keys(items).filter(id=>id!=='talisman')):intent==='craft'?craftTargets:intent==='practice'&&approach==='breakthrough'?(nextRealm?[nextRealm]:[]):['self'];
     if(!targets.length)continue;
-    const interaction=intent==='interact',key=JSON.stringify({targets,interaction}),group=actionGroups.get(key)??{targets,interaction,actions:[]};group.actions.push(intent+':'+approach);actionGroups.set(key,group);
+    const interaction=intent==='interact';
+    if(directed){
+      const purpose=intent==='interact'&&approach==='help'?'给出一份行粮，帮助对方充饥':intent==='negotiate'&&approach==='black-market'?'出售'+ITEMS[(context.life.items.relic??0)>0?'relic':'artifact']+'，换取灵石':null;
+      const crossing=intent==='travel'&&WORLD_TRAVEL_APPROACHES.includes(approach);
+      for(const variant of availableVariants(context,aliases,intent,approach,targets)){
+        const key=JSON.stringify({...variant,interaction,purpose,crossing}),group=actionGroups.get(key)??{...variant,interaction,purpose,actions:[]};group.actions.push(intent+':'+approach);actionGroups.set(key,group);
+      }
+    }else{
+      const key=JSON.stringify({targets,interaction}),group=actionGroups.get(key)??{targets,interaction,actions:[]};group.actions.push(intent+':'+approach);actionGroups.set(key,group);
+    }
   }
-  schema.properties.choices.items={oneOf:[...actionGroups.values()].map(group=>({type:'object',additionalProperties:false,required:['action','targetId','stake',storyActions?'purpose':'label','anchor'],properties:{action:{enum:group.actions},targetId:{enum:group.targets},stake:group.interaction?{const:'low'}:choiceProperties.stake,...(storyActions?{purpose:{$ref:'#/$defs/choicePurpose'}}:{label:{$ref:'#/$defs/choiceLabel'}}),anchor:{$ref:'#/$defs/anchor'}}}))};
+  schema.properties.choices.items={oneOf:[...actionGroups.values()].map(group=>({type:'object',additionalProperties:false,required:['action','targetId','stake',storyActions?'purpose':'label','anchor'],properties:{action:{enum:group.actions},targetId:{enum:group.targets},stake:group.interaction?{const:'low'}:directed?{enum:group.stakes}:choiceProperties.stake,...(storyActions?{purpose:group.purpose?{const:group.purpose}:{$ref:'#/$defs/choicePurpose'}}:{label:{$ref:'#/$defs/choiceLabel'}}),anchor:{$ref:'#/$defs/anchor'}}}))};
   const text=schema.properties.blocks.items.properties.text;
   if(storyActions){text.maxLength=directed?600:160;schema.properties.blocks.maxItems=directed?4:2;}
   if(directed){schema.properties.choices.minItems=3;schema.properties.choices.maxItems=3;}
@@ -105,23 +143,36 @@ explore:cautious/bold仅用于实际寻找目标资源，label明确写出该资
 已知实体完整沿用输入id（如k1_person_陈叔），不能截短或改写；person是人物，place是地点，faction是势力，不同类型不能混用。身份和状态由服务端恢复；如列入名单只写id及可选status，不复制name。未在输入的人物必须另用p1-p24，地点l1-l24、势力f1-f24，在otherPeople/places/factions声明id和name，覆盖speaker、choices.targetId和memoryDeltas.entityId所有新引用；不得把主角、你或玩家另列NPC。名单不写kind。只给人物写status=alive/dead；死亡必须有death记忆，不能复活死者。场景和choices不写id。
 memoryDeltas只记录本场正文已发生的新信息，不能记录未选选项。新记忆写entityId、kind、anchor，anchor同样是本场段落下标，服务端从该段提取text，不自己编写text。无新信息则[]。只有正文明确说出答应、承诺、约定、保证或发誓才用promise，普通见闻用fact或clue。新promise/clue另带status=open；结束已有约定/线索仅写输入m1等referenceId和合法status，服务端恢复原文，不能伪造未提供的约定或更改旧文字。省略的义务仍未解决，摘要不能覆盖事实或义务，不得重开已结束的约定/线索。`;
   if(directed)modern=`${system}
-${settled}正文200–400字，1–4段，只推进本次选择的眼前结果；仅canClimax=true的climax可至600字。第二人称，具体对白和动作，不复述旧段落，不列库存、动作代码或字段。对白speaker=self或活人别名，旁白无speaker。普通动物不能交谈。玩家活着就继续，不设固定回合终局。
+本回合实际经过${context.receipt.elapsedDays}日。正文按事件需要写1–4段，短问题直接回答，不凑字数；第二人称，不列库存或动作代码。对白speaker=self或活人别名，旁白无speaker。
 输出顶层只允许blocks、choices、title、location、otherPeople、places、factions、memoryDeltas、story这9项。先写blocks，再写choices，最后填写名单。
-恰好3个不同的本场选择，至少两个可执行，其中一个为低风险探问、观察、退避或稳妥处理。每项只写action、targetId、stake、purpose、anchor；purpose最多50字，写具体目的，不重复动作前缀，不写奖励、时长或保证结果。anchor为本场段落下标，从0起。选择须回应该段已出现的对象或问题；拒绝也说清放下什么，不补日常菜单。fight/evade的purpose必须包含目标全名，不能错指旁人；危险退避用evade，leave只结束互动。交谈只面对在场可交流对象。
-问答用interact:ask；眼前调查用interact:observe，周围targetId=self，人物的purpose含全名，地点须为当前location。explore只找资源，purpose必须含资源名：${V7_EXPLORE_TARGETS.map(id=>id+'='+ITEMS[id]).join('，')}。travel才移动，目的地不能等于location；跨界仅ascend/smuggle/rift/ancient-array且名称含下一界中界或上界，真实world-crossing判定失败仍在原界。negotiate用于资源交涉，不假装已买到具体物品。
-practice:forbidden和evade:blood可能损寿；rest:medicine服药疗伤，rest:extend服丹延寿；alchemy炼medicine/elixir，formation布array，talisman制符，forge锻talisman/artifact；black-market优先出售行囊已有古修遗物，无则出售已有法器，purpose只写“出售古修遗物，换取灵石”或“出售法器，换取灵石”，每次一件，不卖伴生遗物；交易提高暴露。后果只来自receipt。
-已知实体完整沿用输入id与姓名，新人物p1等、地点l1等、势力f1等声明对应名单，不把主角列NPC，不复活死者。
-新记忆写entityId、kind、anchor，由服务端取该段原文，不写text；fact/clue只记已发生信息，promise须正文明确承诺，新promise/clue带status=open。关闭只用提供的referenceId与合法status，省略不代表结束。无新信息可[]。
-最后story={pattern,beat,anchors}；pattern按事件选investigation/journey/bargain/conflict/cultivation/relationship/discovery/recovery，beat选progress/reversal/revelation/climax/resolution，anchors最多2个有效段落。非progress须同段新记忆或真实判定支撑。beatOverdue必须出现有据转折；opportunityRequired必须有可利用的新线索或破局办法，不能保证成功。相邻已完结篇章不重复pattern。
-人物至少延续三回合的关系与动机，但不强迫随玩家旅行或继续被拒绝的委托。story.npcs可选，最多2人，记录entityId、anchor、title、signatureSpell、habit、obsession；特征必须逐字出现在该段，未知用空字符串。只逐步揭露，不凭空补全履历。`;
-  return {context:packed,instructions:storyActions?modern+actions:instructions.replace('关闭已有约定/线索只用输入m1等referenceId，原文保持不变。','关闭已有约定/线索仅写输入m1等referenceId和status，不写entityId/kind/text，服务端恢复原始记录；对应实体仍须在名单声明。')+continuity+actions,schema};
+给3个不同的本场选择，包含稳妥应对。每项只写action、targetId、stake、purpose、anchor；purpose用50字内说明眼前具体目的，不承诺奖励或固定耗时；anchor是本场段落下标，从0起。只选择schema提供的可执行配对，不补日常菜单。
+问答用interact:ask，眼前调查用interact:observe，环境用self；purpose可观察人物手中物件。explore仅找资源：${V7_EXPLORE_TARGETS.filter(id=>[...actionGroups.values()].some(group=>group.actions.some(action=>action.startsWith('explore:'))&&group.targets.includes(id))).map(id=>id+'='+ITEMS[id]).join('，')}。危险退避用evade，travel才移动且目的地不等于location；新跨界地名以指定下一界开头，不混写界域。
+black-market优先出售行囊已有古修遗物，无则出售已有法器，purpose只写“出售古修遗物，换取灵石”或“出售法器，换取灵石”，每次一件，不卖伴生遗物。普通negotiate不购买具体物品。
+已知对象的target/speaker直接用输入别名，同名对象也依此区分。新对象用{kind,name,ref:"",status:null}，kind分person/place/faction，不冒充旧名或主角；死亡写death记忆，不改status。正文自然称谓即可。
+新记忆写entityId、kind、anchor，不写text；只记已发生信息，promise须明确承诺，新promise/clue带status=open；关闭只用提供的referenceId与合法status，无新信息可[]。
+story按本场标注pattern、beat、anchors。npcs仅记录已呈现特征，未知留空；节奏提示不改变玩家决定。`;
+  const interactionGuide=directed?'\ninteract均stake=low：ask、observe、decline、leave均0日且无数值变化；help仅给予1行粮，经过1日、关系+2，不能承诺治疗、复活或战斗。leave不是旅行或脱险。':actions;
+  return {context:packed,instructions:storyActions?modern+interactionGuide:instructions.replace('关闭已有约定/线索只用输入m1等referenceId，原文保持不变。','关闭已有约定/线索仅写输入m1等referenceId和status，不写entityId/kind/text，服务端恢复原始记录；对应实体仍须在名单声明。')+continuity+actions,schema};
 }
 
 export function decodeGlmScene(wire,context,{storyActions=false}={}){
   try{
     const directed=isV7Life(context.life)&&context.director?.version===7,realms=realmCatalogFor(context.life);
     assertPlainData(wire);
-    if(storyActions&&!Object.hasOwn(wire,'otherPeople'))wire=normalizeNamedScene(wire,context);
+    const named=storyActions&&!Object.hasOwn(wire,'otherPeople');
+    if(named){
+      if(directed){
+        const identify=createNamedTargetLookup(context);
+        const lookup=(target,isNote)=>{
+          const {kind,name,known,status}=identify(target);
+          if(isNote&&(status!==null||kind==='person'&&name===context.life.name))throw Error('Invalid NPC annotation target');
+          return {kind,name,status:known?.status??status,key:known?.id??JSON.stringify([kind,name]),ambiguous:context.entities.filter(entity=>entity.kind===kind&&entity.name===name).length>1};
+        };
+        const namedObjects=[...wire.blocks.map(b=>b.speaker),...wire.choices.map(c=>c.target),...wire.memoryDeltas.map(d=>d.target),...(wire.story?.npcs??[]).map(n=>n.target)];
+        wire={...wire,story:normalizeWireAnnotation(wire.story,wire.blocks,context,'target',lookup,namedObjects.map(o=>o?.name).filter(Boolean))};
+      }
+      wire=normalizeNamedScene(wire,context);
+    }
     const fields=['blocks','title','location','otherPeople','places','factions','choices','memoryDeltas',...(directed?['story']:[])];
     if(storyActions&&Object.keys(wire).some(key=>!fields.includes(key))){
       // JSON mode can echo input data. Only structurally identical input
@@ -150,7 +201,7 @@ export function decodeGlmScene(wire,context,{storyActions=false}={}){
       if(known){if(known.kind!==entity.kind)throw Error();id=known.id;}
       else if(fresh&&({p:'person',l:'place',f:'faction'})[fresh[1]]===entity.kind){id=prefix+'e:'+entity.kind+'_'+fresh[2];if(context.entities.some(known=>known.id===id))throw Error();}
       else throw Error();
-      aliases.set(entity.id,id);return {...entity,id};
+      aliases.set(entity.id,id);return {...entity,id,...(known?.experience?{experience:{...known.experience}}:{})};
     });
     // Known references already have authoritative identities in the context.
     // Restore only referenced declarations; fresh aliases still require a name.
@@ -163,7 +214,7 @@ export function decodeGlmScene(wire,context,{storyActions=false}={}){
       if(typeof alias!=='string'||aliases.has(alias))continue;
       const known=knownAliases.get(alias);if(!known)continue;
       if(entities.some(entity=>entity.id===known.id)){aliases.set(alias,known.id);continue;}
-      aliases.set(alias,known.id);entities.push({id:known.id,name:known.name,kind:known.kind,...(known.kind==='person'&&['alive','dead'].includes(known.status)?{status:known.status}:{})});
+      aliases.set(alias,known.id);entities.push({id:known.id,name:known.name,kind:known.kind,...(known.experience?{experience:{...known.experience}}:{}),...(known.kind==='person'&&['alive','dead'].includes(known.status)?{status:known.status}:{})});
     }
     if(entities.length>24)throw Error();
     const blocks=wire.blocks.map(block=>{
@@ -177,7 +228,7 @@ export function decodeGlmScene(wire,context,{storyActions=false}={}){
       if(purposeful&&!storyActions)throw Error();
       exactKeys(choice,purposeful?['action','targetId','stake','purpose','anchor']:described?['action','targetId','stake','label','anchor']:['action','targetId','stake']);
       if(typeof choice.action!=='string'||!['low','normal','high'].includes(choice.stake))throw Error();
-      const parts=choice.action.split(':'),[intent,approach]=parts;if(parts.length!==2||!Object.hasOwn(INTENTS,intent)||!INTENTS[intent].includes(approach))throw Error();
+      const parts=choice.action.split(':'),[intent,approach]=parts;if(parts.length!==2||!Object.hasOwn(INTENTS,intent)||!(isExperienceLife(context.life)?EXPERIENCE_INTENTS:INTENTS)[intent].includes(approach))throw Error();
       if(intent==='interact'&&(!storyActions||!described))throw Error();
       if(described){
         const anchored=storyActions&&Number.isInteger(choice.anchor)?choice.anchor>=0&&choice.anchor<wire.blocks.length:typeof choice.anchor==='string'&&choice.anchor.length>=4&&choice.anchor.length<=80&&wire.blocks.some(block=>typeof block.text==='string'&&block.text.includes(choice.anchor));
@@ -212,7 +263,25 @@ export function decodeGlmScene(wire,context,{storyActions=false}={}){
       // Older wire samples may repeat them, and final validation checks equality.
       return {entityId,kind:Object.hasOwn(delta,'kind')?delta.kind:record.kind,text:Object.hasOwn(delta,'text')?delta.text:record.text,referenceId:record.id,status:delta.status};
     });
-    const story=directed?{...wire.story,...(wire.story?.npcs!==undefined?{npcs:wire.story.npcs.map(npc=>{const entityId=aliases.get(npc.entityId);if(!entityId)throw Error();return {...npc,entityId};})}:{})}:undefined;
+    let story;
+    if(directed){
+      const lookup=ref=>{
+        const entity=entities.find(row=>row.id===aliases.get(ref));
+        if(!entity){
+          if(typeof ref==='string'&&/^p(?:[1-9]|1\d|2[0-4])$/u.test(ref))return null;
+          throw Error('Invalid NPC annotation reference');
+        }
+        return {...entity,key:entity.id,ambiguous:entities.some(row=>row.id!==entity.id&&row.kind===entity.kind&&row.name===entity.name)};
+      };
+      const notes=named?wire.story:normalizeWireAnnotation(wire.story,wire.blocks,context,'entityId',lookup,entities.map(e=>e.name));
+      story={...notes,...(notes.opponent?{opponent:{...notes.opponent,entityId:aliases.get(notes.opponent.entityId)}}:{}),...(notes.npcs?{npcs:notes.npcs.map(npc=>({...npc,entityId:aliases.get(npc.entityId)}))}:{})};
+    }
+    const intel=story?.opponent;
+    if(intel?.realmId){
+      const e=entities.find(row=>row.id===intel.entityId);
+      if(!e||!['person','faction'].includes(e.kind)||e.status==='dead'||e.experience&&e.experience.realmId!==intel.realmId)throw Error('Conflicting opponent disclosure');
+      e.experience={version:1,realmId:intel.realmId};
+    }
     return {id:prefix+'s:scene',title:wire.title,location:wire.location,entities,blocks,choices,memoryDeltas,...(directed?{story}:{})};
   }catch{throw Object.assign(Error('GENERATED_SCENE_INVALID'),{code:'GENERATED_SCENE_INVALID'});}
 }

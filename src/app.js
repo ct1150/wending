@@ -36,7 +36,7 @@ let readingPreferences = loadPreferences(storage);
 const liveCatalogs = { REALMS: LIVE_REALMS, ORIGINS: LIVE_ORIGINS, TALENTS: LIVE_TALENTS, ITEMS: LIVE_ITEMS };
 const liveClient = createStoryClient();
 let view = navigation.screen;
-let toastTimer, dialogConfirm = null, dialogReturnTarget = null;
+let toastTimer, dialogConfirm = null, dialogReturnTarget = null, retainedHistory = null;
 let disposeTitleScene = () => {}, disposeGameScene = null;
 
 function rememberScreen() {
@@ -52,7 +52,7 @@ function currentJourneySummary() {
 
 function renderSettingsPage() {
   const summary = currentJourneySummary();
-  const body = `<p class="birth-kicker">收好行囊，再赴山河</p><h2 id="settings-title" tabindex="-1">游戏设置</h2>${renderReadingSettings(readingPreferences)}<section class="settings-section"><h3>当前进度</h3><p>${summary ? `${esc(summary.name)} · ${esc(summary.detail)}` : '尚未开启修仙人生。'}</p><p class="save-info">只有一个存档，进度自动保存在此浏览器。重新开始会覆盖当前进度。</p><details class="save-backup"><summary>备份与恢复</summary><div class="settings-actions"><button class="button" data-export ${summary ? '' : 'disabled'}>导出存档</button><button class="button" data-import>恢复备份</button></div><p class="save-info">更换设备前可导出备份。恢复备份会替换当前存档。</p>${hasLegacyData ? '<p class="save-info">旧版原始数据仍保留在本机，可下载留存。</p><button class="button" data-export-legacy>下载旧版原始数据</button>' : ''}</details></section><section class="settings-section"><h3>入世须知</h3><p>岁月只在落下一项选择时前行。</p><button class="button" data-help>查看游戏说明</button></section>`;
+  const body = `<p class="birth-kicker">收好行囊，再赴山河</p><h2 id="settings-title" tabindex="-1">游戏设置</h2>${renderReadingSettings(readingPreferences)}<section class="settings-section"><h3>当前进度</h3><p>${summary ? `${esc(summary.name)} · ${esc(summary.detail)}` : '尚未开启修仙人生。'}</p><p class="save-info">只有一个当前存档，进度自动保存在此浏览器。重新开始后，原人生保留为只读历史。</p>${summary ? `<button class="button" data-restart ${uiBusy || liveSnapshot?.busy ? 'disabled' : ''}>重新开始人生</button>` : ''}<details class="save-backup"><summary>备份与恢复</summary><div class="settings-actions"><button class="button" data-export ${summary ? '' : 'disabled'}>导出存档</button><button class="button" data-import>恢复备份</button></div><p class="save-info">更换设备前可导出备份。恢复备份会替换当前存档。</p><button class="button" data-retained>查看历世与旧备份</button>${hasLegacyData ? '<p class="save-info">旧版原始数据仍保留在本机，可下载留存。</p><button class="button" data-export-legacy>下载旧版原始数据</button>' : ''}</details></section><section class="settings-section"><h3>入世须知</h3><p>岁月只在落下一项选择时前行。</p><button class="button" data-help>查看游戏说明</button></section>`;
   renderScreenShell(body, { title: '游戏设置', back: returnScreen === 'new' ? '返回角色创建' : returnScreen === 'adventure' ? '返回当前剧情' : '返回首页' });
 }
 
@@ -90,14 +90,29 @@ async function continueJourney() {
   finally { uiBusy = false; render(); }
 }
 
-async function prepareNewJourney() {
+async function prepareNewJourney(expectedArchiveId = null) {
   if (uiBusy || liveSnapshot?.busy) return notify('故事正在保存，请稍候再重新开始。', true);
   uiBusy = true; render();
   try {
     await ensureLive();
     const loaded = await liveSession.load();
     if (!loaded.state && loaded.errorCode) throw Error('archive read failed');
-    liveBirthDraft = { name: '云归', originId: 'village', expectedArchiveId: loaded.archiveId ?? null };
+    // A fresh entrance can only create into an empty slot. Another tab may
+    // have created a life since this title was rendered; continue it instead.
+    if (expectedArchiveId === null && loaded.state) {
+      liveError = ''; view = 'adventure'; render();
+      await liveSession.resume();
+      focusAdventure($('#journey-current-title') || $('#main-content'));
+      return;
+    }
+    // Restart consent names the physical life shown when the dialog opened.
+    // Never broaden that consent to a replacement discovered during reload.
+    if ((loaded.archiveId ?? null) !== expectedArchiveId) {
+      view = 'settings';
+      notify('当前人物已在另一页面更新，请重新确认后再开始。', true);
+      return;
+    }
+    liveBirthDraft = { name: '云归', originId: 'village', expectedArchiveId };
     liveError = ''; view = 'new'; returnScreen = 'home';
     saveCreationDraft();
   } catch { notify('暂时无法读取存档，原有进度保持不变。', true); }
@@ -106,7 +121,8 @@ async function prepareNewJourney() {
 
 function askNewJourney() {
   if (!homeReady || uiBusy || liveSnapshot?.busy) return notify('故事正在保存，请稍候再重新开始。', true);
-  if (liveSnapshot?.state) return confirmAction('重新开始', '<p>游戏只有一个存档。新人物确认入世并保存后，会覆盖当前进度。</p><p>取消创建会保留当前人生。重新开始不会结算旧人物，也不会领取轮回奖励。</p>', prepareNewJourney, '继续创建');
+  const expectedArchiveId = liveSnapshot?.archiveId ?? null;
+  if (liveSnapshot?.state) return confirmAction('重新开始', '<p>游戏只有一个存档。新人物确认入世并保存后，会覆盖当前进度。</p><p>取消创建会保留当前人生。重新开始不会结算旧人物，也不会领取轮回奖励。</p>', () => prepareNewJourney(expectedArchiveId), '继续创建');
   return prepareNewJourney();
 }
 
@@ -261,6 +277,8 @@ async function beginLiveLife() {
     if(result.state?.runId===creatingRunId){if(view==='new')view='adventure';liveBirthDraft={name,originId,expectedArchiveId:result.archiveId};}
     else if(result.errorCode==='REINCARNATION_ALREADY_CLAIMED')liveError='此生传承已领取。请恢复下一世备份，或返回首页重新开始。';
     else if(result.errorCode==='REINCARNATION_INSUFFICIENT_POINTS')liveError='因果点不足，请返回此生结算重新选择传承。';
+    else if(result.errorCode==='EXPERIENCE_UNSUPPORTED')liveError='故事服务暂不支持这次轮回的修行规则。原存档已保留，请稍后再试。';
+    else if(['NETWORK_UNAVAILABLE','AI_DISABLED','SERVICE_UNAVAILABLE','PROTOCOL_MISMATCH'].includes(result.errorCode))liveError='暂时无法确认故事服务可用。原存档已保留，请稍后再试。';
     else if(result.errorCode!=='BIRTH_CONTEXT_INVALID')liveError='另一页面可能已更新存档，或本地存档无法保存。请返回首页后重新创建，原进度保持不变。';
   } catch { liveError='无法开始，请检查本地存储与网络。原有旅程保持不变。'; }
   finally {uiBusy=false;creatingRunId=null;render();}
@@ -283,7 +301,7 @@ function selectReincarnationReward(rewardId) {
   if(!REINCARNATION_REWARDS.some(reward=>reward.id===rewardId))return;
   const current=liveBirthDraft.reincarnationRunId===snapshot.state.runId?liveBirthDraft.reincarnationRewardIds??[]:[];
   const selected=current.includes(rewardId)?current.filter(id=>id!==rewardId):[...current,rewardId];
-  try {buildRebirthOptions(snapshot.state,selected);}catch{return notify('因果点不足，无法携入这项传承。',true);}
+  try {buildRebirthOptions(snapshot.state,selected);}catch(error){return notify(error.code==='REINCARNATION_SELECTION_LIMIT'?'每世最多携入两项传承。':'因果点不足，无法携入这项传承。',true);}
   liveBirthDraft={name:liveBirthDraft.reincarnationRunId===snapshot.state.runId?liveBirthDraft.name:snapshot.state.life.name,originId:liveBirthDraft.reincarnationRunId===snapshot.state.runId?liveBirthDraft.originId:'village',expectedArchiveId:snapshot.archiveId,reincarnationRunId:snapshot.state.runId,reincarnationRewardIds:selected};
   saveCreationDraft();render();
 }
@@ -330,17 +348,37 @@ async function showLiveHistory(first) {
   catch { notify('历史读取暂未完成，请重试。',true); }
 }
 
-async function exportLiveGame() {
-  if(!liveArchive||!liveSnapshot?.state)return notify('尚无存档可导出。',true);
+async function showRetainedArchives(cursor = null) {
   try {
-    const filename=`百世问鼎-${liveSnapshot.state.life.name}.wending.jsonl`;
+    await ensureLive();
+    const page = await liveArchive.listRetainedArchives(cursor);
+    const rows = page.entries.map(row => `<section class="settings-section" data-retained-row="${esc(row.archiveId)}"><h3>${esc(row.name)}</h3><p>${row.phase === 'dead' ? '此生已尽' : '旧日进度'} · 第 ${row.turnId} 回</p><div class="settings-actions"><button class="button" data-retained-read="${esc(row.archiveId)}">只读查看</button><button class="button" data-retained-export="${esc(row.archiveId)}">导出备份</button></div></section>`).join('');
+    openDialog('历世与旧备份', `<p>这里保留先前人生与恢复前的备份。只读查看不会推进故事；需要恢复时，请先导出备份，再通过恢复备份确认替换当前进度。</p>${rows || '<p>本页暂无旧记录。</p>'}`, `${cursor ? '<button class="button" data-retained>回到第一页</button>' : ''}${page.cursor ? `<button class="button" data-retained-next="${esc(page.cursor)}">下一页</button>` : ''}`, { drawer: true });
+  } catch { notify('旧记录暂时无法读取，原始存档保持不变。', true); }
+}
+
+async function showRetainedHistory(archiveId, next = false) {
+  try {
+    const row = await liveArchive.readRetainedArchive(archiveId);
+    const cursor = next && retainedHistory?.archiveId === archiveId ? retainedHistory.cursor : null;
+    const page = await liveArchive.readRetainedHistory(archiveId, cursor, 16);
+    retainedHistory = { archiveId, cursor: page.cursor };
+    openDialog(`${row.state.life.name} · 只读历史`, `${renderCharacterDetails(liveCharacterSummary(row.state, liveCatalogs))}${renderLiveHistory(page.entries, row.state.life.name)}`, `<button class="button" data-retained>返回历世</button><button class="button" data-retained-read="${esc(archiveId)}">从头阅读</button>${page.cursor ? `<button class="button" data-retained-history-next="${esc(archiveId)}">下一页</button>` : ''}<button class="button" data-retained-export="${esc(archiveId)}">导出备份</button>`, { drawer: true });
+  } catch { notify('历史读取暂未完成，请重试。原始存档保持不变。', true); }
+}
+
+async function exportLiveGame(physical = null) {
+  if(!liveArchive||!physical&&!liveSnapshot?.state)return notify('尚无存档可导出。',true);
+  try {
+    const snapshot=physical?await liveArchive.readRetainedArchive(physical):liveSnapshot;
+    const filename=`百世问鼎-${snapshot.state.life.name}.wending.jsonl`;
     // File System Access streams directly where available; Blob fallback only
     // affects download memory, never the stored archive or the history DOM.
     if(typeof window.showSaveFilePicker==='function') {
       const handle=await window.showSaveFilePicker({suggestedName:filename,types:[{description:'完整存档备份',accept:{'application/octet-stream':['.jsonl']}}]});
-      const writable=await handle.createWritable();await exportLiveArchive(liveArchive,liveSnapshot.state.runId).pipeTo(writable);
+      const writable=await handle.createWritable();await exportLiveArchive(liveArchive,snapshot.state.runId,physical).pipeTo(writable);
     } else {
-      const blob=await new Response(exportLiveArchive(liveArchive,liveSnapshot.state.runId)).blob();downloadText(filename,blob,'application/octet-stream');
+      const blob=await new Response(exportLiveArchive(liveArchive,snapshot.state.runId,physical)).blob();downloadText(filename,blob,'application/octet-stream');
     }
     notify('存档已导出。');
   } catch(error) { if(error.name!=='AbortError')notify('导出未完成，请重试并保留本机存档。',true); }
@@ -380,7 +418,8 @@ document.addEventListener('click', event => {
   if ('closeDialog' in data) { closeDialog(); return; }
   if ('confirm' in data) { const callback = dialogConfirm; closeDialog(false); callback?.(); return; }
   if ('home' in data) return goHome();
-  if ('titleNew' in data || 'liveNew' in data) return askNewJourney();
+  if ('titleNew' in data) return prepareNewJourney();
+  if ('restart' in data || 'liveNew' in data) return askNewJourney();
   if ('titleContinue' in data) return continueJourney();
   if ('menuBack' in data) {
     if (view === 'new') { if (liveBirthDraft.reincarnationRunId) { view = 'adventure'; render(); return; } return goHome(); }
@@ -394,6 +433,11 @@ document.addEventListener('click', event => {
   if ('liveRetry' in data) return liveSession?.retry();
   if ('liveResume' in data) return liveSession?.resume();
   if ('liveChoice' in data) { currentLiveActionDraft().error = ''; return liveSession?.choose({ choiceId: data.liveChoice, baseRevision: Number(data.revision), stateHash: data.stateHash }); }
+  if ('liveExample' in data) {
+    const draft=currentLiveActionDraft(),field=$('#live-custom-action');
+    if(!draft.open||!field||field.disabled||liveSnapshot?.busy||liveSnapshot?.pending)return;
+    draft.text=data.liveExample;draft.error='';render();$('#live-custom-action')?.focus({preventScroll:true});return;
+  }
   if ('liveCustomToggle' in data) { const draft = currentLiveActionDraft(); draft.open = !draft.open; render(); if (draft.open) $('#live-custom-action')?.focus({ preventScroll: true }); return; }
   if ('liveHistoryNext' in data) return showLiveHistory(false);
   if ('liveHistoryFirst' in data || 'history' in data) return showLiveHistory(true);
@@ -404,6 +448,11 @@ document.addEventListener('click', event => {
     if (view !== 'settings') returnScreen = ['adventure', 'new'].includes(view) ? view : 'home';
     view = 'settings'; render(); $('#settings-title')?.focus({ preventScroll: true }); return;
   }
+  if ('retained' in data) return showRetainedArchives();
+  if ('retainedNext' in data) return showRetainedArchives(data.retainedNext);
+  if ('retainedRead' in data) return showRetainedHistory(data.retainedRead);
+  if ('retainedHistoryNext' in data) return showRetainedHistory(data.retainedHistoryNext, true);
+  if ('retainedExport' in data) return exportLiveGame(data.retainedExport);
   if ('export' in data) return exportLiveGame();
   if ('import' in data) { $('#import-file').click(); return; }
   if ('exportLegacy' in data) {

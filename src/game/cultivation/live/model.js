@@ -6,3 +6,7 @@ export const ITEMS = Object.freeze({...LEGACY_ITEMS,herbs:'灵草',medicine:'回
 export const REALMS = Object.freeze(Object.fromEntries([['mortal','凡人',80,0,null,0],['qi','炼气',120,2,'manual',2],['foundation','筑基',240,3,'crystal',3],['golden','金丹',480,4,'core',5],['nascent','元婴',800,4,'soulseal',8],['spirit','化神',1500,5,'skykey',12],['immortal','登仙',3000,5,'relic',20]].map(([id,name,lifeLimit,threshold,material,minYears],rank)=>[id,Object.freeze({id,name,rank,lifeLimit,threshold,material,minYears})])));
 export const LEGACY_INTENTS = Object.freeze({practice:['steady','intensive','breakthrough'],explore:['cautious','bold'],negotiate:['cooperate','bargain','pressure'],fight:['guard','assault','desperate'],evade:['withdraw','conceal'],rest:['recover','retire'],travel:['road','wilderness'],craft:['study','forge'],interact:['ask','observe','help','decline','leave']});
 export const INTENTS = Object.freeze({...LEGACY_INTENTS,practice:[...LEGACY_INTENTS.practice,'forbidden'],negotiate:[...LEGACY_INTENTS.negotiate,'black-market'],evade:[...LEGACY_INTENTS.evade,'blood'],rest:[...LEGACY_INTENTS.rest,'extend','medicine'],travel:[...LEGACY_INTENTS.travel,'ascend','smuggle','rift','ancient-array'],craft:[...LEGACY_INTENTS.craft,'alchemy','formation','talisman']});
+
+// Only explicitly marked lives may propose these methods; older wire vocabularies stay exact.
+export const GROWTH_APPROACHES=Object.freeze(['diagnose','restore','pledge','repay']);
+export const EXPERIENCE_INTENTS=Object.freeze({...INTENTS,craft:[...INTENTS.craft,...GROWTH_APPROACHES]});

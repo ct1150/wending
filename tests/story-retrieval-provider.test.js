@@ -73,15 +73,51 @@ test('the model cannot forge a source receipt even when it emits a valid canonic
   assert.equal(result.scene,undefined);
 });
 
-test('a configured missing knowledge store pauses without starting Workers AI',async()=>{
+for(const [name,store]of [
+  ['missing',null],
+  ['empty',{async get(){return null;}}],
+  ['corrupt',{async get(){return new TextEncoder().encode('corrupt private source');}}],
+  ['failed read',{async get(){throw Error('private source unavailable');}}],
+  ['timed out',{get(){return new Promise(()=>{});}}],
+])test(`configured ${name} knowledge degrades to the unchanged single model request without a receipt`,async()=>{
+  const c=context(),before=JSON.stringify(c);let calls=0,submitted;
+  const result=await generateScene({run:async(_model,input)=>{
+    calls++;submitted=input;
+    const chunk={model:GLM_MODEL_ID,choices:[{delta:{content:JSON.stringify(wire())},finish_reason:'stop'}],usage:{prompt_tokens:100,completion_tokens:80,total_tokens:180}};
+    return new Response('data: '+JSON.stringify(chunk)+'\n\ndata: [DONE]\n\n').body;
+  }},profile(),c,{}, {storyActions:true,knowledgeStore:store});
+  assert.equal(result.status,'ready',result.errorCode);
+  assert.equal(calls,1);assert.equal(result.inferencePerformed,true);assert.equal(result.accountingStatus,'complete');
+  assert.deepEqual(submitted,buildStoryInput(profile(),c));
+  assert.equal(result.inputHash,sha256(JSON.stringify(submitted)));
+  assert.equal(result.scene.retrieval,undefined);assert.equal(JSON.stringify(c),before);
+  assert.doesNotMatch(JSON.stringify(result),/private source/);
+});
+
+test('retrieval fallback preserves request validation and never starts AI after cancellation or an expired deadline',async()=>{
+  for(const [options,runtime,errorCode]of [
+    [{timeoutMs:0},{},'PROVIDER_OPTIONS_INVALID'],
+    [{},{signal:AbortSignal.abort()},'PROVIDER_TIMEOUT'],
+    [{},{deadlineAt:Date.now()-1},'PROVIDER_TIMEOUT'],
+  ]){
+    let calls=0;
+    const result=await generateScene({run:async()=>{calls++;throw Error('must not infer');}},profile(),context(),options,{storyActions:true,knowledgeStore:{get:async()=>null},...runtime});
+    assert.equal(result.errorCode,errorCode);assert.equal(calls,0);assert.equal(result.inferencePerformed,false);
+  }
+});
+
+test('cancellation during a knowledge read cannot turn into a fallback model request',async()=>{
+  const controller=new AbortController();let calls=0;
+  const result=await generateScene({run:async()=>{calls++;throw Error('must not infer');}},profile(),context(),{}, {storyActions:true,signal:controller.signal,knowledgeStore:{get(){controller.abort();return new Promise(()=>{});}}});
+  assert.equal(result.status,'paused');assert.equal(result.errorCode,'PROVIDER_TIMEOUT');
+  assert.equal(calls,0);assert.equal(result.inferencePerformed,false);assert.equal(result.accountingStatus,'complete');
+});
+
+test('a Free quota failure after retrieval degradation is preserved without a retry',async()=>{
   let calls=0;
-  const result=await generateScene({run:async()=>{calls++;throw Error('AI must not be started');}},profile(),context(),{}, {storyActions:true,knowledgeStore:{async get(){return null;}}});
-  assert.equal(calls,0);
-  assert.equal(result.status,'paused');
-  assert.equal(result.errorCode,'KNOWLEDGE_UNAVAILABLE');
-  assert.equal(result.inferencePerformed,false);
-  assert.equal(result.accountingStatus,'complete');
-  assert.doesNotMatch(JSON.stringify(result),/PRIVATE_EVIDENCE_CANARY|private source/);
+  const result=await generateScene({run:async()=>{calls++;throw Object.assign(Error('3036: Free boundary'),{code:3036});}},profile(),context(),{}, {storyActions:true,knowledgeStore:null});
+  assert.equal(calls,1);assert.equal(result.status,'paused');assert.equal(result.errorCode,'FREE_QUOTA_EXHAUSTED');
+  assert.equal(result.accountingStatus,'complete');assert.equal(result.scene,undefined);
 });
 
 function apiFixture(provider){

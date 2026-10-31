@@ -24,7 +24,14 @@ export async function generateScene(ai,profile,context,options={},runtime={}) {
     try{validateProviderOptions(profile,options,assertValidatedProfile);validateStoryContext(context);idField(options.attemptId??context.identity.requestId);}
     catch{return generateProviderScene(ai,profile,context,options,assertValidatedProfile);}
     try{knowledgeBundle=await loadStoryReferences(runtime.knowledgeStore,selectStoryReferences(context),{signal:runtime.signal});}
-    catch{return {status:'paused',errorCode:'KNOWLEDGE_UNAVAILABLE',accountingStatus:'complete',modelId:profile.modelId,attemptId:options.attemptId??context.identity.requestId,inferencePerformed:false,usage:null,actualNeurons:null,stopReason:null,inputHash:null,inputBytes:null,nonThinkingValidated:null};}
+    catch(error){
+      // Retrieval is optional enrichment. A cancelled request or exhausted
+      // request deadline still stops before inference; neither is a corpus fault.
+      if(runtime.signal?.aborted||Date.now()>=runtime.deadlineAt)return {status:'paused',errorCode:'PROVIDER_TIMEOUT',accountingStatus:'complete',modelId:profile.modelId,attemptId:options.attemptId??context.identity.requestId,inferencePerformed:false,usage:null,actualNeurons:null,stopReason:null,inputHash:null,inputBytes:null,nonThinkingValidated:null};
+      if(error?.code!=='KNOWLEDGE_UNAVAILABLE')throw error;
+      // Keep the original context, budget, request and single model call. No
+      // bundle means no retrieval receipt or invented exposure identifiers.
+    }
   }
   if(profile?.modelId===GLM_MODEL_ID){
     const transport=createGlmTransport({ai,context,onProgress:runtime.onProgress,deadlineAt:runtime.deadlineAt,signal:runtime.signal,timeoutMs:options.timeoutMs});

@@ -7,11 +7,11 @@ const FORMAT='wending-live-jsonl';
 function requireValue(ok){if(!ok)throw new Error('ARCHIVE_INVALID_STREAM');}
 function keys(value,list){requireValue(value&&Object.getPrototypeOf(value)===Object.prototype&&Object.keys(value).sort().join('|')===[...list].sort().join('|'));}
 const digest=value=>sha256(JSON.stringify(value));
-export function exportLiveArchive(archive,runId) {
+export function exportLiveArchive(archive,runId,physical=null) {
  let capture,header,index=0,manifest,done=false;
  const encode=value=>{const text=JSON.stringify(value);requireValue(new TextEncoder().encode(text).length<=MAX_LIVE_RECORD_BYTES);return new TextEncoder().encode(text+'\n');};
  return new ReadableStream({async pull(controller){try{
-  if(!capture){capture=await archive._capture(runId);requireValue(capture);validateGeneration(capture.pending?.generation,capture.pending?.pending);const v7=capture.run.state.life.cultivationProfile?.version===7||Boolean(capture.reincarnationClaim);header={type:'header',format:FORMAT,version:v7?3:capture.pending?.generation?2:1,memoryVersion:1,birth:capture.run.birth,state:capture.run.state,pending:capture.pending?.pending??null,attempt:capture.pending?.attempt??null,...(v7?{generation:capture.pending?.generation??null,reincarnationClaim:capture.reincarnationClaim??null}:capture.pending?.generation?{generation:capture.pending.generation}:{})};manifest=digest(header);controller.enqueue(encode(header));return;}
+  if(!capture){capture=await archive._captureReadable(runId,physical);requireValue(capture);validateGeneration(capture.pending?.generation,capture.pending?.pending);const v7=capture.run.state.life.cultivationProfile?.version===7||Boolean(capture.reincarnationClaim);header={type:'header',format:FORMAT,version:v7?3:capture.pending?.generation?2:1,memoryVersion:1,birth:capture.run.birth,state:capture.run.state,pending:capture.pending?.pending??null,attempt:capture.pending?.attempt??null,...(v7?{generation:capture.pending?.generation??null,reincarnationClaim:capture.reincarnationClaim??null}:capture.pending?.generation?{generation:capture.pending.generation}:{})};manifest=digest(header);controller.enqueue(encode(header));return;}
   if(index<=capture.run.tailIndex){const chunk=index===capture.run.tailIndex?capture.tail:await archive._readChunk(capture.run.archiveId,index);verifyChunk(chunk);const row={type:'chunk',chunk};manifest=sha256(manifest+chunk.hash);index++;controller.enqueue(encode(row));return;}
   if(!done){done=true;controller.enqueue(encode({type:'footer',chunks:index,turns:capture.run.state.turnId,headHash:capture.run.headHash,manifest}));controller.close();}
  }catch(e){controller.error(e);}}});

@@ -1,5 +1,18 @@
 # 问鼎待办与交付账本
 
+## 当前主线：制作人体验改造（2026-10-31）
+
+从 5.3.0 发起，整合了 5.4.0 单存档主线和 5.4.1 可执行选项规则。6.0.0 候选串起修法、还约、战斗和轮回；后续重点是验证真人能否理解并主动利用这些差异。
+
+- [6.0.0 体验验收与待测边界](PRODUCER_ACCEPTANCE_6.0.0.md)
+- [开发 PR #28 与精确版本 CI](https://github.com/ct1150/wending/pull/28)
+
+- [当前TODO](PRODUCER_TODO.md)
+- [设计](superpowers/specs/2026-10-31-producer-experience-design.md)
+- [逐步开发计划](superpowers/plans/2026-10-31-producer-experience.md)
+
+以下是历史版本交付记录，不能替代上述当前TODO的实现、验证或部署状态。
+
 ## 4.1.0：可选的持续实时人生
 
 保留原有离线游戏和存档，加入由真实选择推动的 Cloudflare Workers AI 剧情。登仙、问鼎后继续生活，只有实际死亡才结算；不设固定回合、章节或时长。应用不施加历史测试次数、分任务次数、Neuron 累计上限或“失败一次即停止整个任务”的规则。Workers Free 及平台真实额度约束继续保留。

@@ -1,3 +1,5 @@
+import {checkActorScene} from './actor-insight.js';
+import {isExperienceLife} from './experience.js';
 import { DAYS_PER_YEAR, ORIGINS, TALENTS, ITEMS, REALMS, LEGACY_INTENTS } from './model.js';
 import { isV7Life, summarizeLife, createCultivationBirthProfile, initialLifeForBirth, v7ActionRule, resolveV7Action } from './cultivation-rules.js';
 import { assertPlainData, canonicalStringify, sha256, stateHash } from './identity.js';
@@ -13,8 +15,9 @@ const summary = summarizeLife;
 const same = (a,b) => canonicalStringify(a)===canonicalStringify(b);
 function requireActive(state) { validateLiveState(state);if(state.phase!=='active')throw new Error('此生尚未开场或已经死亡。'); }
 export function createLiveGame(options={}) {
- assertPlainData(options);exactKeys(options,[],['runId','seed','name','originId','engineVersion','inheritedBenefits','reincarnation']);
+ assertPlainData(options);exactKeys(options,[],['runId','seed','name','originId','engineVersion','inheritedBenefits','reincarnation','experienceVersion']);
  if(options.engineVersion!==undefined&&options.engineVersion!==7||options.inheritedBenefits!==undefined&&options.engineVersion!==7)throw new Error('修行引擎版本无效。');
+ if(Object.hasOwn(options,'experienceVersion')&&(options.experienceVersion!==1||options.engineVersion!==7))throw new Error('新体验版本无效。');
  if(options.reincarnation!==undefined){if(options.engineVersion!==7)throw new Error('轮回须进入新的修行人生。');validateReincarnation(options.reincarnation);}
  const name=(options.name??'云归').trim();textField(name,24);if(/[\r\n]/.test(name))throw new Error('姓名不能换行。');
  const originId=options.originId??'village';if(!Object.hasOwn(ORIGINS,originId))throw new Error('出身无效。');
@@ -23,7 +26,7 @@ export function createLiveGame(options={}) {
  let rng=parseInt(sha256(String(seed)).slice(0,8),16);const draw=limit=>{rng=nextRandom(rng);return rng%limit;};
  const attributes={constitution:1,insight:1,fortune:1},names=Object.keys(attributes);for(let n=0;n<9;n++){const eligible=names.filter(id=>attributes[id]<6);attributes[eligible[draw(eligible.length)]]++;}
  const talents=Object.keys(TALENTS),first=talents.splice(draw(talents.length),1)[0],birth={originId,talentIds:[first,talents[draw(talents.length)]],attributes};
- if(options.engineVersion===7)birth.cultivationProfile=createCultivationBirthProfile(draw,options.inheritedBenefits??[]);
+ if(options.engineVersion===7)birth.cultivationProfile=createCultivationBirthProfile(draw,options.inheritedBenefits??[],options.experienceVersion);
  const life=initialLifeForBirth(name,birth);
  const birthReceipt={kind:'opening',choiceId:null,action:null,elapsedDays:0,itemChanges:{},relationChanges:{},random:{before:rng,after:rng,roll:null},before:summary(life),after:summary(life),death:null,birth:copy(birth)};
  if(isV7Life(life))birthReceipt.cultivationResult={version:7,check:null,lifespanChange:{years:0,cause:null}};
@@ -69,7 +72,7 @@ function actionRule(state,p) {
 export function compileChoices(state,proposals) {
  validateLiveState(state);assertPlainData(proposals);if(!Array.isArray(proposals)||proposals.length>3)throw new Error('行动数量无效。');const seen=new Set();
  return proposals.map(p=>{if(seen.has(p.id))throw new Error('行动标识重复。');seen.add(p.id);const rule=actionRule(state,p),warnings=[];
-  if(isV7Life(state.life))return {...copy(p),enabled:!rule.reason,reason:rule.reason??null,costs:{days:rule.days,items:copy(rule.items),spirit:rule.spiritCost,lifeYears:rule.lifeLoss},warnings:[...rule.warnings]};
+  if(isV7Life(state.life))return {...copy(p),enabled:!rule.reason,reason:rule.reason??null,costs:{days:rule.days,items:copy(rule.items),spirit:rule.spiritCost,lifeYears:rule.lifeLoss},warnings:[...rule.warnings],...(rule.outlook?{outlook:copy(rule.outlook)}:{})};
   if(rule.risk)warnings.push('历练受伤基础风险'+rule.risk+'%，根骨与坚韧筋骨可降低风险。');if(rule.injury>0)warnings.push('将增加'+rule.injury+'点伤势；伤势达到10即死亡。');if(state.life.ageDays+rule.days>=state.life.lifeLimit*DAYS_PER_YEAR)warnings.push('余寿不足，将在途中寿尽，得不到行动成果。');return {...copy(p),enabled:!rule.reason,reason:rule.reason??null,costs:{days:rule.days,items:copy(rule.items)},warnings};});
 }
 function identity(state,requestId,choiceId) {idField(requestId);return {runId:state.runId,turnId:state.turnId+1,baseRevision:state.revision,stateHash:stateHash(state),choiceId,rulesVersion:state.rulesVersion,promptVersion:state.promptVersion,requestId};}
@@ -95,7 +98,7 @@ function prepareChoiceWithResolver(state,command,resolveCustom) {
  if(rule.reason){if(custom)throw Object.assign(new Error(CUSTOM_ACTION_MESSAGE),{code:'CUSTOM_ACTION_UNSUPPORTED'});throw new Error(rule.reason);}
  const nextRng=nextRandom(state.rng),roll=nextRng%100;
  let nextLife,elapsedDays,death,cultivationResult;
- if(isV7Life(state.life))({nextLife,elapsedDays,death,result:cultivationResult}=resolveV7Action(state.life,action,rule,roll));
+ if(isV7Life(state.life))({nextLife,elapsedDays,death,result:cultivationResult}=resolveV7Action(state.life,action,rule,roll,state.turnId+1));
  else {
  nextLife=copy(state.life);const remaining=nextLife.lifeLimit*DAYS_PER_YEAR-nextLife.ageDays;elapsedDays=Math.min(remaining,rule.days);
  for(const [id,n] of Object.entries(rule.items))nextLife.items[id]-=n;
@@ -144,7 +147,7 @@ export function projectRelations(life,entities,restored={}) {
  return Object.fromEntries(Object.entries({...restored,...life.relations}).filter(([id])=>entities.some(e=>e.id===id)));
 }
 export function commitTurn(state,pending,scene,restoredRelations={}) {
- const fixed=verifiedPending(state,pending);if(fixed.receipt.death)throw new Error('真实死亡须本地结算。');validateGeneratedScene(scene);
+ const fixed=verifiedPending(state,pending);if(fixed.receipt.death)throw new Error('真实死亡须本地结算。');validateGeneratedScene(scene);checkActorScene(scene,isExperienceLife(state.life),state.relatedEntities,false);
  const relatedEntities=copy(scene.entities);
  // Every current target and memory reference must have an explicit stable entity.
  for(const m of scene.memoryDeltas)if(!relatedEntities.some(e=>e.id===m.entityId))throw new Error('记忆引用未知实体。');
