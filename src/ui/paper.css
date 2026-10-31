@@ -403,28 +403,7 @@ dialog.paper-drawer[open] { display: flex; flex-direction: column; }
 .live-sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; border: 0; }
 .live-journey .live-choice-draft:disabled { color: var(--text); background: transparent; border: 1px solid var(--line2); }
 
-/* The title is a quiet entry to the story; all three actions remain in view. */
-.title-shell { position: relative; isolation: isolate; min-height: 100svh; display: flex; flex-direction: column; align-items: center; overflow: hidden; padding: 64px 24px 24px; background: var(--bg); }
-.title-landscape { position: absolute; z-index: -1; inset: auto -12% -6% -12%; height: 43%; background: url('../../assets/landscape.svg') center 40% / cover no-repeat; filter: grayscale(1); opacity: .10; mask-image: linear-gradient(transparent, #000 68%); pointer-events: none; }
-.title-content { width: 100%; max-width: 380px; flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 0 0 36px; text-align: center; }
-.title-eyebrow { color: var(--muted); font-size: 12px; letter-spacing: .25em; margin: 0 0 28px; }
-.title-name { position: relative; color: var(--text); font: 500 58px/1.4 var(--serif); letter-spacing: .16em; padding-left: .16em; white-space: nowrap; }
-.title-seal { position: absolute; right: -20px; top: -2px; writing-mode: vertical-rl; color: var(--red); border: 1px solid currentColor; padding: 5px 2px; font: 12px/1.2 var(--serif); letter-spacing: 2px; }
-.title-prologue { font: 14px/2 var(--serif); color: var(--muted); letter-spacing: .1em; margin: 12px 0 36px; }
-.title-menu { display: flex; flex-direction: column; width: 100%; max-width: 288px; gap: 10px; }
-.title-option { display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 7px; min-height: 79px; width: 100%; padding: 14px 16px; color: var(--text); background: transparent; border: 1px solid transparent; border-radius: 3px; }
-.title-option-name { font: 20px/1.5 var(--serif); letter-spacing: .2em; padding-left: .2em; }
-.title-option-note { font-size: 11px; line-height: 1.7; color: var(--muted); max-width: 100%; overflow-wrap: anywhere; }
-.title-option.is-primary { border-color: var(--line2); background: var(--panel); }
-.title-option.is-primary .title-option-name { color: var(--jade-bright); }
-.title-option:hover:not(:disabled) { border-color: var(--jade); background: var(--paper-hover); }
-.title-option:disabled { color: var(--dim); border-color: transparent; background: transparent; cursor: default; }
-.title-option:disabled .title-option-name { color: var(--dim); }
-.title-switch { color: var(--muted); font-size: 12px; margin-top: 12px; min-height: 44px; padding: 8px 16px; }
-.title-switch span { margin-left: 7px; }
-.title-switch:hover { color: var(--text); text-decoration: underline; text-underline-offset: 4px; }
-.title-error { color: var(--red); font-size: 12px; line-height: 1.8; margin-top: 12px; }
-.title-footer { display: flex; justify-content: space-between; width: min(100%,720px); gap: 24px; color: var(--dim); font-size: 11px; line-height: 1.8; padding-top: 8px; }
+/* Settings and saved journeys share the paper reading palette. */
 .menu-page-header { display: flex; justify-content: space-between; align-items: center; gap: 20px; border-bottom: 1px solid var(--line); padding: 0 0 12px; }
 .menu-page-header p { font: 17px/1.6 var(--serif); letter-spacing: 2px; }
 .menu-page h2 { font: 28px/1.6 var(--serif); margin: 6px 0 20px; }
@@ -459,26 +438,9 @@ select:focus-visible { outline: 2px solid var(--jade); outline-offset: 3px; }
 :root[data-theme='dark'] { color-scheme: dark; --bg:#1e211f; --panel:#252925; --panel2:#2c302b; --line:#3d423b; --line2:#54594f; --text:#e5e4db; --muted:#b8b8ac; --dim:#aaac9f; --jade:#b8c7a8; --jade-bright:#d1dcc2; --gold:#d1ba8d; --red:#eeaa98; --paper-hover:#30362d; --paper-selected:#343e30; --paper-disabled:#272b26; --paper-selection:#45543c; --paper-backdrop:#080b08b3; }
 :root[data-text-size='large'] .journey-prose p, :root[data-text-size='large'] .journey-consequence p, :root[data-text-size='large'] .story-prose p, :root[data-text-size='large'] .journey-records p, :root[data-text-size='large'] .reading-sample { font-size: 21px; line-height: 2; }
 @media (max-width:560px) {
-  .title-shell { padding: 28px 24px 18px; }
-  .title-content { padding-bottom: 20px; }
-  .title-eyebrow { margin-bottom: 24px; font-size: 11px; }
-  .title-name { font-size: 45px; letter-spacing: .12em; }
-  .title-seal { right: -19px; font-size: 10px; }
-  .title-prologue { font-size: 13px; margin-bottom: 28px; }
-  .title-menu { max-width: 260px; }
-  .title-option { min-height: 76px; }
-  .title-landscape { height: 35%; inset-inline: -40%; }
   .reading-controls { gap: 12px; }
   .journey-navigation { gap: 4px; }
   .journey-navigation button { padding-inline: 8px; }
-}
-@media (max-height:640px) {
-  .title-shell { padding-top: 18px; }
-  .title-eyebrow { margin-bottom: 12px; }
-  .title-prologue { margin-bottom: 14px; }
-  .title-menu { gap: 4px; }
-  .title-option { min-height: 68px; padding-block: 9px; }
-  .title-content { padding-bottom: 8px; }
 }
 .live-status p { margin: .3rem 0 .7rem; }
 .live-status .button, .live-toolbar .button { margin: .3rem .4rem .3rem 0; }

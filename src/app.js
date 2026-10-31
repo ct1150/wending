@@ -22,6 +22,7 @@ import { bootstrapSession, persistSession, migrateSession, recoverLegacySession 
 import { createJourneySaves } from './game/journey-saves.js';
 import { loadNavigation, saveNavigation, loadPreferences, savePreferences } from './ui/navigation.js';
 import { renderTitleScreen, renderGameNavigation, renderReadingSettings, renderJourneyList } from './ui/title-screen.js';
+import { mountTitleScene } from './ui/title-scene.js';
 import { icon } from './ui/icons.js';
 import { renderCombatActions } from './ui/combat.js';
 import { getPrimaryResult, renderStoryScene, renderStoryRecords, renderStoryOutcome, renderStoryInterruption } from './ui/story.js';
@@ -71,6 +72,7 @@ let lastSaved = session.saved;
 let toastTimer;
 let dialogConfirm = null;
 let dialogReturnTarget = null;
+let disposeTitleScene = () => {};
 const openPanels = new Map();
 const isJourney = game => game?.version === 3 || game?.version === 4;
 const isCreating = game => game?.version === 4 && game.phase === 'creating';
@@ -464,9 +466,12 @@ function showHelp() {
 }
 
 function render({ resetSupport = false, focusSelector = null } = {}) {
+  disposeTitleScene();
+  disposeTitleScene = () => {};
   rememberScreen();
   if(view==='home') {
     $('#app').innerHTML=renderTitleScreen({summary:currentJourneySummary(),loading:!homeReady,error:liveError||saveError,hasOtherSaves:Boolean(state||liveSnapshot?.state),version:appVersion});
+    disposeTitleScene = mountTitleScene($('.title-shell'));
     return;
   }
   if(view==='settings')return renderSettingsPage();
