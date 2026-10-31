@@ -3,6 +3,7 @@ import { exportLiveArchive, importLiveArchive } from './game/live-save-format.js
 import { createLiveSession } from './ui/live-session.js';
 import { createStoryClient } from './ui/story-client.js';
 import { compileChoices, rollLiveBirth } from './game/cultivation/live/engine.js';
+import { EXPERIENCE_VERSION } from './game/cultivation/live/experience.js';
 import { stateHash } from './game/cultivation/live/identity.js';
 import { getReincarnationSettlement, REINCARNATION_REWARDS, buildRebirthOptions } from './game/cultivation/live/reincarnation.js';
 import { REALMS as LIVE_REALMS, ORIGINS as LIVE_ORIGINS, TALENTS as LIVE_TALENTS, ITEMS as LIVE_ITEMS } from './game/cultivation/live/model.js';
@@ -61,8 +62,13 @@ function renderSettingsPage() {
 }
 
 function currentBirthOptions() {
+  const inheritedBenefits = liveBirthDraft.reincarnationRunId
+    ? REINCARNATION_REWARDS.filter(reward => liveBirthDraft.reincarnationRewardIds?.includes(reward.id)).map(reward => reward.id).sort()
+    : [];
   return {
     seed:liveBirthDraft.seed,
+    ...(liveBirthDraft.originStories ? {originStories:true, experienceVersion:EXPERIENCE_VERSION} : {}),
+    ...(inheritedBenefits.length ? {inheritedBenefits} : {}),
     ...(liveBirthDraft.originId ? {originId:liveBirthDraft.originId} : {}),
     ...(liveBirthDraft.rolledTalentId ? {lockedTalentId:liveBirthDraft.rolledTalentId} : {}),
   };
@@ -115,7 +121,7 @@ async function prepareNewJourney(expectedArchiveId = null) {
       notify('当前人物已在另一页面更新，请重新确认后再开始。', true);
       return;
     }
-    liveBirthDraft = { name: '云归', seed: newSeed(), expectedArchiveId };
+    liveBirthDraft = { name: '云归', seed: newSeed(), originStories: true, expectedArchiveId };
     liveError = ''; view = 'new'; returnScreen = 'home';
     saveCreationDraft();
   } catch { notify('暂时无法读取存档，原有进度保持不变。', true); }
@@ -164,6 +170,7 @@ function changeBirthRoll(button) {
   const focus = captureFocusTarget(button);
   if ('liveReroll' in button.dataset) {
     liveBirthDraft.seed = newSeed();
+    liveBirthDraft.originStories = true;
     delete liveBirthDraft.originId; // A pre-dice draft may still have a manually chosen origin.
     liveBirthDraft.rolledTalentId = liveBirthDraft.lockedTalentId;
   } else {
@@ -299,7 +306,7 @@ async function beginLiveLife() {
     if(result.state?.runId===creatingRunId){if(view==='new')view='adventure';liveBirthDraft={name,expectedArchiveId:result.archiveId};}
     else if(result.errorCode==='REINCARNATION_ALREADY_CLAIMED')liveError='此生传承已领取。请恢复下一世备份，或返回首页重新开始。';
     else if(result.errorCode==='REINCARNATION_INSUFFICIENT_POINTS')liveError='因果点不足，请返回此生结算重新选择传承。';
-    else if(result.errorCode==='EXPERIENCE_UNSUPPORTED')liveError='故事服务暂不支持这次轮回的修行规则。原存档已保留，请稍后再试。';
+    else if(result.errorCode==='EXPERIENCE_UNSUPPORTED')liveError='故事服务暂时无法接续这张命签。稍后可用同一张命签再次入世。';
     else if(['NETWORK_UNAVAILABLE','AI_DISABLED','SERVICE_UNAVAILABLE','PROTOCOL_MISMATCH'].includes(result.errorCode))liveError='暂时无法确认故事服务可用。原存档已保留，请稍后再试。';
     else if(result.errorCode!=='BIRTH_CONTEXT_INVALID')liveError='另一页面可能已更新存档，或本地存档无法保存。请返回首页后重新创建，原进度保持不变。';
   } catch { liveError='无法开始，请检查本地存储与网络。原有旅程保持不变。'; }
@@ -319,7 +326,7 @@ function liveStoryView(snapshot) {
 
 function setReincarnationDraft(snapshot, rewardIds) {
   const draft = liveBirthDraft.reincarnationRunId === snapshot.state.runId
-    ? liveBirthDraft : {name:snapshot.state.life.name, seed:newSeed()};
+    ? liveBirthDraft : {name:snapshot.state.life.name, seed:newSeed(), originStories:true};
   liveBirthDraft = {...draft, expectedArchiveId:snapshot.archiveId, reincarnationRunId:snapshot.state.runId, reincarnationRewardIds:rewardIds};
 }
 

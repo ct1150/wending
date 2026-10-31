@@ -35,7 +35,7 @@ function cue(c,r){
 // The proposed terms are fixed by the rules, never by a model menu. A pledge
 // additionally needs a live speaker who actually offers those terms in person.
 const offerCue='我愿用'+GROWTH_TERMS.pledge.days+'日替你校法，下次见面还我'+GROWTH_TERMS.repay.items.supplies+'份行粮。';
-function offersRepair(text){
+export function offersRepair(text){
   if(typeof text!=='string')return false;
   const line=text.trim().replace(/^[“「『‘"']|[”」』’"']$/gu,'');
   // Use a direct affirmative offer, not a report, refusal, price negotiation

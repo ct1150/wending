@@ -200,6 +200,9 @@ body { background: #101d24; }
 .live-roll-facts { display: grid; grid-template-columns: 1.4fr 1fr 1fr; gap: 8px; margin: 0; }
 .live-roll-facts dt, .live-roll-facts small { color: var(--muted); font: 12px/1.6 var(--sans); }
 .live-roll-facts dd { margin: 2px 0 0; font: 18px/1.5 var(--serif); }
+.live-roll-background { margin: 7px 0; font: 15px/1.7 var(--serif); }
+.live-roll-background p { margin: 0; }
+.live-birth-kit { color: var(--muted); font: 13px/1.7 var(--sans); }
 .live-roll-root { margin: 12px 0; padding-inline-start: 12px; border-inline-start: 2px solid var(--gold); }
 .live-roll-root strong { display: block; color: var(--gold); font: 17px/1.7 var(--serif); }
 .live-roll-root span { color: var(--text); font: 14px/1.75 var(--serif); }
@@ -208,6 +211,9 @@ body { background: #101d24; }
 .live-roll-talents .birth-lock { color: var(--text); font: 15px/1.5 var(--serif); }
 .live-roll-talents small { margin-inline-start: 8px; font: 12px/1.5 var(--sans); color: var(--muted); }
 .live-roll-talents [aria-pressed='true'] small { color: var(--gold); }
+.live-roll-talent { flex: 1 1 14em; min-width: 0; }
+.live-roll-talent .birth-lock { display: flex; justify-content: space-between; align-items: center; width: 100%; }
+.live-roll-talent p { margin: 5px 0 2px; font: 14px/1.7 var(--serif); }
 .birth #live-name, .birth #live-origin, .birth-name-field input,
 .reading-controls select, .live-birth select {
   border: 1px solid var(--line2); background: var(--control-surface); color: var(--text);
@@ -257,6 +263,9 @@ dialog::backdrop { background: #030b14b8; backdrop-filter: blur(5px); }
 .character-intro strong { color: var(--gold); letter-spacing: .1em; }
 .character-section > h3, .character-talents > h3 { color: var(--gold); }
 .character-talent { background: var(--gold-wash); border-color: var(--gold); }
+.character-facts > .character-origin-fact { grid-column: 1 / -1; display: grid; grid-template-columns: max-content 1fr; }
+.character-origin-fact dd { text-align: start; }
+.character-origin-fact small { display: block; color: var(--muted); font: 14px/1.7 var(--serif); }
 .character-attribute-value { color: var(--gold); }
 .journey-records summary { color: var(--gold); }
 .journey-records .journey-block { letter-spacing: .025em; }

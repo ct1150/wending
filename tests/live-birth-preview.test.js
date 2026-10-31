@@ -1,6 +1,9 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { renderLiveBirth } from '../src/ui/character.js';
+import { liveCharacterSummary, renderCharacterDetails, renderLiveBirth } from '../src/ui/character.js';
+import { createLiveGame } from '../src/game/cultivation/live/engine.js';
+import * as catalogs from '../src/game/cultivation/live/model.js';
+import { TALENT_STORIES } from '../src/game/cultivation/live/birth-stories.js';
 
 const birth = {
   originId: 'ferry',
@@ -49,4 +52,41 @@ test('submitting freezes the displayed roll and its controls', () => {
   assert.equal(controls.length, 4);
   for (const control of controls) assert.match(control, /disabled/);
   assert.match(html, /id="live-name"[^>]*disabled/);
+});
+
+test('a recorded past and talent notes follow a character from the dice to the drawer', () => {
+  const state = createLiveGame({ name: '吴舟', seed: '旧渡', runId: 'ferry-drawer', originId: 'ferry', engineVersion: 7 });
+  const rolled = state.life.birth;
+  rolled.backgroundId = 'ferry-knots';
+  rolled.talentIds = ['keen-memory', 'sword-bone'];
+  const history = '老艄公教过你一种少见的双扣结。你认得他的手法。';
+  const preview = renderLiveBirth({ birth: rolled, available: true });
+  const drawer = renderCharacterDetails(liveCharacterSummary(state, catalogs));
+  for (const html of [preview, drawer]) assert.ok(html.includes(history), 'show the rolled background');
+  assert.match(preview, /行粮\s*×\s*4/);
+  assert.match(preview, /灵石\s*×\s*2/);
+  for (const id of rolled.talentIds) {
+    const { sense, effect } = TALENT_STORIES[id];
+    const lock = buttons(preview, `data-live-lock="${id}"`)[0];
+    const noteId = lock.match(/aria-describedby="([^"]+)"/)?.[1];
+    assert.ok(noteId);
+    const note = preview.match(new RegExp(`<p id="${noteId}"[^>]*>([^<]+)</p>`))?.[1];
+    assert.ok(note?.includes(sense) && note.includes(effect), 'each lock describes its own talent');
+    assert.ok(drawer.includes(sense) && drawer.includes(effect));
+  }
+  delete rolled.backgroundId;
+  for (const html of [renderLiveBirth({ birth: rolled }), renderCharacterDetails(liveCharacterSummary(state, catalogs))]) {
+    assert.ok(!html.includes(history));
+    for (const id of rolled.talentIds) assert.ok(!html.includes(TALENT_STORIES[id].effect), 'keep legacy effects accurate');
+  }
+});
+
+test('the birth kit includes a purchased former relic alongside the rolled origin supplies', () => {
+  const state = createLiveGame({
+    name: '吴舟', runId: 'ferry-relic', seed: '渡口', originId: 'ferry',
+    engineVersion: 7, experienceVersion: 1, originStories: true, inheritedBenefits: ['former-relic'],
+  });
+  const html = renderLiveBirth({ birth: state.life.birth });
+  assert.match(html, /古修遗物\s*×\s*1/);
+  assert.match(html, /行粮\s*×\s*4/);
 });

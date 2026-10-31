@@ -18,7 +18,7 @@ test('large-type mobile story shows one identity, birth stakes and actual costs;
  const {page,origin}=await liveBrowser(t);let posts=0;const errors=[];page.on('pageerror',e=>errors.push(e.message));
  await page.route('https://experience.test/**',async route=>{
    const url=new URL(route.request().url()),json=data=>route.fulfill({status:200,contentType:'application/json',body:JSON.stringify(data)});
-   if(url.pathname.endsWith('/capabilities'))return json({protocolVersion:1,available:true,status:'ready',storyActions:true,experienceVersion:1,errorCode:null,limits:{maxRequestBytes:32768,maxResponseBytes:65536,maxContextBytes:7000,timeoutMs:30000}});
+   if(url.pathname.endsWith('/capabilities'))return json({protocolVersion:1,available:true,status:'ready',storyActions:true,experienceVersion:1,originStories:true,errorCode:null,limits:{maxRequestBytes:32768,maxResponseBytes:65536,maxContextBytes:7000,timeoutMs:30000}});
    if(url.pathname.endsWith('/session'))return json({protocolVersion:1,status:'ready',sessionRef:'ui-session',expiresAt:Date.now()+86400000});
    if(url.pathname.endsWith('/turn')){posts++;const {context,attempt}=route.request().postDataJSON(),p=context.namespace+':t'+context.identity.turnId+':',person={id:context.entities.find(e=>e.name==='渡者')?.id??p+'e:actor',name:'渡者',kind:'person'};
      const scene=liveStoryFixture({id:p+'s:bridge',title:'渡口',location:'松溪',entities:[person],blocks:[{kind:'narration',text:'渡者说：“今夜水涨，明晨再渡。”'}],choices:[{id:p+'c:train',label:'就地修行',intent:'practice',targetId:'self',stake:'low',approach:'steady'},{id:p+'c:ask',label:'询问渡者渡河的时辰',intent:'interact',targetId:person.id,stake:'low',approach:'ask'}],memoryDeltas:[]},context);

@@ -9,26 +9,32 @@ import { resolveCustomAction, replayCustomAction, customActionCommand, CUSTOM_AC
 import { createStoryDirector, advanceStoryDirector } from './story-director.js';
 import { validateReincarnation } from './reincarnation.js';
 import { advanceRetrievalMemory } from './retrieval-memory.js';
+import { ORIGIN_BACKGROUNDS } from './birth-stories.js';
 const copy = value => JSON.parse(JSON.stringify(value));
 const nextRandom = value => (Math.imul(value,1664525)+1013904223)>>>0;
 const summary = summarizeLife;
 const same = (a,b) => canonicalStringify(a)===canonicalStringify(b);
 function requireActive(state) { validateLiveState(state);if(state.phase!=='active')throw new Error('此生尚未开场或已经死亡。'); }
-const birthFields = ['originId','engineVersion','lockedTalentId','inheritedBenefits','experienceVersion'];
+const birthFields = ['originId','engineVersion','lockedTalentId','inheritedBenefits','experienceVersion','originStories'];
 
-function rollBirth({seed, originId, engineVersion, lockedTalentId, inheritedBenefits, experienceVersion}) {
+function rollBirth({seed, originId, engineVersion, lockedTalentId, inheritedBenefits, experienceVersion, originStories}) {
  if(engineVersion!==undefined&&engineVersion!==7||inheritedBenefits!==undefined&&engineVersion!==7)throw new Error('修行引擎版本无效。');
+ if(originStories!==undefined&&(originStories!==true||engineVersion!==7))throw new Error('出身故事版本无效。');
  if(experienceVersion!==undefined&&(experienceVersion!==1||engineVersion!==7))throw new Error('新体验版本无效。');
  if(lockedTalentId!=null&&(engineVersion!==7||typeof lockedTalentId!=='string'||!Object.hasOwn(TALENTS,lockedTalentId)))throw new Error('锁定命格无效。');
  if(!['string','number'].includes(typeof seed)||typeof seed==='number'&&!Number.isFinite(seed)||String(seed).length>200)throw new Error('种子无效。');
+ const seededIndex=(label,limit)=>parseInt(sha256('birth-'+label+':'+seed).slice(0,8),16)%limit;
  if(originId==null){
    // Origin has its own draw so previous seeded lives retain their exact RNG stream.
    const origins=Object.keys(ORIGINS);
-   originId=origins[parseInt(sha256('birth-origin:'+seed).slice(0,8),16)%origins.length];
+   originId=origins[seededIndex('origin',origins.length)];
  }
  if(typeof originId!=='string'||!Object.hasOwn(ORIGINS,originId))throw new Error('出身无效。');
  let rng=parseInt(sha256(String(seed)).slice(0,8),16);
- const draw=limit=>{rng=nextRandom(rng);return rng%limit;};
+ const draw=(limit,label)=>{
+   rng=nextRandom(rng);
+   return originStories&&label ? seededIndex(label,limit) : rng%limit;
+ };
  const attributes={constitution:1,insight:1,fortune:1},names=Object.keys(attributes);
  for(let n=0;n<9;n++){
    const eligible=names.filter(id=>attributes[id]<6);
@@ -39,6 +45,10 @@ function rollBirth({seed, originId, engineVersion, lockedTalentId, inheritedBene
  const talentIds=[first,talents[draw(talents.length)]];
  if(lockedTalentId!=null&&!talentIds.includes(lockedTalentId))talentIds[0]=lockedTalentId;
  const birth={originId,talentIds,attributes};
+ if(originStories){
+   const backgrounds=Object.keys(ORIGIN_BACKGROUNDS[originId]);
+   birth.backgroundId=backgrounds[seededIndex('background:'+originId,backgrounds.length)];
+ }
  if(engineVersion===7)birth.cultivationProfile=createCultivationBirthProfile(draw,inheritedBenefits??[],experienceVersion);
  return {birth,rng};
 }
@@ -53,7 +63,8 @@ export function createLiveGame(options={}) {
  if(options.reincarnation!==undefined){if(options.engineVersion!==7)throw new Error('轮回须进入新的修行人生。');validateReincarnation(options.reincarnation);}
  const name=(options.name??'云归').trim();textField(name,24);if(/[\r\n]/.test(name))throw new Error('姓名不能换行。');
  const runId=options.runId??globalThis.crypto.randomUUID();idField(runId);
- const {birth,rng}=rollBirth({...options,seed:options.seed??runId,originId:options.originId??'village'});
+ const originId=options.originStories ? options.originId : options.originId??'village';
+ const {birth,rng}=rollBirth({...options,seed:options.seed??runId,originId});
  const life=initialLifeForBirth(name,birth);
  const birthReceipt={kind:'opening',choiceId:null,action:null,elapsedDays:0,itemChanges:{},relationChanges:{},random:{before:rng,after:rng,roll:null},before:summary(life),after:summary(life),death:null,birth:copy(birth)};
  if(isV7Life(life))birthReceipt.cultivationResult={version:7,check:null,lifespanChange:{years:0,cause:null}};

@@ -84,8 +84,8 @@ function descriptions(profile){
 }
 export function createCultivationBirthProfile(draw,inheritedBenefits=[],experienceVersion){
   validateInheritedBenefits(inheritedBenefits);
-  const select=table=>Object.keys(table)[draw(Object.keys(table).length)];
-  const profile={version:7,rootId:select(ROOTS),physiqueId:select(PHYSIQUES),relicId:select(RELICS),techniqueId:select(TECHNIQUES),inheritedBenefits:[...inheritedBenefits]};
+  const select=(table,label)=>Object.keys(table)[draw(Object.keys(table).length,label)];
+  const profile={version:7,rootId:select(ROOTS),physiqueId:select(PHYSIQUES,'physique'),relicId:select(RELICS,'relic'),techniqueId:select(TECHNIQUES),inheritedBenefits:[...inheritedBenefits]};
   return {...profile,...descriptions(profile),...(experienceVersion===undefined?{}:{experienceVersion})};
 }
 export function validateV7BirthProfile(profile){
@@ -165,6 +165,7 @@ function modifiers(life){
 export function v7ActionRule(state,p){
   requireValue(validV7Target(state,p),'行动目标不属于可执行规则。');
   const life=state.life,realm=realmFor(life),profile=life.cultivationProfile,m=modifiers(life),factor=p.stake==='high'?2:p.stake==='low'?0:1;
+  const hasStoryTalent=id=>Boolean(life.birth.backgroundId)&&life.birth.talentIds.includes(id);
   const rule={days:30,items:{},gain:{},cultivation:0,injury:0,relationship:0,risk:0,realm:null,spiritCost:0,spiritGain:0,lifeLoss:0,lifeGain:0,exposure:0,checkKind:null,chance:100,failureInjury:0,art:null,worldTier:null,arrivalExposure:0,warnings:[]};
   const check=(kind,chance,failureInjury=1)=>{rule.checkKind=kind;rule.chance=clamp(Math.round(chance),5,99);rule.failureInjury=failureInjury;};
   switch(p.intent){
@@ -186,7 +187,8 @@ export function v7ActionRule(state,p){
         if(life.cultivation<next.threshold)rule.reason='修为积累不足，须先修行。';
         if(life.injury>1)rule.reason='伤势过重，须先疗伤。';
         const surplus=Math.min(8,Math.floor((life.cultivation-next.threshold)/2));
-        check('breakthrough',70+m.insight*2+(m.root.breakthrough??0)+(m.body.breakthrough??0)+(m.technique.breakthrough??0)+(hasBenefit(life.birth,'past-memory')?5:0)+surplus-life.injury*8-(next.rank>=7?10:0),2);
+        const insightBonus=hasStoryTalent('flash-wisdom')?6:0;
+        check('breakthrough',70+m.insight*2+insightBonus+(m.root.breakthrough??0)+(m.body.breakthrough??0)+(m.technique.breakthrough??0)+(hasBenefit(life.birth,'past-memory')?5:0)+surplus-life.injury*8-(next.rank>=7?10:0),2);
         rule.warnings.push('突破需要实际材料与闭关年月；失败会损失材料、修为并受伤。');
         if(next.rank>=7)rule.warnings.push('高境冲关可能引来致命反噬。');
         if(m.relic==='quiet-lamp')rule.exposure=6;
@@ -221,7 +223,12 @@ export function v7ActionRule(state,p){
       if(needed&&needed.rank>1)rule.items.supplies=1;
       rule.gain[p.targetId]=p.targetId==='stones'?(bold?6:3)+realm.rank:(bold?2:1);
       rule.spiritCost=special?5:0;
-      check('exploration',(bold?65:90)+m.fortune*2+(m.root.exploration??0)+(m.relic==='cracked-mirror'?10:0)+(hasBenefit(life.birth,'causal-compass')?12:0)+Math.floor(m.protection/2)-factor*3-m.exposed+fortuneCycleModifier(state),bold?2:1);
+      const breathBonus=!bold&&hasStoryTalent('sensitive-breath')?8:0;
+      check('exploration',(bold?65:90)+breathBonus+m.fortune*2+(m.root.exploration??0)+(m.relic==='cracked-mirror'?10:0)+(hasBenefit(life.birth,'causal-compass')?12:0)+Math.floor(m.protection/2)-factor*3-m.exposed+fortuneCycleModifier(state),bold?2:1);
+      if(bold&&hasStoryTalent('fortune-debt')){
+        rule.gain[p.targetId]++;
+        rule.failureInjury++;
+      }
       if(m.relic==='cracked-mirror'&&bold){rule.spiritCost+=3;rule.exposure+=8;}
       if(m.relic==='rusted-needle'&&special)rule.exposure+=5;
       if(p.targetId==='relic')rule.exposure+=10;
@@ -240,7 +247,8 @@ export function v7ActionRule(state,p){
     case 'fight':{
       rule.days=7;const guard=p.approach==='guard',desperate=p.approach==='desperate';rule.spiritCost=guard?10:desperate?25:15;
       rule.injury=Math.max(0,(guard?1:desperate?3:2)+factor-((life.items.artifact??0)>0?1:0)+(guard?0:m.root.assaultInjury??0));
-      rule.relationship=-5;rule.gain.stones=guard?2:5;check('combat',75+m.protection-(desperate?15:0)-factor*5-m.exposed,2);
+      const assaultBonus=p.approach==='assault'&&hasStoryTalent('sword-bone')?8:0;
+      rule.relationship=-5;rule.gain.stones=guard?2:5;check('combat',75+m.protection+assaultBonus-(desperate?15:0)-factor*5-m.exposed,2);
       if(guard&&(life.items.talisman??0)>0){rule.items.talisman=1;rule.injury=Math.max(0,rule.injury-1);}
       break;
     }
@@ -289,6 +297,10 @@ export function v7ActionRule(state,p){
       if(Object.hasOwn(GROWTH_TERMS,p.approach)){
         const e=profile.experience,how=p.approach;
         Object.assign(rule,GROWTH_TERMS[how],{items:{...GROWTH_TERMS[how].items}});
+        if(how==='restore'&&hasStoryTalent('keen-memory')){
+          rule.days=Math.ceil(rule.days/2);
+          rule.talentId='keen-memory';
+        }
         if(how==='repay'){
           if(e.commitment?.status!=='owed'||e.commitment.entityId!==p.targetId)rule.reason='须向当初校法之人归还约定的一份行粮。';
         }else if(!TECHNIQUES[e.activeTechniqueId].defective||e.repaired)rule.reason='当前功法无需修补。';
@@ -384,5 +396,6 @@ export function resolveV7Action(life,action,rule,roll,turnId){
   }
   if(isExperienceLife(life))profile.experience=experienceAfterAction(profile.experience,next.realm!==life.realm,{action,turnId,death});
   const result={version:7,check,lifespanChange:{years:next.lifeLimit-life.lifeLimit,cause}};
+  if(rule.talentId)result.talentId=rule.talentId;
   return {nextLife:next,elapsedDays,death,result};
 }

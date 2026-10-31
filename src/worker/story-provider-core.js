@@ -4,13 +4,14 @@ import { CANDIDATE_MODEL_ID, GLM_MODEL_ID, STORY_LIMITS } from './story-config.j
 import { idField, exactKeys, validateGeneratedScene as validateStructure } from '../game/cultivation/live/schema.js';
 import { assertPlainData, canonicalStringify, sha256 } from '../game/cultivation/live/identity.js';
 import { validateStoryContext, validateGeneratedScene, STORY_ERROR_CODES } from '../game/cultivation/live/memory.js';
-import { REALMS, DAYS_PER_YEAR, ITEMS } from '../game/cultivation/live/model.js';
+import { REALMS, DAYS_PER_YEAR, ITEMS, ORIGINS, TALENTS } from '../game/cultivation/live/model.js';
+import { ORIGIN_BACKGROUNDS, TALENT_STORIES } from '../game/cultivation/live/birth-stories.js';
 import { isV7Life, realmFor, nextRealmFor, ROOTS, PHYSIQUES, RELICS, TECHNIQUES, WORLD_TIERS } from '../game/cultivation/live/cultivation-rules.js';
 import { buildGenerationSchema } from './story-generation-schema.js';
 import { buildGlmWire,decodeGlmScene } from './story-glm-wire.js';
 import { buildNamedSceneSchema,createNamedTargetLookup } from './story-named-targets.js';
 import {adaptV7ModelOutput,adaptV7EngineMenuOutput} from './story-model-output.js';
-import {buildStoryChoicePlan} from './story-choice-plan.js';
+import {buildStoryChoicePlan,offersRepair} from './story-choice-plan.js';
 import {readCompleteV7Wire,readCompleteV7Body} from './story-readable-wire.js';
 import { packStoryReferences } from './story-knowledge.js';
 import { validateRetrievalReceipt } from '../game/cultivation/live/retrieval-memory.js';
@@ -94,6 +95,13 @@ function settledLocation(context) {
   if(context.phase==='choice'&&context.director)return context.director.world.location;
   return context.memory.recent.find(record=>record.kind==='turn'&&record.turnId===context.identity.turnId-1)?.text.match(/^地点：([^\n]+)\n/u)?.[1]?.split('；刚才选择：')[0];
 }
+
+export function usesEngineMenu(profile,context) {
+  return profile.engineMenu===true && profile.storyActions===true && context?.director?.version===7 && isV7Life(context.life) && !context.life.birth?.backgroundId;
+}
+
+const BIRTH_STORY_GUIDANCE='birthMemory是主角开局前的亲历。旧地不是当前地点，旧相识不自动在场，旧事不产生现今的债务、任务或物品。开局让一处能看见或听见的细节勾起这段记忆，使玩家有一个旁人未必知道的查证办法。天赋写到能察觉的区别、可尝试的做法或要承受的代价；效果以规则结算，不保证成功。以后先承接本次已选行动和真实后果，只有眼前线索、旧人或既往选择能接上时才回扣身世或天赋。不逐回罗列，不因拒绝、离开而反复推回原请求。';
+const BIRTH_MENU_GUIDANCE='先完成一至三段自然的blocks，再根据正文创作两至三个不同的choices。每个purpose写清玩家可以对哪个眼前人物或物件做什么、希望弄清什么。让一项做法用得上具体线索或天赋，另有不同打算，不用例行观察、休息或告辞凑数，不代选、不预付奖励。按schema选可执行的action、target、stake；已知对象用输入别名，新对象写{kind,name}。询问对方须能回答，旅行写明真实目的地，援助只交一份行粮。功法立约须在场本人说清三日校法、以后还一份行粮。若无新事实，省略可选的记忆与标注。';
 // The author receives the state after settlement and a plain-language preview
 // of possible decisions. The plan itself (IDs, actions, targets and costs)
 // belongs to the engine and is never requested from a narrative completion.
@@ -133,7 +141,7 @@ function buildProviderRequest(profile,context,knowledgeBundle) {
     const wire=buildGlmWire(context,system,{storyActions:profile.storyActions===true});
     input.messages[0].content=wire.instructions;input.messages[1].content=JSON.stringify(wire.context);
     if(profile.storyActions===true){
-      const engineMenu=directed&&profile.engineMenu===true;
+      const engineMenu=usesEngineMenu(profile,context);
       if(!engineMenu)input.messages[0].content+='\n合法动作与目标以schema中的完整分支配对为准，不交换目标类型；只声明实际引用的实体。';
       // Avoid native character caps and large action/target unions. The model
       // writes prose and semantic pairs; final decoding validates all of them.
@@ -155,6 +163,12 @@ function buildProviderRequest(profile,context,knowledgeBundle) {
         const [instructions,turnFacts]=narrativePrompt(system,context,wire,fixedLocation,buildStoryChoicePlan(context),!!schema.properties.memoryDeltas,opening,!!schema.properties.story?.properties?.opponent);
         input.messages[0].content=instructions;
         input.messages.push({role:'user',content:turnFacts});
+      }else if(context.life.birth.backgroundId){
+        input.messages[0].content=system+'\n'+BIRTH_MENU_GUIDANCE;
+        const selectedPurpose=context.receipt.action?.label??null;
+        const closed=context.previousScene?.id===context.namespace+':t'+(context.identity.turnId-1)+':s:closed';
+        const guidance=departure||closed?'先前互动已结束，不继续原请求。':respondent?'让被问者亲口回应所问。':observation?'指出针对本次观察对象的新发现。':failedCrossing?'跨界失败，仍在原地。':action?.intent==='travel'?'写抵达结算地点后的眼前情景，旧地人物不默认同行。':null;
+        input.messages.push({role:'user',content:JSON.stringify({selectedPurpose,settledLocation:fixedLocation??null,opening,guidance,craft:growthPrompt(context)})});
       }else{
         input.messages[0].content=input.messages[0].content
           .replace('blocks、choices、title、location、otherPeople、places、factions、memoryDeltas这8项','blocks、choices、title、location、memoryDeltas这5项')
@@ -172,6 +186,16 @@ function buildProviderRequest(profile,context,knowledgeBundle) {
       }
     }else input.response_format={type:'json_schema',json_schema:{name:'cultivation_scene',strict:true,schema:wire.schema}};
     input.stream=true;input.stream_options={include_usage:true};
+  }
+  if(context.life.birth.backgroundId){
+    const {originId,backgroundId,talentIds}=context.life.birth;
+    const prompt=JSON.parse(input.messages[1].content);
+    prompt.birthMemory={
+      origin:ORIGINS[originId],beforeOpening:ORIGIN_BACKGROUNDS[originId][backgroundId],
+      talents:talentIds.map(id=>({name:TALENTS[id],...TALENT_STORIES[id]})),
+    };
+    input.messages[1].content=JSON.stringify(prompt);
+    input.messages[0].content+='\n'+BIRTH_STORY_GUIDANCE;
   }
   if(context.previousLife){
     const prompt=JSON.parse(input.messages[1].content);
@@ -260,11 +284,10 @@ export async function generateProviderScene(ai,profile,context,options={},assert
     if(usage&&['prompt_tokens','completion_tokens','total_tokens'].every(k=>Number.isSafeInteger(usage[k])&&usage[k]>=0)&&usage.total_tokens===usage.prompt_tokens+usage.completion_tokens){result.usage={promptTokens:usage.prompt_tokens,completionTokens:usage.completion_tokens,totalTokens:usage.total_tokens};}
     result.stopReason=['stop','length','tool_calls','content_filter'].includes(choice?.finish_reason)?choice.finish_reason:null;
     const namedV7=directed&&profile.modelId===GLM_MODEL_ID&&profile.storyActions===true;
-    const engineMenu=namedV7&&profile.engineMenu===true;
-    // When decisions are engine-owned, a token ceiling can end optional prose
-    // after a complete block. It is still a length finish, with the same model,
-    // accounting, thinking and content checks as a normal completed response.
-    const capped=engineMenu&&result.stopReason==='length';
+    const engineMenu=namedV7&&usesEngineMenu(profile,context);
+    // A length finish may still contain a playable core. Marked births need
+    // their author's own complete choices as well as the original prose.
+    const capped=(engineMenu||namedV7&&context.life.birth.backgroundId)&&result.stopReason==='length';
     if(!capped&&result.stopReason==='length')fail('OUTPUT_TRUNCATED');
     if(!capped&&result.stopReason!=='stop')fail('STOP_REASON_INVALID');
     if(capped&&raw.model!==profile.modelId)fail('MODEL_RESPONSE_MISMATCH');
@@ -282,6 +305,7 @@ export async function generateProviderScene(ai,profile,context,options={},assert
     try { scene=JSON.parse(choice.message.content); }
     catch { scene=engineMenu?readCompleteV7Body(choice.message.content,context):namedV7?readCompleteV7Wire(choice.message.content):null;if(!scene)fail(capped?'OUTPUT_TRUNCATED':'PROVIDER_RESPONSE_INVALID'); }
     if(capped&&(!Array.isArray(scene?.blocks)||!scene.blocks.some(b=>['narration','dialogue'].includes(b?.kind)&&typeof b.text==='string'&&b.text.trim())))fail('OUTPUT_TRUNCATED');
+    if(capped&&!engineMenu&&(!Array.isArray(scene.choices)||scene.choices.length<2))fail('OUTPUT_TRUNCATED');
     if(namedV7&&!engineMenu)try { scene=adaptV7ModelOutput(scene,context); } catch { fail('GENERATED_SCENE_INVALID'); }
     const wire=scene;
     function accept(scene,indices){
@@ -311,6 +335,8 @@ export async function generateProviderScene(ai,profile,context,options={},assert
         // Source grammar supplies rule-compatible actions. Keep semantic checks
         // for real costs, but do not turn natural names or prose into v7 gates.
         for(const [index,proposal]of scene.choices.entries()){
+          if(context.life.birth.backgroundId&&proposal.intent==='craft'&&proposal.approach==='pledge'&&
+            !scene.blocks.some(block=>block.kind==='dialogue'&&block.speaker===proposal.targetId&&offersRepair(block.text)))fail('CHOICE_NOT_COMPILABLE');
           if(!directed&&['fight','evade'].includes(proposal.intent)){const target=scene.entities.find(entity=>entity.id===proposal.targetId);if(!target||!purposes[index].includes(target.name))fail('CHOICE_NOT_COMPILABLE');}
           if(proposal.intent==='interact'&&proposal.approach==='help'&&(!directed&&!/行粮|干粮|口粮|食物|吃的|充饥|饱腹/u.test(purposes[index])||/包扎|止血|处理伤口|治疗|治愈|医治|急救|疗伤|复活/u.test(purposes[index])))fail('CHOICE_NOT_COMPILABLE');
           if(proposal.intent==='interact'&&proposal.approach==='observe'&&proposal.targetId!=='self'){

@@ -6,6 +6,7 @@ import { liveBrowser } from './helpers/live-browser.js';
 import { liveStoryFixture } from './helpers/live-story-fixture.js';
 import { ORIGINS, TALENTS } from '../src/game/cultivation/live/model.js';
 import { ROOTS } from '../src/game/cultivation/live/cultivation-rules.js';
+import { ORIGIN_BACKGROUNDS, TALENT_STORIES } from '../src/game/cultivation/live/birth-stories.js';
 import { rollLiveBirth } from '../src/game/cultivation/live/engine.js';
 
 function story(context) {
@@ -18,7 +19,7 @@ async function fixture(t) {
   await page.addInitScript(()=>{window.showSaveFilePicker=undefined;});
   await context.route('https://wending-title.test/**',async route=>{
     const url=new URL(route.request().url()),json=value=>route.fulfill({status:200,contentType:'application/json',body:JSON.stringify(value)});
-    if(url.pathname==='/api/story/capabilities')return json({protocolVersion:1,available:true,status:'ready',errorCode:null,limits:{maxRequestBytes:32768,maxResponseBytes:65536,maxContextBytes:7000,timeoutMs:30000}});
+    if(url.pathname==='/api/story/capabilities')return json({protocolVersion:1,available:true,status:'ready',errorCode:null,storyActions:true,experienceVersion:1,originStories:true,limits:{maxRequestBytes:32768,maxResponseBytes:65536,maxContextBytes:7000,timeoutMs:30000}});
     if(url.pathname==='/api/story/session')return json({protocolVersion:1,status:'ready',sessionRef:'title-session',expiresAt:Date.now()+86400000});
     if(url.pathname==='/api/story/turn') {
       posts++;const {context:c,attempt}=route.request().postDataJSON();
@@ -62,6 +63,14 @@ test('title is read-only, menus fit narrow screens, new defaults live, and draft
   assert.equal(await f.read(),null);assert.equal(f.posts,0);
 });
 
+function assertBirthStory(text, birth) {
+  assert.ok(text.includes(ORIGIN_BACKGROUNDS[birth.originId][birth.backgroundId]));
+  for (const id of birth.talentIds) {
+    assert.ok(text.includes(TALENT_STORIES[id].sense));
+    assert.ok(text.includes(TALENT_STORIES[id].effect));
+  }
+}
+
 function assertDisplayedBirth(text, birth) {
   const { name, advantage, defect } = ROOTS[birth.cultivationProfile.rootId];
   for (const value of [ORIGINS[birth.originId], ...birth.talentIds.map(id => TALENTS[id]), name, advantage, defect]) {
@@ -70,6 +79,7 @@ function assertDisplayedBirth(text, birth) {
   for (const [label, value] of [['根骨', birth.attributes.constitution], ['悟性', birth.attributes.insight]]) {
     assert.match(text, new RegExp(`${label}\\s*${value}\\b`));
   }
+  if (birth.backgroundId) assertBirthStory(text, birth);
 }
 
 test('one selected talent survives a reroll and the last displayed hand becomes the opening life', async t => {
@@ -94,14 +104,15 @@ test('one selected talent survives a reroll and the last displayed hand becomes 
     if (new URL(request.url()).pathname.startsWith('/api/story/')) storyRequests.push(request.url());
   });
   assert.equal(await locks.count(), 2);
-  assertDisplayedBirth(await form.innerText(), rollLiveBirth({seed: '1'}).birth);
+  const currentRules = {experienceVersion: 1, originStories: true};
+  assertDisplayedBirth(await form.innerText(), rollLiveBirth({seed: '1', ...currentRules}).birth);
   const held = await locks.nth(1).getAttribute('data-live-lock');
   await locks.first().click();
   await locks.nth(1).click();
   assert.equal(await pressed.count(), 1);
   assert.equal(await pressed.getAttribute('data-live-lock'), held);
   await form.locator('[data-live-reroll]').click();
-  const expected = rollLiveBirth({seed: '2', lockedTalentId: held});
+  const expected = rollLiveBirth({seed: '2', lockedTalentId: held, ...currentRules});
   assertDisplayedBirth(await form.innerText(), expected.birth);
   assert.equal(await pressed.getAttribute('data-live-lock'), held);
   const rolled = await form.innerText();
@@ -124,6 +135,8 @@ test('one selected talent survives a reroll and the last displayed hand becomes 
   assert.deepEqual(state.birthReceipt.birth, expected.birth);
   assert.equal(state.rng, expected.rng);
   assert.equal(f.posts, 1);
+  await page.locator('[data-character]').click();
+  assertBirthStory(await page.locator('#dialog[open]').innerText(), state.life.birth);
 });
 
 test('an off-hand talent in a restored draft cannot become a hidden lock on the next reroll', async t => {
@@ -133,17 +146,19 @@ test('an off-hand talent in a restored draft cannot become a hidden lock on the 
   await page.evaluate(() => {
     const key = 'wending-navigation-v1', navigation = JSON.parse(sessionStorage.getItem(key));
     Object.assign(navigation.draft, {name: '林照', seed: '2', rolledTalentId: 'sword-bone', lockedTalentId: 'keen-memory'});
+    delete navigation.draft.originStories;
     sessionStorage.setItem(key, JSON.stringify(navigation));
   });
   await page.reload();
   const form = page.locator('#live-birth-form');
   assert.equal(await form.locator('#live-name').inputValue(), '林照');
   assertDisplayedBirth(await form.innerText(), rollLiveBirth({seed: '2', lockedTalentId: 'sword-bone'}).birth);
+  assert.equal(await form.locator('#live-origin-history').count(), 0);
   assert.equal(await form.locator('[data-live-lock="keen-memory"]').count(), 0);
   await form.locator('[data-live-reroll]').click();
   assert.equal(await form.locator('[data-live-lock][aria-pressed="true"]').count(), 0);
   const seed = await page.evaluate(() => JSON.parse(sessionStorage.getItem('wending-navigation-v1')).draft.seed);
-  assertDisplayedBirth(await form.innerText(), rollLiveBirth({seed}).birth);
+  assertDisplayedBirth(await form.innerText(), rollLiveBirth({seed, originStories: true, experienceVersion: 1}).birth);
   assert.equal(await f.read(), null);
   assert.equal(f.posts, 0);
 });
