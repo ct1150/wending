@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import {readCompleteV7Body} from '../src/worker/story-readable-wire.js';
 import {adaptV7EngineMenuOutput} from '../src/worker/story-model-output.js';
 import {generateProviderScene} from '../src/worker/story-provider-core.js';
+import {decodeGlmScene} from '../src/worker/story-glm-wire.js';
 import {GLM_MODEL_ID,GLM_PROFILE} from '../src/worker/story-config.js';
 import {createLiveGame,prepareOpening,commitTurn,prepareChoice} from '../src/game/cultivation/live/engine.js';
 import {buildStoryContext} from '../src/game/cultivation/live/memory.js';
@@ -23,10 +24,10 @@ test('a malformed later block cannot erase an already complete, exact authored r
   }
 });
 
-test('a prefix comes only from the first root and a complete direct row; complete conflicting speakers are not hidden',()=>{
+test('a prefix comes only from the first root and a complete direct row; complete conflicting speakers are isolated before commit',()=>{
   for(const source of ['{"nested":{"blocks":['+s+']},"damaged":]]}', '{"choices":[{"blocks":['+s+']}],"broken":]]}',root+'{"kind":"narration","text":"半句',root+'{"inside":'+s+'},]]}',JSON.stringify({blocks:[block]})+JSON.stringify({blocks:[dialogue]}),root+s+'],"blocks":['+d+',]]}'])assert.equal(read(source),null,source.slice(-50));
   const actual={kind:'dialogue',speaker:'k99',text:'我真的作为这一段的说话人出现。'},saved=read(root+s+','+JSON.stringify(actual)+',]]]}');
-  assert.deepEqual(saved.blocks,[block,actual]);assert.throws(()=>adaptV7EngineMenuOutput(saved,ctx));
+  assert.deepEqual(saved.blocks,[block,actual]);assert.deepEqual(adaptV7EngineMenuOutput(saved,ctx).blocks,[block]);
 });
 
 test('known complete optional records survive a later bad field; an ambiguous partial obligation is not synthesized',()=>{
@@ -34,7 +35,10 @@ test('known complete optional records survive a later bad field; an ambiguous pa
   for(const source of ['{"memoryDeltas":'+mem+',"blocks":['+s+',]]]}',root+s+'],"memoryDeltas":'+mem+',"comment":{"bad":]]]']){
     const saved=read(source);assert.deepEqual(saved?.blocks,[block]);assert.deepEqual(saved.memoryDeltas,[death,close]);
   }
-  assert.equal(read(root+s+'],"memoryDeltas":[{"referenceId":"m1","status":"resolved"'),null);
+  for(const partial of ['{"referenceId":"m1","status":"resolved"','{"kind":"death","target":','{"kind":"promise","anchor":0,']){
+    assert.deepEqual(read(root+s+'],"memoryDeltas":['+JSON.stringify(close)+','+partial),{blocks:[block],memoryDeltas:[close]});
+    assert.equal(read('{"memoryDeltas":['+partial),null,'no invented body from metadata');
+  }
 });
 
 test('one accepted stop preserves the reported paragraph and produces actionable choices from the frozen turn',async()=>{
@@ -44,15 +48,14 @@ test('one accepted stop preserves the reported paragraph and produces actionable
   const next=commitTurn(state,pending,result.scene);assert.ok(next.currentScene.choices.length>=2);for(const ch of next.currentScene.choices)assert.deepEqual(prepareChoice(next,{requestId:'next',choiceId:ch.id}).receipt.action,ch);
 });
 
-test('a bounded but unparseable block cannot swallow the real sibling memory array',async()=>{
+test('a bounded but unparseable block cannot swallow the real sibling memory array',()=>{
   const death={kind:'death',target:speaker,anchor:0},closure={referenceId:'m1',status:'resolved'},records=[death,closure];
   const damaged=JSON.stringify({kind:'narration',text:'正常',decoy:{memoryDeltas:[{referenceId:'wrong-nested',status:'broken'}]}}).replace('"正常"','"这是"坏"引号"');
   for(const badRow of [damaged,'{"kind":"narration","text":"未转义\u0001字符"}']){
     const content=root+s+','+badRow+','+d+'],"memoryDeltas":'+JSON.stringify(records)+'}';
     const recovered=read(content);assert.deepEqual(recovered?.blocks,[block],'only the verified prefix survives');assert.deepEqual(recovered?.memoryDeltas,records);
-    assert.deepEqual(adaptV7EngineMenuOutput(recovered,ctx).memoryDeltas,records);
-    const result=await generateProviderScene({run:async()=>({model:GLM_MODEL_ID,choices:[{finish_reason:'stop',message:{content}}],usage:{prompt_tokens:200,completion_tokens:200,total_tokens:400}})},{...GLM_PROFILE,storyActions:true,engineMenu:true},ctx);
-    assert.equal(result.status,'rejected','the nonexistent obligation still reaches the authoritative validator');assert.equal(result.scene,undefined);
+    const proposed=adaptV7EngineMenuOutput(recovered,ctx);assert.deepEqual(proposed.memoryDeltas,records);
+    assert.throws(()=>decodeGlmScene(proposed,ctx,{storyActions:true}),'the nonexistent closure is still rejected by the authority boundary');
   }
   assert.deepEqual(read(root+s+','+damaged+'],"irrelevant":{"memoryDeltas":'+JSON.stringify(records)+'}}'),{blocks:[block]},'never seek records inside unrelated objects');
   assert.deepEqual(read(root+s+',{ "kind":"narration", ]]} "memoryDeltas":'+JSON.stringify(records)),{blocks:[block]},'an ambiguous boundary supplies no sibling record');

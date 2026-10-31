@@ -36,41 +36,48 @@ function optionalText(value,max){
   if(typeof value!=='string'||formalId.test(value))return undefined;
   try{textField(value,max);assertSafeStoryStrings(value);return value;}catch{return undefined;}
 }
-function authoredBlocks(rows,context){
-  if(!Array.isArray(rows)||!rows.length||rows.length>4)throw Error('Invalid authored blocks');
-  const identify=createNamedTargetLookup(context),blocks=[];
-  for(let i=0;i<rows.length;i++){
-    const row=own(rows,i,true),kind=own(row,'kind',true),text=own(row,'text',true);
-    textField(text,2000);assertSafeStoryStrings(text);
-    if(kind==='narration'){blocks.push({kind,text});continue;}
-    if(kind!=='dialogue')throw Error('Invalid block kind');
-    let speaker=identityTarget(own(row,'speaker',true));
-    if(speaker!=='self'){
-      if(typeof speaker==='string'&&!knownAlias.test(speaker)){
-        textField(speaker,60);
-        if(/[:/\\]|^(?:p|l|f|npc|person|place|faction|m)\d/u.test(speaker))forbidden();
-        const matches=context.entities.filter(e=>e.name===speaker);if(matches.length>1)forbidden();
-        speaker=matches.length?'k'+(context.entities.indexOf(matches[0])+1):{kind:'person',name:speaker};
-      }
-      const actor=identify(speaker);
-      if(actor.kind!=='person'||actor.status!==null||actor.known?.status==='dead'||[context.life.name,'你','主角','玩家'].includes(actor.name))forbidden();
-      assertSafeStoryStrings(speaker);
+function authoredBlock(row,context,identify){
+  const kind=own(row,'kind',true),text=own(row,'text',true);
+  textField(text,2000);assertSafeStoryStrings(text);
+  if(kind==='narration')return {kind,text};
+  if(kind!=='dialogue')throw Error('Invalid block kind');
+  let speaker=identityTarget(own(row,'speaker',true));
+  if(speaker!=='self'){
+    if(typeof speaker==='string'&&!knownAlias.test(speaker)){
+      textField(speaker,60);
+      if(/[:/\\]|^(?:p|l|f|npc|person|place|faction|m)\d/u.test(speaker))forbidden();
+      const matches=context.entities.filter(e=>e.name===speaker);if(matches.length>1)forbidden();
+      speaker=matches.length?'k'+(context.entities.indexOf(matches[0])+1):{kind:'person',name:speaker};
     }
-    blocks.push({kind,text,speaker});
+    const actor=identify(speaker);
+    if(actor.kind!=='person'||actor.status!==null||actor.known?.status==='dead'||[context.life.name,'你','主角','玩家','self'].includes(actor.name)||formalId.test(actor.name))forbidden();
+    assertSafeStoryStrings(speaker);
   }
-  return blocks;
+  return {kind,text,speaker};
 }
-function editorialStory(raw,blocks){
+function authoredBlocks(rows,context){
+  if(!Array.isArray(rows))throw Error('Missing authored blocks');
+  const identify=createNamedTargetLookup(context),blocks=[],positions=new Map();
+  // The response size already bounds native JSON. Also bound direct JS inputs
+  // and the accepted scene to the existing archive limit of twelve paragraphs.
+  for(let i=0;i<Math.min(65536,rows.length)&&blocks.length<12;i++){
+    let block;try{block=authoredBlock(own(rows,i,true),context,identify);}catch{continue;}
+    positions.set(i,blocks.length);blocks.push(block);
+  }
+  if(!blocks.length)throw Error('No verified authored blocks');
+  return {blocks,positions,sourceCount:rows.length};
+}
+function editorialStory(raw,{blocks,positions}){
   const result={};
   const p=own(raw,'pattern'),b=own(raw,'beat'),anchors=own(raw,'anchors');
   if(STORY_PATTERNS.includes(p)&&STORY_BEATS.includes(b)&&Array.isArray(anchors)){
     result.pattern=p;result.beat=b;result.anchors=[];
-    for(let i=0;i<Math.min(anchors.length,2);i++){const n=own(anchors,i);if(Number.isInteger(n)&&n>=0&&n<blocks.length)result.anchors.push(n);}
+    for(let i=0;i<Math.min(anchors.length,2);i++){const n=positions.get(own(anchors,i));if(n!==undefined)result.anchors.push(n);}
   }
   const notes=own(raw,'npcs');
   if(Array.isArray(notes))for(let i=0;i<Math.min(2,notes.length);i++){
-    const input=own(notes,i),anchor=own(input,'anchor');
-    if(!Number.isInteger(anchor)||anchor<0||anchor>=blocks.length)continue;
+    const input=own(notes,i),anchor=positions.get(own(input,'anchor'));
+    if(anchor===undefined)continue;
     const traits={};
     for(const key of STORY_NPC_TRAITS){const value=optionalText(own(input,key),28);if(value&&blocks[anchor].text.includes(value))traits[key]=value;}
     if(!Object.keys(traits).length)continue;
@@ -79,7 +86,7 @@ function editorialStory(raw,blocks){
   }
   return result;
 }
-function authoredMemory(raw,blocks){
+function authoredMemory(raw,{positions,sourceCount}){
   if(!Array.isArray(raw))return [];
   // The ordinary response byte limit already bounds parsed JSON; do not walk
   // a fabricated enormous sparse JS array supplied directly to this boundary.
@@ -89,14 +96,18 @@ function authoredMemory(raw,blocks){
     const input=own(raw,i);if(!object(input))continue;
     const kind=own(input,'kind'),referenceId=own(input,'referenceId',true),status=own(input,'status'),anchor=own(input,'anchor');
     const mandatory=referenceId!==undefined||kind==='death'||kind==='promise'||['resolved','broken'].includes(status);
-    if(!mandatory&&(!['fact','relationship','clue'].includes(kind)||!Number.isInteger(anchor)||anchor<0||anchor>=blocks.length))continue;
+    const mapped=positions.get(anchor);
+    // An indexed event cannot use a different paragraph as evidence. Closures
+    // instead refer to an existing obligation and keep their original fields.
+    if(referenceId===undefined&&mapped===undefined&&Number.isInteger(anchor)&&anchor>=0&&anchor<sourceCount)continue;
+    if(!mandatory&&(!['fact','relationship','clue'].includes(kind)||mapped===undefined))continue;
     const row={},target=own(input,'target',mandatory);
     if(target!==undefined)row.target=identityTarget(target);
     // Consumed scalar fields keep their original types or fail. A closure's
     // reference/status is always validated against server-owned obligations.
     if(referenceId!==undefined){if(typeof referenceId!=='string')forbidden();row.referenceId=referenceId;}
     if(kind!==undefined){if(typeof kind!=='string')forbidden();row.kind=kind;}
-    if(anchor!==undefined){if(!Number.isInteger(anchor))forbidden();row.anchor=anchor;}
+    if(anchor!==undefined){if(!Number.isInteger(anchor))forbidden();row.anchor=referenceId===undefined?mapped??anchor:anchor;}
     if(status!==undefined){if(typeof status!=='string'){if(mandatory)forbidden();continue;}row.status=status;}
     rows.push(row);
   }
@@ -104,9 +115,9 @@ function authoredMemory(raw,blocks){
 }
 export function adaptV7EngineMenuOutput(wire,context){
   if(!isV7Life(context.life)||context.director?.version!==7||!object(wire))throw Error('Engine menu requires a v7 scene');
-  const blocks=authoredBlocks(own(wire,'blocks',true),context);
+  const source=authoredBlocks(own(wire,'blocks',true),context),{blocks}=source;
   const choices=materializeStoryChoices(buildStoryChoicePlan(context),context,blocks);
-  const authored={blocks,choices,story:editorialStory(own(wire,'story'),blocks),memoryDeltas:authoredMemory(own(wire,'memoryDeltas'),blocks)};
+  const authored={blocks,choices,story:editorialStory(own(wire,'story'),source),memoryDeltas:authoredMemory(own(wire,'memoryDeltas'),source)};
   const title=optionalText(own(wire,'title'),120);if(title)authored.title=title;
   // Later turns already have a location fixed by the prior scene/settled
   // travel receipt. An optional model caption must never move the player.

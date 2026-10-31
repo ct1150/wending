@@ -158,5 +158,17 @@
     "afterCompleteBlock": "reset, then result",
     "finalDraftChoices": 0,
     "scope": "This ordinary synthetic browser received one complete narration block before the partial renderer reset. Native source bytes and stop reason for this sample were unavailable. The regression models a damaged suffix; it does not assert which byte the real model wrote."
+  },
+  "candidate122": {
+    "sourceCommit": "94532ecf1e4821ad1bd6fb8bda220c7a133e2e00",
+    "normalTrafficPercent": 0,
+    "knowledgeEnabled": true,
+    "activeCorpus": "fanren-full-v1-b4a4d1c0329acb9f5ec2",
+    "nativeSteps": [
+      "opening ready, 3 enabled actions, revision 1",
+      "ask the named NPC ready, 3 enabled actions, revision 2",
+      "travel to 松风岭 rejected GENERATED_SCENE_INVALID; completed blocks 158/69/149 characters"
+    ],
+    "recoveryEvidence": "Exact frozen travel state and actual public narrative text, with the visible speaker reconstructed by name: a body-only provider response completes revision 3, preserves the 30-day travel receipt/RNG, arrives at 松风岭 and prepares 3 real follow-up actions. Unknown original hidden fields and actual raw final completion are unavailable; this does not prove a particular hidden property caused the rejection."
   }
 }

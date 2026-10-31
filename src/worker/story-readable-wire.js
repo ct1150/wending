@@ -70,7 +70,8 @@ function readAuthoredPrefix(source){
         const isBody=name==='blocks';
         const entry=source[at]==='{'?valueAt(at):null;
         if(!entry){
-          if(!isBody||!rows.length)return null;
+          if(!isBody)return usable();
+          if(!rows.length)return null;
           // Discard the damaged remainder of this array, not its siblings.
           // Only resume if the original array's matching closer is known.
           const end=valueEnd(arrayStart);if(!end)return usable();at=end-1;break;
@@ -83,14 +84,14 @@ function readAuthoredPrefix(source){
         }else rows.push(v);
         at=skip(entry.end);if(source[at]===']')break;
         if(source[at]!==','){
-          if(!isBody)return null;
+          if(!isBody)return usable();
           const end=valueEnd(arrayStart);if(!end)return usable();at=end-1;break;
         }
         at=skip(at+1);
       }
       if(source[at]!==']')return usable();at++;
     }else{
-      const entry=valueAt(at);if(!entry)return name==='memoryDeltas'?null:usable();
+      const entry=valueAt(at);if(!entry)return usable();
       if(keep)result[name]=entry.value;at=entry.end;
     }
     at=skip(at);if(source[at]===','){at++;continue;}
@@ -141,27 +142,15 @@ function readWire(source,bodyContext){
       let j=at;while(j<source.length&&!space(source[j])&&!(',}]'.includes(source[j])))j++;return j>at?j:undefined;
     };
     const read=(a,b)=>JSON.parse(source.slice(a,b));
-    function partialConsequence(at,until){
-      for(const [begin,end]of ends){
-        if(begin<at||begin>=until||source[begin]!=='"'||source[skip(end)]!==':')continue;
-        const key=read(begin,end);if(key==='referenceId')return true;
-        if(key!=='kind'&&key!=='status')continue;
-        const value=skip(skip(end)+1),stop=ends.get(value);
-        if(source[value]==='"'&&stop&&['death','promise','resolved','broken'].includes(read(value,stop)))return true;
-      }
-      return false;
-    }
     function takeRecords(key,limit){
       // Only immediate, individually closed records count. Never synthesize
       // a quote, finish a block or search nested objects for substitute prose.
       if(source[i]!=='[')bad();const cutoff=unfinished.get(i)??source.length;i=skip(i+1);const rows=[];
       while(i<cutoff&&source[i]!==']'){
         if(source[i]!=='{')bad();const end=ends.get(i);
-        if(end===undefined){
-          const stop=unfinished.get(i)??cutoff;
-          if(key==='memoryDeltas'&&partialConsequence(i,stop))bad();
-          i=stop;break;
-        }
+        // A proposal has no effect until its whole original object parses.
+        // Keep earlier complete siblings; never complete a death or closure.
+        if(end===undefined){i=unfinished.get(i)??cutoff;break;}
         if(rows.length>=limit)bad();let row=read(i,end);
         if(key==='blocks'){
           if(!record(row)||!nonempty(row.text)||!['narration','dialogue'].includes(row.kind)||row.kind==='dialogue'&&!Object.hasOwn(row,'speaker'))bad();

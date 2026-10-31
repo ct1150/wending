@@ -95,7 +95,7 @@ function settledLocation(context) {
 // The author receives the state after settlement and a plain-language preview
 // of possible decisions. The plan itself (IDs, actions, targets and costs)
 // belongs to the engine and is never requested from a narrative completion.
-function narrativePrompt(system,context,wire,location,plan){
+function narrativePrompt(system,context,wire,location,plan,canClose){
   const selected=context.receipt.action,failed=context.receipt.cultivationResult?.check?.kind==='world-crossing'&&context.receipt.cultivationResult.check.success===false;
   let focus='写出选定行动的眼前后果，停在新的决定前。';
   if(context.phase==='opening')focus='从出生地眼前的一件具体事务写起，让一名能交谈的当地人亲口说一句有用的话，用独立 dialogue 和具名 speaker 标明他。';
@@ -107,7 +107,7 @@ function narrativePrompt(system,context,wire,location,plan){
   }
   if(context.previousScene?.id===context.namespace+':t'+(context.identity.turnId-1)+':s:closed')focus+='先前互动已经结束；不再推进那件请求。';
   return [
-    system+'\n先在 blocks 中用原创正文回应本次选择的实际结果。一至三段自然旁白或对白即可；一句话能答清就收住，不凑字数，不罗列额外资料。旁白无 speaker；对白 speaker 用输入中的活人别名或新人物 {kind:"person",name:"实际姓名"}。姓名是数据，不自行编造身份标识或生死状态。\n玩家的备选决定由游戏提供。possibleNextSteps 描述可以做、还没有做的事；让场景自然承接这些可能性，停在玩家决定前，不列菜单、不代选、不把任何备选当成已经发生的事实。\n只有在正文支持时才补 title、location、memoryDeltas 或 story，不必凑字段。新记忆用 target、kind 和实际段落下标 anchor；承诺须有人明确作出。关闭旧约定或线索只引用已给的 referenceId 和合法状态，不改旧事实。权威位置、行囊与数值以 receipt 和 life 为准。',
+    system+'\n先在 blocks 中用原创正文回应本次选择的实际结果。一至三段自然旁白或对白即可；一句话能答清就收住，不凑字数，不罗列额外资料。旁白无 speaker；对白 speaker 用输入中的活人别名或新人物 {kind:"person",name:"实际姓名"}。姓名是数据，不自行编造身份标识或生死状态。\n玩家的备选决定由游戏提供。possibleNextSteps 描述可以做、还没有做的事；让场景自然承接这些可能性，停在玩家决定前，不列菜单、不代选、不把任何备选当成已经发生的事实。\n只需写完 blocks 即可结束。位置、行囊与数值以 receipt 和 life 为准。'+(canClose?'如果这场确实解决了输入中的旧约定或线索，可另写 memoryDeltas，仅给对应的 referenceId 与合法状态；未解决就省略。':''),
     JSON.stringify({selectedPurpose:selected?.label??'开启眼前的第一个事件',focus,settled:{location:location??null,items:context.life.items,elapsedDays:context.receipt.elapsedDays,itemChanges:context.receipt.itemChanges,relationChanges:wire.context.receipt.relationChanges},possibleNextSteps:plan.cues}),
   ];
 }
@@ -146,7 +146,7 @@ function buildProviderRequest(profile,context,knowledgeBundle) {
       const schema=buildNamedSceneSchema(wire.schema,wire.context,{blocks,location,engineMenu});
       input.response_format={type:'json_schema',json_schema:{name:'cultivation_scene',strict:true,schema}};
       if(engineMenu){
-        const [instructions,turnFacts]=narrativePrompt(system,context,wire,fixedLocation,buildStoryChoicePlan(context));
+        const [instructions,turnFacts]=narrativePrompt(system,context,wire,fixedLocation,buildStoryChoicePlan(context),!!schema.properties.memoryDeltas);
         input.messages[0].content=instructions;
         input.messages.push({role:'user',content:turnFacts});
       }else{
@@ -265,7 +265,7 @@ export async function generateProviderScene(ai,profile,context,options={},assert
     try { scene=JSON.parse(choice.message.content); }
     catch { scene=engineMenu?readCompleteV7Body(choice.message.content,context):namedV7?readCompleteV7Wire(choice.message.content):null;if(!scene)fail(capped?'OUTPUT_TRUNCATED':'PROVIDER_RESPONSE_INVALID'); }
     if(capped&&(!Array.isArray(scene?.blocks)||!scene.blocks.some(b=>['narration','dialogue'].includes(b?.kind)&&typeof b.text==='string'&&b.text.trim())))fail('OUTPUT_TRUNCATED');
-    if(namedV7)try { scene=engineMenu?adaptV7EngineMenuOutput(scene,context):adaptV7ModelOutput(scene,context); } catch { fail('GENERATED_SCENE_INVALID'); }
+    if(namedV7&&!engineMenu)try { scene=adaptV7ModelOutput(scene,context); } catch { fail('GENERATED_SCENE_INVALID'); }
     const wire=scene;
     function accept(scene,indices){
       // Source receipts are authored by this server after decoding. A model may
@@ -376,23 +376,52 @@ export async function generateProviderScene(ai,profile,context,options={},assert
             if(!destination||!proposal.label.includes(destination.name)||destination.name===validated.location)fail('CHOICE_NOT_COMPILABLE');
           }
         }
-        result.scene=validated;
+        return validated;
       }
       catch(error) {
         if(error?.code==='GENERATED_SCENE_INVALID')result.structureDiagnostic=structureDiagnostic(scene);
         throw error;
       }
     }
-    try { accept(wire); }
-    catch(first){
-      if(engineMenu||!namedV7||!['CHOICE_NOT_COMPILABLE','GENERATED_SCENE_INVALID'].includes(first?.code)||!canIsolateMenu(wire,context))throw first;
-      // These are local projections of the same completed model response. Each
-      // pair passes the full rules with the original positions and no AI call.
-      for(const ids of [[0,1],[0,2],[1,2]]){
-        try{accept({...wire,choices:ids.map(i=>wire.choices[i])},ids);break;}catch{}
+    if(engineMenu){
+      // An author's annotations are proposals. Validate the full response once
+      // in the usual case. If rejected, the identical authored blocks must
+      // stand on their own before any proposal may be considered separately.
+      const validate=source=>{
+        let adapted;try{adapted=adaptV7EngineMenuOutput(source,context);}catch{fail('GENERATED_SCENE_INVALID');}
+        return accept(adapted);
+      };
+      try{result.scene=validate(wire);}
+      catch(fullError){
+        if(!wire||!['memoryDeltas','story','title','location'].some(k=>Object.hasOwn(wire,k)))throw fullError;
+        let retained={blocks:wire.blocks};
+        result.scene=validate(retained); // No recovery from a failed playable core.
+        function propose(patch){
+          const next={...retained,...patch};
+          try{const accepted=validate(next);retained=next;result.scene=accepted;return true;}catch{return false;}
+        }
+        const rows=wire.memoryDeltas;
+        if(Array.isArray(rows)&&rows.length&&!propose({memoryDeltas:rows})){
+          // Never run exponential subset searches. The canonical contract has
+          // sixteen memory slots. Keep admissible rows in their original order;
+          // later proposals cannot override earlier accepted consequences.
+          for(const row of rows.slice(0,16))propose({memoryDeltas:[...(retained.memoryDeltas??[]),row]});
+        }
+        const notes=Object.fromEntries(['title','location','story'].filter(k=>Object.hasOwn(wire,k)).map(k=>[k,wire[k]]));
+        if(Object.keys(notes).length&&!propose(notes))for(const key of Object.keys(notes))propose({[key]:notes[key]});
       }
-      if(!result.scene)throw first;
       delete result.structureDiagnostic;
+    }else{
+      try { result.scene=accept(wire); }
+      catch(first){
+        if(!namedV7||!['CHOICE_NOT_COMPILABLE','GENERATED_SCENE_INVALID'].includes(first?.code)||!canIsolateMenu(wire,context))throw first;
+        // Local projections of the same completed response; never re-infer.
+        for(const ids of [[0,1],[0,2],[1,2]]){
+          try{result.scene=accept({...wire,choices:ids.map(i=>wire.choices[i])},ids);break;}catch{}
+        }
+        if(!result.scene)throw first;
+        delete result.structureDiagnostic;
+      }
     }
     result.status='ready';
   } catch(error) {

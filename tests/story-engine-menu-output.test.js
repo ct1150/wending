@@ -102,7 +102,7 @@ test('recovery takes complete immediate objects only from the single top-level b
     assert.equal(read(source,ctx),null,source.slice(-80));
   }
   const wrong='{"blocks":['+block+','+JSON.stringify({kind:'dialogue',speaker:'k99',text:'我并非此处的已知人物。'});
-  const kept=read(wrong,ctx);assert.ok(kept);assert.throws(()=>adapt(kept,ctx));
+  const kept=read(wrong,ctx);assert.ok(kept);assert.deepEqual(adapt(kept,ctx).blocks,[reportedBlocks[0]]);
 });
 
 test('one normally completed provider response commits the two independently closed rows and their executable menu without another call',async()=>{
@@ -127,5 +127,5 @@ test('independent row recovery preserves later complete consequences when the pr
   const recovered=read('{"blocks":'+body+'],"memoryDeltas":['+JSON.stringify(kept)+']}',ctx);
   assert.deepEqual(recovered,{blocks:reportedBlocks,memoryDeltas:[kept]});
   assert.throws(()=>decodeGlmScene(adapt(recovered,ctx),ctx,{storyActions:true}),'an unknown closure still fails at the authority boundary');
-  assert.equal(read('{"blocks":'+JSON.stringify(reportedBlocks)+',"memoryDeltas":[{"referenceId":"m1","status":"resolved"',ctx),null);
+  assert.deepEqual(read('{"blocks":'+JSON.stringify(reportedBlocks)+',"memoryDeltas":[{"referenceId":"m1","status":"resolved"',ctx),{blocks:reportedBlocks,memoryDeltas:[]});
 });

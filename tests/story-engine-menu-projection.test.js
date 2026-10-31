@@ -53,9 +53,11 @@ test('unusable optional notes fall back without changing settled location or byp
   const active=commitTurn(state,pending,result.scene),choice=active.currentScene.choices.find(x=>x.approach==='observe');
   const next=prepareChoice(active,{choiceId:choice.id,requestId:'observe'}),nextC=buildStoryContext(active,next);
   assert.equal((await deliver({blocks,location:'凭空换了个地方'},nextC)).scene.location,active.director.world.location);
-  for(const wire of [{blocks:[{kind:'dialogue',speaker:{...person,ref:'r:foreign:t9:e:p'},text:'我在这里。'}]},
-    {blocks,memoryDeltas:[{kind:'death',target:{...person,ref:'r:foreign:t9:e:p'},anchor:0}]},
-    {blocks,memoryDeltas:[{referenceId:'m999',status:'resolved'}]}]){
-    const rejected=await deliver(wire,c);assert.equal(rejected.status,'rejected');assert.equal(rejected.scene,undefined);
+  const invalidCore=await deliver({blocks:[{kind:'dialogue',speaker:'r:foreign:t9:e:p',text:'我在这里。'}]},c);
+  assert.equal(invalidCore.status,'rejected');assert.equal(invalidCore.scene,undefined);
+  const baseline=await deliver({blocks},c);
+  for(const note of [{kind:'death',target:{...person,ref:'r:foreign:t9:e:p'},anchor:0},{referenceId:'m999',status:'resolved'}]){
+    const playable=await deliver({blocks,memoryDeltas:[note]},c);assert.equal(playable.status,'ready',playable.errorCode);
+    assert.deepEqual(playable.scene,baseline.scene,'refused memory cannot assert a death or close another obligation');
   }
 });

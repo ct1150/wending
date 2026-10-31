@@ -55,12 +55,13 @@ test('a token-limited v7 rest turn commits only independently complete prose wit
   }
 });
 
-test('a known length finish cannot invent a first block, bypass identity or discard an unfinished consequence',async()=>{
+test('a known length finish cannot invent a first block, bypass identity or apply an unfinished consequence',async()=>{
   const {c}=thirdTurn();
-  for(const source of ['{"blocks":[{"kind":"narration","text":"partial',JSON.stringify({blocks:[]}),JSON.stringify({blocks:[{kind:'narration',text:' '}]}),
-    '{"blocks":'+JSON.stringify(blocks)+',"memoryDeltas":[{"kind":"death","target":']){
+  for(const source of ['{"blocks":[{"kind":"narration","text":"partial',JSON.stringify({blocks:[]}),JSON.stringify({blocks:[{kind:'narration',text:' '}]})]){
     const failed=await generate(source,c);assert.equal(failed.errorCode,'OUTPUT_TRUNCATED');assert.equal(failed.scene,undefined);
   }
+  const body=await generate('{"blocks":'+JSON.stringify(blocks)+',"memoryDeltas":[{"kind":"death","target":',c);
+  assert.equal(body.status,'ready',body.errorCode);assert.deepEqual(body.scene.blocks,blocks);assert.deepEqual(body.scene.memoryDeltas,[]);
   const forged=await generate(JSON.stringify({blocks:[{kind:'dialogue',speaker:'r:alien:t1:e:p',text:'一句话。'}]}),c);
   assert.equal(forged.status,'rejected');assert.equal(forged.scene,undefined);
 });
