@@ -102,6 +102,9 @@ function authoredMemory(raw,{positions,sourceCount}){
     if(referenceId===undefined&&mapped===undefined&&Number.isInteger(anchor)&&anchor>=0&&anchor<sourceCount)continue;
     if(!mandatory&&(!['fact','relationship','clue'].includes(kind)||mapped===undefined))continue;
     const row={},target=own(input,'target',mandatory);
+    // Fresh local symbols are numbered again from the retained participants.
+    // After dropping a block, a bare p1 could mean someone else.
+    if(positions.size!==sourceCount&&typeof target==='string'&&localAlias.test(target))continue;
     if(target!==undefined)row.target=identityTarget(target);
     // Consumed scalar fields keep their original types or fail. A closure's
     // reference/status is always validated against server-owned obligations.

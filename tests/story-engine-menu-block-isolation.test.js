@@ -43,3 +43,19 @@ test('an unusable extra row cannot veto complete rows; the archive limit bounds 
   const out=adapt({blocks:[noise,...rows]},c);assert.deepEqual(out.blocks,rows.slice(0,12));
   assert.throws(()=>adapt({blocks:[noise,null,invalid]},c));
 });
+
+test('a discarded p1 declaration cannot move its promise to the next speaker',async()=>{
+  const opening=await deliver({blocks:[d]},c);
+  const saved=commitTurn(state,pending,opening.scene),known=saved.currentScene.entities.find(e=>e.name===person.name);
+  const ask=saved.currentScene.choices.find(ch=>ch.approach==='ask'),command=prepareChoice(saved,{choiceId:ask.id,requestId:'ask'});
+  const clue={id:'clue:old-road',runId:saved.runId,turnId:1,source:'narrative',kind:'clue',entityId:known.id,text:'确认山路标记',status:'open'};
+  const ctx=buildStoryContext(saved,command,[clue]),alias='k'+(ctx.entities.findIndex(e=>e.id===known.id)+1);
+  const bad={...invalid,speaker:{kind:'person',name:ctx.life.name,ref:'p1'}},actor={kind:'person',name:'船夫'};
+  const reply={kind:'dialogue',speaker:actor,text:'我答应明日交还渡船。'},report={kind:'narration',text:'锦衣人甲认出了山路的标记。'};
+  const facts=[{kind:'fact',target:actor,anchor:1},{kind:'fact',target:alias,anchor:2},{referenceId:'m1',status:'resolved'}];
+  const got=await deliver({blocks:[bad,reply,report],memoryDeltas:[{kind:'promise',target:'p1',anchor:1,status:'open'},...facts]},ctx);
+  assert.equal(got.status,'ready',got.errorCode);
+  assert.deepEqual(got.scene.memoryDeltas.map(m=>[m.kind,m.text,m.referenceId]),[['fact',reply.text,undefined],['fact',report.text,undefined],['clue',clue.text,clue.id]]);
+  assert.equal(got.scene.memoryDeltas[0].entityId,got.scene.blocks[0].speaker);assert.equal(got.scene.memoryDeltas[1].entityId,known.id);
+  assert.equal(got.scene.memoryDeltas[2].status,'resolved');
+});
