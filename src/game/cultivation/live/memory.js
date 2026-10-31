@@ -6,7 +6,7 @@ import { exactKeys, idField, textField, validateEntities, validateGeneratedScene
 import { validateLife, validateReceipt } from './validation.js';
 import { prepareOpening, prepareChoice, prepareRecordedChoice, compileChoices, projectRelations } from './engine.js';
 import { DAYS_PER_YEAR, ITEMS, REALMS } from './model.js';
-import { isV7Life, summarizeLife, initialItemsForBirth, initialLifeForBirth, realmCatalogFor } from './cultivation-rules.js';
+import { isV7Life, v7ActionRule, summarizeLife, initialItemsForBirth, initialLifeForBirth, realmCatalogFor } from './cultivation-rules.js';
 import { advanceStoryDirector, buildDirectorContext, validateStoryDirector, validateDirectorScene } from './story-director.js';
 import { projectRetrievalMemory, validateRetrievalMemory, advanceRetrievalMemory } from './retrieval-memory.js';
 
@@ -358,7 +358,25 @@ function compilationState(c,scene) {
   return {...(c.relationshipVersion===1||scene.choices.some(choice=>choice.intent==='interact')?{relationshipVersion:1}:{}),...(c.director?{director:advanceStoryDirector(c.director,life,c.receipt,scene,c.identity.turnId)}:{}),...(retrieval?{retrieval}:{}),version:5,mode:'cultivation',contentVersion:4,rulesVersion:1,promptVersion:1,runId:c.identity.runId,revision:c.identity.turnId,turnId:c.identity.turnId,phase:'active',rng:c.receipt.random.after,life,birthReceipt,currentScene:scene,lastReceipt:c.receipt,relatedEntities:scene.entities,archiveCursor:0};
 }
 
-export function validateGeneratedScene(raw,context,{checkNextContext,continuity=false,requireExit=false,requireAllChoices=false}={}) {
+// A disabled offer is safe to display only if paying its real costs would
+// make it legal. Test a local copy; inventory and receipts stay unchanged.
+function onlyShortOfResources(state,choice){
+  const life=state.life;
+  if(!isV7Life(life))return false;
+  const items={...life.items},profile=life.cultivationProfile;
+  const spirit=Math.max(profile.spirit,choice.costs.spirit);
+  if(spirit>profile.maxSpirit)return false;
+  let missing=spirit>profile.spirit;
+  for(const [id,cost] of Object.entries(choice.costs.items)){
+    if((items[id]??0)>=cost)continue;
+    items[id]=cost;missing=true;
+  }
+  if(!missing)return false;
+  const funded={...life,items,cultivationProfile:{...profile,spirit}};
+  return !v7ActionRule({...state,life:funded},choice).reason;
+}
+
+export function validateGeneratedScene(raw,context,{checkNextContext,continuity=false,requireExit=false,requireAllChoices=false,allowUnaffordableChoices=false}={}) {
   inspect(raw);validateStoryContext(context);
   try { validateStructure(raw); } catch { fail('GENERATED_SCENE_INVALID'); }
   checkActorScene(raw,isExperienceLife(context.life),context.entities);
@@ -408,7 +426,7 @@ export function validateGeneratedScene(raw,context,{checkNextContext,continuity=
   } catch { fail('CHOICE_NOT_COMPILABLE'); }
   const enabled=choices.filter(choice=>choice.enabled);
   if(!enabled.length)fail('NO_EXECUTABLE_CHOICE');
-  if(requireAllChoices&&enabled.length!==choices.length)fail('CHOICE_NOT_COMPILABLE');
+  if(requireAllChoices&&choices.some(choice=>!choice.enabled&&!(allowUnaffordableChoices&&onlyShortOfResources(prospective,choice))))fail('CHOICE_NOT_COMPILABLE');
   validateDirectorScene(raw,context,choices);
   if(requireExit&&(enabled.length<2||!enabled.some(choice=>choice.intent==='interact'&&['decline','leave'].includes(choice.approach)||choice.intent==='evade')))fail('CHOICE_NOT_COMPILABLE');
   for(const choice of enabled) {

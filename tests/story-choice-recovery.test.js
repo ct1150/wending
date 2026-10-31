@@ -108,6 +108,29 @@ test('the original 126-character opening becomes three usable choices after one 
   assert.equal(r.posts.length,1);assert.equal(r.inferences,1);assert.equal(r.posts[0].attempt.retryOf,null);assert.deepEqual(r.posts[0].saved.generation.context,r.posts[0].context);assert.equal(r.settlements.length,1);assert.equal(r.settlements[0].result.status,'ready');assert.equal(r.history.entries.length,1);
 });
 
+test('one unaffordable model choice shows the actual cost while the other advances the saved turn',async t=>{
+  const {page}=await setup(t);
+  const opening=await page.evaluate(async()=>{
+    const f=globalThis.boundedMenu=await playableStory('unfunded-forge');
+    f.wireFor=c=>c.phase==='opening'?{choices:[
+      {action:'craft:forge',target:'artifact',stake:'low',purpose:'在村口铁砧上打造护身法器'},
+      {action:'interact:observe',target:'self',purpose:'观察陶罐缺口下的潮湿印记'},
+    ]}:{};
+    await f.start();
+    return {status:f.session.view().status,buttons:f.buttons(),posts:f.posts.length};
+  });
+  assert.equal(opening.status,'ready');assert.equal(opening.posts,1);
+  assert.deepEqual(opening.buttons.map(b=>b.disabled),[true,false]);
+  const disabled=page.locator('[data-live-choice]:disabled').filter({hasText:'在村口铁砧上打造护身法器'});
+  assert.match(await disabled.innerText(),/缺少(?:玄铁|灵石)/);
+  await page.locator('[data-live-choice]:enabled').filter({hasText:'观察陶罐缺口下的潮湿印记'}).click();
+  const after=await page.evaluate(async()=>{
+    const f=globalThis.boundedMenu;await f.action;const row=await f.archive.load();
+    return {revision:row.state.revision,action:row.state.lastReceipt.action.label,pending:row.pending,posts:f.posts.length};
+  });
+  assert.deepEqual(after,{revision:2,action:'观察陶罐缺口下的潮湿印记',pending:null,posts:2});
+});
+
 test('each original choice independently continues the same opening and commits its exact selected action once',async t=>{
   const {page}=await setup(t),rows=await page.evaluate(async()=>{
     const rows=[];

@@ -17,7 +17,7 @@ export function endsSelectedInteraction(context){
 
 // Generation uses the same post-action life and rule calculation as the menu.
 // Fresh identities stand in only for their type; actual names remain the model's.
-function availableVariants(context,aliases,intent,approach,targets){
+function availableVariants(context,aliases,intent,approach,targets,authoredChoices){
   const selected=context.receipt.action,closed=context.previousScene?.id===context.namespace+':t'+(context.identity.turnId-1)+':s:closed';
   const endedTarget=endsSelectedInteraction(context)?selected.targetId:closed?(context.memory.recent.find(record=>record.kind==='turn'&&record.turnId===context.identity.turnId-1)?.entityIds[0]??context.memory.facts.find(record=>record.id==='decision:'+(context.identity.turnId-1)&&record.kind==='fact'&&record.source==='rules')?.entityId??'self'):null;
   const failedCrossing=context.receipt.cultivationResult?.check?.kind==='world-crossing'&&context.receipt.cultivationResult.check.success===false;
@@ -31,7 +31,7 @@ function availableVariants(context,aliases,intent,approach,targets){
       if(intent==='interact'&&known&&(known.id===endedTarget||endedTarget==='self'&&closed&&['person','faction'].includes(known.kind)))return false;
       if(intent==='travel'&&known?.name===location)return false;
       const entity=known??(fresh?{id:targetId,kind:({p:'person',l:'place',f:'faction'})[fresh[1]],name:crossing?(WORLD_TIERS[context.life.cultivationProfile.worldTier+1]??'无下一界')+'新去处':'眼前新对象',status:'alive'}:null);
-      if(intent==='interact'&&approach==='observe'&&entity?.kind==='place'&&(!known||entity.name!==location))return false;
+      if(intent==='interact'&&approach==='observe'&&entity?.kind==='place'&&(known?entity.name!==location:!authoredChoices))return false;
       const state={...ruleState,relatedEntities:entity?[entity]:[]};
       try{return !v7ActionRule(state,{intent,approach,targetId:entity?.id??targetId,stake}).reason;}catch{return false;}
     });
@@ -102,7 +102,7 @@ export function buildGlmWire(context,system,{storyActions=false,authoredChoices=
     if(directed){
       const purpose=authoredChoices?null:intent==='interact'&&approach==='help'?'给出一份行粮，帮助对方充饥':intent==='negotiate'&&approach==='black-market'?'出售'+ITEMS[(context.life.items.relic??0)>0?'relic':'artifact']+'，换取灵石':null;
       const crossing=intent==='travel'&&WORLD_TRAVEL_APPROACHES.includes(approach);
-      for(const variant of availableVariants(context,aliases,intent,approach,targets)){
+      for(const variant of availableVariants(context,aliases,intent,approach,targets,authoredChoices)){
         const key=JSON.stringify({...variant,interaction,purpose,crossing}),group=actionGroups.get(key)??{...variant,interaction,purpose,actions:[]};group.actions.push(intent+':'+approach);actionGroups.set(key,group);
       }
     }else{

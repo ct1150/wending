@@ -66,7 +66,7 @@ test('a marked birth uses its past and both talents at the model boundary, then 
   assert.deepEqual(opened.input.response_format.json_schema.schema.required, ['blocks','choices']);
   const schemaAtOpening=opened.input.response_format.json_schema.schema;
   assert.equal(schemaAtOpening.properties.blocks.maxItems,2);
-  assert.equal(schemaAtOpening.properties.choices.maxItems,2);
+  assert.equal(schemaAtOpening.properties.choices.maxItems,3);
   for(const block of schemaAtOpening.properties.blocks.items.oneOf)assert.equal(block.properties.text.maxLength,120);
   assert.equal(opened.facts.director, undefined);
   assert.equal(opened.facts['眼前与旧闻'].夙愿,context.director.destiny.text);
@@ -193,4 +193,42 @@ test('holding a different talent changes the model’s specific clue and rule gu
     assert.deepEqual(sample.facts.birthMemory.talents[0], {name:TALENTS[talents[i]], ...TALENT_STORIES[talents[i]]});
     assert.ok(!JSON.stringify(sample.facts.birthMemory).includes(TALENT_STORIES[talents[1-i]].effect));
   }
+});
+
+test('model-authored opening accepts grounded shorthand and preserves typed places, resources and costs', async () => {
+  const {state,pending,context}=birth();
+  const hunter={kind:'person',name:'老猎户'}, inn={kind:'place',name:'松坳驿铺'};
+  const blocks=[{kind:'narration',text:'老猎户指向松坳驿铺门口的虎爪印，驿铺篱边晾着药草和路上的干饼。'}];
+  const inspect={action:'interact:observe',target:'self',purpose:'看看脚印为何一深一浅'};
+  const cases=[
+    {action:'interact:ask',target:hunter,purpose:'问他爪痕是什么时候留下的'},
+    {action:'interact:help',target:hunter,purpose:'递给老猎户一块干饼充作路食'},
+    {action:'explore:cautious',target:'herbs',stake:'low',purpose:'沿篱根寻找药草'},
+    {action:'explore:cautious',target:'supplies',stake:'low',purpose:'沿篱根找些路上的口粮'},
+    {action:'travel:road',target:inn,stake:'low',purpose:'循车辙走到那家驿铺'},
+    {action:'interact:observe',target:inn,purpose:'查看门槛上的虎爪印'},
+  ];
+  for(const choice of cases){
+    const {result}=await complete(context,{blocks,choices:[inspect,choice]});
+    assert.equal(result.status,'ready',choice.action+' '+result.errorCode);
+    const active=commitTurn(state,pending,result.scene),actual=active.currentScene.choices[1];
+    assert.equal(actual.label,choice.purpose);assert.equal(actual.intent+':'+actual.approach,choice.action);
+    assert.equal(typeof choice.target==='object'?active.relatedEntities.find(e=>e.id===actual.targetId)?.name:actual.targetId,choice.target.name??choice.target);
+  }
+  for(const invalid of [
+    {action:'explore:cautious',target:'herbs',stake:'low',purpose:'寻找路上的口粮'},
+    {action:'travel:road',target:inn,stake:'low',purpose:'前往山顶的土地庙'},
+    {action:'interact:observe',target:{kind:'place',name:'百里外的土地庙'},purpose:'查看山顶庙墙上的裂痕'},
+  ]){
+    const {result}=await complete(context,{blocks,choices:[inspect,invalid]});
+    assert.equal(result.errorCode,'CHOICE_NOT_COMPILABLE',invalid.action);
+  }
+});
+
+test('a three-row opening prefers two executable authored choices over an unfunded craft', async () => {
+  const {context}=birth();
+  const forge={action:'craft:forge',target:'artifact',stake:'low',purpose:'在铁砧上打造护身法器'};
+  const {result}=await complete(context,{...firstScene,choices:[forge,...firstScene.choices]});
+  assert.equal(result.status,'ready',result.errorCode);
+  assert.deepEqual(result.scene.choices.map(c=>c.label),firstScene.choices.map(c=>c.purpose));
 });

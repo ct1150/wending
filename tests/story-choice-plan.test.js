@@ -28,6 +28,29 @@ function select(state,approach){
   assert.ok(choice,approach);return prepareChoice(state,{requestId:'take-'+approach,choiceId:choice.id});
 }
 
+test('either the manual check or a question about the entrance exam continues the same saved opening',async()=>{
+  const born=createLiveGame({runId:'entrance-exam',seed:3,engineVersion:7,experienceVersion:1,originStories:true});
+  assert.equal(born.life.birth.cultivationProfile.techniqueId,'hollow-marrow');
+  const brother={kind:'person',name:'二师兄'};
+  const opening=await takeScene(born,prepareOpening(born,{requestId:'exam-open'}),[
+    {kind:'narration',text:'你手里的旧功法缺了一角，石阶上方传来考核的钟声。'},
+    {kind:'dialogue',speaker:brother,text:'引气入体是第一关。那几个走侧门的，另有来历。'},
+  ],[
+    row('craft:diagnose','self','运用《空髓引炁篇》自行探查身体与灵根的契合度，寻找入门的契机。'),
+    row('interact:ask',brother,'向这位看似和善的师兄询问关于“引气入体”考核的具体细节，以及为何有人能直接进入核心堂口。'),
+  ]);
+  const diagnosis=select(opening,'diagnose'),inquiry=select(opening,'ask');
+  assert.ok(diagnosis.nextLife.cultivationProfile.experience.lessons.includes('diagnosed'));
+  assert.equal(inquiry.receipt.elapsedDays,0);
+  const context=buildStoryContext(opening,inquiry,[],{continuity:true});
+  const answer=await generate(context,[{kind:'dialogue',speaker:'k1',text:'走侧门的人是来换旧符牌的。轮到你的时候，先让石盏里的灯芯亮起来。'}],[
+    row('interact:observe','self','凑近看石盏的灯芯是用什么搓成的'),
+    row('interact:ask','k1','问师兄谁负责核对侧门收进的旧符牌'),
+  ]);
+  assert.equal(answer.status,'ready',answer.errorCode);
+  assert.equal(commitTurn(opening,inquiry,answer.scene).revision,2);
+});
+
 for(const name of ['购买香烛的妇人','出售茶叶的商人','用山货换取盐的猎户']){
   test('a model-authored negotiation with '+name+' keeps its own meaning and exact target',async()=>{
     const born=createLiveGame({runId:'trade-speaker',seed:5,engineVersion:7,experienceVersion:1});
@@ -77,6 +100,8 @@ test('only a genuine authored repair offer binds a debt, and only the same prese
   const reunion=[{kind:'dialogue',speaker:alias,text:'我在此地等了你一会儿了。'}];
   const merelyAsking=await generate(due,reunion,[{...repay,purpose:'问问药师当年约定的行粮数目'},observe]);
   assert.ok(!merelyAsking.scene?.choices.some(c=>c.approach==='repay'));
+  const quiet=await generate(due,[{kind:'narration',text:'渡口药师站在小舟旁，向你伸出空着的手。'}],[repay,observe]);
+  assert.equal(quiet.status,'ready',quiet.errorCode);
   const final=await takeScene(offered,accepted,reunion,[repay,observe]);
   const paid=select(final,'repay');assert.equal(paid.receipt.action.targetId,creditor);
   assert.equal(paid.receipt.itemChanges.supplies,-GROWTH_TERMS.repay.items.supplies);

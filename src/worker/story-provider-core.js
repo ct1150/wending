@@ -151,10 +151,11 @@ function buildProviderRequest(profile,context,knowledgeBundle) {
         // ample room for two complete decisions within the model token budget.
         const body=schema.properties.blocks.items;
         for(const block of body.oneOf??[body])block.properties.text.maxLength=120;
-        schema.properties.choices.maxItems=2;
+        schema.properties.choices.maxItems=context.phase==='opening'?3:2;
       }
       if(authored&&directed){
         input.messages[0].content=facts+'\n'+AUTHORED_SCENE_GUIDANCE;
+        if(context.phase==='opening')input.messages[0].content+='\n开局给三个简短可行的不同办法。观察眼前物件或痕迹用 interact:observe、target=self。';
         const {director,...worldFacts}=wire.context;
         worldFacts.memory={...worldFacts.memory,recent:worldFacts.memory.recent.map(priorTurnForAuthor)};
         worldFacts['眼前与旧闻']={
@@ -283,6 +284,13 @@ function describesHeldSale(text,item){
     &&!text.includes(item===ITEMS.relic?ITEMS.artifact:ITEMS.relic);
 }
 
+const RESOURCE_ALIASES={supplies:['口粮','干粮','路粮','干饼'],herbs:['药草','草药']};
+function mentionsScenePlace(text,place,scene,context){
+  if(text.includes(place.name))return true;
+  const tail=Array.from(place.name).slice(-2).join('');
+  if(tail.length<2||!text.includes(tail))return false;
+  return ![...context.entities,...scene.entities].some(e=>e.kind==='place'&&e.id!==place.id&&e.name.endsWith(tail));
+}
 function givesFoodToTarget(purpose,targetId,people){
   if(!/行粮|干粮|口粮|食物|吃食|粮食|饭食|干饼/u.test(purpose)||!/给|递|交|送|分|赠|拿出|取出|掰|让出|匀/u.test(purpose)||/是否|要不要|问问|询问|拒绝|婉拒|暂不|不给|不送|不肯/u.test(purpose))return false;
   const target=people.find(e=>e.id===targetId);
@@ -340,7 +348,7 @@ export async function generateProviderScene(ai,profile,context,options={},assert
     if(capped&&(!Array.isArray(scene?.blocks)||!scene.blocks.length||!Array.isArray(scene.choices)||scene.choices.length<2))fail('OUTPUT_TRUNCATED');
     if(namedV7)try { scene=adaptV7ModelOutput(scene,context,{authoredChoices:profile.authoredChoices===true}); } catch { fail('GENERATED_SCENE_INVALID'); }
     const wire=scene;
-    function accept(scene,indices){
+    function accept(scene,indices,allEnabled=false){
       // Source receipts are authored by this server after decoding. A model may
       // never smuggle one into canonical output, including the older full schema.
       if(scene&&Object.hasOwn(scene,'retrieval'))fail('GENERATED_SCENE_INVALID');
@@ -370,7 +378,13 @@ export async function generateProviderScene(ai,profile,context,options={},assert
         for(const [index,proposal]of scene.choices.entries()){
           if(proposal.intent==='craft'&&['pledge','repay'].includes(proposal.approach)){
             const spoken=scene.blocks.filter(b=>b.kind==='dialogue'&&b.speaker===proposal.targetId);
-            if(!spoken.length||proposal.approach==='pledge'&&!spoken.some(b=>offersRepair(b.text)))fail('CHOICE_NOT_COMPILABLE');
+            if(proposal.approach==='pledge'&&!spoken.some(b=>offersRepair(b.text)))fail('CHOICE_NOT_COMPILABLE');
+            if(proposal.approach==='repay'){
+              const debt=context.life.cultivationProfile?.experience?.commitment;
+              const person=scene.entities.find(e=>e.id===proposal.targetId);
+              const present=spoken.length||person&&scene.blocks.some(b=>b.kind==='narration'&&b.text.split(/[。！？]/u).some(line=>line.includes(person.name)&&!/不在|不见|未见|没来|离开|听说|传闻/u.test(line)));
+              if(debt?.status!=='owed'||debt.entityId!==proposal.targetId||!present)fail('CHOICE_NOT_COMPILABLE');
+            }
             if(profile.authoredChoices===true){
               const actor=scene.entities.find(e=>e.id===proposal.targetId);
               const purpose=actor?purposes[index].replaceAll(actor.name,'对方'):purposes[index];
@@ -381,10 +395,11 @@ export async function generateProviderScene(ai,profile,context,options={},assert
           }
           if(!directed&&profile.authoredChoices!==true&&['fight','evade'].includes(proposal.intent)){const target=scene.entities.find(entity=>entity.id===proposal.targetId);if(!target||!purposes[index].includes(target.name))fail('CHOICE_NOT_COMPILABLE');}
           if(profile.authoredChoices===true&&proposal.intent==='interact'&&proposal.approach==='help'&&!givesFoodToTarget(purposes[index],proposal.targetId,[...scene.entities,...context.entities]))fail('CHOICE_NOT_COMPILABLE');
-          if(proposal.intent==='interact'&&proposal.approach==='help'&&((!directed||profile.authoredChoices===true)&&!/行粮|干粮|口粮|食物|吃的|充饥|饱腹/u.test(purposes[index])||/包扎|止血|处理伤口|治疗|治愈|医治|急救|疗伤|复活/u.test(purposes[index])))fail('CHOICE_NOT_COMPILABLE');
+          if(proposal.intent==='interact'&&proposal.approach==='help'&&(!directed&&profile.authoredChoices!==true&&!/行粮|干粮|口粮|食物|吃的|充饥|饱腹/u.test(purposes[index])||/包扎|止血|处理伤口|治疗|治愈|医治|急救|疗伤|复活/u.test(purposes[index])))fail('CHOICE_NOT_COMPILABLE');
           if(proposal.intent==='interact'&&proposal.approach==='observe'&&proposal.targetId!=='self'){
             const target=scene.entities.find(entity=>entity.id===proposal.targetId);
-            if(!target||target.kind==='place'&&target.name!==scene.location||!directed&&target.kind!=='place'&&target.name.length<=50&&!purposes[index].includes(target.name))fail('CHOICE_NOT_COMPILABLE');
+            const localLandmark=profile.authoredChoices===true&&directed&&target?.kind==='place'&&!context.entities.some(e=>e.id===target.id)&&mentionsScenePlace(scene.blocks.map(b=>b.text).join(' '),target,scene,context);
+            if(!target||target.kind==='place'&&target.name!==scene.location&&!localLandmark||!directed&&profile.authoredChoices!==true&&target.kind!=='place'&&target.name.length<=50&&!purposes[index].includes(target.name))fail('CHOICE_NOT_COMPILABLE');
           }
           if(ended&&proposal.intent==='interact'&&endedTargets.includes(proposal.targetId))fail('CHOICE_NOT_COMPILABLE');
         }
@@ -401,7 +416,7 @@ export async function generateProviderScene(ai,profile,context,options={},assert
         if(scene.blocks.length!==1||scene.blocks[0].kind!=='narration')fail('GENERATED_SCENE_INVALID');
       }
       try {
-        const validated=validateGeneratedScene(scene,context,{checkNextContext:next=>providerInput(profile,next),continuity:profile.storyActions===true,requireAllChoices:profile.authoredChoices===true,requireExit:profile.storyActions===true&&!context.director&&profile.authoredChoices!==true});
+        const validated=validateGeneratedScene(scene,context,{checkNextContext:next=>providerInput(profile,next),continuity:profile.storyActions===true,requireAllChoices:profile.authoredChoices===true,allowUnaffordableChoices:!allEnabled,requireExit:profile.storyActions===true&&!context.director&&profile.authoredChoices!==true});
         if(profile.storyActions===true){
           const texts=[validated.title,validated.location,...validated.blocks.map(block=>block.text),...validated.memoryDeltas.filter(delta=>!Object.hasOwn(delta,'referenceId')).map(delta=>delta.text)];
           if(texts.some(text=>/\b(?:interact|travel|practice|explore|negotiate|fight|evade|rest|craft):[a-z]+\b/u.test(text)||Object.values(ITEMS).some(name=>text.includes(name+'='))))fail('GENERATED_SCENE_INVALID');
@@ -418,7 +433,10 @@ export async function generateProviderScene(ai,profile,context,options={},assert
         // Apply this narrative check only to new provider output. Canonical scene
         // validation and previously saved/cached scene recovery remain unchanged.
         for(const [index,proposal]of validated.choices.entries()){
-          if(profile.storyActions===true&&proposal.intent==='explore'&&!proposal.label.includes(ITEMS[proposal.targetId]))fail('CHOICE_NOT_COMPILABLE');
+          if(profile.storyActions===true&&proposal.intent==='explore'&&!proposal.label.includes(ITEMS[proposal.targetId])){
+            const aliases=profile.authoredChoices===true?RESOURCE_ALIASES[proposal.targetId]:null;
+            if(!aliases?.some(word=>proposal.label.includes(word)))fail('CHOICE_NOT_COMPILABLE');
+          }
           if(profile.storyActions===true){
             const actor=validated.entities.find(entity=>entity.id===proposal.targetId&&['person','faction'].includes(entity.kind));
             if(actor&&!directed){
@@ -465,7 +483,12 @@ export async function generateProviderScene(ai,profile,context,options={},assert
           }
           if(proposal.intent==='travel'){
             const destination=validated.entities.find(entity=>entity.id===proposal.targetId&&entity.kind==='place');
-            if(!destination||!proposal.label.includes(destination.name)||destination.name===validated.location)fail('CHOICE_NOT_COMPILABLE');
+            if(!destination||destination.name===validated.location)fail('CHOICE_NOT_COMPILABLE');
+            if(!proposal.label.includes(destination.name)){
+              const nearby=validated.blocks.some(b=>mentionsScenePlace(b.text,destination,validated,context));
+              const competing=[...context.entities,...validated.entities].some(e=>e.kind==='place'&&e.id!==destination.id&&proposal.label.includes(e.name));
+              if(profile.authoredChoices!==true||!nearby||competing||!mentionsScenePlace(proposal.label,destination,validated,context)||!/往|去|走|抵|赴|赶|登|过|进|穿|奔|绕|到|循/u.test(proposal.label))fail('CHOICE_NOT_COMPILABLE');
+            }
           }
         }
         return validated;
@@ -475,12 +498,22 @@ export async function generateProviderScene(ai,profile,context,options={},assert
         throw error;
       }
     }
-    try { result.scene=accept(wire); }
+    const projects=namedV7&&canIsolateMenu(wire,context);
+    const preferEnabled=projects&&profile.authoredChoices===true;
+    try { result.scene=accept(wire,undefined,preferEnabled); }
     catch(first){
-      if(!namedV7||!['CHOICE_NOT_COMPILABLE','GENERATED_SCENE_INVALID'].includes(first?.code)||!canIsolateMenu(wire,context))throw first;
-      // Local projections of the same completed response; never re-infer.
-      for(const ids of [[0,1],[0,2],[1,2]]){
-        try{result.scene=accept({...wire,choices:ids.map(i=>wire.choices[i])},ids);break;}catch{}
+      if(!projects||!['CHOICE_NOT_COMPILABLE','GENERATED_SCENE_INVALID'].includes(first?.code))throw first;
+      // Prefer two enabled original rows when available. Otherwise keep a
+      // valid unavailable action with the reason the engine displays for it.
+      const pairs=[[0,1],[0,2],[1,2]];
+      function takePair(requireAll){
+        for(const ids of pairs){
+          try{return accept({...wire,choices:ids.map(i=>wire.choices[i])},ids,requireAll);}catch{}
+        }
+      }
+      result.scene=takePair(preferEnabled);
+      if(!result.scene&&preferEnabled){
+        try{result.scene=accept(wire);}catch{result.scene=takePair(false);}
       }
       if(!result.scene)throw first;
       delete result.structureDiagnostic;
