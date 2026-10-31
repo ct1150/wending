@@ -11,6 +11,7 @@ import {CANDIDATE_MODEL_ID,DEFAULT_STORY_MODEL_ID,GLM_MODEL_ID,GLM_PROFILE,GLM_P
 import {execFile} from 'node:child_process';
 import {promisify} from 'node:util';
 import {setFixtureProductionProfiles,UNVALIDATED_PROFILE,VALIDATED_FIXTURE_PROFILE} from './helpers/production-profiles.js';
+import {KNOWLEDGE_MANIFEST} from '../src/worker/knowledge/catalog.js';
 const productionModule=await import('../src/worker/story-production.js').catch(()=>null);
 const repository=fileURLToPath(new URL('../',import.meta.url));
 const versions={protocolVersion:1,rulesVersion:1,promptVersion:1,saveVersion:5,contentVersion:4};
@@ -73,6 +74,21 @@ test('production factory defers proof validation past simulated zero module cloc
 test('production packaging cannot borrow a validated registry from another source root',async t=>{
   const trusted=await fixture(t),unvalidated=await fixture(t,{profiles:[UNVALIDATED_PROFILE]});
   await assert.rejects(trusted.build({root:unvalidated.root,sourceCommit:'8'.repeat(40),production:policy()}),/production source root/i);
+});
+
+test('full corpus production package binds the private namespace and pins its version without changing legacy bindings',async t=>{
+  const f=await fixture(t),knowledge={enabled:true,corpusVersion:KNOWLEDGE_MANIFEST.contentVersion,namespaceId:'b'.repeat(32)};
+  await f.build({root:f.root,sourceCommit:'6'.repeat(40),production:{...policy(),knowledge}});
+  const output=path.join(f.root,'release/backend'),manifest=JSON.parse(await readFile(path.join(output,'deployment.json'),'utf8'));
+  assert.deepEqual(manifest.bindings.find(row=>row.name==='STORY_KNOWLEDGE'),{name:'STORY_KNOWLEDGE',type:'kv_namespace',namespace_id:knowledge.namespaceId});
+  assert.deepEqual(manifest.knowledge,{enabled:true,corpusVersion:knowledge.corpusVersion});
+  assert.deepEqual(manifest.migrations,[]);assert.deepEqual(manifest.optionalSecrets,[]);
+  assert.ok(manifest.modules.some(row=>row.name==='src/worker/knowledge/catalog.js'));
+  assert.equal(manifest.modules.some(row=>row.name.includes('.private.')),false);
+  const worker=await import(pathToFileURL(path.join(output,'entry.mjs')).href);
+  assert.deepEqual(worker.backendIdentity.knowledge,manifest.knowledge);
+  const caps=await(await worker.default.fetch(new Request('https://game.test/api/story/capabilities'),{AI:{run(){throw Error('no inference expected');}}})).json();
+  assert.equal(caps.available,false);assert.equal(caps.errorCode,'KNOWLEDGE_UNAVAILABLE');
 });
 
 for(const promoted of [false,true])test(`default CLI builds a disabled backend with enabled policy and ${promoted?'promoted':'unvalidated'} registry`,async t=>{
