@@ -85,27 +85,33 @@ test('the one current journey and its pending turn survive refresh and a new vis
   assert.equal((await f.read()).archiveId,a.archiveId);assert.deepEqual((await f.read()).pending,pending.pending);
 });
 
-test('new-game warning and cancelled creation preserve the current save until a confirmed birth replaces it',async t=>{
+test('title new-game warning and cancelled creation preserve the current save until a confirmed birth replaces it',async t=>{
   const f=await fixture(t),{page}=f;
   await page.locator('[data-title-new]:enabled').click();await page.locator('#live-name').fill('林照');await page.locator('[data-live-start]:enabled').click();
   await page.locator('[data-live-choice]:enabled').first().waitFor();
   await page.locator('[data-live-choice]').first().click();await page.locator('[data-live-choice][data-revision="2"]:enabled').first().waitFor();
   const original=await f.read();assert.equal(f.posts,2);
-  await page.locator('[data-view="settings"]').click();await page.locator('[data-restart]').click();
+  await page.locator('[data-home]').click();
+  assert.match(await page.locator('[data-title-new]').innerText(),/创建新人物/);
+  assert.match(await page.locator('[data-title-continue]').innerText(),/林照/);
+  await page.locator('[data-title-new]:enabled').click();
   const warning=page.locator('#dialog[open]');
+  await page.locator('#dialog[open], [data-live-story]').first().waitFor();
+  assert.equal(await warning.count(),1,'starting a new game with a save asks for confirmation');
+  assert.match(await warning.innerText(),/不会.*轮回奖励/);
   assert.match(await warning.innerText(),/只有一个存档/);assert.match(await warning.innerText(),/覆盖当前进度/);
   assert.doesNotMatch(await warning.innerText(),/随时.*切回|各自保存/);
   assert.deepEqual((await f.read()).state,original.state);
   await warning.locator('[data-close-dialog]').first().click();
   assert.deepEqual((await f.read()).state,original.state);assert.equal(f.posts,2);
-  await page.locator('[data-restart]').click();await page.locator('[data-confirm]').click();
+  await page.locator('[data-title-new]:enabled').click();await page.locator('[data-confirm]').click();
   await page.locator('#live-name').fill('未入世的人');
   assert.deepEqual((await f.read()).state,original.state);assert.equal(f.posts,2);
   await page.reload();assert.equal(await page.locator('#live-name').inputValue(),'未入世的人');
   assert.equal((await f.read()).archiveId,original.archiveId);assert.deepEqual((await f.read()).state,original.state);
   await page.locator('[data-menu-back]').click();await page.locator('[data-title-continue]:enabled').click();
   await page.locator('[data-live-choice][data-revision="2"]:enabled').first().waitFor();assert.equal(f.posts,2);
-  await page.locator('[data-view="settings"]').click();await page.locator('[data-restart]').click();await page.locator('[data-confirm]').click();
+  await page.locator('[data-home]').click();await page.locator('[data-title-new]:enabled').click();await page.locator('[data-confirm]').click();
   await page.locator('#live-name').fill('沈渡');await page.locator('[data-live-start]:enabled').click();
   await page.locator('[data-live-choice][data-revision="1"]:enabled').first().waitFor();
   const replacement=await f.read();assert.notEqual(replacement.archiveId,original.archiveId);assert.equal(replacement.state.life.name,'沈渡');assert.equal(replacement.state.reincarnation,undefined);assert.deepEqual(replacement.state.life.birth.cultivationProfile.inheritedBenefits,[]);assert.equal(f.posts,3);
@@ -230,7 +236,11 @@ test('continuing a completed life preserves its settlement until an explicit rei
       throw Error('the deterministic battle fixture did not settle');
     } finally {archive.close();}
   });
-  await page.reload();await page.locator('[data-title-new]:enabled').click();await page.locator('[data-live-reincarnate]:enabled').waitFor();
+  await page.reload();await page.locator('[data-title-new]:enabled').click();
+  await page.locator('#dialog[open] [data-confirm]').click();await page.locator('#live-name').waitFor();
+  assert.deepEqual((await f.read()).state,parent.state);assert.equal(f.posts,0);
+  await page.locator('[data-menu-back]').click();await page.locator('[data-title-continue]:enabled').click();
+  await page.locator('[data-live-reincarnate]:enabled').waitFor();
   assert.match(await page.locator('.live-reincarnation').innerText(),/此生结算/);assert.deepEqual((await f.read()).state,parent.state);assert.equal(f.posts,0);
   await page.reload();await page.locator('[data-live-reincarnate]:enabled').waitFor();
   assert.equal((await f.read()).archiveId,parent.archiveId);assert.deepEqual((await f.read()).state,parent.state);assert.equal(f.posts,0);
@@ -292,20 +302,6 @@ test('failure to retain a live creation draft gives a visible warning without cr
 });
 
 
-test('the start entrance continues the current life and restart is explicit in settings',async t=>{
-  const f=await fixture(t),{page}=f;
-  await page.locator('[data-title-new]:enabled').click();await page.locator('#live-name').fill('林照');await page.locator('[data-live-start]:enabled').click();
-  await page.locator('[data-live-choice]:enabled').first().waitFor();const before=await f.read();
-  await page.locator('[data-home]').click();await page.locator('[data-title-new]:enabled').click();
-  await page.locator('[data-live-choice]:enabled').first().waitFor();
-  assert.equal(await page.locator('#dialog[open], #live-name').count(),0);
-  assert.deepEqual((await f.read()).state,before.state);assert.equal(f.posts,1);
-  await page.locator('[data-view="settings"]').click();await page.locator('[data-restart]').click();
-  await page.locator('#dialog[open]').waitFor();
-  assert.match(await page.locator('#dialog').innerText(),/不会.*轮回奖励/);
-  await page.keyboard.press('Escape');assert.equal((await f.read()).archiveId,before.archiveId);
-});
-
 async function replaceFromOtherTab(f,name='另一页的人',importCurrent=false) {
   const other=await f.context.newPage();
   await other.goto('https://wending-title.test/');
@@ -321,14 +317,17 @@ async function replaceFromOtherTab(f,name='另一页的人',importCurrent=false)
   },{name,importCurrent});
 }
 
-test('a stale empty title continues a life created in another tab without authorizing replacement',async t=>{
+test('a stale empty title requires fresh confirmation for a life created in another tab',async t=>{
   const f=await fixture(t),{page}=f;
   await page.locator('[data-title-new]:enabled').waitFor();
   const current=await replaceFromOtherTab(f);
   await page.locator('[data-title-new]').click();
-  await page.locator('#live-name, [data-live-story]').first().waitFor();
-  assert.equal(await page.locator('#live-name').count(),0,'fresh creation must never adopt an existing life as a replacement target');
-  await page.locator('[data-live-retry]').waitFor();
+  await page.locator('#toast.error, [data-live-story], #live-name').first().waitFor();
+  assert.equal(await page.locator('[data-live-story], #live-name').count(),0,'the stale click neither resumes nor replaces the other life');
+  await page.getByText('当前人物已在另一页面更新，请重新确认后再开始。',{exact:true}).waitFor();
+  assert.match(await page.locator('[data-title-continue]').innerText(),/另一页的人/);
+  await page.locator('[data-title-new]:enabled').click();await page.locator('#dialog[open] [data-confirm]').click();
+  await page.locator('#live-name').waitFor();
   assert.deepEqual(await f.read(),current);assert.equal(f.posts,0);
 });
 
