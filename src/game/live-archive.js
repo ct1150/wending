@@ -70,6 +70,13 @@ function verifyImportedLineage(stores,get,run,finish) {
  const row=run.birth.reincarnation,invalid='REINCARNATION_INVALID_STATE';
  const readKnown=(id,done)=>get(stores.runs,'@run:'+id,pointer=>pointer?get(stores.runs,pointer.target,done):done(null));
  const recordFor=claim=>({archiveId:claimKey(claim.parentRunId),...claim});
+ const checkSettlement=(parent,birth)=>{
+   const record=birth.reincarnation;
+   check(record&&parent.state.phase==='dead'&&parent.hash===record.parentStateHash,invalid);
+   check(record.version===(isExperienceLife(parent.state.life)?2:1),invalid);
+   let expected;try{expected=buildRebirthOptions(parent.state,record.purchases);}catch{fail(invalid);}
+   check(same(record,expected.reincarnation)&&same(birth.life.birth.cultivationProfile.inheritedBenefits,expected.inheritedBenefits),invalid);
+ };
  readKnown(run.runId,old=>{
    const marked=old&&isExperienceLife(old.birth.life)||isExperienceLife(run.birth.life);
    if(old&&marked)check(same(old.birth,run.birth),invalid);
@@ -79,9 +86,7 @@ function verifyImportedLineage(stores,get,run,finish) {
        if(!parent){finish(false);return;} // Authenticity outside this database is not attested.
        if(row.version!==2&&!isExperienceLife(parent.state.life)){finish();return;} // historical v1 parent + child
        if(parent.state.phase==='dead'&&parent.hash===row.parentStateHash){
-         check(row.version===(isExperienceLife(parent.state.life)?2:1),invalid);
-         const expected=buildRebirthOptions(parent.state,row.purchases);
-         check(same(row,expected.reincarnation),invalid);finish(true);return;
+         checkSettlement(parent,run.birth);finish(true);return;
        }
        // @run may now select an earlier physical copy. Only a child already
        // recorded here with this exact birth AND spent claim may be restored
@@ -91,13 +96,35 @@ function verifyImportedLineage(stores,get,run,finish) {
        get(stores.runs,claimKey(row.parentRunId),proof=>{check(proof&&same(proof,recordFor(claim)),invalid);finish(true);});
      });
    };
-   // A header-only marker is not evidence that another local, currently
-   // unspent marked life has already spent its points. Import its actual
-   // child first so the transaction verifies the settlement and records it.
-   if(old&&marked&&run.reincarnationClaim){
-     const claim=run.reincarnationClaim;
-     get(stores.runs,claimKey(run.runId),proof=>{check(proof&&same(proof,recordFor(claim)),invalid);verifyChild();});
-   }else verifyChild();
+   // The other half of the same check: an independently imported child
+   // may already have installed a *portable* claim before this parent exists.
+   // Only the matching real death can substantiate it. Promotion is local
+   // (never exported) and rolls back atomically if this import later fails.
+   get(stores.runs,claimKey(run.runId),proof=>{
+     if(old&&marked&&run.reincarnationClaim)
+       check(proof&&same(proof,recordFor(run.reincarnationClaim)),invalid);
+     if(!proof){verifyChild();return;}
+     readKnown(proof.childRunId,child=>{
+       if(!marked&&child?.birth?.reincarnation?.version!==2){verifyChild();return;}
+       if(!child){
+         // A claimed-parent-only backup may legitimately arrive by itself.
+         // If a death snapshot is present the claimed hash must already match.
+         if(run.state.phase==='dead')check(run.hash===proof.parentStateHash,invalid);
+         verifyChild();return;
+       }
+       const claim=reincarnationClaimForChild(child.birth);
+       check(claim&&same(proof,recordFor(claim)),invalid);
+       if(run.state.phase==='dead'){
+         checkSettlement(run,child.birth);
+         if(child.verifiedParentHash!==run.hash)stores.runs.put({...child,verifiedParentHash:run.hash});
+       }else{
+         // A living earlier copy proves no settlement. It may display a
+         // previously verified child's spent claim, never promote a new one.
+         check(child.verifiedParentHash===claim.parentStateHash,invalid);
+       }
+       verifyChild();
+     });
+   });
  });
 }
 // Never await inside a transaction. All work here is synchronous or chained from
