@@ -28,11 +28,11 @@ function readAuthoredPrefix(source){
   function stringEnd(at){
     for(let j=at+1;j<source.length;j++){
       if(source[j]==='\\'){j++;continue;}
-      if(source[j]==='"')return j+1;if(source.charCodeAt(j)<32)return -1;
+      if(source[j]==='"')return j+1;
     }
     return -1;
   }
-  function valueAt(at){
+  function valueEnd(at){
     let end=at;const first=source[at];
     if(first==='"')end=stringEnd(at);
     else if(first==='{'||first==='['){
@@ -47,7 +47,10 @@ function readAuthoredPrefix(source){
         }
       }
     }else while(end<source.length&&!space(source[end])&&!(',}]'.includes(source[end])))end++;
-    if(end<=at)return null;
+    return end>at?end:null;
+  }
+  function valueAt(at){
+    const end=valueEnd(at);if(!end)return null;
     try{return {value:JSON.parse(source.slice(at,end)),end};}catch{return null;}
   }
   let at=skip(0);if(source[at++]!=='{')return null;
@@ -61,13 +64,17 @@ function readAuthoredPrefix(source){
     const name=key.value,keep=fields.has(name)&&name!=='choices';
     if(keep){if(seen.has(name))return null;seen.add(name);}
     if(name==='blocks'||name==='memoryDeltas'&&source[at]==='['){
-      if(source[at++]!=='[')return null;
+      const arrayStart=at;if(source[at++]!=='[')return null;
       const rows=[];result[name]=rows;at=skip(at);
       while(at<source.length&&source[at]!==']'){
         const isBody=name==='blocks';
-        if(source[at]!=='{')return isBody?usable():null;
-        const entry=valueAt(at);
-        if(!entry)return isBody?usable():null; // an undecodable obligation cannot be silently discarded
+        const entry=source[at]==='{'?valueAt(at):null;
+        if(!entry){
+          if(!isBody||!rows.length)return null;
+          // Discard the damaged remainder of this array, not its siblings.
+          // Only resume if the original array's matching closer is known.
+          const end=valueEnd(arrayStart);if(!end)return usable();at=end-1;break;
+        }
         if(rows.length>=(isBody?4:16))return null;
         const v=entry.value;
         if(isBody){
@@ -75,7 +82,11 @@ function readAuthoredPrefix(source){
           rows.push(v.kind==='dialogue'?{kind:v.kind,speaker:v.speaker,text:v.text}:{kind:v.kind,text:v.text});
         }else rows.push(v);
         at=skip(entry.end);if(source[at]===']')break;
-        if(source[at]!==',')return usable();at=skip(at+1);
+        if(source[at]!==','){
+          if(!isBody)return null;
+          const end=valueEnd(arrayStart);if(!end)return usable();at=end-1;break;
+        }
+        at=skip(at+1);
       }
       if(source[at]!==']')return usable();at++;
     }else{

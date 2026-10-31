@@ -43,3 +43,17 @@ test('one accepted stop preserves the reported paragraph and produces actionable
   assert.equal(result.status,'ready',result.errorCode);assert.equal(calls,1);assert.deepEqual(result.scene.blocks.map(b=>b.text),[block.text,dialogue.text]);
   const next=commitTurn(state,pending,result.scene);assert.ok(next.currentScene.choices.length>=2);for(const ch of next.currentScene.choices)assert.deepEqual(prepareChoice(next,{requestId:'next',choiceId:ch.id}).receipt.action,ch);
 });
+
+test('a bounded but unparseable block cannot swallow the real sibling memory array',async()=>{
+  const death={kind:'death',target:speaker,anchor:0},closure={referenceId:'m1',status:'resolved'},records=[death,closure];
+  const damaged=JSON.stringify({kind:'narration',text:'正常',decoy:{memoryDeltas:[{referenceId:'wrong-nested',status:'broken'}]}}).replace('"正常"','"这是"坏"引号"');
+  for(const badRow of [damaged,'{"kind":"narration","text":"未转义\u0001字符"}']){
+    const content=root+s+','+badRow+','+d+'],"memoryDeltas":'+JSON.stringify(records)+'}';
+    const recovered=read(content);assert.deepEqual(recovered?.blocks,[block],'only the verified prefix survives');assert.deepEqual(recovered?.memoryDeltas,records);
+    assert.deepEqual(adaptV7EngineMenuOutput(recovered,ctx).memoryDeltas,records);
+    const result=await generateProviderScene({run:async()=>({model:GLM_MODEL_ID,choices:[{finish_reason:'stop',message:{content}}],usage:{prompt_tokens:200,completion_tokens:200,total_tokens:400}})},{...GLM_PROFILE,storyActions:true,engineMenu:true},ctx);
+    assert.equal(result.status,'rejected','the nonexistent obligation still reaches the authoritative validator');assert.equal(result.scene,undefined);
+  }
+  assert.deepEqual(read(root+s+','+damaged+'],"irrelevant":{"memoryDeltas":'+JSON.stringify(records)+'}}'),{blocks:[block]},'never seek records inside unrelated objects');
+  assert.deepEqual(read(root+s+',{ "kind":"narration", ]]} "memoryDeltas":'+JSON.stringify(records)),{blocks:[block]},'an ambiguous boundary supplies no sibling record');
+});
