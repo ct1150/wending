@@ -2,7 +2,10 @@
 
 ## 当前主线：制作人体验改造（2026-10-31）
 
-以5.3.0为基线，按“顺畅选择 → 单存档 → 成长与因果 → 轮回与验收”推进。
+从 5.3.0 发起，整合了 5.4.0 单存档主线和 5.4.1 可执行选项规则。6.0.0 候选串起修法、还约、战斗和轮回；后续重点是验证真人能否理解并主动利用这些差异。
+
+- [6.0.0 体验验收与待测边界](PRODUCER_ACCEPTANCE_6.0.0.md)
+- [开发 PR #28 与精确版本 CI](https://github.com/ct1150/wending/pull/28)
 
 - [当前TODO](PRODUCER_TODO.md)
 - [设计](superpowers/specs/2026-10-31-producer-experience-design.md)

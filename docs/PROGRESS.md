@@ -2,6 +2,12 @@
 
 Plans: [first release](superpowers/plans/2026-10-24-first-release.md) · [1.1.0 narrative upgrade](superpowers/plans/2026-10-25-narrative-adventure.md)
 
+## 6.0.0 候选：选择、成长与因果 — 2026-10-31
+
+制作人评审已落实为新人生规则：四种开局、两种能完成的修法路径、绑定具体人物的承诺、依据真实实力的交锋、带来源的生平与轮回。首页优先继续当前人物；曾经的物理存档可只读与备份。已有无标记人生和冻结回合维持原有协议。
+
+[体验验收方法与实际范围](PRODUCER_ACCEPTANCE_6.0.0.md) · [任务与修复轨迹](PRODUCER_TODO.md) · [开发 PR #28 / 当前 CI](https://github.com/ct1150/wending/pull/28)。本轮源码、静态发行、后端部署和真人体验分开记录；以下为此前版本的历史证据。
+
 ## 5.4.1 从源头生成可执行选项 — 2026-10-31
 
 - 原生候选 #108 在 0% 流量下仍遇到一次已确认的结构拒绝；后续改为只生成真实未了事项的关闭引用、只采纳可证实的导演注释，并合并完全一样的重复按钮。正式发布读回见 [PR #27](https://github.com/ct1150/wending/pull/27)。
