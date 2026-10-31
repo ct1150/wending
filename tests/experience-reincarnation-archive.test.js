@@ -37,10 +37,11 @@ test('paid death, forged or racing child, delayed backup, ongoing frozen request
   const{validateGeneration}=await import('/src/game/live-archive.js');const fake=structuredClone(v.generation);fake.context.previousLife=['已还行粮'];const generationTamper=await error(()=>validateGeneration(fake,v.pending,v.state));
   const json=await new Response(format.exportLiveArchive(archive)).text(),copy=await open('new-database'),restored=await format.importLiveArchive(new Response(json).body,copy);
   const previous=await format.importLiveArchive(new Response(backup).body,archive);
-  return {bad,parentProof,generationTamper,intact:intact.archiveId===parent.archiveId&&!intact.reincarnatedTo,count:settled.filter(x=>x.status==='fulfilled').length,importTamper,child,previous:previous.reincarnatedTo,distinct:previous.archiveId!==parent.archiveId,snapshots,changed:restored.archiveId!==w.archiveId,replay:identity.stateHash(restored.state)===identity.stateHash(v.state),pending:JSON.stringify(restored.generation)===JSON.stringify(v.generation),row:restored.state.reincarnation};
+  const sameChild=await format.importLiveArchive(new Response(json).body,archive);
+  return {sameChild:identity.stateHash(sameChild.state)===identity.stateHash(v.state),bad,parentProof,generationTamper,intact:intact.archiveId===parent.archiveId&&!intact.reincarnatedTo,count:settled.filter(x=>x.status==='fulfilled').length,importTamper,child,previous:previous.reincarnatedTo,distinct:previous.archiveId!==parent.archiveId,snapshots,changed:restored.archiveId!==w.archiveId,replay:identity.stateHash(restored.state)===identity.stateHash(v.state),pending:JSON.stringify(restored.generation)===JSON.stringify(v.generation),row:restored.state.reincarnation};
  },{birth:parent.birth,steps:parent.steps});
  assert.equal(out.bad,'REINCARNATION_INVALID_STATE');assert.equal(out.parentProof,'REINCARNATION_INVALID_STATE');assert.ok(out.intact);assert.equal(out.count,1);assert.equal(out.importTamper,'REINCARNATION_INVALID_STATE');assert.equal(out.generationTamper,'ARCHIVE_INVALID_GENERATION');
- assert.equal(out.previous,out.child);assert.ok(out.distinct&&out.changed&&out.replay&&out.pending);assert.equal(out.row.parentStateHash,parent.hash);assert.equal(out.snapshots.length,2);
+ assert.ok(out.sameChild);assert.equal(out.previous,out.child);assert.ok(out.distinct&&out.changed&&out.replay&&out.pending);assert.equal(out.row.parentStateHash,parent.hash);assert.equal(out.snapshots.length,2);
  for(const s of out.snapshots)assert.ok(s.persisted&&s.shown&&s.quoted<=7000&&s.wire<=24576);
  t.diagnostic('actual reborn opening / next paid action: '+JSON.stringify(out.snapshots));
 });

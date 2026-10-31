@@ -2,6 +2,7 @@ import { canonicalStringify, sha256, stateHash, assertPlainData } from './cultiv
 import { validateLiveState } from './cultivation/live/validation.js';
 import { prepareOpening, prepareRecordedChoice, commitTurn, settleDeath, resolveImmediateInteraction } from './cultivation/live/engine.js';
 import { buildStoryContext, validateGeneratedScene, buildMemoryDelta, validateStoryContext, sceneTurnRecord } from './cultivation/live/memory.js';
+import { isExperienceLife } from './cultivation/live/experience.js';
 import { echoNotes, buildRebirthOptions, reincarnationClaimForChild, validateReincarnationClaim } from './cultivation/live/reincarnation.js';
 
 export const CHUNK_TURNS = 128;
@@ -62,23 +63,41 @@ function writeClaims(stores,get,claims,finish) {
   };
   next();
 }
-// A portable child can be the only surviving backup. If this database also
-// knows its original child birth or exact parent death, check the echo and
-// purchases against those durable facts before activating any imported copy.
+// Portable backups can stand alone, but cannot contradict a local birth,
+// spend a local parent by downgrading the wire version, or supersede a claim.
+// Check the local parent's rules, not the version/hash asserted by the child.
 function verifyImportedLineage(stores,get,run,finish) {
- const row=run.birth.reincarnation;
+ const row=run.birth.reincarnation,invalid='REINCARNATION_INVALID_STATE';
  const readKnown=(id,done)=>get(stores.runs,'@run:'+id,pointer=>pointer?get(stores.runs,pointer.target,done):done(null));
+ const recordFor=claim=>({archiveId:claimKey(claim.parentRunId),...claim});
  readKnown(run.runId,old=>{
-   if(old&&(old.birth?.reincarnation?.version===2||row?.version===2))
-     check(same(old.birth.reincarnation??null,row??null),'REINCARNATION_INVALID_STATE');
-   if(row?.version!==2){finish();return;}
-   readKnown(row.parentRunId,parent=>{
-     if(parent?.hash===row.parentStateHash){
-       const expected=buildRebirthOptions(parent.state,row.purchases);
-       check(same(row,expected.reincarnation),'REINCARNATION_INVALID_STATE');
-     }
-     finish();
-   });
+   const marked=old&&isExperienceLife(old.birth.life)||isExperienceLife(run.birth.life);
+   if(old&&marked)check(same(old.birth,run.birth),invalid);
+   const verifyChild=()=>{
+     if(!row){finish();return;}
+     readKnown(row.parentRunId,parent=>{
+       if(!parent){finish(false);return;} // Authenticity outside this database is not attested.
+       if(row.version!==2&&!isExperienceLife(parent.state.life)){finish();return;} // historical v1 parent + child
+       if(parent.state.phase==='dead'&&parent.hash===row.parentStateHash){
+         check(row.version===(isExperienceLife(parent.state.life)?2:1),invalid);
+         const expected=buildRebirthOptions(parent.state,row.purchases);
+         check(same(row,expected.reincarnation),invalid);finish(true);return;
+       }
+       // @run may now select an earlier physical copy. Only a child already
+       // recorded here with this exact birth AND spent claim may be restored
+       // without verifying its settlement against the actual death again.
+       check(old?.verifiedParentHash===row.parentStateHash&&same(old.birth,run.birth),invalid);
+       const claim=reincarnationClaimForChild(run.birth);
+       get(stores.runs,claimKey(row.parentRunId),proof=>{check(proof&&same(proof,recordFor(claim)),invalid);finish(true);});
+     });
+   };
+   // A header-only marker is not evidence that another local, currently
+   // unspent marked life has already spent its points. Import its actual
+   // child first so the transaction verifies the settlement and records it.
+   if(old&&marked&&run.reincarnationClaim){
+     const claim=run.reincarnationClaim;
+     get(stores.runs,claimKey(run.runId),proof=>{check(proof&&same(proof,recordFor(claim)),invalid);verifyChild();});
+   }else verifyChild();
  });
 }
 // Never await inside a transaction. All work here is synchronous or chained from
@@ -178,7 +197,7 @@ class Archive {
   const expected=buildRebirthOptions(c.run.state,rewardIds);
   check((expected.experienceVersion===undefined||state.life.birth.cultivationProfile?.experienceVersion===expected.experienceVersion)&&same(state.reincarnation,expected.reincarnation)&&same(state.life.birth.cultivationProfile?.inheritedBenefits,expected.inheritedBenefits),'REINCARNATION_INVALID_STATE');
   const claim=reincarnationClaimForChild(state);validateReincarnationClaim(claim,c.run.state);
-  const archiveId=crypto.randomUUID(),run={archiveId,runId:state.runId,state:clone(state),birth:clone(state),hash:stateHash(state),tailIndex:-1,headHash:ZERO,status:'active'},p=pendingRow(archiveId,clone(pending));
+  const archiveId=crypto.randomUUID(),run={archiveId,runId:state.runId,state:clone(state),birth:clone(state),hash:stateHash(state),tailIndex:-1,headHash:ZERO,status:'active',...(state.reincarnation.version===2?{verifiedParentHash:c.run.hash}:{})},p=pendingRow(archiveId,clone(pending));
   await transaction(this.db,'readwrite',(s,get)=>this._cas(s,get,c,()=>get(s.runs,claimKey(c.run.runId),old=>{
     check(!old,'REINCARNATION_ALREADY_CLAIMED');
     get(s.runs,'@run:'+state.runId,existing=>{check(!existing);writeClaims(s,get,[claim],()=>{
@@ -400,7 +419,7 @@ class Archive {
  async activate(archiveId,expectedArchiveId,expectedSnapshot=null) {
   await transaction(this.db,'readwrite',(s,get)=>get(s.runs,ACTIVE,active=>{
    check((active?.target??null)===expectedArchiveId);
-   const switchPointer=()=>get(s.runs,archiveId,run=>{check(run?.status==='validated','ARCHIVE_NOT_VALIDATED');verifyImportedLineage(s,get,run,()=>writeClaims(s,get,[reincarnationClaimForChild(run.state),run.reincarnationClaim],()=>{s.runs.put({...run,status:'active'});s.runs.put({archiveId:ACTIVE,target:archiveId});s.runs.put({archiveId:'@run:'+run.runId,target:archiveId});}));});
+   const switchPointer=()=>get(s.runs,archiveId,run=>{check(run?.status==='validated','ARCHIVE_NOT_VALIDATED');verifyImportedLineage(s,get,run,verified=>writeClaims(s,get,[reincarnationClaimForChild(run.state),run.reincarnationClaim],()=>{s.runs.put({...run,status:'active',...(verified?{verifiedParentHash:run.birth.reincarnation.parentStateHash}:{})});s.runs.put({archiveId:ACTIVE,target:archiveId});s.runs.put({archiveId:'@run:'+run.runId,target:archiveId});}));});
    if(expectedSnapshot)get(s.runs,expectedArchiveId,run=>{check(run?.hash===expectedSnapshot.run.hash&&run?.headHash===expectedSnapshot.run.headHash);get(s.pending,expectedArchiveId,p=>{check(same(p??null,expectedSnapshot.pending));switchPointer();});});else switchPointer();
   }));this.bound=archiveId;return this.load();
  }
