@@ -1,9 +1,9 @@
 {
   "schemaVersion": 1,
-  "version": "6.0.4",
-  "sourceCommit": "8ee05a24d5611eddfbe5b27dbb885cac58494bf4",
-  "artifactCommit": "c0af1ee2bc2a373d3247698219be9f1ecae63e0e",
-  "htmlSha256": "4153680acf2b23162aa22f8d6af999d2fc28f0dd1af49c8f291d3814f7633213",
-  "htmlBytes": 924064,
-  "artifactPath": "releases/4153680acf2b23162aa22f8d6af999d2fc28f0dd1af49c8f291d3814f7633213.html"
+  "version": "6.0.5",
+  "sourceCommit": "6d82b8514d747ff364bfa2b03fe53f552e7eab43",
+  "artifactCommit": "2a76d855aa9055475cbfe7e1bf5aa39d793d7bf8",
+  "htmlSha256": "8f2aa22c4251a0a1773b54842a130d5b5c39635540f160957ced50e7c7ad5d6d",
+  "htmlBytes": 932641,
+  "artifactPath": "releases/8f2aa22c4251a0a1773b54842a130d5b5c39635540f160957ced50e7c7ad5d6d.html"
 }
