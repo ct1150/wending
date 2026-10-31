@@ -24,21 +24,40 @@ export function validateInsightShape(note,key,blockCount){
  if(has(note,'realmId')&&(typeof note.realmId!=='string'||!has(V7_REALMS,note.realmId)))fail();
  for(const k of ['purpose','condition'])if(has(note,k)&&(typeof note[k]!=='string'||!note[k].trim()||[...note[k]].length>24||/[\x00-\x1f]/u.test(note[k])))fail();
 }
-export function groundedInsight(note,block,actor,{speaker=false,ambiguous=false}={}){
+// Accept a small, positive observation language. Optional intelligence can be
+// omitted without rejecting the scene; a question or disclaimer is not proof.
+const uncertain=/[?？“”「」『』"]|没有根据|骗局|欺骗|谎言|谎话|不对|无稽|胡说|未获证实|传闻|传言|谣言|谣传|误传|传说|听说|听闻|据说|据传|未经证实|尚未证实|未必|不实|不属实|并不属实|是假|假的|假称|佯称|假装|伪装|并非|并未|并没有|否认|摇头|说错|口误|才怪|其实不|不是|难道|莫非|是否|或许|可能|猜测|揣测|怀疑|看似|似乎|倘若|假如|如果/u;
+const directGoal=['意在','目的是','目的为','只想','想要','打算','为了','正','正在'];
+const directCondition=['破绽是','破绽为','弱点是','可趁'];
+export function groundedInsight(note,block,actor,{speaker=false,ambiguous=false,others=[],blocks=[block]}={}){
  if(!block||!actor||!['person','faction'].includes(actor.kind)||actor.status==='dead')return null;
- const name=actor.name,text=block.text,mentions=!ambiguous&&text.includes(name);
- if(!mentions&&!speaker)return null;
- const row={anchor:note.anchor};
- if(note.realmId){
-   const realm=V7_REALMS[note.realmId].name,subjects=[...(mentions&&block.kind==='narration'?[name]:[]),...(speaker?['我','在下']:[])];
-   // The rank must be predicated of this actor, not a nearby cultivator or a title.
-   const statements=text.split(/[。！？；\n]/u).map(s=>s.trim());
-   if(subjects.some(subject=>['已入','已至','已是','境界为','境界是','是'].some(join=>statements.some(s=>{
-     const claim=subject+join+realm;if(!s.startsWith(claim))return false;
-     return /^(?:$|[，、：,. ]|境|期|初期|中期|后期|修为|修士)/u.test(s.slice(claim.length));
-   }))))row.realmId=note.realmId;
+ // A later correction in the same short model scene can cancel an earlier
+ // confident-looking sentence. Do not persist the provisional observation.
+ if(blocks.some(b=>uncertain.test(b.text)))return null;
+ const subjects=block.kind==='narration'&&!ambiguous?[actor.name]:speaker?['在下','我']:[];
+ if(!subjects.length)return null;
+ const row={anchor:note.anchor},realm=note.realmId&&V7_REALMS[note.realmId].name;
+ for(const statement of block.text.split(/[。！？.!?\n]/u)){
+   // Mixed actors in one sentence are not a safe source of subject attribution.
+   if(others.some(name=>name!==actor.name&&statement.includes(name)))continue;
+   let owns=false;
+   for(const part of statement.split(/[，,；;：:]/u)){
+     const clause=part.trim(),subject=subjects.find(s=>clause.startsWith(s));
+     if(subject)owns=true;
+     if(!owns)continue;
+     const text=subject?clause.slice(subject.length):clause;
+     const rank=Boolean(subject&&realm&&['已入','已至','已是','境界为','境界是','是'].some(join=>
+       ['', '境','期','初期','中期','后期','修为','修士'].some(suffix=>text===join+realm+suffix)));
+     if(rank)row.realmId=note.realmId;
+     const goal=note.purpose&&directGoal.some(prefix=>text===prefix+note.purpose);
+     if(goal)row.purpose=note.purpose;
+     const condition=note.condition&&(directCondition.some(prefix=>text===prefix+note.condition)||(subject||/^(?:旧伤|伤口|左臂|右臂|脚步|灵力|气息|阵脚|退路|剑势|护体|经脉)/u.test(text))&&text===note.condition);
+     if(condition)row.condition=note.condition;
+     // A change of subject without attribution breaks the chain. Never carry
+     // ownership across a full stop, or through another person's independent act.
+     owns=Boolean(rank||goal||condition);
+   }
  }
- for(const k of ['purpose','condition'])if(note[k]&&text.includes(note[k]))row[k]=note[k];
  return Object.keys(row).length>1?row:null;
 }
 export function checkActorScene(scene,marked,known=[],strict=true){
@@ -48,7 +67,7 @@ export function checkActorScene(scene,marked,known=[],strict=true){
  if(note){
    validateInsightShape(note,'entityId',scene.blocks.length);
    const e=scene.entities.find(x=>x.id===note.entityId),b=scene.blocks[note.anchor];
-   const observation=groundedInsight(note,b,e,{speaker:b.kind==='dialogue'&&b.speaker===e?.id,ambiguous:scene.entities.some(x=>x.id!==e?.id&&x.name===e?.name)});
+   const observation=groundedInsight(note,b,e,{speaker:b.kind==='dialogue'&&b.speaker===e?.id,ambiguous:scene.entities.some(x=>x.id!==e?.id&&x.name===e?.name),others:[...known,...scene.entities].map(x=>x.name),blocks:scene.blocks});
    if(!observation||['realmId','purpose','condition'].some(k=>observation[k]!==note[k])||note.realmId&&e?.experience?.realmId!==note.realmId)fail();
  }
  for(const e of scene.entities){

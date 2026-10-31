@@ -168,7 +168,8 @@ export function decodeGlmScene(wire,context,{storyActions=false}={}){
           if(isNote&&(status!==null||kind==='person'&&name===context.life.name))throw Error('Invalid NPC annotation target');
           return {kind,name,status:known?.status??status,key:known?.id??JSON.stringify([kind,name]),ambiguous:context.entities.filter(entity=>entity.kind===kind&&entity.name===name).length>1};
         };
-        wire={...wire,story:normalizeWireAnnotation(wire.story,wire.blocks,context,'target',lookup)};
+        const namedObjects=[...wire.blocks.map(b=>b.speaker),...wire.choices.map(c=>c.target),...wire.memoryDeltas.map(d=>d.target),...(wire.story?.npcs??[]).map(n=>n.target)];
+        wire={...wire,story:normalizeWireAnnotation(wire.story,wire.blocks,context,'target',lookup,namedObjects.map(o=>o?.name).filter(Boolean))};
       }
       wire=normalizeNamedScene(wire,context);
     }
@@ -272,7 +273,7 @@ export function decodeGlmScene(wire,context,{storyActions=false}={}){
         }
         return {...entity,key:entity.id,ambiguous:entities.some(row=>row.id!==entity.id&&row.kind===entity.kind&&row.name===entity.name)};
       };
-      const notes=named?wire.story:normalizeWireAnnotation(wire.story,wire.blocks,context,'entityId',lookup);
+      const notes=named?wire.story:normalizeWireAnnotation(wire.story,wire.blocks,context,'entityId',lookup,entities.map(e=>e.name));
       story={...notes,...(notes.opponent?{opponent:{...notes.opponent,entityId:aliases.get(notes.opponent.entityId)}}:{}),...(notes.npcs?{npcs:notes.npcs.map(npc=>({...npc,entityId:aliases.get(npc.entityId)}))}:{})};
     }
     const intel=story?.opponent;

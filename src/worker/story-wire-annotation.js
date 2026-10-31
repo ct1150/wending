@@ -6,7 +6,7 @@ import {assertSafeStoryStrings} from '../game/cultivation/live/memory.js';
 
 // Clean up editorial notes at the model boundary, before a named NPC can be
 // registered. Saves and accepted scenes continue to use the strict validator.
-export function normalizeWireAnnotation(story,blocks,context,field,lookup){
+export function normalizeWireAnnotation(story,blocks,context,field,lookup,otherNames=[]){
   assertSafeStoryStrings(story);
   exactKeys(story,[],['pattern','beat','anchors','npcs',...(isExperienceLife(context.life)?['opponent']:[])]);
   for(const key of ['pattern','beat'])if(Object.hasOwn(story,key)&&typeof story[key]!=='string')throw Error('Invalid story tag');
@@ -24,7 +24,7 @@ export function normalizeWireAnnotation(story,blocks,context,field,lookup){
   if(story.opponent!==undefined){
     const n=story.opponent;validateInsightShape(n,field,4);
     const actor=lookup(n[field],true),block=blocks[n.anchor],speaker=block?.kind==='dialogue'&&block.speaker!=='self'&&lookup(block.speaker,false)?.key===actor?.key;
-    const obs=groundedInsight(n,block,actor,{speaker,ambiguous:actor?.ambiguous});
+    const obs=groundedInsight(n,block,actor,{speaker,ambiguous:actor?.ambiguous,others:[...context.entities.map(e=>e.name),...otherNames],blocks});
     if(obs)result.opponent={[field]:n[field],...obs};
   }
   if(story.npcs===undefined)return result;

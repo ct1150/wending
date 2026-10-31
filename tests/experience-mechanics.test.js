@@ -50,3 +50,22 @@ test('unmarked fight menu and paid action reproduce the independently captured p
  assert.equal(sha256(canonicalStringify(menu)),'a86208727fccfe9eb74d604d985b93025fa043bfa490af4c6e5737bba94a994b');
  assert.equal(sha256(canonicalStringify(p)),'9c565032a418d99525c25abc1f4f08c4009ca4785c0e91bba4f9746e8c9481c9');
 });
+
+test('only affirmative single-subject evidence survives decode, scene validation and durable fight preparation',()=>{
+ const s=birth(),p=prepareOpening(s,{requestId:'evidence'}),c=buildStoryContext(s,p,[]);
+ const a={kind:'person',name:'陈砚',ref:'',status:null},b={kind:'person',name:'李明',ref:'',status:null};
+ const opts=[{action:'fight:guard',target:a,stake:'low',purpose:'守桥',anchor:0},{action:'fight:guard',target:b,stake:'low',purpose:'守岸',anchor:0},{action:'rest:recover',target:'self',stake:'low',purpose:'暂歇',anchor:0}];
+ const note={realmId:'foundation',purpose:'守桥',condition:'旧伤未愈'};
+ const run=(blocks,expected)=>{
+   const w={title:'桥头',location:'落苇渡',blocks,choices:opts,memoryDeltas:[],story:{pattern:'conflict',beat:'progress',anchors:[0],opponent:{target:a,anchor:0,...note}}};
+   const scene=decodeGlmScene(w,c,{storyActions:true});validateGeneratedScene(scene,c);
+   const active=commitTurn(s,p,scene),foe=active.relatedEntities.find(e=>e.name===a.name),menu=compileChoices(active,[active.currentScene.choices[0]])[0];
+   assert.deepEqual([foe.experience?.realmId,menu.outlook.purpose,menu.outlook.condition],expected,blocks.map(x=>x.text).join(' '));
+   assert.ok(menu.enabled);const paid=prepareChoice(active,{requestId:'fight',choiceId:menu.id});assert.equal(paid.receipt.action.targetId,foe.id);
+ };
+ const none=[undefined,undefined,undefined];
+ for(const text of ['陈砚已入筑基？村民摇头，这只是没有根据的传闻。','据说陈砚已入筑基。','陈砚已入筑基，才怪。','陈砚停步。李明旧伤未愈，意在守桥。','陈砚停步，李明旧伤未愈，意在守桥。','陈砚停步。旧伤未愈，意在守桥。','陈砚向一个来客打听旧伤，意在守桥。'])run([{kind:'narration',text}],none);
+ run([{kind:'narration',text:'陈砚已入筑基。'},{kind:'narration',text:'这个传闻并不属实。'}],none);
+ run([{kind:'narration',text:'陈砚已入筑基，意在守桥；旧伤未愈。'}],['foundation','守桥','旧伤未愈']);
+ run([{kind:'dialogue',speaker:a,text:'我已入筑基，意在守桥；旧伤未愈。'}],['foundation','守桥','旧伤未愈']);
+});
