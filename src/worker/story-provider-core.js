@@ -107,7 +107,7 @@ function narrativePrompt(system,context,wire,location,plan){
   }
   if(context.previousScene?.id===context.namespace+':t'+(context.identity.turnId-1)+':s:closed')focus+='先前互动已经结束；不再推进那件请求。';
   return [
-    system+'\n只写原创正文，先输出 blocks。用一至四段旁白或对白写清人物意图与所见后果；短问题直接回答，不凑字数。旁白无 speaker；对白 speaker 用输入中的活人别名或新人物 {kind:"person",name:"实际姓名"}。姓名是数据，不自行编造身份标识或生死状态。\n玩家的备选决定由游戏提供。possibleNextSteps 描述可以做、还没有做的事；让场景自然承接这些可能性，停在玩家决定前，不列菜单、不代选、不把任何备选当成已经发生的事实。\n只有在正文支持时才补 title、location、memoryDeltas 或 story，不必凑字段。新记忆用 target、kind 和实际段落下标 anchor；承诺须有人明确作出。关闭旧约定或线索只引用已给的 referenceId 和合法状态，不改旧事实。权威位置、行囊与数值以 receipt 和 life 为准。',
+    system+'\n先在 blocks 中用原创正文回应本次选择的实际结果。一至三段自然旁白或对白即可；一句话能答清就收住，不凑字数，不罗列额外资料。旁白无 speaker；对白 speaker 用输入中的活人别名或新人物 {kind:"person",name:"实际姓名"}。姓名是数据，不自行编造身份标识或生死状态。\n玩家的备选决定由游戏提供。possibleNextSteps 描述可以做、还没有做的事；让场景自然承接这些可能性，停在玩家决定前，不列菜单、不代选、不把任何备选当成已经发生的事实。\n只有在正文支持时才补 title、location、memoryDeltas 或 story，不必凑字段。新记忆用 target、kind 和实际段落下标 anchor；承诺须有人明确作出。关闭旧约定或线索只引用已给的 referenceId 和合法状态，不改旧事实。权威位置、行囊与数值以 receipt 和 life 为准。',
     JSON.stringify({selectedPurpose:selected?.label??'开启眼前的第一个事件',focus,settled:{location:location??null,items:context.life.items,elapsedDays:context.receipt.elapsedDays,itemChanges:context.receipt.itemChanges,relationChanges:wire.context.receipt.relationChanges},possibleNextSteps:plan.cues}),
   ];
 }
@@ -242,8 +242,15 @@ export async function generateProviderScene(ai,profile,context,options={},assert
     const choice=raw.choices?.[0],usage=raw.usage;
     if(usage&&['prompt_tokens','completion_tokens','total_tokens'].every(k=>Number.isSafeInteger(usage[k])&&usage[k]>=0)&&usage.total_tokens===usage.prompt_tokens+usage.completion_tokens){result.usage={promptTokens:usage.prompt_tokens,completionTokens:usage.completion_tokens,totalTokens:usage.total_tokens};}
     result.stopReason=['stop','length','tool_calls','content_filter'].includes(choice?.finish_reason)?choice.finish_reason:null;
-    if(result.stopReason==='length')fail('OUTPUT_TRUNCATED');
-    if(result.stopReason!=='stop')fail('STOP_REASON_INVALID');
+    const namedV7=directed&&profile.modelId===GLM_MODEL_ID&&profile.storyActions===true;
+    const engineMenu=namedV7&&profile.engineMenu===true;
+    // When decisions are engine-owned, a token ceiling can end optional prose
+    // after a complete block. It is still a length finish, with the same model,
+    // accounting, thinking and content checks as a normal completed response.
+    const capped=engineMenu&&result.stopReason==='length';
+    if(!capped&&result.stopReason==='length')fail('OUTPUT_TRUNCATED');
+    if(!capped&&result.stopReason!=='stop')fail('STOP_REASON_INVALID');
+    if(capped&&raw.model!==profile.modelId)fail('MODEL_RESPONSE_MISMATCH');
     if(!result.usage)fail('PROVIDER_USAGE_INVALID');
     if(result.usage.completionTokens>input.max_tokens)fail('OUTPUT_TOO_LARGE');
     // The provider may return both reasoning aliases with whitespace placeholders.
@@ -254,11 +261,10 @@ export async function generateProviderScene(ai,profile,context,options={},assert
       const value=choice.message[field];return value===undefined||value===null||typeof value==='string'&&!/\S/u.test(value);
     });
     if(!result.nonThinkingValidated)fail('PROVIDER_RESPONSE_INVALID');
-    const namedV7=directed&&profile.modelId===GLM_MODEL_ID&&profile.storyActions===true;
-    const engineMenu=namedV7&&profile.engineMenu===true;
     let scene;
     try { scene=JSON.parse(choice.message.content); }
-    catch { scene=engineMenu?readCompleteV7Body(choice.message.content,context):namedV7?readCompleteV7Wire(choice.message.content):null;if(!scene)fail('PROVIDER_RESPONSE_INVALID'); }
+    catch { scene=engineMenu?readCompleteV7Body(choice.message.content,context):namedV7?readCompleteV7Wire(choice.message.content):null;if(!scene)fail(capped?'OUTPUT_TRUNCATED':'PROVIDER_RESPONSE_INVALID'); }
+    if(capped&&(!Array.isArray(scene?.blocks)||!scene.blocks.some(b=>['narration','dialogue'].includes(b?.kind)&&typeof b.text==='string'&&b.text.trim())))fail('OUTPUT_TRUNCATED');
     if(namedV7)try { scene=engineMenu?adaptV7EngineMenuOutput(scene,context):adaptV7ModelOutput(scene,context); } catch { fail('GENERATED_SCENE_INVALID'); }
     const wire=scene;
     function accept(scene,indices){

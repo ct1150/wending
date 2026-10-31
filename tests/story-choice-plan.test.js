@@ -20,6 +20,12 @@ test('the frozen opening plan becomes actionable without reading any model choic
   assert.deepEqual(materializeStoryChoices(plan,c,blocks),rows);
 });
 
+test('a quoted NPC remark yields a readable question about one clause',()=>{
+  const c=context(),body=[{kind:'dialogue',speaker:{kind:'person',name:'老张'},text:'“这东西邪门得很，我刚才摸过，指尖还麻着。”'}];
+  const ask=materializeStoryChoices(buildStoryChoicePlan(c),c,body).find(x=>x.action==='interact:ask');
+  assert.equal(ask.purpose,'问问“这东西邪门得很”是怎么回事');
+});
+
 test('a narration-only opening has a real playable menu without inventing a speaker',()=>{
   const c=context(),body=[{kind:'narration',text:'渡口无人，唯见水纹荡开。'}],rows=materializeStoryChoices(buildStoryChoicePlan(c),c,body),scene=sceneFor(c,rows,body);
   assert.ok(rows.length>=2);assert.ok(scene.choices.some(x=>x.intent==='interact'&&x.approach==='observe'&&x.targetId==='self'));assert.ok(!scene.entities.some(x=>x.kind==='person'));

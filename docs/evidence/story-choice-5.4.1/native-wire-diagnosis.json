@@ -131,5 +131,22 @@
     "extraRootFields": 2,
     "extraRootFieldNamesRecorded": false,
     "scope": "A separate dedicated synthetic life, with normal reservation and settlement. Three complete blocks and a typed NPC speaker reached the adapter. Two surplus properties on the parsed top-level object caused rejection. The exact surplus keys and original text were not captured."
+  },
+  "candidate118": {
+    "sourceCommit": "8444d3342f00832e5197d4bc51372cb21cd0f2d0",
+    "ordinaryTrafficPercent": 0,
+    "gameplay": [
+      "opening ready, revision 1, 3 actionable choices",
+      "ask the vendor ready, revision 2, 3 actionable choices",
+      "rest:recover rejected OUTPUT_TRUNCATED, revision unchanged"
+    ],
+    "thirdTurnCompleteNarrativeBlockLengths": [
+      291,
+      173,
+      128
+    ],
+    "forwardedTurns": 3,
+    "extraOrAutomaticTurns": 0,
+    "scope": "Actual browser, native GLM, persistent archive. Public error explicitly conveys the length stop; original raw completion tail was unavailable."
   }
 }

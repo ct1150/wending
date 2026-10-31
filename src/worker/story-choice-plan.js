@@ -98,7 +98,8 @@ export function materializeStoryChoices(plan,c,blocks){
     if(slot.action==='interact:ask'&&slot.purpose==='请对方说明事情的来由'&&typeof speaker?.text==='string'){
       // Quoting a short exact passage narrows the question without converting
       // free text into a command. The original body still belongs to the author.
-      const quoted=Array.from(speaker.text.trim()).slice(0,16).join('');if(quoted)purpose='请说明“'+quoted+'”的来由';
+      const clause=speaker.text.trim().replace(/^[“「『‘"'\s]+/u,'').split(/[。！？；，、：,.!?：“”「」『』\n]/u).find(part=>part.trim())?.trim()??'';
+      const chars=Array.from(clause);if(chars.length)purpose='问问“'+chars.slice(0,16).join('')+(chars.length>16?'…':'')+'”是怎么回事';
     }
     const r={action:slot.action,target,stake:slot.stake,purpose,anchor:0},id=identity(r);if(!runnable(c,r)||seen.has(id))return;seen.add(id);result.push(r);
   }
