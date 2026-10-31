@@ -46,7 +46,8 @@ export function createStoryProductionWorker({staticFetch=()=>new Response('Not f
       // Cloudflare module scope has no request clock. The existing API calls
       // readiness only for new work; cached results remain readable when paused.
       const {policy,evidence}=readPolicy(config);
-      if(policy.knowledge)await assertStoryKnowledgeReady(runtime.STORY_KNOWLEDGE);
+      // Corpus availability is reported by /knowledge; validated policy and
+      // the hard Free boundary alone determine inference readiness.
       return assertProviderReady({enabled:true,modelId:policy.modelId,env:runtime,evidence,purpose:'production'});
     };
     // Readiness validates the entire policy before any new inference. A retained

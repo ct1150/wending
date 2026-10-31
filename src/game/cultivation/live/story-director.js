@@ -220,17 +220,12 @@ export function validateDirectorScene(scene,context,compiledChoices) {
   validateStoryDirector(context.director,{turnId:context.identity.turnId-1});
   if(!scene.story)fail('STORY_ANNOTATION_INVALID');validateStoryAnnotation(scene.story,scene.blocks.length);
   groundedTraits(scene);
-  const length=scene.blocks.reduce((sum,block)=>sum+chars(block.text).length,0),p=context.director.pacing;
-  if(length<200||length>(scene.story.beat==='climax'&&p.canClimax?600:400))fail('STORY_LENGTH_INVALID');
-  if(scene.story.beat==='climax'&&!p.canClimax)fail('STORY_BEAT_INVALID');
+  // Pacing and prose length guide the author; only playable, grounded
+  // structure and continuity can reject a scene.
+  const p=context.director.pacing;
   if(scene.choices.length!==3||compiledChoices.filter(choice=>choice.enabled).length<2||!compiledChoices.some(cautious))fail('CHOICE_NOT_COMPILABLE');
   const labels=scene.choices.map(choice=>choice.label.replace(/[\s，。！？：、,.!?：:]/gu,''));
   if(new Set(labels).size!==3)fail('CHOICE_NOT_COMPILABLE');
   if(p.sceneHashes.includes(sha256(canonicalStringify(scene.blocks))))fail('REPEATED_SCENE');
-  if(p.beatOverdue&&scene.story.beat==='progress')fail('STORY_BEAT_INVALID');
-  if(p.opportunityRequired&&!['reversal','revelation','resolution'].includes(scene.story.beat))fail('STORY_BEAT_INVALID');
-  const anchors=scene.story.anchors.map(anchor=>scene.blocks[anchor].text);
-  if(scene.story.beat!=='progress'&&!scene.memoryDeltas.some(row=>!row.referenceId&&anchors.some(block=>block.includes(row.text)))&&!context.receipt.cultivationResult?.check)fail('STORY_BEAT_INVALID');
-  if(scene.story.beat==='resolution'&&p.completedPatterns.at(-1)===scene.story.pattern)fail('REPEATED_STORY_ARC');
   return scene;
 }

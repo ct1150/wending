@@ -88,7 +88,9 @@ test('full corpus production package binds the private namespace and pins its ve
   const worker=await import(pathToFileURL(path.join(output,'entry.mjs')).href);
   assert.deepEqual(worker.backendIdentity.knowledge,manifest.knowledge);
   const caps=await(await worker.default.fetch(new Request('https://game.test/api/story/capabilities'),{AI:{run(){throw Error('no inference expected');}}})).json();
-  assert.equal(caps.available,false);assert.equal(caps.errorCode,'KNOWLEDGE_UNAVAILABLE');
+  assert.equal(caps.available,true);assert.equal(caps.errorCode,null);
+  const knowledgeHealth=await(await worker.default.fetch(new Request('https://game.test/api/story/knowledge'))).json();
+  assert.equal(knowledgeHealth.available,false);assert.equal(knowledgeHealth.errorCode,'KNOWLEDGE_UNAVAILABLE');
 });
 
 for(const promoted of [false,true])test(`default CLI builds a disabled backend with enabled policy and ${promoted?'promoted':'unvalidated'} registry`,async t=>{
