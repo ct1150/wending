@@ -36,14 +36,20 @@ test('cinematic is the default while saved reading preferences keep their meanin
   }
 });
 
-test('retained legacy pages and their settings return target survive a same-tab reload', () => {
+test('removed save menus and offline pages normalize to home on reload', () => {
   const storage=memory();
-  for(const screen of ['inventory','worlds','legacies','chronicle']) {
-    module.saveNavigation(storage,{screen,mode:'offline'});
-    assert.equal(module.loadNavigation(storage,'reload').screen,screen);
+  for(const screen of ['saves','inventory','worlds','legacies','chronicle']) {
+    storage.setItem('wending-navigation-v1',JSON.stringify({screen,mode:'live',returnScreen:screen}));
+    assert.equal(module.loadNavigation(storage,'reload').screen,'home',screen);
+    assert.equal(module.loadNavigation(storage,'reload').returnScreen,'home',screen);
     assert.equal(module.loadNavigation(storage,'navigate').screen,'home');
-    module.saveNavigation(storage,{screen:'settings',mode:'offline',returnScreen:screen});
-    assert.equal(module.loadNavigation(storage,'reload').returnScreen,screen);
+  }
+  for(const screen of ['new','adventure','settings']) {
+    storage.setItem('wending-navigation-v1',JSON.stringify({screen,mode:'offline',returnScreen:'adventure',offlineDraft:{raw:'original offline bytes',name:'旧旅人',expectedRaw:null,expectedBackupRaw:null}}));
+    const restored=module.loadNavigation(storage,'reload');
+    assert.equal(restored.screen,'home',screen);
+    assert.notEqual(restored.mode,'offline');
+    assert.equal(restored.offlineDraft??null,null);
   }
 });
 

@@ -100,7 +100,10 @@ test('v7 schemas expose only paired executable craft resources and the next high
 });
 
 test('legacy named wire keeps its original two-choice contract and never requests new narrative annotations',()=>{
-  const state=createLiveGame({runId:'legacy-director-wire',seed:42}),c=buildStoryContext(state,prepareOpening(state,{requestId:'legacy-open'}));
+  const state=createLiveGame({runId:'legacy-director-wire',seed:42}),c=structuredClone(buildStoryContext(state,prepareOpening(state,{requestId:'legacy-open'})));
+  // A frozen 5.0.1 request predates the optional retrieval capability. Fresh
+  // contexts advertise it; replaying an old request must retain its exact wire.
+  delete c.retrieval;
   const built=buildGlmWire(c,'',{storyActions:true}),schema=buildNamedSceneSchema(built.schema,built.context);
   assert.equal(schema.properties.choices.minItems,2);
   assert.ok(!schema.required.includes('story'));

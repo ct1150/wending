@@ -15,7 +15,7 @@ async function fixture(t) {
   return root;
 }
 
-test('offline build preserves isolated module scopes and inlines styles and SVG assets', async t => {
+test('web build preserves isolated modules and assets without producing an offline download', async t => {
   const root = await fixture(t);
   await writeFile(path.join(root, 'index.html'), '<!doctype html><link rel="stylesheet" href="./src/styles.css"><link rel="icon" href="./assets/mark.svg"><img src="./assets/mark.svg"><script type="module" src="./src/app.js"></script>');
   await writeFile(path.join(root, 'assets/mark.svg'), '<svg xmlns="http://www.w3.org/2000/svg"><path d="M0 0"/></svg>');
@@ -24,16 +24,19 @@ test('offline build preserves isolated module scopes and inlines styles and SVG 
   await writeFile(path.join(root, 'src/b.js'), 'const privateValue = 22; function read() { return privateValue; } export { read as b };');
   await writeFile(path.join(root, 'src/app.js'), 'import { a as first, label } from "./a.js"; import { b } from "./b.js"; globalThis.answer = first + b(); globalThis.label = label; globalThis.image = "./assets/mark.svg";');
   const meta = await build(root);
-  const html = await readFile(path.join(root, 'release/baishi-wending-offline.html'), 'utf8');
+  assert.equal(meta.frontend?.file, 'baishi-wending-web.html');
+  assert.equal(meta.offline, undefined);
+  const html = await readFile(path.join(root, 'release/baishi-wending-web.html'), 'utf8');
   assert.equal(await readFile(path.join(root, 'dist/index.html'), 'utf8'), await readFile(path.join(root, 'index.html'), 'utf8'));
-  assert.equal(await readFile(path.join(root, 'dist/baishi-wending-offline.html'), 'utf8'), html);
+  for (const file of ['release/baishi-wending-offline.html', 'dist/baishi-wending-offline.html', 'dist/baishi-wending-web.html']) await assert.rejects(readFile(path.join(root, file)), { code: 'ENOENT' });
   assert.match(html, /<style>/); assert.match(html, /data:image\/svg\+xml;base64,/);
   assert.doesNotMatch(html, /(?:href|src)="\.\//); assert.doesNotMatch(html, /type="module"/);
   const context = {}; vm.runInNewContext(html.match(/<script>([\s\S]*)<\/script>/)[1], context);
   assert.equal(context.answer, 42); assert.equal(context.label, 'export default import');
   assert.match(context.image, /^data:image\/svg\+xml;base64,/);
-  assert.equal(meta.offline.bytes, Buffer.byteLength(html)); assert.match(meta.offline.sha256, /^[0-9a-f]{64}$/);
-  assert.equal(JSON.parse(await readFile(path.join(root, 'release/release.json'), 'utf8')).version, '1.0.0');
+  assert.equal(meta.frontend.bytes, Buffer.byteLength(html)); assert.match(meta.frontend.sha256, /^[0-9a-f]{64}$/);
+  const savedMetadata = JSON.parse(await readFile(path.join(root, 'release/release.json'), 'utf8'));
+  assert.equal(savedMetadata.version, '1.0.0'); assert.deepEqual(savedMetadata.frontend, meta.frontend); assert.equal(savedMetadata.offline, undefined);
 });
 
 test('unsupported module syntax fails explicitly', () => {
@@ -78,32 +81,30 @@ test('development server serves modules and refuses traversal, hidden files, sym
   assert.equal((await get(handler, '/', 'POST')).status, 405); assert.equal((await get(handler, '/', 'HEAD')).body, '');
 });
 
-test('development offline download falls back to dist without bypassing root files or path restrictions', async t => {
+test('development server retires offline downloads even when stale files remain', async t => {
   const root = await fixture(t); const dist = path.join(root, 'dist');
   const filename = 'baishi-wending-offline.html';
   await mkdir(dist); await writeFile(path.join(dist, filename), '<h1>offline release</h1>');
   const handler = await createRequestHandler(root);
-  const download = await get(handler, '/' + filename);
-  assert.equal(download.status, 200); assert.equal(download.body, '<h1>offline release</h1>');
-  assert.match(download.headers['Content-Type'], /text\/html/);
   const distHandler = await createRequestHandler(dist);
-  assert.equal((await get(distHandler, '/' + filename)).body, download.body);
   await writeFile(path.join(root, filename), '<h1>root release</h1>');
-  assert.equal((await get(handler, '/' + filename)).body, '<h1>root release</h1>');
-  await rm(path.join(root, filename));
+  for (const serve of [handler, distHandler]) {
+    for (const url of ['/' + filename, '/' + filename + '?download=1']) {
+      const retired = await get(serve, url);
+      assert.equal(retired.status, 410); assert.match(retired.headers['Content-Type'], /text\/plain/);
+      assert.equal(retired.headers['Content-Disposition'], undefined); assert.doesNotMatch(retired.body, /<h1>/);
+      const head = await get(serve, url, 'HEAD'); assert.equal(head.status, 410); assert.equal(head.body, '');
+    }
+  }
+  assert.equal((await get(handler, '/' + filename, 'POST')).status, 405);
   for (const url of ['/%2e%2e/' + filename, '/.hidden/' + filename]) assert.equal((await get(handler, url)).status, 403);
-  await rm(path.join(dist, filename)); await symlink('/etc/passwd', path.join(dist, filename));
-  assert.equal((await get(handler, '/' + filename)).status, 403);
+  await rm(path.join(root, filename)); await rm(path.join(dist, filename));
+  assert.equal((await get(handler, '/' + filename)).status, 410);
 });
 
-test('production app and journey renderer bundle through the offline named-module graph', async () => {
+test('production web app bundles through the named-module graph', async () => {
   const code = await bundleModules(process.cwd(), './src/app.js');
   assert.doesNotThrow(() => new vm.Script(code));
-  const { startApp } = await import('./helpers/app-harness.js');
-  const app = await startApp();
-  assert.match(app.html, /data-birth-start/);
-  app.clickRendered('[data-birth-start]');
-  assert.match(app.html, /data-journey-choice/);
 });
 
 test('static outputs exclude server code and browser imports cannot reach worker modules',async t=>{
@@ -114,7 +115,7 @@ test('static outputs exclude server code and browser imports cannot reach worker
   await writeFile(path.join(root,'src/worker/private.js'),'export const operatorEvidence = "SERVER_ONLY_EVIDENCE";');
   await build(root);
   await assert.rejects(readFile(path.join(root,'dist/src/worker/private.js')),/ENOENT/);
-  assert.doesNotMatch(await readFile(path.join(root,'release/baishi-wending-offline.html'),'utf8'),/SERVER_ONLY_EVIDENCE/);
+  assert.doesNotMatch(await readFile(path.join(root,'release/baishi-wending-web.html'),'utf8'),/SERVER_ONLY_EVIDENCE/);
   await writeFile(path.join(root,'src/app.js'),'import { operatorEvidence } from "./worker/private.js"; globalThis.leak = operatorEvidence;');
   await assert.rejects(build(root),/server|worker/i);
 });

@@ -6,7 +6,7 @@ import { createStoryWorker } from '../src/worker/index.js';
 import { createBudgetCoordinator } from '../src/worker/story-budget.js';
 import { generateScene } from '../src/worker/story-provider.js';
 import { generateAcceptanceScene } from '../src/worker/story-acceptance.js';
-import { CANDIDATE_PROFILE,GLM_MODEL_ID } from '../src/worker/story-config.js';
+import { CANDIDATE_PROFILE,GLM_MODEL_ID,STORY_LIMITS } from '../src/worker/story-config.js';
 import { createLiveGame,prepareOpening } from '../src/game/cultivation/live/engine.js';
 import { buildStoryContext } from '../src/game/cultivation/live/memory.js';
 import { canonicalStringify,sha256 } from '../src/game/cultivation/live/identity.js';
@@ -44,6 +44,16 @@ test('the story API never reads the old Zhipu secret for a CF-only turn',async t
   const f=fixture();t.after(()=>f.db.close());const s=await session(f);
   const env={get ZHIPU_API_KEY(){throw Error('unused secret must not be read');}};
   assert.equal((await(await f.api.fetch(req('/api/story/turn',body(s),s.cookie),env)).json()).status,'ready');assert.equal(f.calls,1);
+});
+
+test('an API without an explicit knowledge policy never reads an ambient knowledge binding',async t=>{
+  const f=fixture(async(_ai,_profile,c,_options,runtime)=>{
+    assert.equal(runtime.knowledgeStore,undefined);
+    return {status:'ready',scene:scene(c),accountingStatus:'complete'};
+  });t.after(()=>f.db.close());const s=await session(f);
+  const env={get STORY_KNOWLEDGE(){throw Error('ambient binding must not activate knowledge');}};
+  const result=await(await f.api.fetch(req('/api/story/turn',body(s),s.cookie),env)).json();
+  assert.equal(result.status,'ready',result.errorCode);assert.equal(f.calls,1);
 });
 
 test('default API watchdog pauses at 90 seconds and preserves the unknown reservation without retry',async t=>{
@@ -170,7 +180,7 @@ test('Task8 records safe provider and API rejection observations once, without e
     assert.ok(Number.isInteger(observation.latencyMs)&&observation.latencyMs>=0);
     if(['ready','provider-structure'].includes(mode)){
       assert.equal(observation.modelId,CANDIDATE_PROFILE.modelId);assert.match(observation.inputHash,/^[a-f0-9]{64}$/);
-      assert.ok(observation.inputBytes>0&&observation.inputBytes<=12288);
+      assert.ok(observation.inputBytes>0&&observation.inputBytes<=STORY_LIMITS.maxInputBytes);
       assert.deepEqual(observation.usage,{promptTokens:100,completionTokens:80,totalTokens:180});
       assert.equal(observation.stopReason,'stop');assert.equal(observation.nonThinkingValidated,true);
     }
@@ -303,7 +313,7 @@ test('contract vocabulary is complete and accounting is independent of public er
   const {STORY_ERROR_CODES}=await import('../src/game/cultivation/live/memory.js');
   const {PROVIDER_ERROR_CODES}=await import('../src/worker/story-provider.js');
   const {readFile}=await import('node:fs/promises');
-  const source=(await Promise.all(['memory.js','story-director.js','story-annotation.js'].map(file=>readFile(new URL('../src/game/cultivation/live/'+file,import.meta.url),'utf8')))).join('\n');
+  const source=(await Promise.all(['memory.js','story-director.js','story-annotation.js','retrieval-memory.js'].map(file=>readFile(new URL('../src/game/cultivation/live/'+file,import.meta.url),'utf8')))).join('\n');
   const retiredEditorialCodes=['STORY_LENGTH_INVALID','STORY_BEAT_INVALID','REPEATED_STORY_ARC'];
   const activeCodes=[...new Set([...source.matchAll(/(?:fail|new Error)\('([A-Z_]+)'\)/g)].map(m=>m[1]))];
   assert.deepEqual(activeCodes.sort(),STORY_ERROR_CODES.filter(code=>!retiredEditorialCodes.includes(code)).sort());

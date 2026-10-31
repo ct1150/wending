@@ -132,5 +132,6 @@ test('a claimed death settlement cannot offer a second reincarnation purchase', 
   const html=renderLiveJourney({...view,reincarnatedTo:'new-life'},[]);
   assert.match(html,/data-live-reincarnate[^>]*disabled/);
   assert.equal((html.match(/data-live-reward="[^"]+"[^>]*disabled/g)??[]).length,4);
-  assert.match(html,/此生已经步入轮回/);
+  assert.match(html,/此生传承已领取/);
+  assert.match(html,/恢复下一世备份，或返回首页重新开始/);
 });

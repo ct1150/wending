@@ -3,14 +3,10 @@ import assert from 'node:assert/strict';
 import { renderJourney, renderJourneyHistory } from '../src/ui/journey.js';
 import { renderIdentityBar, renderCharacterDetails } from '../src/ui/character.js';
 import { serializeGame, deserializeGame } from '../src/game/save-format.js';
-import { createJourney } from '../src/game/journey/engine.js';
-import { createCultivation, getCultivationView, chooseCultivation } from '../src/game/cultivation/engine.js';
 import { bootstrapSession, persistSession, migrateSession, recoverLegacySession } from '../src/ui/session.js';
 import { SAVE_KEY } from '../src/game/persistence.js';
-import { startApp } from './helpers/app-harness.js';
 
 // A public display-view fixture isolates presentation from authored route text.
-// The actual application tests below still run the bundled engine and storage.
 function displayView() {
   return {
     revision: 8, sceneId: 'arrival', phase: 'playing', title: '山门之外', location: '药谷',
@@ -39,16 +35,6 @@ function cultivationCheckpoint() {
     scene: { nodeId: 'arrival', fate: { opening: 'valley', opportunity: 'marsh', pressure: 'rival' }, visited: [] },
     transcript: [], summary: null,
   };
-}
-
-function currentCommand(state) {
-  const view = getCultivationView(state), choice = view.choices.find(row => row.enabled);
-  assert.ok(choice, 'the authored current scene must offer a playable choice');
-  return { revision: view.revision, sceneId: view.sceneId, choiceId: choice.id };
-}
-
-function clickCommand(app, command) {
-  app.click({ journeyChoice: command.choiceId, revision: String(command.revision), sceneId: command.sceneId });
 }
 
 test('the unified save boundary round-trips cultivation and rejects an invalid cultivation state', () => {
@@ -98,28 +84,6 @@ test('cultivation separates compact identity from current goal and natural choic
   assert.deepEqual(view, before);
 });
 
-test('the actual fresh application prepares character creation in the tab without activating a save', async () => {
-  const app = await startApp(), state = deserializeGame(app.navigation.offlineDraft.raw);
-  assert.equal(state.version, 4);
-  assert.equal(state.mode, 'cultivation');
-  assert.equal(state.contentVersion, 3);
-  assert.equal(state.phase, 'creating');
-  assert.equal(state.revision, 0);
-  assert.equal(state.scene.nodeId, 'arrival');
-  assert.equal(state.life.realm, 'mortal');
-  assert.equal(state.life.ageDays, 5760);
-  assert.equal(app.storage.raw, null);
-  assert.equal(app.storage.writes, 0);
-  assert.match(app.html, /id="birth-name"[^>]*value="云归"/);
-  assert.match(app.html, /data-birth-start/);
-  assert.doesNotMatch(app.html, /data-journey-choice/);
-  assert.doesNotMatch(app.html, /data-action|data-equip|data-rebirth|dao-name/);
-  const restored = await startApp({ navigation: app.navigation, navigationType: 'reload' });
-  assert.equal(restored.storage.writes, 0);
-  assert.equal(restored.storage.raw, null);
-  assert.deepEqual(deserializeGame(restored.navigation.offlineDraft.raw), state);
-});
-
 test('the cultivation ending explains its achievement and lesson and keeps each completed life readable', () => {
   const view = displayView();
   const ending = { cause: 'retired', title: '归山收剑', generation: 1, age: 44, realm: 'qi', achievement: '你终于独自引气入体。', lesson: '下次入山前，先备好治伤的药。' };
@@ -141,134 +105,4 @@ test('the cultivation ending explains its achievement and lesson and keeps each 
   assert.match(escaped, /&lt;img/);
   assert.match(escaped, /&lt;script/);
   assert.match(escaped, /&lt;svg/);
-});
-
-test('an existing journey confirms a new chapter and keeps the original available to restore', async () => {
-  const source = createJourney({ seed: 'old-chapter' }), raw = serializeGame(source);
-  const app = await startApp({ raw });
-  assert.equal(app.storage.writes, 0);
-  app.clickRendered('[data-view="settings"]');
-  app.clickRendered('[data-export]');
-  const backup = app.downloads.find(value => value instanceof Blob);
-  assert.deepEqual(deserializeGame(await backup.text()), source);
-  app.clickRendered('[data-menu-back]'); app.clickRendered('[data-home]');
-  app.clickRendered('[data-title-new]');
-  assert.equal(app.dialog.open, true);
-  assert.match(app.dialog.innerHTML, /原有旅程会保留/);
-  assert.equal(app.storage.raw, raw);
-  app.click({ closeDialog: '' });
-  assert.equal(app.storage.raw, raw);
-  app.clickRendered('[data-title-new]'); app.clickRendered('[data-confirm]');
-  const fresh = deserializeGame(app.navigation.offlineDraft.raw);
-  assert.equal(app.storage.raw, raw);
-  assert.equal(app.storage.writes, 0);
-  assert.equal(fresh.version, 4);
-  assert.equal(fresh.phase, 'creating');
-  assert.equal(fresh.world.generation, 1);
-  assert.equal(fresh.revision, 0);
-  assert.equal(fresh.life.realm, 'mortal');
-  app.clickRendered('[data-birth-start]');
-  assert.equal(deserializeGame(app.storage.raw).phase, 'playing');
-  assert.equal(app.storage.writes, 1);
-  app.clickRendered('[data-view="settings"]'); await app.clickRendered('[data-saves]');
-  const previousId = app.html.match(/data-select-offline="([^"]+)"/g).map(value => value.match(/"([^"]+)"/)[1]).find(id => id !== 'current');
-  assert.ok(previousId, 'new creation retains the original journey in the public save list');
-  await app.clickRendered(`[data-select-offline="${previousId}"]`);
-  assert.equal(app.storage.raw, raw);
-  assert.match(app.html, /data-journey-choice/);
-});
-
-test('cultivation choices apply once, focus the consequence and stay unchanged after reload or an old click', async () => {
-  const app = await startApp({ raw: serializeGame(createCultivation({ seed: 'existing-cultivation-choice' })) }), before = deserializeGame(app.storage.raw), command = currentCommand(before);
-  const button = app.html.match(new RegExp(`<button[^>]*data-journey-choice="${command.choiceId}"[^>]*>`))?.[0];
-  assert.ok(button);
-  const renderedCommand = {
-    choiceId: button.match(/data-journey-choice="([^"]+)"/)[1],
-    revision: Number(button.match(/data-revision="([^"]+)"/)[1]),
-    sceneId: button.match(/data-scene-id="([^"]+)"/)[1],
-  };
-  clickCommand(app, renderedCommand);
-  const progressed = deserializeGame(app.storage.raw), writes = app.storage.writes;
-  assert.equal(progressed.version, 4);
-  assert.equal(progressed.revision, 1);
-  assert.equal(progressed.rng, before.rng);
-  assert.equal(progressed.transcript.filter(block => block.choiceId === command.choiceId).length, 1);
-  const result = progressed.transcript.find(block => block.kind === 'result');
-  assert.ok(result);
-  assert.equal(app.focus.at(-1), `#journey-block-${result.id}`);
-  assert.equal(app.scroll.at(-1), `#journey-block-${result.id}`);
-  clickCommand(app, renderedCommand);
-  assert.equal(app.storage.writes, writes);
-  assert.deepEqual(deserializeGame(app.storage.raw), progressed);
-  const restored = await startApp({ raw: app.storage.raw });
-  assert.equal(restored.storage.writes, 0);
-  assert.ok(restored.html.includes(result.text));
-  clickCommand(restored, renderedCommand);
-  assert.equal(restored.storage.writes, 0);
-  assert.deepEqual(deserializeGame(restored.storage.raw), progressed);
-});
-
-test('cultivation import, export and help preserve the saved life through the actual controller', async () => {
-  let source = createCultivation({ seed: 'cultivation-import' });
-  source = chooseCultivation(source, currentCommand(source)).state;
-  source.life.name = '<云归>';
-  const previous = serializeGame(createJourney({ seed: 'keep-until-confirmed' }));
-  const legacyBackupRaw = '{unrelated old backup';
-  const app = await startApp({ raw: previous, legacyBackupRaw });
-  await app.import(serializeGame(source));
-  assert.equal(app.storage.raw, previous);
-  assert.equal(app.storage.writes, 0);
-  assert.match(app.dialog.innerHTML, /&lt;云归&gt;/);
-  assert.match(app.dialog.innerHTML, /凡人/);
-  assert.doesNotMatch(app.dialog.innerHTML, /undefined|NaN/);
-  app.click({ confirm: '' });
-  assert.equal(app.focus.at(-1), '#journey-current-title');
-  assert.deepEqual(deserializeGame(app.storage.raw), source);
-  const writes = app.storage.writes;
-  app.clickRendered('[data-view="settings"]'); app.clickRendered('[data-help]');
-  assert.match(app.dialog.innerHTML, /求仙/);
-  app.click({ view: 'settings' }); app.click({ export: '' });
-  const backup = app.downloads.find(value => value instanceof Blob);
-  assert.deepEqual(deserializeGame(await backup.text()), source);
-  const download = app.downloads.find(value => typeof value?.download === 'string');
-  assert.match(download.download, /第1世-16岁\.json$/);
-  app.clickRendered('[data-menu-back]');
-  assert.equal(app.storage.writes, writes);
-  assert.deepEqual(deserializeGame(app.storage.raw), source);
-  clickCommand(app, currentCommand(source));
-  assert.equal(deserializeGame(app.storage.raw).revision, source.revision + 1);
-  app.clickRendered('[data-view="settings"]'); app.clickRendered('[data-export-recovery]');
-  const recovery = JSON.parse(await app.downloads.filter(value => value instanceof Blob).at(-1).text());
-  assert.equal(recovery.format, 'wending-recovery-backups');
-  assert.ok(recovery.entries.some(entry => entry.raw === previous && entry.backupRaw === legacyBackupRaw), 'the original primary and malformed handoff remain exportable byte for byte after import');
-});
-
-test('failed cultivation writes leave new in-memory choices exportable and preserve the previous saved life', async () => {
-  const source = createCultivation({ seed: 'cultivation-quota' }), raw = serializeGame(source);
-  const app = await startApp({ raw, denyWrite: true });
-  clickCommand(app, currentCommand(source));
-  assert.equal(app.storage.raw, raw);
-  assert.match(app.html, /自动保存暂不可用/);
-  assert.match(app.html, /data-revision="1"/);
-  app.clickRendered('[data-view="settings"]'); app.clickRendered('[data-export]');
-  const progressed = deserializeGame(await app.downloads.find(value => value instanceof Blob).text());
-  assert.equal(progressed.revision, 1);
-  assert.equal(progressed.version, 4);
-  app.clickRendered('[data-menu-back]');
-  clickCommand(app, currentCommand(progressed));
-  assert.match(app.html, /data-revision="2"/);
-  assert.equal(app.storage.raw, raw);
-});
-
-test('malformed cultivation imports never replace a valid saved life or its export', async () => {
-  const source = createCultivation({ seed: 'cultivation-kept' }), raw = serializeGame(source);
-  const app = await startApp({ raw });
-  const malformed = structuredClone(source); malformed.scene.nodeId = '<script>bad()</script>';
-  await app.import(JSON.stringify(malformed));
-  assert.equal(app.dialog.open, false);
-  assert.equal(app.storage.writes, 0);
-  assert.equal(app.storage.raw, raw);
-  assert.match(app.toast, /存档/);
-  app.clickRendered('[data-view="settings"]'); app.clickRendered('[data-export]');
-  assert.deepEqual(deserializeGame(await app.downloads.find(value => value instanceof Blob).text()), source);
 });

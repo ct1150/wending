@@ -63,11 +63,15 @@ Free proof 保留原始 `checkedAt`、来源和账户，不伪造新观察。验
 
 | 产物 | 用途 |
 | --- | --- |
+| `release/baishi-wending-web.html` | 供网关内嵌和静态发行使用的联网前端；不作为离线游戏下载 |
+| `release/release.json` | 本地构建版本及 `frontend` 文件名、字节数和 SHA-256 |
 | `release/gateway.mjs` | 单模块静态网关，不包含实时 API |
 | `release/backend/entry.mjs` 与 `src/**` | 完整 ESM 后端、生产入口及 StoryBudget 命名导出 |
 | `release/backend/deployment.json` | 源码、版本、绑定、模块字节与 SHA-256 清单；不是直接上传的 Cloudflare metadata |
 | `wrangler.story.json` | 后端入口与首次部署参考；已有 namespace 更新不重新创建迁移 |
 | `wrangler.jsonc` | 旧静态 Assets 配置，不代替实时生产上传合同 |
+
+构建不再生成 `baishi-wending-offline.html`，也不向 `dist/` 复制单文件下载。更新后的网关和开发服务器对旧下载路径 `/baishi-wending-offline.html` 返回 `410 Gone`；HEAD 无响应正文，该路径不会读取缓存或刷新发行频道。已有 Worker 的路由只有重新部署后才会改变，单独发布 HTML 不能撤除旧下载入口。
 
 ## 存储与账户身份
 
@@ -86,9 +90,9 @@ Free proof 保留原始 `checkedAt`、来源和账户，不伪造新观察。验
 1. 归档真实模型输入/响应、当前源码解析与规则提交、受保护浏览器保存恢复，以及失败样本和修复回归。当前覆盖分属 `47c4064` 浏览器与 `b519bf4` 最终模型校验，明确记录组件变化，不宣称整个新提交已经线上跑过。
 2. 晋升 Qwen 3.8 profile 并启用仓库生产策略，运行最终源码完整 release、显式生产打包及独立审查。普通 CI 后端产物继续关闭推理。
 3. 推送最终 PR #14 分支，观察精确 head 的 CI；合并后记录真实 main SHA 与 main 验证结果。
-4. 等待 main publish 完成，核对 `release-channel/manifest.json.sourceCommit` 指向最终 main。生产网关读取该频道，避免旧频道覆盖新内嵌页面。
+4. 等待 main publish 完成，核对 `release-channel/manifest.json.sourceCommit` 指向最终 main。普通静态网关读取该频道；显式生产包固定内嵌页面，仍需下一步重新部署。
 5. 从最终 main SHA 生成显式生产包，取得当前部署基线并上传原 Worker。上传前比较 deployment/version、settings、旧模块摘要；并发变更或不确定结果先调查，不隐式重复 PUT。
-6. 回读全部模块、绑定和版本；无 tester permit 检查 capabilities。核对 `/healthz`、首页与离线下载的源码、版本、字节和摘要，再完成公开浏览器新建人生、实际选择、保存和刷新恢复。
+6. 回读全部模块、绑定和版本；无 tester permit 检查 capabilities。核对 `/healthz` 与首页的源码、版本、字节和摘要，确认旧下载路径返回 `410 Gone`，再完成公开浏览器新建人生、实际选择、保存和刷新恢复。
 
 原始 API 上传须上传全部清单模块并转换为 Cloudflare multipart metadata，不能只传 entry 或静态 gateway。正式模块图不包含 tester/operator 入口，玩家生成无需 tester permit 或 operator secret。
 
@@ -97,6 +101,8 @@ Free proof 保留原始 `checkedAt`、来源和账户，不伪造新观察。验
 `.github/workflows/validate-deploy.yml` 执行 `npm ci --ignore-scripts`、浏览器依赖安装、`npm run release` 和默认关闭后端打包，保存对应源码的产物。只有 main 的非 PR 工作流继续 publish，用该次验证产物写入不可变 HTML 与 `release-channel` manifest。
 
 `publish-release.js` 发布前复查 main 身份，以普通 fast-forward 更新频道，不覆盖已经前进的 main。网关校验 manifest、字节与 SHA-256 后切换，下载失败时保留已验证页面。活动实例按请求检查，间隔至少 60 秒，不保证全球同时切换。
+
+本地 `frontend` 元数据不会改变远程合同：频道清单继续使用 `schemaVersion:1` 与原有七个字段，产物路径仍为 `releases/<sha256>.html`，以兼容已部署的静态网关。
 
 该工作流不部署 Cloudflare AI 后端，也不证明模型验收或公开浏览器闭环。`/healthz` 报告实际提供的 HTML 身份；后端身份另查真实 deployment 和模块摘要。
 

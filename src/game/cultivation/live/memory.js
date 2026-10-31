@@ -5,6 +5,7 @@ import { prepareOpening, prepareChoice, prepareRecordedChoice, compileChoices, p
 import { DAYS_PER_YEAR, ITEMS, REALMS } from './model.js';
 import { isV7Life, summarizeLife, initialItemsForBirth, initialLifeForBirth, realmCatalogFor } from './cultivation-rules.js';
 import { advanceStoryDirector, buildDirectorContext, validateStoryDirector, validateDirectorScene } from './story-director.js';
+import { projectRetrievalMemory, validateRetrievalMemory, advanceRetrievalMemory } from './retrieval-memory.js';
 
 const encoder = new TextEncoder();
 const bytes = value => encoder.encode(JSON.stringify(value)).length;
@@ -23,6 +24,7 @@ export const STORY_ERROR_CODES=Object.freeze([
   'STORY_DIRECTOR_INVALID', 'STORY_DIRECTOR_TOO_LARGE', 'STORY_ANNOTATION_INVALID',
   // Retired editorial rejections remain in the wire vocabulary for old attempts.
   'STORY_LENGTH_INVALID', 'STORY_BEAT_INVALID', 'REPEATED_STORY_ARC',
+  'STORY_RETRIEVAL_INVALID',
 ]);
 const fail = code => { throw Object.assign(new Error(code), {code}); };
 const namespace = runId => 'r:' + sha256(runId).slice(0,16);
@@ -144,6 +146,7 @@ export function buildStoryContext(state,pending,relatedRecords=[],options={}) {
   }
   if(selecting) {
     selectRelevantMemory(result,records,state,entities,options.openTotal,current?.id);
+    addRetrievalProjection(result,state.retrieval,true);
     validateStoryContext(result);
     return freeze(result);
   }
@@ -153,8 +156,22 @@ export function buildStoryContext(state,pending,relatedRecords=[],options={}) {
     if(result.memory.summaries.length)result.memory.summaries.pop();else result.memory.recent.pop();updateReferences();
   }
   if(bytes(result)>7000)fail('MEMORY_CONTEXT_TOO_LARGE');
+  addRetrievalProjection(result,state.retrieval,false);
   validateStoryContext(result);
   return freeze(result);
+}
+
+function addRetrievalProjection(context,memory,serialized) {
+  // Retrieval is optional prompt history. Preserve the previously legal state,
+  // action and selected game memory before spending any remaining bytes on it.
+  const projection=projectRetrievalMemory(memory);
+  context.retrieval=projection;
+  const fits=()=>bytes(context)<=7000&&(!serialized||bytes(JSON.stringify(context))<=7000);
+  while(!fits()) {
+    const candidates=['recentCardIds','recentEvidenceIds','recentFamilies'].filter(key=>projection[key].length).sort((a,b)=>bytes(projection[b])-bytes(projection[a])||a.localeCompare(b,'en'));
+    if(!candidates.length){delete context.retrieval;break;}
+    projection[candidates[0]].shift();
+  }
 }
 
 // Selection changes only prompt coverage. Immutable rows and unresolved statuses
@@ -214,7 +231,8 @@ function selectRelevantMemory(result,records,state,entities,openTotal,currentTur
 // builder re-derives pending; this checks consistency, not account authentication.
 export function validateStoryContext(c) {
   inspect(c,7000);
-  exactKeys(c,['schemaVersion','phase','identity','namespace','receipt','life','entities','memory','references','previousScene'],['coverage','relationshipVersion','relationships','director']);
+  exactKeys(c,['schemaVersion','phase','identity','namespace','receipt','life','entities','memory','references','previousScene'],['coverage','relationshipVersion','relationships','director','retrieval']);
+  if(c.retrieval!==undefined)validateRetrievalMemory(c.retrieval);
   if(c.schemaVersion!==1||!['opening','choice'].includes(c.phase))fail('STORY_CONTEXT_INVALID');
   exactKeys(c.identity,['runId','turnId','baseRevision','stateHash','choiceId','rulesVersion','promptVersion','requestId']);
   idField(c.identity.runId);idField(c.identity.requestId);whole(c.identity.turnId,1);whole(c.identity.baseRevision);
@@ -287,7 +305,8 @@ function compilationState(c,scene) {
   // Mirror commitTurn's bounded active relation set while keeping the complete
   // immutable relationChanges receipt available for permanent archive storage.
   const life=copy(c.life);life.relations=projectRelations(life,scene.entities,c.relationshipVersion===1?c.relationships:{});
-  return {...(c.relationshipVersion===1||scene.choices.some(choice=>choice.intent==='interact')?{relationshipVersion:1}:{}),...(c.director?{director:advanceStoryDirector(c.director,life,c.receipt,scene,c.identity.turnId)}:{}),version:5,mode:'cultivation',contentVersion:4,rulesVersion:1,promptVersion:1,runId:c.identity.runId,revision:c.identity.turnId,turnId:c.identity.turnId,phase:'active',rng:c.receipt.random.after,life,birthReceipt,currentScene:scene,lastReceipt:c.receipt,relatedEntities:scene.entities,archiveCursor:0};
+  const retrieval=advanceRetrievalMemory(c.retrieval,scene.retrieval);
+  return {...(c.relationshipVersion===1||scene.choices.some(choice=>choice.intent==='interact')?{relationshipVersion:1}:{}),...(c.director?{director:advanceStoryDirector(c.director,life,c.receipt,scene,c.identity.turnId)}:{}),...(retrieval?{retrieval}:{}),version:5,mode:'cultivation',contentVersion:4,rulesVersion:1,promptVersion:1,runId:c.identity.runId,revision:c.identity.turnId,turnId:c.identity.turnId,phase:'active',rng:c.receipt.random.after,life,birthReceipt,currentScene:scene,lastReceipt:c.receipt,relatedEntities:scene.entities,archiveCursor:0};
 }
 
 export function validateGeneratedScene(raw,context,{checkNextContext,continuity=false,requireExit=false}={}) {

@@ -141,7 +141,7 @@ test('broken structural metadata cannot commit a preview or trigger an unrequest
 
 test('generation failure feedback preserves progress and manual continuation without exposing quality rules',()=>{
   const state=createLiveGame({runId:'generation-message',seed:42,engineVersion:7}),pending=prepareOpening(state,{requestId:'opening'});
-  for(const errorCode of ['CHOICE_NOT_COMPILABLE','STORY_LENGTH_INVALID','GENERATED_SCENE_INVALID']){
+  for(const errorCode of ['CHOICE_NOT_COMPILABLE','STORY_LENGTH_INVALID','GENERATED_SCENE_INVALID','KNOWLEDGE_UNAVAILABLE']){
     const html=renderLiveJourney({state,pending,status:'paused',busy:false,errorCode,preview:{blocks:[],choices:originalLabels.map(label=>({label,complete:true}))}},[]);
     assert.match(html,/进度已保留/u);assert.match(html,/data-live-retry/u);assert.doesNotMatch(html,/字数|全名|称谓|校验/u);assert.doesNotMatch(html,/data-live-choice="/u);
   }

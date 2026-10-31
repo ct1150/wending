@@ -7,6 +7,8 @@ import { isV7Life, realmFor, nextRealmFor, ROOTS, PHYSIQUES, RELICS, TECHNIQUES,
 import { buildGenerationSchema } from './story-generation-schema.js';
 import { buildGlmWire,decodeGlmScene } from './story-glm-wire.js';
 import { buildNamedSceneSchema } from './story-named-targets.js';
+import { packStoryReferences } from './story-knowledge.js';
+import { validateRetrievalReceipt } from '../game/cultivation/live/retrieval-memory.js';
 
 // Shared server-only input/transport/parser. Production supplies its validation
 // gate; operator acceptance fixes the unpromoted candidate in a separate module.
@@ -74,13 +76,20 @@ function validateProfile(profile,assertProfileReady) {
   if(profile.requestFormat!=='workers-ai-messages'||profile.responseFormat!=='json_schema'||canonicalStringify(profile.usageFields)!==canonicalStringify(['usage.prompt_tokens','usage.completion_tokens','usage.total_tokens'])||canonicalStringify(profile.stopFields)!==canonicalStringify(['choices[0].finish_reason']))fail('PROVIDER_PROFILE_INVALID');
   for(const field of ['maxInput','maxOutput','contextTokens'])if(!Number.isSafeInteger(profile[field])||profile[field]<1)fail('PROVIDER_PROFILE_INVALID');
 }
+export function validateProviderOptions(profile,options,assertProfileReady) {
+  assertPlainData(options);exactKeys(options,[],['attemptId','timeoutMs']);
+  const timeoutMs=options.timeoutMs??STORY_LIMITS.timeoutMs;
+  if(!Number.isSafeInteger(timeoutMs)||timeoutMs<1||timeoutMs>STORY_LIMITS.timeoutMs)fail('PROVIDER_OPTIONS_INVALID');
+  validateProfile(profile,assertProfileReady);
+  return timeoutMs;
+}
 function settledLocation(context) {
   const action=context.receipt.action,check=context.receipt.cultivationResult?.check;
   if(action?.intent==='travel'&&!(check?.kind==='world-crossing'&&check.success===false))return context.entities.find(entity=>entity.id===action.targetId&&entity.kind==='place')?.name;
   if(context.phase==='choice'&&context.director)return context.director.world.location;
   return context.memory.recent.find(record=>record.kind==='turn'&&record.turnId===context.identity.turnId-1)?.text.match(/^地点：([^\n]+)\n/u)?.[1]?.split('；刚才选择：')[0];
 }
-function providerInput(profile,context) {
+function buildProviderRequest(profile,context,knowledgeBundle) {
   validateStoryContext(context);
   const directed=isV7Life(context.life)&&context.director?.version===7;
   const prefix=`${context.namespace}:t${context.identity.turnId}:`;
@@ -89,7 +98,7 @@ function providerInput(profile,context) {
   const birth=context.life.birth.cultivationProfile;
   const facts=`当前主角${Math.floor(context.life.ageDays/DAYS_PER_YEAR)}岁，境界${realmFor(context.life).name}；本场必须以此当前状态展开。`+(directed?`所在${WORLD_TIERS[context.life.cultivationProfile.worldTier]}；灵根${ROOTS[birth.rootId].name}，体质${PHYSIQUES[birth.physiqueId].name}，功法${TECHNIQUES[birth.techniqueId].name}，伴生${RELICS[birth.relicId].name}。`:'');
   const system=facts+'\n'+(directed?DIRECTOR_SYSTEM:SYSTEM).replaceAll('namespace:t本回合:',prefix).replace('NEXT_REALM',nextRealm);
-  const input={messages:[{role:'system',content:system},{role:'user',content:JSON.stringify(context)}],stream:false,temperature:0.3,max_tokens:Math.min(profile.maxOutput,STORY_LIMITS.maxOutputTokens),response_format:{type:'json_schema',json_schema:{name:'cultivation_scene',strict:true,schema}},chat_template_kwargs:{enable_thinking:false}};
+  let input={messages:[{role:'system',content:system},{role:'user',content:JSON.stringify(context)}],stream:false,temperature:0.3,max_tokens:Math.min(profile.maxOutput,STORY_LIMITS.maxOutputTokens),response_format:{type:'json_schema',json_schema:{name:'cultivation_scene',strict:true,schema}},chat_template_kwargs:{enable_thinking:false}};
   if(profile.modelId===GLM_MODEL_ID){
     // Modern grammar fixes the envelope; legacy keeps its original full schema.
     // Both stream and pass the same identity, scene and rules validation.
@@ -128,18 +137,26 @@ function providerInput(profile,context) {
     }else input.response_format={type:'json_schema',json_schema:{name:'cultivation_scene',strict:true,schema:wire.schema}};
     input.stream=true;input.stream_options={include_usage:true};
   }
+  let receipt=null;
+  if(knowledgeBundle!==undefined&&knowledgeBundle!==null){
+    ({input,receipt}=packStoryReferences(input,context,knowledgeBundle,{maxBytes:Math.min(profile.maxInput,STORY_LIMITS.maxInputBytes)}));
+    if(receipt!==null)validateRetrievalReceipt(receipt,{queryHash:sha256(canonicalStringify(context))});
+  }
   const inputBytes=size(input);
   if(inputBytes>Math.min(profile.maxInput,STORY_LIMITS.maxInputBytes)||size({model:profile.modelId,input})>STORY_LIMITS.maxRequestBytes)fail('INPUT_TOO_LARGE');
   // Match conservative Task1 accounting, including framing/system/schema and
   // output. This upper bound is not a tokenizer or proof of free billing.
   if(inputBytes+1024+64*input.messages.length+input.max_tokens>profile.contextTokens)fail('CONTEXT_TOO_LARGE');
-  return input;
+  return {input,receipt};
 }
-export function buildStoryInput(profile,context) {
+// Prospective next-action validation stays synchronous and does not load or
+// consume references. A later real request packs them into its remaining room.
+function providerInput(profile,context) { return buildProviderRequest(profile,context).input; }
+export function buildStoryInput(profile,context,knowledgeBundle) {
   validateProfile(profile);
-  return providerInput(profile,context);
+  return buildProviderRequest(profile,context,knowledgeBundle).input;
 }
-export const PROVIDER_ERROR_CODES=Object.freeze([...STORY_ERROR_CODES,'PROVIDER_PROFILE_INVALID','MODEL_NOT_ALLOWED','MODEL_UNVALIDATED','AI_BINDING_MISSING','PROVIDER_OPTIONS_INVALID','INPUT_TOO_LARGE','CONTEXT_TOO_LARGE','PROVIDER_TIMEOUT','PROVIDER_RESPONSE_INVALID','PROVIDER_RESPONSE_TOO_LARGE','MODEL_RESPONSE_MISMATCH','OUTPUT_TRUNCATED','STOP_REASON_INVALID','PROVIDER_USAGE_INVALID','OUTPUT_TOO_LARGE','BUDGET_UNAVAILABLE']);
+export const PROVIDER_ERROR_CODES=Object.freeze([...STORY_ERROR_CODES,'PROVIDER_PROFILE_INVALID','MODEL_NOT_ALLOWED','MODEL_UNVALIDATED','AI_BINDING_MISSING','PROVIDER_OPTIONS_INVALID','INPUT_TOO_LARGE','CONTEXT_TOO_LARGE','PROVIDER_TIMEOUT','PROVIDER_RESPONSE_INVALID','PROVIDER_RESPONSE_TOO_LARGE','MODEL_RESPONSE_MISMATCH','OUTPUT_TRUNCATED','STOP_REASON_INVALID','PROVIDER_USAGE_INVALID','OUTPUT_TOO_LARGE','BUDGET_UNAVAILABLE','KNOWLEDGE_UNAVAILABLE']);
 const ownCodes=new Set(PROVIDER_ERROR_CODES);
 function mappedCode(error) {
   // workerd binding errors carry the numeric code only in a leading message.
@@ -150,17 +167,14 @@ function mappedCode(error) {
   if(['PROVIDER_BUSY','PROVIDER_FAILED','FREE_QUOTA_EXHAUSTED'].includes(code))return code;
   return ownCodes.has(code)?code:'PROVIDER_FAILED';
 }
-const pausedCodes=new Set(['FREE_QUOTA_EXHAUSTED','PROVIDER_BUSY','PROVIDER_TIMEOUT','PROVIDER_FAILED','BUDGET_UNAVAILABLE']);
+const pausedCodes=new Set(['FREE_QUOTA_EXHAUSTED','PROVIDER_BUSY','PROVIDER_TIMEOUT','PROVIDER_FAILED','BUDGET_UNAVAILABLE','KNOWLEDGE_UNAVAILABLE']);
 
-export async function generateProviderScene(ai,profile,context,options={},assertProfileReady) {
+export async function generateProviderScene(ai,profile,context,options={},assertProfileReady,knowledgeBundle) {
   const result={status:'rejected',accountingStatus:'complete',modelId:null,attemptId:null,inferencePerformed:false,usage:null,actualNeurons:null,stopReason:null,inputHash:null,inputBytes:null,nonThinkingValidated:null};
   try {
-    assertPlainData(options);exactKeys(options,[],['attemptId','timeoutMs']);
+    const timeoutMs=validateProviderOptions(profile,options,assertProfileReady);result.modelId=profile.modelId;
     const directed=isV7Life(context?.life)&&context.director?.version===7;
-    const timeoutMs=options.timeoutMs??STORY_LIMITS.timeoutMs;
-    if(!Number.isSafeInteger(timeoutMs)||timeoutMs<1||timeoutMs>STORY_LIMITS.timeoutMs)fail('PROVIDER_OPTIONS_INVALID');
-    validateProfile(profile,assertProfileReady);result.modelId=profile.modelId;
-    const input=providerInput(profile,context);
+    const {input,receipt:retrievalReceipt}=buildProviderRequest(profile,context,knowledgeBundle);
     const serializedInput=JSON.stringify(input);
     result.inputHash=sha256(serializedInput);result.inputBytes=encoder.encode(serializedInput).length;
     const attemptId=options.attemptId??context.identity.requestId;idField(attemptId);result.attemptId=attemptId;
@@ -191,11 +205,15 @@ export async function generateProviderScene(ai,profile,context,options={},assert
     });
     if(!result.nonThinkingValidated)fail('PROVIDER_RESPONSE_INVALID');
     let scene;try { scene=JSON.parse(choice.message.content); } catch { fail('PROVIDER_RESPONSE_INVALID'); }
+    // Source receipts are authored by this server after decoding. A model may
+    // never smuggle one into canonical output, including the older full schema.
+    if(scene&&Object.hasOwn(scene,'retrieval'))fail('GENERATED_SCENE_INVALID');
     if(profile.storyActions===true)try{exactKeys(scene,['blocks','choices','title','location','memoryDeltas',...(context.director?['story']:[])]);}catch{fail('GENERATED_SCENE_INVALID');}
     const composed=profile.storyActions===true&&Array.isArray(scene?.choices)&&scene.choices.every(proposal=>proposal&&Object.hasOwn(proposal,'purpose'));
     if(profile.storyActions===true&&(!composed||scene.choices.some(proposal=>!Number.isInteger(proposal.anchor))||!Array.isArray(scene.memoryDeltas)||scene.memoryDeltas.some(delta=>!delta||!Object.hasOwn(delta,'referenceId')&&(!Number.isInteger(delta.anchor)||Object.hasOwn(delta,'text')))))fail('GENERATED_SCENE_INVALID');
     const purposes=profile.storyActions===true?scene.choices.map(proposal=>proposal.purpose):[];
     if(profile.modelId===GLM_MODEL_ID)scene=decodeGlmScene(scene,context,{storyActions:profile.storyActions===true});
+    if(retrievalReceipt!==null&&context.retrieval?.version===1)scene.retrieval=structuredClone(retrievalReceipt);
     const selected=context.receipt.action,closed=context.previousScene?.id===context.namespace+':t'+(context.identity.turnId-1)+':s:closed',endedTarget=selected?.intent==='interact'&&selected.approach==='leave'?selected.targetId:closed?(context.memory.recent.find(record=>record.kind==='turn'&&record.turnId===context.identity.turnId-1)?.entityIds[0]??context.memory.facts.find(record=>record.id==='decision:'+(context.identity.turnId-1)&&record.turnId===context.identity.turnId-1&&record.kind==='fact'&&record.source==='rules')?.entityId??'self'):null,ended=endedTarget!==null;
     const endedTargets=endedTarget==='self'&&closed?context.entities.filter(entity=>['person','faction'].includes(entity.kind)).map(entity=>entity.id):endedTarget&&endedTarget!=='self'?[endedTarget]:[];
     if(profile.storyActions===true){
@@ -294,7 +312,7 @@ export async function generateProviderScene(ai,profile,context,options={},assert
   } catch(error) {
     result.errorCode=mappedCode(error);
     if(['FREE_QUOTA_EXHAUSTED','PROVIDER_BUSY'].includes(result.errorCode))result.accountingStatus='complete';
-    result.status=result.inferencePerformed&&pausedCodes.has(result.errorCode)?'paused':'rejected';
+    result.status=(result.inferencePerformed||result.errorCode==='KNOWLEDGE_UNAVAILABLE')&&pausedCodes.has(result.errorCode)?'paused':'rejected';
   }
   return result;
 }

@@ -15,7 +15,7 @@ async function fixture(t){
   const root=await mkdtemp(path.join(tmpdir(),'wending-backend-'));t.after(()=>rm(root,{recursive:true,force:true}));
   await cp(path.join(repository,'src'),path.join(root,'src'),{recursive:true});
   for(const dir of ['release','assets','config'])await mkdir(path.join(root,dir),{recursive:true});
-  await writeFile(path.join(root,'release/baishi-wending-offline.html'),'<!doctype html><title>旧版回退·问鼎</title>');
+  await writeFile(path.join(root,'release/baishi-wending-web.html'),'<!doctype html><title>旧版回退·问鼎</title>');
   await writeFile(path.join(root,'assets/seal.svg'),'<svg/>');
   await writeFile(path.join(root,'package.json'),'{"version":"4.0.0","type":"module"}');
   await writeFile(path.join(root,'config/story-deployment.json'),JSON.stringify({enabled:false,protocolVersion:1,rulesVersion:1,promptVersion:1,saveVersion:5,contentVersion:4}));
@@ -43,7 +43,7 @@ test('backend package includes deterministic complete ESM graph, named DO export
   let worker;try{worker=await import(pathToFileURL(path.join(root,'release/backend/entry.mjs')).href);}finally{globalThis.fetch=original;}
   assert.equal(outbound,0);assert.equal(typeof worker.StoryBudget,'function');
   const response=await worker.default.fetch(new Request('https://game.test/'));
-  assert.equal(await response.text(),await readFile(path.join(root,'release/baishi-wending-offline.html'),'utf8'));
+  assert.equal(await response.text(),await readFile(path.join(root,'release/baishi-wending-web.html'),'utf8'));
   assert.equal(outbound,1);
   const capabilities=await (await worker.default.fetch(new Request('https://game.test/api/story/capabilities'),{})).json();
   assert.equal(capabilities.available,false);assert.equal(capabilities.errorCode,'INFERENCE_DISABLED');
@@ -149,7 +149,7 @@ test('explicit tester-only package preserves disabled public policy and declares
 
 test('tester-only package serves its reviewed HTML while the separate ordinary gateway still updates',async t=>{
   const root=await fixture(t),sourceCommit='3'.repeat(40),candidate='<!doctype html><title>reviewed live candidate 实时人生</title>';
-  await writeFile(path.join(root,'release/baishi-wending-offline.html'),candidate);
+  await writeFile(path.join(root,'release/baishi-wending-web.html'),candidate);
   await buildGateway({root,sourceCommit,acceptance:testerPolicy()});
   const packageManifest=JSON.parse(await readFile(path.join(root,'release/backend/deployment.json'),'utf8'));
   const staleHtml='<!doctype html><title>previous public 4.0 game</title>',staleHash=hash(staleHtml);
@@ -167,7 +167,8 @@ test('tester-only package serves its reviewed HTML while the separate ordinary g
     const health=await(await stage.default.fetch(new Request('https://game.test/healthz'))).json();
     assert.equal(health.sourceCommit,stage.backendIdentity.sourceCommit);assert.equal(health.sourceCommit,sourceCommit);
     assert.equal(health.htmlSha256,packageManifest.frontend.htmlSha256);assert.equal(health.htmlSha256,hash(candidate));assert.equal(health.releaseSource,'embedded');
-    assert.equal(await(await stage.default.fetch(new Request('https://game.test/baishi-wending-offline.html'))).text(),candidate);
+    const retired=await stage.default.fetch(new Request('https://game.test/baishi-wending-offline.html'));
+    assert.equal(retired.status,410);assert.equal(retired.headers.get('Content-Disposition'),null);assert.doesNotMatch(await retired.text(),/<!doctype|<script/i);
     assert.deepEqual(calls,{match:0,put:0,fetch:0});
     const ordinary=await import(pathToFileURL(path.join(root,'release/gateway.mjs')).href);
     assert.equal(await(await ordinary.default.fetch(new Request('https://game.test/'))).text(),staleHtml);

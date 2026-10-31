@@ -8,7 +8,7 @@ import {buildGlmWire,decodeGlmScene} from '../src/worker/story-glm-wire.js';
 import {buildNamedSceneSchema} from '../src/worker/story-named-targets.js';
 import {buildStoryInput} from '../src/worker/story-provider-core.js';
 import {GLM_PROFILE,STORY_LIMITS} from '../src/worker/story-config.js';
-import {sha256} from '../src/game/cultivation/live/identity.js';
+import {canonicalStringify,sha256} from '../src/game/cultivation/live/identity.js';
 
 function context(){
   const state=createLiveGame({runId:'available-actions',seed:42,engineVersion:7});
@@ -143,7 +143,10 @@ test('same-name and same-prefix known targets keep their separate identities and
 test('v7 guidance accepts natural names and response lengths while legacy requests remain stable',()=>{
   const c=context(),instructions=generation(c).instructions;
   assert.doesNotMatch(instructions,/purpose必须包含目标全名|人物的purpose含全名|正文200–400字/);
-  const state=createLiveGame({runId:'legacy-director-wire',seed:42}),legacy=buildStoryContext(state,prepareOpening(state,{requestId:'legacy-open'}));
+  const state=createLiveGame({runId:'legacy-director-wire',seed:42}),legacy=structuredClone(buildStoryContext(state,prepareOpening(state,{requestId:'legacy-open'})));
+  // Frozen requests predate the optional retrieval capability advertised by
+  // newly built contexts. Their existing complete input must stay unchanged.
+  delete legacy.retrieval;
   const input=buildStoryInput({...GLM_PROFILE,storyActions:true},legacy);
   assert.equal(sha256(JSON.stringify(input)),'6040772d4faeea1ca096c6c61ebeb60d1743d37762c68c10550142b22277a745');
   const current=buildStoryInput({...GLM_PROFILE,storyActions:true},c);
@@ -161,7 +164,7 @@ test('a dense v7 context keeps its complete target constraints inside the provid
   for(const schema of Object.values(built.named.$defs))if(schema?.properties?.name?.pattern)assert.doesNotMatch(schema.properties.name.pattern,/\(\?[=!<]/u,'native generation does not support lookaround');
 });
 
-test('a near-full v7 continuation with many affordable actions also fits the complete request budget',()=>{
+test('a near-full v7 continuation preserves its complete action grammar when references share the request budget',t=>{
   const state=createLiveGame({runId:'rich-continuation',seed:42,engineVersion:7}),pending=prepareOpening(state,{requestId:'rich-opening'}),openingContext=buildStoryContext(state,pending);
   const scene=decodeGlmScene({blocks:[{kind:'narration',text:'村口的古井旁留下新鲜泥痕，来路尚待辨认。'}],choices:[choice('interact:observe','self','low','查看古井边缘'),choice('interact:observe','self','low','查看地上泥痕'),choice('interact:leave','self','low','暂且放下井边异状')],title:'井边异状',location:'村口',memoryDeltas:[],story:{pattern:'investigation',beat:'progress',anchors:[0]}},openingContext,{storyActions:true});
   const active=commitTurn(state,pending,scene),c=structuredClone(buildStoryContext(active,prepareChoice(active,{requestId:'rich-next',choiceId:scene.choices[0].id})));
@@ -172,4 +175,15 @@ test('a near-full v7 continuation with many affordable actions also fits the com
   assert.ok(bytes(c)>6500&&bytes(c)<=7000);validateStoryContext(c);
   const input=buildStoryInput({...GLM_PROFILE,storyActions:true},c);
   assert.ok(bytes(input)<=STORY_LIMITS.maxInputBytes,`rich request: ${bytes(input)} bytes`);
+  const before=JSON.stringify(c),evidenceId='SCHEMA-TEST-001',family='source:TEST-0001',text='合成参考：先询问在场之人，再决定是否调查此事。'.repeat(30);
+  const references={selection:{corpusVersion:'source-schema-test-v1',queryHash:sha256(canonicalStringify(c)),cardIds:[],evidenceIds:[evidenceId],families:[family]},curated:[],evidence:[{id:evidenceId,chapterId:'TEST-0001',family,text}]};
+  const packed=buildStoryInput({...GLM_PROFILE,storyActions:true},c,references),{storyReferences,...modelContext}=JSON.parse(packed.messages[1].content);
+  assert.ok(bytes(packed)<=STORY_LIMITS.maxInputBytes,`rich request with references: ${bytes(packed)} bytes`);
+  assert.equal(storyReferences.evidence.length,1);
+  assert.ok(storyReferences.evidence[0].excerpt.length<text.length,'only optional reference prose yields to the original request budget');
+  assert.deepEqual(modelContext,JSON.parse(input.messages[1].content),'packing references preserves every known alias and gameplay fact');
+  assert.deepEqual(packed.response_format,input.response_format,'packing references preserves the complete action grammar');
+  assert.deepEqual(buildStoryInput({...GLM_PROFILE,storyActions:true,maxInput:bytes(input)+8},c,references),input,'an almost-full request omits references without removing legal actions or known targets');
+  assert.equal(JSON.stringify(c),before,'reference packing does not rewrite the frozen context');
+  t.diagnostic(`v7 context ${bytes(c)} B; complete input ${bytes(input)} B; with references ${bytes(packed)} B / ${STORY_LIMITS.maxInputBytes} B`);
 });

@@ -1,0 +1,90 @@
+{
+  "schemaVersion": 1,
+  "candidateVersion": "5.3.0",
+  "baseCommit": "4676d7f356c750352141e2ec9c7f1dd0699ffd3f",
+  "status": "local_release_verified_production_activation_pending",
+  "recordedAt": "2026-10-31T01:25:44.541587+00:00",
+  "corpus": {
+    "contentVersion": "fanren-full-v1-b4a4d1c0329acb9f5ec2",
+    "sourceHash": "6f57fb63c67179fcb57557459647c28c728f427c88024bcbf30548da69b6992f",
+    "checkedShards": 248,
+    "checkedRecords": 7936,
+    "checkedChapters": 2454,
+    "narrativeParagraphs": 137443,
+    "narrativeChars": 7574058,
+    "privateBytes": 28527185,
+    "claims": {
+      "allExtractsHumanOrModelReviewed": false,
+      "allNarrativeParagraphsIndexed": true,
+      "allScenesSemanticallyIdentified": false,
+      "generatedChoicesInEvidence": false
+    },
+    "publicIsolationAudit": {
+      "catalogFieldsAreMetadataOnly": true,
+      "termKeysRestrictedToGenericLexicon": true,
+      "genericPostingTerms": 406,
+      "originalAnchorQuoteHits": 0,
+      "originalSourceSummaryHits": 0,
+      "fullTextInGitignoredDirectory": true,
+      "runtimeCuratedSourceFields": false,
+      "originalDownloadUrlPresent": false
+    },
+    "manifestSha256": "909c58aa640bd47c87330e90b383ac68bdc9a66e5e4f462ba69784bd3540d861",
+    "shardsDigest": "8d84a279b2e189d2543955b2ed741c02946bc1e1c61ce4e12e24954ca8c7e03d"
+  },
+  "reproducibility": {
+    "frozenPackageBuilderSha256": "51a604a955985ba5057f5dbd5b86758094de630fc796b1ac47f41895253b6234",
+    "currentHardenedBuilderSha256": "7b2ce161974d8d2ac87ff7453916a4aaa3ed1fe9404f76b2945ea5d7f046b54c",
+    "exactRebuild": "Use the private package pinned builder with default shard size 32; current repository builder has stricter 1..64 CLI bounds and yields a new corpus version."
+  },
+  "validation": {
+    "command": "npm run release",
+    "tests": 1207,
+    "passed": 1207,
+    "failed": 0,
+    "cancelled": 0,
+    "skipped": 0,
+    "todo": 0,
+    "testDurationMs": 100614.07876,
+    "syntaxCheckedJavaScriptFiles": 217,
+    "offlineBytes": 1649851,
+    "offlineSha256": "3dec321d9c840c0db1726f4f51356c02b70e9782ef0e107e4acd7295f30d9d5e",
+    "releaseLogSha256": "bb279669a16f11b657832acc93a6668a233221c8d131247df9fe2a5c22550c78",
+    "independentReview": "approve after all concrete findings fixed",
+    "productionModelCalls": 0
+  },
+  "resolvedFindings": [
+    "Current action affinity on actual curated cards",
+    "Near-limit legacy JSONL import and optional retrieval projection",
+    "Completion-marker deadline and retry recovery",
+    "Concurrent same-shard cache byte accounting",
+    "Explicit production knowledge opt-in despite retained binding",
+    "Builder shard size aligned with runtime maximum 64"
+  ],
+  "localPerformance": {
+    "measurement": "Node v24.22.1 elapsed time with local filesystem KV; not Cloudflare CPU",
+    "coldModuleImportMs": 89.32,
+    "coldSelectLoadPackMs": 16.41,
+    "warmRepetitions": 30,
+    "warmTotalMedianMs": 2.27,
+    "warmTotalP95Ms": 5.95,
+    "warmTotalMaxMs": 5.97,
+    "kvReadsTotal": 2,
+    "packedInputBytes": 5580
+  },
+  "production": {
+    "ragActivated": false,
+    "currentServedVersion": "5.2.0",
+    "currentServedSourceCommit": "4676d7f356c750352141e2ec9c7f1dd0699ffd3f",
+    "capabilities": "ready",
+    "importedShards": 4,
+    "requiredShards": 248,
+    "completionMarkerPresent": false,
+    "activationBlocked": "Private corpus persistence to the exact Cloudflare KV destination requires explicit authorization after automatic approval review rejection."
+  },
+  "limitations": [
+    "Corpus windows are deterministic extracts, not 7936 reviewed authored cards.",
+    "No live RAG model generation, production CPU measurement or long-form literary quality certification.",
+    "GitHub HTML publication alone does not activate the explicitly configured production backend."
+  ]
+}

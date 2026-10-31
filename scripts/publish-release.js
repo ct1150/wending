@@ -15,10 +15,10 @@ export async function publishRelease({root=projectRoot,sourceCommit=process.env.
   const currentMain=async()=>((await git(root,'ls-remote','origin','refs/heads/main')).split(/\s/)[0]||'');
   if(await currentMain()!==sourceCommit)return{published:false,reason:'superseded'};
   if(await git(root,'rev-parse','HEAD')!==sourceCommit)throw new Error('Source checkout does not match the release');
-  const html=await readFile(path.join(root,'release/baishi-wending-offline.html'));
+  const html=await readFile(path.join(root,'release/baishi-wending-web.html'));
   const meta=JSON.parse(await readFile(path.join(root,'release/release.json'),'utf8'));
   const htmlSha256=createHash('sha256').update(html).digest('hex');
-  if(!/^\d+\.\d+\.\d+(?:-[a-zA-Z0-9.-]+)?$/.test(meta.version)||html.byteLength<1||html.byteLength>3000000||meta.offline?.bytes!==html.byteLength||meta.offline?.sha256!==htmlSha256)throw new Error('Release bytes or digest do not match the verified build');
+  if(!/^\d+\.\d+\.\d+(?:-[a-zA-Z0-9.-]+)?$/.test(meta.version)||html.byteLength<1||html.byteLength>3000000||meta.frontend?.bytes!==html.byteLength||meta.frontend?.sha256!==htmlSha256)throw new Error('Release bytes or digest do not match the verified build');
   const holder=await mkdtemp(path.join(tmpdir(),'wending-publish-')),work=path.join(holder,'channel');
   let added=false;
   try{

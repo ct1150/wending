@@ -29,3 +29,7 @@ Production 5.2.0 streamed a 126-character opening and three plausible choices, t
 ## Release constraints
 
 Keep Workers Free, the validated GLM direct AI binding and existing secret bindings. Never read secret values or change billing. Build from reviewed source using the recorded production policy and inherit bindings. Test an uploaded version before activation when the provider supports preview, then verify the public domain and record the actual observed result.
+
+## Concurrent main integration
+
+Before release, main advanced to `e5f3cc2` through PRs #25 and #26. Preserve full-novel retrieval code and the single online save workflow. The repair version is now 5.4.1. Resolve overlapping provider/options, error vocabulary, UI message and documentation changes without activating retrieval. Re-run the complete release on the integrated tree; deploy only that tree, preserving the latest bindings.

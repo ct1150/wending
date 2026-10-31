@@ -4,8 +4,7 @@ import { createJourneySaves, JOURNEY_SAVES_KEY } from '../src/game/journey-saves
 import { SAVE_KEY } from '../src/game/persistence.js';
 import { bootstrapSession } from '../src/ui/session.js';
 import { createCultivation, chooseCultivation } from '../src/game/cultivation/engine.js';
-import { serializeGame, deserializeGame } from '../src/game/save-format.js';
-import { startApp } from './helpers/app-harness.js';
+import { serializeGame } from '../src/game/save-format.js';
 
 const backupKey = `${JOURNEY_SAVES_KEY}-recovery`;
 function memory(primary) {
@@ -54,39 +53,4 @@ test('catalog recovery refuses stale input and never resets before a verified du
     assert.equal(storage.getItem(JOURNEY_SAVES_KEY),mode==='stale'?'{newer corrupt bytes':corrupt,mode);
     if(mode.startsWith('catalog'))assert.equal(JSON.parse(storage.getItem(backupKey)).entries[0].raw,corrupt);
   }
-});
-
-test('settings exports and explicitly recovers a broken catalog so a new life can preserve and restore its predecessor', async () => {
-  const original = alive('旧日旅人'), corrupt = '{broken offline catalog\n原文';
-  const app = await startApp({raw:original,autoEnter:false});
-  app.storage.setItem(JOURNEY_SAVES_KEY,corrupt);
-  await app.clickRendered('[data-title-new]');
-  await app.clickRendered('[data-confirm]');
-  app.input('birth-name','新的旅人');
-  await app.clickRendered('[data-birth-start]');
-  assert.equal(app.storage.raw,original);
-  assert.equal(app.navigation.screen,'new');
-  await app.clickRendered('[data-view="settings"]');
-  await app.clickRendered('[data-export-catalog]');
-  assert.equal(await app.downloads.find(item=>item instanceof Blob).text(),corrupt);
-  await app.clickRendered('[data-recover-catalog]');
-  assert.equal(app.storage.getItem(JOURNEY_SAVES_KEY),corrupt,'opening confirmation is read-only');
-  app.cancelDialog();
-  assert.equal(app.storage.getItem(JOURNEY_SAVES_KEY),corrupt,'cancelling retains exact original bytes');
-  await app.clickRendered('[data-recover-catalog]');
-  await app.clickRendered('[data-confirm]');
-  assert.equal(app.storage.raw,original);
-  assert.equal(JSON.parse(app.storage.getItem(backupKey)).entries[0].raw,corrupt);
-  await app.clickRendered('[data-export-catalog-recovery]');
-  const backups = app.downloads.filter(item=>item instanceof Blob);
-  assert.equal(JSON.parse(await backups.at(-1).text()).entries[0].raw,corrupt);
-  await app.clickRendered('[data-menu-back]');
-  await app.clickRendered('[data-birth-start]');
-  assert.equal(deserializeGame(app.storage.raw).life.name,'新的旅人');
-  const retained = JSON.parse(app.storage.getItem(JOURNEY_SAVES_KEY)).entries.find(row=>row.raw===original);
-  assert.ok(retained,'the old living character remains reachable after the confirmed recovery');
-  await app.clickRendered('[data-home]');
-  await app.clickRendered('[data-saves]');
-  await app.clickRendered(`[data-select-offline="${retained.id}"]`);
-  assert.equal(app.storage.raw,original);
 });
