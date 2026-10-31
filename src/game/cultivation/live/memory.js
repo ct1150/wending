@@ -1,11 +1,10 @@
 import { assertPlainData, canonicalStringify, sha256 } from './identity.js';
 import { exactKeys, idField, textField, validateEntities, validateGeneratedScene as validateStructure } from './schema.js';
 import { validateLife, validateReceipt } from './validation.js';
-import { prepareOpening, prepareChoice, compileChoices, projectRelations } from './engine.js';
+import { prepareOpening, prepareChoice, prepareRecordedChoice, compileChoices, projectRelations } from './engine.js';
 import { DAYS_PER_YEAR, ITEMS, REALMS } from './model.js';
 import { isV7Life, summarizeLife, initialItemsForBirth, initialLifeForBirth, realmCatalogFor } from './cultivation-rules.js';
 import { advanceStoryDirector, buildDirectorContext, validateStoryDirector, validateDirectorScene } from './story-director.js';
-import { customActionCommand } from './custom-actions.js';
 
 const encoder = new TextEncoder();
 const bytes = value => encoder.encode(JSON.stringify(value)).length;
@@ -112,7 +111,7 @@ export function buildStoryContext(state,pending,relatedRecords=[],options={}) {
   if(!Array.isArray(relatedRecords)||relatedRecords.length>256)fail('MEMORY_RETRIEVAL_TOO_LARGE');
   let fixed;
   try {
-    fixed=pending.kind==='opening'?prepareOpening(state,{requestId:pending.identity.requestId}):pending.kind==='choice'?prepareChoice(state,customActionCommand(pending)):null;
+    fixed=pending.kind==='opening'?prepareOpening(state,{requestId:pending.identity.requestId}):pending.kind==='choice'?prepareRecordedChoice(state,pending):null;
     if(!fixed||!equal(fixed,pending))fail('ACTION_RECEIPT_MISMATCH');
   } catch { fail('ACTION_RECEIPT_MISMATCH'); }
   if(fixed.receipt.death)fail('DEATH_REQUIRES_LOCAL_SETTLEMENT');

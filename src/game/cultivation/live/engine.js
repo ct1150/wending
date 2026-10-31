@@ -3,7 +3,7 @@ import { isV7Life, summarizeLife, createCultivationBirthProfile, initialLifeForB
 import { assertPlainData, canonicalStringify, sha256, stateHash } from './identity.js';
 import { exactKeys, idField, textField, validateProposal, validateGeneratedScene } from './schema.js';
 import { validateLiveState } from './validation.js';
-import { resolveCustomAction, customActionCommand, CUSTOM_ACTION_MESSAGE } from './custom-actions.js';
+import { resolveCustomAction, replayCustomAction, customActionCommand, CUSTOM_ACTION_MESSAGE } from './custom-actions.js';
 import { createStoryDirector, advanceStoryDirector } from './story-director.js';
 import { validateReincarnation } from './reincarnation.js';
 const copy = value => JSON.parse(JSON.stringify(value));
@@ -74,12 +74,21 @@ export function compileChoices(state,proposals) {
 function identity(state,requestId,choiceId) {idField(requestId);return {runId:state.runId,turnId:state.turnId+1,baseRevision:state.revision,stateHash:stateHash(state),choiceId,rulesVersion:state.rulesVersion,promptVersion:state.promptVersion,requestId};}
 export function prepareOpening(state,command) {validateLiveState(state);assertPlainData(command);exactKeys(command,['requestId']);if(state.phase!=='awaitingOpening')throw new Error('出生已经开场。');return {kind:'opening',identity:identity(state,command.requestId,null),receipt:copy(state.birthReceipt),nextLife:copy(state.life),nextRng:state.rng};}
 export function prepareChoice(state,command) {
+ return prepareChoiceWithResolver(state,command,resolveCustomAction);
+}
+// Internal replay seam for recorded pending turns and JSONL history. Callers
+// still compare the complete identity/receipt (and next state when available).
+export function prepareRecordedChoice(state,recorded) {
+ assertPlainData(recorded);
+ return prepareChoiceWithResolver(state,customActionCommand(recorded),replayCustomAction);
+}
+function prepareChoiceWithResolver(state,command,resolveCustom) {
  requireActive(state);assertPlainData(command);exactKeys(command,['requestId'],['choiceId','customAction','baseRevision','stateHash']);
  const custom=Object.hasOwn(command,'customAction');
  if(command.choiceId!==undefined)idField(command.choiceId);
  if(custom&&!isV7Life(state.life))throw Object.assign(new Error(CUSTOM_ACTION_MESSAGE),{code:'CUSTOM_ACTION_UNSUPPORTED'});
  if(command.baseRevision!==undefined&&command.baseRevision!==state.revision||command.stateHash!==undefined&&command.stateHash!==stateHash(state))throw new Error('行动基准已经过期。');
- const action=custom?resolveCustomAction(state,command.customAction):state.currentScene.choices.find(p=>p.id===command.choiceId);if(!action)throw new Error('当前场景没有此行动。');
+ const action=custom?resolveCustom(state,command.customAction):state.currentScene.choices.find(p=>p.id===command.choiceId);if(!action)throw new Error('当前场景没有此行动。');
  if(custom&&command.choiceId!==undefined&&command.choiceId!==action.id)throw Object.assign(new Error(CUSTOM_ACTION_MESSAGE),{code:'CUSTOM_ACTION_UNSUPPORTED'});
  let rule;try{rule=actionRule(state,action);}catch(error){if(custom)throw Object.assign(new Error(CUSTOM_ACTION_MESSAGE),{code:'CUSTOM_ACTION_UNSUPPORTED'});throw error;}
  if(rule.reason){if(custom)throw Object.assign(new Error(CUSTOM_ACTION_MESSAGE),{code:'CUSTOM_ACTION_UNSUPPORTED'});throw new Error(rule.reason);}
@@ -110,7 +119,7 @@ export function prepareChoice(state,command) {
 }
 function verifiedPending(state,pending) {
  validateLiveState(state);assertPlainData(pending);exactKeys(pending,['kind','identity','receipt','nextLife','nextRng']);exactKeys(pending.identity,['runId','turnId','baseRevision','stateHash','choiceId','rulesVersion','promptVersion','requestId']);
- const expected=pending.kind==='opening'?prepareOpening(state,{requestId:pending.identity.requestId}):pending.kind==='choice'?prepareChoice(state,customActionCommand(pending)):null;
+ const expected=pending.kind==='opening'?prepareOpening(state,{requestId:pending.identity.requestId}):pending.kind==='choice'?prepareRecordedChoice(state,pending):null;
  if(!expected||!same(pending,expected))throw new Error('待提交行动已过期或收据遭到修改。');return expected;
 }
 export function resolveImmediateInteraction(state,pending) {

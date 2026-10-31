@@ -1,0 +1,765 @@
+{
+  "schemaVersion": 1,
+  "kind": "production-opening-capture",
+  "sourceCommit": "e9c6e0a4a2bf9795ca2a4d0e3812508f661a688f",
+  "releaseVersion": "5.0.1",
+  "modelId": "@cf/zai-org/glm-4.7-flash",
+  "summary": {
+    "version": "5.0.1",
+    "sourceCommit": "e9c6e0a4a2bf9795ca2a4d0e3812508f661a688f",
+    "status": "ready",
+    "seconds": 16.619,
+    "events": 103,
+    "eventTypes": [
+      "status",
+      "block",
+      "choice",
+      "result"
+    ],
+    "storyCharacters": 235,
+    "choices": 3,
+    "enabledChoices": 3,
+    "sceneHash": "53252a4ea1c0e875280517aaa8f3596a076f531f891ac26e3d12e8efb073702b",
+    "revision": 1,
+    "roundtripIdentical": true,
+    "nextContextsValid": true
+  },
+  "scope": "One accepted production SSE opening, then local rule commit, snapshot roundtrip and next-context validation. No browser persistence or long-run model-quality claim. Session credentials and transport identities are omitted.",
+  "context": {
+    "schemaVersion": 1,
+    "phase": "opening",
+    "identity": {
+      "runId": "release-v7-20261030-2340",
+      "turnId": 1,
+      "baseRevision": 0,
+      "stateHash": "4c3505857aaffe47e08bb4aa66e7b862de791dc92d84ac9c8399f53adb1c5566",
+      "choiceId": null,
+      "rulesVersion": 1,
+      "promptVersion": 1,
+      "requestId": "v7-release-opening"
+    },
+    "namespace": "r:c233d45888426812",
+    "receipt": {
+      "kind": "opening",
+      "choiceId": null,
+      "action": null,
+      "elapsedDays": 0,
+      "itemChanges": {},
+      "relationChanges": {},
+      "random": {
+        "before": 3123853561,
+        "after": 3123853561,
+        "roll": null
+      },
+      "before": {
+        "ageDays": 5760,
+        "realm": "mortal",
+        "cultivation": 0,
+        "injury": 0,
+        "lifeLimit": 80,
+        "cultivationProfile": {
+          "version": 7,
+          "lifespanBonus": 0,
+          "lifespanLoss": 0,
+          "spirit": 110,
+          "maxSpirit": 110,
+          "exposure": 0,
+          "worldTier": 0,
+          "arts": {
+            "alchemy": 0,
+            "forging": 0,
+            "formations": 0,
+            "talismans": 0
+          }
+        }
+      },
+      "after": {
+        "ageDays": 5760,
+        "realm": "mortal",
+        "cultivation": 0,
+        "injury": 0,
+        "lifeLimit": 80,
+        "cultivationProfile": {
+          "version": 7,
+          "lifespanBonus": 0,
+          "lifespanLoss": 0,
+          "spirit": 110,
+          "maxSpirit": 110,
+          "exposure": 0,
+          "worldTier": 0,
+          "arts": {
+            "alchemy": 0,
+            "forging": 0,
+            "formations": 0,
+            "talismans": 0
+          }
+        }
+      },
+      "death": null,
+      "birth": {
+        "originId": "village",
+        "talentIds": [
+          "keen-memory",
+          "sword-bone"
+        ],
+        "attributes": {
+          "constitution": 4,
+          "insight": 6,
+          "fortune": 2
+        },
+        "cultivationProfile": {
+          "version": 7,
+          "rootId": "frost-water",
+          "physiqueId": "ember",
+          "relicId": "root-seed",
+          "techniqueId": "torn-meridian",
+          "inheritedBenefits": [],
+          "advantages": [
+            "寒水归息：休养额外恢复伤势。",
+            "留焰体：炼丹更稳，灵力略多。",
+            "枯壳灵种：炼丹判定更稳。",
+            "回脉旧法：仍可积累修为。"
+          ],
+          "defects": [
+            "寒气反冲：强攻多承受一分伤势。",
+            "残焰扰心：突破稍难。",
+            "温养灵种：修炼额外消耗灵力。",
+            "功法残页：修行耗时增加两成。"
+          ]
+        }
+      },
+      "cultivationResult": {
+        "version": 7,
+        "check": null,
+        "lifespanChange": {
+          "years": 0,
+          "cause": null
+        }
+      }
+    },
+    "life": {
+      "name": "陆岑",
+      "ageDays": 5760,
+      "lifeLimit": 80,
+      "realm": "mortal",
+      "cultivation": 0,
+      "injury": 0,
+      "items": {
+        "supplies": 4,
+        "stones": 0,
+        "herbs": 1
+      },
+      "relations": {},
+      "birth": {
+        "originId": "village",
+        "talentIds": [
+          "keen-memory",
+          "sword-bone"
+        ],
+        "attributes": {
+          "constitution": 4,
+          "insight": 6,
+          "fortune": 2
+        },
+        "cultivationProfile": {
+          "version": 7,
+          "rootId": "frost-water",
+          "physiqueId": "ember",
+          "relicId": "root-seed",
+          "techniqueId": "torn-meridian",
+          "inheritedBenefits": [],
+          "advantages": [
+            "寒水归息：休养额外恢复伤势。",
+            "留焰体：炼丹更稳，灵力略多。",
+            "枯壳灵种：炼丹判定更稳。",
+            "回脉旧法：仍可积累修为。"
+          ],
+          "defects": [
+            "寒气反冲：强攻多承受一分伤势。",
+            "残焰扰心：突破稍难。",
+            "温养灵种：修炼额外消耗灵力。",
+            "功法残页：修行耗时增加两成。"
+          ]
+        }
+      },
+      "cultivationProfile": {
+        "version": 7,
+        "lifespanBonus": 0,
+        "lifespanLoss": 0,
+        "spirit": 110,
+        "maxSpirit": 110,
+        "exposure": 0,
+        "worldTier": 0,
+        "arts": {
+          "alchemy": 0,
+          "forging": 0,
+          "formations": 0,
+          "talismans": 0
+        }
+      }
+    },
+    "entities": [],
+    "memory": {
+      "facts": [],
+      "promises": [],
+      "clues": [],
+      "recent": [],
+      "summaries": []
+    },
+    "references": [],
+    "previousScene": null,
+    "director": {
+      "version": 7,
+      "seed": 3103828021,
+      "turnId": 0,
+      "resolvedCount": 0,
+      "destiny": {
+        "id": "destiny:3103828021",
+        "text": "伴生的枯壳灵种牵动旧因果；辨明机缘背后的代价，自定取舍与修行之道",
+        "motif": "空名旧契"
+      },
+      "mystery": {
+        "id": "mystery:3103828021",
+        "question": "为何枯壳灵种会回应空名旧契，而你的寒水真灵根能感知其回声？",
+        "progress": 0
+      },
+      "currentGoal": "先辨清眼前局势，再决定去留",
+      "mainQuest": null,
+      "sideQuests": [],
+      "memory": {
+        "causes": [],
+        "npcs": [],
+        "enemies": [],
+        "clues": []
+      },
+      "background": {
+        "count": 0,
+        "text": ""
+      },
+      "world": {
+        "year": 16,
+        "tier": 0,
+        "location": "出生地",
+        "faction": "尚未相识",
+        "summary": "尚无已确认的世局变化。"
+      },
+      "archive": {
+        "throughTurn": 0,
+        "text": "此生尚未落笔。",
+        "reasons": []
+      },
+      "pacing": {
+        "turnId": 1,
+        "arc": 1,
+        "startedAt": 1,
+        "lastBeat": 0,
+        "nextBeat": 18,
+        "lastEra": 0,
+        "pattern": "discovery",
+        "completedPatterns": [],
+        "sceneHashes": [],
+        "setbackStreak": 0,
+        "pressure": 0,
+        "volume": 1,
+        "plotDue": false,
+        "beatOverdue": false,
+        "fortuneDue": false,
+        "eraDue": false,
+        "volumeDue": false,
+        "canClimax": false,
+        "fortunePhase": "机缘初露",
+        "fortuneBand": "high",
+        "opportunityDue": false,
+        "opportunityRequired": false,
+        "scope": "乡野与市镇"
+      }
+    },
+    "relationshipVersion": 1,
+    "relationships": {},
+    "coverage": {
+      "policy": "relevance-v1",
+      "openTotal": 0,
+      "openIncluded": 0,
+      "openOmitted": 0
+    }
+  },
+  "birthState": {
+    "relationshipVersion": 1,
+    "version": 5,
+    "mode": "cultivation",
+    "contentVersion": 4,
+    "rulesVersion": 1,
+    "promptVersion": 1,
+    "runId": "release-v7-20261030-2340",
+    "revision": 0,
+    "turnId": 0,
+    "phase": "awaitingOpening",
+    "rng": 3123853561,
+    "life": {
+      "name": "陆岑",
+      "ageDays": 5760,
+      "lifeLimit": 80,
+      "realm": "mortal",
+      "cultivation": 0,
+      "injury": 0,
+      "items": {
+        "supplies": 4,
+        "stones": 0,
+        "herbs": 1
+      },
+      "relations": {},
+      "birth": {
+        "originId": "village",
+        "talentIds": [
+          "keen-memory",
+          "sword-bone"
+        ],
+        "attributes": {
+          "constitution": 4,
+          "insight": 6,
+          "fortune": 2
+        },
+        "cultivationProfile": {
+          "version": 7,
+          "rootId": "frost-water",
+          "physiqueId": "ember",
+          "relicId": "root-seed",
+          "techniqueId": "torn-meridian",
+          "inheritedBenefits": [],
+          "advantages": [
+            "寒水归息：休养额外恢复伤势。",
+            "留焰体：炼丹更稳，灵力略多。",
+            "枯壳灵种：炼丹判定更稳。",
+            "回脉旧法：仍可积累修为。"
+          ],
+          "defects": [
+            "寒气反冲：强攻多承受一分伤势。",
+            "残焰扰心：突破稍难。",
+            "温养灵种：修炼额外消耗灵力。",
+            "功法残页：修行耗时增加两成。"
+          ]
+        }
+      },
+      "cultivationProfile": {
+        "version": 7,
+        "lifespanBonus": 0,
+        "lifespanLoss": 0,
+        "spirit": 110,
+        "maxSpirit": 110,
+        "exposure": 0,
+        "worldTier": 0,
+        "arts": {
+          "alchemy": 0,
+          "forging": 0,
+          "formations": 0,
+          "talismans": 0
+        }
+      }
+    },
+    "birthReceipt": {
+      "kind": "opening",
+      "choiceId": null,
+      "action": null,
+      "elapsedDays": 0,
+      "itemChanges": {},
+      "relationChanges": {},
+      "random": {
+        "before": 3123853561,
+        "after": 3123853561,
+        "roll": null
+      },
+      "before": {
+        "ageDays": 5760,
+        "realm": "mortal",
+        "cultivation": 0,
+        "injury": 0,
+        "lifeLimit": 80,
+        "cultivationProfile": {
+          "version": 7,
+          "lifespanBonus": 0,
+          "lifespanLoss": 0,
+          "spirit": 110,
+          "maxSpirit": 110,
+          "exposure": 0,
+          "worldTier": 0,
+          "arts": {
+            "alchemy": 0,
+            "forging": 0,
+            "formations": 0,
+            "talismans": 0
+          }
+        }
+      },
+      "after": {
+        "ageDays": 5760,
+        "realm": "mortal",
+        "cultivation": 0,
+        "injury": 0,
+        "lifeLimit": 80,
+        "cultivationProfile": {
+          "version": 7,
+          "lifespanBonus": 0,
+          "lifespanLoss": 0,
+          "spirit": 110,
+          "maxSpirit": 110,
+          "exposure": 0,
+          "worldTier": 0,
+          "arts": {
+            "alchemy": 0,
+            "forging": 0,
+            "formations": 0,
+            "talismans": 0
+          }
+        }
+      },
+      "death": null,
+      "birth": {
+        "originId": "village",
+        "talentIds": [
+          "keen-memory",
+          "sword-bone"
+        ],
+        "attributes": {
+          "constitution": 4,
+          "insight": 6,
+          "fortune": 2
+        },
+        "cultivationProfile": {
+          "version": 7,
+          "rootId": "frost-water",
+          "physiqueId": "ember",
+          "relicId": "root-seed",
+          "techniqueId": "torn-meridian",
+          "inheritedBenefits": [],
+          "advantages": [
+            "寒水归息：休养额外恢复伤势。",
+            "留焰体：炼丹更稳，灵力略多。",
+            "枯壳灵种：炼丹判定更稳。",
+            "回脉旧法：仍可积累修为。"
+          ],
+          "defects": [
+            "寒气反冲：强攻多承受一分伤势。",
+            "残焰扰心：突破稍难。",
+            "温养灵种：修炼额外消耗灵力。",
+            "功法残页：修行耗时增加两成。"
+          ]
+        }
+      },
+      "cultivationResult": {
+        "version": 7,
+        "check": null,
+        "lifespanChange": {
+          "years": 0,
+          "cause": null
+        }
+      }
+    },
+    "currentScene": null,
+    "lastReceipt": null,
+    "relatedEntities": [],
+    "archiveCursor": 0,
+    "director": {
+      "version": 7,
+      "seed": 3103828021,
+      "turnId": 0,
+      "resolvedCount": 0,
+      "destiny": {
+        "id": "destiny:3103828021",
+        "text": "伴生的枯壳灵种牵动旧因果；辨明机缘背后的代价，自定取舍与修行之道",
+        "motif": "空名旧契"
+      },
+      "mystery": {
+        "id": "mystery:3103828021",
+        "question": "为何枯壳灵种会回应空名旧契，而你的寒水真灵根能感知其回声？",
+        "progress": 0
+      },
+      "currentGoal": "先辨清眼前局势，再决定去留",
+      "mainQuest": null,
+      "sideQuests": [],
+      "memory": {
+        "causes": [],
+        "npcs": [],
+        "enemies": [],
+        "clues": []
+      },
+      "background": {
+        "count": 0,
+        "text": ""
+      },
+      "world": {
+        "year": 16,
+        "tier": 0,
+        "location": "出生地",
+        "faction": "尚未相识",
+        "summary": "尚无已确认的世局变化。"
+      },
+      "archive": {
+        "throughTurn": 0,
+        "text": "此生尚未落笔。",
+        "reasons": []
+      },
+      "pacing": {
+        "turnId": 1,
+        "arc": 1,
+        "startedAt": 1,
+        "lastBeat": 0,
+        "nextBeat": 18,
+        "lastEra": 0,
+        "pattern": "discovery",
+        "completedPatterns": [],
+        "sceneHashes": [],
+        "setbackStreak": 0,
+        "pressure": 0,
+        "volume": 1,
+        "plotDue": false,
+        "beatOverdue": false,
+        "fortuneDue": false,
+        "eraDue": false,
+        "volumeDue": false,
+        "canClimax": false,
+        "fortunePhase": "机缘初露",
+        "fortuneBand": "high",
+        "opportunityDue": false,
+        "opportunityRequired": false,
+        "scope": "乡野与市镇"
+      }
+    }
+  },
+  "openingPending": {
+    "kind": "opening",
+    "identity": {
+      "runId": "release-v7-20261030-2340",
+      "turnId": 1,
+      "baseRevision": 0,
+      "stateHash": "4c3505857aaffe47e08bb4aa66e7b862de791dc92d84ac9c8399f53adb1c5566",
+      "choiceId": null,
+      "rulesVersion": 1,
+      "promptVersion": 1,
+      "requestId": "v7-release-opening"
+    },
+    "receipt": {
+      "kind": "opening",
+      "choiceId": null,
+      "action": null,
+      "elapsedDays": 0,
+      "itemChanges": {},
+      "relationChanges": {},
+      "random": {
+        "before": 3123853561,
+        "after": 3123853561,
+        "roll": null
+      },
+      "before": {
+        "ageDays": 5760,
+        "realm": "mortal",
+        "cultivation": 0,
+        "injury": 0,
+        "lifeLimit": 80,
+        "cultivationProfile": {
+          "version": 7,
+          "lifespanBonus": 0,
+          "lifespanLoss": 0,
+          "spirit": 110,
+          "maxSpirit": 110,
+          "exposure": 0,
+          "worldTier": 0,
+          "arts": {
+            "alchemy": 0,
+            "forging": 0,
+            "formations": 0,
+            "talismans": 0
+          }
+        }
+      },
+      "after": {
+        "ageDays": 5760,
+        "realm": "mortal",
+        "cultivation": 0,
+        "injury": 0,
+        "lifeLimit": 80,
+        "cultivationProfile": {
+          "version": 7,
+          "lifespanBonus": 0,
+          "lifespanLoss": 0,
+          "spirit": 110,
+          "maxSpirit": 110,
+          "exposure": 0,
+          "worldTier": 0,
+          "arts": {
+            "alchemy": 0,
+            "forging": 0,
+            "formations": 0,
+            "talismans": 0
+          }
+        }
+      },
+      "death": null,
+      "birth": {
+        "originId": "village",
+        "talentIds": [
+          "keen-memory",
+          "sword-bone"
+        ],
+        "attributes": {
+          "constitution": 4,
+          "insight": 6,
+          "fortune": 2
+        },
+        "cultivationProfile": {
+          "version": 7,
+          "rootId": "frost-water",
+          "physiqueId": "ember",
+          "relicId": "root-seed",
+          "techniqueId": "torn-meridian",
+          "inheritedBenefits": [],
+          "advantages": [
+            "寒水归息：休养额外恢复伤势。",
+            "留焰体：炼丹更稳，灵力略多。",
+            "枯壳灵种：炼丹判定更稳。",
+            "回脉旧法：仍可积累修为。"
+          ],
+          "defects": [
+            "寒气反冲：强攻多承受一分伤势。",
+            "残焰扰心：突破稍难。",
+            "温养灵种：修炼额外消耗灵力。",
+            "功法残页：修行耗时增加两成。"
+          ]
+        }
+      },
+      "cultivationResult": {
+        "version": 7,
+        "check": null,
+        "lifespanChange": {
+          "years": 0,
+          "cause": null
+        }
+      }
+    },
+    "nextLife": {
+      "name": "陆岑",
+      "ageDays": 5760,
+      "lifeLimit": 80,
+      "realm": "mortal",
+      "cultivation": 0,
+      "injury": 0,
+      "items": {
+        "supplies": 4,
+        "stones": 0,
+        "herbs": 1
+      },
+      "relations": {},
+      "birth": {
+        "originId": "village",
+        "talentIds": [
+          "keen-memory",
+          "sword-bone"
+        ],
+        "attributes": {
+          "constitution": 4,
+          "insight": 6,
+          "fortune": 2
+        },
+        "cultivationProfile": {
+          "version": 7,
+          "rootId": "frost-water",
+          "physiqueId": "ember",
+          "relicId": "root-seed",
+          "techniqueId": "torn-meridian",
+          "inheritedBenefits": [],
+          "advantages": [
+            "寒水归息：休养额外恢复伤势。",
+            "留焰体：炼丹更稳，灵力略多。",
+            "枯壳灵种：炼丹判定更稳。",
+            "回脉旧法：仍可积累修为。"
+          ],
+          "defects": [
+            "寒气反冲：强攻多承受一分伤势。",
+            "残焰扰心：突破稍难。",
+            "温养灵种：修炼额外消耗灵力。",
+            "功法残页：修行耗时增加两成。"
+          ]
+        }
+      },
+      "cultivationProfile": {
+        "version": 7,
+        "lifespanBonus": 0,
+        "lifespanLoss": 0,
+        "spirit": 110,
+        "maxSpirit": 110,
+        "exposure": 0,
+        "worldTier": 0,
+        "arts": {
+          "alchemy": 0,
+          "forging": 0,
+          "formations": 0,
+          "talismans": 0
+        }
+      }
+    },
+    "nextRng": 3123853561
+  },
+  "acceptedScene": {
+    "id": "r:c233d45888426812:t1:s:scene",
+    "title": "寒火难调",
+    "location": "出生地",
+    "entities": [
+      {
+        "id": "r:c233d45888426812:t1:e:person_1",
+        "name": "老赵",
+        "kind": "person"
+      }
+    ],
+    "blocks": [
+      {
+        "kind": "narration",
+        "text": "十六岁的陆岑站在出生地村口的老槐树下，寒风卷着枯叶打在脸上。身旁的村民老赵正蹲在地上，手里摆弄着一只缺了口的粗陶罐，罐口封着层薄薄的冰霜。老赵抬头瞥了你一眼，指了指罐子，声音沙哑：“后生，你那灵根看着有些寒气，这罐子里的东西若是处理不好，怕是要炸了。这可是我攒了半年的心血，想炼点‘暖阳散’给家里重病的婆娘，可这‘留焰体’的火候总压不住这‘寒水根’的寒气，一碰就散。”老赵叹了口气，把陶罐往你面前推了推，眼神里带着几分希冀，“你若是能帮忙看看这火候，我愿分你半块干粮。”"
+      }
+    ],
+    "choices": [
+      {
+        "id": "r:c233d45888426812:t1:c:a",
+        "label": "询问老赵：询问老赵关于这罐子炼丹失败的具体原因，以及他为何认为陆岑的灵根能帮忙。",
+        "intent": "interact",
+        "targetId": "r:c233d45888426812:t1:e:person_1",
+        "stake": "low",
+        "approach": "ask"
+      },
+      {
+        "id": "r:c233d45888426812:t1:c:b",
+        "label": "观察老赵：仔细观察老赵手中的陶罐和周围环境，寻找炼丹失败的蛛丝马迹。",
+        "intent": "interact",
+        "targetId": "r:c233d45888426812:t1:e:person_1",
+        "stake": "low",
+        "approach": "observe"
+      },
+      {
+        "id": "r:c233d45888426812:t1:c:c",
+        "label": "婉拒老赵：拒绝老赵的请求，表示自己只是个凡人，帮不上忙。",
+        "intent": "interact",
+        "targetId": "r:c233d45888426812:t1:e:person_1",
+        "stake": "low",
+        "approach": "decline"
+      }
+    ],
+    "memoryDeltas": [
+      {
+        "entityId": "r:c233d45888426812:t1:e:person_1",
+        "kind": "fact",
+        "text": "十六岁的陆岑站在出生地村口的老槐树下，寒风卷着枯叶打在脸上。身旁的村民老赵正蹲在地上，手里摆弄着一只缺了口的粗陶罐，罐口封着层薄薄的冰霜。老赵抬头瞥了你一眼，指了指罐子，声音沙哑：“后生，你那灵根看着有些寒气，这罐子里的东西若是处理不好，怕是要炸了。这可是我攒了半年的心血，想炼点‘暖阳散’给家里重病的婆娘，可这‘留焰体’的火候总压不住这‘寒水根’的寒气，一碰就散。”老赵叹了口气，把陶罐往你面前推了推，眼神里带着几分希冀，“你若是能帮忙看看这火候，我愿分你半块干粮。”"
+      },
+      {
+        "entityId": "r:c233d45888426812:t1:e:person_1",
+        "kind": "clue",
+        "text": "十六岁的陆岑站在出生地村口的老槐树下，寒风卷着枯叶打在脸上。身旁的村民老赵正蹲在地上，手里摆弄着一只缺了口的粗陶罐，罐口封着层薄薄的冰霜。老赵抬头瞥了你一眼，指了指罐子，声音沙哑：“后生，你那灵根看着有些寒气，这罐子里的东西若是处理不好，怕是要炸了。这可是我攒了半年的心血，想炼点‘暖阳散’给家里重病的婆娘，可这‘留焰体’的火候总压不住这‘寒水根’的寒气，一碰就散。”老赵叹了口气，把陶罐往你面前推了推，眼神里带着几分希冀，“你若是能帮忙看看这火候，我愿分你半块干粮。”",
+        "status": "open"
+      }
+    ],
+    "story": {
+      "pattern": "discovery",
+      "beat": "progress",
+      "anchors": [
+        0
+      ]
+    }
+  }
+}

@@ -44,7 +44,7 @@ function failedRevisedRecord(){
 }
 function scene(context){const p=context.namespace+':t'+context.identity.turnId+':',entity=context.entities[0]??{id:p+'e:keeper',name:'守山人',kind:'person',status:'alive'};return {id:p+'s:path',title:'山路新事',location:'松溪山门',blocks:[{kind:'narration',text:'山路传来新消息，第'+context.identity.turnId+'回。行动'+(context.receipt.action?.intent??'opening')+'。'},{kind:'dialogue',speaker:entity.id,text:'旧约还记在册中。'}],entities:[entity],choices:[{id:p+'c:talk',label:'协助守山人',intent:'negotiate',targetId:entity.id,stake:'low',approach:'cooperate'},{id:p+'c:rest',label:'歇息观察',intent:'rest',targetId:'self',stake:'low',approach:'recover'}],memoryDeltas:context.identity.turnId===1?[{kind:'promise',entityId:entity.id,text:'替守山人留意山路。'}]:[]};}
 function raw(context){return {model:CANDIDATE_MODEL_ID,choices:[{finish_reason:'stop',message:{content:JSON.stringify(scene(context)),reasoning_content:' \n'}}],usage:{prompt_tokens:100,completion_tokens:80,total_tokens:180}};}
-const config=()=>({operatorTokenSha256:sha256(token),bindingAccountId:'fixture-account',freeBoundaryEvidence:{accountId:'fixture-account',source:'operator-account-verification',plan:'workers-free',hardLimit:true,noGatewayCredits:true,directBinding:true,accountUsageVerified:true,storageFreeVerified:true,remainingNeurons:10000,checkedAt:new Date().toISOString()}});
+const config=(now=Date.now())=>({operatorTokenSha256:sha256(token),bindingAccountId:'fixture-account',freeBoundaryEvidence:{accountId:'fixture-account',source:'operator-account-verification',plan:'workers-free',hardLimit:true,noGatewayCredits:true,directBinding:true,accountUsageVerified:true,storageFreeVerified:true,remainingNeurons:10000,checkedAt:new Date(now).toISOString()}});
 const req=(caseId='task7-opening',attemptId='story0',extra={})=>new Request('https://operator.invalid/story-acceptance',{method:'POST',headers:{authorization:'Bearer '+token,'content-type':'application/json'},body:JSON.stringify({attemptId,caseId,...extra})});
 const statusReq=()=>new Request('https://operator.invalid/status',{headers:{authorization:'Bearer '+token}});
 async function fixture(run,initial=oldRecord()){const storage=disk();await storage.put('experiment-v1',initial);const inputs=[];const env={AI:{async run(model,input){const snapshot=await storage.get('experiment-v1'),entry=snapshot.ledger.attempts.at(-1);assert.equal(entry.task,'task7');assert.equal(entry.status,'reserved');const c=JSON.parse(input.messages[1].content);const pending=Object.values(snapshot.acceptance.cases).find(row=>row.attemptId===entry.attemptId);assert.equal(pending.contextHash,sha256(canonicalStringify(c)));assert.equal(pending.inputHash,sha256(JSON.stringify(input)));assert.equal(pending.inputBytes,new TextEncoder().encode(JSON.stringify(input)).length);assert.ok(entry.reservedNeurons>24&&entry.reservedNeurons<=TURN_RESERVATION_NEURONS);inputs.push({model,input,context:c});return run?run(c):raw(c);}}};const cfg=config(),make=()=>new OperatorProbeDurableObject({storage},env,cfg);return {storage,env,cfg,make,object:make(),inputs};}
@@ -77,8 +77,12 @@ test('first durable write failure and bounded snapshot admission never invoke AI
 
 async function nativeFixture(t,initial=oldRecord()){
   const root=await mkdtemp(path.join(tmpdir(),'wending-operator-story-'));t.after(()=>rm(root,{recursive:true,force:true}));
+  // This persistence fixture shares one clock with its proof, including after
+  // restart; real UTC midnight must not expire evidence during worker startup.
+  const now=Date.parse('2026-10-30T23:59:59.999Z');
   const entry=`import {createOperatorProbeWorker,OperatorProbeDurableObject} from './operator-probe.js';
-const CANDIDATE_MODEL_ID=${JSON.stringify(CANDIDATE_MODEL_ID)};const config=${JSON.stringify(config())};const scene=${scene.toString()};const raw=${raw.toString()};
+Date.now=()=>${now};
+const CANDIDATE_MODEL_ID=${JSON.stringify(CANDIDATE_MODEL_ID)};const config=${JSON.stringify(config(now))};const scene=${scene.toString()};const raw=${raw.toString()};
 export class Probe extends OperatorProbeDurableObject{constructor(ctx,env){super(ctx,{...env,AI:{async run(model,input){const stored=await ctx.storage.get('experiment-v1');if(stored.ledger.attempts.at(-1).status!=='reserved'||stored.ledger.attempts.slice(0,4).some(row=>row.task!=='task1'))throw new Error('reservation lost');return raw(JSON.parse(input.messages[1].content));}}},config);ctx.blockConcurrencyWhile(async()=>{if(await ctx.storage.get('experiment-v1')===undefined)await ctx.storage.put('experiment-v1',${JSON.stringify(initial)});});}}
 export default createOperatorProbeWorker(config);`;
   const modules=[{type:'ESModule',path:path.join(root,'src/worker/entry.js'),contents:entry}],visited=new Set();
@@ -91,10 +95,11 @@ export default createOperatorProbeWorker(config);`;
 }
 test('native workerd SQLite preserves four old calls and four fixed story cases across restart',{timeout:30000},async t=>{
   const f=await nativeFixture(t);
-  assert.equal((await f.call(caseIds[0],'native0')).status,'ready');assert.equal((await f.call(caseIds[1],'native1')).status,'ready');
+  const ready=async(caseId,attemptId)=>{const result=await f.call(caseId,attemptId);assert.equal(result.status,'ready',JSON.stringify(result));};
+  await ready(caseIds[0],'native0');await ready(caseIds[1],'native1');
   await f.restart();
   assert.equal((await f.call(caseIds[0],'replay')).attemptId,'native0');
-  assert.equal((await f.call(caseIds[2],'native2')).status,'ready');assert.equal((await f.call(caseIds[3],'native3')).status,'ready');
+  await ready(caseIds[2],'native2');await ready(caseIds[3],'native3');
   const status=await f.status();
   assert.equal(status.callCount,8);assert.deepEqual(status.ledger.attempts.slice(0,4),oldRecord().ledger.attempts);assert.equal(Object.keys(status.acceptance.cases).length,4);assert.equal(f.egress,0);
 });

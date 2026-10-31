@@ -58,6 +58,29 @@ test('v7 provider rejects duplicate story anchors even when native grammar canno
   assert.equal(result.scene,undefined,'invalid metadata cannot reach the commit boundary');
 });
 
+test('v7 purpose guidance retains full target names required by combat, evasion and person observation',async()=>{
+  const c=context(),profile={...GLM_PROFILE,storyActions:true},instructions=buildStoryInput(profile,c).messages[0].content;
+  assert.ok(!instructions.includes('不重复动作名、姓名'),'do not forbid the full names required by the following action rules');
+  assert.match(instructions,/fight\/evade的purpose必须包含目标全名/);
+  assert.match(instructions,/人物的purpose含全名/);
+  const wire=wireFixture(),actor=wire.choices[0].target;
+  wire.blocks[0].text+='江陌拔刀拦住去路，握刀的手势正对着河岸石桩。';
+  wire.choices=[
+    {action:'fight:guard',target:actor,stake:'low',purpose:'稳住江陌的刀势',anchor:0},
+    {action:'evade:blood',target:actor,stake:'low',purpose:'借河岸石桩摆脱江陌',anchor:0},
+    {action:'interact:observe',target:actor,stake:'low',purpose:'看清江陌握刀的手势',anchor:0},
+  ];
+  const result=await generateProviderScene({run:async()=>({model:GLM_MODEL_ID,choices:[{finish_reason:'stop',message:{content:JSON.stringify(wire)}}],usage:{prompt_tokens:400,completion_tokens:450,total_tokens:850}})},profile,c);
+  assert.equal(result.status,'ready',result.errorCode);
+  assert.equal(result.scene.choices[1].label,'避开江陌，燃寿遁逃：借河岸石桩摆脱江陌');
+});
+
+test('v7 black-market guidance names the rule-selected sale item and preserves relic priority',()=>{
+  const instructions=buildStoryInput({...GLM_PROFILE,storyActions:true},context()).messages[0].content;
+  assert.match(instructions,/black-market优先出售行囊已有古修遗物，无则出售已有法器/);
+  assert.match(instructions,/purpose只写“出售古修遗物，换取灵石”或“出售法器，换取灵石”，每次一件，不卖伴生遗物/);
+});
+
 test('v7 schemas expose only paired executable craft resources and the next higher realm',()=>{
   const c=context();c.life.realm='spirit';
   const schema=buildGlmWire(c,'',{storyActions:true}).schema;
@@ -78,8 +101,10 @@ test('legacy named wire keeps its original two-choice contract and never request
   assert.ok(!JSON.stringify(schema).includes('practice:forbidden'));
   assert.ok(!JSON.stringify(schema).includes('voidstone'));
   // Independently reproduced from the released 4.5.1 source at aa758e1.
-  const submitted=buildStoryInput({...GLM_PROFILE,storyActions:true},c).response_format.json_schema.schema;
-  assert.equal(sha256(JSON.stringify(submitted)),'477a559f18c58363dab44506792c758e784e99511fa8880080816ed305506907');
+  const submitted=buildStoryInput({...GLM_PROFILE,storyActions:true},c);
+  assert.equal(sha256(JSON.stringify(submitted.response_format.json_schema.schema)),'477a559f18c58363dab44506792c758e784e99511fa8880080816ed305506907');
+  // The v7 wording changes must preserve the complete legacy 5.0.1 request.
+  assert.equal(sha256(JSON.stringify(submitted)),'6040772d4faeea1ca096c6c61ebeb60d1743d37762c68c10550142b22277a745');
 });
 
 test('a complete v7 provider turn carries its durable director within the existing request budget',async()=>{

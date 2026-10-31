@@ -107,9 +107,9 @@ memoryDeltas只记录本场正文已发生的新信息，不能记录未选选�
   if(directed)modern=`${system}
 ${settled}正文200–400字，1–4段，只推进本次选择的眼前结果；仅canClimax=true的climax可至600字。第二人称，具体对白和动作，不复述旧段落，不列库存、动作代码或字段。对白speaker=self或活人别名，旁白无speaker。普通动物不能交谈。玩家活着就继续，不设固定回合终局。
 输出顶层只允许blocks、choices、title、location、otherPeople、places、factions、memoryDeltas、story这9项。先写blocks，再写choices，最后填写名单。
-恰好3个不同的本场选择，至少两个可执行，其中一个为低风险探问、观察、退避或稳妥处理。每项只写action、targetId、stake、purpose、anchor；purpose最多50字，写具体目的，不重复动作名、姓名，不写奖励、时长或保证结果。anchor为本场段落下标，从0起。选择须回应该段已出现的对象或问题；拒绝也说清放下什么，不补日常菜单。fight/evade的purpose必须包含目标全名，不能错指旁人；危险退避用evade，leave只结束互动。交谈只面对在场可交流对象。
+恰好3个不同的本场选择，至少两个可执行，其中一个为低风险探问、观察、退避或稳妥处理。每项只写action、targetId、stake、purpose、anchor；purpose最多50字，写具体目的，不重复动作前缀，不写奖励、时长或保证结果。anchor为本场段落下标，从0起。选择须回应该段已出现的对象或问题；拒绝也说清放下什么，不补日常菜单。fight/evade的purpose必须包含目标全名，不能错指旁人；危险退避用evade，leave只结束互动。交谈只面对在场可交流对象。
 问答用interact:ask；眼前调查用interact:observe，周围targetId=self，人物的purpose含全名，地点须为当前location。explore只找资源，purpose必须含资源名：${V7_EXPLORE_TARGETS.map(id=>id+'='+ITEMS[id]).join('，')}。travel才移动，目的地不能等于location；跨界仅ascend/smuggle/rift/ancient-array且名称含下一界中界或上界，真实world-crossing判定失败仍在原界。negotiate用于资源交涉，不假装已买到具体物品。
-practice:forbidden和evade:blood可能损寿；rest:medicine服药疗伤，rest:extend服丹延寿；alchemy炼medicine/elixir，formation布array，talisman制符，forge锻talisman/artifact；black-market出售已持有遗物或法器并暴露。后果只来自receipt。
+practice:forbidden和evade:blood可能损寿；rest:medicine服药疗伤，rest:extend服丹延寿；alchemy炼medicine/elixir，formation布array，talisman制符，forge锻talisman/artifact；black-market优先出售行囊已有古修遗物，无则出售已有法器，purpose只写“出售古修遗物，换取灵石”或“出售法器，换取灵石”，每次一件，不卖伴生遗物；交易提高暴露。后果只来自receipt。
 已知实体完整沿用输入id与姓名，新人物p1等、地点l1等、势力f1等声明对应名单，不把主角列NPC，不复活死者。
 新记忆写entityId、kind、anchor，由服务端取该段原文，不写text；fact/clue只记已发生信息，promise须正文明确承诺，新promise/clue带status=open。关闭只用提供的referenceId与合法status，省略不代表结束。无新信息可[]。
 最后story={pattern,beat,anchors}；pattern按事件选investigation/journey/bargain/conflict/cultivation/relationship/discovery/recovery，beat选progress/reversal/revelation/climax/resolution，anchors最多2个有效段落。非progress须同段新记忆或真实判定支撑。beatOverdue必须出现有据转折；opportunityRequired必须有可利用的新线索或破局办法，不能保证成功。相邻已完结篇章不重复pattern。
