@@ -14,7 +14,7 @@ export function renderGameScene({version='dev'}={}) {
 
 export function renderTitleScreen({summary=null,loading=false,error='',version='dev'}={}) {
   const arrow = '<svg class="title-option-arrow" viewBox="0 0 32 16" fill="none" aria-hidden="true"><path d="M1 8h28M22 1l7 7-7 7" stroke="currentColor" stroke-width="1"/></svg>';
-  const detail = loading ? '正在读取旅程…' : summary ? esc(summary.name+' · '+summary.detail) : '待一段仙缘，落笔成章';
+  const detail = loading ? '正在读取旅程…' : summary ? esc(summary.name+' · '+summary.detail) : '尚无可续写的存档';
   return `<div class="title-shell" data-motion="off">
     ${renderSceneWorld()}
     <header class="title-topbar"><div class="title-wordmark"><span class="title-brand-mark" aria-hidden="true">问</span><span>百世问鼎<small>WENDING</small></span></div>${renderSceneControls()}</header>
@@ -23,7 +23,7 @@ export function renderTitleScreen({summary=null,loading=false,error='',version='
       <h1 class="title-name" aria-label="百世问鼎"><span class="title-name-prelude" aria-hidden="true">百世</span><span class="title-name-main" aria-hidden="true">问鼎</span><span class="title-seal" aria-hidden="true">凡人<br>问道</span></h1>
       <p class="title-prologue">纵有千世风霜，仍赴一场长生。</p>
       <nav class="title-menu" aria-label="开始游戏">
-        <button class="title-option is-primary" data-title-new ${loading?'disabled':''}><span class="title-option-index" aria-hidden="true">壹</span><span class="title-option-copy"><span class="title-option-name">踏入仙途</span><span class="title-option-note">${summary?'继续当前人物的修仙人生':'一纸姓名，开启你的修仙人生'}</span></span>${arrow}</button>
+        <button class="title-option is-primary" data-title-new ${loading?'disabled':''}><span class="title-option-index" aria-hidden="true">壹</span><span class="title-option-copy"><span class="title-option-name">踏入仙途</span><span class="title-option-note">创建新人物，开启一段修仙人生</span></span>${arrow}</button>
         <button class="title-option" data-title-continue ${!summary||loading?'disabled':''}><span class="title-option-index" aria-hidden="true">贰</span><span class="title-option-copy"><span class="title-option-name">续写此生</span><span class="title-option-note">${detail}</span></span>${arrow}</button>
         <button class="title-option" data-view="settings"><span class="title-option-index" aria-hidden="true">叁</span><span class="title-option-copy"><span class="title-option-name">游戏设置</span><span class="title-option-note">画面与阅读偏好</span></span>${arrow}</button>
       </nav>

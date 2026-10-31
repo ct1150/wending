@@ -95,18 +95,8 @@ async function prepareNewJourney(expectedArchiveId = null) {
     await ensureLive();
     const loaded = await liveSession.load();
     if (!loaded.state && loaded.errorCode) throw Error('archive read failed');
-    // A fresh entrance can only create into an empty slot. Another tab may
-    // have created a life since this title was rendered; continue it instead.
-    if (expectedArchiveId === null && loaded.state) {
-      liveError = ''; view = 'adventure'; render();
-      await liveSession.resume();
-      focusAdventure($('#journey-current-title') || $('#main-content'));
-      return;
-    }
-    // Restart consent names the physical life shown when the dialog opened.
-    // Never broaden that consent to a replacement discovered during reload.
+    // A new life may only replace the save the player saw and confirmed.
     if ((loaded.archiveId ?? null) !== expectedArchiveId) {
-      view = 'settings';
       notify('当前人物已在另一页面更新，请重新确认后再开始。', true);
       return;
     }
@@ -392,8 +382,7 @@ document.addEventListener('click', event => {
   if ('closeDialog' in data) { closeDialog(); return; }
   if ('confirm' in data) { const callback = dialogConfirm; closeDialog(false); callback?.(); return; }
   if ('home' in data) return goHome();
-  if ('titleNew' in data) return prepareNewJourney();
-  if ('restart' in data || 'liveNew' in data) return askNewJourney();
+  if ('titleNew' in data || 'restart' in data || 'liveNew' in data) return askNewJourney();
   if ('titleContinue' in data) return continueJourney();
   if ('menuBack' in data) {
     if (view === 'new') { if (liveBirthDraft.reincarnationRunId) { view = 'adventure'; render(); return; } return goHome(); }
