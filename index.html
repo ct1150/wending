@@ -4,18 +4,19 @@
     <meta charset="UTF-8" />
     <meta name="application-version" content="dev" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-    <meta name="theme-color" content="#faf8f2" />
-    <meta name="theme-color" content="#1e211f" media="(prefers-color-scheme: dark)" />
+    <meta name="theme-color" content="#101d24" />
     <meta name="description" content="踏入仙途，续写此生。从一纸姓名开始，在修行、历险与结缘中，用每一次选择走出自己的修仙人生。" />
-    <meta name="color-scheme" content="light dark" />
+    <meta name="color-scheme" content="dark light" />
     <title>百世问鼎 · 一世山河</title>
     <link rel="icon" type="image/svg+xml" href="./assets/seal.svg" />
     <link rel="stylesheet" href="./src/ui/styles.css" />
     <link rel="stylesheet" href="./src/ui/paper.css" />
     <link rel="stylesheet" href="./src/ui/title.css" />
+    <link rel="stylesheet" href="./src/ui/game.css" />
   </head>
   <body>
     <a class="skip-link" href="#main-content">跳转到游戏内容</a>
+    <div id="game-scene" class="game-scene" data-motion="off" hidden></div>
     <div id="app"><div class="initial-loading"><span class="seal">问</span><p>一念初起，万世将开。</p></div></div>
     <div id="toast" class="toast" role="status" aria-live="polite"></div>
     <dialog id="dialog" aria-labelledby="dialog-title"></dialog>

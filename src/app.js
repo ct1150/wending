@@ -21,7 +21,7 @@ import { renderIdentityBar, renderCharacterDetails, renderBirth, renderLiveBirth
 import { bootstrapSession, persistSession, migrateSession, recoverLegacySession } from './ui/session.js';
 import { createJourneySaves } from './game/journey-saves.js';
 import { loadNavigation, saveNavigation, loadPreferences, savePreferences } from './ui/navigation.js';
-import { renderTitleScreen, renderGameNavigation, renderReadingSettings, renderJourneyList } from './ui/title-screen.js';
+import { renderTitleScreen, renderGameScene, renderGameNavigation, renderReadingSettings, renderJourneyList } from './ui/title-screen.js';
 import { mountTitleScene } from './ui/title-scene.js';
 import { icon } from './ui/icons.js';
 import { renderCombatActions } from './ui/combat.js';
@@ -73,6 +73,7 @@ let toastTimer;
 let dialogConfirm = null;
 let dialogReturnTarget = null;
 let disposeTitleScene = () => {};
+let disposeGameScene = null;
 const openPanels = new Map();
 const isJourney = game => game?.version === 3 || game?.version === 4;
 const isCreating = game => game?.version === 4 && game.phase === 'creating';
@@ -465,9 +466,29 @@ function showHelp() {
   openDialog('入世须知', `<p>你的这一世，从药谷旧火开始。相逢、调查与取舍，会改变谷地，也改变后来人要面对的事。</p><div class="help-tip"><strong>先看眼前之事，再落下一念。</strong><br>场景与目标指明眼前方向；选项会列出所需岁月、灵石、药材、气血或命损。无法选择的缘由也会写明。选择的后果会留在正文中，手记、人物、线索与生平都在页面下方「回看」中。资源、修为和自身余寿在「状态」中。</div><div class="help-tip"><strong>调查有取舍，岁月只有一条河。</strong><br>药谷旧火的三条调查线最多追查两条。修炼、外出和旅行也推进世界年份，可能令最后一夜提前到来；阅读、看手记与换装不耗时。倒计时按游戏中的年计算。</div><div class="help-tip"><strong>修行是此生的另一条路。</strong><br>在页面下方「修行」中闭关、休息、炼丹或自由历练。修为满足条件后可尝试破境，突破提高寿限。主线结果确定后，仍可继续修行、问道三界，或归隐转世。</div><div class="help-tip"><strong>功法与法器要亲自装配。</strong><br>从「修行 → 功法与法器」中选择一门本命功法、两个神通与一件法器，再返回当前剧情。身在幽冥或天界时，可回看药谷故事；回到人间才能继续作出谷中的选择。</div><div class="help-tip"><strong>留意余寿和气血。</strong><br>燃寿强攻损耗寿元，延寿丹每世最多服用两次。战斗需先分胜负或遁走，才能继续剧情。</div><div class="help-tip"><strong>转世，走进自己改变的世界。</strong><br>医谷共守、宗门接管与焚种迁民，会通向不同的后世事务。人物随世界年份老去，新的你也有新的身份。寿尽、陨落或归隐后，先从真实经历产生的候选中明确选择一项旧途奖励，再按提示交接进入对话新人生；下一世只沿用一项情境方法，已得传承历史、世界因果与三界道证保留。</div><div class="help-tip"><strong>问鼎三界。</strong><br>取得人间、幽冥、天界的三枚道证，修至登仙，在天界挑战三界共主。可随时从「修行 → 三界山河」查看长远目标。</div><p>旧存档的当世沿旧途继续，结束此生并转世后进入新篇，不会补写未曾经历的药谷往事。进度自动保存在当前浏览器；更换设备前，请在剧情下方的「游戏设置」中导出备份。</p>`, '<button class="button primary" data-close-dialog>我已明了</button>');
 }
 
+function syncGameScene() {
+  if (document.documentElement) document.documentElement.dataset.screen = view === 'home' ? 'home' : 'game';
+  const scene = $('#game-scene');
+  if (!scene) return;
+  if (view === 'home') {
+    disposeGameScene?.();
+    disposeGameScene = null;
+    scene.hidden = true;
+    scene.innerHTML = '';
+    return;
+  }
+  scene.hidden = false;
+  // Keep this sibling of #app alive across every story, choice and settings render.
+  if (!disposeGameScene) {
+    scene.innerHTML = renderGameScene({version:appVersion});
+    disposeGameScene = mountTitleScene(scene);
+  }
+}
+
 function render({ resetSupport = false, focusSelector = null } = {}) {
   disposeTitleScene();
   disposeTitleScene = () => {};
+  syncGameScene();
   rememberScreen();
   if(view==='home') {
     $('#app').innerHTML=renderTitleScreen({summary:currentJourneySummary(),loading:!homeReady,error:liveError||saveError,hasOtherSaves:Boolean(state||liveSnapshot?.state),version:appVersion});

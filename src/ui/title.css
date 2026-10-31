@@ -7,7 +7,12 @@
   font-display: swap;
 }
 
-/* This scene owns its palette; reading preferences still belong to paper.css. */
+/* Shared asset references are embedded once in the self-contained release. */
+:root {
+  --scene-landscape-desktop: url('../../assets/title-cinematic.webp');
+  --scene-landscape-mobile: url('../../assets/title-cinematic-mobile.webp');
+}
+/* The title scene keeps its palette independently of reading preferences. */
 .initial-loading { min-height: 100svh; background: #101d24; color: #d9d1be; }
 .initial-loading .seal { background: #15242d; border: 1px solid #d8bd8970; color: #dfc495; }
 .title-shell {
@@ -37,7 +42,7 @@
   z-index: 0;
   inset: -22px;
   height: auto;
-  background: url('../../assets/title-cinematic.webp') center center / cover no-repeat;
+  background: var(--scene-landscape-desktop) center center / cover no-repeat;
   opacity: 1;
   filter: none;
   mask-image: none;
@@ -164,7 +169,7 @@
   .title-scene-controls { gap: 4px; }
   .title-shell .title-scene-control { padding: 0 9px; font-size: 9px; letter-spacing: 0; gap: 5px; }
   .title-scene-control svg { width: 14px; height: 14px; }
-  .title-landscape { background-image: url('../../assets/title-cinematic-mobile.webp'); background-position: center 42%; inset: -14px; transform: translate3d(var(--scene-x), var(--scene-y), 0) scale(1.025); }
+  .title-landscape { background-image: var(--scene-landscape-mobile); background-position: center 42%; inset: -14px; transform: translate3d(var(--scene-x), var(--scene-y), 0) scale(1.025); }
   .title-vignette { background: linear-gradient(0deg, #07141df5 0%, #091822e6 23%, #0a1c26bb 40%, #0a18234d 67%, #09192233 83%, #0918227a 100%); }
   .title-content { width: min(100%, 360px); max-width: 360px; padding: 0 0 25px; margin: clamp(60px, 12svh, 160px) auto 0; align-self: end; justify-self: center; text-align: left; }
   .title-eyebrow { margin-bottom: 12px; font-size: 9px; gap: 10px; }
