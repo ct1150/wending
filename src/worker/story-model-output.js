@@ -4,6 +4,7 @@ import {assertSafeStoryStrings} from '../game/cultivation/live/memory.js';
 import {isV7Life} from '../game/cultivation/live/cultivation-rules.js';
 import {createNamedTargetLookup} from './story-named-targets.js';
 import {normalizeWireAnnotation} from './story-wire-annotation.js';
+import {normalizeV7Presentation} from './story-v7-presentation.js';
 
 const object=value=>value!==null&&typeof value==='object'&&!Array.isArray(value);
 const consequential=row=>object(row)&&(Object.hasOwn(row,'referenceId')||row.kind==='death'||row.kind==='promise'||['resolved','broken'].includes(row.status));
@@ -18,6 +19,7 @@ export function adaptV7ModelOutput(wire,context){
   if(!isV7Life(context.life)||context.director?.version!==7)return wire;
   assertPlainData(wire);
   exactKeys(wire,['blocks','choices'],['title','location','story','memoryDeltas']);
+  wire=normalizeV7Presentation(wire,context);
   const {blocks,choices}=wire;
   if(!Array.isArray(blocks)||!blocks.length||!Array.isArray(choices)||choices.length<2||choices.length>3)throw Error('Invalid playable core');
   const identify=createNamedTargetLookup(context);

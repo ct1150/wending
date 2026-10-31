@@ -6,6 +6,15 @@ const blocks=[{kind:'narration',text:'纸上写着「}、]、{」，他又说：
 const choices=['ask','observe','decline'].map((a,i)=>({action:'interact:'+a,target:person,stake:'low',purpose:['问渡河的时辰','查看陶罐','暂且道别'][i],anchor:0}));
 const core='{"blocks":'+JSON.stringify(blocks)+',"choices":'+JSON.stringify(choices);
 
+test('complete compact interactions survive broken JSON without inventing missing non-interaction stakes',()=>{
+  const compact=choices.slice(0,2).map(({stake,anchor,...row})=>row),truncated=rows=>'{"blocks":'+JSON.stringify(blocks)+',"choices":'+JSON.stringify(rows);
+  assert.deepEqual(readCompleteV7Wire(truncated(compact)),{blocks,choices:compact});
+  const travel={action:'travel:road',target:{kind:'place',name:'渡口'},purpose:'去渡口查看'};
+  assert.equal(readCompleteV7Wire(truncated([compact[0],travel])),null);
+  assert.deepEqual(readCompleteV7Wire(truncated([compact[0],{...travel,stake:'normal'}])).choices[1],{...travel,stake:'normal'});
+  assert.equal(readCompleteV7Wire(truncated([compact[0],{...compact[1],unknown:null}])),null);
+});
+
 test('only complete original fields survive a malformed JSON ending; escaped prose and choices remain untouched',()=>{
   const source=core+',"title":"渡口","location":"青石桥","memoryDeltas":[],"story":{"pattern":"investigation","beat":"pro';
   assert.deepEqual(readCompleteV7Wire(source),{blocks,choices,title:'渡口',location:'青石桥',memoryDeltas:[]});

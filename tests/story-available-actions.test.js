@@ -39,7 +39,7 @@ function accepts(schema,rule,value){
 }
 const target=(kind,name,ref)=>ref===undefined?{kind,name}:{kind,name,ref,status:null};
 const choice=(action,target,stake='low',purpose='辨明眼前情况')=>({action,target,stake,purpose,anchor:0});
-const allows=(built,value)=>accepts(built.named,built.named.properties.choices.items,value);
+const allows=(built,value)=>{const {anchor,...emitted}=value;if(emitted.action.startsWith('interact:'))delete emitted.stake;return accepts(built.named,built.named.properties.choices.items,emitted);};
 
 function namedOpening(actor,notes=[]){return {blocks:[{kind:'narration',text:'船夫指着渡口，告诉你船上的陶罐是在上游找到的。'}],choices:[choice('interact:ask',actor),choice('interact:observe',actor),choice('interact:decline',actor)],title:'渡口陶罐',location:'渡口',memoryDeltas:notes,story:{pattern:'investigation',beat:'progress',anchors:[0]}};}
 
@@ -91,10 +91,12 @@ test('v7 named memory offers only real open references with the allowed closure,
   for(const [id,status,valid]of [['m1','broken',true],['m1','resolved',true],['m2','resolved',false],['m3','broken',false],['m3','resolved',true],['m4','resolved',false]])assert.equal(permits(next,{referenceId:id,status}),valid,id+'/'+status);
 });
 
-test('v7 choice anchors always name an existing block, and optional NPC traits can be omitted individually',()=>{
+test('v7 asks only for actual mechanical decisions, and optional NPC traits can be omitted individually',()=>{
   const built=generation(context()),schema=built.named;
   assert.equal(allows(built,choice('interact:observe','self')),true);
-  assert.equal(allows(built,{...choice('interact:observe','self'),anchor:3}),false);
+  const rule=schema.properties.choices.items,ask={action:'interact:observe',target:'self',purpose:'查看陶罐'};
+  assert.equal(accepts(schema,rule,ask),true);assert.equal(accepts(schema,rule,{...ask,anchor:0}),false);assert.equal(accepts(schema,rule,{...ask,stake:'low'}),false);
+  const recover={...ask,action:'rest:recover'};assert.equal(accepts(schema,rule,recover),false);assert.equal(accepts(schema,rule,{...recover,stake:'low'}),true);
   assert.equal(accepts(schema,schema.properties.story.properties.npcs.items,{target:target('person','渡者'),anchor:0,habit:'盘绳'}),true);
 });
 

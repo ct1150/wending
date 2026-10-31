@@ -40,5 +40,30 @@
     "parsedGameObjectAvailable": false,
     "scope": "No parsed object or original token sequence was available. Cannot attribute this independent malformed response to a specific punctuation error."
   },
-  "responseBoundary": "v7 requests complete narrative and two or three playable actions first. Only complete, independently parseable fields may be salvaged from an otherwise malformed ordinary-stop response; saved state is validated by the engine. No corrective model call."
+  "responseBoundary": "v7 requests complete narrative and two or three playable actions first. Only complete, independently parseable fields may be salvaged from an otherwise malformed ordinary-stop response; saved state is validated by the engine. No corrective model call.",
+  "candidate113": {
+    "normalTraffic": 0,
+    "status": "rejected",
+    "errorCode": "GENERATED_SCENE_INVALID",
+    "visibleChoices": 3,
+    "visibleNarrationCharacters": 568,
+    "scope": "Normal browser against this candidate; no complete model wire was recorded for that specific turn."
+  },
+  "scopedDiagnostic114": {
+    "normalTraffic": 0,
+    "status": "rejected",
+    "errorCode": "PROVIDER_RESPONSE_TOO_LARGE",
+    "settlement": "confirmed",
+    "stage": "TRANSPORT_L59",
+    "minimumTransportBytes": 262145,
+    "validatedContentAvailable": false,
+    "scope": "A separate fixed synthetic opening. Token count, content size and number of frames of the native sample were not captured.",
+    "offlineCounterexample": {
+      "sameGameJsonBytes": 2419,
+      "sameUsage": true,
+      "coarseFramingBytes": 112305,
+      "fineFramingBytes": 330855,
+      "fineFrames": 1165
+    }
+  }
 }

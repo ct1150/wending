@@ -1,8 +1,9 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {createLiveGame,prepareOpening,prepareChoice,commitTurn} from '../src/game/cultivation/live/engine.js';
+import {createLiveGame,prepareOpening,prepareChoice,commitTurn,compileChoices} from '../src/game/cultivation/live/engine.js';
 import {buildStoryContext} from '../src/game/cultivation/live/memory.js';
-import {sha256} from '../src/game/cultivation/live/identity.js';
+import {sha256,stateHash} from '../src/game/cultivation/live/identity.js';
+import {renderLiveJourney} from '../src/ui/journey.js';
 import {generateProviderScene} from '../src/worker/story-provider-core.js';
 import {GLM_PROFILE,GLM_MODEL_ID} from '../src/worker/story-config.js';
 import {cultivationFixtureProse} from './helpers/live-story-fixture.js';
@@ -31,7 +32,10 @@ function fixture(items,purpose,approach='black-market') {
 }
 
 async function generate(fixture) {
-  return generateProviderScene({run:async()=>({model:GLM_MODEL_ID,choices:[{finish_reason:'stop',message:{content:JSON.stringify(fixture.wire)}}],usage:{prompt_tokens:400,completion_tokens:450,total_tokens:850}})},{...GLM_PROFILE,storyActions:true},fixture.context);
+  let calls=0;
+  const result=await generateProviderScene({run:async()=>{calls++;return {model:GLM_MODEL_ID,choices:[{finish_reason:'stop',message:{content:JSON.stringify(fixture.wire)}}],usage:{prompt_tokens:400,completion_tokens:450,total_tokens:850}};}},{...GLM_PROFILE,storyActions:true},fixture.context);
+  assert.equal(calls,1,'menu admission must use only this completed response');
+  return result;
 }
 
 for(const {name,items,purpose,sold,stones} of [
@@ -43,6 +47,7 @@ for(const {name,items,purpose,sold,stones} of [
   const f=fixture(items,purpose),result=await generate(f);
   assert.equal(result.status,'ready',result.errorCode);
   const committed=commitTurn(f.state,f.pending,result.scene),sale=prepareChoice(committed,{requestId:'sell',choiceId:result.scene.choices[0].id});
+  assert.equal(sale.receipt.action.approach,'black-market');assert.ok(sale.receipt.action.label.endsWith(purpose));
   assert.equal(sale.receipt.itemChanges[sold],-1);
   assert.equal(sale.nextLife.items[sold],items[sold]-1);
   const other=sold==='relic'?'artifact':'relic';
@@ -71,14 +76,43 @@ for(const {name,items,purpose,approach} of [
   {name:'companion relic',items:{relic:1},purpose:'出售听烛残灯'},
   {name:'wrong exchange reward',items:{relic:1},purpose:'出售古修遗物，换取完整功法'},
   {name:'invented exchange amount',items:{relic:1},purpose:'出售古修遗物，换取一百灵石'},
-])test('v7 negotiation does not admit '+name,async()=>{
-  const result=await generate(fixture(items,purpose,approach));
-  assert.equal(result.status,'rejected');
-  assert.equal(result.errorCode,'CHOICE_NOT_COMPILABLE');
-  assert.equal(result.scene,undefined);
+])test('v7 drops '+name+' and keeps both original interactions playable',async()=>{
+  const f=fixture(items,purpose,approach),result=await generate(f);
+  assert.equal(result.status,'ready',result.errorCode);
+  const state=commitTurn(f.state,f.pending,result.scene),prefix=f.context.namespace+':t'+f.pending.identity.turnId+':c:';
+  const askId=prefix+'b',observeId=prefix+'c',actor=f.state.currentScene.entities[0];
+  assert.deepEqual(state.currentScene.blocks,f.wire.blocks);
+  assert.deepEqual(state.currentScene.choices,[
+    {id:askId,label:'询问'+actor.name+'：'+f.wire.choices[1].purpose,intent:'interact',approach:'ask',targetId:actor.id,stake:'low'},
+    {id:observeId,label:'仔细观察：'+f.wire.choices[2].purpose,intent:'interact',approach:'observe',targetId:'self',stake:'low'},
+  ]);
+  const compiled=compileChoices(state,state.currentScene.choices),html=renderLiveJourney({state,stateHash:stateHash(state),status:'ready'},compiled);
+  const buttons=[...html.matchAll(/<button\b[^>]* data-live-choice="([^"]+)"[^>]*>/gu)];
+  assert.deepEqual(buttons.map(button=>button[1]),[askId,observeId]);
+  assert.ok(buttons.every(button=>!button[0].includes(' disabled')));
+  assert.throws(()=>prepareChoice(state,{choiceId:prefix+'a',requestId:'stale-trade'}),/当前场景没有此行动/u);
+  assert.deepEqual(state.life.items,f.state.life.items);
+  for(const choice of state.currentScene.choices){
+    const next=prepareChoice(state,{requestId:'select-'+choice.approach,choiceId:choice.id});
+    assert.deepEqual(next.receipt.action,choice);
+    assert.deepEqual(next.receipt.itemChanges,{});assert.deepEqual(next.nextLife.items,state.life.items);
+  }
 });
 
-test('v7 ordinary negotiation still admits talking about an item price',async()=>{
-  const result=await generate(fixture({relic:1},'询问古修遗物的价格','cooperate'));
-  assert.equal(result.status,'ready',result.errorCode);
+test('an entirely invalid trade menu produces no committable scene or inventory change',async()=>{
+  const f=fixture({relic:1,artifact:1,stones:8},'购买古修遗物'),trade=f.wire.choices[0];
+  f.wire.choices=[trade,{...trade,action:'negotiate:cooperate',purpose:'出售古修遗物'},{...trade,action:'negotiate:bargain',purpose:'收购法器'}];
+  const original=structuredClone(f.state),result=await generate(f);
+  assert.equal(result.status,'rejected');assert.equal(result.errorCode,'CHOICE_NOT_COMPILABLE');
+  assert.equal(result.scene,undefined);
+  assert.throws(()=>commitTurn(f.state,f.pending,result.scene));
+  assert.deepEqual(f.state,original,'the last committed scene, receipt, revision, RNG and entire inventory remain intact');
+});
+
+test('v7 ordinary negotiation keeps the original proposal to discuss an item price',async()=>{
+  const f=fixture({relic:1},'询问古修遗物的价格','cooperate'),result=await generate(f);
+  assert.equal(result.status,'ready',result.errorCode);assert.equal(result.scene.choices.length,3);
+  const state=commitTurn(f.state,f.pending,result.scene),talk=prepareChoice(state,{choiceId:result.scene.choices[0].id,requestId:'talk'});
+  assert.equal(talk.receipt.action.approach,'cooperate');assert.ok(talk.receipt.action.label.endsWith(f.wire.choices[0].purpose));
+  assert.equal(talk.nextLife.items.relic,state.life.items.relic);
 });

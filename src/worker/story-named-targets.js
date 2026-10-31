@@ -222,9 +222,10 @@ export function buildNamedSceneSchema(source,context,{blocks,location}={}){
   const choices={type:'array',minItems:2,maxItems:3,items:{oneOf:source.properties.choices.items.oneOf.map(group=>{
     if(scoped){
       const actions=group.properties.action.enum,travel=actions.some(action=>action.startsWith('travel:'))?(actions.some(action=>WORLD_TRAVEL_APPROACHES.includes(action.split(':')[1]))?'crossing':'local'):null;
-      // A choice's wire anchor never enters its canonical action or receipt.
-      // Zero always names a real block without imposing a paragraph count.
-      return {type:'object',additionalProperties:false,required:['action','target','stake','purpose','anchor'],properties:{action:group.properties.action,target:scoped.fromIds(group.properties.targetId.enum,{travel}),stake:group.properties.stake.enum?.join(',')==='low,normal,high'?{$ref:'#/$defs/stakes'}:group.properties.stake,purpose:Object.hasOwn(group.properties.purpose??{},'const')?group.properties.purpose:{$ref:'#/$defs/choicePurpose'},anchor:{const:0}}};
+      // Only actual decisions go on the model wire. The adapter supplies the
+      // unused choice anchor and the rule-fixed low stake of an interaction.
+      const variableStake=!actions.every(action=>action.startsWith('interact:'));
+      return {type:'object',additionalProperties:false,required:['action','target',...(variableStake?['stake']:[]),'purpose'],properties:{action:group.properties.action,target:scoped.fromIds(group.properties.targetId.enum,{travel}),...(variableStake?{stake:group.properties.stake.enum?.join(',')==='low,normal,high'?{$ref:'#/$defs/stakes'}:group.properties.stake}:{}),purpose:Object.hasOwn(group.properties.purpose??{},'const')?group.properties.purpose:{$ref:'#/$defs/choicePurpose'}}};
     }
     const values=group.properties.targetId.enum,kinds=new Set(),strings=[];
     for(const id of values){const known=context.entities.find(entity=>entity.id===id),fresh=/^([plf])\d+$/u.exec(id);if(known)kinds.add(known.kind);else if(fresh)kinds.add(({p:'person',l:'place',f:'faction'})[fresh[1]]);else strings.push(id);}

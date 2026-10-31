@@ -1,4 +1,5 @@
 import {STORY_LIMITS} from './story-config.js';
+import {isFixedV7Interaction} from './story-v7-presentation.js';
 
 const encoder=new TextEncoder(),fields=new Set(['blocks','choices','title','location','memoryDeltas','story']);
 const reserved=new Set(['__proto__','constructor','prototype','life','receipt','retrieval','identity','items','rng','stateHash','baseRevision','namespace','entities','relatedEntities','cultivationProfile','itemChanges','relationChanges']);
@@ -46,7 +47,7 @@ export function readCompleteV7Wire(source){
         if(end===undefined){if(count!==3||rows.length!==2)bad();i=source.length;break;}
         let row;try{row=read(i,end);}catch{if(count!==3||rows.length!==2)bad();}
         if(row!==undefined){
-          if(!record(row)||Object.keys(row).length!==5||!nonempty(row.action)||!nonempty(row.purpose)||!['low','normal','high'].includes(row.stake)||!Number.isInteger(row.anchor)||row.anchor<0||!(nonempty(row.target)||record(row.target)&&['person','place','faction'].includes(row.target.kind)&&nonempty(row.target.name)))bad();
+          if(!record(row)||Object.keys(row).some(key=>!['action','target','stake','purpose','anchor'].includes(key))||!nonempty(row.action)||!nonempty(row.purpose)||!['low','normal','high'].includes(row.stake)&&!(isFixedV7Interaction(row.action)&&row.stake===undefined)||row.anchor!==undefined&&(!Number.isInteger(row.anchor)||row.anchor<0)||!(nonempty(row.target)||record(row.target)&&['person','place','faction'].includes(row.target.kind)&&nonempty(row.target.name)))bad();
           rows.push(row);
         }
         i=skip(end);if(i===source.length||source[i]===']')break;
