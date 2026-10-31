@@ -60,7 +60,7 @@ import { combatAction, getStats, equipItem } from '../src/game/engine.js';
 import { JOURNEY_LEGACIES } from '../src/game/journey/content.js';
 import { LEGACIES } from '../src/game/content.js';
 import { LEGACY_BACKUP_KEY } from '../src/game/persistence.js';
-import { startApp } from './helpers/app-harness.js';
+
 test('ten old identities retain original names/sources and one finite method without reborn bonuses',()=>{
  const mapping={'plain-medicine':'herbalism','valley-seed':'herbalism','golden-furnace':'herbalism','sword-echo':'shelter','city-oath':'shelter','iron-bone':'shelter','tomb-lantern':'soul-lamp','debt-released':'bind-oath','sword-heart':'discern','realm-memory':'burn-life'};
  for(const old of LEGACIES){
@@ -94,15 +94,6 @@ test('backup quota failure never replaces old current and remains retryable with
  assert.equal(s.saved,false);assert.equal(s.state.version,2);assert.equal(storage.values.get(SAVE_KEY),raw);
  const prepared=s.legacyBackup.preparedRaw;storage.failKey=null;
  s=sessions.migrateSession(s,{choiceId:'new-life',seed:100},storage);assert.equal(s.saved,true);assert.equal(serializeGame(s.state),prepared);
-});
-test('the actual app bridge enters the dialogue without setup or a second autosave and keeps old backup export',async()=>{
- const old=ended(),raw=serialize(old),app=await startApp({raw});
- assert.match(app.html,/此生沿旧规继续/);assert.match(app.html,/data-legacy-bridge="new-life"/);
- app.click({legacyBridge:'new-life'});
- const next=deserializeGame(app.storage.raw);assert.equal(next.version,3);assert.equal(app.focus.at(-1),'#journey-current-title');
- assert.equal(app.storage.writes,1);assert.equal(app.storage.writeCounts.get(LEGACY_BACKUP_KEY),1);assert.doesNotMatch(app.html,/dao-name|data-start/);
- app.clickRendered('[data-view="settings"]');app.clickRendered('[data-export-legacy]');
- const blobs=app.downloads.filter(x=>x instanceof Blob);assert.equal(await blobs[0].text(),raw);assert.equal(blobs.length,3);
 });
 
 import { chooseStory, getStoryView, reincarnate } from '../src/game/engine.js';
@@ -188,16 +179,6 @@ test('ordinary old progress and explicit reward survive backup-success/current-f
  }
 });
 
-test('actual app exposes pending old checkpoint for export and explicit recovery while blocking old actions',async()=>{
- const old=createGame({seed:7}),newer=chooseStory(old,'enter_help'),raw=serialize(old),storage=store(raw);
- storage.failKey=SAVE_KEY;sessions.persistSession({...sessions.bootstrapSession(storage),state:newer},storage);
- const app=await startApp({raw,legacyBackupRaw:storage.values.get(LEGACY_BACKUP_KEY)});
- assert.match(app.html,/data-recover-legacy/);assert.match(app.html,/较新旧人生/);
- assert.equal(app.storage.writes,0);app.click({storyChoice:'enter_help'});assert.equal(app.storage.writes,0);
- app.clickRendered('[data-export-legacy]');const blobs=app.downloads.filter(x=>x instanceof Blob);
- assert.ok((await Promise.all(blobs.map(b=>b.text()))).includes(serialize(newer)));
- app.click({recoverLegacy:''});assert.deepEqual(deserializeGame(app.storage.raw),newer);assert.equal(app.storage.writes,1);assert.doesNotMatch(app.html,/data-recover-legacy/);
-});
 test('explicit recovery rereads a temporary backup denial and preserves malformed backups without overwrite',()=>{
  const old=createGame({seed:7}),newer=chooseStory(old,'enter_help'),raw=serialize(old),storage=store(raw);
  storage.failKey=SAVE_KEY;sessions.persistSession({...sessions.bootstrapSession(storage),state:newer},storage);storage.failKey=null;

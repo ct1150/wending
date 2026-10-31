@@ -124,10 +124,11 @@ export function createReleaseGateway({ fallback, icon = '', repository = 'ct1150
       if (request.method !== 'GET' && !head) return respond('Method not allowed',405,'text/plain; charset=utf-8',{Allow:'GET, HEAD'});
       const path = new URL(request.url).pathname;
       if (path === '/favicon.ico' || path === '/favicon.svg') return respond(icon,200,'image/svg+xml');
-      if (!['/','/index.html','/baishi-wending-offline.html','/healthz'].includes(path)) return respond('Not found',404,'text/plain; charset=utf-8');
+      if (path === '/baishi-wending-offline.html') return respond('离线版已停止提供，请返回首页在线游玩。',410,'text/plain; charset=utf-8');
+      if (!['/','/index.html','/healthz'].includes(path)) return respond('Not found',404,'text/plain; charset=utf-8');
       const current = await snapshot();
       if (path === '/healthz') return respond(JSON.stringify({ status:'ok',version:current.version,sourceCommit:current.sourceCommit,htmlSha256:current.htmlSha256,htmlBytes:current.htmlBytes,releaseSource:current.source,lastAttemptAt:attemptedAt,lastSuccessAt:succeededAt,lastError }),200,'application/json; charset=utf-8');
-      return respond(current.html,200,'text/html; charset=utf-8',path === '/baishi-wending-offline.html' ? {'Content-Disposition':'attachment; filename="baishi-wending-offline.html"'} : {});
+      return respond(current.html,200,'text/html; charset=utf-8');
     },
   };
 }

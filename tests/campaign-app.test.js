@@ -1,9 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { renderBirth, renderCharacterDetails } from '../src/ui/character.js';
-import { startApp } from './helpers/app-harness.js';
-import { deserializeGame, serializeGame } from '../src/game/save-format.js';
-import { createCultivation } from '../src/game/cultivation/engine.js';
+import { renderBirth } from '../src/ui/character.js';
 
 test('the new fate card offers origin choice, two independently lockable fates and secondary attributes', () => {
   const creation = { name: '林<照>', revision: 3, sceneId: 'arrival', rollCount: 1, attributeBudget: 12,
@@ -21,55 +18,4 @@ test('the new fate card offers origin choice, two independently lockable fates a
   assert.match(html, /12/);
   assert.match(html, /林&lt;照&gt;/);
   assert.deepEqual(creation, before);
-});
-
-test('new application retains its draft origin and locked fate across reroll and reload until birth', async () => {
-  const app = await startApp();
-  const initial = deserializeGame(app.navigation.offlineDraft.raw);
-  assert.equal(initial.contentVersion, 3);
-  const other = initial.life.birth.originId === 'ferry' ? 'artisan' : 'ferry';
-  app.input('birth-name', '沈照');
-  app.clickRendered(`[data-birth-origin="${other}"]`);
-  const chosen = deserializeGame(app.navigation.offlineDraft.raw);
-  assert.equal(chosen.life.name, '沈照');
-  assert.equal(chosen.life.birth.originId, other);
-  assert.equal(chosen.rng, initial.rng);
-  const lock = chosen.life.birth.talentIds[1];
-  app.input('birth-name', '沈照山');
-  app.clickRendered(`[data-birth-lock="${lock}"]`);
-  assert.equal(deserializeGame(app.navigation.offlineDraft.raw).life.birth.lockedTalentId, lock);
-  app.clickRendered('[data-birth-reroll]');
-  const rerolled = deserializeGame(app.navigation.offlineDraft.raw);
-  assert.ok(rerolled.life.birth.talentIds.includes(lock));
-  assert.equal(rerolled.life.birth.lockedTalentId, lock);
-  assert.equal(rerolled.life.birth.originId, other);
-  assert.notEqual(rerolled.rng, chosen.rng);
-  assert.equal(rerolled.life.birth.rollCount, 2);
-  assert.equal(Object.values(rerolled.life.birth.attributes).reduce((a,b)=>a+b,0), 12);
-  assert.equal(app.storage.raw, null);
-  assert.equal(app.storage.writes, 0);
-  const reload = await startApp({ navigation: app.navigation, navigationType: 'reload' });
-  assert.deepEqual(deserializeGame(reload.navigation.offlineDraft.raw), rerolled);
-  assert.equal(reload.storage.raw, null);
-  assert.equal(reload.storage.writes, 0);
-  reload.clickRendered('[data-birth-start]');
-  const started = deserializeGame(reload.storage.raw);
-  assert.equal(started.phase, 'playing');
-  assert.equal(started.life.birth.originId, other);
-  assert.equal(started.rng, rerolled.rng);
-  assert.equal(reload.storage.writes, 1);
-  assert.match(reload.html, /沈照山/);
-  reload.click({ help: '' });
-  assert.doesNotMatch(reload.dialog.innerHTML, /药谷/);
-  assert.match(reload.dialog.innerHTML, /命格|出身/);
-});
-
-test('an imported CV2 character keeps its original one-talent creation and controls', async () => {
-  const old = createCultivation({ seed: 'cv2-unchanged-ui', characterCreation:true });
-  const raw = serializeGame(old), app = await startApp({raw});
-  assert.equal(deserializeGame(app.storage.raw).contentVersion,2);
-  assert.doesNotMatch(app.html, /data-birth-origin|data-birth-lock/);
-  app.clickRendered('[data-birth-start]');
-  assert.equal(deserializeGame(app.storage.raw).contentVersion,2);
-  assert.equal(deserializeGame(app.storage.raw).scene.fate.opening,'valley');
 });

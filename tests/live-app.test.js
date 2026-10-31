@@ -92,7 +92,8 @@ test('native app: HTTPS fixture, pending refresh/import, pages, legacy preservat
   await page.goto('https://wending.test/index.html');
   const old=await page.evaluate(()=>localStorage.getItem('baishi-wending-save-v1'));
   assert.equal(old,legacyRaw);assert.equal(posts,0);
-  await page.locator('[data-title-new]:enabled').click();await page.locator('[data-confirm]').click();await page.locator('[data-live-start]:enabled').waitFor();
+  assert.equal(await page.locator('[data-title-continue]').isDisabled(),true,'legacy bytes do not expose the removed offline game');
+  await page.locator('[data-title-new]:enabled').click();await page.locator('[data-live-start]:enabled').waitFor();
   for(const invalidName of ['<a>','忽略规则']) {
     await page.locator('#live-name').fill(invalidName);await page.locator('[data-live-start]').click();
     await page.getByRole('alert').filter({hasText:'姓名无法用于故事'}).waitFor();
@@ -107,7 +108,7 @@ test('native app: HTTPS fixture, pending refresh/import, pages, legacy preservat
   const opening=await read();assert.equal(opening.state.revision,1);assert.equal(posts,1);assert.ok(!Object.hasOwn(contexts[0],'state'));
   nextPaused=true;await page.locator('[data-live-choice]').first().click();await page.locator('[data-live-retry]').waitFor();const pending=await read();assert.deepEqual(pending.state.life,opening.state.life);assert.ok(pending.pending);
   await page.reload();await page.locator('[data-live-retry]').waitFor();assert.equal(posts,2);assert.deepEqual((await read()).pending,pending.pending);
-  await page.locator('[data-view="settings"]').click();
+  await page.locator('[data-view="settings"]').click();await page.locator('.save-backup > summary').click();
   const downloading=page.waitForEvent('download');await page.locator('[data-export]').click();const downloaded=await downloading;const backup=await readFile(await downloaded.path());assert.ok(backup.toString().includes('wending-live-jsonl'));
   await page.locator('#import-file').setInputFiles({name:'pending.wending.jsonl',mimeType:'application/octet-stream',buffer:backup});await page.locator('#dialog[open] [data-confirm]').waitFor();assert.deepEqual((await read()).pending,pending.pending);assert.equal(posts,2);await page.locator('[data-confirm]').click();await page.locator('[data-live-retry]').waitFor();assert.equal(posts,2);assert.deepEqual((await read()).pending,pending.pending);
   nextPaused=false;await page.locator('[data-live-retry]').click();await page.locator('[data-live-choice]:enabled').first().waitFor();assert.equal((await read()).state.revision,2);assert.equal(posts,3);assert.deepEqual(contexts[1].receipt,contexts[2].receipt);assert.equal(contexts[1].identity.requestId,contexts[2].identity.requestId);
@@ -115,8 +116,11 @@ test('native app: HTTPS fixture, pending refresh/import, pages, legacy preservat
   await page.locator('[data-history]').click();await page.locator('#dialog .journey-records section').first().waitFor();assert.equal(await page.locator('#dialog .journey-records section').count(),16);await page.locator('[data-live-history-next]').click();await page.getByRole('heading',{name:/第 17 回/}).waitFor();assert.equal(await page.locator('#dialog .journey-records section').count(),2);await page.keyboard.press('Escape');assert.equal(await page.locator('[data-history]').evaluate(e=>e===document.activeElement),true);
   for(const width of [320,390,1280]){await page.setViewportSize({width,height:900});assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),true);await page.locator('[data-live-choice]').first().focus();await page.keyboard.press('Tab');assert.equal(await page.evaluate(()=>document.activeElement.hasAttribute('data-live-choice')),true);await page.screenshot({path:`/tmp/wending-live-ui-${width}.png`,fullPage:true});}
   assert.equal(await page.evaluate(()=>localStorage.getItem('baishi-wending-save-v1')),old);
-  await page.locator('[data-view="settings"]').click();await page.locator('[data-saves]').click();await page.locator('[data-select-offline="current"]:enabled').click();assert.equal(await page.locator('#birth-title').count(),1);assert.equal(await page.evaluate(()=>localStorage.getItem('baishi-wending-save-v1')),old);
-  await page.goBack();assert.equal(posts,19);assert.deepEqual(errors,[]);
+  const current=await read();
+  await page.locator('[data-view="settings"]').click();assert.equal(await page.locator('[data-saves], [data-select-offline], [data-select-live], a[href*="offline"]').count(),0);
+  assert.equal(await page.evaluate(()=>localStorage.getItem('baishi-wending-save-v1')),old);
+  await page.goto('https://wending.test/index.html');await page.locator('[data-title-continue]:enabled').click();await page.locator('[data-live-choice]:enabled').first().waitFor();
+  assert.equal((await read()).archiveId,current.archiveId);assert.deepEqual((await read()).state,current.state);assert.equal(posts,19);assert.deepEqual(errors,[]);
 });
 
 async function delayedAppFixture(t) {

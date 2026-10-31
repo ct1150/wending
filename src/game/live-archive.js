@@ -105,44 +105,6 @@ class Archive {
   });
  }
  async load(runId) {const c=await this._capture(runId);if(c)this.bound=c.run.archiveId;return c?loaded(c.run,c.pending):null;}
- async listJourneys({cursor=null,limit=20}={}) {
-  check(Number.isInteger(limit)&&limit>=1&&limit<=128,'ARCHIVE_INVALID_QUERY');
-  if(cursor!==null)ident(cursor);
-  return transaction(this.db,'readonly',(s,get,done,guard)=>get(s.runs,ACTIVE,active=>{
-   const entries=[];
-   const request=s.runs.openCursor(cursor===null?undefined:IDBKeyRange.lowerBound(cursor,true));
-   request.onsuccess=guard(()=>{
-    const current=request.result;
-    if(!current){done({entries,cursor:null});return;}
-    const run=current.value;
-    // Import staging/validated rows and pointer records are not playable saves.
-    if(run.status==='active') {
-     if(entries.length===limit){done({entries,cursor:entries.at(-1).archiveId});return;}
-     entries.push({archiveId:run.archiveId,runId:run.runId,state:clone(run.state),active:active?.target===run.archiveId});
-    }
-    current.continue();
-   });
-  }));
- }
- async selectJourney(archiveId,expectedArchiveId) {
-  ident(archiveId);
-  const selected=await transaction(this.db,'readwrite',(s,get,done)=>get(s.runs,ACTIVE,active=>{
-   check((active?.target??null)===expectedArchiveId);
-   get(s.runs,archiveId,run=>{
-    check(run?.status==='active','ARCHIVE_NOT_SELECTABLE');
-    validateLiveState(run.state);check(stateHash(run.state)===run.hash,'ARCHIVE_INVALID_STATE');
-    get(s.pending,archiveId,pending=>{
-     if(pending){verifyPending(run.state,pending.pending);validateAttempt(pending.attempt);pauseValue(pending.pause);}
-     s.runs.put({archiveId:ACTIVE,target:archiveId});
-     // Imported revisions can retain the same logical runId under distinct
-     // physical archive IDs. Future prepare/commit must resolve this selection.
-     s.runs.put({archiveId:'@run:'+run.runId,target:archiveId});
-     done(loaded(run,pending));
-    });
-   });
-  }));
-  this.bound=archiveId;return selected;
- }
  async create({state,pending,expectedArchiveId=null}) {
   validateLiveState(state);check(!state.reincarnation&&!state.life.birth.cultivationProfile?.inheritedBenefits?.length,'REINCARNATION_REQUIRES_SETTLEMENT');check(state.revision===0&&state.archiveCursor===0,'ARCHIVE_INVALID_BIRTH');verifyPending(state,pending);
   const archiveId=crypto.randomUUID(),run={archiveId,runId:state.runId,state:clone(state),birth:clone(state),hash:stateHash(state),tailIndex:-1,headHash:ZERO,status:'active'};

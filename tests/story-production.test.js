@@ -27,7 +27,7 @@ async function fixture(t,{profiles=[VALIDATED_FIXTURE_PROFILE]}={}){
   for(const dir of ['scripts','release','assets','config'])await mkdir(path.join(root,dir),{recursive:true});
   await writeFile(path.join(root,'package.json'),'{"type":"module","version":"4.0.0"}');
   await writeFile(path.join(root,'assets/seal.svg'),'<svg/>');
-  await writeFile(path.join(root,'release/baishi-wending-offline.html'),'<!doctype html><title>isolated production fixture</title>');
+  await writeFile(path.join(root,'release/baishi-wending-web.html'),'<!doctype html><title>isolated production fixture</title>');
   await writeFile(path.join(root,'config/story-deployment.json'),JSON.stringify({enabled:true,...versions}));
   // Fixture admission is independent of the real release's promotion state.
   await setFixtureProductionProfiles(root,profiles);
@@ -144,7 +144,7 @@ export default {async fetch(request,env,ctx){
   }
   const initialStatus=await getStatus();assert.equal(initialStatus.aiCalls,0);
   assert.deepEqual(initialStatus.backendIdentity,{sourceCommit,...versions,enabled:true,publicEnabled:true,accessMode:'production',candidateModelId:DEFAULT_STORY_MODEL_ID,activeModelId:modelId,modelValidated:true,providerRoute:null});
-  assert.equal(await(await mf.dispatchFetch('https://game.test/')).text(),await readFile(path.join(f.root,'release/baishi-wending-offline.html'),'utf8'));
+  assert.equal(await(await mf.dispatchFetch('https://game.test/')).text(),await readFile(path.join(f.root,'release/baishi-wending-web.html'),'utf8'));
   const health=await(await mf.dispatchFetch('https://game.test/healthz')).json();assert.equal(health.sourceCommit,sourceCommit);assert.equal(health.htmlSha256,manifest.frontend.htmlSha256);
   const origin='https://game.test',sessionResponse=await mf.dispatchFetch(origin+'/api/story/session',{method:'POST',headers:{origin,'content-type':'application/json'},body:'{"protocolVersion":1}'}),session=await sessionResponse.json();
   assert.equal(session.status,'ready');const cookie=sessionResponse.headers.get('set-cookie').split(';')[0];

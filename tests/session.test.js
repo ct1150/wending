@@ -154,7 +154,7 @@ test('a failed v3 write retains the exact playable progress for export and recov
 });
 
 import { journeyAtSize, legacyAtSize } from './helpers/save-boundaries.js';
-import { startApp } from './helpers/app-harness.js';
+
 test('oversized direct persistence reports failure before replacing either current or legacy backup',()=>{
  for(const build of [journeyAtSize,legacyAtSize]){
   const original=JSON.stringify(build(999999)),storage=storageWith(original);
@@ -163,32 +163,4 @@ test('oversized direct persistence reports failure before replacing either curre
   assert.doesNotMatch(failed.error,/请导出存档备份/);
   assert.equal(storage.raw,original);assert.equal(storage.writes,0);assert.equal(failed.storageRaw,original);
  }
-});
-test('actual app rejects a near-limit growing choice and exports the unchanged reloadable checkpoint',async()=>{
- for(const [state,dataset] of [
-  [journeyAtSize(999999),{journeyChoice:'catch-child',revision:'0',sceneId:'mortal-entry'}],
-  [legacyAtSize(999999),{storyChoice:'enter_help'}],
- ]){
-  const raw=JSON.stringify(state),app=await startApp({raw});
-  app.click(dataset);
-  assert.match(app.toast,/存档.*(长度|字符|上限)/);assert.match(app.toast,/未.*(执行|提交)|保持/);
-  assert.equal(app.storage.raw,raw);assert.equal(app.storage.writes,0);
-  app.click({view:'settings'});app.click({export:''});
-  const blob=app.downloads.find(value=>value instanceof Blob);assert.ok(blob);
-  const exported=await blob.text();assert.ok(blob.size>2*1024*1024,'UTF-8 bytes exceed the former upload guard despite valid character length');assert.deepEqual(deserializeGame(exported),state);
-  await app.import(exported);assert.match(app.dialog.innerHTML,/确认恢复/);app.click({confirm:''});assert.doesNotMatch(app.toast,/失败|过大|超过/);assert.ok(app.storage.writes>0,'actual file chooser accepted the exported UTF-8 file');assert.deepEqual(deserializeGame(app.storage.raw),state);
- }
-});
-
-test('oversized normalized v3 import is rejected before confirmation and leaves the current exportable checkpoint',async()=>{
- const current=createJourney({seed:'keep-current'}),original=serializeGame(current),app=await startApp({raw:original});
- const raw=JSON.stringify(journeyAtSize(1000001)).replace('"year":1000','"year":1e3');
- assert.equal(raw.length,1000000);assert.equal(JSON.stringify(JSON.parse(raw)).length,1000001);
- await app.import(raw);
- assert.equal(app.dialog.open,false);assert.doesNotMatch(app.dialog.innerHTML,/确认恢复/);
- assert.match(app.toast,/存档.*(长度|字符|上限)/);assert.doesNotMatch(app.toast,/存档已恢复/);
- assert.equal(app.storage.raw,original);assert.equal(app.storage.writes,0);
- app.click({view:'settings'});app.click({export:''});
- const exported=await app.downloads.find(value=>value instanceof Blob).text();
- assert.deepEqual(deserializeGame(exported),current);assert.equal(app.storage.raw,original);
 });

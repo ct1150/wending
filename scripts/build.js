@@ -99,7 +99,7 @@ export function parseModule(source, file = 'module.js') {
       for (let j = i + 1; j < ts.length; j++) {
         const item = ts[j]; if (item.literal) continue;
         if (expectName) {
-          if (!identifier.test(item.value)) throw new Error(`${file}: top-level mutable destructuring is unsupported by the offline bundler`);
+          if (!identifier.test(item.value)) throw new Error(`${file}: top-level mutable destructuring is unsupported by the web bundler`);
           mutable.add(item.value); expectName = false; continue;
         }
         if (['(', '[', '{'].includes(item.value)) nested++;
@@ -214,7 +214,7 @@ export async function bundleModules(root, entry) {
 }
 
 async function inlineCss(css, file, root) {
-  if (/@import\b/i.test(css)) throw new Error(`${file}: CSS @import is unsupported in the offline build`);
+  if (/@import\b/i.test(css)) throw new Error(`${file}: CSS @import is unsupported in the web build`);
   const matches = [...css.matchAll(/url\(\s*(['"]?)([^)'"\s]+)\1\s*\)/g)];
   for (const match of matches.reverse()) {
     if (match[2].startsWith('data:') || match[2].startsWith('#')) continue;
@@ -252,13 +252,13 @@ export async function build(root = projectRoot) {
   await writeFile(path.join(dist, 'index.html'), staticHtml);
   for (const directory of ['src', 'assets']) await cp(path.join(root, directory), path.join(dist, directory), { recursive: true, filter: source => source !== path.join(root, 'src/worker') });
   await writeFile(path.join(dist, '.nojekyll'), '');
-  const filename = 'baishi-wending-offline.html';
-  await writeFile(path.join(release, filename), html); await writeFile(path.join(dist, filename), html);
-  const metadata = { name: pkg.name, version: pkg.version, builtAt: new Date().toISOString(), offline: { file: filename, bytes: Buffer.byteLength(html), sha256: createHash('sha256').update(html).digest('hex') }, staticDirectory: 'dist', runtimeDependencies: 0 };
+  const filename = 'baishi-wending-web.html';
+  await writeFile(path.join(release, filename), html);
+  const metadata = { name: pkg.name, version: pkg.version, builtAt: new Date().toISOString(), frontend: { file: filename, bytes: Buffer.byteLength(html), sha256: createHash('sha256').update(html).digest('hex') }, staticDirectory: 'dist', runtimeDependencies: 0 };
   await writeFile(path.join(release, 'release.json'), JSON.stringify(metadata, null, 2) + '\n');
   return metadata;
 }
 
 if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
-  build().then(meta => console.log(`Built dist/ and release/${meta.offline.file} (${meta.offline.bytes} bytes)`)).catch(error => { console.error(`Build failed: ${error.message}`); process.exitCode = 1; });
+  build().then(meta => console.log(`Built dist/ and release/${meta.frontend.file} (${meta.frontend.bytes} bytes)`)).catch(error => { console.error(`Build failed: ${error.message}`); process.exitCode = 1; });
 }

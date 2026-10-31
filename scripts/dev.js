@@ -15,17 +15,13 @@ export async function createRequestHandler(root = defaultRoot) {
       // Decode before normalization so encoded traversal is rejected too.
       const raw = decodeURIComponent((request.url || '/').split('?')[0]);
       if (raw.includes('\0') || raw.includes('\\') || raw.split('/').some(part => part === '..' || part.startsWith('.'))) { response.writeHead(403).end('Forbidden'); return; }
+      if (raw === '/baishi-wending-offline.html') {
+        response.writeHead(410, { 'Content-Type': 'text/plain; charset=utf-8', 'Cache-Control': 'no-store', 'X-Content-Type-Options': 'nosniff' }).end(request.method === 'HEAD' ? undefined : '离线版已停止提供，请返回首页在线游玩。');
+        return;
+      }
       const candidate = path.resolve(base, '.' + raw);
       if (candidate !== base && !candidate.startsWith(base + path.sep)) { response.writeHead(403).end('Forbidden'); return; }
-      let file;
-      try {
-        file = await realpath(candidate);
-      } catch (error) {
-        if (error.code !== 'ENOENT' || raw !== '/baishi-wending-offline.html') throw error;
-        // Source previews keep generated downloads in dist; built-site roots
-        // already contain the file and therefore never take this fallback.
-        file = await realpath(path.join(base, 'dist', 'baishi-wending-offline.html'));
-      }
+      let file = await realpath(candidate);
       if (file !== base && !file.startsWith(base + path.sep)) { response.writeHead(403).end('Forbidden'); return; }
       if ((await stat(file)).isDirectory()) file = await realpath(path.join(file, 'index.html'));
       if (file !== base && !file.startsWith(base + path.sep)) { response.writeHead(403).end('Forbidden'); return; }
