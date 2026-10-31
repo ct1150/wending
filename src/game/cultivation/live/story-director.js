@@ -48,10 +48,16 @@ export function createStoryDirector(life,seed=0) {
 }
 
 function groundedTraits(scene) {
+  const traits=new Map();
   for(const npc of scene.story?.npcs??[]){
     const entity=scene.entities.find(row=>row.id===npc.entityId&&row.kind==='person'),block=scene.blocks[npc.anchor];
-    if(!entity||!(block.text.includes(entity.name)||block.kind==='dialogue'&&block.speaker===entity.id)||TRAITS.some(key=>npc[key]&&!block.text.includes(npc[key])))fail('STORY_ANNOTATION_INVALID');
+    if(!entity||!block)fail('STORY_ANNOTATION_INVALID');
+    const mentioned=block.text.includes(entity.name)||block.kind==='dialogue'&&block.speaker===entity.id;
+    // Optional characterization is useful only when the scene shows it. Ignore
+    // unsupported additions instead of rejecting play or replacing prior facts.
+    traits.set(npc.entityId,Object.fromEntries(TRAITS.filter(key=>mentioned&&npc[key]&&block.text.includes(npc[key])).map(key=>[key,npc[key]])));
   }
+  return traits;
 }
 
 export function validateStoryDirector(d,{turnId}={}) {
@@ -125,7 +131,7 @@ export function advanceStoryDirector(director,life,receipt,scene,turnId) {
   if(check){d.pacing.setbackStreak=check.success?0:Math.min(10,d.pacing.setbackStreak+1);d.pacing.pressure=Math.max(0,Math.min(10,d.pacing.pressure+(check.success?-2:1)));}
   d.world.tier=life.cultivationProfile?.worldTier??0;
   if(scene){
-    assertPlainData(scene);if(scene.story)validateStoryAnnotation(scene.story,scene.blocks.length);groundedTraits(scene);
+    assertPlainData(scene);if(scene.story)validateStoryAnnotation(scene.story,scene.blocks.length);const shownTraits=groundedTraits(scene);
     const blocks=scene.blocks.map(block=>block.text),body=blocks.join('\n'),annotation=scene.story??{pattern:d.pacing.pattern,beat:'progress',anchors:[0]};
     const fresh=scene.memoryDeltas.filter(row=>!row.referenceId&&blocks.some(block=>block.includes(row.text)));
     const result=fresh[0]?.text??blocks[0],decision=receipt.action?.label;
@@ -136,7 +142,7 @@ export function advanceStoryDirector(director,life,receipt,scene,turnId) {
       if(!spoken&&!mentioned)continue;
       const fact=fresh.find(row=>row.entityId===entity.id),prior=d.memory.npcs.find(row=>row.id===entity.id);
       const status=prior?.status==='dead'?'dead':entity.status??prior?.status??'unknown';
-      const traits=scene.story?.npcs?.find(row=>row.entityId===entity.id);
+      const traits=shownTraits.get(entity.id);
       if(entity.kind==='person')upsert(d,'npcs',{id:entity.id,name:entity.name,status,text:clip(fact?.text??blocks.find(block=>block.includes(entity.name))??result,80),turnId,introducedAt:prior?.introducedAt??turnId,...Object.fromEntries(TRAITS.map(key=>[key,traits?.[key]||prior?.[key]||'']))});
       const opponent=d.memory.enemies.find(row=>row.id===entity.id),challenged=receipt.action?.targetId===entity.id&&['fight','evade'].includes(receipt.action.intent);
       if(opponent||challenged){
@@ -208,29 +214,12 @@ export function buildDirectorContext(director,life,receipt,turnId) {
   return validateStoryDirector(d);
 }
 
-function cautious(choice) {
-  if(!choice.enabled||choice.stake!=='low')return false;
-  if(choice.intent==='interact')return ['ask','observe','decline','leave'].includes(choice.approach);
-  if(choice.intent==='evade')return ['withdraw','conceal'].includes(choice.approach);
-  return choice.intent==='explore'&&choice.approach==='cautious'||choice.intent==='rest'&&choice.approach==='recover'||choice.intent==='travel'&&choice.approach==='road';
-}
-
-export function validateDirectorScene(scene,context,compiledChoices) {
+export function validateDirectorScene(scene,context) {
   if(!context.director)return scene;
   validateStoryDirector(context.director,{turnId:context.identity.turnId-1});
   if(!scene.story)fail('STORY_ANNOTATION_INVALID');validateStoryAnnotation(scene.story,scene.blocks.length);
   groundedTraits(scene);
-  const length=scene.blocks.reduce((sum,block)=>sum+chars(block.text).length,0),p=context.director.pacing;
-  if(length<200||length>(scene.story.beat==='climax'&&p.canClimax?600:400))fail('STORY_LENGTH_INVALID');
-  if(scene.story.beat==='climax'&&!p.canClimax)fail('STORY_BEAT_INVALID');
-  if(scene.choices.length!==3||compiledChoices.filter(choice=>choice.enabled).length<2||!compiledChoices.some(cautious))fail('CHOICE_NOT_COMPILABLE');
-  const labels=scene.choices.map(choice=>choice.label.replace(/[\s，。！？：、,.!?：:]/gu,''));
-  if(new Set(labels).size!==3)fail('CHOICE_NOT_COMPILABLE');
-  if(p.sceneHashes.includes(sha256(canonicalStringify(scene.blocks))))fail('REPEATED_SCENE');
-  if(p.beatOverdue&&scene.story.beat==='progress')fail('STORY_BEAT_INVALID');
-  if(p.opportunityRequired&&!['reversal','revelation','resolution'].includes(scene.story.beat))fail('STORY_BEAT_INVALID');
-  const anchors=scene.story.anchors.map(anchor=>scene.blocks[anchor].text);
-  if(scene.story.beat!=='progress'&&!scene.memoryDeltas.some(row=>!row.referenceId&&anchors.some(block=>block.includes(row.text)))&&!context.receipt.cultivationResult?.check)fail('STORY_BEAT_INVALID');
-  if(scene.story.beat==='resolution'&&p.completedPatterns.at(-1)===scene.story.pattern)fail('REPEATED_STORY_ARC');
+  // Length, menu variety and pacing remain generation guidance. The game rules
+  // check action availability; editorial preferences must not stop a valid turn.
   return scene;
 }

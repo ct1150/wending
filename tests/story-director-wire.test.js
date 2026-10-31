@@ -11,6 +11,7 @@ import { createCultivationBirthProfile,initialLifeForBirth,summarizeLife,V7_REAL
 import { buildStoryInput,generateProviderScene } from '../src/worker/story-provider-core.js';
 import { GLM_PROFILE,GLM_MODEL_ID,STORY_LIMITS } from '../src/worker/story-config.js';
 import { formatStoryChoiceLabel } from '../src/game/cultivation/live/story-choice-label.js';
+import { ITEMS } from '../src/game/cultivation/live/model.js';
 
 function context(){
   const legacy=createLiveGame({runId:'director-wire',seed:42}),pending=prepareOpening(legacy,{requestId:'wire-open'}),c=structuredClone(buildStoryContext(legacy,pending));
@@ -37,7 +38,7 @@ test('v7 named generation preserves story annotations after the streamed choices
   assert.equal(scene.choices.length,3);
   assert.equal(scene.memoryDeltas[0].text,scene.blocks[0].text);
   assert.match(built.instructions,/独立的固定安全规则/,'the modern prompt must retain its supplied system contract');
-  assert.match(built.instructions,/200[—–-]400/);
+  assert.match(built.instructions,/短问题直接回答，不凑字数/);
 });
 
 test('v7 GLM input omits unsupported anchor uniqueness without weakening the canonical schema',()=>{
@@ -58,11 +59,11 @@ test('v7 provider rejects duplicate story anchors even when native grammar canno
   assert.equal(result.scene,undefined,'invalid metadata cannot reach the commit boundary');
 });
 
-test('v7 purpose guidance retains full target names required by combat, evasion and person observation',async()=>{
+test('v7 purpose guidance lets natural wording coexist with explicit action targets',async()=>{
   const c=context(),profile={...GLM_PROFILE,storyActions:true},instructions=buildStoryInput(profile,c).messages[0].content;
   assert.ok(!instructions.includes('不重复动作名、姓名'),'do not forbid the full names required by the following action rules');
-  assert.match(instructions,/fight\/evade的purpose必须包含目标全名/);
-  assert.match(instructions,/人物的purpose含全名/);
+  assert.doesNotMatch(instructions,/fight\/evade的purpose必须包含目标全名|人物的purpose含全名/);
+  assert.match(instructions,/正文自然称谓即可/);
   const wire=wireFixture(),actor=wire.choices[0].target;
   wire.blocks[0].text+='江陌拔刀拦住去路，握刀的手势正对着河岸石桩。';
   wire.choices=[
@@ -82,7 +83,8 @@ test('v7 black-market guidance names the rule-selected sale item and preserves r
 });
 
 test('v7 schemas expose only paired executable craft resources and the next higher realm',()=>{
-  const c=context();c.life.realm='spirit';
+  const c=context();c.life.realm='spirit';c.life.cultivation=100;c.life.injury=0;c.life.cultivationProfile.spirit=100;
+  for(const item of Object.keys(ITEMS))c.life.items[item]=200;
   const schema=buildGlmWire(c,'',{storyActions:true}).schema;
   const targets=action=>schema.properties.choices.items.oneOf.filter(branch=>branch.properties.action.enum.includes(action)).flatMap(branch=>branch.properties.targetId.enum);
   assert.deepEqual(targets('practice:breakthrough'),['void']);
@@ -91,6 +93,10 @@ test('v7 schemas expose only paired executable craft resources and the next high
   assert.deepEqual(targets('craft:forge'),['talisman','artifact']);
   assert.ok(targets('explore:cautious').includes('voidstone'));
   assert.ok(!targets('explore:cautious').includes('elixir'));
+  for(const item of Object.keys(c.life.items))c.life.items[item]=0;
+  const depleted=buildGlmWire(c,'',{storyActions:true}).schema.properties.choices.items.oneOf;
+  assert.ok(!depleted.some(branch=>branch.properties.action.enum.includes('practice:breakthrough')));
+  assert.ok(!depleted.some(branch=>branch.properties.action.enum.some(action=>action.startsWith('craft:'))));
 });
 
 test('legacy named wire keeps its original two-choice contract and never requests new narrative annotations',()=>{

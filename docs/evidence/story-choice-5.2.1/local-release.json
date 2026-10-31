@@ -1,0 +1,55 @@
+{
+  "schemaVersion": 1,
+  "version": "5.2.1",
+  "recordedAt": "2026-10-31T01:47:29.963974+00:00",
+  "status": "LOCAL_RELEASE_VALIDATED",
+  "baseCommit": "4676d7f356c750352141e2ec9c7f1dd0699ffd3f",
+  "reproduction": {
+    "frontendVersion": "5.2.0",
+    "httpStatus": 200,
+    "result": "rejected",
+    "errorCode": "CHOICE_NOT_COMPILABLE",
+    "proseCharacters": 126,
+    "independentEditorialGates": [
+      "observation purpose missing literal person name",
+      "fewer than 200 prose characters",
+      "indirect person description instead of literal name"
+    ],
+    "fixture": "tests/helpers/story-choice-captured.js",
+    "fixtureBoundary": "Visible streamed prose and choices are captured; envelope metadata is reconstructed, not raw model JSON."
+  },
+  "release": {
+    "command": "WENDING_BROWSER_EXECUTABLE=/root/.cache/ms-playwright/chromium_headless_shell-1161/chrome-linux/headless_shell npm run release",
+    "tests": 1174,
+    "pass": 1174,
+    "fail": 0,
+    "cancelled": 0,
+    "skipped": 0,
+    "todo": 0,
+    "durationMs": 115951.446476,
+    "syntaxFiles": 208,
+    "offlineHtmlBytes": 1643728
+  },
+  "behaviorChecks": [
+    "Original prose and three purposes/targets commit unchanged",
+    "Each original rendered choice can be selected from the same opening",
+    "One inference per opening or selected action; no automatic correction retry",
+    "Original receipt, RNG and stored choice remain stable; refresh makes no new inference",
+    "Actual rule projection removes unavailable action/target/stake combinations",
+    "Known identities and local/next-world target restrictions survive named conversion",
+    "Malformed metadata and conflicting identities still reject before commit"
+  ],
+  "inputBytes": {
+    "opening": 16655,
+    "dense24Entities": 20128,
+    "richContinuation": 23387,
+    "limit": 24576
+  },
+  "legacyInputSha256": "6040772d4faeea1ca096c6c61ebeb60d1743d37762c68c10550142b22277a745",
+  "resolvedReviewFindings": [
+    "Food synonyms no longer require a literal whitelist in v7",
+    "Ordinary advice about a teacher is not treated as a prompt instruction",
+    "Explicit instruction-like names remain blocked; first full run found two name-boundary regressions, corrected before final green release"
+  ],
+  "productionAcceptance": "Not claimed by this local record. Native GLM, deployment and public-domain results will be recorded in the repair PR."
+}

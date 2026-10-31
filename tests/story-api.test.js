@@ -304,7 +304,10 @@ test('contract vocabulary is complete and accounting is independent of public er
   const {PROVIDER_ERROR_CODES}=await import('../src/worker/story-provider.js');
   const {readFile}=await import('node:fs/promises');
   const source=(await Promise.all(['memory.js','story-director.js','story-annotation.js'].map(file=>readFile(new URL('../src/game/cultivation/live/'+file,import.meta.url),'utf8')))).join('\n');
-  assert.deepEqual([...new Set([...source.matchAll(/(?:fail|new Error)\('([A-Z_]+)'\)/g)].map(m=>m[1]))].sort(),[...STORY_ERROR_CODES].sort());
+  const retiredEditorialCodes=['STORY_LENGTH_INVALID','STORY_BEAT_INVALID','REPEATED_STORY_ARC'];
+  const activeCodes=[...new Set([...source.matchAll(/(?:fail|new Error)\('([A-Z_]+)'\)/g)].map(m=>m[1]))];
+  assert.deepEqual(activeCodes.sort(),STORY_ERROR_CODES.filter(code=>!retiredEditorialCodes.includes(code)).sort());
+  for(const code of retiredEditorialCodes)assert.ok(STORY_ERROR_CODES.includes(code),'cached old responses remain readable');
   for(const code of [...STORY_ERROR_CODES,'SECRET_INTERNAL_FAILURE']) {
     if(code!=='SECRET_INTERNAL_FAILURE')assert.ok(PROVIDER_ERROR_CODES.includes(code));
     const f=fixture(async()=>({status:'rejected',accountingStatus:'complete',errorCode:code}));t.after(()=>f.db.close());const s=await session(f);
