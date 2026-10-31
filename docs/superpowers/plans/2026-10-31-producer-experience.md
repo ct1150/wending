@@ -43,13 +43,15 @@
 
 ### Task 2: 收敛在线单存档与旧数据恢复
 
-**Files:** Modify `src/app.js`, `src/ui/title-screen.js`, `src/ui/navigation.js`, `src/ui/live-session.js`, `src/game/live-archive.js`; Test `tests/title-screen.test.js`, `tests/title-navigation.test.js`, `tests/live-app.test.js`, `tests/live-journeys.test.js`; Create `tests/single-life.test.js`.
+**Upstream integration:** 开发期间主线 PR #26 / `e5f3cc2` 已实现大部分单存档与离线入口移除。先集成并复用其代码和验证，再完成下面仍有差异的继续优先、设置中主动重开与只读历史；不恢复多存档选择接口。
+
+**Files:** Modify `src/app.js`, `src/ui/title-screen.js`, `src/ui/navigation.js`, `src/ui/live-session.js`, `src/game/live-archive.js`, `src/game/live-save-format.js`; Test `tests/title-screen.test.js`, `tests/title-navigation.test.js`, `tests/live-app.test.js`, `tests/live-journeys.test.js`; Create `tests/single-life.test.js`.
 
 **Interfaces:** 当前活动档案仍由 Archive 的 `@active` 指针决定；新增单人生策略封装，不改变旧底层记录身份。只读历史/备份不使用 `selectJourney`。
 
 - [ ] 写浏览器回归：正常首页/设置没有切档、离线下载和离线模式；存活时开始入口继续当前人生，主动重开在设置中确认。
 - [ ] 写回归：重开不发轮回奖励，失败不替换当前档；导入保持事务验证，旧原文可备份，旧多档不会被批量删除。
-- [ ] 实现单存档入口与导航恢复；旧 `saves` 路由收敛到设置，旧离线数据只读备份，不再以旧模式创建新人生。
+- [ ] 实现单存档入口与导航恢复；沿用5.4.0旧 `saves` 路由回首页的恢复策略，旧离线数据只读备份，不再以旧模式创建新人生。
 - [ ] 轮回后当前指针更新，前世可以只读；验证旧标签无法覆盖新人物。
 - [ ] 更新受需求变化影响的界面测试，保留底层旧档/导入/CAS 覆盖；提交并审查。
 
