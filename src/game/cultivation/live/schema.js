@@ -1,6 +1,7 @@
 import { assertPlainData } from './identity.js';
 import { INTENTS } from './model.js';
 import { STORY_ANNOTATION_SCHEMA, validateStoryAnnotation } from './story-annotation.js';
+import { validateRetrievalReceipt } from './retrieval-memory.js';
 export function exactKeys(value, keys, optional=[]) {
   if (!value || typeof value !== 'object' || Array.isArray(value) || Object.keys(value).some(key=>!keys.includes(key)&&!optional.includes(key)) || keys.some(key=>!Object.hasOwn(value,key))) throw new Error('数据字段无效。');
 }
@@ -9,7 +10,7 @@ export function idField(value) { if(typeof value!=='string'||!/^[A-Za-z0-9][A-Za
 export function validateProposal(p) { assertPlainData(p);exactKeys(p,['id','label','intent','targetId','stake','approach']);idField(p.id);textField(p.label,120);idField(p.targetId);if(!Object.hasOwn(INTENTS,p.intent)||!INTENTS[p.intent].includes(p.approach)||!['low','normal','high'].includes(p.stake))throw new Error('未知行动意图。');return p; }
 export function validateEntities(entities) { if(!Array.isArray(entities)||entities.length>24)throw new Error('关联人物过多。');const seen=new Set();for(const e of entities){exactKeys(e,['id','name','kind'],['status']);if(Object.hasOwn(e,'status')&&(e.kind!=='person'||!['alive','dead'].includes(e.status)))throw new Error('人物生死状态无效。');idField(e.id);textField(e.name,60);if(seen.has(e.id)||!['person','place','faction'].includes(e.kind))throw new Error('实体无效。');seen.add(e.id);} }
 export function validateGeneratedScene(scene) {
- assertPlainData(scene);exactKeys(scene,['id','title','location','blocks','entities','choices','memoryDeltas'],['story']);idField(scene.id);textField(scene.title,120);textField(scene.location,120);validateEntities(scene.entities);
+ assertPlainData(scene);exactKeys(scene,['id','title','location','blocks','entities','choices','memoryDeltas'],['story','retrieval']);idField(scene.id);textField(scene.title,120);textField(scene.location,120);validateEntities(scene.entities);
  if(!Array.isArray(scene.blocks)||scene.blocks.length<1||scene.blocks.length>12)throw new Error('正文段落数量无效。');for(const block of scene.blocks){exactKeys(block,block.kind==='dialogue'?['kind','text','speaker']:['kind','text']);if(!['narration','dialogue'].includes(block.kind))throw new Error('正文类型无效。');textField(block.text,2000);if(block.kind==='dialogue')textField(block.speaker,80);}
  if(!Array.isArray(scene.choices)||scene.choices.length<2||scene.choices.length>3)throw new Error('须有二至三个行动。');const ids=new Set(),actions=new Set();for(const p of scene.choices){validateProposal(p);if(ids.has(p.id))throw new Error('行动标识重复。');ids.add(p.id);const action=JSON.stringify([p.intent,p.targetId,p.stake,p.approach,...(p.intent==='interact'?[p.label.trim()]:[])]);if(actions.has(action))throw new Error('行动内容重复。');actions.add(action);}
  if(!Array.isArray(scene.memoryDeltas)||scene.memoryDeltas.length>16)throw new Error('记忆增量过多。');for(const m of scene.memoryDeltas){
@@ -22,6 +23,7 @@ export function validateGeneratedScene(scene) {
   }
  }
  if(scene.story!==undefined)validateStoryAnnotation(scene.story,scene.blocks.length);
+ if(scene.retrieval!==undefined)validateRetrievalReceipt(scene.retrieval);
  if(new TextEncoder().encode(JSON.stringify(scene)).length>48000)throw new Error('场景过大。');return scene;
 }
 const string = {type:'string',minLength:1};

@@ -4,6 +4,7 @@ import { exactKeys, idField, textField, validateProposal, validateEntities, vali
 import { V7_REALMS, isV7Life, isV7Birth, summarizeLife, initialLifeForBirth, initialItemsForBirth, validateV7BirthProfile, validateV7Profile, realmFor, lifespanLimitFor, maximumSpiritFor, validV7Target } from './cultivation-rules.js';
 import { validateStoryDirector } from './story-director.js';
 import { validateReincarnation } from './reincarnation.js';
+import { validateRetrievalMemory } from './retrieval-memory.js';
 export { assertPlainData };
 export function integer(value,min=0,max=Number.MAX_SAFE_INTEGER-1) { if(!Number.isSafeInteger(value)||value<min||value>max)throw new Error('数值字段无效。'); }
 export function validateBirth(birth) { exactKeys(birth,['originId','talentIds','attributes'],['cultivationProfile']);if(Object.hasOwn(birth,'cultivationProfile'))validateV7BirthProfile(birth.cultivationProfile);if(!Object.hasOwn(ORIGINS,birth.originId)||!Array.isArray(birth.talentIds)||birth.talentIds.length!==2||new Set(birth.talentIds).size!==2||birth.talentIds.some(id=>!Object.hasOwn(TALENTS,id)))throw new Error('出生条件无效。');exactKeys(birth.attributes,['constitution','insight','fortune']);let total=0;for(const n of Object.values(birth.attributes)){integer(n,1,6);total+=n;}if(total!==12)throw new Error('资质必须合计十二点。'); }
@@ -107,12 +108,13 @@ function validateCultivationResult(receipt){
 }
 export function validateLiveState(state) {
   assertPlainData(state);
-  exactKeys(state, ['version','mode','contentVersion','rulesVersion','promptVersion','runId','revision','turnId','phase','rng','life','birthReceipt','currentScene','lastReceipt','relatedEntities','archiveCursor'],['relationshipVersion','director','reincarnation']);
+  exactKeys(state, ['version','mode','contentVersion','rulesVersion','promptVersion','runId','revision','turnId','phase','rng','life','birthReceipt','currentScene','lastReceipt','relatedEntities','archiveCursor'],['relationshipVersion','director','reincarnation','retrieval']);
   if(state.relationshipVersion!==undefined&&state.relationshipVersion!==1)throw new Error('关系规则版本无效。');
   if (state.version !== 5 || state.mode !== 'cultivation' || state.contentVersion !== 4 || state.rulesVersion !== 1 || state.promptVersion !== 1 || !['awaitingOpening','active','dead'].includes(state.phase)) throw new Error('实时存档版本或阶段无效。');
   idField(state.runId);
   integer(state.revision);
   integer(state.turnId);
+  if(state.retrieval!==undefined){validateRetrievalMemory(state.retrieval);if(state.turnId===0)throw new Error('开场之前不能添加来源记录。');}
   if (state.revision !== state.turnId) throw new Error('回合与修订不一致。');
   integer(state.archiveCursor);
   integer(state.rng, 0, 4294967295);

@@ -6,6 +6,7 @@ import { validateLiveState } from './validation.js';
 import { resolveCustomAction, replayCustomAction, customActionCommand, CUSTOM_ACTION_MESSAGE } from './custom-actions.js';
 import { createStoryDirector, advanceStoryDirector } from './story-director.js';
 import { validateReincarnation } from './reincarnation.js';
+import { advanceRetrievalMemory } from './retrieval-memory.js';
 const copy = value => JSON.parse(JSON.stringify(value));
 const nextRandom = value => (Math.imul(value,1664525)+1013904223)>>>0;
 const summary = summarizeLife;
@@ -149,6 +150,7 @@ export function commitTurn(state,pending,scene,restoredRelations={}) {
  for(const m of scene.memoryDeltas)if(!relatedEntities.some(e=>e.id===m.entityId))throw new Error('记忆引用未知实体。');
  const life=copy(fixed.nextLife);life.relations=projectRelations(life,relatedEntities,state.relationshipVersion===1?restoredRelations:{});
  const next={...copy(state),...(scene.choices.some(choice=>choice.intent==='interact')?{relationshipVersion:1}:{}),revision:state.revision+1,turnId:state.turnId+1,phase:'active',life,rng:fixed.nextRng,lastReceipt:copy(fixed.receipt),currentScene:copy(scene),relatedEntities};
+ const retrieval=advanceRetrievalMemory(state.retrieval,scene.retrieval);if(retrieval)next.retrieval=retrieval;
  if(state.director)next.director=advanceStoryDirector(state.director,life,fixed.receipt,scene,next.turnId);
  const choices=compileChoices(next,scene.choices);if(!choices.some(p=>p.enabled))throw new Error('场景必须保留可执行行动。');return validateLiveState(next);
 }

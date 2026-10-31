@@ -6,6 +6,7 @@ import { exactKeys,idField } from '../game/cultivation/live/schema.js';
 import { readStoryJson } from './story-request-body.js';
 import { createStoryObservation } from './story-observation.js';
 import { structureDiagnostic } from './story-provider-core.js';
+import { validateRetrievalReceipt } from '../game/cultivation/live/retrieval-memory.js';
 
 export const STORY_COOKIE='__Host-story_session';
 // Leave room for provider completion and durable settlement before the browser
@@ -96,7 +97,7 @@ export function createStoryApi({provider=generateScene,budget,config={},experime
         if(Date.now()>=providerDeadline)generated={status:'paused',errorCode:'PROVIDER_TIMEOUT',accountingStatus:'unknown',inferencePerformed:false};
         else generated=await Promise.race([Promise.resolve().then(()=>{
           if(controller.signal.aborted||Date.now()>=providerDeadline)throw Object.assign(Error('PROVIDER_TIMEOUT'),{code:'PROVIDER_TIMEOUT'});
-          return provider(env.AI,profile,body.context,{attemptId:identity.attemptId},{storyActions,deadlineAt:providerDeadline,signal:controller.signal,onProgress:event=>{if(providerActive)onProgress(event);}});
+          return provider(env.AI,profile,body.context,{attemptId:identity.attemptId},{storyActions,knowledgeStore:config.knowledgeEnabled===true?(env.STORY_KNOWLEDGE??null):undefined,deadlineAt:providerDeadline,signal:controller.signal,onProgress:event=>{if(providerActive)onProgress(event);}});
         }),new Promise(resolve=>{timer=setTimeout(()=>{controller.abort();resolve({status:'paused',errorCode:'PROVIDER_TIMEOUT',accountingStatus:'unknown',inferencePerformed:true});},Math.max(1,providerDeadline-Date.now()));})]);
       }catch(error){generated={status:'paused',errorCode:error?.code==='PROVIDER_TIMEOUT'?'PROVIDER_TIMEOUT':'PROVIDER_FAILED',accountingStatus:'unknown',inferencePerformed:true};}finally{providerActive=false;clearTimeout(timer);controller.abort();}
       const latencyMs=Date.now()-providerStartedAt;
@@ -105,7 +106,12 @@ export function createStoryApi({provider=generateScene,budget,config={},experime
       if(generated?.status==='ready'){
         try {
           if(!storyActions&&generated.scene?.choices.some(choice=>choice.intent==='interact'))fail('GENERATED_SCENE_INVALID');
-          const scene=validateGeneratedScene(generated.scene,body.context);result={...envelope('ready',null,identity),scene};
+          const scene=validateGeneratedScene(generated.scene,body.context);
+          if(scene.retrieval!==undefined){
+            if(body.context.retrieval?.version!==1)fail('GENERATED_SCENE_INVALID');
+            validateRetrievalReceipt(scene.retrieval,{queryHash:sha256(canonicalStringify(body.context))});
+          }
+          result={...envelope('ready',null,identity),scene};
           if(encoder.encode(JSON.stringify(result)).length>STORY_LIMITS.maxResponseBytes){observationStage='api-envelope';result=envelope('rejected','GENERATED_SCENE_INVALID',identity);}
         }catch(error){
           observationStage='api-scene';apiDiagnostic=error?.code==='GENERATED_SCENE_INVALID'?structureDiagnostic(generated.scene):null;
