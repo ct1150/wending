@@ -54,22 +54,18 @@ test('a saved turn without a goal shows the current scene without assigning the 
   assert.match(renderLiveJourney(view, choices), /data-live-goal>柳溪渡口</);
 });
 
-test('v7 presents exactly three numbered story choices followed by a separate custom action form', () => {
+test('v7 presents only the numbered story choices', () => {
   const { view, choices } = fixture();
   const html = renderLiveJourney({ ...view, customAction: { open: true, text: '在茶棚听听来客的议论', error: '' } }, choices);
   assert.equal((html.match(/data-live-choice="/g) ?? []).length, 3);
   assert.match(html, />1[.．、]\s*<\/span>/);
   assert.match(html, />2[.．、]\s*<\/span>/);
   assert.match(html, />3[.．、]\s*<\/span>/);
-  assert.match(html, /data-live-custom-toggle/);
-  assert.match(html, /4[.．、]\s*<\/span>.*自定义行动/);
-  assert.match(html, /id="live-custom-action"/);
-  assert.match(html, /在茶棚听听来客的议论/);
-  assert.ok(html.indexOf('data-live-custom-toggle') > html.indexOf('data-live-choice="leave"'));
+  assert.doesNotMatch(html, /data-live-custom|自定义行动|data-live-example/);
   assert.doesNotMatch(html, />0日|无变化|无效果|落下一念，故事才会继续/);
 });
 
-test('v7 streamed choices and the custom path remain disabled until durable completion', () => {
+test('v7 streamed choices and controls stay disabled until durable completion', () => {
   const { view } = fixture();
   const html = renderLiveJourney({ ...view, busy: true, pending: {}, preview: {
     blocks: [{ kind: 'narration', text: '船夫抬起头，', complete: false }],
@@ -77,15 +73,7 @@ test('v7 streamed choices and the custom path remain disabled until durable comp
   } }, []);
   assert.doesNotMatch(html, /data-live-choice="/);
   assert.match(html, /data-live-choice-preview[^>]*disabled/);
-  assert.match(html, /data-live-custom-toggle[^>]*disabled/);
-});
-
-test('unmapped custom input remains visible with the exact failure response and no fake turn feedback', () => {
-  const { view, choices } = fixture();
-  const html = renderLiveJourney({ ...view, customAction: { open: true, text: '立刻飞升天界', error: '【该行动超出当前场景能力范围，请重新选择。】' } }, choices);
-  assert.match(html, /立刻飞升天界/);
-  assert.match(html, /【该行动超出当前场景能力范围，请重新选择。】/);
-  assert.doesNotMatch(html, /骰|掷骰|行动成功/);
+  assert.doesNotMatch(html, /data-live-custom/);
 });
 
 test('live birth asks for the exact requested name prompt before opening a life', () => {

@@ -148,7 +148,7 @@ function newNamePattern(names,{prefix='',noWorld=false}={}){
   return escaped(prefix)+(branch(root)??'');
 }
 
-function directedTargets(context,includeMemoryTypes=true){
+function directedTargets(context){
   const definitions={},fresh=new Map(),scopes=new Map(),parts=new Map();
   const entities=new Map(context.entities.map(entity=>[entity.id,entity]));
   const selected=context.receipt.action,failedCrossing=context.receipt.cultivationResult?.check?.kind==='world-crossing'&&context.receipt.cultivationResult.check.success===false;
@@ -192,17 +192,14 @@ function directedTargets(context,includeMemoryTypes=true){
     const name='targets'+scopes.size;scopes.set(key,name);definitions[name]=alternatives.length===1?alternatives[0]:{oneOf:alternatives};
     return {$ref:'#/$defs/'+name};
   }
-  if(includeMemoryTypes){
-    for(const kind of ['person','place','faction'])definitions[kind+'Target']=fromIds([...context.entities.filter(entity=>entity.kind===kind).map(entity=>entity.id),({person:'p',place:'l',faction:'f'})[kind]+'1']);
-    definitions.entityTarget={oneOf:['person','place','faction'].map(kind=>({$ref:'#/$defs/'+kind+'Target'}))};
-  }
+  for(const kind of ['person','place','faction'])definitions[kind+'Target']=fromIds([...context.entities.filter(entity=>entity.kind===kind).map(entity=>entity.id),({person:'p',place:'l',faction:'f'})[kind]+'1']);
+  definitions.entityTarget={oneOf:['person','place','faction'].map(kind=>({$ref:'#/$defs/'+kind+'Target'}))};
   return {definitions,fromIds};
 }
 
-export function buildNamedSceneSchema(source,context,{blocks,location,engineMenu=false}={}){
+export function buildNamedSceneSchema(source,context,{blocks,location}={}){
   const directed=isV7Life(context.life)&&context.director?.version===7;
-  const narrativeOnly=directed&&engineMenu;
-  const scoped=directed?directedTargets(context,!narrativeOnly):null;
+  const scoped=directed?directedTargets(context):null;
   const named={};for(const kind of ['person','place','faction']){
     const ambiguous=context.entities.some((entity,index)=>entity.kind===kind&&context.entities.slice(0,index).some(previous=>previous.kind===kind&&previous.name===entity.name));
     named[kind]={type:'object',additionalProperties:false,required:['kind','name','ref','status'],properties:{kind:{const:kind},name:{type:'string',minLength:1,maxLength:60},ref:ambiguous?{type:'string',maxLength:80}:{const:''},status:{const:null}}};
@@ -223,25 +220,6 @@ export function buildNamedSceneSchema(source,context,{blocks,location,engineMenu
     variant.required=['kind','speaker','text'];
   }
   const closures=directed?source.properties.memoryDeltas.items.oneOf.filter(row=>row.properties.referenceId).map(row=>structuredClone(row)):[{type:'object',additionalProperties:false,required:['referenceId','status'],properties:{referenceId:{type:'string'},status:{enum:['resolved','broken']}}}];
-  if(narrativeOnly){
-    const decisionDetail={type:'object',additionalProperties:false,required:['anchor','quote'],properties:{
-      anchor:{type:'integer',minimum:0,maximum:(body.maxItems??4)-1},quote:{type:'string',minLength:2,maxLength:18},
-    }};
-    const properties={blocks:body,decisionDetail};
-    // A normal turn needs prose only. When the frozen context provides an
-    // actual open record, allow an optional decision about exactly that record.
-    if(closures.length)properties.memoryDeltas={type:'array',maxItems:16,items:closures.length===1?closures[0]:{oneOf:closures}};
-    const intel=source.properties.story?.properties.opponent;
-    if(isExperienceLife(context.life)&&intel){
-      // Only marked lives may establish a grounded opponent observation. A
-      // readable scene without new intelligence still requires prose alone.
-      const {entityId,anchor,...facts}=intel.properties;
-      const actors=context.entities.filter(e=>['person','faction'].includes(e.kind)&&e.status!=='dead').map(e=>e.id);
-      const opponent={type:'object',additionalProperties:false,required:['target','anchor'],properties:{target:scoped.fromIds([...actors,'p1','f1']),anchor:{...anchor,maximum:(body.maxItems??4)-1},...facts}};
-      properties.story={type:'object',additionalProperties:false,required:['opponent'],properties:{opponent}};
-    }
-    return {type:'object',additionalProperties:false,required:['blocks'],properties,...(Object.keys(definitions).length?{$defs:definitions}:{})};
-  }
   const anchor={type:'integer',minimum:0,maximum:(body.maxItems??4)-1};
   if(scoped){definitions.choicePurpose={type:'string',minLength:1,maxLength:50};definitions.blockAnchor=anchor;definitions.stakes={enum:['low','normal','high']};}
   const choices={type:'array',minItems:2,maxItems:3,items:{oneOf:source.properties.choices.items.oneOf.map(group=>{

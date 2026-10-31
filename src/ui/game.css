@@ -164,16 +164,11 @@ body { background: #101d24; }
 .paper-page .journey-choice:disabled::after { opacity: .35; }
 .paper-page .journey-choice-label { font: 16px/1.85 var(--serif); letter-spacing: .025em; }
 .live-choice-number { color: var(--gold); }
-.paper-page .live-choice-draft:disabled, .paper-page .live-custom-action > .journey-choice:disabled {
+.paper-page .live-choice-draft:disabled {
   color: var(--text); border: 1px solid var(--line2);
   background: linear-gradient(105deg, var(--gold-wash), transparent 75%), var(--choice-surface);
 }
-.paper-page .live-choice-draft:disabled::after, .paper-page .live-custom-action > .journey-choice:disabled::after { opacity: .7; }
-.live-custom-action { margin-top: 11px; }
-.live-custom-action > .journey-choice { background: transparent; }
-.live-custom-action > .journey-choice::after { content: '+'; }
-.live-custom-action textarea { background: var(--control-surface); border-radius: 1px; }
-.live-custom-action form { padding: 18px; border: 1px solid var(--line); background: var(--gold-wash); }
+.paper-page .live-choice-draft:disabled::after { opacity: .7; }
 .live-turn-feedback { padding-left: 13px; border-left: 2px solid var(--gold); }
 .live-turn-changes { padding-left: 15px; }
 .live-turn-state { border-color: var(--line2); margin-top: 26px; }
@@ -304,7 +299,6 @@ dialog::backdrop { background: #030b14b8; backdrop-filter: blur(5px); }
   .paper-top-immersive { margin-inline: -17px; padding-inline: 17px; }
   .journey-identity-facts { column-gap: 8px; }
   .journey-navigation button { padding-inline: 7px; }
-  .live-custom-action form { padding: 13px; }
   .character-facts, .character-inventory { grid-template-columns: minmax(0, 1fr); }
 }
 @media (prefers-reduced-motion: reduce) {
@@ -316,6 +310,3 @@ dialog::backdrop { background: #030b14b8; backdrop-filter: blur(5px); }
 .live-birth-facts p { margin: .3em 0; line-height: 1.7; }
 .live-birth-facts strong { color: var(--gold); margin-inline-end: .7em; }
 .live-turn-state summary [data-live-goal] { color: var(--text); overflow-wrap: anywhere; }
-.live-action-examples { display: flex; flex-wrap: wrap; align-items: center; gap: .2em .6em; margin: .35em 0; color: var(--muted); }
-.live-action-examples[hidden] { display: none; }
-.live-action-examples button { max-width: 100%; min-height: 44px; border: 0; border-bottom: 1px solid var(--line2); background: transparent; color: var(--gold); text-align: start; font: inherit; overflow-wrap: anywhere; cursor: pointer; }

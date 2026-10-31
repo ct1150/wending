@@ -1,28 +1,12 @@
 import {namedGlmFixture} from './helpers/named-glm-fixture.js';
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {createLiveGame,prepareOpening,prepareChoice,commitTurn,compileChoices,resolveImmediateInteraction} from '../src/game/cultivation/live/engine.js';
+import {createLiveGame,prepareOpening,prepareChoice,commitTurn,compileChoices} from '../src/game/cultivation/live/engine.js';
 import * as memory from '../src/game/cultivation/live/memory.js';
 import {buildStoryInput,generateProviderScene} from '../src/worker/story-provider-core.js';
 import {GLM_PROFILE} from '../src/worker/story-config.js';
 import {validateReceipt} from '../src/game/cultivation/live/validation.js';
 import {buildGlmWire,decodeGlmScene} from '../src/worker/story-glm-wire.js';
-
-test('new refusals and farewells close locally without rewards, travel or another NPC question',()=>{
-  for(const approach of ['decline','leave']){
-    const {state}=encounter(),actor=state.relatedEntities.find(entity=>entity.kind==='person');state.currentScene.choices[0]={id:state.currentScene.choices[0].id,label:'结束眼前的请求',intent:'interact',targetId:actor.id,stake:'low',approach};
-    const before=structuredClone(state),pending=prepareChoice(state,{requestId:'immediate-'+approach,choiceId:state.currentScene.choices[0].id}),scene=resolveImmediateInteraction(state,pending),next=commitTurn(state,pending,scene);
-    memory.validateGeneratedScene(scene,memory.buildStoryContext(state,pending));assert.deepEqual(state,before);assert.deepEqual(next.life,state.life);assert.equal(next.rng,pending.nextRng);assert.equal(next.revision,state.revision+1);assert.equal(scene.location,state.currentScene.location);assert.ok(scene.blocks[0].text.includes(actor.name));assert.ok(scene.choices.every(choice=>choice.targetId!==actor.id&&!['decline','leave'].includes(choice.approach)));assert.ok(scene.choices.some(choice=>choice.intent==='travel'));assert.ok(scene.choices.some(choice=>choice.intent==='interact'&&choice.approach==='observe'));
-  }
-  const {state,pending}=encounter();assert.throws(()=>resolveImmediateInteraction(state,pending));
-  state.currentScene.location='village';state.currentScene.choices[0]={id:state.currentScene.choices[0].id,label:'结束互动',intent:'interact',targetId:'self',approach:'leave',stake:'low'};const local=resolveImmediateInteraction(state,prepareChoice(state,{requestId:'opaque-place',choiceId:state.currentScene.choices[0].id}));assert.ok(!local.blocks[0].text.includes('village'));assert.equal(local.location,'village');
-});
-
-test('an old scene matching the local farewell still advances without weakening repeat validation',()=>{
-  const {state}=encounter();state.currentScene.choices[0]={id:state.currentScene.choices[0].id,label:'结束当前互动',intent:'interact',targetId:'self',approach:'leave',stake:'low'};
-  let pending=prepareChoice(state,{requestId:'repeat-local-old',choiceId:state.currentScene.choices[0].id});state.currentScene.blocks=resolveImmediateInteraction(state,pending).blocks;pending=prepareChoice(state,{requestId:'repeat-local-new',choiceId:state.currentScene.choices[0].id});
-  const scene=resolveImmediateInteraction(state,pending);assert.notDeepEqual(scene.blocks,state.currentScene.blocks);assert.doesNotThrow(()=>memory.validateGeneratedScene(scene,memory.buildStoryContext(state,pending)));
-});
 
 test('modern model guidance uses short interactions for questions without legacy negotiation instructions',()=>{
   const state=createLiveGame({runId:'modern-question',seed:42}),context=memory.buildStoryContext(state,prepareOpening(state,{requestId:'question-opening'}));

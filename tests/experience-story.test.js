@@ -13,12 +13,25 @@ const profile={...GLM_PROFILE,storyActions:true};
 const life=(seed=42,opt=true)=>createLiveGame({...frozen.options,seed,...(opt?{experienceVersion:1}:{})});
 const subject=frozen.scene.entities[0];
 const cexp=s=>s.life.cultivationProfile.experience;
-const pending=(s,label)=>prepareChoice(s,{customAction:label,requestId:'effect-'+(s.turnId+1)});
+const pending=(s,label)=>prepareChoice(s,{choiceId:s.currentScene.choices.find(c=>c.label===label)?.id??'not-offered',requestId:'effect-'+(s.turnId+1)});
 const ctx=(s,p)=>buildStoryContext(s,p,[],{selection:'relevance-v1',openTotal:0});
 function scene(s,p,{offer=false,other=false,omit=false}={}){
  const next=s.turnId+1,sc=structuredClone(frozen.scene);sc.id=sc.id.replace(':t1:',':t'+next+':');for(const o of sc.choices)o.id=o.id.replace(':t1:',':t'+next+':');
  sc.blocks=[{kind:'narration',text:'陈砚翻过手里的纸页，指着一段断开的口诀说，可以带你校法，等再见时给他带一份行粮。你尚未答应。'}];
- if(offer)Object.assign(sc.choices[1],{label:'请陈砚校法，许诺归还一份行粮',intent:'craft',approach:'pledge',stake:'low'});
+ const progress=p.nextLife.cultivationProfile?.experience;
+ sc.choices[2].label='观察周围';
+ if(progress&&!progress.repaired&&TECHNIQUES[progress.activeTechniqueId].defective){
+   const diagnosed=progress.lessons.includes('diagnosed');
+   Object.assign(sc.choices[0],{label:diagnosed?'自行推演残法':'验看本命功法',intent:'craft',approach:diagnosed?'restore':'diagnose'});
+ }
+ if(offer){
+   Object.assign(sc.choices[0],{label:'婉拒陈砚',intent:'interact',approach:'decline',targetId:subject.id});
+   Object.assign(sc.choices[1],{label:'接受陈砚的校法之约',intent:'craft',approach:'pledge'});
+ }
+ if(progress?.commitment?.status==='owed'&&!omit){
+   Object.assign(sc.choices[0],{label:'帮助陈砚',intent:'interact',approach:'help',targetId:subject.id});
+   Object.assign(sc.choices[1],{label:'向陈砚归还行粮',intent:'craft',approach:'repay'});
+ }
  if(other)sc.entities.push({id:'r:88d5c5505f1d09bb:t'+next+':e:other',name:'李明',kind:'person'});
  if(omit){sc.entities=[];sc.choices=sc.choices.filter(c=>c.targetId==='self');sc.blocks=[{kind:'narration',text:'雨停了，渡口空无一人。'}];}
  return sc;

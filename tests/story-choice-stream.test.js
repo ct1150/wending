@@ -58,7 +58,7 @@ test('real GLM choice text arrives before the rest of its JSON and matches the v
   sink.enqueue(frame(source.slice(end)));sink.enqueue(ending());sink.close();
   const result=await work;
   assert.equal(premature,false);
-  assert.equal(before?.choices[0]?.label,'询问陈叔：哭声里夹着');
+  assert.equal(before?.choices[0]?.label,'哭声里夹着');
   assert.equal(before.choices[0].complete,false);
   assert.equal(result.status,'ready');
   const final=events.filter(event=>event.type==='presentation').at(-1);
@@ -130,18 +130,19 @@ test('GLM through the actual API and browser exposes a partial choice before val
   const premature=finished,settledEarly=f.settled;
   sink.enqueue(frame(source.slice(end)));sink.enqueue(ending());sink.close();
   const result=await work;
-  assert.equal(first?.label,'询问陈叔：哭声里夹着');assert.equal(first.complete,false);assert.equal(premature,false);assert.equal(settledEarly,null);
+  assert.equal(first?.label,'哭声里夹着');assert.equal(first.complete,false);assert.equal(premature,false);assert.equal(settledEarly,null);
   assert.equal(result.status,'ready');assert.equal(f.calls,1);assert.equal(f.settled.result.status,'ready');
   assert.equal(events.some(event=>event.type==='preview'),false);
   const final=events.filter(event=>event.type==='choice'&&event.index===0).at(-1);
   assert.equal(final.label,result.scene.choices[0].label);assert.equal(final.complete,true);
 });
 
-test('a streamed model menu without an exit settles as rejected and never returns ready choices',async()=>{
+test('a streamed model menu can offer two distinct investigations without an injected exit',async()=>{
   const f=apiFixture(generateScene);f.wire.choices[1]={action:'interact:observe',target:'self',stake:'low',purpose:'辨认树林中的哭声',anchor:0};
   const ai={run:async()=>new ReadableStream({start(controller){controller.enqueue(frame(JSON.stringify(f.wire)));controller.enqueue(ending());controller.close();}})};
   const result=packets(await(await f.api.fetch(f.request(true),{AI:ai})).text());
-  assert.ok(result.some(event=>event.type==='choice'&&event.label==='仔细观察：辨认树林中的哭声'));
-  assert.equal(result.at(-1).type,'result');assert.equal(result.at(-1).result.status,'rejected');assert.equal(result.at(-1).result.errorCode,'CHOICE_NOT_COMPILABLE');assert.equal(result.at(-1).result.scene,undefined);
+  assert.ok(result.some(event=>event.type==='choice'&&event.label==='辨认树林中的哭声'));
+  assert.equal(result.at(-1).type,'result');assert.equal(result.at(-1).result.status,'ready');
+  assert.deepEqual(result.at(-1).result.scene.choices.map(row=>row.label),f.wire.choices.map(row=>row.purpose));
   assert.equal(f.settled.status,'complete');assert.equal(f.calls,1);
 });

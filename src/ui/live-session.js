@@ -231,10 +231,6 @@ export function createLiveSession({archive,client,engine=defaultEngine,onChange=
       if(!loaded||loaded.pending)throw fault('TURN_ALREADY_PENDING');
       if(command.baseRevision!==loaded.state.revision||command.stateHash!==stateHash(loaded.state))throw fault('STALE_CHOICE');
       const pending=engine.prepareChoice(loaded.state,{...command,requestId:id()});
-      if(loaded.state.life.cultivationProfile?.version!==7&&pending.receipt.action?.intent==='interact'&&['decline','leave'].includes(pending.receipt.action.approach)){
-        loaded=await archive.commitInteraction({expectedArchiveId:loaded.archiveId,expectedRevision:loaded.state.revision,pending});
-        preview=null;status='ready';errorCode=null;emit();return;
-      }
       loaded=await archive.prepare(pending);
       status='pending';
       emit();

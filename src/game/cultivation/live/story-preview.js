@@ -82,7 +82,7 @@ export function readStoryPreview(source){
 
 // Display-only drafts expose no action, target, identity, memory or effects.
 // Array order is stable: an incomplete row never lets a later row take its slot.
-export function readStoryPresentation(source,context={}){
+export function readStoryPresentation(source,context={},{authoredChoices=false}={}){
   const root=partialJson(source),blocks=[],choices=[];
   function target(node){
     const literal=text(node,{complete:true,max:80});
@@ -107,7 +107,7 @@ export function readStoryPresentation(source,context={}){
   for(const choice of rows(field(root,'choices')).slice(0,3)){
     const action=text(field(choice,'action'),{complete:true,max:40}),resolved=target(field(choice,'target')??field(choice,'targetId')),purpose=text(field(choice,'purpose'),{max:50});
     if(!action||!resolved||purpose===null)break;
-    const label=formatStoryChoiceLabel({action,targetId:resolved.id,targetName:resolved.name,purpose});
+    const label=formatStoryChoiceLabel({action,targetId:resolved.id,targetName:resolved.name,purpose,authoredChoices});
     if(!label)break;
     choices.push({label:label.slice(0,120),complete:choice.complete});
   }

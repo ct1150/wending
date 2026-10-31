@@ -1,10 +1,10 @@
-import {ITEMS,INTENTS} from '../game/cultivation/live/model.js';
+import {ITEMS,EXPERIENCE_INTENTS} from '../game/cultivation/live/model.js';
 import {isV7Life,validV7Target,v7ActionRule,V7_REALMS} from '../game/cultivation/live/cultivation-rules.js';
 import {formatStoryChoiceLabel} from '../game/cultivation/live/story-choice-label.js';
 import {createNamedTargetLookup} from './story-named-targets.js';
 
 const object=value=>value!==null&&typeof value==='object'&&!Array.isArray(value);
-const actions=new Set(Object.entries(INTENTS).flatMap(([intent,approaches])=>approaches.map(approach=>intent+':'+approach)));
+const actions=new Set(Object.entries(EXPERIENCE_INTENTS).flatMap(([intent,approaches])=>approaches.map(approach=>intent+':'+approach)));
 export const isFixedV7Interaction=action=>typeof action==='string'&&actions.has(action)&&action.startsWith('interact:');
 const decoration=new Set(['id','label','description','title','role','alias']);
 function changed(rows,fn){let next;for(const [i,row]of rows.entries()){const item=fn(row);if(item!==row){next??=rows.slice();next[i]=item;}}return next??rows;}

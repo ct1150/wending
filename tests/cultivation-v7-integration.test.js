@@ -4,7 +4,6 @@ import {createLiveGame,prepareOpening,prepareChoice,commitTurn,settleDeath} from
 import {buildStoryContext,validateGeneratedScene} from '../src/game/cultivation/live/memory.js';
 import {serializeLiveState,deserializeLiveState} from '../src/game/cultivation/live/validation.js';
 import {sha256} from '../src/game/cultivation/live/identity.js';
-import {customActionCommand} from '../src/game/cultivation/live/custom-actions.js';
 import {buildRebirthOptions,getReincarnationSettlement} from '../src/game/cultivation/live/reincarnation.js';
 
 function scene(state,{combat=false}={}){
@@ -26,16 +25,16 @@ test('v7 opening and serialized world state use the same validated context and r
  const state=open();assert.equal(state.director.version,7);assert.equal(state.director.turnId,1);assert.deepEqual(deserializeLiveState(serializeLiveState(state)),state);
  const legacy=createLiveGame({runId:'legacy-still',seed:42});assert.equal(legacy.director,undefined);assert.equal(legacy.life.cultivationProfile,undefined);
 });
-test('custom action preserves exact intent through pending verification, context and commit',()=>{
- const state=open(),before=JSON.stringify(state),text='询问陈砚：旧桥的刻痕是谁留下的？';
- const pending=prepareChoice(state,{requestId:'custom-ask',customAction:text}),context=buildStoryContext(state,pending);
- assert.equal(context.receipt.action.label,text);assert.equal(context.receipt.elapsedDays,0);assert.deepEqual(prepareChoice(state,customActionCommand(pending)),pending);
+test('offered action preserves exact intent through pending verification, context and commit',()=>{
+ const state=open(),before=JSON.stringify(state),choice=state.currentScene.choices[1],text=choice.label;
+ const pending=prepareChoice(state,{requestId:'ask',choiceId:choice.id}),context=buildStoryContext(state,pending);
+ assert.equal(context.receipt.action.label,text);assert.equal(context.receipt.elapsedDays,0);
  const next=scene(state);validateGeneratedScene(next,context);const committed=commitTurn(state,pending,next);
  assert.equal(committed.lastReceipt.action.label,text);assert.equal(committed.life.ageDays,state.life.ageDays);assert.equal(committed.director.turnId,2);assert.equal(JSON.stringify(state),before);
 });
 test('unsupported or unaffordable custom actions cannot advance state or random outcome',()=>{
  const state=open(),before=JSON.stringify(state);
- for(const text of ['瞬移到天界','突破炼气','不攻击陈砚，只观察四周'])assert.throws(()=>prepareChoice(state,{requestId:'invalid',customAction:text}),{code:'CUSTOM_ACTION_UNSUPPORTED'});
+ for(const text of ['询问陈砚：旧桥的刻痕是谁留下的？','休整','2','瞬移到天界','突破炼气','不攻击陈砚，只观察四周'])assert.throws(()=>prepareChoice(state,{requestId:'invalid',customAction:text}),{code:'CUSTOM_ACTION_UNSUPPORTED'});
  assert.equal(JSON.stringify(state),before);
 });
 test('actual local death creates affordable next-life inheritance without a provider',()=>{

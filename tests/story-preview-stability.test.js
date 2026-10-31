@@ -5,6 +5,19 @@ import {createStoryApi} from '../src/worker/story-api.js';
 import {GLM_MODEL_ID,GLM_PROFILE} from '../src/worker/story-config.js';
 import {createLiveGame,prepareOpening} from '../src/game/cultivation/live/engine.js';
 import {buildStoryContext} from '../src/game/cultivation/live/memory.js';
+import {readStoryPresentation} from '../src/game/cultivation/live/story-preview.js';
+import {formatStoryChoiceLabel} from '../src/game/cultivation/live/story-choice-label.js';
+
+test('model-authored choices stream exactly the eventual button text; an action code alone has no label',()=>{
+  const ctx=context(), mode={authoredChoices:true};
+  const action='interact:observe',purpose='翻过半枚铜钱，辨认背面的渡口印记';
+  const start='{"blocks":[],"choices":[{"action":"interact:observe","target":"self","purpose":"';
+  assert.deepEqual(readStoryPresentation(start+'翻过半枚铜钱',ctx,mode).choices,[{label:'翻过半枚铜钱',complete:false}]);
+  assert.deepEqual(readStoryPresentation(start+purpose+'"}]}',ctx,mode).choices,[{label:purpose,complete:true}]);
+  assert.equal(formatStoryChoiceLabel({action,targetId:'self',purpose,...mode}),purpose);
+  for(const empty of [undefined,'','   '])assert.equal(formatStoryChoiceLabel({action,targetId:'self',purpose:empty,...mode}),null);
+  assert.equal(readStoryPresentation('{"blocks":[],"choices":[{"action":"rest:recover","target":"self"}]}',ctx,mode).choices.length,0);
+});
 
 // Only this completed display row was observed in #119. Broken tails are
 // synthetic controls, never used as supposed raw native response evidence.
@@ -17,9 +30,9 @@ function stream(parts){
   return new Response(frames.join('')).body;
 }
 function context(){const state=createLiveGame({runId:'stable-preview',seed:42,engineVersion:7});return buildStoryContext(state,prepareOpening(state,{requestId:'stable-opening'}));}
-async function read(parts,engineMenu=true){
+async function read(parts,authoredChoices=true){
   const events=[];let calls=0;
-  const transport=createGlmTransport({context:context(),engineMenu,onProgress:e=>events.push(e),ai:{run:async()=>{calls++;return stream(parts);}}});
+  const transport=createGlmTransport({context:context(),authoredChoices,onProgress:e=>events.push(e),ai:{run:async()=>{calls++;return stream(parts);}}});
   let raw,code;try{raw=await transport.run(GLM_MODEL_ID,{stream:true});}catch(e){code=e.code;}
   assert.equal(calls,1);return {events,raw,code};
 }
@@ -50,7 +63,7 @@ test('a display can grow from partial to complete rows, keeping draft status unt
   assert.equal(raw.choices[0].message.content,pieces.join(''),'transport returns the original bytes decoded to text, never a draft reconstruction');
   const interrupted=await read([prefix,'\n'+' invalid'.repeat(10)]);
   assert.ok(interrupted.events.filter(e=>e.type==='presentation').every(d=>!d.blocks[1]?.complete),'partial second row is never upgraded on parse failure');
-  const old=await read(pieces,false);assert.deepEqual(old.events.filter(e=>e.type==='presentation').at(-1).blocks,[],'legacy presentation policy remains unchanged');
+  const old=await read(pieces,false);assert.deepEqual(old.events.filter(e=>e.type==='presentation').at(-1).blocks,drafts.at(-1).blocks,'a damaged suffix cannot retract complete prose in either display mode');
 });
 
 test('monotone display cannot mask a subsequent model mismatch, reasoning delta or visible thinking markup',async()=>{

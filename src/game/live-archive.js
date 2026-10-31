@@ -1,6 +1,6 @@
 import { canonicalStringify, sha256, stateHash, assertPlainData } from './cultivation/live/identity.js';
 import { validateLiveState } from './cultivation/live/validation.js';
-import { prepareOpening, prepareRecordedChoice, commitTurn, settleDeath, resolveImmediateInteraction } from './cultivation/live/engine.js';
+import { prepareOpening, prepareRecordedChoice, commitTurn, settleDeath } from './cultivation/live/engine.js';
 import { buildStoryContext, validateGeneratedScene, buildMemoryDelta, validateStoryContext, sceneTurnRecord } from './cultivation/live/memory.js';
 import { isExperienceLife } from './cultivation/live/experience.js';
 import { echoNotes, buildRebirthOptions, reincarnationClaimForChild, validateReincarnationClaim } from './cultivation/live/reincarnation.js';
@@ -239,6 +239,7 @@ class Archive {
  async prepare(pending) {
   const c=await this._capture(pending?.identity?.runId);check(c&&(!this.bound||this.bound===c.run.archiveId));verifyPending(c.run.state,pending);const p=pendingRow(c.run.archiveId,clone(pending));
   if(c.pending)check(same(c.pending.pending,pending));
+  else if(pending.kind==='choice')check(c.run.state.currentScene?.choices.some(choice=>choice.id===pending.identity.choiceId),'ARCHIVE_INVALID_PENDING');
   await transaction(this.db,'readwrite',(s,get)=>this._cas(s,get,c,()=>{if(!c.pending)s.pending.put(p);}));return loaded(c.run,c.pending??p);
  }
  async setAttempt({runId,requestId,expectedAttemptId,attempt,pause=null,generation}) {
@@ -394,13 +395,6 @@ class Archive {
   if(scene!==null)check((c.pending.attempt?.id??null)===expectedAttemptId,'ARCHIVE_ATTEMPT_CONFLICT');
   const derived=await this._derived(c,scene,memoryDelta);check(same(nextState,derived.state),'ARCHIVE_INVALID_STATE');
   return this._commitCaptured(c,c.pending.pending,scene,derived);
- }
- async commitInteraction({expectedArchiveId,expectedRevision,pending}) {
-  assertPlainData(pending);pending=clone(pending);
-  const c=await this._capture(pending?.identity?.runId);check(c&&c.run.archiveId===expectedArchiveId&&(!this.bound||this.bound===c.run.archiveId)&&c.run.state.revision===expectedRevision&&!c.pending);
-  verifyPending(c.run.state,pending);const scene=resolveImmediateInteraction(c.run.state,pending);
-  const derived=await this._derived({...c,pending:pendingRow(c.run.archiveId,pending)},scene,buildMemoryDelta(pending.receipt,scene));
-  return this._commitCaptured(c,pending,scene,derived);
  }
  async _commitCaptured(c,pending,scene,derived) {
   const nextState=derived.state,entry={identity:clone(pending.identity),receipt:clone(pending.receipt),scene:clone(scene),stateHash:stateHash(nextState)};

@@ -456,14 +456,6 @@ select:focus-visible { outline: 2px solid var(--jade); outline-offset: 3px; }
 .live-turn-state dd { margin: 3px 0 0; color: var(--text); overflow-wrap: anywhere; }
 .live-turn-state dl > div:last-child { grid-column: 1 / -1; }
 .live-choice-number { font-variant-numeric: tabular-nums; }
-.live-custom-action { margin-top: 10px; }
-.live-custom-action > .journey-choice:disabled { color: var(--text); background: transparent; border: 1px solid var(--line2); }
-.live-custom-action form { margin-top: 14px; }
-.live-custom-action label { display: block; margin-bottom: 8px; color: var(--muted); font-size: 14px; }
-.live-custom-action textarea { display: block; box-sizing: border-box; width: 100%; min-height: 88px; resize: vertical; padding: 12px; border: 1px solid var(--line2); border-radius: 4px; color: var(--text); background: transparent; font: 16px/1.8 var(--serif); }
-.live-custom-action textarea:focus { outline: 2px solid var(--jade); outline-offset: 2px; }
-.live-custom-action form .button { margin-top: 10px; }
-.live-action-error { color: var(--red); font-size: 13px; line-height: 1.7; margin: 8px 0; }
 .live-reincarnation { margin-top: 24px; }
 .live-reincarnation h3 { font: 23px/1.5 var(--serif); }
 .live-epitaph { margin: 18px 0; padding-left: 16px; border-left: 2px solid var(--line2); font: 17px/1.8 var(--serif); color: var(--muted); }

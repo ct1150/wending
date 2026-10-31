@@ -7,7 +7,7 @@ import {GLM_PROFILE} from '../src/worker/story-config.js';
 import {readFile} from 'node:fs/promises';
 const module=await import('../src/worker/story-glm-wire.js').catch(()=>null);
 const context=()=>{const state=createLiveGame({runId:'wire-run',name:'云归',seed:42});return buildStoryContext(state,prepareOpening(state,{requestId:'wire-opening'}));};
-const wire=()=>({blocks:[{kind:'narration',text:'山风吹过，陈叔指向远处的山道。'},{kind:'dialogue',text:'沿山道走便是了。',speaker:'p1'}],title:'山道',location:'山下',otherPeople:[{id:'p1',name:'陈叔'}],places:[{id:'l1',name:'古道'}],factions:[],choices:[{action:'travel:road',targetId:'l1',stake:'low'},{action:'rest:recover',targetId:'self',stake:'low'}],memoryDeltas:[]});
+const wire=()=>({blocks:[{kind:'narration',text:'山风吹过，陈叔指向远处的山道。'},{kind:'dialogue',text:'沿山道走便是了。',speaker:'p1'}],title:'山道',location:'山下',otherPeople:[{id:'p1',name:'陈叔'}],places:[{id:'l1',name:'古道'}],factions:[],choices:[{action:'travel:road',targetId:'l1',stake:'low',label:'循陈叔所指的小路前往古道',anchor:'沿山道走便是了'},{action:'rest:recover',targetId:'self',stake:'low',label:'先在山脚歇息，等这一阵山风过去',anchor:'沿山道走便是了'}],memoryDeltas:[]});
 function knownContext(){
   const state=createLiveGame({runId:'wire-known-run',name:'云归',seed:42}),opening=prepareOpening(state,{requestId:'first'}),c=buildStoryContext(state,opening);
   const next=commitTurn(state,opening,module.decodeGlmScene(wire(),c),c.relationships),pending=prepareChoice(next,{requestId:'next',choiceId:next.currentScene.choices[1].id});
@@ -18,7 +18,7 @@ function knownContext(){
 test('GLM wire uses short aliases and server-owned scene and choice identities',()=>{
   assert.ok(module);const c=context(),input=wire(),before=structuredClone(input),scene=module.decodeGlmScene(input,c),prefix=c.namespace+':t1:';
   assert.equal(scene.id,prefix+'s:scene');assert.equal(scene.choices[0].id,prefix+'c:a');assert.equal(scene.entities[0].id,prefix+'e:person_1');assert.equal(scene.blocks[1].speaker,scene.entities[0].id);assert.equal(scene.choices[0].targetId,scene.entities[1].id);assert.deepEqual(validateGeneratedScene(scene,c),scene);assert.deepEqual(input,before);
-  assert.equal(scene.choices[0].label,'沿路前往古道（谨慎）');
+  assert.equal(scene.choices[0].label,input.choices[0].label);
 });
 
 test('GLM request puts narrative first and keeps birth facts without asking the model to copy hashes',()=>{
@@ -118,11 +118,13 @@ test('the captured real identifier failure remains rejected and a player alias c
 
 test('legacy generated labels cannot override the executable target',()=>{
   const value=wire();value.choices[0]={action:'fight:assault',targetId:'p1',stake:'low',label:'射杀野猪',anchor:'陈叔指向远处的山道'};
-  assert.equal(module.decodeGlmScene(value,context()).choices[0].label,'向陈叔发起攻势（谨慎）');
+  assert.throws(()=>module.decodeGlmScene(value,context()),{code:'GENERATED_SCENE_INVALID'});
 });
 
-test('wire action codes produce labels from the actual target and reject unknown action pairs',()=>{
-  const c=context(),s=wire();s.choices[0].action='travel:recover';assert.throws(()=>module.decodeGlmScene(s,c),{code:'GENERATED_SCENE_INVALID'});
+test('wire action codes alone cannot create buttons, and unknown action pairs remain invalid',()=>{
+  const c=context(),s=wire(),bare=wire();delete bare.choices[0].label;delete bare.choices[0].anchor;
+  assert.throws(()=>module.decodeGlmScene(bare,c),{code:'GENERATED_SCENE_INVALID'});
+  s.choices[0].action='travel:recover';assert.throws(()=>module.decodeGlmScene(s,c),{code:'GENERATED_SCENE_INVALID'});
   const input=buildStoryInput(GLM_PROFILE,c);assert.match(input.messages[0].content,/"action"/);assert.doesNotMatch(input.messages[0].content,/"required":\["id","label"/);
 });
 
@@ -145,11 +147,12 @@ test('fresh aliases cannot claim a known ID from the current turn',()=>{
   assert.throws(()=>module.decodeGlmScene(wire(),c),{code:'GENERATED_SCENE_INVALID'});
 });
 
-test('captured real opening and continuation decode and pass the unchanged scene contract',async()=>{
+test('historically stored canonical scenes replay but their code-only raw completions cannot generate fresh menus',async()=>{
   const evidence=JSON.parse(await readFile(new URL('../docs/evidence/stream-speed-2026-10-29/glm-browser-two-turns-first.json',import.meta.url),'utf8'));
   const cases=new Map(evidence.records.flatMap(record=>record.diagnostics.map(sample=>[sample.requestId,sample])));assert.equal(cases.size,2);
   for(const {context:c,rawCompletion,result}of cases.values()){
     validateStoryContext(c);assert.equal(result.status,'ready');assert.equal(rawCompletion.choices[0].finish_reason,'stop');
-    const scene=module.decodeGlmScene(JSON.parse(rawCompletion.choices[0].message.content),c);assert.deepEqual(validateGeneratedScene(scene,c),scene);assert.deepEqual(scene,result.scene);
+    assert.deepEqual(validateGeneratedScene(result.scene,c),result.scene);
+    assert.throws(()=>module.decodeGlmScene(JSON.parse(rawCompletion.choices[0].message.content),c),{code:'GENERATED_SCENE_INVALID'});
   }
 });

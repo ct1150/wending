@@ -11,107 +11,14 @@ const bad=()=>{throw Error('Unreadable scene fragment');};
 // The caller checks the finish reason, usage, thinking and response limit first.
 // This recovers only slices from one damaged v7 envelope. No display preview,
 // guessed string terminator, invented target, title or decision enters it.
-export function readCompleteV7Wire(source){return readWire(source,null);}
-export function readCompleteV7Body(source,context){
-  if(context?.director?.version!==7||context.life?.cultivationProfile?.version!==7)return null;
-  return readWire(source,context)??readAuthoredPrefix(source);
-}
-
-// Last resort for the prose-only contract. Walk from the first root, never
-// search a corrupt suffix for a convenient paragraph. Each value is parsed
-// from its own ORIGINAL slice before the next byte can affect it. The full
-// reader above gets first refusal so it can retain later recoverable records.
-function readAuthoredPrefix(source){
-  if(typeof source!=='string'||source.length>STORY_LIMITS.maxResponseBytes||encoder.encode(source).length>STORY_LIMITS.maxResponseBytes)return null;
-  try{JSON.parse(source);return null;}catch{/* Valid documents use the ordinary path. */}
-  const skip=at=>{while(at<source.length&&space(source[at]))at++;return at;};
-  function stringEnd(at){
-    for(let j=at+1;j<source.length;j++){
-      if(source[j]==='\\'){j++;continue;}
-      if(source[j]==='"')return j+1;
-    }
-    return -1;
-  }
-  function valueEnd(at){
-    let end=at;const first=source[at];
-    if(first==='"')end=stringEnd(at);
-    else if(first==='{'||first==='['){
-      const stack=[];
-      for(let j=at;j<source.length;j++){
-        const ch=source[j];
-        if(ch==='"'){const stop=stringEnd(j);if(stop<0)return null;j=stop-1;}
-        else if(ch==='{'||ch==='['){stack.push(ch);if(stack.length>32)return null;}
-        else if(ch==='}'||ch===']'){
-          if(stack.pop()!==(ch==='}'?'{':'['))return null;
-          if(!stack.length){end=j+1;break;}
-        }
-      }
-    }else while(end<source.length&&!space(source[end])&&!(',}]'.includes(source[end])))end++;
-    return end>at?end:null;
-  }
-  function valueAt(at){
-    const end=valueEnd(at);if(!end)return null;
-    try{return {value:JSON.parse(source.slice(at,end)),end};}catch{return null;}
-  }
-  let at=skip(0);if(source[at++]!=='{')return null;
-  const result={},seen=new Set(),usable=()=>result.blocks?.length?result:null;
-  for(;;){
-    at=skip(at);if(at===source.length)return usable();
-    if(source[at]==='}')return skip(at+1)===source.length?usable():null; // never join two documents
-    if(source[at]!=='"')return usable();
-    const key=valueAt(at);if(!key)return usable();at=skip(key.end);
-    if(source[at++]!==':')return usable();at=skip(at);
-    const name=key.value,keep=name==='decisionDetail'||fields.has(name)&&name!=='choices';
-    if(keep){if(seen.has(name))return null;seen.add(name);}
-    if(name==='blocks'||name==='memoryDeltas'&&source[at]==='['){
-      const arrayStart=at;if(source[at++]!=='[')return null;
-      const rows=[];result[name]=rows;at=skip(at);
-      while(at<source.length&&source[at]!==']'){
-        const isBody=name==='blocks';
-        const entry=source[at]==='{'?valueAt(at):null;
-        if(!entry){
-          if(!isBody)return usable();
-          if(!rows.length)return null;
-          // Discard the damaged remainder of this array, not its siblings.
-          // Only resume if the original array's matching closer is known.
-          const end=valueEnd(arrayStart);if(!end)return usable();at=end-1;break;
-        }
-        if(rows.length>=(isBody?4:16))return null;
-        const v=entry.value;
-        if(isBody){
-          if(!record(v)||!nonempty(v.text)||!['narration','dialogue'].includes(v.kind)||v.kind==='dialogue'&&!Object.hasOwn(v,'speaker'))return null;
-          rows.push(v.kind==='dialogue'?{kind:v.kind,speaker:v.speaker,text:v.text}:{kind:v.kind,text:v.text});
-        }else rows.push(v);
-        at=skip(entry.end);if(source[at]===']')break;
-        if(source[at]!==','){
-          if(!isBody)return usable();
-          const end=valueEnd(arrayStart);if(!end)return usable();at=end-1;break;
-        }
-        at=skip(at+1);
-      }
-      if(source[at]!==']')return usable();at++;
-    }else{
-      const entry=valueAt(at);if(!entry)return usable();
-      if(keep)result[name]=entry.value;at=entry.end;
-    }
-    at=skip(at);if(source[at]===','){at++;continue;}
-    if(source[at]==='}')return skip(at+1)===source.length?usable():null;
-    return usable();
-  }
-}
-
-function readWire(source,bodyContext){
+export function readCompleteV7Wire(source){
   if(typeof source!=='string'||source.length>STORY_LIMITS.maxResponseBytes||encoder.encode(source).length>STORY_LIMITS.maxResponseBytes)return null;
   try{JSON.parse(source);return null;}catch{/* Valid completions use the ordinary path. */}
   try{
     const skip=i=>{while(i<source.length&&space(source[i]))i++;return i;};
-    let start=skip(0);
-    if(bodyContext&&source.startsWith('```',start)){
-      const fence=/^```(?:json)?[ \t]*\r?\n([\s\S]*?)\r?\n```[ \t\r\n]*$/iu.exec(source.slice(start));
-      if(!fence)return null;JSON.parse(fence[1]);source=fence[1];start=skip(0);
-    }
+    const start=skip(0);
     if(source[start]!=='{')return null;
-    const ends=new Map(),unfinished=new Map(),keyOwners=new Map(),stack=[];let closed=false;
+    const ends=new Map(),stack=[];let closed=false;
     // Index complete containers and strings in one bounded pass. Also inspect
     // the unused tail: a second document or an explicit authority field must
     // never be hidden by dropping an unfinished third choice or optional note.
@@ -119,19 +26,13 @@ function readWire(source,bodyContext){
       const ch=source[i];if(closed){if(!space(ch))bad();continue;}
       if(ch==='"'){
         const begin=i;let done=false;
-        while(++i<source.length){if(source[i]==='\\'){i++;continue;}if(!bodyContext&&source.charCodeAt(i)<32)bad();if(source[i]==='"'){done=true;break;}}
+        while(++i<source.length){if(source[i]==='\\'){i++;continue;}if(source.charCodeAt(i)<32)bad();if(source[i]==='"'){done=true;break;}}
         if(done){ends.set(begin,i+1);if(source[skip(i+1)]===':'){
-          if(bodyContext)keyOwners.set(begin,stack.at(-1)?.[1]);else if(reserved.has(JSON.parse(source.slice(begin,i+1))))bad();
+          if(reserved.has(JSON.parse(source.slice(begin,i+1))))bad();
         }}
       }else if(ch==='{'||ch==='['){stack.push([ch,i]);if(stack.length>32)bad();}
       else if(ch==='}'||ch===']'){
-        const type=({'}':'{',']':'['})[ch];let open=stack.pop();
-        if(!open||open[0]!==type){
-          // One omitted inner terminator: discard that unfinished value, but
-          // keep the real outer boundary so later memory records are still read.
-          if(!bodyContext||!open||stack.at(-1)?.[0]!==type)bad();
-          unfinished.set(open[1],i);open=stack.pop();
-        }
+        const type=({'}':'{',']':'['})[ch];const open=stack.pop();if(!open||open[0]!==type)bad();
         ends.set(open[1],i+1);if(!stack.length)closed=true;
       }
       if(ends.size>12000)bad();
@@ -142,31 +43,6 @@ function readWire(source,bodyContext){
       let j=at;while(j<source.length&&!space(source[j])&&!(',}]'.includes(source[j])))j++;return j>at?j:undefined;
     };
     const read=(a,b)=>JSON.parse(source.slice(a,b));
-    function takeRecords(key,limit){
-      // Only immediate, individually closed records count. Never synthesize
-      // a quote, finish a block or search nested objects for substitute prose.
-      if(source[i]!=='[')bad();const cutoff=unfinished.get(i)??source.length;i=skip(i+1);const rows=[];
-      while(i<cutoff&&source[i]!==']'){
-        if(source[i]!=='{')bad();const end=ends.get(i);
-        // A proposal has no effect until its whole original object parses.
-        // Keep earlier complete siblings; never complete a death or closure.
-        if(end===undefined){i=unfinished.get(i)??cutoff;break;}
-        if(rows.length>=limit)bad();let row=read(i,end);
-        if(key==='blocks'){
-          if(!record(row)||!nonempty(row.text)||!['narration','dialogue'].includes(row.kind)||row.kind==='dialogue'&&!Object.hasOwn(row,'speaker'))bad();
-          row=row.kind==='dialogue'?{kind:row.kind,speaker:row.speaker,text:row.text}:{kind:row.kind,text:row.text};
-        }
-        rows.push(row);i=skip(end);
-        if(i===cutoff||source[i]===']')break;
-        if(source[i]!==',')bad();i=skip(i+1);
-      }
-      if(source[i]===']')i++;output[key]=rows;
-    }
-    function ignoreField(){
-      // Neither suggestions nor unsolicited annotations are game inputs. Skip
-      // their entire value; never search inside it for blocks or consequences.
-      i=span(i)??unfinished.get(i)??source.length;
-    }
     function takeChoices(){
       if(source[i]!=='[')bad();i=skip(i+1);const rows=[];let count=0;
       while(i<source.length&&source[i]!==']'){
@@ -183,24 +59,20 @@ function readWire(source,bodyContext){
       if(rows.length<2)bad();if(source[i]===']')i++;output.choices=rows;
     }
     while(i<source.length&&source[i]!=='}'){
-      if(source[i]!=='"'||!ends.has(i)||bodyContext&&keyOwners.get(i)!==start)bad();const end=ends.get(i),key=read(i,end);
-      const retained=bodyContext&&key==='decisionDetail'||fields.has(key)&&!(bodyContext&&key==='choices');
-      if(!bodyContext&&!retained||retained&&seen.has(key))bad();seen.add(key);i=skip(end);if(source[i]!==':')bad();i=skip(i+1);
-      if(bodyContext&&!retained)ignoreField();
-      else if(bodyContext&&key==='blocks')takeRecords(key,4);
-      else if(bodyContext&&key==='memoryDeltas'&&source[i]==='[')takeRecords(key,16);
-      else if(key==='choices')takeChoices();
+      if(source[i]!=='"'||!ends.has(i))bad();const end=ends.get(i),key=read(i,end);
+      if(!fields.has(key)||seen.has(key))bad();seen.add(key);i=skip(end);if(source[i]!==':')bad();i=skip(i+1);
+      if(key==='choices')takeChoices();
       else{
         const valueEnd=span(i);
-        if(valueEnd===undefined){if(bodyContext&&key==='memoryDeltas'||i<source.length&&!['[','{','"'].includes(source[i]))bad();break;}
-        let value;try{value=read(i,valueEnd);}catch{if(key==='blocks'||bodyContext&&key==='memoryDeltas')bad();}
+        if(valueEnd===undefined){if(i<source.length&&!['[','{','"'].includes(source[i]))bad();break;}
+        let value;try{value=read(i,valueEnd);}catch{if(key==='blocks')bad();}
         if(value!==undefined)output[key]=value;i=valueEnd;
       }
       i=skip(i);if(i===source.length||source[i]==='}')break;
       if(source[i]!==',')bad();i=skip(i+1);
     }
     const blocks=output.blocks;
-    if(!Array.isArray(blocks)||!blocks.length||blocks.length>4||!blocks.every(row=>record(row)&&nonempty(row.text)&&(row.kind==='narration'&&Object.keys(row).length===2||row.kind==='dialogue'&&Object.keys(row).length===3&&Object.hasOwn(row,'speaker')))||!bodyContext&&!output.choices)return null;
+    if(!Array.isArray(blocks)||!blocks.length||blocks.length>4||!blocks.every(row=>record(row)&&nonempty(row.text)&&(row.kind==='narration'&&Object.keys(row).length===2||row.kind==='dialogue'&&Object.keys(row).length===3&&Object.hasOwn(row,'speaker')))||!output.choices)return null;
     return output;
   }catch{return null;}
 }

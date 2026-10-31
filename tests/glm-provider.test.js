@@ -26,14 +26,14 @@ test('the production GLM wrapper carries negotiated story actions into format gu
     assert.equal(input.response_format.type,'json_schema');
     if(storyActions)assert.ok(input.response_format.json_schema.schema.properties.choices.items.oneOf.some(row=>row.properties.action.enum.includes('interact:ask')));
     else assert.equal(input.response_format.json_schema.schema.properties.choices.items.oneOf.some(row=>row.properties.action.enum.some(action=>action.startsWith('interact:'))),false);
-    assert.equal(result.status,storyActions?'ready':'rejected');if(storyActions)assert.equal(result.scene.choices[0].label,'询问陈叔：'+wire.choices[0].purpose);
+    assert.equal(result.status,storyActions?'ready':'rejected');if(storyActions)assert.equal(result.scene.choices[0].label,wire.choices[0].purpose);
   }
 });
 
-test('production streaming composes the canonical action and the generated concrete purpose',async()=>{
+test('production streaming displays the exact authored decision and retains its rule action',async()=>{
   const c=context(),wire={blocks:[{kind:'narration',text:'陈叔指向林中，等你决定是否调查。'}],title:'林边',location:'林外',otherPeople:[{id:'p1',name:'陈叔'}],places:[],factions:[],choices:[{action:'interact:ask',targetId:'p1',stake:'low',purpose:'林中刚才发生了什么',anchor:0},{action:'interact:leave',targetId:'p1',stake:'low',purpose:'结束这次交谈，继续原定行程',anchor:0}],memoryDeltas:[]},events=[];let input;
   const result=await generateScene({run:async(model,value)=>{input=value;return stream(namedGlmFixture(wire,value));}},profile(),c,{}, {storyActions:true,onProgress:event=>events.push(event)});
-  assert.equal(result.status,'ready');assert.equal(result.scene.choices[0].label,'询问陈叔：林中刚才发生了什么');assert.equal(input.messages.length,3);
+  assert.equal(result.status,'ready');assert.equal(result.scene.choices[0].label,wire.choices[0].purpose);assert.equal(result.scene.choices[0].approach,'ask');assert.equal(input.messages.length,3);
   assert.ok(input.response_format.json_schema.schema.properties.choices.items.oneOf.every(row=>row.required.includes('purpose')));assert.ok(events.some(event=>event.type==='preview'));
 });
 
@@ -65,8 +65,11 @@ test('partial JSON preview decodes only blocks text, including split escapes and
 
 test('GLM streams real narrative before completion and still uses final scene validation',async()=>{
   const c=context(),value=scene(c),progress=[];let complete=false,finish;
+  value.choices[0].label='倚着山下的石台歇脚';value.choices[1].label='借着山风调息练功';
+  const authored=wireScene(value);
+  authored.choices.forEach((choice,index)=>{choice.label=value.choices[index].label;choice.anchor='山风拂过';});
   const held=new Promise(resolve=>finish=resolve);
-  const ai={async run(model,input){assert.equal(model,config.GLM_MODEL_ID);assert.equal(input.stream,true);assert.equal(input.response_format.type,'json_schema');assert.equal(input.chat_template_kwargs.enable_thinking,false);assert.match(input.messages[0].content,/memoryDeltas/);const source=stream(value).getReader();return new ReadableStream({async pull(controller){const item=await source.read();if(item.done){await held;controller.close();}else controller.enqueue(item.value);}});}};
+  const ai={async run(model,input){assert.equal(model,config.GLM_MODEL_ID);assert.equal(input.stream,true);assert.equal(input.response_format.type,'json_schema');assert.equal(input.chat_template_kwargs.enable_thinking,false);assert.match(input.messages[0].content,/memoryDeltas/);const source=stream(authored).getReader();return new ReadableStream({async pull(controller){const item=await source.read();if(item.done){await held;controller.close();}else controller.enqueue(item.value);}});}};
   const pending=generateScene(ai,profile(),c,{}, {onProgress:event=>progress.push(event)}).then(result=>{complete=true;return result;});
   while(!complete&&!progress.some(e=>e.type==='preview'&&e.text.includes('山风')))await new Promise(resolve=>setImmediate(resolve));
   const previewArrived=progress.some(e=>e.type==='preview'&&e.text.includes('山风')),finishedBeforePreview=complete;

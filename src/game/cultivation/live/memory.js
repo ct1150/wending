@@ -358,7 +358,7 @@ function compilationState(c,scene) {
   return {...(c.relationshipVersion===1||scene.choices.some(choice=>choice.intent==='interact')?{relationshipVersion:1}:{}),...(c.director?{director:advanceStoryDirector(c.director,life,c.receipt,scene,c.identity.turnId)}:{}),...(retrieval?{retrieval}:{}),version:5,mode:'cultivation',contentVersion:4,rulesVersion:1,promptVersion:1,runId:c.identity.runId,revision:c.identity.turnId,turnId:c.identity.turnId,phase:'active',rng:c.receipt.random.after,life,birthReceipt,currentScene:scene,lastReceipt:c.receipt,relatedEntities:scene.entities,archiveCursor:0};
 }
 
-export function validateGeneratedScene(raw,context,{checkNextContext,continuity=false,requireExit=false}={}) {
+export function validateGeneratedScene(raw,context,{checkNextContext,continuity=false,requireExit=false,requireAllChoices=false}={}) {
   inspect(raw);validateStoryContext(context);
   try { validateStructure(raw); } catch { fail('GENERATED_SCENE_INVALID'); }
   checkActorScene(raw,isExperienceLife(context.life),context.entities);
@@ -408,6 +408,7 @@ export function validateGeneratedScene(raw,context,{checkNextContext,continuity=
   } catch { fail('CHOICE_NOT_COMPILABLE'); }
   const enabled=choices.filter(choice=>choice.enabled);
   if(!enabled.length)fail('NO_EXECUTABLE_CHOICE');
+  if(requireAllChoices&&enabled.length!==choices.length)fail('CHOICE_NOT_COMPILABLE');
   validateDirectorScene(raw,context,choices);
   if(requireExit&&(enabled.length<2||!enabled.some(choice=>choice.intent==='interact'&&['decline','leave'].includes(choice.approach)||choice.intent==='evade')))fail('CHOICE_NOT_COMPILABLE');
   for(const choice of enabled) {

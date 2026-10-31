@@ -16,19 +16,23 @@ export function storyLife(runId,alreadyPaid,prior=null,{marked=true,selfStudy=fa
   assert.ok(rules.TECHNIQUES[state.life.birth.cultivationProfile.techniqueId].defective);
   const birth=structuredClone(state), steps=[];
   const prefix='r:'+identity.sha256(state.runId).slice(0,16),identityOfCreditor=prefix+':t1:e:chen';
-  function select(customAction=null,offer=false){
-   const n=state.turnId+1, command=customAction?{requestId:'qa-request-'+n,customAction}:{requestId:'qa-request-'+n};
-   const prepare=s=>customAction?engine.prepareChoice(s,command):engine.prepareOpening(s,command);
+  function select(label=null,offer=false){
+   const n=state.turnId+1, command={requestId:'qa-request-'+n};
+   if(label)command.choiceId=state.currentScene.choices.find(choice=>choice.label===label).id;
+   const prepare=s=>label?engine.prepareChoice(s,command):engine.prepareOpening(s,command);
    const p=prepare(state);
    assert.deepEqual(prepare(state),p);
    validation.validateReceipt(p.receipt,{turnId:n});
    let scene=null;
    if(!p.receipt.death){
     scene=structuredClone(fixture.scene);scene.id=prefix+':t'+n+':s:bridge';scene.entities[0].id=identityOfCreditor;
-    const t=customAction===null?'陈砚守在渡口，借着灯光等你翻开本命功法。':offer?'陈砚指着功法缺页，提出替你校法三日，待你下次带一份行粮相还；你也可不应。':customAction.includes('接受')?'陈砚依约校正功法。你还欠他一份行粮。':customAction.includes('归还')?'陈砚收下你交还的行粮，这一笔欠账就此结清。':'陈砚仍在渡口，争执过后双方各退一步。';
+    const t=label===null?'陈砚守在渡口，借着灯光等你翻开本命功法。':offer?'陈砚指着功法缺页，提出替你校法三日，待你下次带一份行粮相还；你也可不应。':label.includes('接受')?'陈砚依约校正功法。你还欠他一份行粮。':label.includes('归还')?'陈砚收下你交还的行粮，这一笔欠账就此结清。':'陈砚仍在渡口，争执过后双方各退一步。';
     scene.blocks=[{kind:'narration',text:t}];
     for(const [i,c] of scene.choices.entries()){c.id=prefix+':t'+n+':c:x'+i;if(c.targetId!=='self')c.targetId=identityOfCreditor;}
-    if(offer)Object.assign(scene.choices[1],{label:'接受陈砚的校法之约，许诺归还一份行粮',intent:'craft',approach:'pledge',stake:'low'});
+    Object.assign(scene.choices[1],{label:'拼命陈砚',intent:'fight',approach:'desperate',targetId:identityOfCreditor,stake:'high'});
+    if(marked&&n===1)Object.assign(scene.choices[0],{label:'验看本命功法',intent:'craft',approach:'diagnose'});
+    if(offer)Object.assign(scene.choices[0],selfStudy?{label:'自行推演残法',intent:'craft',approach:'restore'}:{label:'接受陈砚的校法之约',intent:'craft',approach:'pledge',targetId:identityOfCreditor});
+    if(alreadyPaid&&p.nextLife.cultivationProfile?.experience?.commitment?.status==='owed')Object.assign(scene.choices[0],{label:'向陈砚归还行粮',intent:'craft',approach:'repay',targetId:identityOfCreditor});
     const context=memory.buildStoryContext(state,p,[],{selection:'relevance-v1',openTotal:0});
     memory.validateGeneratedScene(scene,context);
    }

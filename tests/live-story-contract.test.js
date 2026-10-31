@@ -111,6 +111,7 @@ test('fix1 exact action tuples reject distinct IDs and labels while disabled dis
   assert.throws(()=>validateGeneratedScene(duplicate,context()));
   const distinct=scene();distinct.choices=[proposal('rest'),proposal('breakthrough','practice','qi','breakthrough')];
   assert.deepEqual(validateGeneratedScene(distinct,context()),distinct);
+  assert.throws(()=>validateGeneratedScene(distinct,context(),{requireAllChoices:true}),{code:'CHOICE_NOT_COMPILABLE'});
 });
 
 test('fix1 supported entity and clue versions retain legal forward transitions',()=>{
