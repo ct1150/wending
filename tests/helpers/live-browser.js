@@ -8,7 +8,9 @@ export async function liveBrowser(t) {
  const server=createServer(async(req,res)=>{try{const path=resolve(root,'.'+new URL(req.url,'http://localhost').pathname);if(!path.startsWith(root+sep))throw Error();const body=await readFile(path);res.writeHead(200,{'content-type':({'.js':'text/javascript','.css':'text/css','.svg':'image/svg+xml','.json':'application/json'})[extname(path)]??'text/html'});res.end(body);}catch{res.writeHead(404);res.end();}});
  await new Promise((resolve,reject)=>{server.once('error',reject);server.listen(0,'127.0.0.1',resolve);});
  const profile=await mkdtemp(resolve(tmpdir(),'wending-idb-'));let context;
- try{context=await chromium.launchPersistentContext(profile,{headless:true,...(process.env.WENDING_BROWSER_EXECUTABLE?{executablePath:process.env.WENDING_BROWSER_EXECUTABLE}:{})});}catch(e){server.close();throw e;}
+ // Long archive/session fixtures exercise storage, not continuous title rendering.
+ // Scene tests explicitly restore motion and verify the real animation lifecycle.
+ try{context=await chromium.launchPersistentContext(profile,{headless:true,reducedMotion:'reduce',...(process.env.WENDING_BROWSER_EXECUTABLE?{executablePath:process.env.WENDING_BROWSER_EXECUTABLE}:{})});}catch(e){server.close();throw e;}
  t.after(async()=>{await context.close();await new Promise(r=>server.close(r));await rm(profile,{recursive:true,force:true});});
  const browser=context.browser(),page=await context.newPage();const origin=`http://127.0.0.1:${server.address().port}`;await page.goto(origin+'/index.html');
  await page.evaluate(async()=>{

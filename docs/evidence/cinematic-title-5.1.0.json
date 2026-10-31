@@ -1,0 +1,78 @@
+{
+  "version": "5.1.0",
+  "observedAt": "2026-10-31T00:02:34.920209+00:00",
+  "sourceBase": "e9c6e0a4a2bf9795ca2a4d0e3812508f661a688f",
+  "scope": "cinematic homepage; integrated full 5.0.1 main and native schema fix",
+  "releaseGate": {
+    "command": "npm run release",
+    "tests": 1102,
+    "passed": 1102,
+    "failed": 0,
+    "cancelled": 0,
+    "skipped": 0,
+    "durationMs": 91583.967889,
+    "syntaxFiles": 202
+  },
+  "initialGate": {
+    "passed": 1099,
+    "failed": 0,
+    "cancelled": 1,
+    "reason": "1000-turn native archive test exceeded 240000 ms while shared fixture continued homepage animation under concurrent test load"
+  },
+  "fixtureAdjustment": "Shared archive/browser fixture requests reduced motion; scene tests explicitly set motion preference before mounting. No timeout or assertion relaxed.",
+  "longRunTest": {
+    "turns": 1000,
+    "durationMs": 73068.345264,
+    "result": "passed",
+    "provider": "controlled fixture, not 1000 live AI calls"
+  },
+  "artifact": {
+    "path": "release/baishi-wending-offline.html",
+    "bytes": 1622703,
+    "sha256": "2d7a9c20b9aef4d6037ff23e06d62e3ad504dd001893a42ca7801e12cc12b5a9",
+    "maxBytes": 3000000
+  },
+  "sceneCases": 10,
+  "layoutChecks": {
+    "viewports": [
+      [
+        320,
+        740
+      ],
+      [
+        390,
+        740
+      ],
+      [
+        1280,
+        740
+      ],
+      [
+        390,
+        844
+      ]
+    ],
+    "longNameChars": 24,
+    "longSummary": true,
+    "allThreeActionsVisible": true,
+    "horizontalOverflow": false
+  },
+  "independentReview": "no material findings; shared-fixture change separately reviewed",
+  "browserGraphics": "Canvas fallback in visual preview; WebGL lifecycle covered by native Chromium tests",
+  "screenshot": "docs/evidence/cinematic-title-5.1.0-desktop.jpg",
+  "limits": [
+    "No physical-device FPS claim",
+    "Not all GPU or screen-reader combinations tested"
+  ],
+  "production": "Candidate evidence only; final commit, CI and production identity recorded in release PR and public health endpoint",
+  "previousPassingGate": {
+    "command": "npm run release",
+    "tests": 1100,
+    "passed": 1100,
+    "failed": 0,
+    "cancelled": 0,
+    "skipped": 0,
+    "durationMs": 83411.882354,
+    "syntaxFiles": 202
+  }
+}
