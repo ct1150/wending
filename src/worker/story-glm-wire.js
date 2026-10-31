@@ -1,7 +1,7 @@
-import {advancesEvent} from '../game/cultivation/live/experience.js';
+import {advancesEvent,isExperienceLife,GROWTH_TERMS} from '../game/cultivation/live/experience.js';
 import {SCENE_SCHEMA,exactKeys} from '../game/cultivation/live/schema.js';
 import {assertPlainData,canonicalStringify} from '../game/cultivation/live/identity.js';
-import {ITEMS,REALMS,INTENTS,LEGACY_ITEMS,LEGACY_INTENTS,ORIGINS,TALENTS} from '../game/cultivation/live/model.js';
+import {ITEMS,REALMS,INTENTS,EXPERIENCE_INTENTS,LEGACY_ITEMS,LEGACY_INTENTS,ORIGINS,TALENTS} from '../game/cultivation/live/model.js';
 import {isV7Life,realmCatalogFor,nextRealmFor,V7_EXPLORE_TARGETS,v7ActionRule,WORLD_TIERS,WORLD_TRAVEL_APPROACHES} from '../game/cultivation/live/cultivation-rules.js';
 import {createNamedTargetLookup,normalizeNamedScene} from './story-named-targets.js';
 import {normalizeWireAnnotation} from './story-wire-annotation.js';
@@ -36,7 +36,7 @@ function availableVariants(context,aliases,intent,approach,targets){
 // GLM writes local references. The server owns persistent scene/choice IDs;
 // only declared, typed aliases may become new entity IDs for this exact turn.
 export function buildGlmWire(context,system,{storyActions=false}={}){
-  const directed=isV7Life(context.life)&&context.director?.version===7,items=isV7Life(context.life)?ITEMS:LEGACY_ITEMS,intents=isV7Life(context.life)?INTENTS:LEGACY_INTENTS,realms=realmCatalogFor(context.life);
+  const directed=isV7Life(context.life)&&context.director?.version===7,items=isV7Life(context.life)?ITEMS:LEGACY_ITEMS,intents=isExperienceLife(context.life)?EXPERIENCE_INTENTS:isV7Life(context.life)?INTENTS:LEGACY_INTENTS,realms=realmCatalogFor(context.life);
   if(context.entities.some(entity=>['self',...Object.keys(items),...Object.keys(realms)].includes(entity.id)))throw Object.assign(Error('STORY_CONTEXT_INVALID'),{code:'STORY_CONTEXT_INVALID'});
   const aliases=new Map(context.entities.map((entity,index)=>[entity.id,'k'+(index+1)+(storyActions&&!directed?'_'+entity.kind+'_'+Array.from(entity.name).slice(0,4).join(''):'')]));
   const obligations=[...context.memory.promises,...context.memory.clues];
@@ -81,7 +81,7 @@ export function buildGlmWire(context,system,{storyActions=false}={}){
   const actionGroups=new Map();
   for(const [intent,approaches]of Object.entries(intents))for(const approach of approaches){
     if(intent==='interact'&&!storyActions)continue;
-    const craftTargets=approach==='study'?['manual']:approach==='alchemy'?['medicine','elixir']:approach==='formation'?['array']:approach==='forge'&&isV7Life(context.life)?['talisman','artifact']:['talisman'];
+    const craftTargets=Object.hasOwn(GROWTH_TERMS,approach)?(['pledge','repay'].includes(approach)?people:['self']):approach==='study'?['manual']:approach==='alchemy'?['medicine','elixir']:approach==='formation'?['array']:approach==='forge'&&isV7Life(context.life)?['talisman','artifact']:['talisman'];
     const targets=intent==='interact'?(approach==='help'?people:['ask','decline'].includes(approach)?actors:['self',...(approach==='observe'?entityAliases:livingAliases)]):intent==='travel'?places:['negotiate','fight','evade'].includes(intent)?actors:intent==='explore'?(isV7Life(context.life)?[...V7_EXPLORE_TARGETS]:Object.keys(items).filter(id=>id!=='talisman')):intent==='craft'?craftTargets:intent==='practice'&&approach==='breakthrough'?(nextRealm?[nextRealm]:[]):['self'];
     if(!targets.length)continue;
     const interaction=intent==='interact';
@@ -226,7 +226,7 @@ export function decodeGlmScene(wire,context,{storyActions=false}={}){
       if(purposeful&&!storyActions)throw Error();
       exactKeys(choice,purposeful?['action','targetId','stake','purpose','anchor']:described?['action','targetId','stake','label','anchor']:['action','targetId','stake']);
       if(typeof choice.action!=='string'||!['low','normal','high'].includes(choice.stake))throw Error();
-      const parts=choice.action.split(':'),[intent,approach]=parts;if(parts.length!==2||!Object.hasOwn(INTENTS,intent)||!INTENTS[intent].includes(approach))throw Error();
+      const parts=choice.action.split(':'),[intent,approach]=parts;if(parts.length!==2||!Object.hasOwn(INTENTS,intent)||!(isExperienceLife(context.life)?EXPERIENCE_INTENTS:INTENTS)[intent].includes(approach))throw Error();
       if(intent==='interact'&&(!storyActions||!described))throw Error();
       if(described){
         const anchored=storyActions&&Number.isInteger(choice.anchor)?choice.anchor>=0&&choice.anchor<wire.blocks.length:typeof choice.anchor==='string'&&choice.anchor.length>=4&&choice.anchor.length<=80&&wire.blocks.some(block=>typeof block.text==='string'&&block.text.includes(choice.anchor));

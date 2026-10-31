@@ -36,6 +36,7 @@ export function createLiveSession({archive,client,engine=defaultEngine,onChange=
     }
     const entityIds=[...new Set([
       row.pending.receipt.action?.targetId,
+      row.state.life.cultivationProfile?.experience?.commitment?.entityId,
       row.state.director?.mainQuest?.entityId,
       ...(row.state.director?.sideQuests??[]).map(quest=>quest.entityId),
       ...(row.state.director?.memory?.clues??[]).map(clue=>clue.entityId),

@@ -2,7 +2,7 @@ import { assertPlainData, canonicalStringify } from './identity.js';
 import { DAYS_PER_YEAR, ORIGINS, TALENTS, ITEMS, REALMS, LEGACY_ITEMS, LEGACY_INTENTS } from './model.js';
 import { exactKeys, idField, textField, validateProposal, validateEntities, validateGeneratedScene } from './schema.js';
 import { V7_REALMS, isV7Life, isV7Birth, summarizeLife, initialLifeForBirth, initialItemsForBirth, validateV7BirthProfile, validateV7Profile, realmFor, lifespanLimitFor, maximumSpiritFor, validV7Target } from './cultivation-rules.js';
-import { isExperienceLife, validateExperienceState, experienceAfterAction } from './experience.js';
+import { isExperienceLife, validateExperienceState, experienceAfterAction, GROWTH_TERMS } from './experience.js';
 import { validateStoryDirector } from './story-director.js';
 import { validateReincarnation } from './reincarnation.js';
 import { validateRetrievalMemory } from './retrieval-memory.js';
@@ -32,7 +32,7 @@ function validateSummary(row) {
 }
 function same(left, right) { return canonicalStringify(left) === canonicalStringify(right); }
 const lifeSummary=summarizeLife;
-export function validateReceipt(row) {
+export function validateReceipt(row,{turnId}={}) {
   exactKeys(row, ['kind','choiceId','action','elapsedDays','itemChanges','relationChanges','random','before','after','death','birth'],['cultivationResult']);
   const modern=Object.hasOwn(row.before??{},'cultivationProfile');
   if(modern!==Object.hasOwn(row.after??{},'cultivationProfile')||modern!==Object.hasOwn(row,'cultivationResult'))throw new Error('收据规则版本不一致。');
@@ -49,7 +49,13 @@ export function validateReceipt(row) {
   validateSummary(row.before);
   validateSummary(row.after);
   const beforeExperience=row.before.cultivationProfile?.experience,afterExperience=row.after.cultivationProfile?.experience;
-  if(Boolean(beforeExperience)!==Boolean(afterExperience)||beforeExperience&&!same(experienceAfterAction(beforeExperience,row.before.realm!==row.after.realm),afterExperience))throw new Error('修行经历与行动不符。');
+  const growth=row.action?.intent==='craft'&&GROWTH_TERMS[row.action.approach];
+  if(growth){
+    if(!beforeExperience)throw new Error('旧人生没有这项修行行动。');
+    if(!row.death&&(row.elapsedDays!==growth.days||row.after.cultivationProfile.spirit!==row.before.cultivationProfile.spirit-growth.spiritCost||
+      !same(row.itemChanges,row.action.approach==='repay'?{supplies:-1}:{})))throw new Error('修行代价与行动不符。');
+  }
+  if(Boolean(beforeExperience)!==Boolean(afterExperience)||beforeExperience&&!same(experienceAfterAction(beforeExperience,row.before.realm!==row.after.realm,{action:row.action,death:row.death,turnId:turnId??afterExperience?.commitment?.acceptedTurn}),afterExperience))throw new Error('修行经历与行动不符。');
   if (row.death !== null) {
     exactKeys(row.death, ['cause']);
     if (!['lifespan', 'injury'].includes(row.death.cause)) throw new Error('死亡原因无效。');
@@ -139,7 +145,7 @@ export function validateLiveState(state) {
     validateUnchangedBirth(state);
   } else {
     if (state.revision < 1 || state.lastReceipt === null) throw new Error('已提交回合缺少收据。');
-    validateReceipt(state.lastReceipt);
+    validateReceipt(state.lastReceipt,{turnId:state.turnId});
     if (!same(state.lastReceipt.after, lifeSummary(state.life)) || state.lastReceipt.random.after !== state.rng) throw new Error('人物快照与最后收据不一致。');
     if (state.revision === 1) {
       if (!same(state.lastReceipt, state.birthReceipt)) throw new Error('首个提交必须是原始出生收据。');

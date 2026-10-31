@@ -96,7 +96,7 @@ function prepareChoiceWithResolver(state,command,resolveCustom) {
  if(rule.reason){if(custom)throw Object.assign(new Error(CUSTOM_ACTION_MESSAGE),{code:'CUSTOM_ACTION_UNSUPPORTED'});throw new Error(rule.reason);}
  const nextRng=nextRandom(state.rng),roll=nextRng%100;
  let nextLife,elapsedDays,death,cultivationResult;
- if(isV7Life(state.life))({nextLife,elapsedDays,death,result:cultivationResult}=resolveV7Action(state.life,action,rule,roll));
+ if(isV7Life(state.life))({nextLife,elapsedDays,death,result:cultivationResult}=resolveV7Action(state.life,action,rule,roll,state.turnId+1));
  else {
  nextLife=copy(state.life);const remaining=nextLife.lifeLimit*DAYS_PER_YEAR-nextLife.ageDays;elapsedDays=Math.min(remaining,rule.days);
  for(const [id,n] of Object.entries(rule.items))nextLife.items[id]-=n;

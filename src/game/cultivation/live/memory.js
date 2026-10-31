@@ -178,6 +178,8 @@ function addRetrievalProjection(context,memory,serialized) {
 // remain in the archive; the same fixed action and candidates give the same DTO.
 function selectRelevantMemory(result,records,state,entities,openTotal,currentTurnId) {
   const currentIds=new Set(state.relatedEntities.map(entity=>entity.id));
+  const creditor=result.life.cultivationProfile?.experience?.commitment;
+  if(creditor?.status==='owed'&&currentIds.size<24&&entities.has(creditor.entityId))currentIds.add(creditor.entityId);
   const openCandidates=records.filter(row=>['promise','clue'].includes(row.kind)&&row.status==='open');
   if(openCandidates.length>openTotal)fail('STORY_CONTEXT_INVALID');
   result.entities=[...entities.values()].filter(entity=>currentIds.has(entity.id));
@@ -195,7 +197,20 @@ function selectRelevantMemory(result,records,state,entities,openTotal,currentTur
   // The context is itself serialized as a user-message string. Account for
   // that second JSON escaping layer, leaving room for fixed system/schema data.
   const fits=()=>result.entities.length<=24&&bytes(result)<=7000&&bytes(JSON.stringify(result))<=7000;
-  if(!fits())fail('MEMORY_CONTEXT_TOO_LARGE');
+  // All durable receipts, actors and accepted promises stay intact. Only on
+  // marked lives, give the latest actual turn/open record precedence over
+  // duplicate director prose and hashes in this particular model projection.
+  function makeRoom(){
+    const d=result.director;if(d?.eventCount===undefined||result.entities.length>24||fits())return;
+    for(const rows of [d.pacing.sceneHashes,d.memory.causes,d.memory.npcs,d.memory.enemies,d.memory.clues]){
+      while(rows.length&&!fits())rows.shift();
+      if(fits())return;
+    }
+    for(const [obj,key,max] of [[d.background,'text',0],[d.archive,'text',24],[d.world,'summary',24]]){
+      obj[key]=Array.from(obj[key]).slice(0,max).join('');if(fits())return;
+    }
+  }
+  makeRoom();if(!fits())fail('MEMORY_CONTEXT_TOO_LARGE');
   const target=result.receipt.action?.targetId;
   const directedReferences=new Set([state.director?.mainQuest,...(state.director?.sideQuests??[]),...(state.director?.memory.clues??[])].filter(Boolean).map(row=>row.id));
   const relevance=row=>row.entityId===target?0:currentIds.has(row.entityId)?1:2;
@@ -214,6 +229,7 @@ function selectRelevantMemory(result,records,state,entities,openTotal,currentTur
     result.entities=[...result.entities,...missing.map(id=>entities.get(id))];
     result.memory[group].push(row);
     refresh();
+    if(row.id===currentTurnId||(['promise','clue'].includes(row.kind)&&row.status==='open'))makeRoom();
     if(row.id===currentTurnId){
       while(!fits()&&row.text.length>40){const characters=Array.from(row.text);row.text=characters.slice(0,10).join('')+'…'+characters.slice(20).join('');}
       // Old legal scenes may leave no room even for the record envelope.
@@ -238,7 +254,7 @@ export function validateStoryContext(c) {
   idField(c.identity.runId);idField(c.identity.requestId);whole(c.identity.turnId,1);whole(c.identity.baseRevision);
   if(c.namespace!==namespace(c.identity.runId)||!/^[a-f0-9]{64}$/.test(c.identity.stateHash)||c.identity.rulesVersion!==1||c.identity.promptVersion!==1||c.identity.turnId!==c.identity.baseRevision+1)fail('STORY_CONTEXT_INVALID');
   if(c.phase==='opening'&&c.identity.baseRevision!==0||c.phase==='choice'&&c.identity.baseRevision<1)fail('STORY_CONTEXT_INVALID');
-  validateLife(c.life);validateReceipt(c.receipt);
+  validateLife(c.life);validateReceipt(c.receipt,{turnId:c.identity.turnId});
   if(c.receipt.kind!==c.phase||c.identity.choiceId!==c.receipt.choiceId||c.receipt.death||!equal(c.receipt.after,summarizeLife(c.life))||c.phase==='opening'&&!equal(c.receipt.birth,c.life.birth))fail('ACTION_RECEIPT_MISMATCH');
   if(c.phase==='opening'&&(!equal(c.life.items,initialItemsForBirth(c.life.birth))||Object.keys(c.life.relations).length))fail('ACTION_RECEIPT_MISMATCH');
   if(c.director!==undefined){if(!isV7Life(c.life))fail('STORY_CONTEXT_INVALID');validateStoryDirector(c.director,{turnId:c.identity.baseRevision,life:c.life});}

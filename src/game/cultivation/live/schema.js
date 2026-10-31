@@ -1,5 +1,5 @@
 import { assertPlainData } from './identity.js';
-import { INTENTS } from './model.js';
+import { INTENTS, EXPERIENCE_INTENTS } from './model.js';
 import { STORY_ANNOTATION_SCHEMA, validateStoryAnnotation } from './story-annotation.js';
 import { validateRetrievalReceipt } from './retrieval-memory.js';
 export function exactKeys(value, keys, optional=[]) {
@@ -7,7 +7,7 @@ export function exactKeys(value, keys, optional=[]) {
 }
 export function textField(value,max=200) { if(typeof value!=='string'||!value.trim()||value.length>max||/[\x00-\x08\x0b\x0c\x0e-\x1f]/.test(value))throw new Error('文字字段无效。'); }
 export function idField(value) { if(typeof value!=='string'||!/^[A-Za-z0-9][A-Za-z0-9:_-]{0,79}$/.test(value))throw new Error('标识无效。'); }
-export function validateProposal(p) { assertPlainData(p);exactKeys(p,['id','label','intent','targetId','stake','approach']);idField(p.id);textField(p.label,120);idField(p.targetId);if(!Object.hasOwn(INTENTS,p.intent)||!INTENTS[p.intent].includes(p.approach)||!['low','normal','high'].includes(p.stake))throw new Error('未知行动意图。');return p; }
+export function validateProposal(p) { assertPlainData(p);exactKeys(p,['id','label','intent','targetId','stake','approach']);idField(p.id);textField(p.label,120);idField(p.targetId);if(!Object.hasOwn(EXPERIENCE_INTENTS,p.intent)||!EXPERIENCE_INTENTS[p.intent].includes(p.approach)||!['low','normal','high'].includes(p.stake))throw new Error('未知行动意图。');return p; }
 export function validateEntities(entities) { if(!Array.isArray(entities)||entities.length>24)throw new Error('关联人物过多。');const seen=new Set();for(const e of entities){exactKeys(e,['id','name','kind'],['status']);if(Object.hasOwn(e,'status')&&(e.kind!=='person'||!['alive','dead'].includes(e.status)))throw new Error('人物生死状态无效。');idField(e.id);textField(e.name,60);if(seen.has(e.id)||!['person','place','faction'].includes(e.kind))throw new Error('实体无效。');seen.add(e.id);} }
 export function validateGeneratedScene(scene) {
  assertPlainData(scene);exactKeys(scene,['id','title','location','blocks','entities','choices','memoryDeltas'],['story','retrieval']);idField(scene.id);textField(scene.title,120);textField(scene.location,120);validateEntities(scene.entities);

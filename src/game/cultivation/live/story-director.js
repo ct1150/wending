@@ -1,4 +1,5 @@
 import { assertPlainData, canonicalStringify, sha256 } from './identity.js';
+import {buildOpeningBrief,advanceExperienceStory} from './experience-story.js';
 import { isExperienceLife, advancesEvent } from './experience.js';
 import { DAYS_PER_YEAR } from './model.js';
 import { ROOTS, RELICS, TECHNIQUES, realmFor, fortuneCycleModifier } from './cultivation-rules.js';
@@ -47,6 +48,7 @@ export function createStoryDirector(life,seed=0) {
     pacing:{turnId:1,arc:1,startedAt:1,lastBeat:0,nextBeat:10+seeded%11,lastEra:0,pattern:'discovery',completedPatterns:[],sceneHashes:[],setbackStreak:0,pressure:0},
   };
   d.pacing=schedule(d,life,1);
+  if(isExperienceLife(life))d.currentGoal=buildOpeningBrief({life,director:d,phase:'opening'}).goal;
   return validateStoryDirector(d);
 }
 
@@ -170,11 +172,13 @@ export function advanceStoryDirector(director,life,receipt,scene,turnId) {
       }else if(fresh.includes(row)){
         const bounded={id:reference,entityId:row.entityId,text:clip(row.text,90),turnId};
         if(row.kind==='clue')upsert(d,'clues',{...bounded,status:'open'});
-        addQuest(d,{...bounded,kind:row.kind});
+        // An offered favor or clue is information. Only a player's paid pledge binds a marked life.
+        if(!marked||row.kind==='clue')addQuest(d,{...bounded,kind:row.kind});
       }
     }
     if(!d.mainQuest&&d.sideQuests.length)d.mainQuest=d.sideQuests.shift();
     d.currentGoal=clip(d.mainQuest?.text??(receipt.action?.intent==='interact'&&['decline','leave'].includes(receipt.action.approach)?'已结束当前互动，自定下一步':'辨明眼前变化，自定下一步'),60);
+    if(marked)d.currentGoal=clip(advanceExperienceStory(d.currentGoal,receipt,scene,life),60);
     const anchors=annotation.anchors.map(anchor=>blocks[anchor]).join('\n');
     if(['revelation','resolution'].includes(annotation.beat)&&anchors.includes(d.destiny.motif)&&fresh.some(row=>row.kind==='clue'&&anchors.includes(row.text)))d.mystery.progress=Math.min(9,d.mystery.progress+1);
     if(advance&&clock-d.pacing.lastBeat>=10&&annotation.beat!=='progress'){

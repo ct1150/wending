@@ -1,7 +1,7 @@
 import { DAYS_PER_YEAR, ITEMS, REALMS, ORIGINS } from './model.js';
 import { exactKeys } from './schema.js';
 
-import {EXPERIENCE_VERSION,isExperienceLife,createExperienceState,validateExperienceProfile,experienceAfterAction} from './experience.js';
+import {EXPERIENCE_VERSION,isExperienceLife,createExperienceState,validateExperienceProfile,experienceAfterAction,GROWTH_TERMS} from './experience.js';
 
 const clone=value=>JSON.parse(JSON.stringify(value));
 const bounded=(value,min,max)=>Number.isSafeInteger(value)&&value>=min&&value<=max;
@@ -109,7 +109,7 @@ export function validateV7BirthProfile(profile){
 }
 export function validateV7Profile(profile){
   exactKeys(profile,PROFILE_KEYS,['experience']);
-  if(Object.hasOwn(profile,'experience')){validateExperienceProfile(profile.experience);requireValue(Object.hasOwn(TECHNIQUES,profile.experience.activeTechniqueId));}
+  if(Object.hasOwn(profile,'experience')){validateExperienceProfile(profile.experience);requireValue(Object.hasOwn(TECHNIQUES,profile.experience.activeTechniqueId)&&(!profile.experience.lessons.includes('diagnosed')||TECHNIQUES[profile.experience.activeTechniqueId].defective));}
   requireValue(profile.version===7&&bounded(profile.lifespanBonus,0,1000000)&&bounded(profile.lifespanLoss,0,1000000)&&bounded(profile.maxSpirit,1,1000)&&bounded(profile.spirit,0,profile.maxSpirit)&&bounded(profile.exposure,0,100)&&bounded(profile.worldTier,0,2));
   exactKeys(profile.arts,Object.keys(ART_NAMES));for(const value of Object.values(profile.arts))requireValue(bounded(value,0,20));
   return profile;
@@ -142,6 +142,10 @@ export function initialLifeForBirth(name,birth){
 
 export function validV7Target(state,proposal){
   const p=proposal,entity=state.relatedEntities.find(row=>row.id===p.targetId),actor=entity&&entity.status!=='dead'&&['person','faction'].includes(entity.kind);
+  if(p.intent==='craft'&&Object.hasOwn(GROWTH_TERMS,p.approach)){
+    if(!isExperienceLife(state.life)||p.stake!=='low')return false;
+    return ['pledge','repay'].includes(p.approach)?entity?.kind==='person'&&entity.status!=='dead'&&!/野兽|黄鼠狼|野狼|猛虎|野猪|毒蛇|蟒蛇/u.test(entity.name):p.targetId==='self';
+  }
   if(p.intent==='practice')return p.approach==='breakthrough'?nextRealmFor(state.life)?.id===p.targetId:p.targetId==='self';
   if(p.intent==='rest')return p.targetId==='self';
   if(p.intent==='explore')return V7_EXPLORE_TARGETS.includes(p.targetId);
@@ -286,6 +290,16 @@ export function v7ActionRule(state,p){
       break;
     }
     case 'craft':{
+      if(Object.hasOwn(GROWTH_TERMS,p.approach)){
+        const e=profile.experience,how=p.approach;
+        Object.assign(rule,GROWTH_TERMS[how],{items:{...GROWTH_TERMS[how].items}});
+        if(how==='repay'){
+          if(e.commitment?.status!=='owed'||e.commitment.entityId!==p.targetId)rule.reason='须向当初校法之人归还约定的一份行粮。';
+        }else if(!TECHNIQUES[e.activeTechniqueId].defective||e.repaired)rule.reason='当前功法无需修补。';
+        else if((how==='diagnose')===e.lessons.includes('diagnosed'))rule.reason=how==='diagnose'?'脉络已经验明。':'须先验明功法缺处。';
+        if(how==='pledge')rule.warnings.push('接受校法后，须向此人归还一份行粮。');
+        break;
+      }
       if(p.approach==='study'){rule.days=180;rule.items.stones=2;rule.gain.manual=1;rule.spiritCost=5;break;}
       const art=p.approach==='alchemy'?'alchemy':p.approach==='formation'?'formations':p.approach==='talisman'?'talismans':'forging';
       rule.art=art;rule.days=Math.max(30,realm.rank>=5?realm.practiceYears*30:30);rule.spiritCost=15;rule.gain[p.targetId]=1;
@@ -313,7 +327,7 @@ export function v7ActionRule(state,p){
   return rule;
 }
 
-export function resolveV7Action(life,action,rule,roll){
+export function resolveV7Action(life,action,rule,roll,turnId){
   const next=clone(life),profile=next.cultivationProfile;
   for(const [id,count] of Object.entries(rule.items))next.items[id]-=count;
   profile.spirit-=rule.spiritCost;
@@ -358,7 +372,7 @@ export function resolveV7Action(life,action,rule,roll){
       if(rule.relationship)next.relations[action.targetId]=clamp((next.relations[action.targetId]??0)+rule.relationship,-100,100);
     }
   }
-  if(isExperienceLife(life))profile.experience=experienceAfterAction(profile.experience,next.realm!==life.realm);
+  if(isExperienceLife(life))profile.experience=experienceAfterAction(profile.experience,next.realm!==life.realm,{action,turnId,death});
   const result={version:7,check,lifespanChange:{years:next.lifeLimit-life.lifeLimit,cause}};
   return {nextLife:next,elapsedDays,death,result};
 }
