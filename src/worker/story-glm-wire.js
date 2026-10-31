@@ -145,12 +145,12 @@ memoryDeltas只记录本场正文已发生的新信息，不能记录未选选�
   if(directed)modern=`${system}
 本回合实际经过${context.receipt.elapsedDays}日。正文按事件需要写1–4段，短问题直接回答，不凑字数；第二人称，不列库存或动作代码。对白speaker=self或活人别名，旁白无speaker。
 输出顶层只允许blocks、choices、title、location、otherPeople、places、factions、memoryDeltas、story这9项。先写blocks，再写choices，最后填写名单。
-给3个不同的本场选择，包含稳妥应对。每项只写action、targetId、stake、purpose、anchor；purpose用50字内说明眼前具体目的，不承诺奖励或固定耗时；anchor是本场段落下标，从0起。只选择schema提供的可执行配对，不补日常菜单。
+给2至3个本场真正不同的选择，两个足够就不凑第三个。每项只写action、targetId、stake、purpose、anchor；purpose用50字内说明眼前具体目的，不承诺奖励或固定耗时；anchor是本场段落下标，从0起。只选择schema提供的可执行配对，不补日常菜单。
 问答用interact:ask，眼前调查用interact:observe，环境用self；purpose可观察人物手中物件。explore仅找资源：${V7_EXPLORE_TARGETS.filter(id=>[...actionGroups.values()].some(group=>group.actions.some(action=>action.startsWith('explore:'))&&group.targets.includes(id))).map(id=>id+'='+ITEMS[id]).join('，')}。危险退避用evade，travel才移动且目的地不等于location；新跨界地名以指定下一界开头，不混写界域。
 black-market优先出售行囊已有古修遗物，无则出售已有法器，purpose只写“出售古修遗物，换取灵石”或“出售法器，换取灵石”，每次一件，不卖伴生遗物。普通negotiate不购买具体物品。
-已知对象的target/speaker直接用输入别名，同名对象也依此区分。新对象用{kind,name,ref:"",status:null}，kind分person/place/faction，不冒充旧名或主角；死亡写death记忆，不改status。正文自然称谓即可。
+已知对象的target/speaker直接用输入别名。新人物示例{"kind":"person","name":"渡口船夫"}；新地点用place，势力用faction。不自行编ID、别名或生死状态。死亡只写有证据的death记忆。正文自然称谓即可。
 新记忆写entityId、kind、anchor，不写text；只记已发生信息，promise须明确承诺，新promise/clue带status=open；关闭只用提供的referenceId与合法status，无新信息可[]。
-story按本场标注pattern、beat、anchors。npcs仅记录已呈现特征，未知留空；节奏提示不改变玩家决定。`;
+story示例：{"pattern":"${context.director.pacing.pattern}","beat":"progress","anchors":[0]}。pattern、beat都是字符串；没有明确转折就沿用此例。只有正文确实写出的NPC特征才填npcs，未知项省略。`;
   const interactionGuide=directed?'\ninteract均stake=low：ask、observe、decline、leave均0日且无数值变化；help仅给予1行粮，经过1日、关系+2，不能承诺治疗、复活或战斗。leave不是旅行或脱险。':actions;
   return {context:packed,instructions:storyActions?modern+interactionGuide:instructions.replace('关闭已有约定/线索只用输入m1等referenceId，原文保持不变。','关闭已有约定/线索仅写输入m1等referenceId和status，不写entityId/kind/text，服务端恢复原始记录；对应实体仍须在名单声明。')+continuity+actions,schema};
 }

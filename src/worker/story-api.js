@@ -98,7 +98,7 @@ export function createStoryApi({provider=generateScene,budget,config={},experime
         if(Date.now()>=providerDeadline)generated={status:'paused',errorCode:'PROVIDER_TIMEOUT',accountingStatus:'unknown',inferencePerformed:false};
         else generated=await Promise.race([Promise.resolve().then(()=>{
           if(controller.signal.aborted||Date.now()>=providerDeadline)throw Object.assign(Error('PROVIDER_TIMEOUT'),{code:'PROVIDER_TIMEOUT'});
-          return provider(env.AI,profile,body.context,{attemptId:identity.attemptId},{storyActions,knowledgeStore:config.knowledgeEnabled===true?(env.STORY_KNOWLEDGE??null):undefined,deadlineAt:providerDeadline,signal:controller.signal,onProgress:event=>{if(providerActive)onProgress(event);}});
+          return provider(env.AI,profile,body.context,{attemptId:identity.attemptId},{storyActions,engineMenu:true,knowledgeStore:config.knowledgeEnabled===true?(env.STORY_KNOWLEDGE??null):undefined,deadlineAt:providerDeadline,signal:controller.signal,onProgress:event=>{if(providerActive)onProgress(event);}});
         }),new Promise(resolve=>{timer=setTimeout(()=>{controller.abort();resolve({status:'paused',errorCode:'PROVIDER_TIMEOUT',accountingStatus:'unknown',inferencePerformed:true});},Math.max(1,providerDeadline-Date.now()));})]);
       }catch(error){generated={status:'paused',errorCode:error?.code==='PROVIDER_TIMEOUT'?'PROVIDER_TIMEOUT':'PROVIDER_FAILED',accountingStatus:'unknown',inferencePerformed:true};}finally{providerActive=false;clearTimeout(timer);controller.abort();}
       const latencyMs=Date.now()-providerStartedAt;

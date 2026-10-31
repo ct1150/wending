@@ -4,6 +4,13 @@ import {assertPlainData} from '../game/cultivation/live/identity.js';
 import {ITEMS,REALMS} from '../game/cultivation/live/model.js';
 import {isV7Life,realmCatalogFor,WORLD_TIERS,WORLD_TRAVEL_APPROACHES} from '../game/cultivation/live/cultivation-rules.js';
 
+// Bound, typed symbols from older model responses exist only within one scene.
+const localSymbol=value=>{
+  const match=typeof value==='string'&&/^(p|npc|person|l|place|f|faction)([1-9]|1\d|2[0-4])$/u.exec(value);
+  return match?({p:'p',npc:'p',person:'p',l:'l',place:'l',f:'f',faction:'f'})[match[1]]+match[2]:null;
+};
+const kindLetter={person:'p',place:'l',faction:'f'};
+
 // The model names an object next to its intended action. The server resolves
 // existing identity or allocates a local wire reference; it never trusts a
 // model-provided ID that disagrees with the complete name and kind.
@@ -17,11 +24,17 @@ export function createNamedTargetLookup(context){
       const known=knownRefs.get(target);if(!known)throw Error('Unknown named reference');
       target={kind:known.kind,name:known.name,ref:target,status:null};
     }
-    exactKeys(target,['kind','name','ref','status']);
-    if(!['person','place','faction'].includes(target.kind)||target.ref!==null&&typeof target.ref!=='string'||target.status!==null&&(!['alive','dead'].includes(target.status)||target.kind!=='person'))throw Error('Invalid named target');
+    if(directed){exactKeys(target,['kind','name'],['ref','status']);target={ref:'',status:null,...target};}
+    else exactKeys(target,['kind','name','ref','status']);
+    if(!['person','place','faction'].includes(target.kind)||target.ref!==null&&typeof target.ref!=='string'||target.status!==null&&(directed||!['alive','dead'].includes(target.status)||target.kind!=='person'))throw Error('Invalid named target');
     textField(target.name,60);
     let known;
-    if(![null,'','null'].includes(target.ref)){known=knownRefs.get(target.ref);if(!known||known.kind!==target.kind||known.name!==target.name)throw Error('Named reference mismatch');}
+    if(![null,'','null'].includes(target.ref)){
+      known=knownRefs.get(target.ref);
+      const local=directed&&localSymbol(target.ref);
+      if(!known&&local&&local[0]===kindLetter[target.kind]&&!context.entities.some(entity=>entity.kind===target.kind&&entity.name===target.name))return {...target,known:null};
+      if(!known||known.kind!==target.kind||known.name!==target.name)throw Error('Named reference mismatch');
+    }
     else{const matches=context.entities.filter(entity=>entity.kind===target.kind&&entity.name===target.name);if(matches.length>1)throw Error('Ambiguous named reference');known=matches[0];}
     return {...target,known:known??null};
   };
@@ -32,12 +45,20 @@ export function normalizeNamedScene(wire,context){
   assertPlainData(wire);exactKeys(wire,['blocks','choices','title','location','memoryDeltas',...(directed?['story']:[])]);
   if(!Array.isArray(wire.blocks)||wire.blocks.length<1||wire.blocks.length>12||!Array.isArray(wire.choices)||wire.choices.length<2||wire.choices.length>3||!Array.isArray(wire.memoryDeltas)||wire.memoryDeltas.length>16)throw Error('Invalid named scene');
   const lookup=createNamedTargetLookup(context),declarations=new Map(),counts={person:0,place:0,faction:0},literals=new Set(['self',...Object.keys(ITEMS),...Object.keys(realmCatalogFor(context.life))]);
+  const targets=new Map(),symbols=new Map();
   function declare(target){
     const known=target.known,key=known?known.id:JSON.stringify([target.kind,target.name]);let declaration=declarations.get(key);
     if(!declaration){
       const id=known?'k'+(context.entities.indexOf(known)+1):({person:'p',place:'l',faction:'f'})[target.kind]+(++counts[target.kind]);
       declaration={id,...(!known?{name:target.name}:{}),kind:target.kind};declarations.set(key,declaration);
       if(declarations.size>24)throw Error('Too many named targets');
+    }
+    if(directed){
+      targets.set(declaration.id,target);
+      for(const symbol of [localSymbol(declaration.id),localSymbol(target.ref)].filter(Boolean)){
+        if(symbols.has(symbol)&&symbols.get(symbol)!==declaration.id)throw Error('Conflicting local reference');
+        symbols.set(symbol,declaration.id);
+      }
     }
     if(target.status!==null){if(Object.hasOwn(declaration,'status')&&declaration.status!==target.status)throw Error('Contradictory named status');declaration.status=target.status;}
     return declaration.id;
@@ -55,16 +76,33 @@ export function normalizeNamedScene(wire,context){
     const targetId=typeof choice.target==='string'&&literals.has(choice.target)?choice.target:resolve(choice.target);
     return {action:choice.action,targetId,stake:choice.stake,purpose:choice.purpose,anchor:choice.anchor};
   });
+  // Only a dialogue speaker or action target can establish a new bare-name
+  // reference. Optional notes cannot bootstrap further participants or IDs.
+  const participants=new Map(targets),localParticipants=new Map(symbols);
+  function evidenceTarget(value){
+    if(!directed||typeof value!=='string'||/^k\d/u.test(value))return lookup(value);
+    textField(value,60);
+    if(/[:/\\]/u.test(value)||context.entities.some(entity=>entity.id===value))throw Error('Invalid memory identity');
+    const symbol=localSymbol(value);
+    if(symbol)return participants.get(localParticipants.get(symbol))??null;
+    if(/^(?:p|npc|person|l|place|f|faction|m)\d/u.test(value))throw Error('Invalid local memory reference');
+    const matches=[...participants.values()].filter(target=>target.name===value),target=matches[0];
+    return matches.length===1&&!context.entities.some(entity=>entity.name===value&&entity.id!==target.known?.id)?target:null;
+  }
   const memoryDeltas=wire.memoryDeltas.flatMap(delta=>{
     if(Object.hasOwn(delta,'referenceId')){exactKeys(delta,['referenceId','status']);return {...delta};}
     exactKeys(delta,['target','kind','anchor'],['status']);
-    const target=lookup(delta.target);
+    if(directed){
+      const obligation=['promise','clue'].includes(delta.kind);
+      if(!['fact','relationship','death','promise','clue'].includes(delta.kind)||!Number.isInteger(delta.anchor)||delta.anchor<0||delta.anchor>=Math.max(4,blocks.length)||Object.hasOwn(delta,'status')&&(!obligation||delta.status!=='open'))throw Error('Invalid named evidence');
+    }
+    const target=evidenceTarget(delta.target);
+    if(!target){if(['fact','relationship','clue'].includes(delta.kind))return [];throw Error('Unbound memory identity');}
     // A variable-length scene may end before this optional evidence slot.
     // Validate its shape and identity first; never move a death or a promise
     // to another paragraph, create its entity, or apply an unsupported status.
     if(directed&&Number.isInteger(delta.anchor)&&delta.anchor>=blocks.length&&delta.anchor<=3){
-      const obligation=['promise','clue'].includes(delta.kind);
-      if(!['fact','relationship','death','promise','clue'].includes(delta.kind)||target.status!==null||delta.kind==='death'&&target.kind!=='person'||obligation&&delta.status!=='open'||!obligation&&Object.hasOwn(delta,'status')||target.kind==='person'&&target.name===context.life.name)throw Error('Invalid named evidence');
+      if(delta.kind==='death'&&target.kind!=='person'||target.kind==='person'&&target.name===context.life.name)throw Error('Invalid named evidence');
       return [];
     }
     const entityId=declare(target);
@@ -110,7 +148,7 @@ function newNamePattern(names,{prefix='',noWorld=false}={}){
   return escaped(prefix)+(branch(root)??'');
 }
 
-function directedTargets(context){
+function directedTargets(context,includeMemoryTypes=true){
   const definitions={},fresh=new Map(),scopes=new Map(),parts=new Map();
   const entities=new Map(context.entities.map(entity=>[entity.id,entity]));
   const selected=context.receipt.action,failedCrossing=context.receipt.cultivationResult?.check?.kind==='world-crossing'&&context.receipt.cultivationResult.check.success===false;
@@ -128,7 +166,7 @@ function directedTargets(context){
       pattern='^(?:'+alternatives.join('|')+')$';
     }else pattern='^'+newNamePattern(names)+'$';
     const name=kind+(travel??'New')+'Target';fresh.set(key,name);
-    definitions[name]={type:'object',additionalProperties:false,required:['kind','name','ref','status'],properties:{kind:{const:kind},name:{type:'string',minLength:1,maxLength:60,pattern},ref:{const:''},status:{const:null}}};
+    definitions[name]={type:'object',additionalProperties:false,required:['kind','name'],properties:{kind:{const:kind},name:{type:'string',minLength:1,maxLength:60,pattern}}};
     return {$ref:'#/$defs/'+name};
   }
   function fromIds(ids,{travel=null}={}){
@@ -154,14 +192,17 @@ function directedTargets(context){
     const name='targets'+scopes.size;scopes.set(key,name);definitions[name]=alternatives.length===1?alternatives[0]:{oneOf:alternatives};
     return {$ref:'#/$defs/'+name};
   }
-  for(const kind of ['person','place','faction'])definitions[kind+'Target']=fromIds([...context.entities.filter(entity=>entity.kind===kind).map(entity=>entity.id),({person:'p',place:'l',faction:'f'})[kind]+'1']);
-  definitions.entityTarget={oneOf:['person','place','faction'].map(kind=>({$ref:'#/$defs/'+kind+'Target'}))};
+  if(includeMemoryTypes){
+    for(const kind of ['person','place','faction'])definitions[kind+'Target']=fromIds([...context.entities.filter(entity=>entity.kind===kind).map(entity=>entity.id),({person:'p',place:'l',faction:'f'})[kind]+'1']);
+    definitions.entityTarget={oneOf:['person','place','faction'].map(kind=>({$ref:'#/$defs/'+kind+'Target'}))};
+  }
   return {definitions,fromIds};
 }
 
-export function buildNamedSceneSchema(source,context,{blocks,location}={}){
+export function buildNamedSceneSchema(source,context,{blocks,location,engineMenu=false}={}){
   const directed=isV7Life(context.life)&&context.director?.version===7;
-  const scoped=directed?directedTargets(context):null;
+  const narrativeOnly=directed&&engineMenu;
+  const scoped=directed?directedTargets(context,!narrativeOnly):null;
   const named={};for(const kind of ['person','place','faction']){
     const ambiguous=context.entities.some((entity,index)=>entity.kind===kind&&context.entities.slice(0,index).some(previous=>previous.kind===kind&&previous.name===entity.name));
     named[kind]={type:'object',additionalProperties:false,required:['kind','name','ref','status'],properties:{kind:{const:kind},name:{type:'string',minLength:1,maxLength:60},ref:ambiguous?{type:'string',maxLength:80}:{const:''},status:{const:null}}};
@@ -181,14 +222,32 @@ export function buildNamedSceneSchema(source,context,{blocks,location}={}){
     variant.properties={kind:variant.properties.kind,speaker:variant.properties.speaker,text:variant.properties.text};
     variant.required=['kind','speaker','text'];
   }
+  const closures=directed?source.properties.memoryDeltas.items.oneOf.filter(row=>row.properties.referenceId).map(row=>structuredClone(row)):[{type:'object',additionalProperties:false,required:['referenceId','status'],properties:{referenceId:{type:'string'},status:{enum:['resolved','broken']}}}];
+  if(narrativeOnly){
+    const properties={blocks:body};
+    // A normal turn needs prose only. When the frozen context provides an
+    // actual open record, allow an optional decision about exactly that record.
+    if(closures.length)properties.memoryDeltas={type:'array',maxItems:16,items:closures.length===1?closures[0]:{oneOf:closures}};
+    const intel=source.properties.story?.properties.opponent;
+    if(isExperienceLife(context.life)&&intel){
+      // Only marked lives may establish a grounded opponent observation. A
+      // readable scene without new intelligence still requires prose alone.
+      const {entityId,anchor,...facts}=intel.properties;
+      const actors=context.entities.filter(e=>['person','faction'].includes(e.kind)&&e.status!=='dead').map(e=>e.id);
+      const opponent={type:'object',additionalProperties:false,required:['target','anchor'],properties:{target:scoped.fromIds([...actors,'p1','f1']),anchor:{...anchor,maximum:(body.maxItems??4)-1},...facts}};
+      properties.story={type:'object',additionalProperties:false,required:['opponent'],properties:{opponent}};
+    }
+    return {type:'object',additionalProperties:false,required:['blocks'],properties,...(Object.keys(definitions).length?{$defs:definitions}:{})};
+  }
   const anchor={type:'integer',minimum:0,maximum:(body.maxItems??4)-1};
   if(scoped){definitions.choicePurpose={type:'string',minLength:1,maxLength:50};definitions.blockAnchor=anchor;definitions.stakes={enum:['low','normal','high']};}
-  const choices={type:'array',minItems:directed?3:2,maxItems:3,items:{oneOf:source.properties.choices.items.oneOf.map(group=>{
+  const choices={type:'array',minItems:2,maxItems:3,items:{oneOf:source.properties.choices.items.oneOf.map(group=>{
     if(scoped){
       const actions=group.properties.action.enum,travel=actions.some(action=>action.startsWith('travel:'))?(actions.some(action=>WORLD_TRAVEL_APPROACHES.includes(action.split(':')[1]))?'crossing':'local'):null;
-      // A choice's wire anchor never enters its canonical action or receipt.
-      // Zero always names a real block without imposing a paragraph count.
-      return {type:'object',additionalProperties:false,required:['action','target','stake','purpose','anchor'],properties:{action:group.properties.action,target:scoped.fromIds(group.properties.targetId.enum,{travel}),stake:group.properties.stake.enum?.join(',')==='low,normal,high'?{$ref:'#/$defs/stakes'}:group.properties.stake,purpose:Object.hasOwn(group.properties.purpose??{},'const')?group.properties.purpose:{$ref:'#/$defs/choicePurpose'},anchor:{const:0}}};
+      // Only actual decisions go on the model wire. The adapter supplies the
+      // unused choice anchor and the rule-fixed low stake of an interaction.
+      const variableStake=!actions.every(action=>action.startsWith('interact:'));
+      return {type:'object',additionalProperties:false,required:['action','target',...(variableStake?['stake']:[]),'purpose'],properties:{action:group.properties.action,target:scoped.fromIds(group.properties.targetId.enum,{travel}),...(variableStake?{stake:group.properties.stake.enum?.join(',')==='low,normal,high'?{$ref:'#/$defs/stakes'}:group.properties.stake}:{}),purpose:Object.hasOwn(group.properties.purpose??{},'const')?group.properties.purpose:{$ref:'#/$defs/choicePurpose'}}};
     }
     const values=group.properties.targetId.enum,kinds=new Set(),strings=[];
     for(const id of values){const known=context.entities.find(entity=>entity.id===id),fresh=/^([plf])\d+$/u.exec(id);if(known)kinds.add(known.kind);else if(fresh)kinds.add(({p:'person',l:'place',f:'faction'})[fresh[1]]);else strings.push(id);}
@@ -196,7 +255,6 @@ export function buildNamedSceneSchema(source,context,{blocks,location}={}){
     return {type:'object',additionalProperties:false,required:['action','target','stake','purpose','anchor'],properties:{action:group.properties.action,target,stake:group.properties.stake,purpose:{type:'string',minLength:1,maxLength:50},anchor:{type:'integer',minimum:0,maximum:(body.maxItems??4)-1}}};
   })}};
   const evidence=(kind,entity='entityTarget',open=false)=>({type:'object',additionalProperties:false,required:['target','kind','anchor',...(open?['status']:[])],properties:{target:{$ref:'#/$defs/'+entity},kind,anchor:directed?{$ref:'#/$defs/blockAnchor'}:anchor,...(open?{status:{const:'open'}}:{})}});
-  const closures=directed?source.properties.memoryDeltas.items.oneOf.filter(row=>row.properties.referenceId).map(row=>structuredClone(row)):[{type:'object',additionalProperties:false,required:['referenceId','status'],properties:{referenceId:{type:'string'},status:{enum:['resolved','broken']}}}];
   const memoryDeltas={type:'array',maxItems:16,items:{oneOf:[evidence({enum:directed?['fact','relationship']:['fact','relationship','death']}),...(directed?[evidence({const:'death'},'personTarget')]:[]),evidence({enum:['promise','clue']},'entityTarget',true),...closures]}};
   const properties={blocks:body,choices,title:source.properties.title,location:location??source.properties.location,memoryDeltas,...(directed?{story:structuredClone(source.properties.story)}:{})};
   if(directed){
@@ -206,7 +264,7 @@ export function buildNamedSceneSchema(source,context,{blocks,location}={}){
     const traits=properties.story.properties.npcs.items;delete traits.properties.entityId;traits.properties={target:{$ref:'#/$defs/personTarget'},...traits.properties};traits.required=['target','anchor'];traits.properties.anchor.maximum=(body.maxItems??4)-1;
     for(const field of ['title','signatureSpell','habit','obsession'])traits.properties[field].minLength=1;
   }
-  const schema={type:'object',additionalProperties:false,required:Object.keys(properties),properties,$defs:definitions};
+  const schema={type:'object',additionalProperties:false,required:directed?['blocks','choices']:Object.keys(properties),properties,$defs:definitions};
   if(isExperienceLife(context.life)){
     // Definitions are private grammar symbols, never generated data. Shorten
     // their names, preserving the complete action constraints and game facts.

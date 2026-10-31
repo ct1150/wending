@@ -37,9 +37,44 @@ function accepts(schema,rule,value){
   }
   return true;
 }
-const target=(kind,name,ref='')=>({kind,name,ref,status:null});
+const target=(kind,name,ref)=>ref===undefined?{kind,name}:{kind,name,ref,status:null};
 const choice=(action,target,stake='low',purpose='辨明眼前情况')=>({action,target,stake,purpose,anchor:0});
-const allows=(built,value)=>accepts(built.named,built.named.properties.choices.items,value);
+const allows=(built,value)=>{const {anchor,...emitted}=value;if(emitted.action.startsWith('interact:'))delete emitted.stake;return accepts(built.named,built.named.properties.choices.items,emitted);};
+
+function namedOpening(actor,notes=[]){return {blocks:[{kind:'narration',text:'船夫指着渡口，告诉你船上的陶罐是在上游找到的。'}],choices:[choice('interact:ask',actor),choice('interact:observe',actor),choice('interact:decline',actor)],title:'渡口陶罐',location:'渡口',memoryDeltas:notes,story:{pattern:'investigation',beat:'progress',anchors:[0]}};}
+
+test('native compact targets and omitted status bind bare-name memories to the same actor as the selected action',()=>{
+  const c=context(),person={kind:'person',name:'船夫'},built=generation(c);
+  assert.deepEqual(built.named.$defs.personNewTarget.required,['kind','name']);
+  for(const actor of [person,{...person,ref:''},{...person,ref:'',status:null},{...person,ref:null},{...person,ref:'null'}]){
+    const wire=namedOpening(actor,[{target:'船夫',kind:'clue',status:'open',anchor:0}]);
+    const scene=decodeGlmScene(wire,c,{storyActions:true});assert.equal(scene.entities.length,1);
+    assert.ok(scene.choices.every(row=>row.targetId===scene.entities[0].id));assert.equal(scene.memoryDeltas[0].entityId,scene.entities[0].id);
+    assert.equal(scene.memoryDeltas[0].text,wire.blocks[0].text);assert.equal(scene.memoryDeltas[0].kind,'clue');
+  }
+  c.entities=[{id:'old:boatman',kind:'person',name:'船夫',status:'alive'}];
+  const known=decodeGlmScene(namedOpening('k1',[{target:'船夫',kind:'fact',anchor:0}]),c,{storyActions:true});assert.equal(known.choices[0].targetId,'old:boatman');assert.equal(known.memoryDeltas[0].entityId,'old:boatman');
+});
+
+test('typed scene-local symbols only resolve unambiguously declared participants and never rebind existing identities',()=>{
+  const c=context(),person=target('person','船夫');
+  for(const ref of ['p1','npc1']){
+    const scene=decodeGlmScene(namedOpening({...person,ref},[{target:ref,kind:'fact',anchor:0}]),c,{storyActions:true});assert.equal(scene.memoryDeltas[0].entityId,scene.choices[0].targetId);
+  }
+  const collided=namedOpening({...person,ref:'npc1'});collided.choices[1].target={kind:'person',name:'陌生人',ref:'npc1'};
+  assert.throws(()=>decodeGlmScene(collided,c,{storyActions:true}),{code:'GENERATED_SCENE_INVALID'});
+  for(const ref of ['l1','k1','npc99','r:other:t3:e:person_1','an-arbitrary-reference'])assert.throws(()=>decodeGlmScene(namedOpening({...person,ref}),c,{storyActions:true}),{code:'GENERATED_SCENE_INVALID'});
+  c.entities=[{id:'old:known',kind:'person',name:'船夫',status:'alive'}];
+  assert.throws(()=>decodeGlmScene(namedOpening({...person,ref:'p1'}),c,{storyActions:true}),{code:'GENERATED_SCENE_INVALID'});
+});
+
+test('unbound or ambiguous ordinary memory is omitted without creating an entity; identity conflicts remain errors',()=>{
+  const c=context(),person=target('person','船夫'),notes=[{target:'未知过客',kind:'fact',anchor:0},{target:'p9',kind:'relationship',anchor:0},{target:'船夫',kind:'fact',anchor:0}];
+  let scene=decodeGlmScene(namedOpening(person,notes),c,{storyActions:true});assert.equal(scene.entities.length,1);assert.equal(scene.memoryDeltas.length,1);
+  c.entities=[{id:'old:a',kind:'person',name:'船夫',status:'alive'},{id:'old:b',kind:'person',name:'船夫',status:'alive'}];
+  const ambiguous=namedOpening('k1',notes);ambiguous.choices[1].target='k2';scene=decodeGlmScene(ambiguous,c,{storyActions:true});assert.equal(scene.entities.length,2);assert.equal(scene.memoryDeltas.length,0);
+  for(const bad of [{target:'船夫',kind:'death',anchor:0},{target:'未知过客',kind:'promise',status:'open',anchor:0},{target:'k9',kind:'fact',anchor:0},{target:'r:other:t3:e:person_1',kind:'fact',anchor:0},{target:'未知过客',kind:'fact',status:'dead',anchor:0}])assert.throws(()=>decodeGlmScene({...ambiguous,memoryDeltas:[bad]},c,{storyActions:true}),{code:'GENERATED_SCENE_INVALID'});
+});
 
 test('v7 named memory offers only real open references with the allowed closure, and only people can die',()=>{
   const c=context(),actor=target('person','渡者'),place=target('place','渡口');
@@ -56,10 +91,12 @@ test('v7 named memory offers only real open references with the allowed closure,
   for(const [id,status,valid]of [['m1','broken',true],['m1','resolved',true],['m2','resolved',false],['m3','broken',false],['m3','resolved',true],['m4','resolved',false]])assert.equal(permits(next,{referenceId:id,status}),valid,id+'/'+status);
 });
 
-test('v7 choice anchors always name an existing block, and optional NPC traits can be omitted individually',()=>{
+test('v7 asks only for actual mechanical decisions, and optional NPC traits can be omitted individually',()=>{
   const built=generation(context()),schema=built.named;
   assert.equal(allows(built,choice('interact:observe','self')),true);
-  assert.equal(allows(built,{...choice('interact:observe','self'),anchor:3}),false);
+  const rule=schema.properties.choices.items,ask={action:'interact:observe',target:'self',purpose:'查看陶罐'};
+  assert.equal(accepts(schema,rule,ask),true);assert.equal(accepts(schema,rule,{...ask,anchor:0}),false);assert.equal(accepts(schema,rule,{...ask,stake:'low'}),false);
+  const recover={...ask,action:'rest:recover'};assert.equal(accepts(schema,rule,recover),false);assert.equal(accepts(schema,rule,{...recover,stake:'low'}),true);
   assert.equal(accepts(schema,schema.properties.story.properties.npcs.items,{target:target('person','渡者'),anchor:0,habit:'盘绳'}),true);
 });
 

@@ -32,7 +32,7 @@ async function setup(t){
         {action:'travel:road',target:{kind:'place',name:'村边茶棚',ref:'',status:null},stake:'low',purpose:'前往村边茶棚歇脚',anchor:0},
       ],title:'陶罐之后',location:'村口',memoryDeltas:[],story:{pattern:'investigation',beat:'progress',anchors:[0]}};
     }
-    globalThis.playableStory=async(name)=>{
+    globalThis.playableStory=async(name,engineMenu=false)=>{
       const archive=await open(name),mount=document.createElement('section');document.body.append(mount);
       const f={archive,mount,posts:[],gets:[],inferences:[],settlements:[],progress:[],holdNext:false,corrupt:false},sessionRef='session-'+name,cache=new Map();
       let previewReady;f.previewReady=new Promise(resolve=>previewReady=resolve);
@@ -46,6 +46,11 @@ async function setup(t){
       const ai={async run(model,input){
         f.inferences.push({model,input});
         const context=f.posts.at(-1).context,wire=context.phase==='opening'?capturedStoryWire():continuation(context);
+        if(engineMenu&&context.phase==='opening'){
+          wire.blocks.push({kind:'dialogue',speaker:{kind:'person',name:'灰衣汉子'},text:'听见了吗？缸底有东西在动。'});
+          // A real v7 sample wrote complete prose but used three unknown actions.
+          wire.choices=wire.choices.map(row=>({...row,action:'invented-command',extra:'untrusted suggestion'}));
+        }else if(engineMenu)delete wire.choices;
         if(f.corrupt)wire.story.receipt={elapsedDays:0};
         return new ReadableStream({start(controller){
           controller.enqueue(frame({model:GLM_MODEL_ID,choices:[{index:0,delta:{content:JSON.stringify(wire)}}]}));
@@ -53,7 +58,7 @@ async function setup(t){
           if(f.holdNext){f.holdNext=false;f.finish=finish;}else finish();
         }});
       }};
-      const api=createStoryApi({budget,config:{readiness:()=>profile},provider:generateScene});
+      const api=createStoryApi({budget,config:{readiness:()=>profile},provider:engineMenu?generateScene:(ai,p,c,o,r)=>generateScene(ai,p,c,o,{...r,engineMenu:false})});
       const client=createStoryClient({location:{protocol:'https:'},fetch:async(path,options)=>{
         if(path==='/api/story/turn')f.posts.push({...JSON.parse(options.body),saved:await archive.load()});
         else if(path.startsWith('/api/story/turn/'))f.gets.push(path);
@@ -70,7 +75,7 @@ async function setup(t){
       };
       f.session=createLiveSession({archive,client,onChange:render,onProgress:view=>{
         render(view);f.progress.push({turn:f.posts.at(-1).context.identity.turnId,preview:view.preview});
-        if(view.preview?.choices?.length===3)previewReady();
+        if(engineMenu?view.preview?.blocks?.some(block=>block.text):view.preview?.choices?.length===3)previewReady();
       }});
       mount.addEventListener('click',event=>{
         const button=event.target.closest('[data-live-choice]');if(!button||button.disabled)return;
@@ -86,7 +91,7 @@ async function setup(t){
   return browser;
 }
 
-test('the original 126-character opening becomes three usable choices after one real provider response',async t=>{
+test('legacy model-menu compatibility: the original 126-character opening becomes three usable choices after one real provider response',async t=>{
   const {page}=await setup(t),r=await page.evaluate(async()=>{
     const f=await playableStory('original-opening');f.holdNext=true;const starting=f.start();
     let timer;const visible=await Promise.race([f.previewReady.then(()=>true),new Promise(resolve=>timer=setTimeout(()=>resolve(false),2000))]);clearTimeout(timer);
@@ -101,7 +106,7 @@ test('the original 126-character opening becomes three usable choices after one 
   assert.equal(r.posts.length,1);assert.equal(r.inferences,1);assert.equal(r.posts[0].attempt.retryOf,null);assert.deepEqual(r.posts[0].saved.generation.context,r.posts[0].context);assert.equal(r.settlements.length,1);assert.equal(r.settlements[0].result.status,'ready');assert.equal(r.history.entries.length,1);
 });
 
-test('each original choice independently continues the same opening and commits its exact selected action once',async t=>{
+test('legacy model-menu compatibility: each original choice independently continues the same opening and commits its exact selected action once',async t=>{
   const {page}=await setup(t),rows=await page.evaluate(async()=>{
     const rows=[];
     for(let index=0;index<3;index++){
@@ -131,6 +136,29 @@ test('each original choice independently continues the same opening and commits 
   assert.equal(rows[2].view.state.currentScene.blocks[0].kind,'narration');assert.match(rows[2].view.state.currentScene.blocks[0].text,/没有追问/u);
 });
 
+test('the actual v7 HTTP route streams prose without phantom buttons and commits a playable engine menu despite three invented model commands',async t=>{
+  const {page}=await setup(t),r=await page.evaluate(async()=>{
+    const f=await playableStory('engine-menu-real-route',true);f.holdNext=true;
+    const starting=f.start();await Promise.race([f.previewReady,new Promise((_,reject)=>setTimeout(()=>reject(Error('no narrative draft')),3000))]);
+    const draft={buttons:f.buttons(),history:await f.archive.readHistory('captured-playable')};
+    f.finish();await starting;
+    const opening=f.session.view();if(opening.status!=='ready')throw Error(opening.errorCode);
+    const buttons=f.buttons(),choice=opening.state.currentScene.choices[0];
+    f.mount.querySelector('[data-live-choice]').click();await f.action;
+    const view=f.session.view(),history=await f.archive.readHistory('captured-playable'),reloaded=await f.reload();
+    return {draft,buttons,choice,opening,view,history,reloaded,posts:f.posts,settlements:f.settlements.length,calls:f.inferences.length,
+      requested:f.inferences[0].input.response_format.json_schema.schema.required,previews:f.progress.flatMap(p=>p.preview?.choices??[])};
+  });
+  assert.deepEqual(r.draft.buttons,[]);assert.deepEqual(r.previews,[]);assert.equal(r.draft.history.entries.length,0);
+  assert.deepEqual(r.requested,['blocks']);assert.deepEqual(r.opening.state.currentScene.blocks[0],capturedStoryWire().blocks[0]);
+  assert.equal(r.opening.state.currentScene.blocks[1].text,'听见了吗？缸底有东西在动。');
+  assert.ok(r.buttons.length>=2&&r.buttons.length<=3);assert.ok(r.buttons.every(row=>row.label&&row.choiceId&&!row.disabled));
+  assert.equal(r.view.status,'ready',r.view.errorCode);assert.equal(r.view.pending,null);assert.equal(r.view.state.revision,2);
+  assert.deepEqual(r.posts[1].context.receipt.action,r.choice);assert.equal(r.calls,2);assert.equal(r.posts.length,2);assert.equal(r.settlements,2);
+  assert.equal(r.history.entries.length,2);assert.deepEqual(r.history.entries[1].receipt.action,r.choice);
+  assert.deepEqual(r.reloaded.state,r.view.state);assert.equal(r.reloaded.pending,null);
+});
+
 test('broken structural metadata cannot commit a preview or trigger an unrequested second inference',async t=>{
   const {page}=await setup(t),r=await page.evaluate(async()=>{
     const f=await playableStory('broken-metadata');f.corrupt=true;await f.start();
@@ -141,7 +169,7 @@ test('broken structural metadata cannot commit a preview or trigger an unrequest
 
 test('generation failure feedback preserves progress and manual continuation without exposing quality rules',()=>{
   const state=createLiveGame({runId:'generation-message',seed:42,engineVersion:7}),pending=prepareOpening(state,{requestId:'opening'});
-  for(const errorCode of ['CHOICE_NOT_COMPILABLE','STORY_LENGTH_INVALID','GENERATED_SCENE_INVALID','KNOWLEDGE_UNAVAILABLE']){
+  for(const errorCode of ['CHOICE_NOT_COMPILABLE','STORY_LENGTH_INVALID','GENERATED_SCENE_INVALID','KNOWLEDGE_UNAVAILABLE','PROVIDER_RESPONSE_INVALID','OUTPUT_TRUNCATED']){
     const html=renderLiveJourney({state,pending,status:'paused',busy:false,errorCode,preview:{blocks:[],choices:originalLabels.map(label=>({label,complete:true}))}},[]);
     assert.match(html,/进度已保留/u);assert.match(html,/data-live-retry/u);assert.doesNotMatch(html,/字数|全名|称谓|校验/u);assert.doesNotMatch(html,/data-live-choice="/u);
   }

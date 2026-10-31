@@ -8,7 +8,10 @@ import { REALMS, DAYS_PER_YEAR, ITEMS } from '../game/cultivation/live/model.js'
 import { isV7Life, realmFor, nextRealmFor, ROOTS, PHYSIQUES, RELICS, TECHNIQUES, WORLD_TIERS } from '../game/cultivation/live/cultivation-rules.js';
 import { buildGenerationSchema } from './story-generation-schema.js';
 import { buildGlmWire,decodeGlmScene } from './story-glm-wire.js';
-import { buildNamedSceneSchema } from './story-named-targets.js';
+import { buildNamedSceneSchema,createNamedTargetLookup } from './story-named-targets.js';
+import {adaptV7ModelOutput,adaptV7EngineMenuOutput} from './story-model-output.js';
+import {buildStoryChoicePlan} from './story-choice-plan.js';
+import {readCompleteV7Wire,readCompleteV7Body} from './story-readable-wire.js';
 import { packStoryReferences } from './story-knowledge.js';
 import { validateRetrievalReceipt } from '../game/cultivation/live/retrieval-memory.js';
 
@@ -91,6 +94,28 @@ function settledLocation(context) {
   if(context.phase==='choice'&&context.director)return context.director.world.location;
   return context.memory.recent.find(record=>record.kind==='turn'&&record.turnId===context.identity.turnId-1)?.text.match(/^地点：([^\n]+)\n/u)?.[1]?.split('；刚才选择：')[0];
 }
+// The author receives the state after settlement and a plain-language preview
+// of possible decisions. The plan itself (IDs, actions, targets and costs)
+// belongs to the engine and is never requested from a narrative completion.
+function narrativePrompt(system,context,wire,location,plan,canClose,opening,canDisclose){
+  const selected=context.receipt.action,failed=context.receipt.cultivationResult?.check?.kind==='world-crossing'&&context.receipt.cultivationResult.check.success===false;
+  let focus='写出选定行动的眼前后果，停在新的决定前。';
+  if(context.phase==='opening')focus='从出生地眼前的一件具体事务写起，让一名能交谈的当地人亲口说一句有用的话，用独立 dialogue 和具名 speaker 标明他。';
+  else if(selected?.intent==='travel')focus=failed?'跨界未成功，仍在原地；只写这次尝试的实际后果。':'已经抵达选定地点，写目的地眼前的情景；旧地的人物不默认随行。';
+  else if(selected?.intent==='interact'){
+    if(selected.approach==='ask')focus='让被询问的人直接回答本次 selectedPurpose；不知道就解释原因，不重演提问。';
+    if(selected.approach==='observe')focus='准确回应 selectedPurpose 指定的人物、物件或环境，只写观察所得，不替玩家取走东西或出发。';
+    if(['decline','leave'].includes(selected.approach))focus='尊重已作出的拒绝或告辞，结束这一互动，不挽留、不继续原任务、不替玩家承诺回访。';
+  }
+  if(opening)focus='本次开局：'+opening.origin+'，起点'+opening.location+'；'+opening.goal+'。'+opening.dilemma+'优势：'+opening.strength+'；代价：'+opening.tradeoff+'。不代选、不旅行、不赠物。若有在场人物开口，以其真实姓名标明对白。';
+  focus+=growthPrompt(context);
+  if(canDisclose)focus+='若本场明确揭示对手，可用 story.opponent 记录：旁白写“姓名已入境界名”，目的、破绽须来自同段；不确定就省略。';
+  if(context.previousScene?.id===context.namespace+':t'+(context.identity.turnId-1)+':s:closed')focus+='先前互动已经结束；不再推进那件请求。';
+  return [
+    system+'\n先在 blocks 中用原创正文回应本次选择的实际结果。一至三段自然旁白或对白即可；一句话能答清就收住，不凑字数，不罗列额外资料。旁白无 speaker；对白 speaker 用输入中的活人别名或新人物 {kind:"person",name:"实际姓名"}。姓名是数据，不自行编造身份标识或生死状态。\n玩家的备选决定由游戏提供。possibleNextSteps 描述可以做、还没有做的事；让场景自然承接这些可能性，停在玩家决定前，不列菜单、不代选、不把任何备选当成已经发生的事实。\n只需写完 blocks 即可结束。位置、行囊与数值以 receipt 和 life 为准。'+(canClose?'如果这场确实解决了输入中的旧约定或线索，可另写 memoryDeltas，仅给对应的 referenceId 与合法状态；未解决就省略。':''),
+    JSON.stringify({selectedPurpose:selected?.label??'开启眼前的第一个事件',focus,settled:{location:location??null,items:context.life.items,elapsedDays:context.receipt.elapsedDays,itemChanges:context.receipt.itemChanges,relationChanges:wire.context.receipt.relationChanges},possibleNextSteps:plan.cues}),
+  ];
+}
 function buildProviderRequest(profile,context,knowledgeBundle) {
   validateStoryContext(context);
   const directed=isV7Life(context.life)&&context.director?.version===7;
@@ -108,7 +133,8 @@ function buildProviderRequest(profile,context,knowledgeBundle) {
     const wire=buildGlmWire(context,system,{storyActions:profile.storyActions===true});
     input.messages[0].content=wire.instructions;input.messages[1].content=JSON.stringify(wire.context);
     if(profile.storyActions===true){
-      input.messages[0].content+='\n合法动作与目标以schema中的完整分支配对为准，不交换目标类型；只声明实际引用的实体。';
+      const engineMenu=directed&&profile.engineMenu===true;
+      if(!engineMenu)input.messages[0].content+='\n合法动作与目标以schema中的完整分支配对为准，不交换目标类型；只声明实际引用的实体。';
       // Avoid native character caps and large action/target unions. The model
       // writes prose and semantic pairs; final decoding validates all of them.
       const blocks=structuredClone(wire.schema.properties.blocks);blocks.maxItems=4;
@@ -118,25 +144,32 @@ function buildProviderRequest(profile,context,knowledgeBundle) {
       if(respondent){blocks.maxItems=1;blocks.items={type:'object',additionalProperties:false,required:['kind','text','speaker'],properties:{kind:{const:'dialogue'},text:{type:'string',minLength:1},speaker:{const:respondent.id}}};}
       if(departure){blocks.maxItems=1;blocks.items={type:'object',additionalProperties:false,required:['kind','text'],properties:{kind:{const:'narration'},text:{type:'string',minLength:1}}};}
       const observation=action?.intent==='interact'&&action.approach==='observe';
-      if(observation){blocks.maxItems=1;blocks.items={type:'object',additionalProperties:false,required:['kind','text'],properties:{kind:{const:'narration'},text:{type:'string',minLength:1}}};}
+      if(observation&&!engineMenu){blocks.maxItems=1;blocks.items={type:'object',additionalProperties:false,required:['kind','text'],properties:{kind:{const:'narration'},text:{type:'string',minLength:1}}};}
       const previousLocation=context.memory.recent.find(record=>record.kind==='turn'&&record.turnId===context.identity.turnId-1)?.text.match(/^地点：([^\n]+)\n/u)?.[1]?.split('；刚才选择：')[0];
       const fixedLocation=settledLocation(context);
       const failedCrossing=context.receipt.cultivationResult?.check?.kind==='world-crossing'&&context.receipt.cultivationResult.check.success===false;
       const location=fixedLocation&&!fixedLocation.includes('…')?{const:fixedLocation}:wire.schema.properties.location;
-      const schema=buildNamedSceneSchema(wire.schema,wire.context,{blocks,location});
+      const schema=buildNamedSceneSchema(wire.schema,wire.context,{blocks,location,engineMenu});
       input.response_format={type:'json_schema',json_schema:{name:'cultivation_scene',strict:true,schema}};
-      input.messages[0].content=input.messages[0].content
-        .replace('blocks、choices、title、location、otherPeople、places、factions、memoryDeltas这8项','blocks、choices、title、location、memoryDeltas这5项')
-        .replace('blocks、choices、title、location、otherPeople、places、factions、memoryDeltas、story这9项','blocks、choices、title、location、memoryDeltas、story这6项')
-        .replace('先写blocks，再写choices，最后填写名单','先写blocks，再写choices，最后填写memoryDeltas')
-        .replace('每项只写action、targetId、stake、purpose、anchor','每项只写action、target、stake、purpose、anchor')
-        .replace(/已知实体完整沿用输入id[^\n]+/u,directed?'已有对象的target或speaker直接复制输入别名字符串，不重新声明或改名。新人物、地点、势力才写target={kind,name,ref,status}，name为自然中文名称，ref固定为空字符串""，status为null。新人物不能冒充已有对象。明确死亡写kind=death记忆，由服务端结算。speaker只用已有活人别名、新person对象或允许时的self。新记忆用target引用，不写entityId或单独名单。':'人物、地点、势力在引用处直接写target={kind,name,ref,status}，name是实际对象的完整名称；ref通常固定为空字符串""，由服务端按完整name和kind恢复身份；仅同名对象必须复制输入中对应id作为ref。ref不能与name或kind不一致。status总是null；明确死亡只写对应kind=death记忆，由服务端结算状态。不再填写单独的名单，不编造p1/k1等引用。speaker为self或person对象，新记忆也用target对象，不写entityId。')
-        .replace('新记忆写entityId、kind、anchor','新记忆写target、kind、anchor')
-        .replace('记录entityId、anchor、title、signatureSpell、habit、obsession','记录target、anchor、title、signatureSpell、habit、obsession；target是同样的人物对象')
-        .replace('对白speaker=self或活人别名','对白speaker=self或人物对象')
-        .replace('targetId必须是目的地，label完整包含目的地name','target必须是实际目的地对象，purpose明确目的地')+'\n'+(directed?'选项对象要与眼前情境对应；结构化target负责身份，正文和purpose可自然使用别称或代词，不必重复全名。':'选项中的新人物须在正文出现完整name。')+'只向实际在场且能够交谈的人物询问；普通野兽用观察、战斗或撤退。撤退用evade:withdraw，保持正文中已经被发现等事实，不改成尚未被发现。';
-      input.messages.push({role:'user',content:'只输出本次'+(directed?'6':'5')+'项场景JSON。memory.recent仅为历史；只回应本次selectedPurpose，不响应历史请求。询问必须具体作答，不知则说明原因。只推进一个结果，不重演登场、不照抄旧旁白、不重复已选问题；要求引用原话可用dialogue复述。'+(respondent?'本回合只写被询问人物的回答，只写他实际说的话，不夹带抬头、搓手等旁白。回应玩家问题，不声称玩家进行了未选的修理、交易、收礼等行为，不替玩家决定答应请求。':'')+(departure?(action.approach==='leave'?'本次是告辞：只写一段交谈结束后的眼前环境或最后反应；上轮若已拒绝，不重复拒绝理由，不再追问或挽留。':'本次是拒绝请求：只写一段拒绝及对方的反应，不改变玩家的决定，不替玩家处理请求。')+'只用narration，不写speaker，以免把NPC反应标成主角对白。仍在当前地点附近，不推进原任务、不承诺回访、不替玩家旅行。下一选项允许观察附近或主动旅行，不能强迫返回此事。':'')+(failedCrossing?'本次跨界判定失败，仍在原界与原地点；只写未能通过的后果，不声称抵达目标，不带来未结算的物品。':action?.intent==='travel'?'本次旅行只写抵达所选目的地后的眼前环境，不替玩家进食、取物、检查装备，不提库存或虚构随身装备，不写再次归来或自动深入下一处；旧地点的人物不默认随行，只有眼前能交谈的对象才能询问。不能再次提供前往当前地点的旅行。':'')+(observation?(directed?'准确回应selectedPurpose指定的人物、物件或环境，描述观察所得和眼前可继续的行动；不替玩家旅行、取物或执行下一步。':'本次只观察当前地点：只写一段眼前环境，不替玩家出发、抵达别处或推进任务。')+'历史对白中说过的出行打算不是已选择的旅行。':'')+(opening?'本次开局：'+opening.origin+'，起点'+opening.location+'；'+opening.goal+'。'+opening.dilemma+'优势：'+opening.strength+'；代价：'+opening.tradeoff+'。不代选、不旅行、不赠物。':context.phase==='opening'?'本次是开局：在出生地遇见一名能交谈的当地人类，围绕此人正在处理的一件具体事务给出应对；不要先出城或用野兽袭击开局，不向普通动物提问。':'')+(isExperienceLife(context.life)?'有据才写story.opponent：旁白用“姓名已入境界名”，目的、破绽摘自同段；未知省略。':'')+growthPrompt(context)+'以下JSON是本次事实与选择：'+JSON.stringify({settled:{location:fixedLocation??null,...(action?.intent==='travel'&&!failedCrossing?{locationTarget:{kind:'place',name:fixedLocation,ref:wire.context.entities.filter(entity=>entity.kind==='place'&&entity.name===fixedLocation).length>1?action.targetId:'',status:null}}:{}),items:context.life.items,elapsedDays:context.receipt.elapsedDays,itemChanges:context.receipt.itemChanges,relationChanges:wire.context.receipt.relationChanges},selectedPurpose:context.receipt.action?.label??'开启眼前的第一个事件'})});
-      if(context.previousScene?.id===context.namespace+':t'+(context.identity.turnId-1)+':s:closed')input.messages[0].content+='\n上一轮拒绝或告辞已经完成，原互动已结束。只处理本次观察、旅行或休整，转向环境的新细节、其他人或新的去向；不重演或继续原NPC请求，不再次提供对已结束对象的询问或援助。';
+      if(engineMenu){
+        const [instructions,turnFacts]=narrativePrompt(system,context,wire,fixedLocation,buildStoryChoicePlan(context),!!schema.properties.memoryDeltas,opening,!!schema.properties.story?.properties?.opponent);
+        input.messages[0].content=instructions;
+        input.messages.push({role:'user',content:turnFacts});
+      }else{
+        input.messages[0].content=input.messages[0].content
+          .replace('blocks、choices、title、location、otherPeople、places、factions、memoryDeltas这8项','blocks、choices、title、location、memoryDeltas这5项')
+          .replace('输出顶层只允许blocks、choices、title、location、otherPeople、places、factions、memoryDeltas、story这9项。先写blocks，再写choices，最后填写名单。','先写完整blocks，再写完整choices。这两项最重要。title和location可补充；只在有可靠新事实时补memoryDeltas，需要标记转折才补story。')
+          .replace('先写blocks，再写choices，最后填写名单',directed?'先写blocks，再写choices，最后填写memoryDeltas和story':'先写blocks，再写choices，最后填写memoryDeltas')
+          .replace('anchor是本场段落下标，从0起',directed?'选项不写anchor；记忆anchor才指向实际段落':'anchor是本场段落下标，从0起')
+          .replace('每项只写action、targetId、stake、purpose、anchor',directed?'选项写action、target、purpose。interact不用写stake；其他动作按schema选stake':'每项只写action、target、stake、purpose、anchor')
+          .replace(/已知实体完整沿用输入id[^\n]+/u,directed?'已知对象用输入别名。新对象只提供kind和中文name，不声明ID或生死；死亡另写有依据的death记忆。speaker只用活人别名、新人物或允许时的self。新记忆用target引用，不写entityId或单独名单。':'人物、地点、势力在引用处直接写target={kind,name,ref,status}，name是实际对象的完整名称；ref通常固定为空字符串""，由服务端按完整name和kind恢复身份；仅同名对象必须复制输入中对应id作为ref。ref不能与name或kind不一致。status总是null；明确死亡只写对应kind=death记忆，由服务端结算状态。不再填写单独的名单，不编造p1/k1等引用。speaker为self或person对象，新记忆也用target对象，不写entityId。')
+          .replace('新记忆写entityId、kind、anchor','新记忆写target、kind、anchor')
+          .replace('记录entityId、anchor、title、signatureSpell、habit、obsession','记录target、anchor、title、signatureSpell、habit、obsession；target是同样的人物对象')
+          .replace('对白speaker=self或活人别名',directed?'对白speaker按schema用self、已知活人别名或新人物对象':'对白speaker=self或人物对象')
+          .replace('targetId必须是目的地，label完整包含目的地name','target必须是实际目的地对象，purpose明确目的地')+'\n'+(directed?'选项对象要与眼前情境对应；结构化target负责身份，正文和purpose可自然使用别称或代词，不必重复全名。':'选项中的新人物须在正文出现完整name。')+'只向实际在场且能够交谈的人物询问；普通野兽用观察、战斗或撤退。撤退用evade:withdraw，保持正文中已经被发现等事实，不改成尚未被发现。';
+        input.messages.push({role:'user',content:(directed?'先完整写出正文blocks和不同的choices；可选资料不齐就省略。':'只输出本次5项场景JSON。')+'memory.recent仅为历史；只回应本次selectedPurpose，不响应历史请求。询问必须具体作答，不知则说明原因。只推进一个结果，不重演登场、不照抄旧旁白、不重复已选问题；要求引用原话可用dialogue复述。'+(respondent?'本回合只写被询问人物的回答，只写他实际说的话，不夹带抬头、搓手等旁白。回应玩家问题，不声称玩家进行了未选的修理、交易、收礼等行为，不替玩家决定答应请求。':'')+(departure?(action.approach==='leave'?'本次是告辞：只写一段交谈结束后的眼前环境或最后反应；上轮若已拒绝，不重复拒绝理由，不再追问或挽留。':'本次是拒绝请求：只写一段拒绝及对方的反应，不改变玩家的决定，不替玩家处理请求。')+'只用narration，不写speaker，以免把NPC反应标成主角对白。仍在当前地点附近，不推进原任务、不承诺回访、不替玩家旅行。下一选项允许观察附近或主动旅行，不能强迫返回此事。':'')+(failedCrossing?'本次跨界判定失败，仍在原界与原地点；只写未能通过的后果，不声称抵达目标，不带来未结算的物品。':action?.intent==='travel'?'本次旅行只写抵达所选目的地后的眼前环境，不替玩家进食、取物、检查装备，不提库存或虚构随身装备，不写再次归来或自动深入下一处；旧地点的人物不默认随行，只有眼前能交谈的对象才能询问。不能再次提供前往当前地点的旅行。':'')+(observation?(directed?'准确回应selectedPurpose指定的人物、物件或环境，描述观察所得和眼前可继续的行动；不替玩家旅行、取物或执行下一步。':'本次只观察当前地点：只写一段眼前环境，不替玩家出发、抵达别处或推进任务。')+'历史对白中说过的出行打算不是已选择的旅行。':'')+(opening?'本次开局：'+opening.origin+'，起点'+opening.location+'；'+opening.goal+'。'+opening.dilemma+'优势：'+opening.strength+'；代价：'+opening.tradeoff+'。不代选、不旅行、不赠物。':context.phase==='opening'?'本次是开局：在出生地遇见一名能交谈的当地人类，围绕此人正在处理的一件具体事务给出应对；不要先出城或用野兽袭击开局，不向普通动物提问。':'')+(isExperienceLife(context.life)?'有据才写story.opponent：旁白用“姓名已入境界名”，目的、破绽摘自同段；未知省略。':'')+growthPrompt(context)+'以下JSON是本次事实与选择：'+JSON.stringify({settled:{location:fixedLocation??null,...(action?.intent==='travel'&&!failedCrossing?{locationTarget:{kind:'place',name:fixedLocation,ref:wire.context.entities.filter(entity=>entity.kind==='place'&&entity.name===fixedLocation).length>1?action.targetId:'',status:null}}:{}),items:context.life.items,elapsedDays:context.receipt.elapsedDays,itemChanges:context.receipt.itemChanges,relationChanges:wire.context.receipt.relationChanges},selectedPurpose:context.receipt.action?.label??'开启眼前的第一个事件'})});
+        if(context.previousScene?.id===context.namespace+':t'+(context.identity.turnId-1)+':s:closed')input.messages[0].content+='\n上一轮拒绝或告辞已经完成，原互动已结束。只处理本次观察、旅行或休整，转向环境的新细节、其他人或新的去向；不重演或继续原NPC请求，不再次提供对已结束对象的询问或援助。';
+      }
     }else input.response_format={type:'json_schema',json_schema:{name:'cultivation_scene',strict:true,schema:wire.schema}};
     input.stream=true;input.stream_options={include_usage:true};
   }
@@ -183,6 +216,26 @@ function mappedCode(error) {
 }
 const pausedCodes=new Set(['FREE_QUOTA_EXHAUSTED','PROVIDER_BUSY','PROVIDER_TIMEOUT','PROVIDER_FAILED','BUDGET_UNAVAILABLE','KNOWLEDGE_UNAVAILABLE']);
 
+// A spare suggestion is not part of the settled action. If two original
+// suggestions remain, they can stand on their own. Never use this path to
+// conceal an identity conflict, a forged field or a consequential memory.
+function canIsolateMenu(wire,context){
+  if(wire.choices?.length!==3||wire.memoryDeltas.some(d=>d.kind==='death'||d.kind==='promise'||d.referenceId))return false;
+  const lookup=createNamedTargetLookup(context),refs=new Map(),allowed=['action','target','stake','purpose','anchor'];
+  try{
+    for(const c of wire.choices){
+      if(!c||typeof c!=='object'||Object.keys(c).some(k=>!allowed.includes(k)))return false;
+      const t=c.target;
+      if(typeof t==='string'){if(/[:/\\]/u.test(t))return false;if(/^k\d/u.test(t))lookup(t);continue;}
+      if(t&&typeof t==='object'){
+        const a=lookup(t);if(a.name===context.life.name||a.status!==null)return false;
+        if(t.ref){const key=JSON.stringify([a.kind,a.name]);if(refs.has(t.ref)&&refs.get(t.ref)!==key)return false;refs.set(t.ref,key);}
+      }
+    }
+    return true;
+  }catch{return false;}
+}
+
 export async function generateProviderScene(ai,profile,context,options={},assertProfileReady,knowledgeBundle) {
   const result={status:'rejected',accountingStatus:'complete',modelId:null,attemptId:null,inferencePerformed:false,usage:null,actualNeurons:null,stopReason:null,inputHash:null,inputBytes:null,nonThinkingValidated:null};
   try {
@@ -206,8 +259,15 @@ export async function generateProviderScene(ai,profile,context,options={},assert
     const choice=raw.choices?.[0],usage=raw.usage;
     if(usage&&['prompt_tokens','completion_tokens','total_tokens'].every(k=>Number.isSafeInteger(usage[k])&&usage[k]>=0)&&usage.total_tokens===usage.prompt_tokens+usage.completion_tokens){result.usage={promptTokens:usage.prompt_tokens,completionTokens:usage.completion_tokens,totalTokens:usage.total_tokens};}
     result.stopReason=['stop','length','tool_calls','content_filter'].includes(choice?.finish_reason)?choice.finish_reason:null;
-    if(result.stopReason==='length')fail('OUTPUT_TRUNCATED');
-    if(result.stopReason!=='stop')fail('STOP_REASON_INVALID');
+    const namedV7=directed&&profile.modelId===GLM_MODEL_ID&&profile.storyActions===true;
+    const engineMenu=namedV7&&profile.engineMenu===true;
+    // When decisions are engine-owned, a token ceiling can end optional prose
+    // after a complete block. It is still a length finish, with the same model,
+    // accounting, thinking and content checks as a normal completed response.
+    const capped=engineMenu&&result.stopReason==='length';
+    if(!capped&&result.stopReason==='length')fail('OUTPUT_TRUNCATED');
+    if(!capped&&result.stopReason!=='stop')fail('STOP_REASON_INVALID');
+    if(capped&&raw.model!==profile.modelId)fail('MODEL_RESPONSE_MISMATCH');
     if(!result.usage)fail('PROVIDER_USAGE_INVALID');
     if(result.usage.completionTokens>input.max_tokens)fail('OUTPUT_TOO_LARGE');
     // The provider may return both reasoning aliases with whitespace placeholders.
@@ -218,119 +278,167 @@ export async function generateProviderScene(ai,profile,context,options={},assert
       const value=choice.message[field];return value===undefined||value===null||typeof value==='string'&&!/\S/u.test(value);
     });
     if(!result.nonThinkingValidated)fail('PROVIDER_RESPONSE_INVALID');
-    let scene;try { scene=JSON.parse(choice.message.content); } catch { fail('PROVIDER_RESPONSE_INVALID'); }
-    // Source receipts are authored by this server after decoding. A model may
-    // never smuggle one into canonical output, including the older full schema.
-    if(scene&&Object.hasOwn(scene,'retrieval'))fail('GENERATED_SCENE_INVALID');
-    if(profile.storyActions===true)try{exactKeys(scene,['blocks','choices','title','location','memoryDeltas',...(context.director?['story']:[])]);}catch{fail('GENERATED_SCENE_INVALID');}
-    const composed=profile.storyActions===true&&Array.isArray(scene?.choices)&&scene.choices.every(proposal=>proposal&&Object.hasOwn(proposal,'purpose'));
-    if(profile.storyActions===true&&(!composed||scene.choices.some(proposal=>!Number.isInteger(proposal.anchor))||!Array.isArray(scene.memoryDeltas)||scene.memoryDeltas.some(delta=>!delta||!Object.hasOwn(delta,'referenceId')&&(!Number.isInteger(delta.anchor)||Object.hasOwn(delta,'text')))))fail('GENERATED_SCENE_INVALID');
-    let purposes=profile.storyActions===true?scene.choices.map(proposal=>proposal.purpose):[];
-    if(profile.modelId===GLM_MODEL_ID)scene=decodeGlmScene(scene,context,{storyActions:profile.storyActions===true});
-    if(directed&&composed&&scene.choices.length===3){
-      // Collapse only an exact duplicate after identity resolution. Distinct
-      // player purposes survive, and retained choices keep their original IDs.
-      const seen=new Set(),keep=[];
-      for(const [i,c] of scene.choices.entries()){
-        const key=JSON.stringify([c.intent,c.approach,c.targetId,c.stake,c.label,purposes[i]]);
-        if(!seen.has(key)){seen.add(key);keep.push(i);}
-      }
-      if(keep.length===2){scene.choices=keep.map(i=>scene.choices[i]);purposes=keep.map(i=>purposes[i]);}
-    }
-    if(retrievalReceipt!==null&&context.retrieval?.version===1)scene.retrieval=structuredClone(retrievalReceipt);
-    const selected=context.receipt.action,closed=context.previousScene?.id===context.namespace+':t'+(context.identity.turnId-1)+':s:closed',endedTarget=selected?.intent==='interact'&&selected.approach==='leave'?selected.targetId:closed?(context.memory.recent.find(record=>record.kind==='turn'&&record.turnId===context.identity.turnId-1)?.entityIds[0]??context.memory.facts.find(record=>record.id==='decision:'+(context.identity.turnId-1)&&record.turnId===context.identity.turnId-1&&record.kind==='fact'&&record.source==='rules')?.entityId??'self'):null,ended=endedTarget!==null;
-    const endedTargets=endedTarget==='self'&&closed?context.entities.filter(entity=>['person','faction'].includes(entity.kind)).map(entity=>entity.id):endedTarget&&endedTarget!=='self'?[endedTarget]:[];
-    if(profile.storyActions===true){
-      // Source grammar supplies rule-compatible actions. Keep semantic checks
-      // for real costs, but do not turn natural names or prose into v7 gates.
-      for(const [index,proposal]of scene.choices.entries()){
-        if(!directed&&['fight','evade'].includes(proposal.intent)){const target=scene.entities.find(entity=>entity.id===proposal.targetId);if(!target||!purposes[index].includes(target.name))fail('CHOICE_NOT_COMPILABLE');}
-        if(proposal.intent==='interact'&&proposal.approach==='help'&&(!directed&&!/行粮|干粮|口粮|食物|吃的|充饥|饱腹/u.test(purposes[index])||/包扎|止血|处理伤口|治疗|治愈|医治|急救|疗伤|复活/u.test(purposes[index])))fail('CHOICE_NOT_COMPILABLE');
-        if(proposal.intent==='interact'&&proposal.approach==='observe'&&proposal.targetId!=='self'){
-          const target=scene.entities.find(entity=>entity.id===proposal.targetId);
-          if(!target||target.kind==='place'&&target.name!==scene.location||!directed&&target.kind!=='place'&&target.name.length<=50&&!purposes[index].includes(target.name))fail('CHOICE_NOT_COMPILABLE');
+    let scene;
+    try { scene=JSON.parse(choice.message.content); }
+    catch { scene=engineMenu?readCompleteV7Body(choice.message.content,context):namedV7?readCompleteV7Wire(choice.message.content):null;if(!scene)fail(capped?'OUTPUT_TRUNCATED':'PROVIDER_RESPONSE_INVALID'); }
+    if(capped&&(!Array.isArray(scene?.blocks)||!scene.blocks.some(b=>['narration','dialogue'].includes(b?.kind)&&typeof b.text==='string'&&b.text.trim())))fail('OUTPUT_TRUNCATED');
+    if(namedV7&&!engineMenu)try { scene=adaptV7ModelOutput(scene,context); } catch { fail('GENERATED_SCENE_INVALID'); }
+    const wire=scene;
+    function accept(scene,indices){
+      // Source receipts are authored by this server after decoding. A model may
+      // never smuggle one into canonical output, including the older full schema.
+      if(scene&&Object.hasOwn(scene,'retrieval'))fail('GENERATED_SCENE_INVALID');
+      if(profile.storyActions===true)try{exactKeys(scene,['blocks','choices','title','location','memoryDeltas',...(context.director?['story']:[])]);}catch{fail('GENERATED_SCENE_INVALID');}
+      const composed=profile.storyActions===true&&Array.isArray(scene?.choices)&&scene.choices.every(proposal=>proposal&&Object.hasOwn(proposal,'purpose'));
+      if(profile.storyActions===true&&(!composed||scene.choices.some(proposal=>!Number.isInteger(proposal.anchor))||!Array.isArray(scene.memoryDeltas)||scene.memoryDeltas.some(delta=>!delta||!Object.hasOwn(delta,'referenceId')&&(!Number.isInteger(delta.anchor)||Object.hasOwn(delta,'text')))))fail('GENERATED_SCENE_INVALID');
+      let purposes=profile.storyActions===true?scene.choices.map(proposal=>proposal.purpose):[];
+      if(profile.modelId===GLM_MODEL_ID)scene=decodeGlmScene(scene,context,{storyActions:profile.storyActions===true});
+      if(indices)for(const [i,p] of scene.choices.entries())p.id=p.id.slice(0,-1)+['a','b','c'][indices[i]];
+      if(!engineMenu&&directed&&composed&&scene.choices.length===3){
+        // Collapse only an exact duplicate after identity resolution. Distinct
+        // player purposes survive, and retained choices keep their original IDs.
+        const seen=new Set(),keep=[];
+        for(const [i,c] of scene.choices.entries()){
+          const key=JSON.stringify([c.intent,c.approach,c.targetId,c.stake,c.label,purposes[i]]);
+          if(!seen.has(key)){seen.add(key);keep.push(i);}
         }
-        if(ended&&proposal.intent==='interact'&&endedTargets.includes(proposal.targetId))fail('CHOICE_NOT_COMPILABLE');
+        if(keep.length===2){scene.choices=keep.map(i=>scene.choices[i]);purposes=keep.map(i=>purposes[i]);}
       }
-      if(!directed&&scene.choices.every(proposal=>proposal.intent==='interact'&&['decline','leave'].includes(proposal.approach)))fail('CHOICE_NOT_COMPILABLE');
-    }
-    if(profile.storyActions===true&&!directed&&context.phase==='opening'&&scene.blocks.some(block=>block.kind==='dialogue'&&block.speaker==='self'))fail('GENERATED_SCENE_INVALID');
-    if(profile.storyActions===true){
-      const previousLocation=context.memory.recent.find(record=>record.kind==='turn'&&record.turnId===context.identity.turnId-1)?.text.match(/^地点：([^\n]+)\n/u)?.[1]?.split('；刚才选择：')[0];
-      const fixedLocation=settledLocation(context);
-      if(fixedLocation&&!fixedLocation.includes('…')&&scene.location!==fixedLocation)fail('GENERATED_SCENE_INVALID');
-      if(!directed&&selected?.intent==='interact'&&selected.approach==='observe'&&(scene.blocks.length!==1||scene.blocks[0].kind!=='narration'))fail('GENERATED_SCENE_INVALID');
-    }
-    if(profile.storyActions===true&&!directed&&selected?.intent==='interact'&&selected.approach==='ask'&&context.entities.some(entity=>entity.id===selected.targetId&&entity.kind==='person'&&entity.status!=='dead')&&(scene.blocks.length!==1||scene.blocks.some(block=>block.kind!=='dialogue'||block.speaker!==selected.targetId)))fail('GENERATED_SCENE_INVALID');
-    if(profile.storyActions===true&&!directed&&selected?.intent==='interact'&&['decline','leave'].includes(selected.approach)){
-      if(scene.blocks.length!==1||scene.blocks[0].kind!=='narration')fail('GENERATED_SCENE_INVALID');
-    }
-    try {
-      const validated=validateGeneratedScene(scene,context,{checkNextContext:next=>providerInput(profile,next),continuity:profile.storyActions===true,requireExit:profile.storyActions===true&&!context.director});
+      if(retrievalReceipt!==null&&context.retrieval?.version===1)scene.retrieval=structuredClone(retrievalReceipt);
+      const selected=context.receipt.action,closed=context.previousScene?.id===context.namespace+':t'+(context.identity.turnId-1)+':s:closed',endedTarget=selected?.intent==='interact'&&selected.approach==='leave'?selected.targetId:closed?(context.memory.recent.find(record=>record.kind==='turn'&&record.turnId===context.identity.turnId-1)?.entityIds[0]??context.memory.facts.find(record=>record.id==='decision:'+(context.identity.turnId-1)&&record.turnId===context.identity.turnId-1&&record.kind==='fact'&&record.source==='rules')?.entityId??'self'):null,ended=endedTarget!==null;
+      const endedTargets=endedTarget==='self'&&closed?context.entities.filter(entity=>['person','faction'].includes(entity.kind)).map(entity=>entity.id):endedTarget&&endedTarget!=='self'?[endedTarget]:[];
       if(profile.storyActions===true){
-        const texts=[validated.title,validated.location,...validated.blocks.map(block=>block.text),...validated.memoryDeltas.filter(delta=>!Object.hasOwn(delta,'referenceId')).map(delta=>delta.text)];
-        if(texts.some(text=>/\b(?:interact|travel|practice|explore|negotiate|fight|evade|rest|craft):[a-z]+\b/u.test(text)||Object.values(ITEMS).some(name=>text.includes(name+'='))))fail('GENERATED_SCENE_INVALID');
-        const recent=closed?[...context.memory.recent,...context.memory.facts,...context.memory.clues,...context.memory.promises,...context.memory.summaries].filter(record=>typeof record.text==='string'):context.memory.recent.filter(record=>record.kind==='turn'),seen=new Set();
-        for(const block of validated.blocks){
-          if(!directed&&block.kind==='narration'&&block.text.length>=40&&(seen.has(block.text)||recent.some(record=>record.text.includes(block.text))))fail('REPEATED_SCENE');
-          seen.add(block.text);
+        // Source grammar supplies rule-compatible actions. Keep semantic checks
+        // for real costs, but do not turn natural names or prose into v7 gates.
+        for(const [index,proposal]of scene.choices.entries()){
+          if(!directed&&['fight','evade'].includes(proposal.intent)){const target=scene.entities.find(entity=>entity.id===proposal.targetId);if(!target||!purposes[index].includes(target.name))fail('CHOICE_NOT_COMPILABLE');}
+          if(proposal.intent==='interact'&&proposal.approach==='help'&&(!directed&&!/行粮|干粮|口粮|食物|吃的|充饥|饱腹/u.test(purposes[index])||/包扎|止血|处理伤口|治疗|治愈|医治|急救|疗伤|复活/u.test(purposes[index])))fail('CHOICE_NOT_COMPILABLE');
+          if(proposal.intent==='interact'&&proposal.approach==='observe'&&proposal.targetId!=='self'){
+            const target=scene.entities.find(entity=>entity.id===proposal.targetId);
+            if(!target||target.kind==='place'&&target.name!==scene.location||!directed&&target.kind!=='place'&&target.name.length<=50&&!purposes[index].includes(target.name))fail('CHOICE_NOT_COMPILABLE');
+          }
+          if(ended&&proposal.intent==='interact'&&endedTargets.includes(proposal.targetId))fail('CHOICE_NOT_COMPILABLE');
         }
-        if(!directed&&context.receipt.elapsedDays>0)for(const delta of validated.memoryDeltas){
-          const actor=context.entities.find(entity=>entity.id===delta.entityId&&['person','faction'].includes(entity.kind));
-          if(actor&&!Object.hasOwn(delta,'referenceId')&&!validated.blocks.some(block=>block.kind==='dialogue'&&block.speaker===actor.id||(context.receipt.action?.intent!=='travel'||actor.kind==='faction')&&block.text.includes(actor.name)))fail('GENERATED_SCENE_INVALID');
-        }
+        if(!directed&&scene.choices.every(proposal=>proposal.intent==='interact'&&['decline','leave'].includes(proposal.approach)))fail('CHOICE_NOT_COMPILABLE');
       }
-      // Apply this narrative check only to new provider output. Canonical scene
-      // validation and previously saved/cached scene recovery remain unchanged.
-      for(const [index,proposal]of validated.choices.entries()){
-        if(profile.storyActions===true&&proposal.intent==='explore'&&!proposal.label.includes(ITEMS[proposal.targetId]))fail('CHOICE_NOT_COMPILABLE');
+      if(profile.storyActions===true&&!directed&&context.phase==='opening'&&scene.blocks.some(block=>block.kind==='dialogue'&&block.speaker==='self'))fail('GENERATED_SCENE_INVALID');
+      if(profile.storyActions===true){
+        const previousLocation=context.memory.recent.find(record=>record.kind==='turn'&&record.turnId===context.identity.turnId-1)?.text.match(/^地点：([^\n]+)\n/u)?.[1]?.split('；刚才选择：')[0];
+        const fixedLocation=settledLocation(context);
+        if(fixedLocation&&!fixedLocation.includes('…')&&scene.location!==fixedLocation)fail('GENERATED_SCENE_INVALID');
+        if(!directed&&selected?.intent==='interact'&&selected.approach==='observe'&&(scene.blocks.length!==1||scene.blocks[0].kind!=='narration'))fail('GENERATED_SCENE_INVALID');
+      }
+      if(profile.storyActions===true&&!directed&&selected?.intent==='interact'&&selected.approach==='ask'&&context.entities.some(entity=>entity.id===selected.targetId&&entity.kind==='person'&&entity.status!=='dead')&&(scene.blocks.length!==1||scene.blocks.some(block=>block.kind!=='dialogue'||block.speaker!==selected.targetId)))fail('GENERATED_SCENE_INVALID');
+      if(profile.storyActions===true&&!directed&&selected?.intent==='interact'&&['decline','leave'].includes(selected.approach)){
+        if(scene.blocks.length!==1||scene.blocks[0].kind!=='narration')fail('GENERATED_SCENE_INVALID');
+      }
+      try {
+        const validated=validateGeneratedScene(scene,context,{checkNextContext:next=>providerInput(profile,next),continuity:profile.storyActions===true,requireExit:profile.storyActions===true&&!context.director});
         if(profile.storyActions===true){
-          const actor=validated.entities.find(entity=>entity.id===proposal.targetId&&['person','faction'].includes(entity.kind));
-          if(actor&&!directed){
-            const nearby=context.receipt.elapsedDays===0&&context.memory.recent.some(record=>record.kind==='turn'&&record.turnId===context.identity.turnId-1&&record.text.includes(actor.name));
-            if(proposal.approach!=='leave'&&!proposal.label.includes(actor.name)||!nearby&&!validated.blocks.some(block=>block.kind==='dialogue'&&block.speaker===actor.id||(context.receipt.action?.intent!=='travel'||actor.kind==='faction'||!context.entities.some(entity=>entity.id===actor.id))&&block.text.includes(actor.name)))fail('CHOICE_NOT_COMPILABLE');
-            if(['fight','evade'].includes(proposal.intent)){
-              const prefix=(proposal.intent==='fight'?'迎战':'避开')+actor.name,label=proposal.label.trim(),tail=label.slice(prefix.length);
-              if(!label.startsWith(prefix)||tail&&!/^[，,:：]/u.test(tail))fail('CHOICE_NOT_COMPILABLE');
-            }
+          const texts=[validated.title,validated.location,...validated.blocks.map(block=>block.text),...validated.memoryDeltas.filter(delta=>!Object.hasOwn(delta,'referenceId')).map(delta=>delta.text)];
+          if(texts.some(text=>/\b(?:interact|travel|practice|explore|negotiate|fight|evade|rest|craft):[a-z]+\b/u.test(text)||Object.values(ITEMS).some(name=>text.includes(name+'='))))fail('GENERATED_SCENE_INVALID');
+          const recent=closed?[...context.memory.recent,...context.memory.facts,...context.memory.clues,...context.memory.promises,...context.memory.summaries].filter(record=>typeof record.text==='string'):context.memory.recent.filter(record=>record.kind==='turn'),seen=new Set();
+          for(const block of validated.blocks){
+            if(!directed&&block.kind==='narration'&&block.text.length>=40&&(seen.has(block.text)||recent.some(record=>record.text.includes(block.text))))fail('REPEATED_SCENE');
+            seen.add(block.text);
+          }
+          if(!directed&&context.receipt.elapsedDays>0)for(const delta of validated.memoryDeltas){
+            const actor=context.entities.find(entity=>entity.id===delta.entityId&&['person','faction'].includes(entity.kind));
+            if(actor&&!Object.hasOwn(delta,'referenceId')&&!validated.blocks.some(block=>block.kind==='dialogue'&&block.speaker===actor.id||(context.receipt.action?.intent!=='travel'||actor.kind==='faction')&&block.text.includes(actor.name)))fail('GENERATED_SCENE_INVALID');
           }
         }
-        const selected=context.receipt.action;
-        if(profile.storyActions===true&&!directed&&selected?.intent==='interact'&&['ask','observe'].includes(selected.approach)&&proposal.intent===selected.intent&&proposal.approach===selected.approach&&proposal.targetId===selected.targetId&&proposal.label.trim()===selected.label.trim())fail('CHOICE_NOT_COMPILABLE');
-        // Costs are compiled by the rules and shown separately by the UI.
-        // Legacy labels retain their old duration check. V7 prose may refer to
-        // past years or times; it cannot override the separately compiled cost.
-        if(!directed&&/[0-9零〇一二两三四五六七八九十百千万半]+\s*(?:个\s*)?(?:年|月|天|日|晚|夜|周|星期|时辰|小时|分钟|刻钟|炷香)/u.test(proposal.label))fail('CHOICE_NOT_COMPILABLE');
-        if(proposal.intent==='negotiate'){
-          // Asking about a route is dialogue; a label beginning with an actual
-          // journey must use a travel action instead of negotiation mechanics.
-          if(/^(?:返回|前往|赶往|赶赴|启程|出发|跟随|搭车|乘车|乘船)/u.test(proposal.label))fail('CHOICE_NOT_COMPILABLE');
-          if(/购买|买下|买走|买入|购入/u.test(proposal.label))fail('CHOICE_NOT_COMPILABLE');
-          const v7=isV7Life(context.life),purpose=composed?purposes[index]:proposal.label;
-          if(v7&&proposal.approach==='black-market'){
-            // Black-market rules sell one held relic, or an artifact only when
-            // no relic is held. Require an explicit single-item sale so a
-            // purchase, question, or different quantity cannot consume it.
-            const sold=(context.life.items.relic??0)>0?'relic':'artifact';
-            const sale=/^(?:出售|卖出|卖掉)(?:[一1](?:件|个|枚|份))?(古修遗物|法器)(?:[，,]?(?:换取|换得|兑换)灵石)?[。！!]*$/u.exec(purpose.trim());
-            if(!(context.life.items[sold]>0)||sale?.[1]!==ITEMS[sold])fail('CHOICE_NOT_COMPILABLE');
-          }else if(/卖出|卖掉|出售/u.test(proposal.label)||v7&&/^(?:买|购|收购|卖|出售|售出)/u.test(purpose.trim()))fail('CHOICE_NOT_COMPILABLE');
-          const exchange=/(?:换取|换得|兑换)(.+)$/u.exec(proposal.label);
-          // Negotiation rules grant only stones (cooperate/pressure) or
-          // supplies (bargain), never the named object offered by an NPC.
-          const resource=ITEMS[proposal.approach==='bargain'?'supplies':'stones'];
-          if(exchange&&exchange[1].trim().replace(/[。！!]+$/u,'')!==resource)fail('CHOICE_NOT_COMPILABLE');
+        // Apply this narrative check only to new provider output. Canonical scene
+        // validation and previously saved/cached scene recovery remain unchanged.
+        for(const [index,proposal]of validated.choices.entries()){
+          if(profile.storyActions===true&&proposal.intent==='explore'&&!proposal.label.includes(ITEMS[proposal.targetId]))fail('CHOICE_NOT_COMPILABLE');
+          if(profile.storyActions===true){
+            const actor=validated.entities.find(entity=>entity.id===proposal.targetId&&['person','faction'].includes(entity.kind));
+            if(actor&&!directed){
+              const nearby=context.receipt.elapsedDays===0&&context.memory.recent.some(record=>record.kind==='turn'&&record.turnId===context.identity.turnId-1&&record.text.includes(actor.name));
+              if(proposal.approach!=='leave'&&!proposal.label.includes(actor.name)||!nearby&&!validated.blocks.some(block=>block.kind==='dialogue'&&block.speaker===actor.id||(context.receipt.action?.intent!=='travel'||actor.kind==='faction'||!context.entities.some(entity=>entity.id===actor.id))&&block.text.includes(actor.name)))fail('CHOICE_NOT_COMPILABLE');
+              if(['fight','evade'].includes(proposal.intent)){
+                const prefix=(proposal.intent==='fight'?'迎战':'避开')+actor.name,label=proposal.label.trim(),tail=label.slice(prefix.length);
+                if(!label.startsWith(prefix)||tail&&!/^[，,:：]/u.test(tail))fail('CHOICE_NOT_COMPILABLE');
+              }
+            }
+          }
+          const selected=context.receipt.action;
+          if(profile.storyActions===true&&!directed&&selected?.intent==='interact'&&['ask','observe'].includes(selected.approach)&&proposal.intent===selected.intent&&proposal.approach===selected.approach&&proposal.targetId===selected.targetId&&proposal.label.trim()===selected.label.trim())fail('CHOICE_NOT_COMPILABLE');
+          // Costs are compiled by the rules and shown separately by the UI.
+          // Legacy labels retain their old duration check. V7 prose may refer to
+          // past years or times; it cannot override the separately compiled cost.
+          if(!directed&&/[0-9零〇一二两三四五六七八九十百千万半]+\s*(?:个\s*)?(?:年|月|天|日|晚|夜|周|星期|时辰|小时|分钟|刻钟|炷香)/u.test(proposal.label))fail('CHOICE_NOT_COMPILABLE');
+          if(proposal.intent==='negotiate'){
+            // Asking about a route is dialogue; a label beginning with an actual
+            // journey must use a travel action instead of negotiation mechanics.
+            if(/^(?:返回|前往|赶往|赶赴|启程|出发|跟随|搭车|乘车|乘船)/u.test(proposal.label))fail('CHOICE_NOT_COMPILABLE');
+            if(/购买|买下|买走|买入|购入/u.test(proposal.label))fail('CHOICE_NOT_COMPILABLE');
+            const v7=isV7Life(context.life),purpose=composed?purposes[index]:proposal.label;
+            if(v7&&proposal.approach==='black-market'){
+              // Black-market rules sell one held relic, or an artifact only when
+              // no relic is held. Require an explicit single-item sale so a
+              // purchase, question, or different quantity cannot consume it.
+              const sold=(context.life.items.relic??0)>0?'relic':'artifact';
+              const sale=/^(?:出售|卖出|卖掉)(?:[一1](?:件|个|枚|份))?(古修遗物|法器)(?:[，,]?(?:换取|换得|兑换)灵石)?[。！!]*$/u.exec(purpose.trim());
+              if(!(context.life.items[sold]>0)||sale?.[1]!==ITEMS[sold])fail('CHOICE_NOT_COMPILABLE');
+            }else if(/卖出|卖掉|出售/u.test(proposal.label)||v7&&/^(?:买|购|收购|卖|出售|售出)/u.test(purpose.trim()))fail('CHOICE_NOT_COMPILABLE');
+            const exchange=/(?:换取|换得|兑换)(.+)$/u.exec(proposal.label);
+            // Negotiation rules grant only stones (cooperate/pressure) or
+            // supplies (bargain), never the named object offered by an NPC.
+            const resource=ITEMS[proposal.approach==='bargain'?'supplies':'stones'];
+            if(exchange&&exchange[1].trim().replace(/[。！!]+$/u,'')!==resource)fail('CHOICE_NOT_COMPILABLE');
+          }
+          if(proposal.intent==='travel'){
+            const destination=validated.entities.find(entity=>entity.id===proposal.targetId&&entity.kind==='place');
+            if(!destination||!proposal.label.includes(destination.name)||destination.name===validated.location)fail('CHOICE_NOT_COMPILABLE');
+          }
         }
-        if(proposal.intent==='travel'){
-          const destination=validated.entities.find(entity=>entity.id===proposal.targetId&&entity.kind==='place');
-          if(!destination||!proposal.label.includes(destination.name)||destination.name===validated.location)fail('CHOICE_NOT_COMPILABLE');
-        }
+        return validated;
       }
-      result.scene=validated;
+      catch(error) {
+        if(error?.code==='GENERATED_SCENE_INVALID')result.structureDiagnostic=structureDiagnostic(scene);
+        throw error;
+      }
     }
-    catch(error) {
-      if(error?.code==='GENERATED_SCENE_INVALID')result.structureDiagnostic=structureDiagnostic(scene);
-      throw error;
+    if(engineMenu){
+      // An author's annotations are proposals. Validate the full response once
+      // in the usual case. If rejected, the identical authored blocks must
+      // stand on their own before any proposal may be considered separately.
+      const validate=source=>{
+        let adapted;try{adapted=adaptV7EngineMenuOutput(source,context);}catch{fail('GENERATED_SCENE_INVALID');}
+        return accept(adapted);
+      };
+      try{result.scene=validate(wire);}
+      catch(fullError){
+        if(!wire||!['memoryDeltas','story','title','location'].some(k=>Object.hasOwn(wire,k)))throw fullError;
+        let retained={blocks:wire.blocks};
+        result.scene=validate(retained); // No recovery from a failed playable core.
+        function propose(patch){
+          const next={...retained,...patch};
+          try{const accepted=validate(next);retained=next;result.scene=accepted;return true;}catch{return false;}
+        }
+        const rows=wire.memoryDeltas;
+        if(Array.isArray(rows)&&rows.length&&!propose({memoryDeltas:rows})){
+          // Never run exponential subset searches. The canonical contract has
+          // sixteen memory slots. Keep admissible rows in their original order;
+          // later proposals cannot override earlier accepted consequences.
+          for(const row of rows.slice(0,16))propose({memoryDeltas:[...(retained.memoryDeltas??[]),row]});
+        }
+        const notes=Object.fromEntries(['title','location','story'].filter(k=>Object.hasOwn(wire,k)).map(k=>[k,wire[k]]));
+        if(Object.keys(notes).length&&!propose(notes))for(const key of Object.keys(notes))propose({[key]:notes[key]});
+      }
+      delete result.structureDiagnostic;
+    }else{
+      try { result.scene=accept(wire); }
+      catch(first){
+        if(!namedV7||!['CHOICE_NOT_COMPILABLE','GENERATED_SCENE_INVALID'].includes(first?.code)||!canIsolateMenu(wire,context))throw first;
+        // Local projections of the same completed response; never re-infer.
+        for(const ids of [[0,1],[0,2],[1,2]]){
+          try{result.scene=accept({...wire,choices:ids.map(i=>wire.choices[i])},ids);break;}catch{}
+        }
+        if(!result.scene)throw first;
+        delete result.structureDiagnostic;
+      }
     }
     result.status='ready';
   } catch(error) {
