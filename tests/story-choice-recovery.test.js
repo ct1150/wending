@@ -34,7 +34,8 @@ async function setup(t){
     }
     globalThis.playableStory=async(name,engineMenu=false)=>{
       const archive=await open(name),mount=document.createElement('section');document.body.append(mount);
-      const f={archive,mount,posts:[],gets:[],inferences:[],settlements:[],progress:[],holdNext:false,corrupt:false},sessionRef='session-'+name,cache=new Map();
+      const sessionRef='session-'+name,cache=new Map();
+      const f={archive,mount,cache,posts:[],gets:[],inferences:[],settlements:[],progress:[],holdNext:false,corrupt:false};
       let previewReady;f.previewReady=new Promise(resolve=>previewReady=resolve);
       const budget={
         async admit(){return {kind:'allowed'};},
@@ -51,6 +52,7 @@ async function setup(t){
           // A real v7 sample wrote complete prose but used three unknown actions.
           wire.choices=wire.choices.map(row=>({...row,action:'invented-command',extra:'untrusted suggestion'}));
         }else if(engineMenu)delete wire.choices;
+        if(f.authoredBlocks)wire.blocks=f.authoredBlocks;
         if(f.corrupt)wire.story.receipt={elapsedDays:0};
         return new ReadableStream({start(controller){
           controller.enqueue(frame({model:GLM_MODEL_ID,choices:[{index:0,delta:{content:JSON.stringify(wire)}}]}));
@@ -84,7 +86,7 @@ async function setup(t){
       });
       f.start=()=>f.session.start({runId:'captured-playable',seed:42,engineVersion:7});
       f.buttons=()=>[...mount.querySelectorAll('[data-live-choices] button')].map(button=>({disabled:button.disabled,choiceId:button.dataset.liveChoice??null,label:button.querySelector('.journey-choice-label').textContent.replace(/^\d+\.\s*/u,'')}));
-      f.reload=async()=>{const reloaded=createLiveSession({archive:await open(name),client});await reloaded.load();await reloaded.resume();return reloaded.view();};
+      f.reload=async()=>{f.session=createLiveSession({archive:await open(name),client,onChange:render});await f.session.load();await f.session.resume();return f.session.view();};
       return f;
     };
   });
@@ -157,6 +159,44 @@ test('the actual v7 HTTP route streams prose without phantom buttons and commits
   assert.deepEqual(r.posts[1].context.receipt.action,r.choice);assert.equal(r.calls,2);assert.equal(r.posts.length,2);assert.equal(r.settlements,2);
   assert.equal(r.history.entries.length,2);assert.deepEqual(r.history.entries[1].receipt.action,r.choice);
   assert.deepEqual(r.reloaded.state,r.view.state);assert.equal(r.reloaded.pending,null);
+});
+
+test('a saved rejected inquiry retries once, then its negotiated action survives refresh and settles once',async t=>{
+  const {page}=await setup(t),r=await page.evaluate(async()=>{
+    const f=await playableStory('retry-trade',true),runId='trade-speaker',name='购买香烛的妇人';
+    f.authoredBlocks=[{kind:'dialogue',speaker:{kind:'person',name},text:'桥旁还有一艘船。'}];
+    const opening=await f.session.start({runId,seed:5,engineVersion:7,experienceVersion:1});
+    const inquiry=opening.state.currentScene.choices.find(choice=>choice.approach==='ask');
+    const requestId='saved-inquiry',attempt={id:'previous-inference',sessionRef:f.posts[0].attempt.sessionRef,retryOf:null};
+    const pending=engine.prepareChoice(opening.state,{requestId,choiceId:inquiry.id});
+    const records=await f.archive.readStoryRecords(runId,{entityIds:[inquiry.targetId],recent:true});
+    const context=memory.buildStoryContext(opening.state,pending,records.records,{selection:'relevance-v1',openTotal:records.openTotal,continuity:true});
+    // Seed the original durable decision and the terminal response a 6.0.1 client could read.
+    await f.archive.prepare(pending);
+    await f.archive.setAttempt({runId,requestId,expectedAttemptId:null,attempt,generation:{storyActions:true,context}});
+    f.cache.set(attempt.id,{protocolVersion:1,requestId,attemptId:attempt.id,sessionRef:attempt.sessionRef,status:'rejected',errorCode:'CHOICE_NOT_COMPILABLE',retry:null});
+    const paused=await f.reload(),callsAfterLoad=f.inferences.length;
+    const resumed=await f.session.retry();
+    if(resumed.status!=='ready')throw Error('explicit retry: '+resumed.errorCode);
+    const refreshed=await f.reload(),callsAfterRefresh=f.inferences.length;
+    const trade=refreshed.state.currentScene.choices.find(choice=>choice.intent==='negotiate'&&choice.approach==='cooperate');
+    f.mount.querySelector('[data-live-choice="'+trade.id+'"]').click();await f.action;
+    const final=await f.reload(),history=await f.archive.readHistory(runId);
+    return {paused,pending,attempt,context,resumed,refreshed,trade,final,history,callsAfterLoad,callsAfterRefresh,
+      calls:f.inferences.length,posts:f.posts.map(({attempt,context})=>({attempt,context})),gets:f.gets.length};
+  });
+  assert.equal(r.paused.errorCode,'CHOICE_NOT_COMPILABLE');assert.deepEqual(r.paused.pending,r.pending);assert.equal(r.paused.state.revision,1);
+  assert.equal(r.callsAfterLoad,1,'only the opening generated before explicit retry');
+  assert.deepEqual(r.posts[1].context,r.context);assert.notEqual(r.posts[1].attempt.id,r.attempt.id);
+  assert.deepEqual(r.posts[1].attempt.retryOf,{attemptId:r.attempt.id,sessionRef:r.attempt.sessionRef});
+  assert.equal(r.resumed.pending,null);assert.equal(r.resumed.state.revision,2);assert.deepEqual(r.resumed.state.lastReceipt,r.pending.receipt);
+  assert.deepEqual(r.refreshed.state,r.resumed.state);assert.equal(r.callsAfterRefresh,2);assert.equal(r.gets,2);
+  assert.equal(r.trade.targetId,r.pending.receipt.action.targetId);assert.match(r.trade.label,/购买香烛的妇人/u);
+  assert.deepEqual(r.posts[2].context.receipt.action,r.trade);assert.equal(r.posts[2].attempt.retryOf,null);
+  assert.equal(r.final.status,'ready');assert.equal(r.final.state.revision,3);assert.equal(r.final.pending,null);
+  assert.deepEqual(r.history.entries[1].receipt,r.pending.receipt);assert.deepEqual(r.history.entries[2].receipt,r.final.state.lastReceipt);
+  assert.equal(r.final.state.life.items.supplies,r.resumed.state.life.items.supplies-1);
+  assert.equal(r.history.entries.length,3);assert.equal(r.posts.length,3);assert.equal(r.calls,3);
 });
 
 test('broken structural metadata cannot commit a preview or trigger an unrequested second inference',async t=>{
