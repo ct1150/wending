@@ -1,8 +1,7 @@
+import { currentStoryGoal } from '../game/cultivation/live/story-director.js';
 import {ORIGINS,TALENTS,ITEMS,DAYS_PER_YEAR} from '../game/cultivation/live/model.js';
 import {describeEcho,getReincarnationSettlement,REINCARNATION_REWARDS} from '../game/cultivation/live/reincarnation.js';
 import {buildOpeningBrief} from '../game/cultivation/live/experience-story.js';
-import {resolveCustomAction} from '../game/cultivation/live/custom-actions.js';
-import {compileChoices} from '../game/cultivation/live/engine.js';
 const esc = value => String(value ?? '').replace(/[&<>"']/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[char]);
 
 const endings = { retired: '归隐', lifespan: '寿尽', battle: '陨落', victory: '问鼎', burned: '燃命而终' };
@@ -88,7 +87,7 @@ export function renderJourneyHistory(view) {
   return `<div class="journey-records"><section aria-labelledby="journey-history-current-title"><h3 id="journey-history-current-title">第 ${esc(summary.generation)} 世 · ${esc(summary.name)}</h3>${view.blocks.length ? passage(view.blocks, 'current') : '<p class="journey-record-empty">此生尚未落笔。入世后，相逢与选择都会留在这里。</p>'}</section>${records.length ? `<section class="journey-past-lives" aria-label="历世生平"><h3>历世生平</h3>${records.map((record, index) => `<details><summary>第 ${esc(record.generation)} 世 · ${esc(record.name)} · ${esc(record.age)} 岁 · ${esc(record.title ?? endings[record.cause] ?? record.cause)}</summary><div class="journey-record-body">${record.achievement ? `<p>${esc(record.achievement)}</p>` : ''}${(record.deeds ?? []).map(deed => `<p>${esc(deed)}</p>`).join('')}${record.lesson ? `<p>${esc(record.lesson)}</p>` : ''}${passage(record.transcript ?? record.log ?? [], `life-${index}`)}</div></details>`).join('')}</section>` : ''}${previous.length ? `<details><summary>前世完整对话与轮回交接</summary><div class="journey-record-body">${passage(previous, 'prior')}</div></details>` : ''}${old ? `<details><summary>旧途原始记录</summary><div class="journey-record-body">${passage(old.run?.log ?? [], 'legacy')}<details><summary>旧途收藏、世界与生平原档</summary><pre>${esc(JSON.stringify(old, null, 2))}</pre></details></div></details>` : ''}${collection.length ? `<details><summary>历世传承</summary><div class="journey-record-body">${collection.map(record => `<p><strong>${esc(record.name)}</strong>${record.source ? ` · ${esc(record.source)}` : ''}${record.description ? `<br>${esc(record.description)}` : ''}</p>`).join('')}</div></details>` : ''}</div>`;
 }
 
-const liveMessages={EXPERIENCE_UNSUPPORTED:'故事服务暂不支持此生的修行规则，进度已保留，请稍后续接。',KNOWLEDGE_UNAVAILABLE:'故事资料暂时无法读取，进度已保留，请稍后重试。',AI_DISABLED:'实时生成尚未开放。',FREE_QUOTA_EXHAUSTED:'可用的续写额度暂时不足。进度已保留，请稍后再试。',PROVIDER_BUSY:'此刻繁忙，请稍后重试。',PROVIDER_TIMEOUT:'等待超时，进度已保留。',NETWORK_UNAVAILABLE:'网络未连接，已保存的故事仍可阅读。',SESSION_UNAVAILABLE:'原会话不可用，请明确重试以续接这一步。',NEXT_CONTEXT_TOO_LARGE:'这一段没有接稳，已保留原来的选择。请重试续接。',ATTEMPT_NOT_FOUND:'原回应已不可读取，请重试续接。',ATTEMPT_IN_PROGRESS:'故事仍在续写。稍后检查已有回应，就能接上这一步。',AWAITING_EXPLICIT_RETRY:'这一步已经保存，点「重试续接」继续。',SERVICE_UNAVAILABLE:'暂时连不上故事服务。进度已保留，稍后可续接。',PROTOCOL_MISMATCH:'服务版本不兼容，请保留备份并稍后重试。',STORAGE_OR_STATE_CONFLICT:'保存未完成或另一标签页已有更新。请检查存储空间后重新读取。',STALE_CHOICE:'故事已更新，请按眼前的选项继续。',TURN_ALREADY_PENDING:'这一步已经在等待回应。',CHOICE_NOT_COMPILABLE:'剧情选项生成失败，进度已保留。请重试续接。',STORY_LENGTH_INVALID:'这一段剧情暂未接上，进度已保留。请重试续接。',GENERATED_SCENE_INVALID:'这一段剧情暂未接上，进度已保留。请重试续接。',PROVIDER_RESPONSE_INVALID:'本回合还没有保存，之前的进度已保留。可以重试续接。',OUTPUT_TRUNCATED:'这一段没有写完，进度已保留。可以重试续接。'};
+const liveMessages={EXPERIENCE_UNSUPPORTED:'故事服务暂不支持此生的修行规则，进度已保留，请稍后续接。',KNOWLEDGE_UNAVAILABLE:'故事资料暂时无法读取，进度已保留，请稍后重试。',AI_DISABLED:'实时生成尚未开放。',FREE_QUOTA_EXHAUSTED:'可用的续写额度暂时不足。进度已保留，请稍后再试。',PROVIDER_BUSY:'此刻繁忙，请稍后重试。',PROVIDER_TIMEOUT:'等待超时，进度已保留。',NETWORK_UNAVAILABLE:'网络未连接，已保存的故事仍可阅读。',SESSION_UNAVAILABLE:'原会话已失效，这一步的选择已保留。',NEXT_CONTEXT_TOO_LARGE:'这一段尚未写完，原来的选择已保留。',ATTEMPT_NOT_FOUND:'暂时查不到原回应，这一步的选择已保留。',ATTEMPT_IN_PROGRESS:'故事仍在续写。',AWAITING_EXPLICIT_RETRY:'这一步的选择已经保存。',SERVICE_UNAVAILABLE:'暂时连不上故事服务。进度已保留，稍后可续接。',PROTOCOL_MISMATCH:'服务版本不兼容，请保留备份并稍后重试。',STORAGE_OR_STATE_CONFLICT:'保存未完成或另一标签页已有更新。请检查存储空间后重新读取。',STALE_CHOICE:'故事已更新，请按眼前的选项继续。',TURN_ALREADY_PENDING:'这一步已经在等待回应。',CHOICE_NOT_COMPILABLE:'剧情选项生成失败，进度已保留。',STORY_LENGTH_INVALID:'这一段剧情暂未接上，进度已保留。',GENERATED_SCENE_INVALID:'这一段剧情暂未接上，进度已保留。',PROVIDER_RESPONSE_INVALID:'本回合还没有保存，之前的进度已保留。',OUTPUT_TRUNCATED:'这一段没有写完，进度已保留。'};
 
 function livePresentation(view, choices) {
   const state = view.state, scene = state.currentScene;
@@ -133,35 +132,6 @@ function renderLiveChoice(choice, view, index, presentation) {
   return `<button type="button" class="journey-choice${draft ? ' live-choice-draft' : ''}" data-live-choice-index="${index}"${draft ? ' data-live-choice-preview' : ` data-live-choice="${esc(choice.id)}" data-revision="${view.state.revision}" data-state-hash="${esc(view.stateHash)}"`}${draft || presentation.pending || !choice.enabled ? ' disabled' : ''}${details.length ? ` aria-describedby="live-cost-${index}"` : ''}><span class="journey-choice-label">${numbered ? `<span class="live-choice-number">${index + 1}. </span>` : ''}${esc(choice.label)}</span><span class="journey-choice-reason" id="live-cost-${index}"${details.length ? '' : ' hidden'}>${esc(details.join(' · '))}</span></button>`;
 }
 
-// Only show expressions that the same parser and cost checks will accept
-// in this particular scene. Looking at a suggestion never prepares an action.
-function customExamples(state) {
-  const actors=(state.relatedEntities??[]).filter(e=>e.kind==='person'&&e.status!=='dead'),pledge=state.currentScene.choices.find(c=>c.approach==='pledge');
-  const actor=id=>actors.find(e=>e.id===id)?.name, creditor=actor(state.life.cultivationProfile?.experience?.commitment?.entityId), offer=actor(pledge?.targetId);
-  const candidates=[
-    [creditor&&'向'+creditor+'归还行粮','repay',state.life.cultivationProfile?.experience?.commitment?.entityId],
-    [offer&&'接受'+offer+'的校法之约','pledge',pledge?.targetId],['自行推演残法','restore','self'],['验看本命功法','diagnose','self'],
-    ...actors.filter(e=>state.currentScene.choices.some(c=>c.targetId===e.id&&(c.intent==='negotiate'||c.intent==='interact'&&['ask','help','decline'].includes(c.approach)))).slice(0,3).map(e=>['询问'+e.name+'：眼下有什么打算？','ask',e.id]),
-    ['观察周围','observe','self'],['休整','recover','self']];
-  const examples=[];
-  for(const [text,how,id] of candidates){
-    if(!text)continue;
-    let p;try{p=resolveCustomAction(state,text);}catch{continue;}
-    // A generated option may use these exact words for a different choice;
-    // custom input honors that match, so it must not be advertised here.
-    if(p.approach!==how||p.targetId!==id)continue;
-    try{if(compileChoices(state,[p])[0].enabled)examples.push(text);}catch{continue;}
-    if(examples.length===3)break;
-  }
-  return examples;
-}
-
-function renderCustomAction(view, presentation) {
-  const draft = view.customAction ?? {}, disabled = presentation.pending || presentation.preview || view.state.phase !== 'active';
-  const examples=draft.open&&!disabled?customExamples(view.state):[];
-  return `<section class="live-custom-action" data-live-custom${view.state.phase === 'dead' ? ' hidden' : ''}><button type="button" class="journey-choice" data-live-custom-toggle aria-expanded="${Boolean(draft.open)}" aria-controls="live-custom-form"${disabled ? ' disabled' : ''}><span class="journey-choice-label"><span class="live-choice-number">4. </span>自定义行动</span></button><form id="live-custom-form"${draft.open ? '' : ' hidden'}><label for="live-custom-action">你打算如何行动？</label><textarea id="live-custom-action" data-live-custom-field name="action" rows="2" maxlength="120" autocomplete="off" aria-describedby="live-custom-error"${disabled ? ' disabled' : ''}>${esc(draft.text ?? '')}</textarea><div class="live-action-examples"${examples.length?'':' hidden'}><span>试着写（点选只填入）：</span>${examples.map(text=>`<button type="button" data-live-example="${esc(text)}">${esc(text)}</button>`).join('')}</div><p id="live-custom-error" class="live-action-error" role="status"${draft.error ? '' : ' hidden'}>${esc(draft.error ?? '')}</p><button type="submit" class="button primary" data-live-custom-submit${disabled ? ' disabled' : ''}>落下此念</button></form></section>`;
-}
-
 function renderLiveOutcome(receipt, view = {}) {
   const active = receipt?.kind === 'choice' && receipt.action;
   const changes = [], before = receipt?.before ?? {}, after = receipt?.after ?? {};
@@ -195,7 +165,9 @@ function renderLiveBirthFacts(view) {
 
 function renderLiveState(view) {
   const life = view.state.life, summary = view.characterSummary;
-  const goal = summary?.currentGoal ?? view.state.director?.currentGoal ?? view.state.director?.mainQuest?.text ?? view.state.director?.mystery?.question ?? view.state.director?.destiny?.text;
+  const goal = summary?.currentGoal ?? currentStoryGoal(view.state.director);
+  const scene = view.state.currentScene;
+  const situation = [scene?.location, scene?.title !== scene?.location && scene?.title !== '眼前所见' && scene?.title].filter(Boolean).join(' · ');
 
   const facts = [
     ['气血', `${Math.max(0, 10 - life.injury) * 10}%`],
@@ -205,7 +177,7 @@ function renderLiveState(view) {
 
     ...(view.state.reincarnation?.version===2?[['前世回响',view.state.reincarnation.echoes.map(describeEcho).join('')]]:[]),
   ];
-  return `<details class="live-turn-state" data-live-state data-live-preserve-open${view.state.phase === 'dead' ? ' hidden' : ''}><summary><span class="live-state-hint">${goal?'当前目标':'当前处境'}</span><span data-live-goal>${esc(goal??'查看随身资源')}</span></summary><dl>${facts.map(([name, value]) => `<div><dt>${esc(name)}</dt><dd>${esc(value)}</dd></div>`).join('')}</dl></details>`;
+  return `<details class="live-turn-state" data-live-state data-live-preserve-open${view.state.phase === 'dead' ? ' hidden' : ''}><summary><span class="live-state-hint">${goal?'当前目标':'当前处境'}</span><span data-live-goal>${esc(goal || situation || '查看随身资源')}</span></summary><dl>${facts.map(([name, value]) => `<div><dt>${esc(name)}</dt><dd>${esc(value)}</dd></div>`).join('')}</dl></details>`;
 }
 
 function renderLiveEnding(view) {
@@ -230,9 +202,12 @@ export function renderLiveJourney(view, choices) {
   const message = view.status === 'paused' && !view.busy ? liveMessages[view.errorCode] ?? '故事未完成，请重试。'
     : view.busy && view.generationStatus === 'queued' ? '等候回应…'
       : view.busy && view.generationStatus === 'switching' ? '重新续写…' : '';
-  const retry = Boolean(view.pending && !view.busy);
+  const waiting = view.errorCode === 'ATTEMPT_IN_PROGRESS' || (view.attempt && !view.errorCode);
+  const recovery = !view.pending || view.busy ? '' : waiting
+    ? '<button type="button" class="button primary" data-live-resume>查看续写进度</button>'
+    : '<button type="button" class="button primary" data-live-retry>继续故事</button>';
   const status = message ? esc(message) : view.busy ? '<span aria-hidden="true">…</span><span class="live-sr-only">正在续写</span>' : '';
-  return `<article class="journey live-journey${v7 ? ' live-cultivation-v7' : ''}" data-live-story data-live-run="${esc(state.runId)}" aria-label="此生故事"><section class="journey-current" aria-labelledby="journey-current-title"><h2 id="journey-current-title" class="live-sr-only" tabindex="-1">${esc(state.phase === 'dead' ? '此生已尽' : scene?.title ?? '此生故事')}</h2><section class="live-intro" aria-label="本地开场"${opening ? '' : ' hidden'}>${intro}</section>${v7 ? renderLiveBirthFacts(view) : ''}${v7 ? renderLiveOutcome(view.pending?.receipt ?? state.lastReceipt, view) : ''}<div class="journey-prose" data-live-prose data-live-preview-text${presentation.preview ? ' data-live-preview' : ''} aria-busy="${Boolean(view.busy)}">${presentation.blocks.map(renderLiveBlock).join('')}</div>${v7 ? renderLiveState(view) : ''}<div class="journey-choices" data-live-choices role="group" aria-label="眼前的选择"${presentation.choices.length ? '' : ' hidden'}>${presentation.choices.map((choice, index) => renderLiveChoice(choice, view, index, presentation)).join('')}</div>${v7 ? renderCustomAction(view, presentation) : ''}<section class="live-status" aria-live="polite" aria-atomic="true"${status || retry ? '' : ' hidden'}><p data-live-progress-status>${status}</p><div data-live-recovery${retry ? '' : ' hidden'}><button type="button" class="button primary" data-live-retry${view.errorCode==='ATTEMPT_IN_PROGRESS'?' hidden':''}>重试续接</button><button type="button" class="button" data-live-resume>检查已有回应</button></div></section><section class="journey-ending"${state.phase === 'dead' ? '' : ' hidden'}>${renderLiveEnding(view)}</section></section></article>`;
+  return `<article class="journey live-journey${v7 ? ' live-cultivation-v7' : ''}" data-live-story data-live-run="${esc(state.runId)}" aria-label="此生故事"><section class="journey-current" aria-labelledby="journey-current-title"><h2 id="journey-current-title" class="live-sr-only" tabindex="-1">${esc(state.phase === 'dead' ? '此生已尽' : scene?.title ?? '此生故事')}</h2><section class="live-intro" aria-label="本地开场"${opening ? '' : ' hidden'}>${intro}</section>${v7 ? renderLiveBirthFacts(view) : ''}${v7 ? renderLiveOutcome(view.pending?.receipt ?? state.lastReceipt, view) : ''}<div class="journey-prose" data-live-prose data-live-preview-text${presentation.preview ? ' data-live-preview' : ''} aria-busy="${Boolean(view.busy)}">${presentation.blocks.map(renderLiveBlock).join('')}</div>${v7 ? renderLiveState(view) : ''}<div class="journey-choices" data-live-choices role="group" aria-label="眼前的选择"${presentation.choices.length ? '' : ' hidden'}>${presentation.choices.map((choice, index) => renderLiveChoice(choice, view, index, presentation)).join('')}</div><section class="live-status" aria-live="polite" aria-atomic="true"${status || recovery ? '' : ' hidden'}><p data-live-progress-status>${status}</p>${recovery}</section><section class="journey-ending"${state.phase === 'dead' ? '' : ' hidden'}>${renderLiveEnding(view)}</section></section></article>`;
 }
 
 // The live reading surface keeps its paragraph and choice nodes as text arrives

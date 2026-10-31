@@ -88,10 +88,13 @@ test('only marked lives receive the new specialized chances and the two sides of
 
 test('keen-memory self-restoration lasts 45 days, verifies against birth, replays and round-trips unchanged', () => {
   const newLife = marked({lockedTalentId:'keen-memory'});
-  const start = commitTurn(newLife, prepareOpening(newLife,{requestId:'opening'}), scene(1));
-  const diagnosis = prepareChoice(start,{customAction:'验看本命功法',requestId:'diagnose'});
-  const diagnosed = commitTurn(start, diagnosis, scene(2));
-  const restored = prepareChoice(diagnosed,{customAction:'自行推演残法',requestId:'restore'});
+  const opening = scene(1), followup = scene(2);
+  Object.assign(opening.choices[0], {intent:'craft', approach:'diagnose', label:'验看本命功法'});
+  Object.assign(followup.choices[0], {intent:'craft', approach:'restore', label:'自行推演残法'});
+  const start = commitTurn(newLife, prepareOpening(newLife,{requestId:'opening'}), opening);
+  const diagnosis = prepareChoice(start,{choiceId:opening.choices[0].id,requestId:'diagnose'});
+  const diagnosed = commitTurn(start, diagnosis, followup);
+  const restored = prepareChoice(diagnosed,{choiceId:followup.choices[0].id,requestId:'restore'});
   assert.equal(restored.receipt.elapsedDays,45);
   assert.equal(restored.nextLife.cultivationProfile.experience.repaired,true);
   assert.deepEqual(prepareRecordedChoice(diagnosed,restored),restored);

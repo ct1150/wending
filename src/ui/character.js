@@ -1,3 +1,4 @@
+import { currentStoryGoal } from '../game/cultivation/live/story-director.js';
 import { realmFor, initialItemsForBirth, ROOTS, PHYSIQUES, RELICS, TECHNIQUES, WORLD_TIERS, INHERITED_BENEFITS, ART_NAMES } from '../game/cultivation/live/cultivation-rules.js';
 import { ITEMS, ORIGINS, TALENTS } from '../game/cultivation/live/model.js';
 import { ORIGIN_BACKGROUNDS, TALENT_STORIES } from '../game/cultivation/live/birth-stories.js';
@@ -120,7 +121,7 @@ function renderCampaignBirth(creation) {
 export function liveCharacterSummary(state, catalogs) {
   const life=state.life,days=life.ageDays,profile=life.cultivationProfile,birth=life.birth.cultivationProfile;
   const v7=profile?.version===7,generation=state.reincarnation?.generation??1;
-  const currentGoal=state.director?.currentGoal??state.director?.mainQuest?.text??state.director?.mystery?.question??state.director?.destiny?.text;
+  const currentGoal=currentStoryGoal(state.director);
   const experience=profile?.experience,method=experience&&TECHNIQUES[experience.activeTechniqueId];
   const details=v7?{
     lifespanText:`${(days/360).toFixed(1)} / ${life.lifeLimit}岁`,

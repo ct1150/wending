@@ -29,6 +29,17 @@ const lifeYear=life=>Math.floor(life.ageDays/DAYS_PER_YEAR);
 const rowId=(scene,index)=>scene.memoryDeltas[index].referenceId??'m:'+sha256(scene.id+':'+index).slice(0,32);
 const openingSeed=(life,seed)=>parseInt(sha256(String(seed)+':'+(life.birth?.originId??'wanderer')).slice(0,8),16)>>>0;
 
+// These sentinels are part of historical state hashes. Interpret them when
+// projecting a goal, so that existing saves and their replay stay identical.
+const OPENING_NO_GOAL='先辨清眼前局势，再决定去留';
+const NO_GOAL='辨明眼前变化，自定下一步';
+const CLOSED_NO_GOAL='已结束当前互动，自定下一步';
+export function currentStoryGoal(director) {
+  const goal=director?.currentGoal;
+  if(!goal||[OPENING_NO_GOAL,NO_GOAL,CLOSED_NO_GOAL].includes(goal))return director?.mainQuest?.text;
+  return goal;
+}
+
 function schedule(d,life,turnId,receipt) {
   const marked=isExperienceLife(life),clock=marked?d.eventCount+(advancesEvent(receipt)?1:0):turnId;
   const luck=life.birth?.cultivationProfile?fortuneCycleModifier({life,turnId:turnId-1,director:{eventCount:clock}}):((Math.floor((turnId-1)/20)+d.seed)%5-2)*3,check=receipt?.cultivationResult?.check,streak=check?(check.success?0:d.pacing.setbackStreak+1):d.pacing.setbackStreak;
@@ -42,7 +53,7 @@ export function createStoryDirector(life,seed=0) {
   const d={version:7,seed:seeded,turnId:0,resolvedCount:0,...(isExperienceLife(life)?{eventCount:0}:{}),
     destiny:{id:'destiny:'+seeded,text:clip((relic?'伴生的'+relic.name+'牵动旧因果；':'')+theme.destiny,60),motif:theme.motif},
     mystery:{id:'mystery:'+seeded,question:clip(relic?`为何${relic.name}会回应${theme.motif}，而你的${root?.name??'灵根'}能感知其回声？`:theme.mystery,80),progress:0},
-    currentGoal:'先辨清眼前局势，再决定去留',mainQuest:null,sideQuests:[],memory:{causes:[],npcs:[],enemies:[],clues:[]},
+    currentGoal:OPENING_NO_GOAL,mainQuest:null,sideQuests:[],memory:{causes:[],npcs:[],enemies:[],clues:[]},
     background:{count:0,text:''},world:{year:lifeYear(life),tier:life.cultivationProfile?.worldTier??0,location:'出生地',faction:'尚未相识',summary:'尚无已确认的世局变化。'},
     archive:{throughTurn:0,text:'此生尚未落笔。',reasons:[]},
     pacing:{turnId:1,arc:1,startedAt:1,lastBeat:0,nextBeat:10+seeded%11,lastEra:0,pattern:'discovery',completedPatterns:[],sceneHashes:[],setbackStreak:0,pressure:0},
@@ -177,7 +188,7 @@ export function advanceStoryDirector(director,life,receipt,scene,turnId) {
       }
     }
     if(!d.mainQuest&&d.sideQuests.length)d.mainQuest=d.sideQuests.shift();
-    d.currentGoal=clip(d.mainQuest?.text??(receipt.action?.intent==='interact'&&['decline','leave'].includes(receipt.action.approach)?'已结束当前互动，自定下一步':'辨明眼前变化，自定下一步'),60);
+    d.currentGoal=clip(d.mainQuest?.text??(receipt.action?.intent==='interact'&&['decline','leave'].includes(receipt.action.approach)?CLOSED_NO_GOAL:NO_GOAL),60);
     if(marked)d.currentGoal=clip(advanceExperienceStory(d.currentGoal,receipt,scene,life),60);
     const anchors=annotation.anchors.map(anchor=>blocks[anchor]).join('\n');
     if(['revelation','resolution'].includes(annotation.beat)&&anchors.includes(d.destiny.motif)&&fresh.some(row=>row.kind==='clue'&&anchors.includes(row.text)))d.mystery.progress=Math.min(9,d.mystery.progress+1);

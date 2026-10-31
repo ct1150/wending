@@ -8,19 +8,8 @@ const unsupported = () => { throw Object.assign(new Error(CUSTOM_ACTION_MESSAGE)
 const customId = (state,text) => 'r:'+sha256(state.runId).slice(0,16)+':t'+(state.turnId+1)+':c:custom_'+sha256(text).slice(0,12);
 const living = entity => entity.status !== 'dead';
 
-// Parsing is intentionally conservative: it recognizes executable intentions,
-// never guesses a different action or creates a target/resource from prose.
-export function resolveCustomAction(state,input) {
-  return parseCustomAction(state,input,true);
-}
-
-// Saved receipts keep the canonical interpretation used when they were made.
-// Only fresh-input trade admission is skipped; all original grammar checks stay.
+// Replay archived actions using the grammar that produced their recorded receipts.
 export function replayCustomAction(state,input) {
-  return parseCustomAction(state,input,false);
-}
-
-function parseCustomAction(state,input,freshInput) {
   if(typeof input!=='string'||!state.currentScene||state.phase!=='active')unsupported();
   const label=input.trim();
   if(!label||label.length>120||/[<>\x00-\x1f]/u.test(label))unsupported();
@@ -57,15 +46,7 @@ function parseCustomAction(state,input,freshInput) {
     if(candidates.length!==1)unsupported();
     return candidates[0].id;
   }
-  const proposal=(intent,approach,targetId='self',stake='low')=>{
-    if(freshInput&&intent==='negotiate'&&approach!=='black-market'){
-      const actor=entities.find(entity=>entity.id===targetId),purpose=actor?text.split(actor.name).join(''):text;
-      // Ordinary negotiation has fixed resource exchanges. Never discard an
-      // explicit purchase/sale tail and execute those different rules instead.
-      if(/[买卖购售]|销赃/u.test(purpose))unsupported();
-    }
-    return {id:customId(state,label),label,intent,targetId,approach,stake};
-  };
+  const proposal=(intent,approach,targetId='self',stake='low')=>({id:customId(state,label),label,intent,targetId,approach,stake});
   if(isExperienceLife(state.life)){
     if(/^验看本命功法[。！!]?$/u.test(text))return proposal('craft','diagnose');
     if(/^自行推演残法[。！!]?$/u.test(text))return proposal('craft','restore');

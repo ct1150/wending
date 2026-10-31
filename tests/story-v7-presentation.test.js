@@ -47,3 +47,23 @@ test('unknown, ambiguous, dead, wrong-kind and explicitly forged references are 
     const fixed=normalizeV7Presentation(scene([row('interact:ask',bad),row('interact:observe','self')]),c);assert.deepEqual(fixed.choices[0].target,bad);assert.throws(()=>decodeGlmScene(fixed,c,{storyActions:true}));
   }
 });
+
+test('authored labels and split action codes normalize only as exact rule-backed wire fields',()=>{
+  const c=context(),p='询问船夫昨夜失落的铜铃',r={intent:'interact',approach:'ask',targetId:actor,label:p},s=scene([r,row('interact:observe','self')]);
+  const out=normalizeV7Presentation(s,c,{authoredChoices:true});
+  assert.deepEqual(out.choices[0],{action:'interact:ask',target:actor,purpose:p,stake:'low',anchor:0});
+  for(const corrupted of [{...r,action:'fight:assault'},{...r,target:'self'},{...r,purpose:'另一决定'},{...r,receipt:{}},{...r,intent:undefined}]){
+    assert.throws(()=>decodeGlmScene(normalizeV7Presentation(scene([corrupted,s.choices[1]]),c,{authoredChoices:true}),c,{storyActions:true,authoredChoices:true}));
+  }
+});
+
+test('targetId for a real marked exploration uses the same event clock and affordability as a native target',()=>{
+  const initial=createLiveGame({runId:'target-alias',seed:42,engineVersion:7,experienceVersion:1,originStories:true});
+  const c=buildStoryContext(initial,prepareOpening(initial,{requestId:'open'}));
+  const query={intent:'explore',approach:'cautious',targetId:'herbs',stake:'normal',label:'辨认可以采下的灵草'};
+  const fixed=normalizeV7Presentation(scene([query,row('interact:observe','self')]),c,{authoredChoices:true});
+  assert.equal(fixed.choices[0].target,'herbs');
+  assert.equal(fixed.choices[0].purpose,query.label);
+  const wrong=normalizeV7Presentation(scene([{...query,targetId:'thunderseal'},row('interact:observe','self')]),c,{authoredChoices:true});
+  assert.ok(Object.hasOwn(wrong.choices[0],'targetId'));
+});

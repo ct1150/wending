@@ -1,4 +1,4 @@
-import { generateProviderScene, validateProviderOptions, usesEngineMenu } from './story-provider-core.js';
+import { generateProviderScene, validateProviderOptions } from './story-provider-core.js';
 import { GLM_MODEL_ID } from './story-config.js';
 import { createGlmTransport } from './story-glm-provider.js';
 import { assertPlainData } from '../game/cultivation/live/identity.js';
@@ -34,11 +34,8 @@ export async function generateScene(ai,profile,context,options={},runtime={}) {
     }
   }
   if(profile?.modelId===GLM_MODEL_ID){
-    // The server keeps the engine menu for older lives. New birth stories
-    // require the author's own scene-specific decisions through final decoding.
-    const engineMenu=usesEngineMenu(runtime,context);
-    const transport=createGlmTransport({ai,context,engineMenu,onProgress:runtime.onProgress,deadlineAt:runtime.deadlineAt,signal:runtime.signal,timeoutMs:options.timeoutMs});
-    const result=await generateProviderScene(transport,{...profile,storyActions:runtime.storyActions===true,engineMenu},context,options,assertValidatedProfile,knowledgeBundle);
+    const transport=createGlmTransport({ai,context,authoredChoices:true,onProgress:runtime.onProgress,deadlineAt:runtime.deadlineAt,signal:runtime.signal,timeoutMs:options.timeoutMs});
+    const result=await generateProviderScene(transport,{...profile,storyActions:runtime.storyActions===true,authoredChoices:true},context,options,assertValidatedProfile,knowledgeBundle);
     if(transport.accountingUnknown)result.accountingStatus='unknown';
     if(result.inferencePerformed)result.providerSource=transport.source;
     return result;

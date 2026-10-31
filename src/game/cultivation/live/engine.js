@@ -5,7 +5,7 @@ import { isV7Life, summarizeLife, createCultivationBirthProfile, initialLifeForB
 import { assertPlainData, canonicalStringify, sha256, stateHash } from './identity.js';
 import { exactKeys, idField, textField, validateProposal, validateGeneratedScene } from './schema.js';
 import { validateLiveState } from './validation.js';
-import { resolveCustomAction, replayCustomAction, customActionCommand, CUSTOM_ACTION_MESSAGE } from './custom-actions.js';
+import { replayCustomAction, customActionCommand, CUSTOM_ACTION_MESSAGE } from './custom-actions.js';
 import { createStoryDirector, advanceStoryDirector } from './story-director.js';
 import { validateReincarnation } from './reincarnation.js';
 import { advanceRetrievalMemory } from './retrieval-memory.js';
@@ -116,21 +116,21 @@ export function compileChoices(state,proposals) {
 function identity(state,requestId,choiceId) {idField(requestId);return {runId:state.runId,turnId:state.turnId+1,baseRevision:state.revision,stateHash:stateHash(state),choiceId,rulesVersion:state.rulesVersion,promptVersion:state.promptVersion,requestId};}
 export function prepareOpening(state,command) {validateLiveState(state);assertPlainData(command);exactKeys(command,['requestId']);if(state.phase!=='awaitingOpening')throw new Error('出生已经开场。');return {kind:'opening',identity:identity(state,command.requestId,null),receipt:copy(state.birthReceipt),nextLife:copy(state.life),nextRng:state.rng};}
 export function prepareChoice(state,command) {
- return prepareChoiceWithResolver(state,command,resolveCustomAction);
+ return prepareChoiceCommand(state,command);
 }
 // Internal replay seam for recorded pending turns and JSONL history. Callers
 // still compare the complete identity/receipt (and next state when available).
 export function prepareRecordedChoice(state,recorded) {
  assertPlainData(recorded);
- return prepareChoiceWithResolver(state,customActionCommand(recorded),replayCustomAction);
+ return prepareChoiceCommand(state,customActionCommand(recorded),true);
 }
-function prepareChoiceWithResolver(state,command,resolveCustom) {
+function prepareChoiceCommand(state,command,replaying=false) {
  requireActive(state);assertPlainData(command);exactKeys(command,['requestId'],['choiceId','customAction','baseRevision','stateHash']);
  const custom=Object.hasOwn(command,'customAction');
  if(command.choiceId!==undefined)idField(command.choiceId);
- if(custom&&!isV7Life(state.life))throw Object.assign(new Error(CUSTOM_ACTION_MESSAGE),{code:'CUSTOM_ACTION_UNSUPPORTED'});
+ if(custom&&(!replaying||!isV7Life(state.life)))throw Object.assign(new Error(CUSTOM_ACTION_MESSAGE),{code:'CUSTOM_ACTION_UNSUPPORTED'});
  if(command.baseRevision!==undefined&&command.baseRevision!==state.revision||command.stateHash!==undefined&&command.stateHash!==stateHash(state))throw new Error('行动基准已经过期。');
- const action=custom?resolveCustom(state,command.customAction):state.currentScene.choices.find(p=>p.id===command.choiceId);if(!action)throw new Error('当前场景没有此行动。');
+ const action=custom?replayCustomAction(state,command.customAction):state.currentScene.choices.find(p=>p.id===command.choiceId);if(!action)throw new Error('当前场景没有此行动。');
  if(custom&&command.choiceId!==undefined&&command.choiceId!==action.id)throw Object.assign(new Error(CUSTOM_ACTION_MESSAGE),{code:'CUSTOM_ACTION_UNSUPPORTED'});
  let rule;try{rule=actionRule(state,action);}catch(error){if(custom)throw Object.assign(new Error(CUSTOM_ACTION_MESSAGE),{code:'CUSTOM_ACTION_UNSUPPORTED'});throw error;}
  if(rule.reason){if(custom)throw Object.assign(new Error(CUSTOM_ACTION_MESSAGE),{code:'CUSTOM_ACTION_UNSUPPORTED'});throw new Error(rule.reason);}
@@ -163,18 +163,6 @@ function verifiedPending(state,pending) {
  validateLiveState(state);assertPlainData(pending);exactKeys(pending,['kind','identity','receipt','nextLife','nextRng']);exactKeys(pending.identity,['runId','turnId','baseRevision','stateHash','choiceId','rulesVersion','promptVersion','requestId']);
  const expected=pending.kind==='opening'?prepareOpening(state,{requestId:pending.identity.requestId}):pending.kind==='choice'?prepareRecordedChoice(state,pending):null;
  if(!expected||!same(pending,expected))throw new Error('待提交行动已过期或收据遭到修改。');return expected;
-}
-export function resolveImmediateInteraction(state,pending) {
- const fixed=verifiedPending(state,pending),action=fixed.receipt.action;
- if(action?.intent!=='interact'||!['decline','leave'].includes(action.approach)||fixed.receipt.death)throw new Error('此行动须继续生成剧情。');
- const prefix='r:'+sha256(state.runId).slice(0,16)+':t'+fixed.identity.turnId+':',location=state.currentScene.location,actor=state.relatedEntities.find(entity=>entity.id===action.targetId),routes=state.currentScene.choices.filter(choice=>choice.intent==='travel'&&state.relatedEntities.some(entity=>entity.id===choice.targetId&&entity.kind==='place'&&entity.name!==location)&&compileChoices(state,[choice])[0].enabled).slice(0,2);
- const choices=[{id:prefix+'c:observe',label:'观察周围：寻找新的线索',intent:'interact',targetId:'self',stake:'low',approach:'observe'},...routes.map((choice,index)=>({...copy(choice),id:prefix+'c:travel'+index}))];
- if(choices.length===1)choices.push({id:prefix+'c:rest',label:'留在原地休整',intent:'rest',targetId:'self',stake:'low',approach:'recover'});
- const entities=state.relatedEntities.filter(entity=>entity.id===action.targetId||routes.some(choice=>choice.targetId===entity.id));
- const decision=actor&&['person','faction'].includes(actor.kind)?(action.approach==='decline'?'你婉拒了'+actor.name+'的请求，结束了这次交谈。':'你向'+actor.name+'告辞，结束了这次交谈。'):'你结束了眼前的互动。';
- let text=decision+'你仍在原处，接下来可以自行观察或行动。';
- if(same(state.currentScene.blocks,[{kind:'narration',text}]))text+='此事暂且搁下，你可以按自己的打算行动。';
- return validateGeneratedScene({id:prefix+'s:closed',title:'暂别此事',location,blocks:[{kind:'narration',text}],entities:copy(entities),choices,memoryDeltas:[]});
 }
 // Only the scene's bounded working set enters snapshots and their hashes.
 // Restored values come from indexed rule records, never narrative descriptions.

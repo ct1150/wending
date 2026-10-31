@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import { liveBrowser } from './helpers/live-browser.js';
 import { liveStoryFixture } from './helpers/live-story-fixture.js';
 
-test('new v7 UI keeps invalid custom input, accepts numeric and natural actions, and generates a fresh decline decision', async t => {
+test('number keys select only offered model choices, and declining requests a new scene', async t => {
   const { page, origin }=await liveBrowser(t), replies=new Map();
   const errors=[];page.on('pageerror',error=>errors.push(error.message));
   let posts=0;
@@ -38,20 +38,13 @@ test('new v7 UI keeps invalid custom input, accepts numeric and natural actions,
   assert.match(await page.locator('[data-character]').getAttribute('aria-label'),/16\.0 \/ 80/);
   assert.doesNotMatch(await page.locator('[data-character]').getAttribute('aria-label'),/余寿/);
   await page.locator('[data-live-state] > summary').click();
-  await page.locator('[data-live-custom-toggle]').click();await page.locator('#live-custom-action').fill('瞬移到上界');
-  await page.evaluate(()=>{window.originalCustom=document.querySelector('#live-custom-action');window.originalStory=document.querySelector('[data-live-story]');});
-  await page.locator('[data-live-custom-submit]').click();
-  await page.getByText('【该行动超出当前场景能力范围，请重新选择。】',{exact:true}).waitFor();
-  assert.equal(await page.locator('#live-custom-action').inputValue(),'瞬移到上界');
-  assert.equal(posts,1);assert.deepEqual((await read()).state,opening.state);assert.equal((await read()).pending,null);
-  assert.equal(await page.evaluate(()=>document.querySelector('#live-custom-action')===window.originalCustom&&document.querySelector('[data-live-story]')===window.originalStory&&document.querySelector('[data-live-state]').open),true);
-  await page.locator('#live-custom-action').fill('2');await page.locator('[data-live-custom-submit]').click();await revision(2);
-  assert.equal((await read()).state.lastReceipt.action.approach,'observe');assert.equal(posts,2);
-  await page.locator('[data-live-custom-toggle]').click();assert.equal(await page.locator('#live-custom-action').inputValue(),'');
-  await page.locator('#live-custom-action').fill('观察岸边的旧木桩');await page.locator('[data-live-custom-submit]').click();await revision(3);
-  assert.equal((await read()).state.lastReceipt.action.label,'观察岸边的旧木桩');assert.equal(posts,3);
-  await page.locator('[data-history]').focus();await page.keyboard.press('3');await revision(4);
-  const declined=await read();assert.equal(declined.state.lastReceipt.action.approach,'decline');assert.equal(posts,4);
+  assert.equal(await page.locator('[data-live-custom],textarea').count(),0);
+  await page.locator('[data-history]').focus();await page.keyboard.press('4');
+  assert.deepEqual((await read()).state,opening.state);assert.equal(posts,1);
+  await page.keyboard.press('2');await revision(2);
+  assert.equal((await read()).state.lastReceipt.action.id,opening.state.currentScene.choices[1].id);assert.equal(posts,2);
+  await page.locator('[data-history]').focus();await page.keyboard.press('3');await revision(3);
+  const declined=await read();assert.equal(declined.state.lastReceipt.action.approach,'decline');assert.equal(posts,3);
   assert.equal(declined.state.life.ageDays,opening.state.life.ageDays);
   assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),true);
   assert.deepEqual(errors,[]);

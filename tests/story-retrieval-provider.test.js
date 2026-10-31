@@ -88,7 +88,7 @@ for(const [name,store]of [
   }},profile(),c,{}, {storyActions:true,knowledgeStore:store});
   assert.equal(result.status,'ready',result.errorCode);
   assert.equal(calls,1);assert.equal(result.inferencePerformed,true);assert.equal(result.accountingStatus,'complete');
-  assert.deepEqual(submitted,buildStoryInput(profile(),c));
+  assert.deepEqual(submitted,buildStoryInput({...profile(),authoredChoices:true},c));
   assert.equal(result.inputHash,sha256(JSON.stringify(submitted)));
   assert.equal(result.scene.retrieval,undefined);assert.equal(JSON.stringify(c),before);
   assert.doesNotMatch(JSON.stringify(result),/private source/);

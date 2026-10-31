@@ -34,8 +34,6 @@ if (liveBirthDraft.lockedTalentId && !rollLiveBirth(currentBirthOptions()).birth
   delete liveBirthDraft.lockedTalentId;
 }
 let liveArchive = null, liveSession = null, liveSnapshot = null, liveError = '', liveHistoryCursor = null, liveHistoryRun = null;
-let liveActionDraft = { key: null, open: false, text: '', error: '' };
-const unsupportedAction = '【该行动超出当前场景能力范围，请重新选择。】';
 let liveInitialization = null, homeReady = false, uiBusy = false, creatingRunId = null, returnScreen = navigation.returnScreen;
 let readingPreferences = loadPreferences(storage);
 const liveCatalogs = { REALMS: LIVE_REALMS, ORIGINS: LIVE_ORIGINS, TALENTS: LIVE_TALENTS, ITEMS: LIVE_ITEMS };
@@ -217,7 +215,7 @@ function captureFocusTarget(element = document.activeElement) {
   // Action identity survives a redraw; revision/state metadata does not.
   const attributes = [...element.attributes].filter(({ name }) => name.startsWith('data-') && !['data-revision', 'data-state-hash', 'data-scene-id'].includes(name));
   const selector = element.id ? `#${CSS.escape(element.id)}` : attributes.length ? element.localName + attributes.map(({ name, value }) => `[${name}="${CSS.escape(value)}"]`).join('') : null;
-  return { element, selector, sceneFallback: element.matches('[data-live-choice], [data-live-start], [data-live-new], [data-live-retry], [data-live-resume], [data-live-custom-toggle], [data-live-custom-submit], [data-live-custom-field], [data-live-reincarnate]') };
+  return { element, selector, sceneFallback: element.matches('[data-live-choice], [data-live-start], [data-live-new], [data-live-retry], [data-live-resume], [data-live-reincarnate]') };
 }
 
 function resolveFocusTarget(target) {
@@ -313,15 +311,9 @@ async function beginLiveLife() {
   finally {uiBusy=false;creatingRunId=null;render();}
 }
 
-function currentLiveActionDraft(snapshot=liveSnapshot) {
-  const key=JSON.stringify([snapshot?.archiveId,snapshot?.state?.runId,snapshot?.state?.revision]);
-  if(liveActionDraft.key!==key)liveActionDraft={key,open:false,text:'',error:''};
-  return liveActionDraft;
-}
-
 function liveStoryView(snapshot) {
   if(!snapshot?.state)return null;
-  return {...snapshot,stateHash:stateHash(snapshot.state),itemNames:LIVE_ITEMS,characterSummary:liveCharacterSummary(snapshot.state,liveCatalogs),customAction:currentLiveActionDraft(snapshot),selectedReincarnationRewards:liveBirthDraft.reincarnationRunId===snapshot.state.runId?liveBirthDraft.reincarnationRewardIds??[]:[]};
+  return {...snapshot,stateHash:stateHash(snapshot.state),itemNames:LIVE_ITEMS,characterSummary:liveCharacterSummary(snapshot.state,liveCatalogs),selectedReincarnationRewards:liveBirthDraft.reincarnationRunId===snapshot.state.runId?liveBirthDraft.reincarnationRewardIds??[]:[]};
 }
 
 function setReincarnationDraft(snapshot, rewardIds) {
@@ -349,19 +341,6 @@ function prepareReincarnation() {
   try {buildRebirthOptions(snapshot.state,selected);}catch{return notify('因果点不足，请重新选择来世传承。',true);}
   setReincarnationDraft(snapshot,selected);
   liveError='';view='new';returnScreen='adventure';saveCreationDraft();render();$('#live-name')?.focus({preventScroll:true});
-}
-
-async function submitLiveCustomAction() {
-  const snapshot=liveSnapshot;
-  if(!liveSession||snapshot?.busy||snapshot?.pending||snapshot?.state?.phase!=='active'||snapshot.state.life.cultivationProfile?.version!==7)return;
-  const draft=currentLiveActionDraft(),text=$('#live-custom-action')?.value??draft.text;
-  draft.text=text;draft.error='';draft.open=true;
-  if(!text.trim()||text.length>120){draft.error=unsupportedAction;render();$('#live-custom-action')?.focus({preventScroll:true});return;}
-  const numeric=text.trim().match(/^[1-3]$/),choice=numeric?snapshot.state.currentScene.choices[Number(numeric[0])-1]:null;
-  const result=await liveSession.choose({...(choice?{choiceId:choice.id}:{customAction:text}),baseRevision:snapshot.state.revision,stateHash:stateHash(snapshot.state)});
-  if(result.errorCode==='CUSTOM_ACTION_UNSUPPORTED'){
-    draft.error=unsupportedAction;render();$('#live-custom-action')?.focus({preventScroll:true});
-  }
 }
 
 function renderLiveApp() {
@@ -421,10 +400,6 @@ async function exportLiveGame(physical = null) {
 
 document.addEventListener('input', event => {
   if (event.target.id === 'live-name') { liveBirthDraft.name = event.target.value; saveCreationDraft(); }
-  if (event.target.id === 'live-custom-action') {
-    const draft = currentLiveActionDraft(); draft.text = event.target.value; draft.error = '';
-    const error = $('#live-custom-error'); if (error) { error.textContent = ''; error.hidden = true; }
-  }
 });
 document.addEventListener('change', event => {
   if (event.target.id === 'reading-theme' || event.target.id === 'reading-size') {
@@ -435,13 +410,12 @@ document.addEventListener('change', event => {
 });
 document.addEventListener('submit', event => {
   if (event.target?.id === 'live-birth-form') { event.preventDefault(); return beginLiveLife(); }
-  if (event.target?.id === 'live-custom-form') { event.preventDefault(); return submitLiveCustomAction(); }
 });
 document.addEventListener('keydown', event => {
   if (event.defaultPrevented || event.repeat || event.isComposing || event.altKey || event.ctrlKey || event.metaKey || event.shiftKey || view !== 'adventure' || $('#dialog').open || liveSnapshot?.busy || liveSnapshot?.pending || liveSnapshot?.state?.life.cultivationProfile?.version !== 7) return;
   if (event.target?.closest?.('input,textarea,select,[contenteditable="true"]')) return;
-  if (!/^[1-4]$/.test(event.key)) return;
-  const button = event.key === '4' ? $('[data-live-custom-toggle]') : $(`[data-live-choice-index="${Number(event.key) - 1}"][data-live-choice]`);
+  if (!/^[1-3]$/.test(event.key)) return;
+  const button = $(`[data-live-choice-index="${Number(event.key) - 1}"][data-live-choice]`);
   if (!button || button.disabled) return;
   event.preventDefault(); button.click();
 });
@@ -466,13 +440,7 @@ document.addEventListener('click', event => {
   if ('liveReincarnate' in data) return prepareReincarnation();
   if ('liveRetry' in data) return liveSession?.retry();
   if ('liveResume' in data) return liveSession?.resume();
-  if ('liveChoice' in data) { currentLiveActionDraft().error = ''; return liveSession?.choose({ choiceId: data.liveChoice, baseRevision: Number(data.revision), stateHash: data.stateHash }); }
-  if ('liveExample' in data) {
-    const draft=currentLiveActionDraft(),field=$('#live-custom-action');
-    if(!draft.open||!field||field.disabled||liveSnapshot?.busy||liveSnapshot?.pending)return;
-    draft.text=data.liveExample;draft.error='';render();$('#live-custom-action')?.focus({preventScroll:true});return;
-  }
-  if ('liveCustomToggle' in data) { const draft = currentLiveActionDraft(); draft.open = !draft.open; render(); if (draft.open) $('#live-custom-action')?.focus({ preventScroll: true }); return; }
+  if ('liveChoice' in data) return liveSession?.choose({ choiceId: data.liveChoice, baseRevision: Number(data.revision), stateHash: data.stateHash });
   if ('liveHistoryNext' in data) return showLiveHistory(false);
   if ('liveHistoryFirst' in data || 'history' in data) return showLiveHistory(true);
   if ('character' in data) return showCharacter();

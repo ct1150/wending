@@ -8,7 +8,7 @@ import {generateScene} from '../src/worker/story-provider.js';
 import {GLM_PROFILE, STORY_LIMITS} from '../src/worker/story-config.js';
 
 const profile = {...GLM_PROFILE, validated: true, supportsStructuredOutput: true};
-const runtime = {storyActions: true, engineMenu: true};
+const runtime = {storyActions: true};
 const actor = {kind: 'person', name: '芦娘'};
 const firstScene = {
   blocks: [
@@ -64,6 +64,13 @@ test('a marked birth uses its past and both talents at the model boundary, then 
   assert.equal(backgroundId, 'ferry-knots');
   assert.deepEqual(opened.facts.birthMemory, expectedPast);
   assert.deepEqual(opened.input.response_format.json_schema.schema.required, ['blocks','choices']);
+  const schemaAtOpening=opened.input.response_format.json_schema.schema;
+  assert.equal(schemaAtOpening.properties.blocks.maxItems,2);
+  assert.equal(schemaAtOpening.properties.choices.maxItems,3);
+  for(const block of schemaAtOpening.properties.blocks.items.oneOf)assert.equal(block.properties.text.maxLength,120);
+  assert.equal(opened.facts.director, undefined);
+  assert.equal(opened.facts['眼前与旧闻'].夙愿,context.director.destiny.text);
+  assert.doesNotMatch(JSON.stringify(opened.input.messages),/导演组|\\?"dilemma\\?"/u);
   const active = commitTurn(state, pending, opened.result.scene);
   assert.deepEqual(active.currentScene.choices.map(choice => choice.approach), ['ask','decline']);
   const decline = active.currentScene.choices[1];
@@ -114,14 +121,41 @@ test('the first choice is prompted to pursue an opportunity without rejecting a 
   assert.deepEqual(result.scene.choices.map(choice => choice.approach), ['decline','leave']);
 });
 
-test('prose without authored choices cannot receive a generated substitute menu on marked lives', async () => {
+test('prose without authored choices cannot receive a substitute menu on new or existing lives', async () => {
   const wire = {blocks:firstScene.blocks};
   const marked = await complete(birth().context, wire);
   assert.equal(marked.result.errorCode, 'GENERATED_SCENE_INVALID');
   const older = await complete(birth({marked:false}).context, wire);
-  assert.equal(older.result.status, 'ready', older.result.errorCode);
-  assert.deepEqual(older.input.response_format.json_schema.schema.required, ['blocks']);
+  assert.equal(older.result.errorCode, 'GENERATED_SCENE_INVALID');
+  assert.deepEqual(older.input.response_format.json_schema.schema.required, ['blocks','choices']);
   assert.equal(older.facts.birthMemory, undefined);
+});
+
+test('an observation after a verbose old scene gets a short source grammar and keeps only completed model decisions', async () => {
+  const {state, pending, context}=birth();
+  const old={...firstScene, blocks:[{kind:'narration',text:'芦娘指着石阶。导演组提到的反扣还在旧绳上。dilemma：要不要查验？'}], choices:[afterRefusal.choices[0],firstScene.choices[1]]};
+  const opened=await complete(context,old);
+  assert.equal(opened.result.status,'ready',opened.result.errorCode);
+  const active=commitTurn(state,pending,opened.result.scene);
+  const action=prepareChoice(active,{requestId:'old-observation',choiceId:active.currentScene.choices[0].id});
+  const follow=buildStoryContext(active,action,[],{continuity:true});
+  const original=structuredClone(follow);
+  const unfinished='{"blocks":[{"kind":"narration","text":"'+ '潮水'.repeat(379);
+  const stopped=await complete(follow,unfinished,'length');
+  assert.equal(stopped.result.errorCode,'OUTPUT_TRUNCATED');
+  const schema=stopped.input.response_format.json_schema.schema;
+  assert.equal(schema.properties.blocks.maxItems,1);
+  assert.equal(schema.properties.blocks.items.properties.text.maxLength,120);
+  assert.equal(schema.properties.choices.minItems,2);
+  assert.equal(schema.properties.choices.maxItems,2);
+  assert.match(stopped.facts.memory.recent[0].text,/反扣还在旧绳上/);
+  assert.doesNotMatch(stopped.facts.memory.recent[0].text,/导演组|dilemma/);
+  assert.deepEqual(follow,original);
+  const accepted=await complete(follow,afterRefusal);
+  assert.equal(accepted.result.status,'ready',accepted.result.errorCode);
+  const continued=commitTurn(active,action,accepted.result.scene);
+  assert.deepEqual(continued.lastReceipt,action.receipt);
+  assert.deepEqual(continued.currentScene.choices.map(c=>c.label),afterRefusal.choices.map(c=>c.purpose));
 });
 
 test('a capped completion retains its complete authored growth choice and cannot invent a pledge', async () => {
@@ -159,4 +193,42 @@ test('holding a different talent changes the model’s specific clue and rule gu
     assert.deepEqual(sample.facts.birthMemory.talents[0], {name:TALENTS[talents[i]], ...TALENT_STORIES[talents[i]]});
     assert.ok(!JSON.stringify(sample.facts.birthMemory).includes(TALENT_STORIES[talents[1-i]].effect));
   }
+});
+
+test('model-authored opening accepts grounded shorthand and preserves typed places, resources and costs', async () => {
+  const {state,pending,context}=birth();
+  const hunter={kind:'person',name:'老猎户'}, inn={kind:'place',name:'松坳驿铺'};
+  const blocks=[{kind:'narration',text:'老猎户指向松坳驿铺门口的虎爪印，驿铺篱边晾着药草和路上的干饼。'}];
+  const inspect={action:'interact:observe',target:'self',purpose:'看看脚印为何一深一浅'};
+  const cases=[
+    {action:'interact:ask',target:hunter,purpose:'问他爪痕是什么时候留下的'},
+    {action:'interact:help',target:hunter,purpose:'递给老猎户一块干饼充作路食'},
+    {action:'explore:cautious',target:'herbs',stake:'low',purpose:'沿篱根寻找药草'},
+    {action:'explore:cautious',target:'supplies',stake:'low',purpose:'沿篱根找些路上的口粮'},
+    {action:'travel:road',target:inn,stake:'low',purpose:'循车辙走到那家驿铺'},
+    {action:'interact:observe',target:inn,purpose:'查看门槛上的虎爪印'},
+  ];
+  for(const choice of cases){
+    const {result}=await complete(context,{blocks,choices:[inspect,choice]});
+    assert.equal(result.status,'ready',choice.action+' '+result.errorCode);
+    const active=commitTurn(state,pending,result.scene),actual=active.currentScene.choices[1];
+    assert.equal(actual.label,choice.purpose);assert.equal(actual.intent+':'+actual.approach,choice.action);
+    assert.equal(typeof choice.target==='object'?active.relatedEntities.find(e=>e.id===actual.targetId)?.name:actual.targetId,choice.target.name??choice.target);
+  }
+  for(const invalid of [
+    {action:'explore:cautious',target:'herbs',stake:'low',purpose:'寻找路上的口粮'},
+    {action:'travel:road',target:inn,stake:'low',purpose:'前往山顶的土地庙'},
+    {action:'interact:observe',target:{kind:'place',name:'百里外的土地庙'},purpose:'查看山顶庙墙上的裂痕'},
+  ]){
+    const {result}=await complete(context,{blocks,choices:[inspect,invalid]});
+    assert.equal(result.errorCode,'CHOICE_NOT_COMPILABLE',invalid.action);
+  }
+});
+
+test('a three-row opening prefers two executable authored choices over an unfunded craft', async () => {
+  const {context}=birth();
+  const forge={action:'craft:forge',target:'artifact',stake:'low',purpose:'在铁砧上打造护身法器'};
+  const {result}=await complete(context,{...firstScene,choices:[forge,...firstScene.choices]});
+  assert.equal(result.status,'ready',result.errorCode);
+  assert.deepEqual(result.scene.choices.map(c=>c.label),firstScene.choices.map(c=>c.purpose));
 });

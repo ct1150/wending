@@ -14,7 +14,7 @@ test('a decision shows authoritative costs and graded or unknown outlook without
   assert.match(unknown,/胜算未明/);assert.doesNotMatch(unknown,/胜算偏低|胜算较高/);
 });
 
-test('large-type mobile story shows one identity, birth stakes and actual costs; examples only fill, unsupported text remains',async t=>{
+test('large-type mobile story shows one identity, birth stakes and actual costs without a custom action field',async t=>{
  const {page,origin}=await liveBrowser(t);let posts=0;const errors=[];page.on('pageerror',e=>errors.push(e.message));
  await page.route('https://experience.test/**',async route=>{
    const url=new URL(route.request().url()),json=data=>route.fulfill({status:200,contentType:'application/json',body:JSON.stringify(data)});
@@ -31,17 +31,15 @@ test('large-type mobile story shows one identity, birth stakes and actual costs;
  await page.locator('#live-name').fill('云归');await page.locator('[data-live-start]').click();await page.locator('[data-live-choice]:enabled').first().waitFor();
  const expected=await page.evaluate(async()=>{const {openLiveArchive}=await import('/src/game/live-archive.js'),a=await openLiveArchive(),{state}=await a.load(),{compileChoices}=await import('/src/game/cultivation/live/engine.js');a.close();const cost=compileChoices(state,state.currentScene.choices)[0].costs;return {cost,goal:state.director.currentGoal,advantage:state.life.birth.cultivationProfile.advantages[0]};});
  assert.equal(posts,1);assert.equal(await page.locator('[data-character]').count(),1);assert.doesNotMatch(await page.locator('[data-live-state]').innerText(),/寿元\s*16/);
- assert.ok((await page.locator('[data-live-goal]').innerText()).includes(expected.goal));
+ if(expected.goal==='辨明眼前变化，自定下一步'){
+   assert.equal(await page.locator('.live-state-hint').innerText(),'当前处境');
+   assert.equal(await page.locator('[data-live-goal]').innerText(),'松溪 · 渡口');
+ }else assert.equal(await page.locator('[data-live-goal]').innerText(),expected.goal);
  assert.ok((await page.locator('[data-live-birth-facts]').innerText()).includes(expected.advantage));
  assert.match(await page.locator('[data-live-birth-facts]').innerText(),/代价/);
  assert.ok((await page.locator('#live-cost-0').innerText()).includes('灵力 '+expected.cost.spirit));
- await page.locator('[data-live-custom-toggle]').click();
- const example=page.locator('[data-live-example]').filter({hasText:'渡者'}).first(); const text=await example.innerText();await example.click();
- assert.equal(await page.locator('#live-custom-action').inputValue(),text);assert.equal(posts,1);
- await page.locator('#live-custom-action').fill('把月亮装进我的口袋');await page.locator('[data-live-custom-submit]').click();
- await page.locator('#live-custom-error:not([hidden])').waitFor();assert.equal(await page.locator('#live-custom-action').inputValue(),'把月亮装进我的口袋');
- for(const w of [320,390]){await page.setViewportSize({width:w,height:844});const result=await page.evaluate(()=>({pageWidth:document.documentElement.scrollWidth,focus:document.activeElement.id,
-   font:parseFloat(getComputedStyle(document.querySelector('.journey-prose p')).fontSize),controls:[...document.querySelectorAll('[data-live-example],[data-character],[data-live-choice]')].every(e=>{const r=e.getBoundingClientRect();return r.left>=-1&&r.right<=innerWidth+1&&r.height>=40;})}));assert.equal(result.pageWidth,w);assert.equal(result.focus,'live-custom-action');assert.ok(result.font>=20);assert.ok(result.controls);}
+ for(const w of [320,390]){await page.setViewportSize({width:w,height:844});const result=await page.evaluate(()=>({pageWidth:document.documentElement.scrollWidth,
+   font:parseFloat(getComputedStyle(document.querySelector('.journey-prose p')).fontSize),controls:[...document.querySelectorAll('[data-character],[data-live-choice]')].every(e=>{const r=e.getBoundingClientRect();return r.left>=-1&&r.right<=innerWidth+1&&r.height>=40;})}));assert.equal(result.pageWidth,w);assert.ok(result.font>=20);assert.ok(result.controls);}
  assert.equal(posts,1);assert.deepEqual(errors,[]);
 });
 
@@ -49,19 +47,27 @@ test('current method is distinguished from original traits; a repaired life offe
  const {storyLife}=await import('./helpers/experience-death.js'),{commitTurn}=await import('../src/game/cultivation/live/engine.js');
  const {liveCharacterSummary,renderCharacterDetails}=await import('../src/ui/character.js'),catalogs=await import('../src/game/cultivation/live/model.js');
  const {birth,steps}=storyLife('ui-repair',false,null,{selfStudy:true});let s=birth;
- const hints=()=>renderLiveJourney({state:s,stateHash:'hash',customAction:{open:true}},[]);
+ const offered=()=>s.currentScene.choices.map(choice=>choice.approach);
  for(const [i,row] of steps.slice(0,3).entries()){
    s=commitTurn(s,row.p,row.scene);
-   if(i===0)assert.ok(hints().includes('data-live-example="验看本命功法"'));
-   if(i===1)assert.ok(hints().includes('data-live-example="自行推演残法"'));
+   if(i===0)assert.ok(offered().includes('diagnose'));
+   if(i===1)assert.ok(offered().includes('restore'));
  }
  const html=renderCharacterDetails(liveCharacterSummary(s,catalogs));
  assert.match(html,/当前功法[\s\S]+已修补/);assert.match(html,/入世时的根基/);
- assert.ok(!hints().includes('data-live-example="自行推演残法"'));assert.ok(!hints().includes('data-live-example="验看本命功法"'));
+ assert.ok(!offered().includes('restore'));assert.ok(!offered().includes('diagnose'));
 });
 
 test('a still-running response offers to check the saved choice and keeps replacement inference unavailable',()=>{
  const state=createLiveGame({seed:1,engineVersion:7,experienceVersion:1,runId:'ui-wait'});
  const html=renderLiveJourney({state,pending:{},busy:false,status:'paused',errorCode:'ATTEMPT_IN_PROGRESS'},[]);
- assert.match(html,/仍在续写/);assert.match(html,/data-live-retry hidden/);assert.match(html,/data-live-resume>检查已有回应/);assert.doesNotMatch(html,/ATTEMPT_IN_PROGRESS|requestId/);
+ assert.match(html,/仍在续写/);
+ assert.match(html,/data-live-resume>查看续写进度/);
+ assert.doesNotMatch(html,/data-live-retry|ATTEMPT_IN_PROGRESS|requestId/);
+ const failed=renderLiveJourney({state,pending:{},busy:false,status:'paused',errorCode:'GENERATED_SCENE_INVALID'},[]);
+ assert.match(failed,/data-live-retry>继续故事/);
+ assert.doesNotMatch(failed,/data-live-resume/);
+ for(const view of [{state,pending:null,busy:false,status:'ready'}, {state,pending:{},busy:true,status:'pending'}]){
+   assert.doesNotMatch(renderLiveJourney(view,[]),/data-live-retry|data-live-resume/);
+ }
 });

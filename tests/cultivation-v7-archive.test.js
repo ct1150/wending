@@ -42,11 +42,11 @@ test('independent birth cannot persist purchased benefits without a real settlem
  assert.deepEqual(r.codes,['REINCARNATION_REQUIRES_SETTLEMENT','REINCARNATION_REQUIRES_SETTLEMENT']);assert.equal(r.current,null);
 });
 
-test('native v7 custom pending and committed intent roundtrip with director and original receipts',async t=>{
+test('native v7 offered choice pending and committed intent roundtrip with director and original receipts',async t=>{
  const {page}=await setup(t);
  const r=await page.evaluate(async()=>{
    const a=await open('v7-custom-source');await v7Born(a);
-   const current=await a.load(),pending=engine.prepareChoice(current.state,{requestId:'custom-native',customAction:'询问陈砚：旧桥的刻痕是谁留下的？'});await a.prepare(pending);
+   const current=await a.load(),pending=engine.prepareChoice(current.state,{requestId:'authored-question',choiceId:current.state.currentScene.choices[1].id});await a.prepare(pending);
    const b=await open('v7-custom-imported'),restored=await format.importLiveArchive(format.exportLiveArchive(a),b);
    const after=await v7Commit(b),c=await open('v7-custom-completed'),again=await format.importLiveArchive(format.exportLiveArchive(b),c);
    return {pending,restored,after,again,history:await c.readHistory(current.state.runId)};
@@ -65,16 +65,20 @@ test('captured 5.0.1 custom trade-tail pending and committed JSONL replay byte-i
    const before=JSON.stringify(await a.load());let freshCode;
    try{engine.prepareChoice(state,{requestId:captured.pending.identity.requestId,customAction:captured.pending.receipt.action.label});}catch(error){freshCode=error.code;}
    const refusedUnchanged=JSON.stringify(await a.load())===before;
-   await a.prepare(captured.pending);
-   const pendingText=await new Response(format.exportLiveArchive(a)).text(),b=await open('v501-trade-pending-import');
+   let archiveRejected=false;try{await a.prepare(captured.pending);}catch(error){archiveRejected=error.code==='ARCHIVE_INVALID_PENDING';}
+   // Recreate the original export envelope with the captured 5.0.1 pending.
+   const rows=(await new Response(format.exportLiveArchive(a)).text()).trim().split('\n').map(JSON.parse);
+   rows[0].pending=captured.pending;
+   rows.at(-1).manifest=rows.slice(1,-1).reduce((hash,row)=>identity.sha256(hash+row.chunk.hash),identity.sha256(JSON.stringify(rows[0])));
+   const pendingText=rows.map(row=>JSON.stringify(row)).join('\n')+'\n',b=await open('v501-trade-pending-import');
    const restored=await format.importLiveArchive(new Blob([pendingText]).stream(),b),pendingTextAgain=await new Response(format.exportLiveArchive(b)).text();
    const nextState=engine.commitTurn(restored.state,restored.pending,captured.continuationScene);
    const committed=await b.commit({expectedRevision:restored.state.revision,nextState,scene:captured.continuationScene,memoryDelta:memory.buildMemoryDelta(restored.pending.receipt,captured.continuationScene),requestId:restored.pending.identity.requestId});
    const historyText=await new Response(format.exportLiveArchive(b)).text(),c=await open('v501-trade-history-import');
    const replayed=await format.importLiveArchive(new Blob([historyText]).stream(),c),historyTextAgain=await new Response(format.exportLiveArchive(c)).text();
-   return {captured,freshCode,refusedUnchanged,restored,committed,replayed,pendingBytesEqual:pendingTextAgain===pendingText,historyBytesEqual:historyTextAgain===historyText,committedHash:identity.stateHash(committed.state),history:await c.readHistory(state.runId)};
+   return {captured,freshCode,archiveRejected,refusedUnchanged,restored,committed,replayed,pendingBytesEqual:pendingTextAgain===pendingText,historyBytesEqual:historyTextAgain===historyText,committedHash:identity.stateHash(committed.state),history:await c.readHistory(state.runId)};
  });
- assert.equal(r.freshCode,'CUSTOM_ACTION_UNSUPPORTED');assert.equal(r.refusedUnchanged,true);
+ assert.equal(r.freshCode,'CUSTOM_ACTION_UNSUPPORTED');assert.equal(r.archiveRejected,true);assert.equal(r.refusedUnchanged,true);
  assert.deepEqual(r.restored.pending,r.captured.pending);assert.equal(r.pendingBytesEqual,true);
  assert.equal(r.committedHash,r.captured.committedStateHash);assert.equal(r.historyBytesEqual,true);
  assert.deepEqual(r.replayed.state,r.committed.state);assert.equal(r.replayed.pending,null);

@@ -1,11 +1,11 @@
-import {ITEMS,INTENTS,GROWTH_APPROACHES} from '../game/cultivation/live/model.js';
+import {ITEMS,EXPERIENCE_INTENTS} from '../game/cultivation/live/model.js';
 import {isV7Life,validV7Target,v7ActionRule,V7_REALMS} from '../game/cultivation/live/cultivation-rules.js';
+import {advancesEvent,isExperienceLife} from '../game/cultivation/live/experience.js';
 import {formatStoryChoiceLabel} from '../game/cultivation/live/story-choice-label.js';
 import {createNamedTargetLookup} from './story-named-targets.js';
 
 const object=value=>value!==null&&typeof value==='object'&&!Array.isArray(value);
-const actions=new Set(Object.entries(INTENTS).flatMap(([intent,approaches])=>approaches.map(approach=>intent+':'+approach)));
-const birthActions=new Set([...actions,...GROWTH_APPROACHES.map(approach=>'craft:'+approach)]);
+const actions=new Set(Object.entries(EXPERIENCE_INTENTS).flatMap(([intent,approaches])=>approaches.map(approach=>intent+':'+approach)));
 export const isFixedV7Interaction=action=>typeof action==='string'&&actions.has(action)&&action.startsWith('interact:');
 const decoration=new Set(['id','label','description','title','role','alias']);
 function changed(rows,fn){let next;for(const [i,row]of rows.entries()){const item=fn(row);if(item!==row){next??=rows.slice();next[i]=item;}}return next??rows;}
@@ -17,9 +17,29 @@ function clean(target){
 }
 const cleanRow=row=>object(row)&&Object.hasOwn(row,'target')?replace(row,'target',clean(row.target)):row;
 
+// Some model responses use the canonical action's two fields or call the
+// authored button text "label". Never infer action, target or stake from prose.
+export function normalizeAuthoredChoiceFields(row){
+  if(!object(row))return row;
+  let result=row;
+  if(Object.hasOwn(row,'intent')||Object.hasOwn(row,'approach')){
+    if(typeof row.intent!=='string'||typeof row.approach!=='string')return row;
+    const action=row.intent+':'+row.approach;
+    if(!actions.has(action)||Object.hasOwn(row,'action')&&row.action!==action)return row;
+    const {intent,approach,...rest}=row;
+    result={...rest,action};
+  }
+  if(actions.has(result.action)&&typeof result.label==='string'&&
+     (!Object.hasOwn(result,'purpose')||result.purpose===result.label)){
+    const {label,...rest}=result;
+    result={...rest,purpose:label};
+  }
+  return result;
+}
+
 // At the model boundary only. This fills wire fields owned by the rules and
 // resolves an exact visible name; it never derives an action from prose.
-export function normalizeV7Presentation(wire,context){
+export function normalizeV7Presentation(wire,context,{authoredChoices=false}={}){
   if(!isV7Life(context.life)||context.director?.version!==7||!Array.isArray(wire.blocks)||!Array.isArray(wire.choices))return wire;
   const lookup=createNamedTargetLookup(context),names=new Map(),dead=new Set();
   const key=t=>t.known?'known:'+t.known.id:JSON.stringify([t.kind,t.name]);
@@ -27,7 +47,7 @@ export function normalizeV7Presentation(wire,context){
   const remember=t=>{const matches=names.get(t.name)??new Map();matches.set(key(t),t);names.set(t.name,matches);};
   const identify=value=>{try{return lookup(value);}catch{return null;}};
   for(const [index]of context.entities.entries())remember(lookup('k'+(index+1)));
-  const blocks=changed(wire.blocks,b=>b?.kind==='dialogue'?replace(b,'speaker',clean(b.speaker)):b),choices=changed(wire.choices,cleanRow);
+  const blocks=changed(wire.blocks,b=>b?.kind==='dialogue'?replace(b,'speaker',clean(b.speaker)):b),choices=changed(wire.choices,row=>cleanRow(authoredChoices?normalizeAuthoredChoiceFields(row):row));
   for(const target of [...blocks.filter(b=>b?.kind==='dialogue').map(b=>b.speaker),...choices.map(c=>object(c)&&!Object.hasOwn(c,'target')?clean(c.targetId):c?.target)]){
     if(!object(target))continue;const t=identify(target);if(t)remember(t);
   }
@@ -49,11 +69,12 @@ export function normalizeV7Presentation(wire,context){
     const literal=typeof value==='string'&&(value==='self'||Object.hasOwn(ITEMS,value)||Object.hasOwn(V7_REALMS,value));
     const t=literal?null:identify(value);if(!literal&&(!t||t.kind==='person'&&t.name===context.life.name))return null;
     const entity=t?entityFor(t):null,targetId=entity?.id??value,targetName=entity?.name??ITEMS[value]??V7_REALMS[value]?.name??'', [intent,approach]=row.action.split(':');
-    try{if(v7ActionRule({life:context.life,turnId:context.identity.turnId,relatedEntities:entity?[entity]:[]},{intent,approach,targetId,stake:row.stake}).reason)return null;}catch{return null;}
+    const director=isExperienceLife(context.life)?{...context.director,eventCount:context.director.eventCount+(advancesEvent(context.receipt)?1:0)}:context.director;
+    try{if(v7ActionRule({life:context.life,turnId:context.identity.turnId,director,relatedEntities:entity?[entity]:[]},{intent,approach,targetId,stake:row.stake}).reason)return null;}catch{return null;}
     return {targetId,targetName};
   }
   const finalBlocks=changed(blocks,b=>b?.kind==='dialogue'?replace(b,'speaker',named(b.speaker,null)):b),finalChoices=changed(choices,row=>{
-    if(!object(row)||!(context.life.birth.backgroundId?birthActions:actions).has(row.action))return row;
+    if(!object(row)||!actions.has(row.action))return row;
     // A nested object in a supposed scalar is not a fixed rule field: never
     // overwrite it and thereby conceal an explicit authority or identity claim.
     if(row.anchor!==null&&typeof row.anchor==='object'||isFixedV7Interaction(row.action)&&row.stake!==null&&typeof row.stake==='object')throw Error('Invalid mechanical field');

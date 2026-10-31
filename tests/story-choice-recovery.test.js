@@ -6,9 +6,9 @@ import {createLiveGame,prepareOpening} from '../src/game/cultivation/live/engine
 import {renderLiveJourney} from '../src/ui/journey.js';
 
 const originalLabels=[
-  '询问灰衣汉子：询问陶罐中装着什么，以及他为何在此处停留',
-  '观察灰衣汉子：观察陶罐的质地与周围环境，判断是否有危险',
-  '婉拒灰衣汉子：无视他，转身离开村口',
+  '询问陶罐中装着什么，以及他为何在此处停留',
+  '观察陶罐的质地与周围环境，判断是否有危险',
+  '无视他，转身离开村口',
 ];
 
 async function setup(t){
@@ -32,7 +32,7 @@ async function setup(t){
         {action:'travel:road',target:{kind:'place',name:'村边茶棚',ref:'',status:null},stake:'low',purpose:'前往村边茶棚歇脚',anchor:0},
       ],title:'陶罐之后',location:'村口',memoryDeltas:[],story:{pattern:'investigation',beat:'progress',anchors:[0]}};
     }
-    globalThis.playableStory=async(name,engineMenu=false)=>{
+    globalThis.playableStory=async(name)=>{
       const archive=await open(name),mount=document.createElement('section');document.body.append(mount);
       const sessionRef='session-'+name,cache=new Map();
       const f={archive,mount,cache,posts:[],gets:[],inferences:[],settlements:[],progress:[],holdNext:false,corrupt:false};
@@ -47,12 +47,12 @@ async function setup(t){
       const ai={async run(model,input){
         f.inferences.push({model,input});
         const context=f.posts.at(-1).context,wire=context.phase==='opening'?capturedStoryWire():continuation(context);
-        if(engineMenu&&context.phase==='opening'){
+        if(f.invented){
           wire.blocks.push({kind:'dialogue',speaker:{kind:'person',name:'灰衣汉子'},text:'听见了吗？缸底有东西在动。'});
           // A real v7 sample wrote complete prose but used three unknown actions.
           wire.choices=wire.choices.map(row=>({...row,action:'invented-command',extra:'untrusted suggestion'}));
-        }else if(engineMenu)delete wire.choices;
-        if(f.authoredBlocks)wire.blocks=f.authoredBlocks;
+        }
+        if(f.wireFor)Object.assign(wire,f.wireFor(context));
         if(f.corrupt)wire.story.receipt={elapsedDays:0};
         return new ReadableStream({start(controller){
           controller.enqueue(frame({model:GLM_MODEL_ID,choices:[{index:0,delta:{content:JSON.stringify(wire)}}]}));
@@ -60,7 +60,7 @@ async function setup(t){
           if(f.holdNext){f.holdNext=false;f.finish=finish;}else finish();
         }});
       }};
-      const api=createStoryApi({budget,config:{readiness:()=>profile},provider:engineMenu?generateScene:(ai,p,c,o,r)=>generateScene(ai,p,c,o,{...r,engineMenu:false})});
+      const api=createStoryApi({budget,config:{readiness:()=>profile},provider:generateScene});
       const client=createStoryClient({location:{protocol:'https:'},fetch:async(path,options)=>{
         if(path==='/api/story/turn')f.posts.push({...JSON.parse(options.body),saved:await archive.load()});
         else if(path.startsWith('/api/story/turn/'))f.gets.push(path);
@@ -77,7 +77,7 @@ async function setup(t){
       };
       f.session=createLiveSession({archive,client,onChange:render,onProgress:view=>{
         render(view);f.progress.push({turn:f.posts.at(-1).context.identity.turnId,preview:view.preview});
-        if(engineMenu?view.preview?.blocks?.some(block=>block.text):view.preview?.choices?.length===3)previewReady();
+        if(f.invented?view.preview?.blocks?.some(block=>block.text):view.preview?.choices?.length===3)previewReady();
       }});
       mount.addEventListener('click',event=>{
         const button=event.target.closest('[data-live-choice]');if(!button||button.disabled)return;
@@ -93,7 +93,7 @@ async function setup(t){
   return browser;
 }
 
-test('legacy model-menu compatibility: the original 126-character opening becomes three usable choices after one real provider response',async t=>{
+test('the original 126-character opening becomes three usable choices after one real provider response',async t=>{
   const {page}=await setup(t),r=await page.evaluate(async()=>{
     const f=await playableStory('original-opening');f.holdNext=true;const starting=f.start();
     let timer;const visible=await Promise.race([f.previewReady.then(()=>true),new Promise(resolve=>timer=setTimeout(()=>resolve(false),2000))]);clearTimeout(timer);
@@ -108,7 +108,30 @@ test('legacy model-menu compatibility: the original 126-character opening become
   assert.equal(r.posts.length,1);assert.equal(r.inferences,1);assert.equal(r.posts[0].attempt.retryOf,null);assert.deepEqual(r.posts[0].saved.generation.context,r.posts[0].context);assert.equal(r.settlements.length,1);assert.equal(r.settlements[0].result.status,'ready');assert.equal(r.history.entries.length,1);
 });
 
-test('legacy model-menu compatibility: each original choice independently continues the same opening and commits its exact selected action once',async t=>{
+test('one unaffordable model choice shows the actual cost while the other advances the saved turn',async t=>{
+  const {page}=await setup(t);
+  const opening=await page.evaluate(async()=>{
+    const f=globalThis.boundedMenu=await playableStory('unfunded-forge');
+    f.wireFor=c=>c.phase==='opening'?{choices:[
+      {action:'craft:forge',target:'artifact',stake:'low',purpose:'在村口铁砧上打造护身法器'},
+      {action:'interact:observe',target:'self',purpose:'观察陶罐缺口下的潮湿印记'},
+    ]}:{};
+    await f.start();
+    return {status:f.session.view().status,buttons:f.buttons(),posts:f.posts.length};
+  });
+  assert.equal(opening.status,'ready');assert.equal(opening.posts,1);
+  assert.deepEqual(opening.buttons.map(b=>b.disabled),[true,false]);
+  const disabled=page.locator('[data-live-choice]:disabled').filter({hasText:'在村口铁砧上打造护身法器'});
+  assert.match(await disabled.innerText(),/缺少(?:玄铁|灵石)/);
+  await page.locator('[data-live-choice]:enabled').filter({hasText:'观察陶罐缺口下的潮湿印记'}).click();
+  const after=await page.evaluate(async()=>{
+    const f=globalThis.boundedMenu;await f.action;const row=await f.archive.load();
+    return {revision:row.state.revision,action:row.state.lastReceipt.action.label,pending:row.pending,posts:f.posts.length};
+  });
+  assert.deepEqual(after,{revision:2,action:'观察陶罐缺口下的潮湿印记',pending:null,posts:2});
+});
+
+test('each original choice independently continues the same opening and commits its exact selected action once',async t=>{
   const {page}=await setup(t),rows=await page.evaluate(async()=>{
     const rows=[];
     for(let index=0;index<3;index++){
@@ -138,33 +161,31 @@ test('legacy model-menu compatibility: each original choice independently contin
   assert.equal(rows[2].view.state.currentScene.blocks[0].kind,'narration');assert.match(rows[2].view.state.currentScene.blocks[0].text,/没有追问/u);
 });
 
-test('the actual v7 HTTP route streams prose without phantom buttons and commits a playable engine menu despite three invented model commands',async t=>{
+test('the actual v7 HTTP route never commits a replacement menu for three invented model commands',async t=>{
   const {page}=await setup(t),r=await page.evaluate(async()=>{
-    const f=await playableStory('engine-menu-real-route',true);f.holdNext=true;
-    const starting=f.start();await Promise.race([f.previewReady,new Promise((_,reject)=>setTimeout(()=>reject(Error('no narrative draft')),3000))]);
-    const draft={buttons:f.buttons(),history:await f.archive.readHistory('captured-playable')};
-    f.finish();await starting;
-    const opening=f.session.view();if(opening.status!=='ready')throw Error(opening.errorCode);
-    const buttons=f.buttons(),choice=opening.state.currentScene.choices[0];
-    f.mount.querySelector('[data-live-choice]').click();await f.action;
-    const view=f.session.view(),history=await f.archive.readHistory('captured-playable'),reloaded=await f.reload();
-    return {draft,buttons,choice,opening,view,history,reloaded,posts:f.posts,settlements:f.settlements.length,calls:f.inferences.length,
-      requested:f.inferences[0].input.response_format.json_schema.schema.required,previews:f.progress.flatMap(p=>p.preview?.choices??[])};
+    const f=await playableStory('no-fallback');f.invented=true;
+    await f.start();const view=f.session.view(),history=await f.archive.readHistory('captured-playable');
+    return {view,history,buttons:f.buttons(),posts:f.posts.length,calls:f.inferences.length,
+      requested:f.inferences[0].input.response_format.json_schema.schema.required};
   });
-  assert.deepEqual(r.draft.buttons,[]);assert.deepEqual(r.previews,[]);assert.equal(r.draft.history.entries.length,0);
-  assert.deepEqual(r.requested,['blocks']);assert.deepEqual(r.opening.state.currentScene.blocks[0],capturedStoryWire().blocks[0]);
-  assert.equal(r.opening.state.currentScene.blocks[1].text,'听见了吗？缸底有东西在动。');
-  assert.ok(r.buttons.length>=2&&r.buttons.length<=3);assert.ok(r.buttons.every(row=>row.label&&row.choiceId&&!row.disabled));
-  assert.equal(r.view.status,'ready',r.view.errorCode);assert.equal(r.view.pending,null);assert.equal(r.view.state.revision,2);
-  assert.deepEqual(r.posts[1].context.receipt.action,r.choice);assert.equal(r.calls,2);assert.equal(r.posts.length,2);assert.equal(r.settlements,2);
-  assert.equal(r.history.entries.length,2);assert.deepEqual(r.history.entries[1].receipt.action,r.choice);
-  assert.deepEqual(r.reloaded.state,r.view.state);assert.equal(r.reloaded.pending,null);
+  assert.ok(r.requested.includes('blocks')&&r.requested.includes('choices'));
+  assert.equal(r.view.status,'paused');assert.ok(r.view.pending);assert.equal(r.view.state.revision,0);
+  assert.equal(r.history.entries.length,0);assert.ok(r.buttons.every(row=>!row.choiceId&&row.disabled));
+  assert.equal(r.calls,1);assert.equal(r.posts,1);
 });
 
 test('a saved rejected inquiry retries once, then its negotiated action survives refresh and settles once',async t=>{
   const {page}=await setup(t),r=await page.evaluate(async()=>{
-    const f=await playableStory('retry-trade',true),runId='trade-speaker',name='购买香烛的妇人';
-    f.authoredBlocks=[{kind:'dialogue',speaker:{kind:'person',name},text:'桥旁还有一艘船。'}];
+    const f=await playableStory('retry-trade'),runId='trade-speaker',name='购买香烛的妇人';
+    f.wireFor=context=>{
+      const actor=context.phase==='opening'?{kind:'person',name}:'k1';
+      const opening=context.phase==='opening',inquiry=context.receipt.action?.approach==='ask';
+      const text=opening?'桥旁还有一艘船。':inquiry?'你给我一份行粮，我帮你准备渡资。':'那份行粮已经交清，我在桥头等你。';
+      return {blocks:[{kind:'dialogue',speaker:actor,text}],choices:[
+        inquiry?{action:'negotiate:cooperate',target:actor,stake:'low',purpose:'同意给一份行粮，与妇人合作筹措渡资'}:{action:'interact:ask',target:actor,purpose:'向妇人打听桥旁那艘船'},
+        {action:'interact:decline',target:actor,purpose:'辞别妇人，另寻过桥的法子'},
+      ]};
+    };
     const opening=await f.session.start({runId,seed:5,engineVersion:7,experienceVersion:1});
     const inquiry=opening.state.currentScene.choices.find(choice=>choice.approach==='ask');
     const requestId='saved-inquiry',attempt={id:'previous-inference',sessionRef:f.posts[0].attempt.sessionRef,retryOf:null};
@@ -191,7 +212,7 @@ test('a saved rejected inquiry retries once, then its negotiated action survives
   assert.deepEqual(r.posts[1].attempt.retryOf,{attemptId:r.attempt.id,sessionRef:r.attempt.sessionRef});
   assert.equal(r.resumed.pending,null);assert.equal(r.resumed.state.revision,2);assert.deepEqual(r.resumed.state.lastReceipt,r.pending.receipt);
   assert.deepEqual(r.refreshed.state,r.resumed.state);assert.equal(r.callsAfterRefresh,2);assert.equal(r.gets,2);
-  assert.equal(r.trade.targetId,r.pending.receipt.action.targetId);assert.match(r.trade.label,/购买香烛的妇人/u);
+  assert.equal(r.trade.targetId,r.pending.receipt.action.targetId);assert.equal(r.trade.label,'同意给一份行粮，与妇人合作筹措渡资');
   assert.deepEqual(r.posts[2].context.receipt.action,r.trade);assert.equal(r.posts[2].attempt.retryOf,null);
   assert.equal(r.final.status,'ready');assert.equal(r.final.state.revision,3);assert.equal(r.final.pending,null);
   assert.deepEqual(r.history.entries[1].receipt,r.pending.receipt);assert.deepEqual(r.history.entries[2].receipt,r.final.state.lastReceipt);

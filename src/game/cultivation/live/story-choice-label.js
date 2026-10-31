@@ -1,6 +1,7 @@
 // One display composer for tentative model output and the verified scene.
 // Mechanical action/target authority remains in the decoder and rules engine.
-export function formatStoryChoiceLabel({action,targetId,targetName='',purpose,stake}){
+export function formatStoryChoiceLabel({action,targetId,targetName='',purpose,authoredChoices=false}){
+  if(typeof purpose!=='string'||!purpose.trim())return null;
   const labels={
     'practice:steady':'凝神修行','practice:intensive':'闭关苦修','practice:breakthrough':'尝试突破'+targetName,'practice:forbidden':'尝试禁术修行',
     'rest:recover':'歇息调养','rest:retire':'静心休养','rest:medicine':'服用丹药疗伤','rest:extend':'服用延寿丹',
@@ -16,8 +17,8 @@ export function formatStoryChoiceLabel({action,targetId,targetName='',purpose,st
     'interact:help':'援助'+targetName,'interact:decline':'婉拒'+targetName,'interact:leave':targetId==='self'?'结束当前互动':'结束与'+targetName+'的互动',
   };
   if(!Object.hasOwn(labels,action))return null;
+  if(authoredChoices)return purpose.trim();
   const label=labels[action];
-  if(typeof purpose!=='string')return label+(stake==='high'?'（冒险）':stake==='low'?'（谨慎）':'');
   const [intent,approach]=action.split(':');
   const executable=intent==='fight'?'迎战'+targetName+'，'+({guard:'稳守',assault:'强攻',desperate:'搏命'})[approach]:intent==='evade'?'避开'+targetName+'，'+({withdraw:'后撤',conceal:'藏身',blood:'燃寿遁逃'})[approach]:label;
   return executable+'：'+purpose.trim();

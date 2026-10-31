@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {liveBrowser} from './helpers/live-browser.js';
 
-test('native immediate interactions are atomic, offline and replayable, while old pending still uses AI',async t=>{
+test('legacy refusals and farewells wait for the model and keep their receipt across retry and import',async t=>{
   const {page}=await liveBrowser(t),r=await page.evaluate(async()=>{
     const {createLiveSession}=await import('/src/ui/live-session.js'),{exportLiveArchive,importLiveArchive}=await import('/src/game/live-save-format.js');
     async function setup(name){
@@ -11,30 +11,34 @@ test('native immediate interactions are atomic, offline and replayable, while ol
       await a.commit({expectedRevision:0,nextState:engine.commitTurn(state,pending,scene),scene,memoryDelta:memory.buildMemoryDelta(pending.receipt,scene),requestId:pending.identity.requestId});return {a,npc};
     }
     const results=[];
-    for(const [index,approach]of ['decline','leave'].entries()){
-      const {a,npc}=await setup('immediate-'+approach),calls={cap:0,session:0,post:0,get:0},client={async capabilities(){calls.cap++;throw Error('offline');},async createSession(){calls.session++;throw Error('offline');},async requestTurn(){calls.post++;throw Error('offline');},async getTurn(){calls.get++;throw Error('offline');}},session=createLiveSession({archive:a,client});await session.load();const before=await a.load();
-      await session.choose({choiceId:before.state.currentScene.choices[index].id,baseRevision:before.state.revision,stateHash:identity.stateHash(before.state)});const after=await a.load(),history=await a.readHistory(after.state.runId),records=await a.readRelated(after.state.runId,{entityIds:[npc.id]}),restored=await open('immediate-restored-'+approach);await importLiveArchive(exportLiveArchive(a),restored);
-      results.push({kind:'offline',approach,calls:{...calls},status:session.view().status,revision:after.state.revision,pending:after.pending,sameLife:JSON.stringify(before.state.life)===JSON.stringify(after.state.life),sameImported:identity.stateHash((await restored.load()).state)===identity.stateHash(after.state),history:history.entries.length,decisions:records.filter(row=>row.source==='rules'&&row.kind==='fact').length,openPromises:records.filter(row=>row.kind==='promise'&&row.status==='open').length});
-      client.capabilities=async()=>{calls.cap++;return {available:true,storyActions:true};};client.createSession=async()=>{calls.session++;return {sessionRef:'next-session'};};client.requestTurn=async(p,c,at)=>{calls.post++;return {status:'ready',requestId:p.identity.requestId,attemptId:at.id,sessionRef:at.sessionRef,scene:fixture(after.state,after.state.turnId)};};
-      await session.choose({choiceId:after.state.currentScene.choices[0].id,baseRevision:after.state.revision,stateHash:identity.stateHash(after.state)});results.push({kind:'next-ai',approach,calls,status:session.view().status,revision:session.view().state.revision});
-    }
-    {
-      const {a}=await setup('immediate-abort'),before=await a.load(),p=engine.prepareChoice(before.state,{requestId:'abort',choiceId:before.state.currentScene.choices[0].id}),original=a._writeMemory;a._writeMemory=()=>{throw Error('injected write failure');};let failed=false;try{await a.commitInteraction({expectedArchiveId:before.archiveId,expectedRevision:before.state.revision,pending:p});}catch{failed=true;}a._writeMemory=original;const after=await a.load();results.push({kind:'abort',failed,sameState:identity.stateHash(before.state)===identity.stateHash(after.state),pending:after.pending,history:(await a.readHistory(before.state.runId)).entries.length});
-    }
-    {
-      const {a}=await setup('immediate-race'),b=await open('immediate-race'),before=await a.load();await b.load();const args={expectedArchiveId:before.archiveId,expectedRevision:before.state.revision},p=engine.prepareChoice(before.state,{requestId:'race-a',choiceId:before.state.currentScene.choices[0].id}),q=engine.prepareChoice(before.state,{requestId:'race-b',choiceId:before.state.currentScene.choices[0].id}),out=await Promise.allSettled([a.commitInteraction({...args,pending:p}),b.commitInteraction({...args,pending:q})]),after=await a.load();results.push({kind:'race',committed:out.filter(row=>row.status==='fulfilled').length,revision:after.state.revision,rngOnce:after.state.rng===p.nextRng,history:(await a.readHistory(after.state.runId)).entries.length});
-    }
-    {
-      const {a}=await setup('immediate-old-pending'),before=await a.load(),p=engine.prepareChoice(before.state,{requestId:'old-decline',choiceId:before.state.currentScene.choices[0].id});await a.prepare(p);let blocked=false;try{await a.commitInteraction({expectedArchiveId:before.archiveId,expectedRevision:before.state.revision,pending:p});}catch{blocked=true;}let posts=0;
-      const client={async capabilities(){return {available:true,storyActions:true};},async createSession(){return {sessionRef:'old-session'};},async requestTurn(p,c,at){posts++;return {status:'ready',requestId:p.identity.requestId,attemptId:at.id,sessionRef:at.sessionRef,scene:fixture(before.state,99)};}},session=createLiveSession({archive:a,client});await session.load();await session.resume();const still=await a.load();await session.retry();results.push({kind:'old-pending',blocked,unchangedBeforeRetry:JSON.stringify(still.pending)===JSON.stringify(p),posts,revision:session.view().state.revision,sameReceipt:JSON.stringify(session.view().state.lastReceipt)===JSON.stringify(p.receipt)});
-    }
-    {
-      const {a}=await setup('immediate-snapshot'),before=await a.load(),p=engine.prepareChoice(before.state,{requestId:'snapshot',choiceId:before.state.currentScene.choices[0].id}),original=JSON.stringify(p.receipt),capture=a._capture.bind(a);let release,started;const gate=new Promise(r=>release=r),capturing=new Promise(r=>started=r);a._capture=async(...args)=>{const row=await capture(...args);started();await gate;return row;};const committing=a.commitInteraction({expectedArchiveId:before.archiveId,expectedRevision:before.state.revision,pending:p});await capturing;p.receipt.action.label='异步改写的无效标签';a._capture=capture;release();await committing;const after=await a.load(),history=await a.readHistory(after.state.runId);results.push({kind:'snapshot',sameReceipt:JSON.stringify(after.state.lastReceipt)===original,sameHistory:JSON.stringify(history.entries.at(-1).receipt)===original});
-    }
-    {
-      const {a}=await setup('immediate-physical'),session=createLiveSession({archive:a,client:{async capabilities(){throw Error('must not infer');}}});await session.load();const before=await a.load(),other=await open('immediate-physical');await importLiveArchive(exportLiveArchive(a),other);const imported=await other.load();await session.choose({choiceId:before.state.currentScene.choices[0].id,baseRevision:before.state.revision,stateHash:identity.stateHash(before.state)});results.push({kind:'physical',error:session.view().errorCode,differentArchive:before.archiveId!==imported.archiveId,revision:(await other.load()).state.revision});
+    for(const [index,approach] of ['decline','leave'].entries()){
+      const {a}=await setup('online-'+approach),before=await a.load();
+      let available=false,posts=0;
+      const client={
+        async capabilities(){return {available,storyActions:true};},
+        async createSession(){return {sessionRef:'new-session'};},
+        async requestTurn(p,c,at){
+          posts++;
+          const scene=fixture(before.state,2);
+          scene.blocks[0].text='水声压过话音，桥头有人放下缆绳。';
+          return {status:'ready',requestId:p.identity.requestId,attemptId:at.id,sessionRef:at.sessionRef,scene};
+        },
+      };
+      const session=createLiveSession({archive:a,client});await session.load();
+      await session.choose({choiceId:before.state.currentScene.choices[index].id,baseRevision:before.state.revision,stateHash:identity.stateHash(before.state)});
+      const paused=await a.load();available=true;
+      await session.retry();const after=await a.load();
+      const restored=await open('roundtrip-'+approach);await importLiveArchive(exportLiveArchive(a),restored);
+      results.push({approach,posts,before:before.state.revision,paused:paused.state.revision,pending:paused.pending.receipt.action.approach,revision:after.state.revision,blocks:after.state.currentScene.blocks,sameReceipt:JSON.stringify(paused.pending.receipt)===JSON.stringify(after.state.lastReceipt),sameImport:identity.stateHash((await restored.load()).state)===identity.stateHash(after.state)});
     }
     return results;
   });
-  for(const row of r){if(row.kind==='offline'){assert.equal(row.status,'ready');assert.deepEqual(row.calls,{cap:0,session:0,post:0,get:0});assert.equal(row.revision,2);assert.equal(row.pending,null);assert.ok(row.sameLife&&row.sameImported);assert.equal(row.history,2);assert.equal(row.decisions,1);assert.equal(row.openPromises,1);}else if(row.kind==='next-ai'){assert.equal(row.status,'ready');assert.equal(row.calls.post,1);assert.equal(row.revision,3);}else if(row.kind==='abort'){assert.ok(row.failed&&row.sameState);assert.equal(row.pending,null);assert.equal(row.history,1);}else if(row.kind==='race'){assert.equal(row.committed,1);assert.equal(row.revision,2);assert.ok(row.rngOnce);assert.equal(row.history,2);}else if(row.kind==='snapshot'){assert.ok(row.sameReceipt&&row.sameHistory);}else if(row.kind==='physical'){assert.ok(row.differentArchive);assert.equal(row.error,'ARCHIVE_CONFLICT');assert.equal(row.revision,1);}else{assert.ok(row.blocked&&row.unchangedBeforeRetry&&row.sameReceipt);assert.equal(row.posts,1);assert.equal(row.revision,2);}}
+  for(const row of r){
+    assert.equal(row.before,row.paused);
+    assert.equal(row.pending,row.approach);
+    assert.equal(row.posts,1);
+    assert.equal(row.revision,row.before+1);
+    assert.match(row.blocks[0].text,/桥头有人放下缆绳/);
+    assert.ok(row.sameReceipt&&row.sameImport);
+  }
 });

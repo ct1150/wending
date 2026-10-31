@@ -11,7 +11,7 @@ const numericCode=error=>Number(error?.code??error?.errors?.[0]?.code??error?.st
 
 // A trusted server-only transport. It returns one ordinary completion to the
 // existing validator; no partial scene can reach the archive commit path.
-export function createGlmTransport({ai,context,engineMenu=false,onProgress=()=>{},deadlineAt=Infinity,signal,timeoutMs=STORY_LIMITS.timeoutMs}={}) {
+export function createGlmTransport({ai,context,authoredChoices=false,onProgress=()=>{},deadlineAt=Infinity,signal,timeoutMs=STORY_LIMITS.timeoutMs}={}) {
   let accountingUnknown=false;
   const started=Date.now(),endsAt=Math.min(started+timeoutMs,deadlineAt);
   function assertActive(){if(signal?.aborted||Date.now()>=endsAt)throw fault('PROVIDER_TIMEOUT');}
@@ -42,23 +42,21 @@ export function createGlmTransport({ai,context,engineMenu=false,onProgress=()=>{
         // so a fast token stream does not parse both JSON previews per token.
         if(!force&&inspectedBytes>=0&&modelSeen===inspectedModel&&contentBytes-inspectedBytes<64&&now-inspectedAt<32)return;
         inspectedBytes=contentBytes;inspectedAt=now;inspectedModel=modelSeen;
-        const next=readStoryPreview(text),draft=readStoryPresentation(text,context);
-        // Stream the author's prose; only the engine's committed actions become buttons.
-        if(engineMenu)draft.choices=[];
+        const next=readStoryPreview(text),draft=readStoryPresentation(text,context,{authoredChoices});
         const serialized=JSON.stringify(draft);
         if(/<\/?(?:think|thinking|analysis|reasoning)(?:\s|>)/iu.test(next+'\n'+draft.blocks.map(block=>(block.speaker??'')+'\n'+block.text).join('\n')+'\n'+draft.choices.map(choice=>choice.label).join('\n')))throw fault('PROVIDER_RESPONSE_INVALID');
         if(!active||!modelSeen)return;
         // The HTTP writer resets all rows if a snapshot shrinks. A damaged
         // later field must not retract already displayed, individually closed
         // blocks. An unfinished row stays a draft until the parser closes it.
-        const hasClosed=engineMenu&&displayedBlocks.some(row=>row.complete);
+        const hasClosed=displayedBlocks.some(row=>row.complete);
         if(hasClosed&&(draft.blocks.length<displayedBlocks.length||displayedBlocks.some((row,i)=>{
           const now=draft.blocks[i];
           return row.complete&&(!now?.complete||now.kind!==row.kind||now.speaker!==row.speaker||now.text!==row.text);
         })))return;
         if(serialized!==presentation){
           presentation=serialized;
-          if(engineMenu)displayedBlocks=draft.blocks.map(row=>({...row}));
+          displayedBlocks=draft.blocks.map(row=>({...row}));
           onProgress({type:'presentation',...draft});
         }
         // Text-only subscribers also interpret a non-prefix update as reset.

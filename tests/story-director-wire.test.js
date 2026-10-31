@@ -25,6 +25,17 @@ function wireFixture(){
   return {blocks:[{kind:'narration',text:'江陌站在渡口旧桩旁，指给你看水流改道后露出的刻痕。你留在岸上，尚未答应任何委托。'+ '河岸的痕迹仍待辨认，先听清来由再作取舍。'.repeat(8)}],choices:[{action:'interact:ask',target:actor,stake:'low',purpose:'水流何时开始改道',anchor:0},{action:'interact:observe',target:'self',stake:'low',purpose:'核对旧桩上的凿痕',anchor:0},{action:'interact:decline',target:actor,stake:'low',purpose:'暂不答应调查改道之事',anchor:0}],title:'旧桩之问',location:'渡口',memoryDeltas:[{target:actor,kind:'clue',anchor:0,status:'open'}],story:{pattern:'investigation',beat:'progress',anchors:[0]}};
 }
 
+test('the model receives actual goals only, while persisted director data remains replayable',()=>{
+  const c=context();
+  c.director.currentGoal='辨明眼前变化，自定下一步';
+  let wire=buildGlmWire(c,'',{storyActions:true});
+  assert.equal(wire.context.director.currentGoal,undefined);
+  assert.equal(c.director.currentGoal,'辨明眼前变化，自定下一步');
+  c.director.currentGoal='查明河岸封渡的缘由';
+  wire=buildGlmWire(c,'',{storyActions:true});
+  assert.equal(wire.context.director.currentGoal,c.director.currentGoal);
+});
+
 test('v7 named generation puts two or three playable choices before optional story annotations',()=>{
   const c=context(),built=buildGlmWire(c,'当前事实\n独立的固定安全规则',{storyActions:true});
   const schema=buildNamedSceneSchema(built.schema,built.context);

@@ -1,3 +1,4 @@
+import {currentStoryGoal} from '../game/cultivation/live/story-director.js';
 import {advancesEvent,isExperienceLife,GROWTH_TERMS} from '../game/cultivation/live/experience.js';
 import {SCENE_SCHEMA,exactKeys} from '../game/cultivation/live/schema.js';
 import {assertPlainData,canonicalStringify} from '../game/cultivation/live/identity.js';
@@ -16,7 +17,7 @@ export function endsSelectedInteraction(context){
 
 // Generation uses the same post-action life and rule calculation as the menu.
 // Fresh identities stand in only for their type; actual names remain the model's.
-function availableVariants(context,aliases,intent,approach,targets){
+function availableVariants(context,aliases,intent,approach,targets,authoredChoices){
   const selected=context.receipt.action,closed=context.previousScene?.id===context.namespace+':t'+(context.identity.turnId-1)+':s:closed';
   const endedTarget=endsSelectedInteraction(context)?selected.targetId:closed?(context.memory.recent.find(record=>record.kind==='turn'&&record.turnId===context.identity.turnId-1)?.entityIds[0]??context.memory.facts.find(record=>record.id==='decision:'+(context.identity.turnId-1)&&record.kind==='fact'&&record.source==='rules')?.entityId??'self'):null;
   const failedCrossing=context.receipt.cultivationResult?.check?.kind==='world-crossing'&&context.receipt.cultivationResult.check.success===false;
@@ -30,7 +31,7 @@ function availableVariants(context,aliases,intent,approach,targets){
       if(intent==='interact'&&known&&(known.id===endedTarget||endedTarget==='self'&&closed&&['person','faction'].includes(known.kind)))return false;
       if(intent==='travel'&&known?.name===location)return false;
       const entity=known??(fresh?{id:targetId,kind:({p:'person',l:'place',f:'faction'})[fresh[1]],name:crossing?(WORLD_TIERS[context.life.cultivationProfile.worldTier+1]??'无下一界')+'新去处':'眼前新对象',status:'alive'}:null);
-      if(intent==='interact'&&approach==='observe'&&entity?.kind==='place'&&(!known||entity.name!==location))return false;
+      if(intent==='interact'&&approach==='observe'&&entity?.kind==='place'&&(known?entity.name!==location:!authoredChoices))return false;
       const state={...ruleState,relatedEntities:entity?[entity]:[]};
       try{return !v7ActionRule(state,{intent,approach,targetId:entity?.id??targetId,stake}).reason;}catch{return false;}
     });
@@ -42,7 +43,7 @@ function availableVariants(context,aliases,intent,approach,targets){
 
 // GLM writes local references. The server owns persistent scene/choice IDs;
 // only declared, typed aliases may become new entity IDs for this exact turn.
-export function buildGlmWire(context,system,{storyActions=false}={}){
+export function buildGlmWire(context,system,{storyActions=false,authoredChoices=false}={}){
   const directed=isV7Life(context.life)&&context.director?.version===7,items=isV7Life(context.life)?ITEMS:LEGACY_ITEMS,intents=isExperienceLife(context.life)?EXPERIENCE_INTENTS:isV7Life(context.life)?INTENTS:LEGACY_INTENTS,realms=realmCatalogFor(context.life);
   if(context.entities.some(entity=>['self',...Object.keys(items),...Object.keys(realms)].includes(entity.id)))throw Object.assign(Error('STORY_CONTEXT_INVALID'),{code:'STORY_CONTEXT_INVALID'});
   const aliases=new Map(context.entities.map((entity,index)=>[entity.id,'k'+(index+1)+(storyActions&&!directed?'_'+entity.kind+'_'+Array.from(entity.name).slice(0,4).join(''):'')]));
@@ -62,6 +63,11 @@ export function buildGlmWire(context,system,{storyActions=false}={}){
     return value;
   }
   const packed=pack(context);delete packed.identity;delete packed.namespace;packed.turn=context.identity.turnId;
+  if(packed.director){
+    const goal=currentStoryGoal(packed.director);
+    if(goal)packed.director.currentGoal=goal;
+    else delete packed.director.currentGoal;
+  }
   const entityAliases=[...aliases.values(),...['p','l','f'].flatMap(kind=>Array.from({length:24},(_,index)=>kind+(index+1)))];
   const schema=structuredClone(SCENE_SCHEMA);
   // Native XGrammar rejects this keyword. The decoder removes duplicate
@@ -94,9 +100,9 @@ export function buildGlmWire(context,system,{storyActions=false}={}){
     if(!targets.length)continue;
     const interaction=intent==='interact';
     if(directed){
-      const purpose=intent==='interact'&&approach==='help'?'给出一份行粮，帮助对方充饥':intent==='negotiate'&&approach==='black-market'?'出售'+ITEMS[(context.life.items.relic??0)>0?'relic':'artifact']+'，换取灵石':null;
+      const purpose=authoredChoices?null:intent==='interact'&&approach==='help'?'给出一份行粮，帮助对方充饥':intent==='negotiate'&&approach==='black-market'?'出售'+ITEMS[(context.life.items.relic??0)>0?'relic':'artifact']+'，换取灵石':null;
       const crossing=intent==='travel'&&WORLD_TRAVEL_APPROACHES.includes(approach);
-      for(const variant of availableVariants(context,aliases,intent,approach,targets)){
+      for(const variant of availableVariants(context,aliases,intent,approach,targets,authoredChoices)){
         const key=JSON.stringify({...variant,interaction,purpose,crossing}),group=actionGroups.get(key)??{...variant,interaction,purpose,actions:[]};group.actions.push(intent+':'+approach);actionGroups.set(key,group);
       }
     }else{
@@ -106,7 +112,7 @@ export function buildGlmWire(context,system,{storyActions=false}={}){
   schema.properties.choices.items={oneOf:[...actionGroups.values()].map(group=>({type:'object',additionalProperties:false,required:['action','targetId','stake',storyActions?'purpose':'label','anchor'],properties:{action:{enum:group.actions},targetId:{enum:group.targets},stake:group.interaction?{const:'low'}:directed?{enum:group.stakes}:choiceProperties.stake,...(storyActions?{purpose:group.purpose?{const:group.purpose}:{$ref:'#/$defs/choicePurpose'}}:{label:{$ref:'#/$defs/choiceLabel'}}),anchor:{$ref:'#/$defs/anchor'}}}))};
   const text=schema.properties.blocks.items.properties.text;
   if(storyActions){text.maxLength=directed?600:160;schema.properties.blocks.maxItems=directed?4:2;}
-  if(directed){schema.properties.choices.minItems=3;schema.properties.choices.maxItems=3;}
+  if(directed){schema.properties.choices.minItems=authoredChoices?2:3;schema.properties.choices.maxItems=3;}
   schema.properties.blocks.items={oneOf:[
     {type:'object',additionalProperties:false,required:['kind','text'],properties:{kind:{const:'narration'},text}},
     {type:'object',additionalProperties:false,required:['kind','text','speaker'],properties:{kind:{const:'dialogue'},text,speaker:{enum:['self',...context.entities.flatMap(entity=>entity.kind==='person'&&entity.status!=='dead'?[aliases.get(entity.id)]:[]),...Array.from({length:24},(_,index)=>'p'+(index+1))]}}},
@@ -162,7 +168,7 @@ story示例：{"pattern":"${context.director.pacing.pattern}","beat":"progress",
   return {context:packed,instructions:storyActions?modern+interactionGuide:instructions.replace('关闭已有约定/线索只用输入m1等referenceId，原文保持不变。','关闭已有约定/线索仅写输入m1等referenceId和status，不写entityId/kind/text，服务端恢复原始记录；对应实体仍须在名单声明。')+continuity+actions,schema};
 }
 
-export function decodeGlmScene(wire,context,{storyActions=false}={}){
+export function decodeGlmScene(wire,context,{storyActions=false,authoredChoices=false}={}){
   try{
     const directed=isV7Life(context.life)&&context.director?.version===7,realms=realmCatalogFor(context.life);
     assertPlainData(wire);
@@ -244,7 +250,8 @@ export function decodeGlmScene(wire,context,{storyActions=false}={}){
       }
       const targetId=aliases.get(choice.targetId)??(literalTargets.has(choice.targetId)?choice.targetId:null);if(!targetId)throw Error();
       const target=entities.find(entity=>entity.id===targetId)?.name??ITEMS[targetId]??realms[targetId]?.name??'';
-      const label=described&&storyActions&&!purposeful?choice.label:formatStoryChoiceLabel({action:choice.action,targetId,targetName:target,stake:choice.stake,...(purposeful?{purpose:choice.purpose}:{})});
+      if(!purposeful&&(typeof choice.label!=='string'||['fight','evade','travel','negotiate'].includes(intent)&&(!target||!choice.label.includes(target))))throw Error();
+      const label=purposeful?formatStoryChoiceLabel({authoredChoices,action:choice.action,targetId,targetName:target,stake:choice.stake,purpose:choice.purpose}):choice.label;
       if(!label)throw Error();
       return {id:prefix+'c:'+['a','b','c'][index],label,intent,targetId,stake:choice.stake,approach};
     });

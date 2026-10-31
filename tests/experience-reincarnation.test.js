@@ -33,6 +33,6 @@ test('four real deaths can bank eight points; marked child limits purchases to t
 
 test('self-study is observed in the death snapshot without inventing a turn for the repair',()=>{
  const parent=storyLife('self-study',false,null,{selfStudy:true}),s=getReincarnationSettlement(parent.state),e=s.echoes.find(e=>e.kind==='method');
- assert.ok(parent.steps.findIndex(row=>row.command.customAction==='自行推演残法')<parent.steps.length-2);
+ assert.ok(parent.steps.findIndex(row=>row.p.receipt.action?.approach==='restore')<parent.steps.length-2);
  assert.equal(e.route,'study');assert.equal(e.turn,undefined);assert.equal(e.observedAt,parent.state.turnId);assert.equal(s.unfinished.length,0);assert.ok(s.decisions.at(-1).includes('拼命'));
 });

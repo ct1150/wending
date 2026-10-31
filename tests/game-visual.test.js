@@ -177,7 +177,7 @@ test('system reduced motion is respected on entry and when it changes inside the
   await assertSameScene(page);
 });
 
-test('creation, reading, drawers and custom actions stay legible at phone and desktop widths', async t => {
+test('creation, reading, drawers and story choices stay legible at phone and desktop widths', async t => {
   const { page } = await fixture(t);
   await enterBirth(page);
   await page.locator('#live-name').fill('长风听雨问道云归'.repeat(3));
@@ -197,11 +197,7 @@ test('creation, reading, drawers and custom actions stay legible at phone and de
     await assertFits(page, `${width}px story`);
     await assertReadable(page, '.journey-prose .journey-block', `${width}px story prose`);
     await assertReadable(page, '[data-live-choice] .journey-choice-label', `${width}px choices`);
-    await page.locator('[data-live-custom-toggle]').click();
-    await page.locator('#live-custom-action').fill('观察眼前山路'.repeat(8));
-    await assertReadable(page, '#live-custom-action', `${width}px custom action`);
-    await assertFits(page, `${width}px custom action`);
-    await page.locator('[data-live-custom-toggle]').click();
+    assert.equal(await page.locator('[data-live-custom]').count(),0);
     await page.locator('[data-character]').click();
     await assertReadable(page, '#dialog .character-facts dt', `${width}px character labels`);
     await assertReadable(page, '#dialog .character-facts dd', `${width}px character values`);

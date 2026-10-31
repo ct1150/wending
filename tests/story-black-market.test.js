@@ -8,10 +8,10 @@ import {generateProviderScene} from '../src/worker/story-provider-core.js';
 import {GLM_PROFILE,GLM_MODEL_ID} from '../src/worker/story-config.js';
 import {cultivationFixtureProse} from './helpers/live-story-fixture.js';
 
-function fixture(items,purpose,approach='black-market') {
+function fixture(items,purpose,approach='black-market',name='江陌') {
   let state=createLiveGame({runId:'black-market-regression',seed:42,engineVersion:7});
-  const namespace='r:'+sha256(state.runId).slice(0,16),actor={id:namespace+':t1:e:merchant',name:'江陌',kind:'person'};
-  const previous=turn=>({id:namespace+':t'+turn+':s:scene',title:'暗市旧摊',location:'暗市',blocks:[{kind:'narration',text:cultivationFixtureProse('江陌站在暗市旧摊边，等待你自行决定下一步。',turn)}],entities:[actor],choices:[
+  const namespace='r:'+sha256(state.runId).slice(0,16),actor={id:namespace+':t1:e:merchant',name,kind:'person'};
+  const previous=turn=>({id:namespace+':t'+turn+':s:scene',title:'暗市旧摊',location:'暗市',blocks:[{kind:'narration',text:cultivationFixtureProse(name+'站在暗市旧摊边，等待你自行决定下一步。',turn)}],entities:[actor],choices:[
     {id:namespace+':t'+turn+':c:watch',label:'观察旧摊边的脚印',intent:'interact',targetId:'self',approach:'observe',stake:'low'},
     {id:namespace+':t'+turn+':c:ask',label:'询问江陌摊位的来历',intent:'interact',targetId:actor.id,approach:'ask',stake:'low'},
     {id:namespace+':t'+turn+':c:decline',label:'婉拒江陌的提议',intent:'interact',targetId:actor.id,approach:'decline',stake:'low'},
@@ -23,7 +23,7 @@ function fixture(items,purpose,approach='black-market') {
   Object.assign(state.life.items,{relic:0,artifact:0,...items});
   const pending=prepareChoice(state,{requestId:'next',choiceId:state.currentScene.choices[0].id}),context=buildStoryContext(state,pending);
   const target={kind:'person',name:actor.name,ref:'',status:null};
-  const wire={blocks:[{kind:'narration',text:cultivationFixtureProse('江陌拨亮暗市摊位旁的灯，说明此地只收已经持有的古修遗物或法器。交易尚未开始，你仍可以听清条件，或者查看灯影下的旧印。',3)}],title:'灯下议价',location:'暗市',choices:[
+  const wire={blocks:[{kind:'narration',text:cultivationFixtureProse(name+'拨亮暗市摊位旁的灯，说明此地只收已经持有的古修遗物或法器。交易尚未开始，你仍可以听清条件，或者查看灯影下的旧印。',3)}],title:'灯下议价',location:'暗市',choices:[
     {action:'negotiate:'+approach,target,stake:'normal',purpose,anchor:0},
     {action:'interact:ask',target,stake:'low',purpose:'这处暗市由谁照看',anchor:0},
     {action:'interact:observe',target:'self',stake:'low',purpose:'辨认灯影下的旧印',anchor:0},
@@ -31,9 +31,9 @@ function fixture(items,purpose,approach='black-market') {
   return {state,pending,context,wire};
 }
 
-async function generate(fixture) {
+async function generate(fixture,authoredChoices=false) {
   let calls=0;
-  const result=await generateProviderScene({run:async()=>{calls++;return {model:GLM_MODEL_ID,choices:[{finish_reason:'stop',message:{content:JSON.stringify(fixture.wire)}}],usage:{prompt_tokens:400,completion_tokens:450,total_tokens:850}};}},{...GLM_PROFILE,storyActions:true},fixture.context);
+  const result=await generateProviderScene({run:async()=>{calls++;return {model:GLM_MODEL_ID,choices:[{finish_reason:'stop',message:{content:JSON.stringify(fixture.wire)}}],usage:{prompt_tokens:400,completion_tokens:450,total_tokens:850}};}},{...GLM_PROFILE,storyActions:true,authoredChoices},fixture.context);
   assert.equal(calls,1,'menu admission must use only this completed response');
   return result;
 }
@@ -115,4 +115,26 @@ test('v7 ordinary negotiation keeps the original proposal to discuss an item pri
   const state=commitTurn(f.state,f.pending,result.scene),talk=prepareChoice(state,{choiceId:result.scene.choices[0].id,requestId:'talk'});
   assert.equal(talk.receipt.action.approach,'cooperate');assert.ok(talk.receipt.action.label.endsWith(f.wire.choices[0].purpose));
   assert.equal(talk.nextLife.items.relic,state.life.items.relic);
+});
+
+test('a model-written sale may name a trader and the scene while still selling exactly one real item',async()=>{
+  for(const name of ['出售茶叶的商人','购买香烛的妇人','用山货换取盐的猎户']){
+    const purpose='趁灯火尚亮，把古修遗物卖给'+name+'换取灵石';
+    const f=fixture({relic:1},purpose,'black-market',name),result=await generate(f,true);
+    assert.equal(result.status,'ready',result.errorCode);assert.equal(result.scene.choices[0].label,purpose);
+    const state=commitTurn(f.state,f.pending,result.scene);
+    const sold=prepareChoice(state,{choiceId:result.scene.choices[0].id,requestId:'sell'});
+    assert.equal(sold.receipt.action.targetId,state.relatedEntities.find(e=>e.name===name).id);
+    assert.deepEqual(sold.receipt.itemChanges,{relic:-1,stones:25});
+  }
+});
+
+test('a question, refusal, barter or multi-item sale cannot silently settle as a single relic sale',async()=>{
+  for(const purpose of ['拒绝出售古修遗物','问问是否适合出手古修遗物','把古修遗物卖给江陌换取灵石罗盘',
+    '出售古修遗物，换一只铜铃','把古修遗物与法器一起卖出','出售两件古修遗物']){
+    const f=fixture({relic:2,artifact:1},purpose),before=structuredClone(f.state),result=await generate(f,true);
+    assert.ok(!result.scene?.choices.some(row=>row.approach==='black-market'),purpose);
+    if(result.scene)assert.deepEqual(result.scene.choices.map(row=>row.label),f.wire.choices.slice(1).map(row=>row.purpose));
+    assert.deepEqual(f.state,before);
+  }
 });

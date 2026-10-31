@@ -32,49 +32,48 @@ function thirdTurn(){
   state=commitTurn(state,pending,scene(1));pending=prepareChoice(state,{choiceId:'ask',requestId:'ask'});state=commitTurn(state,pending,scene(2));
   pending=prepareChoice(state,{choiceId:'rest',requestId:'rest'});return {state,pending,c:buildStoryContext(state,pending)};
 }
-async function generate(content,c,{stop='length',counts=usage,model=GLM_MODEL_ID,delta={},done=true,engineMenu=true}={}){
+async function generate(content,c,{stop='length',counts=usage,model=GLM_MODEL_ID,delta={},done=true}={}){
   const frames=[{model,choices:[{index:0,delta:{content,...delta}}]},{model,choices:[{index:0,delta:{},finish_reason:stop}]},...(counts?[{choices:[],usage:counts}]:[])];
   const sse=frames.map(f=>'data: '+JSON.stringify(f)+'\n\n').join('')+(done?'data: [DONE]\n\n':'');
-  let calls=0;const result=await generateScene({run:async()=>{calls++;return new Response(sse).body;}},{...GLM_PROFILE,validated:true,supportsStructuredOutput:true},c,{}, {engineMenu,storyActions:true});
+  let calls=0;const result=await generateScene({run:async()=>{calls++;return new Response(sse).body;}},{...GLM_PROFILE,validated:true,supportsStructuredOutput:true},c,{}, {storyActions:true});
   assert.equal(calls,1);return result;
 }
 
-test('a token-limited v7 rest turn commits only independently complete prose without changing the true finish, usage or receipt',async()=>{
-  const {state,pending,c}=thirdTurn();
-  assert.equal(pending.receipt.action.intent,'rest');assert.deepEqual(blocks.map(b=>[b.kind,Array.from(b.text).length]),[['narration',291],['narration',173],['narration',128]]);
+test('a token-limited rest turn with prose alone cannot insert another rest or overwrite the frozen receipt',async()=>{
+  const {state,pending,c}=thirdTurn(),saved=structuredClone(pending);
+  assert.equal(pending.receipt.elapsedDays,30);assert.deepEqual(blocks.map(b=>Array.from(b.text).length),[291,173,128]);
   const body=JSON.stringify(blocks);
-  for(const source of [JSON.stringify({blocks}), '{"blocks":'+body.slice(0,-1)+',{"kind":"narration","text":"unfinished', '{"blocks":'+body+',"story":{"pattern":"disc']){
+  for(const source of [JSON.stringify({blocks}), '{"blocks":'+body.slice(0,-1)+',{"kind":"narration","text":"unfinished',
+    '{"blocks":'+body+',"memoryDeltas":[{"kind":"death","target":']){
     const result=await generate(source,c);
-    assert.equal(result.status,'ready',result.errorCode);assert.equal(result.stopReason,'length');
-    assert.equal(result.accountingStatus,'complete');assert.equal(result.nonThinkingValidated,true);
-    assert.deepEqual(result.usage,{promptTokens:400,completionTokens:limit,totalTokens:400+limit});
-    assert.deepEqual(result.scene.blocks,blocks);
-    const next=commitTurn(state,pending,result.scene);assert.equal(next.revision,3);assert.deepEqual(next.lastReceipt,pending.receipt);
-    assert.deepEqual(next.life.items,pending.nextLife.items);
-    for(const choice of next.currentScene.choices)assert.deepEqual(prepareChoice(next,{requestId:'next-'+choice.approach,choiceId:choice.id}).receipt.action,choice);
+    assert.notEqual(result.status,'ready');assert.equal(result.scene,undefined);
+    assert.deepEqual(pending,saved);assert.equal(state.revision,2);
   }
 });
 
-test('a known length finish cannot invent a first block, bypass identity or apply an unfinished consequence',async()=>{
-  const {c}=thirdTurn();
-  for(const source of ['{"blocks":[{"kind":"narration","text":"partial',JSON.stringify({blocks:[]}),JSON.stringify({blocks:[{kind:'narration',text:' '}]})]){
-    const failed=await generate(source,c);assert.equal(failed.errorCode,'OUTPUT_TRUNCATED');assert.equal(failed.scene,undefined);
-  }
-  const body=await generate('{"blocks":'+JSON.stringify(blocks)+',"memoryDeltas":[{"kind":"death","target":',c);
-  assert.equal(body.status,'ready',body.errorCode);assert.deepEqual(body.scene.blocks,blocks);assert.deepEqual(body.scene.memoryDeltas,[]);
-  const forged=await generate(JSON.stringify({blocks:[{kind:'dialogue',speaker:'r:alien:t1:e:p',text:'一句话。'}]}),c);
-  assert.equal(forged.status,'rejected');assert.equal(forged.scene,undefined);
-});
-
-test('token-limited acceptance is confined to completed, validated v7 engine-menu responses',async()=>{
+test('incomplete native output preserves transport identity, accounting and stop errors',async()=>{
   const {c}=thirdTurn(),source=JSON.stringify({blocks});
   for(const [options,code] of [
     [{counts:null},'PROVIDER_USAGE_INVALID'],[{counts:{prompt_tokens:0,completion_tokens:limit+1,total_tokens:limit+1}},'OUTPUT_TOO_LARGE'],
     [{model:'another-model'},'MODEL_RESPONSE_MISMATCH'],[{done:false},'PROVIDER_RESPONSE_INVALID'],
     [{stop:'tool_calls'},'STOP_REASON_INVALID'],[{stop:'content_filter'},'STOP_REASON_INVALID'],[{stop:'unrecognized'},'STOP_REASON_INVALID'],
     [{delta:{reasoning_content:'still thinking'}},'PROVIDER_RESPONSE_INVALID'],[{delta:{tool_calls:[{index:0}]}},'PROVIDER_RESPONSE_INVALID'],
-    [{engineMenu:false},'OUTPUT_TRUNCATED']
   ]){
     const failed=await generate(source,c,options);assert.equal(failed.errorCode,code,JSON.stringify(options));assert.equal(failed.scene,undefined);
   }
+});
+
+test('a token cap after two complete authored choices keeps their labels, the paid rest receipt and exact usage',async()=>{
+  const {state,pending,c}=thirdTurn();
+  const choices=[
+    {action:'interact:observe',target:'self',purpose:'举起听烛残灯，细辨灯芯的波动'},
+    {action:'interact:leave',target:'self',purpose:'收好听烛残灯，暂且搁下石碾边的异状'},
+  ];
+  const content=JSON.stringify({blocks,choices}).slice(0,-1)+',"title":"';
+  const result=await generate(content,c);
+  assert.equal(result.status,'ready',result.errorCode);assert.equal(result.stopReason,'length');
+  assert.deepEqual(result.usage,{promptTokens:400,completionTokens:limit,totalTokens:400+limit});
+  const next=commitTurn(state,pending,result.scene);
+  assert.deepEqual(next.lastReceipt,pending.receipt);assert.equal(next.revision,3);
+  assert.deepEqual(next.currentScene.blocks,blocks);assert.deepEqual(next.currentScene.choices.map(row=>row.label),choices.map(row=>row.purpose));
 });

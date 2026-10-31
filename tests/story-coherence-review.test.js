@@ -1,7 +1,7 @@
 import {namedGlmFixture} from './helpers/named-glm-fixture.js';
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {createLiveGame,prepareOpening,commitTurn,prepareChoice,resolveImmediateInteraction} from '../src/game/cultivation/live/engine.js';
+import {createLiveGame,prepareOpening,commitTurn,prepareChoice} from '../src/game/cultivation/live/engine.js';
 import {buildStoryContext,validateGeneratedScene,sceneTurnRecord} from '../src/game/cultivation/live/memory.js';
 import {buildGlmWire,decodeGlmScene} from '../src/worker/story-glm-wire.js';
 import {buildStoryInput,generateProviderScene} from '../src/worker/story-provider-core.js';
@@ -17,7 +17,7 @@ function fixture(){
 
 test('observing after a local closure keeps independent choices and cannot replay an old request from a clue',async()=>{
   for(const approach of ['decline','leave']){
-    const f=fixture();f.wire.choices[1].action='interact:'+approach;f.wire.blocks[0].text+='陈叔拿着绳子在林边来回踱步，不时望向山道，等你决定是否参与这件事情。';const opening=decodeGlmScene(f.wire,f.context,{storyActions:true}),active=commitTurn(f.state,f.pending,opening),p=prepareChoice(active,{requestId:'close-'+approach,choiceId:opening.choices[1].id}),closed=resolveImmediateInteraction(active,p),ended=commitTurn(active,p,closed),record=sceneTurnRecord(closed,{runId:ended.runId,turnId:ended.turnId,action:p.receipt.action});
+    const f=fixture();f.wire.choices[1].action='interact:'+approach;f.wire.blocks[0].text+='陈叔拿着绳子在林边来回踱步，不时望向山道，等你决定是否参与这件事情。';const opening=decodeGlmScene(f.wire,f.context,{storyActions:true}),active=commitTurn(f.state,f.pending,opening),p=prepareChoice(active,{requestId:'close-'+approach,choiceId:opening.choices[1].id}),closed={...opening,id:f.context.namespace+':t2:s:closed',title:'暂别此事',blocks:[{kind:'narration',text:'你告辞后仍在原处。'}],choices:[{id:f.context.namespace+':t2:c:observe',label:'观察周围：寻找新的线索',intent:'interact',targetId:'self',stake:'low',approach:'observe'},{id:f.context.namespace+':t2:c:rest',label:'留在原地休整',intent:'rest',targetId:'self',stake:'low',approach:'recover'}],memoryDeltas:[]},ended=commitTurn(active,p,closed),record=sceneTurnRecord(closed,{runId:ended.runId,turnId:ended.turnId,action:p.receipt.action});
     assert.deepEqual(record.entityIds,[opening.entities[0].id]);const oldClue={id:'old-clue',runId:ended.runId,turnId:1,source:'narrative',kind:'clue',entityId:opening.entities[0].id,text:opening.blocks[0].text,status:'open'},context=buildStoryContext(ended,prepareChoice(ended,{requestId:'after-close-'+approach,choiceId:closed.choices[0].id}),[oldClue]),alias=buildGlmWire(context,'',{storyActions:true}).context.entities.find(entity=>entity.kind==='person').id;
     const reply=structuredClone(f.wire);reply.blocks=[{kind:'narration',text:'你转向村外的河岸，注意到泥地里有新留下的脚印。'}];reply.otherPeople=[{id:alias}];reply.places=[{id:'l1',name:'河岸'}];reply.choices.forEach(choice=>choice.targetId=alias);reply.choices.push({action:'travel:road',targetId:'l1',stake:'low',purpose:'前往河岸查看脚印',anchor:0});
     const run=(inputContext=context)=>generateProviderScene({run:async(_model,input)=>({model:GLM_PROFILE.modelId,choices:[{finish_reason:'stop',message:{content:JSON.stringify(namedGlmFixture(reply,input))}}],usage:{prompt_tokens:100,completion_tokens:100,total_tokens:200}})},{...GLM_PROFILE,storyActions:true},inputContext);

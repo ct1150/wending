@@ -233,10 +233,6 @@ export function createLiveSession({archive,client,engine=defaultEngine,onChange=
       if(!loaded||loaded.pending)throw fault('TURN_ALREADY_PENDING');
       if(command.baseRevision!==loaded.state.revision||command.stateHash!==stateHash(loaded.state))throw fault('STALE_CHOICE');
       const pending=engine.prepareChoice(loaded.state,{...command,requestId:id()});
-      if(loaded.state.life.cultivationProfile?.version!==7&&pending.receipt.action?.intent==='interact'&&['decline','leave'].includes(pending.receipt.action.approach)){
-        loaded=await archive.commitInteraction({expectedArchiveId:loaded.archiveId,expectedRevision:loaded.state.revision,pending});
-        preview=null;status='ready';errorCode=null;emit();return;
-      }
       loaded=await archive.prepare(pending);
       status='pending';
       emit();
@@ -257,13 +253,17 @@ export function createLiveSession({archive,client,engine=defaultEngine,onChange=
     });
   }
   function retry() {
-    const expectedArchiveId=loaded?.archiveId;
+    const displayed=loaded;
     return run(async()=>{
-      await reload(expectedArchiveId);
-      if(!loaded?.pending||await death(loaded))return;
+      await reload(displayed?.archiveId);
+      if(!loaded?.pending)return;
+      // A click belongs to the displayed decision and attempt, including across tabs.
+      if(displayed&&(loaded.pending.identity.requestId!==displayed.pending?.identity.requestId||loaded.attempt?.id!==displayed.attempt?.id))return;
+      if(await death(loaded))return;
       const row=loaded;
       if(row.attempt) {
         const result=await client.getTurn(row.pending,row.attempt);
+        if(result.status==='rejected'&&(result.requestId!==row.pending.identity.requestId||result.attemptId!==row.attempt.id||result.sessionRef!==row.attempt.sessionRef))throw fault('RESPONSE_IDENTITY_MISMATCH');
         if(await apply(row,result))return;
         if(result.errorCode==='ATTEMPT_NOT_FOUND'&&(result.requestId!==row.pending.identity.requestId||result.attemptId!==row.attempt.id))throw fault('RESPONSE_IDENTITY_MISMATCH');
         if(result.errorCode==='ATTEMPT_NOT_ADMITTED') {
@@ -277,7 +277,7 @@ export function createLiveSession({archive,client,engine=defaultEngine,onChange=
           if(replayed?.status==='paused'&&replayed.errorCode==='ATTEMPT_NOT_FOUND'&&replayed.requestId===row.pending.identity.requestId&&replayed.attemptId===row.attempt.id&&replayed.sessionRef===row.attempt.sessionRef)await generate(loaded);
           return;
         }
-        if(result.errorCode==='ATTEMPT_IN_PROGRESS'&&result.retry?.afterMs>0)throw fault('ATTEMPT_IN_PROGRESS');
+        if(result.errorCode==='ATTEMPT_IN_PROGRESS')return;
       }
       await generate(row);
     });
