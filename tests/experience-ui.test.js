@@ -18,7 +18,7 @@ test('large-type mobile story shows one identity, birth stakes and actual costs 
  const {page,origin}=await liveBrowser(t);let posts=0;const errors=[];page.on('pageerror',e=>errors.push(e.message));
  await page.route('https://experience.test/**',async route=>{
    const url=new URL(route.request().url()),json=data=>route.fulfill({status:200,contentType:'application/json',body:JSON.stringify(data)});
-   if(url.pathname.endsWith('/capabilities'))return json({protocolVersion:1,available:true,status:'ready',storyActions:true,experienceVersion:1,errorCode:null,limits:{maxRequestBytes:32768,maxResponseBytes:65536,maxContextBytes:7000,timeoutMs:30000}});
+   if(url.pathname.endsWith('/capabilities'))return json({protocolVersion:1,available:true,status:'ready',storyActions:true,experienceVersion:1,originStories:true,errorCode:null,limits:{maxRequestBytes:32768,maxResponseBytes:65536,maxContextBytes:7000,timeoutMs:30000}});
    if(url.pathname.endsWith('/session'))return json({protocolVersion:1,status:'ready',sessionRef:'ui-session',expiresAt:Date.now()+86400000});
    if(url.pathname.endsWith('/turn')){posts++;const {context,attempt}=route.request().postDataJSON(),p=context.namespace+':t'+context.identity.turnId+':',person={id:context.entities.find(e=>e.name==='渡者')?.id??p+'e:actor',name:'渡者',kind:'person'};
      const scene=liveStoryFixture({id:p+'s:bridge',title:'渡口',location:'松溪',entities:[person],blocks:[{kind:'narration',text:'渡者说：“今夜水涨，明晨再渡。”'}],choices:[{id:p+'c:train',label:'就地修行',intent:'practice',targetId:'self',stake:'low',approach:'steady'},{id:p+'c:ask',label:'询问渡者渡河的时辰',intent:'interact',targetId:person.id,stake:'low',approach:'ask'}],memoryDeltas:[]},context);
@@ -61,5 +61,13 @@ test('current method is distinguished from original traits; a repaired life offe
 test('a still-running response offers to check the saved choice and keeps replacement inference unavailable',()=>{
  const state=createLiveGame({seed:1,engineVersion:7,experienceVersion:1,runId:'ui-wait'});
  const html=renderLiveJourney({state,pending:{},busy:false,status:'paused',errorCode:'ATTEMPT_IN_PROGRESS'},[]);
- assert.match(html,/仍在续写/);assert.match(html,/data-live-retry hidden/);assert.match(html,/data-live-resume>检查已有回应/);assert.doesNotMatch(html,/ATTEMPT_IN_PROGRESS|requestId/);
+ assert.match(html,/仍在续写/);
+ assert.match(html,/data-live-resume>查看续写进度/);
+ assert.doesNotMatch(html,/data-live-retry|ATTEMPT_IN_PROGRESS|requestId/);
+ const failed=renderLiveJourney({state,pending:{},busy:false,status:'paused',errorCode:'GENERATED_SCENE_INVALID'},[]);
+ assert.match(failed,/data-live-retry>继续故事/);
+ assert.doesNotMatch(failed,/data-live-resume/);
+ for(const view of [{state,pending:null,busy:false,status:'ready'}, {state,pending:{},busy:true,status:'pending'}]){
+   assert.doesNotMatch(renderLiveJourney(view,[]),/data-live-retry|data-live-resume/);
+ }
 });

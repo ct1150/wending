@@ -10,7 +10,7 @@ test('number keys select only offered model choices, and declining requests a ne
   await page.setViewportSize({width:390,height:844});
   await page.route('https://wending-v7.test/**',async route=>{
     const url=new URL(route.request().url()),json=value=>route.fulfill({status:200,contentType:'application/json',body:JSON.stringify(value)});
-    if(url.pathname==='/api/story/capabilities')return json({protocolVersion:1,available:true,status:'ready',errorCode:null,storyActions:true,limits:{maxRequestBytes:32768,maxResponseBytes:65536,maxContextBytes:7000,timeoutMs:30000}});
+    if(url.pathname==='/api/story/capabilities')return json({protocolVersion:1,available:true,status:'ready',errorCode:null,storyActions:true,experienceVersion:1,originStories:true,limits:{maxRequestBytes:32768,maxResponseBytes:65536,maxContextBytes:7000,timeoutMs:30000}});
     if(url.pathname==='/api/story/session')return json({protocolVersion:1,status:'ready',sessionRef:'v7-browser-session',expiresAt:Date.now()+86400000});
     if(url.pathname==='/api/story/turn') {
       posts++;const {context,attempt}=route.request().postDataJSON(),prefix=context.namespace+':t'+context.identity.turnId+':';

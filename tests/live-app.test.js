@@ -59,6 +59,42 @@ test('structured dialogue and choice previews update in memory only and remain b
 test('birth and pending opening are durable before HTTP; refresh queries and never rerolls',async()=>{const f=fixture();let release;f.setHold(new Promise(r=>release=r));const s=f.make(),starting=s.start({runId:'run',seed:42});while(!f.calls.post)await new Promise(r=>setTimeout(r,0));const before=await f.archive.load();assert.equal(before.state.revision,0);assert.equal(s.view().state.revision,0);const refreshed=f.make();await refreshed.resume();assert.equal(f.calls.post,1);assert.equal(f.calls.get,1);assert.deepEqual(refreshed.view().state.life.birth,before.state.life.birth);release();await starting;assert.equal(s.view().state.revision,1);});
 test('double clicks, old tabs and late ready responses never pay or commit twice',async()=>{const f=fixture(),s=f.make();await s.start({runId:'run',seed:42});const old=f.make();await old.resume();const before=s.view().state;let release;f.setHold(new Promise(r=>release=r));const command={choiceId:before.currentScene.choices[0].id,baseRevision:before.revision,stateHash:stateHash(before)};const choosing=s.choose(command);await s.choose(command);while(f.calls.post<2)await new Promise(r=>setTimeout(r,0));assert.deepEqual(s.view().state.life,before.life);await old.choose(command);assert.equal(f.calls.post,2);release();await choosing;await old.resume();assert.equal(old.view().state.revision,2);await old.choose(command);assert.equal((await f.archive.load()).state.revision,2);assert.equal(f.calls.post,2);});
 test('explicit retry queries old result before replacement; lost session preserves request and receipt',async()=>{const f=fixture(),s=f.make();f.client.requestTurn=async(p,c,a)=>{f.calls.post++;return {status:'paused',errorCode:'PROVIDER_TIMEOUT',requestId:p.identity.requestId,attemptId:a.id,sessionRef:a.sessionRef};};await s.start({runId:'run',seed:42});const before=await f.archive.load();await s.retry();const after=await f.archive.load();assert.equal(f.calls.get,1);assert.equal(f.calls.post,2);assert.deepEqual(after.pending,before.pending);assert.notEqual(after.attempt.id,before.attempt.id);assert.deepEqual(after.attempt.retryOf,{attemptId:before.attempt.id,sessionRef:before.attempt.sessionRef});});
+test('an in-progress lookup never opens a second attempt, even without a delay hint', async () => {
+  const f=fixture(), session=f.make();
+  f.client.requestTurn=async()=>{f.calls.post++;return {status:'paused',errorCode:'NETWORK_UNAVAILABLE'};};
+  await session.start({runId:'lookup-first',seed:42});
+  const saved=await f.archive.load();
+  f.client.getTurn=async(p,a)=>({status:'paused',errorCode:'ATTEMPT_IN_PROGRESS',requestId:p.identity.requestId,attemptId:a.id,sessionRef:a.sessionRef});
+  await session.retry();
+  assert.equal(session.view().errorCode,'ATTEMPT_IN_PROGRESS');
+  assert.deepEqual(await f.archive.load(),saved);
+  assert.equal(f.calls.post,1);
+});
+
+test('an explicit retry cannot act on another pending decision that appeared in the same archive', async () => {
+  const f=fixture(), session=f.make();
+  f.client.requestTurn=async()=>{f.calls.post++;return {status:'paused',errorCode:'PROVIDER_TIMEOUT'};};
+  await session.start({runId:'same-archive',seed:42});
+  const other=await f.archive.load();
+  other.pending.identity.requestId='another-decision';
+  f.archive.load=async()=>structuredClone(other);
+  await session.retry();
+  assert.equal(f.calls.get,0);
+  assert.equal(f.calls.post,1);
+});
+
+test('a rejection identifying a different saved attempt cannot authorize a new generation', async () => {
+  const f=fixture(), session=f.make();
+  f.client.requestTurn=async()=>{f.calls.post++;return {status:'paused',errorCode:'PROVIDER_TIMEOUT'};};
+  await session.start({runId:'mismatched-rejection',seed:42});
+  const saved=await f.archive.load();
+  f.client.getTurn=async(p,a)=>({status:'rejected',errorCode:'GENERATED_SCENE_INVALID',requestId:p.identity.requestId,attemptId:'other-attempt',sessionRef:a.sessionRef});
+  await session.retry();
+  assert.equal(session.view().errorCode,'RESPONSE_IDENTITY_MISMATCH');
+  assert.deepEqual(await f.archive.load(),saved);
+  assert.equal(f.calls.post,1);
+});
+
 test('storage failure retains pending, then retry applies cached ready without another POST',async()=>{const f=fixture(),s=f.make();f.archive.fail=true;await s.start({runId:'run',seed:42});assert.equal(s.view().status,'paused');assert.equal(s.view().state.revision,0);assert.ok((await f.archive.load()).pending);f.archive.fail=false;await s.retry();assert.equal(s.view().state.revision,1);assert.equal(f.calls.post,1);});
 test('disabled capabilities never allocate session or inference and preserve birth',async()=>{const f=fixture();f.client.capabilities=async()=>({available:false,errorCode:'AI_DISABLED'});const s=f.make();await s.start({runId:'run',seed:42});assert.equal(s.view().status,'paused');assert.equal(f.calls.post,0);assert.equal(f.calls.session,0);assert.ok(s.view().pending);});
 test('client rejects static HTML, incompatible capability and file origin without POST',async()=>{assert.ok(clientModule);let calls=0;const client=clientModule.createStoryClient({location:{protocol:'file:'},fetch:async()=>{calls++;}});assert.equal((await client.capabilities()).available,false);assert.equal(calls,0);for(const body of ['<html/>',JSON.stringify({protocolVersion:2,available:true})]){const c=clientModule.createStoryClient({location:{protocol:'https:'},fetch:async()=>new Response(body,{headers:{'content-type':'application/json'}})});assert.equal((await c.capabilities()).available,false);}});
@@ -75,8 +111,8 @@ test('native app: HTTPS fixture, pending refresh/import, pages, legacy preservat
   const { serializeGame } = await import('../src/game/save-format.js');
   const legacyRaw = serializeGame(createCultivation({ seed: 'browser-legacy', characterCreation: true }));
   await page.addInitScript(raw=>{window.showSaveFilePicker=undefined;if(localStorage.getItem('baishi-wending-save-v1')===null)localStorage.setItem('baishi-wending-save-v1',raw);},legacyRaw);
-  let posts=0,nextPaused=false;const results=new Map(),contexts=[];
-  const caps={protocolVersion:1,available:true,status:'ready',errorCode:null,limits:{maxRequestBytes:32768,maxResponseBytes:65536,maxContextBytes:7000,timeoutMs:30000}};
+  let posts=0,nextPaused=false,lookupRunning=false;const results=new Map(),contexts=[];
+  const caps={protocolVersion:1,available:true,status:'ready',errorCode:null,storyActions:true,experienceVersion:1,originStories:true,limits:{maxRequestBytes:32768,maxResponseBytes:65536,maxContextBytes:7000,timeoutMs:30000}};
   await page.route('https://wending.test/**',async route=>{
     const url=new URL(route.request().url());
     const json=value=>route.fulfill({status:200,contentType:'application/json',body:JSON.stringify(value)});
@@ -85,6 +121,10 @@ test('native app: HTTPS fixture, pending refresh/import, pages, legacy preservat
     if(url.pathname==='/api/story/turn'){
       posts++;const {context,attempt}=route.request().postDataJSON();contexts.push(context);
       const result={protocolVersion:1,status:nextPaused?'paused':'ready',requestId:context.identity.requestId,attemptId:attempt.id,sessionRef:attempt.sessionRef,errorCode:nextPaused?'PROVIDER_BUSY':null,retry:nextPaused?{explicit:true,afterMs:0,previousAttemptId:attempt.id,previousSessionRef:attempt.sessionRef}:null,...(nextPaused?{}:{scene:scene(context)})};results.set(attempt.id,result);return json(result);
+    }
+    if(lookupRunning&&url.pathname.startsWith('/api/story/turn/')){
+      const attemptId=url.searchParams.get('attemptId'), existing=results.get(attemptId);
+      return json({...existing,status:'paused',errorCode:'ATTEMPT_IN_PROGRESS'});
     }
     if(url.pathname.startsWith('/api/story/turn/'))return json(results.get(url.searchParams.get('attemptId'))??{protocolVersion:1,status:'paused',requestId:null,attemptId:null,sessionRef:null,errorCode:'SESSION_UNAVAILABLE',retry:{explicit:true,afterMs:0,previousAttemptId:null,previousSessionRef:null}});
     try { const path=resolve('.','.'+(url.pathname==='/'?'/index.html':url.pathname));const body=await readFile(path);await route.fulfill({status:200,contentType:({'.js':'text/javascript','.css':'text/css','.svg':'image/svg+xml'})[extname(path)]??'text/html',body}); }catch {await route.fulfill({status:404,body:''});}
@@ -107,7 +147,11 @@ test('native app: HTTPS fixture, pending refresh/import, pages, legacy preservat
   const read=()=>page.evaluate(async()=>{const {openLiveArchive}=await import('/src/game/live-archive.js');const a=await openLiveArchive();const value=await a.load();a.close();return value;});
   const opening=await read();assert.equal(opening.state.revision,1);assert.equal(posts,1);assert.ok(!Object.hasOwn(contexts[0],'state'));
   nextPaused=true;await page.locator('[data-live-choice]').first().click();await page.locator('[data-live-retry]').waitFor();const pending=await read();assert.deepEqual(pending.state.life,opening.state.life);assert.ok(pending.pending);
-  await page.reload();await page.locator('[data-live-retry]').waitFor();assert.equal(posts,2);assert.deepEqual((await read()).pending,pending.pending);
+  lookupRunning=true;await page.reload();await page.getByRole('button',{name:'查看续写进度'}).waitFor();
+  assert.equal(await page.locator('[data-live-retry]').count(),0);
+  lookupRunning=false;await page.getByRole('button',{name:'查看续写进度'}).click();
+  await page.getByRole('button',{name:'继续故事'}).waitFor();assert.equal(await page.locator('[data-live-resume]').count(),0);
+  assert.equal(posts,2);assert.deepEqual((await read()).pending,pending.pending);
   await page.locator('[data-view="settings"]').click();await page.locator('.save-backup > summary').click();
   const downloading=page.waitForEvent('download');await page.locator('[data-export]').click();const downloaded=await downloading;const backup=await readFile(await downloaded.path());assert.ok(backup.toString().includes('wending-live-jsonl'));
   await page.locator('#import-file').setInputFiles({name:'pending.wending.jsonl',mimeType:'application/octet-stream',buffer:backup});await page.locator('#dialog[open] [data-confirm]').waitFor();assert.deepEqual((await read()).pending,pending.pending);assert.equal(posts,2);await page.locator('[data-confirm]').click();await page.locator('[data-live-retry]').waitFor();assert.equal(posts,2);assert.deepEqual((await read()).pending,pending.pending);
@@ -130,7 +174,7 @@ async function delayedAppFixture(t) {
   const {page}=await liveBrowser(t),requests=[],errors=[],releases=[];
   page.on('pageerror',error=>errors.push(error.message));
   let nextGate=null;
-  const caps={protocolVersion:1,available:true,status:'ready',errorCode:null,limits:{maxRequestBytes:32768,maxResponseBytes:65536,maxContextBytes:7000,timeoutMs:30000}};
+  const caps={protocolVersion:1,available:true,status:'ready',errorCode:null,storyActions:true,experienceVersion:1,originStories:true,limits:{maxRequestBytes:32768,maxResponseBytes:65536,maxContextBytes:7000,timeoutMs:30000}};
   await page.route('https://wending-focus.test/**',async route=>{
     const url=new URL(route.request().url());
     const json=value=>route.fulfill({status:200,contentType:'application/json',body:JSON.stringify(value)});

@@ -96,6 +96,7 @@ export function createLiveSession({archive,client,engine=defaultEngine,onChange=
     const capability=await client.capabilities();
     if(!capability.available)throw fault(capability.errorCode||'SERVICE_UNAVAILABLE');
     const supported=capability.experienceVersion===EXPERIENCE_VERSION;
+    if(options.originStories && (!supported || capability.originStories!==true || capability.storyActions!==true))throw fault('EXPERIENCE_UNSUPPORTED');
     if(!supported&&(required||Object.hasOwn(options,'experienceVersion')))throw fault('EXPERIENCE_UNSUPPORTED');
     return {options:supported?{...options,experienceVersion:EXPERIENCE_VERSION}:options,capability};
   }
@@ -105,6 +106,7 @@ export function createLiveSession({archive,client,engine=defaultEngine,onChange=
     const capability=knownCapability??await client.capabilities();
     if(!capability.available)throw fault(capability.errorCode||'SERVICE_UNAVAILABLE');
     if(isExperienceLife(row.state.life)&&capability.experienceVersion!==EXPERIENCE_VERSION)throw fault('EXPERIENCE_UNSUPPORTED');
+    if(row.state.life.birth.backgroundId && (capability.originStories!==true || capability.storyActions!==true))throw fault('EXPERIENCE_UNSUPPORTED');
     const storyActions=!row.attempt&&capability.storyActions===true;
     if(capability.storyActions!==true&&(row.generation?.storyActions||row.pending.receipt.action?.intent==='interact'))throw fault('SERVICE_UNAVAILABLE');
     const generation=row.generation??{storyActions,context:await contextFor(row,null,storyActions)};
@@ -251,13 +253,17 @@ export function createLiveSession({archive,client,engine=defaultEngine,onChange=
     });
   }
   function retry() {
-    const expectedArchiveId=loaded?.archiveId;
+    const displayed=loaded;
     return run(async()=>{
-      await reload(expectedArchiveId);
-      if(!loaded?.pending||await death(loaded))return;
+      await reload(displayed?.archiveId);
+      if(!loaded?.pending)return;
+      // A click belongs to the displayed decision and attempt, including across tabs.
+      if(displayed&&(loaded.pending.identity.requestId!==displayed.pending?.identity.requestId||loaded.attempt?.id!==displayed.attempt?.id))return;
+      if(await death(loaded))return;
       const row=loaded;
       if(row.attempt) {
         const result=await client.getTurn(row.pending,row.attempt);
+        if(result.status==='rejected'&&(result.requestId!==row.pending.identity.requestId||result.attemptId!==row.attempt.id||result.sessionRef!==row.attempt.sessionRef))throw fault('RESPONSE_IDENTITY_MISMATCH');
         if(await apply(row,result))return;
         if(result.errorCode==='ATTEMPT_NOT_FOUND'&&(result.requestId!==row.pending.identity.requestId||result.attemptId!==row.attempt.id))throw fault('RESPONSE_IDENTITY_MISMATCH');
         if(result.errorCode==='ATTEMPT_NOT_ADMITTED') {
@@ -271,7 +277,7 @@ export function createLiveSession({archive,client,engine=defaultEngine,onChange=
           if(replayed?.status==='paused'&&replayed.errorCode==='ATTEMPT_NOT_FOUND'&&replayed.requestId===row.pending.identity.requestId&&replayed.attemptId===row.attempt.id&&replayed.sessionRef===row.attempt.sessionRef)await generate(loaded);
           return;
         }
-        if(result.errorCode==='ATTEMPT_IN_PROGRESS'&&result.retry?.afterMs>0)throw fault('ATTEMPT_IN_PROGRESS');
+        if(result.errorCode==='ATTEMPT_IN_PROGRESS')return;
       }
       await generate(row);
     });

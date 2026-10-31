@@ -287,7 +287,7 @@ export function validateStoryContext(c) {
   idField(c.identity.runId);idField(c.identity.requestId);whole(c.identity.turnId,1);whole(c.identity.baseRevision);
   if(c.namespace!==namespace(c.identity.runId)||!/^[a-f0-9]{64}$/.test(c.identity.stateHash)||c.identity.rulesVersion!==1||c.identity.promptVersion!==1||c.identity.turnId!==c.identity.baseRevision+1)fail('STORY_CONTEXT_INVALID');
   if(c.phase==='opening'&&c.identity.baseRevision!==0||c.phase==='choice'&&c.identity.baseRevision<1)fail('STORY_CONTEXT_INVALID');
-  validateLife(c.life);validateReceipt(c.receipt,{turnId:c.identity.turnId});
+  validateLife(c.life);validateReceipt(c.receipt,{turnId:c.identity.turnId,birth:c.life.birth});
   if(c.receipt.kind!==c.phase||c.identity.choiceId!==c.receipt.choiceId||c.receipt.death||!equal(c.receipt.after,summarizeLife(c.life))||c.phase==='opening'&&!equal(c.receipt.birth,c.life.birth))fail('ACTION_RECEIPT_MISMATCH');
   if(c.phase==='opening'&&(!equal(c.life.items,initialItemsForBirth(c.life.birth))||Object.keys(c.life.relations).length))fail('ACTION_RECEIPT_MISMATCH');
   if(c.director!==undefined){if(!isV7Life(c.life))fail('STORY_CONTEXT_INVALID');validateStoryDirector(c.director,{turnId:c.identity.baseRevision,life:c.life});}

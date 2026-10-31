@@ -4,6 +4,10 @@ import { readFile } from 'node:fs/promises';
 import { resolve, extname } from 'node:path';
 import { liveBrowser } from './helpers/live-browser.js';
 import { liveStoryFixture } from './helpers/live-story-fixture.js';
+import { ORIGINS, TALENTS } from '../src/game/cultivation/live/model.js';
+import { ROOTS } from '../src/game/cultivation/live/cultivation-rules.js';
+import { ORIGIN_BACKGROUNDS, TALENT_STORIES } from '../src/game/cultivation/live/birth-stories.js';
+import { rollLiveBirth } from '../src/game/cultivation/live/engine.js';
 
 function story(context) {
   const p=context.namespace+':t'+context.identity.turnId+':';
@@ -15,7 +19,7 @@ async function fixture(t) {
   await page.addInitScript(()=>{window.showSaveFilePicker=undefined;});
   await context.route('https://wending-title.test/**',async route=>{
     const url=new URL(route.request().url()),json=value=>route.fulfill({status:200,contentType:'application/json',body:JSON.stringify(value)});
-    if(url.pathname==='/api/story/capabilities')return json({protocolVersion:1,available:true,status:'ready',errorCode:null,limits:{maxRequestBytes:32768,maxResponseBytes:65536,maxContextBytes:7000,timeoutMs:30000}});
+    if(url.pathname==='/api/story/capabilities')return json({protocolVersion:1,available:true,status:'ready',errorCode:null,storyActions:true,experienceVersion:1,originStories:true,limits:{maxRequestBytes:32768,maxResponseBytes:65536,maxContextBytes:7000,timeoutMs:30000}});
     if(url.pathname==='/api/story/session')return json({protocolVersion:1,status:'ready',sessionRef:'title-session',expiresAt:Date.now()+86400000});
     if(url.pathname==='/api/story/turn') {
       posts++;const {context:c,attempt}=route.request().postDataJSON();
@@ -57,6 +61,106 @@ test('title is read-only, menus fit narrow screens, new defaults live, and draft
   assert.equal(await page.locator('html').getAttribute('data-theme'),'dark');
   await page.reload();assert.equal(await page.locator('#reading-size').inputValue(),'large');
   assert.equal(await f.read(),null);assert.equal(f.posts,0);
+});
+
+function assertBirthStory(text, birth) {
+  assert.ok(text.includes(ORIGIN_BACKGROUNDS[birth.originId][birth.backgroundId]));
+  for (const id of birth.talentIds) {
+    assert.ok(text.includes(TALENT_STORIES[id].sense));
+    assert.ok(text.includes(TALENT_STORIES[id].effect));
+  }
+}
+
+function assertDisplayedBirth(text, birth) {
+  const { name, advantage, defect } = ROOTS[birth.cultivationProfile.rootId];
+  for (const value of [ORIGINS[birth.originId], ...birth.talentIds.map(id => TALENTS[id]), name, advantage, defect]) {
+    assert.ok(text.includes(value), `the birth preview should display ${value}`);
+  }
+  for (const [label, value] of [['根骨', birth.attributes.constitution], ['悟性', birth.attributes.insight]]) {
+    assert.match(text, new RegExp(`${label}\\s*${value}\\b`));
+  }
+  if (birth.backgroundId) assertBirthStory(text, birth);
+}
+
+test('one selected talent survives a reroll and the last displayed hand becomes the opening life', async t => {
+  const f = await fixture(t), { page } = f;
+  // These two ordinary hands have disjoint talents, so preserving a lock cannot pass by chance.
+  await page.evaluate(() => {
+    let nextSeed = 1;
+    const randomValues = crypto.getRandomValues.bind(crypto);
+    crypto.getRandomValues = values => {
+      if (values instanceof Uint32Array && values.length === 1) {
+        values[0] = nextSeed++;
+        return values;
+      }
+      return randomValues(values);
+    };
+  });
+  await page.locator('[data-title-new]:enabled').click();
+  const form = page.locator('#live-birth-form'), locks = form.locator('[data-live-lock]');
+  const pressed = locks.and(page.locator('[aria-pressed="true"]'));
+  const storyRequests = [];
+  page.on('request', request => {
+    if (new URL(request.url()).pathname.startsWith('/api/story/')) storyRequests.push(request.url());
+  });
+  assert.equal(await locks.count(), 2);
+  const currentRules = {experienceVersion: 1, originStories: true};
+  assertDisplayedBirth(await form.innerText(), rollLiveBirth({seed: '1', ...currentRules}).birth);
+  const held = await locks.nth(1).getAttribute('data-live-lock');
+  await locks.first().click();
+  await locks.nth(1).click();
+  assert.equal(await pressed.count(), 1);
+  assert.equal(await pressed.getAttribute('data-live-lock'), held);
+  await form.locator('[data-live-reroll]').click();
+  const expected = rollLiveBirth({seed: '2', lockedTalentId: held, ...currentRules});
+  assertDisplayedBirth(await form.innerText(), expected.birth);
+  assert.equal(await pressed.getAttribute('data-live-lock'), held);
+  const rolled = await form.innerText();
+  await page.locator('#live-name').fill('问溪');
+  await page.reload();
+  assert.equal(await page.locator('#live-name').inputValue(), '问溪');
+  assert.equal(await form.innerText(), rolled);
+  assert.equal(await pressed.getAttribute('data-live-lock'), held);
+  await pressed.click();
+  assert.equal(await pressed.count(), 0);
+  assertDisplayedBirth(await form.innerText(), expected.birth);
+  assert.equal(await f.read(), null);
+  assert.deepEqual(storyRequests, []);
+
+  await form.locator('[data-live-start]:enabled').click();
+  await page.locator('[data-live-choice]:enabled').first().waitFor();
+  const { state } = await f.read();
+  assert.equal(state.life.name, '问溪');
+  assert.deepEqual(state.life.birth, expected.birth);
+  assert.deepEqual(state.birthReceipt.birth, expected.birth);
+  assert.equal(state.rng, expected.rng);
+  assert.equal(f.posts, 1);
+  await page.locator('[data-character]').click();
+  assertBirthStory(await page.locator('#dialog[open]').innerText(), state.life.birth);
+});
+
+test('an off-hand talent in a restored draft cannot become a hidden lock on the next reroll', async t => {
+  const f = await fixture(t), { page } = f;
+  await page.locator('[data-title-new]:enabled').click();
+  // The original hand would contain keen-memory, but a previous lock replaced it with sword-bone.
+  await page.evaluate(() => {
+    const key = 'wending-navigation-v1', navigation = JSON.parse(sessionStorage.getItem(key));
+    Object.assign(navigation.draft, {name: '林照', seed: '2', rolledTalentId: 'sword-bone', lockedTalentId: 'keen-memory'});
+    delete navigation.draft.originStories;
+    sessionStorage.setItem(key, JSON.stringify(navigation));
+  });
+  await page.reload();
+  const form = page.locator('#live-birth-form');
+  assert.equal(await form.locator('#live-name').inputValue(), '林照');
+  assertDisplayedBirth(await form.innerText(), rollLiveBirth({seed: '2', lockedTalentId: 'sword-bone'}).birth);
+  assert.equal(await form.locator('#live-origin-history').count(), 0);
+  assert.equal(await form.locator('[data-live-lock="keen-memory"]').count(), 0);
+  await form.locator('[data-live-reroll]').click();
+  assert.equal(await form.locator('[data-live-lock][aria-pressed="true"]').count(), 0);
+  const seed = await page.evaluate(() => JSON.parse(sessionStorage.getItem('wending-navigation-v1')).draft.seed);
+  assertDisplayedBirth(await form.innerText(), rollLiveBirth({seed, originStories: true, experienceVersion: 1}).birth);
+  assert.equal(await f.read(), null);
+  assert.equal(f.posts, 0);
 });
 
 test('the one current journey and its pending turn survive refresh and a new visit without another POST',async t=>{
@@ -106,7 +210,8 @@ test('title new-game warning and cancelled creation preserve the current save un
   assert.deepEqual((await f.read()).state,original.state);assert.equal(f.posts,2);
   await page.locator('[data-title-new]:enabled').click();await page.locator('[data-confirm]').click();
   await page.locator('#live-name').fill('未入世的人');
-  assert.deepEqual((await f.read()).state,original.state);assert.equal(f.posts,2);
+  await page.locator('[data-live-reroll]').click();
+  assert.deepEqual(await f.read(),original);assert.equal(f.posts,2);
   await page.reload();assert.equal(await page.locator('#live-name').inputValue(),'未入世的人');
   assert.equal((await f.read()).archiveId,original.archiveId);assert.deepEqual((await f.read()).state,original.state);
   await page.locator('[data-menu-back]').click();await page.locator('[data-title-continue]:enabled').click();
@@ -245,13 +350,20 @@ test('continuing a completed life preserves its settlement until an explicit rei
   await page.reload();await page.locator('[data-live-reincarnate]:enabled').waitFor();
   assert.equal((await f.read()).archiveId,parent.archiveId);assert.deepEqual((await f.read()).state,parent.state);assert.equal(f.posts,0);
   await page.locator('[data-live-reward="past-memory"]').click();await page.locator('[data-live-reincarnate]').click();
+  await page.locator('[data-live-lock]').first().click();
+  await page.locator('[data-live-reroll]').click();
+  const childPreview=await page.locator('#live-birth-form').innerText();
   await page.locator('#live-name').fill('沈渡');await page.reload();assert.equal(await page.locator('#live-name').inputValue(),'沈渡');
-  assert.deepEqual((await f.read()).state,parent.state);assert.equal(f.posts,0);
+  assert.equal(await page.locator('#live-birth-form').innerText(),childPreview);
+  assert.deepEqual(await f.read(),parent);assert.equal(f.posts,0);
   await page.locator('[data-menu-back]').click();await page.locator('[data-live-reincarnate]:enabled').waitFor();
   assert.equal(await page.locator('[data-live-reward="past-memory"]').getAttribute('aria-pressed'),'true');
   assert.deepEqual((await f.read()).state,parent.state);
-  await page.locator('[data-live-reincarnate]').click();await page.locator('#live-name').fill('沈渡');await page.locator('[data-live-start]:enabled').click();
+  await page.locator('[data-live-reincarnate]').click();
+  assert.equal(await page.locator('#live-birth-form').innerText(),childPreview);
+  await page.locator('[data-live-start]:enabled').click();
   await page.locator('[data-live-choice]:enabled').first().waitFor();const child=await f.read();
+  assertDisplayedBirth(childPreview,child.state.life.birth);
   assert.notEqual(child.archiveId,parent.archiveId);assert.equal(child.state.life.name,'沈渡');assert.equal(child.state.reincarnation.parentRunId,parent.state.runId);
   assert.equal(child.state.reincarnation.generation,2);assert.deepEqual(child.state.reincarnation.purchases,['past-memory']);assert.equal(f.posts,1);
   await page.reload();await page.locator('[data-live-choice]:enabled').first().waitFor();
@@ -296,7 +408,7 @@ test('failure to retain a live creation draft gives a visible warning without cr
   await page.locator('[data-title-new]').click();await page.locator('#live-name').fill('林照');
   assert.match(await page.locator('#toast').textContent(),/创建草稿暂时无法保存/);
   await page.evaluate(()=>{document.querySelector('#toast').textContent='';});
-  await page.locator('#live-origin').selectOption('ferry');
+  await page.locator('[data-live-reroll]').click();
   assert.match(await page.locator('#toast').textContent(),/创建草稿暂时无法保存/);
   assert.equal(await f.read(),null);assert.equal(f.posts,0);
 });

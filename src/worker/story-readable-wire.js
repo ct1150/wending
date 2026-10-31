@@ -1,5 +1,5 @@
 import {STORY_LIMITS} from './story-config.js';
-import {isFixedV7Interaction} from './story-v7-presentation.js';
+import {isFixedV7Interaction,normalizeAuthoredChoiceFields} from './story-v7-presentation.js';
 
 const encoder=new TextEncoder(),fields=new Set(['blocks','choices','title','location','memoryDeltas','story']);
 const reserved=new Set(['__proto__','constructor','prototype','life','receipt','retrieval','identity','items','rng','stateHash','baseRevision','namespace','entities','relatedEntities','cultivationProfile','itemChanges','relationChanges']);
@@ -11,9 +11,14 @@ const bad=()=>{throw Error('Unreadable scene fragment');};
 // The caller checks the finish reason, usage, thinking and response limit first.
 // This recovers only slices from one damaged v7 envelope. No display preview,
 // guessed string terminator, invented target, title or decision enters it.
-export function readCompleteV7Wire(source){
+export function readCompleteV7Wire(source,{authoredChoices=false}={}){
   if(typeof source!=='string'||source.length>STORY_LIMITS.maxResponseBytes||encoder.encode(source).length>STORY_LIMITS.maxResponseBytes)return null;
-  try{JSON.parse(source);return null;}catch{/* Valid completions use the ordinary path. */}
+  const fence=/^```(?:json)?[ \t]*\r?\n([\s\S]+?)\r?\n```$/iu.exec(source.trim());
+  if(fence){
+    source=fence[1];
+    try{JSON.parse(source);}catch{return null;}
+  }
+  else try{JSON.parse(source);return null;}catch{/* Valid completions use the ordinary path. */}
   try{
     const skip=i=>{while(i<source.length&&space(source[i]))i++;return i;};
     const start=skip(0);
@@ -23,7 +28,14 @@ export function readCompleteV7Wire(source){
     // the unused tail: a second document or an explicit authority field must
     // never be hidden by dropping an unfinished third choice or optional note.
     for(let i=start;i<source.length;i++){
-      const ch=source[i];if(closed){if(!space(ch))bad();continue;}
+      const ch=source[i];if(closed){
+        if(space(ch))continue;
+        // Only a brief Chinese signoff outside the finished root. Reject a
+        // second document, a fence with a postscript, or machine fields.
+        const tail=source.slice(i).trim();
+        if(authoredChoices&&!fence&&tail.length<=120&&/^(?:【[\p{Script=Han} ，。！、…]+】|（[\p{Script=Han} ，。！、…]+）|(?:本回合|本幕|本章|请你选择|请选择)[\p{Script=Han} ，。！、…]*)$/u.test(tail))break;
+        bad();
+      }
       if(ch==='"'){
         const begin=i;let done=false;
         while(++i<source.length){if(source[i]==='\\'){i++;continue;}if(source.charCodeAt(i)<32)bad();if(source[i]==='"'){done=true;break;}}
@@ -50,7 +62,11 @@ export function readCompleteV7Wire(source){
         if(end===undefined){if(count!==3||rows.length!==2)bad();i=source.length;break;}
         let row;try{row=read(i,end);}catch{if(count!==3||rows.length!==2)bad();}
         if(row!==undefined){
-          if(!record(row)||Object.keys(row).some(key=>!['action','target','stake','purpose','anchor'].includes(key))||!nonempty(row.action)||!nonempty(row.purpose)||!['low','normal','high'].includes(row.stake)&&!(isFixedV7Interaction(row.action)&&row.stake===undefined)||row.anchor!==undefined&&(!Number.isInteger(row.anchor)||row.anchor<0)||!(nonempty(row.target)||record(row.target)&&['person','place','faction'].includes(row.target.kind)&&nonempty(row.target.name)))bad();
+          const candidate=authoredChoices?normalizeAuthoredChoiceFields(row):row;
+          const target=authoredChoices&&!Object.hasOwn(candidate,'target')?candidate.targetId:candidate.target;
+          if(!record(candidate)||Object.keys(candidate).some(key=>!['action','target','stake','purpose','anchor'].includes(key)&&!(authoredChoices&&key==='targetId'&&!Object.hasOwn(candidate,'target'))))bad();
+          if(!nonempty(candidate.action)||!nonempty(candidate.purpose)||!['low','normal','high'].includes(candidate.stake)&&!(isFixedV7Interaction(candidate.action)&&candidate.stake===undefined))bad();
+          if(candidate.anchor!==undefined&&(!Number.isInteger(candidate.anchor)||candidate.anchor<0)||!(nonempty(target)||record(target)&&['person','place','faction'].includes(target.kind)&&nonempty(target.name)))bad();
           rows.push(row);
         }
         i=skip(end);if(i===source.length||source[i]===']')break;
@@ -60,11 +76,31 @@ export function readCompleteV7Wire(source){
     }
     while(i<source.length&&source[i]!=='}'){
       if(source[i]!=='"'||!ends.has(i))bad();const end=ends.get(i),key=read(i,end);
-      if(!fields.has(key)||seen.has(key))bad();seen.add(key);i=skip(end);if(source[i]!==':')bad();i=skip(i+1);
+      if((!fields.has(key)&&!(authoredChoices&&key==='afterword'))||seen.has(key))bad();seen.add(key);i=skip(end);if(source[i]!==':')bad();i=skip(i+1);
       if(key==='choices')takeChoices();
       else{
+        if(key==='afterword'&&(source[i]!=='"'||!ends.has(i)&&!/^"【?[\p{Script=Han} ，。！、；《》“”（）…]*$/u.test(source.slice(i))))bad();
         const valueEnd=span(i);
-        if(valueEnd===undefined){if(i<source.length&&!['[','{','"'].includes(source[i]))bad();break;}
+        if(valueEnd===undefined){
+          if(i<source.length&&!['[','{','"'].includes(source[i]))bad();
+          if(authoredChoices&&key==='memoryDeltas'&&source[i]==='['){
+            // The final note can be incomplete after an earlier full promise
+            // or closure. Decode each finished record from its own source span.
+            const notes=[];
+            let at=skip(i+1);
+            while(source[at]==='{'&&ends.has(at)){
+              const end=ends.get(at),note=read(at,end);
+              if(!record(note)||!Object.hasOwn(note,'kind')&&!Object.hasOwn(note,'referenceId'))break;
+              if(notes.length>=16)bad();
+              notes.push(note);
+              at=skip(end);
+              if(source[at]!==',')break;
+              at=skip(at+1);
+            }
+            if(notes.length)output.memoryDeltas=notes;
+          }
+          break;
+        }
         let value;try{value=read(i,valueEnd);}catch{if(key==='blocks')bad();}
         if(value!==undefined)output[key]=value;i=valueEnd;
       }

@@ -7,7 +7,7 @@ test('ready story API announces the supported experience version; paused API can
  const url='https://story.example/api/story/capabilities';
  const ready=createStoryApi({config:{readiness(){}}}),paused=createStoryApi({config:{readiness(){throw Error('offline');}}});
  const first=await (await ready.fetch(new Request(url))).json(),second=await (await paused.fetch(new Request(url))).json();
- assert.equal(first.available,true);assert.equal(first.experienceVersion,1);assert.equal(second.available,false);assert.equal(second.experienceVersion,undefined);
+ assert.equal(first.available,true);assert.equal(first.experienceVersion,1);assert.equal(first.originStories,true);assert.equal(second.available,false);assert.equal(second.experienceVersion,undefined);assert.equal(second.originStories,undefined);
 });
 
 test('native session negotiates marked birth before replacing storage, rolls back safely and restores a cached marked reply',async t=>{
@@ -18,6 +18,9 @@ test('native session negotiates marked birth before replacing storage, rolls bac
   const client={async capabilities(){calls++;return capability;},async createSession(){return {sessionRef:'session'};},async requestTurn(p,c,attempt){posts++;cached={status:'ready',requestId:p.identity.requestId,attemptId:attempt.id,sessionRef:attempt.sessionRef,scene:frozen.scene};return {status:'paused',errorCode:'PROVIDER_TIMEOUT'};},async getTurn(){gets++;return cached;}};
   const ss=createLiveSession({archive:a,client}),legacy=await ss.startNew({...frozen.options,runId:'old'},null);
   const blocked=await ss.startNew({...frozen.options,experienceVersion:1},legacy.archiveId),afterBlock=await a.load();
+  capability={available:true,storyActions:true,experienceVersion:1};
+  const oldServer=await ss.startNew({...frozen.options,originStories:true},legacy.archiveId);
+  if(oldServer.errorCode!=='EXPERIENCE_UNSUPPORTED'||(await a.load()).archiveId!==legacy.archiveId)throw Error('Unsupported origin story replaced the current life');
   capability={available:false,errorCode:'AI_DISABLED',experienceVersion:1};const offline=await ss.startNew({...frozen.options,experienceVersion:1},legacy.archiveId);
   capability={available:true,storyActions:true,experienceVersion:1};const before=calls,modern=await ss.startNew(frozen.options,legacy.archiveId),creationChecks=calls-before;
   const b=await open('experience-import'),imported=await format.importLiveArchive(format.exportLiveArchive(a),b);

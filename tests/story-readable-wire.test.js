@@ -47,3 +47,33 @@ test('authority-looking text inside ordinary prose is data, and over-budget or e
   assert.equal(readCompleteV7Wire(core+',"story":'+ '['.repeat(40)),null);
   assert.equal(readCompleteV7Wire(core+',"title":"'+'汉'.repeat(24000)),null);
 });
+
+test('authored recovery preserves the complete original menu and long prose inside a single JSON fence or before a short signoff',()=>{
+  const long=[{kind:'narration',text:'你沿水面的倒影查看那圈灵纹。'.repeat(56)}];
+  const body={blocks:long,choices:choices.slice(0,2)};
+  const raw=JSON.stringify(body),recover=s=>readCompleteV7Wire(s,{authoredChoices:true});
+  assert.deepEqual(recover('```json\n'+raw+'\n```'),body);
+  assert.deepEqual(recover(raw+'\n【本回合完】'),body);
+  assert.deepEqual(recover(raw.slice(0,-1)+',"afterword":"请依自己的心意选择'),body);
+  for(const s of [raw+'\n'+raw,'```json\n'+raw+'\n```\n'+raw,
+    raw+'\n【本回合完】 {"receipt":{}}',JSON.stringify({blocks:long})+'\n【本回合完】',
+    raw.slice(0,-1)+',"afterword":{"receipt":'])assert.equal(recover(s),null);
+});
+
+test('complete explicit legacy choice fields survive a truncated caption without inferring an action',()=>{
+  const pair=[{intent:'interact',approach:'ask',targetId:person,label:'询问船夫铜铃从哪里来'},choices[1]];
+  const damaged=rows=>JSON.stringify({blocks,choices:rows}).slice(0,-1)+',"title":"河';
+  assert.deepEqual(readCompleteV7Wire(damaged(pair),{authoredChoices:true}),{blocks,choices:pair});
+  for(const first of [{target:person,label:'询问船夫铜铃从哪里来'},{intent:'travel',approach:'road',targetId:'k1',label:'动身前往渡口'}]){
+    assert.equal(readCompleteV7Wire(damaged([first,choices[1]]),{authoredChoices:true}),null);
+  }
+});
+
+test('a cut-off decoration does not discard an earlier fully authored memory record',()=>{
+  const promise={target:person,kind:'promise',anchor:0,status:'open'};
+  const wire=core+',"memoryDeltas":['+JSON.stringify(promise)+',{"target":';
+  const recovered=readCompleteV7Wire(wire,{authoredChoices:true});
+  assert.deepEqual(recovered.memoryDeltas,[promise]);
+  assert.deepEqual(recovered.choices,choices);
+  assert.equal(readCompleteV7Wire('```json\n'+core+',}\n```',{authoredChoices:true}),null);
+});

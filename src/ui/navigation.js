@@ -1,3 +1,5 @@
+import { ORIGINS, TALENTS } from '../game/cultivation/live/model.js';
+
 const NAVIGATION_KEY = 'wending-navigation-v1';
 const PREFERENCES_KEY = 'wending-reading-v1';
 const screens = ['home', 'new', 'adventure', 'settings'];
@@ -7,7 +9,11 @@ function navigation(value) {
   if (!value || typeof value !== 'object') return defaults();
   const draft=value.draft && typeof value.draft==='object' ? {
     name:typeof value.draft.name==='string'?value.draft.name.slice(0,24):'云归',
-    originId:typeof value.draft.originId==='string'?value.draft.originId:'village',
+    ...(value.draft.originStories===true ? {originStories:true} : {}),
+    ...(typeof value.draft.originId==='string' && Object.hasOwn(ORIGINS,value.draft.originId) ? {originId:value.draft.originId} : {}),
+    ...(typeof value.draft.seed==='string' && /^\d{1,16}$/.test(value.draft.seed) ? {seed:value.draft.seed} : {}),
+    ...(typeof value.draft.lockedTalentId==='string' && Object.hasOwn(TALENTS,value.draft.lockedTalentId) ? {lockedTalentId:value.draft.lockedTalentId} : {}),
+    ...(typeof value.draft.rolledTalentId==='string' && Object.hasOwn(TALENTS,value.draft.rolledTalentId) ? {rolledTalentId:value.draft.rolledTalentId} : {}),
     expectedArchiveId:typeof value.draft.expectedArchiveId==='string'?value.draft.expectedArchiveId:null,
     ...(typeof value.draft.reincarnationRunId==='string'&&value.draft.reincarnationRunId.length<=80&&Array.isArray(value.draft.reincarnationRewardIds)&&value.draft.reincarnationRewardIds.length<=4&&value.draft.reincarnationRewardIds.every(id=>typeof id==='string'&&id.length<=80)?{reincarnationRunId:value.draft.reincarnationRunId,reincarnationRewardIds:[...new Set(value.draft.reincarnationRewardIds)]}:{}),
   } : null;

@@ -2,7 +2,8 @@ import { openLiveArchive } from './game/live-archive.js';
 import { exportLiveArchive, importLiveArchive } from './game/live-save-format.js';
 import { createLiveSession } from './ui/live-session.js';
 import { createStoryClient } from './ui/story-client.js';
-import { compileChoices } from './game/cultivation/live/engine.js';
+import { compileChoices, rollLiveBirth } from './game/cultivation/live/engine.js';
+import { EXPERIENCE_VERSION } from './game/cultivation/live/experience.js';
 import { stateHash } from './game/cultivation/live/identity.js';
 import { getReincarnationSettlement, REINCARNATION_REWARDS, buildRebirthOptions } from './game/cultivation/live/reincarnation.js';
 import { REALMS as LIVE_REALMS, ORIGINS as LIVE_ORIGINS, TALENTS as LIVE_TALENTS, ITEMS as LIVE_ITEMS } from './game/cultivation/live/model.js';
@@ -27,7 +28,11 @@ try { hasLegacyData = legacyKeys.some(key => storage.getItem(key) !== null); } c
 let navigationStorage = null;
 try { navigationStorage = window.sessionStorage; } catch {}
 const navigation = loadNavigation(navigationStorage, window.performance?.getEntriesByType?.('navigation')?.[0]?.type);
-let liveBirthDraft = navigation.draft ?? { name: '云归', originId: 'village', expectedArchiveId: null };
+let liveBirthDraft = navigation.draft ?? { name: '云归', expectedArchiveId: null };
+if (!liveBirthDraft.seed) liveBirthDraft.seed = newSeed();
+if (liveBirthDraft.lockedTalentId && !rollLiveBirth(currentBirthOptions()).birth.talentIds.includes(liveBirthDraft.lockedTalentId)) {
+  delete liveBirthDraft.lockedTalentId;
+}
 let liveArchive = null, liveSession = null, liveSnapshot = null, liveError = '', liveHistoryCursor = null, liveHistoryRun = null;
 let liveInitialization = null, homeReady = false, uiBusy = false, creatingRunId = null, returnScreen = navigation.returnScreen;
 let readingPreferences = loadPreferences(storage);
@@ -54,9 +59,23 @@ function renderSettingsPage() {
   renderScreenShell(body, { title: '游戏设置', back: returnScreen === 'new' ? '返回角色创建' : returnScreen === 'adventure' ? '返回当前剧情' : '返回首页' });
 }
 
+function currentBirthOptions() {
+  const inheritedBenefits = liveBirthDraft.reincarnationRunId
+    ? REINCARNATION_REWARDS.filter(reward => liveBirthDraft.reincarnationRewardIds?.includes(reward.id)).map(reward => reward.id).sort()
+    : [];
+  return {
+    seed:liveBirthDraft.seed,
+    ...(liveBirthDraft.originStories ? {originStories:true, experienceVersion:EXPERIENCE_VERSION} : {}),
+    ...(inheritedBenefits.length ? {inheritedBenefits} : {}),
+    ...(liveBirthDraft.originId ? {originId:liveBirthDraft.originId} : {}),
+    ...(liveBirthDraft.rolledTalentId ? {lockedTalentId:liveBirthDraft.rolledTalentId} : {}),
+  };
+}
+
 function renderNewJourney() {
   const invalid = liveSnapshot?.errorCode === 'BIRTH_CONTEXT_INVALID';
-  renderScreenShell(renderLiveBirth({ ...liveBirthDraft, origins: LIVE_ORIGINS, available: Boolean(liveSession), busy: uiBusy, invalid, error: liveError }), { title: liveBirthDraft.reincarnationRunId ? '步入轮回' : '踏入仙途', back: liveBirthDraft.reincarnationRunId ? '返回此生结算' : '返回首页' });
+  const {birth} = rollLiveBirth(currentBirthOptions());
+  renderScreenShell(renderLiveBirth({ ...liveBirthDraft, birth, available: homeReady && Boolean(liveSession) && !liveSnapshot?.busy, busy: uiBusy, invalid, error: liveError }), { title: liveBirthDraft.reincarnationRunId ? '步入轮回' : '踏入仙途', back: liveBirthDraft.reincarnationRunId ? '返回此生结算' : '返回首页' });
 }
 
 async function initializeScreens() {
@@ -100,7 +119,7 @@ async function prepareNewJourney(expectedArchiveId = null) {
       notify('当前人物已在另一页面更新，请重新确认后再开始。', true);
       return;
     }
-    liveBirthDraft = { name: '云归', originId: 'village', expectedArchiveId };
+    liveBirthDraft = { name: '云归', seed: newSeed(), originStories: true, expectedArchiveId };
     liveError = ''; view = 'new'; returnScreen = 'home';
     saveCreationDraft();
   } catch { notify('暂时无法读取存档，原有进度保持不变。', true); }
@@ -142,6 +161,24 @@ function newSeed() {
 
 function saveCreationDraft() {
   if(!rememberScreen())notify('创建草稿暂时无法保存到此标签页，刷新会丢失草稿。原有旅程保持不变。',true);
+}
+
+function changeBirthRoll(button) {
+  if (view !== 'new' || uiBusy) return;
+  const focus = captureFocusTarget(button);
+  if ('liveReroll' in button.dataset) {
+    liveBirthDraft.seed = newSeed();
+    liveBirthDraft.originStories = true;
+    delete liveBirthDraft.originId; // A pre-dice draft may still have a manually chosen origin.
+    liveBirthDraft.rolledTalentId = liveBirthDraft.lockedTalentId;
+  } else {
+    const talentId = button.dataset.liveLock;
+    if (!rollLiveBirth(currentBirthOptions()).birth.talentIds.includes(talentId)) return;
+    liveBirthDraft.lockedTalentId = talentId === liveBirthDraft.lockedTalentId ? null : talentId;
+  }
+  saveCreationDraft();
+  render();
+  resolveFocusTarget(focus)?.focus({preventScroll:true});
 }
 
 function applyReadingPreferences() {
@@ -251,21 +288,23 @@ async function ensureLive() {
 }
 
 async function beginLiveLife() {
-  if(uiBusy||view!=='new')return;
-  const name=$('#live-name')?.value?.trim()??liveBirthDraft.name,originId=$('#live-origin')?.value??liveBirthDraft.originId;
-  liveBirthDraft={...liveBirthDraft,name,originId};uiBusy=true;liveError='';render();
+  if(uiBusy||!homeReady||liveSnapshot?.busy||view!=='new')return;
+  const name=$('#live-name')?.value?.trim()??liveBirthDraft.name;
+  liveBirthDraft.name=name;uiBusy=true;liveError='';render();
   try {
     await ensureLive();
     creatingRunId=window.crypto.randomUUID();
-    const options={runId:creatingRunId,name,originId,seed:newSeed(),engineVersion:7};
+    const rollOptions=currentBirthOptions();
+    const {birth}=rollLiveBirth(rollOptions);
+    const options={...rollOptions,runId:creatingRunId,name,originId:birth.originId,engineVersion:7};
     if(liveBirthDraft.reincarnationRunId&&liveSnapshot?.state?.runId!==liveBirthDraft.reincarnationRunId)throw Error('reincarnation parent changed');
     const result=liveBirthDraft.reincarnationRunId
       ?await liveSession.reincarnate(options,liveBirthDraft.reincarnationRewardIds??[],liveBirthDraft.expectedArchiveId)
       :await liveSession.startNew(options,liveBirthDraft.expectedArchiveId);
-    if(result.state?.runId===creatingRunId){if(view==='new')view='adventure';liveBirthDraft={name,originId,expectedArchiveId:result.archiveId};}
+    if(result.state?.runId===creatingRunId){if(view==='new')view='adventure';liveBirthDraft={name,expectedArchiveId:result.archiveId};}
     else if(result.errorCode==='REINCARNATION_ALREADY_CLAIMED')liveError='此生传承已领取。请恢复下一世备份，或返回首页重新开始。';
     else if(result.errorCode==='REINCARNATION_INSUFFICIENT_POINTS')liveError='因果点不足，请返回此生结算重新选择传承。';
-    else if(result.errorCode==='EXPERIENCE_UNSUPPORTED')liveError='故事服务暂不支持这次轮回的修行规则。原存档已保留，请稍后再试。';
+    else if(result.errorCode==='EXPERIENCE_UNSUPPORTED')liveError='故事服务暂时无法接续这张命签。稍后可用同一张命签再次入世。';
     else if(['NETWORK_UNAVAILABLE','AI_DISABLED','SERVICE_UNAVAILABLE','PROTOCOL_MISMATCH'].includes(result.errorCode))liveError='暂时无法确认故事服务可用。原存档已保留，请稍后再试。';
     else if(result.errorCode!=='BIRTH_CONTEXT_INVALID')liveError='另一页面可能已更新存档，或本地存档无法保存。请返回首页后重新创建，原进度保持不变。';
   } catch { liveError='无法开始，请检查本地存储与网络。原有旅程保持不变。'; }
@@ -277,6 +316,12 @@ function liveStoryView(snapshot) {
   return {...snapshot,stateHash:stateHash(snapshot.state),itemNames:LIVE_ITEMS,characterSummary:liveCharacterSummary(snapshot.state,liveCatalogs),selectedReincarnationRewards:liveBirthDraft.reincarnationRunId===snapshot.state.runId?liveBirthDraft.reincarnationRewardIds??[]:[]};
 }
 
+function setReincarnationDraft(snapshot, rewardIds) {
+  const draft = liveBirthDraft.reincarnationRunId === snapshot.state.runId
+    ? liveBirthDraft : {name:snapshot.state.life.name, seed:newSeed(), originStories:true};
+  liveBirthDraft = {...draft, expectedArchiveId:snapshot.archiveId, reincarnationRunId:snapshot.state.runId, reincarnationRewardIds:rewardIds};
+}
+
 function selectReincarnationReward(rewardId) {
   const snapshot=liveSnapshot;
   if(!snapshot?.state||snapshot.busy||snapshot.pending||snapshot.reincarnatedTo||!getReincarnationSettlement(snapshot.state))return;
@@ -284,7 +329,7 @@ function selectReincarnationReward(rewardId) {
   const current=liveBirthDraft.reincarnationRunId===snapshot.state.runId?liveBirthDraft.reincarnationRewardIds??[]:[];
   const selected=current.includes(rewardId)?current.filter(id=>id!==rewardId):[...current,rewardId];
   try {buildRebirthOptions(snapshot.state,selected);}catch(error){return notify(error.code==='REINCARNATION_SELECTION_LIMIT'?'每世最多携入两项传承。':'因果点不足，无法携入这项传承。',true);}
-  liveBirthDraft={name:liveBirthDraft.reincarnationRunId===snapshot.state.runId?liveBirthDraft.name:snapshot.state.life.name,originId:liveBirthDraft.reincarnationRunId===snapshot.state.runId?liveBirthDraft.originId:'village',expectedArchiveId:snapshot.archiveId,reincarnationRunId:snapshot.state.runId,reincarnationRewardIds:selected};
+  setReincarnationDraft(snapshot,selected);
   saveCreationDraft();render();
 }
 
@@ -294,7 +339,7 @@ function prepareReincarnation() {
   const sameParent=liveBirthDraft.reincarnationRunId===snapshot.state.runId;
   const selected=sameParent?liveBirthDraft.reincarnationRewardIds??[]:[];
   try {buildRebirthOptions(snapshot.state,selected);}catch{return notify('因果点不足，请重新选择来世传承。',true);}
-  liveBirthDraft={name:sameParent?liveBirthDraft.name:snapshot.state.life.name,originId:sameParent?liveBirthDraft.originId:'village',expectedArchiveId:snapshot.archiveId,reincarnationRunId:snapshot.state.runId,reincarnationRewardIds:selected};
+  setReincarnationDraft(snapshot,selected);
   liveError='';view='new';returnScreen='adventure';saveCreationDraft();render();$('#live-name')?.focus({preventScroll:true});
 }
 
@@ -357,7 +402,6 @@ document.addEventListener('input', event => {
   if (event.target.id === 'live-name') { liveBirthDraft.name = event.target.value; saveCreationDraft(); }
 });
 document.addEventListener('change', event => {
-  if (event.target.id === 'live-origin') { liveBirthDraft.originId = event.target.value; saveCreationDraft(); }
   if (event.target.id === 'reading-theme' || event.target.id === 'reading-size') {
     readingPreferences = { ...readingPreferences, [event.target.id === 'reading-theme' ? 'theme' : 'textSize']: event.target.value };
     applyReadingPreferences();
@@ -391,6 +435,7 @@ document.addEventListener('click', event => {
     return goHome();
   }
   if ('liveStart' in data) { event.preventDefault(); return beginLiveLife(); }
+  if ('liveReroll' in data || 'liveLock' in data) return changeBirthRoll(button);
   if ('liveReward' in data) return selectReincarnationReward(data.liveReward);
   if ('liveReincarnate' in data) return prepareReincarnation();
   if ('liveRetry' in data) return liveSession?.retry();

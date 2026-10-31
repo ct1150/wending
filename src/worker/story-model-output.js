@@ -27,7 +27,7 @@ export function adaptV7ModelOutput(wire,context,{authoredChoices=false}={}){
     wire=body;
   }
   exactKeys(wire,['blocks','choices'],['title','location','story','memoryDeltas']);
-  wire=normalizeV7Presentation(wire,context);
+  wire=normalizeV7Presentation(wire,context,{authoredChoices});
   const {blocks,choices}=wire;
   if(!Array.isArray(blocks)||!blocks.length||!Array.isArray(choices)||choices.length<2||choices.length>3)throw Error('Invalid playable core');
   const identify=createNamedTargetLookup(context);

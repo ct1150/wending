@@ -26,7 +26,7 @@ async function fixture(t, { reducedMotion = 'reduce', motion = null } = {}) {
     if (url.origin !== appOrigin) { external.push(url.href); return route.abort(); }
     const json = value => route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(value) });
     if (url.pathname === '/__bootstrap') return route.fulfill({ contentType: 'text/html', body: '<!doctype html><html><body></body></html>' });
-    if (url.pathname === '/api/story/capabilities') return json({ protocolVersion: 1, available: true, status: 'ready', errorCode: null, storyActions: true, limits: { maxRequestBytes: 32768, maxResponseBytes: 65536, maxContextBytes: 7000, timeoutMs: 30000 } });
+    if (url.pathname === '/api/story/capabilities') return json({ protocolVersion: 1, available: true, status: 'ready', errorCode: null, storyActions: true, experienceVersion: 1, originStories: true, limits: { maxRequestBytes: 32768, maxResponseBytes: 65536, maxContextBytes: 7000, timeoutMs: 30000 } });
     if (url.pathname === '/api/story/session') return json({ protocolVersion: 1, status: 'ready', sessionRef: 'game-visual-session', expiresAt: Date.now() + 86400000 });
     if (url.pathname === '/api/story/turn') {
       posts++;
@@ -186,7 +186,10 @@ test('creation, reading, drawers and story choices stay legible at phone and des
     await assertFits(page, `${width}px creation`);
     await assertReadable(page, '.live-birth-greeting', `${width}px creation introduction`);
     await assertReadable(page, '#live-name', `${width}px name input`);
-    await assertReadable(page, '#live-origin', `${width}px origin selector`);
+    await assertReadable(page, '[data-live-reroll]', `${width}px reroll control`);
+    await assertReadable(page, '[data-live-lock]', `${width}px talent lock`);
+    await assertReadable(page, '#live-origin-history', `${width}px origin history`);
+    await assertReadable(page, '.live-roll-talent p', `${width}px talent explanation`);
   }
   await enterStory(page);
   for (const width of [320, 390, 1440]) {

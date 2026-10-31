@@ -42,7 +42,7 @@ export function createStoryApi({provider=generateScene,budget,config={},experime
       const method=capabilities||lookupPath?'GET':'POST';if(request.method!==method)return json(envelope('rejected','METHOD_NOT_ALLOWED'),405,{allow:method});
       if(url.protocol!=='https:'||request.headers.get('sec-fetch-site')==='cross-site'||request.headers.has('origin')&&request.headers.get('origin')!==url.origin||method==='POST'&&request.headers.get('origin')!==url.origin)return json(envelope('rejected','ORIGIN_INVALID'),403);
       if(!lookupPath&&url.search)return json(envelope('rejected','REQUEST_INVALID'),400);
-      if(capabilities){let errorCode=null;try{await readiness(env);}catch(error){errorCode=codeOf(error);}return json({protocolVersion:1,available:errorCode===null,status:errorCode?'paused':'ready',errorCode,storyActions:true,...(errorCode===null?{experienceVersion:EXPERIENCE_VERSION}:{}),limits:STORY_API_LIMITS});}
+      if(capabilities){let errorCode=null;try{await readiness(env);}catch(error){errorCode=codeOf(error);}return json({protocolVersion:1,available:errorCode===null,status:errorCode?'paused':'ready',errorCode,storyActions:true,...(errorCode===null?{experienceVersion:EXPERIENCE_VERSION,originStories:true}:{}),limits:STORY_API_LIMITS});}
       const ipHash=sha256(request.headers.get('cf-connecting-ip')??'unknown');
       const admission=await callBudget('admit',{ipHash});if(admission.kind==='denied')return json(envelope('paused',admission.code),429);
       let body;if(method==='POST')body=await readStoryJson(request);
