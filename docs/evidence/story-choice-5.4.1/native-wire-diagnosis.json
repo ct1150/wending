@@ -1,0 +1,27 @@
+{
+  "baseSource": "babbae9f387dda2ddcd887f8e133ea78c4aa2522",
+  "nativeCandidate109": {
+    "model": "@cf/zai-org/glm-4.7-flash",
+    "ordinaryTrafficPercent": 0,
+    "http": 200,
+    "status": "rejected",
+    "errorCode": "GENERATED_SCENE_INVALID",
+    "visibleBlocks": 2,
+    "visibleCharacters": 276,
+    "visibleChoices": 3,
+    "savedRevision": 0
+  },
+  "scopedDiagnostic110": {
+    "ordinaryTrafficPercent": 0,
+    "scope": "One synthetic opening through normal session, budget reservation and settlement; only allowlisted structural classifications returned. Never promote diagnostic build.",
+    "causeSite": "WIRE_DECODE/ANNOTATION_L10/WIRE_DECODE_L168/PROVIDER_L215/API_L98",
+    "topFieldCount": 6,
+    "blocks": 1,
+    "narrativeLength": 167,
+    "choices": 3,
+    "optionalNotes": -1,
+    "finding": "The strict model-wire annotation reader threw at the non-string pattern/beat guard before checking the menu. The specific value was not recorded. Each of three named targets also omitted status; a new memory mentioned a target as a string.",
+    "rawCompletionRecorded": false
+  },
+  "fix": "The game supplies a grounded neutral pattern/beat when model editorial tags are unusable. New target identity uses kind/name; optional wire decoration never authors state. No second inference to correct a scene."
+}

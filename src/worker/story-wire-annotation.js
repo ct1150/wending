@@ -7,16 +7,16 @@ import {assertSafeStoryStrings} from '../game/cultivation/live/memory.js';
 export function normalizeWireAnnotation(story,blocks,context,field,lookup){
   assertSafeStoryStrings(story);
   exactKeys(story,[],['pattern','beat','anchors','npcs']);
-  for(const key of ['pattern','beat'])if(Object.hasOwn(story,key)&&typeof story[key]!=='string')throw Error('Invalid story tag');
   if(!Array.isArray(blocks)||!blocks.length)throw Error('Missing scene blocks');
   const anchors=story.anchors??[];
   if(!Array.isArray(anchors)||anchors.length>2||anchors.some(index=>!Number.isInteger(index)))throw Error('Invalid story anchors');
   const actual=[...new Set(anchors.filter(index=>index>=0&&index<blocks.length))];
-  // Attaching a resolution/climax to an arbitrary block could advance the
-  // director. Its existing pattern and a neutral progress beat do not.
+  // Only a complete pair of known labels describes a beat. Never coerce
+  // arbitrary model JSON or attach a resolution/climax to an arbitrary block.
+  const tagged=actual.length>0&&STORY_PATTERNS.includes(story.pattern)&&STORY_BEATS.includes(story.beat);
   const result={
-    pattern:actual.length&&STORY_PATTERNS.includes(story.pattern)?story.pattern:context.director.pacing.pattern,
-    beat:actual.length&&STORY_BEATS.includes(story.beat)?story.beat:'progress',
+    pattern:tagged?story.pattern:context.director.pacing.pattern,
+    beat:tagged?story.beat:'progress',
     anchors:actual.length?actual:[0],
   };
   if(story.npcs===undefined)return result;

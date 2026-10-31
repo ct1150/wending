@@ -127,3 +127,20 @@ test('an exact repeated menu item leaves both distinct original choices playable
   const committed=commitTurn(state,pending,result.scene);
   for(const choice of result.scene.choices)assert.deepEqual(prepareChoice(committed,{choiceId:choice.id,requestId:'dedup-'+choice.approach}).receipt.action,choice);
 });
+
+test('the native structural sample keeps its menu with advisory tags and a compact actor reference', async () => {
+  const {state,pending,context}=fixture(),wire=capturedStoryWire();
+  wire.blocks[0].text='你看见渡口船夫手边的旧陶罐，他抬手指了指盖上的泥痕。'.repeat(8).slice(0,167);
+  assert.equal(wire.blocks[0].text.length,167);
+  for(const c of wire.choices)c.target={kind:'person',name:'渡口船夫',ref:''};
+  wire.story={pattern:{style:'discovery'},beat:'progress',anchors:[0]};
+  wire.memoryDeltas=[{kind:'fact',target:'渡口船夫',anchor:0}];
+  const result=await run(wire,context);
+  assert.equal(result.status,'ready',result.errorCode);
+  const next=commitTurn(state,pending,result.scene);
+  assert.deepEqual(result.scene.blocks,wire.blocks);assert.equal(next.revision,1);
+  assert.equal(result.scene.story.pattern,context.director.pacing.pattern);
+  assert.equal(result.scene.story.beat,'progress');
+  assert.equal(result.scene.memoryDeltas[0].entityId,result.scene.choices[0].targetId);
+  for(const p of result.scene.choices)assert.deepEqual(prepareChoice(next,{choiceId:p.id,requestId:'native-'+p.approach}).receipt.action,p);
+});

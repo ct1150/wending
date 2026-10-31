@@ -3,6 +3,13 @@ import {assertPlainData} from '../game/cultivation/live/identity.js';
 import {ITEMS,REALMS} from '../game/cultivation/live/model.js';
 import {isV7Life,realmCatalogFor,WORLD_TIERS,WORLD_TRAVEL_APPROACHES} from '../game/cultivation/live/cultivation-rules.js';
 
+// Bound, typed symbols from older model responses exist only within one scene.
+const localSymbol=value=>{
+  const match=typeof value==='string'&&/^(p|npc|person|l|place|f|faction)([1-9]|1\d|2[0-4])$/u.exec(value);
+  return match?({p:'p',npc:'p',person:'p',l:'l',place:'l',f:'f',faction:'f'})[match[1]]+match[2]:null;
+};
+const kindLetter={person:'p',place:'l',faction:'f'};
+
 // The model names an object next to its intended action. The server resolves
 // existing identity or allocates a local wire reference; it never trusts a
 // model-provided ID that disagrees with the complete name and kind.
@@ -16,11 +23,17 @@ export function createNamedTargetLookup(context){
       const known=knownRefs.get(target);if(!known)throw Error('Unknown named reference');
       target={kind:known.kind,name:known.name,ref:target,status:null};
     }
-    exactKeys(target,['kind','name','ref','status']);
-    if(!['person','place','faction'].includes(target.kind)||target.ref!==null&&typeof target.ref!=='string'||target.status!==null&&(!['alive','dead'].includes(target.status)||target.kind!=='person'))throw Error('Invalid named target');
+    if(directed){exactKeys(target,['kind','name'],['ref','status']);target={ref:'',status:null,...target};}
+    else exactKeys(target,['kind','name','ref','status']);
+    if(!['person','place','faction'].includes(target.kind)||target.ref!==null&&typeof target.ref!=='string'||target.status!==null&&(directed||!['alive','dead'].includes(target.status)||target.kind!=='person'))throw Error('Invalid named target');
     textField(target.name,60);
     let known;
-    if(![null,'','null'].includes(target.ref)){known=knownRefs.get(target.ref);if(!known||known.kind!==target.kind||known.name!==target.name)throw Error('Named reference mismatch');}
+    if(![null,'','null'].includes(target.ref)){
+      known=knownRefs.get(target.ref);
+      const local=directed&&localSymbol(target.ref);
+      if(!known&&local&&local[0]===kindLetter[target.kind]&&!context.entities.some(entity=>entity.kind===target.kind&&entity.name===target.name))return {...target,known:null};
+      if(!known||known.kind!==target.kind||known.name!==target.name)throw Error('Named reference mismatch');
+    }
     else{const matches=context.entities.filter(entity=>entity.kind===target.kind&&entity.name===target.name);if(matches.length>1)throw Error('Ambiguous named reference');known=matches[0];}
     return {...target,known:known??null};
   };
@@ -31,12 +44,20 @@ export function normalizeNamedScene(wire,context){
   assertPlainData(wire);exactKeys(wire,['blocks','choices','title','location','memoryDeltas',...(directed?['story']:[])]);
   if(!Array.isArray(wire.blocks)||wire.blocks.length<1||wire.blocks.length>12||!Array.isArray(wire.choices)||wire.choices.length<2||wire.choices.length>3||!Array.isArray(wire.memoryDeltas)||wire.memoryDeltas.length>16)throw Error('Invalid named scene');
   const lookup=createNamedTargetLookup(context),declarations=new Map(),counts={person:0,place:0,faction:0},literals=new Set(['self',...Object.keys(ITEMS),...Object.keys(realmCatalogFor(context.life))]);
+  const targets=new Map(),symbols=new Map();
   function declare(target){
     const known=target.known,key=known?known.id:JSON.stringify([target.kind,target.name]);let declaration=declarations.get(key);
     if(!declaration){
       const id=known?'k'+(context.entities.indexOf(known)+1):({person:'p',place:'l',faction:'f'})[target.kind]+(++counts[target.kind]);
       declaration={id,...(!known?{name:target.name}:{}),kind:target.kind};declarations.set(key,declaration);
       if(declarations.size>24)throw Error('Too many named targets');
+    }
+    if(directed){
+      targets.set(declaration.id,target);
+      for(const symbol of [localSymbol(declaration.id),localSymbol(target.ref)].filter(Boolean)){
+        if(symbols.has(symbol)&&symbols.get(symbol)!==declaration.id)throw Error('Conflicting local reference');
+        symbols.set(symbol,declaration.id);
+      }
     }
     if(target.status!==null){if(Object.hasOwn(declaration,'status')&&declaration.status!==target.status)throw Error('Contradictory named status');declaration.status=target.status;}
     return declaration.id;
@@ -54,16 +75,33 @@ export function normalizeNamedScene(wire,context){
     const targetId=typeof choice.target==='string'&&literals.has(choice.target)?choice.target:resolve(choice.target);
     return {action:choice.action,targetId,stake:choice.stake,purpose:choice.purpose,anchor:choice.anchor};
   });
+  // Only a dialogue speaker or action target can establish a new bare-name
+  // reference. Optional notes cannot bootstrap further participants or IDs.
+  const participants=new Map(targets),localParticipants=new Map(symbols);
+  function evidenceTarget(value){
+    if(!directed||typeof value!=='string'||/^k\d/u.test(value))return lookup(value);
+    textField(value,60);
+    if(/[:/\\]/u.test(value)||context.entities.some(entity=>entity.id===value))throw Error('Invalid memory identity');
+    const symbol=localSymbol(value);
+    if(symbol)return participants.get(localParticipants.get(symbol))??null;
+    if(/^(?:p|npc|person|l|place|f|faction|m)\d/u.test(value))throw Error('Invalid local memory reference');
+    const matches=[...participants.values()].filter(target=>target.name===value),target=matches[0];
+    return matches.length===1&&!context.entities.some(entity=>entity.name===value&&entity.id!==target.known?.id)?target:null;
+  }
   const memoryDeltas=wire.memoryDeltas.flatMap(delta=>{
     if(Object.hasOwn(delta,'referenceId')){exactKeys(delta,['referenceId','status']);return {...delta};}
     exactKeys(delta,['target','kind','anchor'],['status']);
-    const target=lookup(delta.target);
+    if(directed){
+      const obligation=['promise','clue'].includes(delta.kind);
+      if(!['fact','relationship','death','promise','clue'].includes(delta.kind)||!Number.isInteger(delta.anchor)||delta.anchor<0||delta.anchor>=Math.max(4,blocks.length)||Object.hasOwn(delta,'status')&&(!obligation||delta.status!=='open'))throw Error('Invalid named evidence');
+    }
+    const target=evidenceTarget(delta.target);
+    if(!target){if(['fact','relationship','clue'].includes(delta.kind))return [];throw Error('Unbound memory identity');}
     // A variable-length scene may end before this optional evidence slot.
     // Validate its shape and identity first; never move a death or a promise
     // to another paragraph, create its entity, or apply an unsupported status.
     if(directed&&Number.isInteger(delta.anchor)&&delta.anchor>=blocks.length&&delta.anchor<=3){
-      const obligation=['promise','clue'].includes(delta.kind);
-      if(!['fact','relationship','death','promise','clue'].includes(delta.kind)||target.status!==null||delta.kind==='death'&&target.kind!=='person'||obligation&&delta.status!=='open'||!obligation&&Object.hasOwn(delta,'status')||target.kind==='person'&&target.name===context.life.name)throw Error('Invalid named evidence');
+      if(delta.kind==='death'&&target.kind!=='person'||target.kind==='person'&&target.name===context.life.name)throw Error('Invalid named evidence');
       return [];
     }
     const entityId=declare(target);
@@ -126,7 +164,7 @@ function directedTargets(context){
       pattern='^(?:'+alternatives.join('|')+')$';
     }else pattern='^'+newNamePattern(names)+'$';
     const name=kind+(travel??'New')+'Target';fresh.set(key,name);
-    definitions[name]={type:'object',additionalProperties:false,required:['kind','name','ref','status'],properties:{kind:{const:kind},name:{type:'string',minLength:1,maxLength:60,pattern},ref:{const:''},status:{const:null}}};
+    definitions[name]={type:'object',additionalProperties:false,required:['kind','name'],properties:{kind:{const:kind},name:{type:'string',minLength:1,maxLength:60,pattern}}};
     return {$ref:'#/$defs/'+name};
   }
   function fromIds(ids,{travel=null}={}){
