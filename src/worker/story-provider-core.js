@@ -8,7 +8,7 @@ import { REALMS, DAYS_PER_YEAR, ITEMS, ORIGINS, TALENTS } from '../game/cultivat
 import { ORIGIN_BACKGROUNDS, TALENT_STORIES } from '../game/cultivation/live/birth-stories.js';
 import { isV7Life, realmFor, nextRealmFor, ROOTS, PHYSIQUES, RELICS, TECHNIQUES, WORLD_TIERS } from '../game/cultivation/live/cultivation-rules.js';
 import { buildGenerationSchema } from './story-generation-schema.js';
-import { buildGlmWire,decodeGlmScene } from './story-glm-wire.js';
+import { buildGlmWire,decodeGlmScene,endsSelectedInteraction } from './story-glm-wire.js';
 import { buildNamedSceneSchema,createNamedTargetLookup } from './story-named-targets.js';
 import {adaptV7ModelOutput,adaptV7EngineMenuOutput} from './story-model-output.js';
 import {buildStoryChoicePlan,offersRepair} from './story-choice-plan.js';
@@ -101,7 +101,7 @@ export function usesEngineMenu(profile,context) {
 }
 
 const BIRTH_STORY_GUIDANCE='birthMemory是主角开局前的亲历。旧地不是当前地点，旧相识不自动在场，旧事不产生现今的债务、任务或物品。开局让一处能看见或听见的细节勾起这段记忆，使玩家有一个旁人未必知道的查证办法。天赋写到能察觉的区别、可尝试的做法或要承受的代价；效果以规则结算，不保证成功。以后先承接本次已选行动和真实后果，只有眼前线索、旧人或既往选择能接上时才回扣身世或天赋。不逐回罗列，不因拒绝、离开而反复推回原请求。';
-const BIRTH_MENU_GUIDANCE='先完成一至三段自然的blocks，再根据正文创作两至三个不同的choices。每个purpose写清玩家可以对哪个眼前人物或物件做什么、希望弄清什么。让一项做法用得上具体线索或天赋，另有不同打算，不用例行观察、休息或告辞凑数，不代选、不预付奖励。按schema选可执行的action、target、stake；已知对象用输入别名，新对象写{kind,name}。询问对方须能回答，旅行写明真实目的地，援助只交一份行粮。功法立约须在场本人说清三日校法、以后还一份行粮。若无新事实，省略可选的记忆与标注。';
+const BIRTH_MENU_GUIDANCE='先完成一至三段自然的blocks，再根据正文创作两至三个不同的choices。第一项须给玩家一条可主动推进的路，例如查证眼前线索、运用天赋或试一种做法。拒绝与告辞仍可选，但不要把离开写成唯一打算。每个purpose写清玩家可以对哪个眼前人物或物件做什么、希望弄清什么。不用例行观察或休息凑数，不代选、不预付奖励。按schema选可执行的action、target、stake；已知对象用输入别名，新对象写{kind,name}。询问对方须能回答，旅行写明真实目的地，援助只交一份行粮。功法立约须在场本人说清三日校法、以后还一份行粮。若无新事实，省略可选的记忆与标注。';
 // The author receives the state after settlement and a plain-language preview
 // of possible decisions. The plan itself (IDs, actions, targets and costs)
 // belongs to the engine and is never requested from a narrative completion.
@@ -329,7 +329,7 @@ export async function generateProviderScene(ai,profile,context,options={},assert
         if(keep.length===2){scene.choices=keep.map(i=>scene.choices[i]);purposes=keep.map(i=>purposes[i]);}
       }
       if(retrievalReceipt!==null&&context.retrieval?.version===1)scene.retrieval=structuredClone(retrievalReceipt);
-      const selected=context.receipt.action,closed=context.previousScene?.id===context.namespace+':t'+(context.identity.turnId-1)+':s:closed',endedTarget=selected?.intent==='interact'&&selected.approach==='leave'?selected.targetId:closed?(context.memory.recent.find(record=>record.kind==='turn'&&record.turnId===context.identity.turnId-1)?.entityIds[0]??context.memory.facts.find(record=>record.id==='decision:'+(context.identity.turnId-1)&&record.turnId===context.identity.turnId-1&&record.kind==='fact'&&record.source==='rules')?.entityId??'self'):null,ended=endedTarget!==null;
+      const selected=context.receipt.action,closed=context.previousScene?.id===context.namespace+':t'+(context.identity.turnId-1)+':s:closed',endedTarget=endsSelectedInteraction(context)?selected.targetId:closed?(context.memory.recent.find(record=>record.kind==='turn'&&record.turnId===context.identity.turnId-1)?.entityIds[0]??context.memory.facts.find(record=>record.id==='decision:'+(context.identity.turnId-1)&&record.turnId===context.identity.turnId-1&&record.kind==='fact'&&record.source==='rules')?.entityId??'self'):null,ended=endedTarget!==null;
       const endedTargets=endedTarget==='self'&&closed?context.entities.filter(entity=>['person','faction'].includes(entity.kind)).map(entity=>entity.id):endedTarget&&endedTarget!=='self'?[endedTarget]:[];
       if(profile.storyActions===true){
         // Source grammar supplies rule-compatible actions. Keep semantic checks

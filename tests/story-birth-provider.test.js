@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {createLiveGame, prepareOpening, prepareChoice, commitTurn} from '../src/game/cultivation/live/engine.js';
+import {createLiveGame, prepareOpening, prepareChoice, commitTurn, compileChoices} from '../src/game/cultivation/live/engine.js';
 import {buildStoryContext} from '../src/game/cultivation/live/memory.js';
 import {ORIGIN_BACKGROUNDS, TALENT_STORIES} from '../src/game/cultivation/live/birth-stories.js';
 import {ORIGINS, TALENTS} from '../src/game/cultivation/live/model.js';
@@ -82,7 +82,36 @@ test('a marked birth uses its past and both talents at the model boundary, then 
   assert.match(turn.guidance, /不继续原请求/);
   const continued = commitTurn(active, next, follow.result.scene);
   assert.deepEqual(continued.currentScene.choices.map(choice => choice.approach), ['observe','road']);
+  assert.equal(compileChoices(continued,continued.currentScene.choices).filter(choice => choice.enabled).length, 2);
   for (const [i, choice] of afterRefusal.choices.entries()) assert.ok(continued.currentScene.choices[i].label.endsWith(choice.purpose));
+
+  // A provider can still send a stale alias or use the same actor's name.
+  const schema = follow.input.response_format.json_schema.schema;
+  function allowsAlias(target, alias) {
+    if (target.$ref) return allowsAlias(schema.$defs[target.$ref.split('/').pop()], alias);
+    if (target.oneOf) return target.oneOf.some(part => allowsAlias(part, alias));
+    return target.const === alias || target.enum?.includes(alias) === true;
+  }
+  const interactions = schema.properties.choices.items.oneOf.filter(branch => branch.properties.action.enum.some(action => action.startsWith('interact:')));
+  assert.ok(interactions.some(branch => allowsAlias(branch.properties.target,'self')));
+  assert.ok(interactions.every(branch => !allowsAlias(branch.properties.target,'k1')));
+  const reopened = [
+    {...firstScene.choices[0], target:'k1'},
+    {...firstScene.choices[1], target:actor},
+  ];
+  const repeated = await complete(nextContext, {...afterRefusal, choices:reopened});
+  assert.equal(repeated.result.errorCode, 'CHOICE_NOT_COMPILABLE');
+  const repaired = await complete(nextContext, {...afterRefusal, choices:[reopened[0], ...afterRefusal.choices]});
+  assert.equal(repaired.result.status, 'ready', repaired.result.errorCode);
+  assert.deepEqual(repaired.result.scene.choices.map(c => c.label), continued.currentScene.choices.map(c => c.label));
+});
+
+test('the first choice is prompted to pursue an opportunity without rejecting a legal exit-only completion', async () => {
+  const exits = [firstScene.choices[1], {action:'interact:leave', target:'self', purpose:'离开晾绳架，暂把查册之事放到一边'}];
+  const {input, result} = await complete(birth().context, {...firstScene, choices:exits});
+  assert.match(input.messages[0].content, /第一项须给玩家一条可主动推进的路/);
+  assert.equal(result.status, 'ready', result.errorCode);
+  assert.deepEqual(result.scene.choices.map(choice => choice.approach), ['decline','leave']);
 });
 
 test('prose without authored choices cannot receive a generated substitute menu on marked lives', async () => {
