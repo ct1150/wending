@@ -130,8 +130,6 @@
 .title-shell .title-option:disabled .title-option-name { color: #a9b4b5; }
 .title-shell .title-option:disabled .title-option-note { color: #97a7aa; }
 .title-shell .title-option:disabled .title-option-index { color: #8b9c9e; }
-.title-shell .title-switch { margin: 8px 0 -7px 51px; padding: 6px 0; min-height: 44px; color: #c4b58f; font-size: 11px; letter-spacing: .13em; }
-.title-shell .title-switch:hover { color: #f4dfb8; }
 .title-error { max-width: 354px; padding: 10px 13px; border-left: 2px solid #d89983; color: #f0bda7; background: #08131bb3; font: 12px/1.8 var(--sans); text-align: left; }
 .title-verse { position: absolute; top: 24%; right: 4.5%; display: flex; flex-direction: row-reverse; gap: 12px; color: #f3e9d4; text-shadow: 0 2px 12px #0b1c26; }
 .title-verse > span { writing-mode: vertical-rl; font: 15px/1.7 var(--serif); letter-spacing: .45em; }
@@ -184,7 +182,6 @@
   .title-option-name { font-size: 20px; }
   .title-option-note { font-size: 10px; letter-spacing: 0; }
   .title-option-index { font-size: 12px; }
-  .title-shell .title-switch { margin-top: 3px; margin-bottom: -12px; }
   .title-verse { right: 30px; top: 115px; gap: 8px; }
   .title-verse > span { font-size: 12px; }
   .title-verse > span:nth-child(2) { margin-top: 28px; }

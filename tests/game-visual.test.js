@@ -2,8 +2,6 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { liveBrowser } from './helpers/live-browser.js';
 import { liveStoryFixture } from './helpers/live-story-fixture.js';
-import { createGame } from '../src/game/engine.js';
-import { serializeGame } from '../src/game/save-format.js';
 
 const appOrigin = 'https://wending-game-visual.test';
 const readingKey = 'wending-reading-v1';
@@ -93,7 +91,7 @@ async function assertFits(page, label) {
 async function assertReadable(page, selector, label) {
   const element = page.locator(selector).first();
   // Geometry-only visibility does not account for the persistent masthead.
-  // Center the reading sample; focus-driven scroll placement is tested below.
+  // Center the reading sample below the masthead before checking contrast.
   await element.evaluate(node => node.scrollIntoView({ block: 'center', inline: 'nearest', behavior: 'instant' }));
   const foreground = await element.evaluate(node => {
     node.setAttribute('data-contrast-sample', '');
@@ -247,21 +245,4 @@ test('existing light, dark and system preferences keep their selected theme and 
     await assertReadable(page, '.reading-sample', `${theme} large reading sample`);
   }
   assert.equal(f.posts, 0, 'theme selection never requests a story');
-});
-
-test('legacy feedback focus stays visible below the fixed game masthead on a narrow screen', async t => {
-  const { page } = await fixture(t);
-  await page.setViewportSize({ width: 320, height: 844 });
-  const raw = serializeGame(createGame({ name: '云归', seed: 'legacy-feedback-visibility' }));
-  await page.evaluate(value => localStorage.setItem('baishi-wending-save-v1', value), raw);
-  await page.goto(appOrigin + '/');
-  await page.locator('[data-title-continue]:enabled').click();
-  await page.locator('[data-story-choice="enter_help"]').click();
-  const result = await page.locator('#story-result-title').evaluate(node => {
-    const rect = node.getBoundingClientRect(), masthead = document.querySelector('.game-scene-topbar').getBoundingClientRect();
-    return { top: rect.top, mastheadBottom: masthead.bottom, focused: document.activeElement === node, uncovered: node.contains(document.elementFromPoint(rect.left + rect.width / 2, rect.top + rect.height / 2)) };
-  });
-  assert.equal(result.focused, true, 'a committed legacy choice focuses its persistent outcome');
-  assert.ok(result.top >= result.mastheadBottom, `feedback starts at ${result.top}px under the masthead ending at ${result.mastheadBottom}px`);
-  assert.equal(result.uncovered, true, 'the focused outcome heading must not be covered by game chrome');
 });

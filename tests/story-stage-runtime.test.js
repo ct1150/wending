@@ -23,7 +23,7 @@ test('native packaged stage validates proof and permit in API request context wi
   await writeFile(policyFile,JSON.stringify({...deploymentPolicy,enabled:false}));
   for(const dir of ['release','assets'])await mkdir(path.join(root,dir),{recursive:true});
   const html='<!doctype html><title>tester stage runtime fixture</title>';
-  await writeFile(path.join(root,'release/baishi-wending-offline.html'),html);
+  await writeFile(path.join(root,'release/baishi-wending-web.html'),html);
   await writeFile(path.join(root,'assets/seal.svg'),'<svg/>');await writeFile(path.join(root,'package.json'),'{"version":"4.0.0"}');
   const observedAt=Date.now();
   const proof={accountId:'fixture-account',source:'operator-account-verification',plan:'workers-free',hardLimit:true,noGatewayCredits:true,directBinding:true,accountUsageVerified:true,storageFreeVerified:true,remainingNeurons:10000,checkedAt:new Date(observedAt-1000).toISOString()};

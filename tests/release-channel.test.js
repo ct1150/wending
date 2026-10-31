@@ -52,7 +52,7 @@ test('embedded-only gateway keeps reviewed HTML and health despite a valid stale
     async put(){calls.put++;},
   };
   const worker=createReleaseGateway({fallback:reviewed,embeddedOnly:true,cache,now:()=>time,fetchImpl:async url=>{calls.fetch++;return new Response(url.endsWith('manifest.json')?JSON.stringify(manifest):newHtml);}});
-  for(const path of ['/','/index.html','/baishi-wending-offline.html'])assert.equal(await(await request(worker,path)).text(),reviewedHtml);
+  for(const path of ['/','/index.html'])assert.equal(await(await request(worker,path)).text(),reviewedHtml);
   time+=60001;
   const health=await(await request(worker,'/healthz')).json();
   assert.equal(health.sourceCommit,reviewed.sourceCommit);assert.equal(health.htmlSha256,reviewed.htmlSha256);assert.equal(health.htmlBytes,Buffer.byteLength(reviewedHtml));assert.equal(health.version,reviewed.version);
@@ -84,14 +84,31 @@ test('untrusted paths and oversized releases are rejected without following arbi
   assert.equal(calls,3,'invalid metadata never triggers an artifact request');
 });
 
-test('cold offline gateway serves embedded bundle; routes and methods remain bounded', async () => {
+test('unavailable release source preserves the embedded web bundle and bounded routes', async () => {
   const {createReleaseGateway}=await moduleReady();let calls=0;
   const worker=createReleaseGateway({fallback,icon:'<svg/>',fetchImpl:async()=>{calls++;throw new Error('offline');}});
-  assert.equal(await(await request(worker,'/baishi-wending-offline.html')).text(),oldHtml);
+  assert.equal(await(await request(worker)).text(),oldHtml);
   assert.equal((await(await request(worker,'/healthz')).json()).sourceCommit,fallback.sourceCommit);
   assert.equal((await worker.fetch(new Request('https://example.workers.dev/',{method:'HEAD'}))).body,null);
   assert.equal((await worker.fetch(new Request('https://example.workers.dev/',{method:'POST'}))).status,405);
   assert.equal((await request(worker,'/unknown')).status,404);assert.equal(calls,1);
+});
+
+test('retired offline download returns 410 without serving HTML or refreshing the release', async () => {
+  const {createReleaseGateway}=await moduleReady();
+  for(const embeddedOnly of [false,true]){
+    const calls={fetch:0,match:0,put:0};
+    const worker=createReleaseGateway({fallback,embeddedOnly,cache:{async match(){calls.match++;},async put(){calls.put++;}},fetchImpl:async()=>{calls.fetch++;throw new Error('must not fetch');}});
+    for(const suffix of ['', '?download=1']){
+      const url='https://example.workers.dev/baishi-wending-offline.html'+suffix;
+      const response=await worker.fetch(new Request(url));
+      assert.equal(response.status,410);assert.match(response.headers.get('Content-Type'),/^text\/plain/);
+      assert.equal(response.headers.get('Content-Disposition'),null);assert.doesNotMatch(await response.text(),/<!doctype|<script/i);
+      const head=await worker.fetch(new Request(url,{method:'HEAD'}));assert.equal(head.status,410);assert.equal(head.body,null);
+    }
+    assert.equal((await worker.fetch(new Request('https://example.workers.dev/baishi-wending-offline.html',{method:'POST'}))).status,405);
+    assert.deepEqual(calls,{fetch:0,match:0,put:0});
+  }
 });
 
 test('concurrent requests share one refresh and cached data is adopted only after verification', async () => {

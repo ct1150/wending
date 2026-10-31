@@ -38,7 +38,7 @@ jobs:
         run: |
           npm run build:gateway
           test -f release/backend/deployment.json
-      - name: Preserve static site and offline release
+      - name: Preserve static site and web release
         uses: actions/upload-artifact@v7
         with:
           name: baishi-wending-${{ github.sha }}
@@ -76,4 +76,4 @@ jobs:
         run: |
           npm run publish:release | tee release/publication-result.txt
           cat release/publication-result.txt >> "$GITHUB_STEP_SUMMARY"
-          echo 'The existing Cloudflare gateway refreshes the verified game from release-channel. Its /healthz reports the frontend version actually being served. The story backend artifact is disabled and is not deployed by this workflow; HTML publication does not verify AI, account billing, bindings, or worldwide propagation.' >> "$GITHUB_STEP_SUMMARY"
+          echo 'The ordinary static gateway refreshes the verified web game from release-channel. Production backend packages pin their frontend and require a separate compatible deployment, including retirement of the old offline download route. /healthz reports the frontend actually served. The story backend artifact is disabled and is not deployed by this workflow; HTML publication does not verify AI, account billing, bindings, or worldwide propagation.' >> "$GITHUB_STEP_SUMMARY"
