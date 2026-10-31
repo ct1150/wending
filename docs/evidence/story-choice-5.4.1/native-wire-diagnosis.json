@@ -23,5 +23,22 @@
     "finding": "The strict model-wire annotation reader threw at the non-string pattern/beat guard before checking the menu. The specific value was not recorded. Each of three named targets also omitted status; a new memory mentioned a target as a string.",
     "rawCompletionRecorded": false
   },
-  "fix": "The game supplies a grounded neutral pattern/beat when model editorial tags are unusable. New target identity uses kind/name; optional wire decoration never authors state. No second inference to correct a scene."
+  "fix": "The game supplies a grounded neutral pattern/beat when model editorial tags are unusable. New target identity uses kind/name; optional wire decoration never authors state. No second inference to correct a scene.",
+  "candidate111": {
+    "ordinaryTrafficPercent": 0,
+    "visibleNarrationCharacters": 140,
+    "visibleChoices": 2,
+    "status": "rejected",
+    "errorCode": "GENERATED_SCENE_INVALID",
+    "scope": "This is another normal real-model opening, not the scoped diagnostic request."
+  },
+  "scopedDiagnostic112": {
+    "ordinaryTrafficPercent": 0,
+    "stage": "RAW_JSON/PROVIDER_L208",
+    "errorCode": "PROVIDER_RESPONSE_INVALID",
+    "finishReason": "stop",
+    "parsedGameObjectAvailable": false,
+    "scope": "No parsed object or original token sequence was available. Cannot attribute this independent malformed response to a specific punctuation error."
+  },
+  "responseBoundary": "v7 requests complete narrative and two or three playable actions first. Only complete, independently parseable fields may be salvaged from an otherwise malformed ordinary-stop response; saved state is validated by the engine. No corrective model call."
 }

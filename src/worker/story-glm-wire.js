@@ -142,7 +142,7 @@ memoryDeltas只记录本场正文已发生的新信息，不能记录未选选�
   if(directed)modern=`${system}
 本回合实际经过${context.receipt.elapsedDays}日。正文按事件需要写1–4段，短问题直接回答，不凑字数；第二人称，不列库存或动作代码。对白speaker=self或活人别名，旁白无speaker。
 输出顶层只允许blocks、choices、title、location、otherPeople、places、factions、memoryDeltas、story这9项。先写blocks，再写choices，最后填写名单。
-给3个不同的本场选择，包含稳妥应对。每项只写action、targetId、stake、purpose、anchor；purpose用50字内说明眼前具体目的，不承诺奖励或固定耗时；anchor是本场段落下标，从0起。只选择schema提供的可执行配对，不补日常菜单。
+给2至3个本场真正不同的选择，两个足够就不凑第三个。每项只写action、targetId、stake、purpose、anchor；purpose用50字内说明眼前具体目的，不承诺奖励或固定耗时；anchor是本场段落下标，从0起。只选择schema提供的可执行配对，不补日常菜单。
 问答用interact:ask，眼前调查用interact:observe，环境用self；purpose可观察人物手中物件。explore仅找资源：${V7_EXPLORE_TARGETS.filter(id=>[...actionGroups.values()].some(group=>group.actions.some(action=>action.startsWith('explore:'))&&group.targets.includes(id))).map(id=>id+'='+ITEMS[id]).join('，')}。危险退避用evade，travel才移动且目的地不等于location；新跨界地名以指定下一界开头，不混写界域。
 black-market优先出售行囊已有古修遗物，无则出售已有法器，purpose只写“出售古修遗物，换取灵石”或“出售法器，换取灵石”，每次一件，不卖伴生遗物。普通negotiate不购买具体物品。
 已知对象的target/speaker直接用输入别名。新人物示例{"kind":"person","name":"渡口船夫"}；新地点用place，势力用faction。不自行编ID、别名或生死状态。死亡只写有证据的death记忆。正文自然称谓即可。

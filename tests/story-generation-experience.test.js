@@ -144,3 +144,22 @@ test('the native structural sample keeps its menu with advisory tags and a compa
   assert.equal(result.scene.memoryDeltas[0].entityId,result.scene.choices[0].targetId);
   for(const p of result.scene.choices)assert.deepEqual(prepareChoice(next,{choiceId:p.id,requestId:'native-'+p.approach}).receipt.action,p);
 });
+
+test('two independent original actions commit when a third suggestion uses an unknown action', async () => {
+  const {state,pending,context}=fixture(),wire=capturedStoryWire();
+  wire.choices[1].action='interact:levitate';
+  const result=await run(wire,context);assert.equal(result.status,'ready',result.errorCode);
+  assert.deepEqual(result.scene.choices.map(c=>[c.id.split(':').at(-1),c.approach]),[['a','ask'],['c','decline']]);
+  const next=commitTurn(state,pending,result.scene);assert.deepEqual(next.currentScene.blocks,wire.blocks);
+  for(const p of result.scene.choices)assert.deepEqual(prepareChoice(next,{choiceId:p.id,requestId:'original-'+p.approach}).receipt.action,p);
+  const bad=capturedStoryWire();bad.choices[1].target.ref='k99';assert.equal((await run(bad)).status,'rejected');
+});
+
+test('a normal stop with a damaged optional tail commits the complete original playable core in one call',async()=>{
+  const {state,pending,context}=fixture(),wire=capturedStoryWire();let calls=0;
+  const content=JSON.stringify({blocks:wire.blocks,choices:wire.choices}).slice(0,-1)+',"story":{"pattern":';
+  const raw=completion(wire);raw.choices[0].message.content=content;
+  const result=await generateProviderScene({run:async()=>{calls++;return raw;}},{...profile,storyActions:true},context);
+  assert.equal(result.status,'ready',result.errorCode);assert.equal(calls,1);
+  const next=commitTurn(state,pending,result.scene);assert.deepEqual(next.currentScene.blocks,wire.blocks);assert.equal(next.revision,1);
+});

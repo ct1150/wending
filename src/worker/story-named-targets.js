@@ -219,7 +219,7 @@ export function buildNamedSceneSchema(source,context,{blocks,location}={}){
   }
   const anchor={type:'integer',minimum:0,maximum:(body.maxItems??4)-1};
   if(scoped){definitions.choicePurpose={type:'string',minLength:1,maxLength:50};definitions.blockAnchor=anchor;definitions.stakes={enum:['low','normal','high']};}
-  const choices={type:'array',minItems:directed?3:2,maxItems:3,items:{oneOf:source.properties.choices.items.oneOf.map(group=>{
+  const choices={type:'array',minItems:2,maxItems:3,items:{oneOf:source.properties.choices.items.oneOf.map(group=>{
     if(scoped){
       const actions=group.properties.action.enum,travel=actions.some(action=>action.startsWith('travel:'))?(actions.some(action=>WORLD_TRAVEL_APPROACHES.includes(action.split(':')[1]))?'crossing':'local'):null;
       // A choice's wire anchor never enters its canonical action or receipt.
@@ -240,5 +240,5 @@ export function buildNamedSceneSchema(source,context,{blocks,location}={}){
     const traits=properties.story.properties.npcs.items;delete traits.properties.entityId;traits.properties={target:{$ref:'#/$defs/personTarget'},...traits.properties};traits.required=['target','anchor'];traits.properties.anchor.maximum=(body.maxItems??4)-1;
     for(const field of ['title','signatureSpell','habit','obsession'])traits.properties[field].minLength=1;
   }
-  return {type:'object',additionalProperties:false,required:Object.keys(properties),properties,$defs:definitions};
+  return {type:'object',additionalProperties:false,required:directed?['blocks','choices']:Object.keys(properties),properties,$defs:definitions};
 }
