@@ -1,0 +1,21 @@
+{
+  "workerVersion": 108,
+  "versionId": "70dbd39a-f969-4bd2-ac6c-bb6f567fb865",
+  "sourceCommit": "68611ecab00578add84b45e224bd32ea0aa3a39b",
+  "ordinaryTrafficPercent": 0,
+  "testScope": "Fresh synthetic browser save, pinned version. No player data recorded.",
+  "opening": {
+    "http": 200,
+    "narrationBlocks": 1,
+    "previewChoices": 3,
+    "finalStatus": "rejected",
+    "errorCode": "GENERATED_SCENE_INVALID",
+    "archiveRevision": 0
+  },
+  "interpretation": "The failure is confirmed on the real provider. Only the wire presentation and final response were exposed. Do not infer which hidden field failed from this sample.",
+  "verifiedAdditionalGaps": [
+    "The previous generation schema allowed a nonexistent obligation closure, a non-person death, or an anchor beyond the last actual paragraph.",
+    "A duplicate choice or an ungrounded optional director note could invalidate an otherwise playable scene."
+  ],
+  "followup": "Constrain generation; retain grounded evidence and distinct choices. Keep strict canonical save and receipt contracts."
+}

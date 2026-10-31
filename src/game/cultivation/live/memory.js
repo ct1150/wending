@@ -22,6 +22,7 @@ export const STORY_ERROR_CODES=Object.freeze([
   'SCENE_ID_SCOPE_INVALID', 'SPEAKER_REFERENCE_INVALID', 'STORY_CONTEXT_INVALID',
   'STORY_DATA_INVALID', 'STORY_DATA_TOO_LARGE', 'UNSAFE_STORY_TEXT',
   'STORY_DIRECTOR_INVALID', 'STORY_DIRECTOR_TOO_LARGE', 'STORY_ANNOTATION_INVALID',
+  // Retired editorial rejections remain in the wire vocabulary for old attempts.
   'STORY_LENGTH_INVALID', 'STORY_BEAT_INVALID', 'REPEATED_STORY_ARC',
   'STORY_RETRIEVAL_INVALID',
 ]);
@@ -32,15 +33,15 @@ function freeze(value) { if(value && typeof value === 'object'){Object.values(va
 
 // This is defense in depth, never an execution or permission boundary. All text
 // stays JSON data under a fixed system message; arbitrary prose is not a rule.
-function safeStrings(value) {
+export function assertSafeStoryStrings(value) {
   if(typeof value === 'string') {
-    if(/<\s*[a-z!/?][^>]*>|&(?:lt|#0*60|#x0*3c);|\[\/?(?:INST|SYSTEM)\]|<\|(?:im_start|system|assistant)/i.test(value) || /(?:ignore|disregard)\s+(?:all\s+|the\s+|any\s+)?(?:previous|prior|system)\s+(?:instructions?|prompts?)|(?:^|\n)\s*(?:system|developer)\s*:|忽略[^。\n]{0,24}(?:指令|规则|提示)|(?:覆盖|改写|绕过)[^。\n]{0,12}(?:系统|规则|收据)/i.test(value)) fail('UNSAFE_STORY_TEXT');
-  } else if(value && typeof value === 'object') Object.values(value).forEach(safeStrings);
+    if(/<\s*[a-z!/?][^>]*>|&(?:lt|#0*60|#x0*3c);|\[\/?(?:INST|SYSTEM)\]|<\|(?:im_start|system|assistant)/i.test(value) || /(?:ignore|disregard)\s+(?:all\s+|the\s+|any\s+)?(?:previous|prior|system)\s+(?:instructions?|prompts?)|(?:^|\n)\s*(?:system|developer)\s*:|忽略(?:指令|规则)|忽略(?:此前|之前|先前|以上|所有|系统|开发者)[^。\n]{0,24}(?:指令|规则|提示)|(?:覆盖|改写|绕过)[^。\n]{0,12}(?:系统|规则|收据)/i.test(value)) fail('UNSAFE_STORY_TEXT');
+  } else if(value && typeof value === 'object') Object.values(value).forEach(assertSafeStoryStrings);
 }
 function inspect(value,maxBytes=65536) {
   try { assertPlainData(value); } catch { fail('STORY_DATA_INVALID'); }
   if(bytes(value)>maxBytes)fail('STORY_DATA_TOO_LARGE');
-  safeStrings(value);
+  assertSafeStoryStrings(value);
 }
 function whole(value,min=0) { if(!Number.isSafeInteger(value)||value<min)fail('STORY_DATA_INVALID'); }
 
@@ -345,8 +346,11 @@ export function validateGeneratedScene(raw,context,{checkNextContext,continuity=
     if(isDead(block.speaker))fail('ENTITY_DEATH_CONFLICT');
   }
   for(const p of raw.choices)if(['negotiate','fight','evade'].includes(p.intent)&&isDead(p.targetId))fail('ENTITY_DEATH_CONFLICT');
-  if(context.previousScene){const oldHash=context.previousScene.blocksHash??sha256(canonicalStringify(context.previousScene.blocks));if(sha256(canonicalStringify(raw.blocks))===oldHash)fail('REPEATED_SCENE');}
-  const texts=[raw.title,raw.location,...raw.blocks.map(b=>b.text),...raw.memoryDeltas.map(m=>m.text)];texts.forEach(t=>checkMechanicalClaims(t,context));
+  // V7 prose is narrative evidence, not a state mutation. Numeric truth stays
+  // in the validated receipt; quoted speech and repeated descriptions may be
+  // imperfect without making a mechanically valid turn unplayable.
+  if(!context.director&&context.previousScene){const oldHash=context.previousScene.blocksHash??sha256(canonicalStringify(context.previousScene.blocks));if(sha256(canonicalStringify(raw.blocks))===oldHash)fail('REPEATED_SCENE');}
+  if(!context.director){const texts=[raw.title,raw.location,...raw.blocks.map(b=>b.text),...raw.memoryDeltas.map(m=>m.text)];texts.forEach(t=>checkMechanicalClaims(t,context));}
   let prospective,choices;
   try {
     prospective=compilationState(context,raw);

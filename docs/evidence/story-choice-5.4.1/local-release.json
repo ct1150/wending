@@ -1,0 +1,80 @@
+{
+  "schemaVersion": 1,
+  "version": "5.4.1",
+  "recordedAt": "2026-10-31T02:08:52.536731+00:00",
+  "status": "INTEGRATED_LOCAL_RELEASE_VALIDATED",
+  "reproduction": {
+    "frontendVersion": "5.2.0",
+    "httpStatus": 200,
+    "result": "rejected",
+    "errorCode": "CHOICE_NOT_COMPILABLE",
+    "proseCharacters": 126,
+    "independentEditorialGates": [
+      "observation purpose missing literal person name",
+      "fewer than 200 prose characters",
+      "indirect person description instead of literal name"
+    ],
+    "fixture": "tests/helpers/story-choice-captured.js",
+    "fixtureBoundary": "Visible streamed prose and choices are captured; envelope metadata is reconstructed, not raw model JSON."
+  },
+  "release": {
+    "command": "WENDING_BROWSER_EXECUTABLE=/root/.cache/ms-playwright/chromium_headless_shell-1161/chrome-linux/headless_shell npm run release",
+    "tests": 1206,
+    "pass": 1206,
+    "fail": 0,
+    "cancelled": 0,
+    "skipped": 0,
+    "todo": 0,
+    "durationMs": 124300.717771,
+    "syntaxFiles": 216,
+    "webHtml": "release/baishi-wending-web.html",
+    "webHtmlBytes": 869043,
+    "webHtmlSha256": "16df2805f82396a6c05b1f11f250e92eda731280f28779cc86e36241b5d0deac",
+    "scope": "Integrated source after merging main PRs #25 (full-novel retrieval) and #26 (single online save); one complete local release run."
+  },
+  "behaviorChecks": [
+    "Original prose and three purposes/targets commit unchanged",
+    "Each original rendered choice can be selected from the same opening",
+    "One inference per opening or selected action; no automatic correction retry",
+    "Original receipt, RNG and stored choice remain stable; refresh makes no new inference",
+    "Actual rule projection removes unavailable action/target/stake combinations",
+    "Known identities and local/next-world target restrictions survive named conversion",
+    "Malformed metadata and conflicting identities still reject before commit",
+    "Single current journey survives refresh without another POST; cancelled or invalid replacement retains the current save",
+    "Optional references share the original input budget; model-supplied receipts are rejected and an absent knowledge policy ignores the binding"
+  ],
+  "inputBytes": {
+    "richContinuationContext": 6830,
+    "richContinuation": 23341,
+    "richContinuationWithReferences": 24337,
+    "limit": 24576
+  },
+  "legacyInputSha256": "6040772d4faeea1ca096c6c61ebeb60d1743d37762c68c10550142b22277a745",
+  "resolvedReviewFindings": [
+    "Food synonyms no longer require a literal whitelist in v7",
+    "Ordinary advice about a teacher is not treated as a prompt instruction",
+    "Explicit instruction-like names remain blocked; first full run found two name-boundary regressions, corrected before final green release"
+  ],
+  "productionAcceptance": {
+    "status": "PENDING",
+    "checks": [
+      "Native GLM/XGrammar acceptance",
+      "Pinned 0% traffic candidate opening and subsequent selected action",
+      "Production activation and public-domain version/behavior readback"
+    ],
+    "knowledgePolicy": "No production RAG activation in this integration."
+  },
+  "integrationBaseCommit": "e5f3cc287b4bdf106748924abf433aeca5f20274",
+  "preIntegration": {
+    "baseCommit": "4676d7f356c750352141e2ec9c7f1dd0699ffd3f",
+    "tests": 1174,
+    "pass": 1174,
+    "durationMs": 115951.446476,
+    "inputBytes": {
+      "opening": 16655,
+      "dense24Entities": 20128,
+      "richContinuation": 23387,
+      "limit": 24576
+    }
+  }
+}
