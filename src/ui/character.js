@@ -48,10 +48,12 @@ export function renderCharacterDetails(summary) {
     ...(summary.year === undefined ? [] : [['道历', `${summary.year}年`]]),
   ];
   const traits = summary.birthTraits ?? [], inherited = summary.inheritedBenefits ?? [];
+  const method=summary.currentTechnique;
+  const current=method?`<section class="character-section" data-current-technique><h3>当前功法</h3><p><strong>${esc(method.name)}</strong> · ${esc(method.status)}</p><p>${esc(method.advantage)}</p><p>${esc(method.cost)}</p></section>`:'';
   const inventory = items.length || !person.lifespan ? `<section class="character-section"><h3>随身物品</h3>${items.length ? `<dl class="character-inventory">${items.map(item => `<div><dt>${esc(item.name)}</dt><dd>× ${esc(item.count)}</dd></div>`).join('')}</dl>` : '<p class="character-empty">行囊里还没有留下什么。</p>'}</section>` : '';
   const skills = abilities.length || !person.lifespan ? `<section class="character-section"><h3>已学本领</h3>${abilities.length ? `<ul class="character-abilities">${abilities.map(ability => `<li><strong>${esc(ability.name)}</strong>${ability.description ? `<p>${esc(ability.description)}</p>` : ''}</li>`).join('')}</ul>` : '<p class="character-empty">尚未学成法门。</p>'}</section>` : '';
   const legacy = inherited.length ? `<section class="character-section"><h3>今生传承</h3>${renderTalents(inherited)}</section>` : summary.legacy || !person.lifespan ? `<section class="character-section"><h3>今生传承</h3>${summary.legacy ? `<p><strong>${esc(summary.legacy.name)}</strong></p>${summary.legacy.description ? `<p>${esc(summary.legacy.description)}</p>` : ''}` : '<p class="character-empty">只携记忆，重新问道。</p>'}</section>` : '';
-  return `<div class="character-details"><p class="character-intro"><strong>${esc(person.name)}</strong><span>${esc(person.generation)}</span></p><dl class="character-facts">${facts.map(([label, value]) => `<div><dt>${esc(label)}</dt><dd>${esc(value)}</dd></div>`).join('')}</dl>${traits.length ? `<section class="character-section"><h3>此生根基</h3>${renderTalents(traits)}</section>` : ''}${attributes.length || talents.length ? `<section class="character-section" aria-label="此生天资"><h3>此生天资</h3>${attributes.length ? renderAttributes(attributes) : ''}${talents.length ? `<div class="character-talents"><h3>天赋</h3>${renderTalents(talents)}</div>` : ''}</section>` : ''}${inventory}${skills}${legacy}</div>`;
+  return `<div class="character-details"><p class="character-intro"><strong>${esc(person.name)}</strong><span>${esc(person.generation)}</span></p><dl class="character-facts">${facts.map(([label, value]) => `<div><dt>${esc(label)}</dt><dd>${esc(value)}</dd></div>`).join('')}</dl>${current}${traits.length ? `<section class="character-section"><h3>${method?'入世时的根基':'此生根基'}</h3>${renderTalents(traits)}</section>` : ''}${attributes.length || talents.length ? `<section class="character-section" aria-label="此生天资"><h3>此生天资</h3>${attributes.length ? renderAttributes(attributes) : ''}${talents.length ? `<div class="character-talents"><h3>天赋</h3>${renderTalents(talents)}</div>` : ''}</section>` : ''}${inventory}${skills}${legacy}</div>`;
 }
 
 export function renderLiveBirth({ name = '', originId = 'village', origins = {}, available = false, busy = false, invalid = false, error = '' } = {}) {
@@ -75,9 +77,11 @@ export function liveCharacterSummary(state, catalogs) {
   const life=state.life,days=life.ageDays,profile=life.cultivationProfile,birth=life.birth.cultivationProfile;
   const v7=profile?.version===7,generation=state.reincarnation?.generation??1;
   const currentGoal=state.director?.currentGoal??state.director?.mainQuest?.text??state.director?.mystery?.question??state.director?.destiny?.text;
+  const experience=profile?.experience,method=experience&&TECHNIQUES[experience.activeTechniqueId];
   const details=v7?{
     lifespanText:`${(days/360).toFixed(1)} / ${life.lifeLimit}岁`,
     currentGoal,
+    ...(method?{currentTechnique:{name:method.name,status:experience.repaired?'已修补':method.defective?'尚未修补':'完整',advantage:method.advantage,cost:experience.repaired?'原有功法缺陷已解除。':method.defect}}:{}),
     statusFacts:[['气血',`${Math.max(0,10-life.injury)*10}%`],...(Number.isFinite(profile.spirit)?[['灵力',`${profile.spirit} / ${profile.maxSpirit}`]]:[]),['修为',String(life.cultivation)],['灵石',String(life.items.stones??0)],...(WORLD_TIERS[profile.worldTier]?[['天地',WORLD_TIERS[profile.worldTier]]]:[]),...(profile.exposure?[['身份暴露',String(profile.exposure)]]:[]),...(state.currentScene?.location?[['所在地',state.currentScene.location]]:[]),...(currentGoal?[['当前目标',currentGoal]]:[])],
     birthTraits:[ROOTS[birth?.rootId],PHYSIQUES[birth?.physiqueId],RELICS[birth?.relicId],TECHNIQUES[birth?.techniqueId]].filter(Boolean),
     inheritedBenefits:(birth?.inheritedBenefits??[]).map(id=>INHERITED_BENEFITS[id]).filter(Boolean),

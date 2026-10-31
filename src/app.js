@@ -433,6 +433,11 @@ document.addEventListener('click', event => {
   if ('liveRetry' in data) return liveSession?.retry();
   if ('liveResume' in data) return liveSession?.resume();
   if ('liveChoice' in data) { currentLiveActionDraft().error = ''; return liveSession?.choose({ choiceId: data.liveChoice, baseRevision: Number(data.revision), stateHash: data.stateHash }); }
+  if ('liveExample' in data) {
+    const draft=currentLiveActionDraft(),field=$('#live-custom-action');
+    if(!draft.open||!field||field.disabled||liveSnapshot?.busy||liveSnapshot?.pending)return;
+    draft.text=data.liveExample;draft.error='';render();$('#live-custom-action')?.focus({preventScroll:true});return;
+  }
   if ('liveCustomToggle' in data) { const draft = currentLiveActionDraft(); draft.open = !draft.open; render(); if (draft.open) $('#live-custom-action')?.focus({ preventScroll: true }); return; }
   if ('liveHistoryNext' in data) return showLiveHistory(false);
   if ('liveHistoryFirst' in data || 'history' in data) return showLiveHistory(true);
