@@ -216,9 +216,11 @@ function resolveMenu(menu,plan,context){
   if(!pair)throw fault('CHOICE_NOT_COMPILABLE');
   return {...choice,target:pair.target};
  });
- if(new Set(resolved.map(c=>JSON.stringify([c.action,key(c.target),c.action.startsWith('interact:')?'low':c.stake]))).size!==resolved.length)throw menuFault('两项指向相同动作与对象，须选两种不同的行动。');
- for(const choice of resolved){
+ const issues=[];
+ if(new Set(resolved.map(c=>JSON.stringify([c.action,key(c.target),c.action.startsWith('interact:')?'low':c.stake]))).size!==resolved.length)issues.push('两项指向相同动作与对象，须选两种不同的行动。');
+ for(const choice of resolved)try{
   const label=choice.label??choice.purpose;let named;try{named=lookup(choice.target);}catch{}
+  if(typeof label!=='string'||!label.trim())throw menuFault('按钮文字须为非空字符串。');
   if(!sharesSceneBasis(label,plan.sceneText))throw menuFault('按钮“'+label+'”没有点明本段的具体对象或处境，须引用本段原有短语。');
   const pattern=labelPattern(choice.action,choice.target,named?.name??ITEMS[choice.target]??choice.target);
   if(pattern&&!new RegExp(pattern,'u').test(label))throw menuFault('按钮“'+label+'”与其实际动作'+choice.action+'不符，须按该动作description写，且符合'+pattern+'。');
@@ -226,8 +228,9 @@ function resolveMenu(menu,plan,context){
   const ref=[...plan.pairs].find(([,pair])=>pair.action===choice.action&&pair.stake===(choice.action.startsWith('interact:')?'low':choice.stake)&&key(pair.target)===key(choice.target))?.[0],cost=plan.costs.get(ref)??{};
   for(const [id,name]of Object.entries(ITEMS))if(new RegExp('(?:消耗|耗费|用掉|吃下|吃掉|食用|以|用).{0,3}'+(id==='supplies'?'(?:行粮|干粮|口粮|糙米)':name),'u').test(label)&&!(cost[id]>0))throw menuFault('按钮“'+label+'”声称消耗'+name+'，但所选动作没有此项消耗；请改写按钮或选择实际有此代价的ref。');
   if(/^(?:观察|查看|细看|辨认|翻阅|翻看|核对|留意|察看|查验|审视|勘察)/u.test(label)&&choice.action!=='interact:observe')throw fault('CHOICE_NOT_COMPILABLE');
- }
- if(!resolved.some(choice=>[...plan.pairs].some(([ref,pair])=>plan.advanceRefs.has(ref)&&pair.action===(choice.action)&&pair.stake===(choice.action.startsWith('interact:')?'low':choice.stake)&&key(pair.target)===key(choice.target))))throw menuFault('两项都不推进时间，advance必须换成actions中days大于0的ref，不能再选询问、观察或诊明。');
+ }catch(error){issues.push(error.message);}
+ if(!resolved.some(choice=>[...plan.pairs].some(([ref,pair])=>plan.advanceRefs.has(ref)&&pair.action===(choice.action)&&pair.stake===(choice.action.startsWith('interact:')?'low':choice.stake)&&key(pair.target)===key(choice.target))))issues.push('两项都不推进时间，advance必须换成actions中days大于0的ref，不能再选询问或观察。');
+ if(issues.length)throw menuFault(issues.join('；'));
  return resolved;
 }
 

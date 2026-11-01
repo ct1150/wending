@@ -383,3 +383,9 @@ test('the final resource caption must search for its actual resource rather than
  const {context}=setup(),reply=label=>input=>{const t=JSON.parse(input.messages[1].content);return {choices:{advance:{actionRef:t.actions.find(a=>a.action==='explore:cautious'&&a.target==='manual').ref,label},alternative:{actionRef:t.actions.find(a=>a.action==='interact:ask').ref,label:'询问灰衣管事采办的要求'}}};};
  const ai=aiFor([body,reply('去偏房寻找一页名册'),reply('去偏房寻找完整功法')]);const result=await generateScene(ai,profile,context,{}, {storyActions:true,groundedChoices:true});assert.equal(result.status,'ready',result.errorCode);assert.equal(ai.calls.length,3);
 });
+
+test('one correction explains both generic captions instead of fixing them in separate attempts',async()=>{
+ const {context}=setup(),scene={blocks:[{kind:'narration',text:'后山岩缝下，半块干硬行粮落在苔藓间，缺角石镜映出远处山影，风从湿冷的石壁旁吹过。'}],people:[],destinations:[]};
+ const ai=aiFor([scene,input=>{const t=JSON.parse(input.messages[1].content);return {choices:{advance:{actionRef:t.actions.find(a=>a.action==='rest:recover').ref,label:'调息休养恢复灵力伤势'},alternative:{actionRef:t.actions.find(a=>a.action==='interact:observe').ref,label:'查看眼前已有物件或痕迹'}}};},input=>{assert.ok(input.messages.at(-1).content.includes('调息休养恢复灵力伤势'));assert.ok(input.messages.at(-1).content.includes('查看眼前已有物件或痕迹'));const t=JSON.parse(input.messages[1].content);return {choices:{advance:{actionRef:t.actions.find(a=>a.action==='rest:recover').ref,label:'在后山岩缝边调息休养'},alternative:{actionRef:t.actions.find(a=>a.action==='interact:observe').ref,label:'查看岩缝苔藓下的行粮'}}};}]);
+ const result=await generateScene(ai,profile,context,{}, {storyActions:true,groundedChoices:true});assert.equal(result.status,'ready',result.errorCode);assert.equal(ai.calls.length,3);
+});
