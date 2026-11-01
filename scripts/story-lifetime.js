@@ -37,6 +37,7 @@ const client=createStoryClient({location:new URL(base),fetch:async(route,options
  if(process.env.WENDING_TEST_TRACE&&response.headers.get('content-type')?.includes('text/event-stream')){const id=JSON.parse(options.body).attempt.id;response.clone().text().then(text=>writeFile(path.join(root,id+'.sse'),text)).catch(()=>{});}
  const cookie=response.headers.get('set-cookie');if(cookie)run.cookie=cookie.split(';')[0];return response;
 }});
+const resumingTerminal=Boolean(run.attempt&&run.metrics.failures.at(-1)?.result?.attemptId===run.attempt.id);
 if(run.pending)run.pendingSourceCommit??=run.sourceCommit;
 let capability,health;
 for(let probe=0;probe<20;probe++){
@@ -47,6 +48,7 @@ for(let probe=0;probe<20;probe++){
 assert.equal(capability.available,true,JSON.stringify(capability));if(process.env.WENDING_TEST_VERSION)assert.equal(capability.automaticRecovery,1,'candidate has propagated');
 if(process.env.WENDING_EXPECT_SOURCE)assert.equal(health.sourceCommit,process.env.WENDING_EXPECT_SOURCE);
 run.sourceCommit=health.sourceCommit;run.frontendHash=health.htmlSha256;
+if(resumingTerminal)run.pendingSourceCommit=run.sourceCommit;
 run.runtimeHistory??=[];if(run.runtimeHistory.at(-1)?.sourceCommit!==health.sourceCommit)run.runtimeHistory.push({sourceCommit:health.sourceCommit,fromTurn:run.pending?.identity.turnId?(run.pending.identity.turnId+(run.pendingSourceCommit&&run.pendingSourceCommit!==health.sourceCommit?1:0)):run.state.turnId+1,observer:!!process.env.WENDING_TEST_TRACE});
 if(!run.sessionRef){const session=await client.createSession();run.sessionRef=session.sessionRef;await save();}
 run.metrics.recoveries??=[];
@@ -64,7 +66,7 @@ async function generate(pending,context){
 }
 // Restarting after a recorded terminal failure is an explicit retry. A lost
 // response with no recorded result keeps its exact attempt for safe replay.
-if(run.attempt&&run.metrics.failures.at(-1)?.result?.attemptId===run.attempt.id){const old=run.attempt;run.attempt={id:'attempt-'+crypto.randomUUID(),sessionRef:run.sessionRef,retryOf:{attemptId:old.id,sessionRef:old.sessionRef}};await save();}
+if(resumingTerminal){const old=run.attempt;run.attempt={id:'attempt-'+crypto.randomUUID(),sessionRef:run.sessionRef,retryOf:{attemptId:old.id,sessionRef:old.sessionRef}};await save();}
 function select(){
  const s=run.state,next=nextRealmFor(s.life),offered=compileChoices(s,s.currentScene.choices).filter(row=>row.enabled);
  assert.ok(offered.length>=2,'at least two generated enabled choices');
