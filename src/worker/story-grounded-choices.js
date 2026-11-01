@@ -36,7 +36,7 @@ function sharesSceneBasis(label,text,basis){
 
 const labelPattern=(action,target,name)=>{
  const escape=text=>text.replace(/[.*+?^${}()|[\]\\]/gu,'\\$&');
- if(action.startsWith('explore:'))return '.*'+escape(ITEMS[target])+'.*';
+ if(action.startsWith('explore:'))return '.*(?:寻找|搜寻|搜集|搜查|采集|采摘|采办|收集|搜|探查|挖掘|寻访).*'+escape(ITEMS[target])+'.*';
  if(action.startsWith('travel:'))return '.*'+escape(name)+'.*';
  if(action==='interact:ask')return '.*(?:问|请教|打听).*';
  if(action==='interact:observe')return '.*(?:观察|查看|辨认|细看|留意|翻看|翻阅|核对|看清|验看|检视|察看|查验|审视|检查|勘察).*';
@@ -45,7 +45,8 @@ const labelPattern=(action,target,name)=>{
  if(action==='interact:decline')return '.*(?:拒绝|谢绝|婉拒|不接|不愿|暂不|搁下).*';
  if(action==='craft:restore')return '.*(?:推演|修补|补全|修复).*';
  if(action==='craft:diagnose')return '.*(?:检视|验看|检查|查明|诊明|辨明).*';
- if(action.startsWith('practice:'))return '.*(?:修炼|修习|练功|吐纳|运转|闭关|修行|亲试|试运|打磨|突破|冲关).*';
+ if(action==='practice:breakthrough')return '.*(?:突破|破境|冲关|冲击).*';
+ if(action.startsWith('practice:'))return '.*(?:修炼|修习|练功|吐纳|运转|闭关|修行|亲试|试运|打磨).*';
  return null;
 };
 
@@ -98,6 +99,7 @@ function presentTargets(scene,context){
 function currentStoryGoal(context){
  const {life,receipt}=context,next=nextRealmFor(life),experience=life.cultivationProfile.experience,technique=TECHNIQUES[experience?.activeTechniqueId??life.birth.cultivationProfile.techniqueId];
  const prior=experience?advanceExperienceStory(context.director.currentGoal??context.director.mainQuest,receipt,null,life):context.director.currentGoal;
+ if(life.injury>1||life.cultivationProfile.spirit<25)return '当前'+(life.injury>1?'伤势尚重':'灵力不足')+'，可先休养恢复，再继续原来打算；不虚构已经疗好，不代选。';
  if(!next||life.cultivation<next.threshold||experience&&technique.defective&&!experience.repaired||experience?.commitment?.status==='owed')return prior;
  return (life.items[next.material]??0)>0?'修为与'+ITEMS[next.material]+'已具备，可选择闭关冲击'+next.name+'；尚未破境，结果等待实际选择与判定。':'修为已达到冲击'+next.name+'的门槛，尚缺'+ITEMS[next.material]+'。呈现寻找'+ITEMS[next.material]+'的具体机会；尚未取得，不能虚构领物。';
 }
@@ -146,7 +148,7 @@ function buildGroundedMenu(input,scene,context){
  }
  const pairs=new Map(),compact=[],labelGroups=new Map();
  for(const row of actions)for(const target of row.targets)for(const stake of row.stakes){
-  const ref='a'+pairs.size,pair={action:row.action,target:present.find(p=>p.ref===target)?.wire??target,stake};pairs.set(ref,pair);
+  const ref=row.action.split(':')[1]+':'+target,pair={action:row.action,target:present.find(p=>p.ref===target)?.wire??target,stake};pairs.set(ref,pair);
   const name=present.find(p=>p.ref===target)?.entity.name??ITEMS[target]??(target==='self'?'自身':nextRealmFor(life)?.name??target);
   const description=row.action.startsWith('explore:')?'寻找'+name:row.action==='interact:observe'?'查看眼前已有物件或痕迹':row.action==='interact:ask'?'询问'+name:row.action.startsWith('travel:')?'动身前往'+name:meanings[row.action]??row.meaning;
   compact.push({ref,action:row.action,target,description,days:row.days,...(Object.keys(row.cost).length?{cost:row.cost}:{}),...(row.spirit?{spirit:row.spirit}:{}),...(row.lifeYears?{lifeYears:row.lifeYears}:{})});
@@ -207,6 +209,7 @@ function resolveMenu(menu,plan,context){
   if(!sharesSceneBasis(label,plan.sceneText))throw menuFault('按钮“'+label+'”没有点明本段的具体对象或处境，须引用本段原有短语。');
   const pattern=labelPattern(choice.action,choice.target,named?.name??ITEMS[choice.target]??choice.target);
   if(pattern&&!new RegExp(pattern,'u').test(label))throw menuFault('按钮“'+label+'”与其实际动作'+choice.action+'不符，须按该动作description写，且符合'+pattern+'。');
+  if(choice.action.startsWith('practice:')&&choice.action!=='practice:breakthrough'&&/(?:突破|破境|冲关|冲击)/u.test(label))throw menuFault('按钮写了冲关，但ref是普通修炼；冲关只能使用breakthrough引用，尚不具备条件时须改写为实际可做的行动。');
   const ref=[...plan.pairs].find(([,pair])=>pair.action===choice.action&&pair.stake===(choice.action.startsWith('interact:')?'low':choice.stake)&&key(pair.target)===key(choice.target))?.[0],cost=plan.costs.get(ref)??{};
   for(const [id,name]of Object.entries(ITEMS))if(new RegExp('(?:消耗|耗费|用掉|吃下|吃掉|食用|以|用).{0,3}'+(id==='supplies'?'(?:行粮|干粮|口粮|糙米)':name),'u').test(label)&&!(cost[id]>0))throw menuFault('按钮“'+label+'”声称消耗'+name+'，但所选动作没有此项消耗；请改写按钮或选择实际有此代价的ref。');
   if(/^(?:观察|查看|细看|辨认|翻阅|翻看|核对|留意|察看|查验|审视|勘察)/u.test(label)&&choice.action!=='interact:observe')throw fault('CHOICE_NOT_COMPILABLE');
@@ -223,7 +226,7 @@ function writerMessages(input,context){
  const lore={...world['眼前与旧闻'],...(facts.currentGoal?{当前打算:facts.currentGoal}:{})};
  const opening=context.phase==='opening'?input.messages.slice(2).map(row=>{try{return JSON.parse(row.content).opening;}catch{return null;}}).find(Boolean):undefined;
  if(lore.天地)lore.天地={...lore.天地,location:facts.location};
- const {technique:privateTechnique,availableRules,meanings:privateMeanings,selectedAction:privateAction,...publicFacts}=facts;
+ const {technique:privateTechnique,cultivation:privateProgress,availableRules,meanings:privateMeanings,selectedAction:privateAction,...publicFacts}=facts;
  const target=context.receipt.action?.targetId;let actualTarget=ITEMS[target]??(target==='self'?'自身':null);if(!actualTarget)try{actualTarget=createNamedTargetLookup(context)(target).name;}catch{actualTarget=target??null;}
  const data={本次结算:{刚才已选:context.receipt.action?.label??'开局',实际行动:facts.selectedAction?.meaning??'来到故事起点',实际对象:actualTarget,动作类型:context.receipt.action?.intent??'opening',已经过去:context.receipt.elapsedDays+'日',实际所在地:facts.location,当前年龄:facts.currentAge+'岁',当前境界:realmFor(life).name,当前功法:presentMethod,物品变化:Object.fromEntries(Object.entries(context.receipt.itemChanges).map(([id,n])=>[ITEMS[id],n])),结果判定:facts.check,...(context.receipt.action?.intent==='explore'?{本段重点:'先写实地寻找'+actualTarget+'的过程和本次物品变化，不把上一次修炼写成本次已经发生的行动。'}:{})},
   主角:{姓名:life.name,灵根:ROOTS[birth.rootId].name,体质:PHYSIQUES[birth.physiqueId].name,伴生旧物:RELICS[birth.relicId].name,行囊:Object.fromEntries(Object.entries(life.items).filter(([,n])=>n>0).map(([id,n])=>[ITEMS[id],n]))},
@@ -239,7 +242,7 @@ export function createGroundedTransport(options){
  const {context,onProgress}=options;let retained=null,previewBody=null,previewTargets=null,previewPairs=null,cachedScene=null,lastAcceptedChoices=null,modelCalls=0,sceneRepaired=false,repaired=false,accountingUnknown=false,lastCompletion=null;
  const transport=createGlmTransport({...options,presentationText:text=>{
   if(!previewTargets||!text.trimStart().startsWith('{'))return text;
-  const withPairs=text.replace(/"actionRef"\s*:\s*"(a\d+)"/gu,(whole,ref)=>previewPairs.has(ref)?JSON.stringify(previewPairs.get(ref)).slice(1,-1):whole);
+  const withPairs=text.replace(/"actionRef"\s*:\s*"([a-z][a-z0-9:_-]{0,79})"/gu,(whole,ref)=>previewPairs.has(ref)?JSON.stringify(previewPairs.get(ref)).slice(1,-1):whole);
   const projected=withPairs.replace(/("target"\s*:\s*)"([plfk]\d+)"/gu,(whole,prefix,ref)=>previewTargets.has(ref)?prefix+JSON.stringify(previewTargets.get(ref)):whole);
   return JSON.stringify({blocks:previewBody}).slice(0,-1)+','+projected.trimStart().slice(1);
  },onProgress:event=>{

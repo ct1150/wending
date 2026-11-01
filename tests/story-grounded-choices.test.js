@@ -348,10 +348,29 @@ test('once cultivation is sufficient the writer gets the missing gate material a
  assert.equal(JSON.parse(ai.calls[1].messages[1].content).goal,facts.currentGoal);
  assert.match(facts.本次结算.境界变化,/仍为凡人.*没有破境/u);
  assert.equal(facts.本次结算.修为变化,p.nextLife.cultivation-p.receipt.before.cultivation);
+ assert.equal(facts.cultivation,undefined,'an internal progress counter is not a fictional number of realm layers');
+ let serial=0;
+ while(state.life.cultivationProfile.spirit>20){const pending=prepareChoice(state,{requestId:'drain-'+serial,choiceId:state.currentScene.choices[0].id}),scene=structuredClone(state.currentScene);scene.id='drain-scene-'+serial;scene.choices=scene.choices.map((c,i)=>({...c,id:'drain-'+serial+'-'+i}));state=commitTurn(state,pending,scene);serial++;}
+ const low=prepareChoice(state,{requestId:'low-spirit',choiceId:state.currentScene.choices[0].id}),lowAi=aiFor([body,menu]);
+ await generateScene(lowAi,profile,buildStoryContext(state,low),{}, {storyActions:true,groundedChoices:true});
+ assert.match(JSON.parse(lowAi.calls[0].messages[1].content).currentGoal,/休养/u);
 });
 
 test('a steady practice label cannot claim the food cost of an intensive practice',async()=>{
  const {context}=setup(),reply=label=>input=>{const t=JSON.parse(input.messages[1].content);return {choices:{advance:{actionRef:t.actions.find(a=>a.action==='practice:steady').ref,label},alternative:{actionRef:t.actions.find(a=>a.action==='interact:ask').ref,label:'询问灰衣管事采办的要求'}}};};
  const ai=aiFor([body,reply('按功法消耗行粮强化修炼'),reply('回偏房按功法稳步修行')]);
  const result=await generateScene(ai,profile,context,{}, {storyActions:true,groundedChoices:true});assert.equal(result.status,'ready',result.errorCode);assert.equal(ai.calls.length,3);assert.equal(result.scene.choices[0].label,'回偏房按功法稳步修行');
+});
+
+test('a breakthrough caption cannot execute ordinary practice and rule references name their actual approach',async()=>{
+ const {context}=setup(),reply=label=>input=>{const t=JSON.parse(input.messages[1].content),rule=t.actions.find(a=>a.action==='practice:steady');return {choices:{advance:{actionRef:rule.ref,label},alternative:{actionRef:t.actions.find(a=>a.action==='interact:ask').ref,label:'询问灰衣管事采办的要求'}}};};
+ const ai=aiFor([body,reply('按功法闭关冲击炼气'),reply('回偏房按功法稳步修行')]);
+ const result=await generateScene(ai,profile,context,{}, {storyActions:true,groundedChoices:true});assert.equal(result.status,'ready',result.errorCode);assert.equal(ai.calls.length,3);
+ assert.equal(JSON.parse(ai.calls[1].messages[1].content).actions.find(a=>a.action==='practice:steady').ref,'steady:self');
+});
+
+test('asking an official for food cannot masquerade as physically searching for supplies',async()=>{
+ const {context}=setup(),reply=label=>input=>{const t=JSON.parse(input.messages[1].content);return {choices:{advance:{actionRef:t.actions.find(a=>a.action==='explore:cautious'&&a.target==='supplies').ref,label},alternative:{actionRef:t.actions.find(a=>a.action==='interact:ask').ref,label:'询问灰衣管事采办的要求'}}};};
+ const ai=aiFor([body,reply('向灰衣管事讨要行粮补给'),reply('到北坡药圃寻找行粮')]);
+ const result=await generateScene(ai,profile,context,{}, {storyActions:true,groundedChoices:true});assert.equal(result.status,'ready',result.errorCode);assert.equal(ai.calls.length,3);
 });
