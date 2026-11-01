@@ -12,7 +12,7 @@ const numericCode=error=>Number(error?.code??error?.errors?.[0]?.code??error?.st
 // A trusted server-only transport. It returns one ordinary completion to the
 // existing validator; no partial scene can reach the archive commit path.
 export function createGlmTransport({ai,context,authoredChoices=false,onProgress=()=>{},deadlineAt=Infinity,signal,timeoutMs=STORY_LIMITS.timeoutMs}={}) {
-  let accountingUnknown=false;
+  let accountingUnknown=false,lastCompletion=null;
   const started=Date.now(),endsAt=Math.min(started+timeoutMs,deadlineAt);
   function assertActive(){if(signal?.aborted||Date.now()>=endsAt)throw fault('PROVIDER_TIMEOUT');}
   async function consume(factory,model,deadline){
@@ -131,11 +131,12 @@ export function createGlmTransport({ai,context,authoredChoices=false,onProgress=
     finally{active=false;clearTimeout(timer);if(abort)signal?.removeEventListener('abort',abort);controller.abort();reader?.cancel().catch(()=>{});}
   }
   return {
-    get source(){return 'cloudflare';},get accountingUnknown(){return accountingUnknown;},
+    get source(){return 'cloudflare';},get accountingUnknown(){return accountingUnknown;},get lastCompletion(){return lastCompletion;},
     async run(model,input){
       if(model!==GLM_MODEL_ID)throw fault('MODEL_NOT_ALLOWED');
       onProgress({type:'status',status:'generating'});
-      return consume(()=>{assertActive();if(typeof ai?.run!=='function')throw fault('AI_BINDING_MISSING');return ai.run(GLM_MODEL_ID,input);},GLM_MODEL_ID,endsAt-Date.now());
+      lastCompletion=await consume(()=>{assertActive();if(typeof ai?.run!=='function')throw fault('AI_BINDING_MISSING');return ai.run(GLM_MODEL_ID,input);},GLM_MODEL_ID,endsAt-Date.now());
+      return lastCompletion;
     },
   };
 }

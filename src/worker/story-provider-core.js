@@ -112,7 +112,7 @@ function priorTurnForAuthor(record) {
   const excerpt=record.text.slice(newline+1).replace(/导演组提到的|\bdilemma\s*[:：]\s*/gu,'');
   return {...record,text:record.text.slice(0,newline+1)+excerpt};
 }
-function buildProviderRequest(profile,context,knowledgeBundle) {
+function buildProviderRequest(profile,context,knowledgeBundle,choiceRepair) {
   validateStoryContext(context);
   const directed=isV7Life(context.life)&&context.director?.version===7;
   const opening=buildOpeningBrief(context);
@@ -216,6 +216,13 @@ function buildProviderRequest(profile,context,knowledgeBundle) {
     ({input,receipt}=packStoryReferences(input,context,knowledgeBundle,{maxBytes:Math.min(profile.maxInput,STORY_LIMITS.maxInputBytes)}));
     if(receipt!==null)validateRetrievalReceipt(receipt,{queryHash:sha256(canonicalStringify(context))});
   }
+  if(choiceRepair){
+    const schema=input.response_format.json_schema.schema;
+    schema.properties={choices:schema.properties.choices};schema.required=['choices'];
+    schema.properties.choices.maxItems=2;
+    input.max_tokens=Math.min(input.max_tokens,768);
+    input.messages.push({role:'user',content:JSON.stringify({task:'只输出choices，修正上一版无法执行的选项。正文已保留，禁止重写正文或新增其他字段。询问与查看用interact:ask/observe，不用交易、修行或援助代替。每项写清动作对象；选择与现有资源相符的动作，不承诺购买不支持的物品。',blocks:choiceRepair.blocks,previousChoices:choiceRepair.choices})});
+  }
   const inputBytes=size(input);
   if(inputBytes>Math.min(profile.maxInput,STORY_LIMITS.maxInputBytes)||size({model:profile.modelId,input})>STORY_LIMITS.maxRequestBytes)fail('INPUT_TOO_LARGE');
   // Match conservative Task1 accounting, including framing/system/schema and
@@ -303,12 +310,12 @@ function givesFoodToTarget(purpose,targetId,people){
   return true;
 }
 
-export async function generateProviderScene(ai,profile,context,options={},assertProfileReady,knowledgeBundle) {
+export async function generateProviderScene(ai,profile,context,options={},assertProfileReady,knowledgeBundle,choiceRepair) {
   const result={status:'rejected',accountingStatus:'complete',modelId:null,attemptId:null,inferencePerformed:false,usage:null,actualNeurons:null,stopReason:null,inputHash:null,inputBytes:null,nonThinkingValidated:null};
   try {
     const timeoutMs=validateProviderOptions(profile,options,assertProfileReady);result.modelId=profile.modelId;
     const directed=isV7Life(context?.life)&&context.director?.version===7;
-    const {input,receipt:retrievalReceipt}=buildProviderRequest(profile,context,knowledgeBundle);
+    const {input,receipt:retrievalReceipt}=buildProviderRequest(profile,context,knowledgeBundle,choiceRepair);
     const serializedInput=JSON.stringify(input);
     result.inputHash=sha256(serializedInput);result.inputBytes=encoder.encode(serializedInput).length;
     const attemptId=options.attemptId??context.identity.requestId;idField(attemptId);result.attemptId=attemptId;
@@ -346,6 +353,10 @@ export async function generateProviderScene(ai,profile,context,options={},assert
     try { scene=JSON.parse(choice.message.content); }
     catch { scene=namedV7?readCompleteV7Wire(choice.message.content,{authoredChoices:profile.authoredChoices===true}):null;if(!scene)fail(capped?'OUTPUT_TRUNCATED':'PROVIDER_RESPONSE_INVALID'); }
     if(capped&&(!Array.isArray(scene?.blocks)||!scene.blocks.length||!Array.isArray(scene.choices)||scene.choices.length<2))fail('OUTPUT_TRUNCATED');
+    if(choiceRepair){
+      try{exactKeys(scene,['choices']);}catch{fail('GENERATED_SCENE_INVALID');}
+      scene={...choiceRepair,choices:scene.choices};
+    }
     if(namedV7)try { scene=adaptV7ModelOutput(scene,context,{authoredChoices:profile.authoredChoices===true}); } catch { fail('GENERATED_SCENE_INVALID'); }
     const wire=scene;
     function accept(scene,indices,allEnabled=false){

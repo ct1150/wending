@@ -5,6 +5,9 @@ import { assertPlainData } from '../game/cultivation/live/identity.js';
 import { idField } from '../game/cultivation/live/schema.js';
 import { validateStoryContext } from '../game/cultivation/live/memory.js';
 import { selectStoryReferences, loadStoryReferences } from './story-knowledge.js';
+import {adaptV7ModelOutput} from './story-model-output.js';
+import {readStoryPresentation} from '../game/cultivation/live/story-preview.js';
+import {readCompleteV7Wire} from './story-readable-wire.js';
 export { PROVIDER_ERROR_CODES } from './story-provider-core.js';
 
 function assertValidatedProfile(profile) {
@@ -34,8 +37,32 @@ export async function generateScene(ai,profile,context,options={},runtime={}) {
     }
   }
   if(profile?.modelId===GLM_MODEL_ID){
-    const transport=createGlmTransport({ai,context,authoredChoices:true,onProgress:runtime.onProgress,deadlineAt:runtime.deadlineAt,signal:runtime.signal,timeoutMs:options.timeoutMs});
-    const result=await generateProviderScene(transport,{...profile,storyActions:runtime.storyActions===true,authoredChoices:true},context,options,assertValidatedProfile,knowledgeBundle);
+    let retainedBlocks=null;
+    const progress=event=>runtime.onProgress?.(retainedBlocks&&event.type==='presentation'?{...event,blocks:retainedBlocks}:event);
+    const transport=createGlmTransport({ai,context,authoredChoices:true,onProgress:progress,deadlineAt:runtime.deadlineAt,signal:runtime.signal,timeoutMs:options.timeoutMs});
+    const activeProfile={...profile,storyActions:runtime.storyActions===true,authoredChoices:true};
+    let result=await generateProviderScene(transport,activeProfile,context,options,assertValidatedProfile,knowledgeBundle);
+    if(runtime.recoverChoices===true&&runtime.storyActions===true&&context.director?.version===7&&result.errorCode==='CHOICE_NOT_COMPILABLE'&&!runtime.signal?.aborted&&Date.now()<(runtime.deadlineAt??Infinity)){
+      let prior;
+      try{
+        const text=transport.lastCompletion.choices[0].message.content;
+        let wire;try{wire=JSON.parse(text);}catch{wire=readCompleteV7Wire(text,{authoredChoices:true});}
+        prior=adaptV7ModelOutput(wire,context,{authoredChoices:true});
+        // Consequential evidence must stay attached to the original complete
+        // scene; a menu-only correction cannot discard or reinterpret it.
+        if(prior.memoryDeltas.some(row=>['death','promise'].includes(row.kind)||row.referenceId))prior=null;
+      }catch{}
+      if(prior){
+        retainedBlocks=readStoryPresentation(JSON.stringify(prior),context,{authoredChoices:true}).blocks;
+        progress({type:'reset'});
+        progress({type:'preview',text:retainedBlocks.map(block=>block.text).join('\n\n')});
+        progress({type:'presentation',blocks:retainedBlocks,choices:[]});
+        const first=result;
+        result=await generateProviderScene(transport,activeProfile,context,options,assertValidatedProfile,knowledgeBundle,prior);
+        if(first.usage&&result.usage)result.usage=Object.fromEntries(Object.keys(first.usage).map(key=>[key,first.usage[key]+result.usage[key]]));
+        else result.accountingStatus='unknown';
+      }
+    }
     if(transport.accountingUnknown)result.accountingStatus='unknown';
     if(result.inferencePerformed)result.providerSource=transport.source;
     return result;
