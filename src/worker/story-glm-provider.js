@@ -97,7 +97,9 @@ export function createGlmTransport({ai,context,authoredChoices=false,onProgress=
             trailingHigh=last>=0xd800&&last<=0xdbff;
             contentBytes+=encoder.encode(delta.content).length-(joined?2:0);
             if(contentBytes>STORY_LIMITS.maxResponseBytes)throw fault('PROVIDER_RESPONSE_TOO_LARGE');
-            text+=delta.content;previewContent();
+            // Inspect a closing row/document before a later malformed suffix
+            // can obscure it, even when ordinary small deltas are coalesced.
+            text+=delta.content;previewContent(/[}\]]\s*$/u.test(delta.content));
           }
         }
       }

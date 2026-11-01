@@ -226,7 +226,7 @@ test('resource references constrain labels to name the actual resource rather th
  const manual=task.actions.find(a=>a.action==='explore:cautious'&&a.target==='manual'),item=input.response_format.json_schema.schema.properties.choices.properties.alternative;
  const branch=(item.oneOf??[item]).find(row=>row.properties.actionRef.enum.includes(manual.ref));
  assert.ok(branch.properties.actionRef.enum.includes(manual.ref));
- assert.deepEqual(Object.keys(branch.properties),['actionRef','label']);
+ assert.deepEqual(Object.keys(branch.properties),['actionRef','basis','label']);
  assert.match(manual.description,/寻找.*完整功法/u);
 });
 
@@ -297,7 +297,7 @@ test('generic rule captions are regenerated with an explicit anchor in the compl
  assert.equal(result.status,'ready',result.errorCode);assert.equal(ai.calls.length,3);
  assert.deepEqual(result.scene.blocks,prose.blocks);
  assert.ok(result.scene.choices.every(c=>c.label.includes('锁息旧章')));
- assert.ok(ai.calls[1].response_format.json_schema.schema.properties.choices.properties.advance.oneOf.every(row=>row.required.includes('label')&&!row.required.includes('basis')));
+ assert.ok(ai.calls[1].response_format.json_schema.schema.properties.choices.properties.advance.oneOf.every(row=>row.required.includes('basis')&&row.required.includes('label')));
 });
 
 test('the native menu schema reserves one slot for a positive-time action and accepts the two named slots',async()=>{
@@ -396,4 +396,13 @@ test('the menu highlights current concrete terms and offers a contextual alterna
  assert.ok(task.groundingTerms.includes('缺角石镜'));assert.ok(task.groundingTerms.includes('锁息旧章'));assert.ok(task.groundingTerms.includes('后山枯松'));
  assert.equal(input.response_format.json_schema.schema.properties.choices.properties.alternative.oneOf[0].properties.actionRef.enum[0],'observe:self');
  assert.ok(task.actions.some(a=>a.action==='practice:steady'),'other legal alternatives remain available');
+});
+
+test('the model selects an exact current basis before authoring its complete caption',async()=>{
+ const {context}=setup(),scene={blocks:[{kind:'narration',text:'锁息旧章摊在后山石台上，缺角石镜映着书页的残纹，山风从松林里吹过，林朔静候气息平复。'}],people:[],destinations:[]};
+ const reply=label=>input=>{const t=JSON.parse(input.messages[1].content);return {choices:{advance:{actionRef:t.actions.find(a=>a.action==='practice:steady').ref,basis:'锁息旧章',label},alternative:{actionRef:t.actions.find(a=>a.action==='interact:observe').ref,basis:'缺角石镜',label:'查看缺角石镜映出的残纹'}}};};
+ const ai=aiFor([scene,reply('在缺角石镜旁潜心修行'),reply('按锁息旧章潜心修行')]);const result=await generateScene(ai,profile,context,{}, {storyActions:true,groundedChoices:true});
+ assert.equal(result.status,'ready',result.errorCode);assert.equal(ai.calls.length,3);
+ const schema=ai.calls[1].response_format.json_schema.schema;assert.deepEqual(Object.keys(schema.properties.choices.properties.advance.oneOf[0].properties),['actionRef','basis','label']);assert.ok(schema.$defs.basis.enum.every(word=>scene.blocks[0].text.includes(word)));
+ assert.equal(result.scene.choices[0].basis,undefined,'only the model-authored complete caption enters the canonical scene');
 });
