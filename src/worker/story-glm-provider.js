@@ -11,7 +11,7 @@ const numericCode=error=>Number(error?.code??error?.errors?.[0]?.code??error?.st
 
 // A trusted server-only transport. It returns one ordinary completion to the
 // existing validator; no partial scene can reach the archive commit path.
-export function createGlmTransport({ai,context,authoredChoices=false,onProgress=()=>{},deadlineAt=Infinity,signal,timeoutMs=STORY_LIMITS.timeoutMs}={}) {
+export function createGlmTransport({ai,context,authoredChoices=false,onProgress=()=>{},presentationText=text=>text,deadlineAt=Infinity,signal,timeoutMs=STORY_LIMITS.timeoutMs}={}) {
   let accountingUnknown=false,lastCompletion=null;
   const started=Date.now(),endsAt=Math.min(started+timeoutMs,deadlineAt);
   function assertActive(){if(signal?.aborted||Date.now()>=endsAt)throw fault('PROVIDER_TIMEOUT');}
@@ -40,9 +40,9 @@ export function createGlmTransport({ai,context,authoredChoices=false,onProgress=
         const now=Date.now();
         // Preserve the first and final draft. Coalesce only rapid, tiny deltas
         // so a fast token stream does not parse both JSON previews per token.
-        if(!force&&inspectedBytes>=0&&modelSeen===inspectedModel&&contentBytes-inspectedBytes<64&&now-inspectedAt<32)return;
+        if(!force&&inspectedBytes>=0&&modelSeen===inspectedModel&&contentBytes-inspectedBytes<256&&now-inspectedAt<100)return;
         inspectedBytes=contentBytes;inspectedAt=now;inspectedModel=modelSeen;
-        const next=readStoryPreview(text),draft=readStoryPresentation(text,context,{authoredChoices});
+        const visible=presentationText(text),next=readStoryPreview(visible),draft=readStoryPresentation(visible,context,{authoredChoices});
         const serialized=JSON.stringify(draft);
         if(/<\/?(?:think|thinking|analysis|reasoning)(?:\s|>)/iu.test(next+'\n'+draft.blocks.map(block=>(block.speaker??'')+'\n'+block.text).join('\n')+'\n'+draft.choices.map(choice=>choice.label).join('\n')))throw fault('PROVIDER_RESPONSE_INVALID');
         if(!active||!modelSeen)return;
@@ -97,7 +97,9 @@ export function createGlmTransport({ai,context,authoredChoices=false,onProgress=
             trailingHigh=last>=0xd800&&last<=0xdbff;
             contentBytes+=encoder.encode(delta.content).length-(joined?2:0);
             if(contentBytes>STORY_LIMITS.maxResponseBytes)throw fault('PROVIDER_RESPONSE_TOO_LARGE');
-            text+=delta.content;previewContent();
+            // Inspect a closing row/document before a later malformed suffix
+            // can obscure it, even when ordinary small deltas are coalesced.
+            text+=delta.content;previewContent(/[}\]]\s*$/u.test(delta.content));
           }
         }
       }

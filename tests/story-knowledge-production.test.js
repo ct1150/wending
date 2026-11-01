@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import {canonicalStringify,sha256} from '../src/game/cultivation/live/identity.js';
 import {KNOWLEDGE_MANIFEST as manifest} from '../src/worker/knowledge/catalog.js';
 import {createStoryProductionWorker,validateStoryProductionPolicy} from '../src/worker/story-production.js';
+import {createStoryProductionApi,STORY_RUNTIME_POLICY_HEADER} from '../src/worker/story-production-api.js';
 import {GLM_MODEL_ID} from '../src/worker/story-config.js';
 import {assertStoryKnowledgeReady} from '../src/worker/story-knowledge-status.js';
 import {createLiveGame,prepareOpening} from '../src/game/cultivation/live/engine.js';
@@ -21,9 +22,11 @@ function turnFixture(config,store){
   const state=createLiveGame({runId:'knowledge-policy-turn',seed:42}),context=buildStoryContext(state,prepareOpening(state,{requestId:'knowledge-policy-opening'}));
   const actor={kind:'person',name:'陈叔',ref:'',status:null};
   const scene={blocks:[{kind:'narration',text:'陈叔停在村口，告诉你林中传来求救声，请你先听清方位。'}],choices:[{action:'interact:ask',target:actor,stake:'low',purpose:'求救声从哪个方位传来',anchor:0},{action:'interact:leave',target:actor,stake:'low',purpose:'放下林中求救之事',anchor:0}],title:'村口传闻',location:'村口',memoryDeltas:[]};
+  const budgetReplies={admit:{kind:'allowed'},getSession:{kind:'session',sessionRef:'knowledge-session'},lookup:{code:'ATTEMPT_NOT_FOUND'},reserve:{kind:'reserved'},settle:{kind:'settled'}};
   const worker=createStoryProductionWorker({config}),env={STORY_BUDGET:{idFromName:name=>name,get:()=>({async fetch(request){
     const method=new URL(request.url).pathname.slice(1);
-    const result={admit:{kind:'allowed'},getSession:{kind:'session',sessionRef:'knowledge-session'},lookup:{code:'ATTEMPT_NOT_FOUND'},reserve:{kind:'reserved'},settle:{kind:'settled'}}[method];
+    if(method.startsWith('api/story/'))return createStoryProductionApi({config:JSON.parse(request.headers.get(STORY_RUNTIME_POLICY_HEADER)),budget:Object.fromEntries(Object.entries(budgetReplies).map(([key,value])=>[key,async()=>value]))}).fetch(request,env);
+    const result=budgetReplies[method];
     assert.ok(result,'unexpected budget method '+method);return Response.json(result);
   }})},AI:{async run(model,input){
     calls++;assert.equal(model,GLM_MODEL_ID);assert.equal(JSON.parse(input.messages[1].content).storyReferences,undefined);

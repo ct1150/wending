@@ -122,16 +122,18 @@ test('isolated production package has no tester bridge or secrets and executes p
   const variants={disabled:{...config,enabled:false},wrongAccount:{...config,bindingAccountId:'another-account'},paid:{...config,currentPlan:{...config.currentPlan,plan:'workers-paid'}},future:{...config,freeBoundaryProof:{...config.freeBoundaryProof,checkedAt:new Date(Date.now()+3600000).toISOString()}},version:{...config,promptVersion:2}};
   const harness=`import packaged,{backendIdentity} from './entry.mjs';
 import {createStoryProductionWorker} from './src/worker/story-production.js';
-export {StoryBudget} from './entry.mjs';
+import {StoryBudget as PackagedStoryBudget} from './entry.mjs';
+export class StoryBudget extends PackagedStoryBudget {constructor(ctx,env){super(ctx,{...env,AI:fixtureAI});}}
 const variants=Object.fromEntries(Object.entries(${JSON.stringify(variants)}).map(([name,config])=>[name,createStoryProductionWorker({config})]));
 let aiCalls=0;const coordinatorNames=[];
-export default {async fetch(request,env,ctx){
-  if(new URL(request.url).pathname==='/__fixture/status')return Response.json({aiCalls,coordinatorNames,backendIdentity});
-  const localEnv={...env,STORY_BUDGET:{idFromName(name){coordinatorNames.push(name);return env.STORY_BUDGET.idFromName(name);},get(id){return env.STORY_BUDGET.get(id);}},AI:{async run(model,input){
+const fixtureAI={async run(model,input){
     aiCalls++;const context=JSON.parse(input.messages.at(-1).content),prefix=context.namespace+':t'+context.identity.turnId+':';
     const scene={id:prefix+'s:scene',title:'山路',location:'山间',blocks:[{kind:'narration',text:'你循着松影向前。'}],entities:[],choices:[{id:prefix+'c:rest',label:'歇息',intent:'rest',targetId:'self',stake:'low',approach:'recover'},{id:prefix+'c:train',label:'修行',intent:'practice',targetId:'self',stake:'low',approach:'steady'}],memoryDeltas:[]};
     return {model,choices:[{finish_reason:'stop',message:{content:JSON.stringify(scene)}}],usage:{prompt_tokens:100,completion_tokens:80,total_tokens:180}};
-  }}};
+  }};
+export default {async fetch(request,env,ctx){
+  if(new URL(request.url).pathname==='/__fixture/status')return Response.json({aiCalls,coordinatorNames,backendIdentity});
+  const localEnv={...env,STORY_BUDGET:{idFromName(name){coordinatorNames.push(name);return env.STORY_BUDGET.idFromName(name);},get(id){return env.STORY_BUDGET.get(id);}},AI:{run(){throw Error('public entry must not execute inference');}}};
   return (variants[request.headers.get('x-fixture-policy')]??packaged).fetch(request,localEnv,ctx);
 }};`;
   let outbound=0;

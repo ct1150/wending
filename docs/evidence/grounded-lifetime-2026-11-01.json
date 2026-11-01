@@ -1,0 +1,208 @@
+{
+  "schemaVersion": 1,
+  "recordedAt": "2026-11-01T18:57:22.845387+00:00",
+  "site": "https://wending.868656.xyz/",
+  "model": "@cf/zai-org/glm-4.7-flash",
+  "provider": "direct Cloudflare Workers AI; hard Free boundary retained",
+  "completeLife": {
+    "status": "completed-after-development-fixes-and-resumes",
+    "cleanFinalVersionRun": false,
+    "method": "real production/candidate API, actual engine prepare/commit/rule death/rebirth, per-turn save serialization and restore, generated enabled choices only",
+    "metrics": {
+      "turns": 113,
+      "actions": {
+        "opening": 1,
+        "craft:diagnose": 1,
+        "craft:restore": 1,
+        "practice:intensive": 4,
+        "rest:recover": 8,
+        "practice:steady": 85,
+        "interact:ask": 1,
+        "explore:cautious": 7,
+        "explore:bold": 1,
+        "travel:road": 1,
+        "practice:breakthrough": 3
+      },
+      "elapsedDays": 80640,
+      "restores": 124,
+      "maxContextBytes": 6406,
+      "zeroDayStreak": 0,
+      "maxZeroDayStreak": 1,
+      "developmentTerminalFailures": {
+        "PROVIDER_TIMEOUT": 1,
+        "CHOICE_NOT_COMPILABLE": 6,
+        "PROVIDER_RESPONSE_INVALID": 1
+      }
+    },
+    "deathAge": 240,
+    "deathCause": {
+      "cause": "lifespan"
+    },
+    "deathHash": "8ef8f324001b903d0b95e4302d764a2f8e68282ddb4fae04b401cc0e79862e6a",
+    "childHash": "7f0ad029db4c4ece9e3add8b6d3f75313ba04fcd8a42f081137f44a6d6550ae6",
+    "rewards": [
+      "past-memory"
+    ],
+    "childGeneration": 2,
+    "childOpening": true,
+    "settlement": {
+      "realm": "筑基",
+      "lifeLimit": 240,
+      "earnedPoints": 19,
+      "availablePoints": 19
+    },
+    "samples": [
+      {
+        "turn": 1,
+        "age": 16,
+        "action": "opening",
+        "selected": null,
+        "prose": "灰衣管事目光扫过你手中的缺角石镜，眉头微皱，随即挥手将你分入杂役处，只给了一块刻着‘勤’字的木牌。同来的少年被领进内院，你望着那扇紧闭的山门，心中暗自盘算，这石镜虽缺一角，却似能映照出些异象。你决定先去杂役房，看看能否从那些废弃的旧物中找到修补功法缺口的线索，或者至少换点行粮。",
+        "choices": [
+          "前往杂役房",
+          "辨明自身功法缺陷"
+        ]
+      },
+      {
+        "turn": 2,
+        "age": 16.002777777777776,
+        "action": "craft:diagnose",
+        "selected": "辨明自身功法缺陷",
+        "prose": "林朔在杂役房枯坐一日，反复参悟锁息旧章，终知此法虽能敛气，却因根基驳杂，每逢灵力运转至经脉三成处便如撞铜墙，强行催动必致经脉寸断。他并未急着修补，而是将那缺角石镜置于案头，借着微光细看，镜面虽缺，却隐隐映出窗外远处内院弟子御剑飞行的残影，似乎这石镜能映照出某种“灵气流动的轨迹”。",
+        "choices": [
+          "推演修补锁息旧章的缺角",
+          "动身前往栖云门内院"
+        ]
+      },
+      {
+        "turn": 3,
+        "age": 16.252777777777776,
+        "action": "craft:restore",
+        "selected": "推演修补锁息旧章的缺角",
+        "prose": "林朔在杂役房枯坐九十日，终将锁息旧章修补圆满，虽未得灵力，却觉心境通透。外院收录少年渐多，杂役处人声嘈杂，管事正站在高台上分发任务牌，目光扫过台下众人，似乎在寻找可用之人。",
+        "choices": [
+          "尝试消耗行粮强化修炼锁息旧章",
+          "观察管事分发任务牌的动静"
+        ]
+      },
+      {
+        "turn": 4,
+        "age": 16.752777777777776,
+        "action": "practice:intensive",
+        "selected": "尝试消耗行粮强化修炼锁息旧章",
+        "prose": "林朔在杂役房枯坐九十日，终将锁息旧章修补。又过半年，他尝试以行粮强行催动功法，却因根基未稳，灵力反噬致经脉微损，虽未走火入魔，却觉神思困顿。栖云门外院杂役处，管事正巡视至林朔房前，目光在他略显憔悴的脸上停留片刻。",
+        "choices": [
+          "尝试消耗行粮强化修炼锁息旧章",
+          "调息休养恢复经脉伤势"
+        ]
+      },
+      {
+        "turn": 5,
+        "age": 16.836111111111112,
+        "action": "rest:recover",
+        "selected": "调息休养恢复经脉伤势",
+        "prose": "林朔在杂役房静卧三十日，经脉中的淤滞随灵气流转渐散，锁息旧章运转愈发顺畅，虽未突破凡人桎梏，却已能感知到体内灵力如涓涓细流般汇聚。",
+        "choices": [
+          "按锁息旧章运转强化修炼",
+          "观察锁息旧章运转的痛处"
+        ]
+      },
+      {
+        "turn": 7,
+        "age": 18.336111111111112,
+        "action": "practice:steady",
+        "selected": "按锁息旧章运转强化修炼",
+        "prose": "林朔在栖云门外院枯坐半载，经脉虽未大损，但五行灵根驳杂，强行运转锁息旧章，灵气如泥牛入海，反致经脉隐隐作痛，修为毫无寸进，唯有伴生石镜缺角处偶尔闪过一丝微光，似在嘲弄这徒劳的苦修。",
+        "choices": [
+          "按锁息旧章运转强化修炼",
+          "查看伴生石镜的微光"
+        ]
+      },
+      {
+        "turn": 9,
+        "age": 19.336111111111112,
+        "action": "interact:ask",
+        "selected": "询问灰衣管事",
+        "prose": "“五行驳杂，强行运转锁息旧章，经脉凝滞，修为停滞，你倒是有几分执拗。”灰衣管事目光扫过林朔枯瘦的面容，语气平淡，“这半年来，外院杂役试修者换了一茬又一茬，唯有你还在枯坐。既已知晓弊端，为何不换法？”",
+        "choices": [
+          "按锁息旧章长期修炼积累修为",
+          "询问灰衣管事为何不换法"
+        ]
+      },
+      {
+        "turn": 13,
+        "age": 22.586111111111112,
+        "action": "explore:cautious",
+        "selected": "去杂役处寻找行粮",
+        "prose": "林朔在杂役处寻得半袋糙米，虽非灵谷，却足以果腹。九十日间，他每日按锁息旧章运转经脉，虽未破境，却觉体内灵力愈发凝实，根基驳杂之症稍减。一日，他在后山枯坐，忽觉眉心微热，透脉体异象初显，竟引得山风倒卷，吹动衣袂。此时，灰衣管事正路过此处，目光扫过林朔，神色古怪地停下了脚步。",
+        "choices": [
+          "按锁息旧章消耗行粮强化修炼",
+          "询问灰衣管事眉心异象"
+        ]
+      },
+      {
+        "turn": 22,
+        "age": 30.169444444444444,
+        "action": "explore:bold",
+        "selected": "向藏书阁寻找完整功法",
+        "prose": "林朔在栖云门外院枯坐三百日，五行灵根驳杂，锁息旧章运转缓慢，仅勉强将体内灵气循环。三十日间，他数次潜入藏书阁偏殿，避开执事目光，将残卷与残篇反复对照，终得三本完整功法。虽未破境，但灵气流转已较往日顺畅，心境亦随之沉静。",
+        "choices": [
+          "按锁息旧章闭关冲击炼气",
+          "检视锁息旧章运转的痛处"
+        ]
+      }
+    ],
+    "provenance": [
+      "This exploratory life started on earlier candidates and resumed after defects were fixed. It is not proof of a clean birth-to-death run on the final version.",
+      "From turn 52 ordinary production used the existing SQLite Durable Object runtime. The runner retained its startup source identity when the synonym correction was deployed later.",
+      "One overlapping acceptance process produced a duplicate transcript row for cached turn 100 and an ATTEMPT_IN_PROGRESS. The surviving life reached actual rule death at turn 114; the duplicate row did not add a state transition. A single-writer output guard was added to the CLI."
+    ]
+  },
+  "finalVersionRetest": {
+    "status": "blocked-by-free-provider-quota",
+    "sourceCommit": "cddff03b113777ec9cb8249f38b0b79648f30e09",
+    "completed": false,
+    "acceptedTurns": 10,
+    "age": 20.502777777777776,
+    "blockedTurn": 11,
+    "errorCode": "FREE_QUOTA_EXHAUSTED",
+    "unexpectedTerminalFailures": [],
+    "automaticRecoveries": {
+      "CHOICE_NOT_COMPILABLE": 7,
+      "NETWORK_UNAVAILABLE": 1,
+      "PROVIDER_TIMEOUT": 1
+    },
+    "saveAndPendingReceiptRetained": true,
+    "note": "Fresh final-version acceptance cannot be called complete. No new inference is attempted after the provider Free boundary is reached."
+  },
+  "ci": {
+    "commit": "cddff03b113777ec9cb8249f38b0b79648f30e09",
+    "run": "https://github.com/ct1150/wending/actions/runs/41337974143",
+    "tests": 1422,
+    "passed": 1422,
+    "failed": 0,
+    "syntaxFiles": 262,
+    "frontendBytes": 932014,
+    "frontendSha256": "b9949302c0e94d8a07bc8022be72284126042c3dae7309e01150fd9903a6fdaa",
+    "coverage": "native browser and IndexedDB persistence, Miniflare SQLite restart/replay and accounting, origin/policy/free boundary enforcement, streaming, current-scene choices and recovery"
+  },
+  "runtimeEvidence": {
+    "source": "Cloudflare workersInvocationsAdaptive",
+    "windowUtc": [
+      "2026-11-01T18:32:45Z",
+      "2026-11-01T18:36:00Z"
+    ],
+    "sampleRequests": 10,
+    "errors": 0,
+    "cpuP50Microseconds": 1413,
+    "cpuP99Microseconds": 4378,
+    "correction": "Heavy turn generation, validation and retrieval execute in the existing SQLite StoryBudget object. The public Worker forwards server-owned policy; singleton, namespace, schema and receipt authority are preserved."
+  },
+  "limits": [
+    "This records one real completed exploratory life and one quota-blocked final-version retest, not an exhaustive or failure-free guarantee.",
+    "Model-authored drafts may require correction or automatic linked retries; no fixed fallback menus or inferred actions replace them.",
+    "The full-life runner uses real API and engine with file serialization. Browser and IndexedDB behavior is verified separately by native CI.",
+    "No injected scenes, forced deaths, gameplay life/turn caps, paid provider or plan upgrade were used.",
+    "Only zero-traffic candidates were used for draft diagnostics; temporary diagnostic promotion was rejected and was not performed."
+  ]
+}
