@@ -10,9 +10,9 @@ import {createStoryApi} from '../src/worker/story-api.js';
 const profile={...GLM_PROFILE,validated:true,supportsStructuredOutput:true};
 const actor={kind:'person',name:'灰衣管事'},destination={kind:'place',name:'北坡药圃'};
 const body={blocks:[{kind:'dialogue',speaker:actor,text:'想留在外院，先去北坡药圃采办行粮。药圃的工钱能抵伙食，夜里还可回偏房研习功法。'}],cast:[actor,destination]};
-const menu={choices:[{purpose:'问灰衣管事药圃采办要注意什么',action:'interact:ask',target:actor},{purpose:'动身前往北坡药圃接杂役',action:'travel:road',target:destination,stake:'low'}]};
+const menu={choices:[{purpose:'问灰衣管事药圃采办要注意什么',action:'interact:ask',target:actor},{purpose:'动身前往北坡药圃接杂役',action:'travel:road',target:destination,stake:'normal'}]};
 function setup(){const state=createLiveGame({runId:'grounded',seed:4,engineVersion:7,experienceVersion:1,originStories:true});const pending=prepareOpening(state,{requestId:'opening'});return {state,pending,context:buildStoryContext(state,pending)};}
-function aiFor(replies,completionTokens=[]){const calls=[];return {calls,async run(model,input){calls.push(structuredClone(input));const reply=replies[Math.min(calls.length-1,replies.length-1)];if(reply instanceof Error)throw reply;const tokens=completionTokens[calls.length-1]??100;return new Response('data: '+JSON.stringify({model,choices:[{delta:{content:JSON.stringify(reply)},finish_reason:'stop'}],usage:{prompt_tokens:100,completion_tokens:tokens,total_tokens:100+tokens}})+'\n\ndata: [DONE]\n\n').body;}};}
+function aiFor(replies,completionTokens=[]){const calls=[];return {calls,async run(model,input){calls.push(structuredClone(input));let reply=replies[Math.min(calls.length-1,replies.length-1)];if(typeof reply==='function')reply=reply(input);if(reply instanceof Error)throw reply;const tokens=completionTokens[calls.length-1]??100;return new Response('data: '+JSON.stringify({model,choices:[{delta:{content:JSON.stringify(reply)},finish_reason:'stop'}],usage:{prompt_tokens:100,completion_tokens:tokens,total_tokens:100+tokens}})+'\n\ndata: [DONE]\n\n').body;}};}
 
 test('grounded generation writes the menu from the immutable completed scene and real rule costs',async()=>{
  const {state,pending,context}=setup(),ai=aiFor([body,menu]),events=[];
@@ -46,9 +46,10 @@ test('the menu grammar excludes an absent invented actor and a destination absen
  const result=await generateScene(ai,profile,context,{}, {storyActions:true,groundedChoices:true});
  assert.equal(result.status,'ready',result.errorCode);
  const schema=JSON.stringify(ai.calls[1].response_format.json_schema.schema);
- assert.ok(schema.includes('灰衣管事'));assert.ok(schema.includes('北坡药圃'));
+ assert.ok(schema.includes('actionRef'));
  assert.ok(!schema.includes('失踪师兄'));assert.ok(!schema.includes('远方仙城'));
  const task=JSON.parse(ai.calls[1].messages.at(-1).content);
+ assert.ok(JSON.stringify(task.participants).includes('灰衣管事'));assert.ok(JSON.stringify(task.participants).includes('北坡药圃'));
  assert.ok(!JSON.stringify(task.actions).includes('失踪师兄'));
 });
 
@@ -138,7 +139,70 @@ test('the menu asks for short button labels and streams their actual authored wo
  const {context}=setup(),choices=menu.choices.map(({purpose,...row})=>({...row,label:purpose})),ai=aiFor([body,{choices}]),events=[];
  const result=await generateScene(ai,profile,context,{}, {storyActions:true,groundedChoices:true,onProgress:e=>events.push(e)});
  assert.equal(result.status,'ready',result.errorCode);
- for(const branch of ai.calls[1].response_format.json_schema.schema.properties.choices.items.oneOf){assert.ok(branch.properties.label);assert.equal(branch.properties.purpose,undefined);}
+ for(const branch of [ai.calls[1].response_format.json_schema.schema.properties.choices.items]){assert.ok(branch.properties.label);assert.equal(branch.properties.purpose,undefined);}
  assert.ok(events.some(e=>e.type==='presentation'&&e.choices.length===2));
  assert.deepEqual(result.scene.choices.map(c=>c.label),choices.map(c=>c.label));
+});
+
+test('narration establishes an explicitly present official without requiring a stock pose verb',async()=>{
+ const {context}=setup();
+ const prose={blocks:[{kind:'narration',text:'灰衣管事手中的名册翻得哗哗作响，目光扫过你时带了几分迟疑。后山灵田要人帮工。'}],people:[actor],destinations:[destination]};
+ const ai=aiFor([prose,menu]);await generateScene(ai,profile,context,{}, {storyActions:true,groundedChoices:true});
+ assert.ok(JSON.parse(ai.calls[1].messages.at(-1).content).actions.some(a=>a.action==='interact:ask'));
+});
+
+test('travel menu uses the settled destination rather than the previous director location',async()=>{
+ const {state,pending,context}=setup(),start=await generateScene(aiFor([body,menu]),profile,context,{}, {storyActions:true,groundedChoices:true});
+ const current=commitTurn(state,pending,start.scene),p=prepareChoice(current,{requestId:'arrive',choiceId:current.currentScene.choices[1].id}),next=buildStoryContext(current,p);
+ const prose={blocks:[{kind:'narration',text:'北坡药圃的药畦连到石墙脚下，药圃里传来锄地声。'}],people:[],destinations:[destination,{kind:'place',name:'药圃'}]};
+ const input=buildGroundedMenuInput({max_tokens:1536},prose,next),task=JSON.parse(input.messages.at(-1).content);
+ assert.equal(task.scene.location,'北坡药圃');assert.ok(!task.actions.some(a=>a.action.startsWith('travel:')));
+});
+
+test('closed scene-local references resolve to the model-authored people and destinations',async()=>{
+ const {context}=setup(),choices=[{label:'问管事采办时要留意什么',action:'interact:ask',target:'p1'},{label:'前往北坡药圃接下杂役',action:'travel:road',target:'l1',stake:'normal'}],events=[];
+ const result=await generateScene(aiFor([body,{choices}]),profile,context,{}, {storyActions:true,groundedChoices:true,onProgress:e=>events.push(e)});
+ assert.equal(result.status,'ready',result.errorCode);
+ assert.deepEqual(result.scene.entities.map(e=>e.name),['灰衣管事','北坡药圃']);
+ assert.ok(events.some(e=>e.type==='presentation'&&e.choices.length===2));
+});
+
+test('a mislabeled question is corrected once against the same scene without changing its prose',async()=>{
+ const {context}=setup(),bad={choices:[{label:'询问管事采办要留意什么',action:'interact:observe',target:'self'},{label:'前往北坡药圃接下杂役',action:'travel:road',target:'l1',stake:'normal'}]},good={choices:[{label:'询问管事采办要留意什么',action:'interact:ask',target:'p1'},bad.choices[1]]};
+ const ai=aiFor([body,bad,good]);
+ const result=await generateScene(ai,profile,context,{}, {storyActions:true,groundedChoices:true,recoverChoices:true});
+ assert.equal(result.status,'ready',result.errorCode);assert.equal(ai.calls.length,3);
+ assert.equal(result.scene.choices[0].approach,'ask');assert.deepEqual(result.scene.blocks.map(b=>b.text),body.blocks.map(b=>b.text));
+ assert.equal(result.usage.completionTokens,300);
+});
+
+test('a model-selected rule reference compiles the complete offered action and streams its label',async()=>{
+ const {context}=setup(),events=[];
+ const ai=aiFor([body,input=>{const task=JSON.parse(input.messages.at(-1).content);return {choices:[{label:'问管事采办要留意什么',actionRef:task.actions.find(a=>a.action==='interact:ask').ref},{label:'动身前往北坡药圃',actionRef:task.actions.find(a=>a.action==='travel:road').ref}]};}]);
+ const result=await generateScene(ai,profile,context,{}, {storyActions:true,groundedChoices:true,onProgress:e=>events.push(e)});
+ assert.equal(result.status,'ready',result.errorCode);assert.equal(result.scene.choices[0].approach,'ask');assert.equal(result.scene.choices[1].intent,'travel');
+ assert.ok(events.some(e=>e.type==='presentation'&&e.choices.length===2));
+});
+
+test('grounded production also accepts an unmarked legacy v7 life',async()=>{
+ const state=createLiveGame({runId:'legacy-grounded',seed:4,engineVersion:7}),context=buildStoryContext(state,prepareOpening(state,{requestId:'opening'}));
+ const result=await generateScene(aiFor([body,menu]),profile,context,{}, {storyActions:true,groundedChoices:true});
+ assert.equal(result.status,'ready',result.errorCode);
+});
+
+test('after an actual repair the writer receives its settled goal, state and ninety days',async()=>{
+ const state=createLiveGame({runId:'repair-goal',seed:3,engineVersion:7,experienceVersion:1,originStories:true}),pending=prepareOpening(state,{requestId:'opening'}),context=buildStoryContext(state,pending);
+ const diagnose={purpose:'检视自身功法缺陷',action:'craft:diagnose',target:'self',stake:'low'},restore={purpose:'自行推演修补功法',action:'craft:restore',target:'self',stake:'low'};
+ const first=await generateScene(aiFor([body,{choices:[diagnose,menu.choices[0]]}]),profile,context,{}, {storyActions:true,groundedChoices:true});
+ assert.equal(first.status,'ready',first.errorCode);
+ let current=commitTurn(state,pending,first.scene),p=prepareChoice(current,{requestId:'diagnose',choiceId:current.currentScene.choices[0].id});
+ const second=await generateScene(aiFor([body,{choices:[restore,menu.choices[0]]}]),profile,buildStoryContext(current,p),{}, {storyActions:true,groundedChoices:true});
+ current=commitTurn(current,p,second.scene);p=prepareChoice(current,{requestId:'repair',choiceId:current.currentScene.choices[0].id});
+ const ai=aiFor([{blocks:[{kind:'narration',text:'三个月后，功法缺处终于补全，山门的槐叶已经落尽。'}],people:[],destinations:[]},input=>{const task=JSON.parse(input.messages.at(-1).content);return {choices:[{label:'亲试补全后的功法',actionRef:task.actions.find(a=>a.action==='practice:steady').ref},{label:'调息恢复推演消耗的灵力',actionRef:task.actions.find(a=>a.action==='rest:recover').ref}]};}]);
+ const result=await generateScene(ai,profile,buildStoryContext(current,p),{}, {storyActions:true,groundedChoices:true});
+ assert.equal(result.status,'ready',result.errorCode);
+ const facts=JSON.parse(ai.calls[0].messages.at(-1).content),world=JSON.parse(ai.calls[0].messages[1].content);
+ assert.equal(facts.elapsedDays,90);assert.equal(facts.technique.repaired,true);assert.match(facts.currentGoal,/功法已修补/u);
+ assert.equal(world['眼前与旧闻'].当前打算,facts.currentGoal);
+ assert.ok(!JSON.stringify(world.memory.recent).includes(body.blocks[0].text));
 });

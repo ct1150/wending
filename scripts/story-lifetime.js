@@ -19,6 +19,7 @@ const checkpoint=path.join(root,'checkpoint.json'),transcript=path.join(root,'tu
 const headers={origin:new URL(base).origin,'content-type':'application/json','X-Story-Actions':'1',...(process.env.WENDING_TEST_VERSION?{'Cloudflare-Workers-Version-Overrides':'baishi-wending="'+process.env.WENDING_TEST_VERSION+'"'}:{})};
 let run;try{run=JSON.parse(await readFile(checkpoint,'utf8'));}catch{run={state:createLiveGame({runId:'lifetime-'+crypto.randomUUID(),seed,name:'林朔',engineVersion:7,experienceVersion:1,originStories:true}),records:[],metrics:{turns:0,failures:[],actions:{},elapsedDays:0,restores:0,maxContextBytes:0,zeroDayStreak:0,maxZeroDayStreak:0},pending:null,attempt:null};}
 const save=()=>writeFile(checkpoint,JSON.stringify(run,null,2));
+run.policy??=process.env.WENDING_LIFE_POLICY??'balanced';
 async function api(route,body){const turn=route==='/api/story/turn';const response=await fetch(new URL(route,base),{method:body?'POST':'GET',headers:{...headers,...(turn?{accept:'text/event-stream','X-Story-Preview':process.env.WENDING_TEST_TRACE?'1':'2'}:{}),...(run.cookie?{cookie:run.cookie}:{})},...(body?{body:JSON.stringify(body)}:{})});const cookie=response.headers.get('set-cookie');if(cookie)run.cookie=cookie.split(';')[0];const text=await response.text();let value;try{if(text.startsWith('data:')){const frames=text.trim().split('\n\n').map(row=>JSON.parse(row.slice(6)));await writeFile(path.join(root,'latest-stream.json'),JSON.stringify(frames,null,2));value=frames.at(-1).result;}else value=JSON.parse(text);}catch{throw Error('Non JSON API response: '+response.status+' '+text.slice(0,180));}return value;}
 if(!run.sessionRef){const session=await api('/api/story/session',{protocolVersion:1});assert.equal(session.status,'ready',JSON.stringify(session));run.sessionRef=session.sessionRef;await save();}
 // Restarting after a recorded terminal failure is an explicit retry. A lost
@@ -29,8 +30,8 @@ function select(){
  assert.ok(offered.length>=2,'at least two generated enabled choices');
  const prior=s.lastReceipt.action;
  function score(c){
-  if(c.intent==='rest')return s.life.injury>0||s.life.cultivationProfile.spirit<30?110:c.approach==='retire'?25:5;
-  if(c.intent==='practice')return c.approach==='breakthrough'?100:c.approach==='forbidden'?15:65;
+  if(c.intent==='rest')return s.life.injury>0||s.life.cultivationProfile.spirit<30?110:c.approach==='retire'?(run.policy==='patient'?85:25):5;
+  if(c.intent==='practice')return c.approach==='breakthrough'?(run.policy==='patient'?40:100):c.approach==='forbidden'?15:65;
   if(c.intent==='craft')return c.approach==='repay'?95:c.approach==='restore'?85:c.approach==='diagnose'?75:c.approach==='study'&&next?.material==='manual'&&!s.life.items.manual?80:40;
   if(c.intent==='explore')return c.targetId===next?.material&&!s.life.items[next.material]?90:c.targetId==='supplies'&&s.life.items.supplies<2?75:35;
   if(c.intent==='travel')return prior?.intent==='travel'?20:50;
@@ -83,5 +84,5 @@ const dead=run.state,settlement=getReincarnationSettlement(dead);assert.ok(settl
 assert.deepEqual(getReincarnationSettlement(deserializeLiveState(serializeLiveState(dead))),settlement);
 const rewards=settlement.availablePoints>=2?['past-memory']:[],child=createLiveGame({runId:'reborn-'+crypto.randomUUID(),seed:seed+'-child',name:'林继',originStories:true,...buildRebirthOptions(dead,rewards)});
 validateReincarnationClaim(reincarnationClaimForChild(child),dead);assert.equal(child.reincarnation.generation,2);
-const report={completed:true,version:process.env.WENDING_TEST_VERSION??'production',seed,metrics:run.metrics,settlement,deathHash:stateHash(dead),childHash:stateHash(child),rewards,childGeneration:child.reincarnation.generation};
+const report={completed:true,version:process.env.WENDING_TEST_VERSION??'production',seed,policy:run.policy,metrics:run.metrics,settlement,deathHash:stateHash(dead),childHash:stateHash(child),rewards,childGeneration:child.reincarnation.generation};
 await writeFile(path.join(root,'report.json'),JSON.stringify(report,null,2));console.log(JSON.stringify(report));

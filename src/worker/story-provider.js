@@ -44,7 +44,7 @@ export async function generateScene(ai,profile,context,options={},runtime={}) {
     const transport=(grounded?createGroundedTransport:createGlmTransport)({ai,context,authoredChoices:true,onProgress:progress,deadlineAt:runtime.deadlineAt,signal:runtime.signal,timeoutMs:options.timeoutMs});
     const activeProfile={...profile,storyActions:runtime.storyActions===true,authoredChoices:true,stagedChoices:grounded};
     let result=await generateProviderScene(transport,activeProfile,context,options,assertValidatedProfile,knowledgeBundle);
-    if(!grounded&&runtime.recoverChoices===true&&runtime.storyActions===true&&context.director?.version===7&&result.errorCode==='CHOICE_NOT_COMPILABLE'&&!runtime.signal?.aborted&&Date.now()<(runtime.deadlineAt??Infinity)){
+    if(runtime.recoverChoices===true&&runtime.storyActions===true&&context.director?.version===7&&result.errorCode==='CHOICE_NOT_COMPILABLE'&&!runtime.signal?.aborted&&Date.now()<(runtime.deadlineAt??Infinity)){
       let prior;
       try{
         const text=transport.lastCompletion.choices[0].message.content;

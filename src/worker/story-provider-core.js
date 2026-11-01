@@ -343,9 +343,9 @@ export async function generateProviderScene(ai,profile,context,options={},assert
     if(!capped&&result.stopReason!=='stop')fail('STOP_REASON_INVALID');
     if(capped&&raw.model!==profile.modelId)fail('MODEL_RESPONSE_MISMATCH');
     if(!result.usage)fail('PROVIDER_USAGE_INVALID');
-    // The trusted production transport composes two separately bounded model
+    // The trusted production transport composes separately bounded model
     // completions. Its sum is accounting, not one overlong completion.
-    const completionLimit=profile.modelId===GLM_MODEL_ID&&profile.stagedChoices===true?2*input.max_tokens:input.max_tokens;
+    const completionLimit=profile.modelId===GLM_MODEL_ID&&profile.stagedChoices===true?3*input.max_tokens:input.max_tokens;
     if(result.usage.completionTokens>completionLimit)fail('OUTPUT_TOO_LARGE');
     // The provider may return both reasoning aliases with whitespace placeholders.
     // Each must be absent/null or a whitespace-only string; a blank alias must
@@ -393,6 +393,10 @@ export async function generateProviderScene(ai,profile,context,options={},assert
         // Source grammar supplies rule-compatible actions. Keep semantic checks
         // for real costs, but do not turn natural names or prose into v7 gates.
         for(const [index,proposal]of scene.choices.entries()){
+          // Detect an explicit authored question mapped to a different rule;
+          // ask the same model for a corrected menu, never reinterpret its
+          // action or silently compile a question as observation or trade.
+          if(profile.stagedChoices===true&&(/^(?:问(?!鼎)|询问|追问|质问|请教|打听|问清)/u.test(purposes[index])||/^(?:向|找).{1,12}(?:询问|请教|打听)/u.test(purposes[index]))&&!(proposal.intent==='interact'&&proposal.approach==='ask'))fail('CHOICE_NOT_COMPILABLE');
           if(proposal.intent==='craft'&&['pledge','repay'].includes(proposal.approach)){
             const spoken=scene.blocks.filter(b=>b.kind==='dialogue'&&b.speaker===proposal.targetId);
             if(proposal.approach==='pledge'&&!spoken.some(b=>offersRepair(b.text)))fail('CHOICE_NOT_COMPILABLE');
