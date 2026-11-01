@@ -44,6 +44,15 @@ export async function generateScene(ai,profile,context,options={},runtime={}) {
     const transport=(grounded?createGroundedTransport:createGlmTransport)({ai,context,authoredChoices:true,onProgress:progress,deadlineAt:runtime.deadlineAt,signal:runtime.signal,timeoutMs:options.timeoutMs});
     const activeProfile={...profile,storyActions:runtime.storyActions===true,authoredChoices:true,stagedChoices:grounded};
     let result=await generateProviderScene(transport,activeProfile,context,options,assertValidatedProfile,knowledgeBundle);
+    if(grounded&&runtime.recoverChoices===true&&result.errorCode==='GENERATED_SCENE_INVALID'&&transport.canRecoverScene&&!runtime.signal?.aborted&&Date.now()<(runtime.deadlineAt??Infinity)){
+      // Regenerate an uncommitted invalid draft from the original receipt and
+      // the model's already-selected legal actions. Never trim an authority
+      // claim into validity or rewrite an archived scene.
+      const first=result;
+      result=await generateProviderScene({run:(model,input)=>transport.repairScene(model,input)},activeProfile,context,options,assertValidatedProfile,knowledgeBundle);
+      if(first.usage&&result.usage)result.usage=Object.fromEntries(Object.keys(first.usage).map(key=>[key,first.usage[key]+result.usage[key]]));
+      else result.accountingStatus='unknown';
+    }
     if(runtime.recoverChoices===true&&runtime.storyActions===true&&context.director?.version===7&&result.errorCode==='CHOICE_NOT_COMPILABLE'&&!runtime.signal?.aborted&&Date.now()<(runtime.deadlineAt??Infinity)){
       let prior;
       try{

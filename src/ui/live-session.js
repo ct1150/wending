@@ -4,6 +4,7 @@ import { stateHash } from '../game/cultivation/live/identity.js';
 import { isExperienceLife, EXPERIENCE_VERSION } from '../game/cultivation/live/experience.js';
 import { buildRebirthOptions } from '../game/cultivation/live/reincarnation.js';
 import {MORTAL_OPENING} from '../game/cultivation/live/mortal-opening.js';
+import {requestRecoverableTurn} from './story-recovery.js';
 const defaultEngine={createLiveGame,prepareOpening,prepareChoice,commitTurn,settleDeath};
 const copy=value=>value===undefined?undefined:JSON.parse(JSON.stringify(value));
 const id=()=>globalThis.crypto.randomUUID();
@@ -141,7 +142,14 @@ export function createLiveSession({archive,client,engine=defaultEngine,onChange=
     emit();
     let active=true;
     try{
-      const result=await client.requestTurn(row.pending,context,attempt,{storyActions:generation.storyActions,onProgress:event=>{
+      const recovered=await requestRecoverableTurn({client,pending:row.pending,context,attempt,storyActions:generation.storyActions,automatic:capability.automaticRecovery===1,replaceAttempt:async(previousAttempt,{reuse})=>{
+        const current=await archive.prepare(row.pending);
+        if(current.attempt?.id!==previousAttempt.id||current.pending?.identity.requestId!==row.pending.identity.requestId)throw fault('ARCHIVE_ATTEMPT_CONFLICT');
+        const authenticated=await client.createSession();
+        attempt=reuse&&authenticated.sessionRef===previousAttempt.sessionRef?previousAttempt:{id:id(),sessionRef:authenticated.sessionRef,retryOf:{attemptId:previousAttempt.id,sessionRef:previousAttempt.sessionRef}};
+        loaded=await archive.setAttempt({runId:row.state.runId,requestId:row.pending.identity.requestId,expectedAttemptId:previousAttempt.id,attempt,generation});
+        preview=null;status='pending';errorCode=null;emit();return attempt;
+      },onProgress:event=>{
         if(!active||loaded?.attempt?.id!==attempt.id||loaded?.pending?.identity.requestId!==row.pending.identity.requestId)return;
         if(event.type==='reset')preview=null;
         else if(event.type==='preview')preview={text:(preview?.text??'')+event.text};
@@ -153,6 +161,7 @@ export function createLiveSession({archive,client,engine=defaultEngine,onChange=
         else if(event.type==='status')generationStatus=event.status;
         onProgress(view());
       }});
+      const result=recovered.result;
       active=false;
       await apply(loaded,result,context);
       return result;

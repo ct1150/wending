@@ -345,7 +345,7 @@ export async function generateProviderScene(ai,profile,context,options={},assert
     if(!result.usage)fail('PROVIDER_USAGE_INVALID');
     // The trusted production transport composes separately bounded model
     // completions. Its sum is accounting, not one overlong completion.
-    const completionLimit=profile.modelId===GLM_MODEL_ID&&profile.stagedChoices===true?3*input.max_tokens:input.max_tokens;
+    const completionLimit=profile.modelId===GLM_MODEL_ID&&profile.stagedChoices===true?4*input.max_tokens:input.max_tokens;
     if(result.usage.completionTokens>completionLimit)fail('OUTPUT_TOO_LARGE');
     // The provider may return both reasoning aliases with whitespace placeholders.
     // Each must be absent/null or a whitespace-only string; a blank alias must

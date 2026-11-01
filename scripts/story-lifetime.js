@@ -11,6 +11,8 @@ import {serializeLiveState,deserializeLiveState} from '../src/game/cultivation/l
 import {stateHash} from '../src/game/cultivation/live/identity.js';
 import {nextRealmFor} from '../src/game/cultivation/live/cultivation-rules.js';
 import {getReincarnationSettlement,buildRebirthOptions,validateReincarnationClaim,reincarnationClaimForChild} from '../src/game/cultivation/live/reincarnation.js';
+import {createStoryClient} from '../src/ui/story-client.js';
+import {requestRecoverableTurn} from '../src/ui/story-recovery.js';
 
 const [base,output,seed='complete-life-2026-11-01']=process.argv.slice(2);
 if(!base||!output)throw Error('Usage: node scripts/story-lifetime.js BASE_URL OUTPUT_DIR [SEED]');
@@ -20,8 +22,23 @@ const headers={origin:new URL(base).origin,'content-type':'application/json','X-
 let run;try{run=JSON.parse(await readFile(checkpoint,'utf8'));}catch{run={state:createLiveGame({runId:'lifetime-'+crypto.randomUUID(),seed,name:'林朔',engineVersion:7,experienceVersion:1,originStories:true}),records:[],metrics:{turns:0,failures:[],actions:{},elapsedDays:0,restores:0,maxContextBytes:0,zeroDayStreak:0,maxZeroDayStreak:0},pending:null,attempt:null};}
 const save=()=>writeFile(checkpoint,JSON.stringify(run,null,2));
 run.policy??=process.env.WENDING_LIFE_POLICY??'balanced';
-async function api(route,body){const turn=route==='/api/story/turn';const response=await fetch(new URL(route,base),{method:body?'POST':'GET',headers:{...headers,...(turn?{accept:'text/event-stream','X-Story-Preview':process.env.WENDING_TEST_TRACE?'1':'2'}:{}),...(run.cookie?{cookie:run.cookie}:{})},...(body?{body:JSON.stringify(body)}:{})});const cookie=response.headers.get('set-cookie');if(cookie)run.cookie=cookie.split(';')[0];const text=await response.text();let value;try{if(text.startsWith('data:')){const frames=text.trim().split('\n\n').map(row=>JSON.parse(row.slice(6)));await writeFile(path.join(root,'latest-stream.json'),JSON.stringify(frames,null,2));value=frames.at(-1).result;}else value=JSON.parse(text);}catch{throw Error('Non JSON API response: '+response.status+' '+text.slice(0,180));}return value;}
-if(!run.sessionRef){const session=await api('/api/story/session',{protocolVersion:1});assert.equal(session.status,'ready',JSON.stringify(session));run.sessionRef=session.sessionRef;await save();}
+const client=createStoryClient({location:new URL(base),fetch:async(route,options)=>{
+ const response=await fetch(new URL(route,base),{...options,headers:{...headers,...options.headers,...(run.cookie?{cookie:run.cookie}:{})}});
+ const cookie=response.headers.get('set-cookie');if(cookie)run.cookie=cookie.split(';')[0];return response;
+}});
+const capability=await client.capabilities();assert.equal(capability.available,true,JSON.stringify(capability));
+if(!run.sessionRef){const session=await client.createSession();run.sessionRef=session.sessionRef;await save();}
+run.metrics.recoveries??=[];
+async function generate(pending,context){
+ return requestRecoverableTurn({client,pending,context,attempt:run.attempt,storyActions:true,automatic:capability.automaticRecovery===1,onProgress:()=>{},
+  onRecovery:event=>{run.metrics.recoveries.push({turn:pending.identity.turnId,...event});console.log(JSON.stringify({recovery:event,turn:pending.identity.turnId}));},
+  replaceAttempt:async(previous,{reuse})=>{
+   const session=await client.createSession();run.sessionRef=session.sessionRef;
+   run.attempt=reuse?previous:{id:'attempt-'+crypto.randomUUID(),sessionRef:session.sessionRef,retryOf:{attemptId:previous.id,sessionRef:previous.sessionRef}};
+   await save();return run.attempt;
+  }
+ });
+}
 // Restarting after a recorded terminal failure is an explicit retry. A lost
 // response with no recorded result keeps its exact attempt for safe replay.
 if(run.attempt&&run.metrics.failures.at(-1)?.result?.attemptId===run.attempt.id){const old=run.attempt;run.attempt={id:'attempt-'+crypto.randomUUID(),sessionRef:run.sessionRef,retryOf:{attemptId:old.id,sessionRef:old.sessionRef}};await save();}
@@ -63,7 +80,7 @@ while(run.state.phase!=='dead'){
  const records=related(),context=buildStoryContext(before,pending,records,{selection:'relevance-v1',openTotal:run.records.filter(r=>['clue','promise'].includes(r.kind)&&r.status==='open').length});
  run.metrics.maxContextBytes=Math.max(run.metrics.maxContextBytes,new TextEncoder().encode(JSON.stringify(context)).length);
  if(!run.attempt){run.attempt={id:'attempt-'+crypto.randomUUID(),sessionRef:run.sessionRef,retryOf:null};await save();}
- const started=Date.now(),result=await api('/api/story/turn',{context,attempt:run.attempt,storyActions:true});
+ const started=Date.now(),{result}=await generate(pending,context);
  if(result.status!=='ready'){
   run.metrics.failures.push({turn:pending.identity.turnId,errorCode:result.errorCode,result});await save();await writeFile(path.join(root,'failure-context.json'),JSON.stringify(context,null,2));throw Error('Turn '+pending.identity.turnId+': '+result.errorCode);
  }
@@ -82,7 +99,10 @@ while(run.state.phase!=='dead'){
 }
 const dead=run.state,settlement=getReincarnationSettlement(dead);assert.ok(settlement);assert.ok(dead.life.injury>=10||dead.life.ageDays>=dead.life.lifeLimit*360);
 assert.deepEqual(getReincarnationSettlement(deserializeLiveState(serializeLiveState(dead))),settlement);
-const rewards=settlement.availablePoints>=2?['past-memory']:[],child=createLiveGame({runId:'reborn-'+crypto.randomUUID(),seed:seed+'-child',name:'林继',originStories:true,...buildRebirthOptions(dead,rewards)});
+const rewards=settlement.availablePoints>=2?['past-memory']:[],child=run.child??createLiveGame({runId:'reborn-'+crypto.randomUUID(),seed:seed+'-child',name:'林继',originStories:true,...buildRebirthOptions(dead,rewards)});
 validateReincarnationClaim(reincarnationClaimForChild(child),dead);assert.equal(child.reincarnation.generation,2);
-const report={completed:true,version:process.env.WENDING_TEST_VERSION??'production',seed,policy:run.policy,metrics:run.metrics,settlement,deathHash:stateHash(dead),childHash:stateHash(child),rewards,childGeneration:child.reincarnation.generation};
+run.child=child;run.childPending??=prepareOpening(child,{requestId:'req-'+crypto.randomUUID()});run.attempt=run.childAttempt??{id:'attempt-'+crypto.randomUUID(),sessionRef:run.sessionRef,retryOf:null};run.childAttempt=run.attempt;await save();
+const childContext=buildStoryContext(child,run.childPending,[]),{result:childResult}=await generate(run.childPending,childContext);assert.equal(childResult.status,'ready',JSON.stringify(childResult));validateGeneratedScene(childResult.scene,childContext);
+const childAfter=commitTurn(child,run.childPending,childResult.scene);assert.equal(childAfter.reincarnation.generation,2);assert.deepEqual(deserializeLiveState(serializeLiveState(childAfter)),childAfter);await writeFile(path.join(root,'child.json'),serializeLiveState(childAfter));
+const report={completed:true,version:process.env.WENDING_TEST_VERSION??'production',seed,policy:run.policy,metrics:run.metrics,settlement,deathAge:dead.life.ageDays/360,deathCause:dead.lastReceipt.death,deathHash:stateHash(dead),childHash:stateHash(childAfter),rewards,childGeneration:childAfter.reincarnation.generation,childOpening:true};
 await writeFile(path.join(root,'report.json'),JSON.stringify(report,null,2));console.log(JSON.stringify(report));

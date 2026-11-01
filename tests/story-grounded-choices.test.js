@@ -205,7 +205,7 @@ test('after an actual repair the writer receives its settled goal, state and nin
  const result=await generateScene(ai,profile,buildStoryContext(current,p),{}, {storyActions:true,groundedChoices:true});
  assert.equal(result.status,'ready',result.errorCode);
  const facts=JSON.parse(ai.calls[0].messages.at(-1).content),world=JSON.parse(ai.calls[0].messages[1].content);
- assert.equal(facts.elapsedDays,90);assert.equal(facts.technique.repaired,true);assert.match(facts.currentGoal,/功法已修补/u);
+ assert.equal(facts.elapsedDays,90);assert.equal(facts.technique,undefined);assert.match(facts.currentGoal,/功法已修补/u);
  assert.equal(world['眼前与旧闻'].当前打算,facts.currentGoal);
  assert.equal(world.life,undefined,'do not repeat the birth-time defective technique as current state');
  assert.match(world.本次结算.当前功法,/已经修补/u);
@@ -243,4 +243,46 @@ test('an official walking into the current scene remains an actual interlocutor'
  const ai=aiFor([prose,input=>{const t=JSON.parse(input.messages[1].content);return {choices:[{actionRef:t.actions.find(a=>a.action==='interact:ask').ref,label:'上前询问考核条件'},{actionRef:t.actions.find(a=>a.action==='practice:steady').ref,label:'按现有功法继续修行'}]};}]);
  const result=await generateScene(ai,profile,context,{}, {storyActions:true,groundedChoices:true});
  assert.equal(result.status,'ready',result.errorCode);assert.equal(result.scene.choices[0].approach,'ask');
+});
+
+test('an omitted-subject departure makes the named actor unavailable for another question',()=>{
+ const {context}=setup(),prose={blocks:[{kind:'narration',text:'灰衣管事收起名册，转身离去。你独自留在外院，准备研习功法。'}],people:[actor],destinations:[]};
+ const input=buildGroundedMenuInput({max_tokens:1536},prose,context),task=JSON.parse(input.messages[1].content);
+ assert.ok(!task.actions.some(a=>a.action==='interact:ask'));
+});
+
+test('an observation label cannot secretly spend a long cultivation period',async()=>{
+ const {context}=setup(),ai=aiFor([body,input=>{const t=JSON.parse(input.messages[1].content);return {choices:[{actionRef:t.actions.find(a=>a.action==='practice:steady').ref,label:'观察管事手里名册上的名字'},{actionRef:t.actions.find(a=>a.action==='rest:recover').ref,label:'调息恢复灵力'}]};},input=>{const t=JSON.parse(input.messages[1].content);return {choices:[{actionRef:t.actions.find(a=>a.action==='interact:observe').ref,label:'观察管事手里名册上的名字'},{actionRef:t.actions.find(a=>a.action==='rest:recover').ref,label:'调息恢复灵力'}]};}]);
+ const result=await generateScene(ai,profile,context,{}, {storyActions:true,groundedChoices:true});
+ assert.equal(result.status,'ready',result.errorCode);assert.equal(ai.calls.length,3);assert.equal(result.scene.choices[0].approach,'observe');
+});
+
+test('a rejected scene can be regenerated from the immutable receipt after a menu correction, within four calls',async()=>{
+ const {state,context}=setup(),badBody={...body,story:{life:{items:{stones:999}}}},fresh=[{kind:'narration',text:'灰衣管事把竹简放回案上，指着北坡药圃说明那边正缺帮工。'}];
+ const ai=aiFor([badBody,{choices:[{label:'前往北坡药圃',actionRef:'missing'},{label:'问管事差事',actionRef:'missing'}]},menu,{blocks:fresh,labels:{a:'询问灰衣管事采办的要求',b:'动身前往北坡药圃'}}]);
+ const result=await generateScene(ai,profile,context,{}, {storyActions:true,groundedChoices:true,recoverChoices:true});
+ assert.equal(result.status,'ready',result.errorCode);assert.equal(ai.calls.length,4);assert.equal(state.revision,0);
+ assert.deepEqual(result.scene.blocks.map(b=>b.text),fresh.map(b=>b.text));assert.equal(result.usage.completionTokens,400);
+ assert.equal(result.scene.story.life,undefined);assert.equal(result.scene.choices[0].approach,'ask');
+});
+
+test('a menu correction after a regenerated scene uses that new prose rather than the rejected draft',async()=>{
+ const {context}=setup(),fresh=[{kind:'narration',text:'雨水敲着偏房的瓦，漏下来的水滴正落在功法旁。你可以在檐下修行，也可以进屋闭关。'}];
+ const primary={choices:[{label:'按现有功法修行',action:'practice:steady',target:'self',stake:'normal'},{label:'闭关打磨当前功法',action:'practice:intensive',target:'self',stake:'normal'}]};
+ const ai=aiFor([{...body,story:{life:{items:{stones:999}}}},primary,{blocks:fresh,labels:{a:'闭关修行',b:'闭关修行'}},input=>{const t=JSON.parse(input.messages[1].content);assert.deepEqual(t.scene.blocks,fresh);const ref=t.actions.find(a=>a.action==='practice:steady').ref;return {choices:[{actionRef:ref,label:'在檐下按功法修行'},{actionRef:t.actions.find(a=>a.action==='practice:intensive').ref,label:'进屋以行粮强化修炼'}]};}]);
+ const result=await generateScene(ai,profile,context,{}, {storyActions:true,groundedChoices:true,recoverChoices:true});
+ assert.equal(result.status,'ready',JSON.stringify({result,calls:ai.calls.length,last:ai.calls.at(-1)?.messages.at(-1)}));assert.equal(ai.calls.length,4);assert.deepEqual(result.scene.blocks.map(b=>b.text),fresh.map(b=>b.text));
+});
+
+test('different captions cannot disguise a duplicate rule action in one menu',async()=>{
+ const {context}=setup(),ai=aiFor([body,input=>{const t=JSON.parse(input.messages[1].content),ref=t.actions.find(a=>a.action==='practice:steady').ref;return {choices:[{actionRef:ref,label:'按旧法闭关修行'},{actionRef:ref,label:'继续按旧法吐纳'}]};},input=>{const t=JSON.parse(input.messages[1].content);return {choices:[{actionRef:t.actions.find(a=>a.action==='practice:steady').ref,label:'按旧法闭关修行'},{actionRef:t.actions.find(a=>a.action==='rest:recover').ref,label:'调息恢复灵力'}]};}]);
+ const result=await generateScene(ai,profile,context,{}, {storyActions:true,groundedChoices:true});
+ assert.equal(result.status,'ready',result.errorCode);assert.equal(ai.calls.length,3);assert.equal(result.scene.choices[1].intent,'rest');
+});
+
+test('an interrupted first provider stream retries the body without losing the original receipt',async()=>{
+ const {state,context}=setup(),failure=Object.assign(Error('interrupted upstream stream'),{code:'PROVIDER_RESPONSE_INVALID'}),ai=aiFor([failure,body,menu]);
+ const result=await generateScene(ai,profile,context,{}, {storyActions:true,groundedChoices:true});
+ assert.equal(result.status,'ready',result.errorCode);assert.equal(ai.calls.length,3);assert.equal(state.revision,0);
+ assert.equal(result.accountingStatus,'unknown');assert.equal(result.usage.completionTokens,200);
 });
