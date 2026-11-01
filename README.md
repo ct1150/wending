@@ -1,6 +1,6 @@
 # 百世问鼎 · 三界求仙篇
 
-**6.1.0 · 剧情行动随场景生成。** 阅读本幕，点击其中一项行动即可继续。出身旧事和天赋注解仍可在命签与人物页查看。
+**6.1.1 · 剧情选项在本回合内修正。** 阅读本幕，点击其中一项行动即可继续。模型生成的选项无法执行时，保留正文并由模型单独修正选项；仍然无法续接时保留原进度。出身旧事和天赋注解仍可在命签与人物页查看。
 
 [线上游戏](https://wending.868656.xyz/) · [成长与轮回设计](docs/superpowers/specs/2026-10-31-producer-experience-design.md) · [剧情可玩性修复](docs/superpowers/plans/2026-10-31-story-choice-recovery.md) · [6.0 主线体验验收](docs/PRODUCER_ACCEPTANCE_6.0.0.md) · [验收记录](docs/QA_REPORT.md)
 
