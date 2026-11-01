@@ -23,7 +23,8 @@ let run;try{run=JSON.parse(await readFile(checkpoint,'utf8'));}catch{run={state:
 const save=()=>writeFile(checkpoint,JSON.stringify(run,null,2));
 run.policy??=process.env.WENDING_LIFE_POLICY??'balanced';
 const client=createStoryClient({location:new URL(base),fetch:async(route,options)=>{
- const response=await fetch(new URL(route,base),{...options,headers:{...headers,...options.headers,...(run.cookie?{cookie:run.cookie}:{})}});
+ const response=await fetch(new URL(route,base),{...options,headers:{...headers,...options.headers,...(process.env.WENDING_TEST_TRACE&&route==='/api/story/turn'?{'X-Story-Preview':'1'}:{}),...(run.cookie?{cookie:run.cookie}:{})}});
+ if(process.env.WENDING_TEST_TRACE&&response.headers.get('content-type')?.includes('text/event-stream')){const id=JSON.parse(options.body).attempt.id;response.clone().text().then(text=>writeFile(path.join(root,id+'.sse'),text)).catch(()=>{});}
  const cookie=response.headers.get('set-cookie');if(cookie)run.cookie=cookie.split(';')[0];return response;
 }});
 let capability,health;

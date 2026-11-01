@@ -60,7 +60,7 @@ test('a second phase cannot rewrite prose or silently lose first phase accountin
  for(const reply of [{...menu,blocks:[{kind:'narration',text:'另一段。'}]},new Error('upstream unavailable')]){
   const ai=aiFor([body,reply]);
   const result=await generateScene(ai,profile,context,{}, {storyActions:true,groundedChoices:true});
-  assert.notEqual(result.status,'ready');assert.equal(result.scene,undefined);assert.equal(state.revision,0);assert.equal(ai.calls.length,2);
+  assert.notEqual(result.status,'ready');assert.equal(result.scene,undefined);assert.equal(state.revision,0);assert.equal(ai.calls.length,reply instanceof Error?2:3);
   assert.equal(result.accountingStatus,'unknown');
  }
 });
@@ -321,4 +321,30 @@ test('typed compatibility choices also require a concrete basis in the finished 
  const ai=aiFor([scene,{choices:[pair('按现有功法长期修炼','practice:steady'),pair('调息恢复灵力','rest:recover')]},{choices:[pair('按锁息旧章长期修炼','practice:steady'),pair('握着缺角石镜调息休养','rest:recover')]}]);
  const result=await generateScene(ai,profile,context,{}, {storyActions:true,groundedChoices:true});
  assert.equal(result.status,'ready',result.errorCode);assert.equal(ai.calls.length,3);assert.equal(result.scene.choices[0].label,'按锁息旧章长期修炼');
+});
+
+test('inspecting a physical rice jar is a valid observation rather than a diagnosis or practice',async()=>{
+ const {context}=setup(),scene={blocks:[{kind:'narration',text:'柴房米缸里还有一袋陈年糙米，可用作行粮。'}],people:[],destinations:[]};
+ const ai=aiFor([scene,input=>{const t=JSON.parse(input.messages[1].content);return {choices:{advance:{actionRef:t.actions.find(a=>a.action==='explore:cautious'&&a.target==='supplies').ref,label:'从柴房附近寻找行粮'},alternative:{actionRef:t.actions.find(a=>a.action==='interact:observe').ref,label:'检视柴房米缸里的陈年糙米'}}};}]);
+ const result=await generateScene(ai,profile,context,{}, {storyActions:true,groundedChoices:true});assert.equal(result.status,'ready',result.errorCode);assert.equal(ai.calls.length,2);assert.equal(result.scene.choices[1].approach,'observe');
+});
+
+test('unexpected menu fields are rejected and corrected against the same body inside the attempt',async()=>{
+ const {context}=setup(),ai=aiFor([body,{...menu,stake:'untrusted extra field'},menu]);
+ const result=await generateScene(ai,profile,context,{}, {storyActions:true,groundedChoices:true});assert.equal(result.status,'ready',result.errorCode);assert.equal(ai.calls.length,3);assert.deepEqual(result.scene.blocks.map(b=>b.text),body.blocks.map(b=>b.text));
+});
+
+test('once cultivation is sufficient the writer gets the missing gate material and the unchanged actual realm',async()=>{
+ let state=createLiveGame({runId:'gate-goal',seed:7,engineVersion:7});
+ for(let i=0;i<4;i++){
+  const p=i?prepareChoice(state,{requestId:'train-'+i,choiceId:state.currentScene.choices[0].id}):prepareOpening(state,{requestId:'opening'}),prefix='gate-'+i;
+  state=commitTurn(state,p,{id:prefix,title:'偏房',location:state.director.world.location,entities:[],blocks:[{kind:'narration',text:'偏房中，旧功法已经摊在案上，门外传来雨声。'}],choices:[{id:prefix+'-practice',label:'按旧功法修炼',intent:'practice',targetId:'self',stake:'normal',approach:'steady'},{id:prefix+'-rest',label:'在偏房调息休养',intent:'rest',targetId:'self',stake:'normal',approach:'recover'}],memoryDeltas:[]});
+ }
+ assert.ok(state.life.cultivation>=2);assert.equal(state.life.items.manual??0,0);
+ const p=prepareChoice(state,{requestId:'gate-next',choiceId:state.currentScene.choices[0].id}),ai=aiFor([body,menu]);
+ const result=await generateScene(ai,profile,buildStoryContext(state,p),{}, {storyActions:true,groundedChoices:true});assert.equal(result.status,'ready',result.errorCode);
+ const facts=JSON.parse(ai.calls[0].messages[1].content);
+ assert.match(facts.currentGoal,/完整功法/u);assert.match(facts.currentGoal,/尚缺/u);
+ assert.match(facts.本次结算.境界变化,/仍为凡人.*没有破境/u);
+ assert.equal(facts.本次结算.修为变化,p.nextLife.cultivation-p.receipt.before.cultivation);
 });
