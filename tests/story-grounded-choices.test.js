@@ -406,3 +406,11 @@ test('a complete caption may reference another concrete current detail than its 
  const schema=ai.calls[1].response_format.json_schema.schema;assert.deepEqual(Object.keys(schema.properties.choices.properties.advance.oneOf[0].properties),['actionRef','basis','label']);assert.ok(schema.$defs.basis.enum.every(word=>scene.blocks[0].text.includes(word)));
  assert.equal(result.scene.choices[0].basis,undefined,'only the model-authored complete caption enters the canonical scene');
 });
+
+
+test('a scene-specific cultivation caption can consolidate the actual technique without a literal practice verb',async()=>{
+ const {context}=setup(),prose={blocks:[{kind:'narration',text:'锁息旧章在经脉中渐趋平稳，林朔收敛浊气，缺角石镜映着稳固的根基。'}],people:[],destinations:[]};
+ const ai=aiFor([prose,input=>{const task=JSON.parse(input.messages[1].content);return {choices:{advance:{actionRef:task.actions.find(a=>a.action==='practice:steady').ref,basis:'锁息旧章',label:'稳固锁息旧章根基'},alternative:{actionRef:task.actions.find(a=>a.action==='interact:observe').ref,basis:'缺角石镜',label:'查看缺角石镜映出的根基'}}};}]);
+ const result=await generateScene(ai,profile,context,{}, {storyActions:true,groundedChoices:true});
+ assert.equal(result.status,'ready',result.errorCode);assert.equal(ai.calls.length,2);assert.equal(result.scene.choices[0].intent,'practice');assert.equal(result.scene.choices[0].approach,'steady');assert.equal(result.scene.choices[0].label,'稳固锁息旧章根基');
+});

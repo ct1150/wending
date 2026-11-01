@@ -46,7 +46,7 @@ const labelPattern=(action,target,name)=>{
  if(action==='craft:restore')return '.*(?:推演|修补|补全|修复).*';
  if(action==='craft:diagnose')return '.*(?:检视|验看|检查|查明|诊明|辨明).*';
  if(action==='practice:breakthrough')return '.*(?:突破|破境|冲关|冲击).*';
- if(action.startsWith('practice:'))return '.*(?:修炼|修习|练功|吐纳|运转|闭关|修行|苦修|打坐|炼功|亲试|试运|打磨).*';
+ if(action.startsWith('practice:'))return '.*(?:修炼|修习|练功|吐纳|运转|闭关|修行|苦修|打坐|炼功|亲试|试运|打磨'+(action==='practice:steady'?'|稳固|巩固|夯实|磨砺|锤炼|潜修|静修|修持|积累|精进':'')+').*';
  return null;
 };
 

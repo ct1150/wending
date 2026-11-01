@@ -30,7 +30,7 @@ const client=createStoryClient({location:new URL(base),fetch:async(route,options
 let capability,health;
 for(let probe=0;probe<20;probe++){
  health=await(await fetch(new URL('/healthz',base),{headers,signal:AbortSignal.timeout(10000)})).json();capability=await client.capabilities();
- if(!process.env.WENDING_TEST_VERSION||capability.automaticRecovery===1&&(!process.env.WENDING_EXPECT_SOURCE||health.sourceCommit===process.env.WENDING_EXPECT_SOURCE))break;
+ if((!process.env.WENDING_TEST_VERSION||capability.automaticRecovery===1)&&(!process.env.WENDING_EXPECT_SOURCE||health.sourceCommit===process.env.WENDING_EXPECT_SOURCE))break;
  await new Promise(resolve=>setTimeout(resolve,1500));
 }
 assert.equal(capability.available,true,JSON.stringify(capability));if(process.env.WENDING_TEST_VERSION)assert.equal(capability.automaticRecovery,1,'candidate has propagated');
