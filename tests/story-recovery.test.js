@@ -45,6 +45,12 @@ test('recovery stops after two attempts and older services retain their original
  calls=0;await requestRecoverableTurn({...options,automatic:false});assert.equal(calls,1);assert.equal(replacements,1);
 });
 
+test('an older service may still return its original identity-free paused result',async()=>{
+ const paused={status:'paused',errorCode:'PROVIDER_TIMEOUT'};
+ const value=await requestRecoverableTurn({client:{async requestTurn(){return paused;}},pending,context:{},attempt,automatic:false});
+ assert.equal(value.result,paused);
+});
+
 test('the game session persists recovery before POST, commits once and never displays the transient failure',async()=>{
  const state=createLiveGame({runId:'ui-recovery',seed:4,engineVersion:7,experienceVersion:1,originStories:true}),p=prepareOpening(state,{requestId:'opening'}),views=[],contexts=[];
  let row={archiveId:'recovery-archive',state,pending:p,attempt:null},calls=0,commits=0;

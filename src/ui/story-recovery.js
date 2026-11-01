@@ -8,7 +8,7 @@ const pause=ms=>new Promise(resolve=>setTimeout(resolve,ms));
 
 export async function requestRecoverableTurn({client,pending,context,attempt,storyActions=false,onProgress,replaceAttempt,automatic=false,onRecovery=()=>{},now=()=>Date.now(),sleep=pause,recoveryMs=125000,pollMs=1500}){
  let current=attempt;
- function identity(value){if(value?.requestId!==pending.identity.requestId||value.attemptId!==current.id||value.sessionRef!==current.sessionRef)throw fault('RESPONSE_IDENTITY_MISMATCH');return value;}
+ function identity(value){if(!automatic&&value?.status!=='ready')return value;if(value?.requestId!==pending.identity.requestId||value.attemptId!==current.id||value.sessionRef!==current.sessionRef)throw fault('RESPONSE_IDENTITY_MISMATCH');return value;}
  async function lookup(started){
   for(;;){
    try{
