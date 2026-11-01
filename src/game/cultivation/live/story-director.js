@@ -1,3 +1,4 @@
+import {MORTAL_OPENING} from './mortal-opening.js';
 import { assertPlainData, canonicalStringify, sha256 } from './identity.js';
 import {buildOpeningBrief,advanceExperienceStory} from './experience-story.js';
 import { isExperienceLife, advancesEvent } from './experience.js';
@@ -59,6 +60,11 @@ export function createStoryDirector(life,seed=0) {
     pacing:{turnId:1,arc:1,startedAt:1,lastBeat:0,nextBeat:10+seeded%11,lastEra:0,pattern:'discovery',completedPatterns:[],sceneHashes:[],setbackStreak:0,pressure:0},
   };
   d.pacing=schedule(d,life,1);
+  if(life.birth?.originId===MORTAL_OPENING.originId){
+    d.destiny={...d.destiny,text:MORTAL_OPENING.destiny,motif:'山门与长生'};
+    d.mystery={...d.mystery,question:MORTAL_OPENING.mystery};
+    d.world={...d.world,location:MORTAL_OPENING.location,faction:MORTAL_OPENING.faction,summary:'外院正在收录来投的少年，杂役须凭差事争取试修机会。'};
+  }
   if(isExperienceLife(life))d.currentGoal=buildOpeningBrief({life,director:d,phase:'opening'}).goal;
   return validateStoryDirector(d);
 }

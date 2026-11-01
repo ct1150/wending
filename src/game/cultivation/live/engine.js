@@ -10,6 +10,7 @@ import { createStoryDirector, advanceStoryDirector } from './story-director.js';
 import { validateReincarnation } from './reincarnation.js';
 import { advanceRetrievalMemory } from './retrieval-memory.js';
 import { ORIGIN_BACKGROUNDS } from './birth-stories.js';
+import {MORTAL_OPENING} from './mortal-opening.js';
 const copy = value => JSON.parse(JSON.stringify(value));
 const nextRandom = value => (Math.imul(value,1664525)+1013904223)>>>0;
 const summary = summarizeLife;
@@ -25,11 +26,16 @@ function rollBirth({seed, originId, engineVersion, lockedTalentId, inheritedBene
  if(!['string','number'].includes(typeof seed)||typeof seed==='number'&&!Number.isFinite(seed)||String(seed).length>200)throw new Error('种子无效。');
  const seededIndex=(label,limit)=>parseInt(sha256('birth-'+label+':'+seed).slice(0,8),16)%limit;
  if(originId==null){
-   // Origin has its own draw so previous seeded lives retain their exact RNG stream.
-   const origins=Object.keys(ORIGINS);
-   originId=origins[seededIndex('origin',origins.length)];
+   // Preserve the old unmarked seed stream for archive reproduction. Every
+   // new marked life now starts from the same ordinary-person background.
+   const origins=Object.keys(ORIGINS).filter(id=>id!==MORTAL_OPENING.originId);
+   originId=originStories?MORTAL_OPENING.originId:origins[seededIndex('origin',origins.length)];
  }
  if(typeof originId!=='string'||!Object.hasOwn(ORIGINS,originId))throw new Error('出身无效。');
+ if(originId===MORTAL_OPENING.originId){
+   if(engineVersion!==7)throw new Error('凡人开局须使用当前修行规则。');
+   originStories=true;experienceVersion=1;
+ }
  let rng=parseInt(sha256(String(seed)).slice(0,8),16);
  const draw=(limit,label)=>{
    rng=nextRandom(rng);

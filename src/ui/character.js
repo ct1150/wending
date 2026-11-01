@@ -2,6 +2,7 @@ import { currentStoryGoal } from '../game/cultivation/live/story-director.js';
 import { realmFor, initialItemsForBirth, ROOTS, PHYSIQUES, RELICS, TECHNIQUES, WORLD_TIERS, INHERITED_BENEFITS, ART_NAMES } from '../game/cultivation/live/cultivation-rules.js';
 import { ITEMS, ORIGINS, TALENTS } from '../game/cultivation/live/model.js';
 import { ORIGIN_BACKGROUNDS, TALENT_STORIES } from '../game/cultivation/live/birth-stories.js';
+import {MORTAL_OPENING} from '../game/cultivation/live/mortal-opening.js';
 const esc = value => String(value ?? '').replace(/[&<>"']/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[char]);
 const realmNames = { mortal: '凡人', qi: '炼气', foundation: '筑基', golden: '金丹', nascent: '元婴' };
 const injuryNames = { 0: '无碍', 1: '轻伤', 2: '内伤', 3: '重伤', none: '无碍', well: '无碍', healthy: '无碍', hurt: '受伤', severe: '重伤' };
@@ -70,6 +71,7 @@ function renderLiveBirthRoll(birth, lockedTalentId, busy) {
   const root = ROOTS[birth.cultivationProfile.rootId];
   const disabled = busy ? ' disabled' : '';
   const history = ORIGIN_BACKGROUNDS[birth.originId]?.[birth.backgroundId];
+  const mortal=birth.originId===MORTAL_OPENING.originId;
   const startingItems = history ? Object.entries(initialItemsForBirth(birth))
     .filter(([, count]) => count > 0)
     .map(([id, count]) => `${ITEMS[id]} × ${count}`).join('、') : '';
@@ -83,8 +85,8 @@ function renderLiveBirthRoll(birth, lockedTalentId, busy) {
   return `<section class="live-birth-roll" aria-labelledby="live-roll-title">
     <div class="birth-fate-heading"><h3 id="live-roll-title">此生命签</h3><button type="button" class="button birth-reroll" data-live-reroll aria-describedby="live-roll-result"${disabled}><span class="birth-dice" aria-hidden="true">⚄</span>再掷一次</button></div>
     <div id="live-roll-result" aria-live="polite" aria-atomic="true">
-      <dl class="live-roll-facts"><div><dt>出身</dt><dd${history ? ' aria-describedby="live-origin-history"' : ''}>${esc(ORIGINS[birth.originId])}</dd></div><div><dt>根骨</dt><dd>${esc(birth.attributes.constitution)}<small> / 6</small></dd></div><div><dt>悟性</dt><dd>${esc(birth.attributes.insight)}<small> / 6</small></dd></div></dl>
-      ${history ? `<div class="live-roll-background"><p id="live-origin-history">${esc(history)}</p><p class="live-birth-kit">随身带着${esc(startingItems)}。</p></div>` : ''}
+      <dl class="live-roll-facts${mortal?' live-roll-facts--mortal':''}">${mortal?'':`<div><dt>出身</dt><dd${history ? ' aria-describedby="live-origin-history"' : ''}>${esc(ORIGINS[birth.originId])}</dd></div>`}<div><dt>根骨</dt><dd>${esc(birth.attributes.constitution)}<small> / 6</small></dd></div><div><dt>悟性</dt><dd>${esc(birth.attributes.insight)}<small> / 6</small></dd></div></dl>
+      ${history&&!mortal ? `<div class="live-roll-background"><p id="live-origin-history">${esc(history)}</p><p class="live-birth-kit">随身带着${esc(startingItems)}。</p></div>` : ''}
       <p class="live-roll-root"><strong>${esc(root.name)}</strong><span>${esc(root.advantage)}${esc(root.defect)}</span></p>
       <span class="live-sr-only">天赋：${birth.talentIds.map(id => esc(TALENTS[id])).join('、')}</span>
     </div>
@@ -94,11 +96,14 @@ function renderLiveBirthRoll(birth, lockedTalentId, busy) {
 }
 
 export function renderLiveBirth({ name = '', birth, lockedTalentId, available = false, busy = false, invalid = false, error = '' } = {}) {
+  const mortal=birth?.originId===MORTAL_OPENING.originId;
+  const startingItems=mortal?Object.entries(initialItemsForBirth(birth)).filter(([,n])=>n>0).map(([id,n])=>`${ITEMS[id]} × ${n}`).join('、'):'';
   return `<section class="birth live-birth"><h2 id="journey-current-title" class="live-sr-only" tabindex="-1">留下名讳</h2>
-    <p class="live-birth-greeting">大道无情，仙路崎岖。 凡人，留下你的名讳，准备踏入这残酷而浩瀚的修仙界：</p>
+    <p class="live-birth-greeting">${mortal?'十六岁这年，你第一次离开石溪村。山门前，还没有人知道你的名字。':'大道无情，仙路崎岖。 凡人，留下你的名讳，准备踏入这残酷而浩瀚的修仙界：'}</p>
     <form id="live-birth-form"><label for="live-name">名讳</label>
       <input id="live-name" name="name" autocomplete="off" spellcheck="false" maxlength="24" aria-required="true" value="${esc(name)}"${busy ? ' disabled' : ''}${invalid ? ' aria-invalid="true" aria-describedby="live-name-error"' : ''}>
       ${invalid ? '<p id="live-name-error" class="notice error" role="alert">姓名无法用于故事，请修改后重新开始。支持中文姓名与常用标点。</p>' : ''}
+      ${mortal?`<section class="live-opening-story" aria-labelledby="live-opening-title"><h3 id="live-opening-title">${esc(MORTAL_OPENING.title)}</h3><p id="live-origin-history">${esc(MORTAL_OPENING.history)}</p><p class="live-birth-kit">随身带着${esc(startingItems)}。身世已定，天资由你掷定。</p></section>`:''}
       ${birth ? renderLiveBirthRoll(birth, lockedTalentId, busy) : ''}
       ${error ? `<p class="notice error" role="status">${esc(error)}</p>` : ''}
       <button type="submit" class="button primary birth-start" data-live-start${!available || !birth || busy ? ' disabled' : ''}>${busy ? '正在安放此身…' : '就以此身，入世'}</button>

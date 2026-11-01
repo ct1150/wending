@@ -3,6 +3,7 @@ import { buildStoryContext, validateGeneratedScene, buildMemoryDelta } from '../
 import { stateHash } from '../game/cultivation/live/identity.js';
 import { isExperienceLife, EXPERIENCE_VERSION } from '../game/cultivation/live/experience.js';
 import { buildRebirthOptions } from '../game/cultivation/live/reincarnation.js';
+import {MORTAL_OPENING} from '../game/cultivation/live/mortal-opening.js';
 const defaultEngine={createLiveGame,prepareOpening,prepareChoice,commitTurn,settleDeath};
 const copy=value=>value===undefined?undefined:JSON.parse(JSON.stringify(value));
 const id=()=>globalThis.crypto.randomUUID();
@@ -96,6 +97,8 @@ export function createLiveSession({archive,client,engine=defaultEngine,onChange=
     const capability=await client.capabilities();
     if(!capability.available)throw fault(capability.errorCode||'SERVICE_UNAVAILABLE');
     const supported=capability.experienceVersion===EXPERIENCE_VERSION;
+    const mortal=options.originId===MORTAL_OPENING.originId||options.originStories===true&&options.originId==null;
+    if(mortal&&capability.openingStoryVersion!==1)throw fault('EXPERIENCE_UNSUPPORTED');
     if(options.originStories && (!supported || capability.originStories!==true || capability.storyActions!==true))throw fault('EXPERIENCE_UNSUPPORTED');
     if(!supported&&(required||Object.hasOwn(options,'experienceVersion')))throw fault('EXPERIENCE_UNSUPPORTED');
     return {options:supported?{...options,experienceVersion:EXPERIENCE_VERSION}:options,capability};
@@ -105,6 +108,7 @@ export function createLiveSession({archive,client,engine=defaultEngine,onChange=
     if(await death(row))return;
     const capability=knownCapability??await client.capabilities();
     if(!capability.available)throw fault(capability.errorCode||'SERVICE_UNAVAILABLE');
+    if(row.state.life.birth.originId===MORTAL_OPENING.originId&&capability.openingStoryVersion!==1)throw fault('EXPERIENCE_UNSUPPORTED');
     if(isExperienceLife(row.state.life)&&capability.experienceVersion!==EXPERIENCE_VERSION)throw fault('EXPERIENCE_UNSUPPORTED');
     if(row.state.life.birth.backgroundId && (capability.originStories!==true || capability.storyActions!==true))throw fault('EXPERIENCE_UNSUPPORTED');
     const storyActions=!row.attempt&&capability.storyActions===true;

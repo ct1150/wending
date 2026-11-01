@@ -1,5 +1,6 @@
 import {checkActorScene} from './actor-insight.js';
 import {ORIGIN_BACKGROUNDS} from './birth-stories.js';
+import {MORTAL_OPENING} from './mortal-opening.js';
 import { assertPlainData, canonicalStringify } from './identity.js';
 import { DAYS_PER_YEAR, ORIGINS, TALENTS, ITEMS, REALMS, LEGACY_ITEMS, LEGACY_INTENTS } from './model.js';
 import { exactKeys, idField, textField, validateProposal, validateEntities, validateGeneratedScene } from './schema.js';
@@ -15,6 +16,7 @@ export function validateBirth(birth) {
  if(Object.hasOwn(birth,'cultivationProfile'))validateV7BirthProfile(birth.cultivationProfile);
  if(typeof birth.originId!=='string'||!Object.hasOwn(ORIGINS,birth.originId)||!Array.isArray(birth.talentIds)||birth.talentIds.length!==2||new Set(birth.talentIds).size!==2||birth.talentIds.some(id=>typeof id!=='string'||!Object.hasOwn(TALENTS,id)))throw new Error('出生条件无效。');
  if(Object.hasOwn(birth,'backgroundId')&&(!isV7Birth(birth)||typeof birth.backgroundId!=='string'||!Object.hasOwn(ORIGIN_BACKGROUNDS[birth.originId],birth.backgroundId)))throw new Error('出身与经历不符。');
+ if(birth.originId===MORTAL_OPENING.originId&&(birth.backgroundId!==MORTAL_OPENING.backgroundId||birth.cultivationProfile?.experienceVersion!==1))throw new Error('凡人开局背景无效。');
  exactKeys(birth.attributes,['constitution','insight','fortune']);
  let total=0;for(const n of Object.values(birth.attributes)){integer(n,1,6);total+=n;}
  if(total!==12)throw new Error('资质必须合计十二点。');

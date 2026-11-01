@@ -48,7 +48,7 @@ test('background membership is validated against origin and legacy births cannot
   assert.throws(() => createLiveGame({runId:'old', originStories:true}));
 });
 
-test('new story lives confirm the same randomly drawn origin even if the caller omits originId', () => {
+test('new marked lives confirm the same fixed origin even if the caller omits originId', () => {
   for (let seed=0; seed<16; seed++) {
     const params={seed,originStories:true,engineVersion:7};
     const preview=rollLiveBirth(params);

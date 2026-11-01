@@ -1,5 +1,5 @@
 export const DAYS_PER_YEAR = 360;
-export const ORIGINS = Object.freeze({village:'山村猎户',artisan:'城坊匠徒',ferry:'渡口短工',exile:'流亡孤儿'});
+export const ORIGINS = Object.freeze({mortal:'寒村少年',village:'山村猎户',artisan:'城坊匠徒',ferry:'渡口短工',exile:'流亡孤儿'});
 export const TALENTS = Object.freeze({'keen-memory':'过目成诵','sensitive-breath':'听息敏锐','iron-bones':'坚韧筋骨','sword-bone':'天生剑骨','flash-wisdom':'刹那慧心','fortune-debt':'福祸相依'});
 export const LEGACY_ITEMS = Object.freeze({stones:'灵石',supplies:'行粮',talisman:'护符',manual:'完整功法',crystal:'地脉灵晶',core:'金丹灵髓',soulseal:'归魂印',skykey:'天门玉钥',iron:'玄铁',relic:'古修遗物'});
 export const ITEMS = Object.freeze({...LEGACY_ITEMS,herbs:'灵草',medicine:'回元丹',elixir:'延寿丹',array:'护身阵盘',artifact:'法器',voidstone:'虚空凝石',unityjade:'合道灵玉',daofruit:'归一灵果',thunderseal:'避劫雷印'});

@@ -18,7 +18,7 @@ test('each seeded preview can be confirmed with exactly the same birth and RNG',
     assert.equal(opening.nextRng, preview.rng);
     assert.deepEqual(engine.rollLiveBirth(options), preview);
   }
-  assert.deepEqual(origins, new Set(Object.keys(ORIGINS)));
+  assert.deepEqual(origins, new Set(['village','artisan','ferry','exile']),'unmarked historical rolls retain their original pool');
 });
 
 test('locking a shown talent preserves the current roll and carries only that talent into new rolls', () => {

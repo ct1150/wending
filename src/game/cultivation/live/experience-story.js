@@ -2,6 +2,7 @@ import {isExperienceLife} from './experience.js';
 import {TECHNIQUES} from './cultivation-rules.js';
 import {ORIGINS} from './model.js';
 import {sha256} from './identity.js';
+import {MORTAL_OPENING} from './mortal-opening.js';
 
 // These are four dilemmas, not four events that have already happened. The
 // saved director seed includes origin; retrying never rolls another opening.
@@ -13,6 +14,10 @@ const openings=[
 ];
 export function buildOpeningBrief({life,director,phase}){
   if(phase!=='opening'||!isExperienceLife(life))return null;
+  if(life.birth.originId===MORTAL_OPENING.originId){
+    const b=life.birth.cultivationProfile,t=TECHNIQUES[b.techniqueId];
+    return {kind:'entry',goal:MORTAL_OPENING.goal,dilemma:MORTAL_OPENING.dilemma,origin:MORTAL_OPENING.name,location:MORTAL_OPENING.location,strength:b.advantages[0],tradeoff:t.defective?t.defect:b.defects[0],technique:t.name};
+  }
   const dilemmaSeed=life.birth.backgroundId ? parseInt(sha256('opening-dilemma:'+director.seed).slice(0,8),16) : director.seed;
   const [kind,goal,dilemma]=openings[dilemmaSeed%openings.length],b=life.birth.cultivationProfile,t=TECHNIQUES[b.techniqueId];
   return {kind,goal,dilemma,origin:ORIGINS[life.birth.originId],location:director.world.location,strength:b.advantages[0],tradeoff:t.defective?t.defect:b.defects[0],technique:t.name};

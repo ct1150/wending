@@ -55,7 +55,7 @@ export const ART_NAMES=Object.freeze({alchemy:'丹道',forging:'器道',formatio
 export const WORLD_TIERS=Object.freeze(['下界','中界','上界']);
 export const WORLD_TRAVEL_APPROACHES=Object.freeze(['ascend','smuggle','rift','ancient-array']);
 export const V7_EXPLORE_TARGETS=Object.freeze(['supplies','stones','manual','crystal','core','soulseal','skykey','relic','iron','herbs','voidstone','unityjade','daofruit','thunderseal']);
-const ORIGIN_ITEMS=Object.freeze({village:{supplies:4,stones:0,herbs:1},artisan:{supplies:2,stones:4,iron:1},ferry:{supplies:4,stones:2},exile:{supplies:2,stones:0,herbs:2,talisman:1}});
+const ORIGIN_ITEMS=Object.freeze({mortal:{supplies:2,stones:0},village:{supplies:4,stones:0,herbs:1},artisan:{supplies:2,stones:4,iron:1},ferry:{supplies:4,stones:2},exile:{supplies:2,stones:0,herbs:2,talisman:1}});
 const BIRTH_KEYS=['version','rootId','physiqueId','relicId','techniqueId','advantages','defects','inheritedBenefits'];
 const PROFILE_KEYS=['version','lifespanBonus','lifespanLoss','spirit','maxSpirit','exposure','worldTier','arts'];
 
