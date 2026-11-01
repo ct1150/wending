@@ -345,6 +345,13 @@ test('once cultivation is sufficient the writer gets the missing gate material a
  const result=await generateScene(ai,profile,buildStoryContext(state,p),{}, {storyActions:true,groundedChoices:true});assert.equal(result.status,'ready',result.errorCode);
  const facts=JSON.parse(ai.calls[0].messages[1].content);
  assert.match(facts.currentGoal,/完整功法/u);assert.match(facts.currentGoal,/尚缺/u);
+ assert.equal(JSON.parse(ai.calls[1].messages[1].content).goal,facts.currentGoal);
  assert.match(facts.本次结算.境界变化,/仍为凡人.*没有破境/u);
  assert.equal(facts.本次结算.修为变化,p.nextLife.cultivation-p.receipt.before.cultivation);
+});
+
+test('a steady practice label cannot claim the food cost of an intensive practice',async()=>{
+ const {context}=setup(),reply=label=>input=>{const t=JSON.parse(input.messages[1].content);return {choices:{advance:{actionRef:t.actions.find(a=>a.action==='practice:steady').ref,label},alternative:{actionRef:t.actions.find(a=>a.action==='interact:ask').ref,label:'询问灰衣管事采办的要求'}}};};
+ const ai=aiFor([body,reply('按功法消耗行粮强化修炼'),reply('回偏房按功法稳步修行')]);
+ const result=await generateScene(ai,profile,context,{}, {storyActions:true,groundedChoices:true});assert.equal(result.status,'ready',result.errorCode);assert.equal(ai.calls.length,3);assert.equal(result.scene.choices[0].label,'回偏房按功法稳步修行');
 });
