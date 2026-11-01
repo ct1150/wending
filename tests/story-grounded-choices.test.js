@@ -201,7 +201,7 @@ test('after an actual repair the writer receives its settled goal, state and nin
  let current=commitTurn(state,pending,first.scene),p=prepareChoice(current,{requestId:'diagnose',choiceId:current.currentScene.choices[0].id});
  const second=await generateScene(aiFor([body,{choices:[restore,menu.choices[0]]}]),profile,buildStoryContext(current,p),{}, {storyActions:true,groundedChoices:true});
  current=commitTurn(current,p,second.scene);p=prepareChoice(current,{requestId:'repair',choiceId:current.currentScene.choices[0].id});
- const ai=aiFor([{blocks:[{kind:'narration',text:'三个月后，功法缺处终于补全，山门的槐叶已经落尽。'}],people:[],destinations:[]},input=>{const task=JSON.parse(input.messages.at(-1).content);return {choices:[{label:'亲试补全后的功法',actionRef:task.actions.find(a=>a.action==='practice:steady').ref},{label:'调息恢复推演消耗的灵力',actionRef:task.actions.find(a=>a.action==='rest:recover').ref}]};}]);
+ const ai=aiFor([{blocks:[{kind:'narration',text:'三个月后，功法缺处终于补全，山门的槐叶已经落尽。'}],people:[],destinations:[]},input=>{const task=JSON.parse(input.messages.at(-1).content);return {choices:[{label:'亲试补全后的功法',actionRef:task.actions.find(a=>a.action==='practice:steady').ref},{label:'在山门槐树下调息恢复灵力',actionRef:task.actions.find(a=>a.action==='rest:recover').ref}]};}]);
  const result=await generateScene(ai,profile,buildStoryContext(current,p),{}, {storyActions:true,groundedChoices:true});
  assert.equal(result.status,'ready',result.errorCode);
  const facts=JSON.parse(ai.calls[0].messages.at(-1).content),world=JSON.parse(ai.calls[0].messages[1].content);
@@ -224,7 +224,7 @@ test('resource references constrain labels to name the actual resource rather th
  const manual=task.actions.find(a=>a.action==='explore:cautious'&&a.target==='manual'),item=input.response_format.json_schema.schema.properties.choices.items;
  const branch=(item.oneOf??[item]).find(row=>row.properties.actionRef.enum.includes(manual.ref));
  assert.match(branch.properties.label.pattern,/完整功法/u);
- assert.deepEqual(Object.keys(branch.properties),['actionRef','label']);
+ assert.deepEqual(Object.keys(branch.properties),['actionRef','label','basis']);
  assert.match(manual.description,/寻找.*完整功法/u);
 });
 
@@ -252,7 +252,7 @@ test('an omitted-subject departure makes the named actor unavailable for another
 });
 
 test('an observation label cannot secretly spend a long cultivation period',async()=>{
- const {context}=setup(),ai=aiFor([body,input=>{const t=JSON.parse(input.messages[1].content);return {choices:[{actionRef:t.actions.find(a=>a.action==='practice:steady').ref,label:'观察管事手里名册上的名字'},{actionRef:t.actions.find(a=>a.action==='rest:recover').ref,label:'调息恢复灵力'}]};},input=>{const t=JSON.parse(input.messages[1].content);return {choices:[{actionRef:t.actions.find(a=>a.action==='interact:observe').ref,label:'观察管事手里名册上的名字'},{actionRef:t.actions.find(a=>a.action==='rest:recover').ref,label:'调息恢复灵力'}]};}]);
+ const {context}=setup(),prose={...body,blocks:[{...body.blocks[0],text:body.blocks[0].text+'管事手里拿着名册。'}]},ai=aiFor([prose,input=>{const t=JSON.parse(input.messages[1].content);return {choices:[{actionRef:t.actions.find(a=>a.action==='practice:steady').ref,label:'观察管事手里名册上的名字'},{actionRef:t.actions.find(a=>a.action==='rest:recover').ref,label:'回偏房调息恢复灵力'}]};},input=>{const t=JSON.parse(input.messages[1].content);return {choices:[{actionRef:t.actions.find(a=>a.action==='interact:observe').ref,label:'观察管事手里名册上的名字'},{actionRef:t.actions.find(a=>a.action==='rest:recover').ref,label:'回偏房调息恢复灵力'}]};}]);
  const result=await generateScene(ai,profile,context,{}, {storyActions:true,groundedChoices:true});
  assert.equal(result.status,'ready',result.errorCode);assert.equal(ai.calls.length,3);assert.equal(result.scene.choices[0].approach,'observe');
 });
@@ -275,7 +275,7 @@ test('a menu correction after a regenerated scene uses that new prose rather tha
 });
 
 test('different captions cannot disguise a duplicate rule action in one menu',async()=>{
- const {context}=setup(),ai=aiFor([body,input=>{const t=JSON.parse(input.messages[1].content),ref=t.actions.find(a=>a.action==='practice:steady').ref;return {choices:[{actionRef:ref,label:'按旧法闭关修行'},{actionRef:ref,label:'继续按旧法吐纳'}]};},input=>{const t=JSON.parse(input.messages[1].content);return {choices:[{actionRef:t.actions.find(a=>a.action==='practice:steady').ref,label:'按旧法闭关修行'},{actionRef:t.actions.find(a=>a.action==='rest:recover').ref,label:'调息恢复灵力'}]};}]);
+ const {context}=setup(),ai=aiFor([body,input=>{const t=JSON.parse(input.messages[1].content),ref=t.actions.find(a=>a.action==='practice:steady').ref;return {choices:[{actionRef:ref,label:'按功法闭关修行'},{actionRef:ref,label:'继续按旧法吐纳'}]};},input=>{const t=JSON.parse(input.messages[1].content);return {choices:[{actionRef:t.actions.find(a=>a.action==='practice:steady').ref,label:'按功法闭关修行'},{actionRef:t.actions.find(a=>a.action==='rest:recover').ref,label:'回偏房调息恢复灵力'}]};}]);
  const result=await generateScene(ai,profile,context,{}, {storyActions:true,groundedChoices:true});
  assert.equal(result.status,'ready',result.errorCode);assert.equal(ai.calls.length,3);assert.equal(result.scene.choices[1].intent,'rest');
 });
@@ -285,4 +285,15 @@ test('an interrupted first provider stream retries the body without losing the o
  const result=await generateScene(ai,profile,context,{}, {storyActions:true,groundedChoices:true});
  assert.equal(result.status,'ready',result.errorCode);assert.equal(ai.calls.length,3);assert.equal(state.revision,0);
  assert.equal(result.accountingStatus,'unknown');assert.equal(result.usage.completionTokens,200);
+});
+
+test('generic rule captions are regenerated with an explicit anchor in the completed prose',async()=>{
+ const state=createLiveGame({runId:'basis',seed:3,engineVersion:7,experienceVersion:1,originStories:true}),context=buildStoryContext(state,prepareOpening(state,{requestId:'opening'})),prose={blocks:[{kind:'narration',text:'锁息旧章在经脉中隐隐作痛，缺角石镜映着窗外的雨。'}],people:[],destinations:[]};
+ const refs=input=>JSON.parse(input.messages[1].content).actions;
+ const ai=aiFor([prose,input=>({choices:[{actionRef:refs(input).find(a=>a.action==='practice:steady').ref,label:'按现有功法长期修炼'},{actionRef:refs(input).find(a=>a.action==='craft:diagnose').ref,label:'辨明自身功法缺陷'}]}),input=>({choices:[{actionRef:refs(input).find(a=>a.action==='practice:steady').ref,label:'按锁息旧章长期修炼',basis:'锁息旧章'},{actionRef:refs(input).find(a=>a.action==='craft:diagnose').ref,label:'检视锁息旧章痛处',basis:'锁息旧章'}]})]);
+ const result=await generateScene(ai,profile,context,{}, {storyActions:true,groundedChoices:true});
+ assert.equal(result.status,'ready',result.errorCode);assert.equal(ai.calls.length,3);
+ assert.deepEqual(result.scene.blocks,prose.blocks);
+ assert.ok(result.scene.choices.every(c=>c.label.includes('锁息旧章')));
+ assert.ok(ai.calls[1].response_format.json_schema.schema.properties.choices.items.oneOf.every(row=>row.required.includes('basis')));
 });

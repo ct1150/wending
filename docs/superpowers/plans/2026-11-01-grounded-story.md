@@ -16,13 +16,22 @@
 
 ## Task 1: Ground generation in the completed scene
 
-- [ ] Add failing integration tests in `tests/story-grounded-choices.test.js`: second input contains the exact scene and selected purpose; candidate actors/destinations require current evidence; catalog uses real costs; streaming retains the body; API settles once; phase failure does not commit.
-- [ ] Add `src/worker/story-grounded-choices.js`: server-only two-phase transport using the existing streaming transport and rules. Keep the canonical decoder/validator as the only acceptance path.
-- [ ] Enable the path in production composition through API runtime configuration, preserving acceptance/legacy provider paths.
+- [x] Add failing integration tests in `tests/story-grounded-choices.test.js`: second input contains the exact scene and selected purpose; candidate actors/destinations require current evidence; catalog uses real costs; streaming retains the body; API settles once; phase failure does not commit.
+- [x] Add `src/worker/story-grounded-choices.js`: server-only two-phase transport using the existing streaming transport and rules. Keep the canonical decoder/validator as the only acceptance path.
+- [x] Enable the path in production composition through API runtime configuration, preserving acceptance/legacy provider paths.
 - [ ] Run targeted tests, full suite, check and release build. Correct failures before integration.
 
 ## Task 2: Complete-life acceptance and release
 
-- [ ] Add an opt-in public API acceptance runner using actual engine prepare/commit, memories and saves, with a reproducible transcript. Select only generated enabled choices, never inject scenes/actions/states.
+- [x] Add an opt-in public API acceptance runner using actual engine prepare/commit, memories and saves, with a reproducible transcript. Select only generated enabled choices, never inject scenes/actions/states.
 - [ ] Run candidate isolation with actual free GLM from birth to rule death; check restore, death settlement, archive and reincarnation. Inspect scene/choice causality throughout, and add regression tests for any discovered defect.
 - [ ] Obtain branch review, pass CI, merge and deploy. Verify deployed source, health and a real generated turn. Record measured coverage and limitations in repository evidence.
+
+## Findings incorporated during real-model acceptance
+
+- Labels now include a concrete basis copied from the finished scene, while the selected rule reference determines all mechanical fields. Generic rule captions are rejected and corrected by the model.
+- Current receipt, location, technique state and translated item deltas override obsolete narrative history.
+- At most four model calls share one original provider deadline; unsuccessful uncommitted drafts may be corrected without changing the receipt.
+- An explicitly advertised frontend recovery path first looks up interrupted attempts, then persists at most one linked retry before POST. Quota and identity failures cannot trigger another inference.
+- Two independent code reviews found departed-actor and observation/practice mismatches; their failing regression tests now pass.
+- Complete-life acceptance remains pending until the final report is produced.

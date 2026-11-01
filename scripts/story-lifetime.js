@@ -18,7 +18,7 @@ const [base,output,seed='complete-life-2026-11-01']=process.argv.slice(2);
 if(!base||!output)throw Error('Usage: node scripts/story-lifetime.js BASE_URL OUTPUT_DIR [SEED]');
 const root=path.resolve(output);await mkdir(root,{recursive:true});
 const checkpoint=path.join(root,'checkpoint.json'),transcript=path.join(root,'turns.jsonl');
-const headers={origin:new URL(base).origin,'content-type':'application/json','X-Story-Actions':'1',...(process.env.WENDING_TEST_VERSION?{'Cloudflare-Workers-Version-Overrides':'baishi-wending="'+process.env.WENDING_TEST_VERSION+'"'}:{})};
+const headers={origin:new URL(base).origin,...(process.env.WENDING_TEST_VERSION?{'Cloudflare-Workers-Version-Overrides':'baishi-wending="'+process.env.WENDING_TEST_VERSION+'"'}:{})};
 let run;try{run=JSON.parse(await readFile(checkpoint,'utf8'));}catch{run={state:createLiveGame({runId:'lifetime-'+crypto.randomUUID(),seed,name:'林朔',engineVersion:7,experienceVersion:1,originStories:true}),records:[],metrics:{turns:0,failures:[],actions:{},elapsedDays:0,restores:0,maxContextBytes:0,zeroDayStreak:0,maxZeroDayStreak:0},pending:null,attempt:null};}
 const save=()=>writeFile(checkpoint,JSON.stringify(run,null,2));
 run.policy??=process.env.WENDING_LIFE_POLICY??'balanced';
