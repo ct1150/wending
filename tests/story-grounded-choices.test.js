@@ -224,7 +224,7 @@ test('resource references constrain labels to name the actual resource rather th
  const manual=task.actions.find(a=>a.action==='explore:cautious'&&a.target==='manual'),item=input.response_format.json_schema.schema.properties.choices.properties.alternative;
  const branch=(item.oneOf??[item]).find(row=>row.properties.actionRef.enum.includes(manual.ref));
  assert.match(branch.properties.label.pattern,/完整功法/u);
- assert.deepEqual(Object.keys(branch.properties),['actionRef','label','basis']);
+ assert.deepEqual(Object.keys(branch.properties),['actionRef','label']);
  assert.match(manual.description,/寻找.*完整功法/u);
 });
 
@@ -295,7 +295,7 @@ test('generic rule captions are regenerated with an explicit anchor in the compl
  assert.equal(result.status,'ready',result.errorCode);assert.equal(ai.calls.length,3);
  assert.deepEqual(result.scene.blocks,prose.blocks);
  assert.ok(result.scene.choices.every(c=>c.label.includes('锁息旧章')));
- assert.ok(ai.calls[1].response_format.json_schema.schema.properties.choices.properties.advance.oneOf.every(row=>row.required.includes('basis')));
+ assert.ok(ai.calls[1].response_format.json_schema.schema.properties.choices.properties.advance.oneOf.every(row=>row.required.includes('label')&&!row.required.includes('basis')));
 });
 
 test('the native menu schema reserves one slot for a positive-time action and accepts the two named slots',async()=>{
@@ -306,4 +306,19 @@ test('the native menu schema reserves one slot for a positive-time action and ac
   return {choices:{advance:{actionRef:t.actions.find(a=>a.action==='practice:steady').ref,label:'回偏房按功法修行',basis:'偏房'},alternative:{actionRef:t.actions.find(a=>a.action==='interact:ask').ref,label:'询问管事采办的要求',basis:'采办'}}};
  }]);
  const result=await generateScene(ai,profile,context,{}, {storyActions:true,groundedChoices:true});assert.equal(result.status,'ready',result.errorCode);assert.equal(result.scene.choices.length,2);assert.equal(ai.calls.length,2);
+});
+
+test('an ordinary field request cannot become feeding the official or an unsupported fight or trade',()=>{
+ const {context}=setup(),scene={blocks:[{kind:'narration',text:'灰衣管事指着田边一株枯黄灵稻，示意你先查看根部。'}],people:[actor],destinations:[]};
+ const task=JSON.parse(buildGroundedMenuInput({},scene,context).messages[1].content);
+ assert.ok(!task.actions.some(a=>a.action==='interact:help'||a.action==='negotiate:cooperate'||a.action.startsWith('fight:')||a.action.startsWith('evade:')));
+ assert.ok(task.actions.some(a=>a.action==='practice:steady'));
+});
+
+test('typed compatibility choices also require a concrete basis in the finished scene',async()=>{
+ const {context}=setup(),scene={blocks:[{kind:'narration',text:'锁息旧章在经脉中隐隐作痛，缺角石镜映着窗外的雨。'}],people:[],destinations:[]};
+ const pair=(label,action)=>({label,action,target:'self',stake:'normal'});
+ const ai=aiFor([scene,{choices:[pair('按现有功法长期修炼','practice:steady'),pair('调息恢复灵力','rest:recover')]},{choices:[pair('按锁息旧章长期修炼','practice:steady'),pair('握着缺角石镜调息休养','rest:recover')]}]);
+ const result=await generateScene(ai,profile,context,{}, {storyActions:true,groundedChoices:true});
+ assert.equal(result.status,'ready',result.errorCode);assert.equal(ai.calls.length,3);assert.equal(result.scene.choices[0].label,'按锁息旧章长期修炼');
 });
