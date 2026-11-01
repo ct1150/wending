@@ -52,6 +52,6 @@ export function createStoryProductionWorker({staticFetch=()=>new Response('Not f
     };
     // Readiness validates the entire policy before any new inference. A retained
     // KV binding alone must not activate retrieval after a policy rollback.
-    return createStoryApi({budget:storyBudgetCoordinator(env),config:{readiness,knowledgeEnabled:config?.knowledge?.enabled===true}}).fetch(request,env,ctx);
+    return createStoryApi({budget:storyBudgetCoordinator(env),config:{readiness,groundedChoices:true,knowledgeEnabled:config?.knowledge?.enabled===true}}).fetch(request,env,ctx);
   }};
 }

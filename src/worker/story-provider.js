@@ -1,6 +1,7 @@
 import { generateProviderScene, validateProviderOptions } from './story-provider-core.js';
 import { GLM_MODEL_ID } from './story-config.js';
 import { createGlmTransport } from './story-glm-provider.js';
+import {createGroundedTransport} from './story-grounded-choices.js';
 import { assertPlainData } from '../game/cultivation/live/identity.js';
 import { idField } from '../game/cultivation/live/schema.js';
 import { validateStoryContext } from '../game/cultivation/live/memory.js';
@@ -39,10 +40,11 @@ export async function generateScene(ai,profile,context,options={},runtime={}) {
   if(profile?.modelId===GLM_MODEL_ID){
     let retainedBlocks=null;
     const progress=event=>runtime.onProgress?.(retainedBlocks&&event.type==='presentation'?{...event,blocks:retainedBlocks}:event);
-    const transport=createGlmTransport({ai,context,authoredChoices:true,onProgress:progress,deadlineAt:runtime.deadlineAt,signal:runtime.signal,timeoutMs:options.timeoutMs});
-    const activeProfile={...profile,storyActions:runtime.storyActions===true,authoredChoices:true};
+    const grounded=runtime.groundedChoices===true&&runtime.storyActions===true&&context.director?.version===7;
+    const transport=(grounded?createGroundedTransport:createGlmTransport)({ai,context,authoredChoices:true,onProgress:progress,deadlineAt:runtime.deadlineAt,signal:runtime.signal,timeoutMs:options.timeoutMs});
+    const activeProfile={...profile,storyActions:runtime.storyActions===true,authoredChoices:true,stagedChoices:grounded};
     let result=await generateProviderScene(transport,activeProfile,context,options,assertValidatedProfile,knowledgeBundle);
-    if(runtime.recoverChoices===true&&runtime.storyActions===true&&context.director?.version===7&&result.errorCode==='CHOICE_NOT_COMPILABLE'&&!runtime.signal?.aborted&&Date.now()<(runtime.deadlineAt??Infinity)){
+    if(!grounded&&runtime.recoverChoices===true&&runtime.storyActions===true&&context.director?.version===7&&result.errorCode==='CHOICE_NOT_COMPILABLE'&&!runtime.signal?.aborted&&Date.now()<(runtime.deadlineAt??Infinity)){
       let prior;
       try{
         const text=transport.lastCompletion.choices[0].message.content;
