@@ -69,3 +69,13 @@ test('zero-byte reads cannot keep a provider operation busy until its wall-clock
   const frames=[...Array(100).fill(new Uint8Array()),packet('ok'),packet('',true),done],ai=binding(frames);
   await assert.rejects(raw(ai),{code:'PROVIDER_RESPONSE_INVALID'});assert.ok(ai.reads<frames.length);assert.equal(ai.calls,1);
 });
+
+test('ordinary small token deltas share preview parses while retaining the exact final scene',async t=>{
+ let clock=Date.now(),inspections=0,index=0;t.mock.method(Date,'now',()=>clock);
+ const wire=capturedStoryWire(),source=JSON.stringify(wire),frames=[...Array.from(source).map(ch=>packet(ch)),packet('',true),done],events=[];
+ const ai={run(){return new ReadableStream({pull(controller){clock+=20;if(index===frames.length)controller.close();else controller.enqueue(frames[index++]);}});}};
+ const out=await createGlmTransport({ai,presentationText:text=>{inspections++;return text;},onProgress:e=>events.push(e)}).run(GLM_MODEL_ID,{max_tokens:STORY_LIMITS.maxOutputTokens});
+ assert.equal(out.choices[0].message.content,source);
+ assert.ok(inspections<=Math.ceil(Array.from(source).length/4)+3,JSON.stringify({inspections,characters:Array.from(source).length}));
+ assert.deepEqual(events.filter(e=>e.type==='presentation').at(-1).blocks.map(b=>b.text),wire.blocks.map(b=>b.text));
+});

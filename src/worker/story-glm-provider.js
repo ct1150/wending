@@ -40,7 +40,7 @@ export function createGlmTransport({ai,context,authoredChoices=false,onProgress=
         const now=Date.now();
         // Preserve the first and final draft. Coalesce only rapid, tiny deltas
         // so a fast token stream does not parse both JSON previews per token.
-        if(!force&&inspectedBytes>=0&&modelSeen===inspectedModel&&contentBytes-inspectedBytes<64&&now-inspectedAt<32)return;
+        if(!force&&inspectedBytes>=0&&modelSeen===inspectedModel&&contentBytes-inspectedBytes<256&&now-inspectedAt<100)return;
         inspectedBytes=contentBytes;inspectedAt=now;inspectedModel=modelSeen;
         const visible=presentationText(text),next=readStoryPreview(visible),draft=readStoryPresentation(visible,context,{authoredChoices});
         const serialized=JSON.stringify(draft);

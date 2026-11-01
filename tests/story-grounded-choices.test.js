@@ -389,3 +389,11 @@ test('one correction explains both generic captions instead of fixing them in se
  const ai=aiFor([scene,input=>{const t=JSON.parse(input.messages[1].content);return {choices:{advance:{actionRef:t.actions.find(a=>a.action==='rest:recover').ref,label:'调息休养恢复灵力伤势'},alternative:{actionRef:t.actions.find(a=>a.action==='interact:observe').ref,label:'查看眼前已有物件或痕迹'}}};},input=>{assert.ok(input.messages.at(-1).content.includes('调息休养恢复灵力伤势'));assert.ok(input.messages.at(-1).content.includes('查看眼前已有物件或痕迹'));const t=JSON.parse(input.messages[1].content);return {choices:{advance:{actionRef:t.actions.find(a=>a.action==='rest:recover').ref,label:'在后山岩缝边调息休养'},alternative:{actionRef:t.actions.find(a=>a.action==='interact:observe').ref,label:'查看岩缝苔藓下的行粮'}}};}]);
  const result=await generateScene(ai,profile,context,{}, {storyActions:true,groundedChoices:true});assert.equal(result.status,'ready',result.errorCode);assert.equal(ai.calls.length,3);
 });
+
+test('the menu highlights current concrete terms and offers a contextual alternative before another training action',()=>{
+ const {context}=setup(),scene={blocks:[{kind:'narration',text:'林朔在后山枯松下静养，缺角石镜映出一枚青色玉简，锁息旧章已经摊在身旁。'}],people:[],destinations:[]};
+ const input=buildGroundedMenuInput({},scene,context),task=JSON.parse(input.messages[1].content);
+ assert.ok(task.groundingTerms.includes('缺角石镜'));assert.ok(task.groundingTerms.includes('锁息旧章'));assert.ok(task.groundingTerms.includes('后山枯松'));
+ assert.equal(input.response_format.json_schema.schema.properties.choices.properties.alternative.oneOf[0].properties.actionRef.enum[0],'observe:self');
+ assert.ok(task.actions.some(a=>a.action==='practice:steady'),'other legal alternatives remain available');
+});
