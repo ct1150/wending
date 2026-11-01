@@ -3,8 +3,9 @@
 // node scripts/story-lifetime.js BASE_URL OUTPUT_DIR [SEED]
 // WENDING_TEST_VERSION optionally selects a zero-traffic Worker candidate.
 import assert from 'node:assert/strict';
-import {mkdir,readFile,writeFile,appendFile} from 'node:fs/promises';
+import {mkdir,readFile,writeFile,appendFile,open} from 'node:fs/promises';
 import path from 'node:path';
+import {readFileSync,unlinkSync} from 'node:fs';
 import {createLiveGame,prepareOpening,prepareChoice,commitTurn,settleDeath,compileChoices} from '../src/game/cultivation/live/engine.js';
 import {buildStoryContext,validateGeneratedScene,buildMemoryDelta,sceneTurnRecord} from '../src/game/cultivation/live/memory.js';
 import {serializeLiveState,deserializeLiveState} from '../src/game/cultivation/live/validation.js';
@@ -17,6 +18,15 @@ import {requestRecoverableTurn} from '../src/ui/story-recovery.js';
 const [base,output,seed='complete-life-2026-11-01']=process.argv.slice(2);
 if(!base||!output)throw Error('Usage: node scripts/story-lifetime.js BASE_URL OUTPUT_DIR [SEED]');
 const root=path.resolve(output);await mkdir(root,{recursive:true});
+// One writer per acceptance output. A killed process can leave this lock;
+// verify it has stopped before manually removing it to resume the same life.
+const lockPath=path.join(root,'runner.lock'),lockOwner=crypto.randomUUID();
+let lock;
+try{lock=await open(lockPath,'wx');}catch(error){if(error.code==='EEXIST')throw Error('Acceptance output already in use; verify the previous runner has stopped before removing '+lockPath);throw error;}
+await lock.writeFile(lockOwner);await lock.close();
+const releaseLock=()=>{try{if(readFileSync(lockPath,'utf8')===lockOwner)unlinkSync(lockPath);}catch{}};
+process.once('exit',releaseLock);
+for(const [signal,status]of [['SIGINT',130],['SIGTERM',143]])process.once(signal,()=>{releaseLock();process.exit(status);});
 const checkpoint=path.join(root,'checkpoint.json'),transcript=path.join(root,'turns.jsonl');
 const headers={origin:new URL(base).origin,...(process.env.WENDING_TEST_VERSION?{'Cloudflare-Workers-Version-Overrides':'baishi-wending="'+process.env.WENDING_TEST_VERSION+'"'}:{})};
 let run;try{run=JSON.parse(await readFile(checkpoint,'utf8'));}catch{run={state:createLiveGame({runId:'lifetime-'+crypto.randomUUID(),seed,name:'林朔',engineVersion:7,experienceVersion:1,originStories:true}),records:[],metrics:{turns:0,failures:[],actions:{},elapsedDays:0,restores:0,maxContextBytes:0,zeroDayStreak:0,maxZeroDayStreak:0},pending:null,attempt:null};}
@@ -27,6 +37,7 @@ const client=createStoryClient({location:new URL(base),fetch:async(route,options
  if(process.env.WENDING_TEST_TRACE&&response.headers.get('content-type')?.includes('text/event-stream')){const id=JSON.parse(options.body).attempt.id;response.clone().text().then(text=>writeFile(path.join(root,id+'.sse'),text)).catch(()=>{});}
  const cookie=response.headers.get('set-cookie');if(cookie)run.cookie=cookie.split(';')[0];return response;
 }});
+if(run.pending)run.pendingSourceCommit??=run.sourceCommit;
 let capability,health;
 for(let probe=0;probe<20;probe++){
  health=await(await fetch(new URL('/healthz',base),{headers,signal:AbortSignal.timeout(10000)})).json();capability=await client.capabilities();
@@ -36,7 +47,7 @@ for(let probe=0;probe<20;probe++){
 assert.equal(capability.available,true,JSON.stringify(capability));if(process.env.WENDING_TEST_VERSION)assert.equal(capability.automaticRecovery,1,'candidate has propagated');
 if(process.env.WENDING_EXPECT_SOURCE)assert.equal(health.sourceCommit,process.env.WENDING_EXPECT_SOURCE);
 run.sourceCommit=health.sourceCommit;run.frontendHash=health.htmlSha256;
-run.runtimeHistory??=[];if(run.runtimeHistory.at(-1)?.sourceCommit!==health.sourceCommit)run.runtimeHistory.push({sourceCommit:health.sourceCommit,fromTurn:run.pending?.identity.turnId??run.state.turnId+1,observer:!!process.env.WENDING_TEST_TRACE});
+run.runtimeHistory??=[];if(run.runtimeHistory.at(-1)?.sourceCommit!==health.sourceCommit)run.runtimeHistory.push({sourceCommit:health.sourceCommit,fromTurn:run.pending?.identity.turnId?(run.pending.identity.turnId+(run.pendingSourceCommit&&run.pendingSourceCommit!==health.sourceCommit?1:0)):run.state.turnId+1,observer:!!process.env.WENDING_TEST_TRACE});
 if(!run.sessionRef){const session=await client.createSession();run.sessionRef=session.sessionRef;await save();}
 run.metrics.recoveries??=[];
 async function generate(pending,context){
@@ -45,6 +56,7 @@ async function generate(pending,context){
   replaceAttempt:async(previous,{reuse})=>{
    const session=await client.createSession();run.sessionRef=session.sessionRef;
    run.attempt=reuse?previous:{id:'attempt-'+crypto.randomUUID(),sessionRef:session.sessionRef,retryOf:{attemptId:previous.id,sessionRef:previous.sessionRef}};
+   if(!reuse)run.pendingSourceCommit=run.sourceCommit;
    if(run.childPending?.identity.requestId===pending.identity.requestId)run.childAttempt=run.attempt;
    await save();return run.attempt;
   }
@@ -83,7 +95,7 @@ function remember(pending,scene){
 }
 while(run.state.phase!=='dead'){
  const before=run.state;
- if(!run.pending){const choice=before.phase==='awaitingOpening'?null:select();run.pending=choice?prepareChoice(before,{requestId:'req-'+crypto.randomUUID(),choiceId:choice.id}):prepareOpening(before,{requestId:'req-'+crypto.randomUUID()});run.attempt=null;await save();}
+ if(!run.pending){const choice=before.phase==='awaitingOpening'?null:select();run.pending=choice?prepareChoice(before,{requestId:'req-'+crypto.randomUUID(),choiceId:choice.id}):prepareOpening(before,{requestId:'req-'+crypto.randomUUID()});run.attempt=null;run.pendingSourceCommit=run.sourceCommit;await save();}
  const pending=run.pending;
  assert.equal(stateHash(deserializeLiveState(serializeLiveState(before))),stateHash(before));run.metrics.restores++;
  // Real rule death needs no inference and cannot be changed by the narrator.
@@ -104,8 +116,8 @@ while(run.state.phase!=='dead'){
  run.metrics.zeroDayStreak=pending.receipt.elapsedDays===0?run.metrics.zeroDayStreak+1:0;run.metrics.maxZeroDayStreak=Math.max(run.metrics.maxZeroDayStreak,run.metrics.zeroDayStreak);
  run.metrics.turns++;run.metrics.elapsedDays+=pending.receipt.elapsedDays;
  remember(pending,result.scene);
- await appendFile(transcript,JSON.stringify({turn:pending.identity.turnId,age:after.life.ageDays/360,realm:after.life.realm,selected:action,receipt:pending.receipt,scene:result.scene,sourceCommit:run.sourceCommit,contextHash:stateHash(context),stateHash:stateHash(after),latencyMs:Date.now()-started})+'\n');
- run.state=after;run.pending=null;run.attempt=null;await save();
+ await appendFile(transcript,JSON.stringify({turn:pending.identity.turnId,age:after.life.ageDays/360,realm:after.life.realm,selected:action,receipt:pending.receipt,scene:result.scene,sourceCommit:run.pendingSourceCommit??run.sourceCommit,contextHash:stateHash(context),stateHash:stateHash(after),latencyMs:Date.now()-started})+'\n');
+ run.state=after;run.pending=null;run.attempt=null;run.pendingSourceCommit=null;await save();
  console.log(JSON.stringify({turn:after.turnId,age:Math.round(after.life.ageDays/36)/10,realm:after.life.realm,injury:after.life.injury,spirit:after.life.cultivationProfile.spirit,selected:action?.label??'开局',text:result.scene.blocks.map(b=>b.text).join(' '),choices:result.scene.choices.map(c=>({text:c.label,action:c.intent+':'+c.approach}))}));
 }
 const dead=run.state,settlement=getReincarnationSettlement(dead);assert.ok(settlement);assert.ok(dead.life.injury>=10||dead.life.ageDays>=dead.life.lifeLimit*360);

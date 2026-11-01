@@ -19,7 +19,7 @@
 - [x] Add failing integration tests in `tests/story-grounded-choices.test.js`: second input contains the exact scene and selected purpose; candidate actors/destinations require current evidence; catalog uses real costs; streaming retains the body; API settles once; phase failure does not commit.
 - [x] Add `src/worker/story-grounded-choices.js`: server-only two-phase transport using the existing streaming transport and rules. Keep the canonical decoder/validator as the only acceptance path.
 - [x] Enable the path in production composition through API runtime configuration, preserving acceptance/legacy provider paths.
-- [ ] Run targeted tests, full suite, check and release build. Correct failures before integration.
+- [x] Run targeted tests, full suite, check and release build. Correct failures before integration.
 
 ## Task 2: Complete-life acceptance and release
 
@@ -40,6 +40,13 @@
 
 Cloudflare invocation metrics confirmed `exceededResources` during long turns despite stream coalescing. Move production turn execution (including original authentication, lookup, rules, retrieval, streaming and accounting) into the existing SQLite StoryBudget object, whose CPU allowance accommodates this work. The public Worker remains a thin forwarding boundary and overwrites the private policy header with its own policy. Keep the singleton identity, storage schema, bindings, hard Free proof, API URLs and cookies unchanged. Session/capability endpoints retain their current behavior.
 
-- [ ] Write failing forwarding and real SQLite integration tests, including trusted policy ownership, replay across restart and inference disabled.
-- [ ] Extract shared production API composition and add the internal DO turn handler. No new namespace or migration.
+- [x] Write failing forwarding and real SQLite integration tests, including trusted policy ownership, replay across restart and inference disabled.
+- [x] Extract shared production API composition and add the internal DO turn handler. No new namespace or migration.
 - [ ] Run full CI and review before a normal production deployment; continue the retained real life against the deployed version and record all development failures honestly.
+
+## Acceptance outcome
+
+- Real exploratory life completed 113 generated turns, reached 240-year lifespan death on turn 114, settled inheritance and generated the actual second-life opening. Development failures were fixed and resumed; this is not a clean final-version life.
+- Final cddff03 version passed all 1,422 native tests and was deployed normally. Fresh acceptance completed 10 turns and stopped at turn 11 on `FREE_QUOTA_EXHAUSTED`. Its save and pending receipt remain available. Do not mark the final-version full-life checklist complete.
+- CLI output now rejects concurrent writers before making API calls; a fixture verified this guard.
+- Sanitized evidence: `docs/evidence/grounded-lifetime-2026-11-01.json`.
