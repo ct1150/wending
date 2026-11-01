@@ -1,3 +1,4 @@
+import {createStoryProductionApi,STORY_RUNTIME_POLICY_HEADER} from './story-production-api.js';
 // One SQLite Durable Object per account/game. No provider work runs inside a
 // transaction. Ledger commitments are independent of expiring response records.
 // Null count/budget limits keep accounting without imposing an application
@@ -149,9 +150,15 @@ export function createBudgetCoordinator({storage,now=Date.now,limits={}}){
 }
 
 export class StoryBudget {
-  constructor(ctx){this.coordinator=createBudgetCoordinator({storage:ctx.storage});this.nextCleanup=0;}
+  constructor(ctx,env={}){this.coordinator=createBudgetCoordinator({storage:ctx.storage});this.nextCleanup=0;this.env=env;this.ctx=ctx;}
   async fetch(request){
     // Reachable only through the singleton internal Durable Object binding.
+    const path=new URL(request.url).pathname;
+    if(path==='/api/story/turn'||path.startsWith('/api/story/turn/')){
+      let config;
+      try{const raw=request.headers.get(STORY_RUNTIME_POLICY_HEADER);if(!raw||raw.length>16384)throw Error();config=JSON.parse(raw);}catch{return new Response(null,{status:400});}
+      return createStoryProductionApi({config,budget:this.coordinator}).fetch(request,this.env,this.ctx);
+    }
     if(request.method!=='POST')return new Response(null,{status:405});
     const method=new URL(request.url).pathname.slice(1);
     if(!['getSession','admit','createSession','lookup','reserve','settle','cleanup','acquireProvider','releaseProvider'].includes(method))return new Response(null,{status:404});

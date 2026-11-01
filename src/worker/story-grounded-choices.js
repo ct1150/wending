@@ -222,7 +222,7 @@ function resolveMenu(menu,plan,context){
   if(Object.hasOwn(row,'actionRef')){
    exactKeys(row,['label','actionRef'],['basis']);const pair=plan.pairs.get(row.actionRef);
    if(!pair||typeof row.label!=='string'||!row.label.trim())throw fault('CHOICE_NOT_COMPILABLE');
-   if(row.basis!==undefined&&(typeof row.basis!=='string'||!plan.terms.includes(row.basis)||!row.label.includes(row.basis)))throw menuFault('basis必须复制groundingTerms原词，且完整按钮必须包含已选basis“'+(typeof row.basis==='string'?row.basis:'')+'”。');
+   if(row.basis!==undefined&&(typeof row.basis!=='string'||!plan.terms.includes(row.basis)))throw menuFault('basis必须复制groundingTerms原词；完整按钮必须点明正文中的具体对象或处境。');
    return {label:row.label,...pair};
   }
   // Compatibility is a typed equality check against this scene's complete

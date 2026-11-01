@@ -35,3 +35,11 @@
 - An explicitly advertised frontend recovery path first looks up interrupted attempts, then persists at most three linked retries before POST. Quota and identity failures cannot trigger another inference.
 - Two independent code reviews found departed-actor and observation/practice mismatches; their failing regression tests now pass.
 - Complete-life acceptance remains pending until the final report is produced.
+
+## Resource-limit correction from real-model evidence
+
+Cloudflare invocation metrics confirmed `exceededResources` during long turns despite stream coalescing. Move production turn execution (including original authentication, lookup, rules, retrieval, streaming and accounting) into the existing SQLite StoryBudget object, whose CPU allowance accommodates this work. The public Worker remains a thin forwarding boundary and overwrites the private policy header with its own policy. Keep the singleton identity, storage schema, bindings, hard Free proof, API URLs and cookies unchanged. Session/capability endpoints retain their current behavior.
+
+- [ ] Write failing forwarding and real SQLite integration tests, including trusted policy ownership, replay across restart and inference disabled.
+- [ ] Extract shared production API composition and add the internal DO turn handler. No new namespace or migration.
+- [ ] Run full CI and review before a normal production deployment; continue the retained real life against the deployed version and record all development failures honestly.
