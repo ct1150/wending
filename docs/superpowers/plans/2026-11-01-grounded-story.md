@@ -29,9 +29,9 @@
 
 ## Findings incorporated during real-model acceptance
 
-- Labels now include a concrete basis copied from the finished scene, while the selected rule reference determines all mechanical fields. Generic rule captions are rejected and corrected by the model.
+- Final labels must name concrete content from the finished scene, including typed compatibility and scene repair paths, while the selected rule reference determines all mechanical fields. Generic rule captions are rejected and corrected by the model.
 - Current receipt, location, technique state and translated item deltas override obsolete narrative history.
 - At most four model calls share one original provider deadline; unsuccessful uncommitted drafts may be corrected without changing the receipt.
-- An explicitly advertised frontend recovery path first looks up interrupted attempts, then persists at most one linked retry before POST. Quota and identity failures cannot trigger another inference.
+- An explicitly advertised frontend recovery path first looks up interrupted attempts, then persists at most three linked retries before POST. Quota and identity failures cannot trigger another inference.
 - Two independent code reviews found departed-actor and observation/practice mismatches; their failing regression tests now pass.
 - Complete-life acceptance remains pending until the final report is produced.

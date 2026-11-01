@@ -18,14 +18,15 @@ export async function requestRecoverableTurn({client,pending,context,attempt,sto
    await sleep(Math.min(pollMs,Math.max(1,started+recoveryMs-now())));
   }
  }
- for(let pass=0;pass<(automatic?2:1);pass++){
+ const maxAttempts=automatic?4:1;
+ for(let pass=0;pass<maxAttempts;pass++){
   const started=now();let value;
   try{value=identity(await client.requestTurn(pending,context,current,{storyActions,onProgress}));}
   catch(error){
    if(!automatic||!network.has(error?.code))throw error;
    onRecovery({kind:'reconnect',code:error.code});value=await lookup(started);
   }
-  if(value.status==='ready'||!automatic||pass===1)return {result:value,attempt:current};
+  if(value.status==='ready'||pass===maxAttempts-1)return {result:value,attempt:current};
   if(value.errorCode==='PROVIDER_BUSY'||value.errorCode==='ATTEMPT_IN_PROGRESS')value=await lookup(started);
   if(value.status==='ready')return {result:value,attempt:current};
   const reuse=['ATTEMPT_NOT_ADMITTED','ATTEMPT_NOT_FOUND'].includes(value.errorCode);

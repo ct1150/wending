@@ -37,12 +37,12 @@ test('quota exhaustion and identity mismatch cannot trigger new inference',async
  assert.equal(replacements,0);
 });
 
-test('recovery stops after two attempts and older services retain their original behavior',async()=>{
+test('recovery stops after four attempts and older services retain their original behavior',async()=>{
  let calls=0,replacements=0;
  const client={async requestTurn(p,c,a){calls++;return result(a,'rejected','CHOICE_NOT_COMPILABLE');}};
  const options={client,pending,context:{},attempt,replaceAttempt:async old=>{replacements++;return {...old,id:'second',retryOf:{attemptId:old.id,sessionRef:old.sessionRef}};}};
- const value=await requestRecoverableTurn({...options,automatic:true});assert.equal(value.result.status,'rejected');assert.equal(calls,2);assert.equal(replacements,1);
- calls=0;await requestRecoverableTurn({...options,automatic:false});assert.equal(calls,1);assert.equal(replacements,1);
+ const value=await requestRecoverableTurn({...options,automatic:true});assert.equal(value.result.status,'rejected');assert.equal(calls,4);assert.equal(replacements,3);
+ calls=0;await requestRecoverableTurn({...options,automatic:false});assert.equal(calls,1);assert.equal(replacements,3);
 });
 
 test('an older service may still return its original identity-free paused result',async()=>{
