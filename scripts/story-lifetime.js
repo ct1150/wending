@@ -26,7 +26,15 @@ const client=createStoryClient({location:new URL(base),fetch:async(route,options
  const response=await fetch(new URL(route,base),{...options,headers:{...headers,...options.headers,...(run.cookie?{cookie:run.cookie}:{})}});
  const cookie=response.headers.get('set-cookie');if(cookie)run.cookie=cookie.split(';')[0];return response;
 }});
-const capability=await client.capabilities();assert.equal(capability.available,true,JSON.stringify(capability));
+let capability,health;
+for(let probe=0;probe<20;probe++){
+ health=await(await fetch(new URL('/healthz',base),{headers})).json();capability=await client.capabilities();
+ if(!process.env.WENDING_TEST_VERSION||capability.automaticRecovery===1&&(!process.env.WENDING_EXPECT_SOURCE||health.sourceCommit===process.env.WENDING_EXPECT_SOURCE))break;
+ await new Promise(resolve=>setTimeout(resolve,1500));
+}
+assert.equal(capability.available,true,JSON.stringify(capability));if(process.env.WENDING_TEST_VERSION)assert.equal(capability.automaticRecovery,1,'candidate has propagated');
+if(process.env.WENDING_EXPECT_SOURCE)assert.equal(health.sourceCommit,process.env.WENDING_EXPECT_SOURCE);
+run.sourceCommit=health.sourceCommit;run.frontendHash=health.htmlSha256;
 if(!run.sessionRef){const session=await client.createSession();run.sessionRef=session.sessionRef;await save();}
 run.metrics.recoveries??=[];
 async function generate(pending,context){
@@ -104,5 +112,5 @@ validateReincarnationClaim(reincarnationClaimForChild(child),dead);assert.equal(
 run.child=child;run.childPending??=prepareOpening(child,{requestId:'req-'+crypto.randomUUID()});run.attempt=run.childAttempt??{id:'attempt-'+crypto.randomUUID(),sessionRef:run.sessionRef,retryOf:null};run.childAttempt=run.attempt;await save();
 const childContext=buildStoryContext(child,run.childPending,[]),{result:childResult}=await generate(run.childPending,childContext);assert.equal(childResult.status,'ready',JSON.stringify(childResult));validateGeneratedScene(childResult.scene,childContext);
 const childAfter=commitTurn(child,run.childPending,childResult.scene);assert.equal(childAfter.reincarnation.generation,2);assert.deepEqual(deserializeLiveState(serializeLiveState(childAfter)),childAfter);await writeFile(path.join(root,'child.json'),serializeLiveState(childAfter));
-const report={completed:true,version:process.env.WENDING_TEST_VERSION??'production',seed,policy:run.policy,metrics:run.metrics,settlement,deathAge:dead.life.ageDays/360,deathCause:dead.lastReceipt.death,deathHash:stateHash(dead),childHash:stateHash(childAfter),rewards,childGeneration:childAfter.reincarnation.generation,childOpening:true};
+const report={completed:true,version:process.env.WENDING_TEST_VERSION??'production',sourceCommit:run.sourceCommit,frontendHash:run.frontendHash,seed,policy:run.policy,metrics:run.metrics,settlement,deathAge:dead.life.ageDays/360,deathCause:dead.lastReceipt.death,deathHash:stateHash(dead),childHash:stateHash(childAfter),rewards,childGeneration:childAfter.reincarnation.generation,childOpening:true};
 await writeFile(path.join(root,'report.json'),JSON.stringify(report,null,2));console.log(JSON.stringify(report));

@@ -141,7 +141,7 @@ test('the menu asks for short button labels and streams their actual authored wo
  const {context}=setup(),choices=menu.choices.map(({purpose,...row})=>({...row,label:purpose})),ai=aiFor([body,{choices}]),events=[];
  const result=await generateScene(ai,profile,context,{}, {storyActions:true,groundedChoices:true,onProgress:e=>events.push(e)});
  assert.equal(result.status,'ready',result.errorCode);
- const item=ai.calls[1].response_format.json_schema.schema.properties.choices.items;
+ const item=ai.calls[1].response_format.json_schema.schema.properties.choices.properties.alternative;
  for(const branch of item.oneOf??[item]){assert.ok(branch.properties.label);assert.equal(branch.properties.purpose,undefined);}
  assert.ok(events.some(e=>e.type==='presentation'&&e.choices.length===2));
  assert.deepEqual(result.scene.choices.map(c=>c.label),choices.map(c=>c.label));
@@ -221,7 +221,7 @@ test('a menu of only questions is corrected into a real opportunity while questi
 
 test('resource references constrain labels to name the actual resource rather than an unrelated paper',()=>{
  const {context}=setup(),input=buildGroundedMenuInput({max_tokens:1536},body,context),task=JSON.parse(input.messages[1].content);
- const manual=task.actions.find(a=>a.action==='explore:cautious'&&a.target==='manual'),item=input.response_format.json_schema.schema.properties.choices.items;
+ const manual=task.actions.find(a=>a.action==='explore:cautious'&&a.target==='manual'),item=input.response_format.json_schema.schema.properties.choices.properties.alternative;
  const branch=(item.oneOf??[item]).find(row=>row.properties.actionRef.enum.includes(manual.ref));
  assert.match(branch.properties.label.pattern,/完整功法/u);
  assert.deepEqual(Object.keys(branch.properties),['actionRef','label','basis']);
@@ -295,5 +295,15 @@ test('generic rule captions are regenerated with an explicit anchor in the compl
  assert.equal(result.status,'ready',result.errorCode);assert.equal(ai.calls.length,3);
  assert.deepEqual(result.scene.blocks,prose.blocks);
  assert.ok(result.scene.choices.every(c=>c.label.includes('锁息旧章')));
- assert.ok(ai.calls[1].response_format.json_schema.schema.properties.choices.items.oneOf.every(row=>row.required.includes('basis')));
+ assert.ok(ai.calls[1].response_format.json_schema.schema.properties.choices.properties.advance.oneOf.every(row=>row.required.includes('basis')));
+});
+
+test('the native menu schema reserves one slot for a positive-time action and accepts the two named slots',async()=>{
+ const {context}=setup(),ai=aiFor([body,input=>{const t=JSON.parse(input.messages[1].content),schema=input.response_format.json_schema.schema.properties.choices;
+  assert.equal(schema.type,'object');assert.deepEqual(schema.required,['advance','alternative']);
+  const refs=schema.properties.advance.oneOf.flatMap(row=>row.properties.actionRef.enum);
+  assert.ok(refs.length>0&&refs.every(ref=>t.actions.find(a=>a.ref===ref).days>0));
+  return {choices:{advance:{actionRef:t.actions.find(a=>a.action==='practice:steady').ref,label:'回偏房按功法修行',basis:'偏房'},alternative:{actionRef:t.actions.find(a=>a.action==='interact:ask').ref,label:'询问管事采办的要求',basis:'采办'}}};
+ }]);
+ const result=await generateScene(ai,profile,context,{}, {storyActions:true,groundedChoices:true});assert.equal(result.status,'ready',result.errorCode);assert.equal(result.scene.choices.length,2);assert.equal(ai.calls.length,2);
 });

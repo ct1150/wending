@@ -104,7 +104,8 @@ export function readStoryPresentation(source,context={},{authoredChoices=false}=
     if(kind==='dialogue'&&!speaker?.name)break;
     blocks.push({kind,...(speaker?{speaker:speaker.name.slice(0,60)}:{}),text:content,complete:block.complete});
   }
-  for(const choice of rows(field(root,'choices')).slice(0,3)){
+  const menu=field(root,'choices'),ordered=authoredChoices&&field(menu,'advance')?[field(menu,'advance'),field(menu,'alternative')].filter(Boolean):rows(menu);
+  for(const choice of ordered.slice(0,3)){
     const action=text(field(choice,'action'),{complete:true,max:40}),resolved=target(field(choice,'target')??field(choice,'targetId')),purpose=text(field(choice,'purpose')??(authoredChoices?field(choice,'label'):undefined),{max:50});
     if(!action||!resolved||purpose===null)break;
     const label=formatStoryChoiceLabel({action,targetId:resolved.id,targetName:resolved.name,purpose,authoredChoices});
