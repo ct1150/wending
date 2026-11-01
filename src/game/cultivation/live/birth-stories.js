@@ -1,6 +1,8 @@
+import {MORTAL_OPENING} from './mortal-opening.js';
 // These are memories from before the opening. They do not put a person, item,
 // or unpaid debt into the current scene.
 export const ORIGIN_BACKGROUNDS = Object.freeze({
+  mortal:{[MORTAL_OPENING.backgroundId]:MORTAL_OPENING.history},
   village: {
     'village-tracks': '带你进山的老猎户右脚有旧伤。他留下的脚印总是一深一浅。',
     'village-whistle': '守山人曾教你用三短一长的鸟哨报平安。外乡人很少知道这个暗号。',

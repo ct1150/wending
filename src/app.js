@@ -65,9 +65,8 @@ function currentBirthOptions() {
     : [];
   return {
     seed:liveBirthDraft.seed,
-    ...(liveBirthDraft.originStories ? {originStories:true, experienceVersion:EXPERIENCE_VERSION} : {}),
+    originStories:true,experienceVersion:EXPERIENCE_VERSION,
     ...(inheritedBenefits.length ? {inheritedBenefits} : {}),
-    ...(liveBirthDraft.originId ? {originId:liveBirthDraft.originId} : {}),
     ...(liveBirthDraft.rolledTalentId ? {lockedTalentId:liveBirthDraft.rolledTalentId} : {}),
   };
 }

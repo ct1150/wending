@@ -193,6 +193,11 @@ body { background: #101d24; }
 .live-birth-roll { padding-block: 12px; border-block: 1px solid var(--line2); }
 .live-birth-roll .birth-fate-heading { flex-wrap: wrap; }
 .live-roll-facts { display: grid; grid-template-columns: 1.4fr 1fr 1fr; gap: 8px; margin: 0; }
+.live-roll-facts--mortal { grid-template-columns: repeat(2,minmax(0,1fr)); }
+.live-opening-story { margin: 22px 0; padding: 18px 0; border-top: 1px solid var(--line2); }
+.live-opening-story h3 { margin: 0 0 10px; color: var(--gold); font: 18px/1.7 var(--serif); }
+.live-opening-story p { margin: 8px 0; font-size: 15px; line-height: 1.9; }
+.live-opening-story .live-birth-kit { font-size: 13px; }
 .live-roll-facts dt, .live-roll-facts small { color: var(--muted); font: 12px/1.6 var(--sans); }
 .live-roll-facts dd { margin: 2px 0 0; font: 18px/1.5 var(--serif); }
 .live-roll-background { margin: 7px 0; font: 15px/1.7 var(--serif); }

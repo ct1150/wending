@@ -7,7 +7,7 @@ test('ready story API announces the supported experience version; paused API can
  const url='https://story.example/api/story/capabilities';
  const ready=createStoryApi({config:{readiness(){}}}),paused=createStoryApi({config:{readiness(){throw Error('offline');}}});
  const first=await (await ready.fetch(new Request(url))).json(),second=await (await paused.fetch(new Request(url))).json();
- assert.equal(first.available,true);assert.equal(first.experienceVersion,1);assert.equal(first.originStories,true);assert.equal(second.available,false);assert.equal(second.experienceVersion,undefined);assert.equal(second.originStories,undefined);
+ assert.equal(first.available,true);assert.equal(first.experienceVersion,1);assert.equal(first.originStories,true);assert.equal(first.openingStoryVersion,1);assert.equal(second.available,false);assert.equal(second.experienceVersion,undefined);assert.equal(second.originStories,undefined);assert.equal(second.openingStoryVersion,undefined);
 });
 
 test('native session negotiates marked birth before replacing storage, rolls back safely and restores a cached marked reply',async t=>{

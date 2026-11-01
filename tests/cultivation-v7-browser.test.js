@@ -10,7 +10,7 @@ test('number keys select only offered model choices, and declining requests a ne
   await page.setViewportSize({width:390,height:844});
   await page.route('https://wending-v7.test/**',async route=>{
     const url=new URL(route.request().url()),json=value=>route.fulfill({status:200,contentType:'application/json',body:JSON.stringify(value)});
-    if(url.pathname==='/api/story/capabilities')return json({protocolVersion:1,available:true,status:'ready',errorCode:null,storyActions:true,experienceVersion:1,originStories:true,limits:{maxRequestBytes:32768,maxResponseBytes:65536,maxContextBytes:7000,timeoutMs:30000}});
+    if(url.pathname==='/api/story/capabilities')return json({protocolVersion:1,available:true,status:'ready',errorCode:null,storyActions:true,experienceVersion:1,originStories:true,openingStoryVersion:1,limits:{maxRequestBytes:32768,maxResponseBytes:65536,maxContextBytes:7000,timeoutMs:30000}});
     if(url.pathname==='/api/story/session')return json({protocolVersion:1,status:'ready',sessionRef:'v7-browser-session',expiresAt:Date.now()+86400000});
     if(url.pathname==='/api/story/turn') {
       posts++;const {context,attempt}=route.request().postDataJSON(),prefix=context.namespace+':t'+context.identity.turnId+':';
@@ -31,7 +31,7 @@ test('number keys select only offered model choices, and declining requests a ne
   const revision=value=>page.locator(`[data-live-choice][data-revision="${value}"]:enabled`).first().waitFor();
   await page.goto('https://wending-v7.test/');
   await page.locator('[data-title-new]:enabled').click();
-  await page.getByText('大道无情，仙路崎岖。 凡人，留下你的名讳，准备踏入这残酷而浩瀚的修仙界：',{exact:true}).waitFor();
+  await page.locator('#live-birth-form').waitFor();
   await page.locator('#live-name').fill('问溪');await page.locator('[data-live-start]').click();await revision(1);
   const opening=await read();assert.equal(opening.state.life.cultivationProfile.version,7);assert.equal(posts,1);
   assert.equal(await page.locator('[data-live-choice]').count(),3);

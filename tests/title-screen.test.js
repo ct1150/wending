@@ -19,7 +19,7 @@ async function fixture(t) {
   await page.addInitScript(()=>{window.showSaveFilePicker=undefined;});
   await context.route('https://wending-title.test/**',async route=>{
     const url=new URL(route.request().url()),json=value=>route.fulfill({status:200,contentType:'application/json',body:JSON.stringify(value)});
-    if(url.pathname==='/api/story/capabilities')return json({protocolVersion:1,available:true,status:'ready',errorCode:null,storyActions:true,experienceVersion:1,originStories:true,limits:{maxRequestBytes:32768,maxResponseBytes:65536,maxContextBytes:7000,timeoutMs:30000}});
+    if(url.pathname==='/api/story/capabilities')return json({protocolVersion:1,available:true,status:'ready',errorCode:null,storyActions:true,experienceVersion:1,originStories:true,openingStoryVersion:1,limits:{maxRequestBytes:32768,maxResponseBytes:65536,maxContextBytes:7000,timeoutMs:30000}});
     if(url.pathname==='/api/story/session')return json({protocolVersion:1,status:'ready',sessionRef:'title-session',expiresAt:Date.now()+86400000});
     if(url.pathname==='/api/story/turn') {
       posts++;const {context:c,attempt}=route.request().postDataJSON();
@@ -139,21 +139,22 @@ test('one selected talent survives a reroll and the last displayed hand becomes 
   assertBirthStory(await page.locator('#dialog[open]').innerText(), state.life.birth);
 });
 
-test('an off-hand talent in a restored draft cannot become a hidden lock on the next reroll', async t => {
+test('an older creation draft uses the sole background and cannot hide an off-hand talent lock', async t => {
   const f = await fixture(t), { page } = f;
   await page.locator('[data-title-new]:enabled').click();
   // The original hand would contain keen-memory, but a previous lock replaced it with sword-bone.
   await page.evaluate(() => {
     const key = 'wending-navigation-v1', navigation = JSON.parse(sessionStorage.getItem(key));
-    Object.assign(navigation.draft, {name: '林照', seed: '2', rolledTalentId: 'sword-bone', lockedTalentId: 'keen-memory'});
+    Object.assign(navigation.draft, {name: '林照', seed: '2', originId:'exile', rolledTalentId: 'sword-bone', lockedTalentId: 'keen-memory'});
     delete navigation.draft.originStories;
     sessionStorage.setItem(key, JSON.stringify(navigation));
   });
   await page.reload();
   const form = page.locator('#live-birth-form');
   assert.equal(await form.locator('#live-name').inputValue(), '林照');
-  assertDisplayedBirth(await form.innerText(), rollLiveBirth({seed: '2', lockedTalentId: 'sword-bone'}).birth);
-  assert.equal(await form.locator('#live-origin-history').count(), 0);
+  assertDisplayedBirth(await form.innerText(), rollLiveBirth({seed: '2', lockedTalentId: 'sword-bone',originStories:true,experienceVersion:1}).birth);
+  assert.equal(await form.locator('#live-origin-history').count(), 1);
+  assert.doesNotMatch(await form.innerText(),/流亡孤儿|山村猎户|城坊匠徒|渡口短工/u);
   assert.equal(await form.locator('[data-live-lock="keen-memory"]').count(), 0);
   await form.locator('[data-live-reroll]').click();
   assert.equal(await form.locator('[data-live-lock][aria-pressed="true"]').count(), 0);
@@ -161,6 +162,10 @@ test('an off-hand talent in a restored draft cannot become a hidden lock on the 
   assertDisplayedBirth(await form.innerText(), rollLiveBirth({seed, originStories: true, experienceVersion: 1}).birth);
   assert.equal(await f.read(), null);
   assert.equal(f.posts, 0);
+  const expected=rollLiveBirth({seed,originStories:true,experienceVersion:1}).birth;
+  await form.locator('[data-live-start]:enabled').click();
+  await page.locator('[data-live-choice]:enabled').first().waitFor();
+  const created=await f.read();assert.equal(created.state.life.birth.originId,'mortal');assert.deepEqual(created.state.life.birth,expected);
 });
 
 test('the one current journey and its pending turn survive refresh and a new visit without another POST',async t=>{

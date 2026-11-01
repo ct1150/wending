@@ -6,6 +6,7 @@ import { assertPlainData, canonicalStringify, sha256 } from '../game/cultivation
 import { validateStoryContext, validateGeneratedScene, STORY_ERROR_CODES } from '../game/cultivation/live/memory.js';
 import { REALMS, DAYS_PER_YEAR, ITEMS, ORIGINS, TALENTS } from '../game/cultivation/live/model.js';
 import { ORIGIN_BACKGROUNDS, TALENT_STORIES } from '../game/cultivation/live/birth-stories.js';
+import {MORTAL_OPENING} from '../game/cultivation/live/mortal-opening.js';
 import { isV7Life, realmFor, nextRealmFor, ROOTS, PHYSIQUES, RELICS, TECHNIQUES, WORLD_TIERS } from '../game/cultivation/live/cultivation-rules.js';
 import { buildGenerationSchema } from './story-generation-schema.js';
 import { buildGlmWire,decodeGlmScene,endsSelectedInteraction } from './story-glm-wire.js';
@@ -96,6 +97,7 @@ export function validateProviderOptions(profile,options,assertProfileReady) {
   return timeoutMs;
 }
 function settledLocation(context) {
+  if(context.phase==='opening'&&context.life.birth.originId===MORTAL_OPENING.originId)return MORTAL_OPENING.location;
   const action=context.receipt.action,check=context.receipt.cultivationResult?.check;
   if(action?.intent==='travel'&&!(check?.kind==='world-crossing'&&check.success===false))return context.entities.find(entity=>entity.id===action.targetId&&entity.kind==='place')?.name;
   if(context.phase==='choice'&&context.director)return context.director.world.location;
@@ -200,6 +202,7 @@ function buildProviderRequest(profile,context,knowledgeBundle,choiceRepair) {
     input.messages[1].content=JSON.stringify(prompt);
     input.messages[0].content+='\n'+BIRTH_STORY_GUIDANCE;
   }
+  if(context.life.birth.originId===MORTAL_OPENING.originId)input.messages[0].content+='\n'+MORTAL_OPENING.guidance+(context.phase==='opening'?'\n'+MORTAL_OPENING.openingGuidance:'');
   if(context.previousLife){
     const prompt=JSON.parse(input.messages[1].content);
     delete prompt.previousLife;
