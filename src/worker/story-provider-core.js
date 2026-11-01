@@ -396,7 +396,7 @@ export async function generateProviderScene(ai,profile,context,options={},assert
           // Detect an explicit authored question mapped to a different rule;
           // ask the same model for a corrected menu, never reinterpret its
           // action or silently compile a question as observation or trade.
-          if(profile.stagedChoices===true&&(/^(?:问(?!鼎)|询问|追问|质问|请教|打听|问清)/u.test(purposes[index])||/^(?:向|找).{1,12}(?:询问|请教|打听)/u.test(purposes[index]))&&!(proposal.intent==='interact'&&proposal.approach==='ask'))fail('CHOICE_NOT_COMPILABLE');
+          if(profile.stagedChoices===true&&(/^问(?!鼎)/u.test(purposes[index])||/(?:询问|追问|质问|请教|打听|问清)/u.test(purposes[index])&&!/^(?:观察|查看|细看|辨认|翻阅|翻看|核对)/u.test(purposes[index]))&&!(proposal.intent==='interact'&&proposal.approach==='ask'))fail('CHOICE_NOT_COMPILABLE');
           if(proposal.intent==='craft'&&['pledge','repay'].includes(proposal.approach)){
             const spoken=scene.blocks.filter(b=>b.kind==='dialogue'&&b.speaker===proposal.targetId);
             if(proposal.approach==='pledge'&&!spoken.some(b=>offersRepair(b.text)))fail('CHOICE_NOT_COMPILABLE');
