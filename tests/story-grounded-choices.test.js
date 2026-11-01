@@ -118,13 +118,15 @@ test('reported absence and portraits cannot establish an interlocutor',async()=>
  }
 });
 
-test('a stocked mortal life and six current targets fit the production request limit',async()=>{
+test('a stocked mortal life and six peaceful or threatened targets fit the production request limit',async()=>{
  const {context}=setup(),rich=structuredClone(context);
  for(const key of ['stones','supplies','manual','relic','herbs','iron','medicine','elixir','array','artifact','talisman'])rich.life.items[key]=10;
  const people=['陈掌柜','周药师','王师兄'].map(name=>({kind:'person',name}));
  const prose={blocks:[{kind:'narration',text:'灰衣管事与陈掌柜、周药师、王师兄在外院偏房前议事。北坡药圃正缺帮手。'}],cast:[actor,destination,...people,{kind:'place',name:'外院偏房'}]};
  const input=buildGroundedMenuInput({max_tokens:1536},prose,rich);
  assert.ok(new TextEncoder().encode(JSON.stringify(input)).length<=24576);
+ const battle={...prose,blocks:[{kind:'narration',text:prose.blocks[0].text+'有人拔剑围攻，饥饿的弟子求分行粮，许诺用灵石换取帮工报酬。'+'山雨不停，外院石阶已经积满落叶，屋檐的水珠一滴滴落在刀鞘上。'.repeat(8)}]};
+ assert.ok(new TextEncoder().encode(JSON.stringify(buildGroundedMenuInput({max_tokens:1536},battle,rich))).length<=24576);
 });
 
 test('a continuing named actor can be referred to by a unique visible role',async()=>{
@@ -223,7 +225,7 @@ test('resource references constrain labels to name the actual resource rather th
  const {context}=setup(),input=buildGroundedMenuInput({max_tokens:1536},body,context),task=JSON.parse(input.messages[1].content);
  const manual=task.actions.find(a=>a.action==='explore:cautious'&&a.target==='manual'),item=input.response_format.json_schema.schema.properties.choices.properties.alternative;
  const branch=(item.oneOf??[item]).find(row=>row.properties.actionRef.enum.includes(manual.ref));
- assert.match(branch.properties.label.pattern,/完整功法/u);
+ assert.ok(branch.properties.actionRef.enum.includes(manual.ref));
  assert.deepEqual(Object.keys(branch.properties),['actionRef','label']);
  assert.match(manual.description,/寻找.*完整功法/u);
 });
@@ -346,6 +348,7 @@ test('once cultivation is sufficient the writer gets the missing gate material a
  const facts=JSON.parse(ai.calls[0].messages[1].content);
  assert.match(facts.currentGoal,/完整功法/u);assert.match(facts.currentGoal,/尚缺/u);
  assert.equal(JSON.parse(ai.calls[1].messages[1].content).goal,facts.currentGoal);
+ assert.deepEqual(JSON.parse(ai.calls[1].messages[1].content).actions.slice(0,1).map(a=>[a.action,a.target]),[['explore:cautious','manual']]);
  assert.match(facts.本次结算.境界变化,/仍为凡人.*没有破境/u);
  assert.equal(facts.本次结算.修为变化,p.nextLife.cultivation-p.receipt.before.cultivation);
  assert.equal(facts.cultivation,undefined,'an internal progress counter is not a fictional number of realm layers');
@@ -354,6 +357,7 @@ test('once cultivation is sufficient the writer gets the missing gate material a
  const low=prepareChoice(state,{requestId:'low-spirit',choiceId:state.currentScene.choices[0].id}),lowAi=aiFor([body,menu]);
  await generateScene(lowAi,profile,buildStoryContext(state,low),{}, {storyActions:true,groundedChoices:true});
  assert.match(JSON.parse(lowAi.calls[0].messages[1].content).currentGoal,/休养/u);
+ assert.equal(JSON.parse(lowAi.calls[1].messages[1].content).actions[0].action,'rest:recover');
 });
 
 test('a steady practice label cannot claim the food cost of an intensive practice',async()=>{
@@ -373,4 +377,9 @@ test('asking an official for food cannot masquerade as physically searching for 
  const {context}=setup(),reply=label=>input=>{const t=JSON.parse(input.messages[1].content);return {choices:{advance:{actionRef:t.actions.find(a=>a.action==='explore:cautious'&&a.target==='supplies').ref,label},alternative:{actionRef:t.actions.find(a=>a.action==='interact:ask').ref,label:'询问灰衣管事采办的要求'}}};};
  const ai=aiFor([body,reply('向灰衣管事讨要行粮补给'),reply('到北坡药圃寻找行粮')]);
  const result=await generateScene(ai,profile,context,{}, {storyActions:true,groundedChoices:true});assert.equal(result.status,'ready',result.errorCode);assert.equal(ai.calls.length,3);
+});
+
+test('the final resource caption must search for its actual resource rather than an unrelated paper',async()=>{
+ const {context}=setup(),reply=label=>input=>{const t=JSON.parse(input.messages[1].content);return {choices:{advance:{actionRef:t.actions.find(a=>a.action==='explore:cautious'&&a.target==='manual').ref,label},alternative:{actionRef:t.actions.find(a=>a.action==='interact:ask').ref,label:'询问灰衣管事采办的要求'}}};};
+ const ai=aiFor([body,reply('去偏房寻找一页名册'),reply('去偏房寻找完整功法')]);const result=await generateScene(ai,profile,context,{}, {storyActions:true,groundedChoices:true});assert.equal(result.status,'ready',result.errorCode);assert.equal(ai.calls.length,3);
 });
