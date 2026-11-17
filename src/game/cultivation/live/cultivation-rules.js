@@ -163,11 +163,14 @@ function modifiers(life){
 
 // Proposals express a finite intention. All amounts, durations, checks and
 // consequences are supplied here; model text never supplies numeric effects.
+export function initialV7ActionRule(days){
+  return {days,items:{},gain:{},cultivation:0,injury:0,relationship:0,risk:0,realm:null,spiritCost:0,spiritGain:0,lifeLoss:0,lifeGain:0,exposure:0,checkKind:null,chance:100,failureInjury:0,art:null,worldTier:null,arrivalExposure:0,warnings:[]};
+}
 export function v7ActionRule(state,p){
   requireValue(validV7Target(state,p),'行动目标不属于可执行规则。');
   const life=state.life,realm=realmFor(life),profile=life.cultivationProfile,m=modifiers(life),factor=p.stake==='high'?2:p.stake==='low'?0:1;
   const hasStoryTalent=id=>Boolean(life.birth.backgroundId)&&life.birth.talentIds.includes(id);
-  const rule={days:30,items:{},gain:{},cultivation:0,injury:0,relationship:0,risk:0,realm:null,spiritCost:0,spiritGain:0,lifeLoss:0,lifeGain:0,exposure:0,checkKind:null,chance:100,failureInjury:0,art:null,worldTier:null,arrivalExposure:0,warnings:[]};
+  const rule=initialV7ActionRule(30);
   const check=(kind,chance,failureInjury=1)=>{rule.checkKind=kind;rule.chance=clamp(Math.round(chance),5,99);rule.failureInjury=failureInjury;};
   switch(p.intent){
     case 'rest':

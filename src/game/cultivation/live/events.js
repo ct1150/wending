@@ -1,6 +1,7 @@
 import {assertPlainData,canonicalStringify,sha256} from './identity.js';
 import {exactKeys} from './schema.js';
-import {ITEMS} from './model.js';
+import {ITEMS,DAYS_PER_YEAR} from './model.js';
+import {initialV7ActionRule} from './cultivation-rules.js';
 import {eventNode,eventEntities,eventLocation} from './event-content.js';
 import {riverCases,validateRiver} from './river-chronicle.js';
 import {validateExpedition} from './expedition.js';
@@ -34,17 +35,14 @@ function selected(state,action){
  return option;
 }
 export function eventActionRule(state,proposal,baseRule){
- const option=selected(state,proposal),rule={...baseRule,items:{...baseRule.items},gain:{...baseRule.gain},warnings:[...baseRule.warnings]};
- if(option.navigation)Object.assign(rule,{days:0,items:{},gain:{},cultivation:0,injury:0,relationship:0,risk:0,realm:null,spiritCost:0,spiritGain:0,lifeLoss:0,lifeGain:0,exposure:0,checkKind:null,chance:100,warnings:[],eventNavigation:true});
- if(option.rule)Object.assign(rule,copy(option.rule));
- delete rule.reason;
+ const option=selected(state,proposal);
+ if(option.navigation)return {...initialV7ActionRule(0),eventNavigation:true};
+ if(!option.rule)return baseRule;
+ const rule={...initialV7ActionRule(0),...copy(option.rule)};
  for(const [id,count] of Object.entries(rule.items))if((state.life.items[id]??0)<count)rule.reason='缺少'+ITEMS[id]+'。';
  for(const [id,count] of Object.entries(rule.gain))if((state.life.items[id]??0)-(rule.items[id]??0)+count>9999)rule.reason='行囊已经装不下。';
  if(state.life.cultivationProfile.spirit<rule.spiritCost)rule.reason='灵力不足，须先调息。';
- // Keep requirements from unmodified cultivation rules (threshold, injury,
- // realm access and repair contracts); an authored override only changes the
- // particular, explicitly defined task's costs and gains.
- if(!option.navigation&&!option.rule&&baseRule.reason)rule.reason=baseRule.reason;
+ if(state.life.ageDays+rule.days>=state.life.lifeLimit*DAYS_PER_YEAR)rule.warnings.push('此行动无法在当前寿元上限前完成，途中寿尽将无法得到成果。');
  return rule;
 }
 export function advanceEvents(state,receipt){

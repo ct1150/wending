@@ -43,6 +43,14 @@ test('free questions and menus cannot farm items, reroll risk, or accept an unch
  assert.equal(state.rng,rng);assert.deepEqual(state.life.items,items);assert.equal(state.life.ageDays,age);assert.equal(state.events.entry,'unresolved');
 });
 
+test('being paid a manual for nursery work never activates the treasure compass',()=>{
+ const seed=Array.from({length:100},(_,i)=>i).find(i=>engine.createLiveGame({...options,seed:i}).life.birth.cultivationProfile.relicId==='rusted-needle');
+ assert.notEqual(seed,undefined);
+ const before=choose(opening({seed}),'accept'),after=choose(before,'finish-work');
+ assert.equal(after.life.cultivationProfile.exposure,before.life.cultivationProfile.exposure);
+ assert.equal(after.life.items.manual,(before.life.items.manual??0)+1);
+});
+
 test('a companion decision persists and aid has an actual cost without taking over the entry quest',()=>{
  let state=choose(choose(opening(),'ask'),'companion');
  const supplies=state.life.items.supplies;state=choose(state,'aid');
