@@ -7,6 +7,7 @@ import {riverCases,validateRiver} from './river-chronicle.js';
 import {validateExpedition} from './expedition.js';
 import {councilHearings,validateCouncil} from './mountain-council.js';
 import {validateConvoy} from './sea-convoy.js';
+import {validateCharters} from './harbor-charters.js';
 import {validateValley} from './mist-valley.js';
 import {validateWatch} from './retreat-watch.js';
 import {validateMine} from './lamp-mine.js';
@@ -25,6 +26,7 @@ const eventNodeIds=new Set([
  'council-book','council-result',
  'convoy-book','convoy-plan','convoy-crew','convoy-stores','convoy-check','convoy-result','convoy-arrival',
  'convoy-cross','convoy-board','convoy-board-notes','convoy-test-result','convoy-remote',
+ 'packet-book','packet-cargo','packet-chart','packet-to-0','packet-to-1','packet-to-2','packet-moor','packet-history',
  'convoy-ear-book','convoy-ear-open','convoy-ear-read','convoy-ear-table','convoy-ear-good','convoy-ear-miss','convoy-ear-receipt',
  'convoy-concert-plan','convoy-concert-visits','convoy-concert-last','convoy-concert-check','convoy-concert-result',
  'field-guide','field-camp','field-bank','field-grove','field-kiln','field-shrine','field-spar','field-proof','field-source','field-banks','field-ending',
@@ -43,12 +45,13 @@ const eventNodeIds=new Set([
 const copy=value=>JSON.parse(JSON.stringify(value));
 export function createEventState(atlas){return {version:1,node:'arrival',entry:'unresolved',companion:'unmet',mentor:'unmet',page:0,location:'gate',...(atlas?copy(atlas):{})};}
 export function validateEventState(events,life,gardenRoot){
- assertPlainData(events);exactKeys(events,['version','node','entry','companion','mentor','page','location'],['river','expedition','council','convoy','valley','watch','mine','garden','firstMeeting','post','mountain','ferry','well','cloudPassage']);
+ assertPlainData(events);exactKeys(events,['version','node','entry','companion','mentor','page','location'],['river','expedition','council','convoy','charters','valley','watch','mine','garden','firstMeeting','post','mountain','ferry','well','cloudPassage']);
  if(!eventNodeIds.has(events.node))throw new Error('规则事件节点无效。');
  // A fatal breakthrough can reduce cultivation while leaving the final event at the grounds.
  if(life&&events.node.startsWith('hunt-')&&!nextRealmFor(life))throw new Error('当前没有需准备的破境材料。');
  if(Object.hasOwn(events,'council'))validateCouncil(events.council);
  if(Object.hasOwn(events,'convoy'))validateConvoy(events.convoy);
+ if(events.node.startsWith('packet-')||Object.hasOwn(events,'charters'))validateCharters(events,life);
  if(Object.hasOwn(events,'well'))validateWell(events.well,life);
  if(Object.hasOwn(events,'cloudPassage')||events.node.startsWith('sky-'))validateCloudPassage(events,life);
  if(events.node==='well-book'&&!events.well)throw new Error('回声井尚未起程。');

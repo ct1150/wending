@@ -998,6 +998,22 @@ test('one continuous birth finishes the three-world campaign and replays its ent
  s=follow(s,'convoy-book','crew','load-1','manifest','stores','load-3','manifest','weigh','sail','convoy-book');
  assert.deepEqual(s.events.convoy.chapters[0].loads,[5,10]);assert.equal(s.events.convoy.draft,0);
  assert.equal(s.life.cultivationProfile.worldTier,0);assert.match(prose(s),/中界/);
+ const openHarbor=state=>follow(state,'river-back','journey-menu','workshop-menu','crossing-menu','packet-book','packet-sign');
+ const sail=(state,stop,mode)=>follow(state,'packet-chart','packet-to-'+stop,'packet-'+mode);
+ const loadCargo=(state,n)=>follow(state,'packet-cargo','packet-load-'+n);
+ const councilFromTraining=state=>follow(state,'rest-menu','back','journey-menu','river-book','hear-council','convoy-book');
+ s=openHarbor(s);
+ assert.match(prose(s),/旧钟埠/);
+ s=loadCargo(s,0);
+ const full=pick(deserializeLiveState(serializeLiveState(s)),'packet-cargo');
+ assert.ok(!full.currentScene.choices.some(c=>c.id.includes('packet-load')));
+ const priorFreightIron=s.life.items.iron??0;
+ s=sail(s,1,'tide');assert.equal(s.life.items.iron,priorFreightIron+1);assert.match(prose(s),/独木船/);
+ s=loadCargo(s,2);s=sail(s,0,'tide');s=loadCargo(s,1);
+ const herbs=s.life.items.herbs??0,food=s.life.items.supplies??0;
+ s=sail(s,2,'tide');assert.equal(s.life.items.herbs,herbs+3);assert.equal(s.life.items.supplies,food+2);
+ assert.match(prose(s),/红线钉在秧床/);
+ s=follow(s,'packet-close','train-menu');s=councilFromTraining(s);
  const priorStones=s.life.items.stones??0,priorArrays=s.life.items.array??0;
  s=follow(s,'work-board','pin-R','pin-L','pin-L','pin-R','test-pins');
  assert.match(s.currentScene.title,/未合/);assert.equal(s.life.items.stones??0,priorStones);
@@ -1020,6 +1036,15 @@ test('one continuous birth finishes the three-world campaign and replays its ent
  assert.match(s.currentScene.title,/等候上界/);s=pick(s,'convoy-book');
  s=follow(s,'rig-barge','crew','load-0','manifest','weigh','sail','convoy-book','stores','load-2','load-3','manifest','crew','load-1','manifest','weigh','sail','convoy-book');
  assert.deepEqual(s.events.convoy.chapters[1].loads,[1,14]);
+ s=openHarbor(s);s=loadCargo(loadCargo(s,0),1);
+ const bargeFood=s.life.items.supplies??0;
+ s=sail(s,2,'tow');assert.equal(s.life.items.supplies??0,bargeFood);
+ s=loadCargo(s,2);
+ const towCheck=follow(deserializeLiveState(serializeLiveState(s)),'packet-chart','packet-to-1');
+ assert.match(prose(towCheck),/需一份行粮/);
+ s=sail(s,1,'tide');assert.match(prose(s),/靛坊|染槽/);
+ assert.match(prose(s),/回来的人按自己的名字/);
+ s=follow(s,'packet-close','train-menu');s=councilFromTraining(s);
  s=follow(s,'work-board','pin-R','pin-L','pin-R','pin-L','test-pins','cross-menu');
  assert.ok(!compileChoices(s,s.currentScene.choices).find(c=>c.approach==='ancient-array').enabled);
  s=trainTo(follow(s,'river-back','train-menu'),4);
@@ -1045,6 +1070,8 @@ test('one continuous birth finishes the three-world campaign and replays its ent
  s=pick(s,'convoy-book');
  s=follow(s,'rig-light','crew','load-1','manifest','stores','load-3','manifest','weigh','sail','convoy-book','crew','load-0','manifest','stores','load-2','manifest','weigh','sail','convoy-book');
  assert.deepEqual(s.events.convoy.chapters[2].loads,[10,5]);assert.match(s.currentScene.title,/问川归航/);
+ s=openHarbor(s);s=loadCargo(s,1);s=sail(s,2,'tow');assert.match(prose(s),/新翻的土/);
+ s=follow(s,'packet-moor','train-menu');s=councilFromTraining(s);
  for(let rank=4;rank<=8;rank++){
   if(rank>4)s=trainTo(pick(s,'train-menu'),rank);
   if(rank%2)continue;
@@ -1070,6 +1097,12 @@ test('one continuous birth finishes the three-world campaign and replays its ent
    assert.equal(s.life.items.thunderseal,(before.items.thunderseal??0)+1);
    assert.match(prose(s),/跳板/);assert.ok(!s.currentScene.choices.some(c=>c.id.includes('sky-route')));
   }else assert.match(prose(s),/下一封请托/);
+  if(stage===0){
+   s=follow(s,'train-menu','rest-menu','back','journey-menu','workshop-menu','crossing-menu','packet-book');
+   assert.match(prose(s),/已过装货期/);assert.match(prose(s),/梅核家书（已交割/);
+   s=pick(s,'packet-close');assert.match(prose(s),/等不及井水/);
+   assert.match(prose(s),/新翻的土/);
+  }
   s=follow(s,'train-menu','rest-menu','back','journey-menu','river-book','hear-council');
  }
  s=pick(s,'train-menu');
@@ -1139,12 +1172,13 @@ test('one continuous birth finishes the three-world campaign and replays its ent
    if(heir.errorCode)throw Error(heir.errorCode);
   }
   return {events:restored.state.events,turn:restored.state.turnId,life:restored.state.life,title:restored.state.currentScene.title,exact,
-   gardenRoot:reborn.reincarnation.gardenRoot,heirRecord:heir.state.events.garden.record,
+   gardenRoot:reborn.reincarnation.gardenRoot,heirRecord:heir.state.events.garden.record,heirCharters:reborn.events.charters??null,heirShips:reborn.events.convoy.chapters,
    cause:row.state.lastReceipt.death.cause,reborn:reborn.life.realm,inscription:reborn.reincarnation.inscription,childTitle:reborn.currentScene.blocks.map(b=>b.text).join(''),privateWatch:!!reborn.events.watch};
  },route);
  assert.equal(browser.exact,true);assert.deepEqual(browser.events,s.events);assert.deepEqual(browser.life,s.life);
  assert.equal(browser.turn,s.turnId);assert.equal(browser.title,s.currentScene.title);
  assert.equal(browser.reborn,'mortal');assert.equal(browser.privateWatch,false);assert.match(browser.childTitle,/无名榫/);
+ assert.equal(browser.heirCharters,null);assert.deepEqual(browser.heirShips,s.events.convoy.chapters);
  assert.match(browser.childTitle,/归灰稻母土/);assert.equal(browser.gardenRoot,8);
  assert.equal(browser.heirRecord.length,1);assert.equal(browser.heirRecord[0].take,'tips');
  assert.equal(browser.heirRecord[0].day-browser.heirRecord[0].sown,DAYS_PER_YEAR);

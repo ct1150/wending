@@ -4,6 +4,7 @@ import {DAYS_PER_YEAR} from './model.js';
 import {harvestWindows} from './phenology.js';
 import {postWindows} from './lin-post.js';
 import {shellTide} from './shell-ferry.js';
+import {charterNote} from './harbor-charters.js';
 import {riverCases} from './river-chronicle.js';
 import {councilHearings} from './mountain-council.js';
 
@@ -66,6 +67,8 @@ export function journeyNotes(state){
  if(e.expedition&&e.expedition.place!=='end')add('voyage-book','三程行旅','行旅簿已收下'+e.expedition.volume+'枚图印。');
  if(e.council!==undefined&&e.council.length<councilHearings)add('council-book','北山公簿','已留下'+e.council.length+'处落款，可翻到下一件事。');
  if(e.convoy?.chapters.length){
+  const packet=charterNote(e,age);
+  if(packet)add('packet-book',packet.title,packet.detail,packet.window,'货期已过，可以回港收簿');
   const loads=e.convoy.chapters.reduce((n,c)=>n+c.loads.length,0);
   if(loads<6)add('convoy-book','三界海路','两潮一港，已经发出'+loads+'班船。'+(e.convoy.draft?'本班候船名单已留存。':''));
  }
