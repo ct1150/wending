@@ -40,7 +40,13 @@ export function eventActionRule(state,proposal,baseRule){
  if(!option.rule)return baseRule;
  const rule={...initialV7ActionRule(0),...copy(option.rule)};
  for(const [id,count] of Object.entries(rule.items))if((state.life.items[id]??0)<count)rule.reason='缺少'+ITEMS[id]+'。';
- for(const [id,count] of Object.entries(rule.gain))if((state.life.items[id]??0)-(rule.items[id]??0)+count>9999)rule.reason='行囊已经装不下。';
+ for(const [id,count] of Object.entries(rule.gain)){
+  const room=9999-(state.life.items[id]??0)+(rule.items[id]??0);
+  if(count<=room)continue;
+  if(!option.optionalGift){rule.reason='行囊已经装不下。';continue;}
+  if(room>0)rule.gain[id]=room;else delete rule.gain[id];
+  rule.warnings.push(ITEMS[id]+'剩余容量为'+room+'，多出的赠礼留给当地。');
+ }
  if(state.life.cultivationProfile.spirit<rule.spiritCost)rule.reason='灵力不足，须先调息。';
  if(state.life.ageDays+rule.days>=state.life.lifeLimit*DAYS_PER_YEAR)rule.warnings.push('此行动无法在当前寿元上限前完成，途中寿尽将无法得到成果。');
  return rule;

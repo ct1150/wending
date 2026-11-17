@@ -79,7 +79,7 @@ export function expeditionNode(state,menu,choice){
  const canFinish=v.place===map.finish&&(v.goods&map.required)===map.required;
  if(canFinish&&e.node!=='voyage-detour'){
   const extra=(v.goods&map.bonus)!==0,next=voyages[v.volume+1],result={volume:v.volume+1,results:v.results+(extra?'1':'0'),place:next?.start??'end',watch:0,goods:0};
-  return node(placeName,map.goal,[description,stamp,'物件已经备齐。你可现在结印，也可再看看路上有没有遗漏的人。'],[choice('voyage-finish','亲手完成'+map.name+'，领取本程图印','explore',map.reward,'cautious',{next:'voyage-result',patch:{expedition:result},rule:{days:v.watch||1,items:{},gain:{[map.reward]:2},checkKind:null,spiritCost:0,warnings:[]}}),menu('voyage-on','暂不结印，继续探路','voyage-detour'),overview]);
+  return node(placeName,map.goal,[description,stamp,'物件已经备齐。你可现在结印，也可再看看路上有没有遗漏的人。'],[choice('voyage-finish','亲手完成'+map.name+'，领取本程图印','explore',map.reward,'cautious',{next:'voyage-result',optionalGift:true,patch:{expedition:result},rule:{days:v.watch||1,items:{},gain:{[map.reward]:2},checkKind:null,spiritCost:0,warnings:[]}}),menu('voyage-on','暂不结印，继续探路','voyage-detour'),overview]);
  }
  return road();
 

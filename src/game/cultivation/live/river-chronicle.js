@@ -99,13 +99,14 @@ export function riverNode(state,menu,choice){
  const book=menu('next-case','翻看问川图','river-book');
  if(e.node==='river-result'){
   const prior=cases[index-1],policy=prior.policies[Number(river.record.at(-1))];
-  return node(prior.title,'记下这次处置的代价',[policy[1],'图印松开，封在这一折的资用也随之解出。'],[book,back]);
+  const gift=state.lastReceipt?.itemChanges?.[policy[2]]>0?'图印松开，封在这一折的资用也随之解出。':'图印松开。行囊已经装满，你将这一折的赠礼留在了河边。';
+  return node(prior.title,'记下这次处置的代价',[policy[1],gift],[book,back]);
  }
  if(!current)return node('问川图 · 河簿合卷','展开行旅录，或带着所得继续修行',['图面渐暗，河上有人把一条空船撑回上游。最初的水尺和最后的木楔，如今都有了去处。簿底露出领航人珍藏的一册行旅图。',...cases.map((c,i)=>c.title+'　'+c.policies[Number(river.record[i])][0])],[menu('voyage-book','打开领航人留下的行旅录','voyage-book'),menu('train-menu','用历练所得继续修行','training'),back]);
  if(e.node==='river-book')return node('问川图 · 河上人家',current.title,['这卷传习图封着六段前人留下的河上旧境。展开时，你可入境察看水土、听人说话、亲手处置难题。离开时图中年月停住，回来仍接原处。每折结印才解出一份修行资用。','已结 '+index+' 折。眼下翻到'+current.title+'。'],[resume,back]);
  const known=current.clues.flatMap(([label,text],i)=>river.seen&(1<<i)?[label+'。'+text]:[]);
  if(e.node==='river-reading')return node(current.title,'把看到的线索与他人的处境合起来',[...known],[menu('river-return','回到现场，重新权衡','river-site'),back]);
- if(e.node==='river-decision')return node(current.title,current.question,[current.question,...known],[...current.policies.map(([label,,item],i)=>choice('policy-'+i,label,'explore',item,'cautious',{next:'river-result',patch:{river:{record:river.record+i,seen:0}},rule:{days:2+i,items:{},gain:{[item]:1},checkKind:null,spiritCost:0,warnings:[]}})),menu('river-return','再看看现场','river-site')]);
+ if(e.node==='river-decision')return node(current.title,current.question,[current.question,...known],[...current.policies.map(([label,,item],i)=>choice('policy-'+i,label,'explore',item,'cautious',{next:'river-result',optionalGift:true,patch:{river:{record:river.record+i,seen:0}},rule:{days:2+i,items:{},gain:{[item]:1},checkKind:null,spiritCost:0,warnings:[]}})),menu('river-return','再看看现场','river-site')]);
  const investigations=current.clues.flatMap(([label],i)=>river.seen&(1<<i)?[]:[menu('clue-'+i,label,'river-reading',{river:{...river,seen:river.seen|(1<<i)}})]);
  const decide=menu('deliberate','权衡两种做法，决定怎样处置','river-decision');
  return node(current.title,current.question,[current.lead?.(river.record),current.scene,...known],[...investigations,decide,...(investigations.length<2?[back]:[])]);

@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {createLiveGame,prepareOpening,prepareChoice,commitTurn,resolveRuleScene} from '../src/game/cultivation/live/engine.js';
+import {createLiveGame,prepareOpening,prepareChoice,commitTurn,resolveRuleScene,compileChoices} from '../src/game/cultivation/live/engine.js';
 import {realmFor,nextRealmFor} from '../src/game/cultivation/live/cultivation-rules.js';
 import {serializeLiveState,deserializeLiveState} from '../src/game/cultivation/live/validation.js';
 
@@ -44,6 +44,16 @@ test('the other first decision changes the next evidence and the account of who 
  state=follow(state,'next-case','river-open');
  assert.match(prose(state),/碾房.*转/);
  assert.equal(state.events.river.record,'1');
+});
+
+test('a full pack still allows either river settlement and leaves excess gifts at the site',()=>{
+ const s=follow(open(),'deliberate');
+ Object.assign(s.life.items,{herbs:9999,supplies:9999});
+ const actions=compileChoices(s,s.currentScene.choices);
+ assert.ok(actions.slice(0,2).every(row=>row.enabled));
+ const saved=pick(s,'policy-0');
+ assert.equal(saved.events.river.record,'0');assert.equal(saved.life.items.herbs,9999);
+ assert.match(prose(saved),/行囊/);
 });
 
 for(const branch of [0,1])test('all six leaves settle once and return to the cultivation game on route '+branch,()=>{
