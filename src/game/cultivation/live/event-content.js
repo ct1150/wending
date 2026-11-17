@@ -9,6 +9,7 @@ import {valleyLocation,valleyNode,valleyPlaces} from './mist-valley.js';
 import {inscriptionText,watchNode} from './retreat-watch.js';
 import {trailLocation} from './deer-trail.js';
 import {mineNode,minePlaces} from './lamp-mine.js';
+import {gardenNode,gardenRootName} from './phenology.js';
 
 // Authored situations supply every fact and executable choice. AI never edits
 // these definitions. Stable actors belong to a life, not a generated paragraph.
@@ -54,6 +55,7 @@ export function eventNode(state){
  if(e.node.startsWith('watch-'))return watchNode(state,menu,choice);
  if(e.node.startsWith('field-'))return valleyNode(state,menu,choice,actor);
  if(e.node.startsWith('mine-'))return mineNode(state,menu,choice,actor);
+ if(e.node.startsWith('garden-'))return gardenNode(state,menu,choice);
  if(e.node==='voyage-result')return expeditionResult(e.expedition,menu);
  if(e.node.startsWith('voyage-'))return expeditionNode(state,menu,choice);
  if(e.node.startsWith('council-'))return councilNode(state,menu,choice);
@@ -63,6 +65,7 @@ export function eventNode(state){
    narration(young?'栖云门外院里，送炭的板车刚刚停稳。你把母亲缝好的衣袖拉平，站到登记的长桌前。周执事没有问你的灵根，只把一册差事簿推到桌沿。':'外院还存着那册旧簿。门上的墨色换了几回，当值者核对年月，仍认得当年写给试修弟子的条款。'),
    ...(state.reincarnation?.atlas?[narration('你行囊里有一本辗转传下的问川图。前人结过的图印还在，夹住旧页的草绳也在。等安顿下来，便可以从外出历练处接着读。')]:[]),
    ...(state.reincarnation?.inscription?[narration(inscriptionText(state.reincarnation.inscription))]:[]),
+   ...(state.reincarnation?.gardenRoot!==undefined?[narration('行囊深处有一包先人封存的'+gardenRootName(state.reincarnation.gardenRoot)+'母土。将来试种第一畦时，它能多护一段嫩候。')]:[]),
    young?speech(actor('steward'),'外院不白收人。帮忙整理三日药圃，我给你一卷完整的入门功法。是否留下，你想清楚再答。'):narration('旧簿上写着：整理药圃三日，以一卷完整功法为酬。'),
   ],[menu('ask','先问清差事与试修条件','terms'),terms()[0],terms()[2]]);
   case 'terms':return row('一卷功法的条件','知道代价后，再决定是否接受',[
@@ -116,13 +119,18 @@ export function eventNode(state){
     narration(e.entry==='accepted'?'药圃差事仍可回去做完；未做完时不会发放功法。':e.entry==='declined'?'你选择了独自求道。栖云门那份未接下的差事没有变成必须偿还的债。':'修为、功法与资用各有门槛。已经完成的差事不会再要求你重做。'),
    ],[menu('train-menu','安排修炼与突破','training'),menu('journey-menu',journey,'journey'),menu('affairs-menu','探访故人，处理未完之事','affairs')]);
   }
-  case 'training':return row('修行的门槛',next?'积累修为与'+ITEMS[next.material]+'，尝试进入'+next.name:'在当前境界继续修行与历练',[
+  case 'training':{
+   // A restored pre-garden training screen still contains its disabled breakthrough.
+   const oldGate=state.currentScene?.id.endsWith(':t'+state.turnId+':s:event_training')&&state.currentScene.choices.some(c=>c.id.endsWith(':c:breakthrough'));
+   return row('修行的门槛',next?'积累修为与'+ITEMS[next.material]+'，尝试进入'+next.name:'在当前境界继续修行与历练',[
    narration(next?'你目前是'+realm.name+'。进入'+next.name+'需要修为达到'+next.threshold+'，并备妥'+ITEMS[next.material]+'。闭关的年月、灵力和风险会在行动前列明。':'渡劫之后，此生仍未结束。你可以继续积累、历练或照料旧日因果，直到真实的寿尽或伤重。'),
   ],[
-   choice('practice','按当前功法稳步修炼','practice','self','steady',{next:'action-result'}),
-   next?choice('breakthrough','闭关尝试突破'+next.name,'practice',next.id,'breakthrough',{next:'action-result'}):choice('intensive','以行粮支撑一次苦修','practice','self','intensive',{next:'action-result'}),
+   e.garden?.plot&&(!next||life.cultivation>=next.threshold)?menu('garden-book','验看苗盆，或在盆旁继续修行','garden-book'):choice('practice','按当前功法稳步修炼','practice','self','steady',{next:'action-result'}),
+   next&&life.cultivation<next.threshold&&!oldGate?menu('garden-book','随身携一畦苗，选择稳修或苦修','garden-book'):
+    next?choice('breakthrough','闭关尝试突破'+next.name,'practice',next.id,'breakthrough',{next:'action-result'}):choice('intensive','以行粮支撑一次苦修','practice','self','intensive',{next:'action-result'}),
    menu('rest-menu','调息、安排守关或验看功法','rest'),
   ]);
+  }
   case 'rest':{
    const reserve=realm.rank>=1&&next&&life.lifeLimit*DAYS_PER_YEAR-life.ageDays<=(next.minYears+realm.practiceYears)*DAYS_PER_YEAR;
    return row('停下来整备','先照料伤势与灵力，也可回去处理别的事',[
@@ -148,8 +156,11 @@ export function eventNode(state){
    const targets=[...new Set([next?.material??'relic','supplies','stones','herbs','iron'])],target=targets[e.page%targets.length];
    return row('寻找'+ITEMS[target],'只结算本次选定的资源',[
     narration('你把目标定为'+ITEMS[target]+'。谨慎搜寻花费更多时间，仍须承担当前境界与环境下的真实风险；失败也会留下记录。'),
-   ],[choice('gather','谨慎搜寻'+ITEMS[target],'explore',target,'cautious',{next:'action-result'}),menu('next-resource','换看下一种物资','resources',{page:(e.page+1)%targets.length}),e.river?.record.length?menu('field-guide','翻看雾药谷游记与往返路线','field-guide'):leave]);
+   ],[choice('gather','谨慎搜寻'+ITEMS[target],'explore',target,'cautious',{next:target==='herbs'&&!e.garden?'herb-basket':'action-result'}),menu('next-resource','换看下一种物资','resources',{page:(e.page+1)%targets.length}),target==='herbs'&&e.garden?menu('garden-book','查看随身苗盆与采候','garden-book'):e.river?.record.length?menu('field-guide','翻看雾药谷游记与往返路线','field-guide'):leave]);
   }
+  case 'herb-basket':return row('山口的试种盆','清点本次采药，决定要不要照料随身苗盆',[
+   narration((state.lastReceipt?.cultivationResult?.check?.success===false?'这次寻药落空。':'采回的药草已经收入行囊。')+'山口的空花盆能绑在背篓上，行脚和闭关时都跟着你。领种栽下才会开始计算采候。'),
+  ],[menu('garden-book','看看行圃与试种的条件','garden-book'),menu('train-menu','回去安排修行','training'),menu('continue','继续安排此后的仙路','hub')]);
   case 'workshop':{
    const recipes=[['medicine','alchemy'],['artifact','forge'],['talisman','talisman'],['array','formation'],['elixir','alchemy']],recipe=recipes[e.page%recipes.length];
    return row('整备手艺','材料与灵力足够时再动手',[
@@ -200,6 +211,14 @@ export function eventNode(state){
    else if(action?.intent==='craft')text=check&&!check.success?'这次炼制失败，投入的材料已经消耗，未得到成品。':'你完成了这次炼制，所得与消耗照实记入行囊。';
    else if(action?.intent==='travel')text=check&&!check.success?'这次跨界没有成功，你仍在原来的界域；实际损耗已经记下。':'你抵达所选的界域，旧事仍保留在来路中，眼前的修行条件按新的天地结算。';
    let onward=menu('affairs-menu','看看故人与未完之事','affairs');
+   if(e.garden&&next&&life.cultivation<next.threshold&&
+     (action?.intent==='practice'&&['steady','intensive'].includes(action.approach)||action?.id.endsWith(':c:forage-again'))){
+    const delta=receipt.after.cultivation-receipt.before.cultivation;
+    return row('出定再择功课','查看修为差额和余寿，决定下一关怎样练',[
+     narration((action.intent==='explore'?'这次备粮用去':'上一关用去')+receipt.elapsedDays+'日，'+(check?.success===false?'检定未成':action.intent==='explore'?'寻粮归来':'修行已毕')+'，修为变动'+delta+'。距离'+next.name+'还差'+(next.threshold-life.cultivation)+'分。行粮还有'+(life.items.supplies??0)+'份，灵力尚余'+life.cultivationProfile.spirit+'。'),
+    ],[choice('practice-again','依当前功法再闭关一次','practice','self','steady',{next:'action-result'}),
+     life.items.supplies?choice('intensive-again','付行粮苦修，提早出关','practice','self','intensive',{next:'action-result'}):choice('forage-again','亲自出山备粮，归来再择功课','explore','supplies','cautious',{next:'action-result'}),menu('train-menu','收功，回看苗盆或整备','training')]);
+   }
    if(action?.intent==='practice'&&action.approach==='steady'&&next&&life.cultivation<next.threshold){
     onward=choice('practice-again','依当前功法再闭关一次','practice','self','steady',{next:'action-result'});
    }

@@ -148,7 +148,7 @@ export function validateLiveState(state) {
   integer(state.rng, 0, 4294967295);
   validateLife(state.life);
   if(state.life.birth.cultivationProfile?.eventVersion===1){
-    validateEventState(state.events);
+    validateEventState(state.events,state.life,state.reincarnation?.gardenRoot);
     if(state.events.mine?.start>state.life.ageDays)throw new Error('井下脚程不能始于未来。');
     if(state.events.node.startsWith('mine-')&&state.events.node!=='mine-journal'&&state.life.cultivationProfile.worldTier!==0)throw new Error('井下行程仅在下界开放。');
     const outing=state.events.watch?.trail;
@@ -160,6 +160,7 @@ export function validateLiveState(state) {
   if(state.director!==undefined){if(!isV7Life(state.life))throw new Error('旧人生不能静默切换世界规则。');validateStoryDirector(state.director,{turnId:state.turnId,life:state.life});}
   if(state.reincarnation!==undefined){
     validateReincarnation(state.reincarnation);
+    if(state.reincarnation.gardenRoot!==undefined&&!state.events)throw new Error('行圃传种需要规则事件人生。');
     if(state.reincarnation.atlas&&!state.events)throw new Error('只有规则事件人生可以承接图卷。');
     if(state.reincarnation.version===2&&!isExperienceLife(state.life))throw Object.assign(new Error('轮回传承与出生事实不符。'),{code:'REINCARNATION_INVALID_STATE'});
     if(!isV7Life(state.life)||state.reincarnation.parentRunId===state.runId||!same(state.reincarnation.purchases,state.life.birth.cultivationProfile.inheritedBenefits))throw new Error('轮回传承与出生事实不符。');

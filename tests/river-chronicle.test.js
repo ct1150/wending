@@ -10,6 +10,7 @@ import {validateWatch} from '../src/game/cultivation/live/retreat-watch.js';
 import {validateDing,validateInscription} from '../src/game/cultivation/live/mountain-ding.js';
 import {validateMine} from '../src/game/cultivation/live/lamp-mine.js';
 import {DAYS_PER_YEAR} from '../src/game/cultivation/live/model.js';
+import {validateGarden,gardenRootForChild} from '../src/game/cultivation/live/phenology.js';
 
 const observers=new WeakMap();
 function start(observe,seed=42){
@@ -33,6 +34,53 @@ const prose=state=>state.currentScene.blocks.map(block=>block.text).join('\n');
 
 const valleyCamp=()=>follow(open(),'deliberate','policy-0','field-guide','enter-field');
 const firstWatch=(seed,keeper,marks)=>follow(start(undefined,seed),'decline','train-menu','rest-menu','watch-book','watch-open','keeper-'+keeper,marks,'sit-watch');
+const firstPlot=(seed=42)=>follow(start(undefined,seed),'decline','train-menu','garden-book','sow');
+test('the same seed crop ripens during the actual native retreat, while shorter intensive practice returns at the tender harvest',()=>{
+ const split=firstPlot(),opening=split.life.ageDays,practice=pick(split,'practice-bed');
+ const choices=compileChoices(practice,practice.currentScene.choices);
+ const steady=pick(practice,'garden-steady');
+ assert.equal(steady.life.ageDays-opening,choices.find(c=>c.approach==='steady').costs.days);
+ assert.equal(steady.lastReceipt.action.approach,'steady');
+ const mature=follow(steady,'inspect-bed','ripe','pick-root');
+ assert.equal(mature.events.garden.record[0].take,'root');
+ assert.equal(mature.events.garden.plot,null);
+ const supplies=split.life.items.supplies;
+ let quick=pick(practice,'garden-intensive');
+ assert.equal(quick.life.items.supplies,supplies-1);
+ assert.equal(quick.life.ageDays-opening,choices.find(c=>c.approach==='intensive').costs.days);
+ quick=deserializeLiveState(serializeLiveState(quick));
+ const tender=follow(quick,'inspect-bed','pick-tips');
+ assert.equal(tender.life.items.supplies,supplies);
+ assert.equal(tender.events.garden.record[0].take,'tips');
+ assert.ok(!tender.currentScene.choices.some(c=>c.id.endsWith(':c:sow')));
+});
+test('tending advances the actual calendar without cultivating; missed crops cannot grant a harvest',()=>{
+ let s=firstPlot(),cultivation=s.life.cultivation;
+ s=follow(s,'inspect-bed','tend');assert.equal(s.life.cultivation,cultivation);
+ assert.equal(s.life.ageDays-s.events.garden.plot.sown,DAYS_PER_YEAR/2);
+ s=follow(s,'practice-bed','garden-steady','inspect-bed');
+ assert.match(prose(s),/种实已散/);
+ const items={...s.life.items};
+ s=follow(s,'pick-scatter','garden-history');assert.deepEqual(s.life.items,items);
+ assert.equal(s.events.garden.record[0].take,'scatter');
+});
+test('a saved pre-garden training page still compiles its disabled breakthrough and can continue normally',()=>{
+ const s=follow(start(),'decline','train-menu'),next=nextRealmFor(s.life);
+ const old=s.currentScene.choices[1];
+ Object.assign(old,{id:old.id.replace(/garden-book$/,'breakthrough'),label:'闭关尝试突破'+next.name,intent:'practice',targetId:next.id,approach:'breakthrough'});
+ const restored=deserializeLiveState(serializeLiveState(s));
+ const actions=compileChoices(restored,restored.currentScene.choices);
+ assert.equal(actions.find(c=>c.approach==='breakthrough').enabled,false);
+ assert.equal(pick(restored,'practice').lastReceipt.action.approach,'steady');
+});
+test('late tender harvests require an unused mother root, and an active crop consumes the parcel',()=>{
+ const record=[{bed:0,sown:10,day:10+DAYS_PER_YEAR,take:'tips'}];
+ assert.throws(()=>validateGarden({record,plot:null}),/采期/);
+ validateGarden({record,plot:null},undefined,0);
+ assert.equal(gardenRootForChild({reincarnation:{gardenRoot:0}}),0);
+ assert.equal(gardenRootForChild({reincarnation:{gardenRoot:0},events:{garden:{record:[],plot:{bed:0,sown:10}}}}),undefined);
+ assert.equal(gardenRootForChild({reincarnation:{gardenRoot:0},events:{garden:{record,plot:null}}}),undefined);
+});
 
 const mineStart=()=>follow(valleyCamp(),'to-bank','take-sample','to-grove','brew-filter','to-shrine','show-proof','proof-medicine','to-source','water-spring','field-home','journey-menu','resources-menu','field-guide','mine-book','borrow-lamp');
 test('mine rescue clues follow the changed waterway, consume oil once and persist before deciding',()=>{
@@ -364,8 +412,50 @@ test('wrong tide and missed deadline are recoverable without consuming real life
  assert.doesNotMatch(prose(s),/二十年的潮纸/);
 });
 
+function gardenFromTraining(s){
+ if(s.currentScene.choices.some(c=>c.id.endsWith(':c:garden-book')))return pick(s,'garden-book');
+ s=follow(s,'rest-menu','back','journey-menu','resources-menu');
+ for(let page=0;s.currentScene.choices[0].targetId!=='herbs';page++){
+  assert.ok(page<5);s=pick(s,'next-resource');
+ }
+ if(!s.events.garden)s=pick(s,'gather');
+ return pick(s,'garden-book');
+}
+function crossWithArray(s,tier){
+ s=follow(s,'cross-menu','sea-array');
+ for(let n=0;s.life.cultivationProfile.worldTier<tier;n++){
+  assert.ok(n<100,'could not fund the next crossing');
+  s=pick(s,'river-back');
+  const fare=tier===2?90:45,hasArray=(s.life.items.array??0)>0;
+  if(s.life.injury>1||s.life.cultivationProfile.spirit<30){
+   s=follow(s,'train-menu','rest-menu','recover','train-menu','rest-menu','back');
+  }else if((s.life.items.stones??0)<fare+(hasArray?0:6)||!hasArray&&(s.life.items.iron??0)<2){
+   const target=!hasArray&&(s.life.items.iron??0)<2?'iron':'stones';
+   s=follow(s,'journey-menu','resources-menu');
+   for(let page=0;s.currentScene.choices[0].targetId!==target;page++){
+    assert.ok(page<5);s=pick(s,'next-resource');
+   }
+   s=follow(s,'gather','continue');
+  }else if(!hasArray){
+   s=follow(s,'journey-menu','workshop-menu','next-recipe','next-recipe','next-recipe','craft','continue');
+  }
+  s=follow(s,'journey-menu','river-book','hear-council','convoy-book','cross-menu');
+  const crossing=compileChoices(s,s.currentScene.choices).find(c=>c.approach==='ancient-array');
+  if(crossing.enabled)s=pick(s,'sea-array');
+ }
+ return s;
+}
 function guardedPractice(s){
  const i=s.events.watch?.record.length??0;
+ s=pick(gardenFromTraining(s),'sow');
+ if(i===4||i===6){
+  s=pick(s,'practice-bed');
+  for(let n=0;!s.life.items.supplies;n++){
+   assert.ok(n<8);s=pick(s,'forage');
+  }
+  s=follow(s,'garden-intensive','inspect-bed','pick-tips');
+ }
+ s=pick(s,'train-menu');
  s=follow(s,'rest-menu','watch-book','watch-open','keeper-'+(i%2),i%3?'two-marks':'one-mark','sit-watch');
  assert.equal(s.events.watch.draft.days,s.lastReceipt.elapsedDays);
  s=pick(s,i%2?'seal-original':'leave-copy');
@@ -375,6 +465,12 @@ function guardedPractice(s){
  }
  s=pick(s,'watch-later');
  assert.equal(s.events.watch.record.length,i+1);
+ if(s.events.garden.plot){
+  s=pick(gardenFromTraining(s),'inspect-bed');
+  if(!s.currentScene.choices.some(c=>c.id.endsWith(':c:ripe')))s=follow(s,'tend','inspect-bed');
+  s=follow(s,'ripe',i%2?'pick-fruit':'pick-root','train-menu');
+ }
+ assert.equal(s.events.garden.record.length,i+1);
  return s;
 }
 function trainTo(state,rank){
@@ -382,8 +478,7 @@ function trainTo(state,rank){
  for(let i=0;realmFor(s.life).rank<rank;i++){
   assert.ok(i<100,'training route is stuck');
   const realm=nextRealmFor(s.life);
-  const retreat=compileChoices(s,s.currentScene.choices).find(c=>c.approach==='breakthrough');
-  const reserve=(s.life.lifeLimit-100)*DAYS_PER_YEAR-retreat.costs.days;
+  const reserve=(s.life.lifeLimit-100-realm.minYears)*DAYS_PER_YEAR;
   if(rank===9&&s.life.ageDays>=reserve){
    // Shop and brew through ordinary screens when the remaining lifespan is
    // close to the cost of one retreat. A failed brew spends both ingredients.
@@ -403,7 +498,8 @@ function trainTo(state,rank){
    }
    s=pick(s,'practice');
    while((rank<9||s.life.ageDays<reserve)&&s.life.cultivation<realm.threshold&&s.life.injury<=1&&s.life.cultivationProfile.spirit>=30+rank*5){
-    s=pick(s,'practice-again');
+    const quick=s.events.garden&&rank>=3&&s.life.injury===0&&s.life.cultivationProfile.spirit>=50+rank*5;
+    s=pick(s,quick?(s.life.items.supplies?'intensive-again':'forage-again'):'practice-again');
    }
    s=pick(s,'train-menu');
   }else if(!s.life.items[realm.material]){
@@ -454,7 +550,7 @@ test('one continuous birth finishes the three-world campaign and replays its ent
  assert.match(s.currentScene.title,/未合/);assert.equal(s.life.items.stones??0,priorStones);
  s=follow(s,'reset-pins','pin-L','pin-R','pin-L','pin-R','test-pins');
  assert.equal(s.life.items.stones,priorStones+45);assert.equal(s.life.items.array,priorArrays+1);assert.ok(s.events.convoy.benches[0].paid);
- s=follow(s,'cross-menu','sea-array');
+ s=crossWithArray(s,1);
  assert.equal(s.life.cultivationProfile.worldTier,1);assert.equal(s.life.items.array,priorArrays);
  s=pick(s,'ear-book');
  for(const [i,key] of ['right','left','right'].entries()){
@@ -474,7 +570,7 @@ test('one continuous birth finishes the three-world campaign and replays its ent
  s=follow(s,'work-board','pin-R','pin-L','pin-R','pin-L','test-pins','cross-menu');
  assert.ok(!compileChoices(s,s.currentScene.choices).find(c=>c.approach==='ancient-array').enabled);
  s=trainTo(follow(s,'river-back','train-menu'),4);
- s=follow(s,'cross-menu','sea-array');
+ s=crossWithArray(s,2);
  assert.equal(s.life.cultivationProfile.worldTier,2);
  s=pick(s,'ear-book');
  for(const [i,key] of ['left','left','left'].entries()){
@@ -550,12 +646,24 @@ test('one continuous birth finishes the three-world campaign and replays its ent
   const childCopy=await open('keeper-child-copy');
   await format.importLiveArchive(format.exportLiveArchive(archive),childCopy);
   const reborn=(await childCopy.load()).state;
+  const childSession=createLiveSession({archive:childCopy,client:{}});
+  let heir=await childCopy.load();
+  for(const key of ['decline','train-menu','garden-book','sow','inspect-bed','tend','inspect-bed','tend','inspect-bed','pick-tips']){
+   const state=heir.state,action=state.currentScene.choices.find(c=>c.id.endsWith(':c:'+key));
+   if(!action)throw Error('child missing '+key);
+   heir=await childSession.choose({choiceId:action.id,baseRevision:state.revision,stateHash:identity.stateHash(state)});
+   if(heir.errorCode)throw Error(heir.errorCode);
+  }
   return {events:restored.state.events,turn:restored.state.turnId,life:restored.state.life,title:restored.state.currentScene.title,exact,
+   gardenRoot:reborn.reincarnation.gardenRoot,heirRecord:heir.state.events.garden.record,
    cause:row.state.lastReceipt.death.cause,reborn:reborn.life.realm,inscription:reborn.reincarnation.inscription,childTitle:reborn.currentScene.blocks.map(b=>b.text).join(''),privateWatch:!!reborn.events.watch};
  },route);
  assert.equal(browser.exact,true);assert.deepEqual(browser.events,s.events);assert.deepEqual(browser.life,s.life);
  assert.equal(browser.turn,s.turnId);assert.equal(browser.title,s.currentScene.title);
  assert.equal(browser.reborn,'mortal');assert.equal(browser.privateWatch,false);assert.match(browser.childTitle,/无名榫/);
+ assert.match(browser.childTitle,/归灰稻母土/);assert.equal(browser.gardenRoot,8);
+ assert.equal(browser.heirRecord.length,1);assert.equal(browser.heirRecord[0].take,'tips');
+ assert.equal(browser.heirRecord[0].day-browser.heirRecord[0].sown,DAYS_PER_YEAR);
  assert.deepEqual(browser.inscription,{form:'village',pieces:[{foot:0,shared:true},{foot:3,shared:false},{foot:8,shared:true}]});
  t.diagnostic('Native archive parent settlement: '+browser.cause+'; inherited inscription restored in mortal child.');
  t.diagnostic('Route inventory: '+blocks.size+' distinct displayed blocks, '+[...blocks].reduce((n,b)=>n+[...b].length,0)+' characters (includes menu and status text).');

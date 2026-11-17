@@ -10,6 +10,7 @@ import {validateConvoy} from './sea-convoy.js';
 import {validateValley} from './mist-valley.js';
 import {validateWatch} from './retreat-watch.js';
 import {validateMine} from './lamp-mine.js';
+import {validateGarden} from './phenology.js';
 
 const eventNodeIds=new Set([
  'arrival','terms','work','entry-result','companion','companion-result','reunion','reunion-result',
@@ -26,18 +27,22 @@ const eventNodeIds=new Set([
  'watch-visitors','watch-trail','watch-trail-map','watch-trail-fork',
  'watch-ding-book','watch-ding-pick','watch-ding-last','watch-ding-dedicate','watch-ding-result',
  'mine-book','mine-gallery','mine-inspect','mine-decide','mine-report','mine-journal',
- 'apothecary',
+ 'apothecary','herb-basket',
+ 'garden-book','garden-history','garden-practice','garden-pick','garden-ripe',
 ]);
 const copy=value=>JSON.parse(JSON.stringify(value));
 export function createEventState(atlas){return {version:1,node:'arrival',entry:'unresolved',companion:'unmet',mentor:'unmet',page:0,location:'gate',...(atlas?copy(atlas):{})};}
-export function validateEventState(events){
- assertPlainData(events);exactKeys(events,['version','node','entry','companion','mentor','page','location'],['river','expedition','council','convoy','valley','watch','mine']);
+export function validateEventState(events,life,gardenRoot){
+ assertPlainData(events);exactKeys(events,['version','node','entry','companion','mentor','page','location'],['river','expedition','council','convoy','valley','watch','mine','garden']);
  if(!eventNodeIds.has(events.node))throw new Error('规则事件节点无效。');
  if(Object.hasOwn(events,'council'))validateCouncil(events.council);
  if(Object.hasOwn(events,'convoy'))validateConvoy(events.convoy);
  if(Object.hasOwn(events,'valley'))validateValley(events.valley);
  if(Object.hasOwn(events,'watch'))validateWatch(events.watch);
  if(Object.hasOwn(events,'mine'))validateMine(events.mine);
+ if(Object.hasOwn(events,'garden'))validateGarden(events.garden,life,gardenRoot);
+ if(['garden-practice','garden-pick','garden-ripe'].includes(events.node)&&!events.garden?.plot||
+    events.node==='garden-history'&&!events.garden?.record.length)throw new Error('候物圃页次无效。');
  if((events.mine||events.node.startsWith('mine-'))&&!events.valley?.settled||
     ['mine-gallery','mine-inspect','mine-decide'].includes(events.node)&&(!events.mine||events.mine.record.length===3)||
     events.node==='mine-report'&&!events.mine?.record.length||
@@ -103,7 +108,7 @@ export function advanceEvents(state,receipt){
   events.watch.draft.days=receipt.elapsedDays;
   events.watch.draft.success=success;
  }
- return validateEventState(events);
+ return validateEventState(events,undefined,state.reincarnation?.gardenRoot);
 }
 export function resolveEventScene(state,pending){
  const events=advanceEvents(state,pending.receipt),prospective={...state,life:pending.nextLife,events,lastReceipt:pending.receipt,turnId:pending.identity.turnId};
