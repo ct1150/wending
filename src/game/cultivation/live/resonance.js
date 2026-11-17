@@ -118,7 +118,13 @@ export function resonanceNode(state,menu,choice){
   return row(item.title+' · 试样和信','取出需要核对的线索',clues,[...options,table,...(s.seen?[book]:[])]);
  }
  if(node==='convoy-ear-miss')return row(item.title+' · 走音','依据实测结果调整接法',[item.miss,'这一日试音已记入修行历。原样仍在，去读信或换接法都来得及。'],[table,read,back]);
- if(node==='convoy-ear-table')return row(item.title+' · 试台','择一接法做一日空载试音',[item.scene,'左案可拆装铜制样件，右案可在木阵盘上重排声路。案上各有一份待验的接法和公料。试一次用一日，原物和旧信都能收好带走。'],[...item.labels.map((label,i)=>choice('try-'+(i?'right':'left'),label,'craft',i?'array':'artifact',i?'formation':'forge',{next:i===item.correct?'convoy-ear-good':'convoy-ear-miss',patch:patch({trial:i===item.correct?'proved':'miss'}),rule:{days:1}})),book]);
+ if(node==='convoy-ear-table'){
+  const notes=[];
+  if(s.seen&1)notes.push(item.object);
+  if(s.seen&2)notes.push(item.letter);
+  if(!notes.length)notes.push(item.scene);
+  return row(item.title+' · 试台','择一接法做一日空载试音',[...notes,'左案可拆装铜制样件，右案可在木阵盘上重排声路。案上各有一份待验的接法和公料。试一次用一日，原物和旧信都能收好带走。'],[...item.labels.map((label,i)=>choice('try-'+(i?'right':'left'),label,'craft',i?'array':'artifact',i?'formation':'forge',{next:i===item.correct?'convoy-ear-good':'convoy-ear-miss',patch:patch({trial:i===item.correct?'proved':'miss'}),rule:{days:1}})),book]);
+ }
  if(node==='convoy-ear-good')return row(item.title+' · 合声','决定把这件手艺交给谁',[item.proof,'委托人同意两种交割。制符留样需三日，原物仍归本主，图样可以再印；亲校原件需两日，原件和覆验尺寸一并交还，只留下往来的信。公料由受托方供给。'],[
   choice('make-copy','花三日制符留样，让他人照样重做','craft','talisman','talisman',{next:'convoy-ear-receipt',patch:patch({...blank(),decisions:s.decisions+'C'}),rule:{days:3,art:'talismans'}}),
   choice('keep-original','花两日校过原件，归还原主','craft','artifact','forge',{next:'convoy-ear-receipt',patch:patch({...blank(),decisions:s.decisions+'O'}),rule:{days:2,art:'forging'}}),back]);

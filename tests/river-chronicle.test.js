@@ -296,6 +296,7 @@ test('one continuous birth finishes the three-world campaign and replays its ent
  for(const [i,key] of ['right','left','right'].entries()){
   s=follow(s,'ear-open','ear-read','ear-object','ear-letter','ear-table');
   if(i===0){
+   assert.match(prose(s),/米粒/);assert.match(prose(s),/拣豆子/);
    s=pick(s,'try-left');assert.match(s.currentScene.title,/走音/);assert.equal(s.lastReceipt.elapsedDays,1);
    assert.equal(s.events.convoy.resonance.decisions,'');s=pick(s,'ear-table');
   }

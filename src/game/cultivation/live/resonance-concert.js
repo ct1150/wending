@@ -29,7 +29,7 @@ export function concertNode(state,menu,choice,row,book,sea){
  const hub=menu('river-back','合起排演单，回去休整','hub');
  if(!plan){
   const venue=(code,label)=>menu('play-'+code,label,'convoy-concert-plan',patch({venue:code,visits:0,performed:false}));
-  return row('归航合奏 · 择地','选定最后演奏的地方',['谱匣合上后，有两张请帖同时到了。码头想让等船的人在雾里也能听见交接；临窗的小院只摆得下几把凳子，希望给总被响声淹没的人单独留一场。两边同日开演，选定一处，另一处照旧过自己的日子。','出场前三班各有自己的差事。你有两日可亲自去合练，每日能陪一班。没有合练的班次仍按自己原来的办法行事。'],[venue('harbor','应长桥之约，把曲子留给等船的人'),venue('window','应窗下之约，给小院留一场'),book]);
+  return row('归航合奏 · 择地','选定最后演奏的地方',['谱匣里有两张长年有效的请帖。码头想让等船的人在雾里也能听见交接；临窗的小院只摆得下几把凳子，希望给总被响声淹没的人单独留一场。三班人共用一套器物，衡量过人手，只能认领其中一场。','各班愿意合出两个工日陪持匣人排演，每日一班。合练过的接法会刻在交班牌上；即便换了值守人，后来接手的也能照牌入拍。等持匣人落印才定演期，其余日子仍各做各的事。'],[venue('harbor','应长桥之约，把曲子留给等船的人'),venue('window','应窗下之约，给小院留一场'),book]);
  }
  const harbor=plan.venue==='harbor',venue=harbor?'长桥':'窗下',title=harbor?'一座桥的回声':'一扇窗的回声';
  const notes=seats.map((seat,i)=>seat.name+'。'+(score.decisions[i+3]==='C'?seat.copy:seat.original));
