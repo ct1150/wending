@@ -17,6 +17,8 @@ const eventNodeIds=new Set([
  'council-book','council-result',
  'convoy-book','convoy-plan','convoy-crew','convoy-stores','convoy-check','convoy-result','convoy-arrival',
  'convoy-cross','convoy-board','convoy-board-notes','convoy-test-result','convoy-remote',
+ 'convoy-ear-book','convoy-ear-open','convoy-ear-read','convoy-ear-table','convoy-ear-good','convoy-ear-miss','convoy-ear-receipt',
+ 'convoy-concert-plan','convoy-concert-visits','convoy-concert-last','convoy-concert-check','convoy-concert-result',
  'field-guide','field-camp','field-bank','field-grove','field-kiln','field-shrine','field-spar','field-proof','field-source','field-banks','field-ending',
 ]);
 const copy=value=>JSON.parse(JSON.stringify(value));
@@ -31,6 +33,14 @@ export function validateEventState(events){
  if(['field-source','field-banks','field-ending'].includes(events.node)&&!events.valley?.pass||events.node==='field-ending'&&!events.valley?.settled||events.node==='field-proof'&&!(events.valley?.remedy||events.valley?.sleeve))throw new Error('雾药谷游记页次无效。');
  if((events.convoy||events.node.startsWith('convoy-'))&&events.council?.length!==councilHearings)throw new Error('海路尚未开卷。');
  if(events.node==='convoy-result'&&!events.convoy?.chapters.at(-1)?.loads.length)throw new Error('海路缺少到港记录。');
+ if(events.node.startsWith('convoy-ear-')){
+  const score=events.convoy?.resonance;
+  if(events.convoy?.chapters[0]?.loads.length!==2||events.node==='convoy-ear-good'&&score?.trial!=='proved'||events.node==='convoy-ear-miss'&&score?.trial!=='miss'||events.node==='convoy-ear-receipt'&&!score?.decisions.length)throw new Error('听息谱页次无效。');
+ }
+ if(events.node.startsWith('convoy-concert-')){
+  const score=events.convoy?.resonance;
+  if(score?.decisions.length!==6||events.node!=='convoy-concert-plan'&&!score.concert||events.node==='convoy-concert-result'&&!score.concert?.performed)throw new Error('归航合奏页次无效。');
+ }
  if((events.council!==undefined||events.node.startsWith('council-'))&&events.expedition?.place!=='end'||events.node==='council-result'&&!events.council)throw new Error('北山公簿页次无效。');
  if(Object.hasOwn(events,'river'))validateRiver(events.river);
  if(Object.hasOwn(events,'expedition'))validateExpedition(events.expedition);

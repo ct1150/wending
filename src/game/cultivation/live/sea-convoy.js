@@ -1,6 +1,7 @@
 import {exactKeys} from './schema.js';
 import {WORLD_TIERS} from './cultivation-rules.js';
 import {tideWorkshop,validateBenches} from './tide-workshop.js';
+import {resonanceNode,validateResonance} from './resonance.js';
 
 // Each port has two fair tides. Boat space measures displacement including
 // tools and personal effects. People here have already opted to travel.
@@ -46,7 +47,7 @@ const capacity=(port,chapter,tide)=>chapter.rig==='barge'?(tide===0?2:4):tide===
 const names=(port,mask)=>port.groups.filter((_,i)=>has(mask,i)).map(g=>g[0]).join('、')||'空船';
 
 export function validateConvoy(v){
- exactKeys(v,['chapters','draft'],['benches']);
+ exactKeys(v,['chapters','draft'],['benches','resonance']);
  if(!Array.isArray(v.chapters)||v.chapters.length>ports.length||!Number.isInteger(v.draft)||v.draft<0||v.draft>15)throw new Error('海路舱单无效。');
  for(const [i,chapter] of v.chapters.entries()){
   exactKeys(chapter,['rig','loads']);
@@ -60,6 +61,10 @@ export function validateConvoy(v){
  }
  if(!v.chapters.length&&v.draft)throw new Error('尚未议定船型。');
  if(Object.hasOwn(v,'benches'))validateBenches(v.benches,v.chapters);
+ if(Object.hasOwn(v,'resonance')){
+  if(v.chapters[0]?.loads.length!==2)throw new Error('谱匣尚未随港信寄出。');
+  validateResonance(v.resonance);
+ }
 }
 
 export function convoyNode(state,menu,choice,actor){
@@ -70,24 +75,27 @@ export function convoyNode(state,menu,choice,actor){
  const back=menu('river-back','收起海路公牍，回去整备','hub');
  const next=menu('convoy-book','查阅下一程海路','convoy-book');
  const training=menu('train-menu','安排修炼与突破','training');
+ if(nodeId.startsWith('convoy-ear-')||nodeId.startsWith('convoy-concert-'))return resonanceNode(state,menu,choice);
+ const ear=menu('ear-book','查看白汀符匠钟荻的听息谱','convoy-ear-book');
+ const hasEar=state.life.cultivationProfile.worldTier>=1&&v.chapters[0]?.loads.length===2;
  if(nodeId==='convoy-result'){
   const p=ports[v.chapters.length-1],i=chapter.loads.length-1,load=chapter.loads[i],sent=chapter.loads.reduce((a,b)=>a|b,0);
   const lines=['第'+(i+1)+'次潮汛落印，历时'+p.days[i]+'日。到岸簿记为：'+names(p,load)+'。'];
   p.groups.forEach((g,j)=>{if(has(load,j))lines.push(g[3]);else if(i===1&&!has(sent,j))lines.push(g[4]);});
-  return row(p.name+' · 到岸回信','读完来信，继续下一次交接',lines,[next,back]);
+  return row(p.name+' · 到岸回信','读完来信，继续下一次交接',lines,[next,...(hasEar?[ear]:[]),back]);
  }
  if(!port){
   const ending=v.chapters.map((c,i)=>{
    const p=ports[i],delivered=c.loads[0]|c.loads[1];
    return p.name+'。头潮载了'+names(p,c.loads[0])+'，末潮载了'+names(p,c.loads[1])+'。'+(delivered===15?'这一港的四份请求都已办妥。':'留在原岸的是'+names(p,15^delivered)+'。');
   });
-  return row('问川归航 · 两岸各有灯','三界海路已交还给沿岸的人',['某日清晨，水鉴里有个小孩问，最初的守闸人是哪一位。对岸的人翻出北山公簿，又有人翻出河簿。几处笔迹未必出自同一个人，却能一路找到写在水尺背面的第三道刻痕。',...ending,'你把水鉴放下时，另一岸也有人自去上灯。这一段问川行路到此合卷。'],[training,back]);
+  return row('问川归航 · 两岸各有灯','三界海路已交还给沿岸的人',['某日清晨，水鉴里有个小孩问，最初的守闸人是哪一位。对岸的人翻出北山公簿，又有人翻出河簿。几处笔迹未必出自同一个人，却能一路找到写在水尺背面的第三道刻痕。',...ending,'你把水鉴放下时，另一岸也有人自去上灯。这一段问川行路到此合卷。'],[training,...(hasEar?[ear]:[]),back]);
  }
  const tier=state.life.cultivationProfile.worldTier;
  const remote=tier>index;
  if(nodeId==='convoy-arrival'){
   const arrived=state.lastReceipt?.cultivationResult?.check?.success;
-  return row(arrived?'界外第一封信':'界渡折返','核对本次跨界的实际结果',[arrived?'传送已成。你在'+WORLD_TIERS[tier]+'重新接好水鉴，镜里起了不同的潮纹。':'这次跨界失败，你仍在'+WORLD_TIERS[tier]+'。已经耗去的材料与承受的伤势记在本回收据中，海路公牍保留原来的到港单。'],[next,training,back]);
+  return row(arrived?'界外第一封信':'界渡折返','核对本次跨界的实际结果',[arrived?'传送已成。你在'+WORLD_TIERS[tier]+'重新接好水鉴，镜里起了不同的潮纹。':'这次跨界失败，你仍在'+WORLD_TIERS[tier]+'。已经耗去的材料与承受的伤势记在本回收据中，海路公牍保留原来的到港单。',...(arrived&&hasEar?['落脚处还寄存着一只谱匣。白汀符匠钟荻以前写给家人的信，夹在六件音器的图纸里。']:[])],[next,arrived&&hasEar?ear:training,back]);
  }
  if(tier<index){
   const destination=tier===0?'middle':'upper',name=tier===0?'中界清河城':'上界观星台';

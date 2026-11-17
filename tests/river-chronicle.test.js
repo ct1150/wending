@@ -28,6 +28,37 @@ const open=observe=>follow(start(observe),'decline','journey-menu','river-book',
 const prose=state=>state.currentScene.blocks.map(block=>block.text).join('\n');
 
 const valleyCamp=()=>follow(open(),'deliberate','policy-0','field-guide','enter-field');
+test('each of the eight handoff histories changes the actual upper-world instruments and their working proposals',()=>{
+ const state=start();state.life.cultivationProfile.worldTier=2;
+ const chapters=[{rig:'light',loads:[5,10]}];
+ for(let mask=0;mask<8;mask++){
+  const letters=Array.from({length:3},(_,i)=>mask&(1<<i)?'C':'O').join('');
+  for(let i=0;i<3;i++){
+   const decisions=letters+'O'.repeat(i);
+   state.events={...state.events,node:'convoy-ear-table',convoy:{chapters,draft:0,resonance:{decisions,seen:0,trial:'none'}}};
+   const controls=eventNode(state).choices.slice(0,2),useRight=letters[i]==='C'?(i===1):(i!==1);
+   assert.equal(controls[Number(useRight)].next,'convoy-ear-good');
+   assert.equal(controls[1-Number(useRight)].next,'convoy-ear-miss');
+   assert.equal(controls[Number(useRight)].rule.days,1);
+   assert.match(controls[Number(useRight)].patch.convoy.resonance.trial,/proved/);
+   state.life.cultivationProfile.worldTier=1;
+   assert.equal(eventNode(state).choices.some(c=>c.key.startsWith('try-')),false);
+   state.life.cultivationProfile.worldTier=2;
+  }
+ }
+ const score={decisions:'CCOCOO',seen:0,trial:'none'};
+ assert.throws(()=>validateConvoy({chapters,draft:0,resonance:{...score,decisions:'CCO',concert:{venue:'harbor',visits:0,performed:false}}}),/尚未校完/);
+ assert.throws(()=>validateConvoy({chapters,draft:0,resonance:{...score,concert:{venue:'window',visits:7,performed:true}}}),/合奏/);
+ for(const venue of ['harbor','window']){
+  for(let visits=0;visits<7;visits++){
+   state.events={...state.events,node:'convoy-concert-check',convoy:{chapters,draft:0,resonance:{...score,concert:{venue,visits,performed:false}}}};
+   const perform=eventNode(state).choices.find(c=>c.key==='perform');
+   state.events={...state.events,...perform.patch,node:perform.next};
+   validateConvoy(state.events.convoy);
+   const result=eventNode(state);assert.match(result.title,venue==='harbor'?/桥/:/窗/);assert.ok(!result.choices.some(c=>c.key==='perform'));
+  }
+ }
+});
 test('a life already above an unfinished port must commission local hands through the mirror',()=>{
  for(const tier of [1,2]){
   const state=start();state.life.cultivationProfile.worldTier=tier;
@@ -253,14 +284,41 @@ test('one continuous birth finishes the three-world campaign and replays its ent
  assert.equal(s.life.items.stones,priorStones+45);assert.equal(s.life.items.array,priorArrays+1);assert.ok(s.events.convoy.benches[0].paid);
  s=follow(s,'cross-menu','sea-array');
  assert.equal(s.life.cultivationProfile.worldTier,1);assert.equal(s.life.items.array,priorArrays);
- s=follow(s,'convoy-book','rig-barge','crew','load-0','manifest','weigh','sail','convoy-book','stores','load-2','load-3','manifest','crew','load-1','manifest','weigh','sail','convoy-book');
+ s=pick(s,'ear-book');
+ for(const [i,key] of ['right','left','right'].entries()){
+  s=follow(s,'ear-open','ear-read','ear-object','ear-letter','ear-table');
+  if(i===0){
+   s=pick(s,'try-left');assert.match(s.currentScene.title,/走音/);assert.equal(s.lastReceipt.elapsedDays,1);
+   assert.equal(s.events.convoy.resonance.decisions,'');s=pick(s,'ear-table');
+  }
+  s=pick(s,'try-'+key);assert.match(s.currentScene.title,/合声/);
+  s=pick(s,i===1?'keep-original':'make-copy');assert.equal(s.events.convoy.resonance.decisions.length,i+1);
+  s=pick(s,'ear-book');
+ }
+ assert.match(s.currentScene.title,/等候上界/);s=pick(s,'convoy-book');
+ s=follow(s,'rig-barge','crew','load-0','manifest','weigh','sail','convoy-book','stores','load-2','load-3','manifest','crew','load-1','manifest','weigh','sail','convoy-book');
  assert.deepEqual(s.events.convoy.chapters[1].loads,[1,14]);
  s=follow(s,'work-board','pin-R','pin-L','pin-R','pin-L','test-pins','cross-menu');
  assert.ok(!compileChoices(s,s.currentScene.choices).find(c=>c.approach==='ancient-array').enabled);
  s=trainTo(follow(s,'river-back','train-menu'),4);
  s=follow(s,'convoy-book','cross-menu','sea-array');
  assert.equal(s.life.cultivationProfile.worldTier,2);
- s=follow(s,'convoy-book','rig-light','crew','load-1','manifest','stores','load-3','manifest','weigh','sail','convoy-book','crew','load-0','manifest','stores','load-2','manifest','weigh','sail','convoy-book');
+ s=pick(s,'ear-book');
+ for(const [i,key] of ['left','left','left'].entries()){
+  s=follow(s,'ear-open','ear-read','ear-letter','ear-object','ear-table','try-'+key);
+  assert.match(s.currentScene.title,/合声/);
+  s=follow(s,i===1?'make-copy':'keep-original','ear-book');
+ }
+ assert.equal(s.events.convoy.resonance.decisions,'COCOCO');
+ assert.match(prose(s),/钟荻/);
+ s=follow(s,'plan-concert','play-window','visit-groups','visit-0','visit-groups','visit-2');
+ assert.equal(s.events.convoy.resonance.concert.visits,5);
+ s=follow(s,'check-concert','perform');
+ assert.match(s.currentScene.title,/一扇窗/);assert.match(prose(s),/陶管/);
+ const arts={...s.life.cultivationProfile.arts};
+ s=follow(s,'ear-book','read-concert');assert.deepEqual(s.life.cultivationProfile.arts,arts);
+ s=pick(s,'convoy-book');
+ s=follow(s,'rig-light','crew','load-1','manifest','stores','load-3','manifest','weigh','sail','convoy-book','crew','load-0','manifest','stores','load-2','manifest','weigh','sail','convoy-book');
  assert.deepEqual(s.events.convoy.chapters[2].loads,[10,5]);assert.match(s.currentScene.title,/问川归航/);
  t.diagnostic('Three-world campaign ending at turn '+s.turnId+'; world tier '+s.life.cultivationProfile.worldTier);
  const {liveBrowser}=await import('./helpers/live-browser.js'),{page}=await liveBrowser(t);
