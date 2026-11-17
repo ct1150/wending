@@ -488,6 +488,10 @@ class Archive {
    const current=resolveRuleScene(c.run.state,p);
    if(current.choices.some(c=>!prior.ferry&&c.id.endsWith(':c:shell-book')||!prior.well&&c.id.endsWith(':c:well-road'))&&same(scene,resolveEventScene(c.run.state,p,'resources')))scene=current;
   }
+  if(prior&&sceneId.endsWith(':s:event_training')&&scene.choices?.some(c=>['practice','garden-book','mount-book'].some(key=>c.id?.endsWith(':c:'+key)))){
+   const current=resolveRuleScene(c.run.state,p);
+   if(current.choices.some(c=>c.id.endsWith(':c:ward-book'))&&same(scene,resolveEventScene(c.run.state,p,'ward')))scene=current;
+  }
   if(prior&&sceneId.endsWith(':s:event_training')&&scene.choices?.some(c=>c.id?.endsWith(':c:breakthrough'))){
    const current=resolveRuleScene(c.run.state,p);
    if(!current.choices.some(c=>c.id.endsWith(':c:breakthrough'))&&same(scene,resolveEventScene(c.run.state,p,'training')))scene=current;

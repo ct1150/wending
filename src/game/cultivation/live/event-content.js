@@ -165,9 +165,11 @@ export function eventNode(state,historicMenu=null){
    const oldGate=historicMenu==='training'||state.currentScene?.id.endsWith(':t'+state.turnId+':s:event_training')&&state.currentScene.choices.some(c=>c.id.endsWith(':c:breakthrough'));
    const oldHunt=historicMenu==='ridge'||state.currentScene?.id.endsWith(':t'+state.turnId+':s:event_training')&&state.currentScene.choices.some(c=>c.id.endsWith(':c:find-material'));
    const ridge=next&&!oldHunt&&ridgeEntrance(state,next.material);
+   const oldWard=historicMenu||state.currentScene?.id.endsWith(':t'+state.turnId+':s:event_training')&&!state.currentScene.choices.some(c=>c.id.endsWith(':c:ward-book'));
    return row('修行的门槛',next?'积累修为与'+ITEMS[next.material]+'，尝试进入'+next.name:'在当前境界继续修行与历练',[
    narration(next?'你目前是'+realm.name+'。进入'+next.name+'需要修为达到'+next.threshold+'，并备妥'+ITEMS[next.material]+'。闭关的年月、灵力和风险会在行动前列明。':'渡劫之后，此生仍未结束。你可以继续积累、历练或照料旧日因果，直到真实的寿尽或伤重。'),
   ],[
+   !oldWard&&next?.rank>=7&&life.cultivation>=next.threshold?menu('ward-book','查看护阵突破，准备抵挡致命反噬','breakthrough-ward'):
    e.mountain?.walk[4]?.exit==='echo'?menu('mount-book','回雪脊，回应停下的旧影','mount-book'):
    e.mountain?.wind&&!e.mountain.wind.ending?menu('mount-book','回风口，接着与小满商量下一步','mount-book'):
     e.garden?.plot&&(!next||life.cultivation>=next.threshold)?menu('garden-book','验看苗盆，或在盆旁继续修行','garden-book'):choice('practice','按当前功法稳步修炼','practice','self','steady',{next:'action-result'}),
@@ -177,6 +179,19 @@ export function eventNode(state,historicMenu=null){
    menu('rest-menu','调息、安排守关或验看功法','rest'),
   ]);
   }
+  case 'breakthrough-ward':return row('在关门内留一条退路','备好器物，再决定是否护阵冲关',[
+   narration('冲关时，阵盘承接溃散的灵息，法器作为泄流的阵眼。两件器物都会毁去，换来失败时仍能收住经脉的机会。'),
+   narration('护阵突破沿用普通突破的成功率、闭关年月与破境材料，额外消耗阵盘一件、法器一件和十二分灵力。失败仍损失修为并增加两层伤势，但不会因这次冲关的致命反噬直接身亡。护阵不能延寿，途中寿尽仍会死亡。'),
+   narration('若不愿付出这笔代价，可以返回修行页选择普通突破，承担原有风险；也可先到手艺页准备器物。浏览这张阵图不耗时、不扣物。'),
+  ],[choice('guarded-breakthrough','耗用护阵器物，尝试突破'+next.name,'practice',next.id,'breakthrough',{next:'action-result'}),menu('ward-preparation','继续积累修为，或准备护阵器物','breakthrough-preparation'),menu('train-menu','收好阵图，回去安排修行','training')]);
+  case 'breakthrough-preparation':return row('冲关前的准备','多积累修为，或以器物护住经脉',[
+   narration('达到门槛后仍能稳修。超出门槛的修为可以提高突破机会，但提高幅度有上限，也挡不住普通冲关的致命反噬。稳修继续照常消耗年月与灵力，余寿仍要留给闭关。'),
+   narration('法器与护身阵盘都在手艺页炼制。是否继续积累、是否准备护阵，由你决定。'),
+  ],[
+   e.mountain?.walk[4]?.exit==='echo'?menu('mount-book','回雪脊，回应停下的旧影','mount-book'):
+   e.mountain?.wind&&!e.mountain.wind.ending?menu('mount-book','回风口，接着与小满商量下一步','mount-book'):
+   e.garden?.plot?menu('garden-book','验看苗盆，或在盆旁继续修行','garden-book'):choice('practice','按当前功法再稳修一关','practice','self','steady',{next:'action-result'}),
+   menu('ward-workshop','准备法器与阵盘，查看手艺','workshop',{page:1}),menu('ward-book','带着准备回看护阵突破','breakthrough-ward')]);
   case 'rest':{
    const reserve=realm.rank>=1&&next&&life.lifeLimit*DAYS_PER_YEAR-life.ageDays<=(next.minYears+realm.practiceYears)*DAYS_PER_YEAR;
    return row('停下来整备','先照料伤势与灵力，也可回去处理别的事',[
@@ -286,6 +301,7 @@ export function eventNode(state,historicMenu=null){
    else if(action?.intent==='rest')text='你留出时间静养调息。恢复以真实伤势与灵力为准，没有借休整替你完成未接下的事情。';
    else if(action?.intent==='craft')text=check&&!check.success?'这次炼制失败，投入的材料已经消耗，未得到成品。':'你完成了这次炼制，所得与消耗照实记入行囊。';
    else if(action?.intent==='travel')text=check&&!check.success?'这次跨界没有成功，你仍在原来的界域；实际损耗已经记下。':'你抵达所选的界域，旧事仍保留在来路中，眼前的修行条件按新的天地结算。';
+   if(action?.id.endsWith(':c:guarded-breakthrough'))text+=(check?.success?'阵盘与法器已经耗尽，护阵的代价没有因突破成功而退回。':check?.roll>=98?'关内灵息逆冲，阵盘与法器一并毁去，把致命反噬截在经脉之外。你带伤出关，仍须重新积累。':'阵盘与法器已经耗尽。你带伤出关，护阵没有替你免去失败的其他代价。');
    let onward=menu('affairs-menu','看看故人与未完之事','affairs');
    const oldRations=historicMenu==='provisions'||state.currentScene?.id.endsWith(':t'+state.turnId+':s:event_action-result')&&!state.currentScene.choices.some(c=>c.id.endsWith(':c:ration-book'));
    const canTrade=(life.items.stones??0)>=2||(life.items.herbs??0)>=2;

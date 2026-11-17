@@ -29,7 +29,7 @@ const eventNodeIds=new Set([
  'ration-book','ration-road','ration-packed','seed-book',
  'ridge-unityjade','ridge-daofruit','ridge-thunderseal',
  'form-book','form-drill','form-result','hunt-forms',
- 'hub','training','rest','journey','resources','workshop','crossing','affairs','mentor','mentor-result','old-record','action-result',
+ 'hub','training','breakthrough-ward','breakthrough-preparation','rest','journey','resources','workshop','crossing','affairs','mentor','mentor-result','old-record','action-result',
  'river-book','river-site','river-reading','river-decision','river-result',
  'voyage-book','voyage-road','voyage-camp','voyage-log','voyage-reset','voyage-result','voyage-detour',
  'council-book','council-result','council-inquiry','council-witness','council-question',
@@ -59,6 +59,7 @@ export function validateEventState(events,life,gardenRoot,birthRoll){
  if(Object.hasOwn(events,'cloudRift')||events.node.startsWith('sky-rift'))validateCloudRift(events,life);
  if(events.node==='sky-lodgings'&&(events.cloudPassage?.[0]?.route==null||life&&realmFor(life).rank<5))throw Error('风隙尚不可访，无须分开安排云渡。');
  if(!eventNodeIds.has(events.node))throw new Error('规则事件节点无效。');
+ if(events.node.startsWith('breakthrough-')&&life&&(!nextRealmFor(life)||realmFor(life).rank<6))throw Error('此境尚无高境护阵冲关。');
  if(Object.hasOwn(events,'nursery')||events.node.startsWith('nursery-')||events.node==='work-porch')validateNursery(events,life,birthRoll);
  if(Object.hasOwn(events,'saltField')||events.node==='seed-book')validateSaltField(events,life);
  if(Object.hasOwn(events,'ridgeRoad')||events.node.startsWith('ridge-'))validateRidgeRoad(events,life);
@@ -145,8 +146,11 @@ function selected(state,action){
 export function eventActionRule(state,proposal,baseRule){
  const option=selected(state,proposal);
  if(option.navigation)return {...initialV7ActionRule(0),eventNavigation:true};
- if(!option.rule)return baseRule;
- const rule={...initialV7ActionRule(0),...copy(option.rule)};
+ if(!option.rule&&option.key!=='guarded-breakthrough')return baseRule;
+ const rule=option.key==='guarded-breakthrough'?{
+  ...copy(baseRule),items:{...baseRule.items,array:1,artifact:1},spiritCost:baseRule.spiritCost+12,breakthroughWard:true,
+  warnings:[...baseRule.warnings.filter(w=>w!=='高境冲关可能引来致命反噬。'),'护阵器物无论成败都会消耗；可挡本次致命反噬，不能免除伤势、修为损失或寿尽。'],
+ }:{...initialV7ActionRule(0),...copy(option.rule)};
  for(const [id,count] of Object.entries(rule.items))if((state.life.items[id]??0)<count)rule.reason='缺少'+ITEMS[id]+'。';
  for(const [id,count] of Object.entries(rule.gain)){
   const room=9999-(state.life.items[id]??0)+(rule.items[id]??0);
@@ -156,7 +160,7 @@ export function eventActionRule(state,proposal,baseRule){
   rule.warnings.push(ITEMS[id]+'剩余容量为'+room+'，多出的赠礼留给当地。');
  }
  if(state.life.cultivationProfile.spirit<rule.spiritCost)rule.reason='灵力不足，须先调息。';
- if(state.life.ageDays+rule.days>=state.life.lifeLimit*DAYS_PER_YEAR)rule.warnings.push('此行动无法在当前寿元上限前完成，途中寿尽将无法得到成果。');
+ if(!rule.breakthroughWard&&state.life.ageDays+rule.days>=state.life.lifeLimit*DAYS_PER_YEAR)rule.warnings.push('此行动无法在当前寿元上限前完成，途中寿尽将无法得到成果。');
  return rule;
 }
 export function advanceEvents(state,receipt){

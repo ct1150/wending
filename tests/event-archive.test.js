@@ -4,6 +4,61 @@ import {readFile} from 'node:fs/promises';
 import {gunzipSync} from 'node:zlib';
 import {liveBrowser} from './helpers/live-browser.js';
 
+test('an old high-realm pending menu resumes once and a genuinely provisioned ward replays once',async t=>{
+ const text=gunzipSync(await readFile(new URL('./fixtures/378f0a2-high-training.jsonl.gz',import.meta.url))).toString('utf8');
+ const {page}=await liveBrowser(t);
+ const result=await page.evaluate(async text=>{
+  const {importLiveArchive,exportLiveArchive}=await import('/src/game/live-save-format.js'),{createLiveSession}=await import('/src/ui/live-session.js');
+  const {nextRealmFor}=await import('/src/game/cultivation/live/cultivation-rules.js');
+  const a=await open('ward-old'),copy=await open('ward-paid');await importLiveArchive(new Response(text).body,a);
+  const original=await a.load(),session=createLiveSession({archive:a,client:{}});await session.load();await session.resume();await session.resume();let row=await a.load();
+  const resumed=row.state;
+  async function go(...keys){for(const key of keys){
+   const c=row.state.currentScene.choices.find(c=>c.id.endsWith(':c:'+key));if(!c)throw Error('missing '+key+' in '+row.state.events.node);
+   row=await session.choose({choiceId:c.id,baseRevision:row.state.revision,stateHash:identity.stateHash(row.state)});if(row.errorCode)throw Error(key+': '+row.errorCode);
+  }}
+  await go('back','train-menu');const beforeVisit=row.state;await go('ward-book');const visited=row.state;
+  const disabled=engine.compileChoices(visited,visited.currentScene.choices).find(c=>c.id.endsWith(':c:guarded-breakthrough'));
+  await go('train-menu');
+  async function stock(id,count){for(let tries=0;(row.state.life.items[id]??0)<count;tries++){
+   if(tries>=30)throw Error('resource preparation stalled '+id);
+   await go('rest-menu','recover','train-menu','rest-menu','back','journey-menu','resources-menu');
+   for(let menu=0;row.state.currentScene.choices.find(c=>c.id.endsWith(':c:gather')).targetId!==id;menu++){
+    if(menu>=6)throw Error('missing resource '+id);await go('next-resource');
+   }
+   await go('gather','train-menu');
+  }}
+  for(const item of ['artifact','array']){
+   for(let tries=0;!(row.state.life.items[item]>0);tries++){
+    if(tries>=12)throw Error('craft preparation stalled');
+    await stock('stones',6);await stock('iron',item==='artifact'?4:2);
+    await go('rest-menu','recover','train-menu','ward-book','ward-preparation','ward-workshop');
+    if(item==='array')await go('next-recipe','next-recipe');
+    await go('craft','train-menu');
+   }
+  }
+  const material=nextRealmFor(row.state.life).material;await stock('supplies',2);await stock(material,1);
+  await go('rest-menu','recover','train-menu','ward-book');const prepared=row.state;
+  const choice=prepared.currentScene.choices.find(c=>c.id.endsWith(':c:guarded-breakthrough'));
+  const available=engine.compileChoices(prepared,prepared.currentScene.choices).find(c=>c.id===choice.id);
+  if(!available.enabled)throw Error(available.reason);
+  await a.prepare(engine.prepareChoice(prepared,{choiceId:choice.id,requestId:'paid-ward'}));
+  await importLiveArchive(exportLiveArchive(a),copy);const second=createLiveSession({archive:copy,client:{}});
+  await second.load();await second.resume();await second.resume();const settled=(await copy.load()).state;
+  const third=await open('ward-final');await importLiveArchive(exportLiveArchive(copy),third);
+  const replayed=(await third.load()).state;
+  return {old:original.state.turnId,resumed:resumed.turnId,oldKeys:original.state.currentScene.choices.map(c=>c.id.split(':c:')[1]),
+   lifeUnchanged:JSON.stringify(beforeVisit.life)===JSON.stringify(visited.life),rngUnchanged:beforeVisit.rng===visited.rng,disabled:disabled.enabled,
+   prepared:prepared.turnId,settled:settled.turnId,receipt:settled.lastReceipt,material,exact:identity.stateHash(replayed)===identity.stateHash(settled),
+   text:settled.currentScene.blocks.map(b=>b.text).join('\n')};
+ },text);
+ assert.ok(result.oldKeys.includes('practice'));assert.equal(result.resumed,result.old+1);
+ assert.ok(result.lifeUnchanged);assert.ok(result.rngUnchanged);assert.equal(result.disabled,false);
+ assert.equal(result.settled,result.prepared+1);assert.ok(result.exact);
+ assert.equal(result.receipt.itemChanges.array,-1);assert.equal(result.receipt.itemChanges.artifact,-1);assert.equal(result.receipt.itemChanges[result.material],-1);
+ assert.equal(result.receipt.death,null);assert.ok(result.receipt.elapsedDays>0);assert.match(result.text,/阵盘与法器/);
+});
+
 test('a genuine old cloud exit and a paid rift launch resume once with exact mixed-history replay',async t=>{
  const text=gunzipSync(await readFile(new URL('./fixtures/21e6acc-rift-pending.jsonl.gz',import.meta.url))).toString('utf8');
  const {page}=await liveBrowser(t);

@@ -380,7 +380,7 @@ export function resolveV7Action(life,action,rule,roll,turnId){
       if(rule.lethalFailure&&roll>=98)injury=10;
       if(rule.checkKind==='breakthrough'){
         next.cultivation=Math.max(0,next.cultivation-Math.max(1,Math.ceil(V7_REALMS[rule.realm].threshold/2)));
-        if(V7_REALMS[rule.realm].rank>=7&&roll>=98)injury=10;
+        if(V7_REALMS[rule.realm].rank>=7&&roll>=98&&!rule.breakthroughWard)injury=10;
       }
       if(rule.checkKind==='forbidden'){
         profile.lifespanLoss+=rule.backlashLoss;next.lifeLimit=lifespanLimitFor(next);cause='forbidden-backlash';
