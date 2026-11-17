@@ -4,6 +4,48 @@ import {readFile} from 'node:fs/promises';
 import {gunzipSync} from 'node:zlib';
 import {liveBrowser} from './helpers/live-browser.js';
 
+test('steady retreat plans commit the manual turns exactly once and fence interruption, stale tabs and partial writes',async t=>{
+ const {page}=await liveBrowser(t);
+ const results=await page.evaluate(async()=>{
+  const {createLiveSession}=await import('/src/ui/live-session.js'),{practicePlan}=await import('/src/game/cultivation/live/practice-plan.js');
+  const {exportLiveArchive,importLiveArchive}=await import('/src/game/live-save-format.js');
+  const archive=await open('repeat-source'),session=createLiveSession({archive,client:{}});
+  let row=await session.startNew({runId:'repeat',seed:42,name:'沈渡',engineVersion:7,eventVersion:1,originStories:true,experienceVersion:1},null);
+  const args=row=>({archiveId:row.archiveId,count:practicePlan(row.state).count,baseRevision:row.state.revision,stateHash:identity.stateHash(row.state)});
+  const choose=(ss,r,key)=>ss.choose({choiceId:r.state.currentScene.choices.find(c=>c.id.endsWith(':c:'+key)).id,baseRevision:r.state.revision,stateHash:identity.stateHash(r.state)});
+  for(const key of ['decline','train-menu'])row=await choose(session,row,key);
+  const command=args(row),bytes=await new Response(exportLiveArchive(archive)).text();
+  const full=await session.practiceUntil(command),old=await session.practiceUntil(command);
+  const modes={};
+  for(const mode of ['manual','stop','abort','replace']){
+   const a=await open('repeat-'+mode);await importLiveArchive(new Response(bytes).body,a);
+   const ss=createLiveSession({archive:a,client:{},onChange:current=>{if(mode==='stop'&&current.practice?.done===1)ss.stopPractice();}});
+   const initial=await ss.load(),commit=a.commitEvent.bind(a);let calls=0;
+   a.commitEvent=async input=>{
+    calls++;
+    if(calls===2&&mode==='abort')throw Error('simulated interrupted write');
+    if(calls===2&&mode==='replace'){
+     const other=await open('repeat-'+mode);
+     try{await importLiveArchive(new Response(bytes).body,other);}finally{other.close();}
+    }
+    return commit(input);
+   };
+   let final=initial;
+   if(mode==='manual')for(let i=0;i<command.count;i++)final=await choose(ss,final,i?'practice-again':'practice');
+   else final=await ss.practiceUntil(args(initial));
+   const after=await a.load();modes[mode]={turns:after.state.turnId-initial.state.turnId,hash:identity.stateHash(after.state),error:final.errorCode,report:final.practice?.done};
+   a.close();
+  }
+  const copied=await open('repeat-export');await importLiveArchive(exportLiveArchive(archive),copied);
+  return {count:command.count,full:identity.stateHash(full.state),roundtrip:identity.stateHash((await copied.load()).state),old:old.errorCode,start:command.stateHash,modes};
+ });
+ assert.ok(results.count>=2);assert.equal(results.full,results.roundtrip);assert.equal(results.full,results.modes.manual.hash);
+ assert.equal(results.old,'STALE_CHOICE');
+ assert.equal(results.modes.stop.turns,1);assert.equal(results.modes.stop.report,1);
+ assert.equal(results.modes.abort.hash,results.modes.stop.hash);assert.ok(results.modes.abort.error);
+ assert.equal(results.modes.replace.turns,0);assert.equal(results.modes.replace.hash,results.start);assert.ok(results.modes.replace.error);
+});
+
 test('an old two-option courier journal resumes into the playable station route and round-trips its mixed history',async t=>{
  const {page}=await liveBrowser(t);
  await page.setViewportSize({width:360,height:760});

@@ -441,6 +441,11 @@ document.addEventListener('click', event => {
   if ('liveProseExpand' in data) return liveSession?.expandProse();
   if ('liveResume' in data) return liveSession?.resume();
   if ('liveChoice' in data) return liveSession?.choose({ choiceId: data.liveChoice, baseRevision: Number(data.revision), stateHash: data.stateHash });
+  if ('livePractice' in data||'liveShortPractice' in data){
+    const count=Number(data.livePractice??button.closest('details').querySelector('[data-practice-count]').value);
+    return liveSession?.practiceUntil({count,archiveId:data.archiveId,baseRevision:Number(data.revision),stateHash:data.stateHash},()=>view==='adventure'&&!document.hidden&&!$('#dialog').open);
+  }
+  if ('liveStopPractice' in data) return liveSession?.stopPractice();
   if ('liveHistoryNext' in data) return showLiveHistory(false);
   if ('liveHistoryFirst' in data || 'history' in data) return showLiveHistory(true);
   if ('character' in data) return showCharacter();
@@ -484,6 +489,8 @@ $('#dialog').addEventListener('cancel', event => { event.preventDefault(); close
 $('#dialog').addEventListener('close', () => { const target = dialogReturnTarget; dialogReturnTarget = null; dialogConfirm = null; resolveFocusTarget(target)?.focus({ preventScroll: true }); });
 $('#dialog').addEventListener('click', event => { if (event.target === $('#dialog')) { const rect = $('#dialog').getBoundingClientRect(); if (event.clientX < rect.left || event.clientX > rect.right || event.clientY < rect.top || event.clientY > rect.bottom) closeDialog(); } });
 window.addEventListener?.('pageshow', event => { if (event.persisted && webContext) liveSession?.resume(); });
+window.addEventListener?.('pagehide',()=>liveSession?.stopPractice());
+document.addEventListener('visibilitychange',()=>{if(document.hidden)liveSession?.stopPractice();});
 
 render();
 initializeScreens();

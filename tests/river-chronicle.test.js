@@ -215,7 +215,24 @@ async function replayOldGarden(t,route,expected){
  }
  await resume('train-menu');
  await button('train-menu').click();await button('garden-book').click();
- for(const key of route.slice(3)){
+ let savedClicks=0,batches=0;
+ for(let i=3;i<route.length;i++){
+  const key=route[i];
+  if(key==='practice'){
+   await button(key).waitFor();
+   const batch=page.locator('[data-live-practice]:enabled');
+   if(await batch.count()){
+    const count=Number(await batch.getAttribute('data-live-practice'));
+    // Substitute only an identical stretch of ordinary practice. The
+    // reference route still owns every recovery, search and breakthrough.
+    const same=Array.from({length:count},(_,j)=>route[i+2*j]==='practice'&&(!j||route[i+2*j-1]==='train-menu')).every(Boolean);
+    if(same){
+     await batch.click();
+     await page.locator('[data-practice-report]').filter({hasText:'已完成 '+count+' 关'}).waitFor();
+     savedClicks+=2*(count-1);batches++;i+=2*(count-1);continue;
+    }
+   }
+  }
   await button(key).click();
   if(key==='try-again'){await button('path-1').waitFor();await resume('path-1');}
  }
@@ -229,7 +246,22 @@ async function replayOldGarden(t,route,expected){
   }finally{a.close();b.close();}
  });
  assert.deepEqual(result,[expected,'spirit',true,true]);assert.equal(calls,0);
- t.diagnostic('Mobile old-save route to the mountain ending: '+route.length+' choices in the native route.');
+ assert.ok(batches>0&&savedClicks>0);
+ t.diagnostic('Mobile old-save route to the mountain ending: '+route.length+' reference choices; '+batches+' steady retreat plans saved '+savedClicks+' clicks along that route.');
+ await button('train-menu').click();
+ await page.locator('.practice-plan details summary').click();
+ await page.locator('[data-practice-count]').selectOption('2');
+ const [days,spirit,gain]=await page.locator('[data-practice-count] option:checked').innerText().then(text=>text.match(/(\d+) 日 · 灵力 −(\d+) · 修为 \+(\d+)/).slice(1).map(Number));
+ const current=()=>page.evaluate(async()=>{
+  const {openLiveArchive}=await import('/src/game/live-archive.js');const a=await openLiveArchive();
+  try{const {life,turnId}=((await a.load()).state);return [life.ageDays,life.cultivationProfile.spirit,life.cultivation,turnId];}finally{a.close();}
+ });
+ const before=await current();
+ await page.locator('[data-live-short-practice]').click();
+ await page.locator('[data-practice-report]').filter({hasText:'已按所选关数收功'}).waitFor();
+ await resume('train-menu');const after=await current();
+ assert.deepEqual(after.map((n,i)=>n-before[i]),[days,-spirit,gain,2]);
+ assert.equal(calls,0);
 }
 test('folded mountain retains a failed intensive retreat and charges a detour only once',()=>{
  for(let seed=0;seed<50;seed++){

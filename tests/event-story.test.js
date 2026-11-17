@@ -5,6 +5,7 @@ import {stateHash} from '../src/game/cultivation/live/identity.js';
 import {TECHNIQUES,nextRealmFor} from '../src/game/cultivation/live/cultivation-rules.js';
 import {eventNode} from '../src/game/cultivation/live/event-content.js';
 import {DAYS_PER_YEAR} from '../src/game/cultivation/live/model.js';
+import {practicePlan} from '../src/game/cultivation/live/practice-plan.js';
 
 const options={runId:'rules-event-life',seed:42,name:'沈渡',engineVersion:7,originStories:true,experienceVersion:1,eventVersion:1};
 function opening(extra={}){
@@ -17,6 +18,41 @@ function choose(state,key){
  const pending=engine.prepareChoice(state,{choiceId:choice.id,requestId:'turn-'+(state.turnId+1)});
  return pending.receipt.death?engine.settleDeath(state,pending):engine.commitTurn(state,pending,engine.resolveRuleScene(state,pending));
 }
+
+test('a retreat plan quotes actual ordinary steady turns and leaves each accepted appointment reachable',()=>{
+ let s=choose(choose(opening(),'decline'),'train-menu');
+ const plan=practicePlan(s);
+ assert.ok(plan.count>=2);
+ const life=structuredClone(s.life);
+ for(let i=0;i<plan.count;i++)s=choose(s,i?'practice-again':'practice');
+ assert.equal(s.life.ageDays-life.ageDays,plan.days);
+ assert.equal(s.life.cultivation-life.cultivation,plan.gain);
+ assert.equal(life.cultivationProfile.spirit-s.life.cultivationProfile.spirit,plan.spirit);
+ assert.equal(s.life.cultivationProfile.exposure-life.cultivationProfile.exposure,plan.exposure);
+ assert.equal(practicePlan(s),null);
+
+ const base=choose(choose(opening(),'decline'),'train-menu'),age=base.life.ageDays,days=plan.days/plan.count;
+ for(const [patch,pattern] of [
+  [{garden:{plot:{bed:0,sown:age},record:[]}},/嫩候/],
+  [{watch:{trail:{start:age,world:0,outcome:null}}},/栗溪/],
+  [{mine:{start:age,record:[]}},/交班/],
+  [{post:{route:'relay',ending:'box',walk:{start:age,outcome:null}}},/潮约/],
+  [{post:{route:'relay',ending:'box',stations:[{sent:age,settled:null}]}},/两站/],
+ ]){
+  const withDate={...base,events:{...base.events,...patch}};
+  const constrained=practicePlan(withDate);
+  assert.equal(constrained.count,0);assert.match(constrained.stop,pattern);
+ }
+ const post={start:age,route:'relay',steps:[],ending:null};
+ const scheduled=practicePlan({...base,events:{...base.events,post}});
+ assert.equal(scheduled.count,Math.ceil(DAYS_PER_YEAR/days));assert.match(scheduled.stop,/回单/);
+ base.life.cultivationProfile.spirit=plan.spirit/plan.count;
+ assert.equal(practicePlan(base).count,1);assert.match(practicePlan(base).stop,/调息/);
+ base.life.cultivationProfile.spirit=life.cultivationProfile.spirit;
+ base.life.ageDays=base.life.lifeLimit*DAYS_PER_YEAR-days;
+ assert.equal(practicePlan(base).count,0);assert.match(practicePlan(base).stop,/寿元/);
+ assert.equal(practicePlan({...base,events:{...base.events,node:'mount-sight'}}),null);
+});
 
 test('event birth is explicit and preserves the same rolled birth and resources',()=>{
  let state;assert.doesNotThrow(()=>{state=engine.createLiveGame(options);});

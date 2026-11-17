@@ -1,7 +1,7 @@
 import {DAYS_PER_YEAR} from './model.js';
 import {exactKeys} from './schema.js';
 import {shoreNode,validateShore} from './zhi-shore.js';
-import {stationNode,validateStations} from './post-stations.js';
+import {stationNode,validateStations,stationVisitWindow} from './post-stations.js';
 
 const years=DAYS_PER_YEAR;
 const seasons=[
@@ -13,6 +13,17 @@ const late=['missed','delegated'];
 const places=['渡口的篷房','石阶上的晒院'];
 const office=p=>p.route==='relay'?0:1;
 const reached=p=>p.steps[0]?.decision===(p.route==='relay'?'ferry':'yard');
+export function postWindows(p){
+ if(!p||p.route==='pass')return [];
+ const times=[],station=stationVisitWindow(p);
+ if(station)times.push(station);
+ if(p.walk&&!p.walk.outcome)times.push({name:'阿枳的潮约',open:p.walk.start,close:p.walk.start+4});
+ if(!p.ending){
+  const s=seasons[p.steps.length];
+  times.push({name:s?'药路第'+(p.steps.length+1)+'封回单':'旧匣交割',open:p.start+(s?.open??25)*years,close:s?p.start+s.close*years-1:Infinity});
+ }
+ return times;
+}
 export function postNotice(p,age,days){
  if(!p||p.route==='pass'||p.walk?.outcome)return null;
  const forecast=days!==undefined;

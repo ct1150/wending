@@ -67,6 +67,12 @@ function journeyDays(previous,route,site){
  const regular=previous?.settled??(route==='door'?1:0);
  return site===regular?1:3;
 }
+export function stationVisitWindow(p){
+ const records=p.stations,last=records?.at(-1);
+ if(last?.settled!==null)return null;
+ const open=last.sent+seasons[records.length-1].days;
+ return {name:'两站交账首班',open,close:open+30};
+}
 export function stationNode(state,menu,choice){
  const {post:p,node}=state.events,records=p.stations??[],last=records.at(-1);
  const active=last?.settled===null,i=active?records.length-1:records.length,c=seasons[i],age=state.life.ageDays;

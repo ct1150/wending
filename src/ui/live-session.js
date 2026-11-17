@@ -6,16 +6,19 @@ import { buildRebirthOptions } from '../game/cultivation/live/reincarnation.js';
 import {MORTAL_OPENING} from '../game/cultivation/live/mortal-opening.js';
 import {requestRecoverableTurn} from './story-recovery.js';
 import {buildEventProseBrief,validateProseText} from '../game/cultivation/live/event-prose.js';
+import {practicePlan} from '../game/cultivation/live/practice-plan.js';
 const defaultEngine={createLiveGame,prepareOpening,prepareChoice,commitTurn,settleDeath};
 const copy=value=>value===undefined?undefined:JSON.parse(JSON.stringify(value));
 const id=()=>globalThis.crypto.randomUUID();
 const fault=code=>Object.assign(new Error(code),{code});
 export function createLiveSession({archive,client,engine=defaultEngine,onChange=()=>{},onProgress=()=>{}}) {
   let loaded=null,busy=false,status='idle',errorCode=null,preview=null,generationStatus='generating',prose=null;
+  let practice=null;
   function proseMatches(row,brief){return row?.archiveId===brief.archiveId&&row.state?.phase==='active'&&row.state.events&&row.state.revision===brief.revision&&buildEventProseBrief(row.state,row.archiveId).sourceHash===brief.sourceHash;}
   function view(){
     if(prose&&!proseMatches(loaded,prose.brief))prose=null;
-    return copy({...loaded,state:loaded?.state??null,pending:loaded?.pending??null,attempt:loaded?.attempt??null,status,errorCode,busy,preview,generationStatus,...(loaded?.state.events?{prose:prose?{status:prose.status,text:prose.text}:null}:{})});
+    const samePractice=practice&&practice.archiveId===loaded?.archiveId&&practice.revision===loaded?.state.revision;
+    return copy({...loaded,state:loaded?.state??null,pending:loaded?.pending??null,attempt:loaded?.attempt??null,status,errorCode,busy,preview,generationStatus,...(samePractice?{practice}:{}),...(loaded?.state.events?{prose:prose?{status:prose.status,text:prose.text}:null}:{})});
   }
   function emit(){onChange(view());}
   async function reload(expectedArchiveId) {
@@ -266,6 +269,31 @@ export function createLiveSession({archive,client,engine=defaultEngine,onChange=
       await generate(loaded);
     });
   }
+  function practiceUntil(command,canContinue=()=>true){
+    return run(async()=>{
+      await reload(command.archiveId);
+      if(!loaded||loaded.pending||loaded.archiveId!==command.archiveId||command.baseRevision!==loaded.state.revision||command.stateHash!==stateHash(loaded.state))throw fault('STALE_CHOICE');
+      const plan=practicePlan(loaded.state);
+      if(!plan||!Number.isInteger(command.count)||command.count<2||command.count>plan.count)throw fault('STALE_CHOICE');
+      practice={archiveId:loaded.archiveId,revision:loaded.state.revision,count:command.count,done:0,days:0,gain:0,running:true,stopped:false,reason:command.count===plan.count?plan.stop:'已按所选关数收功'};
+      try{
+        while(practice.done<practice.count){
+          if(practice.stopped||!canContinue()){practice.reason='已提前收功';break;}
+          const step=practicePlan(loaded.state);
+          if(!step||step.count<1){practice.reason=step?.stop??'已到下一处选择';break;}
+          const pending=engine.prepareChoice(loaded.state,{choiceId:step.choiceId,requestId:id()});
+          loaded=await archive.commitEvent({expectedArchiveId:command.archiveId,expectedRevision:practice.revision,pending});
+          practice.revision=loaded.state.revision;
+          practice.done++;practice.days+=pending.receipt.elapsedDays;
+          practice.gain+=pending.receipt.after.cultivation-pending.receipt.before.cultivation;
+          preview=null;status='ready';errorCode=null;emit();
+        }
+      }catch(error){
+        practice.reason='连续稳修中断';throw error;
+      }finally{practice.running=false;}
+    });
+  }
+  function stopPractice(){if(practice?.running)practice.stopped=true;}
   function resume() {
     const expectedArchiveId=loaded?.archiveId;
     return run(async()=>{
@@ -331,5 +359,5 @@ export function createLiveSession({archive,client,engine=defaultEngine,onChange=
     if(prose===current)emit();
     return view();
   }
-  return {start,startNew,reincarnate,load,choose,resume,retry,expandProse,view};
+  return {start,startNew,reincarnate,load,choose,practiceUntil,stopPractice,resume,retry,expandProse,view};
 }

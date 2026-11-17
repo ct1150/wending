@@ -340,3 +340,5 @@ dialog::backdrop { background: #030b14b8; backdrop-filter: blur(5px); }
 .event-growth { color: var(--gold); font-size: .9em; line-height: 1.7; overflow-wrap: anywhere; }
 .event-prose { margin-block-start: 1.5em; padding-block-start: 1em; border-block-start: 1px solid var(--line); overflow-wrap: anywhere; }
 .event-prose .save-info { margin-block: .6em; }
+.practice-plan details { margin-block-start: .6em; }
+.practice-plan select { max-width: 100%; }

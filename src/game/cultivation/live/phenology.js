@@ -34,6 +34,12 @@ function available(t,w,elapsed){
  if(t==='scatter')return elapsed>w.last;
  return elapsed>=w.full&&elapsed<=w.last;
 }
+export function harvestWindows(state){
+ const g=state.events.garden;
+ if(!g?.plot)return [];
+ const {bed,sown}=g.plot,last=g.record.at(-1),w=windows(bed,last?last.take==='root':state.reincarnation?.gardenRoot!==undefined);
+ return [{name:beds[bed].name+'嫩候',open:sown+w.early,close:sown+w.end},{name:beds[bed].name+'熟候',open:sown+w.full,close:sown+w.last}];
+}
 export function validateGarden(g,life,root){
  exactKeys(g,['record','plot']);
  if(!Array.isArray(g.record)||g.record.length>beds.length)throw new Error('候物圃册数无效。');
