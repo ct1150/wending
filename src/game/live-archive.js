@@ -446,7 +446,11 @@ class Archive {
   }
   if(prior&&!prior.ferry&&sceneId.endsWith(':s:event_resources')&&scene?.choices?.some(c=>c.id?.endsWith(':c:back')||c.id?.endsWith(':c:field-guide'))){
    const current=resolveRuleScene(c.run.state,p);
-   if(current.choices.some(c=>c.id.endsWith(':c:shell-book'))&&same(scene,resolveEventScene(c.run.state,p,true)))scene=current;
+   if(current.choices.some(c=>c.id.endsWith(':c:shell-book'))&&same(scene,resolveEventScene(c.run.state,p,'resources')))scene=current;
+  }
+  if(prior&&sceneId.endsWith(':s:event_training')&&scene.choices?.some(c=>c.id?.endsWith(':c:breakthrough'))){
+   const current=resolveRuleScene(c.run.state,p);
+   if(!current.choices.some(c=>c.id.endsWith(':c:breakthrough'))&&same(scene,resolveEventScene(c.run.state,p,'training')))scene=current;
   }
   const d=await this._derived(c,scene,scene?buildMemoryDelta(p.receipt,scene):null);
   if(scene!==entry.scene)d.state.currentScene=clone(entry.scene);

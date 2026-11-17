@@ -164,6 +164,31 @@ function growToRealm(s,rank,arrival='mount-book'){
  assert.fail('stalled at '+s.life.realm);
 }
 const ferryFromTraining=s=>follow(s,'rest-menu','back','journey-menu','resources-menu','shell-book');
+test('material leads follow the actual missing item, fishing decisions and native search odds',()=>{
+ let gate=growToRealm(follow(start(),'accept','finish-work'),1,'train-menu');
+ while(gate.life.cultivation<nextRealmFor(gate.life).threshold)gate=follow(gate,'practice','train-menu');
+ const source=pick(gate,'find-material');
+ assert.equal(source.lastReceipt.elapsedDays,0);assert.match(prose(source),/裂壳滩/);
+ const fork=pick(source,'shell-book');
+ const gift=follow(fork,'sail-bank','trace-shell','ask-ferrier','leave-release','train-menu','find-material');
+ assert.equal(gift.events.node,'hunt-grounds');assert.equal(gift.currentScene.title.startsWith('断层石场'),true);
+ let ordinary=pick(source,'hunt-grounds');
+ for(let i=0;!ordinary.life.items.supplies;i++){
+  assert.ok(i<12);ordinary=pick(ordinary,'hunt-food');
+ }
+ const row=key=>ordinary.currentScene.choices.find(c=>c.id.endsWith(':c:'+key));
+ const careful=v7ActionRule(ordinary,row('hunt-careful')),bold=v7ActionRule(ordinary,row('hunt-bold'));
+ assert.ok(careful.days>bold.days);assert.ok(careful.chance>bold.chance);
+ for(const [key,rule] of [['hunt-careful',careful],['hunt-bold',bold]]){
+  const after=pick(ordinary,key);
+  assert.equal(after.lastReceipt.elapsedDays,rule.days);assert.equal(after.lastReceipt.itemChanges.supplies,-1);
+  const gained=after.lastReceipt.itemChanges.crystal??0;
+  assert.equal(gained,after.lastReceipt.cultivationResult.check.success?rule.gain.crystal:0);
+  assert.match(prose(after),gained?/晶心|青光/:/碎屑/);
+  assert.deepEqual(deserializeLiveState(serializeLiveState(after)),after);
+  if(gained)assert.equal(pick(after,'breakthrough').lastReceipt.itemChanges.crystal,-1);
+ }
+});
 test('one cultivator takes three ferry relics into native breakthroughs and returns to fulfil the promise',()=>{
  const spent=new Set();
  const birth=start((key,s)=>{if(key==='breakthrough')for(const [item,n] of Object.entries(s.lastReceipt.itemChanges))if(n<0)spent.add(item);});
@@ -793,9 +818,11 @@ function trainTo(state,rank){
    }
    s=pick(s,'train-menu');
   }else if(!s.life.items[realm.material]){
-   s=follow(s,'rest-menu','back','journey-menu','resources-menu');
-   if(rank>1&&!s.life.items.supplies)s=pick(s,'next-resource');
-   s=follow(s,'gather','train-menu');
+   s=pick(s,'find-material');
+   if(s.events.node==='hunt-sources')s=pick(s,'hunt-grounds');
+   if(rank>1&&!s.life.items.supplies)s=pick(s,'hunt-food');
+   else s=pick(s,'hunt-careful');
+   s=pick(s,'train-menu');
   }else{
    s=pick(s,'breakthrough');
    if(realmFor(s.life).rank===rank)return pick(s,'resume-ledger');
@@ -841,8 +868,11 @@ test('Lin and Zhi keep their full itinerary alongside the river cases and actual
  assert.deepEqual(restored.events.post,s.events.post);
 });
 test('one continuous birth finishes the three-world campaign and replays its entire archive',async t=>{
- const route=[],blocks=new Set();
- const observe=(key,state)=>{route.push(key);for(const b of state.currentScene.blocks)blocks.add(b.text);};
+ const route=[],blocks=new Set(),hunted=new Set();
+ const observe=(key,state)=>{
+  route.push(key);for(const b of state.currentScene.blocks)blocks.add(b.text);
+  if(key==='hunt-careful'&&state.lastReceipt.cultivationResult.check.success)hunted.add(state.currentScene.location);
+ };
  let s=lowerWorldCareer(observe,false);
  t.diagnostic('Continuous route to the valley ending: '+s.turnId+' committed turns including menus; '+s.life.ageDays+' in-world age days.');
  const inventory={...s.life.items};
@@ -930,6 +960,7 @@ test('one continuous birth finishes the three-world campaign and replays its ent
  assert.deepEqual(s.events.watch.ding.feet,[0,3,8]);
  s=follow(s,'watch-later','rest-menu','back','journey-menu','river-book','hear-council','convoy-book');
  t.diagnostic('Three-world campaign ending at turn '+s.turnId+'; world tier '+s.life.cultivationProfile.worldTier);
+ t.diagnostic('Material grounds successfully searched in this life: '+[...hunted].join('、'));
  const {liveBrowser}=await import('./helpers/live-browser.js'),{page}=await liveBrowser(t);
  const browser=await page.evaluate(async keys=>{
   const {createLiveSession}=await import('/src/ui/live-session.js'),format=await import('/src/game/live-save-format.js');

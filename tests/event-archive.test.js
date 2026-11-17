@@ -46,6 +46,38 @@ test('steady retreat plans commit the manual turns exactly once and fence interr
  assert.equal(results.modes.replace.turns,0);assert.equal(results.modes.replace.hash,results.start);assert.ok(results.modes.replace.error);
 });
 
+test('the previous training gate survives mobile import and the new material route resumes halfway through',async t=>{
+ const {page}=await liveBrowser(t);await page.setViewportSize({width:360,height:760});
+ let calls=0;await page.route('**/api/story/**',r=>{calls++;return r.abort();});
+ const bytes=gunzipSync(await readFile(new URL('./fixtures/1bb3191-missing-crystal.jsonl.gz',import.meta.url))).toString('utf8');
+ assert.ok(await page.evaluate(async text=>{
+  const {openLiveArchive}=await import('/src/game/live-archive.js'),{importLiveArchive}=await import('/src/game/live-save-format.js');
+  const archive=await openLiveArchive();
+  try{
+   await importLiveArchive(new Response(text).body,archive);
+   return identity.stateHash((await archive.load()).state)===identity.stateHash(JSON.parse(text.split('\n')[0]).state);
+  }finally{archive.close();}
+ },bytes));
+ const option=key=>page.locator('[data-live-choice$=":c:'+key+'"]');
+ async function resume(key){
+  await page.reload();const button=option(key),enter=page.locator('[data-title-continue]:enabled');
+  await button.or(enter).first().waitFor();if(!await button.isVisible())await enter.click();await button.waitFor();
+ }
+ await resume('breakthrough');assert.ok(await option('breakthrough').isDisabled());
+ for(const key of ['rest-menu','back','train-menu','find-material','hunt-grounds'])await option(key).click();
+ await option('hunt-careful').waitFor();
+ await resume('hunt-careful');await option('hunt-careful').click();
+ await page.getByText(/这一趟收得|没有灵脉的碎屑/).first().waitFor();
+ assert.ok(await page.evaluate(async()=>{
+  const {openLiveArchive}=await import('/src/game/live-archive.js'),{stateHash}=await import('/src/game/cultivation/live/identity.js');
+  const {importLiveArchive,exportLiveArchive}=await import('/src/game/live-save-format.js');
+  const a=await openLiveArchive(),b=await openLiveArchive({name:'gate-roundtrip'});
+  try{await importLiveArchive(exportLiveArchive(a),b);return stateHash((await a.load()).state)===stateHash((await b.load()).state);}
+  finally{a.close();b.close();}
+ }));
+ assert.equal(calls,0);
+});
+
 test('a pre-ferry resource menu resumes on mobile and preserves both its original history and the harvested crystal',async t=>{
  const {page}=await liveBrowser(t);
  await page.setViewportSize({width:360,height:760});

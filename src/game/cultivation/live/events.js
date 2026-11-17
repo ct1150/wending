@@ -1,7 +1,7 @@
 import {assertPlainData,canonicalStringify,sha256} from './identity.js';
 import {exactKeys} from './schema.js';
 import {ITEMS,DAYS_PER_YEAR} from './model.js';
-import {initialV7ActionRule,realmFor} from './cultivation-rules.js';
+import {initialV7ActionRule,realmFor,nextRealmFor} from './cultivation-rules.js';
 import {eventNode,eventEntities,eventLocation} from './event-content.js';
 import {riverCases,validateRiver} from './river-chronicle.js';
 import {validateExpedition} from './expedition.js';
@@ -36,12 +36,17 @@ const eventNodeIds=new Set([
  'post-stations','post-settle','post-fog',
  'mount-book','mount-history','mount-sight','mount-sound',
  'shell-book','shell-journal','shell-parley',
+ 'hunt-sources','hunt-grounds',
 ]);
 const copy=value=>JSON.parse(JSON.stringify(value));
 export function createEventState(atlas){return {version:1,node:'arrival',entry:'unresolved',companion:'unmet',mentor:'unmet',page:0,location:'gate',...(atlas?copy(atlas):{})};}
 export function validateEventState(events,life,gardenRoot){
  assertPlainData(events);exactKeys(events,['version','node','entry','companion','mentor','page','location'],['river','expedition','council','convoy','valley','watch','mine','garden','firstMeeting','post','mountain','ferry']);
  if(!eventNodeIds.has(events.node))throw new Error('规则事件节点无效。');
+ if(life&&events.node.startsWith('hunt-')){
+  const next=nextRealmFor(life);
+  if(!next||life.cultivation<next.threshold)throw new Error('当前没有需准备的破境材料。');
+ }
  if(Object.hasOwn(events,'council'))validateCouncil(events.council);
  if(Object.hasOwn(events,'convoy'))validateConvoy(events.convoy);
  if(Object.hasOwn(events,'valley'))validateValley(events.valley);
@@ -139,10 +144,10 @@ export function advanceEvents(state,receipt){
  }
  return validateEventState(events,undefined,state.reincarnation?.gardenRoot);
 }
-export function resolveEventScene(state,pending,oldResourceMenu=false){
+export function resolveEventScene(state,pending,historicMenu=null){
  const events=advanceEvents(state,pending.receipt),prospective={...state,life:pending.nextLife,events,lastReceipt:pending.receipt,turnId:pending.identity.turnId};
- const definition=eventNode(prospective,oldResourceMenu),prefix='r:'+sha256(state.runId).slice(0,16)+':t'+pending.identity.turnId+':';
- return {id:prefix+'s:event_'+events.node,title:definition.title,location:eventLocation(prospective),blocks:copy(definition.blocks),entities:eventEntities(prospective),choices:definition.choices.map(({key,label,intent,targetId,stake,approach})=>({id:prefix+'c:'+key,label,intent,targetId,stake,approach})),memoryDeltas:[]};
+ const definition=eventNode(prospective,historicMenu),prefix='r:'+sha256(state.runId).slice(0,16)+':t'+pending.identity.turnId+':';
+ return {id:prefix+'s:event_'+events.node,title:definition.title,location:definition.location??eventLocation(prospective),blocks:copy(definition.blocks),entities:eventEntities(prospective),choices:definition.choices.map(({key,label,intent,targetId,stake,approach})=>({id:prefix+'c:'+key,label,intent,targetId,stake,approach})),memoryDeltas:[]};
 }
 export function assertRuleScene(state,pending,scene){
  if(canonicalStringify(scene)!==canonicalStringify(resolveEventScene(state,pending)))throw new Error('规则事件场景不可由生成内容改写。');

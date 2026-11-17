@@ -12,7 +12,8 @@ import {mineNode,minePlaces} from './lamp-mine.js';
 import {gardenNode,gardenRootName} from './phenology.js';
 import {postNode,postNotice} from './lin-post.js';
 import {mountainNode,mountainHistory} from './folded-mountain.js';
-import {shellNode} from './shell-ferry.js';
+import {shellNode,ferryForMaterial} from './shell-ferry.js';
+import {materialHunt} from './material-hunt.js';
 
 // Authored situations supply every fact and executable choice. AI never edits
 // these definitions. Stable actors belong to a life, not a generated paragraph.
@@ -44,7 +45,7 @@ const choice=(key,label,intent='interact',targetId='self',approach='observe',ext
 const menu=(key,label,next,patch={})=>choice(key,label,'interact','self','observe',{next,patch,navigation:true});
 const home=e=>e.entry==='accepted'?'work':e.entry==='unresolved'?'arrival':'hub';
 
-export function eventNode(state,oldResourceMenu=false){
+export function eventNode(state,historicMenu=null){
  const e=state.events,life=state.life,actors=eventEntities(state),actor=key=>actors.find(row=>row.id.endsWith(':e:'+key)).id;
  const next=nextRealmFor(life),realm=realmFor(life),method=TECHNIQUES[life.cultivationProfile.experience.activeTechniqueId];
  const young=life.ageDays<80*DAYS_PER_YEAR;
@@ -61,6 +62,7 @@ export function eventNode(state,oldResourceMenu=false){
  if(e.node.startsWith('mine-'))return mineNode(state,menu,choice,actor);
  if(e.node.startsWith('garden-'))return gardenNode(state,menu,choice);
  if(e.node.startsWith('shell-'))return shellNode(state,menu,choice,actor('ferrier'));
+ if(e.node==='hunt-sources'||e.node==='hunt-grounds')return materialHunt(state,next,menu,choice);
  if(e.node==='mount-history')return mountainHistory(e.mountain,menu);
  if(e.node.startsWith('mount-'))return mountainNode(state,menu,choice);
  if(e.node==='post-index'){
@@ -136,12 +138,13 @@ export function eventNode(state,oldResourceMenu=false){
   }
   case 'training':{
    // A restored pre-garden training screen still contains its disabled breakthrough.
-   const oldGate=state.currentScene?.id.endsWith(':t'+state.turnId+':s:event_training')&&state.currentScene.choices.some(c=>c.id.endsWith(':c:breakthrough'));
+   const oldGate=historicMenu==='training'||state.currentScene?.id.endsWith(':t'+state.turnId+':s:event_training')&&state.currentScene.choices.some(c=>c.id.endsWith(':c:breakthrough'));
    return row('修行的门槛',next?'积累修为与'+ITEMS[next.material]+'，尝试进入'+next.name:'在当前境界继续修行与历练',[
    narration(next?'你目前是'+realm.name+'。进入'+next.name+'需要修为达到'+next.threshold+'，并备妥'+ITEMS[next.material]+'。闭关的年月、灵力和风险会在行动前列明。':'渡劫之后，此生仍未结束。你可以继续积累、历练或照料旧日因果，直到真实的寿尽或伤重。'),
   ],[
    e.garden?.plot&&(!next||life.cultivation>=next.threshold)?menu('garden-book','验看苗盆，或在盆旁继续修行','garden-book'):choice('practice','按当前功法稳步修炼','practice','self','steady',{next:'action-result'}),
    next&&life.cultivation<next.threshold&&!oldGate?menu('garden-book','随身携一畦苗，选择稳修或苦修','garden-book'):
+    next&&!oldGate&&!life.items[next.material]?menu('find-material','修为已足，去寻'+ITEMS[next.material],ferryForMaterial(state,next.material)?'hunt-sources':'hunt-grounds'):
     next?choice('breakthrough','闭关尝试突破'+next.name,'practice',next.id,'breakthrough',{next:'action-result'}):choice('intensive','以行粮支撑一次苦修','practice','self','intensive',{next:'action-result'}),
    menu('rest-menu','调息、安排守关或验看功法','rest'),
   ]);
@@ -171,7 +174,7 @@ export function eventNode(state,oldResourceMenu=false){
    const targets=[...new Set([next?.material??'relic','supplies','stones','herbs','iron'])],target=targets[e.page%targets.length];
    const original=target==='herbs'&&e.garden?menu('garden-book','查看随身苗盆与采候','garden-book'):e.river?.record.length?menu('field-guide','翻看雾药谷游记与往返路线','field-guide'):leave;
    const savedOld=state.currentScene?.id.endsWith(':t'+state.turnId+':s:event_resources')&&!state.currentScene.choices.some(c=>c.id.endsWith(':c:shell-book'));
-   const ferry=realm.rank>=1&&e.page===0&&!oldResourceMenu&&!savedOld;
+   const ferry=realm.rank>=1&&e.page===0&&historicMenu!=='resources'&&!savedOld;
    return row('寻找'+ITEMS[target],'只结算本次选定的资源',[
     narration('你把目标定为'+ITEMS[target]+'。谨慎搜寻花费更多时间，仍须承担当前境界与环境下的真实风险；失败也会留下记录。'),
    ],[choice('gather','谨慎搜寻'+ITEMS[target],'explore',target,'cautious',{next:target==='herbs'&&!e.garden?'herb-basket':'action-result'}),menu('next-resource','换看下一种物资','resources',{page:(e.page+1)%targets.length}),ferry?menu('shell-book','循浮蚌渡的潮纹，查访破境宝物','shell-book'):original]);

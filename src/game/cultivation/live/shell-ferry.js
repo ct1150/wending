@@ -29,6 +29,13 @@ export function shellTide(book){
  const last=book?.pages.at(-1);
  return last&&!finished(last)?{name:reaches[last.id].name+'退潮',open:last.start,close:last.start+reaches[last.id].window}:null;
 }
+export function ferryForMaterial(state,material){
+ const i=nextReach(state.events.ferry,realmFor(state.life).rank),reach=reaches[i];
+ if(reach?.material!==material)return null;
+ const tide=shellTide(state.events.ferry);
+ if(tide&&tide.close<=state.life.ageDays)return null;
+ return reach.name;
+}
 export function validateFerry(b,life){
  exactKeys(b,['pages','reply']);
  if(!Array.isArray(b.pages)||!b.pages.length||b.pages.length>3||![null,'chart','quiet'].includes(b.reply))throw new Error('浮蚌渡行程无效。');
