@@ -8,6 +8,7 @@ import {convoyNode} from './sea-convoy.js';
 import {valleyLocation,valleyNode,valleyPlaces} from './mist-valley.js';
 import {inscriptionText,watchNode} from './retreat-watch.js';
 import {trailLocation} from './deer-trail.js';
+import {mineNode,minePlaces} from './lamp-mine.js';
 
 // Authored situations supply every fact and executable choice. AI never edits
 // these definitions. Stable actors belong to a life, not a generated paragraph.
@@ -22,10 +23,12 @@ export function eventEntities(state){
   {id:prefix+'middle',name:'中界清河城',kind:'place'},
   {id:prefix+'upper',name:'上界观星台',kind:'place'},
   ...(state.events.node.startsWith('field-')?valleyPlaces(prefix):[]),
+  ...(state.events.node.startsWith('mine-')?minePlaces(prefix):[]),
   ...(state.events.node==='field-shrine'?[{id:prefix+'springward',name:'守泉会',kind:'faction',experience:{version:1,realmId:'qi'}}]:[]),
  ];
 }
 export function eventLocation(state){
+ if(state.events.node.startsWith('mine-')&&state.events.node!=='mine-journal')return '石肺三硐';
  if(state.events.node.startsWith('watch-trail'))return trailLocation(state);
  if(valleyLocation(state.events.node))return valleyLocation(state.events.node);
  return {gate:'栖云门外院',retreat:'青石山居',middle:'中界清河城',upper:'上界观星台'}[state.events.location];
@@ -50,6 +53,7 @@ export function eventNode(state){
  if(e.node.startsWith('river-'))return riverNode(state,menu,choice);
  if(e.node.startsWith('watch-'))return watchNode(state,menu,choice);
  if(e.node.startsWith('field-'))return valleyNode(state,menu,choice,actor);
+ if(e.node.startsWith('mine-'))return mineNode(state,menu,choice,actor);
  if(e.node==='voyage-result')return expeditionResult(e.expedition,menu);
  if(e.node.startsWith('voyage-'))return expeditionNode(state,menu,choice);
  if(e.node.startsWith('council-'))return councilNode(state,menu,choice);
@@ -119,9 +123,24 @@ export function eventNode(state){
    next?choice('breakthrough','闭关尝试突破'+next.name,'practice',next.id,'breakthrough',{next:'action-result'}):choice('intensive','以行粮支撑一次苦修','practice','self','intensive',{next:'action-result'}),
    menu('rest-menu','调息、安排守关或验看功法','rest'),
   ]);
-  case 'rest':return row('停下来整备','先照料伤势与灵力，也可回去处理别的事',[
-   narration('休整不会替你突破，也不会替你答应任何请求。修行所需的行粮与材料仍要亲自准备。'),
-   ],[choice('recover','静养调息，恢复伤势与灵力','rest','self','recover',{next:'action-result'}),menu('watch-book','翻开守关簿，或验看功法','watch-book'),leave]);
+  case 'rest':{
+   const reserve=realm.rank>=1&&next&&life.lifeLimit*DAYS_PER_YEAR-life.ageDays<=(next.minYears+realm.practiceYears)*DAYS_PER_YEAR;
+   return row('停下来整备','先照料伤势与灵力，也可回去处理别的事',[
+    narration(reserve?'这段余寿已经经不起几次长关。调息过后可在药房查看延寿方，亲自备药，也可以径回山中。':'休整不会替你突破，也不会替你答应任何请求。修行所需的行粮与材料仍要亲自准备。'),
+   ],[choice('recover','静养调息，恢复伤势与灵力','rest','self','recover',{next:reserve||life.items.elixir?'apothecary':'action-result'}),menu('watch-book','翻开守关簿，或验看功法','watch-book'),leave]);
+  }
+  case 'apothecary':{
+   const receipt=state.lastReceipt,a=receipt?.action,failed=receipt?.cultivationResult?.check?.success===false;
+   const prior=a?.intent==='craft'?(failed?'上一炉没能成丹，投进去的药草和灵石已经用去。':'炉盖掀开，一枚延寿丹已收入行囊。'):
+    a?.intent==='explore'?(failed?'上次搜寻无所得。药柜里仍是实际带回的存量。':'带回的材料已入柜。'):
+    a?.approach==='extend'?'丹已服下，此次实增寿限'+receipt.cultivationResult.lifespanChange.years+'年。':'你在炉边调匀了气息。';
+   const herbs=life.items.herbs??0,stones=life.items.stones??0,elixir=life.items.elixir??0;
+   const material=herbs<8?'herbs':'stones';
+   const work=elixir?choice('take-elixir','服用一枚延寿丹','rest','self','extend',{next:'apothecary'}):
+    herbs<8||stones<12?choice('gather-ingredient','亲自搜寻'+ITEMS[material],'explore',material,'cautious',{next:'apothecary'}):
+    choice('brew-elixir','将八份药草和十二枚灵石投入丹炉','craft','elixir','alchemy',{next:'apothecary'});
+   return row('山中药房 · 延寿方','按余寿与材料决定是否开炉',[narration(prior),narration('距寿尽尚有'+(life.lifeLimit*DAYS_PER_YEAR-life.ageDays)+'日。药草 '+herbs+' / 8，灵石 '+stones+' / 12，延寿丹 '+elixir+' 枚。这张方子需要十五分灵力；若炼制失败，材料仍会耗去。')],[work,choice('recover','在炉边调息养伤','rest','self','recover',{next:'apothecary'}),menu('train-menu','收起药方，安排修行','training')]);
+  }
   case 'journey':return row('路与行囊','接续历练，或备办下一次修行的资用',[
    narration(e.council?.length===councilHearings?'北山九次落款都在册。从河簿翻到北山最后一页，可以查到三界海路的舱单与来信。':e.expedition?.place==='end'?'你的行囊里放着三程图印。北山井户的一纸来信夹在其间，等你回去落款。':e.river?'问川图上夹着一根草绳，再打开仍是上次停下的地方。':'你在山口书摊翻到一卷旧图。卖书人说是好几代守闸人留的传习卷，问你愿不愿试着展开。桌的另一头还摊着采药与打铁的路引。'),
   ],[menu('river-book',e.expedition?.place==='end'?'翻阅河簿、三程行旅与北山公簿':'展开问川图，历练河上人家','river-book'),menu('resources-menu','寻找修行材料与生活物资','resources',{page:0}),menu('workshop-menu','炼制、跨界与其他准备','workshop',{page:0})]);
@@ -135,7 +154,7 @@ export function eventNode(state){
    const recipes=[['medicine','alchemy'],['artifact','forge'],['talisman','talisman'],['array','formation'],['elixir','alchemy']],recipe=recipes[e.page%recipes.length];
    return row('整备手艺','材料与灵力足够时再动手',[
     narration('当前准备炼制'+ITEMS[recipe[0]]+'。配方消耗与失败风险由规则列明，材料不足时可以先去寻取。'),
-   ],[choice('craft','尝试炼制'+ITEMS[recipe[0]],'craft',recipe[0],recipe[1],{next:'action-result'}),menu('next-recipe','查看下一项手艺','workshop',{page:(e.page+1)%recipes.length}),menu('crossing-menu','查看界域道路或返回','crossing')]);
+   ],[choice('craft','尝试炼制'+ITEMS[recipe[0]],'craft',recipe[0],recipe[1],{next:recipe[0]==='elixir'?'apothecary':'action-result'}),menu('next-recipe','查看下一项手艺','workshop',{page:(e.page+1)%recipes.length}),menu('crossing-menu','查看界域道路或返回','crossing')]);
   }
   case 'crossing':{
    const tier=life.cultivationProfile.worldTier,destination=tier===0?'middle':'upper',name=tier===0?'中界清河城':'上界观星台';

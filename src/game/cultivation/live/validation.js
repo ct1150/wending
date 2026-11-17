@@ -149,6 +149,8 @@ export function validateLiveState(state) {
   validateLife(state.life);
   if(state.life.birth.cultivationProfile?.eventVersion===1){
     validateEventState(state.events);
+    if(state.events.mine?.start>state.life.ageDays)throw new Error('井下脚程不能始于未来。');
+    if(state.events.node.startsWith('mine-')&&state.events.node!=='mine-journal'&&state.life.cultivationProfile.worldTier!==0)throw new Error('井下行程仅在下界开放。');
     const outing=state.events.watch?.trail;
     if(outing&&(outing.start>state.life.ageDays||outing.world>state.life.cultivationProfile.worldTier))throw new Error('栗溪行程不能始于未来。');
     if(!isExperienceLife(state.life)||state.life.birth.originId!==MORTAL_OPENING.originId)throw new Error('规则事件出生合同无效。');

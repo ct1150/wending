@@ -27,7 +27,11 @@ export function valleyNode(state,menu,choice,actor){
  const home=choice('field-home','沿山路回住处休整','travel',actor(e.location),'road',{next:'hub',rule:{days:1}});
  const job=(key,label,target,next,change,rule)=>choice(key,label,'explore',target,'cautious',{next,optionalGift:true,patch:patch(change),rule});
  if(node==='field-guide'){
-  if(v.settled)return row('雾药谷 · 游记合卷','回看当年定下的水路',[ending[v.settled],v.pass==='spar'?'记载里还留着守泉会试手时的规矩。':v.pass==='medicine'?'入泉的凭据是一份由药棚验过的滤方。':'入泉的凭据是一件给旧闸换上的偏心套。'],[menu('train-menu','回去修炼','training'),back]);
+  if(v.settled){
+   const mine=tier===0?[menu('mine-book','循坡背路去石肺三硐，接续井下灯簿','mine-book')]:
+    e.mine?.record.length?[menu('mine-journal','翻读从下界带来的井下灯簿','mine-journal',{page:0})]:[];
+   return row('雾药谷 · 游记合卷','回看当年定下的水路',[ending[v.settled],v.pass==='spar'?'记载里还留着守泉会试手时的规矩。':v.pass==='medicine'?'入泉的凭据是一份由药棚验过的滤方。':'入泉的凭据是一件给旧闸换上的偏心套。'],[menu('train-menu','回去修炼','training'),...mine,back]);
+  }
   if(tier>0)return row('下界旧游 · 雾药谷','查阅下界留下的游记',['雾药谷在下界的青石坡后，脚下这条路已不通向那座谷口。书页保留了当年亲自核对的线索。',v.sample?'白砂下的红粉会随第一瓢井水浮起。':'水样一栏仍空着。',v.slag?'旧瓷窑的铜套内侧有一道歪斜的磨痕。':'窑裂一栏尚待后来人勘查。'],[menu('train-menu','继续此界的修行','training'),back]);
   return row('青石坡后的雾药谷','查清上游来雾的缘由，替两岸定下一条水路',['守闸人的旧札提过青石坡背后的一眼清泉。谷里的药棚和瓷窑共用它。近年晨起总有红雾，午后水又清了。有人怪药童倒错渣，有人怪窑里换了土；两边仍得一起用这口水。','从这里走一天到茶棚。谷口可问路，也能沿原路回来。已采过的样、做过的工和守泉会给的凭据都留在游记里。'],[stroll('enter-field','用一天走到谷口茶棚','field-camp'),back]);
  }

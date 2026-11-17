@@ -8,6 +8,8 @@ import {validateValley} from '../src/game/cultivation/live/mist-valley.js';
 import {eventNode} from '../src/game/cultivation/live/event-content.js';
 import {validateWatch} from '../src/game/cultivation/live/retreat-watch.js';
 import {validateDing,validateInscription} from '../src/game/cultivation/live/mountain-ding.js';
+import {validateMine} from '../src/game/cultivation/live/lamp-mine.js';
+import {DAYS_PER_YEAR} from '../src/game/cultivation/live/model.js';
 
 const observers=new WeakMap();
 function start(observe,seed=42){
@@ -31,6 +33,85 @@ const prose=state=>state.currentScene.blocks.map(block=>block.text).join('\n');
 
 const valleyCamp=()=>follow(open(),'deliberate','policy-0','field-guide','enter-field');
 const firstWatch=(seed,keeper,marks)=>follow(start(undefined,seed),'decline','train-menu','rest-menu','watch-book','watch-open','keeper-'+keeper,marks,'sit-watch');
+
+const mineStart=()=>follow(valleyCamp(),'to-bank','take-sample','to-grove','brew-filter','to-shrine','show-proof','proof-medicine','to-source','water-spring','field-home','journey-menu','resources-menu','field-guide','mine-book','borrow-lamp');
+test('mine rescue clues follow the changed waterway, consume oil once and persist before deciding',()=>{
+ for(const drain of [0,1]){
+  let s=mineStart();
+  for(let i=0;i<3;i++){
+   s=follow(s,'inspect','inspect-0');
+   const age=s.life.ageDays,oil=s.events.mine.lamp;
+   s=pick(s,'inspect-0');
+   assert.equal(s.life.ageDays,age);assert.equal(s.events.mine.lamp,oil);
+   s=deserializeLiveState(serializeLiveState(s));
+   const move=i===0?drain:i===1?(drain===0?0:1):0;
+   if(i===1)assert.match(prose(s),drain===0?/刚剥落/:/一层细细的灰/);
+   s=follow(s,'gallery','decide','move-'+move);
+   assert.equal(s.lastReceipt.elapsedDays,1);
+   if(i<2)s=follow(s,'mine-book','enter-gallery');
+  }
+  s=follow(s,'mine-book','teach-log');
+  assert.equal(s.events.mine.pledge,'巡教');assert.equal(s.lastReceipt.elapsedDays,3);
+  assert.ok(s.currentScene.choices.every(c=>!c.id.endsWith(':c:teach-log')));
+  const age=s.life.ageDays;
+  s=follow(s,'mine-journal','turn-page');
+  assert.equal(s.life.ageDays,age);assert.match(prose(s),drain===0?/刚剥落/:/一层细细的灰/);
+  assert.doesNotMatch(prose(s),/刚踩扁的枣核|篓耳勒出/);
+ }
+});
+test('retreating with an empty lamp leaves a playable way back and buying oil charges actual supplies',()=>{
+ let s=follow(mineStart(),'inspect','inspect-0','inspect-1','gallery','decide','move-1','mine-book','enter-gallery','inspect','inspect-1','gallery','decide','move-1','mine-book','enter-gallery','inspect');
+ assert.equal(s.events.mine.lamp,0);
+ const stock=s.life.items.supplies??0;
+ s=pick(s,'withdraw');
+ assert.equal(s.lastReceipt.elapsedDays,1);
+ const buy=compileChoices(s,s.currentScene.choices).find(c=>c.id.endsWith(':c:buy-oil'));
+ assert.equal(buy.enabled,stock>=1);assert.equal(buy.costs.items.supplies,1);
+ if(stock>=1){
+  s=pick(s,'buy-oil');assert.equal(s.life.items.supplies,stock-1);assert.equal(s.events.mine.lamp,2);
+ }
+ s=follow(s,'enter-gallery','decide','move-0');
+ assert.equal(s.events.mine.record[2].seen,0);
+});
+test('a premature mine decision changes the next rescue and a wrong response takes two extra days',()=>{
+ let s=mineStart();
+ s=follow(s,'decide','move-0','mine-book','enter-gallery','decide','move-1','mine-book','enter-gallery','inspect','inspect-1');
+ assert.match(prose(s),/两个人的重量/);
+ s=follow(s,'gallery','decide','move-0');
+ assert.equal(s.lastReceipt.elapsedDays,3);assert.match(prose(s),/再歇两日/);
+ assert.throws(()=>validateMine({...s.events.mine,lamp:6}),/灯簿/);
+ assert.throws(()=>validateMine({...s.events.mine,record:[],pledge:'留井'}),/灯簿/);
+});
+test('leaving the mine to cultivate lets the other crew take over; the first report remains readable',()=>{
+ let s=follow(mineStart(),'inspect','inspect-1','gallery','decide','move-1','field-guide','train-menu','practice','continue','journey-menu','resources-menu','field-guide','mine-book');
+ assert.match(s.currentScene.title,/交班/);assert.equal(s.events.mine.record.length,1);
+ s=follow(s,'mine-journal','mine-book');assert.match(s.currentScene.title,/交班/);
+ assert.ok(!s.currentScene.choices.some(c=>c.id.endsWith(':c:enter-gallery')));
+});
+test('an ordinary workshop brew opens the dispensary, consumes its actual ingredients and extends life only on drinking',()=>{
+ let s=follow(start(),'decline');
+ for(let n=0;(s.life.items.herbs??0)<8||(s.life.items.stones??0)<12;n++){
+  assert.ok(n<45);
+  const target=(s.life.items.herbs??0)<8?'herbs':'stones';
+  s=follow(s,'journey-menu','resources-menu');
+  for(let pages=0;s.currentScene.choices[0].targetId!==target;pages++){
+   assert.ok(pages<5);s=pick(s,'next-resource');
+  }
+  s=follow(s,'gather','continue');
+ }
+ s=follow(s,'journey-menu','workshop-menu','next-recipe','next-recipe','next-recipe','next-recipe');
+ const herbs=s.life.items.herbs,stones=s.life.items.stones,limit=s.life.lifeLimit;
+ s=pick(s,'craft');
+ assert.equal(s.events.node,'apothecary');assert.equal(s.life.items.herbs,herbs-8);assert.equal(s.life.items.stones,stones-12);
+ for(let n=0;!s.life.items.elixir;n++){
+  assert.ok(n<90);
+  s=pick(s,s.life.injury>1||s.life.cultivationProfile.spirit<15?'recover':(s.life.items.herbs??0)<8||(s.life.items.stones??0)<12?'gather-ingredient':'brew-elixir');
+ }
+ s=deserializeLiveState(serializeLiveState(s));
+ assert.equal(s.life.lifeLimit,limit);
+ s=pick(s,'take-elixir');assert.equal(s.life.items.elixir,0);assert.equal(s.life.lifeLimit,limit+5);
+ assert.match(prose(s),/实增寿限5年/);
+});
 test('a missed practice check preserves the time and injury, and a single signature really authorizes early action',()=>{
  const missed=firstWatch(36,0,'one-mark');
  assert.equal(missed.lastReceipt.cultivationResult.check.success,false);
@@ -235,7 +316,12 @@ function afterRiver(timberChoice=1,observe,visitValley=false){
  for(let i=0;i<6;i++){
   s=follow(s,'deliberate','policy-'+(i===3?timberChoice:i%2));
   if(i===0&&visitValley){
-   s=follow(s,'field-guide','enter-field','to-bank','take-sample','to-grove','brew-filter','to-shrine','show-proof','proof-medicine','to-source','compare-banks','water-clinic','field-home','journey-menu','river-book');
+   s=follow(s,'field-guide','enter-field','to-bank','take-sample','to-grove','brew-filter','to-shrine','show-proof','proof-medicine','to-source','compare-banks','water-clinic','field-home','journey-menu','resources-menu','field-guide','mine-book','borrow-lamp');
+   for(const move of [0,0,0]){
+    s=follow(s,'inspect','inspect-0','gallery','decide','move-'+move,'mine-book');
+    if(s.events.mine.record.length<3)s=pick(s,'enter-gallery');
+   }
+   s=follow(s,'leave-log','field-guide','field-back','journey-menu','river-book');
   }else s=pick(s,'next-case');
   if(i<5)s=pick(s,'river-open');
  }
@@ -296,14 +382,27 @@ function trainTo(state,rank){
  for(let i=0;realmFor(s.life).rank<rank;i++){
   assert.ok(i<100,'training route is stuck');
   const realm=nextRealmFor(s.life);
-  if(s.life.injury>1||s.life.cultivationProfile.spirit<30+rank*5){
+  const retreat=compileChoices(s,s.currentScene.choices).find(c=>c.approach==='breakthrough');
+  const reserve=(s.life.lifeLimit-100)*DAYS_PER_YEAR-retreat.costs.days;
+  if(rank===9&&s.life.ageDays>=reserve){
+   // Shop and brew through ordinary screens when the remaining lifespan is
+   // close to the cost of one retreat. A failed brew spends both ingredients.
+   s=follow(s,'rest-menu','recover');
+   for(let tries=0;!s.life.items.elixir;tries++){
+    assert.ok(tries<80,'could not prepare a longevity elixir');
+    const stocked=(s.life.items.herbs??0)>=8&&(s.life.items.stones??0)>=12;
+    s=pick(s,s.life.injury>1||s.life.cultivationProfile.spirit<15?'recover':stocked?'brew-elixir':'gather-ingredient');
+   }
+   const upper=s.life.lifeLimit;
+   s=follow(s,'take-elixir','train-menu');assert.ok(s.life.lifeLimit>upper);
+  }else if(s.life.injury>1||s.life.cultivationProfile.spirit<30+rank*5){
    s=follow(s,'rest-menu','recover','train-menu');
   }else if(s.life.cultivation<realm.threshold){
    if((s.events.watch?.record.length??0)<=realmFor(s.life).rank){
     s=guardedPractice(s);continue;
    }
    s=pick(s,'practice');
-   while(s.life.cultivation<realm.threshold&&s.life.injury<=1&&s.life.cultivationProfile.spirit>=30+rank*5){
+   while((rank<9||s.life.ageDays<reserve)&&s.life.cultivation<realm.threshold&&s.life.injury<=1&&s.life.cultivationProfile.spirit>=30+rank*5){
     s=pick(s,'practice-again');
    }
    s=pick(s,'train-menu');
