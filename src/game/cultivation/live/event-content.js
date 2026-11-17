@@ -20,6 +20,7 @@ import {cloudPassage} from './cloud-passage.js';
 import {nurseryNode} from './entry-nursery.js';
 import {saltFieldNode} from './salt-field.js';
 import {ridgeEntrance,ridgeNode} from './ridge-road.js';
+import {canStudyForm,formNode} from './technique-forms.js';
 
 // Authored situations supply every fact and executable choice. AI never edits
 // these definitions. Stable actors belong to a life, not a generated paragraph.
@@ -68,7 +69,8 @@ export function eventNode(state,historicMenu=null){
  if(e.node.startsWith('mine-'))return mineNode(state,menu,choice,actor);
  if(e.node.startsWith('garden-'))return gardenNode(state,menu,choice);
  if(e.node.startsWith('shell-'))return shellNode(state,menu,choice,actor('ferrier'));
- if(e.node==='hunt-sources'||e.node==='hunt-grounds')return materialHunt(state,next,menu,choice,historicMenu);
+ if(e.node==='hunt-sources'||e.node==='hunt-grounds'||e.node==='hunt-forms')return materialHunt(state,next,menu,choice,historicMenu);
+ if(e.node.startsWith('form-'))return formNode(state,menu,choice);
  if(e.node==='well-book')return echoWell(state,menu,choice);
  if(e.node==='seed-book')return saltFieldNode(state,menu,choice);
  if(e.node.startsWith('ridge-'))return ridgeNode(state,menu,choice);
@@ -238,13 +240,15 @@ export function eventNode(state,historicMenu=null){
   }
   case 'mentor':{
    const experience=life.cultivationProfile.experience,commitment=experience.commitment,young=life.ageDays<100*DAYS_PER_YEAR;
+   const oldForm=historicMenu==='forms'||state.currentScene?.id.endsWith(':t'+state.turnId+':s:event_mentor')&&state.currentScene.choices.some(c=>c.id.endsWith(':c:back'));
+   const form=canStudyForm(life)&&!oldForm?menu('form-book','推演本命法诀，或收卷回山','form-book'):leave;
    const canPledge=life.ageDays+3<100*DAYS_PER_YEAR;
    if(commitment?.status==='owed')return row('校法时的约定','记着当初那一份行粮',[
     narration(young?'顾师叔仍在旧廊下校书。你记得接受指点时说好的条件：向他本人归还一份行粮。':'旧廊已换了主人，眼下没有顾师叔的下落。那份未还的约定仍被保留，不能向别的人交粮便算履行。'),
-   ],[...(young?[choice('repay','向顾师叔归还约定的一份行粮','craft',actor('mentor'),'repay',{next:'mentor-result',patch:{mentor:'repaid'}})]:[menu('read-debt','记下未还之约，暂不臆测他的去向','old-record')]),menu('resources-menu','先备办行粮','resources',{page:1}),leave]);
+   ],[...(young?[choice('repay','向顾师叔归还约定的一份行粮','craft',actor('mentor'),'repay',{next:'mentor-result',patch:{mentor:'repaid'}})]:[menu('read-debt','记下未还之约，暂不臆测他的去向','old-record')]),menu('resources-menu','先备办行粮','resources',{page:1}),form]);
    if(!method.defective||experience.repaired)return row('法诀与来路','已有的功法改善继续参与真实结算',[
     narration(experience.repaired?'你已经修补过当前功法。原有长处保留，缺处的代价已按规则改变；不必重复付出校法的代价。':'你现在使用的功法脉路完整，不需要为了展开故事而硬添一处缺陷。'),
-   ],[menu('train-menu','亲自修炼，检验功法','training'),menu('companion-menu','回看故人的事情',life.ageDays<80*DAYS_PER_YEAR?'companion':'old-record'),leave]);
+   ],[menu('train-menu','亲自修炼，检验功法','training'),menu('companion-menu','回看故人的事情',life.ageDays<80*DAYS_PER_YEAR?'companion':'old-record'),form]);
    if(!experience.lessons.includes('diagnosed'))return row('先辨明缺处','验法不会自动接受指点或欠下人情',[
     narration('你把'+method.name+'摊在膝上。'+method.defect+'先辨清实际缺处，才谈得上自己推演或求助。'),
    ],[choice('diagnose','验看本命功法的实际缺处','craft','self','diagnose',{next:'mentor'}),menu('train-menu','暂不修法，继续原有修行','training'),leave]);

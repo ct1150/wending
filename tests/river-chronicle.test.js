@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {createLiveGame,prepareOpening,prepareChoice,commitTurn,resolveRuleScene,compileChoices,settleDeath} from '../src/game/cultivation/live/engine.js';
-import {realmFor,nextRealmFor,v7ActionRule} from '../src/game/cultivation/live/cultivation-rules.js';
+import {realmFor,nextRealmFor,v7ActionRule,resolveV7Action} from '../src/game/cultivation/live/cultivation-rules.js';
 import {serializeLiveState,deserializeLiveState} from '../src/game/cultivation/live/validation.js';
 import {validateConvoy} from '../src/game/cultivation/live/sea-convoy.js';
 import {yardNode,validateYardShifts} from '../src/game/cultivation/live/departure-yard.js';
@@ -19,6 +19,8 @@ import {validateWell} from '../src/game/cultivation/live/echo-well.js';
 import {validateCloudPassage} from '../src/game/cultivation/live/cloud-passage.js';
 import {journeyNotes,noteRoutes,crossingDeadlines} from '../src/game/cultivation/live/journey-notes.js';
 import {practicePlan} from '../src/game/cultivation/live/practice-plan.js';
+import {canStudyForm,validateForms} from '../src/game/cultivation/live/technique-forms.js';
+import {eventActionRule,advanceEvents} from '../src/game/cultivation/live/events.js';
 
 const observers=new WeakMap();
 test('port wages depend on the actual cargo and settle once, with native forge and search rules',()=>{
@@ -226,6 +228,76 @@ function growToRealm(s,rank,arrival='mount-book'){
  }
  assert.fail('stalled at '+s.life.realm);
 }
+function formBook(observe){
+ let s=follow(start(observe),'decline');
+ for(let rank=1;rank<=2;rank++)s=growToRealm(s,rank,'continue');
+ s=follow(s,'affairs-menu','mentor-menu');
+ if(!canStudyForm(s.life))s=follow(s,'diagnose','restore','mentor-menu');
+ return pick(s,'form-book');
+}
+test('a repaired foundation life studies a form through paid native practice and keeps the draft in its journal',()=>{
+ const book=formBook(),draft=pick(book,'form-listen');
+ assert.deepEqual(draft.events.forms,{known:null,draft:'listen'});
+ assert.ok(journeyNotes(draft).some(n=>n.node==='form-book'));
+ const proposal=draft.currentScene.choices.find(c=>c.id.endsWith(':c:form-steady')),rule=v7ActionRule(draft,proposal);
+ const learned=pick(deserializeLiveState(serializeLiveState(draft)),'form-steady');
+ assert.deepEqual(learned.events.forms,{known:'listen',draft:null});
+ assert.equal(learned.life.ageDays-draft.life.ageDays,rule.days);
+ assert.equal(learned.life.cultivation-draft.life.cultivation,rule.cultivation);
+ assert.equal(draft.life.cultivationProfile.spirit-learned.life.cultivationProfile.spirit,rule.spiritCost);
+ assert.ok(!journeyNotes(learned).some(n=>n.node==='form-book'));
+ const retrain=follow(learned,'form-book','form-ward');
+ const action=retrain.currentScene.choices.find(c=>c.id.endsWith(':c:form-intensive'));
+ const failed=advanceEvents(retrain,{kind:'choice',action,cultivationResult:{check:{success:false}}});
+ assert.deepEqual(failed.forms,{known:'listen',draft:'ward'});
+ assert.equal(failed.node,'form-result');
+ assert.match(eventNode({...retrain,events:failed}).blocks[0].text,/分息听泉仍在/);
+ const changed=pick(retrain,'form-steady');
+ assert.deepEqual(changed.events.forms,{known:'ward',draft:null});
+ assert.equal(changed.life.ageDays-retrain.life.ageDays,rule.days);
+});
+
+test('forms keep the ordinary risky path intact and change only the advertised spirit, chance or failure injury',()=>{
+ for(const mode of ['listen','ward']){
+  let s=follow(formBook(),'form-'+mode,'form-steady','train-menu');
+  while(s.life.cultivation<nextRealmFor(s.life).threshold){
+   if(s.life.cultivationProfile.spirit<30)s=follow(s,'rest-menu','recover','train-menu');
+   s=follow(s,'practice','train-menu');
+  }
+  s=pick(s,'find-material');if(s.events.node==='hunt-sources')s=pick(s,'hunt-grounds');
+  while(!s.life.items.supplies)s=pick(s,'hunt-food');
+  if(s.life.cultivationProfile.spirit<20)s=pick(s,'hunt-rest');
+  s=pick(s,'hunt-forms');
+  const original=s.currentScene.choices.find(c=>c.id.endsWith(':c:hunt-bold'));
+  const skill=s.currentScene.choices.find(c=>c.id.endsWith(':c:hunt-skilled'));
+  assert.equal(original.stake,'low');
+  const ordinary=v7ActionRule(s,original),aided=eventActionRule(s,skill,v7ActionRule(s,skill));
+  assert.equal(aided.spiritCost,ordinary.spiritCost+6);
+  assert.equal(aided.chance,mode==='listen'?Math.min(99,ordinary.chance+12):ordinary.chance);
+  assert.equal(aided.failureInjury,mode==='ward'?Math.max(0,ordinary.failureInjury-1):ordinary.failureInjury);
+  for(const field of ['days','gain','items','cultivation','checkKind','exposure'])assert.deepEqual(aided[field],ordinary[field]);
+  const failed=resolveV7Action(s.life,skill,aided,99,s.turnId+1),plainFailure=resolveV7Action(s.life,original,ordinary,99,s.turnId+1);
+  assert.equal(failed.result.check.success,false);
+  assert.equal(failed.nextLife.injury,plainFailure.nextLife.injury-(mode==='ward'?1:0));
+  assert.equal(failed.nextLife.items.core??0,s.life.items.core??0);
+  const outcome=pick(s,'hunt-skilled');
+  assert.equal(outcome.life.ageDays-s.life.ageDays,aided.days);
+  assert.equal(s.life.cultivationProfile.spirit-outcome.life.cultivationProfile.spirit,aided.spiritCost);
+  assert.equal(outcome.lastReceipt.cultivationResult.check.chance,aided.chance);
+  assert.equal(outcome.lastReceipt.itemChanges.supplies,-1);
+  assert.deepEqual(deserializeLiveState(serializeLiveState(outcome)).events.forms,s.events.forms);
+  const poor=structuredClone(s);poor.life.cultivationProfile.spirit=ordinary.spiritCost;
+  assert.match(eventActionRule(poor,skill,v7ActionRule(poor,skill)).reason,/灵力不足/);
+  assert.ok(!eventActionRule(poor,original,v7ActionRule(poor,original)).reason);
+ }
+});
+
+test('form records reject unearned entries and malformed specializations',()=>{
+ assert.throws(()=>validateForms({node:'form-book'},start().life),/筑基/);
+ for(const forms of [null,{},[],{known:null,draft:null},{known:'both',draft:null},{known:'listen',draft:'other'}])assert.throws(()=>validateForms({node:'hub',forms}));
+ for(const node of ['form-drill','form-result','hunt-forms'])assert.throws(()=>validateForms({node}));
+ assert.doesNotThrow(()=>validateForms({node:'form-book'}));
+});
 const ferryFromTraining=s=>follow(s,'rest-menu','back','journey-menu','resources-menu','shell-book');
 test('the echo well charges each leg once, carries survey work across a retreat and remembers who inherits the bell',async()=>{
  const {readFile}=await import('node:fs/promises'),{gunzipSync}=await import('node:zlib');

@@ -4,6 +4,48 @@ import {readFile} from 'node:fs/promises';
 import {gunzipSync} from 'node:zlib';
 import {liveBrowser} from './helpers/live-browser.js';
 
+test('an original foundation mentor exit restores once, then paid form study and its risky search replay together',async t=>{
+ const bytes=gunzipSync(await readFile(new URL('./fixtures/06df05c-forms-pending.jsonl.gz',import.meta.url))).toString('utf8');
+ const {page}=await liveBrowser(t);
+ const result=await page.evaluate(async text=>{
+  const {importLiveArchive,exportLiveArchive}=await import('/src/game/live-save-format.js');
+  const {createLiveSession}=await import('/src/ui/live-session.js');
+  const {nextRealmFor}=await import('/src/game/cultivation/live/cultivation-rules.js');
+  const a=await open('forms-before'),copy=await open('forms-after');
+  await importLiveArchive(new Blob([text]).stream(),a);
+  const original=(await a.load()).state,session=createLiveSession({archive:a,client:{}});
+  await session.load();await session.resume();await session.resume();
+  let row=await a.load();const restored=row.state.events.node,revision=row.state.revision;
+  async function go(...keys){for(const key of keys){
+   const c=row.state.currentScene.choices.find(c=>c.id.endsWith(':c:'+key));
+   if(!c)throw Error('missing '+key+' at '+row.state.events.node);
+   row=await session.choose({choiceId:c.id,baseRevision:row.state.revision,stateHash:identity.stateHash(row.state)});
+   if(row.errorCode)throw Error(row.errorCode);
+  }}
+  await go('affairs-menu','mentor-menu','form-book','form-ward');
+  const from=row.state.life;
+  await go('form-steady');
+  const study={days:row.state.lastReceipt.elapsedDays,spirit:from.cultivationProfile.spirit-row.state.life.cultivationProfile.spirit,known:row.state.events.forms.known};
+  await go('train-menu');
+  for(let guard=0;row.state.life.cultivation<nextRealmFor(row.state.life).threshold;guard++){
+   if(guard>40)throw Error('stalled practice');
+   if(row.state.life.cultivationProfile.spirit<30)await go('rest-menu','recover','train-menu');
+   await go('practice','train-menu');
+  }
+  await go('find-material');if(row.state.events.node==='hunt-sources')await go('hunt-grounds');
+  for(let guard=0;!row.state.life.items.supplies;guard++){if(guard>20)throw Error('stalled supplies');await go('hunt-food');}
+  if(row.state.life.cultivationProfile.spirit<20)await go('hunt-rest');
+  await go('hunt-forms','hunt-skilled');
+  await importLiveArchive(exportLiveArchive(a),copy);
+  const saved=(await copy.load()).state;
+  return {restored,revision,originalRevision:original.revision,old:original.currentScene.choices.map(c=>c.id.split(':c:')[1]),study,known:saved.events.forms.known,receipt:saved.lastReceipt,exact:identity.stateHash(saved)===identity.stateHash(row.state)};
+ },bytes);
+ assert.ok(result.old.includes('back'));assert.equal(result.restored,'hub');assert.equal(result.revision,result.originalRevision+1);
+ assert.ok(result.study.days>0);assert.ok(result.study.spirit>0);assert.equal(result.study.known,'ward');
+ assert.equal(result.known,'ward');assert.ok(result.exact);assert.equal(result.receipt.itemChanges.supplies,-1);
+ assert.ok(result.receipt.action.id.endsWith(':c:hunt-skilled'));
+});
+
 test('an original failed crossing replays its old exit, then allows one paid port shift',async t=>{
  const bytes=gunzipSync(await readFile(new URL('./fixtures/eac27c6-crossing-exit.jsonl.gz',import.meta.url))).toString('utf8');
  const {page}=await liveBrowser(t);

@@ -1,6 +1,8 @@
 import {ITEMS} from './model.js';
 import {ferryForMaterial} from './shell-ferry.js';
 import {wellDepartures} from './echo-well.js';
+import {v7ActionRule} from './cultivation-rules.js';
+import {formNames} from './technique-forms.js';
 
 // The two approaches use the ordinary exploration roll, its price and its actual yield.
 const sites={
@@ -18,15 +20,29 @@ const sites={
 export function materialHunt(state,next,menu,choice,historicMenu){
  const {life,lastReceipt:r}=state,id=next.material,name=ITEMS[id];
  const [place,opening,careful,bold,found,missed]=sites[id];
- const row=(title,lines,choices)=>({title,location:state.events.node==='hunt-grounds'?place:undefined,goal:'为'+next.name+'备妥'+name,blocks:lines.map(text=>({kind:'narration',text})),choices});
+ const row=(title,lines,choices)=>({title,location:['hunt-grounds','hunt-forms'].includes(state.events.node)?place:undefined,goal:'为'+next.name+'备妥'+name,blocks:lines.map(text=>({kind:'narration',text})),choices});
  const home=menu('train-menu','回去安排修行','training'),grounds='hunt-grounds';
  const ferry=ferryForMaterial(state,id);
  if(state.events.node==='hunt-sources'&&ferry)return row('两处可访的'+name,[
   '修为已经够了，行囊里还缺'+name+'。可以去浮蚌渡的'+ferry+'和蓼商量宝物的归属，也可以自己前往'+place+'。',
  ],[menu('shell-book','到'+ferry+'探访浮蚌渡','shell-book'),menu('hunt-grounds','自行前往'+place,grounds),home]);
  const rest=choice('hunt-rest','就地调息，整备后再决定','rest','self','recover',{next:grounds});
+ if(state.events.node==='hunt-forms'){
+  const mode=state.events.forms.known;
+  const aided=choice('hunt-skilled','运'+formNames[mode]+'走险径取'+name,'explore',id,'bold',{next:grounds,stake:'normal'});
+  // The extra stake is the six spirit spent on the form. Keep the original
+  // low-stake path as the baseline, without adding a second generic penalty.
+  const rule=v7ActionRule(state,{...aided,stake:'low'}),baseChance=rule.chance,baseInjury=rule.failureInjury;
+  rule.spiritCost+=6;
+  if(mode==='listen')rule.chance=Math.min(99,rule.chance+12);
+  else rule.failureInjury=Math.max(0,rule.failureInjury-1);
+  rule.warnings.push(mode==='listen'?'听息将本次成功机会从'+baseChance+'%提高至'+rule.chance+'%，额外耗六分灵力。':'护脉将本次失败伤势从'+baseInjury+'减至'+rule.failureInjury+'，额外耗六分灵力。');
+  aided.rule=rule;
+  return row(place+' · 气路与险径',[opening,mode==='listen'?'你将一缕灵息探在身前，辨别石缝、风口和水声之后仍在变动的细响。':'你将灵息贴着经络收紧，准备承受险径上的第一下冲击。','旧的走法也还在。使术与直接抢路的行程和行粮相同，灵力与风险列在行动前。'],[
+   aided,choice('hunt-bold',bold,'explore',id,'bold',{next:grounds}),menu('hunt-grounds','先退回山口，再决定走法',grounds)]);
+ }
  const lines=[],key=r.action?.id.split(':c:').at(-1);
- if(key==='hunt-careful'||key==='hunt-bold')lines.push(r.itemChanges[id]>0?found+' 这一趟收得'+r.itemChanges[id]+'份'+name+'。':missed);
+ if(key==='hunt-careful'||key==='hunt-bold'||key==='hunt-skilled')lines.push(r.itemChanges[id]>0?found+' 这一趟收得'+r.itemChanges[id]+'份'+name+'。':missed);
  if(key==='hunt-food')lines.push(r.itemChanges.supplies>0?'备下的行粮已经装袋，可以起行。':'这次沿路没有寻到行粮。');
  if(key==='hunt-rest')lines.push('你收功起身，当前灵力为'+life.cultivationProfile.spirit+'。');
  if(!lines.length)lines.push(opening);
@@ -42,5 +58,5 @@ export function materialHunt(state,next,menu,choice,historicMenu){
  if(id==='soulseal'&&!well&&historicMenu!=='well'&&!(state.currentScene?.id.endsWith(':t'+state.turnId+':s:event_hunt-grounds')&&state.currentScene.choices.some(c=>c.id.endsWith(':c:hunt-careful')))){
   return row(place,lines,[...wellDepartures(state,choice),home]);
  }
- return row(place,lines,[choice('hunt-careful',careful,'explore',id,'cautious',{next:grounds}),choice('hunt-bold',bold,'explore',id,'bold',{next:grounds}),home]);
+ return row(place,lines,[choice('hunt-careful',careful,'explore',id,'cautious',{next:grounds}),state.events.forms?.known?menu('hunt-forms','衡量'+formNames[state.events.forms.known]+'与此地险径','hunt-forms'):choice('hunt-bold',bold,'explore',id,'bold',{next:grounds}),home]);
 }

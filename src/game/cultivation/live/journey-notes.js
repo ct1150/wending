@@ -26,6 +26,7 @@ export function journeyNotes(state){
   notes.push({node,title,detail,timing,priority,date,close:window?.close});
  }
  const w=e.well;
+ if(e.forms?.draft)add('form-book','本命术式','已选好要演练的气路，可以回去安排这一关。');
  const ridge=e.ridgeRoad?.at(-1);
  if(ridge&&ridge.ending===null)add('ridge-'+ridge.site,'走山驿的路',ridge.aligned?'试路已经做完，可以决定留下哪种设施。':'去现场的行粮已交，可以回去接着验路。');
  if(e.saltField&&!e.saltField.ending){
@@ -104,7 +105,7 @@ export function crossingDeadlines(state,notes,days){
 
 // These menu screens can be read on the way to a known entry. A trip, promise,
 // reward or quest patch is a player decision even when it happens to cost zero days.
-const shelves=new Set(['hub','training','rest','journey','resources','workshop','crossing','affairs','post-index','post-book','post-history','watch-book','watch-visitors','field-guide','garden-book','garden-history','river-book','voyage-book','council-book']);
+const shelves=new Set(['hub','training','rest','journey','resources','workshop','crossing','affairs','mentor','post-index','post-book','post-history','watch-book','watch-visitors','field-guide','garden-book','garden-history','river-book','voyage-book','council-book']);
 export function noteMenuSteps(state){
  return eventNode(state).choices.filter(c=>c.navigation&&c.targetId==='self'&&c.approach==='observe'&&!c.arrival&&!c.rule&&Object.keys(c.patch??{}).every(k=>k==='page'));
 }
