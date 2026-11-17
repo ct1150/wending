@@ -4,6 +4,33 @@ import {readFile} from 'node:fs/promises';
 import {gunzipSync} from 'node:zlib';
 import {liveBrowser} from './helpers/live-browser.js';
 
+test('an old snow path resumes and a paid reflection survives pending settlement and the final farewell',async t=>{
+ const text=gunzipSync(await readFile(new URL('./fixtures/ce167ab-reflection-pending.jsonl.gz',import.meta.url))).toString('utf8');
+ const {page}=await liveBrowser(t);
+ const result=await page.evaluate(async text=>{
+  const {importLiveArchive,exportLiveArchive}=await import('/src/game/live-save-format.js'),{createLiveSession}=await import('/src/ui/live-session.js');
+  const a=await open('reflection-before'),copy=await open('reflection-after');await importLiveArchive(new Response(text).body,a);
+  const old=await a.load(),session=createLiveSession({archive:a,client:{}});await session.load();await session.resume();await session.resume();let row=await a.load();
+  const resumed={exit:row.state.events.mountain.walk[4].exit,revision:row.state.revision,life:row.state.life};
+  async function go(active,...keys){for(const key of keys){
+   const c=row.state.currentScene.choices.find(c=>c.id.endsWith(':c:'+key));if(!c)throw Error('missing '+key);
+   row=await active.choose({choiceId:c.id,baseRevision:row.state.revision,stateHash:identity.stateHash(row.state)});if(row.errorCode)throw Error(row.errorCode);
+  }}
+  await go(session,'mount-echo');
+  await a.prepare(engine.prepareChoice(row.state,{choiceId:row.state.currentScene.choices.find(c=>c.id.endsWith(':c:echo-enter')).id,requestId:'paid-reflection'}));
+  await importLiveArchive(exportLiveArchive(a),copy);const loaded=await copy.load(),next=createLiveSession({archive:copy,client:{}});
+  await next.load();await next.resume();await next.resume();row=await copy.load();const paid=row.state;
+  await go(next,'train-menu','mount-book','echo-send','hear-stone','mount-steady','path-0','send-xiaoman');
+  const final=await open('reflection-final');await importLiveArchive(exportLiveArchive(copy),final);
+  return {old:old.state,resumed,loaded:loaded.state,paid,final:row.state,exact:identity.stateHash((await final.load()).state)===identity.stateHash(row.state)};
+ },text);
+ assert.equal(result.resumed.exit,'lost');assert.equal(result.resumed.revision,result.old.revision+1);assert.deepEqual(result.resumed.life,result.old.life);
+ assert.equal(result.paid.revision,result.loaded.revision+1);assert.equal(result.paid.life.ageDays,result.loaded.life.ageDays+1);
+ assert.equal(result.paid.life.cultivationProfile.spirit,result.loaded.life.cultivationProfile.spirit-6);assert.deepEqual(result.paid.life.items,result.loaded.life.items);
+ assert.equal(result.final.events.mountain.walk[4].echo.day,result.paid.life.ageDays);
+ assert.match(result.final.currentScene.blocks.map(b=>b.text).join('\n'),/旧影走过的雪路/);assert.ok(result.exact);
+});
+
 test('an old harbor pending exit can accept a passenger once and replay the actual arrival',async t=>{
  const text=gunzipSync(await readFile(new URL('./fixtures/36c035c-passenger-pending.jsonl.gz',import.meta.url))).toString('utf8');
  const {page}=await liveBrowser(t);

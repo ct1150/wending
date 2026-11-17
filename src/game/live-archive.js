@@ -444,6 +444,10 @@ class Archive {
    const current=resolveRuleScene(c.run.state,p);
    if(current.choices.some(c=>c.id.endsWith(':c:mount-wind'))&&same(scene,resolveEventScene(c.run.state,p,'wind')))scene=current;
   }
+  if(prior&&sceneId.endsWith(':s:event_mount-book')&&scene.choices?.some(c=>c.id?.endsWith(':c:train-menu'))){
+   const current=resolveRuleScene(c.run.state,p);
+   if(current.choices.some(c=>c.id.endsWith(':c:mount-echo'))&&same(scene,resolveEventScene(c.run.state,p,'echo')))scene=current;
+  }
   if(prior&&sceneId.endsWith(':s:event_mentor')&&scene.choices?.some(c=>c.id?.endsWith(':c:back'))){
    const current=resolveRuleScene(c.run.state,p);
    if(current.choices.some(c=>c.id.endsWith(':c:form-book'))&&same(scene,resolveEventScene(c.run.state,p,'forms')))scene=current;

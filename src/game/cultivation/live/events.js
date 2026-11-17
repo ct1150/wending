@@ -47,7 +47,7 @@ const eventNodeIds=new Set([
  'garden-book','garden-history','garden-practice','garden-pick','garden-ripe',
  'post-index','post-book','post-offer-later','post-traces','post-address','post-return','post-history','post-shore',
  'post-stations','post-settle','post-fog',
- 'mount-book','mount-history','mount-sight','mount-sound','mount-wind',
+ 'mount-book','mount-history','mount-sight','mount-sound','mount-wind','mount-echo',
  'shell-book','shell-journal','shell-parley',
  'hunt-sources','hunt-grounds','well-book','well-road','sky-book','sky-boat','sky-shore',
 ]);

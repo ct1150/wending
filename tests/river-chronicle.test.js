@@ -356,6 +356,34 @@ test('the wind lesson changes an actual later rescue and farewell even when the 
   assert.deepEqual(deserializeLiveState(serializeLiveState(s)).events.mountain,s.events.mountain);
  }
 });
+test('snow reflection uses the learned form once and carries its decision through the last door',()=>{
+ for(const [form,ending] of [['listen','send'],['ward','stay']]){
+  let s=pick(windOffer(form),'keep-token');s=growToRealm(s,5);s=follow(s,'hear-stone','mount-steady');
+  const ordinary=pick(s,'path-1');assert.equal(ordinary.events.mountain.walk[4].exit,'found');
+  s=pick(s,'mount-echo');const before=s,poor=structuredClone(s);poor.life.cultivationProfile.spirit=5;
+  const button=poor.currentScene.choices.find(c=>c.id.endsWith(':c:echo-enter'));
+  assert.match(eventActionRule(poor,button,v7ActionRule(poor,button)).reason,/灵力不足/);
+  s=pick(s,'echo-enter');assert.equal(s.life.ageDays,before.life.ageDays+1);assert.equal(s.life.cultivationProfile.spirit,before.life.cultivationProfile.spirit-6);
+  assert.equal(s.life.cultivation,before.life.cultivation);assert.deepEqual(s.life.items,before.life.items);
+  assert.match(prose(s),form==='listen'?/回声停下以后/:/护住的并不是幻影/);
+  const paid=s;s=pick(s,'train-menu');const route=noteRoutes(s,journeyNotes(s)).get('mount-book');assert.ok(route);s=follow(s,...route);
+  assert.equal(s.events.mountain.walk[4].echo.ending,null);assert.equal(s.life.ageDays,paid.life.ageDays);
+  s=deserializeLiveState(serializeLiveState(s));s=pick(s,'echo-'+ending);
+  assert.equal(s.events.mountain.walk[4].exit,'attuned');assert.equal(s.events.mountain.walk[4].echo.ending,ending);
+  s=follow(s,'hear-stone','mount-steady','path-0','send-xiaoman');
+  assert.match(prose(s),ending==='send'?/旧影走过的雪路/:/守在雪脊的旧影/);
+  s=pick(s,'mount-history');assert.match(prose(s),/返照/);
+  const invalid=structuredClone(s.events.mountain);invalid.walk[4].echo.day=invalid.walk[4].woke;
+  assert.throws(()=>validateMountain(invalid,s.life,s.events.node,s.events.forms),/返照/);
+  const skipped=structuredClone(s.events.mountain);delete skipped.walk[4].echo;
+  assert.throws(()=>validateMountain(skipped,s.life,s.events.node,s.events.forms),/返照/);
+  const future=structuredClone(s.events.mountain);future.walk[4].echo.day=future.walk[5].woke;
+  assert.throws(()=>validateMountain(future,s.life,s.events.node,s.events.forms),/入定/);
+  const beforeKnown=structuredClone(before);beforeKnown.events.forms=undefined;
+  assert.throws(()=>validateMountain(beforeKnown.events.mountain,beforeKnown.life,'mount-echo'),/返照/);
+  assert.deepEqual(deserializeLiveState(serializeLiveState(s)).events.mountain,s.events.mountain);
+ }
+});
 const ferryFromTraining=s=>follow(s,'rest-menu','back','journey-menu','resources-menu','shell-book');
 test('the echo well charges each leg once, carries survey work across a retreat and remembers who inherits the bell',async()=>{
  const {readFile}=await import('node:fs/promises'),{gunzipSync}=await import('node:zlib');

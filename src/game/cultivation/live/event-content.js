@@ -168,6 +168,7 @@ export function eventNode(state,historicMenu=null){
    return row('修行的门槛',next?'积累修为与'+ITEMS[next.material]+'，尝试进入'+next.name:'在当前境界继续修行与历练',[
    narration(next?'你目前是'+realm.name+'。进入'+next.name+'需要修为达到'+next.threshold+'，并备妥'+ITEMS[next.material]+'。闭关的年月、灵力和风险会在行动前列明。':'渡劫之后，此生仍未结束。你可以继续积累、历练或照料旧日因果，直到真实的寿尽或伤重。'),
   ],[
+   e.mountain?.walk[4]?.exit==='echo'?menu('mount-book','回雪脊，回应停下的旧影','mount-book'):
    e.mountain?.wind&&!e.mountain.wind.ending?menu('mount-book','回风口，接着与小满商量下一步','mount-book'):
     e.garden?.plot&&(!next||life.cultivation>=next.threshold)?menu('garden-book','验看苗盆，或在盆旁继续修行','garden-book'):choice('practice','按当前功法稳步修炼','practice','self','steady',{next:'action-result'}),
    next&&life.cultivation<next.threshold&&!oldGate?menu('garden-book','随身携一畦苗，选择稳修或苦修','garden-book'):

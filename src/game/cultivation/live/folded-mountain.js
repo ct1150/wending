@@ -1,6 +1,7 @@
 import {realmFor,TECHNIQUES} from './cultivation-rules.js';
 import {exactKeys} from './schema.js';
 import {formNames} from './technique-forms.js';
+import {reflectionNode} from './mountain-reflection.js';
 
 // The stone unfolds during ordinary retreats. The room, not the engine roll,
 // determines what the player can learn from looking or listening.
@@ -83,7 +84,7 @@ const byways={
   acts:['把这些年的一件小事讲给他听','在他整好行囊以前，一直陪他坐着'],keys:['speak','sit'],
   results:['你说起小满第一次在山顶怕高的模样。少年听见一句零散的笑声，系好行囊，也轻轻地笑了一下。','直到最后一道绳结系好，你都留在窗边。少年走时没有求你许诺一个归期，只把门给你虚掩着。']},
 };
-const cleared=['found','corrected','around','guided'];
+const cleared=['found','corrected','around','guided','attuned'];
 const completed=r=>cleared.includes(r.exit);
 export function validateMountain(m,life,node,forms){
  exactKeys(m,['wish','walk','gifts','ending'],['wind']);
@@ -91,14 +92,20 @@ export function validateMountain(m,life,node,forms){
     !m.gifts.every(g=>['keep','give'].includes(g))||![null,'open','send'].includes(m.ending))throw new Error('折山行履无效。');
  let day=0;
  for(const [i,r] of m.walk.entries()){
-  exactKeys(r,['sense','method','technique','ok','days','woke','exit'],['turning']);
+  exactKeys(r,['sense','method','technique','ok','days','woke','exit'],['turning','echo']);
   if(![0,1].includes(r.sense)||!['steady','intensive'].includes(r.method)||typeof r.ok!=='boolean'||r.method==='steady'&&!r.ok||
      !Number.isSafeInteger(r.days)||r.days<1||!Number.isSafeInteger(r.woke)||r.woke-r.days<day||life&&(r.woke>life.ageDays||realmFor(life).rank<rooms[i].rank)||
-     !Object.hasOwn(TECHNIQUES,r.technique)||![null,'lost','reading','bypath',...cleared].includes(r.exit)||r.exit==='guided'&&!m.gifts.slice(0,Math.floor(i/2)).includes('give')&&!(i>=4&&m.wind?.ending)||
+     !Object.hasOwn(TECHNIQUES,r.technique)||![null,'lost','reading','bypath','echo',...cleared].includes(r.exit)||r.exit==='guided'&&!m.gifts.slice(0,Math.floor(i/2)).includes('give')&&!(i>=4&&m.wind?.ending)||
      !completed(r)&&i!==m.walk.length-1||m.gifts.length<Math.floor(i/2))throw new Error('折山入定记录无效。');
   if(r.exit==='bypath'&&!byways[i]||Object.hasOwn(r,'turning')&&(r.exit!=='around'||!byways[i]?.keys.includes(r.turning))||
      byways[i]&&r.exit==='around'&&!r.turning||r.turning==='carry'&&m.walk[0].turning!=='bowl')throw new Error('折山岔路无效。');
   day=r.woke+(['around','bypath'].includes(r.exit)?3:0)+(r.turning==='meal'?1:0);
+  if(Object.hasOwn(r,'echo')){
+   exactKeys(r.echo,['form','day','ending']);const echo=r.echo;
+   if(i!==4||!['listen','ward'].includes(echo.form)||![null,'send','stay'].includes(echo.ending)||!Number.isSafeInteger(echo.day)||echo.day<=r.woke||
+      r.exit!==(echo.ending?'attuned':'echo')||life&&!forms?.known)throw new Error('雪脊返照记录无效。');
+   day=echo.day;
+  }else if(['echo','attuned'].includes(r.exit))throw new Error('雪脊返照尚未施术。');
   if(life&&day>life.ageDays)throw new Error('折山绕行日数无效。');
  }
  const finished=m.walk.filter(completed).length;
@@ -110,6 +117,7 @@ export function validateMountain(m,life,node,forms){
      life&&(w.day>life.ageDays||!forms?.known))throw new Error('风口同行记录无效。');
  }
  if(node==='mount-wind'&&(finished!==4||m.walk.length!==4||m.gifts.length!==1||life&&!forms?.known))throw new Error('还未到风口同行之处。');
+ if(node==='mount-echo'&&(m.walk.length!==5||![null,'reading','lost','echo'].includes(m.walk[4].exit)||life&&!forms?.known))throw new Error('还未到雪脊返照之处。');
  if(m.gifts.length>Math.floor(finished/2)||m.ending&&finished!==rooms.length)throw new Error('折山信物无效。');
  if(node==='mount-history'&&(!finished||finished!==m.walk.length)||
     ['mount-sight','mount-sound'].includes(node)&&(finished!==m.walk.length||!rooms[finished]||m.gifts.length<Math.floor(finished/2)||life&&realmFor(life).rank<rooms[finished].rank))throw new Error('折山页次无效。');
@@ -130,6 +138,8 @@ export function mountainNode(state,menu,choice,historicMenu){
  const home=m.wish==='home',giftCount=gifts.filter(g=>g==='give').length;
  const prior=last&&completed(last)?walkResult(m,walk.length-1):null;
  const wind=m.wind;
+ const echo=walk[4]?.echo;
+ if(node==='mount-echo'||echo&&!echo.ending)return reflectionNode(state,menu,choice);
  if(node==='mount-wind'||wind&&!wind.ending){
   if(!wind){
    const form=events.forms.known;
@@ -152,7 +162,8 @@ export function mountainNode(state,menu,choice,historicMenu){
   m.ending==='send'?'你把折石搁在路边，等那泥人自己走下来。小满回头看了很久，伸手把石头推回你掌心。「你带走吧。是我要走了。」你第一次听到他的脚步落在石外的土地上。':'你把折石的两面撑开，给山里和山外各留一道门。小满没有马上跟出来，一阵细碎的脚步声从里面跑远；那是他头一次走一条你不跟着的路。',
   home?'炊烟散了，你还记得自己出村时真正踩过的那一步。现在有人在另一条路上迈出了自己的第一步。':'井水的声响到了门外微不可闻。你终于听见它从哪里来：石缝里第一滴水撞上另一滴水，没有谁在井底敲钟。',
   giftCount?'小满一路自己收着'+items.filter((_,k)=>gifts[k]==='give').join('和')+'。临分别，他没有把那些东西还给你。':'芦哨和风筝线都还在你手里。小满摊开两只空手，原来他也能空手走出一座山。',
-  ...(wind?.ending?[wind.ending==='own'?'临到最后一级，他像风口那天一样，先看了一眼落脚处。这一回没有回头等你伸手。':'走到听不见彼此的地方，他在石上敲了两下。你在掌心回了两下；谁都没有叫对方停住。']:[])],[menu('mount-history','回看实际走过的六关','mount-history'),back]);
+  ...(wind?.ending?[wind.ending==='own'?'临到最后一级，他像风口那天一样，先看了一眼落脚处。这一回没有回头等你伸手。':'走到听不见彼此的地方，他在石上敲了两下。你在掌心回了两下；谁都没有叫对方停住。']:[]),
+  ...(echo?.ending?[echo.ending==='send'?'旧影走过的雪路已经不再与你的足印重叠。小满往石内望了一眼，说原来分别以后，不必有谁替谁继续走。':'守在雪脊的旧影将灯转向另一侧，给一串从未见过的足印让路。小满说，留在原处的人也可以做出从前没有过的事。']:[])],[menu('mount-history','回看实际走过的六关','mount-history'),back]);
  if(!c)return row('石口等一个人','决定让山门常开，还是陪小满走出石头',[prior,'小满把泥脚在石脊上一磕，磕掉薄薄一层干壳。里面长着自己的脚趾。他问你：「这回出去哪儿，要我自己选吗？」'],[
   menu('send-xiaoman','陪到石口，让他自己走入山外',desk,patch({ending:'send'})),menu('open-mountain','给两边留门，让他决定哪天出去',desk,patch({ending:'open'})),back]);
  if(!inside&&i&&i%2===0&&gifts.length<i/2){
@@ -166,6 +177,8 @@ export function mountainNode(state,menu,choice,historicMenu){
  if(realmFor(life).rank<c.rank)return row('折山石合上了一层','在'+(c.rank===2?'筑基':'化神')+'后再展开下一重山',[prior,'眼下的气息托不开折痕。石头仍可随身带走，等自己的境界到了再续前路。'],[menu('mount-history','回顾前面走过的路','mount-history'),back]);
  if(inside){
   const taken=change=>patch({walk:[...walk.slice(0,-1),{...last,...change}]});
+  const oldEcho=historicMenu==='echo'||state.currentScene?.id.endsWith(':t'+state.turnId+':s:event_mount-book')&&state.currentScene.choices.some(c=>c.id.endsWith(':c:train-menu'));
+  const investigate=i===4&&events.forms?.known&&!oldEcho?menu('mount-echo','以本命术式探返照，或收功回山','mount-echo'):back;
   if(last.exit==='bypath'){
    const side=byways[i];
    const options=side.keys.flatMap((turning,k)=>{
@@ -177,12 +190,12 @@ export function mountainNode(state,menu,choice,historicMenu){
   }
   const windHelp=i>=4&&wind?.ending;
   if(last.exit==='lost')return row(c.title+' · 走岔之后','决定怎样离开眼前这条岔路',[c.lost,windHelp?(wind.ending==='own'?'小满在另一侧踩了踩地，说他记得风口那天怎样试出能落脚的地方。这一次，他想先走给你看。':'石后响起两下，接着一下。小满用风口那天的节拍，告诉你他在哪里停了下来。'):giftCount?'远处还有小满。他保管着你交给他的信物，这一次可以请他指路。':'小满还没有一件可以隔着山指路的东西。你可以重读亲眼所见，也可以自己走山路绕到另一侧。'],[
-   choice('go-around','自己绕山走三日，看看岔路尽头','explore','supplies','cautious',{next:desk,patch:taken({exit:byways[i]?'bypath':'around'}),rule:{days:3}}),...(giftCount||windHelp?[menu('call-xiaoman',windHelp?(wind.ending==='own'?'让小满先试落脚处，跟着他出山':'按当年的节拍应声，与小满重新会合'):'循小满送来的信物，随他出山',desk,taken({exit:'guided'}))]:[menu('try-again','回想线索，重辨原来的岔口',desk,taken({exit:'reading'}))]),back]);
+   choice('go-around','自己绕山走三日，看看岔路尽头','explore','supplies','cautious',{next:desk,patch:taken({exit:byways[i]?'bypath':'around'}),rule:{days:3}}),...(giftCount||windHelp?[menu('call-xiaoman',windHelp?(wind.ending==='own'?'让小满先试落脚处，跟着他出山':'按当年的节拍应声，与小满重新会合'):'循小满送来的信物，随他出山',desk,taken({exit:'guided'}))]:[menu('try-again','回想线索，重辨原来的岔口',desk,taken({exit:'reading'}))]),investigate]);
   const clue=i===5&&home?'绷直的筝线搭在碗沿。新碗添上一个泥手印，线便偏了一根头发的距离。':tokenClues[i-2];
   return row(c.title+' · 入定所见','根据这一关的见闻决定怎样走',[
    '这次以'+TECHNIQUES[last.technique].name+(last.method==='steady'?'稳修':'苦修')+'经过'+last.days+'日。'+(last.ok?'你在收功前留下了一个清楚的印象。':'练功失手，真正的伤势与消耗已经结算。静下来仍能回想入定前留意的细节。'),
    c.signs[last.sense],...(clue&&gifts[Math.floor(i/2)-1]==='keep'?[clue]:[])],[
-   ...c.paths.map((label,n)=>menu('path-'+n,label,desk,taken({exit:n===c.right?(last.exit==='reading'?'corrected':'found'):'lost'}))),back]);
+   ...c.paths.map((label,n)=>menu('path-'+n,label,desk,taken({exit:n===c.right?(last.exit==='reading'?'corrected':'found'):'lost'}))),investigate]);
  }
  if(node==='mount-sight'||node==='mount-sound')return row(c.title+' · 入定前','选择本次真正要练的功课',[c.scene,'你把注意留在「'+c.sights[node==='mount-sight'?0:1]+'」。稳修和苦修都沿用当前功法，苦修另耗行粮，失手仍留下本次见闻。随时可以收功去做别的事。'],[
   choice('mount-steady','按本命功法稳修，定中寻路','practice','self','steady',{next:desk}),choice('mount-intensive','备粮苦修，缩短这一关','practice','self','intensive',{next:desk}),book]);
@@ -191,6 +204,7 @@ export function mountainNode(state,menu,choice,historicMenu){
 }
 function walkResult(m,i){
  const r=m.walk[i],c=roomFor(m,i);
+ if(r.echo)return '雪脊返照。以'+formNames[r.echo.form]+'用一日、六分灵力探入旧影。'+(r.echo.ending==='send'?'你撤回代行的脚印，请旧影自选一条没有走过的雪路；山脊因此有了另一个出口。':r.echo.ending==='stay'?'旧影留下认路，却不再替任何人迈步。你从他第一次没有替你走的那一步跨过了雪脊。':'旧影已经停下，仍等着你回应它想往何处去。');
  if(r.exit==='guided'&&i>=4&&m.wind?.ending)return m.wind.ending==='own'?'小满在石背上试了三步，停在不会往回滑的那一步，朝你伸手。风口那天你等过他，现在轮到你沿他的脚印走。':'两下走，一下停。你们隔着石壁应了几遍，直到两只手在同一道缝里碰到一起。风口的节拍把两个人都带回了路上。';
  if(r.exit==='guided')return m.gifts[0]==='give'?'石后传来破了音的芦哨。小满从来没吹响过，这一次却把那一口气拖到你找到他为止。':'风筝线贴着袖口落下。小满在远处拽了两下，向你指明回去的路。';
  if(r.exit==='around')return r.turning?byways[i].results[byways[i].keys.indexOf(r.turning)]:'你亲自走完三日山路，从那条绕远的岔道也到达了这里。';

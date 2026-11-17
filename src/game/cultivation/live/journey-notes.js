@@ -91,7 +91,7 @@ export function journeyNotes(state){
   add(node,t.name,node==='post-book'?'已办理'+e.post.steps.length+'封药路回单。':node==='post-shore'?'阿枳的手记还留着这次看潮的约定。':'查看已派出的站班与交账记录。',t);
  }
  if(life.cultivationProfile.experience?.commitment?.status==='owed')add('mentor','校法还粮','当年校法时答应还一份行粮。',{open:0,close:100*DAYS_PER_YEAR-1},'旧约仍在记录中，可查当年的来路');
- if(e.mountain&&!e.mountain.ending)add('mount-book','折山石',e.mountain.wind&&!e.mountain.wind.ending?'已陪小满练过一日，等着商量下一步怎样同行。':'已留下'+e.mountain.walk.length+'关入定记录。石里的路从上次留下的地方接续。');
+ if(e.mountain&&!e.mountain.ending)add('mount-book','折山石',e.mountain.walk[4]?.exit==='echo'?'已施术进入雪脊返照，旧影仍等着你的回应。':e.mountain.wind&&!e.mountain.wind.ending?'已陪小满练过一日，等着商量下一步怎样同行。':'已留下'+e.mountain.walk.length+'关入定记录。石里的路从上次留下的地方接续。');
  if(e.watch?.draft)add('watch-book','守关簿',e.watch.draft.days?'已经出定，待读守关人的回信。':e.watch.draft.marks?'值守条件已写好，可回去核对再入定。':'本次值守委托尚未交割。');
  if(e.entry==='accepted'){
   const r=e.nursery;
