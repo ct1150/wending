@@ -1,6 +1,7 @@
 import {realmFor,V7_REALMS} from './cultivation-rules.js';
 import {exactKeys} from './schema.js';
 import {trailNode,validateTrail} from './deer-trail.js';
+import {dingNode,validateDing} from './mountain-ding.js';
 
 // The same nine commissions can follow one cultivator through successive
 // retreats. Each entry concerns the watch outside, not the rolls inside.
@@ -88,10 +89,14 @@ function checkEntry(x,closed){
     closed&&(x.days===null||typeof x.shared!=='boolean'))throw new Error('守关回执无效。');
 }
 export function validateWatch(w){
- exactKeys(w,['record','draft'],['trail']);
+ exactKeys(w,['record','draft'],['trail','ding']);
  if(!Array.isArray(w.record)||w.record.length>watches.length||w.record.length===watches.length&&w.draft!==null)throw new Error('守关簿卷数无效。');
  for(const entry of w.record)checkEntry(entry,true);
  if(w.draft!==null)checkEntry(w.draft,false);
+ if(Object.hasOwn(w,'ding')){
+  if(w.record.length!==watches.length)throw new Error('守关未毕，山门尚未开范。');
+  validateDing(w.ding);
+ }
  if(Object.hasOwn(w,'trail')){
   if(!w.record.length)throw new Error('栗溪行程尚未开启。');
   validateTrail(w.trail);
@@ -115,12 +120,13 @@ export function watchNode(state,menu,choice){
  const trail=menu('deer-trail',w.trail?'到驿棚查栗溪的近况':'去驿棚看看背篓里那只小鹿','watch-trail');
  const contacts=w.record.length?menu('watch-visitors','探访驿棚来客，或验看功法','watch-visitors'):mentor;
  if(node.startsWith('watch-trail'))return trailNode(state,menu,choice);
+ if(node.startsWith('watch-ding-'))return dingNode(state,watches,menu,choice,row,book,train);
  if(node==='watch-visitors')return row('值夜班的饭棚','找行脚人，或查功法来路',['灶边有给过路人留的矮凳。牧女陶禾的栗溪行程在驿棚留有消息；若想验看自己的修行法门，仍可从这里回去找师承。'],[trail,mentor,book]);
  if(node==='watch-receipt'){
   const last=w.record[i-1],prior=watches[i-1];
   return row(prior.title+' · 交割','读值守人的回执',[...report(i-1,w.record,last),last.shared?prior.pass:prior.seal],[book,trail,train]);
  }
- if(!c)return row('山门长开 · 守关簿合卷','回看此生九次守关的实情',['簿中九道关并非同时关闭。每次翻开，都是当时的人替你照料那些关不到门内的日子。',...w.record.map((v,n)=>watches[n].title+'。'+report(n,w.record,v).at(-1)+(v.shared?watches[n].pass:watches[n].seal))],[train,contacts]);
+ if(!c)return row('山门长开 · 守关簿合卷','回看此生九次守关的实情',['簿中九道关并非同时关闭。每次翻开，都是当时的人替你照料那些关不到门内的日子。',...w.record.map((v,n)=>watches[n].title+'。'+report(n,w.record,v).at(-1)+(v.shared?watches[n].pass:watches[n].seal))],[menu('ding-book','去山门铸坊，看看问鼎之约','watch-ding-book'),train,contacts]);
  const needed=Object.values(V7_REALMS)[i],rank=realmFor(state.life).rank;
  if(rank<i)return row('山门守关簿 · 待再入定','到'+needed.name+'再接这一关的委托',[w.record.at(-1)?.shared?'上一处留下了可公开比对的底稿。':'上一处已把原样交还当事人。','下一折「'+c.title+'」要在'+needed.name+'的闭关里亲历。'],[train,contacts]);
  if(node==='watch-book'){
@@ -138,4 +144,9 @@ export function watchNode(state,menu,choice){
  if(node==='watch-report')return row(c.title+' · 出关来信','依实际后果安排底稿与原样',[d.success?'你按本命功法结束这一关，共过了'+d.days+'日。':'这次修炼检定未成，仍实际经过了'+d.days+'日。关外的值守人照约办了自己的事。',...report(i,w.record,d),c.pass+'也可另行封存。'],[
   ...[true,false].map(shared=>menu(shared?'leave-copy':'seal-original',shared?'留下可复核的公用底稿':'封还原样，留给当事人核对','watch-receipt',{watch:{...w,record:[...w.record,{...d,shared}],draft:null}})),train]);
  throw new Error('守关簿页次无效。');
+}
+
+export function inscriptionText(inscription){
+ const names=inscription.pieces.map(p=>p.shared?'「'+watches[p.foot].object+'」':'「'+watches[p.foot].title+'」留下的无名榫');
+ return '随行的旧物中有一纸鼎铭传拓，三足记着'+names.join('、')+'。'+(inscription.form==='hall'?'前人把三足合在山门的公器上。':'前人令器物分归各地，山门留下空范。');
 }

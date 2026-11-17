@@ -23,6 +23,7 @@ const eventNodeIds=new Set([
  'field-guide','field-camp','field-bank','field-grove','field-kiln','field-shrine','field-spar','field-proof','field-source','field-banks','field-ending',
  'watch-book','watch-people','watch-orders','watch-sit','watch-report','watch-receipt',
  'watch-visitors','watch-trail','watch-trail-map','watch-trail-fork',
+ 'watch-ding-book','watch-ding-pick','watch-ding-last','watch-ding-dedicate','watch-ding-result',
 ]);
 const copy=value=>JSON.parse(JSON.stringify(value));
 export function createEventState(atlas){return {version:1,node:'arrival',entry:'unresolved',companion:'unmet',mentor:'unmet',page:0,location:'gate',...(atlas?copy(atlas):{})};}
@@ -33,6 +34,10 @@ export function validateEventState(events){
  if(Object.hasOwn(events,'convoy'))validateConvoy(events.convoy);
  if(Object.hasOwn(events,'valley'))validateValley(events.valley);
  if(Object.hasOwn(events,'watch'))validateWatch(events.watch);
+ if(events.node.startsWith('watch-ding-')){
+  const ding=events.watch?.ding;
+  if(events.watch?.record.length!==9||['watch-ding-pick','watch-ding-last'].includes(events.node)&&ding?.feet.length===3||events.node==='watch-ding-dedicate'&&ding?.feet.length!==3||events.node==='watch-ding-result'&&!ding?.form)throw new Error('山门问鼎页次无效。');
+ }
  if((events.node.startsWith('watch-trail')||events.node==='watch-visitors')&&!events.watch?.record.length)throw new Error('守关驿棚尚未开门。');
  const draft=events.watch?.draft;
  if(events.node==='watch-orders'&&(!draft||draft.days!==null)||events.node==='watch-sit'&&(!draft?.marks||draft.days!==null)||events.node==='watch-report'&&!draft?.days||events.node==='watch-receipt'&&!events.watch?.record.length)throw new Error('守关回信页次无效。');

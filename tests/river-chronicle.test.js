@@ -7,6 +7,7 @@ import {validateConvoy} from '../src/game/cultivation/live/sea-convoy.js';
 import {validateValley} from '../src/game/cultivation/live/mist-valley.js';
 import {eventNode} from '../src/game/cultivation/live/event-content.js';
 import {validateWatch} from '../src/game/cultivation/live/retreat-watch.js';
+import {validateDing,validateInscription} from '../src/game/cultivation/live/mountain-ding.js';
 
 const observers=new WeakMap();
 function start(observe,seed=42){
@@ -52,6 +53,8 @@ test('public and sealed handoffs give different keepers an independent source fo
  }
  assert.throws(()=>validateWatch({record:[{...first,days:null}],draft:null}),/回执/);
  assert.throws(()=>validateWatch({record:[first],draft:null,trail:{start:5,world:0,place:'ford',traces:0,outcome:'herd',reply:null}}),/栗溪/);
+ assert.throws(()=>validateDing({form:'hall',feet:[0,1,6]}),/问鼎/);
+ assert.throws(()=>validateInscription({form:'hall',pieces:[{foot:0,shared:true},{foot:3,shared:false,keeper:1},{foot:6,shared:true}]}));
 });
 test('Tao He leaves on schedule, and both a timely handoff and a missed meeting survive reload',()=>{
  const base=follow(firstWatch(42,1,'one-mark'),'leave-copy','deer-trail','walk-with-he');
@@ -401,6 +404,23 @@ test('one continuous birth finishes the three-world campaign and replays its ent
  assert.match(prose(s),/多年以前寄存的旧信/);
  s=follow(s,'answer-letter','watch-later','rest-menu','back','journey-menu','river-book','hear-council','convoy-book');
  assert.match(s.currentScene.title,/问川归航/);
+ s=trainTo(pick(s,'train-menu'),9);
+ assert.equal(s.life.realm,'tribulation');
+ s=follow(s,'train-menu','rest-menu','watch-book','ding-book','choose-feet','foot-0','foot-0','more-feet','foot-2','dedicate');
+ let hall=deserializeLiveState(serializeLiveState(s));
+ if(!hall.life.items.iron){
+  hall=follow(hall,'ding-book','watch-book','watch-later','rest-menu','back','journey-menu','resources-menu','next-resource','next-resource','next-resource','next-resource','gather','train-menu','rest-menu','watch-book','ding-book','dedicate');
+ }
+ const iron=hall.life.items.iron;
+ hall=pick(hall,'join-pieces');assert.match(hall.currentScene.title,/山门有器/);
+ assert.equal(hall.lastReceipt.elapsedDays,9);assert.equal(hall.life.items.iron??0,iron-1);
+ hall=follow(hall,'watch-book','ding-book');
+ assert.ok(!hall.currentScene.choices.some(c=>c.id.endsWith(':c:join-pieces')));
+ s=pick(s,'return-pieces');assert.equal(s.lastReceipt.elapsedDays,3);
+ assert.match(s.currentScene.title,/鼎归九处/);
+ assert.equal(s.events.watch.ding.form,'village');
+ assert.deepEqual(s.events.watch.ding.feet,[0,3,8]);
+ s=follow(s,'watch-later','rest-menu','back','journey-menu','river-book','hear-council','convoy-book');
  t.diagnostic('Three-world campaign ending at turn '+s.turnId+'; world tier '+s.life.cultivationProfile.worldTier);
  const {liveBrowser}=await import('./helpers/live-browser.js'),{page}=await liveBrowser(t);
  const browser=await page.evaluate(async keys=>{
@@ -416,10 +436,29 @@ test('one continuous birth finishes the three-world campaign and replays its ent
   }
   await format.importLiveArchive(format.exportLiveArchive(archive),target);
   const restored=await target.load();
-  return {events:restored.state.events,turn:restored.state.turnId,life:restored.state.life,title:restored.state.currentScene.title,exact:identity.stateHash(restored.state)===identity.stateHash(row.state)};
+  const exact=identity.stateHash(restored.state)===identity.stateHash(row.state);
+  const {compileChoices}=await import('/src/game/cultivation/live/engine.js');
+  // Keep the restored living campaign available while the source runs out its natural lifespan.
+  for(let n=0;row.state.phase!=='dead'&&n<400;n++){
+   const state=row.state,node=state.events.node,key=node==='training'?(compileChoices(state,state.currentScene.choices).find(c=>c.id.endsWith(':c:practice')).enabled?'practice':'rest-menu'):node==='rest'?'recover':'train-menu';
+   const action=state.currentScene.choices.find(c=>c.id.endsWith(':c:'+key));
+   row=await session.choose({choiceId:action.id,baseRevision:state.revision,stateHash:identity.stateHash(state)});
+   if(row.errorCode)throw Error(row.errorCode);
+  }
+  if(row.state.phase!=='dead')throw Error('parent did not reach settlement');
+  const child=await session.reincarnate({runId:'keeper-descendant',seed:7,name:'沈棠'},[],row.archiveId);
+  if(child.errorCode)throw Error(child.errorCode);
+  const childCopy=await open('keeper-child-copy');
+  await format.importLiveArchive(format.exportLiveArchive(archive),childCopy);
+  const reborn=(await childCopy.load()).state;
+  return {events:restored.state.events,turn:restored.state.turnId,life:restored.state.life,title:restored.state.currentScene.title,exact,
+   cause:row.state.lastReceipt.death.cause,reborn:reborn.life.realm,inscription:reborn.reincarnation.inscription,childTitle:reborn.currentScene.blocks.map(b=>b.text).join(''),privateWatch:!!reborn.events.watch};
  },route);
  assert.equal(browser.exact,true);assert.deepEqual(browser.events,s.events);assert.deepEqual(browser.life,s.life);
  assert.equal(browser.turn,s.turnId);assert.equal(browser.title,s.currentScene.title);
+ assert.equal(browser.reborn,'mortal');assert.equal(browser.privateWatch,false);assert.match(browser.childTitle,/无名榫/);
+ assert.deepEqual(browser.inscription,{form:'village',pieces:[{foot:0,shared:true},{foot:3,shared:false},{foot:8,shared:true}]});
+ t.diagnostic('Native archive parent settlement: '+browser.cause+'; inherited inscription restored in mortal child.');
  t.diagnostic('Route inventory: '+blocks.size+' distinct displayed blocks, '+[...blocks].reduce((n,b)=>n+[...b].length,0)+' characters (includes menu and status text).');
  s=pick(s,'train-menu');assert.equal(s.phase,'active');
 });

@@ -6,7 +6,7 @@ import {expeditionNode,expeditionResult} from './expedition.js';
 import {councilHearings,councilNode} from './mountain-council.js';
 import {convoyNode} from './sea-convoy.js';
 import {valleyLocation,valleyNode,valleyPlaces} from './mist-valley.js';
-import {watchNode} from './retreat-watch.js';
+import {inscriptionText,watchNode} from './retreat-watch.js';
 import {trailLocation} from './deer-trail.js';
 
 // Authored situations supply every fact and executable choice. AI never edits
@@ -58,6 +58,7 @@ export function eventNode(state){
   case 'arrival':return row('外院第一日','问清入门条件，选择留下或独行',[
    narration(young?'栖云门外院里，送炭的板车刚刚停稳。你把母亲缝好的衣袖拉平，站到登记的长桌前。周执事没有问你的灵根，只把一册差事簿推到桌沿。':'外院还存着那册旧簿。门上的墨色换了几回，当值者核对年月，仍认得当年写给试修弟子的条款。'),
    ...(state.reincarnation?.atlas?[narration('你行囊里有一本辗转传下的问川图。前人结过的图印还在，夹住旧页的草绳也在。等安顿下来，便可以从外出历练处接着读。')]:[]),
+   ...(state.reincarnation?.inscription?[narration(inscriptionText(state.reincarnation.inscription))]:[]),
    young?speech(actor('steward'),'外院不白收人。帮忙整理三日药圃，我给你一卷完整的入门功法。是否留下，你想清楚再答。'):narration('旧簿上写着：整理药圃三日，以一卷完整功法为酬。'),
   ],[menu('ask','先问清差事与试修条件','terms'),terms()[0],terms()[2]]);
   case 'terms':return row('一卷功法的条件','知道代价后，再决定是否接受',[

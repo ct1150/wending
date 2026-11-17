@@ -7,6 +7,7 @@ import {validateExpedition} from './expedition.js';
 import {councilHearings,validateCouncil} from './mountain-council.js';
 import {validateConvoy} from './sea-convoy.js';
 import {validateValley} from './mist-valley.js';
+import {inscriptionFrom,validateInscription} from './mountain-ding.js';
 
 export const REINCARNATION_REWARDS = Object.freeze([
   {id:'resilient-body',name:'特殊体质',cost:3,description:'下一世带入坚韧的体魄，保留与之相伴的缺陷。'},
@@ -48,6 +49,9 @@ function readEchoes(rows,parentId){
 export function validateReincarnation(row) {
  assertPlainData(row);
  const keys=['version','lineageId','generation','parentRunId','parentStateHash','earnedPoints','balance','purchases'];
+ if(row?.version===2&&Object.hasOwn(row,'inscription')){
+  keys.push('inscription');validateInscription(row.inscription);
+ }
  if(row?.version===2&&Object.hasOwn(row,'atlas')){
   keys.push('atlas');
   const atlas=row.atlas;
@@ -115,11 +119,12 @@ export function buildRebirthOptions(deadState,rewardIds=[]) {
   if(spent>settlement.availablePoints)fail('REINCARNATION_INSUFFICIENT_POINTS');
   const purchases=[...rewardIds].sort();
   const events=deadState.events;
+  const inscription=inscriptionFrom(events?.watch)??deadState.reincarnation?.inscription;
   const atlas=events?.river?structuredClone({river:events.river,...(events.expedition?{expedition:events.expedition}:{}),...(events.council?{council:events.council}:{}),...(events.convoy?{convoy:events.convoy}:{}),...(events.valley?{valley:events.valley}:{})}):null;
   return {engineVersion:7,...(isExperienceLife(deadState.life)?{experienceVersion:EXPERIENCE_VERSION}:{}),...(deadState.events?{eventVersion:1,originStories:true}:{}),inheritedBenefits:purchases,reincarnation:{
     version:settlement.echoes?2:1,...(settlement.echoes?{carriedPoints:settlement.carriedPoints,echoes:settlement.echoes}:{}),lineageId:deadState.reincarnation?.lineageId??deadState.runId,
     generation:settlement.generation+1,parentRunId:deadState.runId,parentStateHash:stateHash(deadState),
-    earnedPoints:settlement.earnedPoints,balance:settlement.availablePoints-spent,purchases,...(atlas?{atlas}:{}),
+    earnedPoints:settlement.earnedPoints,balance:settlement.availablePoints-spent,purchases,...(atlas?{atlas}:{}),...(inscription?{inscription:structuredClone(inscription)}:{}),
   }};
 }
 
