@@ -4,6 +4,7 @@ import {harvestWindows} from './phenology.js';
 import {postWindows} from './lin-post.js';
 import {shellTide} from './shell-ferry.js';
 import {nurseryWindow} from './entry-nursery.js';
+import {saltWindow} from './salt-field.js';
 import {charterNote} from './harbor-charters.js';
 
 // Only the repeatable, ordinary steady action is eligible. Story retreats
@@ -29,6 +30,7 @@ export function practicePlan(state){
 
  const times=[...harvestWindows(state),...postWindows(e.post)];
  const nursery=nurseryWindow(e);if(nursery)times.push(nursery);
+ const salt=saltWindow(e,age);if(salt)times.push(salt);
  const packet=charterNote(e,age);if(packet?.window)times.push({...packet.window,name:packet.title});
  const ferry=shellTide(e.ferry);if(ferry)times.push(ferry);
  const trail=e.watch?.trail;

@@ -18,6 +18,7 @@ import {materialHunt} from './material-hunt.js';
 import {echoWell,wellDepartures} from './echo-well.js';
 import {cloudPassage} from './cloud-passage.js';
 import {nurseryNode} from './entry-nursery.js';
+import {saltFieldNode} from './salt-field.js';
 
 // Authored situations supply every fact and executable choice. AI never edits
 // these definitions. Stable actors belong to a life, not a generated paragraph.
@@ -68,6 +69,7 @@ export function eventNode(state,historicMenu=null){
  if(e.node.startsWith('shell-'))return shellNode(state,menu,choice,actor('ferrier'));
  if(e.node==='hunt-sources'||e.node==='hunt-grounds')return materialHunt(state,next,menu,choice,historicMenu);
  if(e.node==='well-book')return echoWell(state,menu,choice);
+ if(e.node==='seed-book')return saltFieldNode(state,menu,choice);
  if(e.node.startsWith('sky-'))return cloudPassage(state,choice,menu);
  if(e.node==='well-road'){
   const home=menu('train-menu','收起路引，回去安排修行','training');
@@ -217,9 +219,11 @@ export function eventNode(state,historicMenu=null){
    const sky=tier===2&&realm.rank>=4&&!oldRoad;
    const oldPacket=historicMenu==='crossing'||historicMenu==='packet'||state.currentScene?.id.endsWith(':t'+state.turnId+':s:event_crossing')&&state.currentScene.choices.some(c=>c.id.endsWith(':c:resources-menu'));
    const packet=e.convoy?.chapters[0]?.loads.length===2&&!oldPacket;
+   const oldExit=historicMenu||state.currentScene?.id.endsWith(':t'+state.turnId+':s:event_crossing')&&state.currentScene.choices.some(c=>c.id.endsWith(':c:back'));
+   const seedDesk=tier>=1&&e.nursery?.end&&!oldExit;
    return row('天地之间','达到真实门槛后才能跨界',[
     narration(tier<2?'通往'+name+'的道路有自己的境界、材料与风险门槛。未达到时，继续留在当前天地修行便是。':'你已经身在上界，仍可继续修行与历练。'),
-   ],[tier<2?choice('cross','循正途飞升前往'+name,'travel',actor(destination),'ascend',{next:'action-result',arrival:destination}):sky?menu('sky-book','去白脊云渡，随渡班闭关守风','sky-book'):menu('train-menu','继续安排修行','training'),packet?menu('packet-book','借旧港的船，翻开轮航簿','packet-book'):menu('resources-menu','回去备办资源','resources',{page:0}),leave]);
+   ],[tier<2?choice('cross','循正途飞升前往'+name,'travel',actor(destination),'ascend',{next:'action-result',arrival:destination}):sky?menu('sky-book','去白脊云渡，随渡班闭关守风','sky-book'):menu('train-menu','继续安排修行','training'),packet?menu('packet-book','借旧港的船，翻开轮航簿','packet-book'):menu('resources-menu','回去备办资源','resources',{page:0}),seedDesk?menu('seed-book','翻看盐埠种簿，或合簿回山','seed-book'):leave]);
   }
   case 'affairs':{
    const companion=young&&['helped','declined'].includes(e.companion)&&realm.rank>=1?'reunion':'companion';

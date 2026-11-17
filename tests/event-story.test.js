@@ -4,6 +4,7 @@ import * as engine from '../src/game/cultivation/live/engine.js';
 import {stateHash} from '../src/game/cultivation/live/identity.js';
 import {TECHNIQUES,nextRealmFor} from '../src/game/cultivation/live/cultivation-rules.js';
 import {eventNode} from '../src/game/cultivation/live/event-content.js';
+import {saltWindow,validateSaltField} from '../src/game/cultivation/live/salt-field.js';
 import {DAYS_PER_YEAR} from '../src/game/cultivation/live/model.js';
 import {practicePlan} from '../src/game/cultivation/live/practice-plan.js';
 
@@ -37,6 +38,7 @@ test('a retreat plan quotes actual ordinary steady turns and leaves each accepte
   [{watch:{trail:{start:age,world:0,outcome:null}}},/栗溪/],
   [{mine:{start:age,record:[]}},/交班/],
   [{entry:'accepted',nursery:{start:age-1,care:null}},/药圃工日/],
+  [{entry:'joined',nursery:{end:'beans'},saltField:{bed:'seep',sown:age,mended:false,parcel:null}},/盐埠改畦/],
   [{convoy:{chapters:[{rig:'light',loads:[5,10]}]},charters:[{start:age,steps:[]}]},/沉钟湾轮航/],
   [{post:{route:'relay',ending:'box',walk:{start:age,outcome:null}}},/潮约/],
   [{post:{route:'relay',ending:'box',stations:[{sent:age,settled:null}]}},/两站/],
@@ -186,6 +188,34 @@ test('a wayside kitchen exchanges real stores and allows the ordinary forage ins
  assert.equal(foraged.lastReceipt.elapsedDays,90);
  assert.ok(foraged.lastReceipt.cultivationResult.check);
  assert.equal(choose(road,'train-menu').events.node,'training');
+});
+
+test('salt-field crops, rescue window and upper deliveries follow the recorded nursery and soil',()=>{
+ for(const end of ['beans','herbs','pot','late']){
+  const s=opening(),e=s.events,life=s.life;
+  life.cultivationProfile.worldTier=1;e.node='seed-book';e.nursery={end,settled:life.ageDays};
+  const opts=()=>eventNode(s).choices;
+  const act=key=>{
+   const selected=opts().find(c=>c.key===key);assert.ok(selected,key);
+   life.ageDays+=selected.rule.days;Object.assign(e,selected.patch);
+   validateSaltField(e,life);return selected.rule;
+  };
+  assert.match(eventNode(s).blocks[0].text,new RegExp({beans:'亲手送豆',herbs:'细籽',pot:'同畦',late:'本地灶户'}[end]));
+  act(end==='herbs'?'seed-ridge':'seed-seep');
+  const close=saltWindow(e,life.ageDays).close;
+  life.ageDays=close;assert.equal(opts().some(c=>c.key==='seed-mend'),true);
+  life.ageDays++;assert.equal(opts().some(c=>c.key==='seed-mend'),false);
+  assert.equal(act('seed-watch').days,2);
+  assert.equal(opts().some(c=>c.key==='seed-seed'),false);
+  act('seed-notes');assert.equal(saltWindow(e,life.ageDays),null);
+  assert.equal(opts().some(c=>c.key==='seed-trial'),false);
+  life.cultivationProfile.worldTier=2;
+  const copy=structuredClone(e.saltField),cost=act('seed-trial').items;
+  assert.deepEqual(cost,end==='herbs'?{herbs:1}:{supplies:1});
+  assert.deepEqual(opts().map(c=>c.key),['train-menu','back']);
+  assert.throws(()=>validateSaltField({...e,saltField:{...copy,parcel:'seed'}},life),/盐畦/);
+  e.saltField=copy;act('seed-wall');assert.match(eventNode(s).blocks[0].text,/井壁/);
+ }
 });
 
 test('event scenes cannot be replaced by structurally valid model text or invented options',()=>{

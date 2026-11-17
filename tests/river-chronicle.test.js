@@ -1027,7 +1027,9 @@ test('one continuous birth finishes the three-world campaign and replays its ent
  assert.equal(s.life.items.stones,priorStones+45);assert.equal(s.life.items.array,priorArrays+1);assert.ok(s.events.convoy.benches[0].paid);
  s=crossWithArray(s,1);
  assert.equal(s.life.cultivationProfile.worldTier,1);assert.equal(s.life.items.array,priorArrays);
- s=pick(s,'ear-book');
+ s=follow(s,'river-back','journey-menu','workshop-menu','crossing-menu','seed-book');
+ assert.match(prose(s),/亲手送豆/);
+ s=follow(s,'seed-seep','seed-mend','train-menu','rest-menu','back','affairs-menu','ear-book');
  for(const [i,key] of ['right','left','right'].entries()){
   s=follow(s,'ear-open','ear-read','ear-object','ear-letter','ear-table');
   if(i===0){
@@ -1057,9 +1059,14 @@ test('one continuous birth finishes the three-world campaign and replays its ent
  s=follow(s,'river-back','journey-menu','resources-menu','next-resource','well-book');
  assert.match(prose(s),/副铃/);assert.equal(s.currentScene.location,'行粮驿的书案');
  s=follow(s,'well-down','train-menu','rest-menu','back','journey-menu','river-book','hear-council','convoy-book');
+ s=follow(s,'river-back','journey-menu','workshop-menu','crossing-menu','seed-book','seed-seed');
+ assert.equal(s.events.saltField.mended,true);assert.equal(s.events.saltField.parcel,'seed');
+ s=follow(s,'back','journey-menu','river-book','hear-council','convoy-book');
  s=crossWithArray(s,2);
  assert.equal(s.life.cultivationProfile.worldTier,2);
- s=pick(s,'ear-book');
+ s=follow(s,'river-back','journey-menu','workshop-menu','crossing-menu','seed-book','seed-households');
+ assert.match(prose(s),/三处地址/);
+ s=follow(s,'back','affairs-menu','ear-book');
  for(const [i,key] of ['left','left','left'].entries()){
   s=follow(s,'ear-open','ear-read','ear-letter','ear-object','ear-table','try-'+key);
   assert.match(s.currentScene.title,/合声/);

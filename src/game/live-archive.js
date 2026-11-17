@@ -465,6 +465,10 @@ class Archive {
    const historical=scene.choices.some(c=>c.id.endsWith(':c:train-menu'))?'crossing':'packet';
    if(current.choices.some(c=>c.id.endsWith(':c:sky-book')||c.id.endsWith(':c:packet-book'))&&same(scene,resolveEventScene(c.run.state,p,historical)))scene=current;
   }
+  if(prior?.nursery?.end&&sceneId.endsWith(':s:event_crossing')&&scene.choices?.some(c=>c.id?.endsWith(':c:back'))){
+   const current=resolveRuleScene(c.run.state,p);
+   if(current.choices.some(c=>c.id.endsWith(':c:seed-book'))&&same(scene,resolveEventScene(c.run.state,p,'seed')))scene=current;
+  }
   if(prior&&!prior.well&&sceneId.endsWith(':s:event_hunt-grounds')&&scene.choices?.some(c=>c.id?.endsWith(':c:hunt-careful')&&c.targetId==='soulseal')){
    const current=resolveRuleScene(c.run.state,p);
    if(current.choices.some(c=>c.id.endsWith(':c:well-cautious'))&&same(scene,resolveEventScene(c.run.state,p,'well')))scene=current;

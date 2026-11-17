@@ -6,6 +6,7 @@ import {postWindows} from './lin-post.js';
 import {shellTide} from './shell-ferry.js';
 import {charterNote} from './harbor-charters.js';
 import {nurseryWindow} from './entry-nursery.js';
+import {saltWindow} from './salt-field.js';
 import {riverCases} from './river-chronicle.js';
 import {councilHearings} from './mountain-council.js';
 
@@ -25,6 +26,11 @@ export function journeyNotes(state){
   notes.push({node,title,detail,timing,priority,date,close:window?.close});
  }
  const w=e.well;
+ if(e.saltField&&!e.saltField.ending){
+  const field=e.saltField;
+  const window=saltWindow(e,age);
+  add('seed-book','盐埠借种',field.parcel?(tier===2?'递种亭已收到封筒，可以决定去处。':'封筒已离岸，抵达上界可以查收。'):window.name==='盐埠改畦'?'水土不合，若要救苗须留三日动工。':'试畦已下种，可以回去看苗或收签。',window);
+ }
  const passage=e.cloudPassage;
  if(passage&&!(passage.length===3&&passage[2].route!==null)){
   const last=passage.at(-1),nextRank=[4,6,8][passage.length];
