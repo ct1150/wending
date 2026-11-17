@@ -12,6 +12,7 @@ import {mineNode,minePlaces} from './lamp-mine.js';
 import {gardenNode,gardenRootName} from './phenology.js';
 import {postNode,postNotice} from './lin-post.js';
 import {mountainNode,mountainHistory} from './folded-mountain.js';
+import {shellNode} from './shell-ferry.js';
 
 // Authored situations supply every fact and executable choice. AI never edits
 // these definitions. Stable actors belong to a life, not a generated paragraph.
@@ -25,6 +26,7 @@ export function eventEntities(state){
   {id:prefix+'retreat',name:'青石山居',kind:'place'},
   {id:prefix+'middle',name:'中界清河城',kind:'place'},
   {id:prefix+'upper',name:'上界观星台',kind:'place'},
+  ...(state.events.node.startsWith('shell-')?[{id:prefix+'ferrier',name:'蓼',kind:'person',status:'alive'}]:[]),
   ...(state.events.node.startsWith('field-')?valleyPlaces(prefix):[]),
   ...(state.events.node.startsWith('mine-')?minePlaces(prefix):[]),
   ...(state.events.node==='field-shrine'?[{id:prefix+'springward',name:'守泉会',kind:'faction',experience:{version:1,realmId:'qi'}}]:[]),
@@ -42,7 +44,7 @@ const choice=(key,label,intent='interact',targetId='self',approach='observe',ext
 const menu=(key,label,next,patch={})=>choice(key,label,'interact','self','observe',{next,patch,navigation:true});
 const home=e=>e.entry==='accepted'?'work':e.entry==='unresolved'?'arrival':'hub';
 
-export function eventNode(state){
+export function eventNode(state,oldResourceMenu=false){
  const e=state.events,life=state.life,actors=eventEntities(state),actor=key=>actors.find(row=>row.id.endsWith(':e:'+key)).id;
  const next=nextRealmFor(life),realm=realmFor(life),method=TECHNIQUES[life.cultivationProfile.experience.activeTechniqueId];
  const young=life.ageDays<80*DAYS_PER_YEAR;
@@ -58,6 +60,7 @@ export function eventNode(state){
  if(e.node.startsWith('field-'))return valleyNode(state,menu,choice,actor);
  if(e.node.startsWith('mine-'))return mineNode(state,menu,choice,actor);
  if(e.node.startsWith('garden-'))return gardenNode(state,menu,choice);
+ if(e.node.startsWith('shell-'))return shellNode(state,menu,choice,actor('ferrier'));
  if(e.node==='mount-history')return mountainHistory(e.mountain,menu);
  if(e.node.startsWith('mount-'))return mountainNode(state,menu,choice);
  if(e.node==='post-index'){
@@ -166,9 +169,12 @@ export function eventNode(state){
   ],[menu('river-book',e.expedition?.place==='end'?'翻阅河簿、三程行旅与北山公簿':'展开问川图，历练河上人家','river-book'),menu('resources-menu','寻找修行材料与生活物资','resources',{page:0}),menu('workshop-menu','炼制、跨界与其他准备','workshop',{page:0})]);
   case 'resources':{
    const targets=[...new Set([next?.material??'relic','supplies','stones','herbs','iron'])],target=targets[e.page%targets.length];
+   const original=target==='herbs'&&e.garden?menu('garden-book','查看随身苗盆与采候','garden-book'):e.river?.record.length?menu('field-guide','翻看雾药谷游记与往返路线','field-guide'):leave;
+   const savedOld=state.currentScene?.id.endsWith(':t'+state.turnId+':s:event_resources')&&!state.currentScene.choices.some(c=>c.id.endsWith(':c:shell-book'));
+   const ferry=realm.rank>=1&&e.page===0&&!oldResourceMenu&&!savedOld;
    return row('寻找'+ITEMS[target],'只结算本次选定的资源',[
     narration('你把目标定为'+ITEMS[target]+'。谨慎搜寻花费更多时间，仍须承担当前境界与环境下的真实风险；失败也会留下记录。'),
-   ],[choice('gather','谨慎搜寻'+ITEMS[target],'explore',target,'cautious',{next:target==='herbs'&&!e.garden?'herb-basket':'action-result'}),menu('next-resource','换看下一种物资','resources',{page:(e.page+1)%targets.length}),target==='herbs'&&e.garden?menu('garden-book','查看随身苗盆与采候','garden-book'):e.river?.record.length?menu('field-guide','翻看雾药谷游记与往返路线','field-guide'):leave]);
+   ],[choice('gather','谨慎搜寻'+ITEMS[target],'explore',target,'cautious',{next:target==='herbs'&&!e.garden?'herb-basket':'action-result'}),menu('next-resource','换看下一种物资','resources',{page:(e.page+1)%targets.length}),ferry?menu('shell-book','循浮蚌渡的潮纹，查访破境宝物','shell-book'):original]);
   }
   case 'herb-basket':return row('山口的试种盆','清点本次采药，决定要不要照料随身苗盆',[
    narration((state.lastReceipt?.cultivationResult?.check?.success===false?'这次寻药落空。':'采回的药草已经收入行囊。')+'山口的空花盆能绑在背篓上，行脚和闭关时都跟着你。领种栽下才会开始计算采候。'),

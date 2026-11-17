@@ -1,7 +1,7 @@
 import {assertPlainData,canonicalStringify,sha256} from './identity.js';
 import {exactKeys} from './schema.js';
 import {ITEMS,DAYS_PER_YEAR} from './model.js';
-import {initialV7ActionRule} from './cultivation-rules.js';
+import {initialV7ActionRule,realmFor} from './cultivation-rules.js';
 import {eventNode,eventEntities,eventLocation} from './event-content.js';
 import {riverCases,validateRiver} from './river-chronicle.js';
 import {validateExpedition} from './expedition.js';
@@ -13,6 +13,7 @@ import {validateMine} from './lamp-mine.js';
 import {validateGarden} from './phenology.js';
 import {validatePost} from './lin-post.js';
 import {recordMountainRetreat,validateMountain} from './folded-mountain.js';
+import {validateFerry} from './shell-ferry.js';
 
 const eventNodeIds=new Set([
  'arrival','terms','work','entry-result','companion','companion-result','reunion','reunion-result',
@@ -34,11 +35,12 @@ const eventNodeIds=new Set([
  'post-index','post-book','post-offer-later','post-traces','post-address','post-return','post-history','post-shore',
  'post-stations','post-settle','post-fog',
  'mount-book','mount-history','mount-sight','mount-sound',
+ 'shell-book','shell-journal','shell-parley',
 ]);
 const copy=value=>JSON.parse(JSON.stringify(value));
 export function createEventState(atlas){return {version:1,node:'arrival',entry:'unresolved',companion:'unmet',mentor:'unmet',page:0,location:'gate',...(atlas?copy(atlas):{})};}
 export function validateEventState(events,life,gardenRoot){
- assertPlainData(events);exactKeys(events,['version','node','entry','companion','mentor','page','location'],['river','expedition','council','convoy','valley','watch','mine','garden','firstMeeting','post','mountain']);
+ assertPlainData(events);exactKeys(events,['version','node','entry','companion','mentor','page','location'],['river','expedition','council','convoy','valley','watch','mine','garden','firstMeeting','post','mountain','ferry']);
  if(!eventNodeIds.has(events.node))throw new Error('规则事件节点无效。');
  if(Object.hasOwn(events,'council'))validateCouncil(events.council);
  if(Object.hasOwn(events,'convoy'))validateConvoy(events.convoy);
@@ -46,6 +48,12 @@ export function validateEventState(events,life,gardenRoot){
  if(Object.hasOwn(events,'watch'))validateWatch(events.watch);
  if(Object.hasOwn(events,'mine'))validateMine(events.mine);
  if(Object.hasOwn(events,'garden'))validateGarden(events.garden,life,gardenRoot);
+ if(Object.hasOwn(events,'ferry'))validateFerry(events.ferry,life);
+ if(events.node.startsWith('shell-')&&(life&&realmFor(life).rank<1||events.node!=='shell-book'&&!events.ferry))throw new Error('浮蚌渡页次无效。');
+ if(events.node==='shell-parley'){
+  const p=events.ferry.pages.at(-1);
+  if(p.end!==null||(p.id===2?!(p.marks&4):p.marks!==1))throw new Error('尚未走到与蓼商量的地方。');
+ }
  if(Object.hasOwn(events,'mountain'))validateMountain(events.mountain,life,events.node);
  if(events.node.startsWith('mount-')&&events.node!=='mount-book'&&!events.mountain)throw new Error('折山页次无效。');
  if(Object.hasOwn(events,'firstMeeting')&&(!['helped','declined'].includes(events.firstMeeting)||!['completed','parted'].includes(events.companion)))throw new Error('林砚初遇记录无效。');
@@ -131,9 +139,9 @@ export function advanceEvents(state,receipt){
  }
  return validateEventState(events,undefined,state.reincarnation?.gardenRoot);
 }
-export function resolveEventScene(state,pending){
+export function resolveEventScene(state,pending,oldResourceMenu=false){
  const events=advanceEvents(state,pending.receipt),prospective={...state,life:pending.nextLife,events,lastReceipt:pending.receipt,turnId:pending.identity.turnId};
- const definition=eventNode(prospective),prefix='r:'+sha256(state.runId).slice(0,16)+':t'+pending.identity.turnId+':';
+ const definition=eventNode(prospective,oldResourceMenu),prefix='r:'+sha256(state.runId).slice(0,16)+':t'+pending.identity.turnId+':';
  return {id:prefix+'s:event_'+events.node,title:definition.title,location:eventLocation(prospective),blocks:copy(definition.blocks),entities:eventEntities(prospective),choices:definition.choices.map(({key,label,intent,targetId,stake,approach})=>({id:prefix+'c:'+key,label,intent,targetId,stake,approach})),memoryDeltas:[]};
 }
 export function assertRuleScene(state,pending,scene){

@@ -1,5 +1,6 @@
 import { canonicalStringify, sha256, stateHash, assertPlainData } from './cultivation/live/identity.js';
 import { validateLiveState } from './cultivation/live/validation.js';
+import {resolveEventScene} from './cultivation/live/events.js';
 import { prepareOpening, prepareRecordedChoice, commitTurn, settleDeath,resolveRuleScene } from './cultivation/live/engine.js';
 import { buildStoryContext, validateGeneratedScene, buildMemoryDelta, validateStoryContext, sceneTurnRecord } from './cultivation/live/memory.js';
 import { isExperienceLife } from './cultivation/live/experience.js';
@@ -442,6 +443,10 @@ class Archive {
    const current=resolveRuleScene(c.run.state,p);
    const oldChoices=current.choices.filter(choice=>!choice.id.endsWith(':c:'+addedChoice));
    if(oldChoices.length!==current.choices.length&&same(scene,{...current,choices:oldChoices}))scene=current;
+  }
+  if(prior&&!prior.ferry&&sceneId.endsWith(':s:event_resources')&&scene?.choices?.some(c=>c.id?.endsWith(':c:back')||c.id?.endsWith(':c:field-guide'))){
+   const current=resolveRuleScene(c.run.state,p);
+   if(current.choices.some(c=>c.id.endsWith(':c:shell-book'))&&same(scene,resolveEventScene(c.run.state,p,true)))scene=current;
   }
   const d=await this._derived(c,scene,scene?buildMemoryDelta(p.receipt,scene):null);
   if(scene!==entry.scene)d.state.currentScene=clone(entry.scene);

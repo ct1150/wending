@@ -46,6 +46,44 @@ test('steady retreat plans commit the manual turns exactly once and fence interr
  assert.equal(results.modes.replace.turns,0);assert.equal(results.modes.replace.hash,results.start);assert.ok(results.modes.replace.error);
 });
 
+test('a pre-ferry resource menu resumes on mobile and preserves both its original history and the harvested crystal',async t=>{
+ const {page}=await liveBrowser(t);
+ await page.setViewportSize({width:360,height:760});
+ let calls=0;await page.route('**/api/story/**',route=>{calls++;return route.abort();});
+ const old=gunzipSync(await readFile(new URL('./fixtures/4d9bd9c-qi-resources.jsonl.gz',import.meta.url))).toString('utf8');
+ const same=await page.evaluate(async text=>{
+  const {openLiveArchive}=await import('/src/game/live-archive.js'),{importLiveArchive}=await import('/src/game/live-save-format.js');
+  const archive=await openLiveArchive();
+  try{
+   await importLiveArchive(new Response(text).body,archive);
+   return identity.stateHash((await archive.load()).state)===identity.stateHash(JSON.parse(text.split('\n')[0]).state);
+  }finally{archive.close();}
+ },old);
+ assert.ok(same);
+ const option=key=>page.locator('[data-live-choice$=":c:'+key+'"]:enabled');
+ async function resume(key){
+  await page.reload();const saved=option(key),enter=page.locator('[data-title-continue]:enabled');
+  await saved.or(enter).first().waitFor();
+  if(!await saved.isVisible())await enter.click();
+  await saved.waitFor();
+ }
+ await resume('back');
+ for(const key of ['back','journey-menu','resources-menu','shell-book','sail-bank','trace-shell'])await option(key).click();
+ await option('take-moult').waitFor();await resume('take-moult');await option('take-moult').click();
+ await option('shell-journal').waitFor();
+ const kept=await page.evaluate(async()=>{
+  const {openLiveArchive}=await import('/src/game/live-archive.js'),{importLiveArchive,exportLiveArchive}=await import('/src/game/live-save-format.js');
+  const source=await openLiveArchive(),copy=await openLiveArchive({name:'ferry-copy'});
+  const {stateHash}=await import('/src/game/cultivation/live/identity.js');
+  try{
+   await importLiveArchive(exportLiveArchive(source),copy);
+   const a=(await source.load()).state,b=(await copy.load()).state;
+   return [a.events.ferry.pages[0].end,a.lastReceipt.itemChanges.crystal,Object.values(a.lastReceipt.relationChanges),stateHash(a)===stateHash(b)];
+  }finally{source.close();copy.close();}
+ });
+ assert.deepEqual(kept,['moult',1,[1],true]);assert.equal(calls,0);
+});
+
 test('an old two-option courier journal resumes into the playable station route and round-trips its mixed history',async t=>{
  const {page}=await liveBrowser(t);
  await page.setViewportSize({width:360,height:760});

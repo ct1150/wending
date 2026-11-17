@@ -13,6 +13,8 @@ import {DAYS_PER_YEAR} from '../src/game/cultivation/live/model.js';
 import {validateGarden,gardenRootForChild} from '../src/game/cultivation/live/phenology.js';
 import {validatePost} from '../src/game/cultivation/live/lin-post.js';
 import {validateMountain} from '../src/game/cultivation/live/folded-mountain.js';
+import {validateFerry} from '../src/game/cultivation/live/shell-ferry.js';
+import {practicePlan} from '../src/game/cultivation/live/practice-plan.js';
 
 const observers=new WeakMap();
 function start(observe,seed=42){
@@ -143,7 +145,7 @@ test('station commissions carry the last settlement into the next trip; both dis
 });
 const firstWatch=(seed,keeper,marks)=>follow(start(undefined,seed),'decline','train-menu','rest-menu','watch-book','watch-open','keeper-'+keeper,marks,'sit-watch');
 const firstPlot=(seed=42)=>follow(start(undefined,seed),'decline','train-menu','garden-book','sow');
-function growOutsideMountain(s,rank){
+function growToRealm(s,rank,arrival='mount-book'){
  s=pick(s,'train-menu');
  for(let turns=0;turns<80;turns++){
   const next=nextRealmFor(s.life);
@@ -155,17 +157,59 @@ function growOutsideMountain(s,rank){
    s=follow(s,'gather','train-menu');
   }else{
    s=pick(s,'breakthrough');
-   if(realmFor(s.life).rank===rank)return pick(s,'mount-book');
+   if(realmFor(s.life).rank===rank)return pick(s,arrival);
    s=pick(s,'train-menu');
   }
  }
  assert.fail('stalled at '+s.life.realm);
 }
+const ferryFromTraining=s=>follow(s,'rest-menu','back','journey-menu','resources-menu','shell-book');
+test('one cultivator takes three ferry relics into native breakthroughs and returns to fulfil the promise',()=>{
+ const spent=new Set();
+ const birth=start((key,s)=>{if(key==='breakthrough')for(const [item,n] of Object.entries(s.lastReceipt.itemChanges))if(n<0)spent.add(item);});
+ let s=ferryFromTraining(growToRealm(follow(birth,'accept','finish-work'),1,'train-menu'));
+ s=follow(s,'sail-bank','trace-shell','take-moult');
+ assert.equal(s.lastReceipt.itemChanges.crystal,1);
+ assert.deepEqual(Object.values(s.lastReceipt.relationChanges),[1]);
+ s=ferryFromTraining(growToRealm(s,2,'train-menu'));
+ s=follow(s,'sail-bank','follow-lamp');
+ assert.equal(s.lastReceipt.elapsedDays,2);
+ s=follow(s,'warm-coal','take-cold');
+ assert.equal(s.lastReceipt.itemChanges.core,1);
+ s=ferryFromTraining(growToRealm(s,5,'train-menu'));
+ s=follow(s,'sail-deck','pilot-gap');
+ assert.deepEqual(s.lastReceipt.itemChanges,{});
+ s=pick(s,'take-borrow');assert.equal(s.lastReceipt.itemChanges.voidstone,1);
+ s=ferryFromTraining(growToRealm(s,6,'train-menu'));
+ for(const ending of ['chart','quiet']){
+  const final=pick(s,ending);
+  assert.equal(final.events.ferry.reply,ending);
+  assert.deepEqual(final.lastReceipt.itemChanges,{});
+  assert.deepEqual(deserializeLiveState(serializeLiveState(final)),final);
+  assert.equal(pick(final,'shell-journal').currentScene.blocks.length,3);
+ }
+ for(const item of ['crystal','core','voidstone'])assert.ok(spent.has(item),item);
+});
+test('the ferry records a missed tide, a gift freely declined, and the cost of stripping the boat',()=>{
+ const opening=ferryFromTraining(growToRealm(follow(start(),'accept','finish-work'),1,'train-menu'));
+ const atBank=pick(opening,'sail-bank');
+ assert.equal(practicePlan(pick(atBank,'train-menu')).count,0);
+ const missed=pick(ferryFromTraining(follow(atBank,'train-menu','practice','train-menu')),'close-tide');
+ assert.equal(missed.events.ferry.pages[0].end,'missed');assert.deepEqual(missed.lastReceipt.itemChanges,{});
+ const gift=follow(atBank,'trace-shell','ask-ferrier','leave-release');
+ assert.deepEqual(gift.lastReceipt.itemChanges,{});assert.deepEqual(Object.values(gift.lastReceipt.relationChanges),[3]);
+ const stripped=pick(atBank,'take-keel');
+ assert.equal(stripped.lastReceipt.itemChanges.crystal,1);assert.deepEqual(Object.values(stripped.lastReceipt.relationChanges),[-2]);
+ const next=ferryFromTraining(growToRealm(stripped,2,'train-menu'));
+ assert.match(prose(next),/玄铁/);
+ const broken=structuredClone(gift.events.ferry);broken.pages[0].marks=0;
+ assert.throws(()=>validateFerry(broken,gift.life),/宝物去处/);
+});
 test('a single life returns to the folded mountain at foundation and spirit, including a mobile replay from a pre-stone archive',async t=>{
  for(const wish of ['home','source']){
   const route=[];let s=follow(start(key=>route.push(key)),'decline','train-menu','garden-book','mount-book','seek-'+wish);
   for(let i=0;i<6;i++){
-   if(i===2||i===4)s=growOutsideMountain(s,i===2?2:5);
+   if(i===2||i===4)s=growToRealm(s,i===2?2:5);
    s=pick(s,i%2?'hear-stone':'watch-stone');const before=s.life.ageDays;
    s=pick(s,'mount-steady');const slot=s.events.mountain.walk[i];
    assert.equal(slot.days,s.life.ageDays-before);assert.equal(slot.woke,s.life.ageDays);
