@@ -27,14 +27,39 @@ test('long-route invitations are available before acceptance and never impersona
  assert.deepEqual(adventureLeads({...entry,events:undefined}),[]);
  const employed=choose(entry,'accept');assert.equal(adventureLeads(employed)[0].node,'work');
  const independent=choose(entry,'decline'),leads=adventureLeads(independent);
- assert.deepEqual(leads.map(l=>l.node),['river-book','watch-book']);
- assert.match(leads[1].detail,/渡劫境/);assert.equal(journeyNotes(independent).length,0);
+ assert.deepEqual(leads.map(l=>l.node),['companion','mount-book','river-book','watch-book']);
+ assert.match(leads.find(l=>l.node==='watch-book').detail,/渡劫境/);assert.equal(journeyNotes(independent).length,0);
  for(const [node,path] of noteRoutes(independent,leads)){
   const reached=path.reduce(choose,independent);
   assert.equal(reached.events.node,node);assert.deepEqual(reached.life,independent.life);
   assert.equal(reached.rng,independent.rng);assert.equal(reached.events.river,undefined);assert.equal(reached.events.watch,undefined);
+  assert.equal(reached.events.companion,'unmet');assert.equal(reached.events.post,undefined);assert.equal(reached.events.mountain,undefined);
  }
- assert.equal(noteRoutes(independent,leads).size,2);
+ assert.equal(noteRoutes(independent,leads).size,4);
+});
+
+test('optional directions follow actual eligibility and never revive a declined personal route',()=>{
+ const base=choose(opening(),'decline');
+ const candidate=(realm,world=0,change={})=>({...base,currentScene:null,life:{...base.life,realm,cultivationProfile:{...base.life.cultivationProfile,worldTier:world}},events:{...base.events,...change}});
+ const keys=s=>adventureLeads(s).map(n=>n.node);
+ assert.ok(keys(candidate('qi')).includes('shell-book'));
+ assert.ok(keys(candidate('foundation')).includes('mentor'));
+ assert.ok(keys(candidate('golden')).includes('well-road'));
+ assert.ok(!keys(candidate('golden',0,{well:{claim:'share',reply:'down'}})).includes('well-road'));
+ assert.ok(keys(candidate('nascent',2)).includes('sky-book'));
+ assert.ok(!keys(candidate('spirit',1)).includes('sky-rift'));
+ assert.ok(keys(candidate('spirit',2,{cloudPassage:[{seat:0,route:1}]})).includes('sky-rift'));
+ assert.ok(!keys(candidate('spirit',2,{cloudPassage:[{seat:0,route:null}]})).includes('sky-rift'));
+ assert.ok(!keys(candidate('spirit',2,{cloudPassage:[{seat:0,route:1}],cloudRift:{start:1}})).includes('sky-rift'));
+ assert.ok(!keys(candidate('foundation',0,{forms:{known:'listen',draft:null}})).includes('form-book'));
+ const older=candidate('foundation');older.life.ageDays=80*DAYS_PER_YEAR;
+ assert.ok(!keys(older).some(k=>['companion','reunion','post-book'].includes(k)));
+ assert.ok(!keys(candidate('qi',1)).some(k=>['companion','reunion','post-book'].includes(k)));
+ const refused=choose(choose(choose(choose(choose(base,'affairs-menu'),'companion-menu'),'decline-companion'),'continue'),'affairs-menu');
+ const personal=choose(refused,'companion-menu');assert.ok(keys(personal).includes('post-book'));
+ const post=choose(choose(choose(personal,'post-book'),'consider'),'decline-post');
+ assert.ok(!keys(post).some(k=>['companion','reunion','post-book'].includes(k)));
+ assert.equal(post.events.post.route,'pass');
 });
 
 test('independent retreats expose the same native intensive tradeoff without requiring a garden',()=>{

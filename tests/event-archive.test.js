@@ -151,7 +151,14 @@ test('mobile long-route directions open the actual story entrances without accep
  const watch=await state();assert.equal(watch.events.watch,undefined);assert.deepEqual(watch.life,before.life);assert.equal(watch.rng,before.rng);
  await page.locator('[data-adventure-lead][data-live-note="river-book"]').click();await opt('river-open').waitFor();
  const river=await state();assert.equal(river.events.river,undefined);assert.equal(river.events.watch,undefined);assert.deepEqual(river.life,before.life);assert.equal(river.rng,before.rng);
- await page.reload();await opt('river-open').waitFor();assert.deepEqual(await state(),river);
+ await page.locator('[data-adventure-lead][data-live-note="companion"]').click();await opt('leave-companion').waitFor();
+ const person=await state();assert.equal(person.events.companion,'unmet');assert.deepEqual(person.life,before.life);
+ await page.locator('[data-adventure-lead][data-live-note="mount-book"]').click();await opt('seek-home').waitFor();
+ const stone=await state();assert.equal(stone.events.mountain,undefined);assert.equal(stone.events.post,undefined);assert.deepEqual(stone.life,before.life);assert.equal(stone.rng,before.rng);
+ await page.reload();await opt('seek-home').waitFor();assert.deepEqual(await state(),stone);
+ await opt('seek-home').click();await opt('hear-stone').waitFor();
+ assert.equal(await page.locator('[data-adventure-lead][data-live-note="mount-book"]').count(),0);
+ assert.equal((await state()).events.mountain.wish,'home');
  assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),true);
 });
 

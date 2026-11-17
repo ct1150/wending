@@ -222,6 +222,20 @@ test('rift entry and phase boundaries reject skipped time without hiding eligibl
  assert.throws(()=>validateCloudRift({...e,node:'sky-rift',forms:{known:'listen',draft:null},cloudRift:r},life),/风隙/);
 });
 
+test('earned realms expose safe routes to optional forms, material stories and the cloud rift',()=>{
+ const foundation=pick(formBook(),'back'),upper=riftOffer();
+ for(const [state,targets] of [[foundation,['form-book','shell-book','mount-book']],[upper,['sky-rift']]]){
+  const leads=adventureLeads(state),routes=noteRoutes(state,leads);
+  for(const node of targets){
+   assert.ok(leads.some(l=>l.node===node),'missing invitation '+node);
+   assert.ok(routes.has(node),'no safe native route to '+node);
+   const visited=routes.get(node).reduce(pick,state);
+   assert.equal(visited.events.node,node);assert.deepEqual(visited.life,state.life);assert.equal(visited.rng,state.rng);
+   for(const field of ['forms','ferry','mountain','cloudRift'])assert.deepEqual(visited.events[field],state.events[field]);
+  }
+ }
+});
+
 function postOffer(meeting,observe){
  return follow(start(observe),'ask','companion',meeting,'continue','decline','affairs-menu','companion-menu','post-book');
 }

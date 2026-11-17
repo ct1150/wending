@@ -226,7 +226,7 @@ function renderJourneyNotes(view,notes,invitations=false){
       `<small>${path?'正在这一页':'先离开眼前的场景，再翻到这一页'}</small>`;
     return `<li><strong>${esc(n.title)}</strong><p>${esc(n.detail)}${n.timing?' '+esc(n.timing)+'。':''}</p>${link}</li>`;
   }).join('');
-  return `<details class="journey-notes" ${invitations?'data-adventure-leads':'data-journey-notes'} data-live-preserve-open><summary>${invitations?'仙路方向':'此生行记'+(notes.length>1?'（'+notes.length+'件）':'')} · ${esc(top.title)}${top.timing?' · '+esc(top.timing):''}</summary>${invitations?'<p>沿问川、行旅、北山走向三界海路；修行途中与人相托，最后亲自问鼎。可以自由选择先做哪一件。</p>':''}<ul>${rows}</ul></details>`;
+  return `<details class="journey-notes" ${invitations?'data-adventure-leads':'data-journey-notes'} data-live-preserve-open><summary>${invitations?'仙路方向（'+notes.length+'条）':'此生行记'+(notes.length>1?'（'+notes.length+'件）':'')} · ${esc(top.title)}${top.timing?' · '+esc(top.timing):''}</summary>${invitations?'<p>这些道路随当前境界与经历出现。前往只翻到现场，是否相助、应约、练功或出发，仍由你决定。已接下的事可从「此生行记」续行。</p>':''}<ul>${rows}</ul></details>`;
 }
 function renderEventExtras(view,notes){
   const state=view.state;

@@ -1,14 +1,16 @@
 import {eventNode} from './event-content.js';
-import {realmFor,V7_REALMS} from './cultivation-rules.js';
+import {realmFor,nextRealmFor,V7_REALMS} from './cultivation-rules.js';
 import {DAYS_PER_YEAR} from './model.js';
 import {harvestWindows} from './phenology.js';
 import {postWindows} from './lin-post.js';
-import {shellTide} from './shell-ferry.js';
+import {shellTide,ferryForMaterial} from './shell-ferry.js';
 import {charterNote} from './harbor-charters.js';
 import {nurseryWindow} from './entry-nursery.js';
 import {saltWindow} from './salt-field.js';
 import {riverCases} from './river-chronicle.js';
 import {councilHearings} from './mountain-council.js';
+import {canStudyForm} from './technique-forms.js';
+import {canVisitRift} from './cloud-rift.js';
 
 // Invitations explain the existing long route without accepting its work or
 // putting undiscovered stories into the journal of actual commitments.
@@ -28,7 +30,21 @@ export function adventureLeads(state){
   const needed=Object.values(V7_REALMS)[watch].name;
   add('watch-book','修行 · 九关问鼎','已交割 '+watch+' / 9 关。'+(rank<watch?'下一关须到'+needed+'境再入定。':'下次闭关前，可先与守关人商量关外的事。')+'九关经历与渡劫境齐备后，可到铸坊决定此生怎样问鼎。');
  }else add('watch-ding-book',e.watch.ding?.form?'问鼎 · 此生已有交割':'问鼎 · 三足取自一生',e.watch.ding?.form?'鼎铭已按你的决定留下。仍可回看旧事、继续此生；下一世须等这位人物真正走到生命尽头。':rank<9?'九关已交割。继续修至渡劫，再从三段人生各取一足，亲自决定鼎的去处。':'九关与境界已齐备。到山门铸坊取足、开范，决定哪些经历留给后来的人。');
- return leads;
+ if(e.entry==='accepted')return leads;
+ const life=state.life,tier=life.cultivationProfile.worldTier,opportunities=[];
+ const invite=(node,title,detail)=>opportunities.push({node,title,detail});
+ if(!e.post&&tier===0&&life.ageDays<80*DAYS_PER_YEAR){
+  const node=e.companion==='unmet'?'companion':['helped','declined'].includes(e.companion)&&rank>=1?'reunion':'post-book';
+  invite(node,'林砚 · 此世的同路人',node==='companion'?'先到外院看看林砚的处境，是否相助由你当面决定。以后还可与他试走药路，留下跨越数十年的往来。':node==='reunion'?'林砚在近山有一次采药邀约，同行或各走各路都可亲自答复。之后还能听他讲那只空药匣。':'药路有三次按年到来的交割，二十五年后还有旧匣与后辈的故事。林砚本人的邀约限凡界八十岁前；晚些应约，未必赶得上后段的相聚。');
+ }
+ if(rank>=2&&!e.forms?.known&&!e.forms?.draft)invite(canStudyForm(life)?'form-book':'mentor','本命术式 · 把修为用在险路',canStudyForm(life)?'可以推演听泉或护身，亲自闭关练成。术式能改变寻材风险，也可用于折山同行与上界风隙；前往法页后再选择怎样练。':'筑基后可以推演专修术式，当前功法还需先验看缺处。到校法页比较自研与求助，完成修补后再决定是否练听泉或护身。');
+ const material=nextRealmFor(life)?.material;
+ if(rank===3&&!e.well)invite('well-road','回声井 · 随人下井寻印','结丹可随巡井人或绳班探归魂印。学辨铃或绳结会改变后续工期，出井后还有副铃的去处。先看路引，出发才交行粮；未取印就离开此界，将不能亲自接续井路。');
+ else if(material&&ferryForMaterial(state,material)&&(!e.ferry||e.ferry.pages.at(-1)?.end))invite('shell-book','浮蚌渡 · 宝物与归路','当前破境所需的宝物可循浮蚌潮纹寻找。蓼的船底和回游的蚌群也依赖这些东西；先到河岸看清情形，决定出发后才开始计算这一潮的期限。');
+ if(!e.mountain)invite('mount-book','折山石 · 带着自己的心愿入定','盆架闲下时，可以展开石中六关。选择想回家还是寻源，与小满同行；每次练功照常结算修期与修为，信物与已学术式会改变后来的辨路和分别。');
+ if(tier===2&&rank>=4&&!e.cloudPassage)invite('sky-book','白脊云渡 · 在上界亲历风候','随渡班在岸上或船中闭关，再亲自决定怎样试航。元婴、炼虚、大乘各有一班，旧井铃与先前的渡法会改变后来的办法。');
+ if(!e.cloudRift&&canVisitRift(state))invite('sky-rift','白脊风隙 · 用所学走进异变','化神后可循已经交接的旧渡路探访浮岩。调查支点与回流，勘路或施术入隙；首次定脉后，到合体再处理自己留下的变化。先看现场，出发才交粮。');
+ return [...opportunities,...leads];
 }
 
 // Only events the character has entered belong here. Reading a note never opens an event.
@@ -127,7 +143,7 @@ export function crossingDeadlines(state,notes,days){
 
 // These menu screens can be read on the way to a known entry. A trip, promise,
 // reward or quest patch is a player decision even when it happens to cost zero days.
-const shelves=new Set(['hub','training','rest','journey','resources','workshop','crossing','affairs','mentor','post-index','post-book','post-history','watch-book','watch-visitors','field-guide','garden-book','garden-history','river-book','voyage-book','council-book','sky-book']);
+const shelves=new Set(['hub','training','rest','journey','resources','workshop','crossing','affairs','mentor','companion','post-index','post-book','post-history','watch-book','watch-visitors','field-guide','garden-book','garden-history','river-book','voyage-book','council-book','sky-book']);
 export function noteMenuSteps(state){
  return eventNode(state).choices.filter(c=>c.navigation&&c.targetId==='self'&&c.approach==='observe'&&!c.arrival&&!c.rule&&Object.keys(c.patch??{}).every(k=>k==='page'));
 }
