@@ -6,6 +6,10 @@ import {DAYS_PER_YEAR} from './model.js';
 function sheltered(rain,tool){
  return (tool==='ditch')===rain?'beans':'herbs';
 }
+export function nurseryWindow(events){
+ const r=events.nursery;
+ return events.entry==='accepted'&&r?{name:'药圃工日',open:r.start,close:r.start+(r.care?2:1)}:null;
+}
 export function validateNursery(events,life,birthRoll){
  const r=events.nursery,node=events.node;
  if(node==='nursery-receipt'&&(!r?.end||events.entry!=='joined'))throw Error('药圃尚未交工。');

@@ -5,6 +5,7 @@ import {harvestWindows} from './phenology.js';
 import {postWindows} from './lin-post.js';
 import {shellTide} from './shell-ferry.js';
 import {charterNote} from './harbor-charters.js';
+import {nurseryWindow} from './entry-nursery.js';
 import {riverCases} from './river-chronicle.js';
 import {councilHearings} from './mountain-council.js';
 
@@ -64,7 +65,7 @@ export function journeyNotes(state){
  if(e.watch?.draft)add('watch-book','守关簿',e.watch.draft.days?'已经出定，待读守关人的回信。':e.watch.draft.marks?'值守条件已写好，可回去核对再入定。':'本次值守委托尚未交割。');
  if(e.entry==='accepted'){
   const r=e.nursery;
-  if(r)add('work','药圃工簿',r.care?'已做两个工日，待交付收成。':'已做一个工日，待决定守哪一畦。',{open:r.start,close:r.start+(r.care?2:1)},'旧苗过季，可补做余工领卷');
+  if(r)add('work','药圃工簿',r.care?'已做两个工日，待交付收成。':'已做一个工日，待决定守哪一畦。',nurseryWindow(e),'旧苗过季，可补做余工领卷');
   else add('work','药圃差事','已经应下三日差事，功法尚未到手。');
  }
  if(e.river&&e.river.record.length<riverCases)add('river-book','问川图','已结'+e.river.record.length+'折，'+(e.river.seen?'本折查过的线索还在。':'可从这一折接着走。'));

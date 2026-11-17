@@ -3,6 +3,8 @@ import {nextRealmFor,v7ActionRule} from './cultivation-rules.js';
 import {harvestWindows} from './phenology.js';
 import {postWindows} from './lin-post.js';
 import {shellTide} from './shell-ferry.js';
+import {nurseryWindow} from './entry-nursery.js';
+import {charterNote} from './harbor-charters.js';
 
 // Only the repeatable, ordinary steady action is eligible. Story retreats
 // consume the same days but have a player decision on the other side.
@@ -26,6 +28,8 @@ export function practicePlan(state){
  limit(Math.floor((life.lifeLimit*DAYS_PER_YEAR-age-breakthrough.days-1)/rule.days),'为冲关留出所需寿元');
 
  const times=[...harvestWindows(state),...postWindows(e.post)];
+ const nursery=nurseryWindow(e);if(nursery)times.push(nursery);
+ const packet=charterNote(e,age);if(packet?.window)times.push({...packet.window,name:packet.title});
  const ferry=shellTide(e.ferry);if(ferry)times.push(ferry);
  const trail=e.watch?.trail;
  if(trail&&!trail.outcome&&life.cultivationProfile.worldTier===trail.world)times.push({name:'栗溪同行之约',open:trail.start,close:trail.start+5});

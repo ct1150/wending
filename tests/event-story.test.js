@@ -36,6 +36,8 @@ test('a retreat plan quotes actual ordinary steady turns and leaves each accepte
   [{garden:{plot:{bed:0,sown:age},record:[]}},/嫩候/],
   [{watch:{trail:{start:age,world:0,outcome:null}}},/栗溪/],
   [{mine:{start:age,record:[]}},/交班/],
+  [{entry:'accepted',nursery:{start:age-1,care:null}},/药圃工日/],
+  [{convoy:{chapters:[{rig:'light',loads:[5,10]}]},charters:[{start:age,steps:[]}]},/沉钟湾轮航/],
   [{post:{route:'relay',ending:'box',walk:{start:age,outcome:null}}},/潮约/],
   [{post:{route:'relay',ending:'box',stations:[{sent:age,settled:null}]}},/两站/],
  ]){
