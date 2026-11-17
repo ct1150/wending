@@ -931,7 +931,8 @@ test('an ordinary workshop brew opens the dispensary, consumes its actual ingred
   for(let pages=0;s.currentScene.choices[0].targetId!==target;pages++){
    assert.ok(pages<5);s=pick(s,'next-resource');
   }
-  s=follow(s,'gather','continue');
+  s=pick(s,'gather');
+  s=s.currentScene.choices.some(c=>c.id.endsWith(':c:continue'))?pick(s,'continue'):follow(s,'train-menu','rest-menu','back');
  }
  s=follow(s,'journey-menu','workshop-menu','next-recipe','next-recipe','next-recipe','next-recipe');
  const herbs=s.life.items.herbs,stones=s.life.items.stones,limit=s.life.lifeLimit;

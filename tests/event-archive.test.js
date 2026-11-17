@@ -4,6 +4,32 @@ import {readFile} from 'node:fs/promises';
 import {gunzipSync} from 'node:zlib';
 import {liveBrowser} from './helpers/live-browser.js';
 
+test('an old ordinary search result keeps its exit and a pending repeat settles exactly once',async t=>{
+ const text=gunzipSync(await readFile(new URL('./fixtures/61e74ce-resource-result.jsonl.gz',import.meta.url))).toString('utf8');
+ const {page}=await liveBrowser(t);
+ const result=await page.evaluate(async text=>{
+  const {importLiveArchive,exportLiveArchive}=await import('/src/game/live-save-format.js'),{createLiveSession}=await import('/src/ui/live-session.js');
+  const old=await open('repeat-old');await importLiveArchive(new Response(text).body,old);const original=await old.load();
+  await old.prepare(engine.prepareChoice(original.state,{choiceId:original.state.currentScene.choices.find(c=>c.id.endsWith(':c:continue')).id,requestId:'old-search-exit'}));
+  const a=await open('repeat-new');await importLiveArchive(exportLiveArchive(old),a);let session=createLiveSession({archive:a,client:{}});
+  await session.load();await session.resume();await session.resume();let row=await a.load();const exit=row.state;
+  async function go(...keys){for(const key of keys){const c=row.state.currentScene.choices.find(c=>c.id.endsWith(':c:'+key));if(!c)throw Error(key);row=await session.choose({choiceId:c.id,baseRevision:row.state.revision,stateHash:identity.stateHash(row.state)});if(row.errorCode)throw Error(row.errorCode);}}
+  await go('journey-menu','resources-menu','next-resource','next-resource','gather');
+  const before=row.state,c=before.currentScene.choices.find(c=>c.id.endsWith(':c:gather-again'));
+  if(!c)throw Error('new search cannot repeat');
+  await a.prepare(engine.prepareChoice(before,{choiceId:c.id,requestId:'repeat-search'}));
+  const copied=await open('repeat-pending');await importLiveArchive(exportLiveArchive(a),copied);session=createLiveSession({archive:copied,client:{}});
+  await session.load();await session.resume();const once=await copied.load();await session.resume();const twice=await copied.load();
+  const final=await open('repeat-final');await importLiveArchive(exportLiveArchive(copied),final);
+  return {old:original.state.turnId,oldKeys:original.state.currentScene.choices.map(c=>c.id.split(':c:')[1]),exit:exit.turnId,exitNode:exit.events.node,before:before.life,turn:before.turnId,after:twice.state.life,receipt:twice.state.lastReceipt,settled:twice.state.turnId,exact:identity.stateHash(once.state)===identity.stateHash(twice.state)&&identity.stateHash((await final.load()).state)===identity.stateHash(twice.state)};
+ },text);
+ assert.ok(result.oldKeys.includes('continue'));assert.ok(!result.oldKeys.includes('gather-again'));
+ assert.equal(result.exit,result.old+1);assert.equal(result.exitNode,'hub');assert.equal(result.settled,result.turn+1);assert.ok(result.exact);
+ assert.equal(result.after.ageDays-result.before.ageDays,result.receipt.elapsedDays);assert.equal(result.receipt.elapsedDays,90);
+ assert.equal(result.receipt.action.targetId,'stones');assert.equal(result.receipt.cultivationResult.check.kind,'exploration');
+ assert.equal(result.after.items.stones-result.before.items.stones,result.receipt.itemChanges.stones??0);
+});
+
 test('a personal adventure can fund both public arrays and reach the upper rift without river commissions',async t=>{
  const text=gunzipSync(await readFile(new URL('./fixtures/5b86310-personal-crossing.jsonl.gz',import.meta.url))).toString('utf8');
  const {page}=await liveBrowser(t);

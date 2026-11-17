@@ -440,6 +440,10 @@ class Archive {
    const current=resolveRuleScene(c.run.state,p);
    if(current.choices.some(c=>c.id.endsWith(':c:rift-book'))&&same(scene,resolveEventScene(c.run.state,p,'rift')))scene=current;
   }
+  if(prior&&sceneId.endsWith(':s:event_action-result')&&scene.choices?.some(c=>c.id?.endsWith(':c:continue'))){
+   const current=resolveRuleScene(c.run.state,p);
+   if(current.choices.some(c=>c.id.endsWith(':c:gather-again'))&&same(scene,resolveEventScene(c.run.state,p,'gather')))scene=current;
+  }
   if(prior&&!prior.garden&&sceneId.endsWith(':s:event_action-result')&&scene.choices?.some(c=>c.id?.endsWith(':c:continue'))){
    const current=resolveRuleScene(c.run.state,p);
    if(!current.choices.some(c=>c.id.endsWith(':c:continue'))&&same(scene,resolveEventScene(c.run.state,p,'practice')))scene=current;

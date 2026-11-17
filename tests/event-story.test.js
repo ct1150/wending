@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import * as engine from '../src/game/cultivation/live/engine.js';
 import {stateHash} from '../src/game/cultivation/live/identity.js';
-import {TECHNIQUES,nextRealmFor,v7ActionRule} from '../src/game/cultivation/live/cultivation-rules.js';
+import {TECHNIQUES,nextRealmFor,v7ActionRule,resolveV7Action} from '../src/game/cultivation/live/cultivation-rules.js';
 import {eventNode} from '../src/game/cultivation/live/event-content.js';
 import {saltWindow,validateSaltField} from '../src/game/cultivation/live/salt-field.js';
 import {DAYS_PER_YEAR} from '../src/game/cultivation/live/model.js';
@@ -20,6 +20,44 @@ function choose(state,key){
  const pending=engine.prepareChoice(state,{choiceId:choice.id,requestId:'turn-'+(state.turnId+1)});
  return pending.receipt.death?engine.settleDeath(state,pending):engine.commitTurn(state,pending,engine.resolveRuleScene(state,pending));
 }
+
+test('ordinary resource repeats spend the same days and roll as returning through the original menus',()=>{
+ for(const target of ['manual','supplies','stones','iron']){
+  let s=choose(choose(choose(opening(),'decline'),'journey-menu'),'resources-menu');
+  while(s.currentScene.choices[0].targetId!==target)s=choose(s,'next-resource');
+  s=choose(s,'gather');
+  assert.ok(s.currentScene.choices.some(c=>c.id.endsWith(':c:gather-again')));
+  let slow=choose(choose(choose(choose(s,'train-menu'),'rest-menu'),'back'),'journey-menu');slow=choose(slow,'resources-menu');
+  while(slow.currentScene.choices[0].targetId!==target)slow=choose(slow,'next-resource');
+  for(let n=0;n<3;n++){
+   const quick=choose(s,'gather-again'),original=choose(slow,'gather');
+   assert.deepEqual(quick.life,original.life);assert.equal(quick.rng,original.rng);
+   assert.equal(quick.director.eventCount,original.director.eventCount);assert.equal(quick.lastReceipt.elapsedDays,original.lastReceipt.elapsedDays);
+   assert.deepEqual(quick.lastReceipt.cultivationResult,original.lastReceipt.cultivationResult);
+   s=quick;if(n<2){slow=choose(choose(choose(choose(s,'train-menu'),'rest-menu'),'back'),'journey-menu');slow=choose(slow,'resources-menu');while(slow.currentScene.choices[0].targetId!==target)slow=choose(slow,'next-resource');}
+  }
+  const action=s.currentScene.choices.find(c=>c.id.endsWith(':c:gather-again'));
+  const full=structuredClone(s);full.life.items[target]=9999;
+  assert.match(v7ActionRule(full,action).reason,/装不下/);
+  // Boundary-only inputs: the shortcut must not bypass mortality or failed searches.
+  const ending=structuredClone(s);ending.life.ageDays=ending.life.lifeLimit*DAYS_PER_YEAR-1;
+  const timed=v7ActionRule(ending,action);assert.ok(timed.warnings.some(w=>w.includes('途中寿尽')));
+  const expired=resolveV7Action(ending.life,action,timed,0,ending.turnId+1);
+  assert.equal(expired.death.cause,'lifespan');assert.equal(expired.elapsedDays,1);
+  assert.deepEqual(expired.nextLife.items,ending.life.items);
+  const wounded=structuredClone(s);wounded.life.injury=9;
+  const failed=resolveV7Action(wounded.life,action,v7ActionRule(wounded,action),99,wounded.turnId+1);
+  assert.equal(failed.result.check.success,false);assert.equal(failed.death.cause,'injury');
+  assert.deepEqual(failed.nextLife.items,wounded.life.items);
+ }
+});
+
+test('repeat search does not turn practice or authored errands into repeatable rewards',()=>{
+ let s=choose(choose(opening(),'decline'),'train-menu');s=choose(s,'practice');
+ assert.ok(!s.currentScene.choices.some(c=>c.id.endsWith(':c:gather-again')));
+ let errand=choose(choose(opening(),'accept'),'finish-work');
+ assert.ok(!errand.currentScene.choices.some(c=>c.id.endsWith(':c:gather-again')));
+});
 
 test('long-route invitations are available before acceptance and never impersonate commitments',()=>{
  const entry=opening();assert.deepEqual(adventureLeads(entry),[]);

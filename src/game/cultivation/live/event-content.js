@@ -317,11 +317,13 @@ export function eventNode(state,historicMenu=null){
    else if(action?.intent==='craft')text=check&&!check.success?'这次炼制失败，投入的材料已经消耗，未得到成品。':'你完成了这次炼制，所得与消耗照实记入行囊。';
    else if(action?.intent==='travel')text=check&&!check.success?'这次跨界没有成功，你仍在原来的界域；实际损耗已经记下。':'你抵达所选的界域，旧事仍保留在来路中，眼前的修行条件按新的天地结算。';
    if(action?.id.endsWith(':c:guarded-breakthrough'))text+=(check?.success?'阵盘与法器已经耗尽，护阵的代价没有因突破成功而退回。':check?.roll>=98?'关内灵息逆冲，阵盘与法器一并毁去，把致命反噬截在经脉之外。你带伤出关，仍须重新积累。':'阵盘与法器已经耗尽。你带伤出关，护阵没有替你免去失败的其他代价。');
+   const ordinaryGather=action?.intent==='explore'&&action.approach==='cautious'&&['gather','gather-again'].some(key=>action.id.endsWith(':c:'+key));
+   const oldGather=historicMenu||state.currentScene?.id.endsWith(':t'+state.turnId+':s:event_action-result')&&!state.currentScene.choices.some(c=>c.id.endsWith(':c:gather-again'));
    let onward=menu('affairs-menu','看看故人与未完之事','affairs');
    const oldRations=historicMenu==='provisions'||state.currentScene?.id.endsWith(':t'+state.turnId+':s:event_action-result')&&!state.currentScene.choices.some(c=>c.id.endsWith(':c:ration-book'));
    const canTrade=(life.items.stones??0)>=2||(life.items.herbs??0)>=2;
    const kitchen=menu('ration-book','到路灶备四份行粮，或亲自寻粮','ration-book');
-   if(!oldRations&&action?.id.endsWith(':c:gather')&&['stones','herbs','supplies'].includes(action.targetId))onward=kitchen;
+   if(!oldRations&&ordinaryGather&&['stones','herbs','supplies'].includes(action.targetId))onward=kitchen;
    const oldPractice=historicMenu==='practice'||state.currentScene?.id.endsWith(':t'+state.turnId+':s:event_action-result')&&state.currentScene.choices.some(c=>c.id.endsWith(':c:continue'));
    if((e.garden||!oldPractice)&&next&&life.cultivation<next.threshold&&
      (action?.intent==='practice'&&['steady','intensive'].includes(action.approach)||action?.id.endsWith(':c:forage-again'))){
@@ -340,7 +342,8 @@ export function eventNode(state,historicMenu=null){
     onward=e.council?.length===councilHearings?menu('resume-ledger','以新境界再看三界海路','convoy-book'):menu('resume-ledger','以新境界再看北山来信','council-book');
    }
    const resumeMountain=e.mountain&&!e.mountain.ending&&(action?.approach==='breakthrough'&&check?.success||action?.intent==='rest');
-   return row('这一回的结果','看清代价，再决定下一步',[narration(text)],[resumeMountain?menu('mount-book','收功，翻开随身折山石','mount-book'):menu('continue','继续安排此后的仙路','hub'),menu('train-menu','查看修行与恢复','training'),onward]);
+   const again=ordinaryGather&&!oldGather?choice('gather-again','再谨慎搜寻一次'+ITEMS[action.targetId],'explore',action.targetId,'cautious',{next:'action-result'}):null;
+   return row('这一回的结果','看清代价，再决定下一步',[narration(text)],[again??(resumeMountain?menu('mount-book','收功，翻开随身折山石','mount-book'):menu('continue','继续安排此后的仙路','hub')),menu('train-menu','查看修行与恢复','training'),onward]);
   }
   default:throw new Error('规则事件节点无效。');
  }
