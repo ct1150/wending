@@ -136,4 +136,11 @@ test('the authored loop can earn a real breakthrough and revisit the companion w
  state=choose(choose(choose(choose(state,'rest-menu'),'back'),'affairs-menu'),'companion-menu');assert.equal(state.events.node,'reunion');
  const herbs=state.life.items.herbs??0;state=choose(state,'reunion-work');assert.equal(state.life.items.herbs,herbs+2);assert.equal(state.lastReceipt.elapsedDays,5);
  state=choose(choose(state,'continue'),'affairs-menu');state=choose(state,'companion-menu');assert.equal(state.events.companion,'completed');assert.notEqual(state.events.node,'reunion');
+ assert.equal(state.events.firstMeeting,'helped');
+ const legacy=structuredClone(state);
+ delete legacy.events.firstMeeting;
+ const oldOffer=choose(choose(legacy,'post-book'),'launch-relay');
+ assert.equal(oldOffer.events.post.origin,'unknown');
+ const offer=choose(choose(state,'post-book'),'launch-relay');
+ assert.equal(offer.events.post.origin,'helped');assert.equal(offer.life.items.herbs,herbs+2);
 });

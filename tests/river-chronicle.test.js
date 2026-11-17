@@ -11,6 +11,7 @@ import {validateDing,validateInscription} from '../src/game/cultivation/live/mou
 import {validateMine} from '../src/game/cultivation/live/lamp-mine.js';
 import {DAYS_PER_YEAR} from '../src/game/cultivation/live/model.js';
 import {validateGarden,gardenRootForChild} from '../src/game/cultivation/live/phenology.js';
+import {validatePost} from '../src/game/cultivation/live/lin-post.js';
 
 const observers=new WeakMap();
 function start(observe,seed=42){
@@ -31,6 +32,82 @@ function pick(state,key){
 const follow=(state,...keys)=>keys.reduce(pick,state);
 const open=observe=>follow(start(observe),'decline','journey-menu','river-book','river-open');
 const prose=state=>state.currentScene.blocks.map(block=>block.text).join('\n');
+
+function postOffer(meeting,observe){
+ return follow(start(observe),'ask','companion',meeting,'continue','decline','affairs-menu','companion-menu','post-book');
+}
+test('Lin Yan recalls both early decisions and either original witness can establish the first destination',()=>{
+ for(const [meeting,route,inspect,deliver] of [['aid','relay','read-box','deliver-0'],['decline-companion','door','walk-stops','deliver-1']]){
+  let s=follow(postOffer(meeting),'launch-'+route,'practice-post');
+  assert.match(s.currentScene.title,/写反的站名/);
+  assert.equal(s.lastReceipt.action.approach,'steady');
+  s=follow(s,'investigate',inspect);assert.equal(s.lastReceipt.elapsedDays,1);
+  assert.match(prose(s),route==='relay'?/弧边归篷房/:/与匣底相合的是半边晒架/);
+  s=deserializeLiveState(serializeLiveState(s));
+  s=follow(s,'post-book','deliver',deliver);
+  assert.match(prose(s),/两边合拢/);
+  s=follow(s,'keep-register',route==='door'?'single-bell':'two-runners','keep-register');
+  assert.match(prose(s),route==='door'?/亲手签过/:/两个脚夫/);
+  s=follow(s,'station-mark','keep-register','split-box','post-history');
+  assert.equal(s.events.post.steps.length,3);
+  assert.match(prose(s),/不抄寄件人/);
+  assert.equal(s.events.post.ending,'leaves');
+  assert.equal(s.life.ageDays-s.events.post.start,25*DAYS_PER_YEAR);
+ }
+});
+test('wrong delivery, returning a sealed parcel and declining the project have distinct persistent consequences',()=>{
+ const offer=postOffer('decline-companion'),refused=follow(offer,'consider','decline-post');
+ assert.equal(refused.events.post.route,'pass');assert.equal(refused.lastReceipt.elapsedDays,0);
+ const s=follow(offer,'launch-door','keep-register','deliver');
+ const wrong=pick(s,'deliver-0');assert.match(prose(wrong),/误投/);
+ const returned=follow(s,'review-parcel','return-parcel');assert.match(prose(returned),/重写地点/);
+ assert.deepEqual(returned.life.items,s.life.items);
+ assert.throws(()=>validatePost({...returned.events.post,steps:[{day:s.life.ageDays,decision:'missed'}]}),/回单/);
+});
+test('cultivating past a deadline leaves a dated return slip, and the next cohort still makes its own decision',()=>{
+ let s=follow(postOffer('aid'),'launch-relay','back','train-menu');
+ for(let i=0;i<4;i++)s=follow(s,'practice','train-menu');
+ s=follow(s,'rest-menu','back','affairs-menu','companion-menu','post-book');
+ assert.match(s.currentScene.title,/换班已经过去/);
+ const age=s.life.ageDays;
+ s=pick(s,'file-return');assert.equal(s.life.ageDays,age);
+ assert.equal(s.events.post.steps[0].decision,'missed');
+ if(s.currentScene.choices.some(c=>c.id.endsWith(':c:keep-register')))s=pick(s,'keep-register');
+ assert.match(prose(s),/没有两边落款/);
+ s=pick(s,'single-bell');assert.equal(s.events.post.steps[1].decision,'bell');
+});
+test('the deadline is checked on actual arrival and an overseas courier cannot impersonate an eyewitness',()=>{
+ const s=follow(postOffer('aid'),'launch-relay','keep-register','deliver');
+ s.life.ageDays=s.events.post.start+4*DAYS_PER_YEAR-1;
+ const delivery=eventNode(s).choices.find(c=>c.key==='deliver-0');
+ assert.match(delivery.label,/途中换班/);
+ assert.deepEqual(delivery.patch.post.steps,[{decision:'missed',day:s.life.ageDays+1}]);
+ s.life.cultivationProfile.worldTier=1;
+ const remote=eventNode(s);assert.equal(remote.title,'药路寄来的托函');
+ assert.ok(!remote.choices.some(c=>c.key==='deliver-0'));
+ const reply=remote.choices.find(c=>c.key==='file-return');
+ assert.deepEqual(reply.patch.post.steps,[{decision:'delegated',day:s.life.ageDays}]);
+});
+test('Zhi can travel alone, share the shore or miss the tide; her old training changes the real cost of leave',()=>{
+ const start=follow(postOffer('decline-companion'),'launch-relay','keep-register','deliver','deliver-0','keep-register');
+ const tide=(s,lesson)=>follow(s,lesson,'keep-register','named-witness','keep-register','keep-box','post-shore','join-shore');
+ const pair=tide(start,'two-runners'),bell=tide(start,'single-bell');
+ const alone=pick(pair,'cover-desk');
+ assert.equal(alone.events.post.walk.outcome,'alone');assert.equal(alone.lastReceipt.elapsedDays,3);
+ const supply=bell.life.items.supplies;
+ let solo=pick(bell,'find-cover');
+ assert.equal(solo.life.items.supplies,supply-1);assert.equal(solo.lastReceipt.elapsedDays,2);
+ const options=compileChoices(solo,solo.currentScene.choices);
+ assert.match(options.find(c=>c.id.endsWith(':c:take-ridge')).warnings.join(''),/会错过阿枳/);
+ assert.doesNotMatch(options.find(c=>c.id.endsWith(':c:take-ferry')).warnings.join(''),/会错过阿枳/);
+ const late=follow(solo,'take-ridge','file-tide');
+ assert.equal(late.events.post.walk.outcome,'late');assert.equal(late.events.post.walk.finished-late.events.post.walk.start,5);
+ solo=follow(deserializeLiveState(serializeLiveState(solo)),'take-ferry','hold-paper');
+ assert.equal(solo.events.post.walk.outcome,'sketch');assert.match(prose(solo),/床头/);
+ const shared=follow(pair,'find-cover','take-ridge','sit-quiet');assert.equal(shared.events.post.walk.finished-shared.events.post.walk.start,4);
+ assert.equal(shared.life.items.supplies,pair.life.items.supplies);
+ assert.throws(()=>validatePost({...shared.events.post,walk:{...shared.events.post.walk,finished:shared.life.ageDays+10}},shared.life),/看潮/);
+});
 
 const valleyCamp=()=>follow(open(),'deliberate','policy-0','field-guide','enter-field');
 const firstWatch=(seed,keeper,marks)=>follow(start(undefined,seed),'decline','train-menu','rest-menu','watch-book','watch-open','keeper-'+keeper,marks,'sit-watch');
@@ -359,8 +436,8 @@ for(const branch of [0,1])test('all six leaves settle once and return to the cul
  assert.equal(state.events.node,'action-result');
 });
 
-function afterRiver(timberChoice=1,observe,visitValley=false){
- let s=open(observe);
+function afterRiver(timberChoice=1,observe,visitValley=false,visitPost=false){
+ let s=visitPost?follow(postOffer('decline-companion',observe),'launch-relay','keep-register','investigate','walk-stops','post-book','deliver','deliver-0','back','journey-menu','river-book','river-open'):open(observe);
  for(let i=0;i<6;i++){
   s=follow(s,'deliberate','policy-'+(i===3?timberChoice:i%2));
   if(i===0&&visitValley){
@@ -514,13 +591,22 @@ function trainTo(state,rank){
  }
  return follow(s,'rest-menu','back','journey-menu','river-book','hear-council');
 }
-test('one continuous birth finishes the three-world campaign and replays its entire archive',async t=>{
- const route=[],blocks=new Set();
- const observe=(key,state)=>{route.push(key);for(const b of state.currentScene.blocks)blocks.add(b.text);};
- let s=follow(afterRiver(1,observe,true),'voyage-go','to-kiln','to-store','to-tower','voyage-finish','voyage-book','voyage-go','to-east','to-west','to-peak','voyage-finish','voyage-book','voyage-go','to-pass','to-well','to-camp','voyage-finish','voyage-book','hear-council');
+function lowerWorldCareer(observe,visitPost){
+ let s=follow(afterRiver(1,observe,true,visitPost),'voyage-go','to-kiln','to-store','to-tower','voyage-finish','voyage-book','voyage-go','to-east','to-west','to-peak','voyage-finish','voyage-book','voyage-go','to-pass','to-well','to-camp','voyage-finish','voyage-book','hear-council');
  for(let rank=1;rank<=3;rank++){
   assert.match(s.currentScene.title,/待你归来/);
   s=trainTo(pick(s,'train-menu'),rank);
+  if(visitPost&&rank===1){
+   s=follow(s,'river-back','affairs-menu','companion-menu','post-book');
+   if(s.currentScene.choices.some(c=>c.id.endsWith(':c:keep-register')))s=pick(s,'keep-register');
+   s=follow(s,'two-runners','back','journey-menu','river-book','hear-council');
+  }
+  if(visitPost&&rank===2){
+   s=follow(s,'river-back','affairs-menu','companion-menu','post-book');
+   if(s.currentScene.choices.some(c=>c.id.endsWith(':c:keep-register')))s=pick(s,'keep-register');
+   s=follow(s,'station-mark','keep-register','split-box','post-shore','join-shore','find-cover','take-ferry','sit-quiet','back','journey-menu','river-book','hear-council');
+   assert.equal(s.events.post.walk.outcome,'quiet');
+  }
   for(let i=0;i<3;i++){
    const before=s.life.cultivation,spirit=s.life.cultivationProfile.spirit;
    s=pick(s,'resolve-0');assert.equal(s.life.cultivation,before+1);assert.equal(s.life.cultivationProfile.spirit,spirit-rank);
@@ -531,6 +617,20 @@ test('one continuous birth finishes the three-world campaign and replays its ent
  }
  assert.match(s.currentScene.title,/山河有继/);
  assert.equal(s.events.council,'000000000');assert.equal(s.life.realm,'golden');assert.equal(s.phase,'active');
+ return s;
+}
+test('Lin and Zhi keep their full itinerary alongside the river cases and actual realm breakthroughs',()=>{
+ const s=lowerWorldCareer(undefined,true);
+ assert.equal(s.life.realm,'golden');
+ assert.deepEqual(s.events.post.steps.map(step=>step.decision),['ferry','partner','anonymous']);
+ assert.equal(s.events.post.walk.outcome,'quiet');
+ const restored=deserializeLiveState(serializeLiveState(s));
+ assert.deepEqual(restored.events.post,s.events.post);
+});
+test('one continuous birth finishes the three-world campaign and replays its entire archive',async t=>{
+ const route=[],blocks=new Set();
+ const observe=(key,state)=>{route.push(key);for(const b of state.currentScene.blocks)blocks.add(b.text);};
+ let s=lowerWorldCareer(observe,false);
  t.diagnostic('Continuous route to the valley ending: '+s.turnId+' committed turns including menus; '+s.life.ageDays+' in-world age days.');
  const inventory={...s.life.items};
  s=follow(s,'river-back','journey-menu','river-book','voyage-book');assert.match(s.currentScene.title,/三程归来/);

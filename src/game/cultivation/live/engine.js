@@ -12,6 +12,7 @@ import { advanceRetrievalMemory } from './retrieval-memory.js';
 import { ORIGIN_BACKGROUNDS } from './birth-stories.js';
 import {MORTAL_OPENING} from './mortal-opening.js';
 import {createEventState,eventActionRule,resolveEventScene,assertRuleScene,advanceEvents,eventGoal} from './events.js';
+import {postNotice} from './lin-post.js';
 const copy = value => JSON.parse(JSON.stringify(value));
 const nextRandom = value => (Math.imul(value,1664525)+1013904223)>>>0;
 const summary = summarizeLife;
@@ -120,7 +121,10 @@ function actionRule(state,p) {
 export function compileChoices(state,proposals) {
  validateLiveState(state);assertPlainData(proposals);if(!Array.isArray(proposals)||proposals.length>3)throw new Error('行动数量无效。');const seen=new Set();
  return proposals.map(p=>{if(seen.has(p.id))throw new Error('行动标识重复。');seen.add(p.id);const rule=actionRule(state,p),warnings=[];
-  if(isV7Life(state.life))return {...copy(p),enabled:!rule.reason,reason:rule.reason??null,costs:{days:rule.days,items:copy(rule.items),spirit:rule.spiritCost,lifeYears:rule.lifeLoss},warnings:[...rule.warnings],...(rule.outlook?{outlook:copy(rule.outlook)}:{})};
+  if(isV7Life(state.life)){
+   const appointment=rule.days>0&&postNotice(state.events?.post,state.life.ageDays,rule.days);
+   return {...copy(p),enabled:!rule.reason,reason:rule.reason??null,costs:{days:rule.days,items:copy(rule.items),spirit:rule.spiritCost,lifeYears:rule.lifeLoss},warnings:appointment?[...rule.warnings,appointment]:[...rule.warnings],...(rule.outlook?{outlook:copy(rule.outlook)}:{})};
+  }
   if(rule.risk)warnings.push('历练受伤基础风险'+rule.risk+'%，根骨与坚韧筋骨可降低风险。');if(rule.injury>0)warnings.push('将增加'+rule.injury+'点伤势；伤势达到10即死亡。');if(state.life.ageDays+rule.days>=state.life.lifeLimit*DAYS_PER_YEAR)warnings.push('余寿不足，将在途中寿尽，得不到行动成果。');return {...copy(p),enabled:!rule.reason,reason:rule.reason??null,costs:{days:rule.days,items:copy(rule.items)},warnings};});
 }
 function identity(state,requestId,choiceId) {idField(requestId);return {runId:state.runId,turnId:state.turnId+1,baseRevision:state.revision,stateHash:stateHash(state),choiceId,rulesVersion:state.rulesVersion,promptVersion:state.promptVersion,requestId};}

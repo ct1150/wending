@@ -10,6 +10,7 @@ import {inscriptionText,watchNode} from './retreat-watch.js';
 import {trailLocation} from './deer-trail.js';
 import {mineNode,minePlaces} from './lamp-mine.js';
 import {gardenNode,gardenRootName} from './phenology.js';
+import {postNode,postNotice} from './lin-post.js';
 
 // Authored situations supply every fact and executable choice. AI never edits
 // these definitions. Stable actors belong to a life, not a generated paragraph.
@@ -56,6 +57,12 @@ export function eventNode(state){
  if(e.node.startsWith('field-'))return valleyNode(state,menu,choice,actor);
  if(e.node.startsWith('mine-'))return mineNode(state,menu,choice,actor);
  if(e.node.startsWith('garden-'))return gardenNode(state,menu,choice);
+ if(e.node==='post-index'){
+  const reunion=young&&life.cultivationProfile.worldTier===0&&['helped','declined'].includes(e.companion)&&realm.rank>=1;
+  return row('故人留下的两件事','读药路的回单，或回看早年的同路之约',[narration('当年曾怎样相待，和后来愿意替药路做什么，在手记里各有一页。')],[
+   menu('post-book','读林砚的药路手记','post-book'),menu('other-visit','看旧日采药之约与分别',reunion?'reunion':young&&life.cultivationProfile.worldTier===0?'companion':'old-record'),leave]);
+ }
+ if(e.node.startsWith('post-'))return postNode(state,menu,choice);
  if(e.node==='voyage-result')return expeditionResult(e.expedition,menu);
  if(e.node.startsWith('voyage-'))return expeditionNode(state,menu,choice);
  if(e.node.startsWith('council-'))return councilNode(state,menu,choice);
@@ -87,7 +94,7 @@ export function eventNode(state){
   case 'companion':{
    if(e.companion!=='unmet')return row('记着的那次选择','旧事已经有了决定，不必反复付出',[
     narration(e.companion==='helped'?'林砚还记得你分出的那份行粮。眼下他正在做自己的差事，不再向你重复求助。':e.companion==='declined'?'当日你没有接下林砚的求助。他另找了生计，那次分别没有变成追着你的责问。':'你与林砚的这一段交往已经落下结果。以后各有各的道路。'),
-   ],[menu('continue','继续自己的打算',home(e)),leave]);
+   ],[menu('continue','继续自己的打算',home(e)),...(young&&life.cultivationProfile.worldTier===0?[menu('post-book','听林砚说那只空药匣','post-book')]:[]),leave]);
    return row('空着的布袋','决定是否分出一份行粮',[
     narration('林砚说自己从渡口来，身上的盘缠用在了路上。他还没有做完差事，今晚却已没有饭食。'),
     speech(actor('companion'),'能借我一份行粮么？我不敢许你仙缘，只能记着这份相助。若你也为难，不必勉强。'),
@@ -112,10 +119,12 @@ export function eventNode(state){
    narration(e.companion==='completed'?'五日里，你们按药堂标记采回两份灵草。林砚在岔路口与你道别：有过相助的人，也各有自己的路。':'你与林砚在岔路口道别。他去交自己的差事，你继续安排修行。你没有为这次离开付出额外惩罚。'),
   ],[menu('continue','带着这一段经历继续修行','hub'),menu('train-menu','查看修行与破境','training'),menu('journey-menu','备办下一段历练','journey')]);
   case 'hub':{
+   const appointment=postNotice(e.post,life.ageDays);
    const variants=['风从檐下穿过，书页轻轻翻动。','桌上留着上次修行的笔记，门外的路仍在。','你收拢纷杂的念头，重新衡量手中的时间与资用。'];
    const journey=e.council?.length===councilHearings?'翻阅三界海路与旧簿，或外出备料':e.expedition?.place==='end'?'翻看北山公簿，或外出备料':e.river?.record.length===6?'接续行旅图，或外出备料':'读问川图，或外出备料';
    return row('此后的仙路','修行成长与故人后续，都由你安排',[
     narration(variants[(state.turnId+state.life.birth.attributes.insight)%variants.length]),
+    ...(appointment?[narration(appointment)]:[]),
     narration(e.entry==='accepted'?'药圃差事仍可回去做完；未做完时不会发放功法。':e.entry==='declined'?'你选择了独自求道。栖云门那份未接下的差事没有变成必须偿还的债。':'修为、功法与资用各有门槛。已经完成的差事不会再要求你重做。'),
    ],[menu('train-menu','安排修炼与突破','training'),menu('journey-menu',journey,'journey'),menu('affairs-menu','探访故人，处理未完之事','affairs')]);
   }
@@ -177,7 +186,7 @@ export function eventNode(state){
    const companion=young&&['helped','declined'].includes(e.companion)&&realm.rank>=1?'reunion':'companion';
    return row('旧事与来人','只有尚未完成的事情才需要再作决定',[
     narration(young?'回看故人的来处，也回看自己已经说出口的话。问候不等于答应，暂缓也不等于失信。':'闭关跨过了许多年。你能追索旧日记录，却不能假定当年的凡人仍站在原地等你。'),
-   ],[menu('mentor-menu','查看功法与校法之约','mentor'),menu('companion-menu',young?'看看林砚与当年的选择':'翻看故人的旧日记录',young?companion:'old-record'),e.entry==='accepted'?menu('resume-work','回去完成三日药圃差事','work'):life.cultivationProfile.worldTier>=1&&e.convoy?.chapters[0]?.loads.length===2?menu('ear-book','读钟荻的信，续校六件音器','convoy-ear-book'):leave]);
+   ],[menu('mentor-menu','查看功法与校法之约','mentor'),menu('companion-menu',young?'看看林砚与当年的选择':'翻看故人的旧日记录',e.post?'post-index':young?companion:'old-record'),e.entry==='accepted'?menu('resume-work','回去完成三日药圃差事','work'):life.cultivationProfile.worldTier>=1&&e.convoy?.chapters[0]?.loads.length===2?menu('ear-book','读钟荻的信，续校六件音器','convoy-ear-book'):leave]);
   }
   case 'mentor':{
    const experience=life.cultivationProfile.experience,commitment=experience.commitment,young=life.ageDays<100*DAYS_PER_YEAR;
