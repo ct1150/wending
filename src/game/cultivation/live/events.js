@@ -24,8 +24,10 @@ import {validateCloudPassage} from './cloud-passage.js';
 import {validateCloudRift} from './cloud-rift.js';
 import {validateCloudTrials} from './cloud-trial.js';
 import {validateRiftBeacon} from './rift-beacon.js';
+import {validateHomebound} from './homebound.js';
 
 const eventNodeIds=new Set([
+ 'sky-harbor','home-book','home-talk','home-decide','home-final','home-leave',
  'sky-beacon-book','sky-beacon-rest','sky-beacon-works','sky-beacon-exit',
  'arrival','terms','work','entry-result','companion','companion-result','reunion','reunion-result',
  'work-porch','nursery-book','nursery-pot','nursery-receipt',
@@ -58,7 +60,9 @@ const eventNodeIds=new Set([
 const copy=value=>JSON.parse(JSON.stringify(value));
 export function createEventState(atlas){return {version:1,node:'arrival',entry:'unresolved',companion:'unmet',mentor:'unmet',page:0,location:'gate',...(atlas?copy(atlas):{})};}
 export function validateEventState(events,life,gardenRoot,birthRoll){
- assertPlainData(events);exactKeys(events,['version','node','entry','companion','mentor','page','location'],['river','expedition','council','convoy','charters','valley','watch','mine','garden','firstMeeting','post','mountain','ferry','well','cloudPassage','nursery','saltField','ridgeRoad','forms','cloudRift','cloudTrials','riftBeacon']);
+ assertPlainData(events);exactKeys(events,['version','node','entry','companion','mentor','page','location'],['river','expedition','council','convoy','charters','valley','watch','mine','garden','firstMeeting','post','mountain','ferry','well','cloudPassage','nursery','saltField','ridgeRoad','forms','cloudRift','cloudTrials','riftBeacon','homebound']);
+ if(Object.hasOwn(events,'homebound')||events.node.startsWith('home-'))validateHomebound(events,life);
+ if(events.node==='sky-harbor'&&life&&(life.cultivationProfile.worldTier!==2||realmFor(life).rank<5))throw Error('港外来信须在上界化神后查看。');
  if(Object.hasOwn(events,'riftBeacon')||events.node.startsWith('sky-beacon-'))validateRiftBeacon(events,life);
  if(Object.hasOwn(events,'cloudTrials')||events.node.startsWith('sky-trial')||events.node==='sky-weather')validateCloudTrials(events,life);
  if(Object.hasOwn(events,'cloudRift')||events.node.startsWith('sky-rift'))validateCloudRift(events,life);

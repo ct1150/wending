@@ -21,6 +21,7 @@ import {nurseryNode} from './entry-nursery.js';
 import {saltFieldNode} from './salt-field.js';
 import {ridgeEntrance,ridgeNode} from './ridge-road.js';
 import {beaconPlaces} from './rift-beacon.js';
+import {homeboundNode,homeboundPlaces} from './homebound.js';
 import {canStudyForm,formNode} from './technique-forms.js';
 
 // Authored situations supply every fact and executable choice. AI never edits
@@ -37,6 +38,7 @@ export function eventEntities(state){
   {id:prefix+'upper',name:'上界观星台',kind:'place'},
   ...(state.events.node.startsWith('shell-')?[{id:prefix+'ferrier',name:'蓼',kind:'person',status:'alive'}]:[]),
   ...(state.events.node.startsWith('sky-beacon-')?beaconPlaces(prefix):[]),
+  ...(state.events.node.startsWith('home-')?homeboundPlaces(prefix):[]),
   ...(state.events.node.startsWith('field-')?valleyPlaces(prefix):[]),
   ...(state.events.node.startsWith('mine-')?minePlaces(prefix):[]),
   ...(state.events.node==='field-shrine'?[{id:prefix+'springward',name:'守泉会',kind:'faction',experience:{version:1,realmId:'qi'}}]:[]),
@@ -55,6 +57,8 @@ const menu=(key,label,next,patch={})=>choice(key,label,'interact','self','observ
 const home=e=>e.entry==='accepted'?'work':e.entry==='unresolved'?'arrival':'hub';
 
 export function eventNode(state,historicMenu=null){
+ const oldHarbor=historicMenu==='harbor';
+ if(oldHarbor)historicMenu=null;
  const e=state.events,life=state.life,actors=eventEntities(state),actor=key=>actors.find(row=>row.id.endsWith(':e:'+key)).id;
  const next=nextRealmFor(life),realm=realmFor(life),method=TECHNIQUES[life.cultivationProfile.experience.activeTechniqueId];
  const young=life.ageDays<80*DAYS_PER_YEAR;
@@ -66,6 +70,8 @@ export function eventNode(state,historicMenu=null){
   choice('decline',young?'谢过周执事，自寻修行之路':'把旧簿交还外院，自行求道','interact',young?actor('steward'):'self',young?'decline':'leave',{next:'hub',patch:{entry:'declined',location:'retreat'},navigation:true}),
  ];
  if(e.node.startsWith('river-'))return riverNode(state,menu,choice);
+ if(e.node.startsWith('home-'))return homeboundNode(state,menu,choice);
+ if(e.node==='sky-harbor')return row('上界港外 · 谁的归途','看看来信，或继续自己的行程',[narration('港外停着一艘归潮残舟，舟灵岑照一直想找个人，与她一同听听舱里的声音。读信不算答应，她也不会因你先去别处便失去自己已经守住的锚地。')],[menu('home-book','去见岑照，听她说那艘归潮舟','home-book'),e.nursery?.end?menu('seed-book','翻看盐埠种簿','seed-book'):menu('train-menu','回去安排修行','training'),leave]);
  if(e.node.startsWith('watch-'))return watchNode(state,menu,choice);
  if(e.node.startsWith('field-'))return valleyNode(state,menu,choice,actor);
  if(e.node.startsWith('mine-'))return mineNode(state,menu,choice,actor);
@@ -248,9 +254,10 @@ export function eventNode(state,historicMenu=null){
    const oldExit=historicMenu&&historicMenu!=='routes'||state.currentScene?.id.endsWith(':t'+state.turnId+':s:event_crossing')&&state.currentScene.choices.some(c=>c.id.endsWith(':c:back'));
    const seedDesk=tier>=1&&e.nursery?.end&&!oldExit;
    const oldRoutes=historicMenu||state.currentScene?.id.endsWith(':t'+state.turnId+':s:event_crossing')&&state.currentScene.choices.some(c=>c.id.endsWith(':c:cross'));
+   const harbor=tier===2&&realm.rank>=5&&!oldHarbor&&!(state.currentScene?.id.endsWith(':t'+state.turnId+':s:event_crossing')&&!state.currentScene.choices.some(c=>c.id.endsWith(':c:harbor-book')))&&!historicMenu;
    return row('天地之间','达到真实门槛后才能跨界',[
     narration(tier<2?'通往'+name+'的道路有自己的境界、材料与风险门槛。未达到时，继续留在当前天地修行便是。':'你已经身在上界，仍可继续修行与历练。'),
-   ],[tier<2?(oldRoutes?choice('cross','循正途飞升前往'+name,'travel',actor(destination),'ascend',{next:'action-result',arrival:destination}):menu('crossing-ways','衡量飞升与古阵，前往'+name,'crossing-ways')):sky?menu('sky-book','去白脊云渡，随渡班闭关守风','sky-book'):menu('train-menu','继续安排修行','training'),packet?menu('packet-book','借旧港的船，翻开轮航簿','packet-book'):menu('resources-menu','回去备办资源','resources',{page:0}),seedDesk?menu('seed-book','翻看盐埠种簿，或合簿回山','seed-book'):leave]);
+   ],[tier<2?(oldRoutes?choice('cross','循正途飞升前往'+name,'travel',actor(destination),'ascend',{next:'action-result',arrival:destination}):menu('crossing-ways','衡量飞升与古阵，前往'+name,'crossing-ways')):sky?menu('sky-book','去白脊云渡，随渡班闭关守风','sky-book'):menu('train-menu','继续安排修行','training'),packet?menu('packet-book','借旧港的船，翻开轮航簿','packet-book'):menu('resources-menu','回去备办资源','resources',{page:0}),harbor?menu('harbor-book','看港外来信、旧种簿或归路','sky-harbor'):seedDesk?menu('seed-book','翻看盐埠种簿，或合簿回山','seed-book'):leave]);
   }
   case 'crossing-ways':{
    const upper=life.cultivationProfile.worldTier===1,destination=upper?'upper':'middle',name=upper?'上界观星台':'中界清河城';

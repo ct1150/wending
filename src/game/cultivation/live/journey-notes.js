@@ -44,6 +44,7 @@ export function adventureLeads(state){
  if(!e.mountain)invite('mount-book','折山石 · 带着自己的心愿入定','盆架闲下时，可以展开石中六关。选择想回家还是寻源，与小满同行；每次练功照常结算修期与修为，信物与已学术式会改变后来的辨路和分别。');
  if(tier<2&&rank>=(tier?4:2))invite('crossing-ways','界台 · 筹备前往'+(tier?'上界':'中界'),'当前境界已经可以承受古阵，可自行备阵盘与路费；也可查看正途飞升的条件。前往只看路线，不会开阵或接受海路委托。');
  if(tier===2&&rank>=4&&!e.cloudPassage)invite('sky-book','白脊云渡 · 在上界亲历风候','随渡班在岸上或船中闭关，再亲自决定怎样试航。元婴、炼虚、大乘各有一班，旧井铃与先前的渡法会改变后来的办法。');
+ if(tier===2&&rank>=5&&!e.homebound)invite('home-book','归航者 · 舟灵与醒来的人','港外残舟里有人开始说话。舟灵岑照想修成归乡船，他们却渐渐有了自己的愿望。从化神至大乘四次同行，承诺会改变往后的合作。先去听听，确认承诺后再自行备粮登船。');
  if(!e.cloudRift&&canVisitRift(state))invite('sky-rift','白脊风隙 · 用所学走进异变','化神后可循已经交接的旧渡路探访浮岩。调查支点与回流，勘路或施术入隙；首次定脉后，到合体再处理自己留下的变化。先看现场，出发才交粮。');
  if(e.cloudRift?.ending&&!e.riftBeacon)invite('sky-beacon-book','回风孤标 · 走一圈有回程的路','探路班想取回外岩标台的观风原纸。调查会耗时，第五日变风；旧定脉能帮你走不同入口，返岸的路仍须亲自决定。读信不算起行。');
  return [...opportunities,...leads];
@@ -65,6 +66,7 @@ export function journeyNotes(state){
   notes.push({node,title,detail,timing,priority,date,close:window?.close});
  }
  const w=e.well;
+ if(e.homebound&&!e.homebound.ending)add('home-book','与岑照的归航约定','已起行 '+e.homebound.visits.length+' / 4 幕。'+(e.homebound.place==='ship'?'人还在船上，须亲自走回港外才能修行或辞别。':'可从港外接着上一幕；尚未具备下一幕境界时，可以先继续自己的修行。'));
  if(e.riftBeacon&&!e.riftBeacon.ending){
   const r=e.riftBeacon;
   add('sky-beacon-book','回风孤标',r.entry?'标台已经去过，回程与原纸交割仍按实际行程接续。':'已到外侧渡岸，调查与移动都会过日；晚到可付出代价继续，不会永远失去通路。',{open:r.start,close:r.start+4},'已经变风，按现在的路线与费用继续');
@@ -153,7 +155,7 @@ export function crossingDeadlines(state,notes,days){
 
 // These menu screens can be read on the way to a known entry. A trip, promise,
 // reward or quest patch is a player decision even when it happens to cost zero days.
-const shelves=new Set(['hub','training','rest','journey','resources','workshop','crossing','affairs','mentor','companion','post-index','post-book','post-history','watch-book','watch-visitors','field-guide','garden-book','garden-history','river-book','voyage-book','council-book','sky-book','sky-weather','sky-lodgings','sky-rift']);
+const shelves=new Set(['hub','training','rest','journey','resources','workshop','crossing','affairs','mentor','companion','post-index','post-book','post-history','watch-book','watch-visitors','field-guide','garden-book','garden-history','river-book','voyage-book','council-book','sky-book','sky-weather','sky-lodgings','sky-rift','sky-harbor']);
 export function noteMenuSteps(state){
  return eventNode(state).choices.filter(c=>c.navigation&&c.targetId==='self'&&c.approach==='observe'&&!c.arrival&&!c.rule&&Object.keys(c.patch??{}).every(k=>k==='page'));
 }
