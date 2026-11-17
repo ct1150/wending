@@ -1,0 +1,190 @@
+{
+  "revision": "edf6a40b8f5a66252d10ded5f58cb86ed88e4294",
+  "sourceHash": "a2a546a4336eaca3b0181b68c366ba61a69c7c02d93c9558735bee440ebe5860",
+  "turn": 814,
+  "actions": 813,
+  "distinctBlocks": 888,
+  "characters": 35224,
+  "byRealm": {
+    "mortal": {
+      "actions": 122,
+      "paidActions": 42,
+      "eventChanges": 48,
+      "ordinaryPractice": 1,
+      "characters": 7793,
+      "distinctBlocks": 186
+    },
+    "qi": {
+      "actions": 32,
+      "paidActions": 10,
+      "eventChanges": 9,
+      "ordinaryPractice": 2,
+      "characters": 1854,
+      "distinctBlocks": 46
+    },
+    "foundation": {
+      "actions": 50,
+      "paidActions": 18,
+      "eventChanges": 9,
+      "ordinaryPractice": 4,
+      "characters": 2153,
+      "distinctBlocks": 54
+    },
+    "golden": {
+      "actions": 223,
+      "paidActions": 56,
+      "eventChanges": 74,
+      "ordinaryPractice": 6,
+      "characters": 11405,
+      "distinctBlocks": 303
+    },
+    "nascent": {
+      "actions": 160,
+      "paidActions": 31,
+      "eventChanges": 39,
+      "ordinaryPractice": 1,
+      "characters": 8004,
+      "distinctBlocks": 213
+    },
+    "spirit": {
+      "actions": 47,
+      "paidActions": 19,
+      "eventChanges": 6,
+      "ordinaryPractice": 4,
+      "characters": 2035,
+      "distinctBlocks": 53
+    },
+    "void": {
+      "actions": 52,
+      "paidActions": 21,
+      "eventChanges": 11,
+      "ordinaryPractice": 10,
+      "characters": 3281,
+      "distinctBlocks": 93
+    },
+    "unity": {
+      "actions": 44,
+      "paidActions": 23,
+      "eventChanges": 9,
+      "ordinaryPractice": 15,
+      "characters": 2340,
+      "distinctBlocks": 60
+    },
+    "mahayana": {
+      "actions": 64,
+      "paidActions": 20,
+      "eventChanges": 9,
+      "ordinaryPractice": 14,
+      "characters": 3961,
+      "distinctBlocks": 97
+    },
+    "tribulation": {
+      "actions": 19,
+      "paidActions": 1,
+      "eventChanges": 4,
+      "ordinaryPractice": 0,
+      "characters": 2113,
+      "distinctBlocks": 52
+    }
+  },
+  "longestOrdinaryPractice": [
+    {
+      "turn": 706,
+      "realm": "unity",
+      "key": "practice"
+    },
+    {
+      "turn": 707,
+      "realm": "unity",
+      "key": "practice-again"
+    },
+    {
+      "turn": 708,
+      "realm": "unity",
+      "key": "practice-again"
+    },
+    {
+      "turn": 709,
+      "realm": "unity",
+      "key": "practice-again"
+    },
+    {
+      "turn": 710,
+      "realm": "unity",
+      "key": "practice-again"
+    },
+    {
+      "turn": 711,
+      "realm": "unity",
+      "key": "practice-again"
+    },
+    {
+      "turn": 712,
+      "realm": "unity",
+      "key": "practice-again"
+    },
+    {
+      "turn": 713,
+      "realm": "unity",
+      "key": "practice-again"
+    },
+    {
+      "turn": 714,
+      "realm": "unity",
+      "key": "practice-again"
+    },
+    {
+      "turn": 715,
+      "realm": "unity",
+      "key": "practice-again"
+    },
+    {
+      "turn": 716,
+      "realm": "unity",
+      "key": "practice-again"
+    },
+    {
+      "turn": 717,
+      "realm": "unity",
+      "key": "practice-again"
+    },
+    {
+      "turn": 718,
+      "realm": "unity",
+      "key": "practice-again"
+    },
+    {
+      "turn": 719,
+      "realm": "unity",
+      "key": "practice-again"
+    },
+    {
+      "turn": 720,
+      "realm": "unity",
+      "key": "practice-again"
+    }
+  ],
+  "eventFields": [
+    "version",
+    "node",
+    "entry",
+    "companion",
+    "mentor",
+    "page",
+    "location",
+    "nursery",
+    "river",
+    "valley",
+    "mine",
+    "expedition",
+    "garden",
+    "watch",
+    "council",
+    "well",
+    "convoy",
+    "charters",
+    "saltField",
+    "cloudPassage",
+    "ridgeRoad"
+  ]
+}
