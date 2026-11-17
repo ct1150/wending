@@ -1,0 +1,20 @@
+TAP version 13
+# Subtest: canonical native content audit (no browser replay)
+ok 1 - canonical native content audit (no browser replay)
+  ---
+  duration_ms: 9570.6548
+  type: 'test'
+  ...
+# Continuous route to the valley ending: 228 committed turns including menus; 26546 in-world age days.
+# Three-world campaign ending at turn 812; world tier 2
+# Material grounds successfully searched in this life: 断层石场、冷炉窟、倒悬门、无水涧
+# Journal and long-route entrances reached through existing menus: work, watch-book, river-book, voyage-book, council-book, garden-book, convoy-book, well-book, seed-book, packet-book, sky-book, watch-ding-book
+1..1
+# tests 1
+# suites 0
+# pass 1
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 9852.7313
