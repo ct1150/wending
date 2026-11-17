@@ -4,6 +4,7 @@ import {createLiveGame,prepareOpening,prepareChoice,commitTurn,resolveRuleScene,
 import {realmFor,nextRealmFor,v7ActionRule} from '../src/game/cultivation/live/cultivation-rules.js';
 import {serializeLiveState,deserializeLiveState} from '../src/game/cultivation/live/validation.js';
 import {validateConvoy} from '../src/game/cultivation/live/sea-convoy.js';
+import {yardNode,validateYardShifts} from '../src/game/cultivation/live/departure-yard.js';
 import {validateValley} from '../src/game/cultivation/live/mist-valley.js';
 import {eventNode} from '../src/game/cultivation/live/event-content.js';
 import {validateWatch} from '../src/game/cultivation/live/retreat-watch.js';
@@ -20,6 +21,36 @@ import {journeyNotes,noteRoutes,crossingDeadlines} from '../src/game/cultivation
 import {practicePlan} from '../src/game/cultivation/live/practice-plan.js';
 
 const observers=new WeakMap();
+test('port wages depend on the actual cargo and settle once, with native forge and search rules',()=>{
+ const s=start(),menu=(key,label,next)=>({key,label,next}),choice=(key,label,intent,targetId,approach,extra)=>({key,label,intent,targetId,approach,stake:'low',...extra});
+ const row=(title,goal,blocks,choices)=>({title,goal,blocks,choices});
+ for(const tier of [0,1]){
+  s.life.cultivationProfile.worldTier=tier;
+  const chapters=Array.from({length:tier+1},()=>({rig:'light',loads:[5,10]}));
+  s.events={...s.events,convoy:{chapters,draft:0},node:'convoy-yard-boat'};
+  const options=()=>yardNode(s,menu,choice,row).choices;
+  const pay=options().find(c=>c.key==='yard-pay-iron');
+  assert.equal(pay.rule.days,tier?14:8);assert.deepEqual(pay.rule.gain,{stones:tier?90:45,iron:2});
+  if(tier){
+   s.events.convoy.shifts=[{crew:'boat',pay:'stones'},null];
+   assert.equal(options()[0].rule.days,12);
+  }
+  Object.assign(s.events,pay.patch);s.events.node='convoy-yard-book';
+  validateYardShifts(s.events.convoy);assert.ok(!options().some(c=>c.key==='yard-duty'));
+  const invalid=structuredClone(s.events.convoy);invalid.shifts[tier].pay='free';
+  assert.throws(()=>validateYardShifts(invalid),/工签/);
+  s.events.node='convoy-yard-stores';
+  for(const c of options().slice(0,2)){
+   const rule=v7ActionRule(s,c);assert.equal(c.rule,undefined);assert.equal(rule.days,90);assert.equal(rule.checkKind,'exploration');
+  }
+  s.life.items.stones=0;s.life.items.iron=0;s.life.items.array=0;s.events.node='convoy-yard-shed';
+  assert.equal(options()[0].key,'yard-stores');
+  s.life.items.stones=6;s.life.items.iron=2;
+  const forge=options()[0],rule=v7ActionRule(s,forge);
+  assert.equal(forge.key,'yard-forge');assert.equal(forge.rule,undefined);assert.deepEqual(rule.items,{iron:2,stones:6});
+  assert.equal(rule.checkKind,'craft');
+ }
+});
 function start(observe,seed=42){
  const state=createLiveGame({runId:'river-reader',seed,name:'沈渡',engineVersion:7,originStories:true,experienceVersion:1,eventVersion:1});
  const pending=prepareOpening(state,{requestId:'opening'});
@@ -869,23 +900,23 @@ function crossWithArray(s,tier){
  s=follow(s,'cross-menu','sea-array');
  for(let n=0;s.life.cultivationProfile.worldTier<tier;n++){
   assert.ok(n<100,'could not fund the next crossing');
-  s=pick(s,'river-back');
-  const fare=tier===2?90:45,hasArray=(s.life.items.array??0)>0;
-  if(s.life.injury>1||s.life.cultivationProfile.spirit<30){
-   s=follow(s,'train-menu','rest-menu','recover','train-menu','rest-menu','back');
-  }else if((s.life.items.stones??0)<fare+(hasArray?0:6)||!hasArray&&(s.life.items.iron??0)<2){
-   const target=!hasArray&&(s.life.items.iron??0)<2?'iron':'stones';
-   s=follow(s,'journey-menu','resources-menu');
-   for(let page=0;s.currentScene.choices[0].targetId!==target;page++){
-    assert.ok(page<5);s=pick(s,'next-resource');
-   }
-   s=follow(s,'gather','continue');
-  }else if(!hasArray){
-   s=follow(s,'journey-menu','workshop-menu','next-recipe','next-recipe','next-recipe','craft','continue');
+  const fare=tier===2?90:45,index=tier-1;
+  s=pick(s,'yard-book');
+  if(!s.events.convoy.shifts?.[index]){
+   s=follow(s,'yard-duty','yard-boat','yard-pay-'+((s.life.items.iron??0)<2?'iron':'stones'));
+  }else s=pick(s,'yard-shed');
+  for(let shift=0;;shift++){
+   assert.ok(shift<80,'could not prepare an array at the pier');
+   if(s.life.injury>1||s.life.cultivationProfile.spirit<30)s=pick(s,'yard-rest');
+   else if((s.life.items.stones??0)<fare+(s.life.items.array?0:6)||!s.life.items.array&&(s.life.items.iron??0)<2){
+    s=s.currentScene.choices.some(c=>c.id.endsWith(':c:yard-stores'))?pick(s,'yard-stores'):follow(s,'cross-menu','yard-book','yard-stores');
+    while((s.life.items.stones??0)<fare+(s.life.items.array?0:6))s=pick(s,'yard-stones');
+    while(!s.life.items.array&&(s.life.items.iron??0)<2)s=pick(s,'yard-iron');
+    s=pick(s,'yard-shed');
+   }else if(!s.life.items.array)s=pick(s,'yard-forge');
+   else break;
   }
-  s=follow(s,'journey-menu','river-book','hear-council','convoy-book','cross-menu');
-  const crossing=compileChoices(s,s.currentScene.choices).find(c=>c.approach==='ancient-array');
-  if(crossing.enabled)s=pick(s,'sea-array');
+  s=follow(s,'cross-menu','sea-array');
  }
  return s;
 }
@@ -1096,7 +1127,7 @@ test('one continuous birth finishes the three-world campaign and replays its ent
  s=follow(s,'packet-close','train-menu');s=councilFromTraining(s);
  s=follow(s,'work-board','pin-R','pin-L','pin-R','pin-L','test-pins','cross-menu');
  assert.ok(!compileChoices(s,s.currentScene.choices).find(c=>c.approach==='ancient-array').enabled);
- s=trainTo(follow(s,'river-back','train-menu'),4);
+ s=trainTo(follow(s,'yard-book','river-back','train-menu'),4);
  s=follow(s,'river-back','journey-menu','resources-menu','next-resource','well-book');
  assert.match(prose(s),/副铃/);assert.equal(s.currentScene.location,'行粮驿的书案');
  s=follow(s,'well-down','train-menu','rest-menu','back','journey-menu','river-book','hear-council','convoy-book');

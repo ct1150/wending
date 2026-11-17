@@ -32,6 +32,7 @@ const eventNodeIds=new Set([
  'council-book','council-result',
  'convoy-book','convoy-plan','convoy-crew','convoy-stores','convoy-check','convoy-result','convoy-arrival',
  'convoy-cross','convoy-board','convoy-board-notes','convoy-test-result','convoy-remote',
+ 'convoy-yard-book','convoy-yard-duty','convoy-yard-shore','convoy-yard-boat','convoy-yard-stores','convoy-yard-shed',
  'packet-book','packet-cargo','packet-chart','packet-to-0','packet-to-1','packet-to-2','packet-moor','packet-history',
  'convoy-ear-book','convoy-ear-open','convoy-ear-read','convoy-ear-table','convoy-ear-good','convoy-ear-miss','convoy-ear-receipt',
  'convoy-concert-plan','convoy-concert-visits','convoy-concert-last','convoy-concert-check','convoy-concert-result',
@@ -60,6 +61,11 @@ export function validateEventState(events,life,gardenRoot,birthRoll){
  if(life&&events.node.startsWith('hunt-')&&!nextRealmFor(life))throw new Error('当前没有需准备的破境材料。');
  if(Object.hasOwn(events,'council'))validateCouncil(events.council);
  if(Object.hasOwn(events,'convoy'))validateConvoy(events.convoy);
+ if(events.node.startsWith('convoy-yard-')){
+  const tier=life?.cultivationProfile.worldTier,v=events.convoy;
+  if(!v||v.chapters[0]?.loads.length!==2||v.chapters[2]?.loads.length===2||life&&(tier>=2||v.chapters[tier]?.loads.length!==2))throw Error('本港尚无待办的界渡。');
+  if(life&&['convoy-yard-duty','convoy-yard-shore','convoy-yard-boat'].includes(events.node)&&v.shifts?.[tier])throw Error('本港工签已交割。');
+ }
  if(events.node.startsWith('packet-')||Object.hasOwn(events,'charters'))validateCharters(events,life);
  if(Object.hasOwn(events,'well'))validateWell(events.well,life);
  if(Object.hasOwn(events,'cloudPassage')||events.node.startsWith('sky-'))validateCloudPassage(events,life);

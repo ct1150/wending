@@ -2,6 +2,7 @@ import {exactKeys} from './schema.js';
 import {WORLD_TIERS} from './cultivation-rules.js';
 import {tideWorkshop,validateBenches} from './tide-workshop.js';
 import {resonanceNode,validateResonance} from './resonance.js';
+import {yardNode,yardOutcome,validateYardShifts} from './departure-yard.js';
 
 // Each port has two fair tides. Boat space measures displacement including
 // tools and personal effects. People here have already opted to travel.
@@ -47,7 +48,7 @@ const capacity=(port,chapter,tide)=>chapter.rig==='barge'?(tide===0?2:4):tide===
 const names=(port,mask)=>port.groups.filter((_,i)=>has(mask,i)).map(g=>g[0]).join('、')||'空船';
 
 export function validateConvoy(v){
- exactKeys(v,['chapters','draft'],['benches','resonance']);
+ exactKeys(v,['chapters','draft'],['benches','resonance','shifts']);
  if(!Array.isArray(v.chapters)||v.chapters.length>ports.length||!Number.isInteger(v.draft)||v.draft<0||v.draft>15)throw new Error('海路舱单无效。');
  for(const [i,chapter] of v.chapters.entries()){
   exactKeys(chapter,['rig','loads']);
@@ -61,13 +62,14 @@ export function validateConvoy(v){
  }
  if(!v.chapters.length&&v.draft)throw new Error('尚未议定船型。');
  if(Object.hasOwn(v,'benches'))validateBenches(v.benches,v.chapters);
+ if(Object.hasOwn(v,'shifts'))validateYardShifts(v);
  if(Object.hasOwn(v,'resonance')){
   if(v.chapters[0]?.loads.length!==2)throw new Error('谱匣尚未随港信寄出。');
   validateResonance(v.resonance);
  }
 }
 
-export function convoyNode(state,menu,choice,actor){
+export function convoyNode(state,menu,choice,actor,historicMenu=null){
  const v=state.events.convoy??{chapters:[],draft:0},chapter=v.chapters.at(-1);
  const complete=chapter?.loads.length===2;
  const index=v.chapters.length-(chapter&&!complete?1:0),port=ports[index],nodeId=state.events.node;
@@ -93,16 +95,20 @@ export function convoyNode(state,menu,choice,actor){
  }
  const tier=state.life.cultivationProfile.worldTier;
  const remote=tier>index;
+ if(nodeId.startsWith('convoy-yard-'))return yardNode(state,menu,choice,row);
+ const oldPier=historicMenu==='pier'||state.currentScene?.id.endsWith(':t'+state.turnId+':s:event_'+nodeId)&&!state.currentScene.choices.some(c=>c.id.endsWith(':c:yard-book'));
+ const yard=menu('yard-book','去泊船处筹渡费、修阵或回山','convoy-yard-book');
  if(nodeId==='convoy-arrival'){
   const arrived=state.lastReceipt?.cultivationResult?.check?.success;
-  return row(arrived?'界外第一封信':'界渡折返','核对本次跨界的实际结果',[arrived?'传送已成。你在'+WORLD_TIERS[tier]+'重新接好水鉴，镜里起了不同的潮纹。':'这次跨界失败，你仍在'+WORLD_TIERS[tier]+'。已经耗去的材料与承受的伤势记在本回收据中，海路公牍保留原来的到港单。',...(arrived&&hasEar?['落脚处还寄存着一只谱匣。白汀符匠钟荻以前写给家人的信，夹在六件音器的图纸里。']:[])],[next,arrived&&hasEar?ear:training,back]);
+  const report=arrived&&yardOutcome(v,tier-1);
+  return row(arrived?'界外第一封信':'界渡折返','核对本次跨界的实际结果',[arrived?'传送已成。你在'+WORLD_TIERS[tier]+'重新接好水鉴，镜里起了不同的潮纹。':'这次跨界失败，你仍在'+WORLD_TIERS[tier]+'。已经耗去的材料与承受的伤势记在本回收据中，海路公牍保留原来的到港单。',...(report?['对岸捎来你那班工的回音。'+report]:[]),...(arrived&&hasEar?['落脚处还寄存着一只谱匣。白汀符匠钟荻以前写给家人的信，夹在六件音器的图纸里。']:[])],[next,arrived&&hasEar?ear:arrived===false&&!oldPier?yard:training,back]);
  }
  if(tier<index){
   const destination=tier===0?'middle':'upper',name=tier===0?'中界清河城':'上界观星台';
   if(['convoy-board','convoy-board-notes','convoy-test-result'].includes(nodeId))return tideWorkshop(state,v,tier,menu,choice,row);
   if(nodeId==='convoy-cross')return row('界渡台', '下一站是'+name,['古阵与飞升均须达到对应境界并亲自支付材料。水鉴显示的是你此刻能尝试的道路，闭关、养伤或备料后仍可回来。'],[
    choice('sea-ascend','循正途飞升至'+name,'travel',actor(destination),'ascend',{next:'convoy-arrival',arrival:destination}),
-   choice('sea-array','重启古阵前往'+name,'travel',actor(destination),'ancient-array',{next:'convoy-arrival',arrival:destination}),back,
+   choice('sea-array','重启古阵前往'+name,'travel',actor(destination),'ancient-array',{next:'convoy-arrival',arrival:destination}),oldPier?back:yard,
   ]);
   return row('隔界的海图', '前往'+WORLD_TIERS[index]+'接续'+port.name,['来信署名为'+port.name+'。本界水鉴听不到那片潮声，须到当地核对航线。尚未送出的名单会留在公簿上。','你身在'+WORLD_TIERS[tier]+'，下一站是'+name+'。界渡行有一份校阵委托，验收后支付副盘与古阵渡费。也可以自备材料启程。'],[menu('work-board','查看界渡行的校阵工台','convoy-board'),menu('cross-menu','查看跨界条件与资用','convoy-cross'),back]);
  }

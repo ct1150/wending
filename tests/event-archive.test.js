@@ -4,6 +4,36 @@ import {readFile} from 'node:fs/promises';
 import {gunzipSync} from 'node:zlib';
 import {liveBrowser} from './helpers/live-browser.js';
 
+test('an original failed crossing replays its old exit, then allows one paid port shift',async t=>{
+ const bytes=gunzipSync(await readFile(new URL('./fixtures/eac27c6-crossing-exit.jsonl.gz',import.meta.url))).toString('utf8');
+ const {page}=await liveBrowser(t);
+ const result=await page.evaluate(async text=>{
+  const {importLiveArchive,exportLiveArchive}=await import('/src/game/live-save-format.js');
+  const {createLiveSession}=await import('/src/ui/live-session.js');
+  const a=await open('pier-before'),copy=await open('pier-after');
+  await importLiveArchive(new Blob([text]).stream(),a);
+  const original=(await a.load()).state,session=createLiveSession({archive:a,client:{}});
+  await session.load();await session.resume();
+  let row=await a.load();const restored=row.state.events.node;
+  async function go(key){
+   const c=row.state.currentScene.choices.find(c=>c.id.endsWith(':c:'+key));
+   if(!c)throw Error('missing '+key+' at '+row.state.events.node);
+   row=await session.choose({choiceId:c.id,baseRevision:row.state.revision,stateHash:identity.stateHash(row.state)});
+   if(row.errorCode)throw Error(row.errorCode);
+  }
+  for(const key of ['rest-menu','back','journey-menu','river-book','hear-council','convoy-book','cross-menu','yard-book','yard-duty','yard-shore','yard-pay-iron'])await go(key);
+  const earned=row.state.lastReceipt.itemChanges,days=row.state.lastReceipt.elapsedDays;
+  await go('cross-menu');await go('yard-book');await importLiveArchive(exportLiveArchive(a),copy);
+  const saved=(await copy.load()).state;
+  return {old:original.currentScene.choices.map(c=>c.id.split(':c:')[1]),loss:original.lastReceipt.itemChanges,restored,earned,days,
+   paid:saved.events.convoy.shifts,again:saved.currentScene.choices.some(c=>c.id.endsWith(':c:yard-duty')),exact:identity.stateHash(saved)===identity.stateHash(row.state)};
+ },bytes);
+ assert.deepEqual(result.old,['convoy-book','train-menu','river-back']);assert.equal(result.restored,'training');
+ assert.equal(result.loss.stones,-45);assert.equal(result.loss.array,-1);
+ assert.equal(result.earned.stones,45);assert.equal(result.earned.iron,2);assert.ok(result.days>0);
+ assert.deepEqual(result.paid,[{crew:'shore',pay:'iron'},null]);assert.equal(result.again,false);assert.ok(result.exact);
+});
+
 test('a pending three-day job exported by 1b5487e keeps the old work scene and settles only once',async t=>{
  const bytes=gunzipSync(await readFile(new URL('./fixtures/1b5487e-nursery-pending.jsonl.gz',import.meta.url))).toString('utf8');
  const {page}=await liveBrowser(t);
