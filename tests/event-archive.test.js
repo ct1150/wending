@@ -4,6 +4,39 @@ import {readFile} from 'node:fs/promises';
 import {gunzipSync} from 'node:zlib';
 import {liveBrowser} from './helpers/live-browser.js';
 
+test('the original fourth mountain gift restores its pending exit and the new paid wind conversation replays exactly once',async t=>{
+ const bytes=gunzipSync(await readFile(new URL('./fixtures/320d9a6-wind-pending.jsonl.gz',import.meta.url))).toString('utf8');
+ const {page}=await liveBrowser(t);
+ const result=await page.evaluate(async text=>{
+  const {importLiveArchive,exportLiveArchive}=await import('/src/game/live-save-format.js');
+  const {createLiveSession}=await import('/src/ui/live-session.js');
+  const a=await open('wind-before'),copy=await open('wind-during'),final=await open('wind-after');
+  await importLiveArchive(new Blob([text]).stream(),a);
+  const old=(await a.load()).state;let session=createLiveSession({archive:a,client:{}});
+  await session.load();await session.resume();await session.resume();let row=await a.load();
+  const restored=row.state.events.node,revision=row.state.revision;
+  async function go(...keys){for(const key of keys){
+   const c=row.state.currentScene.choices.find(c=>c.id.endsWith(':c:'+key));if(!c)throw Error('missing '+key+' at '+row.state.events.node);
+   row=await session.choose({choiceId:c.id,baseRevision:row.state.revision,stateHash:identity.stateHash(row.state)});if(row.errorCode)throw Error(row.errorCode);
+  }}
+  await go('rest-menu','recover','mount-book','mount-wind');
+  const from=row.state.life;
+  await go('wind-practice','train-menu');
+  const paid=row.state.life,partial=identity.stateHash(row.state);
+  await importLiveArchive(exportLiveArchive(a),copy);
+  session=createLiveSession({archive:copy,client:{}});await session.load();await session.resume();row=await copy.load();
+  const exactPartial=partial===identity.stateHash(row.state);
+  await go('mount-book','wind-pair','mount-book','keep-token','mount-history');
+  await importLiveArchive(exportLiveArchive(copy),final);
+  const saved=(await final.load()).state;
+  return {oldKeys:old.currentScene.choices.map(c=>c.id.split(':c:')[1]),originalRevision:old.revision,restored,revision,days:paid.ageDays-from.ageDays,spirit:from.cultivationProfile.spirit-paid.cultivationProfile.spirit,
+   exactPartial,exact:identity.stateHash(saved)===identity.stateHash(row.state),wind:saved.events.mountain.wind,gifts:saved.events.mountain.gifts,history:saved.currentScene.blocks.map(b=>b.text).join(''),afterAge:saved.life.ageDays,paidAge:paid.ageDays};
+ },bytes);
+ assert.deepEqual(result.oldKeys,['keep-token','give-token','train-menu']);assert.equal(result.restored,'training');assert.equal(result.revision,result.originalRevision+1);
+ assert.equal(result.days,1);assert.equal(result.spirit,6);assert.equal(result.afterAge,result.paidAge);
+ assert.ok(result.exactPartial&&result.exact);assert.equal(result.wind.ending,'pair');assert.deepEqual(result.gifts,['keep','keep']);assert.match(result.history,/两下走，一下停/);
+});
+
 test('an original foundation mentor exit restores once, then paid form study and its risky search replay together',async t=>{
  const bytes=gunzipSync(await readFile(new URL('./fixtures/06df05c-forms-pending.jsonl.gz',import.meta.url))).toString('utf8');
  const {page}=await liveBrowser(t);

@@ -298,6 +298,63 @@ test('form records reject unearned entries and malformed specializations',()=>{
  for(const node of ['form-drill','form-result','hunt-forms'])assert.throws(()=>validateForms({node}));
  assert.doesNotThrow(()=>validateForms({node:'form-book'}));
 });
+function windOffer(mode='listen',observe){
+ let s=follow(formBook(observe),'form-'+mode,'form-steady','train-menu','garden-book','mount-book','seek-source');
+ for(let i=0;i<4;i++){
+  if(s.life.cultivationProfile.spirit<20)s=follow(s,'train-menu','rest-menu','recover','mount-book');
+  s=follow(s,'hear-stone','mount-steady','path-'+[1,0,1,0][i]);
+  if(i===1)s=pick(s,'keep-token');
+ }
+ return s;
+}
+test('both learned forms can fund a real day with Xiaoman, keep ordinary gifts optional and retain an unfinished conversation',()=>{
+ for(const mode of ['listen','ward']){
+  const offer=windOffer(mode),skipped=pick(offer,'keep-token');
+  assert.equal(skipped.events.mountain.wind,undefined);
+  assert.deepEqual(skipped.events.mountain.gifts,['keep','keep']);
+  const gate=pick(offer,'mount-wind'),poor=structuredClone(gate);poor.life.cultivationProfile.spirit=5;
+  const button=poor.currentScene.choices.find(c=>c.id.endsWith(':c:wind-practice'));
+  assert.match(eventActionRule(poor,button,v7ActionRule(poor,button)).reason,/灵力不足/);
+  const paid=pick(gate,'wind-practice');
+  assert.equal(paid.life.ageDays-gate.life.ageDays,1);
+  assert.equal(gate.life.cultivationProfile.spirit-paid.life.cultivationProfile.spirit,6);
+  assert.equal(paid.life.cultivation,gate.life.cultivation);
+  assert.deepEqual(paid.life.items,gate.life.items);
+  assert.deepEqual(paid.events.mountain.wind,{form:mode,day:paid.life.ageDays,ending:null});
+  let resumed=pick(paid,'train-menu');
+  const route=noteRoutes(resumed,journeyNotes(resumed)).get('mount-book');assert.ok(route);
+  resumed=follow(resumed,...route);
+  assert.equal(resumed.currentScene.title,'谁来迈下一步');
+  resumed=deserializeLiveState(serializeLiveState(resumed));
+  for(const ending of ['own','pair']){
+   const settled=follow(resumed,'wind-'+ending,'mount-book','keep-token');
+   assert.equal(settled.events.mountain.wind.ending,ending);
+   assert.equal(settled.life.ageDays,paid.life.ageDays);
+   assert.ok(!settled.currentScene.choices.some(c=>c.id.endsWith(':c:wind-practice')));
+   const broken=structuredClone(settled.events.mountain);broken.wind.day=broken.walk[3].woke;
+   assert.throws(()=>validateMountain(broken,settled.life,settled.events.node,settled.events.forms),/风口/);
+  }
+  const impossible=structuredClone(paid.events.mountain);impossible.gifts.push('keep');
+  assert.throws(()=>validateMountain(impossible),/风口/);
+ }
+});
+
+test('the wind lesson changes an actual later rescue and farewell even when the player keeps both tokens',()=>{
+ for(const ending of ['own','pair']){
+  let s=follow(windOffer(ending==='own'?'listen':'ward'),'mount-wind','wind-practice','wind-'+ending,'mount-book','keep-token');
+  s=growToRealm(s,5);
+  s=follow(s,'hear-stone','mount-steady','path-0');
+  assert.deepEqual(s.events.mountain.gifts,['keep','keep']);
+  assert.match(prose(s),ending==='own'?/风口那天怎样试出/:/风口那天的节拍/);
+  s=pick(s,'call-xiaoman');assert.equal(s.events.mountain.walk[4].exit,'guided');
+  assert.equal(s.lastReceipt.elapsedDays,0);
+  s=follow(s,'hear-stone','mount-steady','path-0','send-xiaoman');
+  assert.match(prose(s),ending==='own'?/没有回头等你伸手/:/谁都没有叫对方停住/);
+  s=pick(s,'mount-history');assert.match(prose(s),/风口同行/);
+  assert.match(prose(s),ending==='own'?/轮到你沿他的脚印走/:/节拍把两个人都带回/);
+  assert.deepEqual(deserializeLiveState(serializeLiveState(s)).events.mountain,s.events.mountain);
+ }
+});
 const ferryFromTraining=s=>follow(s,'rest-menu','back','journey-menu','resources-menu','shell-book');
 test('the echo well charges each leg once, carries survey work across a retreat and remembers who inherits the bell',async()=>{
  const {readFile}=await import('node:fs/promises'),{gunzipSync}=await import('node:zlib');

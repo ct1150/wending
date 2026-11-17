@@ -436,6 +436,10 @@ class Archive {
   let scene=entry.scene;
   // These historical menus differed by one invitation. Verify every other field.
   const sceneId=typeof scene?.id==='string'?scene.id:'';
+  if(prior&&sceneId.endsWith(':s:event_mount-book')&&scene.choices?.some(c=>c.id?.endsWith(':c:keep-token'))){
+   const current=resolveRuleScene(c.run.state,p);
+   if(current.choices.some(c=>c.id.endsWith(':c:mount-wind'))&&same(scene,resolveEventScene(c.run.state,p,'wind')))scene=current;
+  }
   if(prior&&sceneId.endsWith(':s:event_mentor')&&scene.choices?.some(c=>c.id?.endsWith(':c:back'))){
    const current=resolveRuleScene(c.run.state,p);
    if(current.choices.some(c=>c.id.endsWith(':c:form-book'))&&same(scene,resolveEventScene(c.run.state,p,'forms')))scene=current;

@@ -82,7 +82,7 @@ export function eventNode(state,historicMenu=null){
   ],life.items.supplies?[...wellDepartures(state,choice),home]:[choice('well-food','沿路备下行粮再来报名','explore','supplies','cautious',{next:'well-road'}),home]);
  }
  if(e.node==='mount-history')return mountainHistory(e.mountain,menu);
- if(e.node.startsWith('mount-'))return mountainNode(state,menu,choice);
+ if(e.node.startsWith('mount-'))return mountainNode(state,menu,choice,historicMenu);
  if(e.node==='post-index'){
   const reunion=young&&life.cultivationProfile.worldTier===0&&['helped','declined'].includes(e.companion)&&realm.rank>=1;
   return row('故人留下的两件事','读药路的回单，或回看早年的同路之约',[narration('当年曾怎样相待，和后来愿意替药路做什么，在手记里各有一页。')],[
@@ -168,7 +168,8 @@ export function eventNode(state,historicMenu=null){
    return row('修行的门槛',next?'积累修为与'+ITEMS[next.material]+'，尝试进入'+next.name:'在当前境界继续修行与历练',[
    narration(next?'你目前是'+realm.name+'。进入'+next.name+'需要修为达到'+next.threshold+'，并备妥'+ITEMS[next.material]+'。闭关的年月、灵力和风险会在行动前列明。':'渡劫之后，此生仍未结束。你可以继续积累、历练或照料旧日因果，直到真实的寿尽或伤重。'),
   ],[
-   e.garden?.plot&&(!next||life.cultivation>=next.threshold)?menu('garden-book','验看苗盆，或在盆旁继续修行','garden-book'):choice('practice','按当前功法稳步修炼','practice','self','steady',{next:'action-result'}),
+   e.mountain?.wind&&!e.mountain.wind.ending?menu('mount-book','回风口，接着与小满商量下一步','mount-book'):
+    e.garden?.plot&&(!next||life.cultivation>=next.threshold)?menu('garden-book','验看苗盆，或在盆旁继续修行','garden-book'):choice('practice','按当前功法稳步修炼','practice','self','steady',{next:'action-result'}),
    next&&life.cultivation<next.threshold&&!oldGate?menu('garden-book','随身携一畦苗，选择稳修或苦修','garden-book'):
     next&&!oldGate&&!life.items[next.material]?(ridge?menu('find-ridge','寻'+ITEMS[next.material]+'，到山口选路','ridge-'+next.material):menu('find-material','修为已足，去寻'+ITEMS[next.material],ferryForMaterial(state,next.material)?'hunt-sources':'hunt-grounds')):
     next?choice('breakthrough','闭关尝试突破'+next.name,'practice',next.id,'breakthrough',{next:'action-result'}):choice('intensive','以行粮支撑一次苦修','practice','self','intensive',{next:'action-result'}),

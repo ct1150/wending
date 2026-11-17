@@ -47,7 +47,7 @@ const eventNodeIds=new Set([
  'garden-book','garden-history','garden-practice','garden-pick','garden-ripe',
  'post-index','post-book','post-offer-later','post-traces','post-address','post-return','post-history','post-shore',
  'post-stations','post-settle','post-fog',
- 'mount-book','mount-history','mount-sight','mount-sound',
+ 'mount-book','mount-history','mount-sight','mount-sound','mount-wind',
  'shell-book','shell-journal','shell-parley',
  'hunt-sources','hunt-grounds','well-book','well-road','sky-book','sky-boat','sky-shore',
 ]);
@@ -84,7 +84,7 @@ export function validateEventState(events,life,gardenRoot,birthRoll){
   const p=events.ferry.pages.at(-1);
   if(p.end!==null||(p.id===2?!(p.marks&4):p.marks!==1))throw new Error('尚未走到与蓼商量的地方。');
  }
- if(Object.hasOwn(events,'mountain'))validateMountain(events.mountain,life,events.node);
+ if(Object.hasOwn(events,'mountain'))validateMountain(events.mountain,life,events.node,events.forms);
  if(events.node.startsWith('mount-')&&events.node!=='mount-book'&&!events.mountain)throw new Error('折山页次无效。');
  if(Object.hasOwn(events,'firstMeeting')&&(!['helped','declined'].includes(events.firstMeeting)||!['completed','parted'].includes(events.companion)))throw new Error('林砚初遇记录无效。');
  if(Object.hasOwn(events,'post')){
