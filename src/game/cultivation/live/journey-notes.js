@@ -69,8 +69,13 @@ export function journeyNotes(state){
 export function crossingDeadlines(state,notes,days){
  if(!days)return '';
  const age=state.life.ageDays,here=state.events.node;
- const names=notes.filter(n=>n.close>=age&&age+days>n.close&&!n.node.startsWith('post-')&&
-  !here.startsWith(n.node==='watch-trail'?'watch-trail':n.node.split('-')[0])).map(n=>n.title);
+ const names=notes.filter(n=>{
+  if(!(n.close>=age&&age+days>n.close))return false;
+  // The letter and shore deadlines already appear in the native choice preview.
+  if(n.node==='post-book'||n.node==='post-shore')return false;
+  if(n.node==='post-stations')return true;
+  return !here.startsWith(n.node==='watch-trail'?'watch-trail':n.node.split('-')[0]);
+ }).map(n=>n.title);
  return names.length?'此行结束时已过'+names.join('、')+'的期限。':'';
 }
 

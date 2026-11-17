@@ -118,6 +118,11 @@ const valleyCamp=()=>follow(open(),'deliberate','policy-0','field-guide','enter-
 test('station commissions carry the last settlement into the next trip; both districts can be heard after a real retreat',()=>{
  const start=follow(postOffer('decline-companion'),'launch-relay','keep-register','deliver','deliver-0','keep-register','two-runners','keep-register','station-mark','keep-register','split-box','post-history','station-book');
  const plan=pick(start,'trust-0'),early=follow(plan,'station-work','visit-0','visit-1','station-settle');
+ const appointments=journeyNotes(plan);
+ const shift=appointments.find(n=>n.node==='post-stations');
+ const retreat=compileChoices(plan,plan.currentScene.choices).find(c=>c.id.endsWith(':c:station-retreat'));
+ assert.ok(plan.life.ageDays+retreat.costs.days>shift.close);
+ assert.match(crossingDeadlines(plan,appointments,retreat.costs.days),/两站交账首班/);
  assert.equal(early.life.ageDays-plan.life.ageDays,94);
  assert.match(prose(early),/小木鞋/);assert.match(prose(early),/额头/);
  let s=pick(deserializeLiveState(serializeLiveState(early)),'settle-2');
