@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {createLiveGame,prepareOpening,prepareChoice,commitTurn,resolveRuleScene,compileChoices} from '../src/game/cultivation/live/engine.js';
+import {createLiveGame,prepareOpening,prepareChoice,commitTurn,resolveRuleScene,compileChoices,settleDeath} from '../src/game/cultivation/live/engine.js';
 import {realmFor,nextRealmFor,v7ActionRule} from '../src/game/cultivation/live/cultivation-rules.js';
 import {serializeLiveState,deserializeLiveState} from '../src/game/cultivation/live/validation.js';
 import {validateConvoy} from '../src/game/cultivation/live/sea-convoy.js';
@@ -188,6 +188,30 @@ test('material leads follow the actual missing item, fishing decisions and nativ
   assert.deepEqual(deserializeLiveState(serializeLiveState(after)),after);
   if(gained)assert.equal(pick(after,'breakthrough').lastReceipt.itemChanges.crystal,-1);
  }
+});
+test('a fatal high-realm breakthrough at the search grounds can settle and restore the life',()=>{
+ let s=follow(start(),'accept','finish-work');
+ for(let rank=1;rank<=6;rank++)s=growToRealm(s,rank,'continue');
+ s=pick(s,'train-menu');
+ while(s.life.cultivation<nextRealmFor(s.life).threshold)s=follow(s,'practice','train-menu');
+ s=pick(s,'find-material');
+ for(let i=0;!s.life.items.unityjade;i++){
+  assert.ok(i<60);s=pick(s,!s.life.items.supplies?'hunt-food':s.life.cultivationProfile.spirit<5?'hunt-rest':'hunt-careful');
+ }
+ for(let i=0;i<300;i++){
+  const action=compileChoices(s,s.currentScene.choices).find(c=>c.approach==='breakthrough');
+  if(action.enabled){
+   const pending=prepareChoice(s,{choiceId:action.id,requestId:'high-realm-failure'});
+   if(pending.receipt.death?.cause==='injury'){
+    assert.ok(pending.nextLife.cultivation<nextRealmFor(s.life).threshold);
+    const dead=settleDeath(s,pending);assert.equal(dead.phase,'dead');
+    assert.deepEqual(deserializeLiveState(serializeLiveState(dead)),dead);
+    return;
+   }
+  }
+  s=pick(s,'hunt-rest');
+ }
+ assert.fail('the route did not encounter high-realm backlash');
 });
 test('one cultivator takes three ferry relics into native breakthroughs and returns to fulfil the promise',()=>{
  const spent=new Set();

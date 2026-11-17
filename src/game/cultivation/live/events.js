@@ -43,10 +43,8 @@ export function createEventState(atlas){return {version:1,node:'arrival',entry:'
 export function validateEventState(events,life,gardenRoot){
  assertPlainData(events);exactKeys(events,['version','node','entry','companion','mentor','page','location'],['river','expedition','council','convoy','valley','watch','mine','garden','firstMeeting','post','mountain','ferry']);
  if(!eventNodeIds.has(events.node))throw new Error('规则事件节点无效。');
- if(life&&events.node.startsWith('hunt-')){
-  const next=nextRealmFor(life);
-  if(!next||life.cultivation<next.threshold)throw new Error('当前没有需准备的破境材料。');
- }
+ // A fatal breakthrough can reduce cultivation while leaving the final event at the grounds.
+ if(life&&events.node.startsWith('hunt-')&&!nextRealmFor(life))throw new Error('当前没有需准备的破境材料。');
  if(Object.hasOwn(events,'council'))validateCouncil(events.council);
  if(Object.hasOwn(events,'convoy'))validateConvoy(events.convoy);
  if(Object.hasOwn(events,'valley'))validateValley(events.valley);
