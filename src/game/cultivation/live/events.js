@@ -21,6 +21,7 @@ import {recordMountainRetreat,validateMountain} from './folded-mountain.js';
 import {validateFerry} from './shell-ferry.js';
 import {validateWell} from './echo-well.js';
 import {validateCloudPassage} from './cloud-passage.js';
+import {validateCloudRift} from './cloud-rift.js';
 
 const eventNodeIds=new Set([
  'arrival','terms','work','entry-result','companion','companion-result','reunion','reunion-result',
@@ -49,12 +50,14 @@ const eventNodeIds=new Set([
  'post-stations','post-settle','post-fog',
  'mount-book','mount-history','mount-sight','mount-sound','mount-wind','mount-echo',
  'shell-book','shell-journal','shell-parley',
- 'hunt-sources','hunt-grounds','well-book','well-road','sky-book','sky-boat','sky-shore',
+ 'hunt-sources','hunt-grounds','well-book','well-road','sky-book','sky-boat','sky-shore','sky-rift','sky-rift-way','sky-lodgings',
 ]);
 const copy=value=>JSON.parse(JSON.stringify(value));
 export function createEventState(atlas){return {version:1,node:'arrival',entry:'unresolved',companion:'unmet',mentor:'unmet',page:0,location:'gate',...(atlas?copy(atlas):{})};}
 export function validateEventState(events,life,gardenRoot,birthRoll){
- assertPlainData(events);exactKeys(events,['version','node','entry','companion','mentor','page','location'],['river','expedition','council','convoy','charters','valley','watch','mine','garden','firstMeeting','post','mountain','ferry','well','cloudPassage','nursery','saltField','ridgeRoad','forms']);
+ assertPlainData(events);exactKeys(events,['version','node','entry','companion','mentor','page','location'],['river','expedition','council','convoy','charters','valley','watch','mine','garden','firstMeeting','post','mountain','ferry','well','cloudPassage','nursery','saltField','ridgeRoad','forms','cloudRift']);
+ if(Object.hasOwn(events,'cloudRift')||events.node.startsWith('sky-rift'))validateCloudRift(events,life);
+ if(events.node==='sky-lodgings'&&(events.cloudPassage?.[0]?.route==null||life&&realmFor(life).rank<5))throw Error('风隙尚不可访，无须分开安排云渡。');
  if(!eventNodeIds.has(events.node))throw new Error('规则事件节点无效。');
  if(Object.hasOwn(events,'nursery')||events.node.startsWith('nursery-')||events.node==='work-porch')validateNursery(events,life,birthRoll);
  if(Object.hasOwn(events,'saltField')||events.node==='seed-book')validateSaltField(events,life);

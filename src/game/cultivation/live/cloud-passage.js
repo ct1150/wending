@@ -1,5 +1,6 @@
 import {realmFor} from './cultivation-rules.js';
 import {exactKeys} from './schema.js';
+import {canVisitRift,riftNode} from './cloud-rift.js';
 
 const seasons=[
  {rank:4,title:'盐船过白脊',petition:'云层一低，盐船就搁在白脊。船头只看得见峰，岸上的雇工却说每回都是先听见石滩碎响，才看见峰露出来。渡娘把记风的窄板往你脚下一搁：「请在这里住一关。等真人走了，我们也得认得这条路。」',
@@ -28,14 +29,19 @@ export function validateCloudPassage(events,life){
   if(!next||rank<next.rank||log?.at(-1)?.route===null)throw Error('云渡此班尚不能入关。');
  }
 }
-export function cloudPassage(state,choice,menu){
+export function cloudPassage(state,choice,menu,historicMenu=null){
  const {events,life}=state,log=events.cloudPassage??[],last=log.at(-1);
+ if(events.node.startsWith('sky-rift'))return riftNode(state,menu,choice);
  const watched=last?.route===null,i=watched?log.length-1:log.length,c=seasons[i];
  const back=menu('train-menu','收起渡簿，回去安排修行','training');
  const row=(title,lines,choices)=>({title,location:'上界白脊云渡',goal:'在上界守一关风候，把能交给凡人的渡路留下',blocks:lines.map(text=>({kind:'narration',text})),choices});
+ const rift=menu('rift-book','循浮岩逆风，探访白脊风隙','sky-rift');
+ const old=historicMenu==='rift'||state.currentScene?.id.endsWith(':t'+state.turnId+':s:event_sky-book')&&!state.currentScene.choices.some(c=>c.id.endsWith(':c:rift-book'));
+ if(events.node==='sky-book'&&(events.cloudRift||!old&&!watched&&canVisitRift(state)&&c&&realmFor(life).rank>=c.rank))return row('白脊渡口 · 两条仍可走的路',[events.cloudRift?'旧渡班仍按已经交接的办法发船。浮岩下的风隙另有你留下的足迹，两处都可接着走。':'下一班云渡已经可以守候，浮岩外也传来逆风的消息。可先接云渡，或先去看看风隙；读过请托不等于已经答应。'],[rift,menu('sky-lodgings','继续原来的云渡守候与交班','sky-lodgings'),back]);
+ const returnChoices=[back,menu('crossing-menu','回到界域道路','crossing'),...(!old&&canVisitRift(state)?[rift]:[])];
  const previous=i?seasons[i-1].results[log[i-1].route]:'';
- if(!c)return row('白脊云渡 · 三次交班',log.map((r,k)=>seasons[k].title+'。'+seasons[k].results[r.route]),[back,menu('crossing-menu','回到界域道路','crossing')]);
- if(realmFor(life).rank<c.rank)return row('白脊寄来的渡簿',[previous,'下一封请托在'+(i===1?'炼虚':'大乘')+'境开放。你留下的渡法仍在使用，眼下尽管去走自己的路。'],[back,menu('crossing-menu','回到界域道路','crossing')]);
+ if(!c)return row('白脊云渡 · 三次交班',log.map((r,k)=>seasons[k].title+'。'+seasons[k].results[r.route]),returnChoices);
+ if(realmFor(life).rank<c.rank)return row('白脊寄来的渡簿',[previous,'下一封请托在'+(i===1?'炼虚':'大乘')+'境开放。你留下的渡法仍在使用，眼下尽管去走自己的路。'],returnChoices);
  const rig=events.well?.reply;
  const oldTool=i===1?(log[0].route===0?'旧码头的传声索还在，改给两岸灯坊交班只需三日。':'船上的吃水尺留着空槽，装上报声的铜片只需三日。'):i===2?(log[1].route===0?'灯坊的两班人已经会交接，公渡能借他们开第一班。':'末船的舵手已经会隔岸应答，教船可以请她们带第一程。'):'';
  if(events.node==='sky-shore'||events.node==='sky-boat'){

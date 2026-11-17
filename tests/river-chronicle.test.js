@@ -1,5 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import {readFileSync} from 'node:fs';
+import {validateCloudRift} from '../src/game/cultivation/live/cloud-rift.js';
 import {createLiveGame,prepareOpening,prepareChoice,commitTurn,resolveRuleScene,compileChoices,settleDeath} from '../src/game/cultivation/live/engine.js';
 import {realmFor,nextRealmFor,v7ActionRule,resolveV7Action} from '../src/game/cultivation/live/cultivation-rules.js';
 import {serializeLiveState,deserializeLiveState} from '../src/game/cultivation/live/validation.js';
@@ -73,6 +75,128 @@ const follow=(state,...keys)=>keys.reduce(pick,state);
 const open=observe=>follow(start(observe),'decline','journey-menu','river-book','river-open');
 const prose=state=>state.currentScene.blocks.map(block=>block.text).join('\n');
 
+const riftBases=new Map();
+function riftOffer(observe,firstRoute=1){
+ const route=JSON.parse(readFileSync(new URL('./fixtures/21e6acc-cloud-route.json',import.meta.url))).route;
+ route[route.length-1]='sky-route-'+firstRoute;
+ let s;
+ if(observe||!riftBases.has(firstRoute)){
+  s=route.reduce(pick,start(observe));
+  s=trainTo(pick(s,'train-menu'),5);
+  s=follow(s,'train-menu','rest-menu','recover','train-menu','rest-menu','back','journey-menu','workshop-menu','crossing-menu','sky-book');
+  if(!observe)riftBases.set(firstRoute,s);
+ }else s=riftBases.get(firstRoute);
+ return s;
+}
+
+function riftStudy(s,mode){
+ s=follow(s,'train-menu','rest-menu','back','affairs-menu','mentor-menu');
+ if(!canStudyForm(s.life))s=follow(s,'diagnose','restore','mentor-menu');
+ s=follow(s,'form-book','form-'+mode,'form-steady');
+ assert.equal(s.events.forms.known,mode);
+ return follow(s,'train-menu','rest-menu','recover','train-menu','rest-menu','back','journey-menu','workshop-menu','crossing-menu','sky-book');
+}
+
+test('a cloud rift uses actual supplies, observed routes and a paid later consequence',()=>{
+ const offer=riftOffer();
+ let s=pick(offer,'rift-book');
+ assert.equal(s.events.cloudRift,undefined);assert.deepEqual(s.life,offer.life);
+ const first=s.life;
+ s=pick(s,'rift-launch');
+ assert.equal(s.life.ageDays,first.ageDays+2);assert.equal(s.life.items.supplies,first.items.supplies-1);
+ s=follow(s,'rift-rope','rift-prepare','rift-survey');
+ assert.equal(s.events.cloudRift.marks,3);
+ assert.match(prose(s),/风槽/);
+ const before=s.life;
+ s=pick(s,'rift-ledge');
+ assert.equal(s.life.injury,before.injury+1);assert.equal(s.life.ageDays,before.ageDays+1);
+ assert.ok(!s.currentScene.choices.some(c=>c.id.endsWith(':c:rift-ledge')));
+ s=pick(s,'rift-channel');
+ const arrived=s,iron=s.life.items.iron;
+ s=pick(s,'rift-moor');
+ assert.equal(s.life.items.iron,iron-2);assert.equal(s.life.ageDays,arrived.life.ageDays+2);
+ assert.ok(!s.currentScene.choices.some(c=>c.id.endsWith(':c:rift-return')));
+ assert.equal(s.events.cloudRift.anchor,'moor');
+ s=deserializeLiveState(serializeLiveState(s));
+ const later=trainTo(pick(s,'train-menu'),7);
+ s=follow(later,'train-menu','rest-menu','recover','train-menu');
+ if(!s.life.items.supplies){
+  s=follow(s,'rest-menu','back','journey-menu','resources-menu','next-resource','gather','ration-book','ration-buy','train-menu');
+ }
+ const note=journeyNotes(s).find(n=>n.node==='sky-rift');assert.ok(note);
+ const route=noteRoutes(s,[note]).get(note.node);assert.ok(route);
+ s=route.reduce(pick,s);s=pick(s,'rift-return');
+ assert.match(prose(s),/寒壳/);
+ const repair=pick(s,'rift-renew'),change=pick(s,'rift-change');
+ assert.equal(repair.lastReceipt.elapsedDays,3);assert.equal(change.lastReceipt.elapsedDays,4);
+ assert.equal(change.life.items.iron,s.life.items.iron-1);
+ assert.equal(repair.events.cloudRift.ending,'renew');assert.equal(change.events.cloudRift.ending,'change');
+ assert.notEqual(prose(repair),prose(change));
+ assert.deepEqual(deserializeLiveState(serializeLiveState(change)).events,change.events);
+ const lodging=follow(change,'sky-book','sky-lodgings','sky-watch-0');
+ const watched=pick(lodging,'sky-steady');
+ const resumed=follow(watched,'sky-lodgings','sky-route-0');
+ assert.equal(resumed.events.cloudPassage.length,2);assert.equal(resumed.events.cloudPassage[1].route,0);
+ assert.deepEqual(resumed.events.cloudRift,change.events.cloudRift);
+ assert.equal(watched.life.ageDays-lodging.life.ageDays,watched.lastReceipt.elapsedDays);
+ assert.equal(resumed.life.ageDays-watched.life.ageDays,3);
+});
+
+test('earned forms open different rift paths while old ferries and ordinary survey keep their own routes',()=>{
+ for(const previous of [0,1])for(const form of [null,'listen','ward']){
+  let s=riftOffer(null,previous);if(form)s=riftStudy(s,form);
+  s=follow(s,'rift-book','rift-launch','rift-keel','rift-prepare');
+  const before=s.life;
+  s=pick(s,form?'rift-form':'rift-survey');
+  assert.equal(s.life.ageDays,before.ageDays+(form?1:4));
+  assert.equal(s.life.cultivationProfile.spirit,before.cultivationProfile.spirit-(form?6:0));
+  assert.equal(s.life.cultivation,before.cultivation);
+  assert.equal(s.events.cloudRift.method,form??'survey');
+  for(const path of ['ledge','channel']){
+   const safe=path===(previous===0?'ledge':'channel')||form===(path==='ledge'?'ward':'listen');
+   const result=pick(s,'rift-'+path);
+   assert.equal(result.events.cloudRift.route,safe?path:null);
+   assert.equal(result.life.injury,s.life.injury+(safe?0:1));
+  }
+  const empty=structuredClone(s);empty.life.cultivationProfile.spirit=0;
+  assert.ok(empty.currentScene.choices.filter(c=>c.id.includes(':c:rift-')).every(c=>eventActionRule(empty,c,{}).reason?.includes('灵力')));
+ }
+});
+
+test('rift preparation survives retraining and both original cloud shifts and unfinished steps remain reachable',()=>{
+ let s=riftStudy(riftOffer(),'listen');
+ s=follow(s,'rift-book','rift-launch','rift-rope','rift-prepare','rift-form');
+ const paid=structuredClone(s.events.cloudRift);
+ s=riftStudy(s,'ward');
+ assert.deepEqual(s.events.cloudRift,paid);assert.equal(s.events.forms.known,'ward');
+ s=follow(s,'rift-book','rift-channel','rift-drift');
+ const next=follow(s,'sky-book','sky-lodgings');
+ assert.match(prose(next),/下一封请托/);
+ assert.deepEqual(next.events.cloudPassage,s.events.cloudPassage);
+ assert.deepEqual(deserializeLiveState(serializeLiveState(next)).events,next.events);
+ // A separate ordinary-method life follows the drifting branch into the later realm.
+ s=follow(riftOffer(),'rift-book','rift-launch','rift-rope','rift-prepare','rift-survey','rift-ledge','rift-channel');
+ assert.equal(compileChoices(s,s.currentScene.choices).find(c=>c.id.endsWith(':c:rift-drift')).enabled,false);
+ s=follow(s,'train-menu','rest-menu','back','journey-menu','resources-menu','next-resource','gather','ration-book','ration-buy','train-menu');
+ const unfinished=journeyNotes(s).find(n=>n.node==='sky-rift');s=noteRoutes(s,[unfinished]).get(unfinished.node).reduce(pick,s);
+ s=pick(s,'rift-drift');
+ const ready=trainTo(pick(s,'train-menu'),7,true);
+ s=follow(ready,'train-menu','rest-menu','recover','train-menu','rest-menu','back','journey-menu','resources-menu','next-resource','gather','ration-book','ration-buy','train-menu');
+ const note=journeyNotes(s).find(n=>n.node==='sky-rift');s=noteRoutes(s,[note]).get(note.node).reduce(pick,s);
+ s=pick(s,'rift-return');assert.match(prose(s),/两条气流/);
+ const same=pick(s,'rift-renew'),changed=pick(s,'rift-change');
+ assert.match(prose(same),/错开半拍/);assert.match(prose(changed),/两份新铁/);
+ assert.equal(changed.life.items.iron,s.life.items.iron-2);
+ for(const [field,value] of [['start',s.life.ageDays+1],['route',null],['prepared',0],['returned',0]]){
+  const invalid=structuredClone(s.events);invalid.cloudRift[field]=value;
+  assert.throws(()=>validateCloudRift(invalid,s.life),/风隙/);
+ }
+ const premature=structuredClone(s.life);premature.realm='spirit';
+ assert.throws(()=>validateCloudRift(s.events,premature),/再访/);
+ const poor=structuredClone(s);poor.life.items.iron=0;
+ assert.match(eventActionRule(poor,poor.currentScene.choices.find(c=>c.id.endsWith(':c:rift-change')),{}).reason,/玄铁/);
+});
+
 test('cloud passage records cannot skip an open shift or reopen its lodging before the next realm',()=>{
  const life={...start().life,realm:'nascent'};
  life.cultivationProfile={...life.cultivationProfile,worldTier:2};
@@ -82,6 +206,20 @@ test('cloud passage records cannot skip an open shift or reopen its lodging befo
  assert.throws(()=>validateCloudPassage({...desk,cloudPassage:[...desk.cloudPassage,{seat:1,route:1}]},life));
  assert.throws(()=>validateCloudPassage({node:'sky-boat',cloudPassage:[{seat:0,route:1}]},life));
  assert.throws(()=>validateCloudPassage(desk,{...life,cultivationProfile:{...life.cultivationProfile,worldTier:1}}));
+});
+
+test('rift entry and phase boundaries reject skipped time without hiding eligible cloud choices',()=>{
+ const source=start(),life=structuredClone(source.life);life.realm='void';life.cultivationProfile.worldTier=2;
+ const e={...source.events,node:'sky-book',cloudPassage:[{seat:0,route:1}]};
+ const page=eventNode({...source,life,events:e,currentScene:null});
+ assert.ok(page.choices.some(c=>c.key==='rift-book'));assert.ok(page.choices.some(c=>c.key==='sky-lodgings'));
+ const r={start:life.ageDays,marks:3,method:null,prepared:null,route:null,arrived:null,stumbled:false,anchor:null,settled:null,returned:null,ending:null,finished:null};
+ assert.throws(()=>validateCloudRift({...e,node:'sky-rift',cloudRift:false},life),/风隙/);
+ assert.throws(()=>validateCloudRift({...e,node:'sky-rift',cloudRift:r},life),/风隙/);
+ r.start-=10;r.method='survey';r.prepared=life.ageDays;r.stumbled=true;
+ assert.throws(()=>validateCloudRift({...e,node:'sky-rift',cloudRift:r},life),/风隙/);
+ r.stumbled=false;r.method='listen';r.prepared=r.start+2;
+ assert.throws(()=>validateCloudRift({...e,node:'sky-rift',forms:{known:'listen',draft:null},cloudRift:r},life),/风隙/);
 });
 
 function postOffer(meeting,observe){
@@ -1107,7 +1245,7 @@ function guardedPractice(s){
  assert.equal(s.events.garden.record.length,i+1);
  return s;
 }
-function trainTo(state,rank){
+function trainTo(state,rank,steady=false){
  let s=state;
  for(let i=0;realmFor(s.life).rank<rank;i++){
   assert.ok(i<100,'training route is stuck');
@@ -1132,7 +1270,7 @@ function trainTo(state,rank){
    }
    s=pick(s,'practice');
    while((rank<9||s.life.ageDays<reserve)&&s.life.cultivation<realm.threshold&&s.life.injury<=1&&s.life.cultivationProfile.spirit>=30+rank*5){
-    const quick=s.events.garden&&rank>=3&&s.life.injury===0&&s.life.cultivationProfile.spirit>=50+rank*5;
+    const quick=!steady&&s.events.garden&&rank>=3&&s.life.injury===0&&s.life.cultivationProfile.spirit>=50+rank*5;
     if(quick&&!s.life.items.supplies&&s.currentScene.choices.some(c=>c.id.endsWith(':c:ration-book'))){
      s=follow(s,'ration-book',(s.life.items.stones??0)>=2?'ration-buy':'ration-tea');
      continue;
@@ -1387,6 +1525,7 @@ test('one continuous birth finishes the three-world campaign and replays its ent
   if(s.life.cultivationProfile.spirit<15)s=follow(s,'train-menu','rest-menu','recover','train-menu');
   else s=pick(s,'train-menu');
   s=follow(s,'rest-menu','back','journey-menu','workshop-menu','crossing-menu','sky-book');
+  if(s.currentScene.choices.some(c=>c.id.endsWith(':c:sky-lodgings')))s=pick(s,'sky-lodgings');
   const stage=(rank-4)/2,seat=stage===1?1:0;
   if(!stage)assert.match(prose(s),/末人的报声手势/);
   const before=structuredClone(s.life);

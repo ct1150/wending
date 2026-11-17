@@ -74,7 +74,7 @@ export function eventNode(state,historicMenu=null){
  if(e.node==='well-book')return echoWell(state,menu,choice);
  if(e.node==='seed-book')return saltFieldNode(state,menu,choice);
  if(e.node.startsWith('ridge-'))return ridgeNode(state,menu,choice);
- if(e.node.startsWith('sky-'))return cloudPassage(state,choice,menu);
+ if(e.node.startsWith('sky-'))return cloudPassage(state,choice,menu,historicMenu);
  if(e.node==='well-road'){
   const home=menu('train-menu','收起路引，回去安排修行','training');
   return row('回声井的两班路引','随巡井人去找归魂印，也看井户怎样换班',[
