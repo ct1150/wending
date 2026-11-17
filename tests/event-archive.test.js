@@ -1,6 +1,41 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import {readFile} from 'node:fs/promises';
+import {gunzipSync} from 'node:zlib';
 import {liveBrowser} from './helpers/live-browser.js';
+
+test('a genuine pre-courier reunion backup retains its exact state and rejects a changed historic companion choice',async t=>{
+ const {page}=await liveBrowser(t);
+ const old=gunzipSync(await readFile(new URL('./fixtures/f924d32-lin-reunion.jsonl.gz',import.meta.url))).toString('utf8');
+ const result=await page.evaluate(async text=>{
+  const format=await import('/src/game/live-save-format.js'),{createLiveSession}=await import('/src/ui/live-session.js');
+  const archive=await open('old-reunion'),rows=text.trim().split('\n').map(line=>JSON.parse(line));
+  await format.importLiveArchive(new Response(text).body,archive);
+  let row=await archive.load();const exact=identity.stateHash(row.state)===identity.stateHash(rows[0].state);
+  const session=createLiveSession({archive,client:{}});
+  for(const key of ['back','affairs-menu','companion-menu','post-book','launch-relay']){
+   const s=row.state,action=s.currentScene.choices.find(c=>c.id.endsWith(':c:'+key));
+   row=await session.choose({choiceId:action.id,baseRevision:s.revision,stateHash:identity.stateHash(s)});
+   if(row.errorCode)throw Error(row.errorCode);
+  }
+  const copy=await open('mixed-reunion');
+  await format.importLiveArchive(format.exportLiveArchive(archive),copy);
+  const mixed=await copy.load(),stage=await copy._stage(rows[0].birth);
+  let rejected=false;
+  try{
+   for(const entry of rows.filter(r=>r.type==='chunk').flatMap(r=>r.chunk.entries)){
+    if(entry.scene?.id.endsWith(':s:event_companion')&&entry.scene.choices.length===2){
+     entry.scene.choices[0].label='冒写的旧决定';
+     try{await copy._stageEntry(stage,entry);}catch(error){rejected=error.message==='ARCHIVE_INVALID_RULE_SCENE';}
+     break;
+    }
+    await copy._stageEntry(stage,entry);
+   }
+  }finally{await copy._discardStage(stage);}
+  return {exact,rejected,mixed:identity.stateHash(row.state)===identity.stateHash(mixed.state),origin:mixed.state.events.post.origin};
+ },old);
+ assert.deepEqual(result,{exact:true,rejected:true,mixed:true,origin:'unknown'});
+});
 
 test('native event session opens and makes choices without any story service, then refreshes and replays a full backup',async t=>{
  const {page}=await liveBrowser(t);

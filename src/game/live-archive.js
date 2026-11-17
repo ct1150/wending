@@ -431,7 +431,24 @@ class Archive {
  async _stageEntry(archiveId,entry) {
   keys(entry,['identity','receipt','scene','stateHash']);const c=await this._capture(null,archiveId);check(c?.run.status==='staging');const identity=entry.identity;
   const p=c.run.state.phase==='awaitingOpening'?prepareOpening(c.run.state,{requestId:identity.requestId}):prepareRecordedChoice(c.run.state,entry);check(same(p.identity,identity)&&same(p.receipt,entry.receipt),'ARCHIVE_INVALID_HISTORY');c.pending=pendingRow(archiveId,p);
-  const d=await this._derived(c,entry.scene,entry.scene?buildMemoryDelta(p.receipt,entry.scene):null);check(stateHash(d.state)===entry.stateHash,'ARCHIVE_BAD_HASH');
+  const prior=c.run.state.events,prePost=prior&&!prior.firstMeeting&&!prior.post;
+  let scene=entry.scene;
+  // Earlier companion visits offered precisely the same scene minus the courier invitation.
+  // Prove that exact historical shape before deriving memory from the canonical scene.
+  if(prePost&&typeof scene?.id==='string'&&scene.id.endsWith(':s:event_companion')&&scene.choices?.length===2){
+   const current=resolveRuleScene(c.run.state,p);
+   const oldChoices=current.choices.filter(choice=>!choice.id.endsWith(':c:post-book'));
+   if(oldChoices.length!==current.choices.length&&same(scene,{...current,choices:oldChoices}))scene=current;
+  }
+  const d=await this._derived(c,scene,scene?buildMemoryDelta(p.receipt,scene):null);
+  if(scene!==entry.scene)d.state.currentScene=clone(entry.scene);
+  let hash=stateHash(d.state);
+  if(hash!==entry.stateHash&&prePost&&prior.node==='reunion'&&d.state.events.firstMeeting){
+   // The historical reunion settled identical costs and rewards but stored no initial meeting.
+   delete d.state.events.firstMeeting;
+   hash=stateHash(d.state);
+  }
+  check(hash===entry.stateHash,'ARCHIVE_BAD_HASH');
   await transaction(this.db,'readwrite',(s,get)=>get(s.runs,archiveId,run=>{check(run.status==='staging'&&run.hash===c.run.hash);this._writeMemory(s.memory,archiveId,d.records);s.runs.put({...run,state:d.state,hash:entry.stateHash});}));
  }
  async _stageChunk(archiveId,chunk) {verifyChunk(chunk);await transaction(this.db,'readwrite',(s,get)=>get(s.runs,archiveId,run=>{check(run.status==='staging'&&chunk.index===run.tailIndex+1&&chunk.previousHash===run.headHash);s.history.add({archiveId,index:chunk.index,chunk});s.runs.put({...run,tailIndex:chunk.index,headHash:chunk.hash});}));}
