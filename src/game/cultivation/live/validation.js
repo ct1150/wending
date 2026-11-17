@@ -149,6 +149,8 @@ export function validateLiveState(state) {
   validateLife(state.life);
   if(state.life.birth.cultivationProfile?.eventVersion===1){
     validateEventState(state.events);
+    const outing=state.events.watch?.trail;
+    if(outing&&(outing.start>state.life.ageDays||outing.world>state.life.cultivationProfile.worldTier))throw new Error('栗溪行程不能始于未来。');
     if(!isExperienceLife(state.life)||state.life.birth.originId!==MORTAL_OPENING.originId)throw new Error('规则事件出生合同无效。');
     if(state.turnId===0&&!same(state.events,createEventState(state.reincarnation?.atlas)))throw new Error('规则事件开场不可改写。');
   }else if(state.events!==undefined)throw new Error('旧人生不能静默切换规则事件。');

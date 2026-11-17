@@ -6,10 +6,11 @@ import {serializeLiveState,deserializeLiveState} from '../src/game/cultivation/l
 import {validateConvoy} from '../src/game/cultivation/live/sea-convoy.js';
 import {validateValley} from '../src/game/cultivation/live/mist-valley.js';
 import {eventNode} from '../src/game/cultivation/live/event-content.js';
+import {validateWatch} from '../src/game/cultivation/live/retreat-watch.js';
 
 const observers=new WeakMap();
-function start(observe){
- const state=createLiveGame({runId:'river-reader',seed:42,name:'沈渡',engineVersion:7,originStories:true,experienceVersion:1,eventVersion:1});
+function start(observe,seed=42){
+ const state=createLiveGame({runId:'river-reader',seed,name:'沈渡',engineVersion:7,originStories:true,experienceVersion:1,eventVersion:1});
  const pending=prepareOpening(state,{requestId:'opening'});
  const ready=commitTurn(state,pending,resolveRuleScene(state,pending));
  if(observe)observers.set(ready,observe);
@@ -28,6 +29,51 @@ const open=observe=>follow(start(observe),'decline','journey-menu','river-book',
 const prose=state=>state.currentScene.blocks.map(block=>block.text).join('\n');
 
 const valleyCamp=()=>follow(open(),'deliberate','policy-0','field-guide','enter-field');
+const firstWatch=(seed,keeper,marks)=>follow(start(undefined,seed),'decline','train-menu','rest-menu','watch-book','watch-open','keeper-'+keeper,marks,'sit-watch');
+test('a missed practice check preserves the time and injury, and a single signature really authorizes early action',()=>{
+ const missed=firstWatch(36,0,'one-mark');
+ assert.equal(missed.lastReceipt.cultivationResult.check.success,false);
+ assert.equal(missed.life.injury,1);assert.equal(missed.events.watch.draft.success,false);
+ assert.match(prose(missed),/检定未成/);assert.match(prose(missed),/饭舍开了背风窗/);
+ const confirmed=firstWatch(42,1,'two-marks');
+ assert.match(prose(confirmed),/两道凭据都已齐全/);assert.match(prose(confirmed),/把锅移离烟道/);
+});
+test('public and sealed handoffs give different keepers an independent source for the next retreat',()=>{
+ const s=start();s.life.realm='qi';
+ const first={keeper:0,marks:1,days:360,success:true,shared:true};
+ for(const shared of [true,false]){
+  for(const keeper of [0,1]){
+   const draft={keeper,marks:2,days:360,success:true};
+   s.events={...s.events,node:'watch-report',watch:{record:[{...first,shared}],draft}};
+   validateWatch(s.events.watch);
+   const scene=eventNode(s),confirmed=scene.blocks.some(b=>b.text.includes('两道凭据都已齐全'));
+   assert.equal(confirmed,shared?keeper===1:keeper===0);
+  }
+ }
+ assert.throws(()=>validateWatch({record:[{...first,days:null}],draft:null}),/回执/);
+ assert.throws(()=>validateWatch({record:[first],draft:null,trail:{start:5,world:0,place:'ford',traces:0,outcome:'herd',reply:null}}),/栗溪/);
+});
+test('Tao He leaves on schedule, and both a timely handoff and a missed meeting survive reload',()=>{
+ const base=follow(firstWatch(42,1,'one-mark'),'leave-copy','deer-trail','walk-with-he');
+ let s=follow(base,'to-reeds','read-trace','to-ford','shelter-deer');
+ assert.equal(s.events.watch.trail.outcome,'meadow');assert.equal(s.life.ageDays-base.life.ageDays,5);
+ s=deserializeLiveState(serializeLiveState(s));assert.match(prose(s),/背风坡/);
+ s=follow(base,'to-ridge','trail-fork','cross-slope','trail-fork','cross-slope','trail-fork','cross-slope','trail-fork','cross-slope','trail-fork','cross-slope');
+ assert.equal(s.life.ageDays-base.life.ageDays,6);assert.match(prose(s),/六日已经过去/);
+ s=pick(s,'accept-late');assert.equal(deserializeLiveState(serializeLiveState(s)).events.watch.trail.outcome,'late');
+});
+test('a guarded retreat spends the ordinary practice cost and settles the keeper instructions only once',()=>{
+ const ready=follow(start(),'decline','train-menu');
+ const normal=pick(ready,'practice');
+ let s=follow(ready,'rest-menu','watch-book','watch-open','keeper-0','two-marks','sit-watch');
+ assert.deepEqual(s.life,normal.life);assert.deepEqual(s.lastReceipt.random,normal.lastReceipt.random);
+ assert.equal(s.events.watch.draft.days,normal.lastReceipt.elapsedDays);
+ s=deserializeLiveState(serializeLiveState(s));
+ assert.match(prose(s),/两道/);
+ s=follow(s,'watch-later','rest-menu','watch-book','watch-open','leave-copy','watch-book');
+ assert.equal(s.events.watch.record.length,1);assert.equal(s.events.watch.draft,null);
+ assert.match(prose(s),/炼气/);assert.equal(s.life.ageDays,normal.life.ageDays);
+});
 test('each of the eight handoff histories changes the actual upper-world instruments and their working proposals',()=>{
  const state=start();state.life.cultivationProfile.worldTier=2;
  const chapters=[{rig:'light',loads:[5,10]}];
@@ -229,6 +275,19 @@ test('wrong tide and missed deadline are recoverable without consuming real life
  assert.doesNotMatch(prose(s),/二十年的潮纸/);
 });
 
+function guardedPractice(s){
+ const i=s.events.watch?.record.length??0;
+ s=follow(s,'rest-menu','watch-book','watch-open','keeper-'+(i%2),i%3?'two-marks':'one-mark','sit-watch');
+ assert.equal(s.events.watch.draft.days,s.lastReceipt.elapsedDays);
+ s=pick(s,i%2?'seal-original':'leave-copy');
+ if(i===0){
+  s=follow(s,'deer-trail','walk-with-he','to-ridge','read-trace','cross-slope','read-trace','to-ford','follow-herd');
+  assert.equal(s.events.watch.trail.outcome,'herd');assert.equal(s.life.ageDays-s.events.watch.trail.start,6);
+ }
+ s=pick(s,'watch-later');
+ assert.equal(s.events.watch.record.length,i+1);
+ return s;
+}
 function trainTo(state,rank){
  let s=state;
  for(let i=0;realmFor(s.life).rank<rank;i++){
@@ -237,6 +296,9 @@ function trainTo(state,rank){
   if(s.life.injury>1||s.life.cultivationProfile.spirit<30+rank*5){
    s=follow(s,'rest-menu','recover','train-menu');
   }else if(s.life.cultivation<realm.threshold){
+   if((s.events.watch?.record.length??0)<=realmFor(s.life).rank){
+    s=guardedPractice(s);continue;
+   }
    s=pick(s,'practice');
    while(s.life.cultivation<realm.threshold&&s.life.injury<=1&&s.life.cultivationProfile.spirit>=30+rank*5){
     s=pick(s,'practice-again');
@@ -329,6 +391,16 @@ test('one continuous birth finishes the three-world campaign and replays its ent
  s=pick(s,'convoy-book');
  s=follow(s,'rig-light','crew','load-1','manifest','stores','load-3','manifest','weigh','sail','convoy-book','crew','load-0','manifest','stores','load-2','manifest','weigh','sail','convoy-book');
  assert.deepEqual(s.events.convoy.chapters[2].loads,[10,5]);assert.match(s.currentScene.title,/问川归航/);
+ for(let rank=5;rank<=8;rank++)s=trainTo(pick(s,'train-menu'),rank);
+ s=pick(s,'train-menu');
+ while(s.events.watch.record.length<9)s=guardedPractice(s);
+ s=follow(s,'rest-menu','watch-book');
+ assert.match(s.currentScene.title,/守关簿合卷/);
+ assert.equal(s.life.realm,'mahayana');assert.equal(s.currentScene.blocks.length,10);
+ s=follow(s,'watch-visitors','deer-trail');
+ assert.match(prose(s),/多年以前寄存的旧信/);
+ s=follow(s,'answer-letter','watch-later','rest-menu','back','journey-menu','river-book','hear-council','convoy-book');
+ assert.match(s.currentScene.title,/问川归航/);
  t.diagnostic('Three-world campaign ending at turn '+s.turnId+'; world tier '+s.life.cultivationProfile.worldTier);
  const {liveBrowser}=await import('./helpers/live-browser.js'),{page}=await liveBrowser(t);
  const browser=await page.evaluate(async keys=>{

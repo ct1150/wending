@@ -8,6 +8,7 @@ import {validateExpedition} from './expedition.js';
 import {councilHearings,validateCouncil} from './mountain-council.js';
 import {validateConvoy} from './sea-convoy.js';
 import {validateValley} from './mist-valley.js';
+import {validateWatch} from './retreat-watch.js';
 
 const eventNodeIds=new Set([
  'arrival','terms','work','entry-result','companion','companion-result','reunion','reunion-result',
@@ -20,15 +21,21 @@ const eventNodeIds=new Set([
  'convoy-ear-book','convoy-ear-open','convoy-ear-read','convoy-ear-table','convoy-ear-good','convoy-ear-miss','convoy-ear-receipt',
  'convoy-concert-plan','convoy-concert-visits','convoy-concert-last','convoy-concert-check','convoy-concert-result',
  'field-guide','field-camp','field-bank','field-grove','field-kiln','field-shrine','field-spar','field-proof','field-source','field-banks','field-ending',
+ 'watch-book','watch-people','watch-orders','watch-sit','watch-report','watch-receipt',
+ 'watch-visitors','watch-trail','watch-trail-map','watch-trail-fork',
 ]);
 const copy=value=>JSON.parse(JSON.stringify(value));
 export function createEventState(atlas){return {version:1,node:'arrival',entry:'unresolved',companion:'unmet',mentor:'unmet',page:0,location:'gate',...(atlas?copy(atlas):{})};}
 export function validateEventState(events){
- assertPlainData(events);exactKeys(events,['version','node','entry','companion','mentor','page','location'],['river','expedition','council','convoy','valley']);
+ assertPlainData(events);exactKeys(events,['version','node','entry','companion','mentor','page','location'],['river','expedition','council','convoy','valley','watch']);
  if(!eventNodeIds.has(events.node))throw new Error('规则事件节点无效。');
  if(Object.hasOwn(events,'council'))validateCouncil(events.council);
  if(Object.hasOwn(events,'convoy'))validateConvoy(events.convoy);
  if(Object.hasOwn(events,'valley'))validateValley(events.valley);
+ if(Object.hasOwn(events,'watch'))validateWatch(events.watch);
+ if((events.node.startsWith('watch-trail')||events.node==='watch-visitors')&&!events.watch?.record.length)throw new Error('守关驿棚尚未开门。');
+ const draft=events.watch?.draft;
+ if(events.node==='watch-orders'&&(!draft||draft.days!==null)||events.node==='watch-sit'&&(!draft?.marks||draft.days!==null)||events.node==='watch-report'&&!draft?.days||events.node==='watch-receipt'&&!events.watch?.record.length)throw new Error('守关回信页次无效。');
  if((events.valley||events.node.startsWith('field-'))&&!events.river?.record.length)throw new Error('雾药谷游记尚未开卷。');
  if(['field-source','field-banks','field-ending'].includes(events.node)&&!events.valley?.pass||events.node==='field-ending'&&!events.valley?.settled||events.node==='field-proof'&&!(events.valley?.remedy||events.valley?.sleeve))throw new Error('雾药谷游记页次无效。');
  if((events.convoy||events.node.startsWith('convoy-'))&&events.council?.length!==councilHearings)throw new Error('海路尚未开卷。');
@@ -79,6 +86,10 @@ export function advanceEvents(state,receipt){
  events.node=option.next??'hub';
  if(success&&option.patch)Object.assign(events,copy(option.patch));
  if(success&&option.arrival)events.location=option.arrival;
+ if(option.key==='sit-watch'){
+  events.watch.draft.days=receipt.elapsedDays;
+  events.watch.draft.success=success;
+ }
  return validateEventState(events);
 }
 export function resolveEventScene(state,pending){

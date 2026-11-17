@@ -6,6 +6,8 @@ import {expeditionNode,expeditionResult} from './expedition.js';
 import {councilHearings,councilNode} from './mountain-council.js';
 import {convoyNode} from './sea-convoy.js';
 import {valleyLocation,valleyNode,valleyPlaces} from './mist-valley.js';
+import {watchNode} from './retreat-watch.js';
+import {trailLocation} from './deer-trail.js';
 
 // Authored situations supply every fact and executable choice. AI never edits
 // these definitions. Stable actors belong to a life, not a generated paragraph.
@@ -24,6 +26,7 @@ export function eventEntities(state){
  ];
 }
 export function eventLocation(state){
+ if(state.events.node.startsWith('watch-trail'))return trailLocation(state);
  if(valleyLocation(state.events.node))return valleyLocation(state.events.node);
  return {gate:'栖云门外院',retreat:'青石山居',middle:'中界清河城',upper:'上界观星台'}[state.events.location];
 }
@@ -45,6 +48,7 @@ export function eventNode(state){
   choice('decline',young?'谢过周执事，自寻修行之路':'把旧簿交还外院，自行求道','interact',young?actor('steward'):'self',young?'decline':'leave',{next:'hub',patch:{entry:'declined',location:'retreat'},navigation:true}),
  ];
  if(e.node.startsWith('river-'))return riverNode(state,menu,choice);
+ if(e.node.startsWith('watch-'))return watchNode(state,menu,choice);
  if(e.node.startsWith('field-'))return valleyNode(state,menu,choice,actor);
  if(e.node==='voyage-result')return expeditionResult(e.expedition,menu);
  if(e.node.startsWith('voyage-'))return expeditionNode(state,menu,choice);
@@ -112,11 +116,11 @@ export function eventNode(state){
   ],[
    choice('practice','按当前功法稳步修炼','practice','self','steady',{next:'action-result'}),
    next?choice('breakthrough','闭关尝试突破'+next.name,'practice',next.id,'breakthrough',{next:'action-result'}):choice('intensive','以行粮支撑一次苦修','practice','self','intensive',{next:'action-result'}),
-   menu('rest-menu','调息、修法或暂缓闭关','rest'),
+   menu('rest-menu','调息、安排守关或验看功法','rest'),
   ]);
   case 'rest':return row('停下来整备','先照料伤势与灵力，也可回去处理别的事',[
    narration('休整不会替你突破，也不会替你答应任何请求。修行所需的行粮与材料仍要亲自准备。'),
-  ],[choice('recover','静养调息，恢复伤势与灵力','rest','self','recover',{next:'action-result'}),menu('mentor-menu','验看功法，寻找改善的办法','mentor'),leave]);
+   ],[choice('recover','静养调息，恢复伤势与灵力','rest','self','recover',{next:'action-result'}),menu('watch-book','翻开守关簿，或验看功法','watch-book'),leave]);
   case 'journey':return row('路与行囊','接续历练，或备办下一次修行的资用',[
    narration(e.council?.length===councilHearings?'北山九次落款都在册。从河簿翻到北山最后一页，可以查到三界海路的舱单与来信。':e.expedition?.place==='end'?'你的行囊里放着三程图印。北山井户的一纸来信夹在其间，等你回去落款。':e.river?'问川图上夹着一根草绳，再打开仍是上次停下的地方。':'你在山口书摊翻到一卷旧图。卖书人说是好几代守闸人留的传习卷，问你愿不愿试着展开。桌的另一头还摊着采药与打铁的路引。'),
   ],[menu('river-book',e.expedition?.place==='end'?'翻阅河簿、三程行旅与北山公簿':'展开问川图，历练河上人家','river-book'),menu('resources-menu','寻找修行材料与生活物资','resources',{page:0}),menu('workshop-menu','炼制、跨界与其他准备','workshop',{page:0})]);
