@@ -100,7 +100,7 @@ export function riverNode(state,menu,choice){
  if(e.node==='river-result'){
   const prior=cases[index-1],policy=prior.policies[Number(river.record.at(-1))];
   const gift=state.lastReceipt?.itemChanges?.[policy[2]]>0?'图印松开，封在这一折的资用也随之解出。':'图印松开。行囊已经装满，你将这一折的赠礼留在了河边。';
-  return node(prior.title,'记下这次处置的代价',[policy[1],gift],[book,back]);
+  return node(prior.title,'记下这次处置的代价',[policy[1],gift],[book,menu('field-guide','循守闸旧札查访雾药谷','field-guide'),back]);
  }
  if(!current)return node('问川图 · 河簿合卷','展开行旅录，或带着所得继续修行',['图面渐暗，河上有人把一条空船撑回上游。最初的水尺和最后的木楔，如今都有了去处。簿底露出领航人珍藏的一册行旅图。',...cases.map((c,i)=>c.title+'　'+c.policies[Number(river.record[i])][0])],[menu('voyage-book','打开领航人留下的行旅录','voyage-book'),e.expedition?.place==='end'?menu('hear-council','翻看北山公簿','council-book'):menu('train-menu','用历练所得继续修行','training'),back]);
  if(e.node==='river-book')return node('问川图 · 河上人家',current.title,['这卷传习图封着六段前人留下的河上旧境。展开时，你可入境察看水土、听人说话、亲手处置难题。离开时图中年月停住，回来仍接原处。每折结印才解出一份修行资用。','已结 '+index+' 折。眼下翻到'+current.title+'。'],[resume,back]);

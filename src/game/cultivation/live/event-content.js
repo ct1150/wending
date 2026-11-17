@@ -4,6 +4,8 @@ import {realmFor,nextRealmFor,TECHNIQUES} from './cultivation-rules.js';
 import {riverNode} from './river-chronicle.js';
 import {expeditionNode,expeditionResult} from './expedition.js';
 import {councilNode} from './mountain-council.js';
+import {convoyNode} from './sea-convoy.js';
+import {valleyLocation,valleyNode,valleyPlaces} from './mist-valley.js';
 
 // Authored situations supply every fact and executable choice. AI never edits
 // these definitions. Stable actors belong to a life, not a generated paragraph.
@@ -17,9 +19,12 @@ export function eventEntities(state){
   {id:prefix+'retreat',name:'青石山居',kind:'place'},
   {id:prefix+'middle',name:'中界清河城',kind:'place'},
   {id:prefix+'upper',name:'上界观星台',kind:'place'},
+  ...(state.events.node.startsWith('field-')?valleyPlaces(prefix):[]),
+  ...(['field-shrine','field-spar'].includes(state.events.node)?[{id:prefix+'springward',name:'守泉会',kind:'faction',experience:{version:1,realmId:'qi'}}]:[]),
  ];
 }
 export function eventLocation(state){
+ if(valleyLocation(state.events.node))return valleyLocation(state.events.node);
  return {gate:'栖云门外院',retreat:'青石山居',middle:'中界清河城',upper:'上界观星台'}[state.events.location];
 }
 const narration=text=>({kind:'narration',text});
@@ -40,9 +45,11 @@ export function eventNode(state){
   choice('decline',young?'谢过周执事，自寻修行之路':'把旧簿交还外院，自行求道','interact',young?actor('steward'):'self',young?'decline':'leave',{next:'hub',patch:{entry:'declined',location:'retreat'},navigation:true}),
  ];
  if(e.node.startsWith('river-'))return riverNode(state,menu,choice);
+ if(e.node.startsWith('field-'))return valleyNode(state,menu,choice,actor);
  if(e.node==='voyage-result')return expeditionResult(e.expedition,menu);
  if(e.node.startsWith('voyage-'))return expeditionNode(state,menu,choice);
  if(e.node.startsWith('council-'))return councilNode(state,menu,choice);
+ if(e.node.startsWith('convoy-'))return convoyNode(state,menu,choice,actor);
  switch(!young&&['companion','reunion'].includes(e.node)?'old-record':e.node){
   case 'arrival':return row('外院第一日','问清入门条件，选择留下或独行',[
    narration(young?'栖云门外院里，送炭的板车刚刚停稳。你把母亲缝好的衣袖拉平，站到登记的长桌前。周执事没有问你的灵根，只把一册差事簿推到桌沿。':'外院还存着那册旧簿。门上的墨色换了几回，当值者核对年月，仍认得当年写给试修弟子的条款。'),
@@ -117,7 +124,7 @@ export function eventNode(state){
    const targets=[...new Set([next?.material??'relic','supplies','stones','herbs','iron'])],target=targets[e.page%targets.length];
    return row('寻找'+ITEMS[target],'只结算本次选定的资源',[
     narration('你把目标定为'+ITEMS[target]+'。谨慎搜寻花费更多时间，仍须承担当前境界与环境下的真实风险；失败也会留下记录。'),
-   ],[choice('gather','谨慎搜寻'+ITEMS[target],'explore',target,'cautious',{next:'action-result'}),menu('next-resource','换看下一种物资','resources',{page:(e.page+1)%targets.length}),leave]);
+   ],[choice('gather','谨慎搜寻'+ITEMS[target],'explore',target,'cautious',{next:'action-result'}),menu('next-resource','换看下一种物资','resources',{page:(e.page+1)%targets.length}),e.river?.record.length?menu('field-guide','翻看雾药谷游记与往返路线','field-guide'):leave]);
   }
   case 'workshop':{
    const recipes=[['medicine','alchemy'],['artifact','forge'],['talisman','talisman'],['array','formation'],['elixir','alchemy']],recipe=recipes[e.page%recipes.length];

@@ -3,21 +3,66 @@ import assert from 'node:assert/strict';
 import {createLiveGame,prepareOpening,prepareChoice,commitTurn,resolveRuleScene,compileChoices} from '../src/game/cultivation/live/engine.js';
 import {realmFor,nextRealmFor} from '../src/game/cultivation/live/cultivation-rules.js';
 import {serializeLiveState,deserializeLiveState} from '../src/game/cultivation/live/validation.js';
+import {validateConvoy} from '../src/game/cultivation/live/sea-convoy.js';
+import {validateValley} from '../src/game/cultivation/live/mist-valley.js';
 
-function start(){
+const observers=new WeakMap();
+function start(observe){
  const state=createLiveGame({runId:'river-reader',seed:42,name:'沈渡',engineVersion:7,originStories:true,experienceVersion:1,eventVersion:1});
  const pending=prepareOpening(state,{requestId:'opening'});
- return commitTurn(state,pending,resolveRuleScene(state,pending));
+ const ready=commitTurn(state,pending,resolveRuleScene(state,pending));
+ if(observe)observers.set(ready,observe);
+ return ready;
 }
 function pick(state,key){
  const choice=state.currentScene.choices.find(row=>row.id.endsWith(':c:'+key));
  assert.ok(choice,'missing '+key+' in '+state.currentScene.title);
  const pending=prepareChoice(state,{choiceId:choice.id,requestId:'river-'+(state.turnId+1)});
- return commitTurn(state,pending,resolveRuleScene(state,pending));
+ const next=commitTurn(state,pending,resolveRuleScene(state,pending)),observe=observers.get(state);
+ if(observe){observe(key,next);observers.set(next,observe);}
+ return next;
 }
 const follow=(state,...keys)=>keys.reduce(pick,state);
-const open=()=>follow(start(),'decline','journey-menu','river-book','river-open');
+const open=observe=>follow(start(observe),'decline','journey-menu','river-book','river-open');
 const prose=state=>state.currentScene.blocks.map(block=>block.text).join('\n');
+
+const valleyCamp=()=>follow(open(),'deliberate','policy-0','field-guide','enter-field');
+test('manifest validation permits a voluntary empty return and rejects impossible shipments or commission receipts',()=>{
+ const manifest=(loads,draft=0)=>({chapters:[{rig:'light',loads}],draft});
+ assert.doesNotThrow(()=>validateConvoy(manifest([2,0])));
+ assert.throws(()=>validateConvoy(manifest([0])),/落印/);
+ assert.throws(()=>validateConvoy(manifest([3])),/落印/);
+ assert.throws(()=>validateConvoy(manifest([1,1])),/落印/);
+ assert.throws(()=>validateConvoy(manifest([2],5)),/候船/);
+ assert.throws(()=>validateConvoy({...manifest([1,0]),benches:[{pattern:'RRLL',paid:true},null]}),/未校成/);
+ assert.throws(()=>validateValley({sample:false,remedy:true,slag:false,sleeve:false,pass:'medicine',settled:'kiln'}),/游记/);
+});
+for(const path of ['medicine','forge'])test('mist valley '+path+' route carries real work and one settlement across a reload',()=>{
+ let state=valleyCamp();
+ assert.equal(state.currentScene.location,'谷口茶棚');
+ state=path==='medicine'?follow(state,'to-bank','take-sample','to-grove','brew-filter'):follow(state,'to-kiln','measure-kiln','fit-sleeve');
+ assert.equal(state.lastReceipt.elapsedDays,path==='medicine'?3:4);
+ assert.ok(!state.currentScene.choices.some(row=>/:(brew-filter|fit-sleeve)$/.test(row.id)));
+ state=follow(state,'to-shrine','show-proof','proof-'+path,'to-source');
+ state=deserializeLiveState(serializeLiveState(state));
+ assert.equal(state.events.valley.pass,path);
+ state=follow(state,'compare-banks',path==='medicine'?'water-clinic':'water-kiln');
+ assert.equal(state.events.valley.settled,path==='medicine'?'infirmary':'kiln');
+ const items={...state.life.items};
+ state=follow(state,'field-home','journey-menu','resources-menu','field-guide');
+ assert.match(state.currentScene.title,/合卷/);
+ assert.deepEqual(state.life.items,items);
+});
+test('mist valley spar uses the actual rank and outcome, with a route home after the match',()=>{
+ let state=follow(valleyCamp(),'to-kiln','to-shrine');
+ const foe=state.relatedEntities.find(row=>row.name==='守泉会');
+ assert.equal(foe.experience.realmId,'qi');
+ state=pick(state,'hold-bell');
+ const won=state.lastReceipt.cultivationResult.check.success;
+ assert.equal(state.events.valley?.pass??null,won?'spar':null);
+ state=won?follow(state,'to-source','water-spring','field-home'):pick(state,'field-home');
+ assert.equal(state.events.node,'hub');
+});
 
 test('the player carries independent field observations through rest and reload and can act on incomplete evidence',()=>{
  let state=open();
@@ -73,10 +118,13 @@ for(const branch of [0,1])test('all six leaves settle once and return to the cul
  assert.equal(state.events.node,'action-result');
 });
 
-function afterRiver(timberChoice=1){
- let s=open();
+function afterRiver(timberChoice=1,observe,visitValley=false){
+ let s=open(observe);
  for(let i=0;i<6;i++){
-  s=follow(s,'deliberate','policy-'+(i===3?timberChoice:i%2),'next-case');
+  s=follow(s,'deliberate','policy-'+(i===3?timberChoice:i%2));
+  if(i===0&&visitValley){
+   s=follow(s,'field-guide','enter-field','to-bank','take-sample','to-grove','brew-filter','to-shrine','show-proof','proof-medicine','to-source','compare-banks','water-clinic','field-home','journey-menu','river-book');
+  }else s=pick(s,'next-case');
   if(i<5)s=pick(s,'river-open');
  }
  return pick(s,'voyage-book');
@@ -135,8 +183,10 @@ function trainTo(state,rank){
  }
  return follow(s,'rest-menu','back','journey-menu','river-book','hear-council');
 }
-test('one continuous birth reaches three actual realms and leaves nine binding resolutions in the valley',t=>{
- let s=follow(afterRiver(),'voyage-go','to-kiln','to-store','to-tower','voyage-finish','voyage-book','voyage-go','to-east','to-west','to-peak','voyage-finish','voyage-book','voyage-go','to-pass','to-well','to-camp','voyage-finish','voyage-book','hear-council');
+test('one continuous birth finishes the three-world campaign and replays its entire archive',async t=>{
+ const route=[],blocks=new Set();
+ const observe=(key,state)=>{route.push(key);for(const b of state.currentScene.blocks)blocks.add(b.text);};
+ let s=follow(afterRiver(1,observe,true),'voyage-go','to-kiln','to-store','to-tower','voyage-finish','voyage-book','voyage-go','to-east','to-west','to-peak','voyage-finish','voyage-book','voyage-go','to-pass','to-well','to-camp','voyage-finish','voyage-book','hear-council');
  for(let rank=1;rank<=3;rank++){
   assert.match(s.currentScene.title,/待你归来/);
   s=trainTo(pick(s,'train-menu'),rank);
@@ -154,4 +204,51 @@ test('one continuous birth reaches three actual realms and leaves nine binding r
  const inventory={...s.life.items};
  s=follow(s,'river-back','journey-menu','river-book','voyage-book');assert.match(s.currentScene.title,/三程归来/);
  s=pick(s,'hear-council');assert.match(s.currentScene.title,/山河有继/);assert.deepEqual(s.life.items,inventory);
+ s=pick(s,'convoy-book');assert.match(prose(s),/沉钟湾/);
+ s=follow(s,'rig-light','crew','load-0','manifest','stores','load-2','manifest');
+ assert.equal(s.events.convoy.draft,5);
+ s=deserializeLiveState(serializeLiveState(s));
+ observers.set(s,observe);
+ s=follow(s,'weigh','sail');assert.deepEqual(s.events.convoy.chapters[0].loads,[5]);
+ assert.equal(s.lastReceipt.elapsedDays,3);assert.match(prose(s),/桩/);
+ s=follow(s,'convoy-book','crew','load-1','manifest','stores','load-3','manifest','weigh','sail','convoy-book');
+ assert.deepEqual(s.events.convoy.chapters[0].loads,[5,10]);assert.equal(s.events.convoy.draft,0);
+ assert.equal(s.life.cultivationProfile.worldTier,0);assert.match(prose(s),/中界/);
+ const priorStones=s.life.items.stones??0,priorArrays=s.life.items.array??0;
+ s=follow(s,'work-board','pin-R','pin-L','pin-L','pin-R','test-pins');
+ assert.match(s.currentScene.title,/未合/);assert.equal(s.life.items.stones??0,priorStones);
+ s=follow(s,'reset-pins','pin-L','pin-R','pin-L','pin-R','test-pins');
+ assert.equal(s.life.items.stones,priorStones+45);assert.equal(s.life.items.array,priorArrays+1);assert.ok(s.events.convoy.benches[0].paid);
+ s=follow(s,'cross-menu','sea-array');
+ assert.equal(s.life.cultivationProfile.worldTier,1);assert.equal(s.life.items.array,priorArrays);
+ s=follow(s,'convoy-book','rig-barge','crew','load-0','manifest','weigh','sail','convoy-book','stores','load-2','load-3','manifest','crew','load-1','manifest','weigh','sail','convoy-book');
+ assert.deepEqual(s.events.convoy.chapters[1].loads,[1,14]);
+ s=follow(s,'work-board','pin-R','pin-L','pin-R','pin-L','test-pins','cross-menu');
+ assert.ok(!compileChoices(s,s.currentScene.choices).find(c=>c.approach==='ancient-array').enabled);
+ s=trainTo(follow(s,'river-back','train-menu'),4);
+ s=follow(s,'convoy-book','cross-menu','sea-array');
+ assert.equal(s.life.cultivationProfile.worldTier,2);
+ s=follow(s,'convoy-book','rig-light','crew','load-1','manifest','stores','load-3','manifest','weigh','sail','convoy-book','crew','load-0','manifest','stores','load-2','manifest','weigh','sail','convoy-book');
+ assert.deepEqual(s.events.convoy.chapters[2].loads,[10,5]);assert.match(s.currentScene.title,/问川归航/);
+ t.diagnostic('Three-world campaign ending at turn '+s.turnId+'; world tier '+s.life.cultivationProfile.worldTier);
+ const {liveBrowser}=await import('./helpers/live-browser.js'),{page}=await liveBrowser(t);
+ const browser=await page.evaluate(async keys=>{
+  const {createLiveSession}=await import('/src/ui/live-session.js'),format=await import('/src/game/live-save-format.js');
+  const archive=await open('convoy-source'),target=await open('convoy-restored');
+  const session=createLiveSession({archive,client:{}});
+  let row=await session.startNew({runId:'river-reader',seed:42,name:'沈渡',engineVersion:7,originStories:true,experienceVersion:1,eventVersion:1},null);
+  for(const key of keys){
+   const action=row.state.currentScene.choices.find(c=>c.id.endsWith(':c:'+key));
+   if(!action)throw Error('browser missing '+key+' at '+row.state.turnId);
+   row=await session.choose({choiceId:action.id,baseRevision:row.state.revision,stateHash:identity.stateHash(row.state)});
+   if(row.errorCode)throw Error(row.errorCode);
+  }
+  await format.importLiveArchive(format.exportLiveArchive(archive),target);
+  const restored=await target.load();
+  return {events:restored.state.events,turn:restored.state.turnId,life:restored.state.life,title:restored.state.currentScene.title,exact:identity.stateHash(restored.state)===identity.stateHash(row.state)};
+ },route);
+ assert.equal(browser.exact,true);assert.deepEqual(browser.events,s.events);assert.deepEqual(browser.life,s.life);
+ assert.equal(browser.turn,s.turnId);assert.equal(browser.title,s.currentScene.title);
+ t.diagnostic('Route inventory: '+blocks.size+' distinct displayed blocks, '+[...blocks].reduce((n,b)=>n+[...b].length,0)+' characters (includes menu and status text).');
+ s=pick(s,'train-menu');assert.equal(s.phase,'active');
 });

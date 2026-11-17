@@ -5,7 +5,9 @@ import {initialV7ActionRule} from './cultivation-rules.js';
 import {eventNode,eventEntities,eventLocation} from './event-content.js';
 import {riverCases,validateRiver} from './river-chronicle.js';
 import {validateExpedition} from './expedition.js';
-import {validateCouncil} from './mountain-council.js';
+import {councilHearings,validateCouncil} from './mountain-council.js';
+import {validateConvoy} from './sea-convoy.js';
+import {validateValley} from './mist-valley.js';
 
 const eventNodeIds=new Set([
  'arrival','terms','work','entry-result','companion','companion-result','reunion','reunion-result',
@@ -13,13 +15,22 @@ const eventNodeIds=new Set([
  'river-book','river-site','river-reading','river-decision','river-result',
  'voyage-book','voyage-road','voyage-camp','voyage-log','voyage-reset','voyage-result','voyage-detour',
  'council-book','council-result',
+ 'convoy-book','convoy-plan','convoy-crew','convoy-stores','convoy-check','convoy-result','convoy-arrival',
+ 'convoy-cross','convoy-board','convoy-board-notes','convoy-test-result',
+ 'field-guide','field-camp','field-bank','field-grove','field-kiln','field-shrine','field-spar','field-proof','field-source','field-banks','field-ending',
 ]);
 const copy=value=>JSON.parse(JSON.stringify(value));
 export function createEventState(atlas){return {version:1,node:'arrival',entry:'unresolved',companion:'unmet',mentor:'unmet',page:0,location:'gate',...(atlas?copy(atlas):{})};}
 export function validateEventState(events){
- assertPlainData(events);exactKeys(events,['version','node','entry','companion','mentor','page','location'],['river','expedition','council']);
+ assertPlainData(events);exactKeys(events,['version','node','entry','companion','mentor','page','location'],['river','expedition','council','convoy','valley']);
  if(!eventNodeIds.has(events.node))throw new Error('规则事件节点无效。');
  if(Object.hasOwn(events,'council'))validateCouncil(events.council);
+ if(Object.hasOwn(events,'convoy'))validateConvoy(events.convoy);
+ if(Object.hasOwn(events,'valley'))validateValley(events.valley);
+ if((events.valley||events.node.startsWith('field-'))&&!events.river?.record.length)throw new Error('雾药谷游记尚未开卷。');
+ if(['field-source','field-banks','field-ending'].includes(events.node)&&!events.valley?.pass||events.node==='field-ending'&&!events.valley?.settled||events.node==='field-proof'&&!(events.valley?.remedy||events.valley?.sleeve))throw new Error('雾药谷游记页次无效。');
+ if((events.convoy||events.node.startsWith('convoy-'))&&events.council?.length!==councilHearings)throw new Error('海路尚未开卷。');
+ if(events.node==='convoy-result'&&!events.convoy?.chapters.at(-1)?.loads.length)throw new Error('海路缺少到港记录。');
  if((events.council!==undefined||events.node.startsWith('council-'))&&events.expedition?.place!=='end'||events.node==='council-result'&&!events.council)throw new Error('北山公簿页次无效。');
  if(Object.hasOwn(events,'river'))validateRiver(events.river);
  if(Object.hasOwn(events,'expedition'))validateExpedition(events.expedition);
