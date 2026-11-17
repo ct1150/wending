@@ -17,7 +17,7 @@ import {validateMountain} from '../src/game/cultivation/live/folded-mountain.js'
 import {validateFerry} from '../src/game/cultivation/live/shell-ferry.js';
 import {validateWell} from '../src/game/cultivation/live/echo-well.js';
 import {validateCloudPassage} from '../src/game/cultivation/live/cloud-passage.js';
-import {journeyNotes,noteRoutes,crossingDeadlines} from '../src/game/cultivation/live/journey-notes.js';
+import {journeyNotes,adventureLeads,noteRoutes,crossingDeadlines} from '../src/game/cultivation/live/journey-notes.js';
 import {practicePlan} from '../src/game/cultivation/live/practice-plan.js';
 import {canStudyForm,validateForms} from '../src/game/cultivation/live/technique-forms.js';
 import {eventActionRule,advanceEvents} from '../src/game/cultivation/live/events.js';
@@ -1171,12 +1171,13 @@ test('Lin and Zhi keep their full itinerary alongside the river cases and actual
  assert.deepEqual(restored.events.post,s.events.post);
 });
 test('one continuous birth finishes the three-world campaign and replays its entire archive',async t=>{
- const route=[],blocks=new Set(),hunted=new Set(),resumed=new Set();
+ const route=[],blocks=new Set(),hunted=new Set(),resumed=new Set(),directions=new Set();
  const observe=(key,state)=>{
   route.push(key);for(const b of state.currentScene.blocks)blocks.add(b.text);
+  for(const lead of adventureLeads(state))directions.add(lead.node);
   if(key==='hunt-careful'&&state.lastReceipt.cultivationResult.check.success)hunted.add(state.currentScene.location);
-  if(['hub','training'].includes(state.events.node)){
-   const notes=journeyNotes(state).filter(n=>!resumed.has(n.node));
+  {
+   const notes=[...(['hub','training'].includes(state.events.node)?journeyNotes(state):[]),...adventureLeads(state)].filter(n=>!resumed.has(n.node));
    for(const [node,path] of noteRoutes(state,notes)){
     const before=structuredClone(state),visited=follow(before,...path);
     assert.deepEqual(visited.life,before.life);assert.equal(visited.rng,before.rng);
@@ -1348,7 +1349,10 @@ test('one continuous birth finishes the three-world campaign and replays its ent
  s=follow(s,'watch-later','rest-menu','back','journey-menu','river-book','hear-council','convoy-book');
  t.diagnostic('Three-world campaign ending at turn '+s.turnId+'; world tier '+s.life.cultivationProfile.worldTier);
  t.diagnostic('Material grounds successfully searched in this life: '+[...hunted].join('、'));
- t.diagnostic('Journal entries reopened through existing menus: '+[...resumed].join(', '));
+ t.diagnostic('Journal and long-route entrances reached through existing menus: '+[...resumed].join(', '));
+ for(const node of ['river-book','voyage-book','council-book','convoy-book','watch-book','watch-ding-book']){
+  assert.ok(directions.has(node),'missing long-route invitation '+node);assert.ok(resumed.has(node),'unreachable invitation '+node);
+ }
  const {liveBrowser}=await import('./helpers/live-browser.js'),{page}=await liveBrowser(t);
  const browser=await page.evaluate(async keys=>{
   const {createLiveSession}=await import('/src/ui/live-session.js'),format=await import('/src/game/live-save-format.js');

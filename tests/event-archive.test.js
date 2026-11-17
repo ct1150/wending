@@ -4,6 +4,21 @@ import {readFile} from 'node:fs/promises';
 import {gunzipSync} from 'node:zlib';
 import {liveBrowser} from './helpers/live-browser.js';
 
+test('mobile long-route directions open the actual story entrances without accepting either commission',async t=>{
+ const {page}=await liveBrowser(t);await page.setViewportSize({width:360,height:760});
+ const opt=key=>page.locator('[data-live-choice$=":c:'+key+'"]:enabled');
+ await page.locator('[data-title-new]').click();await page.locator('[data-live-start]').click();await opt('decline').click();
+ const state=()=>page.evaluate(async()=>{const {openLiveArchive}=await import('/src/game/live-archive.js');const a=await openLiveArchive();try{return (await a.load()).state;}finally{a.close();}});
+ const before=await state();await page.locator('[data-adventure-leads] > summary').click();
+ assert.match(await page.locator('[data-adventure-leads]').innerText(),/九关问鼎/);
+ await page.locator('[data-adventure-lead][data-live-note="watch-book"]').click();await opt('watch-open').waitFor();
+ const watch=await state();assert.equal(watch.events.watch,undefined);assert.deepEqual(watch.life,before.life);assert.equal(watch.rng,before.rng);
+ await page.locator('[data-adventure-lead][data-live-note="river-book"]').click();await opt('river-open').waitFor();
+ const river=await state();assert.equal(river.events.river,undefined);assert.equal(river.events.watch,undefined);assert.deepEqual(river.life,before.life);assert.equal(river.rng,before.rng);
+ await page.reload();await opt('river-open').waitFor();assert.deepEqual(await state(),river);
+ assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),true);
+});
+
 test('the original fourth mountain gift restores its pending exit and the new paid wind conversation replays exactly once',async t=>{
  const bytes=gunzipSync(await readFile(new URL('./fixtures/320d9a6-wind-pending.jsonl.gz',import.meta.url))).toString('utf8');
  const {page}=await liveBrowser(t);

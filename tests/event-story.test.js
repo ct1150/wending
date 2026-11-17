@@ -7,6 +7,7 @@ import {eventNode} from '../src/game/cultivation/live/event-content.js';
 import {saltWindow,validateSaltField} from '../src/game/cultivation/live/salt-field.js';
 import {DAYS_PER_YEAR} from '../src/game/cultivation/live/model.js';
 import {practicePlan} from '../src/game/cultivation/live/practice-plan.js';
+import {adventureLeads,journeyNotes,noteRoutes} from '../src/game/cultivation/live/journey-notes.js';
 
 const options={runId:'rules-event-life',seed:42,name:'沈渡',engineVersion:7,originStories:true,experienceVersion:1,eventVersion:1};
 function opening(extra={}){
@@ -19,6 +20,22 @@ function choose(state,key){
  const pending=engine.prepareChoice(state,{choiceId:choice.id,requestId:'turn-'+(state.turnId+1)});
  return pending.receipt.death?engine.settleDeath(state,pending):engine.commitTurn(state,pending,engine.resolveRuleScene(state,pending));
 }
+
+test('long-route invitations are available before acceptance and never impersonate commitments',()=>{
+ const entry=opening();assert.deepEqual(adventureLeads(entry),[]);
+ assert.deepEqual(adventureLeads({...entry,phase:'dead'}),[]);
+ assert.deepEqual(adventureLeads({...entry,events:undefined}),[]);
+ const employed=choose(entry,'accept');assert.equal(adventureLeads(employed)[0].node,'work');
+ const independent=choose(entry,'decline'),leads=adventureLeads(independent);
+ assert.deepEqual(leads.map(l=>l.node),['river-book','watch-book']);
+ assert.match(leads[1].detail,/渡劫境/);assert.equal(journeyNotes(independent).length,0);
+ for(const [node,path] of noteRoutes(independent,leads)){
+  const reached=path.reduce(choose,independent);
+  assert.equal(reached.events.node,node);assert.deepEqual(reached.life,independent.life);
+  assert.equal(reached.rng,independent.rng);assert.equal(reached.events.river,undefined);assert.equal(reached.events.watch,undefined);
+ }
+ assert.equal(noteRoutes(independent,leads).size,2);
+});
 
 test('a retreat plan quotes actual ordinary steady turns and leaves each accepted appointment reachable',()=>{
  let s=choose(choose(opening(),'decline'),'train-menu');

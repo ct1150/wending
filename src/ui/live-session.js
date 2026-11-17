@@ -7,7 +7,7 @@ import {MORTAL_OPENING} from '../game/cultivation/live/mortal-opening.js';
 import {requestRecoverableTurn} from './story-recovery.js';
 import {buildEventProseBrief,validateProseText} from '../game/cultivation/live/event-prose.js';
 import {practicePlan} from '../game/cultivation/live/practice-plan.js';
-import {journeyNotes,noteMenuSteps,noteRoutes} from '../game/cultivation/live/journey-notes.js';
+import {journeyNotes,adventureLeads,noteMenuSteps,noteRoutes} from '../game/cultivation/live/journey-notes.js';
 const defaultEngine={createLiveGame,prepareOpening,prepareChoice,commitTurn,settleDeath};
 const copy=value=>value===undefined?undefined:JSON.parse(JSON.stringify(value));
 const id=()=>globalThis.crypto.randomUUID();
@@ -274,7 +274,7 @@ export function createLiveSession({archive,client,engine=defaultEngine,onChange=
     return run(async()=>{
       await reload(command.archiveId);
       if(!loaded||loaded.pending||loaded.archiveId!==command.archiveId||command.baseRevision!==loaded.state.revision||command.stateHash!==stateHash(loaded.state))throw fault('STALE_CHOICE');
-      const entry=journeyNotes(loaded.state).find(n=>n.node===command.node);
+      const entry=[...journeyNotes(loaded.state),...adventureLeads(loaded.state)].find(n=>n.node===command.node);
       if(!entry)throw fault('STALE_CHOICE');
       const route=noteRoutes(loaded.state,[entry]).get(entry.node);
       if(!route?.length)throw fault('STALE_CHOICE');

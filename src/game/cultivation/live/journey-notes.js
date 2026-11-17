@@ -1,5 +1,5 @@
 import {eventNode} from './event-content.js';
-import {realmFor} from './cultivation-rules.js';
+import {realmFor,V7_REALMS} from './cultivation-rules.js';
 import {DAYS_PER_YEAR} from './model.js';
 import {harvestWindows} from './phenology.js';
 import {postWindows} from './lin-post.js';
@@ -9,6 +9,27 @@ import {nurseryWindow} from './entry-nursery.js';
 import {saltWindow} from './salt-field.js';
 import {riverCases} from './river-chronicle.js';
 import {councilHearings} from './mountain-council.js';
+
+// Invitations explain the existing long route without accepting its work or
+// putting undiscovered stories into the journal of actual commitments.
+export function adventureLeads(state){
+ if(state?.phase!=='active'||!state.events||state.events.entry==='unresolved')return [];
+ const e=state.events,leads=[],rank=realmFor(state.life).rank,watch=e.watch?.record.length??0;
+ const add=(node,title,detail)=>leads.push({node,title,detail});
+ if(e.entry==='accepted')add('work','先安顿这一程','三日药圃差事仍未交割。可先回棚看清约定，也可以辞工后另寻修行的路。');
+ else if((e.river?.record.length??0)<riverCases)add('river-book','问川 · 从一条河开始','问川图已落款 '+(e.river?.record.length??0)+' / '+riverCases+' 折。沿河访人、辨清线索，自己的选择会带到后面的行旅和北山。');
+ else if(e.expedition?.place!=='end')add('voyage-book','行旅 · 亲自走出河图','河上六折已合卷。接着走引灯、观星和雪营三程；路图里选过的苗契，也会改变沿途的处境。');
+ else if((e.council?.length??0)<councilHearings)add('council-book','北山 · 把所学用在现世','三程行旅已归来，北山还有 '+(councilHearings-(e.council?.length??0))+' 件事待定。随境界渐进，才能辨清更深的水脉与地势。');
+ else if((e.convoy?.chapters.reduce((n,c)=>n+c.loads.length,0)??0)<6){
+  const chapters=e.convoy?.chapters??[],last=chapters.at(-1),index=chapters.length-(last&&last.loads.length<2?1:0),tier=state.life.cultivationProfile.worldTier;
+  add('convoy-book','海路 · '+['沉钟湾','白汀','照影台'][index],tier<index?'上一港的两潮已交割。下一封信来自另一界，须亲自备妥境界与资用；海图旁有校阵和渡界的去处。':'北山的潮信把你带到这里。两潮一港，所送的人与物会改变后续航程；三界海路等你逐程走完。');
+ }
+ if(watch<9){
+  const needed=Object.values(V7_REALMS)[watch].name;
+  add('watch-book','修行 · 九关问鼎','已交割 '+watch+' / 9 关。'+(rank<watch?'下一关须到'+needed+'境再入定。':'下次闭关前，可先与守关人商量关外的事。')+'九关经历与渡劫境齐备后，可到铸坊决定此生怎样问鼎。');
+ }else add('watch-ding-book',e.watch.ding?.form?'问鼎 · 此生已有交割':'问鼎 · 三足取自一生',e.watch.ding?.form?'鼎铭已按你的决定留下。仍可回看旧事、继续此生；下一世须等这位人物真正走到生命尽头。':rank<9?'九关已交割。继续修至渡劫，再从三段人生各取一足，亲自决定鼎的去处。':'九关与境界已齐备。到山门铸坊取足、开范，决定哪些经历留给后来的人。');
+ return leads;
+}
 
 // Only events the character has entered belong here. Reading a note never opens an event.
 export function journeyNotes(state){
