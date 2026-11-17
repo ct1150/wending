@@ -46,6 +46,44 @@ test('steady retreat plans commit the manual turns exactly once and fence interr
  assert.equal(results.modes.replace.turns,0);assert.equal(results.modes.replace.hash,results.start);assert.ok(results.modes.replace.error);
 });
 
+test('a historic well search stays playable on mobile, then the new well ledger survives reload and import',async t=>{
+ const {page}=await liveBrowser(t);await page.setViewportSize({width:360,height:760});
+ let calls=0;await page.route('**/api/story/**',r=>{calls++;return r.abort();});
+ const bytes=gunzipSync(await readFile(new URL('./fixtures/f9b784d-echo-well.jsonl.gz',import.meta.url))).toString('utf8');
+ assert.ok(await page.evaluate(async text=>{
+  const {openLiveArchive}=await import('/src/game/live-archive.js'),{importLiveArchive}=await import('/src/game/live-save-format.js');
+  const archive=await openLiveArchive();try{
+   await importLiveArchive(new Response(text).body,archive);
+   return identity.stateHash((await archive.load()).state)===identity.stateHash(JSON.parse(text.split('\n')[0]).state);
+  }finally{archive.close();}
+ },bytes));
+ const option=key=>page.locator('[data-live-choice$=":c:'+key+'"]:enabled');
+ async function resume(key){
+  await page.reload();const enter=page.locator('[data-title-continue]:enabled');
+  await option(key).or(enter).first().waitFor();if(!await option(key).isVisible())await enter.click();await option(key).waitFor();
+ }
+ async function pick(key){
+  const button=option(key);await button.waitFor();
+  const rev=await button.getAttribute('data-revision');await button.click();
+  await page.locator('[data-live-choice]:not([data-revision="'+rev+'"])').first().waitFor();
+ }
+ await resume('hunt-bold');
+ for(const key of ['hunt-bold','train-menu','rest-menu','back','journey-menu','resources-menu','next-resource','well-road'])await pick(key);
+ for(let i=0;await option('well-food').isVisible();i++){assert.ok(i<16);await pick('well-food');}
+ for(const key of ['well-bold','well-knot','train-menu','rest-menu','back','journey-menu','resources-menu','next-resource','well-book','well-basket'])await pick(key);
+ await resume('well-share');await pick('well-share');
+ const result=await page.evaluate(async()=>{
+  const {openLiveArchive}=await import('/src/game/live-archive.js'),{stateHash}=await import('/src/game/cultivation/live/identity.js');
+  const {importLiveArchive,exportLiveArchive}=await import('/src/game/live-save-format.js');
+  const a=await openLiveArchive(),b=await openLiveArchive({name:'well-copy'});
+  try{await importLiveArchive(exportLiveArchive(a),b);const s=(await a.load()).state;
+   return {well:s.events.well,same:stateHash(s)===stateHash((await b.load()).state),overflow:document.documentElement.scrollWidth>innerWidth};
+  }finally{a.close();b.close();}
+ });
+ assert.equal(result.same,true);assert.equal(result.overflow,false);assert.equal(result.well.rig,'basket');assert.equal(result.well.claim,'share');
+ assert.equal(result.well.finish-result.well.start,7*result.well.total/8+12);assert.equal(calls,0);
+});
+
 test('the previous training gate survives mobile import and the new material route resumes halfway through',async t=>{
  const {page}=await liveBrowser(t);await page.setViewportSize({width:360,height:760});
  let calls=0;await page.route('**/api/story/**',r=>{calls++;return r.abort();});

@@ -14,6 +14,7 @@ import {validateGarden} from './phenology.js';
 import {validatePost} from './lin-post.js';
 import {recordMountainRetreat,validateMountain} from './folded-mountain.js';
 import {validateFerry} from './shell-ferry.js';
+import {validateWell} from './echo-well.js';
 
 const eventNodeIds=new Set([
  'arrival','terms','work','entry-result','companion','companion-result','reunion','reunion-result',
@@ -36,17 +37,20 @@ const eventNodeIds=new Set([
  'post-stations','post-settle','post-fog',
  'mount-book','mount-history','mount-sight','mount-sound',
  'shell-book','shell-journal','shell-parley',
- 'hunt-sources','hunt-grounds',
+ 'hunt-sources','hunt-grounds','well-book','well-road',
 ]);
 const copy=value=>JSON.parse(JSON.stringify(value));
 export function createEventState(atlas){return {version:1,node:'arrival',entry:'unresolved',companion:'unmet',mentor:'unmet',page:0,location:'gate',...(atlas?copy(atlas):{})};}
 export function validateEventState(events,life,gardenRoot){
- assertPlainData(events);exactKeys(events,['version','node','entry','companion','mentor','page','location'],['river','expedition','council','convoy','valley','watch','mine','garden','firstMeeting','post','mountain','ferry']);
+ assertPlainData(events);exactKeys(events,['version','node','entry','companion','mentor','page','location'],['river','expedition','council','convoy','valley','watch','mine','garden','firstMeeting','post','mountain','ferry','well']);
  if(!eventNodeIds.has(events.node))throw new Error('规则事件节点无效。');
  // A fatal breakthrough can reduce cultivation while leaving the final event at the grounds.
  if(life&&events.node.startsWith('hunt-')&&!nextRealmFor(life))throw new Error('当前没有需准备的破境材料。');
  if(Object.hasOwn(events,'council'))validateCouncil(events.council);
  if(Object.hasOwn(events,'convoy'))validateConvoy(events.convoy);
+ if(Object.hasOwn(events,'well'))validateWell(events.well,life);
+ if(events.node==='well-book'&&!events.well)throw new Error('回声井尚未起程。');
+ if(events.node==='well-road'&&(events.well||life&&realmFor(life).rank!==3))throw new Error('回声井路引无效。');
  if(Object.hasOwn(events,'valley'))validateValley(events.valley);
  if(Object.hasOwn(events,'watch'))validateWatch(events.watch);
  if(Object.hasOwn(events,'mine'))validateMine(events.mine);
@@ -134,6 +138,7 @@ export function advanceEvents(state,receipt){
  events.node=option.next??'hub';
  if(success&&option.patch)Object.assign(events,copy(option.patch));
  if(success&&option.arrival)events.location=option.arrival;
+ if(option.key==='well-share'||option.key==='well-alone')Object.assign(events.well,{claim:option.key==='well-share'?'share':'alone',found:(receipt.itemChanges.soulseal??0)>0,finish:receipt.after.ageDays});
  if(option.key==='mount-steady'||option.key==='mount-intensive')events.mountain=recordMountainRetreat(state.events,receipt);
  if(state.events.node==='reunion'&&['reunion-work','part'].includes(option.key)&&success)events.firstMeeting=state.events.companion;
  if(option.key==='sit-watch'){

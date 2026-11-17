@@ -1,5 +1,6 @@
 import {ITEMS} from './model.js';
 import {ferryForMaterial} from './shell-ferry.js';
+import {wellDepartures} from './echo-well.js';
 
 // The two approaches use the ordinary exploration roll, its price and its actual yield.
 const sites={
@@ -14,7 +15,7 @@ const sites={
  thunderseal:['引雷坡','坡上旧雷痕一道压一道。贴着冷痕能慢慢摸出雷印的位置，雷眼亮起的片刻则能看清整枚印。','沿冷雷痕逐道寻印','趁雷眼亮起闯入坡心','你托起雷印，石背上一小片银纹慢慢暗了下去。','雷光在下一道坡上亮起，你立足之处只剩焦土。'],
 };
 
-export function materialHunt(state,next,menu,choice){
+export function materialHunt(state,next,menu,choice,historicMenu){
  const {life,lastReceipt:r}=state,id=next.material,name=ITEMS[id];
  const [place,opening,careful,bold,found,missed]=sites[id];
  const row=(title,lines,choices)=>({title,location:state.events.node==='hunt-grounds'?place:undefined,goal:'为'+next.name+'备妥'+name,blocks:lines.map(text=>({kind:'narration',text})),choices});
@@ -29,12 +30,17 @@ export function materialHunt(state,next,menu,choice){
  if(key==='hunt-food')lines.push(r.itemChanges.supplies>0?'备下的行粮已经装袋，可以起行。':'这次沿路没有寻到行粮。');
  if(key==='hunt-rest')lines.push('你收功起身，当前灵力为'+life.cultivationProfile.spirit+'。');
  if(!lines.length)lines.push(opening);
+ const well=state.events.well;
+ if(id==='soulseal'&&well&&!well.claim&&well.world===life.cultivationProfile.worldTier)return row('回声井 · 驿棚留簿',['先前的行粮已经交给了井班。井簿夹在你停下的那一页，想回去时从那里接着走。'],[menu('well-book','取回井簿，接着走','well-book'),home]);
  if(life.items[id])return row(place+' · 备料归来',lines,[
   choice('breakthrough','用'+name+'尝试突破'+next.name,'practice',next.id,'breakthrough',{next:'action-result'}),rest,home]);
  const needsFood=next.rank>1&&!life.items.supplies;
  if(needsFood||life.cultivationProfile.spirit<5){
   lines.push((needsFood?'进山还缺一份行粮。':'')+(life.cultivationProfile.spirit<5?'寻材至少需要五分灵力。':''));
   return row(place+' · 行前整备',lines,[...(needsFood?[choice('hunt-food','沿路备办一份行粮','explore','supplies','cautious',{next:grounds})]:[]),rest,home]);
+ }
+ if(id==='soulseal'&&!well&&historicMenu!=='well'&&!(state.currentScene?.id.endsWith(':t'+state.turnId+':s:event_hunt-grounds')&&state.currentScene.choices.some(c=>c.id.endsWith(':c:hunt-careful')))){
+  return row(place,lines,[...wellDepartures(state,choice),home]);
  }
  return row(place,lines,[choice('hunt-careful',careful,'explore',id,'cautious',{next:grounds}),choice('hunt-bold',bold,'explore',id,'bold',{next:grounds}),home]);
 }

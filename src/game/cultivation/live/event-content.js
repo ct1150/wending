@@ -14,6 +14,7 @@ import {postNode,postNotice} from './lin-post.js';
 import {mountainNode,mountainHistory} from './folded-mountain.js';
 import {shellNode,ferryForMaterial} from './shell-ferry.js';
 import {materialHunt} from './material-hunt.js';
+import {echoWell,wellDepartures} from './echo-well.js';
 
 // Authored situations supply every fact and executable choice. AI never edits
 // these definitions. Stable actors belong to a life, not a generated paragraph.
@@ -62,7 +63,14 @@ export function eventNode(state,historicMenu=null){
  if(e.node.startsWith('mine-'))return mineNode(state,menu,choice,actor);
  if(e.node.startsWith('garden-'))return gardenNode(state,menu,choice);
  if(e.node.startsWith('shell-'))return shellNode(state,menu,choice,actor('ferrier'));
- if(e.node==='hunt-sources'||e.node==='hunt-grounds')return materialHunt(state,next,menu,choice);
+ if(e.node==='hunt-sources'||e.node==='hunt-grounds')return materialHunt(state,next,menu,choice,historicMenu);
+ if(e.node==='well-book')return echoWell(state,menu,choice);
+ if(e.node==='well-road'){
+  const home=menu('train-menu','收起路引，回去安排修行','training');
+  return row('回声井的两班路引','随巡井人去找归魂印，也看井户怎样换班',[
+   narration('行粮棚里压着两份与井班同行的路引。走旧石阶可以逐处听铃；搭吊篮走得快，起印时却少一道把握。先交一份行粮，半途回山仍可循井簿续走。'),
+  ],life.items.supplies?[...wellDepartures(state,choice),home]:[choice('well-food','沿路备下行粮再来报名','explore','supplies','cautious',{next:'well-road'}),home]);
+ }
  if(e.node==='mount-history')return mountainHistory(e.mountain,menu);
  if(e.node.startsWith('mount-'))return mountainNode(state,menu,choice);
  if(e.node==='post-index'){
@@ -172,7 +180,12 @@ export function eventNode(state,historicMenu=null){
   ],[menu('river-book',e.expedition?.place==='end'?'翻阅河簿、三程行旅与北山公簿':'展开问川图，历练河上人家','river-book'),menu('resources-menu','寻找修行材料与生活物资','resources',{page:0}),menu('workshop-menu','炼制、跨界与其他准备','workshop',{page:0})]);
   case 'resources':{
    const targets=[...new Set([next?.material??'relic','supplies','stones','herbs','iron'])],target=targets[e.page%targets.length];
-   const original=target==='herbs'&&e.garden?menu('garden-book','查看随身苗盆与采候','garden-book'):e.river?.record.length?menu('field-guide','翻看雾药谷游记与往返路线','field-guide'):leave;
+   const oldSlip=historicMenu==='resources'||state.currentScene?.id.endsWith(':t'+state.turnId+':s:event_resources')&&!state.currentScene.choices.some(c=>c.id.endsWith(':c:well-road'));
+   let original=target==='herbs'&&e.garden?menu('garden-book','查看随身苗盆与采候','garden-book'):e.river?.record.length?menu('field-guide','翻看雾药谷游记与往返路线','field-guide'):leave;
+   if(target==='supplies'){
+    if(e.well)original=menu('well-book','循行粮路引，回井棚翻井簿','well-book');
+    else if(realm.rank===3&&!oldSlip)original=menu('well-road','取一份去回声井的路引','well-road');
+   }
    const savedOld=state.currentScene?.id.endsWith(':t'+state.turnId+':s:event_resources')&&!state.currentScene.choices.some(c=>c.id.endsWith(':c:shell-book'));
    const ferry=realm.rank>=1&&e.page===0&&historicMenu!=='resources'&&!savedOld;
    return row('寻找'+ITEMS[target],'只结算本次选定的资源',[

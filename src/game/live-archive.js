@@ -444,13 +444,17 @@ class Archive {
    const oldChoices=current.choices.filter(choice=>!choice.id.endsWith(':c:'+addedChoice));
    if(oldChoices.length!==current.choices.length&&same(scene,{...current,choices:oldChoices}))scene=current;
   }
-  if(prior&&!prior.ferry&&sceneId.endsWith(':s:event_resources')&&scene?.choices?.some(c=>c.id?.endsWith(':c:back')||c.id?.endsWith(':c:field-guide'))){
+  if(prior&&sceneId.endsWith(':s:event_resources')&&scene?.choices?.some(c=>c.id?.endsWith(':c:back')||c.id?.endsWith(':c:field-guide'))){
    const current=resolveRuleScene(c.run.state,p);
-   if(current.choices.some(c=>c.id.endsWith(':c:shell-book'))&&same(scene,resolveEventScene(c.run.state,p,'resources')))scene=current;
+   if(current.choices.some(c=>!prior.ferry&&c.id.endsWith(':c:shell-book')||!prior.well&&c.id.endsWith(':c:well-road'))&&same(scene,resolveEventScene(c.run.state,p,'resources')))scene=current;
   }
   if(prior&&sceneId.endsWith(':s:event_training')&&scene.choices?.some(c=>c.id?.endsWith(':c:breakthrough'))){
    const current=resolveRuleScene(c.run.state,p);
    if(!current.choices.some(c=>c.id.endsWith(':c:breakthrough'))&&same(scene,resolveEventScene(c.run.state,p,'training')))scene=current;
+  }
+  if(prior&&!prior.well&&sceneId.endsWith(':s:event_hunt-grounds')&&scene.choices?.some(c=>c.id?.endsWith(':c:hunt-careful')&&c.targetId==='soulseal')){
+   const current=resolveRuleScene(c.run.state,p);
+   if(current.choices.some(c=>c.id.endsWith(':c:well-cautious'))&&same(scene,resolveEventScene(c.run.state,p,'well')))scene=current;
   }
   const d=await this._derived(c,scene,scene?buildMemoryDelta(p.receipt,scene):null);
   if(scene!==entry.scene)d.state.currentScene=clone(entry.scene);

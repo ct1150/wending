@@ -14,6 +14,7 @@ import {validateGarden,gardenRootForChild} from '../src/game/cultivation/live/ph
 import {validatePost} from '../src/game/cultivation/live/lin-post.js';
 import {validateMountain} from '../src/game/cultivation/live/folded-mountain.js';
 import {validateFerry} from '../src/game/cultivation/live/shell-ferry.js';
+import {validateWell} from '../src/game/cultivation/live/echo-well.js';
 import {practicePlan} from '../src/game/cultivation/live/practice-plan.js';
 
 const observers=new WeakMap();
@@ -164,6 +165,47 @@ function growToRealm(s,rank,arrival='mount-book'){
  assert.fail('stalled at '+s.life.realm);
 }
 const ferryFromTraining=s=>follow(s,'rest-menu','back','journey-menu','resources-menu','shell-book');
+test('the echo well charges each leg once, carries survey work across a retreat and remembers who inherits the bell',async()=>{
+ const {readFile}=await import('node:fs/promises'),{gunzipSync}=await import('node:zlib');
+ const bytes=gunzipSync(await readFile(new URL('./fixtures/f9b784d-echo-well.jsonl.gz',import.meta.url))).toString('utf8');
+ const old=JSON.parse(bytes.split('\n')[0]).state;
+ const source=follow(old,'train-menu','find-material');
+ for(const [way,clue,rig,claim,trained] of [['cautious','chalk','sluice','share',true],['bold','knot','sluice','alone',false],['bold','knot','basket','alone',true]]){
+  let s=pick(source,'well-'+way);const budget=s.events.well.total;
+  assert.equal(s.lastReceipt.elapsedDays,budget/4);assert.deepEqual(s.lastReceipt.itemChanges,{supplies:-1});
+  s=pick(s,'well-'+clue);assert.equal(s.lastReceipt.elapsedDays,budget/4);
+  const atLeg=structuredClone(s.events.well),age=s.life.ageDays;
+  s=follow(s,'train-menu','find-material','well-book');assert.deepEqual(s.events.well,atLeg);assert.equal(s.life.ageDays,age);
+  s=pick(deserializeLiveState(serializeLiveState(s)),'well-'+rig);
+  assert.equal(s.lastReceipt.elapsedDays,trained?budget/8:budget/4);
+  const before=s;
+  s=pick(s,'well-'+claim);
+  const w=s.events.well,success=s.lastReceipt.cultivationResult.check.success;
+  assert.equal(s.lastReceipt.elapsedDays,budget/4+(claim==='share'?12:0));assert.equal(w.found,success);
+  assert.equal(w.finish-w.start,(trained?7/8:1)*budget+(claim==='share'?12:0));
+  assert.equal(s.life.items.supplies,source.life.items.supplies-1);assert.equal(s.lastReceipt.itemChanges.soulseal??0,success?(claim==='share'?1:2):0);
+  const broken={...w,finish:w.start+1};assert.throws(()=>validateWell(broken,s.life),/日期/);
+  if(claim==='share'){
+   const later=follow(growToRealm(s,4,'continue'),'journey-menu','resources-menu','next-resource','well-book');
+   for(const reply of ['up','down']){
+    const final=pick(later,'well-'+reply);assert.equal(final.events.well.reply,reply);
+    assert.equal(final.lastReceipt.elapsedDays,12);assert.deepEqual(final.lastReceipt.itemChanges,{});
+    assert.match(prose(final),reply==='up'?/按铃交班/:/最后一人/);
+    assert.deepEqual(deserializeLiveState(serializeLiveState(final)),final);
+   }
+  }else if(!trained){
+   let camp=before;
+   for(let i=0;s.events.well.found;i++){
+    assert.ok(i<32);camp=follow(camp,'train-menu','rest-menu','recover','train-menu','find-material','well-book');
+    s=pick(camp,'well-alone');
+   }
+   assert.equal(s.lastReceipt.itemChanges.soulseal??0,0);assert.match(prose(s),/没有带走归魂印/);
+   let retry=follow(s,'train-menu','find-material');
+   for(let j=0;!retry.life.items.supplies;j++){assert.ok(j<12);retry=pick(retry,'hunt-food');}
+   assert.ok(retry.currentScene.choices.some(c=>c.id.endsWith(':c:hunt-careful')));
+  }
+ }
+});
 test('material leads follow the actual missing item, fishing decisions and native search odds',()=>{
  let gate=growToRealm(follow(start(),'accept','finish-work'),1,'train-menu');
  while(gate.life.cultivation<nextRealmFor(gate.life).threshold)gate=follow(gate,'practice','train-menu');
@@ -898,6 +940,10 @@ test('one continuous birth finishes the three-world campaign and replays its ent
   if(key==='hunt-careful'&&state.lastReceipt.cultivationResult.check.success)hunted.add(state.currentScene.location);
  };
  let s=lowerWorldCareer(observe,false);
+ s=follow(s,'river-back','journey-menu','resources-menu','next-resource','well-road');
+ for(let tries=0;!s.life.items.supplies;tries++){assert.ok(tries<16);s=pick(s,'well-food');}
+ s=follow(s,'well-cautious','well-chalk','well-sluice','well-share','train-menu','rest-menu','back','journey-menu','river-book','hear-council');
+ assert.equal(s.events.well.claim,'share');
  t.diagnostic('Continuous route to the valley ending: '+s.turnId+' committed turns including menus; '+s.life.ageDays+' in-world age days.');
  const inventory={...s.life.items};
  s=follow(s,'river-back','journey-menu','river-book','voyage-book');assert.match(s.currentScene.title,/三程归来/);
@@ -937,6 +983,9 @@ test('one continuous birth finishes the three-world campaign and replays its ent
  s=follow(s,'work-board','pin-R','pin-L','pin-R','pin-L','test-pins','cross-menu');
  assert.ok(!compileChoices(s,s.currentScene.choices).find(c=>c.approach==='ancient-array').enabled);
  s=trainTo(follow(s,'river-back','train-menu'),4);
+ s=follow(s,'river-back','journey-menu','resources-menu','next-resource','well-book');
+ assert.match(prose(s),/副铃/);assert.equal(s.currentScene.location,'行粮驿的书案');
+ s=follow(s,'well-down','train-menu','rest-menu','back','journey-menu','river-book','hear-council','convoy-book');
  s=crossWithArray(s,2);
  assert.equal(s.life.cultivationProfile.worldTier,2);
  s=pick(s,'ear-book');
