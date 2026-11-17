@@ -164,6 +164,30 @@ test('training and material preparation remain reachable when optional story eve
  assert.ok(engine.compileChoices(state,state.currentScene.choices).some(c=>c.enabled));
 });
 
+test('a wayside kitchen exchanges real stores and allows the ordinary forage instead',()=>{
+ let s=choose(choose(choose(opening(),'decline'),'journey-menu'),'resources-menu');
+ s=choose(choose(choose(s,'next-resource'),'next-resource'),'gather');
+ const at=choose(s,'ration-book'),compiled=state=>engine.compileChoices(state,state.currentScene.choices);
+ assert.equal(at.life.ageDays,s.life.ageDays);
+ const limits={...at,life:{...at.life,items:{...at.life.items,stones:1,herbs:1}}};
+ assert.deepEqual(compiled(limits).map(c=>c.enabled),[false,false,true]);
+ for(const [key,item,days] of [['ration-buy','stones',1],['ration-tea','herbs',3]]){
+  const stocked=structuredClone(at);
+  stocked.life.items[item]=2;
+  const packed=choose(stocked,key);
+  assert.equal(packed.life.items[item],0);
+  assert.equal(packed.life.items.supplies,at.life.items.supplies+4);
+  assert.equal(packed.lastReceipt.elapsedDays,days);
+  assert.equal(choose(packed,'intensive-again').life.items.supplies,at.life.items.supplies+3);
+  stocked.life.items.supplies=9996;
+  assert.equal(compiled(stocked).find(c=>c.id.endsWith(':c:'+key)).enabled,false);
+ }
+ const road=choose(at,'ration-road'),foraged=choose(road,'forage-again');
+ assert.equal(foraged.lastReceipt.elapsedDays,90);
+ assert.ok(foraged.lastReceipt.cultivationResult.check);
+ assert.equal(choose(road,'train-menu').events.node,'training');
+});
+
 test('event scenes cannot be replaced by structurally valid model text or invented options',()=>{
  const state=engine.createLiveGame(options),pending=engine.prepareOpening(state,{requestId:'opening'}),scene=engine.resolveRuleScene(state,pending);
  const forged=structuredClone(scene);forged.blocks[0].text='你已经得到掌门的认可。';

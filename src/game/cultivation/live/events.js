@@ -22,6 +22,7 @@ import {validateCloudPassage} from './cloud-passage.js';
 const eventNodeIds=new Set([
  'arrival','terms','work','entry-result','companion','companion-result','reunion','reunion-result',
  'work-porch','nursery-book','nursery-pot','nursery-receipt',
+ 'ration-book','ration-road','ration-packed',
  'hub','training','rest','journey','resources','workshop','crossing','affairs','mentor','mentor-result','old-record','action-result',
  'river-book','river-site','river-reading','river-decision','river-result',
  'voyage-book','voyage-road','voyage-camp','voyage-log','voyage-reset','voyage-result','voyage-detour',

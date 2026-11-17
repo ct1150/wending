@@ -911,6 +911,10 @@ function trainTo(state,rank){
    s=pick(s,'practice');
    while((rank<9||s.life.ageDays<reserve)&&s.life.cultivation<realm.threshold&&s.life.injury<=1&&s.life.cultivationProfile.spirit>=30+rank*5){
     const quick=s.events.garden&&rank>=3&&s.life.injury===0&&s.life.cultivationProfile.spirit>=50+rank*5;
+    if(quick&&!s.life.items.supplies&&s.currentScene.choices.some(c=>c.id.endsWith(':c:ration-book'))){
+     s=follow(s,'ration-book',(s.life.items.stones??0)>=2?'ration-buy':'ration-tea');
+     continue;
+    }
     s=pick(s,quick?(s.life.items.supplies?'intensive-again':'forage-again'):'practice-again');
    }
    s=pick(s,'train-menu');

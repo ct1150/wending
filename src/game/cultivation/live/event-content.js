@@ -250,6 +250,19 @@ export function eventNode(state,historicMenu=null){
   case 'old-record':return row('岁月之后','保留旧事，不编造未确认的重逢',[
    narration('你翻过旧日记录。相助、拒绝、同路与分别仍各有原来的样子。没有新的下落，便不替故人写下死讯，也不假定他们仍在原处。'),
   ],[menu('train-menu','带着旧日经历继续修行','training'),menu('journey-menu','寻找眼前真正可行的道路','journey'),leave]);
+  case 'ration-book':return row('路灶上的四只粮袋','为几次苦修或远行备下行粮',[
+   narration('路灶把一锅炒米分作四袋，一袋够支撑一回苦修。赶路的人留下两枚灵石，当日便能提走；若舍得两份灵草，便能同灶上人用三日煎成药茶，换走同样四袋。'),
+   narration('行囊里有'+(life.items.stones??0)+'枚灵石、'+(life.items.herbs??0)+'份灵草、'+(life.items.supplies??0)+'份行粮。山路仍通，不换也走得。'),
+  ],[choice('ration-buy','付两枚灵石，当日取四袋炒米','explore','stones','cautious',{next:'ration-packed',rule:{days:1,items:{stones:2},gain:{supplies:4}}}),
+   choice('ration-tea','交两份灵草，煎三日茶换四袋粮','explore','herbs','cautious',{next:'ration-packed',rule:{days:3,items:{herbs:2},gain:{supplies:4}}}),
+   menu('ration-road','留住资材，看看山路或回山','ration-road')]);
+  case 'ration-road':return row('路灶外的山径','亲自寻粮，或收起行囊回山',[
+   narration('灶后的小路通向山野。带回多少看这一趟收成；灶上的标价也还在，你可以回去再看。'),
+  ],[choice('forage-again','亲自出山备粮，归来再择功课','explore','supplies','cautious',{next:'action-result'}),menu('ration-book','回灶前看价','ration-book'),menu('train-menu','收起行囊，回山安排修行','training')]);
+  case 'ration-packed':return row('炒米入囊','清点行粮，再决定何时开关',[
+   narration((state.lastReceipt.action.id.endsWith(':c:ration-tea')?'第三日，药茶熬足了火候。灶上人替你扎紧袋口。':'灶上人收好灵石，把还温热的炒米包进油纸。')+'新添四袋，如今共有'+life.items.supplies+'份行粮。'),
+  ],[...(next&&life.cultivation<next.threshold?[choice('practice-again','留着行粮，稳练当前功法','practice','self','steady',{next:'action-result'}),
+   choice('intensive-again','开一袋行粮，支撑一次苦修','practice','self','intensive',{next:'action-result'})]:[menu('continue','带上炒米，安排下一段行程','hub')]),menu('train-menu','收起行粮，回山安排修行','training')]);
   case 'action-result':{
    const receipt=state.lastReceipt,check=receipt?.cultivationResult?.check,action=receipt?.action;
    let text='这次行动已经结束。实际消耗与变化记在下方，你可以继续安排自己的道路。';
@@ -259,13 +272,17 @@ export function eventNode(state,historicMenu=null){
    else if(action?.intent==='craft')text=check&&!check.success?'这次炼制失败，投入的材料已经消耗，未得到成品。':'你完成了这次炼制，所得与消耗照实记入行囊。';
    else if(action?.intent==='travel')text=check&&!check.success?'这次跨界没有成功，你仍在原来的界域；实际损耗已经记下。':'你抵达所选的界域，旧事仍保留在来路中，眼前的修行条件按新的天地结算。';
    let onward=menu('affairs-menu','看看故人与未完之事','affairs');
+   const oldRations=historicMenu==='provisions'||state.currentScene?.id.endsWith(':t'+state.turnId+':s:event_action-result')&&!state.currentScene.choices.some(c=>c.id.endsWith(':c:ration-book'));
+   const canTrade=(life.items.stones??0)>=2||(life.items.herbs??0)>=2;
+   const kitchen=menu('ration-book','到路灶备四份行粮，或亲自寻粮','ration-book');
+   if(!oldRations&&action?.id.endsWith(':c:gather')&&['stones','herbs','supplies'].includes(action.targetId))onward=kitchen;
    if(e.garden&&next&&life.cultivation<next.threshold&&
      (action?.intent==='practice'&&['steady','intensive'].includes(action.approach)||action?.id.endsWith(':c:forage-again'))){
     const delta=receipt.after.cultivation-receipt.before.cultivation;
     return row('出定再择功课','查看修为差额和余寿，决定下一关怎样练',[
      narration((action.intent==='explore'?'这次备粮用去':'上一关用去')+receipt.elapsedDays+'日，'+(check?.success===false?'检定未成':action.intent==='explore'?'寻粮归来':'修行已毕')+'，修为变动'+delta+'。距离'+next.name+'还差'+(next.threshold-life.cultivation)+'分。行粮还有'+(life.items.supplies??0)+'份，灵力尚余'+life.cultivationProfile.spirit+'。'),
     ],[choice('practice-again','依当前功法再闭关一次','practice','self','steady',{next:'action-result'}),
-     life.items.supplies?choice('intensive-again','付行粮苦修，提早出关','practice','self','intensive',{next:'action-result'}):choice('forage-again','亲自出山备粮，归来再择功课','explore','supplies','cautious',{next:'action-result'}),menu('train-menu','收功，回看苗盆或整备','training')]);
+     life.items.supplies?choice('intensive-again','付行粮苦修，提早出关','practice','self','intensive',{next:'action-result'}):canTrade&&!oldRations?kitchen:choice('forage-again','亲自出山备粮，归来再择功课','explore','supplies','cautious',{next:'action-result'}),menu('train-menu','收功，回看苗盆或整备','training')]);
    }
    if(action?.intent==='practice'&&action.approach==='steady'&&next&&life.cultivation<next.threshold){
     onward=choice('practice-again','依当前功法再闭关一次','practice','self','steady',{next:'action-result'});
