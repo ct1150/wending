@@ -45,6 +45,7 @@ export function adventureLeads(state){
  if(tier<2&&rank>=(tier?4:2))invite('crossing-ways','界台 · 筹备前往'+(tier?'上界':'中界'),'当前境界已经可以承受古阵，可自行备阵盘与路费；也可查看正途飞升的条件。前往只看路线，不会开阵或接受海路委托。');
  if(tier===2&&rank>=4&&!e.cloudPassage)invite('sky-book','白脊云渡 · 在上界亲历风候','随渡班在岸上或船中闭关，再亲自决定怎样试航。元婴、炼虚、大乘各有一班，旧井铃与先前的渡法会改变后来的办法。');
  if(!e.cloudRift&&canVisitRift(state))invite('sky-rift','白脊风隙 · 用所学走进异变','化神后可循已经交接的旧渡路探访浮岩。调查支点与回流，勘路或施术入隙；首次定脉后，到合体再处理自己留下的变化。先看现场，出发才交粮。');
+ if(e.cloudRift?.ending&&!e.riftBeacon)invite('sky-beacon-book','回风孤标 · 走一圈有回程的路','探路班想取回外岩标台的观风原纸。调查会耗时，第五日变风；旧定脉能帮你走不同入口，返岸的路仍须亲自决定。读信不算起行。');
  return [...opportunities,...leads];
 }
 
@@ -64,6 +65,11 @@ export function journeyNotes(state){
   notes.push({node,title,detail,timing,priority,date,close:window?.close});
  }
  const w=e.well;
+ if(e.riftBeacon&&!e.riftBeacon.ending){
+  const r=e.riftBeacon;
+  add('sky-beacon-book','回风孤标',r.entry?'标台已经去过，回程与原纸交割仍按实际行程接续。':'已到外侧渡岸，调查与移动都会过日；晚到可付出代价继续，不会永远失去通路。',{open:r.start,close:r.start+4},'已经变风，按现在的路线与费用继续');
+  notes.at(-1).timing=age<r.start+5?'距变风还有'+(r.start+5-age)+'日':'已经变风，按现在的路线与费用继续';
+ }
  if(e.cloudTrials?.at(-1)?.method===null)add('sky-trial','白脊试航船签',e.cloudTrials.at(-1).priority?'已有一组实际到岸，另一组仍待接班安排；可续行，也可交回常班。':'已接下试航，可以回船签桌核对船位和两组人的先后。');
  if(e.cloudRift)add('sky-rift','白脊风隙',e.cloudRift.ending?'再访已经结束，可回看自己留下的通路。':e.cloudRift.returned!==null?'已再入风隙，等你处理旧办法留下的变化。':e.cloudRift.anchor?(rank>=7?'已到合体，可以带粮再访当年的风隙。':'首次定脉已成，到合体可再入风隙。'):'已探到浮岩下，可从原处继续调查或入隙。');
  if(e.forms?.draft)add('form-book','本命术式','已选好要演练的气路，可以回去安排这一关。');
@@ -134,18 +140,20 @@ export function crossingDeadlines(state,notes,days){
  const age=state.life.ageDays,here=state.events.node;
  const names=notes.filter(n=>{
   if(!(n.close>=age&&age+days>n.close))return false;
+  if(n.node==='sky-beacon-book')return false;
   // The letter and shore deadlines already appear in the native choice preview.
   if(n.node==='post-book'||n.node==='post-shore')return false;
   if(n.node==='work'&&here.startsWith('nursery-'))return false;
   if(n.node==='post-stations')return true;
   return !here.startsWith(n.node==='watch-trail'?'watch-trail':n.node.split('-')[0]);
  }).map(n=>n.title);
- return names.length?'此行结束时已过'+names.join('、')+'的期限。':'';
+ const beacon=state.events.riftBeacon,wind=beacon&&!beacon.ending&&!here.startsWith('sky-beacon-')&&age<beacon.start+5&&age+days>=beacon.start+5;
+ return (names.length?'此行结束时已过'+names.join('、')+'的期限。':'')+(wind?'此行结束时回风孤标已经变风，仍可继续探路，通路费用按新的风候结算。':'');
 }
 
 // These menu screens can be read on the way to a known entry. A trip, promise,
 // reward or quest patch is a player decision even when it happens to cost zero days.
-const shelves=new Set(['hub','training','rest','journey','resources','workshop','crossing','affairs','mentor','companion','post-index','post-book','post-history','watch-book','watch-visitors','field-guide','garden-book','garden-history','river-book','voyage-book','council-book','sky-book','sky-weather','sky-lodgings']);
+const shelves=new Set(['hub','training','rest','journey','resources','workshop','crossing','affairs','mentor','companion','post-index','post-book','post-history','watch-book','watch-visitors','field-guide','garden-book','garden-history','river-book','voyage-book','council-book','sky-book','sky-weather','sky-lodgings','sky-rift']);
 export function noteMenuSteps(state){
  return eventNode(state).choices.filter(c=>c.navigation&&c.targetId==='self'&&c.approach==='observe'&&!c.arrival&&!c.rule&&Object.keys(c.patch??{}).every(k=>k==='page'));
 }

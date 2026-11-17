@@ -1,0 +1,85 @@
+{
+  "base": "65ac7486173e16be7526a5ab26ec62d7c034e7a9",
+  "chapter": "回风孤标",
+  "productionDeployed": false,
+  "human20HoursVerified": false,
+  "tests": {
+    "finalRules": {
+      "pass": 10,
+      "fail": 0
+    },
+    "archivesAndCompleteLives": {
+      "pass": 3,
+      "fail": 0
+    },
+    "relatedFiltered": {
+      "pass": 15,
+      "fail": 0
+    },
+    "nativeNoForm": {
+      "pass": 1,
+      "fail": 0
+    }
+  },
+  "verificationOrder": "archives and related tests before final derived UI wording; final rules/build/mobile after wording",
+  "ui": {
+    "before": 852,
+    "after": 885,
+    "days": 43212,
+    "elapsed": 134,
+    "surveyBytes": 2831439,
+    "finalBytes": 2904143,
+    "calls": 0,
+    "errors": [],
+    "viewport": {
+      "width": 360,
+      "height": 760
+    },
+    "noHorizontalOverflow": true,
+    "visuallyReviewed": [
+      "wind",
+      "finished"
+    ]
+  },
+  "bundle": {
+    "directory": "D:\\tmp\\wending\\试玩版\\d987a49\\rift-beacon-v3",
+    "sha256": "9556732a6c62f2f5f8b681dfcbe65f6558eb9818c77f183ef8767f94acb1f11c",
+    "bytes": 1453791,
+    "sourceHashes": {
+      "README.md": "605e603154157d603c6b5265fdced34f48dfb981f06dc852c397bf4a934f7663",
+      "docs/PLAYTHROUGH_ROUTE.md": "c32e78ba56b9f7546885e8d82fac8016ab5450ffdf292ff4f93dad640d53bf35",
+      "src/game/cultivation/live/cloud-passage.js": "8e0b99dfb6a4a8766331489eb871c61873540f27b523d04dd6811b99aa189715",
+      "src/game/cultivation/live/cloud-rift.js": "be6604ede4df763a8c3b4b680b7a27a25c7da6459630058ea387dd05027b40c1",
+      "src/game/cultivation/live/event-content.js": "fb39d39dbe018118581d48233c1aa4d457b34435976d652a4997d91684411e4e",
+      "src/game/cultivation/live/events.js": "3ad0dfe79d5f0bb2248690795e24a16dc3558071e98fa553349b763b1001ad2d",
+      "src/game/cultivation/live/journey-notes.js": "23f8ed82048afcc54cfb238dce5e92f6580e5f5edbba4900df3781795cdf314f",
+      "src/game/live-archive.js": "46732318fb8ea03d64c9739037c4ed4a23d6837fdec235abb30be0c0b80f3381",
+      "tests/combined-adventure.test.js": "adf1172a9a0d96a4dd441cfec5756b9eb659505fbf00d5181d26e15c8f2c782b",
+      "tests/river-chronicle.test.js": "45be0bd5468af8c7269df597037561b45b27abc7e422ba910a47710b6858288d",
+      "src/game/cultivation/live/rift-beacon.js": "22782556092b3ee7f4c5ba48011d605ac7232d2204676db778399f076447e690"
+    }
+  },
+  "routes": {
+    "original": 1009,
+    "withBeacon": 1221,
+    "nativeDeathAndSuccessor": true,
+    "extraTurnsAreNotNewDecisionCount": true
+  },
+  "samples": [
+    {
+      "name": "已查下层.wending.jsonl",
+      "bytes": 2831439,
+      "sha256": "2c061af5b39f29cedbc88ba450a56f8663622ffc383e7eda5fd97e19047c54b8"
+    },
+    {
+      "name": "孤标交割.wending.jsonl",
+      "bytes": 2904143,
+      "sha256": "de778e6b86093a3dad47fbebf08ed34cd0ca66ec199b918bc2bcb69176bc2a0f"
+    },
+    {
+      "name": "含孤标的问鼎人生.wending.jsonl",
+      "bytes": 3964649,
+      "sha256": "323605a6fb98611bbe15d1dccf86672ce75bb5b6cdd1b9d55e4b9c123960787d"
+    }
+  ]
+}

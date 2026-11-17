@@ -436,6 +436,10 @@ class Archive {
   let scene=entry.scene;
   // Verify historical scenes exactly before mapping their menu variant.
   const sceneId=typeof scene?.id==='string'?scene.id:'';
+  if(prior&&sceneId.endsWith(':s:event_sky-rift')&&!scene.choices?.some(c=>c.id?.endsWith(':c:beacon-book'))){
+   const current=resolveRuleScene(c.run.state,p);
+   if(current.choices.some(c=>c.id.endsWith(':c:beacon-book'))&&same(scene,resolveEventScene(c.run.state,p,'beacon')))scene=current;
+  }
   if(prior&&[':s:event_sky-book',':s:event_sky-lodgings'].some(s=>sceneId.endsWith(s))&&!scene.choices?.some(c=>c.id?.endsWith(':c:sky-trial'))){
    const current=resolveRuleScene(c.run.state,p);
    if(current.choices.some(c=>c.id.endsWith(':c:sky-trial'))&&['trials','rift'].some(variant=>same(scene,resolveEventScene(c.run.state,p,variant))))scene=current;

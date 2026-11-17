@@ -27,7 +27,7 @@ export function validateCloudRift(e,life){
  if(e.node==='sky-rift-way'&&(!r.marks||r.method))throw Error('风隙准备页次无效。');
 }
 
-export function riftNode(state,menu,choice){
+export function riftNode(state,menu,choice,historicMenu=null){
  const {events:e,life}=state,r=e.cloudRift;
  const home=menu('train-menu','泊回旧渡口，回山整备或修行','training');
  const book=menu('sky-book','回白脊渡口，安排另一段行程','sky-book');
@@ -70,10 +70,11 @@ export function riftNode(state,menu,choice){
   work('rift-moor','以两份玄铁定住岩心（两日、四分灵力）','iron',2,{anchor:'moor',settled:life.ageDays+2},{items:{iron:2},spiritCost:4}),
   work('rift-drift','留一份行粮，疏开风槽（三日、八分灵力）','supplies',3,{anchor:'drift',settled:life.ageDays+3},{items:{supplies:1},spiritCost:8}),home]);
  const changed=r.ending==='change',moored=(r.anchor==='moor')!==changed;
+ const oldBeacon=historicMenu==='beacon'||state.currentScene?.id.endsWith(':t'+state.turnId+':s:event_sky-rift')&&!state.currentScene.choices.some(c=>c.id.endsWith(':c:beacon-book'));
  if(r.ending)return row('白脊再访 · 一条自己走过的路',[
   r.anchor==='moor'?(changed?'你拆下旧桩，把结壳的石心放回流动的空环。第一次留下的落脚处已经撤去，浮岩又能缓缓转身。':'你没有敲碎整块寒壳，只沿内侧剥出让气流穿过的细缝。旧铁桩仍在，石心不必再隔着整层冰呼吸。'):(changed?'两份新铁跨在相离的气流之间，撑起一小片能驻足的岩面。浮岩还在走，脚下却不必一路追着它换步。':'你将两条气流错开半拍，令一条退去时另一条才接入。风槽重新连成路，没有把浮岩钉回原处。'),
   moored?'如今再从旧渡口抬头，能认出岩底那一小片不随云走的落脚处。它不是渡口必须经过的路，却是你亲自入过、也回来改过的地方。':'如今浮岩的影子会顺着云层移过水面。认路要听它当前的节拍，不能照着你第一次画下的位置生搬；你把旧图上那个固定的圆圈擦掉了。',
-  '此行没有额外增长修为，也没有把石心收入行囊。用掉的年月、灵力与资材都已经入账，留下的是能再次辨认的通路。'],[book,home]);
+  '此行没有额外增长修为，也没有把石心收入行囊。用掉的年月、灵力与资材都已经入账，留下的是能再次辨认的通路。'],[book,home,...(!oldBeacon?[menu('beacon-book','查看探路班的新来信与回风孤标','sky-beacon-book')]:[])]);
  if(r.returned===null)return row('风隙归来 · 留待下一次亲见',[
   r.anchor==='moor'?'铁桩落定，岩下第一次有一块能站稳的地方。离开时，你摸到石心外沿正在结起薄薄的寒壳；它暂时不妨碍通路，终有一日要从里面看清怎样化开。':'气流找到出口，浮岩缓缓移开半个身位。离开时，你听见风槽深处有两拍不同的声音；眼下还能接续，往后会怎样分开，要再亲自回来辨认。',
   realmFor(life).rank<7?'合体以后，周天气脉能同时分辨岩心内外，才可再入风隙处理后续。眼下旧渡仍通，可以继续自己的修行。':'如今已到合体，可带一份粮，用两日再入风隙。回来处理的仍是当初亲自留下的那种办法。'],[

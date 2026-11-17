@@ -20,6 +20,7 @@ import {cloudPassage} from './cloud-passage.js';
 import {nurseryNode} from './entry-nursery.js';
 import {saltFieldNode} from './salt-field.js';
 import {ridgeEntrance,ridgeNode} from './ridge-road.js';
+import {beaconPlaces} from './rift-beacon.js';
 import {canStudyForm,formNode} from './technique-forms.js';
 
 // Authored situations supply every fact and executable choice. AI never edits
@@ -35,6 +36,7 @@ export function eventEntities(state){
   {id:prefix+'middle',name:'中界清河城',kind:'place'},
   {id:prefix+'upper',name:'上界观星台',kind:'place'},
   ...(state.events.node.startsWith('shell-')?[{id:prefix+'ferrier',name:'蓼',kind:'person',status:'alive'}]:[]),
+  ...(state.events.node.startsWith('sky-beacon-')?beaconPlaces(prefix):[]),
   ...(state.events.node.startsWith('field-')?valleyPlaces(prefix):[]),
   ...(state.events.node.startsWith('mine-')?minePlaces(prefix):[]),
   ...(state.events.node==='field-shrine'?[{id:prefix+'springward',name:'守泉会',kind:'faction',experience:{version:1,realmId:'qi'}}]:[]),

@@ -3,8 +3,8 @@ import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
 import {liveBrowser} from './helpers/live-browser.js';
 
-test('one life joins personal stories and the three-world campaign across restored archives and a successor',async t=>{
- const fixture=JSON.parse(await readFile(new URL('./fixtures/a7ded3d-combined-route.json',import.meta.url),'utf8'));
+for(const chapter of [false,true])test('one life joins personal stories and the three-world campaign across restored archives and a successor'+(chapter?' including the beacon expedition':''),async t=>{
+ const fixture=JSON.parse(await readFile(new URL('./fixtures/'+(chapter?'rift-beacon-combined-route.json':'a7ded3d-combined-route.json'),import.meta.url),'utf8'));
  const {page}=await liveBrowser(t);
  const result=await page.evaluate(async ({config,route})=>{
   const {createLiveSession}=await import('/src/ui/live-session.js'),{importLiveArchive,exportLiveArchive}=await import('/src/game/live-save-format.js');
@@ -24,7 +24,7 @@ test('one life joins personal stories and the three-world campaign across restor
    if(row.state.events.mountain?.ending==='send'&&!restored.includes('mountain')){restored.push('mountain');await checkpoint('mountain');}
    if(index===route.length-1)await checkpoint('ending');
   }
-  const living=row.state,privateRecords=structuredClone(living.events),privateNames=['post','mountain','forms','ferry','cloudPassage','cloudTrials','cloudRift'];
+  const living=row.state,privateRecords=structuredClone(living.events),privateNames=['post','mountain','forms','ferry','cloudPassage','cloudTrials','cloudRift','riftBeacon'];
   for(let n=0;row.state.phase!=='dead'&&n<400;n++){
    const s=row.state,key=s.events.node==='training'?(engine.compileChoices(s,s.currentScene.choices).find(c=>c.id.endsWith(':c:practice')).enabled?'practice':'rest-menu'):s.events.node==='rest'?'recover':'train-menu';
    const c=s.currentScene.choices.find(c=>c.id.endsWith(':c:'+key));if(!c)throw Error('no natural ending action');
@@ -40,6 +40,7 @@ test('one life joins personal stories and the three-world campaign across restor
  },fixture);
  assert.ok(result.checkpoints.every(c=>c.exact));assert.deepEqual(result.checkpoints.map(c=>c.name),['arrival','friends','mountain','ending','successor']);
  const e=result.living.events;
+ if(chapter){assert.equal(e.riftBeacon.ending,'delivered');assert.equal(e.riftBeacon.work,'moor');}
  assert.equal(result.living.phase,'active');assert.equal(result.living.life.realm,'tribulation');assert.equal(result.living.life.cultivationProfile.worldTier,2);
  assert.equal(e.nursery.end,'beans');assert.equal(e.post.ending,'leaves');assert.equal(e.post.walk.outcome,'quiet');
  assert.equal(e.mountain.ending,'send');assert.equal(e.mountain.walk.length,6);assert.equal(e.forms.known,'listen');assert.equal(e.ferry.pages.length,3);assert.equal(e.ferry.reply,'chart');
@@ -50,7 +51,7 @@ test('one life joins personal stories and the three-world campaign across restor
  assert.ok(result.retainedExact&&result.parentReadDidNotSwitch);assert.equal(result.parentFirstTurn,1);
  assert.deepEqual(result.child.events.convoy,e.convoy);assert.equal(result.child.reincarnation.inscription.form,'village');assert.equal(result.child.life.realm,'mortal');
  if(process.env.WENDING_COMBINED_EVIDENCE){
-  const {mkdir,writeFile}=await import('node:fs/promises');const dir=process.env.WENDING_COMBINED_EVIDENCE;
+  const {mkdir,writeFile}=await import('node:fs/promises');const dir=process.env.WENDING_COMBINED_EVIDENCE+(chapter?'/beacon':'');
   await mkdir(dir,{recursive:true});
   for(const {name,text} of result.snapshots)await writeFile(dir+'/'+name+'.wending.jsonl',text,{flag:'wx'});
   await writeFile(dir+'/summary.json',JSON.stringify({source:fixture.revision,checkpoints:result.checkpoints,turn:result.living.turnId,events:e,cause:result.dead.lastReceipt.death.cause},null,2),{flag:'wx'});

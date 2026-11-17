@@ -2,6 +2,7 @@ import {realmFor} from './cultivation-rules.js';
 import {exactKeys} from './schema.js';
 import {canVisitRift,riftNode} from './cloud-rift.js';
 import {cloudTrialNode,cloudTrialStage} from './cloud-trial.js';
+import {beaconNode} from './rift-beacon.js';
 
 const seasons=[
  {rank:4,title:'盐船过白脊',petition:'云层一低，盐船就搁在白脊。船头只看得见峰，岸上的雇工却说每回都是先听见石滩碎响，才看见峰露出来。渡娘把记风的窄板往你脚下一搁：「请在这里住一关。等真人走了，我们也得认得这条路。」',
@@ -33,7 +34,8 @@ export function validateCloudPassage(events,life){
 export function cloudPassage(state,choice,menu,historicMenu=null){
  const {events,life}=state,log=events.cloudPassage??[],last=log.at(-1);
  if(events.node.startsWith('sky-trial'))return cloudTrialNode(state,choice,menu);
- if(events.node.startsWith('sky-rift'))return riftNode(state,menu,choice);
+ if(events.node.startsWith('sky-beacon-'))return beaconNode(state,menu,choice);
+ if(events.node.startsWith('sky-rift'))return riftNode(state,menu,choice,historicMenu);
  const watched=last?.route===null,i=watched?log.length-1:log.length,c=seasons[i];
  const back=menu('train-menu','收起渡簿，回去安排修行','training');
  const row=(title,lines,choices)=>({title,location:'上界白脊云渡',goal:'在上界守一关风候，把能交给凡人的渡路留下',blocks:lines.map(text=>({kind:'narration',text})),choices});

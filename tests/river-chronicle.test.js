@@ -236,6 +236,10 @@ test('rift preparation survives retraining and both original cloud shifts and un
  const same=pick(s,'rift-renew'),changed=pick(s,'rift-change');
  assert.match(prose(same),/错开半拍/);assert.match(prose(changed),/两份新铁/);
  assert.equal(changed.life.items.iron,s.life.items.iron-2);
+ assert.equal(same.events.forms,undefined);
+ const beacon=follow(same,'beacon-book','beacon-launch','beacon-channel','beacon-survey','beacon-enter','beacon-read','beacon-works','beacon-moor','beacon-exit','beacon-return','beacon-deliver');
+ assert.equal(beacon.events.riftBeacon.ending,'delivered');assert.equal(beacon.events.forms,undefined);
+ assert.deepEqual(beacon.events.cloudRift,same.events.cloudRift);
  for(const [field,value] of [['start',s.life.ageDays+1],['route',null],['prepared',0],['returned',0]]){
   const invalid=structuredClone(s.events);invalid.cloudRift[field]=value;
   assert.throws(()=>validateCloudRift(invalid,s.life),/风隙/);
