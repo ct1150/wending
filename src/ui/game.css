@@ -172,6 +172,12 @@ body { background: #101d24; }
 .live-turn-feedback { padding-left: 13px; border-left: 2px solid var(--gold); }
 .live-turn-changes { padding-left: 15px; }
 .live-turn-state { border-color: var(--line2); margin-top: 26px; }
+.journey-notes { margin-block: 12px; border-block: 1px solid var(--line2); }
+.journey-notes summary { cursor: pointer; padding-block: 12px; color: var(--gold); }
+.journey-notes ul { list-style: none; padding: 0; }
+.journey-notes li { padding-block: 10px; }
+.journey-notes li + li { border-top: 1px solid var(--line2); }
+.journey-notes li p { margin-block: 4px 8px; }
 .live-turn-state summary { min-height: 44px; line-height: 2; padding-block: 9px; }
 .live-turn-state summary > span:first-child { color: var(--gold); }
 .live-turn-state dd { line-height: 1.9; }

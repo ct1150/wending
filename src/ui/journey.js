@@ -4,6 +4,7 @@ import {describeEcho,getReincarnationSettlement,REINCARNATION_REWARDS} from '../
 import {buildOpeningBrief} from '../game/cultivation/live/experience-story.js';
 import {nextRealmFor} from '../game/cultivation/live/cultivation-rules.js';
 import {practicePlan} from '../game/cultivation/live/practice-plan.js';
+import {journeyNotes,noteRoutes,crossingDeadlines} from '../game/cultivation/live/journey-notes.js';
 const esc = value => String(value ?? '').replace(/[&<>"']/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[char]);
 
 const endings = { retired: '归隐', lifespan: '寿尽', battle: '陨落', victory: '问鼎', burned: '燃命而终' };
@@ -130,6 +131,7 @@ function renderLiveChoice(choice, view, index, presentation) {
     outlook?.purpose ? '对方意图：'+outlook.purpose : '',
     outlook?.condition ? '可利用：'+outlook.condition : '',
     ...(choice.warnings ?? []),
+    choice.enabled&&presentation.notes.length?crossingDeadlines(view.state,presentation.notes,choice.costs?.days):'',
   ].filter(Boolean);
   return `<button type="button" class="journey-choice${draft ? ' live-choice-draft' : ''}" data-live-choice-index="${index}"${draft ? ' data-live-choice-preview' : ` data-live-choice="${esc(choice.id)}" data-revision="${view.state.revision}" data-state-hash="${esc(view.stateHash)}"`}${draft || presentation.pending || !choice.enabled ? ' disabled' : ''}${details.length ? ` aria-describedby="live-cost-${index}"` : ''}><span class="journey-choice-label">${numbered ? `<span class="live-choice-number">${index + 1}. </span>` : ''}${esc(choice.label)}</span><span class="journey-choice-reason" id="live-cost-${index}"${details.length ? '' : ' hidden'}>${esc(details.join(' · '))}</span></button>`;
 }
@@ -212,21 +214,33 @@ function renderPracticePlan(view){
   const shorter=options.length?`<details><summary>提前几关出定</summary><label>修期 <select data-practice-count>${options.join('')}</select></label> <button type="button" class="button" data-live-short-practice ${command}>按所选修期入定</button></details>`:'';
   return summary+`<section class="event-prose practice-plan" aria-label="连续稳修"><p class="save-info" data-practice-cost>${plan.days} 日 · 灵力 −${plan.spirit} · 修为 +${plan.gain}${plan.exposure?' · 暴露 +'+plan.exposure:''}。 ${esc(plan.stop)}。</p><button type="button" class="button" data-live-practice="${plan.count}" ${command}>连续稳修 ${plan.count} 关</button>${shorter}</section>`;
 }
-function renderEventExtras(view){
+function renderJourneyNotes(view,notes){
+  if(!notes.length)return '';
+  const routes=noteRoutes(view.state,notes),top=notes[0];
+  const rows=notes.map(n=>{
+    const path=routes.get(n.node);
+    const link=path?.length?`<button type="button" class="button" data-live-note="${esc(n.node)}" data-archive-id="${esc(view.archiveId)}" data-revision="${view.state.revision}" data-state-hash="${esc(view.stateHash)}"${view.busy||view.pending?' disabled':''}>翻到${esc(n.title)}</button>`:
+      `<small>${path?'正在这一页':'先离开眼前的场景，再翻到这一页'}</small>`;
+    return `<li><strong>${esc(n.title)}</strong><p>${esc(n.detail)}${n.timing?' '+esc(n.timing)+'。':''}</p>${link}</li>`;
+  }).join('');
+  return `<details class="journey-notes" data-journey-notes data-live-preserve-open><summary>此生行记${notes.length>1?'（'+notes.length+'件）':''} · ${esc(top.title)}${top.timing?' · '+esc(top.timing):''}</summary><ul>${rows}</ul></details>`;
+}
+function renderEventExtras(view,notes){
   const state=view.state;
   if(!state.events||state.phase!=='active')return {growth:'',prose:''};
   const next=nextRealmFor(state.life),extra=view.prose;
   const growth=next?`修行目标：${next.name} · 修为 ${state.life.cultivation} / ${next.threshold} · ${view.itemNames?.[next.material]??ITEMS[next.material]} ${state.life.items[next.material]??0} / 1`:'继续此生：修炼、历练与未完的因果仍可推进。';
   const message=extra?.status==='loading'?'正在写一小段扩写，你可以继续选择。':extra?.status==='unavailable'?'这一段扩写暂不可用，你仍可继续当前故事。':'';
   return {
-    growth:`<p class="event-growth" data-event-growth>${esc(growth)}</p>`,
+    growth:`<p class="event-growth" data-event-growth>${esc(growth)}</p>${renderJourneyNotes(view,notes)}`,
     prose:renderPracticePlan(view)+`<section class="event-prose" data-event-prose aria-label="可选扩写"><button type="button" class="button" data-live-prose-expand${extra||view.busy||view.pending?' disabled':''}>${state.currentScene.blocks.some(block=>block.kind==='dialogue')?'展开对白':'展开描写'}</button><p class="save-info">可选的 AI 扩写，需要联网；随时可以继续行动。</p>${message?`<p data-event-prose-status role="status">${esc(message)}</p>`:''}${extra?.status==='ready'?`<p class="journey-block" data-event-prose-text>${esc(extra.text)}</p>`:''}</section>`,
   };
 }
 
 export function renderLiveJourney(view, choices) {
   const state = view.state, scene = state.currentScene, presentation = livePresentation(view, choices);
-  const extras=renderEventExtras(view);
+  presentation.notes=journeyNotes(state);
+  const extras=renderEventExtras(view,presentation.notes);
   const v7 = state.life.cultivationProfile?.version === 7;
   const opening = state.phase === 'awaitingOpening' && !presentation.preview;
   const intro = opening ? `<p>${esc(state.life.name)}，${Math.floor(state.life.ageDays / DAYS_PER_YEAR)}岁，出身${esc(ORIGINS[state.life.birth.originId])}。</p><p>天赋：${state.life.birth.talentIds.map(id => esc(TALENTS[id])).join('、')}。</p>` : '';

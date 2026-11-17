@@ -46,6 +46,80 @@ test('steady retreat plans commit the manual turns exactly once and fence interr
  assert.equal(results.modes.replace.turns,0);assert.equal(results.modes.replace.hash,results.start);assert.ok(results.modes.replace.error);
 });
 
+test('opening a note stops on interruption or archive replacement and rejects old tabs and undiscovered entries',async t=>{
+ const {page}=await liveBrowser(t);
+ const bytes=gunzipSync(await readFile(new URL('./fixtures/f9b784d-echo-well.jsonl.gz',import.meta.url))).toString('utf8');
+ const result=await page.evaluate(async text=>{
+  const {createLiveSession}=await import('/src/ui/live-session.js'),{importLiveArchive,exportLiveArchive}=await import('/src/game/live-save-format.js');
+  const base=await open('notes-original');await importLiveArchive(new Response(text).body,base);
+  const session=createLiveSession({archive:base,client:{}});let row=await session.load();
+  const args=r=>({node:'well-book',archiveId:r.archiveId,baseRevision:r.state.revision,stateHash:identity.stateHash(r.state)});
+  for(const key of ['train-menu','find-material','well-cautious','train-menu','rest-menu','back']){
+   const state=row.state;row=await session.choose({choiceId:state.currentScene.choices.find(c=>c.id.endsWith(':c:'+key)).id,baseRevision:state.revision,stateHash:identity.stateHash(state)});
+  }
+  const saved=await new Response(exportLiveArchive(base)).text(),out={};
+  for(const mode of ['success','stop','replace','invalid']){
+   const a=await open('notes-'+mode);await importLiveArchive(new Response(saved).body,a);
+   const ss=createLiveSession({archive:a,client:{}}),start=await ss.load(),cmd=args(start);
+   const commit=a.commitEvent.bind(a);let count=0;
+   a.commitEvent=async input=>{
+    if(mode==='replace'&&count===1){
+     const other=await open('notes-'+mode);try{await importLiveArchive(new Response(saved).body,other);}finally{other.close();}
+    }
+    const updated=await commit(input);count++;return updated;
+   };
+   const final=await ss.openJourneyNote(mode==='invalid'?{...cmd,node:'well-share'}:cmd,()=>mode!=='stop'||count===0);
+   const current=await a.load();
+   out[mode]={count,error:final.errorCode,node:current.state.events.node,steps:current.state.revision-start.state.revision,unchanged:JSON.stringify(current.state.life)===JSON.stringify(start.state.life)&&current.state.rng===start.state.rng&&current.state.events.well.claim===null};
+   if(mode==='success')out.stale=(await ss.openJourneyNote(cmd)).errorCode;
+   a.close();
+  }
+  base.close();return out;
+ },bytes);
+ assert.equal(result.success.node,'well-book');assert.ok(result.success.steps>=2);assert.equal(result.stale,'STALE_CHOICE');
+ assert.equal(result.stop.count,1);assert.equal(result.stop.steps,1);assert.notEqual(result.stop.node,'well-book');
+ assert.equal(result.replace.count,1);assert.equal(result.replace.steps,0);assert.ok(result.replace.error);
+ assert.equal(result.invalid.steps,0);assert.equal(result.invalid.error,'STALE_CHOICE');
+ for(const mode of ['success','stop','replace','invalid'])assert.ok(result[mode].unchanged);
+});
+
+test('the mobile journey notes resume an interrupted well while a real ferry tide runs, without choosing either outcome',async t=>{
+ const {page}=await liveBrowser(t);await page.setViewportSize({width:360,height:760});
+ let calls=0;await page.route('**/api/story/**',r=>{calls++;return r.abort();});
+ const bytes=gunzipSync(await readFile(new URL('./fixtures/f9b784d-echo-well.jsonl.gz',import.meta.url))).toString('utf8');
+ await page.evaluate(async text=>{
+  const {openLiveArchive}=await import('/src/game/live-archive.js'),{importLiveArchive}=await import('/src/game/live-save-format.js');
+  const a=await openLiveArchive();try{await importLiveArchive(new Response(text).body,a);}finally{a.close();}
+ },bytes);
+ const option=key=>page.locator('[data-live-choice$=":c:'+key+'"]:enabled');
+ async function resume(key){
+  await page.reload();const enter=page.locator('[data-title-continue]:enabled');
+  await option(key).or(enter).first().waitFor();if(!await option(key).isVisible())await enter.click();await option(key).waitFor();
+ }
+ async function pick(...keys){for(const key of keys)await option(key).click();}
+ const state=()=>page.evaluate(async()=>{
+  const {openLiveArchive}=await import('/src/game/live-archive.js');const a=await openLiveArchive();
+  try{return (await a.load()).state;}finally{a.close();}
+ });
+ await resume('hunt-bold');
+ await pick('train-menu','find-material','well-cautious','well-chalk','train-menu','rest-menu','back','journey-menu','resources-menu','shell-book','sail-bank','train-menu');
+ await option('rest-menu').waitFor();await resume('rest-menu');
+ const journal=page.locator('[data-journey-notes]');
+ assert.match(await journal.locator('summary').innerText(),/满舱小灯.*24日/);
+ await journal.locator('summary').click();
+ assert.match(await journal.innerText(),/已找出石壁的假回声/);
+ const before=await state();await journal.locator('[data-live-note="well-book"]').click();await option('well-sluice').waitFor();
+ const after=await state();assert.deepEqual(after.life,before.life);assert.equal(after.rng,before.rng);
+ assert.deepEqual(after.events.well,before.events.well);assert.deepEqual(after.events.ferry,before.events.ferry);
+ assert.match(await option('well-sluice').innerText(),/此行结束时已过浮蚌渡/);
+ await pick('well-sluice');await option('well-share').waitFor();
+ assert.match(await journal.innerText(),/潮已退/);
+ await journal.locator('[data-live-note="shell-book"]').click();await option('close-tide').waitFor();
+ const expired=await state();assert.equal(expired.events.ferry.pages.at(-1).end,null);assert.equal(expired.events.well.claim,null);
+ await pick('close-tide');await option('shell-journal').waitFor();assert.doesNotMatch(await journal.innerText(),/潮已退/);
+ assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),true);assert.equal(calls,0);
+});
+
 test('a historic well search stays playable on mobile, then the new well ledger survives reload and import',async t=>{
  const {page}=await liveBrowser(t);await page.setViewportSize({width:360,height:760});
  let calls=0;await page.route('**/api/story/**',r=>{calls++;return r.abort();});

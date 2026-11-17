@@ -16,11 +16,11 @@ const reached=p=>p.steps[0]?.decision===(p.route==='relay'?'ferry':'yard');
 export function postWindows(p){
  if(!p||p.route==='pass')return [];
  const times=[],station=stationVisitWindow(p);
- if(station)times.push(station);
- if(p.walk&&!p.walk.outcome)times.push({name:'阿枳的潮约',open:p.walk.start,close:p.walk.start+4});
+ if(station)times.push({...station,node:'post-stations'});
+ if(p.walk&&!p.walk.outcome)times.push({node:'post-shore',name:'阿枳的潮约',open:p.walk.start,close:p.walk.start+4});
  if(!p.ending){
   const s=seasons[p.steps.length];
-  times.push({name:s?'药路第'+(p.steps.length+1)+'封回单':'旧匣交割',open:p.start+(s?.open??25)*years,close:s?p.start+s.close*years-1:Infinity});
+  times.push({node:'post-book',name:s?'药路第'+(p.steps.length+1)+'封回单':'旧匣交割',open:p.start+(s?.open??25)*years,close:s?p.start+s.close*years-1:Infinity});
  }
  return times;
 }

@@ -15,6 +15,7 @@ import {validatePost} from '../src/game/cultivation/live/lin-post.js';
 import {validateMountain} from '../src/game/cultivation/live/folded-mountain.js';
 import {validateFerry} from '../src/game/cultivation/live/shell-ferry.js';
 import {validateWell} from '../src/game/cultivation/live/echo-well.js';
+import {journeyNotes,noteRoutes,crossingDeadlines} from '../src/game/cultivation/live/journey-notes.js';
 import {practicePlan} from '../src/game/cultivation/live/practice-plan.js';
 
 const observers=new WeakMap();
@@ -146,6 +147,19 @@ test('station commissions carry the last settlement into the next trip; both dis
 });
 const firstWatch=(seed,keeper,marks)=>follow(start(undefined,seed),'decline','train-menu','rest-menu','watch-book','watch-open','keeper-'+keeper,marks,'sit-watch');
 const firstPlot=(seed=42)=>follow(start(undefined,seed),'decline','train-menu','garden-book','sow');
+test('calendar notes respect inclusive harvest days and distinguish an appointment from a declined invitation',()=>{
+ const s=firstPlot(),notes=journeyNotes(s),garden=notes.find(n=>n.node==='garden-book');
+ assert.match(garden.timing,/日开始/);
+ const away={...s,events:{...s.events,node:'training'}},days=garden.close-s.life.ageDays;
+ assert.equal(crossingDeadlines(away,notes,days),'');
+ assert.match(crossingDeadlines(away,notes,days+1),/嫩候/);
+ const post=follow(postOffer('aid'),'launch-relay','back');
+ const note=journeyNotes(post).find(n=>n.node==='post-book');
+ const path=noteRoutes(post,[note]).get('post-book'),desk=follow(post,...path);
+ assert.equal(desk.events.node,'post-book');assert.deepEqual(desk.life,post.life);assert.deepEqual(desk.events.post,post.events.post);
+ const declined=follow(postOffer('decline-companion'),'consider','decline-post');
+ assert.ok(!journeyNotes(declined).some(n=>n.node==='post-book'));
+});
 function growToRealm(s,rank,arrival='mount-book'){
  s=pick(s,'train-menu');
  for(let turns=0;turns<80;turns++){
@@ -934,10 +948,19 @@ test('Lin and Zhi keep their full itinerary alongside the river cases and actual
  assert.deepEqual(restored.events.post,s.events.post);
 });
 test('one continuous birth finishes the three-world campaign and replays its entire archive',async t=>{
- const route=[],blocks=new Set(),hunted=new Set();
+ const route=[],blocks=new Set(),hunted=new Set(),resumed=new Set();
  const observe=(key,state)=>{
   route.push(key);for(const b of state.currentScene.blocks)blocks.add(b.text);
   if(key==='hunt-careful'&&state.lastReceipt.cultivationResult.check.success)hunted.add(state.currentScene.location);
+  if(['hub','training'].includes(state.events.node)){
+   const notes=journeyNotes(state).filter(n=>!resumed.has(n.node));
+   for(const [node,path] of noteRoutes(state,notes)){
+    const before=structuredClone(state),visited=follow(before,...path);
+    assert.deepEqual(visited.life,before.life);assert.equal(visited.rng,before.rng);
+    assert.deepEqual(visited.events,{...before.events,node,page:visited.events.page});
+    resumed.add(node);
+   }
+  }
  };
  let s=lowerWorldCareer(observe,false);
  s=follow(s,'river-back','journey-menu','resources-menu','next-resource','well-road');
@@ -1034,6 +1057,7 @@ test('one continuous birth finishes the three-world campaign and replays its ent
  s=follow(s,'watch-later','rest-menu','back','journey-menu','river-book','hear-council','convoy-book');
  t.diagnostic('Three-world campaign ending at turn '+s.turnId+'; world tier '+s.life.cultivationProfile.worldTier);
  t.diagnostic('Material grounds successfully searched in this life: '+[...hunted].join('、'));
+ t.diagnostic('Journal entries reopened through existing menus: '+[...resumed].join(', '));
  const {liveBrowser}=await import('./helpers/live-browser.js'),{page}=await liveBrowser(t);
  const browser=await page.evaluate(async keys=>{
   const {createLiveSession}=await import('/src/ui/live-session.js'),format=await import('/src/game/live-save-format.js');

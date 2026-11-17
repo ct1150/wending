@@ -7,6 +7,7 @@ import {MORTAL_OPENING} from '../game/cultivation/live/mortal-opening.js';
 import {requestRecoverableTurn} from './story-recovery.js';
 import {buildEventProseBrief,validateProseText} from '../game/cultivation/live/event-prose.js';
 import {practicePlan} from '../game/cultivation/live/practice-plan.js';
+import {journeyNotes,noteMenuSteps,noteRoutes} from '../game/cultivation/live/journey-notes.js';
 const defaultEngine={createLiveGame,prepareOpening,prepareChoice,commitTurn,settleDeath};
 const copy=value=>value===undefined?undefined:JSON.parse(JSON.stringify(value));
 const id=()=>globalThis.crypto.randomUUID();
@@ -269,6 +270,25 @@ export function createLiveSession({archive,client,engine=defaultEngine,onChange=
       await generate(loaded);
     });
   }
+  function openJourneyNote(command,canContinue=()=>true){
+    return run(async()=>{
+      await reload(command.archiveId);
+      if(!loaded||loaded.pending||loaded.archiveId!==command.archiveId||command.baseRevision!==loaded.state.revision||command.stateHash!==stateHash(loaded.state))throw fault('STALE_CHOICE');
+      const entry=journeyNotes(loaded.state).find(n=>n.node===command.node);
+      if(!entry)throw fault('STALE_CHOICE');
+      const route=noteRoutes(loaded.state,[entry]).get(entry.node);
+      if(!route?.length)throw fault('STALE_CHOICE');
+      for(const key of route){
+        if(!canContinue())break;
+        const state=loaded.state,choice=state.currentScene.choices.find(c=>c.id.endsWith(':c:'+key));
+        if(!choice||!noteMenuSteps(state).some(c=>c.key===key))throw fault('STALE_CHOICE');
+        const pending=engine.prepareChoice(state,{choiceId:choice.id,requestId:id()});
+        if(pending.receipt.elapsedDays||pending.receipt.random.before!==pending.receipt.random.after)throw fault('STALE_CHOICE');
+        loaded=await archive.commitEvent({expectedArchiveId:command.archiveId,expectedRevision:state.revision,pending});
+        preview=null;status='ready';errorCode=null;
+      }
+    });
+  }
   function practiceUntil(command,canContinue=()=>true){
     return run(async()=>{
       await reload(command.archiveId);
@@ -359,5 +379,5 @@ export function createLiveSession({archive,client,engine=defaultEngine,onChange=
     if(prose===current)emit();
     return view();
   }
-  return {start,startNew,reincarnate,load,choose,practiceUntil,stopPractice,resume,retry,expandProse,view};
+  return {start,startNew,reincarnate,load,choose,openJourneyNote,practiceUntil,stopPractice,resume,retry,expandProse,view};
 }

@@ -214,7 +214,7 @@ function captureFocusTarget(element = document.activeElement) {
   // Action identity survives a redraw; revision/state metadata does not.
   const attributes = [...element.attributes].filter(({ name }) => name.startsWith('data-') && !['data-revision', 'data-state-hash', 'data-scene-id'].includes(name));
   const selector = element.id ? `#${CSS.escape(element.id)}` : attributes.length ? element.localName + attributes.map(({ name, value }) => `[${name}="${CSS.escape(value)}"]`).join('') : null;
-  return { element, selector, sceneFallback: element.matches('[data-live-choice], [data-live-start], [data-live-new], [data-live-retry], [data-live-resume], [data-live-reincarnate]') };
+  return { element, selector, sceneFallback: element.matches('[data-live-choice], [data-live-note], [data-live-start], [data-live-new], [data-live-retry], [data-live-resume], [data-live-reincarnate]') };
 }
 
 function resolveFocusTarget(target) {
@@ -441,6 +441,7 @@ document.addEventListener('click', event => {
   if ('liveProseExpand' in data) return liveSession?.expandProse();
   if ('liveResume' in data) return liveSession?.resume();
   if ('liveChoice' in data) return liveSession?.choose({ choiceId: data.liveChoice, baseRevision: Number(data.revision), stateHash: data.stateHash });
+  if ('liveNote' in data)return liveSession?.openJourneyNote({node:data.liveNote,archiveId:data.archiveId,baseRevision:Number(data.revision),stateHash:data.stateHash},()=>view==='adventure'&&!document.hidden&&!$('#dialog').open);
   if ('livePractice' in data||'liveShortPractice' in data){
     const count=Number(data.livePractice??button.closest('details').querySelector('[data-practice-count]').value);
     return liveSession?.practiceUntil({count,archiveId:data.archiveId,baseRevision:Number(data.revision),stateHash:data.stateHash},()=>view==='adventure'&&!document.hidden&&!$('#dialog').open);
