@@ -13,7 +13,7 @@ const hearings=[
   ],
  },
  {
-  title:'一斗米的刻度',realm:'qi',
+  title:'一斗米的刻度',realm:'qi',days:[7,4],
   lead:r=>r[0]==='0'?'新暖渠使矿班多赶出了一车石，矿主提议把新收的租米放进谷仓。':'蓄池占了晒场，染坊愿拿头批新布换谷，补贴失了工钱的学徒。',
   scene:'谷仓来了两个秤手，一个把斗口刮平，一个任谷尖高出半寸。你伸手量过，两个斗的底板竟相差一指。刻尺不同，谁看起来都像在偷粮。仓外早已排起了队，锅里等米的人没有工夫再听一次空泛的公断。',
   stake:'重做斗要停仓七日。若继续开仓，就得有人垫出补差的口粮。',
@@ -33,7 +33,7 @@ const hearings=[
   ],
  },
  {
-  title:'两岸之间的空名',realm:'foundation',
+  title:'两岸之间的空名',realm:'foundation',days:[15,3],
   lead:r=>r[2]==='0'?'守井人送来一份交替写成的巡水册。山脊另一侧也有人想学这套轮值。':'北山的双色尺流到了山脊另一侧。有一把被刻上了卖家从未去过的村名。',
   scene:'筑基之后，你第一次能从山腹听到另一侧河床的回声。旧渡已换了好几拨船，渡税簿上的村名却都还是旧的。芦滩边围出一排泥屋，户户都在替渡口捻绳，却没有一户能领河堤的工钱。有人把一双布满麻丝的手举给你看，又悄悄放了下去。',
   stake:'改簿需要重新议税。另设契约可以立刻发工钱，住在芦滩的人却仍没有议事的席位。',
@@ -76,7 +76,7 @@ const hearings=[
   title:'一盏迟到的灯',realm:'golden',
   lead:r=>r[6]==='0'?'迁居后，坡上家家点灯，山脚的旧屋里却还有一盏亮着。':'新脉通水后，祖堂檐下出现一盏很旧的船灯，灯里夹着一封没有收件人的信。',
   scene:'灯罩上烙着问川图里领航人的印。守灯的是后来学她手艺的一支船户，他们年年在河口找一串星影，却一直找不到那张失传的路图。此刻你明白了当初夹在河簿里的航图为什么偏偏留下三程。',
-  stake:'你可以把亲自走过的路讲给他们，也可以交出原图，陪他们重新走一趟。',
+  stake:'你可以依照行旅录里的三程记录给他们讲路，也可以交出原图，陪他们重新走一趟。',
   paths:[
    ['抄写三程所见，将原图留作传习','你填进三个原本空着的地名，惟独把可以绕路的地方留白。新领航人不照抄你的脚程，自选一条慢路送完了第一封信。','manual'],
    ['护送第一次实航，将领航图交回船户','你在天还未亮时替他们解缆。最窄的浅滩果然不是旧图的样子。回程时，领航人把新线描在透明油纸上，压在旧图上方，两道水路都还看得见。','herbs'],
@@ -110,5 +110,5 @@ export function councilNode(state,menu,choice){
  }
  if(!h)return node('北山公簿 · 山河有继','北山这一段历练已成，仍可行走仙路',['你撤回护着纸页的那一缕灵息。墨已经干透，北山往后有自己的分歧和打算。',...hearings.map((entry,i)=>entry.title+'　'+entry.paths[Number(record[i])][0])],[training,back]);
  if(realmFor(state.life).rank<V7_REALMS[h.realm].rank)return node('北山公簿 · 待你归来','达到'+V7_REALMS[h.realm].name+'后接续'+h.title,['现有落款 '+index+' / '+hearings.length+'。','翻到'+h.title+'时，拓片深处的脉纹渐渐虚散。这一处需以'+V7_REALMS[h.realm].name+'的神识辨清。先修行和准备破境材料，已经记下的落款会等你。'],[training,menu('resources-menu','寻找下一境所需材料','resources',{page:0}),back]);
- return node(h.title,h.stake,[h.lead?.(record),h.scene,h.stake],[...h.paths.map(([label,,reward,cost],i)=>choice('resolve-'+i,label,'explore',reward,'cautious',{next:'council-result',optionalGift:true,patch:{council:record+i},rule:{days:3+i,items:cost??{},gain:{[reward]:1},spiritCost:V7_REALMS[h.realm].rank,cultivation:Math.min(1,9999-state.life.cultivation),checkKind:null,warnings:[]}})),back]);
+ return node(h.title,h.stake,[h.lead?.(record),h.scene,h.stake],[...h.paths.map(([label,,reward,cost],i)=>choice('resolve-'+i,label,'explore',reward,'cautious',{next:'council-result',optionalGift:true,patch:{council:record+i},rule:{days:h.days?.[i]??3+i,items:cost??{},gain:{[reward]:1},spiritCost:V7_REALMS[h.realm].rank,cultivation:Math.min(1,9999-state.life.cultivation),checkKind:null,warnings:[]}})),back]);
 }

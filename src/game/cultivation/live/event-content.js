@@ -31,39 +31,40 @@ const home=e=>e.entry==='accepted'?'work':e.entry==='unresolved'?'arrival':'hub'
 export function eventNode(state){
  const e=state.events,life=state.life,actors=eventEntities(state),actor=key=>actors.find(row=>row.id.endsWith(':e:'+key)).id;
  const next=nextRealmFor(life),realm=realmFor(life),method=TECHNIQUES[life.cultivationProfile.experience.activeTechniqueId];
+ const young=life.ageDays<80*DAYS_PER_YEAR;
  const row=(title,goal,blocks,choices)=>({title,goal,blocks,choices});
  const leave=menu('back','暂且放下，回去安排修行','hub');
  const terms=()=>[
-  choice('accept','接下三日差事，换取完整入门功法','interact',actor('steward'),'ask',{next:'work',patch:{entry:'accepted'},navigation:true}),
-  menu('companion','问问一旁为难的少年','companion'),
-  choice('decline','谢过周执事，自寻修行之路','interact',actor('steward'),'decline',{next:'hub',patch:{entry:'declined',location:'retreat'},navigation:true}),
+  choice('accept','接下三日差事，换取完整入门功法','interact',young?actor('steward'):'self',young?'ask':'observe',{next:'work',patch:{entry:'accepted'},navigation:true}),
+  menu('companion',young?'问问一旁为难的少年':'翻看旧日同窗的记录',young?'companion':'old-record'),
+  choice('decline',young?'谢过周执事，自寻修行之路':'把旧簿交还外院，自行求道','interact',young?actor('steward'):'self',young?'decline':'leave',{next:'hub',patch:{entry:'declined',location:'retreat'},navigation:true}),
  ];
  if(e.node.startsWith('river-'))return riverNode(state,menu,choice);
  if(e.node==='voyage-result')return expeditionResult(e.expedition,menu);
  if(e.node.startsWith('voyage-'))return expeditionNode(state,menu,choice);
  if(e.node.startsWith('council-'))return councilNode(state,menu,choice);
- switch(e.node){
+ switch(!young&&['companion','reunion'].includes(e.node)?'old-record':e.node){
   case 'arrival':return row('外院第一日','问清入门条件，选择留下或独行',[
-   narration('栖云门外院里，送炭的板车刚刚停稳。你把母亲缝好的衣袖拉平，站到登记的长桌前。周执事没有问你的灵根，只把一册差事簿推到桌沿。'),
+   narration(young?'栖云门外院里，送炭的板车刚刚停稳。你把母亲缝好的衣袖拉平，站到登记的长桌前。周执事没有问你的灵根，只把一册差事簿推到桌沿。':'外院还存着那册旧簿。门上的墨色换了几回，当值者核对年月，仍认得当年写给试修弟子的条款。'),
    ...(state.reincarnation?.atlas?[narration('你行囊里有一本辗转传下的问川图。前人结过的图印还在，夹住旧页的草绳也在。等安顿下来，便可以从外出历练处接着读。')]:[]),
-   speech(actor('steward'),'外院不白收人。帮忙整理三日药圃，我给你一卷完整的入门功法。是否留下，你想清楚再答。'),
+   young?speech(actor('steward'),'外院不白收人。帮忙整理三日药圃，我给你一卷完整的入门功法。是否留下，你想清楚再答。'):narration('旧簿上写着：整理药圃三日，以一卷完整功法为酬。'),
   ],[menu('ask','先问清差事与试修条件','terms'),terms()[0],terms()[2]]);
   case 'terms':return row('一卷功法的条件','知道代价后，再决定是否接受',[
-   speech(actor('steward'),'只清沟、分苗，不让你采药试药。三日做完，功法归你，往后愿不愿留门都由你。'),
-   narration(e.companion==='unmet'?'旁边的林砚迟迟没有落笔。他捏着空布袋，目光停在药圃的方向。':'你已经听明白条件。是否接受这份差事，由你自己决定。'),
+   young?speech(actor('steward'),'只清沟、分苗，不让你采药试药。三日做完，功法归你，往后愿不愿留门都由你。'):narration('当值者让你看旧约的附条：差事仅限清沟、分苗，三日做完便可领卷。'),
+   narration(young&&e.companion==='unmet'?'旁边的林砚迟迟没有落笔。他捏着空布袋，目光停在药圃的方向。':'你已经听明白条件。是否接受这份差事，由你自己决定。'),
   ],[terms()[0],e.companion==='unmet'?terms()[1]:menu('back','尚未决定，回到登记处','arrival'),terms()[2]]);
   case 'work':return row('三日药圃','完成已接受的差事，取得入门功法',[
-   narration('周执事给你指出清沟与分苗的区域。差事没有藏着额外的试炼，只有等着做完的活。你可以照约完成，也可以说明不做了；未完成便不领取功法。'),
-   ...(e.companion==='unmet'?[narration('林砚蹲在药圃外，把空布袋翻了又翻，像在计算还能撑过多少天。')]:[]),
+   narration((young?'周执事':'当值的管圃人照着旧簿')+'给你指出清沟与分苗的区域。你可以照约完成，也可以说明不做了。做完差事便能领取功法。'),
+   ...(young&&e.companion==='unmet'?[narration('林砚蹲在药圃外，把空布袋翻了又翻，像在计算还能撑过多少天。')]:[]),
   ],[
    choice('finish-work','做完三日药圃差事','explore','manual','cautious',{next:'entry-result',patch:{entry:'joined'},rule:{days:3,gain:{manual:1},checkKind:null,spiritCost:0,warnings:[]}}),
-   e.companion==='unmet'?menu('companion','先问林砚遇到了什么困难','companion'):menu('pause-work','暂缓差事，先安排自己的修行','hub'),
-   choice('abandon-work','说明不再做这份差事，自行离开','interact',actor('steward'),'decline',{next:'hub',patch:{entry:'declined',location:'retreat'},navigation:true}),
+   young&&e.companion==='unmet'?menu('companion','先问林砚遇到了什么困难','companion'):menu('pause-work','暂缓差事，先安排自己的修行','hub'),
+   choice('abandon-work','说明不再做这份差事，自行离开','interact',young?actor('steward'):'self',young?'decline':'leave',{next:'hub',patch:{entry:'declined',location:'retreat'},navigation:true}),
   ]);
   case 'entry-result':return row('亲手换来的功法','完整功法已到手，下一步积累修为',[
-   narration('第三日傍晚，你把最后一条水沟疏通。周执事照着差事簿核验过，将约定的完整入门功法交给你，没有再加条件。'),
-   speech(actor('steward'),'这卷是你做事换来的。往后走多远，要看你怎么用它。'),
-  ],[menu('continue','收好功法，安排下一步','hub'),menu('companion','去看看林砚的近况','companion'),menu('train-menu','先研究自己的修行门槛','training')]);
+   narration('第三日傍晚，你把最后一条水沟疏通。'+(young?'周执事':'当值的管圃人')+'照着差事簿核验过，将约定的完整入门功法交给你，没有再加条件。'),
+   ...(young?[speech(actor('steward'),'这卷是你做事换来的。往后走多远，要看你怎么用它。')]:[]),
+  ],[menu('continue','收好功法，安排下一步','hub'),menu('companion',young?'去看看林砚的近况':'翻看药圃旧日的同窗记录',young?'companion':'old-record'),menu('train-menu','先研究自己的修行门槛','training')]);
   case 'companion':{
    if(e.companion!=='unmet')return row('记着的那次选择','旧事已经有了决定，不必反复付出',[
     narration(e.companion==='helped'?'林砚还记得你分出的那份行粮。眼下他正在做自己的差事，不再向你重复求助。':e.companion==='declined'?'当日你没有接下林砚的求助。他另找了生计，那次分别没有变成追着你的责问。':'你与林砚的这一段交往已经落下结果。以后各有各的道路。'),
@@ -111,7 +112,7 @@ export function eventNode(state){
   ],[choice('recover','静养调息，恢复伤势与灵力','rest','self','recover',{next:'action-result'}),menu('mentor-menu','验看功法，寻找改善的办法','mentor'),leave]);
   case 'journey':return row('路与行囊','接续历练，或备办下一次修行的资用',[
    narration(e.expedition?.place==='end'?'你的行囊里放着三程图印。北山井户的一纸来信夹在其间，等你回去落款。':e.river?'问川图上夹着一根草绳，再打开仍是上次停下的地方。':'你在山口书摊翻到一卷旧图。卖书人说是好几代守闸人留的传习卷，问你愿不愿试着展开。桌的另一头还摊着采药与打铁的路引。'),
-  ],[e.expedition?.place==='end'?menu('hear-council','翻看北山公簿，接续现世历练','council-book'):menu('river-book','展开问川图，历练河上人家','river-book'),menu('resources-menu','寻找修行材料与生活物资','resources',{page:0}),menu('workshop-menu','炼制、跨界与其他准备','workshop',{page:0})]);
+  ],[menu('river-book',e.expedition?.place==='end'?'翻阅河簿、三程行旅与北山公簿':'展开问川图，历练河上人家','river-book'),menu('resources-menu','寻找修行材料与生活物资','resources',{page:0}),menu('workshop-menu','炼制、跨界与其他准备','workshop',{page:0})]);
   case 'resources':{
    const targets=[...new Set([next?.material??'relic','supplies','stones','herbs','iron'])],target=targets[e.page%targets.length];
    return row('寻找'+ITEMS[target],'只结算本次选定的资源',[
@@ -131,7 +132,6 @@ export function eventNode(state){
    ],[tier<2?choice('cross','循正途飞升前往'+name,'travel',actor(destination),'ascend',{next:'action-result',arrival:destination}):menu('train-menu','继续安排修行','training'),menu('resources-menu','回去备办资源','resources',{page:0}),leave]);
   }
   case 'affairs':{
-   const young=life.ageDays<80*DAYS_PER_YEAR;
    const companion=young&&['helped','declined'].includes(e.companion)&&realm.rank>=1?'reunion':'companion';
    return row('旧事与来人','只有尚未完成的事情才需要再作决定',[
     narration(young?'回看故人的来处，也回看自己已经说出口的话。问候不等于答应，暂缓也不等于失信。':'闭关跨过了许多年。你能追索旧日记录，却不能假定当年的凡人仍站在原地等你。'),
@@ -139,6 +139,7 @@ export function eventNode(state){
   }
   case 'mentor':{
    const experience=life.cultivationProfile.experience,commitment=experience.commitment,young=life.ageDays<100*DAYS_PER_YEAR;
+   const canPledge=life.ageDays+3<100*DAYS_PER_YEAR;
    if(commitment?.status==='owed')return row('校法时的约定','记着当初那一份行粮',[
     narration(young?'顾师叔仍在旧廊下校书。你记得接受指点时说好的条件：向他本人归还一份行粮。':'旧廊已换了主人，眼下没有顾师叔的下落。那份未还的约定仍被保留，不能向别的人交粮便算履行。'),
    ],[...(young?[choice('repay','向顾师叔归还约定的一份行粮','craft',actor('mentor'),'repay',{next:'mentor-result',patch:{mentor:'repaid'}})]:[menu('read-debt','记下未还之约，暂不臆测他的去向','old-record')]),menu('resources-menu','先备办行粮','resources',{page:1}),leave]);
@@ -149,9 +150,9 @@ export function eventNode(state){
     narration('你把'+method.name+'摊在膝上。'+method.defect+'先辨清实际缺处，才谈得上自己推演或求助。'),
    ],[choice('diagnose','验看本命功法的实际缺处','craft','self','diagnose',{next:'mentor'}),menu('train-menu','暂不修法，继续原有修行','training'),leave]);
    return row('两条修法的路','自研或求助，都在选择前说明代价',[
-    narration('功法缺处已经验明。你可以独自推演；'+(young?'顾师叔也愿意指点，但要先说清日后还粮的约定。':'旧日指点者不在眼前，不能隔着数十年自动接受他的指点。')),
-    ...(young?[speech(actor('mentor'),'我可以陪你校法三日，花四分灵力。日后再遇，归还一份行粮便好；不愿欠人情，就自己慢慢推演。')]:[]),
-   ],[choice('restore','自行推演并修补功法','craft','self','restore',{next:'mentor-result',patch:{mentor:'self'}}),young?choice('pledge','接受顾师叔指点，约定日后还粮','craft',actor('mentor'),'pledge',{next:'mentor-result',patch:{mentor:'guided'}}):menu('train-menu','先照原功法修行','training'),leave]);
+    narration('功法缺处已经验明。你可以独自推演。'+(canPledge?'顾师叔也愿意指点，但要先说清日后还粮的约定。':young?'顾师叔将要远游，临行前已经来不及结下三日校法之约。':'旧日指点者不在眼前。')),
+    ...(canPledge?[speech(actor('mentor'),'我可以陪你校法三日，花四分灵力。日后再遇，归还一份行粮便好；不愿欠人情，就自己慢慢推演。')]:[]),
+   ],[choice('restore','自行推演并修补功法','craft','self','restore',{next:'mentor-result',patch:{mentor:'self'}}),canPledge?choice('pledge','接受顾师叔指点，约定日后还粮','craft',actor('mentor'),'pledge',{next:'mentor-result',patch:{mentor:'guided'}}):menu('train-menu','先照原功法修行','training'),leave]);
   }
   case 'mentor-result':return row('法诀留下的变化','以真实修法与还约结果继续前行',[
    narration(e.mentor==='repaid'?'你把一份行粮交还顾师叔。他在旧簿上划去那一笔，这次校法之约已经还清，不会再扣第二份。':e.mentor==='guided'?'三日校法之后，当前功法的缺处得到修补。你仍记着与顾师叔的约定：以后向他本人还一份行粮。':'你按自己推演的次序修补功法。花去的时间与灵力已记下，没有为此欠下指点者的行粮。'),

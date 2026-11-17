@@ -133,7 +133,7 @@ function trainTo(state,rank){
    s=follow(s,'gather','train-menu');
   }else s=follow(s,'breakthrough','train-menu');
  }
- return follow(s,'rest-menu','back','journey-menu','hear-council');
+ return follow(s,'rest-menu','back','journey-menu','river-book','hear-council');
 }
 test('one continuous birth reaches three actual realms and leaves nine binding resolutions in the valley',t=>{
  let s=follow(afterRiver(),'voyage-go','to-kiln','to-store','to-tower','voyage-finish','voyage-book','voyage-go','to-east','to-west','to-peak','voyage-finish','voyage-book','voyage-go','to-pass','to-well','to-camp','voyage-finish','voyage-book','hear-council');
@@ -143,6 +143,8 @@ test('one continuous birth reaches three actual realms and leaves nine binding r
   for(let i=0;i<3;i++){
    const before=s.life.cultivation,spirit=s.life.cultivationProfile.spirit;
    s=pick(s,'resolve-0');assert.equal(s.life.cultivation,before+1);assert.equal(s.life.cultivationProfile.spirit,spirit-rank);
+   if(rank===1&&i===1)assert.equal(s.lastReceipt.elapsedDays,7);
+   if(rank===2&&i===0)assert.equal(s.lastReceipt.elapsedDays,15);
    s=pick(s,'hear-council');
   }
  }
@@ -150,5 +152,6 @@ test('one continuous birth reaches three actual realms and leaves nine binding r
  assert.equal(s.events.council,'000000000');assert.equal(s.life.realm,'golden');assert.equal(s.phase,'active');
  t.diagnostic('Continuous route to the valley ending: '+s.turnId+' committed turns including menus; '+s.life.ageDays+' in-world age days.');
  const inventory={...s.life.items};
- s=follow(s,'river-back','journey-menu','hear-council');assert.deepEqual(s.life.items,inventory);
+ s=follow(s,'river-back','journey-menu','river-book','voyage-book');assert.match(s.currentScene.title,/三程归来/);
+ s=pick(s,'hear-council');assert.match(s.currentScene.title,/山河有继/);assert.deepEqual(s.life.items,inventory);
 });

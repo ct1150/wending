@@ -77,7 +77,7 @@ const cases=[
   question:'把几年里做过的决定交回给住在河边的人。交付什么，会决定他们后来怎样记得你。',
   clues:[
    ['听她说为何想离开','她记得每种水深该用哪根楔，也记得哪家人逼父亲先为自己落楔。她不想一辈子靠别人的谢意来判断对错。她愿意教人，也愿意回来，只希望走的时候不用偷偷解船。'],
-   ['翻过这些年的河簿','水尺背面密密刻着每一年的选择。没有哪一条线能包办后来所有的事。你第一次摸到的第三道刻痕还在，只是下游的人、树和饭碗，都与那一年不同了。'],
+   ['翻过这些年的河簿','水尺背面密密刻着每一年的选择。没有哪一条线能包办后来所有的事。河簿开篇记载的第三道刻痕还在，只是下游的人、树和饭碗，都与那一年不同了。'],
   ],
   policies:[
    ['立两岸共议的水簿，请她做第一位讲述人','她讲完最后一课，两岸各接过一枚木楔。第一场议事吵了整整半夜，第二天水照样到了田里。她在开往下游的船上给你留了一张空纸，说下次要寄她自己见到的河。','manual'],
@@ -102,7 +102,7 @@ export function riverNode(state,menu,choice){
   const gift=state.lastReceipt?.itemChanges?.[policy[2]]>0?'图印松开，封在这一折的资用也随之解出。':'图印松开。行囊已经装满，你将这一折的赠礼留在了河边。';
   return node(prior.title,'记下这次处置的代价',[policy[1],gift],[book,back]);
  }
- if(!current)return node('问川图 · 河簿合卷','展开行旅录，或带着所得继续修行',['图面渐暗，河上有人把一条空船撑回上游。最初的水尺和最后的木楔，如今都有了去处。簿底露出领航人珍藏的一册行旅图。',...cases.map((c,i)=>c.title+'　'+c.policies[Number(river.record[i])][0])],[menu('voyage-book','打开领航人留下的行旅录','voyage-book'),menu('train-menu','用历练所得继续修行','training'),back]);
+ if(!current)return node('问川图 · 河簿合卷','展开行旅录，或带着所得继续修行',['图面渐暗，河上有人把一条空船撑回上游。最初的水尺和最后的木楔，如今都有了去处。簿底露出领航人珍藏的一册行旅图。',...cases.map((c,i)=>c.title+'　'+c.policies[Number(river.record[i])][0])],[menu('voyage-book','打开领航人留下的行旅录','voyage-book'),e.expedition?.place==='end'?menu('hear-council','翻看北山公簿','council-book'):menu('train-menu','用历练所得继续修行','training'),back]);
  if(e.node==='river-book')return node('问川图 · 河上人家',current.title,['这卷传习图封着六段前人留下的河上旧境。展开时，你可入境察看水土、听人说话、亲手处置难题。离开时图中年月停住，回来仍接原处。每折结印才解出一份修行资用。','已结 '+index+' 折。眼下翻到'+current.title+'。'],[resume,back]);
  const known=current.clues.flatMap(([label,text],i)=>river.seen&(1<<i)?[label+'。'+text]:[]);
  if(e.node==='river-reading')return node(current.title,'把看到的线索与他人的处境合起来',[...known],[menu('river-return','回到现场，重新权衡','river-site'),back]);

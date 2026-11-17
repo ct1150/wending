@@ -69,7 +69,7 @@ export function expeditionNode(state,menu,choice){
  const stamp='第 '+v.watch+' / '+map.limit+' 刻　'+placeName+'　随身：'+goods;
  const overview=menu('voyage-log','查看整幅路图、歇脚或收卷','voyage-log');
  const go=menu('voyage-go','进入图中现场','voyage-road',{expedition:v});
- if(e.node==='voyage-book')return node('行旅录 · '+map.name,map.goal,[map.brief,...(towpath?['你在火塘旁立下的苗契留下了一段木纤道。窑脚至桐油仓只要一刻。']:[]),'图内按路程推进潮刻。读图与合卷都能保留进度，走不通时可以重走这一程。结印时才将历练计入此生。',stamp],[go,overview,back]);
+ if(e.node==='voyage-book')return node('行旅录 · '+map.name,map.goal,[map.brief,...(towpath?['河簿里火塘旁的苗契留下了一段木纤道。窑脚至桐油仓只要一刻。']:[]),'图内按路程推进潮刻。读图与合卷都能保留进度，走不通时可以重走这一程。结印时才将历练计入此生。',stamp],[go,overview,back]);
  if(e.node==='voyage-log'){
   const routeLines=Object.entries(map.places).map(([from,p])=>p[0]+' → '+p[2].map(([to,cost,phase])=>map.places[to][0]+' '+legTime(from,to,cost)+'刻'+(phase===undefined?'':phase?'（单刻启程）':'（双刻启程）')).join(' / '));
   return node('行旅路图 · '+map.name,map.goal,[map.goal,stamp,routeLines.join('；'),...map.seals.map((name,i)=>{const source=Object.values(map.places).find(p=>p[3]===(1<<i));return name+'在'+source[0]+(source[4]===undefined?'。':source[4]?'，须在单刻察看。':'，须在双刻察看。');})],[go,menu('voyage-reset','商量是否重走本程','voyage-reset'),back]);

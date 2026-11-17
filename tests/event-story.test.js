@@ -3,6 +3,8 @@ import assert from 'node:assert/strict';
 import * as engine from '../src/game/cultivation/live/engine.js';
 import {stateHash} from '../src/game/cultivation/live/identity.js';
 import {TECHNIQUES,nextRealmFor} from '../src/game/cultivation/live/cultivation-rules.js';
+import {eventNode} from '../src/game/cultivation/live/event-content.js';
+import {DAYS_PER_YEAR} from '../src/game/cultivation/live/model.js';
 
 const options={runId:'rules-event-life',seed:42,name:'沈渡',engineVersion:7,originStories:true,experienceVersion:1,eventVersion:1};
 function opening(extra={}){
@@ -97,6 +99,26 @@ test('a complete technique offers no fabricated defect or extra repair bill',()=
  const seed=Array.from({length:50},(_,i)=>i).find(seed=>!TECHNIQUES[engine.createLiveGame({...options,seed}).life.cultivationProfile.experience.activeTechniqueId].defective);
  assert.notEqual(seed,undefined);let state=choose(opening({seed}),'decline');state=choose(choose(state,'affairs-menu'),'mentor-menu');
  assert.ok(!state.currentScene.choices.some(c=>['diagnose','pledge','restore'].includes(c.approach)));
+});
+
+test('an old unclaimed nursery contract is honored by the office without summoning the original teenagers',()=>{
+ const state=opening();state.life.ageDays=81*DAYS_PER_YEAR;
+ for(const node of ['work','entry-result','companion','reunion']){
+  state.events={...state.events,node,entry:'accepted',companion:'helped'};
+  const scene=eventNode(state),text=scene.blocks.map(b=>b.text).join('');
+  assert.doesNotMatch(text,/周执事照着|眼下他正在|林砚如今|林砚认出了你/);
+  assert.ok(!scene.choices.some(row=>row.next==='companion'||row.next==='reunion'));
+  if(node==='entry-result')assert.ok(scene.choices.some(c=>c.next==='old-record'));
+ }
+});
+
+test('guidance is offered only when its three days leave time for a personal repayment',()=>{
+ const state=repairStart();
+ state.life.ageDays=100*DAYS_PER_YEAR-4;
+ assert.ok(eventNode(state).choices.some(row=>row.key==='pledge'));
+ state.life.ageDays++;
+ assert.ok(!eventNode(state).choices.some(row=>row.key==='pledge'));
+ assert.ok(eventNode(state).choices.some(row=>row.key==='restore'));
 });
 
 test('the authored loop can earn a real breakthrough and revisit the companion without replaying the aid reward',()=>{
