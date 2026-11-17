@@ -198,21 +198,24 @@ function renderLiveEnding(view) {
   return `<div class="live-reincarnation"><h3>此生结算</h3><p>${esc(settlement.summary)}</p>${settlement.echoes?history:'<blockquote class="live-epitaph">'+esc(settlement.epitaph)+'</blockquote>'}<p class="live-causal-points">因果点 ${settlement.availablePoints} · 本世所得 ${settlement.earnedPoints} · 前世结余 ${settlement.carriedPoints}</p><h4>六道轮回商店</h4>${settlement.selectionLimit?'<p>最多两项，也可不选；未用因果点留给来世。</p>':''}<div class="live-reward-list" role="group" aria-label="选择来世传承">${rewards}</div><p class="live-causal-points">已选 ${spent} · 来世结余 ${balance}</p>${view.reincarnatedTo ? '<p class="live-causal-points">此生传承已领取。请恢复下一世备份，或返回首页重新开始。</p>' : ''}<button type="button" class="button primary" data-live-reincarnate${blocked || balance < 0 || selected.size>settlement.selectionLimit ? ' disabled' : ''}>步入轮回</button></div>`;
 }
 
-function renderPracticePlan(view){
+function renderPracticePlan(view,notes){
   const report=view.practice;
   if(report?.running)return `<p role="status">连续稳修，已收功 ${report.done} / ${report.count} 关。 <button type="button" class="button" data-live-stop-practice>本关结束即停</button></p>`;
   const summary=report?`<p role="status" data-practice-report>已完成 ${report.done} 关，共 ${report.days} 日，修为 +${report.gain}。 ${esc(report.reason)}。</p>`:'';
   const plan=practicePlan(view.state);
-  if(!plan||plan.requested<2)return summary;
-  if(plan.count<2)return summary+`<p class="save-info" data-practice-limit>连续稳修可排 ${plan.count} 关，${esc(plan.stop)}。</p>`;
   const command=`data-archive-id="${esc(view.archiveId)}" data-revision="${view.state.revision}" data-state-hash="${esc(view.stateHash)}"${view.busy||view.pending?' disabled':''}`;
+  const node=report?.stopNode??(plan?.count<2?plan.stopNode:null),note=notes.find(n=>n.node===node);
+  const route=note?noteRoutes(view.state,[note]).get(node):null;
+  const resume=route?.length?`<p><button type="button" class="button" data-practice-resume data-live-note="${esc(node)}" ${command}>查看${esc(note.title)}</button></p>`:'';
+  if(!plan||plan.requested<2)return summary+resume;
+  if(plan.count<2)return summary+`<p class="save-info" data-practice-limit>连续稳修可排 ${plan.count} 关，${esc(plan.stop)}。</p>`+resume;
   const options=[];
   for(let n=2;n<plan.count;n++){
     const exposure=Math.min(plan.exposure,n*plan.exposurePerTurn);
     options.push(`<option value="${n}">${n} 关 · ${n*(plan.days/plan.count)} 日 · 灵力 −${n*(plan.spirit/plan.count)} · 修为 +${n*(plan.gain/plan.count)}${exposure?' · 暴露 +'+exposure:''}</option>`);
   }
   const shorter=options.length?`<details><summary>提前几关出定</summary><label>修期 <select data-practice-count>${options.join('')}</select></label> <button type="button" class="button" data-live-short-practice ${command}>按所选修期入定</button></details>`:'';
-  return summary+`<section class="event-prose practice-plan" aria-label="连续稳修"><p class="save-info" data-practice-cost>${plan.days} 日 · 灵力 −${plan.spirit} · 修为 +${plan.gain}${plan.exposure?' · 暴露 +'+plan.exposure:''}。 ${esc(plan.stop)}。</p><button type="button" class="button" data-live-practice="${plan.count}" ${command}>连续稳修 ${plan.count} 关</button>${shorter}</section>`;
+  return summary+resume+`<section class="event-prose practice-plan" aria-label="连续稳修"><p class="save-info" data-practice-cost>${plan.days} 日 · 灵力 −${plan.spirit} · 修为 +${plan.gain}${plan.exposure?' · 暴露 +'+plan.exposure:''}。 ${esc(plan.stop)}。</p><button type="button" class="button" data-live-practice="${plan.count}" ${command}>连续稳修 ${plan.count} 关</button>${shorter}</section>`;
 }
 function renderJourneyNotes(view,notes){
   if(!notes.length)return '';
@@ -232,8 +235,8 @@ function renderEventExtras(view,notes){
   const growth=next?`修行目标：${next.name} · 修为 ${state.life.cultivation} / ${next.threshold} · ${view.itemNames?.[next.material]??ITEMS[next.material]} ${state.life.items[next.material]??0} / 1`:'继续此生：修炼、历练与未完的因果仍可推进。';
   const message=extra?.status==='loading'?'正在写一小段扩写，你可以继续选择。':extra?.status==='unavailable'?'这一段扩写暂不可用，你仍可继续当前故事。':'';
   return {
-    growth:`<p class="event-growth" data-event-growth>${esc(growth)}</p>${renderJourneyNotes(view,notes)}`+(view.playtestActive?'<button type="button" class="button" data-diary-stop>结束本段试玩计时</button>':''),
-    prose:renderPracticePlan(view)+`<section class="event-prose" data-event-prose aria-label="可选扩写"><button type="button" class="button" data-live-prose-expand${extra||view.busy||view.pending?' disabled':''}>${state.currentScene.blocks.some(block=>block.kind==='dialogue')?'展开对白':'展开描写'}</button><p class="save-info">可选的 AI 扩写，需要联网；随时可以继续行动。</p>${message?`<p data-event-prose-status role="status">${esc(message)}</p>`:''}${extra?.status==='ready'?`<p class="journey-block" data-event-prose-text>${esc(extra.text)}</p>`:''}</section>`,
+    growth:`<p class="event-growth" data-event-growth>${esc(growth)}</p>${renderJourneyNotes(view,notes)}`+renderPracticePlan(view,notes)+(view.playtestActive?'<button type="button" class="button" data-diary-stop>结束本段试玩计时</button>':''),
+    prose:`<section class="event-prose" data-event-prose aria-label="可选扩写"><button type="button" class="button" data-live-prose-expand${extra||view.busy||view.pending?' disabled':''}>${state.currentScene.blocks.some(block=>block.kind==='dialogue')?'展开对白':'展开描写'}</button><p class="save-info">可选的 AI 扩写，需要联网；随时可以继续行动。</p>${message?`<p data-event-prose-status role="status">${esc(message)}</p>`:''}${extra?.status==='ready'?`<p class="journey-block" data-event-prose-text>${esc(extra.text)}</p>`:''}</section>`,
   };
 }
 

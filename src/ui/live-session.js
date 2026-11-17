@@ -295,12 +295,12 @@ export function createLiveSession({archive,client,engine=defaultEngine,onChange=
       if(!loaded||loaded.pending||loaded.archiveId!==command.archiveId||command.baseRevision!==loaded.state.revision||command.stateHash!==stateHash(loaded.state))throw fault('STALE_CHOICE');
       const plan=practicePlan(loaded.state);
       if(!plan||!Number.isInteger(command.count)||command.count<2||command.count>plan.count)throw fault('STALE_CHOICE');
-      practice={archiveId:loaded.archiveId,revision:loaded.state.revision,count:command.count,done:0,days:0,gain:0,running:true,stopped:false,reason:command.count===plan.count?plan.stop:'已按所选关数收功'};
+      practice={archiveId:loaded.archiveId,revision:loaded.state.revision,count:command.count,done:0,days:0,gain:0,running:true,stopped:false,reason:command.count===plan.count?plan.stop:'已按所选关数收功',stopNode:command.count===plan.count?plan.stopNode:null};
       try{
         while(practice.done<practice.count){
-          if(practice.stopped||!canContinue()){practice.reason='已提前收功';break;}
+          if(practice.stopped||!canContinue()){practice.reason='已提前收功';practice.stopNode=null;break;}
           const step=practicePlan(loaded.state);
-          if(!step||step.count<1){practice.reason=step?.stop??'已到下一处选择';break;}
+          if(!step||step.count<1){practice.reason=step?.stop??'已到下一处选择';practice.stopNode=step?.stopNode??null;break;}
           const pending=engine.prepareChoice(loaded.state,{choiceId:step.choiceId,requestId:id()});
           loaded=await archive.commitEvent({expectedArchiveId:command.archiveId,expectedRevision:practice.revision,pending});
           practice.revision=loaded.state.revision;
@@ -309,7 +309,7 @@ export function createLiveSession({archive,client,engine=defaultEngine,onChange=
           preview=null;status='ready';errorCode=null;emit();
         }
       }catch(error){
-        practice.reason='连续稳修中断';throw error;
+        practice.reason='连续稳修中断';practice.stopNode=null;throw error;
       }finally{practice.running=false;}
     });
   }

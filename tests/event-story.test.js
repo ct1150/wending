@@ -33,25 +33,25 @@ test('a retreat plan quotes actual ordinary steady turns and leaves each accepte
  assert.equal(practicePlan(s),null);
 
  const base=choose(choose(opening(),'decline'),'train-menu'),age=base.life.ageDays,days=plan.days/plan.count;
- for(const [patch,pattern] of [
-  [{garden:{plot:{bed:0,sown:age},record:[]}},/嫩候/],
-  [{watch:{trail:{start:age,world:0,outcome:null}}},/栗溪/],
-  [{mine:{start:age,record:[]}},/交班/],
-  [{entry:'accepted',nursery:{start:age-1,care:null}},/药圃工日/],
-  [{entry:'joined',nursery:{end:'beans'},saltField:{bed:'seep',sown:age,mended:false,parcel:null}},/盐埠改畦/],
-  [{convoy:{chapters:[{rig:'light',loads:[5,10]}]},charters:[{start:age,steps:[]}]},/沉钟湾轮航/],
-  [{post:{route:'relay',ending:'box',walk:{start:age,outcome:null}}},/潮约/],
-  [{post:{route:'relay',ending:'box',stations:[{sent:age,settled:null}]}},/两站/],
+ for(const [patch,pattern,node] of [
+  [{garden:{plot:{bed:0,sown:age},record:[]}},/嫩候/,'garden-book'],
+  [{watch:{trail:{start:age,world:0,outcome:null}}},/栗溪/,'watch-trail'],
+  [{mine:{start:age,record:[]}},/交班/,'mine-book'],
+  [{entry:'accepted',nursery:{start:age-1,care:null}},/药圃工日/,'work'],
+  [{entry:'joined',nursery:{end:'beans'},saltField:{bed:'seep',sown:age,mended:false,parcel:null}},/盐埠改畦/,'seed-book'],
+  [{convoy:{chapters:[{rig:'light',loads:[5,10]}]},charters:[{start:age,steps:[]}]},/沉钟湾轮航/,'packet-book'],
+  [{post:{route:'relay',ending:'box',walk:{start:age,outcome:null}}},/潮约/,'post-shore'],
+  [{post:{route:'relay',ending:'box',stations:[{sent:age,settled:null}]}},/两站/,'post-stations'],
  ]){
   const withDate={...base,events:{...base.events,...patch}};
   const constrained=practicePlan(withDate);
-  assert.equal(constrained.count,0);assert.match(constrained.stop,pattern);
+  assert.equal(constrained.count,0);assert.match(constrained.stop,pattern);assert.equal(constrained.stopNode,node);
  }
  const post={start:age,route:'relay',steps:[],ending:null};
  const scheduled=practicePlan({...base,events:{...base.events,post}});
  assert.equal(scheduled.count,Math.ceil(DAYS_PER_YEAR/days));assert.match(scheduled.stop,/回单/);
  base.life.cultivationProfile.spirit=plan.spirit/plan.count;
- assert.equal(practicePlan(base).count,1);assert.match(practicePlan(base).stop,/调息/);
+ assert.equal(practicePlan(base).count,1);assert.match(practicePlan(base).stop,/调息/);assert.equal(practicePlan(base).stopNode,null);
  base.life.cultivationProfile.spirit=life.cultivationProfile.spirit;
  base.life.ageDays=base.life.lifeLimit*DAYS_PER_YEAR-days;
  assert.equal(practicePlan(base).count,0);assert.match(practicePlan(base).stop,/寿元/);

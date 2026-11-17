@@ -451,6 +451,7 @@ async function replayOldGarden(t,route,expected){
    await button(key).waitFor();
    const batch=page.locator('[data-live-practice]:enabled');
    if(await batch.count()){
+    assert.ok(await batch.evaluate(node=>Boolean(node.compareDocumentPosition(document.querySelector('[data-live-choice]'))&Node.DOCUMENT_POSITION_FOLLOWING)));
     const count=Number(await batch.getAttribute('data-live-practice'));
     // Substitute only an identical stretch of ordinary practice. The
     // reference route still owns every recovery, search and breakthrough.

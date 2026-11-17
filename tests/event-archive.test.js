@@ -95,6 +95,32 @@ test('steady retreat plans commit the manual turns exactly once and fence interr
  assert.equal(results.modes.replace.turns,0);assert.equal(results.modes.replace.hash,results.start);assert.ok(results.modes.replace.error);
 });
 
+test('the retreat limit opens the waiting harvest without spending time or harvesting it',async t=>{
+ const {page}=await liveBrowser(t);await page.setViewportSize({width:360,height:760});
+ const bytes=gunzipSync(await readFile(new URL('./fixtures/873a7ce-first-garden.jsonl.gz',import.meta.url))).toString('utf8');
+ await page.evaluate(async text=>{
+  const {openLiveArchive}=await import('/src/game/live-archive.js'),{importLiveArchive}=await import('/src/game/live-save-format.js');
+  const a=await openLiveArchive();try{await importLiveArchive(new Response(text).body,a);}finally{a.close();}
+ },bytes);
+ const option=key=>page.locator('[data-live-choice$=":c:'+key+'"]:enabled');
+ const saved=()=>page.evaluate(async()=>{
+  const {openLiveArchive}=await import('/src/game/live-archive.js');const a=await openLiveArchive();
+  try{return (await a.load()).state;}finally{a.close();}
+ });
+ await page.reload();
+ const enter=page.locator('[data-title-continue]:enabled');await option('sow').or(enter).first().waitFor();
+ if(!await option('sow').isVisible())await enter.click();
+ await option('sow').click();await option('train-menu').click();
+ const resume=page.locator('[data-practice-resume][data-live-note="garden-book"]:enabled');
+ await resume.waitFor();assert.match(await page.locator('[data-practice-limit]').innerText(),/0 关.*嫩候/);
+ assert.ok(await resume.evaluate(n=>Boolean(n.compareDocumentPosition(document.querySelector('[data-live-choice]'))&Node.DOCUMENT_POSITION_FOLLOWING)));
+ const before=await saved();await resume.click();await option('inspect-bed').waitFor();const after=await saved();
+ assert.equal(after.events.node,'garden-book');assert.deepEqual(after.life,before.life);assert.equal(after.rng,before.rng);
+ assert.deepEqual(after.events.garden,before.events.garden);
+ await page.reload();assert.deepEqual(await saved(),after);
+ assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth));
+});
+
 test('opening a note stops on interruption or archive replacement and rejects old tabs and undiscovered entries',async t=>{
  const {page}=await liveBrowser(t);
  const bytes=gunzipSync(await readFile(new URL('./fixtures/f9b784d-echo-well.jsonl.gz',import.meta.url))).toString('utf8');
