@@ -460,6 +460,10 @@ class Archive {
    const current=resolveRuleScene(c.run.state,p);
    if(current.choices.some(c=>c.id.endsWith(':c:nursery-book'))&&same(scene,resolveEventScene(c.run.state,p,'work')))scene=current;
   }
+  if(prior&&sceneId.endsWith(':s:event_council-book')&&scene.choices?.some(c=>c.id?.endsWith(':c:resolve-0'))){
+   const current=resolveRuleScene(c.run.state,p);
+   if(current.choices.some(c=>c.id.endsWith(':c:council-inquiry'))&&same(scene,resolveEventScene(c.run.state,p,'council')))scene=current;
+  }
   const addedChoice=prePost&&sceneId.endsWith(':s:event_companion')?'post-book':
    prior?.post&&!prior.post.stations&&sceneId.endsWith(':s:event_post-history')?'station-book':
    prior&&!prior.mountain&&[':s:event_garden-book',':s:event_garden-history'].some(suffix=>sceneId.endsWith(suffix))?'mount-book':null;

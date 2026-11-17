@@ -91,7 +91,7 @@ export function eventNode(state,historicMenu=null){
  if(e.node.startsWith('post-'))return postNode(state,menu,choice);
  if(e.node==='voyage-result')return expeditionResult(e.expedition,menu);
  if(e.node.startsWith('voyage-'))return expeditionNode(state,menu,choice);
- if(e.node.startsWith('council-'))return councilNode(state,menu,choice);
+ if(e.node.startsWith('council-'))return councilNode(state,menu,choice,historicMenu);
  if(e.node.startsWith('convoy-'))return convoyNode(state,menu,choice,actor,historicMenu);
  if(e.node.startsWith('packet-'))return charterNode(state,menu,choice);
  if(e.node.startsWith('nursery-')||e.node==='work-porch'||e.node==='work'&&e.nursery)return nurseryNode(state,menu,choice,actor('steward'));

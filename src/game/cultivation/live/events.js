@@ -31,7 +31,7 @@ const eventNodeIds=new Set([
  'hub','training','rest','journey','resources','workshop','crossing','affairs','mentor','mentor-result','old-record','action-result',
  'river-book','river-site','river-reading','river-decision','river-result',
  'voyage-book','voyage-road','voyage-camp','voyage-log','voyage-reset','voyage-result','voyage-detour',
- 'council-book','council-result',
+ 'council-book','council-result','council-inquiry','council-witness','council-question',
  'convoy-book','convoy-plan','convoy-crew','convoy-stores','convoy-check','convoy-result','convoy-arrival',
  'convoy-cross','convoy-board','convoy-board-notes','convoy-test-result','convoy-remote',
  'convoy-yard-book','convoy-yard-duty','convoy-yard-shore','convoy-yard-boat','convoy-yard-stores','convoy-yard-shed',
@@ -63,6 +63,8 @@ export function validateEventState(events,life,gardenRoot,birthRoll){
  // A fatal breakthrough can reduce cultivation while leaving the final event at the grounds.
  if(life&&events.node.startsWith('hunt-')&&!nextRealmFor(life))throw new Error('当前没有需准备的破境材料。');
  if(Object.hasOwn(events,'council'))validateCouncil(events.council);
+ if(['council-inquiry','council-witness','council-question'].includes(events.node)&&
+  ((events.council??'').length>=councilHearings||events.page>(events.node==='council-question'?1:2)||life&&realmFor(life).rank<1+Math.floor((events.council??'').length/3)))throw new Error('北山问事页次无效。');
  if(Object.hasOwn(events,'convoy'))validateConvoy(events.convoy);
  if(events.node.startsWith('convoy-yard-')){
   const tier=life?.cultivationProfile.worldTier,v=events.convoy;

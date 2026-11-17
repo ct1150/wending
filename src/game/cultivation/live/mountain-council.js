@@ -1,4 +1,5 @@
 import {realmFor,V7_REALMS} from './cultivation-rules.js';
+import {councilInquiry} from './council-inquiry.js';
 
 // The valley keeps written resolutions, so a later cultivator can resume an
 // unfinished project without assuming any witness from a former life survives.
@@ -98,7 +99,7 @@ export const councilHearings=hearings.length;
 export function validateCouncil(record){
  if(typeof record!=='string'||!/^[01]*$/.test(record)||record.length>hearings.length)throw new Error('北山公簿落款无效。');
 }
-export function councilNode(state,menu,choice){
+export function councilNode(state,menu,choice,historicMenu=null){
  const e=state.events,record=e.council??'',index=record.length,h=hearings[index];
  const node=(title,goal,lines,choices)=>({title,goal,blocks:lines.filter(Boolean).map(text=>({kind:'narration',text})),choices});
  const next=menu('hear-council','翻开北山公簿','council-book');
@@ -110,5 +111,7 @@ export function councilNode(state,menu,choice){
  }
  if(!h)return node('北山公簿 · 山河有继','合卷后可循水鉴接续三界海路',['你撤回护着纸页的那一缕灵息。墨已经干透，北山往后有自己的分歧和打算。公簿后还夹着一封海港寄来的潮信。',...hearings.map((entry,i)=>entry.title+'　'+entry.paths[Number(record[i])][0])],[menu('convoy-book','启封海路公牍','convoy-book'),training,back]);
  if(realmFor(state.life).rank<V7_REALMS[h.realm].rank)return node('北山公簿 · 待你归来','达到'+V7_REALMS[h.realm].name+'后接续'+h.title,['现有落款 '+index+' / '+hearings.length+'。','翻到'+h.title+'时，拓片深处的脉纹渐渐虚散。这一处需以'+V7_REALMS[h.realm].name+'的神识辨清。先修行和准备破境材料，已经记下的落款会等你。'],[training,menu('resources-menu','寻找下一境所需材料','resources',{page:0}),back]);
- return node(h.title,h.stake,[h.lead?.(record),h.scene,h.stake],[...h.paths.map(([label,,reward,cost],i)=>choice('resolve-'+i,label,'explore',reward,'cautious',{next:'council-result',optionalGift:true,patch:{council:record+i},rule:{days:h.days?.[i]??3+i,items:cost??{},gain:{[reward]:1},spiritCost:V7_REALMS[h.realm].rank,cultivation:Math.min(1,9999-state.life.cultivation),checkKind:null,warnings:[]}})),back]);
+ if(['council-inquiry','council-witness','council-question'].includes(e.node))return councilInquiry(state,menu);
+ const old=historicMenu==='council'||state.currentScene?.id.endsWith(':t'+state.turnId+':s:event_council-book')&&state.currentScene.choices.some(c=>c.id.endsWith(':c:river-back'));
+ return node(h.title,h.stake,[h.lead?.(record),h.scene,h.stake],[...h.paths.map(([label,,reward,cost],i)=>choice('resolve-'+i,label,'explore',reward,'cautious',{next:'council-result',optionalGift:true,patch:{council:record+i},rule:{days:h.days?.[i]??3+i,items:cost??{},gain:{[reward]:1},spiritCost:V7_REALMS[h.realm].rank,cultivation:Math.min(1,9999-state.life.cultivation),checkKind:null,warnings:[]}})),old?back:menu('council-inquiry','逐户询问、查看实物或暂缓落款','council-inquiry',{page:0})]);
 }

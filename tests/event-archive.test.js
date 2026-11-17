@@ -4,6 +4,32 @@ import {readFile} from 'node:fs/promises';
 import {gunzipSync} from 'node:zlib';
 import {liveBrowser} from './helpers/live-browser.js';
 
+test('a historical council exit resumes once and new testimony survives mixed archive replay',async t=>{
+ const text=gunzipSync(await readFile(new URL('./fixtures/56018ff-council-pending.jsonl.gz',import.meta.url))).toString('utf8');
+ const {page}=await liveBrowser(t);
+ const result=await page.evaluate(async text=>{
+  const {importLiveArchive,exportLiveArchive}=await import('/src/game/live-save-format.js'),{createLiveSession}=await import('/src/ui/live-session.js');
+  const a=await open('council-before'),copy=await open('council-after');await importLiveArchive(new Response(text).body,a);
+  const old=await a.load(),session=createLiveSession({archive:a,client:{}});await session.load();await session.resume();await session.resume();let row=await a.load();
+  const resumed={node:row.state.events.node,revision:row.state.revision,life:row.state.life};
+  async function go(...keys){for(const key of keys){
+   const c=row.state.currentScene.choices.find(c=>c.id.endsWith(':c:'+key));if(!c)throw Error('missing '+key);
+   row=await session.choose({choiceId:c.id,baseRevision:row.state.revision,stateHash:identity.stateHash(row.state)});if(row.errorCode)throw Error(row.errorCode);
+  }}
+  await go('journey-menu','river-book','hear-council','council-inquiry','witness-0');
+  await a.prepare(engine.prepareChoice(row.state,{choiceId:row.state.currentScene.choices.find(c=>c.id.endsWith(':c:ask-witness')).id,requestId:'new-question'}));
+  await importLiveArchive(exportLiveArchive(a),copy);
+  const loaded=await copy.load(),next=createLiveSession({archive:copy,client:{}});await next.load();await next.resume();await next.resume();
+  const answer=await copy.load();const final=await open('council-final');await importLiveArchive(exportLiveArchive(copy),final);
+  return {old:old.state,resumed,loaded:loaded.state,answer:answer.state,exact:identity.stateHash((await final.load()).state)===identity.stateHash(answer.state)};
+ },text);
+ assert.ok(result.old.currentScene.choices.some(c=>c.id.endsWith(':c:river-back')));
+ assert.equal(result.resumed.node,'hub');assert.equal(result.resumed.revision,result.old.revision+1);assert.deepEqual(result.resumed.life,result.old.life);
+ assert.equal(result.answer.events.node,'council-question');assert.equal(result.answer.revision,result.loaded.revision+1);
+ assert.deepEqual(result.answer.life,result.old.life);assert.equal(result.answer.rng,result.old.rng);assert.equal(result.answer.events.council,result.old.events.council);
+ assert.ok(result.exact);
+});
+
 test('an old solo retreat preserves its pending exit and reaches paid intensive practice without planting',async t=>{
  const text=gunzipSync(await readFile(new URL('./fixtures/c79c3ff-solo-pending.jsonl.gz',import.meta.url))).toString('utf8');
  const {page}=await liveBrowser(t);

@@ -1140,12 +1140,12 @@ function lowerWorldCareer(observe,visitPost,first){
   assert.match(s.currentScene.title,/待你归来/);
   s=trainTo(pick(s,'train-menu'),rank);
   if(visitPost&&rank===1){
-   s=follow(s,'river-back','affairs-menu','companion-menu','post-book');
+   s=follow(s,'council-inquiry','witness-2','river-back','affairs-menu','companion-menu','post-book');
    if(s.currentScene.choices.some(c=>c.id.endsWith(':c:keep-register')))s=pick(s,'keep-register');
    s=follow(s,'two-runners','back','journey-menu','river-book','hear-council');
   }
   if(visitPost&&rank===2){
-   s=follow(s,'river-back','affairs-menu','companion-menu','post-book');
+   s=follow(s,'council-inquiry','witness-2','river-back','affairs-menu','companion-menu','post-book');
    if(s.currentScene.choices.some(c=>c.id.endsWith(':c:keep-register')))s=pick(s,'keep-register');
    s=follow(s,'station-mark','keep-register','split-box','post-shore','join-shore','find-cover','take-ferry','sit-quiet','back','journey-menu','river-book','hear-council');
    assert.equal(s.events.post.walk.outcome,'quiet');
@@ -1162,6 +1162,31 @@ function lowerWorldCareer(observe,visitPost,first){
  assert.equal(s.events.council,'000000000');assert.equal(s.life.realm,'golden');assert.equal(s.phase,'active');
  return s;
 }
+test('all nine council hearings allow questions and inspection before the same paid decision',()=>{
+ const hearings=new Map();
+ lowerWorldCareer((key,state)=>{
+  if(state.events.node==='council-book'&&state.currentScene.choices.some(c=>c.id.endsWith(':c:resolve-0')))hearings.set((state.events.council??'').length,state);
+ });
+ assert.equal(hearings.size,9);
+ for(const [index,base] of hearings){
+  let s=pick(base,'council-inquiry');
+  for(const witness of [0,1]){
+   s=follow(s,'witness-'+witness,'ask-witness');
+   assert.ok(prose(s).length>100,'substantive answer at hearing '+index);
+   s=deserializeLiveState(serializeLiveState(s));
+   s=pick(s,'other-voices');
+  }
+  s=follow(s,'witness-2','hear-council');
+  assert.deepEqual(s.life,base.life);assert.equal(s.rng,base.rng);assert.equal(s.events.council,base.events.council);
+  const direct=pick(base,'resolve-0'),informed=pick(s,'resolve-0');
+  assert.deepEqual(informed.life,direct.life);assert.equal(informed.events.council,direct.events.council);
+  assert.equal(informed.lastReceipt.elapsedDays,direct.lastReceipt.elapsedDays);
+  const invalid=structuredClone(s);invalid.events.node='council-question';invalid.events.page=2;
+  assert.throws(()=>serializeLiveState(invalid),/北山问事/);
+ }
+ const first=hearings.get(0),left=follow(first,'resolve-0','hear-council','council-inquiry','witness-0'),right=follow(first,'resolve-1','hear-council','council-inquiry','witness-0');
+ assert.match(prose(left),/暖渠/);assert.match(prose(right),/晒场/);assert.notEqual(prose(left),prose(right));
+});
 test('Lin and Zhi keep their full itinerary alongside the river cases and actual realm breakthroughs',()=>{
  const s=lowerWorldCareer(undefined,true);
  assert.equal(s.life.realm,'golden');
