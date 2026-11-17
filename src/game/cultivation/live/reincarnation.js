@@ -2,6 +2,9 @@ import { stateHash, sha256, assertPlainData } from './identity.js';
 import { DAYS_PER_YEAR } from './model.js';
 import { isExperienceLife, EXPERIENCE_VERSION } from './experience.js';
 import { realmFor, TECHNIQUES, V7_REALMS } from './cultivation-rules.js';
+import {riverCases,validateRiver} from './river-chronicle.js';
+import {validateExpedition} from './expedition.js';
+import {validateCouncil} from './mountain-council.js';
 
 export const REINCARNATION_REWARDS = Object.freeze([
   {id:'resilient-body',name:'特殊体质',cost:3,description:'下一世带入坚韧的体魄，保留与之相伴的缺陷。'},
@@ -43,6 +46,14 @@ function readEchoes(rows,parentId){
 export function validateReincarnation(row) {
  assertPlainData(row);
  const keys=['version','lineageId','generation','parentRunId','parentStateHash','earnedPoints','balance','purchases'];
+ if(row?.version===2&&Object.hasOwn(row,'atlas')){
+  keys.push('atlas');
+  const atlas=row.atlas;
+  if(!atlas||!exact(atlas,['river',...(atlas.expedition?['expedition']:[]),...(Object.hasOwn(atlas,'council')?['council']:[])]))invalid();
+  validateRiver(atlas.river);
+  if(atlas.expedition){if(atlas.river.record.length!==riverCases)invalid();validateExpedition(atlas.expedition);}
+  if(Object.hasOwn(atlas,'council')){if(atlas.expedition?.place!=='end')invalid();validateCouncil(atlas.council);}
+ }
  if(![1,2].includes(row?.version)||!exact(row,row.version===2?[...keys,'carriedPoints','echoes']:keys)||!validId(row.lineageId)||!validId(row.parentRunId)||!integer(row.generation,2)||!/^[a-f0-9]{64}$/u.test(row.parentStateHash)||!integer(row.earnedPoints)||!integer(row.balance))invalid();
  validateRewards(row.purchases);
  if(row.version===2){
@@ -99,10 +110,12 @@ export function buildRebirthOptions(deadState,rewardIds=[]) {
   const spent=costOf(rewardIds);
   if(spent>settlement.availablePoints)fail('REINCARNATION_INSUFFICIENT_POINTS');
   const purchases=[...rewardIds].sort();
-  return {engineVersion:7,...(isExperienceLife(deadState.life)?{experienceVersion:EXPERIENCE_VERSION}:{}),inheritedBenefits:purchases,reincarnation:{
+  const events=deadState.events;
+  const atlas=events?.river?structuredClone({river:events.river,...(events.expedition?{expedition:events.expedition}:{}),...(events.council?{council:events.council}:{})}):null;
+  return {engineVersion:7,...(isExperienceLife(deadState.life)?{experienceVersion:EXPERIENCE_VERSION}:{}),...(deadState.events?{eventVersion:1,originStories:true}:{}),inheritedBenefits:purchases,reincarnation:{
     version:settlement.echoes?2:1,...(settlement.echoes?{carriedPoints:settlement.carriedPoints,echoes:settlement.echoes}:{}),lineageId:deadState.reincarnation?.lineageId??deadState.runId,
     generation:settlement.generation+1,parentRunId:deadState.runId,parentStateHash:stateHash(deadState),
-    earnedPoints:settlement.earnedPoints,balance:settlement.availablePoints-spent,purchases,
+    earnedPoints:settlement.earnedPoints,balance:settlement.availablePoints-spent,purchases,...(atlas?{atlas}:{}),
   }};
 }
 

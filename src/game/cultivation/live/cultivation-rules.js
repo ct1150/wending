@@ -82,15 +82,16 @@ function descriptions(profile){
   const selected=[ROOTS[profile.rootId],PHYSIQUES[profile.physiqueId],RELICS[profile.relicId],TECHNIQUES[profile.techniqueId]];
   return {advantages:[...selected.map(row=>row.advantage),...profile.inheritedBenefits.map(id=>INHERITED_BENEFITS[id].description)],defects:selected.map(row=>row.defect)};
 }
-export function createCultivationBirthProfile(draw,inheritedBenefits=[],experienceVersion){
+export function createCultivationBirthProfile(draw,inheritedBenefits=[],experienceVersion,eventVersion){
   validateInheritedBenefits(inheritedBenefits);
   const select=(table,label)=>Object.keys(table)[draw(Object.keys(table).length,label)];
   const profile={version:7,rootId:select(ROOTS),physiqueId:select(PHYSIQUES,'physique'),relicId:select(RELICS,'relic'),techniqueId:select(TECHNIQUES),inheritedBenefits:[...inheritedBenefits]};
-  return {...profile,...descriptions(profile),...(experienceVersion===undefined?{}:{experienceVersion})};
+  return {...profile,...descriptions(profile),...(experienceVersion===undefined?{}:{experienceVersion}),...(eventVersion===undefined?{}:{eventVersion})};
 }
 export function validateV7BirthProfile(profile){
-  exactKeys(profile,BIRTH_KEYS,['experienceVersion']);
+  exactKeys(profile,BIRTH_KEYS,['experienceVersion','eventVersion']);
   if(Object.hasOwn(profile,'experienceVersion'))requireValue(profile.experienceVersion===EXPERIENCE_VERSION);
+  if(Object.hasOwn(profile,'eventVersion'))requireValue(profile.eventVersion===1&&profile.experienceVersion===EXPERIENCE_VERSION);
   requireValue(profile.version===7&&Object.hasOwn(ROOTS,profile.rootId)&&Object.hasOwn(PHYSIQUES,profile.physiqueId)&&Object.hasOwn(RELICS,profile.relicId)&&Object.hasOwn(TECHNIQUES,profile.techniqueId),'灵根、体质、伴生遗物或功法无效。');
   validateInheritedBenefits(profile.inheritedBenefits);
   const expected=descriptions(profile);

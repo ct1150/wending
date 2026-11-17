@@ -65,7 +65,7 @@ function currentBirthOptions() {
     : [];
   return {
     seed:liveBirthDraft.seed,
-    originStories:true,experienceVersion:EXPERIENCE_VERSION,
+    originStories:true,experienceVersion:EXPERIENCE_VERSION,eventVersion:1,
     ...(inheritedBenefits.length ? {inheritedBenefits} : {}),
     ...(liveBirthDraft.rolledTalentId ? {lockedTalentId:liveBirthDraft.rolledTalentId} : {}),
   };
@@ -137,7 +137,7 @@ function showCharacter() {
 }
 
 function showHelp() {
-  openDialog('入世须知', '<p>阅读眼前的剧情，选择你的做法，或写下自己的行动。岁月随选择前行；查看人物与历史不会推进时间。</p><p>故事需要联网续写。进度自动保存，刷新后可继续；请求未完成时会保留待续进度。</p><p>游戏只有一个存档。重新开始会覆盖当前进度；人物死亡后，可以在此生结算中选择传承、步入轮回。</p>', '<button class="button primary" data-close-dialog>继续阅读</button>');
+  openDialog('入世须知', '<p>阅读眼前的事件，选择自己的做法。修炼、历练与人物往来会留下真实后果；查看条件与菜单不会推进时间。</p><p>新人生的基础剧情与选择立即可用。可选的 AI 扩写需要联网，暂时不可用时仍可继续行动。旧人生继续使用原有的在线续写方式。</p><p>进度自动保存在此浏览器。重新开始会替换当前进度，原人生保留为只读历史；真实死亡后，可以选择传承、步入轮回。</p>', '<button class="button primary" data-close-dialog>继续阅读</button>');
 }
 
 function render() {
@@ -438,6 +438,7 @@ document.addEventListener('click', event => {
   if ('liveReward' in data) return selectReincarnationReward(data.liveReward);
   if ('liveReincarnate' in data) return prepareReincarnation();
   if ('liveRetry' in data) return liveSession?.retry();
+  if ('liveProseExpand' in data) return liveSession?.expandProse();
   if ('liveResume' in data) return liveSession?.resume();
   if ('liveChoice' in data) return liveSession?.choose({ choiceId: data.liveChoice, baseRevision: Number(data.revision), stateHash: data.stateHash });
   if ('liveHistoryNext' in data) return showLiveHistory(false);

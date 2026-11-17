@@ -141,7 +141,7 @@ test('game scenery persists through character creation, settings and story redra
   await page.locator('[data-menu-back]').click();
   await page.locator('[data-live-choice]:enabled').first().waitFor();
   await assertSameScene(page);
-  assert.equal(f.posts, 1, 'settings navigation must not advance the story');
+  assert.equal(f.posts, 0, 'settings navigation and the rule opening require no story request');
   await page.locator('[data-live-choice]:enabled').first().click();
   await page.locator('[data-live-choice][data-revision="2"]:enabled').first().waitFor();
   await assertSameScene(page);

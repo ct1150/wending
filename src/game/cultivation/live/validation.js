@@ -1,6 +1,7 @@
 import {checkActorScene} from './actor-insight.js';
 import {ORIGIN_BACKGROUNDS} from './birth-stories.js';
 import {MORTAL_OPENING} from './mortal-opening.js';
+import {validateEventState,createEventState} from './events.js';
 import { assertPlainData, canonicalStringify } from './identity.js';
 import { DAYS_PER_YEAR, ORIGINS, TALENTS, ITEMS, REALMS, LEGACY_ITEMS, LEGACY_INTENTS } from './model.js';
 import { exactKeys, idField, textField, validateProposal, validateEntities, validateGeneratedScene } from './schema.js';
@@ -45,7 +46,8 @@ function validateSummary(row) {
 function same(left, right) { return canonicalStringify(left) === canonicalStringify(right); }
 const lifeSummary=summarizeLife;
 export function validateReceipt(row,{turnId,birth}={}) {
-  exactKeys(row, ['kind','choiceId','action','elapsedDays','itemChanges','relationChanges','random','before','after','death','birth'],['cultivationResult']);
+  exactKeys(row, ['kind','choiceId','action','elapsedDays','itemChanges','relationChanges','random','before','after','death','birth'],['cultivationResult','eventVersion']);
+  if(Object.hasOwn(row,'eventVersion')&&row.eventVersion!==1||birth&&(row.eventVersion===1)!==(birth.cultivationProfile?.eventVersion===1))throw new Error('规则事件收据版本不符。');
   const modern=Object.hasOwn(row.before??{},'cultivationProfile');
   if(modern!==Object.hasOwn(row.after??{},'cultivationProfile')||modern!==Object.hasOwn(row,'cultivationResult'))throw new Error('收据规则版本不一致。');
   if (!['opening', 'choice'].includes(row.kind)) throw new Error('收据类型无效。');
@@ -93,7 +95,7 @@ export function validateReceipt(row,{turnId,birth}={}) {
     if (row.choiceId !== row.action.id || row.birth !== null || row.elapsedDays < (zeroTime?0:1) || row.random.roll === null) throw new Error('行动收据无效。');
     if(immediate&&(row.elapsedDays!==0||Object.keys(row.itemChanges).length||Object.keys(row.relationChanges).length||!same(row.before,row.after)||row.death!==null))throw new Error('短时互动不能产生资源或数值变化。');
     if (row.before.injury >= 10 || row.before.ageDays >= (modern?row.before.lifeLimit:REALMS[row.before.realm].lifeLimit)*DAYS_PER_YEAR) throw new Error('死亡后不能产生行动收据。');
-    const expectedRandom = (Math.imul(row.random.before, 1664525) + 1013904223) >>> 0;
+    const expectedRandom = row.eventVersion===1&&immediate?row.random.before:(Math.imul(row.random.before, 1664525) + 1013904223) >>> 0;
     if (row.random.after !== expectedRandom || row.random.roll !== expectedRandom % 100) throw new Error('行动随机收据不一致。');
   }
   if(modern)validateCultivationResult(row);
@@ -134,7 +136,7 @@ function validateCultivationResult(receipt){
 }
 export function validateLiveState(state) {
   assertPlainData(state);
-  exactKeys(state, ['version','mode','contentVersion','rulesVersion','promptVersion','runId','revision','turnId','phase','rng','life','birthReceipt','currentScene','lastReceipt','relatedEntities','archiveCursor'],['relationshipVersion','director','reincarnation','retrieval']);
+  exactKeys(state, ['version','mode','contentVersion','rulesVersion','promptVersion','runId','revision','turnId','phase','rng','life','birthReceipt','currentScene','lastReceipt','relatedEntities','archiveCursor'],['relationshipVersion','director','reincarnation','retrieval','events']);
   if(state.relationshipVersion!==undefined&&state.relationshipVersion!==1)throw new Error('关系规则版本无效。');
   if (state.version !== 5 || state.mode !== 'cultivation' || state.contentVersion !== 4 || state.rulesVersion !== 1 || state.promptVersion !== 1 || !['awaitingOpening','active','dead'].includes(state.phase)) throw new Error('实时存档版本或阶段无效。');
   idField(state.runId);
@@ -145,10 +147,16 @@ export function validateLiveState(state) {
   integer(state.archiveCursor);
   integer(state.rng, 0, 4294967295);
   validateLife(state.life);
+  if(state.life.birth.cultivationProfile?.eventVersion===1){
+    validateEventState(state.events);
+    if(!isExperienceLife(state.life)||state.life.birth.originId!==MORTAL_OPENING.originId)throw new Error('规则事件出生合同无效。');
+    if(state.turnId===0&&!same(state.events,createEventState(state.reincarnation?.atlas)))throw new Error('规则事件开场不可改写。');
+  }else if(state.events!==undefined)throw new Error('旧人生不能静默切换规则事件。');
   if(isExperienceLife(state.life)&&!state.director)throw new Error('新人生缺少事件时钟。');
   if(state.director!==undefined){if(!isV7Life(state.life))throw new Error('旧人生不能静默切换世界规则。');validateStoryDirector(state.director,{turnId:state.turnId,life:state.life});}
   if(state.reincarnation!==undefined){
     validateReincarnation(state.reincarnation);
+    if(state.reincarnation.atlas&&!state.events)throw new Error('只有规则事件人生可以承接图卷。');
     if(state.reincarnation.version===2&&!isExperienceLife(state.life))throw Object.assign(new Error('轮回传承与出生事实不符。'),{code:'REINCARNATION_INVALID_STATE'});
     if(!isV7Life(state.life)||state.reincarnation.parentRunId===state.runId||!same(state.reincarnation.purchases,state.life.birth.cultivationProfile.inheritedBenefits))throw new Error('轮回传承与出生事实不符。');
   }

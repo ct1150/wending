@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import * as engine from '../src/game/cultivation/live/engine.js';
 import { sha256, stateHash } from '../src/game/cultivation/live/identity.js';
 import { liveStoryFixture } from './helpers/live-story-fixture.js';
+import { loadLegacyOpening } from './helpers/live-browser.js';
 const sessionModule = await import('../src/ui/live-session.js').catch(()=>null);
 const clientModule = await import('../src/ui/story-client.js').catch(()=>null);
 const copy=x=>structuredClone(x);
@@ -145,6 +146,8 @@ test('native app: HTTPS fixture, pending refresh/import, pages, legacy preservat
   }
   await page.locator('#live-name').fill('云归');await page.locator('[data-live-start]').click();await page.locator('[data-live-choice]:enabled').first().waitFor();
   const read=()=>page.evaluate(async()=>{const {openLiveArchive}=await import('/src/game/live-archive.js');const a=await openLiveArchive();const value=await a.load();a.close();return value;});
+  assert.equal((await read()).state.events.version,1);assert.equal(posts,0);
+  await loadLegacyOpening(page);await page.locator('[data-live-retry]').click();await page.locator('[data-live-choice]:enabled').first().waitFor();
   const opening=await read();assert.equal(opening.state.revision,1);assert.equal(posts,1);assert.ok(!Object.hasOwn(contexts[0],'state'));
   nextPaused=true;await page.locator('[data-live-choice]').first().click();await page.locator('[data-live-retry]').waitFor();const pending=await read();assert.deepEqual(pending.state.life,opening.state.life);assert.ok(pending.pending);
   lookupRunning=true;await page.reload();await page.getByRole('button',{name:'查看续写进度'}).waitFor();
@@ -190,7 +193,7 @@ async function delayedAppFixture(t) {
     catch {await route.fulfill({status:404,body:''});}
   });
   t.after(()=>{for(const release of releases)release();assert.deepEqual(errors,[]);});
-  await page.goto('https://wending-focus.test/index.html');await page.locator('[data-title-new]:enabled').click();await page.locator('[data-live-start]:enabled').waitFor();
+  await page.goto('https://wending-focus.test/index.html');await loadLegacyOpening(page);
   return {page,requests,
     holdNext(){let enter,release;const entered=new Promise(resolve=>enter=resolve),wait=new Promise(resolve=>release=resolve);nextGate={enter,wait};releases.push(release);return {entered,release};},
     waitRevision:revision=>page.locator(`[data-live-choice][data-revision="${revision}"]:enabled`).first().waitFor(),
@@ -211,7 +214,7 @@ test('native streaming preview preserves nodes, focus and an open history dialog
       };}}),{headers:{'content-type':'text/event-stream'}});
     };
   });
-  await page.reload();await page.locator('[data-live-start]:enabled').click();
+  await page.reload();await page.locator('[data-live-retry]:enabled').click();
   await page.locator('[aria-label="本地开场"]').waitFor();await page.waitForFunction(()=>window.streamPacket);
   assert.equal(await page.locator('[data-live-choice]:enabled').count(),0);
   await page.locator('[data-history]').focus();await page.evaluate(()=>{window.originalPreview=document.querySelector('[data-live-preview-text]');window.originalHistory=document.activeElement;window.streamPacket({type:'preview',text:'<script>山风吹来。</script>'});});
@@ -230,9 +233,9 @@ test('native streaming preview preserves nodes, focus and an open history dialog
 
 for(const phase of ['opening','choice'])test(`native app focus: delayed ${phase} keeps the user's current stable control`,async t=>{
   const f=await delayedAppFixture(t),{page}=f;
-  if(phase==='choice'){await page.locator('[data-live-start]').click();await f.waitRevision(1);}
+  if(phase==='choice'){await page.locator('[data-live-retry]').click();await f.waitRevision(1);}
   const gate=f.holdNext();
-  await page.locator(phase==='opening'?'[data-live-start]':'[data-live-choice]').first().click();
+  await page.locator(phase==='opening'?'[data-live-retry]':'[data-live-choice]').first().click();
   const request=await gate.entered,before=await f.read();
   const control=page.locator('[data-history]');
   await control.focus();
@@ -249,7 +252,7 @@ for(const phase of ['opening','choice'])test(`native app focus: delayed ${phase}
 
 test('native app focus: delayed reply leaves modal focus intact and Escape resolves its replaced return control',async t=>{
   const f=await delayedAppFixture(t),{page}=f;
-  await page.locator('[data-live-start]').click();await f.waitRevision(1);
+  await page.locator('[data-live-retry]').click();await f.waitRevision(1);
   const before=await f.read(),gate=f.holdNext();
   await page.locator('[data-live-choice]').first().click();await gate.entered;
   const oldReturn=await page.locator('[data-history]').elementHandle();
@@ -266,7 +269,7 @@ test('native app focus: delayed reply leaves modal focus intact and Escape resol
 
 test('native app focus: a choice that becomes unavailable returns focus to the scene heading',async t=>{
   const f=await delayedAppFixture(t),{page}=f;
-  await page.locator('[data-live-start]').click();await f.waitRevision(1);
+  await page.locator('[data-live-retry]').click();await f.waitRevision(1);
   const before=await f.read(),gate=f.holdNext(),choice=page.locator('[data-live-choice]').first();
   const oldChoice=await choice.getAttribute('data-live-choice');
   await choice.click();await gate.entered;

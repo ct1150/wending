@@ -11,17 +11,19 @@ import { validateReincarnation } from './reincarnation.js';
 import { advanceRetrievalMemory } from './retrieval-memory.js';
 import { ORIGIN_BACKGROUNDS } from './birth-stories.js';
 import {MORTAL_OPENING} from './mortal-opening.js';
+import {createEventState,eventActionRule,resolveEventScene,assertRuleScene,advanceEvents,eventGoal} from './events.js';
 const copy = value => JSON.parse(JSON.stringify(value));
 const nextRandom = value => (Math.imul(value,1664525)+1013904223)>>>0;
 const summary = summarizeLife;
 const same = (a,b) => canonicalStringify(a)===canonicalStringify(b);
 function requireActive(state) { validateLiveState(state);if(state.phase!=='active')throw new Error('此生尚未开场或已经死亡。'); }
-const birthFields = ['originId','engineVersion','lockedTalentId','inheritedBenefits','experienceVersion','originStories'];
+const birthFields = ['originId','engineVersion','lockedTalentId','inheritedBenefits','experienceVersion','originStories','eventVersion'];
 
-function rollBirth({seed, originId, engineVersion, lockedTalentId, inheritedBenefits, experienceVersion, originStories}) {
+function rollBirth({seed, originId, engineVersion, lockedTalentId, inheritedBenefits, experienceVersion, originStories,eventVersion}) {
  if(engineVersion!==undefined&&engineVersion!==7||inheritedBenefits!==undefined&&engineVersion!==7)throw new Error('修行引擎版本无效。');
  if(originStories!==undefined&&(originStories!==true||engineVersion!==7))throw new Error('出身故事版本无效。');
  if(experienceVersion!==undefined&&(experienceVersion!==1||engineVersion!==7))throw new Error('新体验版本无效。');
+ if(eventVersion!==undefined&&(eventVersion!==1||engineVersion!==7||!originStories))throw new Error('规则事件版本无效。');
  if(lockedTalentId!=null&&(engineVersion!==7||typeof lockedTalentId!=='string'||!Object.hasOwn(TALENTS,lockedTalentId)))throw new Error('锁定命格无效。');
  if(!['string','number'].includes(typeof seed)||typeof seed==='number'&&!Number.isFinite(seed)||String(seed).length>200)throw new Error('种子无效。');
  const seededIndex=(label,limit)=>parseInt(sha256('birth-'+label+':'+seed).slice(0,8),16)%limit;
@@ -36,6 +38,7 @@ function rollBirth({seed, originId, engineVersion, lockedTalentId, inheritedBene
    if(engineVersion!==7)throw new Error('凡人开局须使用当前修行规则。');
    originStories=true;experienceVersion=1;
  }
+ if(eventVersion!==undefined&&originId!==MORTAL_OPENING.originId)throw new Error('规则事件须从当前寒村少年背景开始。');
  let rng=parseInt(sha256(String(seed)).slice(0,8),16);
  const draw=(limit,label)=>{
    rng=nextRandom(rng);
@@ -55,7 +58,7 @@ function rollBirth({seed, originId, engineVersion, lockedTalentId, inheritedBene
    const backgrounds=Object.keys(ORIGIN_BACKGROUNDS[originId]);
    birth.backgroundId=backgrounds[seededIndex('background:'+originId,backgrounds.length)];
  }
- if(engineVersion===7)birth.cultivationProfile=createCultivationBirthProfile(draw,inheritedBenefits??[],experienceVersion);
+ if(engineVersion===7)birth.cultivationProfile=createCultivationBirthProfile(draw,inheritedBenefits??[],experienceVersion,eventVersion);
  return {birth,rng};
 }
 
@@ -73,12 +76,13 @@ export function createLiveGame(options={}) {
  const {birth,rng}=rollBirth({...options,seed:options.seed??runId,originId});
  const life=initialLifeForBirth(name,birth);
  const birthReceipt={kind:'opening',choiceId:null,action:null,elapsedDays:0,itemChanges:{},relationChanges:{},random:{before:rng,after:rng,roll:null},before:summary(life),after:summary(life),death:null,birth:copy(birth)};
+ if(options.eventVersion===1)birthReceipt.eventVersion=1;
  if(isV7Life(life))birthReceipt.cultivationResult={version:7,check:null,lifespanChange:{years:0,cause:null}};
- return validateLiveState({relationshipVersion:1,version:5,mode:'cultivation',contentVersion:4,rulesVersion:1,promptVersion:1,runId,revision:0,turnId:0,phase:'awaitingOpening',rng,life,birthReceipt,currentScene:null,lastReceipt:null,relatedEntities:[],archiveCursor:0,...(isV7Life(life)?{director:createStoryDirector(life,rng)}:{}),...(options.reincarnation?{reincarnation:copy(options.reincarnation)}:{})});
+ return validateLiveState({relationshipVersion:1,version:5,mode:'cultivation',contentVersion:4,rulesVersion:1,promptVersion:1,runId,revision:0,turnId:0,phase:'awaitingOpening',rng,life,birthReceipt,currentScene:null,lastReceipt:null,relatedEntities:[],archiveCursor:0,...(isV7Life(life)?{director:createStoryDirector(life,rng)}:{}),...(options.eventVersion===1?{events:createEventState(options.reincarnation?.atlas)}:{}),...(options.reincarnation?{reincarnation:copy(options.reincarnation)}:{})});
 }
 function actionRule(state,p) {
  validateProposal(p);
- if(isV7Life(state.life))return v7ActionRule(state,p);
+ if(isV7Life(state.life)){const rule=v7ActionRule(state,p);return state.events?eventActionRule(state,p,rule):rule;}
  if(!LEGACY_INTENTS[p.intent]?.includes(p.approach))throw new Error('此生尚无此种行动。');
  const life=state.life,rule={days:30,items:{},gain:{},cultivation:0,injury:0,relationship:0,risk:0,realm:null},entity=state.relatedEntities.find(e=>e.id===p.targetId);
  const target=(ok)=>{if(!ok)throw new Error('行动目标不属于可执行规则。');};
@@ -140,7 +144,7 @@ function prepareChoiceCommand(state,command,replaying=false) {
  if(custom&&command.choiceId!==undefined&&command.choiceId!==action.id)throw Object.assign(new Error(CUSTOM_ACTION_MESSAGE),{code:'CUSTOM_ACTION_UNSUPPORTED'});
  let rule;try{rule=actionRule(state,action);}catch(error){if(custom)throw Object.assign(new Error(CUSTOM_ACTION_MESSAGE),{code:'CUSTOM_ACTION_UNSUPPORTED'});throw error;}
  if(rule.reason){if(custom)throw Object.assign(new Error(CUSTOM_ACTION_MESSAGE),{code:'CUSTOM_ACTION_UNSUPPORTED'});throw new Error(rule.reason);}
- const nextRng=nextRandom(state.rng),roll=nextRng%100;
+ const nextRng=state.events&&rule.eventNavigation?state.rng:nextRandom(state.rng),roll=nextRng%100;
  let nextLife,elapsedDays,death,cultivationResult;
  if(isV7Life(state.life))({nextLife,elapsedDays,death,result:cultivationResult}=resolveV7Action(state.life,action,rule,roll,state.turnId+1));
  else {
@@ -162,6 +166,7 @@ function prepareChoiceCommand(state,command,replaying=false) {
  const itemChanges={};for(const id of Object.keys(ITEMS)){const delta=(nextLife.items[id]??0)-(state.life.items[id]??0);if(delta)itemChanges[id]=delta;}
  const relationChanges={};for(const [id,n] of Object.entries(nextLife.relations)){const delta=n-(state.life.relations[id]??0);if(delta)relationChanges[id]=delta;}
  const receipt={kind:'choice',choiceId:action.id,action:copy(action),elapsedDays,itemChanges,relationChanges,random:{before:state.rng,after:nextRng,roll},before:summary(state.life),after:summary(nextLife),death,birth:null};
+ if(state.events)receipt.eventVersion=1;
  if(cultivationResult)receipt.cultivationResult=cultivationResult;
  return {kind:'choice',identity:identity(state,command.requestId,action.id),receipt,nextLife,nextRng};
 }
@@ -169,6 +174,11 @@ function verifiedPending(state,pending) {
  validateLiveState(state);assertPlainData(pending);exactKeys(pending,['kind','identity','receipt','nextLife','nextRng']);exactKeys(pending.identity,['runId','turnId','baseRevision','stateHash','choiceId','rulesVersion','promptVersion','requestId']);
  const expected=pending.kind==='opening'?prepareOpening(state,{requestId:pending.identity.requestId}):pending.kind==='choice'?prepareRecordedChoice(state,pending):null;
  if(!expected||!same(pending,expected))throw new Error('待提交行动已过期或收据遭到修改。');return expected;
+}
+export function resolveRuleScene(state,pending){
+ const fixed=verifiedPending(state,pending);
+ if(!state.events||fixed.receipt.death)throw new Error('此行动不是可续写的规则事件。');
+ return validateGeneratedScene(resolveEventScene(state,fixed));
 }
 // Only the scene's bounded working set enters snapshots and their hashes.
 // Restored values come from indexed rule records, never narrative descriptions.
@@ -180,13 +190,16 @@ export function projectRelations(life,entities,restored={}) {
 }
 export function commitTurn(state,pending,scene,restoredRelations={}) {
  const fixed=verifiedPending(state,pending);if(fixed.receipt.death)throw new Error('真实死亡须本地结算。');validateGeneratedScene(scene);checkActorScene(scene,isExperienceLife(state.life),state.relatedEntities,false);
+ if(state.events)assertRuleScene(state,fixed,scene);
  const relatedEntities=copy(scene.entities);
  // Every current target and memory reference must have an explicit stable entity.
  for(const m of scene.memoryDeltas)if(!relatedEntities.some(e=>e.id===m.entityId))throw new Error('记忆引用未知实体。');
  const life=copy(fixed.nextLife);life.relations=projectRelations(life,relatedEntities,state.relationshipVersion===1?restoredRelations:{});
  const next={...copy(state),...(scene.choices.some(choice=>choice.intent==='interact')?{relationshipVersion:1}:{}),revision:state.revision+1,turnId:state.turnId+1,phase:'active',life,rng:fixed.nextRng,lastReceipt:copy(fixed.receipt),currentScene:copy(scene),relatedEntities};
+ if(state.events)next.events=advanceEvents(state,fixed.receipt);
  const retrieval=advanceRetrievalMemory(state.retrieval,scene.retrieval);if(retrieval)next.retrieval=retrieval;
  if(state.director)next.director=advanceStoryDirector(state.director,life,fixed.receipt,scene,next.turnId);
+ if(next.events)next.director.currentGoal=eventGoal(next);
  const choices=compileChoices(next,scene.choices);if(!choices.some(p=>p.enabled))throw new Error('场景必须保留可执行行动。');return validateLiveState(next);
 }
 export function settleDeath(state,pending) {const fixed=verifiedPending(state,pending);if(!fixed.receipt.death)throw new Error('尚未真实死亡。');return validateLiveState({...copy(state),revision:state.revision+1,turnId:state.turnId+1,phase:'dead',life:copy(fixed.nextLife),rng:fixed.nextRng,lastReceipt:copy(fixed.receipt),currentScene:null,...(state.director?{director:advanceStoryDirector(state.director,fixed.nextLife,fixed.receipt,null,state.turnId+1)}:{})});}

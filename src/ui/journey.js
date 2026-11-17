@@ -2,6 +2,7 @@ import { currentStoryGoal } from '../game/cultivation/live/story-director.js';
 import {ORIGINS,TALENTS,ITEMS,DAYS_PER_YEAR} from '../game/cultivation/live/model.js';
 import {describeEcho,getReincarnationSettlement,REINCARNATION_REWARDS} from '../game/cultivation/live/reincarnation.js';
 import {buildOpeningBrief} from '../game/cultivation/live/experience-story.js';
+import {nextRealmFor} from '../game/cultivation/live/cultivation-rules.js';
 const esc = value => String(value ?? '').replace(/[&<>"']/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[char]);
 
 const endings = { retired: '归隐', lifespan: '寿尽', battle: '陨落', victory: '问鼎', burned: '燃命而终' };
@@ -194,8 +195,21 @@ function renderLiveEnding(view) {
   return `<div class="live-reincarnation"><h3>此生结算</h3><p>${esc(settlement.summary)}</p>${settlement.echoes?history:'<blockquote class="live-epitaph">'+esc(settlement.epitaph)+'</blockquote>'}<p class="live-causal-points">因果点 ${settlement.availablePoints} · 本世所得 ${settlement.earnedPoints} · 前世结余 ${settlement.carriedPoints}</p><h4>六道轮回商店</h4>${settlement.selectionLimit?'<p>最多两项，也可不选；未用因果点留给来世。</p>':''}<div class="live-reward-list" role="group" aria-label="选择来世传承">${rewards}</div><p class="live-causal-points">已选 ${spent} · 来世结余 ${balance}</p>${view.reincarnatedTo ? '<p class="live-causal-points">此生传承已领取。请恢复下一世备份，或返回首页重新开始。</p>' : ''}<button type="button" class="button primary" data-live-reincarnate${blocked || balance < 0 || selected.size>settlement.selectionLimit ? ' disabled' : ''}>步入轮回</button></div>`;
 }
 
+function renderEventExtras(view){
+  const state=view.state;
+  if(!state.events||state.phase!=='active')return {growth:'',prose:''};
+  const next=nextRealmFor(state.life),extra=view.prose;
+  const growth=next?`修行目标：${next.name} · 修为 ${state.life.cultivation} / ${next.threshold} · ${view.itemNames?.[next.material]??ITEMS[next.material]} ${state.life.items[next.material]??0} / 1`:'继续此生：修炼、历练与未完的因果仍可推进。';
+  const message=extra?.status==='loading'?'正在写一小段扩写，你可以继续选择。':extra?.status==='unavailable'?'这一段扩写暂不可用，你仍可继续当前故事。':'';
+  return {
+    growth:`<p class="event-growth" data-event-growth>${esc(growth)}</p>`,
+    prose:`<section class="event-prose" data-event-prose aria-label="可选扩写"><button type="button" class="button" data-live-prose-expand${extra||view.busy||view.pending?' disabled':''}>${state.currentScene.blocks.some(block=>block.kind==='dialogue')?'展开对白':'展开描写'}</button><p class="save-info">可选的 AI 扩写，需要联网；随时可以继续行动。</p>${message?`<p data-event-prose-status role="status">${esc(message)}</p>`:''}${extra?.status==='ready'?`<p class="journey-block" data-event-prose-text>${esc(extra.text)}</p>`:''}</section>`,
+  };
+}
+
 export function renderLiveJourney(view, choices) {
   const state = view.state, scene = state.currentScene, presentation = livePresentation(view, choices);
+  const extras=renderEventExtras(view);
   const v7 = state.life.cultivationProfile?.version === 7;
   const opening = state.phase === 'awaitingOpening' && !presentation.preview;
   const intro = opening ? `<p>${esc(state.life.name)}，${Math.floor(state.life.ageDays / DAYS_PER_YEAR)}岁，出身${esc(ORIGINS[state.life.birth.originId])}。</p><p>天赋：${state.life.birth.talentIds.map(id => esc(TALENTS[id])).join('、')}。</p>` : '';
@@ -207,7 +221,7 @@ export function renderLiveJourney(view, choices) {
     ? '<button type="button" class="button primary" data-live-resume>查看续写进度</button>'
     : '<button type="button" class="button primary" data-live-retry>继续故事</button>';
   const status = message ? esc(message) : view.busy ? '<span aria-hidden="true">…</span><span class="live-sr-only">正在续写</span>' : '';
-  return `<article class="journey live-journey${v7 ? ' live-cultivation-v7' : ''}" data-live-story data-live-run="${esc(state.runId)}" aria-label="此生故事"><section class="journey-current" aria-labelledby="journey-current-title"><h2 id="journey-current-title" class="live-sr-only" tabindex="-1">${esc(state.phase === 'dead' ? '此生已尽' : scene?.title ?? '此生故事')}</h2><section class="live-intro" aria-label="本地开场"${opening ? '' : ' hidden'}>${intro}</section>${v7 ? renderLiveBirthFacts(view) : ''}${v7 ? renderLiveOutcome(view.pending?.receipt ?? state.lastReceipt, view) : ''}<div class="journey-prose" data-live-prose data-live-preview-text${presentation.preview ? ' data-live-preview' : ''} aria-busy="${Boolean(view.busy)}">${presentation.blocks.map(renderLiveBlock).join('')}</div>${v7 ? renderLiveState(view) : ''}<div class="journey-choices" data-live-choices role="group" aria-label="眼前的选择"${presentation.choices.length ? '' : ' hidden'}>${presentation.choices.map((choice, index) => renderLiveChoice(choice, view, index, presentation)).join('')}</div><section class="live-status" aria-live="polite" aria-atomic="true"${status || recovery ? '' : ' hidden'}><p data-live-progress-status>${status}</p>${recovery}</section><section class="journey-ending"${state.phase === 'dead' ? '' : ' hidden'}>${renderLiveEnding(view)}</section></section></article>`;
+  return `<article class="journey live-journey${v7 ? ' live-cultivation-v7' : ''}" data-live-story data-live-run="${esc(state.runId)}" aria-label="此生故事"><section class="journey-current" aria-labelledby="journey-current-title"><h2 id="journey-current-title" class="live-sr-only" tabindex="-1">${esc(state.phase === 'dead' ? '此生已尽' : scene?.title ?? '此生故事')}</h2><section class="live-intro" aria-label="本地开场"${opening ? '' : ' hidden'}>${intro}</section>${v7 ? renderLiveBirthFacts(view) : ''}${v7 ? renderLiveOutcome(view.pending?.receipt ?? state.lastReceipt, view) : ''}<div class="journey-prose" data-live-prose data-live-preview-text${presentation.preview ? ' data-live-preview' : ''} aria-busy="${Boolean(view.busy)}">${presentation.blocks.map(renderLiveBlock).join('')}</div>${v7 ? renderLiveState(view) : ''}${extras.growth}<div class="journey-choices" data-live-choices role="group" aria-label="眼前的选择"${presentation.choices.length ? '' : ' hidden'}>${presentation.choices.map((choice, index) => renderLiveChoice(choice, view, index, presentation)).join('')}</div>${extras.prose}<section class="live-status" aria-live="polite" aria-atomic="true"${status || recovery ? '' : ' hidden'}><p data-live-progress-status>${status}</p>${recovery}</section><section class="journey-ending"${state.phase === 'dead' ? '' : ' hidden'}>${renderLiveEnding(view)}</section></section></article>`;
 }
 
 // The live reading surface keeps its paragraph and choice nodes as text arrives

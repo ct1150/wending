@@ -5,13 +5,18 @@ import { isExperienceLife, EXPERIENCE_VERSION } from '../game/cultivation/live/e
 import { buildRebirthOptions } from '../game/cultivation/live/reincarnation.js';
 import {MORTAL_OPENING} from '../game/cultivation/live/mortal-opening.js';
 import {requestRecoverableTurn} from './story-recovery.js';
+import {buildEventProseBrief,validateProseText} from '../game/cultivation/live/event-prose.js';
 const defaultEngine={createLiveGame,prepareOpening,prepareChoice,commitTurn,settleDeath};
 const copy=value=>value===undefined?undefined:JSON.parse(JSON.stringify(value));
 const id=()=>globalThis.crypto.randomUUID();
 const fault=code=>Object.assign(new Error(code),{code});
 export function createLiveSession({archive,client,engine=defaultEngine,onChange=()=>{},onProgress=()=>{}}) {
-  let loaded=null,busy=false,status='idle',errorCode=null,preview=null,generationStatus='generating';
-  function view(){return copy({...loaded,state:loaded?.state??null,pending:loaded?.pending??null,attempt:loaded?.attempt??null,status,errorCode,busy,preview,generationStatus});}
+  let loaded=null,busy=false,status='idle',errorCode=null,preview=null,generationStatus='generating',prose=null;
+  function proseMatches(row,brief){return row?.archiveId===brief.archiveId&&row.state?.phase==='active'&&row.state.events&&row.state.revision===brief.revision&&buildEventProseBrief(row.state,row.archiveId).sourceHash===brief.sourceHash;}
+  function view(){
+    if(prose&&!proseMatches(loaded,prose.brief))prose=null;
+    return copy({...loaded,state:loaded?.state??null,pending:loaded?.pending??null,attempt:loaded?.attempt??null,status,errorCode,busy,preview,generationStatus,...(loaded?.state.events?{prose:prose?{status:prose.status,text:prose.text}:null}:{})});
+  }
   function emit(){onChange(view());}
   async function reload(expectedArchiveId) {
     const next=await archive.load();
@@ -93,6 +98,7 @@ export function createLiveSession({archive,client,engine=defaultEngine,onChange=
   // Decide the immutable birth contract BEFORE creating/replacing a physical
   // archive. Older available servers still support their original unmarked V7.
   async function birthContract(options,required=false){
+    if(options.eventVersion===1)return {options};
     if(options.engineVersion!==7&&!Object.hasOwn(options,'experienceVersion'))return {options};
     if(Object.hasOwn(options,'experienceVersion')&&(options.engineVersion!==7||options.experienceVersion!==EXPERIENCE_VERSION))throw fault('EXPERIENCE_UNSUPPORTED');
     const capability=await client.capabilities();
@@ -106,6 +112,10 @@ export function createLiveSession({archive,client,engine=defaultEngine,onChange=
   }
   async function generate(row,{reuseAttempt=false,capability:knownCapability}={}) {
     preview=null;generationStatus='generating';
+    if(row.state.events){
+      loaded=await archive.commitEvent({expectedArchiveId:row.archiveId,expectedRevision:row.state.revision,pending:row.pending});
+      status=loaded.state.phase==='dead'?'dead':'ready';errorCode=null;emit();return;
+    }
     if(await death(row))return;
     const capability=knownCapability??await client.capabilities();
     if(!capability.available)throw fault(capability.errorCode||'SERVICE_UNAVAILABLE');
@@ -246,6 +256,10 @@ export function createLiveSession({archive,client,engine=defaultEngine,onChange=
       if(!loaded||loaded.pending)throw fault('TURN_ALREADY_PENDING');
       if(command.baseRevision!==loaded.state.revision||command.stateHash!==stateHash(loaded.state))throw fault('STALE_CHOICE');
       const pending=engine.prepareChoice(loaded.state,{...command,requestId:id()});
+      if(loaded.state.events){
+        loaded=await archive.commitEvent({expectedArchiveId:loaded.archiveId,expectedRevision:loaded.state.revision,pending});
+        preview=null;status=loaded.state.phase==='dead'?'dead':'ready';errorCode=null;emit();return;
+      }
       loaded=await archive.prepare(pending);
       status='pending';
       emit();
@@ -256,6 +270,7 @@ export function createLiveSession({archive,client,engine=defaultEngine,onChange=
     const expectedArchiveId=loaded?.archiveId;
     return run(async()=>{
       await reload(expectedArchiveId);
+      if(loaded?.pending&&loaded.state.events){await generate(loaded);return;}
       if(!loaded?.pending||await death(loaded))return;
       if(!loaded.attempt) {
         status='paused';
@@ -272,6 +287,7 @@ export function createLiveSession({archive,client,engine=defaultEngine,onChange=
       if(!loaded?.pending)return;
       // A click belongs to the displayed decision and attempt, including across tabs.
       if(displayed&&(loaded.pending.identity.requestId!==displayed.pending?.identity.requestId||loaded.attempt?.id!==displayed.attempt?.id))return;
+      if(loaded.state.events){await generate(loaded);return;}
       if(await death(loaded))return;
       const row=loaded;
       if(row.attempt) {
@@ -295,5 +311,25 @@ export function createLiveSession({archive,client,engine=defaultEngine,onChange=
       await generate(row);
     });
   }
-  return {start,startNew,reincarnate,load,choose,resume,retry,view};
+  async function expandProse(){
+    if(busy||loaded?.pending||!loaded?.state.events||loaded.state.phase!=='active'||prose)return view();
+    const current={brief:buildEventProseBrief(loaded.state,loaded.archiveId),status:'loading',text:''};prose=current;emit();
+    try{
+      const capability=await client.capabilities();
+      if(!capability.available||capability.proseVersion!==1)throw fault('SERVICE_UNAVAILABLE');
+      if(prose!==current||!proseMatches(loaded,current.brief))return view();
+      const session=await client.createSession(),attempt={id:id(),sessionRef:session.sessionRef,retryOf:null};
+      if(prose!==current||!proseMatches(loaded,current.brief))return view();
+      const result=await client.requestProse(current.brief,attempt);
+      const physical=await archive.load();
+      if(prose!==current||!proseMatches(loaded,current.brief)||!proseMatches(physical,current.brief))return view();
+      if(result.status!=='ready'||result.requestId!==current.brief.requestId||result.attemptId!==attempt.id||result.sessionRef!==attempt.sessionRef||result.prose?.sourceHash!==current.brief.sourceHash)throw fault('PROVIDER_RESPONSE_INVALID');
+      validateProseText(result.prose.text);current.status='ready';current.text=result.prose.text;
+    }catch{
+      if(prose===current&&proseMatches(loaded,current.brief))current.status='unavailable';
+    }
+    if(prose===current)emit();
+    return view();
+  }
+  return {start,startNew,reincarnate,load,choose,resume,retry,expandProse,view};
 }

@@ -8,6 +8,8 @@ import { readStoryJson } from './story-request-body.js';
 import { createStoryObservation } from './story-observation.js';
 import { structureDiagnostic } from './story-provider-core.js';
 import { validateRetrievalReceipt } from '../game/cultivation/live/retrieval-memory.js';
+import {validateEventProseBrief,validateProseText} from '../game/cultivation/live/event-prose.js';
+import {generateProse,PROSE_LIMITS,PROSE_RESERVATION_NEURONS} from './story-prose.js';
 
 export const STORY_COOKIE='__Host-story_session';
 // Leave room for provider completion and durable settlement before the browser
@@ -30,19 +32,19 @@ function validateTurn(body,storyActions){try {exactKeys(body,['context','attempt
 // These dependencies are trusted server composition seams. index.js and the
 // explicit tester-only entry fix their provider/readiness policies; browser
 // input cannot select or override them.
-export function createStoryApi({provider=generateScene,budget,config={},experiment}={}){
+export function createStoryApi({provider=generateScene,proseProvider=generateProse,budget,config={},experiment}={}){
   const readiness=config.readiness??(env=>assertProviderReady({enabled:config.enabled===true,env,evidence:config.evidence,now:(config.now??Date.now)()}));
   async function callBudget(method,input){if(typeof budget?.[method]!=='function')throw Object.assign(new Error('BUDGET_UNAVAILABLE'),{code:'BUDGET_UNAVAILABLE'});return await budget[method](input);}
   return {async fetch(request,env={},ctx){
     let identity={};
     try {
       const url=new URL(request.url),path=url.pathname;
-      const capabilities=path==='/api/story/capabilities',sessionPath=path==='/api/story/session',turnPath=path==='/api/story/turn',lookupPath=/^\/api\/story\/turn\/[^/]+$/.test(path);
-      if(!capabilities&&!sessionPath&&!turnPath&&!lookupPath)return json(envelope('rejected','NOT_FOUND'),404);
+      const capabilities=path==='/api/story/capabilities',sessionPath=path==='/api/story/session',turnPath=path==='/api/story/turn',prosePath=path==='/api/story/prose',proseRequest=prosePath||path.startsWith('/api/story/prose/'),lookupPath=/^\/api\/story\/(?:turn|prose)\/[^/]+$/.test(path);
+      if(!capabilities&&!sessionPath&&!turnPath&&!prosePath&&!lookupPath||proseRequest&&(config.proseEnabled!==true||experiment))return json(envelope('rejected','NOT_FOUND'),404);
       const method=capabilities||lookupPath?'GET':'POST';if(request.method!==method)return json(envelope('rejected','METHOD_NOT_ALLOWED'),405,{allow:method});
       if(url.protocol!=='https:'||request.headers.get('sec-fetch-site')==='cross-site'||request.headers.has('origin')&&request.headers.get('origin')!==url.origin||method==='POST'&&request.headers.get('origin')!==url.origin)return json(envelope('rejected','ORIGIN_INVALID'),403);
       if(!lookupPath&&url.search)return json(envelope('rejected','REQUEST_INVALID'),400);
-      if(capabilities){let errorCode=null;try{await readiness(env);}catch(error){errorCode=codeOf(error);}return json({protocolVersion:1,available:errorCode===null,status:errorCode?'paused':'ready',errorCode,storyActions:true,...(errorCode===null?{experienceVersion:EXPERIENCE_VERSION,originStories:true,openingStoryVersion:1,...(config.groundedChoices===true?{automaticRecovery:1}:{})}:{}),limits:STORY_API_LIMITS});}
+      if(capabilities){let errorCode=null;try{await readiness(env);}catch(error){errorCode=codeOf(error);}return json({protocolVersion:1,available:errorCode===null,status:errorCode?'paused':'ready',errorCode,storyActions:true,...(errorCode===null?{experienceVersion:EXPERIENCE_VERSION,originStories:true,openingStoryVersion:1,...(config.proseEnabled===true?{proseVersion:1}:{}),...(config.groundedChoices===true?{automaticRecovery:1}:{})}:{}),limits:STORY_API_LIMITS});}
       const ipHash=sha256(request.headers.get('cf-connecting-ip')??'unknown');
       const admission=await callBudget('admit',{ipHash});if(admission.kind==='denied')return json(envelope('paused',admission.code),429);
       let body;if(method==='POST')body=await readStoryJson(request);
@@ -56,16 +58,17 @@ export function createStoryApi({provider=generateScene,budget,config={},experime
         return json({protocolVersion:1,status:'ready',sessionRef,expiresAt:created.expiresAt},200,{'set-cookie':`${STORY_COOKIE}=${token}; Path=/; Max-Age=86400; HttpOnly; Secure; SameSite=Strict`});
       }
       if(turnPath){validateTurn(body,request.headers.get('X-Story-Actions')==='1');identity={requestId:body.context.identity.requestId,attemptId:body.attempt.id,sessionRef:body.attempt.sessionRef};}
-      else {try{identity.requestId=decodeURIComponent(path.slice('/api/story/turn/'.length));identity.attemptId=url.searchParams.get('attemptId');idField(identity.requestId);idField(identity.attemptId);if([...url.searchParams].length!==1||!url.searchParams.has('attemptId'))fail('REQUEST_INVALID');}catch{fail('REQUEST_INVALID');}}
+      else if(prosePath){try{exactKeys(body,['brief','attempt']);validateEventProseBrief(body.brief);exactKeys(body.attempt,['id','sessionRef','retryOf']);idField(body.attempt.id);idField(body.attempt.sessionRef);if(body.attempt.retryOf!==null)fail('REQUEST_INVALID');identity={requestId:body.brief.requestId,attemptId:body.attempt.id,sessionRef:body.attempt.sessionRef};}catch{fail('REQUEST_INVALID');}}
+      else {try{identity.requestId=decodeURIComponent(path.slice((proseRequest?'/api/story/prose/':'/api/story/turn/').length));identity.attemptId=url.searchParams.get('attemptId');idField(identity.requestId);idField(identity.attemptId);if([...url.searchParams].length!==1||!url.searchParams.has('attemptId'))fail('REQUEST_INVALID');}catch{fail('REQUEST_INVALID');}}
       const tokenHash=cookieHash(request);if(!tokenHash)return json(envelope('paused','SESSION_UNAVAILABLE',identity));
       const storyActions=request.headers.get('X-Story-Actions')==='1';
-      const authenticated=await callBudget('getSession',{tokenHash,...(turnPath?{sessionRef:identity.sessionRef}:{})});
+      const authenticated=await callBudget('getSession',{tokenHash,...(turnPath||prosePath?{sessionRef:identity.sessionRef}:{})});
       if(authenticated.kind!=='session')return json(envelope('paused','SESSION_UNAVAILABLE',identity));
       identity.sessionRef=authenticated.sessionRef;
       const lookup=await callBudget('lookup',{...identity,tokenHash});
       if(lookup.kind==='replay'&&!storyActions&&lookup.result?.scene?.choices.some(choice=>choice.intent==='interact'))return json(envelope('paused','CLIENT_UPDATE_REQUIRED',identity));
-      if(lookupPath)return json(lookup.kind==='replay'?lookup.result:envelope('paused',lookup.code,identity));
-      const reservationInput={...identity,tokenHash,ipHash,payloadHash:sha256(canonicalStringify(storyActions?{...body,storyActions:true}:body)),contextHash:sha256(canonicalStringify(storyActions?{context:body.context,storyActions:true}:body.context)),reservedNeurons:TURN_RESERVATION_NEURONS,retryOf:body.attempt.retryOf};
+      if(lookupPath)return json(lookup.kind==='replay'?(lookup.result.status==='ready'&&Boolean(lookup.result.prose)!==proseRequest?envelope('rejected','REQUEST_INVALID',identity):lookup.result):envelope('paused',lookup.code,identity));
+      const reservationInput={...identity,tokenHash,ipHash,payloadHash:sha256(canonicalStringify(prosePath?{prose:body}:storyActions?{...body,storyActions:true}:body)),contextHash:sha256(canonicalStringify(prosePath?{prose:body.brief}:storyActions?{context:body.context,storyActions:true}:body.context)),reservedNeurons:prosePath?PROSE_RESERVATION_NEURONS:TURN_RESERVATION_NEURONS,retryOf:body.attempt.retryOf};
       // Check duplicate payload before readiness, so cached results remain readable
       // when inference is disabled. reserve never adds another existing attempt.
       let profile;
@@ -75,8 +78,9 @@ export function createStoryApi({provider=generateScene,budget,config={},experime
         return json(repeated.kind==='replay'?repeated.result:envelope(repeated.code==='ATTEMPT_PAYLOAD_MISMATCH'?'rejected':'paused',repeated.code,identity));
       }
       try{profile=await readiness(env);}catch(error){return json(envelope('paused',codeOf(error),identity));}
+      if(prosePath&&profile?.modelId!==GLM_PROFILE.modelId)return json(envelope('paused','MODEL_NOT_ALLOWED',identity));
       reservationInput.quotaProvider='cloudflare';
-      const providerDeadline=Date.now()+STORY_LIMITS.timeoutMs;
+      const providerDeadline=Date.now()+(prosePath?PROSE_LIMITS.timeoutMs:STORY_LIMITS.timeoutMs);
       const reserved=await callBudget('reserve',reservationInput);
       if(reserved.kind==='replay'&&!storyActions&&reserved.result?.scene?.choices.some(choice=>choice.intent==='interact'))return json(envelope('paused','CLIENT_UPDATE_REQUIRED',identity));
       if(reserved.kind!=='reserved')return json(reserved.kind==='replay'?reserved.result:envelope(['ATTEMPT_PAYLOAD_MISMATCH','RETRY_INVALID'].includes(reserved.code)?'rejected':'paused',reserved.code,identity));
@@ -98,6 +102,7 @@ export function createStoryApi({provider=generateScene,budget,config={},experime
         if(Date.now()>=providerDeadline)generated={status:'paused',errorCode:'PROVIDER_TIMEOUT',accountingStatus:'unknown',inferencePerformed:false};
         else generated=await Promise.race([Promise.resolve().then(()=>{
           if(controller.signal.aborted||Date.now()>=providerDeadline)throw Object.assign(Error('PROVIDER_TIMEOUT'),{code:'PROVIDER_TIMEOUT'});
+          if(prosePath)return proseProvider(env.AI,profile,body.brief,{attemptId:identity.attemptId},{deadlineAt:providerDeadline,signal:controller.signal});
           return provider(env.AI,profile,body.context,{attemptId:identity.attemptId},{storyActions,recoverChoices:!experiment,groundedChoices:!experiment&&config.groundedChoices===true,knowledgeStore:config.knowledgeEnabled===true?(env.STORY_KNOWLEDGE??null):undefined,deadlineAt:providerDeadline,signal:controller.signal,onProgress:event=>{if(providerActive)onProgress(event);}});
         }),new Promise(resolve=>{timer=setTimeout(()=>{controller.abort();resolve({status:'paused',errorCode:'PROVIDER_TIMEOUT',accountingStatus:'unknown',inferencePerformed:true});},Math.max(1,providerDeadline-Date.now()));})]);
       }catch(error){generated={status:'paused',errorCode:error?.code==='PROVIDER_TIMEOUT'?'PROVIDER_TIMEOUT':'PROVIDER_FAILED',accountingStatus:'unknown',inferencePerformed:true};}finally{providerActive=false;clearTimeout(timer);controller.abort();}
@@ -106,6 +111,8 @@ export function createStoryApi({provider=generateScene,budget,config={},experime
       let result,observationStage='provider',apiDiagnostic;
       if(generated?.status==='ready'){
         try {
+          if(prosePath){validateProseText(generated.text);result={...envelope('ready',null,identity),prose:{text:generated.text,sourceHash:body.brief.sourceHash}};}
+          else {
           if(!storyActions&&generated.scene?.choices.some(choice=>choice.intent==='interact'))fail('GENERATED_SCENE_INVALID');
           const scene=validateGeneratedScene(generated.scene,body.context);
           if(scene.retrieval!==undefined){
@@ -113,6 +120,7 @@ export function createStoryApi({provider=generateScene,budget,config={},experime
             validateRetrievalReceipt(scene.retrieval,{queryHash:sha256(canonicalStringify(body.context))});
           }
           result={...envelope('ready',null,identity),scene};
+          }
           if(encoder.encode(JSON.stringify(result)).length>STORY_LIMITS.maxResponseBytes){observationStage='api-envelope';result=envelope('rejected','GENERATED_SCENE_INVALID',identity);}
         }catch(error){
           observationStage='api-scene';apiDiagnostic=error?.code==='GENERATED_SCENE_INVALID'?structureDiagnostic(generated.scene):null;
@@ -141,7 +149,7 @@ export function createStoryApi({provider=generateScene,budget,config={},experime
       if(settled.kind!=='settled')throw Object.assign(Error('BUDGET_UNAVAILABLE'),{code:'BUDGET_UNAVAILABLE'});
       return result;
       }
-      if(!request.headers.get('accept')?.includes('text/event-stream'))return json(await complete());
+      if(prosePath||!request.headers.get('accept')?.includes('text/event-stream'))return json(await complete());
       let disconnected=false;
       const stream=new ReadableStream({
         start(controller){

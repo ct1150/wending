@@ -1,0 +1,67 @@
+import {assertPlainData,canonicalStringify,sha256} from './identity.js';
+import {exactKeys} from './schema.js';
+import {ITEMS} from './model.js';
+import {eventNode,eventEntities,eventLocation} from './event-content.js';
+import {riverCases,validateRiver} from './river-chronicle.js';
+import {validateExpedition} from './expedition.js';
+import {validateCouncil} from './mountain-council.js';
+
+const eventNodeIds=new Set([
+ 'arrival','terms','work','entry-result','companion','companion-result','reunion','reunion-result',
+ 'hub','training','rest','journey','resources','workshop','crossing','affairs','mentor','mentor-result','old-record','action-result',
+ 'river-book','river-site','river-reading','river-decision','river-result',
+ 'voyage-book','voyage-road','voyage-camp','voyage-log','voyage-reset','voyage-result','voyage-detour',
+ 'council-book','council-result',
+]);
+const copy=value=>JSON.parse(JSON.stringify(value));
+export function createEventState(atlas){return {version:1,node:'arrival',entry:'unresolved',companion:'unmet',mentor:'unmet',page:0,location:'gate',...(atlas?copy(atlas):{})};}
+export function validateEventState(events){
+ assertPlainData(events);exactKeys(events,['version','node','entry','companion','mentor','page','location'],['river','expedition','council']);
+ if(!eventNodeIds.has(events.node))throw new Error('规则事件节点无效。');
+ if(Object.hasOwn(events,'council'))validateCouncil(events.council);
+ if((events.council!==undefined||events.node.startsWith('council-'))&&events.expedition?.place!=='end'||events.node==='council-result'&&!events.council)throw new Error('北山公簿页次无效。');
+ if(Object.hasOwn(events,'river'))validateRiver(events.river);
+ if(Object.hasOwn(events,'expedition'))validateExpedition(events.expedition);
+ if((events.expedition||events.node.startsWith('voyage-'))&&events.river?.record.length!==riverCases||events.node==='voyage-result'&&!events.expedition?.volume)throw new Error('行旅录页次无效。');
+ if(events.node==='river-result'&&!events.river?.record.length||events.node==='river-reading'&&!events.river?.seen||['river-site','river-reading','river-decision'].includes(events.node)&&events.river?.record.length===riverCases)throw new Error('问川图页次无效。');
+ if(events.version!==1||!['unresolved','accepted','joined','declined'].includes(events.entry)||!['unmet','helped','declined','completed','parted'].includes(events.companion)||!['unmet','guided','self','repaid'].includes(events.mentor)||!Number.isInteger(events.page)||events.page<0||events.page>4||!['gate','retreat','middle','upper'].includes(events.location))throw new Error('规则事件状态无效。');
+ return events;
+}
+function selected(state,action){
+ const prefix='r:'+sha256(state.runId).slice(0,16)+':t'+state.turnId+':c:';
+ const option=eventNode(state).choices.find(row=>prefix+row.key===action.id);
+ if(!option||['label','intent','targetId','approach','stake'].some(key=>option[key]!==action[key]))throw new Error('规则事件行动不符。');
+ return option;
+}
+export function eventActionRule(state,proposal,baseRule){
+ const option=selected(state,proposal),rule={...baseRule,items:{...baseRule.items},gain:{...baseRule.gain},warnings:[...baseRule.warnings]};
+ if(option.navigation)Object.assign(rule,{days:0,items:{},gain:{},cultivation:0,injury:0,relationship:0,risk:0,realm:null,spiritCost:0,spiritGain:0,lifeLoss:0,lifeGain:0,exposure:0,checkKind:null,chance:100,warnings:[],eventNavigation:true});
+ if(option.rule)Object.assign(rule,copy(option.rule));
+ delete rule.reason;
+ for(const [id,count] of Object.entries(rule.items))if((state.life.items[id]??0)<count)rule.reason='缺少'+ITEMS[id]+'。';
+ for(const [id,count] of Object.entries(rule.gain))if((state.life.items[id]??0)-(rule.items[id]??0)+count>9999)rule.reason='行囊已经装不下。';
+ if(state.life.cultivationProfile.spirit<rule.spiritCost)rule.reason='灵力不足，须先调息。';
+ // Keep requirements from unmodified cultivation rules (threshold, injury,
+ // realm access and repair contracts); an authored override only changes the
+ // particular, explicitly defined task's costs and gains.
+ if(!option.navigation&&!option.rule&&baseRule.reason)rule.reason=baseRule.reason;
+ return rule;
+}
+export function advanceEvents(state,receipt){
+ const events=copy(state.events);
+ if(receipt.kind==='opening'||receipt.death)return events;
+ const option=selected(state,receipt.action),success=receipt.cultivationResult?.check?.success!==false;
+ events.node=option.next??'hub';
+ if(success&&option.patch)Object.assign(events,copy(option.patch));
+ if(success&&option.arrival)events.location=option.arrival;
+ return validateEventState(events);
+}
+export function resolveEventScene(state,pending){
+ const events=advanceEvents(state,pending.receipt),prospective={...state,life:pending.nextLife,events,lastReceipt:pending.receipt,turnId:pending.identity.turnId};
+ const definition=eventNode(prospective),prefix='r:'+sha256(state.runId).slice(0,16)+':t'+pending.identity.turnId+':';
+ return {id:prefix+'s:event_'+events.node,title:definition.title,location:eventLocation(prospective),blocks:copy(definition.blocks),entities:eventEntities(prospective),choices:definition.choices.map(({key,label,intent,targetId,stake,approach})=>({id:prefix+'c:'+key,label,intent,targetId,stake,approach})),memoryDeltas:[]};
+}
+export function assertRuleScene(state,pending,scene){
+ if(canonicalStringify(scene)!==canonicalStringify(resolveEventScene(state,pending)))throw new Error('规则事件场景不可由生成内容改写。');
+}
+export function eventGoal(state){return state.events?eventNode(state).goal:null;}

@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 import { resolve, extname } from 'node:path';
-import { liveBrowser } from './helpers/live-browser.js';
+import { liveBrowser, loadLegacyOpening } from './helpers/live-browser.js';
 import { liveStoryFixture } from './helpers/live-story-fixture.js';
 import { ORIGINS, TALENTS } from '../src/game/cultivation/live/model.js';
 import { ROOTS } from '../src/game/cultivation/live/cultivation-rules.js';
@@ -104,7 +104,7 @@ test('one selected talent survives a reroll and the last displayed hand becomes 
     if (new URL(request.url()).pathname.startsWith('/api/story/')) storyRequests.push(request.url());
   });
   assert.equal(await locks.count(), 2);
-  const currentRules = {experienceVersion: 1, originStories: true};
+  const currentRules = {eventVersion:1, experienceVersion: 1, originStories: true};
   assertDisplayedBirth(await form.innerText(), rollLiveBirth({seed: '1', ...currentRules}).birth);
   const held = await locks.nth(1).getAttribute('data-live-lock');
   await locks.first().click();
@@ -134,7 +134,7 @@ test('one selected talent survives a reroll and the last displayed hand becomes 
   assert.deepEqual(state.life.birth, expected.birth);
   assert.deepEqual(state.birthReceipt.birth, expected.birth);
   assert.equal(state.rng, expected.rng);
-  assert.equal(f.posts, 1);
+  assert.equal(f.posts, 0);
   await page.locator('[data-character]').click();
   assertBirthStory(await page.locator('#dialog[open]').innerText(), state.life.birth);
 });
@@ -162,7 +162,7 @@ test('an older creation draft uses the sole background and cannot hide an off-ha
   assertDisplayedBirth(await form.innerText(), rollLiveBirth({seed, originStories: true, experienceVersion: 1}).birth);
   assert.equal(await f.read(), null);
   assert.equal(f.posts, 0);
-  const expected=rollLiveBirth({seed,originStories:true,experienceVersion:1}).birth;
+  const expected=rollLiveBirth({seed,eventVersion:1,originStories:true,experienceVersion:1}).birth;
   await form.locator('[data-live-start]:enabled').click();
   await page.locator('[data-live-choice]:enabled').first().waitFor();
   const created=await f.read();assert.equal(created.state.life.birth.originId,'mortal');assert.deepEqual(created.state.life.birth,expected);
@@ -170,7 +170,7 @@ test('an older creation draft uses the sole background and cannot hide an off-ha
 
 test('the one current journey and its pending turn survive refresh and a new visit without another POST',async t=>{
   const f=await fixture(t),{page}=f;
-  await page.locator('[data-title-new]:enabled').click();await page.locator('#live-name').fill('林照');await page.locator('[data-live-start]:enabled').click();
+  await loadLegacyOpening(page);await page.locator('[data-live-retry]:enabled').click();
   await page.locator('[data-live-choice]:enabled').first().waitFor();const a=await f.read();assert.equal(f.posts,1);
   await page.locator('[data-view="settings"]').click();await page.locator('#reading-size').selectOption('large');
   await page.locator('[data-menu-back]').click();await page.locator('[data-history]').click();
@@ -199,7 +199,7 @@ test('title new-game warning and cancelled creation preserve the current save un
   await page.locator('[data-title-new]:enabled').click();await page.locator('#live-name').fill('林照');await page.locator('[data-live-start]:enabled').click();
   await page.locator('[data-live-choice]:enabled').first().waitFor();
   await page.locator('[data-live-choice]').first().click();await page.locator('[data-live-choice][data-revision="2"]:enabled').first().waitFor();
-  const original=await f.read();assert.equal(f.posts,2);
+  const original=await f.read();assert.equal(f.posts,0);
   await page.locator('[data-home]').click();
   assert.match(await page.locator('[data-title-new]').innerText(),/创建新人物/);
   assert.match(await page.locator('[data-title-continue]').innerText(),/林照/);
@@ -212,21 +212,21 @@ test('title new-game warning and cancelled creation preserve the current save un
   assert.doesNotMatch(await warning.innerText(),/随时.*切回|各自保存/);
   assert.deepEqual((await f.read()).state,original.state);
   await warning.locator('[data-close-dialog]').first().click();
-  assert.deepEqual((await f.read()).state,original.state);assert.equal(f.posts,2);
+  assert.deepEqual((await f.read()).state,original.state);assert.equal(f.posts,0);
   await page.locator('[data-title-new]:enabled').click();await page.locator('[data-confirm]').click();
   await page.locator('#live-name').fill('未入世的人');
   await page.locator('[data-live-reroll]').click();
-  assert.deepEqual(await f.read(),original);assert.equal(f.posts,2);
+  assert.deepEqual(await f.read(),original);assert.equal(f.posts,0);
   await page.reload();assert.equal(await page.locator('#live-name').inputValue(),'未入世的人');
   assert.equal((await f.read()).archiveId,original.archiveId);assert.deepEqual((await f.read()).state,original.state);
   await page.locator('[data-menu-back]').click();await page.locator('[data-title-continue]:enabled').click();
-  await page.locator('[data-live-choice][data-revision="2"]:enabled').first().waitFor();assert.equal(f.posts,2);
+  await page.locator('[data-live-choice][data-revision="2"]:enabled').first().waitFor();assert.equal(f.posts,0);
   await page.locator('[data-home]').click();await page.locator('[data-title-new]:enabled').click();await page.locator('[data-confirm]').click();
   await page.locator('#live-name').fill('沈渡');await page.locator('[data-live-start]:enabled').click();
   await page.locator('[data-live-choice][data-revision="1"]:enabled').first().waitFor();
-  const replacement=await f.read();assert.notEqual(replacement.archiveId,original.archiveId);assert.equal(replacement.state.life.name,'沈渡');assert.equal(replacement.state.reincarnation,undefined);assert.deepEqual(replacement.state.life.birth.cultivationProfile.inheritedBenefits,[]);assert.equal(f.posts,3);
+  const replacement=await f.read();assert.notEqual(replacement.archiveId,original.archiveId);assert.equal(replacement.state.life.name,'沈渡');assert.equal(replacement.state.reincarnation,undefined);assert.deepEqual(replacement.state.life.birth.cultivationProfile.inheritedBenefits,[]);assert.equal(f.posts,0);
   await page.reload();await page.locator('[data-live-choice][data-revision="1"]:enabled').first().waitFor();
-  assert.equal((await f.read()).archiveId,replacement.archiveId);assert.deepEqual((await f.read()).state,replacement.state);assert.equal(f.posts,3);
+  assert.equal((await f.read()).archiveId,replacement.archiveId);assert.deepEqual((await f.read()).state,replacement.state);assert.equal(f.posts,0);
   await page.locator('[data-view="settings"]').click();await page.locator('.save-backup > summary').click();await page.locator('[data-retained]').click();
   const oldRow=page.locator(`[data-retained-row="${original.archiveId}"]`);
   await page.waitForFunction(()=>document.querySelector('#dialog[open] [data-retained-row]'),null,{timeout:3000});
@@ -238,7 +238,7 @@ test('title new-game warning and cancelled creation preserve the current save un
   const downloading=page.waitForEvent('download');await page.locator('#dialog [data-retained-export]').click();
   const oldBackup=await readFile(await (await downloading).path());
   assert.deepEqual(JSON.parse(oldBackup.toString().split('\n')[0]).state,original.state);
-  assert.equal((await f.read()).archiveId,replacement.archiveId);assert.deepEqual((await f.read()).state,replacement.state);assert.equal(f.posts,3);
+  assert.equal((await f.read()).archiveId,replacement.archiveId);assert.deepEqual((await f.read()).state,replacement.state);assert.equal(f.posts,0);
   await page.keyboard.press('Escape');await page.locator('[data-menu-back]').click();
   await page.locator('[data-home]').click();await page.locator('[data-title-continue]:enabled').click();
   await page.locator('[data-live-choice]:enabled').first().waitFor();assert.match(await page.locator('#app').innerText(),/沈渡/);
@@ -261,9 +261,9 @@ test('a rejected replacement transaction leaves the current journey playable and
   await page.locator('[data-live-start]:enabled').click();
   await page.locator('#live-birth-form .notice.error').waitFor();
   assert.match(await page.locator('#live-birth-form .notice.error').innerText(),/原进度保持不变|原有旅程保持不变/);
-  assert.equal(f.posts,1);assert.equal((await f.read()).archiveId,original.archiveId);assert.deepEqual((await f.read()).state,original.state);
+  assert.equal(f.posts,0);assert.equal((await f.read()).archiveId,original.archiveId);assert.deepEqual((await f.read()).state,original.state);
   await page.goto('https://wending-title.test/');await page.locator('[data-title-continue]:enabled').click();
-  await page.locator('[data-live-choice]:enabled').first().waitFor();assert.deepEqual((await f.read()).state,original.state);assert.equal(f.posts,1);
+  await page.locator('[data-live-choice]:enabled').first().waitFor();assert.deepEqual((await f.read()).state,original.state);assert.equal(f.posts,0);
 });
 
 test('stale save-list and offline navigation return home without changing the current save or legacy bytes',async t=>{
@@ -281,10 +281,10 @@ test('stale save-list and offline navigation return home without changing the cu
     assert.equal(await page.locator('[data-live-choice], [data-journey-choice], [data-saves], [data-select-live], [data-select-offline], #birth-name, #live-name').count(),0,JSON.stringify(navigation));
     assert.equal((await f.read()).archiveId,current.archiveId);assert.deepEqual((await f.read()).state,current.state);
     assert.deepEqual(await page.evaluate(keys=>Object.fromEntries(keys.map(key=>[key,localStorage.getItem(key)])),Object.keys(legacy)),legacy);
-    assert.equal(f.posts,1);
+    assert.equal(f.posts,0);
   }
   await page.locator('[data-title-continue]').click();await page.locator('[data-live-choice]:enabled').first().waitFor();
-  assert.match(await page.locator('#app').innerText(),/林照/);assert.equal(f.posts,1);
+  assert.match(await page.locator('#app').innerText(),/林照/);assert.equal(f.posts,0);
 });
 
 test('the current online backup restores only after confirmation; cancelled and invalid imports preserve current progress',async t=>{
@@ -297,7 +297,7 @@ test('the current online backup restores only after confirmation; cancelled and 
   const downloading=page.waitForEvent('download');await page.locator('[data-export]').click();
   const download=await downloading,backup=await readFile(await download.path());
   assert.match(download.suggestedFilename(),/\.wending\.jsonl$/);assert.match(backup.toString(),/wending-live-jsonl/);
-  assert.deepEqual((await f.read()).state,original.state);assert.equal(f.posts,2);
+  assert.deepEqual((await f.read()).state,original.state);assert.equal(f.posts,0);
   await page.goto('https://wending-title.test/');await page.locator('[data-view="settings"]').click();await page.locator('[data-restart]').click();await page.locator('[data-confirm]').click();
   await page.locator('#live-name').fill('沈渡');await page.locator('[data-live-start]:enabled').click();
   await page.locator('[data-live-choice][data-revision="1"]:enabled').first().waitFor();const replacement=await f.read();
@@ -308,7 +308,7 @@ test('the current online backup restores only after confirmation; cancelled and 
   assert.match(await page.locator('#dialog').innerText(),/覆盖当前进度|替换当前存档/);
   assert.deepEqual((await f.read()).state,replacement.state);
   await page.locator('#dialog [data-close-dialog]').first().click();
-  assert.equal((await f.read()).archiveId,replacement.archiveId);assert.deepEqual((await f.read()).state,replacement.state);assert.equal(f.posts,3);
+  assert.equal((await f.read()).archiveId,replacement.archiveId);assert.deepEqual((await f.read()).state,replacement.state);assert.equal(f.posts,0);
   const {createCultivation}=await import('../src/game/cultivation/engine.js'),{serializeGame}=await import('../src/game/save-format.js');
   const legacyRaw=serializeGame(createCultivation({seed:'legacy-import-preserved'}));
   await page.locator('#import-file').setInputFiles({name:'old-offline-life.json',mimeType:'application/json',buffer:Buffer.from(legacyRaw)});
@@ -318,12 +318,12 @@ test('the current online backup restores only after confirmation; cancelled and 
   await page.locator('#import-file').setInputFiles({name:'broken.wending.jsonl',mimeType:'application/octet-stream',buffer:Buffer.from('truncated backup')});
   await page.locator('#dialog[open] [data-confirm]').click();
   await page.getByText('备份未能恢复，原进度保持不变。',{exact:true}).waitFor();
-  assert.equal((await f.read()).archiveId,replacement.archiveId);assert.deepEqual((await f.read()).state,replacement.state);assert.equal(f.posts,3);
+  assert.equal((await f.read()).archiveId,replacement.archiveId);assert.deepEqual((await f.read()).state,replacement.state);assert.equal(f.posts,0);
   await chooseBackup();await page.locator('#dialog[open] [data-confirm]').click();
   await page.locator('[data-live-choice][data-revision="2"]:enabled').first().waitFor();
-  assert.deepEqual((await f.read()).state,original.state);assert.equal(f.posts,3,'restoring completed history does not regenerate a story');
+  assert.deepEqual((await f.read()).state,original.state);assert.equal(f.posts,0,'restoring completed history does not regenerate a story');
   await page.reload();await page.locator('[data-live-choice][data-revision="2"]:enabled').first().waitFor();
-  assert.deepEqual((await f.read()).state,original.state);assert.equal(f.posts,3);
+  assert.deepEqual((await f.read()).state,original.state);assert.equal(f.posts,0);
 });
 
 test('continuing a completed life preserves its settlement until an explicit reincarnation replaces the current save',async t=>{
@@ -370,14 +370,14 @@ test('continuing a completed life preserves its settlement until an explicit rei
   await page.locator('[data-live-choice]:enabled').first().waitFor();const child=await f.read();
   assertDisplayedBirth(childPreview,child.state.life.birth);
   assert.notEqual(child.archiveId,parent.archiveId);assert.equal(child.state.life.name,'沈渡');assert.equal(child.state.reincarnation.parentRunId,parent.state.runId);
-  assert.equal(child.state.reincarnation.generation,2);assert.deepEqual(child.state.reincarnation.purchases,['past-memory']);assert.equal(f.posts,1);
+  assert.equal(child.state.reincarnation.generation,2);assert.deepEqual(child.state.reincarnation.purchases,['past-memory']);assert.equal(f.posts,0);
   await page.reload();await page.locator('[data-live-choice]:enabled').first().waitFor();
-  assert.equal((await f.read()).archiveId,child.archiveId);assert.deepEqual((await f.read()).state,child.state);assert.equal(f.posts,1);
+  assert.equal((await f.read()).archiveId,child.archiveId);assert.deepEqual((await f.read()).state,child.state);assert.equal(f.posts,0);
   await page.locator('[data-view="settings"]').click();await page.locator('.save-backup > summary').click();await page.locator('[data-retained]').click();
   await page.locator(`[data-retained-read="${parent.archiveId}"]`).click();
   await page.getByRole('heading',{name:'林照 · 只读历史',exact:true}).waitFor();
   assert.equal(await page.locator('#dialog [data-live-reincarnate], #dialog [data-live-choice]').count(),0);
-  assert.equal((await f.read()).archiveId,child.archiveId);assert.deepEqual((await f.read()).state,child.state);assert.equal(f.posts,1);
+  assert.equal((await f.read()).archiveId,child.archiveId);assert.deepEqual((await f.read()).state,child.state);assert.equal(f.posts,0);
 });
 
 test('an unreadable live archive is reported as a read error while its durable journey stays intact',async t=>{
@@ -397,7 +397,7 @@ test('an unreadable live archive is reported as a read error while its durable j
   await page.getByText('无法读取当前存档，请检查浏览器存储设置后重试。原进度保持不变。',{exact:true}).waitFor();
   assert.equal(await page.locator('[data-title-continue]').isDisabled(),true);
   await page.evaluate(()=>{globalThis.denyLiveReads=false;});
-  assert.deepEqual((await f.read()).state,before.state);assert.equal(f.posts,1);
+  assert.deepEqual((await f.read()).state,before.state);assert.equal(f.posts,0);
 });
 
 test('failure to retain a live creation draft gives a visible warning without creating a journey',async t=>{
@@ -467,7 +467,7 @@ for(const timing of ['before restart request','during confirmation','same-life i
       await page.locator('#live-name').fill('过期草稿的人');await page.locator('[data-live-start]:enabled').click();
       await page.locator('#live-birth-form .notice.error').waitFor();
     }
-    assert.deepEqual(await f.read(),replacement);assert.equal(f.posts,1);
+    assert.deepEqual(await f.read(),replacement);assert.equal(f.posts,0);
   });
 }
 

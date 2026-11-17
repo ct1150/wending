@@ -1,6 +1,6 @@
 import { canonicalStringify, sha256, stateHash, assertPlainData } from './cultivation/live/identity.js';
 import { validateLiveState } from './cultivation/live/validation.js';
-import { prepareOpening, prepareRecordedChoice, commitTurn, settleDeath } from './cultivation/live/engine.js';
+import { prepareOpening, prepareRecordedChoice, commitTurn, settleDeath,resolveRuleScene } from './cultivation/live/engine.js';
 import { buildStoryContext, validateGeneratedScene, buildMemoryDelta, validateStoryContext, sceneTurnRecord } from './cultivation/live/memory.js';
 import { isExperienceLife } from './cultivation/live/experience.js';
 import { echoNotes, buildRebirthOptions, reincarnationClaimForChild, validateReincarnationClaim } from './cultivation/live/reincarnation.js';
@@ -75,7 +75,7 @@ function verifyImportedLineage(stores,get,run,finish) {
    check(record&&parent.state.phase==='dead'&&parent.hash===record.parentStateHash,invalid);
    check(record.version===(isExperienceLife(parent.state.life)?2:1),invalid);
    let expected;try{expected=buildRebirthOptions(parent.state,record.purchases);}catch{fail(invalid);}
-   check(same(record,expected.reincarnation)&&same(birth.life.birth.cultivationProfile.inheritedBenefits,expected.inheritedBenefits),invalid);
+   check((expected.eventVersion===undefined||birth.life.birth.cultivationProfile.eventVersion===expected.eventVersion)&&same(record,expected.reincarnation)&&same(birth.life.birth.cultivationProfile.inheritedBenefits,expected.inheritedBenefits),invalid);
  };
  readKnown(run.runId,old=>{
    const marked=old&&isExperienceLife(old.birth.life)||isExperienceLife(run.birth.life);
@@ -222,7 +222,7 @@ class Archive {
   const c=await this._capture();check(c&&c.run.archiveId===expectedArchiveId&&!c.pending&&c.run.state.phase==='dead','REINCARNATION_REQUIRES_DEATH');
   check(!c.reincarnationClaim,'REINCARNATION_ALREADY_CLAIMED');
   const expected=buildRebirthOptions(c.run.state,rewardIds);
-  check((expected.experienceVersion===undefined||state.life.birth.cultivationProfile?.experienceVersion===expected.experienceVersion)&&same(state.reincarnation,expected.reincarnation)&&same(state.life.birth.cultivationProfile?.inheritedBenefits,expected.inheritedBenefits),'REINCARNATION_INVALID_STATE');
+  check((expected.experienceVersion===undefined||state.life.birth.cultivationProfile?.experienceVersion===expected.experienceVersion)&&(expected.eventVersion===undefined||state.life.birth.cultivationProfile?.eventVersion===expected.eventVersion)&&same(state.reincarnation,expected.reincarnation)&&same(state.life.birth.cultivationProfile?.inheritedBenefits,expected.inheritedBenefits),'REINCARNATION_INVALID_STATE');
   const claim=reincarnationClaimForChild(state);validateReincarnationClaim(claim,c.run.state);
   const archiveId=crypto.randomUUID(),run={archiveId,runId:state.runId,state:clone(state),birth:clone(state),hash:stateHash(state),tailIndex:-1,headHash:ZERO,status:'active',...(state.reincarnation.version===2?{verifiedParentHash:c.run.hash}:{})},p=pendingRow(archiveId,clone(pending));
   await transaction(this.db,'readwrite',(s,get)=>this._cas(s,get,c,()=>get(s.runs,claimKey(c.run.runId),old=>{
@@ -371,12 +371,14 @@ class Archive {
   const p=c.pending.pending;
   if(scene===null){check(p.receipt.death&&memoryDelta===null,'ARCHIVE_INVALID_DEATH');return {state:settleDeath(c.run.state,p),records:[{id:'receipt:'+p.identity.turnId,runId:c.run.runId,turnId:p.identity.turnId,source:'rules',kind:'receipt',receipt:clone(p.receipt)}]};}
   check(!p.receipt.death,'ARCHIVE_INVALID_DEATH');
+  if(c.run.state.events)check(same(scene,resolveRuleScene(c.run.state,p)),'ARCHIVE_INVALID_RULE_SCENE');
   const related=await this.readRelated(c.run.runId,{entityIds:[...new Set([...c.run.state.relatedEntities.map(e=>e.id),...scene.entities.map(e=>e.id)])],referenceIds:scene.memoryDeltas.flatMap(m=>m.referenceId?[m.referenceId]:[]),includeOpen:false,factsPerEntity:0},c.run.archiveId);
-  const context=buildStoryContext(c.run.state,p,related);validateGeneratedScene(scene,context);
+  const context=c.run.state.events?null:buildStoryContext(c.run.state,p,related);
+  if(context)validateGeneratedScene(scene,context);
   const expected=buildMemoryDelta(p.receipt,scene);check(same(expected,memoryDelta),'ARCHIVE_INVALID_MEMORY');
   const turnId=p.identity.turnId,common={runId:c.run.runId,turnId};
   const records=[{id:'receipt:'+turnId,...common,source:'rules',kind:'receipt',receipt:clone(p.receipt)},...expected.records.map(r=>({...r,...common})),...scene.entities.map(e=>{const prior=related.find(r=>r.kind==='entity'&&r.entity.id===e.id);return {id:'e:'+sha256(e.id).slice(0,40),...common,source:'narrative',kind:'entity',entity:{id:e.id,name:e.name,kind:e.kind,...(e.experience?{experience:clone(e.experience)}:{})},status:prior?.status==='dead'?'dead':e.status??prior?.status??'unknown'};})];
-  const nextState=commitTurn(c.run.state,p,scene,context.relationships);
+  const nextState=commitTurn(c.run.state,p,scene,context?.relationships);
   if(nextState.relationshipVersion===1) {
    for(const entityId of Object.keys(c.run.state.relationshipVersion===1?p.receipt.relationChanges:p.nextLife.relations))records.push({
     id:'q:'+sha256(entityId).slice(0,40),...common,source:'rules',kind:'ruleRelation',
@@ -395,6 +397,17 @@ class Archive {
   if(scene!==null)check((c.pending.attempt?.id??null)===expectedAttemptId,'ARCHIVE_ATTEMPT_CONFLICT');
   const derived=await this._derived(c,scene,memoryDelta);check(same(nextState,derived.state),'ARCHIVE_INVALID_STATE');
   return this._commitCaptured(c,c.pending.pending,scene,derived);
+ }
+ async commitEvent({expectedArchiveId,expectedRevision,pending}) {
+  // Snapshot before the first await. A caller cannot mutate a decision while
+  // IndexedDB is reading; the captured physical archive also fences imports.
+  assertPlainData(pending);const fixed=clone(pending),c=await this._capture(fixed.identity.runId);
+  check(c&&c.run.archiveId===expectedArchiveId&&(!this.bound||this.bound===c.run.archiveId)&&c.run.state.revision===expectedRevision);
+  check(c.run.state.events,'ARCHIVE_INVALID_RULE_SCENE');verifyPending(c.run.state,fixed);
+  check(!c.pending||same(c.pending.pending,fixed)&&!c.pending.attempt&&!c.pending.generation,'ARCHIVE_ATTEMPT_CONFLICT');
+  const scene=fixed.receipt.death?null:resolveRuleScene(c.run.state,fixed);
+  const derived=await this._derived({...c,pending:pendingRow(c.run.archiveId,fixed)},scene,scene?buildMemoryDelta(fixed.receipt,scene):null);
+  return this._commitCaptured(c,fixed,scene,derived);
  }
  async _commitCaptured(c,pending,scene,derived) {
   const nextState=derived.state,entry={identity:clone(pending.identity),receipt:clone(pending.receipt),scene:clone(scene),stateHash:stateHash(nextState)};

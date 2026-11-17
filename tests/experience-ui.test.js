@@ -28,19 +28,21 @@ test('large-type mobile story shows one identity, birth stakes and actual costs 
  await page.setViewportSize({width:320,height:844});await page.goto('https://experience.test/');
  await page.locator('[data-view="settings"]').first().click();await page.locator('#reading-size').selectOption('large'); await page.locator('[data-menu-back]').first().click();
  await page.locator('[data-title-new]:enabled').click();assert.equal(await page.locator('[data-live-birth-facts]').count(),0);
- await page.locator('#live-name').fill('云归');await page.locator('[data-live-start]').click();await page.locator('[data-live-choice]:enabled').first().waitFor();
+ await page.locator('#live-name').fill('云归');await page.locator('[data-live-start]').click();await page.locator('[data-live-choice$=":c:decline"]:enabled').waitFor();
+ const birthFacts=await page.locator('[data-live-birth-facts]').innerText();
+ await page.locator('[data-live-choice$=":c:decline"]:enabled').click();await page.locator('[data-live-choice$=":c:train-menu"]:enabled').click();await page.locator('[data-live-choice$=":c:practice"]:enabled').waitFor();
  const expected=await page.evaluate(async()=>{const {openLiveArchive}=await import('/src/game/live-archive.js'),a=await openLiveArchive(),{state}=await a.load(),{compileChoices}=await import('/src/game/cultivation/live/engine.js');a.close();const cost=compileChoices(state,state.currentScene.choices)[0].costs;return {cost,goal:state.director.currentGoal,advantage:state.life.birth.cultivationProfile.advantages[0]};});
- assert.equal(posts,1);assert.equal(await page.locator('[data-character]').count(),1);assert.doesNotMatch(await page.locator('[data-live-state]').innerText(),/寿元\s*16/);
+ assert.equal(posts,0);assert.equal(await page.locator('[data-character]').count(),1);assert.doesNotMatch(await page.locator('[data-live-state]').innerText(),/寿元\s*16/);
  if(expected.goal==='辨明眼前变化，自定下一步'){
    assert.equal(await page.locator('.live-state-hint').innerText(),'当前处境');
    assert.equal(await page.locator('[data-live-goal]').innerText(),'松溪 · 渡口');
  }else assert.equal(await page.locator('[data-live-goal]').innerText(),expected.goal);
- assert.ok((await page.locator('[data-live-birth-facts]').innerText()).includes(expected.advantage));
- assert.match(await page.locator('[data-live-birth-facts]').innerText(),/代价/);
+ assert.ok(birthFacts.includes(expected.advantage));
+ assert.match(birthFacts,/代价/);
  assert.ok((await page.locator('#live-cost-0').innerText()).includes('灵力 '+expected.cost.spirit));
  for(const w of [320,390]){await page.setViewportSize({width:w,height:844});const result=await page.evaluate(()=>({pageWidth:document.documentElement.scrollWidth,
    font:parseFloat(getComputedStyle(document.querySelector('.journey-prose p')).fontSize),controls:[...document.querySelectorAll('[data-character],[data-live-choice]')].every(e=>{const r=e.getBoundingClientRect();return r.left>=-1&&r.right<=innerWidth+1&&r.height>=40;})}));assert.equal(result.pageWidth,w);assert.ok(result.font>=20);assert.ok(result.controls);}
- assert.equal(posts,1);assert.deepEqual(errors,[]);
+ assert.equal(posts,0);assert.deepEqual(errors,[]);
 });
 
 test('current method is distinguished from original traits; a repaired life offers neither diagnosis nor self-repair again',async()=>{
