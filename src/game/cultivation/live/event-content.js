@@ -243,11 +243,26 @@ export function eventNode(state,historicMenu=null){
    const sky=tier===2&&realm.rank>=4&&!oldRoad;
    const oldPacket=historicMenu==='crossing'||historicMenu==='packet'||state.currentScene?.id.endsWith(':t'+state.turnId+':s:event_crossing')&&state.currentScene.choices.some(c=>c.id.endsWith(':c:resources-menu'));
    const packet=e.convoy?.chapters[0]?.loads.length===2&&!oldPacket;
-   const oldExit=historicMenu||state.currentScene?.id.endsWith(':t'+state.turnId+':s:event_crossing')&&state.currentScene.choices.some(c=>c.id.endsWith(':c:back'));
+   const oldExit=historicMenu&&historicMenu!=='routes'||state.currentScene?.id.endsWith(':t'+state.turnId+':s:event_crossing')&&state.currentScene.choices.some(c=>c.id.endsWith(':c:back'));
    const seedDesk=tier>=1&&e.nursery?.end&&!oldExit;
+   const oldRoutes=historicMenu||state.currentScene?.id.endsWith(':t'+state.turnId+':s:event_crossing')&&state.currentScene.choices.some(c=>c.id.endsWith(':c:cross'));
    return row('天地之间','达到真实门槛后才能跨界',[
     narration(tier<2?'通往'+name+'的道路有自己的境界、材料与风险门槛。未达到时，继续留在当前天地修行便是。':'你已经身在上界，仍可继续修行与历练。'),
-   ],[tier<2?choice('cross','循正途飞升前往'+name,'travel',actor(destination),'ascend',{next:'action-result',arrival:destination}):sky?menu('sky-book','去白脊云渡，随渡班闭关守风','sky-book'):menu('train-menu','继续安排修行','training'),packet?menu('packet-book','借旧港的船，翻开轮航簿','packet-book'):menu('resources-menu','回去备办资源','resources',{page:0}),seedDesk?menu('seed-book','翻看盐埠种簿，或合簿回山','seed-book'):leave]);
+   ],[tier<2?(oldRoutes?choice('cross','循正途飞升前往'+name,'travel',actor(destination),'ascend',{next:'action-result',arrival:destination}):menu('crossing-ways','衡量飞升与古阵，前往'+name,'crossing-ways')):sky?menu('sky-book','去白脊云渡，随渡班闭关守风','sky-book'):menu('train-menu','继续安排修行','training'),packet?menu('packet-book','借旧港的船，翻开轮航簿','packet-book'):menu('resources-menu','回去备办资源','resources',{page:0}),seedDesk?menu('seed-book','翻看盐埠种簿，或合簿回山','seed-book'):leave]);
+  }
+  case 'crossing-ways':{
+   const upper=life.cultivationProfile.worldTier===1,destination=upper?'upper':'middle',name=upper?'上界观星台':'中界清河城';
+   return row('去'+name+'的两条路','按境界与实际资用，亲自决定怎样跨界',[
+    narration('正途飞升要等到'+(upper?'大乘':'化神')+'，还须自备'+ITEMS[upper?'thunderseal':'skykey']+'。古阵在'+(upper?'元婴':'筑基')+'便能承受，但每次都要耗一件护身阵盘和更多灵石。两条路都有失败与受伤的可能，不能借下一界的寿元替这一程续命。'),
+    narration('路在界台，不以接过哪份公簿为条件。阵盘可以自己炼，飞升信物也可以另行寻找。只有选中实际跨界行动，才扣去按钮列出的资材与时日。'),
+   ],[choice('cross','循正途飞升前往'+name,'travel',actor(destination),'ascend',{next:'action-result',arrival:destination}),choice('cross-array','自备阵盘，循古阵前往'+name,'travel',actor(destination),'ancient-array',{next:'action-result',arrival:destination}),menu('crossing-preparation','筹备信物与阵盘，或暂留本界','crossing-preparation')]);
+  }
+  case 'crossing-preparation':{
+   const token=life.cultivationProfile.worldTier===1?'thunderseal':'skykey';
+   return row('界台前的准备','亲自寻找飞升信物，或去工坊炼阵',[
+    narration('破境用去的信物不会自动回来。若打算飞升，可以在这里另寻'+ITEMS[token]+'；境界不足时不能提前取材。若走古阵，到手艺页炼一件护身阵盘即可备器，仍需另备实际路费。'),
+    narration('缺灵石、行粮或玄铁，可以回界域页查看物资。整备完再来选路，旁人不会替你开阵。'),
+   ],[choice('crossing-token','谨慎寻找'+ITEMS[token],'explore',token,'cautious',{next:'crossing-preparation'}),menu('crossing-forge','去手艺页炼制护身阵盘','workshop',{page:3}),menu('crossing-menu','回界域页，备料或暂缓远行','crossing')]);
   }
   case 'affairs':{
    const companion=young&&['helped','declined'].includes(e.companion)&&realm.rank>=1?'reunion':'companion';

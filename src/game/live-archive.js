@@ -500,6 +500,10 @@ class Archive {
    const current=resolveRuleScene(c.run.state,p);
    if(current.choices.some(c=>c.id.endsWith(':c:find-ridge'))&&same(scene,resolveEventScene(c.run.state,p,'ridge')))scene=current;
   }
+  if(prior&&sceneId.endsWith(':s:event_crossing')&&scene.choices?.some(c=>c.id?.endsWith(':c:cross'))){
+   const current=resolveRuleScene(c.run.state,p);
+   if(current.choices.some(c=>c.id.endsWith(':c:crossing-ways'))&&same(scene,resolveEventScene(c.run.state,p,'routes')))scene=current;
+  }
   if(prior&&sceneId.endsWith(':s:event_crossing')&&scene.choices?.some(c=>c.id?.endsWith(':c:resources-menu'))){
    const current=resolveRuleScene(c.run.state,p);
    const historical=scene.choices.some(c=>c.id.endsWith(':c:train-menu'))?'crossing':'packet';

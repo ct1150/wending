@@ -4,6 +4,54 @@ import {readFile} from 'node:fs/promises';
 import {gunzipSync} from 'node:zlib';
 import {liveBrowser} from './helpers/live-browser.js';
 
+test('a personal adventure can fund both public arrays and reach the upper rift without river commissions',async t=>{
+ const text=gunzipSync(await readFile(new URL('./fixtures/5b86310-personal-crossing.jsonl.gz',import.meta.url))).toString('utf8');
+ const {page}=await liveBrowser(t);
+ const result=await page.evaluate(async text=>{
+  const {importLiveArchive,exportLiveArchive}=await import('/src/game/live-save-format.js'),{createLiveSession}=await import('/src/ui/live-session.js');
+  let a=await open('independent-old');await importLiveArchive(new Response(text).body,a);
+  const original=await a.load();let session=createLiveSession({archive:a,client:{}});
+  await session.load();await session.resume();await session.resume();let row=await a.load();const resumed=row.state.turnId;
+  async function go(...keys){for(const key of keys){const c=row.state.currentScene.choices.find(c=>c.id.endsWith(':c:'+key));if(!c)throw Error('missing '+key+' in '+row.state.events.node);row=await session.choose({choiceId:c.id,baseRevision:row.state.revision,stateHash:identity.stateHash(row.state)});if(row.errorCode)throw Error(key+': '+row.errorCode);}}
+  await go('train-menu');
+  async function stock(id,count){for(let tries=0;(row.state.life.items[id]??0)<count;tries++){
+   if(tries>=40)throw Error('stock stalled '+id);
+   await go('rest-menu','recover','train-menu','rest-menu','back','journey-menu','resources-menu');
+   for(let n=0;row.state.currentScene.choices.find(c=>c.id.endsWith(':c:gather')).targetId!==id;n++){if(n>=6)throw Error(id);await go('next-resource');}
+   await go('gather','train-menu');
+  }}
+  const {adventureLeads,noteRoutes}=await import('/src/game/cultivation/live/journey-notes.js');
+  const ways=async()=>{const before=row.state,note=adventureLeads(before).find(n=>n.node==='crossing-ways'),path=note&&noteRoutes(before,[note]).get(note.node);if(!path)throw Error('public route invitation unavailable');await go(...path);if(JSON.stringify(row.state.life)!==JSON.stringify(before.life)||row.state.rng!==before.rng)throw Error('invitation spent a resource');};
+  const crossings=[];
+  for(const tier of [0,1]){
+   for(let tries=0;row.state.life.cultivationProfile.worldTier===tier;tries++){
+    if(tries>=6)throw Error('crossing attempts exhausted');
+    for(let craft=0;!row.state.life.items.array;craft++){
+     if(craft>=12)throw Error('array preparation stalled');
+     await stock('stones',6);await stock('iron',2);await go('rest-menu','recover','train-menu');await ways();
+     await go('crossing-preparation','crossing-forge','craft','train-menu');
+    }
+    await stock('stones',tier?90:45);await go('rest-menu','recover','train-menu');await ways();
+    const before=row.state,button=before.currentScene.choices.find(c=>c.id.endsWith(':c:cross-array'));
+    const p=engine.prepareChoice(before,{choiceId:button.id,requestId:'public-array-'+tier+'-'+tries});await a.prepare(p);
+    const checkpoint=await open('array-checkpoint-'+tier+'-'+tries);await importLiveArchive(exportLiveArchive(a),checkpoint);a=checkpoint;
+    session=createLiveSession({archive:a,client:{}});await session.load();await session.resume();row=await a.load();const once=identity.stateHash(row.state);await session.resume();row=await a.load();if(identity.stateHash(row.state)!==once)throw Error('array settled twice');
+    crossings.push({tier,before:before.turnId,after:row.state.turnId,receipt:row.state.lastReceipt,world:row.state.life.cultivationProfile.worldTier});
+    await go('train-menu');
+   }
+  }
+  await go('rest-menu','recover','train-menu','rest-menu','back','journey-menu','workshop-menu','crossing-menu','sky-book','sky-watch-1','sky-steady','sky-route-1','rift-book');
+  const final=row.state,copy=await open('independent-final');await importLiveArchive(exportLiveArchive(a),copy);
+  return {old:original.state.turnId,resumed,oldKey:original.state.currentScene.choices[0].id,final,original:original.state.events,crossings,exact:identity.stateHash((await copy.load()).state)===identity.stateHash(final)};
+ },text);
+ assert.ok(result.oldKey.endsWith(':c:cross'));assert.equal(result.resumed,result.old+1);assert.ok(result.exact);
+ assert.equal(result.final.life.cultivationProfile.worldTier,2);assert.equal(result.final.life.realm,'spirit');assert.equal(result.final.events.node,'sky-rift');
+ assert.equal(result.final.events.convoy,undefined);assert.equal(result.final.events.council,undefined);assert.equal(result.final.events.river,undefined);
+ for(const field of ['post','mountain','forms','ferry'])assert.deepEqual(result.final.events[field],result.original[field]);
+ for(const crossing of result.crossings){const r=crossing.receipt;assert.equal(crossing.after,crossing.before+1);assert.equal(r.itemChanges.array,-1);assert.equal(r.itemChanges.stones,crossing.tier?-90:-45);assert.equal(r.death,null);assert.equal(crossing.world,crossing.tier+Number(r.cultivationResult.check.success));}
+ assert.equal(result.crossings.filter(c=>c.receipt.cultivationResult.check.success).length,2);
+});
+
 test('an old high-realm pending menu resumes once and a genuinely provisioned ward replays once',async t=>{
  const text=gunzipSync(await readFile(new URL('./fixtures/378f0a2-high-training.jsonl.gz',import.meta.url))).toString('utf8');
  const {page}=await liveBrowser(t);

@@ -42,6 +42,7 @@ export function adventureLeads(state){
  if(rank===3&&!e.well)invite('well-road','回声井 · 随人下井寻印','结丹可随巡井人或绳班探归魂印。学辨铃或绳结会改变后续工期，出井后还有副铃的去处。先看路引，出发才交行粮；未取印就离开此界，将不能亲自接续井路。');
  else if(material&&ferryForMaterial(state,material)&&(!e.ferry||e.ferry.pages.at(-1)?.end))invite('shell-book','浮蚌渡 · 宝物与归路','当前破境所需的宝物可循浮蚌潮纹寻找。蓼的船底和回游的蚌群也依赖这些东西；先到河岸看清情形，决定出发后才开始计算这一潮的期限。');
  if(!e.mountain)invite('mount-book','折山石 · 带着自己的心愿入定','盆架闲下时，可以展开石中六关。选择想回家还是寻源，与小满同行；每次练功照常结算修期与修为，信物与已学术式会改变后来的辨路和分别。');
+ if(tier<2&&rank>=(tier?4:2))invite('crossing-ways','界台 · 筹备前往'+(tier?'上界':'中界'),'当前境界已经可以承受古阵，可自行备阵盘与路费；也可查看正途飞升的条件。前往只看路线，不会开阵或接受海路委托。');
  if(tier===2&&rank>=4&&!e.cloudPassage)invite('sky-book','白脊云渡 · 在上界亲历风候','随渡班在岸上或船中闭关，再亲自决定怎样试航。元婴、炼虚、大乘各有一班，旧井铃与先前的渡法会改变后来的办法。');
  if(!e.cloudRift&&canVisitRift(state))invite('sky-rift','白脊风隙 · 用所学走进异变','化神后可循已经交接的旧渡路探访浮岩。调查支点与回流，勘路或施术入隙；首次定脉后，到合体再处理自己留下的变化。先看现场，出发才交粮。');
  return [...opportunities,...leads];
