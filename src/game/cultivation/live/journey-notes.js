@@ -23,6 +23,12 @@ export function journeyNotes(state){
   notes.push({node,title,detail,timing,priority,date,close:window?.close});
  }
  const w=e.well;
+ const passage=e.cloudPassage;
+ if(passage&&!(passage.length===3&&passage[2].route!==null)){
+  const last=passage.at(-1),nextRank=[4,6,8][passage.length];
+  add('sky-book','白脊云渡',last.route===null?'这一班已出关，渡工在等你决定怎样试航。':
+   rank>=nextRank?'下一班的请托已经到了，可以回上界渡口守风。':'渡路已交班，到'+(passage.length===1?'炼虚':'大乘')+'境可回访。');
+ }
  if(w&&!w.reply&&(!w.claim||rank>=4||tier===w.world)){
   const remote=w.world!==tier;
   if(!w.claim&&!remote){
@@ -81,7 +87,7 @@ export function crossingDeadlines(state,notes,days){
 
 // These menu screens can be read on the way to a known entry. A trip, promise,
 // reward or quest patch is a player decision even when it happens to cost zero days.
-const shelves=new Set(['hub','training','rest','journey','resources','affairs','post-index','post-book','post-history','watch-book','watch-visitors','field-guide','garden-book','garden-history','river-book','voyage-book','council-book']);
+const shelves=new Set(['hub','training','rest','journey','resources','workshop','crossing','affairs','post-index','post-book','post-history','watch-book','watch-visitors','field-guide','garden-book','garden-history','river-book','voyage-book','council-book']);
 export function noteMenuSteps(state){
  return eventNode(state).choices.filter(c=>c.navigation&&c.targetId==='self'&&c.approach==='observe'&&!c.arrival&&!c.rule&&Object.keys(c.patch??{}).every(k=>k==='page'));
 }

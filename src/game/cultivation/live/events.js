@@ -15,6 +15,7 @@ import {validatePost} from './lin-post.js';
 import {recordMountainRetreat,validateMountain} from './folded-mountain.js';
 import {validateFerry} from './shell-ferry.js';
 import {validateWell} from './echo-well.js';
+import {validateCloudPassage} from './cloud-passage.js';
 
 const eventNodeIds=new Set([
  'arrival','terms','work','entry-result','companion','companion-result','reunion','reunion-result',
@@ -37,18 +38,19 @@ const eventNodeIds=new Set([
  'post-stations','post-settle','post-fog',
  'mount-book','mount-history','mount-sight','mount-sound',
  'shell-book','shell-journal','shell-parley',
- 'hunt-sources','hunt-grounds','well-book','well-road',
+ 'hunt-sources','hunt-grounds','well-book','well-road','sky-book','sky-boat','sky-shore',
 ]);
 const copy=value=>JSON.parse(JSON.stringify(value));
 export function createEventState(atlas){return {version:1,node:'arrival',entry:'unresolved',companion:'unmet',mentor:'unmet',page:0,location:'gate',...(atlas?copy(atlas):{})};}
 export function validateEventState(events,life,gardenRoot){
- assertPlainData(events);exactKeys(events,['version','node','entry','companion','mentor','page','location'],['river','expedition','council','convoy','valley','watch','mine','garden','firstMeeting','post','mountain','ferry','well']);
+ assertPlainData(events);exactKeys(events,['version','node','entry','companion','mentor','page','location'],['river','expedition','council','convoy','valley','watch','mine','garden','firstMeeting','post','mountain','ferry','well','cloudPassage']);
  if(!eventNodeIds.has(events.node))throw new Error('规则事件节点无效。');
  // A fatal breakthrough can reduce cultivation while leaving the final event at the grounds.
  if(life&&events.node.startsWith('hunt-')&&!nextRealmFor(life))throw new Error('当前没有需准备的破境材料。');
  if(Object.hasOwn(events,'council'))validateCouncil(events.council);
  if(Object.hasOwn(events,'convoy'))validateConvoy(events.convoy);
  if(Object.hasOwn(events,'well'))validateWell(events.well,life);
+ if(Object.hasOwn(events,'cloudPassage')||events.node.startsWith('sky-'))validateCloudPassage(events,life);
  if(events.node==='well-book'&&!events.well)throw new Error('回声井尚未起程。');
  if(events.node==='well-road'&&(events.well||life&&realmFor(life).rank!==3))throw new Error('回声井路引无效。');
  if(Object.hasOwn(events,'valley'))validateValley(events.valley);
@@ -136,7 +138,8 @@ export function advanceEvents(state,receipt){
  if(receipt.kind==='opening'||receipt.death)return events;
  const option=selected(state,receipt.action),success=receipt.cultivationResult?.check?.success!==false;
  events.node=option.next??'hub';
- if(success&&option.patch)Object.assign(events,copy(option.patch));
+ // A missed cultivation check still leaves the ferry crew's weather observations.
+ if(option.patch&&(success||option.key==='sky-intensive'||option.key==='sky-steady'))Object.assign(events,copy(option.patch));
  if(success&&option.arrival)events.location=option.arrival;
  if(option.key==='well-share'||option.key==='well-alone')Object.assign(events.well,{claim:option.key==='well-share'?'share':'alone',found:(receipt.itemChanges.soulseal??0)>0,finish:receipt.after.ageDays});
  if(option.key==='mount-steady'||option.key==='mount-intensive')events.mountain=recordMountainRetreat(state.events,receipt);

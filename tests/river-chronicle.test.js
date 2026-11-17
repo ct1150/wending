@@ -15,6 +15,7 @@ import {validatePost} from '../src/game/cultivation/live/lin-post.js';
 import {validateMountain} from '../src/game/cultivation/live/folded-mountain.js';
 import {validateFerry} from '../src/game/cultivation/live/shell-ferry.js';
 import {validateWell} from '../src/game/cultivation/live/echo-well.js';
+import {validateCloudPassage} from '../src/game/cultivation/live/cloud-passage.js';
 import {journeyNotes,noteRoutes,crossingDeadlines} from '../src/game/cultivation/live/journey-notes.js';
 import {practicePlan} from '../src/game/cultivation/live/practice-plan.js';
 
@@ -37,6 +38,17 @@ function pick(state,key){
 const follow=(state,...keys)=>keys.reduce(pick,state);
 const open=observe=>follow(start(observe),'decline','journey-menu','river-book','river-open');
 const prose=state=>state.currentScene.blocks.map(block=>block.text).join('\n');
+
+test('cloud passage records cannot skip an open shift or reopen its lodging before the next realm',()=>{
+ const life={...start().life,realm:'nascent'};
+ life.cultivationProfile={...life.cultivationProfile,worldTier:2};
+ const desk={node:'sky-book',cloudPassage:[{seat:0,route:null}]};
+ assert.doesNotThrow(()=>validateCloudPassage(desk,life));
+ assert.throws(()=>validateCloudPassage({...desk,node:'sky-shore'},life));
+ assert.throws(()=>validateCloudPassage({...desk,cloudPassage:[...desk.cloudPassage,{seat:1,route:1}]},life));
+ assert.throws(()=>validateCloudPassage({node:'sky-boat',cloudPassage:[{seat:0,route:1}]},life));
+ assert.throws(()=>validateCloudPassage(desk,{...life,cultivationProfile:{...life.cultivationProfile,worldTier:1}}));
+});
 
 function postOffer(meeting,observe){
  return follow(start(observe),'ask','companion',meeting,'continue','decline','affairs-menu','companion-menu','post-book');
@@ -1033,7 +1045,33 @@ test('one continuous birth finishes the three-world campaign and replays its ent
  s=pick(s,'convoy-book');
  s=follow(s,'rig-light','crew','load-1','manifest','stores','load-3','manifest','weigh','sail','convoy-book','crew','load-0','manifest','stores','load-2','manifest','weigh','sail','convoy-book');
  assert.deepEqual(s.events.convoy.chapters[2].loads,[10,5]);assert.match(s.currentScene.title,/问川归航/);
- for(let rank=5;rank<=8;rank++)s=trainTo(pick(s,'train-menu'),rank);
+ for(let rank=4;rank<=8;rank++){
+  if(rank>4)s=trainTo(pick(s,'train-menu'),rank);
+  if(rank%2)continue;
+  if(s.life.cultivationProfile.spirit<15)s=follow(s,'train-menu','rest-menu','recover','train-menu');
+  else s=pick(s,'train-menu');
+  s=follow(s,'rest-menu','back','journey-menu','workshop-menu','crossing-menu','sky-book');
+  const stage=(rank-4)/2,seat=stage===1?1:0;
+  if(!stage)assert.match(prose(s),/末人的报声手势/);
+  const before=structuredClone(s.life);
+  s=follow(s,'sky-watch-'+seat,'sky-steady');
+  assert.equal(s.life.ageDays-before.ageDays,s.lastReceipt.elapsedDays);
+  assert.ok(s.lastReceipt.elapsedDays>9);
+  assert.equal(s.events.cloudPassage.at(-1).route,null);
+  assert.match(prose(s),[/第一枚铁钉/,/两长一短/,/两道白漆/][stage]);
+  const branch=deserializeLiveState(serializeLiveState(s));
+  const alt=pick(branch,'sky-route-1');
+  assert.equal(alt.lastReceipt.elapsedDays,stage===2?9:3);
+  if(stage===2)assert.equal(alt.life.items.elixir,(s.life.items.elixir??0)+1);
+  const main=stage===0?1:0;
+  s=pick(s,'sky-route-'+main);
+  assert.equal(s.lastReceipt.elapsedDays,stage===1?9:3);
+  if(stage===2){
+   assert.equal(s.life.items.thunderseal,(before.items.thunderseal??0)+1);
+   assert.match(prose(s),/跳板/);assert.ok(!s.currentScene.choices.some(c=>c.id.includes('sky-route')));
+  }else assert.match(prose(s),/下一封请托/);
+  s=follow(s,'train-menu','rest-menu','back','journey-menu','river-book','hear-council');
+ }
  s=pick(s,'train-menu');
  while(s.events.watch.record.length<9)s=guardedPractice(s);
  s=follow(s,'rest-menu','watch-book');

@@ -15,6 +15,7 @@ import {mountainNode,mountainHistory} from './folded-mountain.js';
 import {shellNode,ferryForMaterial} from './shell-ferry.js';
 import {materialHunt} from './material-hunt.js';
 import {echoWell,wellDepartures} from './echo-well.js';
+import {cloudPassage} from './cloud-passage.js';
 
 // Authored situations supply every fact and executable choice. AI never edits
 // these definitions. Stable actors belong to a life, not a generated paragraph.
@@ -65,6 +66,7 @@ export function eventNode(state,historicMenu=null){
  if(e.node.startsWith('shell-'))return shellNode(state,menu,choice,actor('ferrier'));
  if(e.node==='hunt-sources'||e.node==='hunt-grounds')return materialHunt(state,next,menu,choice,historicMenu);
  if(e.node==='well-book')return echoWell(state,menu,choice);
+ if(e.node.startsWith('sky-'))return cloudPassage(state,choice,menu);
  if(e.node==='well-road'){
   const home=menu('train-menu','收起路引，回去安排修行','training');
   return row('回声井的两班路引','随巡井人去找归魂印，也看井户怎样换班',[
@@ -203,9 +205,11 @@ export function eventNode(state,historicMenu=null){
   }
   case 'crossing':{
    const tier=life.cultivationProfile.worldTier,destination=tier===0?'middle':'upper',name=tier===0?'中界清河城':'上界观星台';
+   const oldRoad=historicMenu==='crossing'||state.currentScene?.id.endsWith(':t'+state.turnId+':s:event_crossing')&&!state.currentScene.choices.some(c=>c.id.endsWith(':c:sky-book'));
+   const sky=tier===2&&realm.rank>=4&&!oldRoad;
    return row('天地之间','达到真实门槛后才能跨界',[
     narration(tier<2?'通往'+name+'的道路有自己的境界、材料与风险门槛。未达到时，继续留在当前天地修行便是。':'你已经身在上界，仍可继续修行与历练。'),
-   ],[tier<2?choice('cross','循正途飞升前往'+name,'travel',actor(destination),'ascend',{next:'action-result',arrival:destination}):menu('train-menu','继续安排修行','training'),menu('resources-menu','回去备办资源','resources',{page:0}),leave]);
+   ],[tier<2?choice('cross','循正途飞升前往'+name,'travel',actor(destination),'ascend',{next:'action-result',arrival:destination}):sky?menu('sky-book','去白脊云渡，随渡班闭关守风','sky-book'):menu('train-menu','继续安排修行','training'),menu('resources-menu','回去备办资源','resources',{page:0}),leave]);
   }
   case 'affairs':{
    const companion=young&&['helped','declined'].includes(e.companion)&&realm.rank>=1?'reunion':'companion';
