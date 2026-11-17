@@ -64,6 +64,7 @@ export function journeyNotes(state){
   notes.push({node,title,detail,timing,priority,date,close:window?.close});
  }
  const w=e.well;
+ if(e.cloudTrials?.at(-1)?.method===null)add('sky-trial','白脊试航船签',e.cloudTrials.at(-1).priority?'已有一组实际到岸，另一组仍待接班安排；可续行，也可交回常班。':'已接下试航，可以回船签桌核对船位和两组人的先后。');
  if(e.cloudRift)add('sky-rift','白脊风隙',e.cloudRift.ending?'再访已经结束，可回看自己留下的通路。':e.cloudRift.returned!==null?'已再入风隙，等你处理旧办法留下的变化。':e.cloudRift.anchor?(rank>=7?'已到合体，可以带粮再访当年的风隙。':'首次定脉已成，到合体可再入风隙。'):'已探到浮岩下，可从原处继续调查或入隙。');
  if(e.forms?.draft)add('form-book','本命术式','已选好要演练的气路，可以回去安排这一关。');
  const ridge=e.ridgeRoad?.at(-1);
@@ -144,7 +145,7 @@ export function crossingDeadlines(state,notes,days){
 
 // These menu screens can be read on the way to a known entry. A trip, promise,
 // reward or quest patch is a player decision even when it happens to cost zero days.
-const shelves=new Set(['hub','training','rest','journey','resources','workshop','crossing','affairs','mentor','companion','post-index','post-book','post-history','watch-book','watch-visitors','field-guide','garden-book','garden-history','river-book','voyage-book','council-book','sky-book']);
+const shelves=new Set(['hub','training','rest','journey','resources','workshop','crossing','affairs','mentor','companion','post-index','post-book','post-history','watch-book','watch-visitors','field-guide','garden-book','garden-history','river-book','voyage-book','council-book','sky-book','sky-weather','sky-lodgings']);
 export function noteMenuSteps(state){
  return eventNode(state).choices.filter(c=>c.navigation&&c.targetId==='self'&&c.approach==='observe'&&!c.arrival&&!c.rule&&Object.keys(c.patch??{}).every(k=>k==='page'));
 }

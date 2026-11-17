@@ -26,6 +26,41 @@ import {canStudyForm,validateForms} from '../src/game/cultivation/live/technique
 import {eventActionRule,advanceEvents} from '../src/game/cultivation/live/events.js';
 
 const observers=new WeakMap();
+test('one native life carries trained cloud crews through three trials without visiting the rift',()=>{
+ const keys=JSON.parse(readFileSync(new URL('./fixtures/21e6acc-cloud-route.json',import.meta.url))).route;
+ let s=keys.reduce(pick,start());const original=s;
+ s=follow(s,'sky-trial','trial-accept','trial-boat','trial-shore','trial-locals','trial-arrange');
+ assert.ok(!s.currentScene.choices.some(c=>c.id.endsWith(':c:trial-relay')));
+ const manual=follow(s,'trial-return','trial-ferry');
+ s=follow(s,'trial-teach','trial-relay');assert.equal(s.events.cloudTrials[0].method,'signal');
+ const nextTrial=(state,rank)=>{
+  state=trainTo(pick(state,'train-menu'),rank);
+  state=follow(state,'train-menu','rest-menu','recover','train-menu','rest-menu','back','journey-menu','workshop-menu','crossing-menu','sky-book');
+  if(state.currentScene.choices.some(c=>c.id.endsWith(':c:sky-lodgings')))state=pick(state,'sky-lodgings');
+  state=follow(state,'sky-watch-0','sky-steady','sky-route-'+(rank===6?1:0),'sky-trial');
+  if(!state.life.items.supplies)state=follow(state,'train-menu','rest-menu','back','journey-menu','resources-menu','next-resource','gather','ration-book','ration-buy','train-menu','rest-menu','back','journey-menu','workshop-menu','crossing-menu','sky-book','sky-trial');
+  return state;
+ };
+ let later=trainTo(pick(original,'train-menu'),6);
+ later=follow(later,'train-menu','rest-menu','back','journey-menu','workshop-menu','crossing-menu','sky-book','sky-lodgings');
+ assert.ok(later.currentScene.choices.some(c=>c.id.endsWith(':c:sky-trial')),'trial ledger stays reachable beside the next shift');
+ const skipped=follow(nextTrial(nextTrial(s,6),8),'trial-accept','trial-boat','trial-shore','trial-locals','trial-arrange');
+ assert.ok(!skipped.currentScene.choices.some(c=>c.id.endsWith(':c:trial-relay')),'a crew from two shifts ago does not substitute for the preceding shift');
+ const withoutCrew=follow(nextTrial(manual,6),'trial-accept','trial-boat','trial-shore','trial-locals','trial-arrange');
+ assert.ok(!withoutCrew.currentScene.choices.some(c=>c.id.endsWith(':c:trial-relay')));
+ assert.ok(withoutCrew.currentScene.choices.some(c=>c.id.endsWith(':c:trial-teach')));
+ for(const rank of [6,8]){
+  s=nextTrial(s,rank);
+  const inventory={...s.life.items};
+  s=follow(s,'trial-accept','trial-shore','trial-boat','trial-locals','trial-arrange');
+  assert.ok(s.currentScene.choices.some(c=>c.id.endsWith(':c:trial-relay')));
+  assert.ok(!s.currentScene.choices.some(c=>c.id.endsWith(':c:trial-teach')));
+  s=pick(s,'trial-relay');assert.deepEqual(s.life.items,{...inventory,supplies:inventory.supplies-1});
+ }
+ assert.deepEqual(s.events.cloudTrials.map(r=>[r.stage,r.method]),[[0,'signal'],[1,'signal'],[2,'signal']]);
+ assert.equal(s.events.cloudRift,undefined);assert.deepEqual(deserializeLiveState(serializeLiveState(s)).events,s.events);
+});
+
 test('port wages depend on the actual cargo and settle once, with native forge and search rules',()=>{
  const s=start(),menu=(key,label,next)=>({key,label,next}),choice=(key,label,intent,targetId,approach,extra)=>({key,label,intent,targetId,approach,stake:'low',...extra});
  const row=(title,goal,blocks,choices)=>({title,goal,blocks,choices});
@@ -140,6 +175,20 @@ test('a cloud rift uses actual supplies, observed routes and a paid later conseq
  assert.deepEqual(resumed.events.cloudRift,change.events.cloudRift);
  assert.equal(watched.life.ageDays-lodging.life.ageDays,watched.lastReceipt.elapsedDays);
  assert.equal(resumed.life.ageDays-watched.life.ageDays,3);
+ // The completed drifting rift can be borrowed explicitly by a later current-day trial.
+ s=trainTo(pick(resumed,'train-menu'),8);
+ s=follow(s,'train-menu','rest-menu','recover','train-menu','rest-menu','back','journey-menu','workshop-menu','crossing-menu','sky-book','sky-lodgings','sky-watch-0','sky-steady','sky-lodgings','sky-route-0','sky-lodgings','sky-trial');
+ const oldPassage=structuredClone(s.events.cloudPassage),oldRift=structuredClone(s.events.cloudRift);
+ if(!s.life.items.supplies){
+  s=follow(s,'train-menu','rest-menu','back','journey-menu','resources-menu','next-resource','gather','ration-book','ration-buy','train-menu','rest-menu','back','journey-menu','workshop-menu','crossing-menu','sky-book','sky-lodgings','sky-trial');
+ }
+ s=follow(s,'trial-accept','trial-boat','trial-shore','trial-locals','trial-arrange','trial-other');
+ assert.equal(s.events.cloudTrials[0].stage,2);assert.equal(s.events.cloudTrials[0].refuge,'drift');
+ const released=pick(s,'trial-release'),borrowed=pick(s,'trial-refuge');
+ assert.equal(released.events.cloudTrials[0].method,'released');assert.equal(borrowed.events.cloudTrials[0].method,'rift');
+ assert.equal(borrowed.life.ageDays-s.life.ageDays,2);assert.equal(borrowed.life.cultivationProfile.spirit,s.life.cultivationProfile.spirit-4);
+ assert.deepEqual(borrowed.events.cloudRift,oldRift);assert.deepEqual(borrowed.events.cloudPassage,oldPassage);
+ assert.deepEqual(deserializeLiveState(serializeLiveState(borrowed)).events,borrowed.events);
 });
 
 test('earned forms open different rift paths while old ferries and ordinary survey keep their own routes',()=>{

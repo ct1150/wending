@@ -1,6 +1,7 @@
 import {realmFor} from './cultivation-rules.js';
 import {exactKeys} from './schema.js';
 import {canVisitRift,riftNode} from './cloud-rift.js';
+import {cloudTrialNode,cloudTrialStage} from './cloud-trial.js';
 
 const seasons=[
  {rank:4,title:'盐船过白脊',petition:'云层一低，盐船就搁在白脊。船头只看得见峰，岸上的雇工却说每回都是先听见石滩碎响，才看见峰露出来。渡娘把记风的窄板往你脚下一搁：「请在这里住一关。等真人走了，我们也得认得这条路。」',
@@ -31,14 +32,18 @@ export function validateCloudPassage(events,life){
 }
 export function cloudPassage(state,choice,menu,historicMenu=null){
  const {events,life}=state,log=events.cloudPassage??[],last=log.at(-1);
+ if(events.node.startsWith('sky-trial'))return cloudTrialNode(state,choice,menu);
  if(events.node.startsWith('sky-rift'))return riftNode(state,menu,choice);
  const watched=last?.route===null,i=watched?log.length-1:log.length,c=seasons[i];
  const back=menu('train-menu','收起渡簿，回去安排修行','training');
  const row=(title,lines,choices)=>({title,location:'上界白脊云渡',goal:'在上界守一关风候，把能交给凡人的渡路留下',blocks:lines.map(text=>({kind:'narration',text})),choices});
  const rift=menu('rift-book','循浮岩逆风，探访白脊风隙','sky-rift');
+ const trial=menu('sky-trial','翻船签，安排当下渡班的试航与接班','sky-trial');
+ if(events.node==='sky-book'&&events.cloudTrials?.at(-1)?.method===null)return row('白脊渡口 · 船签尚未交回',['试航已接下，船签上记着已经完成的部分。可以继续安排余下的人，也可先守下一班风候；回山不会自动结清这一班。'],[trial,menu('sky-weather','先看原来的云渡守候与风隙','sky-weather'),back]);
  const old=historicMenu==='rift'||state.currentScene?.id.endsWith(':t'+state.turnId+':s:event_sky-book')&&!state.currentScene.choices.some(c=>c.id.endsWith(':c:rift-book'));
- if(events.node==='sky-book'&&(events.cloudRift||!old&&!watched&&canVisitRift(state)&&c&&realmFor(life).rank>=c.rank))return row('白脊渡口 · 两条仍可走的路',[events.cloudRift?'旧渡班仍按已经交接的办法发船。浮岩下的风隙另有你留下的足迹，两处都可接着走。':'下一班云渡已经可以守候，浮岩外也传来逆风的消息。可先接云渡，或先去看看风隙；读过请托不等于已经答应。'],[rift,menu('sky-lodgings','继续原来的云渡守候与交班','sky-lodgings'),back]);
- const returnChoices=[back,menu('crossing-menu','回到界域道路','crossing'),...(!old&&canVisitRift(state)?[rift]:[])];
+ if(['sky-book','sky-weather'].includes(events.node)&&(events.cloudRift||!old&&!watched&&canVisitRift(state)&&c&&realmFor(life).rank>=c.rank))return row('白脊渡口 · 两条仍可走的路',[events.cloudRift?'旧渡班仍按已经交接的办法发船。浮岩下的风隙另有你留下的足迹，两处都可接着走。':'下一班云渡已经可以守候，浮岩外也传来逆风的消息。可先接云渡，或先去看看风隙；读过请托不等于已经答应。'],[rift,menu('sky-lodgings','继续原来的云渡守候与交班','sky-lodgings'),back]);
+ const oldTrials=historicMenu||state.currentScene?.id.endsWith(':t'+state.turnId+':s:event_'+events.node)&&!state.currentScene.choices.some(c=>c.id.endsWith(':c:sky-trial'));
+ const returnChoices=[back,!oldTrials&&cloudTrialStage(events)>=0?trial:menu('crossing-menu','回到界域道路','crossing'),...(!old&&canVisitRift(state)?[rift]:[])];
  const previous=i?seasons[i-1].results[log[i-1].route]:'';
  if(!c)return row('白脊云渡 · 三次交班',log.map((r,k)=>seasons[k].title+'。'+seasons[k].results[r.route]),returnChoices);
  if(realmFor(life).rank<c.rank)return row('白脊寄来的渡簿',[previous,'下一封请托在'+(i===1?'炼虚':'大乘')+'境开放。你留下的渡法仍在使用，眼下尽管去走自己的路。'],returnChoices);
@@ -62,5 +67,5 @@ export function cloudPassage(state,choice,menu,historicMenu=null){
  }
  const bell=i===0&&rig?(rig==='up'?'早年你把副铃留在井口，当年的交班谱能直接接到岸索。':'早年你把副铃留给井底，末人的报声手势如今可交给船上的舵手。'):'';
  return row('白脊云渡 · '+c.title,[...(previous?[previous]:[]),c.petition,...(oldTool?[oldTool]:[]),...(bell?[bell]:[]),'挑一处陪渡班守候，修为、灵力和年月按所选功法照常结算。出关后再决定替谁修渡。'],[
-  ...c.seats.map((label,seat)=>menu('sky-watch-'+seat,label,seat?'sky-boat':'sky-shore')),back]);
+  ...c.seats.map((label,seat)=>menu('sky-watch-'+seat,label,seat?'sky-boat':'sky-shore')),!oldTrials&&cloudTrialStage(events)>=0?trial:back]);
 }

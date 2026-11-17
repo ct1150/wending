@@ -4,6 +4,51 @@ import {readFile} from 'node:fs/promises';
 import {gunzipSync} from 'node:zlib';
 import {liveBrowser} from './helpers/live-browser.js';
 
+test('the old second cloud invitation restores its exit before exposing an unstarted first trial',async t=>{
+ const text=gunzipSync(await readFile(new URL('./fixtures/9b4603a-cloud-ready.jsonl.gz',import.meta.url))).toString('utf8');
+ const {page}=await liveBrowser(t);
+ const result=await page.evaluate(async text=>{
+  const {importLiveArchive,exportLiveArchive}=await import('/src/game/live-save-format.js'),{createLiveSession}=await import('/src/ui/live-session.js');
+  const a=await open('old-cloud-invitation');await importLiveArchive(new Response(text).body,a);const old=await a.load(),session=createLiveSession({archive:a,client:{}});
+  await session.load();await session.resume();await session.resume();let row=await a.load();const resumed=row.state;
+  for(const key of ['rest-menu','back','journey-menu','workshop-menu','crossing-menu','sky-book','sky-lodgings','sky-trial','trial-accept']){
+   const c=row.state.currentScene.choices.find(c=>c.id.endsWith(':c:'+key));if(!c)throw Error('missing '+key);
+   row=await session.choose({choiceId:c.id,baseRevision:row.state.revision,stateHash:identity.stateHash(row.state)});if(row.errorCode)throw Error(row.errorCode);
+  }
+  const copy=await open('old-cloud-invitation-copy');await importLiveArchive(exportLiveArchive(a),copy);
+  return {old:old.state,resumed,final:row.state,exact:identity.stateHash(row.state)===identity.stateHash((await copy.load()).state)};
+ },text);
+ assert.equal(result.old.events.node,'sky-lodgings');assert.ok(!result.old.currentScene.choices.some(c=>c.id.endsWith(':c:sky-trial')));
+ assert.equal(result.resumed.turnId,result.old.turnId+1);assert.deepEqual(result.resumed.life,result.old.life);
+ assert.equal(result.final.events.cloudTrials[0].stage,0);assert.equal(result.final.life.ageDays,result.old.life.ageDays+1);assert.ok(result.exact);
+});
+
+test('a genuine old cloud page keeps its pending exit and a new paid trial resumes exactly once',async t=>{
+ const text=gunzipSync(await readFile(new URL('./fixtures/21e6acc-rift-pending.jsonl.gz',import.meta.url))).toString('utf8');
+ const {page}=await liveBrowser(t);
+ const result=await page.evaluate(async text=>{
+  const {importLiveArchive,exportLiveArchive}=await import('/src/game/live-save-format.js'),{createLiveSession}=await import('/src/ui/live-session.js');
+  const old=await open('trial-old');await importLiveArchive(new Response(text).body,old);const original=await old.load();
+  let session=createLiveSession({archive:old,client:{}});await session.load();await session.resume();await session.resume();let row=await old.load();const resumed=row.state;
+  async function go(...keys){for(const key of keys){const c=row.state.currentScene.choices.find(c=>c.id.endsWith(':c:'+key));if(!c)throw Error('missing '+key);row=await session.choose({choiceId:c.id,baseRevision:row.state.revision,stateHash:identity.stateHash(row.state)});if(row.errorCode)throw Error(row.errorCode);}}
+  await go('rest-menu','back','journey-menu','workshop-menu','crossing-menu','sky-book','sky-trial','trial-accept','trial-boat','trial-shore');
+  const before=row.state,action=before.currentScene.choices.find(c=>c.id.endsWith(':c:trial-locals'));
+  await old.prepare(engine.prepareChoice(before,{choiceId:action.id,requestId:'paid-cloud-trial'}));
+  const copied=await open('trial-pending');await importLiveArchive(exportLiveArchive(old),copied);session=createLiveSession({archive:copied,client:{}});
+  await session.load();await session.resume();const once=await copied.load();await session.resume();row=await copied.load();const paid=row.state;
+  await go('train-menu');
+  const {journeyNotes,noteRoutes}=await import('/src/game/cultivation/live/journey-notes.js');
+  const path=noteRoutes(row.state,journeyNotes(row.state)).get('sky-trial');if(!path)throw Error('no trial continuation');
+  await go(...path,'trial-arrange','trial-teach','trial-relay');
+  const final=await open('trial-final');await importLiveArchive(exportLiveArchive(copied),final);
+  return {old:original.state,resumed,before,paid,once:identity.stateHash(once.state)===identity.stateHash(paid),final:row.state,exact:identity.stateHash((await final.load()).state)===identity.stateHash(row.state)};
+ },text);
+ assert.equal(result.resumed.turnId,result.old.turnId+1);assert.deepEqual(result.resumed.life,result.old.life);
+ assert.equal(result.paid.turnId,result.before.turnId+1);assert.equal(result.paid.life.ageDays-result.before.life.ageDays,2);
+ assert.equal(result.paid.life.items.supplies,result.before.life.items.supplies-1);assert.ok(result.once&&result.exact);
+ assert.equal(result.final.events.cloudTrials[0].method,'signal');
+});
+
 test('an old ordinary search result keeps its exit and a pending repeat settles exactly once',async t=>{
  const text=gunzipSync(await readFile(new URL('./fixtures/61e74ce-resource-result.jsonl.gz',import.meta.url))).toString('utf8');
  const {page}=await liveBrowser(t);
