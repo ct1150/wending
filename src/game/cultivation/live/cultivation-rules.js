@@ -342,6 +342,11 @@ export function v7ActionRule(state,p){
     const note=state.currentScene?.story?.opponent;
     rule.outlook={band,reason:!known?'未辨明对手境界，按谨慎估计行动。':('对手'+V7_REALMS[rank].name+'，你是'+realm.name+'。'+(!rule.checkKind?'此法以实际代价避开较量。':gap>0?'境界占优。':gap<0?'对方境界更高。':'双方境界相当。')),...(note?.entityId===foe.id?Object.fromEntries(['purpose','condition'].filter(k=>note[k]).map(k=>[k,note[k]])):{})};
   }
+  if(state.events?.node==='field-shrine'&&p.intent==='fight'&&p.approach==='guard'){
+    // The wardens use a real combat check, but call off any potentially fatal bout.
+    rule.days=1;rule.relationship=0;rule.gain={};
+    if(life.injury+rule.injury+rule.failureInjury>=10)rule.reason='伤势经不起试手，守泉会请你先疗伤。';
+  }
   for(const [id,count] of Object.entries(rule.items))if((life.items[id]??0)<count)rule.reason='缺少'+ITEMS[id]+'。';
   for(const [id,count] of Object.entries(rule.gain))if((life.items[id]??0)-(rule.items[id]??0)+count>9999)rule.reason='行囊已经装不下。';
   if(rule.cultivation>0&&life.cultivation+rule.cultivation>9999)rule.reason='当前修为已积累至上限。';

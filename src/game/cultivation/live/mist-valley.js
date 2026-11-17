@@ -27,7 +27,7 @@ export function valleyNode(state,menu,choice,actor){
  const home=choice('field-home','沿山路回住处休整','travel',actor(e.location),'road',{next:'hub',rule:{days:1}});
  const job=(key,label,target,next,change,rule)=>choice(key,label,'explore',target,'cautious',{next,optionalGift:true,patch:patch(change),rule});
  if(node==='field-guide'){
-  if(v.settled)return row('雾药谷 · 游记合卷','回看当年定下的水路',[ending[v.settled],v.pass==='spar'?'记载里还留着守泉会试手时的规矩。':v.pass==='medicine'?'入泉的凭据是一份由药棚验过的滤方。':'入泉的凭据是一件给旧闸换上的铜套。'],[menu('train-menu','回去修炼','training'),back]);
+  if(v.settled)return row('雾药谷 · 游记合卷','回看当年定下的水路',[ending[v.settled],v.pass==='spar'?'记载里还留着守泉会试手时的规矩。':v.pass==='medicine'?'入泉的凭据是一份由药棚验过的滤方。':'入泉的凭据是一件给旧闸换上的偏心套。'],[menu('train-menu','回去修炼','training'),back]);
   if(tier>0)return row('下界旧游 · 雾药谷','查阅下界留下的游记',['雾药谷在下界的青石坡后，脚下这条路已不通向那座谷口。书页保留了当年亲自核对的线索。',v.sample?'白砂下的红粉会随第一瓢井水浮起。':'水样一栏仍空着。',v.slag?'旧瓷窑的铜套内侧有一道歪斜的磨痕。':'窑裂一栏尚待后来人勘查。'],[menu('train-menu','继续此界的修行','training'),back]);
   return row('青石坡后的雾药谷','查清上游来雾的缘由，替两岸定下一条水路',['守闸人的旧札提过青石坡背后的一眼清泉。谷里的药棚和瓷窑共用它。近年晨起总有红雾，午后水又清了。有人怪药童倒错渣，有人怪窑里换了土；两边仍得一起用这口水。','从这里走一天到茶棚。谷口可问路，也能沿原路回来。已采过的样、做过的工和守泉会给的凭据都留在游记里。'],[stroll('enter-field','用一天走到谷口茶棚','field-camp'),back]);
  }
@@ -47,9 +47,9 @@ export function valleyNode(state,menu,choice,actor){
   ...(v.remedy?[menu('proof-medicine','留下药棚已验的滤方','field-shrine',patch({pass:'medicine'}))]:[]),
   ...(v.sleeve?[menu('proof-forge','留下旧闸的校准尺寸','field-shrine',patch({pass:'forge'}))]:[]),menu('shrine','先收起凭据','field-shrine')]);
  if(node==='field-spar'||node==='field-shrine'){
-  if(v.pass)return row('石门留名','入分泉池查清源头',[v.pass==='medicine'?'守泉会把滤方贴在闸边。轮值人验过水样，把你的名字添进过门簿。':v.pass==='forge'?'新铜套跟旧磨痕正合。轮值人收好校过的尺寸，退开石门半步。':'三声铃响过，你仍守在原处。守泉会照约开门，把这一场试手记入石簿。','石门以内的两道水渠仍要有人定去处。'],[stroll('to-source','循两道旧渠入分泉池','field-source'),camp]);
+  if(v.pass)return row('石门留名','入分泉池查清源头',[v.pass==='medicine'?'守泉会把滤方贴在闸边。轮值人验过水样，把你的名字添进过门簿。':v.pass==='forge'?'新打的偏心套跟旧磨痕正合。轮值人收好校过的尺寸，退开石门半步。':'三声铃响过，你仍守在原处。守泉会照约开门，把这一场试手记入石簿。','石门以内的两道水渠仍要有人定去处。'],[stroll('to-source','循两道旧渠入分泉池','field-source'),camp]);
   const offer=v.remedy||v.sleeve;
-  return row('守泉石门','选择交出验据、试手或回去准备',['门前的守泉会只借一缕炼气境阵息试人，不争生死。守住三声铃算过，受伤可以退。这道门也认药棚的滤方和窑工的校闸尺寸。',offer?'验过的东西已经在你手中。入门凭据与以后怎样分水是两回事。':'两处验据都尚未拿到。谷口茶棚可以返回住处，整备好再来。'],[
+  return row('守泉石门','选择交出验据、试手或回去准备',['门前的守泉会只借一缕炼气境阵息试人，不争生死。守住三声铃算过，校阵试手共用一天。旧伤太重时，守闸人会请你改日再来。这道门也认药棚的滤方和窑工的校闸尺寸。',offer?'验过的东西已经在你手中。入门凭据与以后怎样分水是两回事。':'两处验据都尚未拿到。谷口茶棚可以返回住处，整备好再来。'],[
    ...(offer?[menu('show-proof','请守泉会当面验据','field-proof')]:[]),
    choice('hold-bell','照约试手，守住三声铃','fight',actor('springward'),'guard',{next:'field-spar',patch:patch({pass:'spar'})}),camp]);
  }

@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {createLiveGame,prepareOpening,prepareChoice,commitTurn,resolveRuleScene,compileChoices} from '../src/game/cultivation/live/engine.js';
-import {realmFor,nextRealmFor} from '../src/game/cultivation/live/cultivation-rules.js';
+import {realmFor,nextRealmFor,v7ActionRule} from '../src/game/cultivation/live/cultivation-rules.js';
 import {serializeLiveState,deserializeLiveState} from '../src/game/cultivation/live/validation.js';
 import {validateConvoy} from '../src/game/cultivation/live/sea-convoy.js';
 import {validateValley} from '../src/game/cultivation/live/mist-valley.js';
@@ -57,7 +57,14 @@ test('mist valley spar uses the actual rank and outcome, with a route home after
  let state=follow(valleyCamp(),'to-kiln','to-shrine');
  const foe=state.relatedEntities.find(row=>row.name==='守泉会');
  assert.equal(foe.experience.realmId,'qi');
+ const stones=state.life.items.stones??0;
+ const wounded=structuredClone(state);wounded.life.injury=9;
+ assert.match(v7ActionRule(wounded,wounded.currentScene.choices.find(c=>c.intent==='fight')).reason??'',/伤/);
  state=pick(state,'hold-bell');
+ assert.equal(state.lastReceipt.elapsedDays,1);
+ assert.equal(state.life.relations[foe.id]??0,0);
+ assert.equal(state.life.items.stones??0,stones);
+ assert.ok(!state.director.memory.enemies.some(enemy=>enemy.id===foe.id));
  const won=state.lastReceipt.cultivationResult.check.success;
  assert.equal(state.events.valley?.pass??null,won?'spar':null);
  state=won?follow(state,'to-source','water-spring','field-home'):pick(state,'field-home');

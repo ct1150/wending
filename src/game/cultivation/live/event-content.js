@@ -3,7 +3,7 @@ import {DAYS_PER_YEAR,ITEMS} from './model.js';
 import {realmFor,nextRealmFor,TECHNIQUES} from './cultivation-rules.js';
 import {riverNode} from './river-chronicle.js';
 import {expeditionNode,expeditionResult} from './expedition.js';
-import {councilNode} from './mountain-council.js';
+import {councilHearings,councilNode} from './mountain-council.js';
 import {convoyNode} from './sea-convoy.js';
 import {valleyLocation,valleyNode,valleyPlaces} from './mist-valley.js';
 
@@ -20,7 +20,7 @@ export function eventEntities(state){
   {id:prefix+'middle',name:'中界清河城',kind:'place'},
   {id:prefix+'upper',name:'上界观星台',kind:'place'},
   ...(state.events.node.startsWith('field-')?valleyPlaces(prefix):[]),
-  ...(['field-shrine','field-spar'].includes(state.events.node)?[{id:prefix+'springward',name:'守泉会',kind:'faction',experience:{version:1,realmId:'qi'}}]:[]),
+  ...(state.events.node==='field-shrine'?[{id:prefix+'springward',name:'守泉会',kind:'faction',experience:{version:1,realmId:'qi'}}]:[]),
  ];
 }
 export function eventLocation(state){
@@ -101,7 +101,7 @@ export function eventNode(state){
   ],[menu('continue','带着这一段经历继续修行','hub'),menu('train-menu','查看修行与破境','training'),menu('journey-menu','备办下一段历练','journey')]);
   case 'hub':{
    const variants=['风从檐下穿过，书页轻轻翻动。','桌上留着上次修行的笔记，门外的路仍在。','你收拢纷杂的念头，重新衡量手中的时间与资用。'];
-   const journey=e.expedition?.place==='end'?'翻看北山公簿，或外出备料':e.river?.record.length===6?'接续行旅图，或外出备料':'读问川图，或外出备料';
+   const journey=e.council?.length===councilHearings?'翻阅三界海路与旧簿，或外出备料':e.expedition?.place==='end'?'翻看北山公簿，或外出备料':e.river?.record.length===6?'接续行旅图，或外出备料':'读问川图，或外出备料';
    return row('此后的仙路','修行成长与故人后续，都由你安排',[
     narration(variants[(state.turnId+state.life.birth.attributes.insight)%variants.length]),
     narration(e.entry==='accepted'?'药圃差事仍可回去做完；未做完时不会发放功法。':e.entry==='declined'?'你选择了独自求道。栖云门那份未接下的差事没有变成必须偿还的债。':'修为、功法与资用各有门槛。已经完成的差事不会再要求你重做。'),
@@ -118,7 +118,7 @@ export function eventNode(state){
    narration('休整不会替你突破，也不会替你答应任何请求。修行所需的行粮与材料仍要亲自准备。'),
   ],[choice('recover','静养调息，恢复伤势与灵力','rest','self','recover',{next:'action-result'}),menu('mentor-menu','验看功法，寻找改善的办法','mentor'),leave]);
   case 'journey':return row('路与行囊','接续历练，或备办下一次修行的资用',[
-   narration(e.expedition?.place==='end'?'你的行囊里放着三程图印。北山井户的一纸来信夹在其间，等你回去落款。':e.river?'问川图上夹着一根草绳，再打开仍是上次停下的地方。':'你在山口书摊翻到一卷旧图。卖书人说是好几代守闸人留的传习卷，问你愿不愿试着展开。桌的另一头还摊着采药与打铁的路引。'),
+   narration(e.council?.length===councilHearings?'北山九次落款都在册。从河簿翻到北山最后一页，可以查到三界海路的舱单与来信。':e.expedition?.place==='end'?'你的行囊里放着三程图印。北山井户的一纸来信夹在其间，等你回去落款。':e.river?'问川图上夹着一根草绳，再打开仍是上次停下的地方。':'你在山口书摊翻到一卷旧图。卖书人说是好几代守闸人留的传习卷，问你愿不愿试着展开。桌的另一头还摊着采药与打铁的路引。'),
   ],[menu('river-book',e.expedition?.place==='end'?'翻阅河簿、三程行旅与北山公簿':'展开问川图，历练河上人家','river-book'),menu('resources-menu','寻找修行材料与生活物资','resources',{page:0}),menu('workshop-menu','炼制、跨界与其他准备','workshop',{page:0})]);
   case 'resources':{
    const targets=[...new Set([next?.material??'relic','supplies','stones','herbs','iron'])],target=targets[e.page%targets.length];
