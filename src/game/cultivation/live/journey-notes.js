@@ -62,7 +62,11 @@ export function journeyNotes(state){
  if(life.cultivationProfile.experience?.commitment?.status==='owed')add('mentor','校法还粮','当年校法时答应还一份行粮。',{open:0,close:100*DAYS_PER_YEAR-1},'旧约仍在记录中，可查当年的来路');
  if(e.mountain&&!e.mountain.ending)add('mount-book','折山石','已留下'+e.mountain.walk.length+'关入定记录。石里的路从上次留下的地方接续。');
  if(e.watch?.draft)add('watch-book','守关簿',e.watch.draft.days?'已经出定，待读守关人的回信。':e.watch.draft.marks?'值守条件已写好，可回去核对再入定。':'本次值守委托尚未交割。');
- if(e.entry==='accepted')add('work','药圃差事','已经应下三日差事，功法尚未到手。');
+ if(e.entry==='accepted'){
+  const r=e.nursery;
+  if(r)add('work','药圃工簿',r.care?'已做两个工日，待交付收成。':'已做一个工日，待决定守哪一畦。',{open:r.start,close:r.start+(r.care?2:1)},'旧苗过季，可补做余工领卷');
+  else add('work','药圃差事','已经应下三日差事，功法尚未到手。');
+ }
  if(e.river&&e.river.record.length<riverCases)add('river-book','问川图','已结'+e.river.record.length+'折，'+(e.river.seen?'本折查过的线索还在。':'可从这一折接着走。'));
  if(e.expedition&&e.expedition.place!=='end')add('voyage-book','三程行旅','行旅簿已收下'+e.expedition.volume+'枚图印。');
  if(e.council!==undefined&&e.council.length<councilHearings)add('council-book','北山公簿','已留下'+e.council.length+'处落款，可翻到下一件事。');
@@ -82,6 +86,7 @@ export function crossingDeadlines(state,notes,days){
   if(!(n.close>=age&&age+days>n.close))return false;
   // The letter and shore deadlines already appear in the native choice preview.
   if(n.node==='post-book'||n.node==='post-shore')return false;
+  if(n.node==='work'&&here.startsWith('nursery-'))return false;
   if(n.node==='post-stations')return true;
   return !here.startsWith(n.node==='watch-trail'?'watch-trail':n.node.split('-')[0]);
  }).map(n=>n.title);

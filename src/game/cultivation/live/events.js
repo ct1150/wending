@@ -8,6 +8,7 @@ import {validateExpedition} from './expedition.js';
 import {councilHearings,validateCouncil} from './mountain-council.js';
 import {validateConvoy} from './sea-convoy.js';
 import {validateCharters} from './harbor-charters.js';
+import {validateNursery} from './entry-nursery.js';
 import {validateValley} from './mist-valley.js';
 import {validateWatch} from './retreat-watch.js';
 import {validateMine} from './lamp-mine.js';
@@ -20,6 +21,7 @@ import {validateCloudPassage} from './cloud-passage.js';
 
 const eventNodeIds=new Set([
  'arrival','terms','work','entry-result','companion','companion-result','reunion','reunion-result',
+ 'work-porch','nursery-book','nursery-pot','nursery-receipt',
  'hub','training','rest','journey','resources','workshop','crossing','affairs','mentor','mentor-result','old-record','action-result',
  'river-book','river-site','river-reading','river-decision','river-result',
  'voyage-book','voyage-road','voyage-camp','voyage-log','voyage-reset','voyage-result','voyage-detour',
@@ -44,9 +46,10 @@ const eventNodeIds=new Set([
 ]);
 const copy=value=>JSON.parse(JSON.stringify(value));
 export function createEventState(atlas){return {version:1,node:'arrival',entry:'unresolved',companion:'unmet',mentor:'unmet',page:0,location:'gate',...(atlas?copy(atlas):{})};}
-export function validateEventState(events,life,gardenRoot){
- assertPlainData(events);exactKeys(events,['version','node','entry','companion','mentor','page','location'],['river','expedition','council','convoy','charters','valley','watch','mine','garden','firstMeeting','post','mountain','ferry','well','cloudPassage']);
+export function validateEventState(events,life,gardenRoot,birthRoll){
+ assertPlainData(events);exactKeys(events,['version','node','entry','companion','mentor','page','location'],['river','expedition','council','convoy','charters','valley','watch','mine','garden','firstMeeting','post','mountain','ferry','well','cloudPassage','nursery']);
  if(!eventNodeIds.has(events.node))throw new Error('规则事件节点无效。');
+ if(Object.hasOwn(events,'nursery')||events.node.startsWith('nursery-')||events.node==='work-porch')validateNursery(events,life,birthRoll);
  // A fatal breakthrough can reduce cultivation while leaving the final event at the grounds.
  if(life&&events.node.startsWith('hunt-')&&!nextRealmFor(life))throw new Error('当前没有需准备的破境材料。');
  if(Object.hasOwn(events,'council'))validateCouncil(events.council);

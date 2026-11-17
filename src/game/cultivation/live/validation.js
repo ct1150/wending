@@ -148,7 +148,7 @@ export function validateLiveState(state) {
   integer(state.rng, 0, 4294967295);
   validateLife(state.life);
   if(state.life.birth.cultivationProfile?.eventVersion===1){
-    validateEventState(state.events,state.life,state.reincarnation?.gardenRoot);
+    validateEventState(state.events,state.life,state.reincarnation?.gardenRoot,state.birthReceipt.random.after);
     if(state.events.mine?.start>state.life.ageDays)throw new Error('井下脚程不能始于未来。');
     if(state.events.node.startsWith('mine-')&&state.events.node!=='mine-journal'&&state.life.cultivationProfile.worldTier!==0)throw new Error('井下行程仅在下界开放。');
     const outing=state.events.watch?.trail;

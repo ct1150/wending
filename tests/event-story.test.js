@@ -75,6 +75,62 @@ test('entry work completes once and refusal leaves a playable independent cultiv
  assert.ok(declined.currentScene.choices.some(c=>c.id.endsWith(':c:train-menu')));
 });
 
+test('both opening forecasts and both tools determine which harvest survives, and three worked days pay one manual',()=>{
+ const forecasts=new Set();
+ for(let seed=1;seed<=16&&forecasts.size<2;seed++){
+  const start=choose(choose(opening({seed}),'accept'),'nursery-book');
+  const rain=Boolean(start.birthReceipt.random.after%2);
+  if(forecasts.has(rain))continue;
+  forecasts.add(rain);
+  for(const tool of ['ditch','rack'])for(const crop of ['beans','herbs']){
+   const protectedCrop=(tool==='ditch')===rain?'beans':'herbs';
+   const first=choose(start,'nursery-'+tool),second=choose(first,'nursery-guard-'+crop);
+   const item=crop==='beans'?'supplies':'herbs';
+   const final=choose(second,'nursery-'+crop);
+   assert.equal(final.life.ageDays-start.life.ageDays,3);
+   assert.equal(final.life.items.manual,(start.life.items.manual??0)+1);
+   assert.equal(final.life.items[item],(start.life.items[item]??0)+(protectedCrop===crop?2:1));
+   assert.equal(final.events.entry,'joined');
+   assert.equal(second.currentScene.choices.some(c=>c.id.endsWith(':c:nursery-pot')),protectedCrop==='beans'||crop==='beans');
+  }
+ }
+ assert.equal(forecasts.size,2);
+});
+
+test('a transplanted seed uses the existing harvest calendar and pays only when actually harvested',()=>{
+ const run=(s,...keys)=>keys.reduce(choose,s);
+ let s=run(opening(),'accept','nursery-book','nursery-rack','nursery-guard-beans','nursery-pot','nursery-pot');
+ assert.deepEqual(s.events.garden,{plot:{bed:0,sown:s.life.ageDays},record:[]});
+ const food=s.life.items.supplies??0;
+ s=run(s,'garden-book','inspect-bed','tend','inspect-bed','pick-tips');
+ assert.equal(s.life.items.supplies,food+1);assert.equal(s.events.garden.plot,null);
+ assert.match(s.currentScene.blocks.map(b=>b.text).join(''),/外院给的旧瓢/);
+ s=choose(s,'garden-history');assert.ok(!s.currentScene.choices.some(c=>c.id.endsWith(':c:pick-tips')));
+});
+
+test('leaving before or after a second shift keeps paid labor and closes the expired crop',()=>{
+ const run=(s,...keys)=>keys.reduce(choose,s);
+ for(const care of [false,true]){
+  let s=run(opening(),'accept','nursery-book','nursery-ditch');
+  if(care)s=choose(s,'nursery-guard-beans');
+  const abandoned=run(s,'work-porch','abandon-work');
+  assert.equal(abandoned.events.entry,'declined');assert.equal(abandoned.events.nursery.end,null);
+  s=run(s,'work-porch','pause-work','train-menu','practice','continue','affairs-menu','resume-work');
+  assert.match(s.currentScene.title,/过季/);
+  const paid=choose(s,'nursery-late');assert.equal(paid.lastReceipt.elapsedDays,care?1:2);
+  assert.deepEqual(paid.lastReceipt.itemChanges,{manual:1});assert.equal(paid.events.nursery.end,'late');
+ }
+});
+
+test('an existing garden keeps its planted day when its keeper finishes the nursery separately',()=>{
+ const run=(s,...keys)=>keys.reduce(choose,s);
+ let s=run(opening(),'accept','work-porch','pause-work','train-menu','garden-book','sow');
+ const firstPlot=structuredClone(s.events.garden);
+ s=run(s,'train-menu','rest-menu','back','affairs-menu','resume-work','nursery-book','nursery-ditch','nursery-guard-beans');
+ assert.ok(!s.currentScene.choices.some(c=>c.id.endsWith(':c:nursery-pot')));
+ s=choose(s,'nursery-beans');assert.deepEqual(s.events.garden,firstPlot);
+});
+
 test('free questions and menus cannot farm items, reroll risk, or accept an unchosen request',()=>{
  let state=opening(),rng=state.rng,items=structuredClone(state.life.items),age=state.life.ageDays;
  for(let i=0;i<12;i++){state=choose(state,'ask');state=choose(state,'companion');state=choose(state,'leave-companion');}

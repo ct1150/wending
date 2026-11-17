@@ -771,8 +771,8 @@ for(const branch of [0,1])test('all six leaves settle once and return to the cul
  assert.equal(state.events.node,'action-result');
 });
 
-function afterRiver(timberChoice=1,observe,visitValley=false,visitPost=false){
- let s=visitPost?follow(postOffer('decline-companion',observe),'launch-relay','keep-register','investigate','walk-stops','post-book','deliver','deliver-0','back','journey-menu','river-book','river-open'):open(observe);
+function afterRiver(timberChoice=1,observe,visitValley=false,visitPost=false,first){
+ let s=first??(visitPost?follow(postOffer('decline-companion',observe),'launch-relay','keep-register','investigate','walk-stops','post-book','deliver','deliver-0','back','journey-menu','river-book','river-open'):open(observe));
  for(let i=0;i<6;i++){
   s=follow(s,'deliberate','policy-'+(i===3?timberChoice:i%2));
   if(i===0&&visitValley){
@@ -928,8 +928,8 @@ function trainTo(state,rank){
  }
  return follow(s,'rest-menu','back','journey-menu','river-book','hear-council');
 }
-function lowerWorldCareer(observe,visitPost){
- let s=follow(afterRiver(1,observe,true,visitPost),'voyage-go','to-kiln','to-store','to-tower','voyage-finish','voyage-book','voyage-go','to-east','to-west','to-peak','voyage-finish','voyage-book','voyage-go','to-pass','to-well','to-camp','voyage-finish','voyage-book','hear-council');
+function lowerWorldCareer(observe,visitPost,first){
+ let s=follow(afterRiver(1,observe,true,visitPost,first),'voyage-go','to-kiln','to-store','to-tower','voyage-finish','voyage-book','voyage-go','to-east','to-west','to-peak','voyage-finish','voyage-book','voyage-go','to-pass','to-well','to-camp','voyage-finish','voyage-book','hear-council');
  for(let rank=1;rank<=3;rank++){
   assert.match(s.currentScene.title,/待你归来/);
   s=trainTo(pick(s,'train-menu'),rank);
@@ -979,7 +979,9 @@ test('one continuous birth finishes the three-world campaign and replays its ent
    }
   }
  };
- let s=lowerWorldCareer(observe,false);
+ const first=follow(start(observe),'accept','nursery-book','nursery-ditch','nursery-guard-beans','nursery-beans','continue','journey-menu','river-book','river-open');
+ let s=lowerWorldCareer(observe,false,first);
+ assert.equal(s.events.nursery.end,'beans');
  s=follow(s,'river-back','journey-menu','resources-menu','next-resource','well-road');
  for(let tries=0;!s.life.items.supplies;tries++){assert.ok(tries<16);s=pick(s,'well-food');}
  s=follow(s,'well-cautious','well-chalk','well-sluice','well-share','train-menu','rest-menu','back','journey-menu','river-book','hear-council');

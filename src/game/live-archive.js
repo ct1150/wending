@@ -436,6 +436,10 @@ class Archive {
   let scene=entry.scene;
   // These historical menus differed by one invitation. Verify every other field.
   const sceneId=typeof scene?.id==='string'?scene.id:'';
+  if(prior&&!prior.nursery&&sceneId.endsWith(':s:event_work')&&scene.choices?.some(c=>c.id?.endsWith(':c:abandon-work'))){
+   const current=resolveRuleScene(c.run.state,p);
+   if(current.choices.some(c=>c.id.endsWith(':c:nursery-book'))&&same(scene,resolveEventScene(c.run.state,p,'work')))scene=current;
+  }
   const addedChoice=prePost&&sceneId.endsWith(':s:event_companion')?'post-book':
    prior?.post&&!prior.post.stations&&sceneId.endsWith(':s:event_post-history')?'station-book':
    prior&&!prior.mountain&&[':s:event_garden-book',':s:event_garden-history'].some(suffix=>sceneId.endsWith(suffix))?'mount-book':null;

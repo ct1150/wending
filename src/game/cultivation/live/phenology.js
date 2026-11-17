@@ -69,6 +69,7 @@ export function gardenNode(state,menu,choice){
  if(events.node==='garden-history')return row('行圃旧册','回看此生各畦的去处',g.record.map(e=>beds[e.bed].name+'。'+harvestText(e)),[book,mountain,back]);
  if(!g.plot){
   const lines=[...(last?[harvestText(last)]:state.reincarnation?.gardenRoot!==undefined?['盆底有先人封存的'+gardenRootName(state.reincarnation.gardenRoot)+'母土。第一畦的嫩候会延长。']:[]),...(b?[b.commission,'这一盆跟着你走。入定、寻材和远行都按同一日历生长。试圃按畦给种一次；这季怎样采收，由你亲自决定。']:[g.record.length===beds.length?'九只试种盆都还了回单。从最初的灯笼豆到归灰稻，你随身带回来的这本圃册里能查到每一处的采候。尚未栽入新畦的母土可以传给下一世。':'眼下能领的种已试过。圃册按实际采期留存。'])];
+  if(last?.bed===0&&events.nursery?.end==='pot')lines.push('你把这一笔记在外院给的旧瓢背面。'+({tips:'当初灶房肯让出一株，如今干粮里真有你亲手种出的豆。',fruit:'从低畦带来的苗结出了药衣。你记得同一块田上，高处还铺着药棚的晒布。',root:'你把瓢底剩的土包起来。外院的这一株，还能护住下次栽下的苗。',scatter:'当初系瓢的草绳还在。掀起干壳，里头已经空了。'}[last.take]));
   return row(b?'候物行圃 · '+b.name:'候物行圃 · 归册','决定是否照料下一畦',lines,[
    ...(b?[choice('sow','接下'+b.name+'，花一日栽进盆中','explore','herbs','cautious',{next:'garden-book',patch:{garden:{...g,plot:{bed,sown:life.ageDays+1}}},rule:{days:1}})]:[]),
    ...(last?[reread]:[]),...(!b||!last?[mountain]:[]),back]);

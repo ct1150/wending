@@ -17,6 +17,7 @@ import {shellNode,ferryForMaterial} from './shell-ferry.js';
 import {materialHunt} from './material-hunt.js';
 import {echoWell,wellDepartures} from './echo-well.js';
 import {cloudPassage} from './cloud-passage.js';
+import {nurseryNode} from './entry-nursery.js';
 
 // Authored situations supply every fact and executable choice. AI never edits
 // these definitions. Stable actors belong to a life, not a generated paragraph.
@@ -87,6 +88,7 @@ export function eventNode(state,historicMenu=null){
  if(e.node.startsWith('council-'))return councilNode(state,menu,choice);
  if(e.node.startsWith('convoy-'))return convoyNode(state,menu,choice,actor);
  if(e.node.startsWith('packet-'))return charterNode(state,menu,choice);
+ if(e.node.startsWith('nursery-')||e.node==='work-porch'||e.node==='work'&&e.nursery)return nurseryNode(state,menu,choice,actor('steward'));
  switch(!young&&['companion','reunion'].includes(e.node)?'old-record':e.node){
   case 'arrival':return row('外院第一日','问清入门条件，选择留下或独行',[
    narration(young?'栖云门外院里，送炭的板车刚刚停稳。你把母亲缝好的衣袖拉平，站到登记的长桌前。周执事没有问你的灵根，只把一册差事簿推到桌沿。':'外院还存着那册旧簿。门上的墨色换了几回，当值者核对年月，仍认得当年写给试修弟子的条款。'),
@@ -99,14 +101,18 @@ export function eventNode(state,historicMenu=null){
    young?speech(actor('steward'),'只清沟、分苗，不让你采药试药。三日做完，功法归你，往后愿不愿留门都由你。'):narration('当值者让你看旧约的附条：差事仅限清沟、分苗，三日做完便可领卷。'),
    narration(young&&e.companion==='unmet'?'旁边的林砚迟迟没有落笔。他捏着空布袋，目光停在药圃的方向。':'你已经听明白条件。是否接受这份差事，由你自己决定。'),
   ],[terms()[0],e.companion==='unmet'?terms()[1]:menu('back','尚未决定，回到登记处','arrival'),terms()[2]]);
-  case 'work':return row('三日药圃','完成已接受的差事，取得入门功法',[
+  case 'work':{
+   const old=historicMenu==='work'||state.currentScene?.id.endsWith(':t'+state.turnId+':s:event_work')&&state.currentScene.choices.some(c=>c.id.endsWith(':c:abandon-work'));
+   const finish=choice('finish-work','做完三日药圃差事','explore','manual','cautious',{next:'entry-result',patch:{entry:'joined'},rule:{days:3,gain:{manual:1},checkKind:null,spiritCost:0,warnings:[]}});
+   return row('三日药圃','完成已接受的差事，取得入门功法',[
    narration((young?'周执事':'当值的管圃人照着旧簿')+'给你指出清沟与分苗的区域。你可以照约完成，也可以说明不做了。做完差事便能领取功法。'),
    ...(young&&e.companion==='unmet'?[narration('林砚蹲在药圃外，把空布袋翻了又翻，像在计算还能撑过多少天。')]:[]),
-  ],[
-   choice('finish-work','做完三日药圃差事','explore','manual','cautious',{next:'entry-result',patch:{entry:'joined'},rule:{days:3,gain:{manual:1},checkKind:null,spiritCost:0,warnings:[]}}),
+  ],old?[
+   finish,
    young&&e.companion==='unmet'?menu('companion','先问林砚遇到了什么困难','companion'):menu('pause-work','暂缓差事，先安排自己的修行','hub'),
    choice('abandon-work','说明不再做这份差事，自行离开','interact',young?actor('steward'):'self',young?'decline':'leave',{next:'hub',patch:{entry:'declined',location:'retreat'},navigation:true}),
-  ]);
+  ]:[menu('nursery-book','先看两畦苗，自己安排三日工','nursery-book'),finish,menu('work-porch','回棚找人、暂缓或辞工','work-porch')]);
+  }
   case 'entry-result':return row('亲手换来的功法','完整功法已到手，下一步积累修为',[
    narration('第三日傍晚，你把最后一条水沟疏通。'+(young?'周执事':'当值的管圃人')+'照着差事簿核验过，将约定的完整入门功法交给你，没有再加条件。'),
    ...(young?[speech(actor('steward'),'这卷是你做事换来的。往后走多远，要看你怎么用它。')]:[]),

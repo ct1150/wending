@@ -4,6 +4,25 @@ import {readFile} from 'node:fs/promises';
 import {gunzipSync} from 'node:zlib';
 import {liveBrowser} from './helpers/live-browser.js';
 
+test('a pending three-day job exported by 1b5487e keeps the old work scene and settles only once',async t=>{
+ const bytes=gunzipSync(await readFile(new URL('./fixtures/1b5487e-nursery-pending.jsonl.gz',import.meta.url))).toString('utf8');
+ const {page}=await liveBrowser(t);
+ const result=await page.evaluate(async text=>{
+  const {importLiveArchive,exportLiveArchive}=await import('/src/game/live-save-format.js');
+  const {createLiveSession}=await import('/src/ui/live-session.js');
+  const archive=await open('old-nursery'),copy=await open('old-nursery-replayed');
+  await importLiveArchive(new Blob([text]).stream(),archive);
+  const before=await archive.load(),session=createLiveSession({archive,client:{}});
+  await session.load();await session.resume();await session.resume();
+  await importLiveArchive(exportLiveArchive(archive),copy);
+  const after=await copy.load();
+  return {oldMenu:before.state.currentScene.choices.map(c=>c.id.split(':').at(-1)),request:before.pending.identity.requestId,
+   days:after.state.life.ageDays-before.state.life.ageDays,manual:(after.state.life.items.manual??0)-(before.state.life.items.manual??0),
+   entry:after.state.events.entry,turns:after.state.turnId-before.state.turnId,partial:after.state.events.nursery??null,pending:after.pending};
+ },bytes);
+ assert.deepEqual(result,{oldMenu:['finish-work','companion','abandon-work'],request:'old-three-day-shift',days:3,manual:1,entry:'joined',turns:1,partial:null,pending:null});
+});
+
 test('steady retreat plans commit the manual turns exactly once and fence interruption, stale tabs and partial writes',async t=>{
  const {page}=await liveBrowser(t);
  const results=await page.evaluate(async()=>{
