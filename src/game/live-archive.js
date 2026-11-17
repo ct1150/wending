@@ -433,11 +433,13 @@ class Archive {
   const p=c.run.state.phase==='awaitingOpening'?prepareOpening(c.run.state,{requestId:identity.requestId}):prepareRecordedChoice(c.run.state,entry);check(same(p.identity,identity)&&same(p.receipt,entry.receipt),'ARCHIVE_INVALID_HISTORY');c.pending=pendingRow(archiveId,p);
   const prior=c.run.state.events,prePost=prior&&!prior.firstMeeting&&!prior.post;
   let scene=entry.scene;
-  // Earlier companion visits offered precisely the same scene minus the courier invitation.
-  // Prove that exact historical shape before deriving memory from the canonical scene.
-  if(prePost&&typeof scene?.id==='string'&&scene.id.endsWith(':s:event_companion')&&scene.choices?.length===2){
+  // These historical menus differed by one invitation. Verify every other field.
+  const sceneId=typeof scene?.id==='string'?scene.id:'';
+  const addedChoice=prePost&&sceneId.endsWith(':s:event_companion')?'post-book':
+   prior?.post&&!prior.post.stations&&sceneId.endsWith(':s:event_post-history')?'station-book':null;
+  if(addedChoice&&scene.choices?.length===2){
    const current=resolveRuleScene(c.run.state,p);
-   const oldChoices=current.choices.filter(choice=>!choice.id.endsWith(':c:post-book'));
+   const oldChoices=current.choices.filter(choice=>!choice.id.endsWith(':c:'+addedChoice));
    if(oldChoices.length!==current.choices.length&&same(scene,{...current,choices:oldChoices}))scene=current;
   }
   const d=await this._derived(c,scene,scene?buildMemoryDelta(p.receipt,scene):null);

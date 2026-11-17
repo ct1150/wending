@@ -31,6 +31,7 @@ const eventNodeIds=new Set([
  'apothecary','herb-basket',
  'garden-book','garden-history','garden-practice','garden-pick','garden-ripe',
  'post-index','post-book','post-offer-later','post-traces','post-address','post-return','post-history','post-shore',
+ 'post-stations','post-settle','post-fog',
 ]);
 const copy=value=>JSON.parse(JSON.stringify(value));
 export function createEventState(atlas){return {version:1,node:'arrival',entry:'unresolved',companion:'unmet',mentor:'unmet',page:0,location:'gate',...(atlas?copy(atlas):{})};}
@@ -50,7 +51,9 @@ export function validateEventState(events,life,gardenRoot){
   if(known&&events.post.origin!==known)throw new Error('药路不能改写初遇。');
  }
  if((events.post||events.node.startsWith('post-'))&&events.companion==='unmet'||events.node.startsWith('post-')&&!['post-book','post-offer-later'].includes(events.node)&&!events.post||
-    events.node==='post-history'&&!events.post?.steps.length||
+    ['post-history','post-stations','post-settle'].includes(events.node)&&!events.post?.steps.length||
+    events.node==='post-settle'&&(!events.post?.stations?.at(-1)?.visits.length||events.post.stations.at(-1).settled!==null)||
+    events.node==='post-fog'&&(events.post?.stations?.length!==3||events.post.stations[2].visits.length!==2||events.post.stations[2].settled!==null||!['turned',undefined].includes(events.post.stations[2].fog)||life&&life.cultivationProfile.worldTier!==0)||
     events.node==='post-shore'&&!events.post?.ending||
     ['post-traces','post-address','post-return'].includes(events.node)&&(events.post.route==='pass'||events.post.steps.length))throw new Error('药路页次无效。');
  if(['garden-practice','garden-pick','garden-ripe'].includes(events.node)&&!events.garden?.plot||

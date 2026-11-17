@@ -4,6 +4,51 @@ import {readFile} from 'node:fs/promises';
 import {gunzipSync} from 'node:zlib';
 import {liveBrowser} from './helpers/live-browser.js';
 
+test('an old two-option courier journal resumes into the playable station route and round-trips its mixed history',async t=>{
+ const {page}=await liveBrowser(t);
+ await page.setViewportSize({width:360,height:760});
+ let calls=0;await page.route('**/api/story/**',route=>{calls++;return route.abort();});
+ const old=gunzipSync(await readFile(new URL('./fixtures/ecb15f3-post-history.jsonl.gz',import.meta.url))).toString('utf8');
+ const restored=await page.evaluate(async text=>{
+  const {openLiveArchive}=await import('/src/game/live-archive.js');
+  const {importLiveArchive}=await import('/src/game/live-save-format.js');
+  const archive=await openLiveArchive();
+  try{
+   await importLiveArchive(new Response(text).body,archive);
+   const {state}=await archive.load();
+   return state.currentScene.choices.length===2&&identity.stateHash(state)===identity.stateHash(JSON.parse(text.split('\n')[0]).state);
+  }finally{archive.close();}
+ },old);
+ assert.equal(restored,true);
+ const pick=key=>page.locator('[data-live-choice$=":c:'+key+'"]:enabled').click();
+ async function resume(key){
+  await page.reload();
+  const saved=page.locator('[data-live-choice$=":c:'+key+'"]:enabled'),enter=page.locator('[data-title-continue]:enabled');
+  await saved.or(enter).first().waitFor();
+  if(!await saved.isVisible())await enter.click();
+  await saved.waitFor();
+ }
+ await resume('post-book');
+ for(const key of ['post-book','post-history','station-book','trust-1','station-retreat','visit-1'])await pick(key);
+ await page.locator('[data-live-choice$=":c:visit-0"]').waitFor();
+ await resume('visit-0');
+ for(const key of ['visit-0','station-settle','settle-1','trust-0','station-work','visit-0','station-settle','settle-0','trust-1','station-work','visit-0','visit-1','walk-fog','feel-left','walk-fog','ask-guide','station-settle','settle-0'])await pick(key);
+ await page.getByRole('heading',{name:'两站合簿 · 拆下临时牌'}).waitFor();
+ assert.match(await page.locator('[data-live-prose]').innerText(),/捎给对岸/);
+ assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),true);
+ const verified=await page.evaluate(async()=>{
+  const {openLiveArchive}=await import('/src/game/live-archive.js'),{stateHash}=await import('/src/game/cultivation/live/identity.js');
+  const {importLiveArchive,exportLiveArchive}=await import('/src/game/live-save-format.js');
+  const from=await openLiveArchive(),to=await openLiveArchive({name:'station-copy'});
+  try{
+   await importLiveArchive(exportLiveArchive(from),to);
+   const a=(await from.load()).state,b=(await to.load()).state;
+   return [a.events.post.stations.map(r=>r.settled),a.events.post.stations[2].fog,stateHash(a)===stateHash(b)];
+  }finally{from.close();to.close();}
+ });
+ assert.deepEqual(verified,[[1,0,0],'guided',true]);assert.equal(calls,0);
+});
+
 test('a genuine pre-courier reunion backup retains its exact state and rejects a changed historic companion choice',async t=>{
  const {page}=await liveBrowser(t);
  const old=gunzipSync(await readFile(new URL('./fixtures/f924d32-lin-reunion.jsonl.gz',import.meta.url))).toString('utf8');

@@ -1,6 +1,7 @@
 import {DAYS_PER_YEAR} from './model.js';
 import {exactKeys} from './schema.js';
 import {shoreNode,validateShore} from './zhi-shore.js';
+import {stationNode,validateStations} from './post-stations.js';
 
 const years=DAYS_PER_YEAR;
 const seasons=[
@@ -50,7 +51,7 @@ function receipt(p,i){
  return decision==='witness'?'两处各留一名当值人，在空签上写下亲眼见到的交割。下一班若有疑问，能找到经手处；当值人也得承担被人当面追问的难处。':'两处都只刻站记，不抄寄件人的姓名。后来有人上门追寻一件旧物，能查到哪一站收过，却须取得本人的同意才可再问下去。';
 }
 export function validatePost(p,life){
- exactKeys(p,['start','origin','route','trace','steps','ending'],['walk']);
+ exactKeys(p,['start','origin','route','trace','steps','ending'],['walk','stations']);
  if(!Number.isSafeInteger(p.start)||p.start<0||p.start>=80*years||life&&p.start>life.ageDays||
     !['helped','declined','unknown'].includes(p.origin)||!['relay','door','pass'].includes(p.route)||
     !Number.isInteger(p.trace)||p.trace<0||p.trace>3||!Array.isArray(p.steps)||p.steps.length>seasons.length||
@@ -64,6 +65,7 @@ export function validatePost(p,life){
      (s.decision==='missed'?elapsed<season.close*years:elapsed>=season.close*years))throw new Error('林砚药路回单无效。');
  }
  if(Object.hasOwn(p,'walk'))validateShore(p.walk,p,life);
+ if(Object.hasOwn(p,'stations'))validateStations(p.stations,p,life);
 }
 export function postNode(state,menu,choice){
  const {events:e,life}=state,p=e.post,node=e.node;
@@ -71,6 +73,7 @@ export function postNode(state,menu,choice){
  const back=menu('back','收起药路手记，自去安排','hub'),book=menu('post-book','回药路手记','post-book');
  const train=menu('train-menu','先去修炼，让药路照常走','training');
  if(node==='post-shore')return shoreNode(state,menu,choice);
+ if(['post-stations','post-settle','post-fog'].includes(node))return stationNode(state,menu,choice);
  const job=(key,label,target,next,patch,days)=>choice(key,label,'explore',target,'cautious',{next,patch,rule:{days}});
  if(!p){
   if(life.ageDays>=80*years||life.cultivationProfile.worldTier!==0)return row('旧药匣的消息','回看手记',['你没有同林砚立过试路的约，手记里也没有能让你返回当年同他走路的凭据。'],[train,back]);
@@ -89,7 +92,7 @@ export function postNode(state,menu,choice){
  const patch=change=>({post:{...p,...change}});
  const write=(decision,day=life.ageDays)=>patch({steps:[...p.steps,{day,decision}]});
  const journal=menu('post-history','翻阅当时的回单','post-history');
- if(node==='post-history')return row('三封回单','读当事时真正留下的字',[...p.steps.map((_,n)=>receipt(p,n))],[book,back]);
+ if(node==='post-history')return row('三封回单','读当事时真正留下的字',[...p.steps.map((_,n)=>receipt(p,n))],[book,menu('station-book','读渡头与石阶合簿，安排两站托付','post-stations'),back]);
  if(i===3&&elapsed>=25*years){
   const endings={box:'完整的空匣留在轮值站。后来换了好几块盖板，旧签始终能同原先的缺角拼上。想学的人须到站里亲自动手。',leaves:'原匣拆作各站的签板。新人上路时只领走一片，到另一站才见得到同它相合的另一半。以后没有谁能从一只匣子上读尽整条路。'};
   const letter=local?'林砚请你摸摸盖上的签槽。槽口最光的地方，正是无数人犹豫要不要落款时下意识摸过的那一寸。':'手记背后封着一张早年拓下的签槽和一份常设委托。此刻能回看往年的字，也能将对旧匣的处置寄给轮值站。';

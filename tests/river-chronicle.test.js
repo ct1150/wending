@@ -110,6 +110,36 @@ test('Zhi can travel alone, share the shore or miss the tide; her old training c
 });
 
 const valleyCamp=()=>follow(open(),'deliberate','policy-0','field-guide','enter-field');
+test('station commissions carry the last settlement into the next trip; both districts can be heard after a real retreat',()=>{
+ const start=follow(postOffer('decline-companion'),'launch-relay','keep-register','deliver','deliver-0','keep-register','two-runners','keep-register','station-mark','keep-register','split-box','post-history','station-book');
+ const plan=pick(start,'trust-0'),early=follow(plan,'station-work','visit-0','visit-1','station-settle');
+ assert.equal(early.life.ageDays-plan.life.ageDays,94);
+ assert.match(prose(early),/小木鞋/);assert.match(prose(early),/额头/);
+ let s=pick(deserializeLiveState(serializeLiveState(early)),'settle-2');
+ assert.equal(s.lastReceipt.elapsedDays,2);assert.equal(s.life.items.supplies,early.life.items.supplies-1);
+ assert.match(prose(s),/最后一人到齐/);
+ s=follow(s,'trust-1','station-work','visit-1');assert.equal(s.lastReceipt.elapsedDays,2);
+ s=follow(s,'station-settle','settle-1','trust-0','station-work','visit-1');assert.equal(s.lastReceipt.elapsedDays,1);
+ const fog=follow(s,'visit-0','walk-fog');
+ const sensed=pick(fog,'sense-oar');assert.equal(sensed.life.cultivationProfile.spirit,fog.life.cultivationProfile.spirit-4);
+ assert.equal(sensed.events.post.stations[2].fog,'carried');
+ const found=pick(fog,'feel-left');assert.equal(found.events.post.stations[2].fog,'found');
+ const missed=follow(fog,'feel-right','walk-fog','find-crossing');assert.equal(missed.events.post.stations[2].fog,'found');
+ s=follow(found,'station-settle','settle-0');assert.equal(s.events.post.stations.length,3);
+ assert.match(prose(s),/无主|无人来认/);assert.match(prose(s),/开船前夜/);
+ assert.deepEqual(deserializeLiveState(serializeLiveState(s)),s);
+ const other=follow(start,'trust-1','station-retreat','visit-1','visit-0','station-settle');
+ assert.match(prose(other),/藤杖/);assert.match(prose(other),/箱到/);
+ assert.match(prose(other),/六日访回/);
+ const delayed=pick(other,'settle-2');assert.equal(delayed.lastReceipt.elapsedDays,6);
+ const debt=structuredClone(delayed.events.post);
+ debt.stations[0].end=debt.stations[0].visits.at(-1).day+2;
+ assert.throws(()=>validatePost(debt,delayed.life),/两站结案/);
+ const one=follow(plan,'station-work','visit-0','station-settle');
+ assert.ok(!one.currentScene.choices.some(x=>x.id.endsWith(':c:settle-2')));
+ const away=pick(one,'hear-other');away.life.cultivationProfile.worldTier=1;
+ assert.match(eventNode(away).choices.find(x=>x.key==='visit-1').label,/寄函/);
+});
 const firstWatch=(seed,keeper,marks)=>follow(start(undefined,seed),'decline','train-menu','rest-menu','watch-book','watch-open','keeper-'+keeper,marks,'sit-watch');
 const firstPlot=(seed=42)=>follow(start(undefined,seed),'decline','train-menu','garden-book','sow');
 test('the same seed crop ripens during the actual native retreat, while shorter intensive practice returns at the tender harvest',()=>{
