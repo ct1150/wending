@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import * as engine from '../src/game/cultivation/live/engine.js';
 import {stateHash} from '../src/game/cultivation/live/identity.js';
-import {TECHNIQUES,nextRealmFor} from '../src/game/cultivation/live/cultivation-rules.js';
+import {TECHNIQUES,nextRealmFor,v7ActionRule} from '../src/game/cultivation/live/cultivation-rules.js';
 import {eventNode} from '../src/game/cultivation/live/event-content.js';
 import {saltWindow,validateSaltField} from '../src/game/cultivation/live/salt-field.js';
 import {DAYS_PER_YEAR} from '../src/game/cultivation/live/model.js';
@@ -35,6 +35,24 @@ test('long-route invitations are available before acceptance and never impersona
   assert.equal(reached.rng,independent.rng);assert.equal(reached.events.river,undefined);assert.equal(reached.events.watch,undefined);
  }
  assert.equal(noteRoutes(independent,leads).size,2);
+});
+
+test('independent retreats expose the same native intensive tradeoff without requiring a garden',()=>{
+ const base=choose(choose(choose(opening(),'decline'),'train-menu'),'practice');
+ assert.equal(base.events.garden,undefined);
+ const intensive=base.currentScene.choices.find(c=>c.id.endsWith(':c:intensive-again'));
+ assert.ok(intensive);const rule=v7ActionRule(base,intensive),next=choose(base,'intensive-again');
+ assert.equal(next.life.items.supplies,base.life.items.supplies-1);
+ assert.equal(next.life.ageDays-base.life.ageDays,rule.days);
+ assert.equal(base.life.cultivationProfile.spirit-next.life.cultivationProfile.spirit,rule.spiritCost);
+ assert.equal(next.lastReceipt.cultivationResult.check.chance,rule.chance);
+ assert.equal(next.life.cultivation-base.life.cultivation,next.lastReceipt.cultivationResult.check.success?rule.cultivation:0);
+ assert.equal(next.events.garden,undefined);
+ assert.equal(choose(base,'train-menu').events.node,'training');
+ const empty=structuredClone(base);empty.currentScene=null;empty.life.items.supplies=0;empty.life.items.stones=0;empty.life.items.herbs=0;
+ const proposal=eventNode(empty).choices.find(c=>c.key==='forage-again');assert.ok(proposal);
+ assert.equal(v7ActionRule(empty,proposal).days,90);
+ empty.life.items.stones=2;assert.ok(eventNode(empty).choices.some(c=>c.key==='ration-book'));
 });
 
 test('a retreat plan quotes actual ordinary steady turns and leaves each accepted appointment reachable',()=>{
@@ -136,7 +154,7 @@ test('leaving before or after a second shift keeps paid labor and closes the exp
   if(care)s=choose(s,'nursery-guard-beans');
   const abandoned=run(s,'work-porch','abandon-work');
   assert.equal(abandoned.events.entry,'declined');assert.equal(abandoned.events.nursery.end,null);
-  s=run(s,'work-porch','pause-work','train-menu','practice','continue','affairs-menu','resume-work');
+  s=run(s,'work-porch','pause-work','train-menu','practice','train-menu','rest-menu','back','affairs-menu','resume-work');
   assert.match(s.currentScene.title,/过季/);
   const paid=choose(s,'nursery-late');assert.equal(paid.lastReceipt.elapsedDays,care?1:2);
   assert.deepEqual(paid.lastReceipt.itemChanges,{manual:1});assert.equal(paid.events.nursery.end,'late');

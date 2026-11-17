@@ -434,8 +434,12 @@ class Archive {
   const p=c.run.state.phase==='awaitingOpening'?prepareOpening(c.run.state,{requestId:identity.requestId}):prepareRecordedChoice(c.run.state,entry);check(same(p.identity,identity)&&same(p.receipt,entry.receipt),'ARCHIVE_INVALID_HISTORY');c.pending=pendingRow(archiveId,p);
   const prior=c.run.state.events,prePost=prior&&!prior.firstMeeting&&!prior.post;
   let scene=entry.scene;
-  // These historical menus differed by one invitation. Verify every other field.
+  // Verify historical scenes exactly before mapping their menu variant.
   const sceneId=typeof scene?.id==='string'?scene.id:'';
+  if(prior&&!prior.garden&&sceneId.endsWith(':s:event_action-result')&&scene.choices?.some(c=>c.id?.endsWith(':c:continue'))){
+   const current=resolveRuleScene(c.run.state,p);
+   if(!current.choices.some(c=>c.id.endsWith(':c:continue'))&&same(scene,resolveEventScene(c.run.state,p,'practice')))scene=current;
+  }
   if(prior&&sceneId.endsWith(':s:event_mount-book')&&scene.choices?.some(c=>c.id?.endsWith(':c:keep-token'))){
    const current=resolveRuleScene(c.run.state,p);
    if(current.choices.some(c=>c.id.endsWith(':c:mount-wind'))&&same(scene,resolveEventScene(c.run.state,p,'wind')))scene=current;

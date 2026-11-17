@@ -290,13 +290,16 @@ export function eventNode(state,historicMenu=null){
    const canTrade=(life.items.stones??0)>=2||(life.items.herbs??0)>=2;
    const kitchen=menu('ration-book','到路灶备四份行粮，或亲自寻粮','ration-book');
    if(!oldRations&&action?.id.endsWith(':c:gather')&&['stones','herbs','supplies'].includes(action.targetId))onward=kitchen;
-   if(e.garden&&next&&life.cultivation<next.threshold&&
+   const oldPractice=historicMenu==='practice'||state.currentScene?.id.endsWith(':t'+state.turnId+':s:event_action-result')&&state.currentScene.choices.some(c=>c.id.endsWith(':c:continue'));
+   if((e.garden||!oldPractice)&&next&&life.cultivation<next.threshold&&
      (action?.intent==='practice'&&['steady','intensive'].includes(action.approach)||action?.id.endsWith(':c:forage-again'))){
     const delta=receipt.after.cultivation-receipt.before.cultivation;
-    return row('出定再择功课','查看修为差额和余寿，决定下一关怎样练',[
+    const options=[choice('practice-again','依当前功法再闭关一次','practice','self','steady',{next:'action-result'}),
+     life.items.supplies?choice('intensive-again','付行粮苦修，提早出关','practice','self','intensive',{next:'action-result'}):canTrade&&!oldRations?kitchen:choice('forage-again','亲自出山备粮，归来再择功课','explore','supplies','cautious',{next:'action-result'}),menu('train-menu',e.garden?'收功，回看苗盆或整备':'收功，回看修行与整备','training')];
+    // Keep the ordinary result's prose and goal stable for historical replay.
+    return e.garden?row('出定再择功课','查看修为差额和余寿，决定下一关怎样练',[
      narration((action.intent==='explore'?'这次备粮用去':'上一关用去')+receipt.elapsedDays+'日，'+(check?.success===false?'检定未成':action.intent==='explore'?'寻粮归来':'修行已毕')+'，修为变动'+delta+'。距离'+next.name+'还差'+(next.threshold-life.cultivation)+'分。行粮还有'+(life.items.supplies??0)+'份，灵力尚余'+life.cultivationProfile.spirit+'。'),
-    ],[choice('practice-again','依当前功法再闭关一次','practice','self','steady',{next:'action-result'}),
-     life.items.supplies?choice('intensive-again','付行粮苦修，提早出关','practice','self','intensive',{next:'action-result'}):canTrade&&!oldRations?kitchen:choice('forage-again','亲自出山备粮，归来再择功课','explore','supplies','cautious',{next:'action-result'}),menu('train-menu','收功，回看苗盆或整备','training')]);
+    ],options):row('这一回的结果','看清代价，再决定下一步',[narration(text)],options);
    }
    if(action?.intent==='practice'&&action.approach==='steady'&&next&&life.cultivation<next.threshold){
     onward=choice('practice-again','依当前功法再闭关一次','practice','self','steady',{next:'action-result'});

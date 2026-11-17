@@ -4,6 +4,35 @@ import {readFile} from 'node:fs/promises';
 import {gunzipSync} from 'node:zlib';
 import {liveBrowser} from './helpers/live-browser.js';
 
+test('an old solo retreat preserves its pending exit and reaches paid intensive practice without planting',async t=>{
+ const text=gunzipSync(await readFile(new URL('./fixtures/c79c3ff-solo-pending.jsonl.gz',import.meta.url))).toString('utf8');
+ const {page}=await liveBrowser(t);
+ const result=await page.evaluate(async text=>{
+  const {importLiveArchive,exportLiveArchive}=await import('/src/game/live-save-format.js'),{createLiveSession}=await import('/src/ui/live-session.js');
+  const {v7ActionRule}=await import('/src/game/cultivation/live/cultivation-rules.js');
+  const a=await open('solo-before'),copy=await open('solo-after');await importLiveArchive(new Response(text).body,a);
+  const old=(await a.load()).state,session=createLiveSession({archive:a,client:{}});await session.load();await session.resume();await session.resume();let row=await a.load();
+  const initial={node:row.state.events.node,revision:row.state.revision,unchanged:JSON.stringify(row.state.life)===JSON.stringify(old.life)};
+  async function go(...keys){for(const key of keys){
+   const c=row.state.currentScene.choices.find(c=>c.id.endsWith(':c:'+key));if(!c)throw Error('missing '+key+' in '+row.state.events.node);
+   row=await session.choose({choiceId:c.id,baseRevision:row.state.revision,stateHash:identity.stateHash(row.state)});if(row.errorCode)throw Error(row.errorCode);
+  }}
+  await go('train-menu','practice');
+  for(let n=0;row.state.life.realm==='mortal';n++){
+   if(n>12)throw Error('stalled first breakthrough');await go('train-menu');
+   if(row.state.life.injury>1||row.state.life.cultivationProfile.spirit<30)await go('rest-menu','recover','train-menu');
+   if(!row.state.life.items.manual){await go('find-material');for(let tries=0;!row.state.life.items.manual;tries++){if(tries>12)throw Error('no manual');await go('hunt-careful');}}
+   await go('breakthrough');
+  }
+  await go('train-menu','practice');
+  const before=row.state,action=before.currentScene.choices.find(c=>c.id.endsWith(':c:intensive-again')),rule=v7ActionRule(before,action);
+  await go('intensive-again');await importLiveArchive(exportLiveArchive(a),copy);const saved=(await copy.load()).state;
+  return {oldKeys:old.currentScene.choices.map(c=>c.id.split(':c:')[1]),oldRevision:old.revision,initial,garden:saved.events.garden??null,days:saved.life.ageDays-before.life.ageDays,spirit:before.life.cultivationProfile.spirit-saved.life.cultivationProfile.spirit,food:saved.life.items.supplies-before.life.items.supplies,rule,exact:identity.stateHash(saved)===identity.stateHash(row.state)};
+ },text);
+ assert.ok(result.oldKeys.includes('continue'));assert.equal(result.initial.node,'hub');assert.equal(result.initial.revision,result.oldRevision+1);assert.ok(result.initial.unchanged);
+ assert.equal(result.garden,null);assert.equal(result.days,result.rule.days);assert.equal(result.spirit,result.rule.spiritCost);assert.equal(result.food,-1);assert.ok(result.exact);
+});
+
 test('mobile long-route directions open the actual story entrances without accepting either commission',async t=>{
  const {page}=await liveBrowser(t);await page.setViewportSize({width:360,height:760});
  const opt=key=>page.locator('[data-live-choice$=":c:'+key+'"]:enabled');

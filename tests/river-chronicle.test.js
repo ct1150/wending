@@ -736,7 +736,7 @@ test('a premature mine decision changes the next rescue and a wrong response tak
  assert.throws(()=>validateMine({...s.events.mine,record:[],pledge:'留井'}),/灯簿/);
 });
 test('leaving the mine to cultivate lets the other crew take over; the first report remains readable',()=>{
- let s=follow(mineStart(),'inspect','inspect-1','gallery','decide','move-1','field-guide','train-menu','practice','continue','journey-menu','resources-menu','field-guide','mine-book');
+ let s=follow(mineStart(),'inspect','inspect-1','gallery','decide','move-1','field-guide','train-menu','practice','train-menu','rest-menu','back','journey-menu','resources-menu','field-guide','mine-book');
  assert.match(s.currentScene.title,/交班/);assert.equal(s.events.mine.record.length,1);
  s=follow(s,'mine-journal','mine-book');assert.match(s.currentScene.title,/交班/);
  assert.ok(!s.currentScene.choices.some(c=>c.id.endsWith(':c:enter-gallery')));
