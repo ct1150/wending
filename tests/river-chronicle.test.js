@@ -267,7 +267,7 @@ test('a fatal high-realm breakthrough at the search grounds can settle and resto
  for(let rank=1;rank<=6;rank++)s=growToRealm(s,rank,'continue');
  s=pick(s,'train-menu');
  while(s.life.cultivation<nextRealmFor(s.life).threshold)s=follow(s,'practice','train-menu');
- s=pick(s,'find-material');
+ s=follow(s,'find-ridge','hunt-grounds');
  for(let i=0;!s.life.items.unityjade;i++){
   assert.ok(i<60);s=pick(s,!s.life.items.supplies?'hunt-food':s.life.cultivationProfile.spirit<5?'hunt-rest':'hunt-careful');
  }
@@ -285,6 +285,38 @@ test('a fatal high-realm breakthrough at the search grounds can settle and resto
   s=pick(s,'hunt-rest');
  }
  assert.fail('the route did not encounter high-realm backlash');
+});
+
+test('an independent cultivator can open the three ridge sections, bring back materials and use the earlier works',()=>{
+ let s=follow(start(),'decline');
+ for(let rank=1;rank<=6;rank++)s=growToRealm(s,rank,'continue');
+ for(const [i,site] of ['unityjade','daofruit','thunderseal'].entries()){
+  s=pick(s,'train-menu');
+  while(s.life.cultivation<nextRealmFor(s.life).threshold||!s.life.items.supplies||s.life.cultivationProfile.spirit<5){
+   if(!s.life.items.supplies)s=follow(s,'rest-menu','back','journey-menu','resources-menu','next-resource','gather','train-menu');
+   else if(s.life.cultivationProfile.spirit<20||s.life.injury>1)s=follow(s,'rest-menu','recover','train-menu');
+   else s=follow(s,'practice','train-menu');
+  }
+  s=pick(s,'find-ridge');
+  const ordinary=pick(structuredClone(s),'hunt-grounds');
+  const fare=v7ActionRule(ordinary,ordinary.currentScene.choices.find(c=>c.id.endsWith(':c:hunt-careful')));
+  s=pick(s,'ridge-start');assert.equal(s.lastReceipt.elapsedDays,fare.days);assert.equal(s.lastReceipt.itemChanges.supplies,-1);
+  if(i===1)assert.match(prose(s),/吊筐正压着近枝/);
+  if(i===2)assert.match(prose(s),/浅槽旁的试针/);
+  const correct=i===0?Number(prose(s).includes('西孔里的粉线')):1;
+  s=pick(s,'ridge-test-'+(1-correct));assert.equal(s.events.ridgeRoad.at(-1).aligned,false);
+  assert.ok(!s.currentScene.choices.some(c=>c.id.endsWith(':c:ridge-test-'+(1-correct))));
+  s=pick(s,'train-menu');
+  const note=journeyNotes(s).find(n=>n.node==='ridge-'+site);
+  s=follow(s,...noteRoutes(s,[note]).get(note.node));
+  s=pick(s,'ridge-test-'+correct);assert.equal(s.lastReceipt.elapsedDays,2);
+  s=pick(s,'ridge-leave-'+(i===0?1:0));assert.equal(s.lastReceipt.itemChanges[site],1);
+  assert.ok(!s.currentScene.choices.some(c=>c.id.includes('ridge-leave')));
+  assert.deepEqual(deserializeLiveState(serializeLiveState(s)),s);
+  if(i<2)s=growToRealm(s,7+i,'continue');
+ }
+ s=growToRealm(s,9,'continue');
+ assert.equal(realmFor(s.life).rank,9);assert.equal(s.events.entry,'declined');assert.equal(s.events.nursery,undefined);
 });
 test('one cultivator takes three ferry relics into native breakthroughs and returns to fulfil the promise',()=>{
  const spent=new Set();
@@ -919,7 +951,16 @@ function trainTo(state,rank){
    }
    s=pick(s,'train-menu');
   }else if(!s.life.items[realm.material]){
-   s=pick(s,'find-material');
+   if(s.currentScene.choices.some(c=>c.id.endsWith(':c:find-ridge'))){
+    s=pick(s,'find-ridge');
+    if(s.life.items.supplies){
+     s=pick(s,'ridge-start');
+     const correct=realm.material==='unityjade'?Number(prose(s).includes('西孔里的粉线')):realm.material==='daofruit'?Number(prose(s).includes('吊筐正压着近枝')):Number(prose(s).includes('浅槽旁的试针'));
+     s=follow(s,'ridge-test-'+correct,'ridge-leave-0','train-menu');
+     continue;
+    }
+    s=pick(s,'hunt-grounds');
+   }else s=pick(s,'find-material');
    if(s.events.node==='hunt-sources')s=pick(s,'hunt-grounds');
    if(rank>1&&!s.life.items.supplies)s=pick(s,'hunt-food');
    else s=pick(s,'hunt-careful');

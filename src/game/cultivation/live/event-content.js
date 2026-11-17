@@ -19,6 +19,7 @@ import {echoWell,wellDepartures} from './echo-well.js';
 import {cloudPassage} from './cloud-passage.js';
 import {nurseryNode} from './entry-nursery.js';
 import {saltFieldNode} from './salt-field.js';
+import {ridgeEntrance,ridgeNode} from './ridge-road.js';
 
 // Authored situations supply every fact and executable choice. AI never edits
 // these definitions. Stable actors belong to a life, not a generated paragraph.
@@ -70,6 +71,7 @@ export function eventNode(state,historicMenu=null){
  if(e.node==='hunt-sources'||e.node==='hunt-grounds')return materialHunt(state,next,menu,choice,historicMenu);
  if(e.node==='well-book')return echoWell(state,menu,choice);
  if(e.node==='seed-book')return saltFieldNode(state,menu,choice);
+ if(e.node.startsWith('ridge-'))return ridgeNode(state,menu,choice);
  if(e.node.startsWith('sky-'))return cloudPassage(state,choice,menu);
  if(e.node==='well-road'){
   const home=menu('train-menu','收起路引，回去安排修行','training');
@@ -159,12 +161,14 @@ export function eventNode(state,historicMenu=null){
   case 'training':{
    // A restored pre-garden training screen still contains its disabled breakthrough.
    const oldGate=historicMenu==='training'||state.currentScene?.id.endsWith(':t'+state.turnId+':s:event_training')&&state.currentScene.choices.some(c=>c.id.endsWith(':c:breakthrough'));
+   const oldHunt=historicMenu==='ridge'||state.currentScene?.id.endsWith(':t'+state.turnId+':s:event_training')&&state.currentScene.choices.some(c=>c.id.endsWith(':c:find-material'));
+   const ridge=next&&!oldHunt&&ridgeEntrance(state,next.material);
    return row('修行的门槛',next?'积累修为与'+ITEMS[next.material]+'，尝试进入'+next.name:'在当前境界继续修行与历练',[
    narration(next?'你目前是'+realm.name+'。进入'+next.name+'需要修为达到'+next.threshold+'，并备妥'+ITEMS[next.material]+'。闭关的年月、灵力和风险会在行动前列明。':'渡劫之后，此生仍未结束。你可以继续积累、历练或照料旧日因果，直到真实的寿尽或伤重。'),
   ],[
    e.garden?.plot&&(!next||life.cultivation>=next.threshold)?menu('garden-book','验看苗盆，或在盆旁继续修行','garden-book'):choice('practice','按当前功法稳步修炼','practice','self','steady',{next:'action-result'}),
    next&&life.cultivation<next.threshold&&!oldGate?menu('garden-book','随身携一畦苗，选择稳修或苦修','garden-book'):
-    next&&!oldGate&&!life.items[next.material]?menu('find-material','修为已足，去寻'+ITEMS[next.material],ferryForMaterial(state,next.material)?'hunt-sources':'hunt-grounds'):
+    next&&!oldGate&&!life.items[next.material]?(ridge?menu('find-ridge','寻'+ITEMS[next.material]+'，到山口选路','ridge-'+next.material):menu('find-material','修为已足，去寻'+ITEMS[next.material],ferryForMaterial(state,next.material)?'hunt-sources':'hunt-grounds')):
     next?choice('breakthrough','闭关尝试突破'+next.name,'practice',next.id,'breakthrough',{next:'action-result'}):choice('intensive','以行粮支撑一次苦修','practice','self','intensive',{next:'action-result'}),
    menu('rest-menu','调息、安排守关或验看功法','rest'),
   ]);
@@ -194,6 +198,7 @@ export function eventNode(state,historicMenu=null){
    const targets=[...new Set([next?.material??'relic','supplies','stones','herbs','iron'])],target=targets[e.page%targets.length];
    const oldSlip=historicMenu==='resources'||state.currentScene?.id.endsWith(':t'+state.turnId+':s:event_resources')&&!state.currentScene.choices.some(c=>c.id.endsWith(':c:well-road'));
    let original=target==='herbs'&&e.garden?menu('garden-book','查看随身苗盆与采候','garden-book'):e.river?.record.length?menu('field-guide','翻看雾药谷游记与往返路线','field-guide'):leave;
+   if(target==='iron'&&e.ridgeRoad?.length)original=menu('ridge-return','循铁钉上的驿印，回山口看路','ridge-'+e.ridgeRoad.at(-1).site);
    if(target==='supplies'){
     if(e.well)original=menu('well-book','循行粮路引，回井棚翻井簿','well-book');
     else if(realm.rank===3&&!oldSlip)original=menu('well-road','取一份去回声井的路引','well-road');

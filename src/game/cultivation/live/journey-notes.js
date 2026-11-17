@@ -26,6 +26,8 @@ export function journeyNotes(state){
   notes.push({node,title,detail,timing,priority,date,close:window?.close});
  }
  const w=e.well;
+ const ridge=e.ridgeRoad?.at(-1);
+ if(ridge&&ridge.ending===null)add('ridge-'+ridge.site,'走山驿的路',ridge.aligned?'试路已经做完，可以决定留下哪种设施。':'去现场的行粮已交，可以回去接着验路。');
  if(e.saltField&&!e.saltField.ending){
   const field=e.saltField;
   const window=saltWindow(e,age);
