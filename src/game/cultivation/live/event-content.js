@@ -175,7 +175,14 @@ export function eventNode(state){
    else if(action?.intent==='rest')text='你留出时间静养调息。恢复以真实伤势与灵力为准，没有借休整替你完成未接下的事情。';
    else if(action?.intent==='craft')text=check&&!check.success?'这次炼制失败，投入的材料已经消耗，未得到成品。':'你完成了这次炼制，所得与消耗照实记入行囊。';
    else if(action?.intent==='travel')text=check&&!check.success?'这次跨界没有成功，你仍在原来的界域；实际损耗已经记下。':'你抵达所选的界域，旧事仍保留在来路中，眼前的修行条件按新的天地结算。';
-   return row('这一回的结果','看清代价，再决定下一步',[narration(text)],[menu('continue','继续安排此后的仙路','hub'),menu('train-menu','查看修行与恢复','training'),menu('affairs-menu','看看故人与未完之事','affairs')]);
+   let onward=menu('affairs-menu','看看故人与未完之事','affairs');
+   if(action?.intent==='practice'&&action.approach==='steady'&&next&&life.cultivation<next.threshold){
+    onward=choice('practice-again','依当前功法再闭关一次','practice','self','steady',{next:'action-result'});
+   }
+   if(action?.intent==='practice'&&action.approach==='breakthrough'&&check?.success&&e.expedition?.place==='end'){
+    onward=e.council?.length===councilHearings?menu('resume-ledger','以新境界再看三界海路','convoy-book'):menu('resume-ledger','以新境界再看北山来信','council-book');
+   }
+   return row('这一回的结果','看清代价，再决定下一步',[narration(text)],[menu('continue','继续安排此后的仙路','hub'),menu('train-menu','查看修行与恢复','training'),onward]);
   }
   default:throw new Error('规则事件节点无效。');
  }

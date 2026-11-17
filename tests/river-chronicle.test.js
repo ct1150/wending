@@ -237,12 +237,20 @@ function trainTo(state,rank){
   if(s.life.injury>1||s.life.cultivationProfile.spirit<30+rank*5){
    s=follow(s,'rest-menu','recover','train-menu');
   }else if(s.life.cultivation<realm.threshold){
-   s=follow(s,'practice','train-menu');
+   s=pick(s,'practice');
+   while(s.life.cultivation<realm.threshold&&s.life.injury<=1&&s.life.cultivationProfile.spirit>=30+rank*5){
+    s=pick(s,'practice-again');
+   }
+   s=pick(s,'train-menu');
   }else if(!s.life.items[realm.material]){
    s=follow(s,'rest-menu','back','journey-menu','resources-menu');
    if(rank>1&&!s.life.items.supplies)s=pick(s,'next-resource');
    s=follow(s,'gather','train-menu');
-  }else s=follow(s,'breakthrough','train-menu');
+  }else{
+   s=pick(s,'breakthrough');
+   if(realmFor(s.life).rank===rank)return pick(s,'resume-ledger');
+   s=pick(s,'train-menu');
+  }
  }
  return follow(s,'rest-menu','back','journey-menu','river-book','hear-council');
 }
@@ -301,7 +309,7 @@ test('one continuous birth finishes the three-world campaign and replays its ent
  s=follow(s,'work-board','pin-R','pin-L','pin-R','pin-L','test-pins','cross-menu');
  assert.ok(!compileChoices(s,s.currentScene.choices).find(c=>c.approach==='ancient-array').enabled);
  s=trainTo(follow(s,'river-back','train-menu'),4);
- s=follow(s,'convoy-book','cross-menu','sea-array');
+ s=follow(s,'cross-menu','sea-array');
  assert.equal(s.life.cultivationProfile.worldTier,2);
  s=pick(s,'ear-book');
  for(const [i,key] of ['left','left','left'].entries()){
