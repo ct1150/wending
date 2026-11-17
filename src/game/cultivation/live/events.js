@@ -16,7 +16,7 @@ const eventNodeIds=new Set([
  'voyage-book','voyage-road','voyage-camp','voyage-log','voyage-reset','voyage-result','voyage-detour',
  'council-book','council-result',
  'convoy-book','convoy-plan','convoy-crew','convoy-stores','convoy-check','convoy-result','convoy-arrival',
- 'convoy-cross','convoy-board','convoy-board-notes','convoy-test-result',
+ 'convoy-cross','convoy-board','convoy-board-notes','convoy-test-result','convoy-remote',
  'field-guide','field-camp','field-bank','field-grove','field-kiln','field-shrine','field-spar','field-proof','field-source','field-banks','field-ending',
 ]);
 const copy=value=>JSON.parse(JSON.stringify(value));

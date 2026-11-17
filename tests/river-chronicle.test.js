@@ -5,6 +5,7 @@ import {realmFor,nextRealmFor,v7ActionRule} from '../src/game/cultivation/live/c
 import {serializeLiveState,deserializeLiveState} from '../src/game/cultivation/live/validation.js';
 import {validateConvoy} from '../src/game/cultivation/live/sea-convoy.js';
 import {validateValley} from '../src/game/cultivation/live/mist-valley.js';
+import {eventNode} from '../src/game/cultivation/live/event-content.js';
 
 const observers=new WeakMap();
 function start(observe){
@@ -27,6 +28,30 @@ const open=observe=>follow(start(observe),'decline','journey-menu','river-book',
 const prose=state=>state.currentScene.blocks.map(block=>block.text).join('\n');
 
 const valleyCamp=()=>follow(open(),'deliberate','policy-0','field-guide','enter-field');
+test('a life already above an unfinished port must commission local hands through the mirror',()=>{
+ for(const tier of [1,2]){
+  const state=start();state.life.cultivationProfile.worldTier=tier;
+  const completed={rig:'light',loads:[5,10]};
+  for(let portIndex=0;portIndex<tier;portIndex++){
+   state.events={...state.events,node:'convoy-book',location:tier===1?'middle':'upper',convoy:{chapters:Array.from({length:portIndex},()=>completed),draft:0}};
+   let choices=eventNode(state).choices;
+   assert.deepEqual(choices.map(c=>c.key),['commission','river-back']);
+   state.events.node=choices[0].next;
+   choices=eventNode(state).choices;
+   const barge=choices.find(c=>c.key==='rig-barge');
+   assert.match(barge.label,/委托/);assert.equal(barge.rule.days,4);
+   assert.equal(barge.rule.items.iron??0,portIndex===0?1:0);
+   state.events={...state.events,...barge.patch,node:'convoy-book'};
+   assert.equal(eventNode(state).choices[0].key,'commission');
+   state.events.node='convoy-remote';
+   assert.equal(eventNode(state).choices[0].key,'crew');
+   state.events.node='convoy-check';state.events.convoy.draft=1;
+   const sail=eventNode(state).choices.find(c=>c.key==='sail');
+   assert.match(sail.label,/委托/);assert.deepEqual(sail.patch.convoy.chapters.at(-1).loads,[1]);
+   assert.equal(sail.arrival,undefined);
+  }
+ }
+});
 test('manifest validation permits a voluntary empty return and rejects impossible shipments or commission receipts',()=>{
  const manifest=(loads,draft=0)=>({chapters:[{rig:'light',loads}],draft});
  assert.doesNotThrow(()=>validateConvoy(manifest([2,0])));

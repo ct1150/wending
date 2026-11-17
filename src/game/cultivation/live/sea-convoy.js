@@ -84,6 +84,7 @@ export function convoyNode(state,menu,choice,actor){
   return row('问川归航 · 两岸各有灯','三界海路已交还给沿岸的人',['某日清晨，水鉴里有个小孩问，最初的守闸人是哪一位。对岸的人翻出北山公簿，又有人翻出河簿。几处笔迹未必出自同一个人，却能一路找到写在水尺背面的第三道刻痕。',...ending,'你把水鉴放下时，另一岸也有人自去上灯。这一段问川行路到此合卷。'],[training,back]);
  }
  const tier=state.life.cultivationProfile.worldTier;
+ const remote=tier>index;
  if(nodeId==='convoy-arrival'){
   const arrived=state.lastReceipt?.cultivationResult?.check?.success;
   return row(arrived?'界外第一封信':'界渡折返','核对本次跨界的实际结果',[arrived?'传送已成。你在'+WORLD_TIERS[tier]+'重新接好水鉴，镜里起了不同的潮纹。':'这次跨界失败，你仍在'+WORLD_TIERS[tier]+'。已经耗去的材料与承受的伤势记在本回收据中，海路公牍保留原来的到港单。'],[next,training,back]);
@@ -97,16 +98,19 @@ export function convoyNode(state,menu,choice,actor){
   ]);
   return row('隔界的海图', '前往'+WORLD_TIERS[index]+'接续'+port.name,['来信署名为'+port.name+'。本界水鉴听不到那片潮声，须到当地核对航线。尚未送出的名单会留在公簿上。','你身在'+WORLD_TIERS[tier]+'，下一站是'+name+'。界渡行有一份校阵委托，验收后支付副盘与古阵渡费。也可以自备材料启程。'],[menu('work-board','查看界渡行的校阵工台','convoy-board'),menu('cross-menu','查看跨界条件与资用','convoy-cross'),back]);
  }
+ if(remote&&nodeId==='convoy-book'){
+  return row(port.name+' · 旧港来函','决定是否从'+WORLD_TIERS[tier]+'委托港上船工',['回传水鉴亮起，照见'+port.name+'的船埠。你已越过这一重界门。岸上的工头愿意代办装船，把各家竹签逐张映给你看；你在此界听取请托，确认工期和资用后才能发船。','铁件可向本界的界渡行交割，旧港凭单领料。船走几天，回信也要几天。未落印的舱单仍可回来再议。'],[menu('commission','接通回传水鉴，委托本港船工','convoy-remote'),back]);
+ }
  if(!chapter||complete){
   const previous=v.chapters.at(-1),toolLoan=index===1&&has(previous.loads[0]|previous.loads[1],2);
   const expert=state.life.cultivationProfile.arts.forging>0;
-  const fit=(rig,key,label,target,items,days)=>choice(key,label,'explore',target,'cautious',{next:'convoy-plan',patch:{convoy:{...v,chapters:[...v.chapters,{rig,loads:[]}],draft:0}},rule:{days,items}});
+  const fit=(rig,key,label,target,items,days)=>choice(key,remote?'委托船工'+label:label,'explore',target,'cautious',{next:'convoy-plan',patch:{convoy:{...v,chapters:[...v.chapters,{rig,loads:[]}],draft:0}},rule:{days,items}});
   return row(port.title,'为'+port.name+'选定两次潮汛的船型',[port.scene,port.hand,'轻舟头潮三格、末潮两格；重驳头潮两格、末潮四格。第一潮出港后不能换船。'+(toolLoan?'沉钟湾绞盘已经到岸，船工肯借你装驳的铁件。':expert?'你能用自己的器道手艺整修旧铁件。':'装重驳需自备一份玄铁。')],[
    fit('light','rig-light','用两日备轻舟','supplies',{},2),fit('barge','rig-barge','用四日装重驳','iron',toolLoan||expert?{}:{iron:1},4),back,
   ]);
  }
  const tide=chapter.loads.length,cap=capacity(port,chapter,tide),used=weight(port,v.draft),sent=chapter.loads[0]??0;
- const stamp=port.name+' · '+(tide===0?'头潮':'末潮')+'　已排 '+used+' / '+cap+' 格　'+names(port,v.draft);
+ const stamp=(remote?'回传水鉴 · ':'')+port.name+' · '+(tide===0?'头潮':'末潮')+'　已排 '+used+' / '+cap+' 格　'+names(port,v.draft);
  const manifest=menu('manifest','合起签条，回到舱单','convoy-plan');
  const weigh=menu('weigh','核对落印与到港日期','convoy-check');
  if(nodeId==='convoy-crew'||nodeId==='convoy-stores'){
@@ -122,7 +126,7 @@ export function convoyNode(state,menu,choice,actor){
   const loads=[...chapter.loads,v.draft],updated={...v,chapters:[...v.chapters.slice(0,-1),{rig:chapter.rig,loads}],draft:0};
   const lines=[stamp,'这一船需'+port.days[tide]+'日。出港即照此单记入公簿，余下位置随这一潮过去。'+(tide===0?'头潮至少要载一份请托。':'没有合适的余位时也可让末船空载收航。')];
   if(tide===1)lines.push('两潮后仍会留在原岸：'+(names(port,15^(sent|v.draft))==='空船'?'无':names(port,15^(sent|v.draft)))+'。');
-  return row('船印落下之前','核准所载和留岸的人物资用',lines,[...(v.draft||tide?[choice('sail','照此舱单发船','explore','stones','cautious',{next:'convoy-result',patch:{convoy:updated},rule:{days:port.days[tide]}})]:[]),manifest,back]);
+  return row('船印落下之前','核准所载和留岸的人物资用',lines,[...(v.draft||tide?[choice('sail',remote?'落印委托港工照单发船':'照此舱单发船','explore','stones','cautious',{next:'convoy-result',patch:{convoy:updated},rule:{days:port.days[tide]}})]:[]),manifest,back]);
  }
  return row(port.name+' · 潮前排舱',port.hand,[stamp,port.hand,'可在出港前调整各签。请托者已经同意启程，货和随身工具也占舱位。'],[menu('crew','听人请托，安排同行者','convoy-crew'),menu('stores','查货栈，安排托运','convoy-stores'),weigh]);
 }
