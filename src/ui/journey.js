@@ -232,7 +232,7 @@ function renderEventExtras(view,notes){
   const growth=next?`修行目标：${next.name} · 修为 ${state.life.cultivation} / ${next.threshold} · ${view.itemNames?.[next.material]??ITEMS[next.material]} ${state.life.items[next.material]??0} / 1`:'继续此生：修炼、历练与未完的因果仍可推进。';
   const message=extra?.status==='loading'?'正在写一小段扩写，你可以继续选择。':extra?.status==='unavailable'?'这一段扩写暂不可用，你仍可继续当前故事。':'';
   return {
-    growth:`<p class="event-growth" data-event-growth>${esc(growth)}</p>${renderJourneyNotes(view,notes)}`,
+    growth:`<p class="event-growth" data-event-growth>${esc(growth)}</p>${renderJourneyNotes(view,notes)}`+(view.playtestActive?'<button type="button" class="button" data-diary-stop>结束本段试玩计时</button>':''),
     prose:renderPracticePlan(view)+`<section class="event-prose" data-event-prose aria-label="可选扩写"><button type="button" class="button" data-live-prose-expand${extra||view.busy||view.pending?' disabled':''}>${state.currentScene.blocks.some(block=>block.kind==='dialogue')?'展开对白':'展开描写'}</button><p class="save-info">可选的 AI 扩写，需要联网；随时可以继续行动。</p>${message?`<p data-event-prose-status role="status">${esc(message)}</p>`:''}${extra?.status==='ready'?`<p class="journey-block" data-event-prose-text>${esc(extra.text)}</p>`:''}</section>`,
   };
 }

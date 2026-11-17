@@ -12,6 +12,7 @@ import { renderLiveJourney, renderLiveHistory, updateLiveJourney } from './ui/jo
 import { loadNavigation, saveNavigation, loadPreferences, savePreferences } from './ui/navigation.js';
 import { renderTitleScreen, renderGameScene, renderGameNavigation, renderReadingSettings } from './ui/title-screen.js';
 import { mountTitleScene } from './ui/title-scene.js';
+import { createPlaytestPanel } from './ui/playtest-panel.js';
 import { icon } from './ui/icons.js';
 
 const $ = selector => document.querySelector(selector);
@@ -41,6 +42,8 @@ const liveClient = createStoryClient();
 let view = navigation.screen;
 let toastTimer, dialogConfirm = null, dialogReturnTarget = null, retainedHistory = null;
 let disposeTitleScene = () => {}, disposeGameScene = null;
+const playtest=createPlaytestPanel({snapshot:()=>liveSnapshot,screen:()=>view,
+  enter:()=>{closeDialog(false);view='adventure';render();},render,openDialog,downloadText,notify,esc,version:appVersion});
 
 function rememberScreen() {
   return saveNavigation(navigationStorage, { screen: view, draft: liveBirthDraft, returnScreen });
@@ -56,7 +59,7 @@ function currentJourneySummary() {
 function renderSettingsPage() {
   const summary = currentJourneySummary();
   const body = `<p class="birth-kicker">收好行囊，再赴山河</p><h2 id="settings-title" tabindex="-1">游戏设置</h2>${renderReadingSettings(readingPreferences)}<section class="settings-section"><h3>当前进度</h3><p>${summary ? `${esc(summary.name)} · ${esc(summary.detail)}` : '尚未开启修仙人生。'}</p><p class="save-info">只有一个当前存档，进度自动保存在此浏览器。重新开始后，原人生保留为只读历史。</p>${summary ? `<button class="button" data-restart ${uiBusy || liveSnapshot?.busy ? 'disabled' : ''}>重新开始人生</button>` : ''}<details class="save-backup"><summary>备份与恢复</summary><div class="settings-actions"><button class="button" data-export ${summary ? '' : 'disabled'}>导出存档</button><button class="button" data-import>恢复备份</button></div><p class="save-info">更换设备前可导出备份。恢复备份会替换当前存档。</p><button class="button" data-retained>查看历世与旧备份</button>${hasLegacyData ? '<p class="save-info">旧版原始数据仍保留在本机，可下载留存。</p><button class="button" data-export-legacy>下载旧版原始数据</button>' : ''}</details></section><section class="settings-section"><h3>入世须知</h3><p>岁月只在落下一项选择时前行。</p><button class="button" data-help>查看游戏说明</button></section>`;
-  renderScreenShell(body, { title: '游戏设置', back: returnScreen === 'new' ? '返回角色创建' : returnScreen === 'adventure' ? '返回当前剧情' : '返回首页' });
+  renderScreenShell(body+'<section class="settings-section"><h3>试玩手记</h3><button class="button" data-diary-open>打开试玩手记</button></section>', { title: '游戏设置', back: returnScreen === 'new' ? '返回角色创建' : returnScreen === 'adventure' ? '返回当前剧情' : '返回首页' });
 }
 
 function currentBirthOptions() {
@@ -141,6 +144,7 @@ function showHelp() {
 }
 
 function render() {
+  playtest.observe();
   disposeTitleScene(); disposeTitleScene = () => {};
   syncGameScene(); rememberScreen();
   if (!webContext) return renderScreenShell('<h2>前往山海，续写此生</h2><p>请通过在线地址游玩。</p><a class="button primary" href="https://wending.868656.xyz/">进入百世问鼎</a>');
@@ -312,7 +316,7 @@ async function beginLiveLife() {
 
 function liveStoryView(snapshot) {
   if(!snapshot?.state)return null;
-  return {...snapshot,stateHash:stateHash(snapshot.state),itemNames:LIVE_ITEMS,characterSummary:liveCharacterSummary(snapshot.state,liveCatalogs),selectedReincarnationRewards:liveBirthDraft.reincarnationRunId===snapshot.state.runId?liveBirthDraft.reincarnationRewardIds??[]:[]};
+  return {...snapshot,playtestActive:playtest.active,stateHash:stateHash(snapshot.state),itemNames:LIVE_ITEMS,characterSummary:liveCharacterSummary(snapshot.state,liveCatalogs),selectedReincarnationRewards:liveBirthDraft.reincarnationRunId===snapshot.state.runId?liveBirthDraft.reincarnationRewardIds??[]:[]};
 }
 
 function setReincarnationDraft(snapshot, rewardIds) {
@@ -422,6 +426,7 @@ document.addEventListener('click', event => {
   const button = event.target.closest('button,a');
   if (!button || button.disabled) return;
   const data = button.dataset;
+  if(Object.keys(data).some(key=>key.startsWith('diary')))return playtest.click(data);
   if ('closeDialog' in data) { closeDialog(); return; }
   if ('confirm' in data) { const callback = dialogConfirm; closeDialog(false); callback?.(); return; }
   if ('home' in data) return goHome();
