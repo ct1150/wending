@@ -12,6 +12,7 @@ import {validateMine} from '../src/game/cultivation/live/lamp-mine.js';
 import {DAYS_PER_YEAR} from '../src/game/cultivation/live/model.js';
 import {validateGarden,gardenRootForChild} from '../src/game/cultivation/live/phenology.js';
 import {validatePost} from '../src/game/cultivation/live/lin-post.js';
+import {validateMountain} from '../src/game/cultivation/live/folded-mountain.js';
 
 const observers=new WeakMap();
 function start(observe,seed=42){
@@ -142,6 +143,112 @@ test('station commissions carry the last settlement into the next trip; both dis
 });
 const firstWatch=(seed,keeper,marks)=>follow(start(undefined,seed),'decline','train-menu','rest-menu','watch-book','watch-open','keeper-'+keeper,marks,'sit-watch');
 const firstPlot=(seed=42)=>follow(start(undefined,seed),'decline','train-menu','garden-book','sow');
+function growOutsideMountain(s,rank){
+ s=pick(s,'train-menu');
+ for(let turns=0;turns<80;turns++){
+  const next=nextRealmFor(s.life);
+  if(s.life.injury>1||s.life.cultivationProfile.spirit<35+next.rank*5)s=follow(s,'rest-menu','recover','train-menu');
+  else if(s.life.cultivation<next.threshold)s=follow(s,'practice','train-menu');
+  else if(!s.life.items[next.material]){
+   s=follow(s,'rest-menu','back','journey-menu','resources-menu');
+   if(!s.life.items.supplies&&next.rank>1)s=pick(s,'next-resource');
+   s=follow(s,'gather','train-menu');
+  }else{
+   s=pick(s,'breakthrough');
+   if(realmFor(s.life).rank===rank)return pick(s,'mount-book');
+   s=pick(s,'train-menu');
+  }
+ }
+ assert.fail('stalled at '+s.life.realm);
+}
+test('a single life returns to the folded mountain at foundation and spirit, including a mobile replay from a pre-stone archive',async t=>{
+ for(const wish of ['home','source']){
+  const route=[];let s=follow(start(key=>route.push(key)),'decline','train-menu','garden-book','mount-book','seek-'+wish);
+  for(let i=0;i<6;i++){
+   if(i===2||i===4)s=growOutsideMountain(s,i===2?2:5);
+   s=pick(s,i%2?'hear-stone':'watch-stone');const before=s.life.ageDays;
+   s=pick(s,'mount-steady');const slot=s.events.mountain.walk[i];
+   assert.equal(slot.days,s.life.ageDays-before);assert.equal(slot.woke,s.life.ageDays);
+   assert.equal(slot.method,s.lastReceipt.action.approach);
+   assert.ok(s.lastReceipt.after.cultivation>s.lastReceipt.before.cultivation);
+   if(wish==='source'&&[0,2,4].includes(i)){
+    s=follow(s,'path-0','go-around','side-'+({0:'bowl',2:'carry',4:'sit'}[i]));
+   }else if(i===0){
+    s=follow(s,'path-0','try-again');assert.deepEqual(deserializeLiveState(serializeLiveState(s)),s);
+    s=pick(s,'path-1');assert.equal(s.events.mountain.walk[0].exit,'corrected');
+   }else if(i===2)s=follow(s,'path-0','call-xiaoman');
+   else s=pick(s,'path-'+(i===4||i===5&&wish==='home'?1:0));
+   if(i===1||i===3){
+    s=pick(s,i===1?'give-token':'keep-token');
+    if(i===3&&wish==='source')assert.equal(s.events.mountain.walk[2].turning,'carry');
+   }
+  }
+  s=pick(s,wish==='home'?'send-xiaoman':'open-mountain');
+  assert.match(prose(s),wish==='home'?/脚步落在石外/:/留一道门/);
+  s=pick(s,'mount-history');
+  assert.equal(s.currentScene.blocks.length,6);assert.match(prose(s),wish==='home'?/破了音的芦哨/:/井底的空碗/);
+  assert.match(prose(s),wish==='home'?/空碗|桌脚/:/石边|侧面/);
+  const clone=structuredClone(s.events.mountain);
+  if(wish==='home')clone.gifts[0]='keep';else clone.walk[0].turning='meal';
+  assert.throws(()=>validateMountain(clone,s.life),/记录|岔路/);
+  if(wish==='home')await replayOldGarden(t,route,s.events.mountain);
+ }
+});
+async function replayOldGarden(t,route,expected){
+ const {liveBrowser}=await import('./helpers/live-browser.js'),{readFile}=await import('node:fs/promises'),{gunzipSync}=await import('node:zlib');
+ const {page}=await liveBrowser(t);await page.setViewportSize({width:360,height:760});
+ let calls=0;await page.route('**/api/story/**',r=>{calls++;return r.abort();});
+ const text=gunzipSync(await readFile(new URL('./fixtures/873a7ce-first-garden.jsonl.gz',import.meta.url))).toString('utf8');
+ const old=await page.evaluate(async text=>{
+  const {openLiveArchive}=await import('/src/game/live-archive.js'),{importLiveArchive}=await import('/src/game/live-save-format.js');
+  const archive=await openLiveArchive();
+  try{
+   await importLiveArchive(new Response(text).body,archive);const {state}=await archive.load();
+   return [identity.stateHash(state)===identity.stateHash(JSON.parse(text.split('\n')[0]).state),state.currentScene.choices.length];
+  }finally{archive.close();}
+ },text);
+ assert.deepEqual(old,[true,2]);
+ const button=key=>page.locator('[data-live-choice$=":c:'+key+'"]:enabled');
+ async function resume(key){
+  await page.reload();const saved=button(key),enter=page.locator('[data-title-continue]:enabled');
+  await saved.or(enter).first().waitFor();if(!await saved.isVisible())await enter.click();await saved.waitFor();
+ }
+ await resume('train-menu');
+ await button('train-menu').click();await button('garden-book').click();
+ for(const key of route.slice(3)){
+  await button(key).click();
+  if(key==='try-again'){await button('path-1').waitFor();await resume('path-1');}
+ }
+ await page.getByRole('heading',{name:'山路留痕'}).waitFor();
+ const result=await page.evaluate(async()=>{
+  const {openLiveArchive}=await import('/src/game/live-archive.js'),{exportLiveArchive,importLiveArchive}=await import('/src/game/live-save-format.js'),{stateHash}=await import('/src/game/cultivation/live/identity.js');
+  const a=await openLiveArchive(),b=await openLiveArchive({name:'stone-roundtrip'});
+  try{
+   await importLiveArchive(exportLiveArchive(a),b);const from=(await a.load()).state,to=(await b.load()).state;
+   return [from.events.mountain,from.life.realm,stateHash(from)===stateHash(to),document.documentElement.scrollWidth<=innerWidth];
+  }finally{a.close();b.close();}
+ });
+ assert.deepEqual(result,[expected,'spirit',true,true]);assert.equal(calls,0);
+ t.diagnostic('Mobile old-save route to the mountain ending: '+route.length+' choices in the native route.');
+}
+test('folded mountain retains a failed intensive retreat and charges a detour only once',()=>{
+ for(let seed=0;seed<50;seed++){
+  let s=follow(start(undefined,seed),'decline','train-menu','garden-book','mount-book','seek-source','hear-stone');
+  const food=s.life.items.supplies;
+  if(!food)continue;
+  s=pick(s,'mount-intensive');
+  if(s.events.mountain.walk[0].ok)continue;
+  assert.equal(s.life.items.supplies,food-1);assert.match(prose(s),/失手/);
+  const before=s.life.ageDays;
+  s=follow(s,'path-0','go-around');assert.equal(s.life.ageDays,before+3);
+  assert.equal(s.events.mountain.walk[0].exit,'bypath');
+  if(s.life.items.supplies){const meals=s.life.items.supplies;s=pick(s,'side-meal');assert.equal(s.life.items.supplies,meals-1);}
+  else s=pick(s,'side-bowl');
+  assert.equal(s.events.mountain.walk[0].exit,'around');
+  assert.ok(!s.currentScene.choices.some(c=>c.id.endsWith(':c:go-around')));return;
+ }
+ assert.fail('no failed intensive retreat exercised');
+});
 test('the same seed crop ripens during the actual native retreat, while shorter intensive practice returns at the tender harvest',()=>{
  const split=firstPlot(),opening=split.life.ageDays,practice=pick(split,'practice-bed');
  const choices=compileChoices(practice,practice.currentScene.choices);

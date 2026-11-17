@@ -12,6 +12,7 @@ import {validateWatch} from './retreat-watch.js';
 import {validateMine} from './lamp-mine.js';
 import {validateGarden} from './phenology.js';
 import {validatePost} from './lin-post.js';
+import {recordMountainRetreat,validateMountain} from './folded-mountain.js';
 
 const eventNodeIds=new Set([
  'arrival','terms','work','entry-result','companion','companion-result','reunion','reunion-result',
@@ -32,11 +33,12 @@ const eventNodeIds=new Set([
  'garden-book','garden-history','garden-practice','garden-pick','garden-ripe',
  'post-index','post-book','post-offer-later','post-traces','post-address','post-return','post-history','post-shore',
  'post-stations','post-settle','post-fog',
+ 'mount-book','mount-history','mount-sight','mount-sound',
 ]);
 const copy=value=>JSON.parse(JSON.stringify(value));
 export function createEventState(atlas){return {version:1,node:'arrival',entry:'unresolved',companion:'unmet',mentor:'unmet',page:0,location:'gate',...(atlas?copy(atlas):{})};}
 export function validateEventState(events,life,gardenRoot){
- assertPlainData(events);exactKeys(events,['version','node','entry','companion','mentor','page','location'],['river','expedition','council','convoy','valley','watch','mine','garden','firstMeeting','post']);
+ assertPlainData(events);exactKeys(events,['version','node','entry','companion','mentor','page','location'],['river','expedition','council','convoy','valley','watch','mine','garden','firstMeeting','post','mountain']);
  if(!eventNodeIds.has(events.node))throw new Error('规则事件节点无效。');
  if(Object.hasOwn(events,'council'))validateCouncil(events.council);
  if(Object.hasOwn(events,'convoy'))validateConvoy(events.convoy);
@@ -44,6 +46,8 @@ export function validateEventState(events,life,gardenRoot){
  if(Object.hasOwn(events,'watch'))validateWatch(events.watch);
  if(Object.hasOwn(events,'mine'))validateMine(events.mine);
  if(Object.hasOwn(events,'garden'))validateGarden(events.garden,life,gardenRoot);
+ if(Object.hasOwn(events,'mountain'))validateMountain(events.mountain,life,events.node);
+ if(events.node.startsWith('mount-')&&events.node!=='mount-book'&&!events.mountain)throw new Error('折山页次无效。');
  if(Object.hasOwn(events,'firstMeeting')&&(!['helped','declined'].includes(events.firstMeeting)||!['completed','parted'].includes(events.companion)))throw new Error('林砚初遇记录无效。');
  if(Object.hasOwn(events,'post')){
   validatePost(events.post,life);
@@ -119,6 +123,7 @@ export function advanceEvents(state,receipt){
  events.node=option.next??'hub';
  if(success&&option.patch)Object.assign(events,copy(option.patch));
  if(success&&option.arrival)events.location=option.arrival;
+ if(option.key==='mount-steady'||option.key==='mount-intensive')events.mountain=recordMountainRetreat(state.events,receipt);
  if(state.events.node==='reunion'&&['reunion-work','part'].includes(option.key)&&success)events.firstMeeting=state.events.companion;
  if(option.key==='sit-watch'){
   events.watch.draft.days=receipt.elapsedDays;

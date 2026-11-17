@@ -11,6 +11,7 @@ import {trailLocation} from './deer-trail.js';
 import {mineNode,minePlaces} from './lamp-mine.js';
 import {gardenNode,gardenRootName} from './phenology.js';
 import {postNode,postNotice} from './lin-post.js';
+import {mountainNode,mountainHistory} from './folded-mountain.js';
 
 // Authored situations supply every fact and executable choice. AI never edits
 // these definitions. Stable actors belong to a life, not a generated paragraph.
@@ -57,6 +58,8 @@ export function eventNode(state){
  if(e.node.startsWith('field-'))return valleyNode(state,menu,choice,actor);
  if(e.node.startsWith('mine-'))return mineNode(state,menu,choice,actor);
  if(e.node.startsWith('garden-'))return gardenNode(state,menu,choice);
+ if(e.node==='mount-history')return mountainHistory(e.mountain,menu);
+ if(e.node.startsWith('mount-'))return mountainNode(state,menu,choice);
  if(e.node==='post-index'){
   const reunion=young&&life.cultivationProfile.worldTier===0&&['helped','declined'].includes(e.companion)&&realm.rank>=1;
   return row('故人留下的两件事','读药路的回单，或回看早年的同路之约',[narration('当年曾怎样相待，和后来愿意替药路做什么，在手记里各有一页。')],[
@@ -234,7 +237,8 @@ export function eventNode(state){
    if(action?.intent==='practice'&&action.approach==='breakthrough'&&check?.success&&e.expedition?.place==='end'){
     onward=e.council?.length===councilHearings?menu('resume-ledger','以新境界再看三界海路','convoy-book'):menu('resume-ledger','以新境界再看北山来信','council-book');
    }
-   return row('这一回的结果','看清代价，再决定下一步',[narration(text)],[menu('continue','继续安排此后的仙路','hub'),menu('train-menu','查看修行与恢复','training'),onward]);
+   const resumeMountain=e.mountain&&!e.mountain.ending&&(action?.approach==='breakthrough'&&check?.success||action?.intent==='rest');
+   return row('这一回的结果','看清代价，再决定下一步',[narration(text)],[resumeMountain?menu('mount-book','收功，翻开随身折山石','mount-book'):menu('continue','继续安排此后的仙路','hub'),menu('train-menu','查看修行与恢复','training'),onward]);
   }
   default:throw new Error('规则事件节点无效。');
  }

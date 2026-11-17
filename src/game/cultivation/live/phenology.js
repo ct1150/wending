@@ -59,12 +59,13 @@ export function gardenNode(state,menu,choice){
  const row=(title,goal,lines,choices)=>({title,goal,blocks:lines.map(text=>({kind:'narration',text})),choices});
  const back=menu('train-menu','收好盆架，回去安排修行','training'),book=menu('garden-book','回到行圃看苗','garden-book');
  const reread=menu('garden-history','翻阅已采各畦的圃册','garden-history');
- if(events.node==='garden-history')return row('行圃旧册','回看此生各畦的去处',g.record.map(e=>beds[e.bed].name+'。'+harvestText(e)),[book,back]);
+ const mountain=menu('mount-book','展开盆架下的折山石，入定寻路','mount-book');
+ if(events.node==='garden-history')return row('行圃旧册','回看此生各畦的去处',g.record.map(e=>beds[e.bed].name+'。'+harvestText(e)),[book,mountain,back]);
  if(!g.plot){
   const lines=[...(last?[harvestText(last)]:state.reincarnation?.gardenRoot!==undefined?['盆底有先人封存的'+gardenRootName(state.reincarnation.gardenRoot)+'母土。第一畦的嫩候会延长。']:[]),...(b?[b.commission,'这一盆跟着你走。入定、寻材和远行都按同一日历生长。试圃按畦给种一次；这季怎样采收，由你亲自决定。']:[g.record.length===beds.length?'九只试种盆都还了回单。从最初的灯笼豆到归灰稻，你随身带回来的这本圃册里能查到每一处的采候。尚未栽入新畦的母土可以传给下一世。':'眼下能领的种已试过。圃册按实际采期留存。'])];
   return row(b?'候物行圃 · '+b.name:'候物行圃 · 归册','决定是否照料下一畦',lines,[
    ...(b?[choice('sow','接下'+b.name+'，花一日栽进盆中','explore','herbs','cautious',{next:'garden-book',patch:{garden:{...g,plot:{bed,sown:life.ageDays+1}}},rule:{days:1}})]:[]),
-   ...(last?[reread]:[]),back]);
+   ...(last?[reread]:[]),...(!b||!last?[mountain]:[]),back]);
  }
  const elapsed=life.ageDays-g.plot.sown,w=windows(bed,last?last.take==='root':state.reincarnation?.gardenRoot!==undefined);
  const tips=available('tips',w,elapsed),ripe=available('fruit',w,elapsed),late=available('scatter',w,elapsed);

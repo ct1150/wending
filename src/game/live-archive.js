@@ -436,7 +436,8 @@ class Archive {
   // These historical menus differed by one invitation. Verify every other field.
   const sceneId=typeof scene?.id==='string'?scene.id:'';
   const addedChoice=prePost&&sceneId.endsWith(':s:event_companion')?'post-book':
-   prior?.post&&!prior.post.stations&&sceneId.endsWith(':s:event_post-history')?'station-book':null;
+   prior?.post&&!prior.post.stations&&sceneId.endsWith(':s:event_post-history')?'station-book':
+   prior&&!prior.mountain&&[':s:event_garden-book',':s:event_garden-history'].some(suffix=>sceneId.endsWith(suffix))?'mount-book':null;
   if(addedChoice&&scene.choices?.length===2){
    const current=resolveRuleScene(c.run.state,p);
    const oldChoices=current.choices.filter(choice=>!choice.id.endsWith(':c:'+addedChoice));
