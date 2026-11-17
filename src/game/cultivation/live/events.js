@@ -35,7 +35,7 @@ const eventNodeIds=new Set([
  'convoy-book','convoy-plan','convoy-crew','convoy-stores','convoy-check','convoy-result','convoy-arrival',
  'convoy-cross','convoy-board','convoy-board-notes','convoy-test-result','convoy-remote',
  'convoy-yard-book','convoy-yard-duty','convoy-yard-shore','convoy-yard-boat','convoy-yard-stores','convoy-yard-shed',
- 'packet-book','packet-cargo','packet-chart','packet-to-0','packet-to-1','packet-to-2','packet-moor','packet-history',
+ 'packet-book','packet-cargo','packet-chart','packet-to-0','packet-to-1','packet-to-2','packet-moor','packet-history','packet-people',
  'convoy-ear-book','convoy-ear-open','convoy-ear-read','convoy-ear-table','convoy-ear-good','convoy-ear-miss','convoy-ear-receipt',
  'convoy-concert-plan','convoy-concert-visits','convoy-concert-last','convoy-concert-check','convoy-concert-result',
  'field-guide','field-camp','field-bank','field-grove','field-kiln','field-shrine','field-spar','field-proof','field-source','field-banks','field-ending',

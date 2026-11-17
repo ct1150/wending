@@ -464,6 +464,10 @@ class Archive {
    const current=resolveRuleScene(c.run.state,p);
    if(current.choices.some(c=>c.id.endsWith(':c:council-inquiry'))&&same(scene,resolveEventScene(c.run.state,p,'council')))scene=current;
   }
+  if(prior&&[':s:event_packet-book',':s:event_packet-moor'].some(suffix=>sceneId.endsWith(suffix))){
+   const current=resolveRuleScene(c.run.state,p);
+   if(!same(scene,current)&&same(scene,resolveEventScene(c.run.state,p,'passenger')))scene=current;
+  }
   const addedChoice=prePost&&sceneId.endsWith(':s:event_companion')?'post-book':
    prior?.post&&!prior.post.stations&&sceneId.endsWith(':s:event_post-history')?'station-book':
    prior&&!prior.mountain&&[':s:event_garden-book',':s:event_garden-history'].some(suffix=>sceneId.endsWith(suffix))?'mount-book':null;

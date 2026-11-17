@@ -93,7 +93,7 @@ export function eventNode(state,historicMenu=null){
  if(e.node.startsWith('voyage-'))return expeditionNode(state,menu,choice);
  if(e.node.startsWith('council-'))return councilNode(state,menu,choice,historicMenu);
  if(e.node.startsWith('convoy-'))return convoyNode(state,menu,choice,actor,historicMenu);
- if(e.node.startsWith('packet-'))return charterNode(state,menu,choice);
+ if(e.node.startsWith('packet-'))return charterNode(state,menu,choice,historicMenu);
  if(e.node.startsWith('nursery-')||e.node==='work-porch'||e.node==='work'&&e.nursery)return nurseryNode(state,menu,choice,actor('steward'));
  switch(!young&&['companion','reunion'].includes(e.node)?'old-record':e.node){
   case 'arrival':return row('外院第一日','问清入门条件，选择留下或独行',[

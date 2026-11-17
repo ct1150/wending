@@ -4,6 +4,7 @@ import {createLiveGame,prepareOpening,prepareChoice,commitTurn,resolveRuleScene,
 import {realmFor,nextRealmFor,v7ActionRule,resolveV7Action} from '../src/game/cultivation/live/cultivation-rules.js';
 import {serializeLiveState,deserializeLiveState} from '../src/game/cultivation/live/validation.js';
 import {validateConvoy} from '../src/game/cultivation/live/sea-convoy.js';
+import {validateCharters,charterNote} from '../src/game/cultivation/live/harbor-charters.js';
 import {yardNode,validateYardShifts} from '../src/game/cultivation/live/departure-yard.js';
 import {validateValley} from '../src/game/cultivation/live/mist-valley.js';
 import {eventNode} from '../src/game/cultivation/live/event-content.js';
@@ -1186,6 +1187,45 @@ test('all nine council hearings allow questions and inspection before the same p
  }
  const first=hearings.get(0),left=follow(first,'resolve-0','hear-council','council-inquiry','witness-0'),right=follow(first,'resolve-1','hear-council','council-inquiry','witness-0');
  assert.match(prose(left),/暖渠/);assert.match(prose(right),/晒场/);assert.notEqual(prose(left),prose(right));
+});
+test('a charter passenger occupies a real berth, arrives only at her destination and can arrange another boat instead',()=>{
+ let s=follow(lowerWorldCareer(),'convoy-book','rig-light','crew','load-0','manifest','stores','load-2','manifest','weigh','sail','convoy-book','crew','load-1','manifest','stores','load-3','manifest','weigh','sail','convoy-book','river-back','journey-menu','workshop-menu','crossing-menu','packet-book','packet-sign');
+ s=follow(s,'packet-cargo','packet-load-0','packet-chart','packet-to-1','packet-tide','packet-moor','packet-people');
+ const start=s,age=s.life.ageDays,items={...s.life.items};
+ s=pick(s,'packet-board');assert.equal(s.life.ageDays,age+1);assert.deepEqual(s.life.items,items);
+ assert.match(prose(s),/同行占1格/);assert.match(charterNote(s.events,s.life.ageDays).detail,/试种圃/);
+ assert.equal(s.events.charters[0].steps.at(-1).kind,'board');
+ const invalid=structuredClone(s.events);invalid.charters[0].steps.push({...invalid.charters[0].steps.at(-1),at:s.life.ageDays});
+ assert.throws(()=>validateCharters(invalid,s.life),/同行/);
+ s=follow(s,'packet-cargo','packet-load-2','packet-chart','packet-to-0','packet-tide','packet-cargo');
+ assert.ok(!s.currentScene.choices.some(c=>c.id.endsWith(':c:packet-load-1')),'one passenger and a water尺 fill the light boat');
+ const stopped=follow(s,'packet-book','packet-moor','packet-close');assert.match(prose(stopped),/未送到试种圃/);
+ s=follow(s,'packet-book','packet-chart','packet-to-2','packet-tow');
+ assert.match(prose(s),/阿禾.*踏上试种圃/);assert.match(prose(s),/同行已到岸/);
+ s=deserializeLiveState(serializeLiveState(s));assert.ok(!charterNote(s.events,s.life.ageDays).detail.includes('仍在船上'));
+ const aid=pick(start,'packet-aid');assert.equal(aid.life.ageDays,age+2);assert.equal(aid.life.items.iron,items.iron-1);
+ assert.match(prose(follow(aid,'packet-moor','packet-close')),/另约渡船/);
+ const leave=pick(start,'packet-book');assert.deepEqual(leave.life,start.life);assert.deepEqual(leave.events.charters,start.events.charters);
+ const shortage=structuredClone(start);shortage.life.items.iron=0;
+ assert.equal(compileChoices(shortage,shortage.currentScene.choices).find(c=>c.id.endsWith(':c:packet-aid')).enabled,false);
+});
+test('all ports retain passenger outcomes, and completed freight does not maroon an accepted passenger',()=>{
+ const s=start();s.currentScene=null;s.life.cultivationProfile.worldTier=2;s.life.ageDays=400;
+ const chapters=Array.from({length:3},()=>({rig:'barge',loads:[1,14]}));
+ const runs=[100,200,300].map((at,i)=>({start:at,steps:[{at,kind:'tide',n:1},{at:at+4,kind:'board',n:1},{at:at+5,kind:'tow',n:i===2?0:2},{at:at+7,kind:'close',n:i===2?0:2}]}));
+ s.events={...s.events,convoy:{chapters,draft:0},charters:runs,node:'packet-history'};
+ validateCharters(s.events,s.life);
+ const history=eventNode(s);assert.equal(history.blocks.length,12);
+ for(const name of ['阿禾','青穗','照石'])assert.ok(history.blocks.some(b=>b.text.includes(name)));
+ const run=runs[2];run.steps=[{at:300,kind:'load',n:0},{at:301,kind:'load',n:1},{at:302,kind:'tow',n:1},{at:304,kind:'board',n:1},{at:305,kind:'tow',n:2},{at:307,kind:'load',n:2},{at:308,kind:'tow',n:1}];
+ s.life.ageDays=310;s.events.node='packet-book';validateCharters(s.events,s.life);
+ assert.ok(eventNode(s).choices.some(c=>c.key==='packet-chart'));
+ const note=charterNote(s.events,s.life.ageDays);assert.match(note.detail,/仍在船上/);assert.equal(note.window.close,317);
+ s.events.node='packet-to-0';const action=eventNode(s).choices.find(c=>c.key==='packet-tow');
+ Object.assign(s.events,action.patch);s.events.node=action.next;s.life.ageDays+=action.rule.days;
+ validateCharters(s.events,s.life);assert.ok(eventNode(s).blocks.some(b=>b.text.includes('照石在星门旧台下船')));
+ const wrong=structuredClone(s.events);wrong.charters[2].steps[3].n=0;assert.throws(()=>validateCharters(wrong,s.life),/同行/);
+ const expired=structuredClone(s.events);expired.node='packet-people';assert.throws(()=>validateCharters(expired,s.life),/同行/);
 });
 test('Lin and Zhi keep their full itinerary alongside the river cases and actual realm breakthroughs',()=>{
  const s=lowerWorldCareer(undefined,true);
