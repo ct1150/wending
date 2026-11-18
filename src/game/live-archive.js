@@ -1,6 +1,7 @@
 import { canonicalStringify, sha256, stateHash, assertPlainData } from './cultivation/live/identity.js';
 import { validateLiveState } from './cultivation/live/validation.js';
-import { prepareOpening, prepareRecordedChoice, commitTurn, settleDeath } from './cultivation/live/engine.js';
+import {resolveEventScene} from './cultivation/live/events.js';
+import { prepareOpening, prepareRecordedChoice, commitTurn, settleDeath,resolveRuleScene } from './cultivation/live/engine.js';
 import { buildStoryContext, validateGeneratedScene, buildMemoryDelta, validateStoryContext, sceneTurnRecord } from './cultivation/live/memory.js';
 import { isExperienceLife } from './cultivation/live/experience.js';
 import { echoNotes, buildRebirthOptions, reincarnationClaimForChild, validateReincarnationClaim } from './cultivation/live/reincarnation.js';
@@ -75,7 +76,7 @@ function verifyImportedLineage(stores,get,run,finish) {
    check(record&&parent.state.phase==='dead'&&parent.hash===record.parentStateHash,invalid);
    check(record.version===(isExperienceLife(parent.state.life)?2:1),invalid);
    let expected;try{expected=buildRebirthOptions(parent.state,record.purchases);}catch{fail(invalid);}
-   check(same(record,expected.reincarnation)&&same(birth.life.birth.cultivationProfile.inheritedBenefits,expected.inheritedBenefits),invalid);
+   check((expected.eventVersion===undefined||birth.life.birth.cultivationProfile.eventVersion===expected.eventVersion)&&same(record,expected.reincarnation)&&same(birth.life.birth.cultivationProfile.inheritedBenefits,expected.inheritedBenefits),invalid);
  };
  readKnown(run.runId,old=>{
    const marked=old&&isExperienceLife(old.birth.life)||isExperienceLife(run.birth.life);
@@ -222,7 +223,7 @@ class Archive {
   const c=await this._capture();check(c&&c.run.archiveId===expectedArchiveId&&!c.pending&&c.run.state.phase==='dead','REINCARNATION_REQUIRES_DEATH');
   check(!c.reincarnationClaim,'REINCARNATION_ALREADY_CLAIMED');
   const expected=buildRebirthOptions(c.run.state,rewardIds);
-  check((expected.experienceVersion===undefined||state.life.birth.cultivationProfile?.experienceVersion===expected.experienceVersion)&&same(state.reincarnation,expected.reincarnation)&&same(state.life.birth.cultivationProfile?.inheritedBenefits,expected.inheritedBenefits),'REINCARNATION_INVALID_STATE');
+  check((expected.experienceVersion===undefined||state.life.birth.cultivationProfile?.experienceVersion===expected.experienceVersion)&&(expected.eventVersion===undefined||state.life.birth.cultivationProfile?.eventVersion===expected.eventVersion)&&same(state.reincarnation,expected.reincarnation)&&same(state.life.birth.cultivationProfile?.inheritedBenefits,expected.inheritedBenefits),'REINCARNATION_INVALID_STATE');
   const claim=reincarnationClaimForChild(state);validateReincarnationClaim(claim,c.run.state);
   const archiveId=crypto.randomUUID(),run={archiveId,runId:state.runId,state:clone(state),birth:clone(state),hash:stateHash(state),tailIndex:-1,headHash:ZERO,status:'active',...(state.reincarnation.version===2?{verifiedParentHash:c.run.hash}:{})},p=pendingRow(archiveId,clone(pending));
   await transaction(this.db,'readwrite',(s,get)=>this._cas(s,get,c,()=>get(s.runs,claimKey(c.run.runId),old=>{
@@ -371,12 +372,14 @@ class Archive {
   const p=c.pending.pending;
   if(scene===null){check(p.receipt.death&&memoryDelta===null,'ARCHIVE_INVALID_DEATH');return {state:settleDeath(c.run.state,p),records:[{id:'receipt:'+p.identity.turnId,runId:c.run.runId,turnId:p.identity.turnId,source:'rules',kind:'receipt',receipt:clone(p.receipt)}]};}
   check(!p.receipt.death,'ARCHIVE_INVALID_DEATH');
+  if(c.run.state.events)check(same(scene,resolveRuleScene(c.run.state,p)),'ARCHIVE_INVALID_RULE_SCENE');
   const related=await this.readRelated(c.run.runId,{entityIds:[...new Set([...c.run.state.relatedEntities.map(e=>e.id),...scene.entities.map(e=>e.id)])],referenceIds:scene.memoryDeltas.flatMap(m=>m.referenceId?[m.referenceId]:[]),includeOpen:false,factsPerEntity:0},c.run.archiveId);
-  const context=buildStoryContext(c.run.state,p,related);validateGeneratedScene(scene,context);
+  const context=c.run.state.events?null:buildStoryContext(c.run.state,p,related);
+  if(context)validateGeneratedScene(scene,context);
   const expected=buildMemoryDelta(p.receipt,scene);check(same(expected,memoryDelta),'ARCHIVE_INVALID_MEMORY');
   const turnId=p.identity.turnId,common={runId:c.run.runId,turnId};
   const records=[{id:'receipt:'+turnId,...common,source:'rules',kind:'receipt',receipt:clone(p.receipt)},...expected.records.map(r=>({...r,...common})),...scene.entities.map(e=>{const prior=related.find(r=>r.kind==='entity'&&r.entity.id===e.id);return {id:'e:'+sha256(e.id).slice(0,40),...common,source:'narrative',kind:'entity',entity:{id:e.id,name:e.name,kind:e.kind,...(e.experience?{experience:clone(e.experience)}:{})},status:prior?.status==='dead'?'dead':e.status??prior?.status??'unknown'};})];
-  const nextState=commitTurn(c.run.state,p,scene,context.relationships);
+  const nextState=commitTurn(c.run.state,p,scene,context?.relationships);
   if(nextState.relationshipVersion===1) {
    for(const entityId of Object.keys(c.run.state.relationshipVersion===1?p.receipt.relationChanges:p.nextLife.relations))records.push({
     id:'q:'+sha256(entityId).slice(0,40),...common,source:'rules',kind:'ruleRelation',
@@ -395,6 +398,17 @@ class Archive {
   if(scene!==null)check((c.pending.attempt?.id??null)===expectedAttemptId,'ARCHIVE_ATTEMPT_CONFLICT');
   const derived=await this._derived(c,scene,memoryDelta);check(same(nextState,derived.state),'ARCHIVE_INVALID_STATE');
   return this._commitCaptured(c,c.pending.pending,scene,derived);
+ }
+ async commitEvent({expectedArchiveId,expectedRevision,pending}) {
+  // Snapshot before the first await. A caller cannot mutate a decision while
+  // IndexedDB is reading; the captured physical archive also fences imports.
+  assertPlainData(pending);const fixed=clone(pending),c=await this._capture(fixed.identity.runId);
+  check(c&&c.run.archiveId===expectedArchiveId&&(!this.bound||this.bound===c.run.archiveId)&&c.run.state.revision===expectedRevision);
+  check(c.run.state.events,'ARCHIVE_INVALID_RULE_SCENE');verifyPending(c.run.state,fixed);
+  check(!c.pending||same(c.pending.pending,fixed)&&!c.pending.attempt&&!c.pending.generation,'ARCHIVE_ATTEMPT_CONFLICT');
+  const scene=fixed.receipt.death?null:resolveRuleScene(c.run.state,fixed);
+  const derived=await this._derived({...c,pending:pendingRow(c.run.archiveId,fixed)},scene,scene?buildMemoryDelta(fixed.receipt,scene):null);
+  return this._commitCaptured(c,fixed,scene,derived);
  }
  async _commitCaptured(c,pending,scene,derived) {
   const nextState=derived.state,entry={identity:clone(pending.identity),receipt:clone(pending.receipt),scene:clone(scene),stateHash:stateHash(nextState)};
@@ -418,7 +432,116 @@ class Archive {
  async _stageEntry(archiveId,entry) {
   keys(entry,['identity','receipt','scene','stateHash']);const c=await this._capture(null,archiveId);check(c?.run.status==='staging');const identity=entry.identity;
   const p=c.run.state.phase==='awaitingOpening'?prepareOpening(c.run.state,{requestId:identity.requestId}):prepareRecordedChoice(c.run.state,entry);check(same(p.identity,identity)&&same(p.receipt,entry.receipt),'ARCHIVE_INVALID_HISTORY');c.pending=pendingRow(archiveId,p);
-  const d=await this._derived(c,entry.scene,entry.scene?buildMemoryDelta(p.receipt,entry.scene):null);check(stateHash(d.state)===entry.stateHash,'ARCHIVE_BAD_HASH');
+  const prior=c.run.state.events,prePost=prior&&!prior.firstMeeting&&!prior.post;
+  let scene=entry.scene;
+  // Verify historical scenes exactly before mapping their menu variant.
+  const sceneId=typeof scene?.id==='string'?scene.id:'';
+  if(prior&&sceneId.endsWith(':s:event_crossing')&&!scene.choices?.some(c=>c.id?.endsWith(':c:harbor-book'))){
+   const current=resolveRuleScene(c.run.state,p);
+   if(current.choices.some(c=>c.id.endsWith(':c:harbor-book'))&&same(scene,resolveEventScene(c.run.state,p,'harbor')))scene=current;
+  }
+  if(prior&&sceneId.endsWith(':s:event_sky-rift')&&!scene.choices?.some(c=>c.id?.endsWith(':c:beacon-book'))){
+   const current=resolveRuleScene(c.run.state,p);
+   if(current.choices.some(c=>c.id.endsWith(':c:beacon-book'))&&same(scene,resolveEventScene(c.run.state,p,'beacon')))scene=current;
+  }
+  if(prior&&[':s:event_sky-book',':s:event_sky-lodgings'].some(s=>sceneId.endsWith(s))&&!scene.choices?.some(c=>c.id?.endsWith(':c:sky-trial'))){
+   const current=resolveRuleScene(c.run.state,p);
+   if(current.choices.some(c=>c.id.endsWith(':c:sky-trial'))&&['trials','rift'].some(variant=>same(scene,resolveEventScene(c.run.state,p,variant))))scene=current;
+  }
+  if(prior&&!prior.cloudRift&&sceneId.endsWith(':s:event_sky-book')&&!scene.choices?.some(c=>c.id?.endsWith(':c:rift-book'))){
+   const current=resolveRuleScene(c.run.state,p);
+   if(current.choices.some(c=>c.id.endsWith(':c:rift-book'))&&same(scene,resolveEventScene(c.run.state,p,'rift')))scene=current;
+  }
+  if(prior&&sceneId.endsWith(':s:event_action-result')&&scene.choices?.some(c=>c.id?.endsWith(':c:continue'))){
+   const current=resolveRuleScene(c.run.state,p);
+   if(current.choices.some(c=>c.id.endsWith(':c:gather-again'))&&same(scene,resolveEventScene(c.run.state,p,'gather')))scene=current;
+  }
+  if(prior&&!prior.garden&&sceneId.endsWith(':s:event_action-result')&&scene.choices?.some(c=>c.id?.endsWith(':c:continue'))){
+   const current=resolveRuleScene(c.run.state,p);
+   if(!current.choices.some(c=>c.id.endsWith(':c:continue'))&&same(scene,resolveEventScene(c.run.state,p,'practice')))scene=current;
+  }
+  if(prior&&sceneId.endsWith(':s:event_mount-book')&&scene.choices?.some(c=>c.id?.endsWith(':c:keep-token'))){
+   const current=resolveRuleScene(c.run.state,p);
+   if(current.choices.some(c=>c.id.endsWith(':c:mount-wind'))&&same(scene,resolveEventScene(c.run.state,p,'wind')))scene=current;
+  }
+  if(prior&&sceneId.endsWith(':s:event_mount-book')&&scene.choices?.some(c=>c.id?.endsWith(':c:train-menu'))){
+   const current=resolveRuleScene(c.run.state,p);
+   if(current.choices.some(c=>c.id.endsWith(':c:mount-echo'))&&same(scene,resolveEventScene(c.run.state,p,'echo')))scene=current;
+  }
+  if(prior&&sceneId.endsWith(':s:event_mentor')&&scene.choices?.some(c=>c.id?.endsWith(':c:back'))){
+   const current=resolveRuleScene(c.run.state,p);
+   if(current.choices.some(c=>c.id.endsWith(':c:form-book'))&&same(scene,resolveEventScene(c.run.state,p,'forms')))scene=current;
+  }
+  if(prior&&[':s:event_convoy-cross',':s:event_convoy-arrival'].some(s=>sceneId.endsWith(s))&&!scene.choices?.some(c=>c.id?.endsWith(':c:yard-book'))){
+   const current=resolveRuleScene(c.run.state,p);
+   if(current.choices.some(c=>c.id.endsWith(':c:yard-book'))&&same(scene,resolveEventScene(c.run.state,p,'pier')))scene=current;
+  }
+  if(prior&&sceneId.endsWith(':s:event_action-result')&&scene.choices?.some(c=>c.id?.endsWith(':c:forage-again')||c.id?.endsWith(':c:affairs-menu'))){
+   const current=resolveRuleScene(c.run.state,p);
+   if(current.choices.some(c=>c.id.endsWith(':c:ration-book'))&&same(scene,resolveEventScene(c.run.state,p,'provisions')))scene=current;
+  }
+  if(prior&&!prior.nursery&&sceneId.endsWith(':s:event_work')&&scene.choices?.some(c=>c.id?.endsWith(':c:abandon-work'))){
+   const current=resolveRuleScene(c.run.state,p);
+   if(current.choices.some(c=>c.id.endsWith(':c:nursery-book'))&&same(scene,resolveEventScene(c.run.state,p,'work')))scene=current;
+  }
+  if(prior&&sceneId.endsWith(':s:event_council-book')&&scene.choices?.some(c=>c.id?.endsWith(':c:resolve-0'))){
+   const current=resolveRuleScene(c.run.state,p);
+   if(current.choices.some(c=>c.id.endsWith(':c:council-inquiry'))&&same(scene,resolveEventScene(c.run.state,p,'council')))scene=current;
+  }
+  if(prior&&[':s:event_packet-book',':s:event_packet-moor'].some(suffix=>sceneId.endsWith(suffix))){
+   const current=resolveRuleScene(c.run.state,p);
+   if(!same(scene,current)&&same(scene,resolveEventScene(c.run.state,p,'passenger')))scene=current;
+  }
+  const addedChoice=prePost&&sceneId.endsWith(':s:event_companion')?'post-book':
+   prior?.post&&!prior.post.stations&&sceneId.endsWith(':s:event_post-history')?'station-book':
+   prior&&!prior.mountain&&[':s:event_garden-book',':s:event_garden-history'].some(suffix=>sceneId.endsWith(suffix))?'mount-book':null;
+  if(addedChoice&&scene.choices?.length===2){
+   const current=resolveRuleScene(c.run.state,p);
+   const oldChoices=current.choices.filter(choice=>!choice.id.endsWith(':c:'+addedChoice));
+   if(oldChoices.length!==current.choices.length&&same(scene,{...current,choices:oldChoices}))scene=current;
+  }
+  if(prior&&sceneId.endsWith(':s:event_resources')&&scene?.choices?.some(c=>c.id?.endsWith(':c:back')||c.id?.endsWith(':c:field-guide'))){
+   const current=resolveRuleScene(c.run.state,p);
+   if(current.choices.some(c=>!prior.ferry&&c.id.endsWith(':c:shell-book')||!prior.well&&c.id.endsWith(':c:well-road'))&&same(scene,resolveEventScene(c.run.state,p,'resources')))scene=current;
+  }
+  if(prior&&sceneId.endsWith(':s:event_training')&&scene.choices?.some(c=>['practice','garden-book','mount-book'].some(key=>c.id?.endsWith(':c:'+key)))){
+   const current=resolveRuleScene(c.run.state,p);
+   if(current.choices.some(c=>c.id.endsWith(':c:ward-book'))&&same(scene,resolveEventScene(c.run.state,p,'ward')))scene=current;
+  }
+  if(prior&&sceneId.endsWith(':s:event_training')&&scene.choices?.some(c=>c.id?.endsWith(':c:breakthrough'))){
+   const current=resolveRuleScene(c.run.state,p);
+   if(!current.choices.some(c=>c.id.endsWith(':c:breakthrough'))&&same(scene,resolveEventScene(c.run.state,p,'training')))scene=current;
+  }
+  if(prior&&sceneId.endsWith(':s:event_training')&&scene.choices?.some(c=>c.id?.endsWith(':c:find-material'))){
+   const current=resolveRuleScene(c.run.state,p);
+   if(current.choices.some(c=>c.id.endsWith(':c:find-ridge'))&&same(scene,resolveEventScene(c.run.state,p,'ridge')))scene=current;
+  }
+  if(prior&&sceneId.endsWith(':s:event_crossing')&&scene.choices?.some(c=>c.id?.endsWith(':c:cross'))){
+   const current=resolveRuleScene(c.run.state,p);
+   if(current.choices.some(c=>c.id.endsWith(':c:crossing-ways'))&&same(scene,resolveEventScene(c.run.state,p,'routes')))scene=current;
+  }
+  if(prior&&sceneId.endsWith(':s:event_crossing')&&scene.choices?.some(c=>c.id?.endsWith(':c:resources-menu'))){
+   const current=resolveRuleScene(c.run.state,p);
+   const historical=scene.choices.some(c=>c.id.endsWith(':c:train-menu'))?'crossing':'packet';
+   if(current.choices.some(c=>c.id.endsWith(':c:sky-book')||c.id.endsWith(':c:packet-book'))&&same(scene,resolveEventScene(c.run.state,p,historical)))scene=current;
+  }
+  if(prior?.nursery?.end&&sceneId.endsWith(':s:event_crossing')&&scene.choices?.some(c=>c.id?.endsWith(':c:back'))){
+   const current=resolveRuleScene(c.run.state,p);
+   if(current.choices.some(c=>c.id.endsWith(':c:seed-book')||c.id.endsWith(':c:harbor-book'))&&same(scene,resolveEventScene(c.run.state,p,'seed')))scene=current;
+  }
+  if(prior&&!prior.well&&sceneId.endsWith(':s:event_hunt-grounds')&&scene.choices?.some(c=>c.id?.endsWith(':c:hunt-careful')&&c.targetId==='soulseal')){
+   const current=resolveRuleScene(c.run.state,p);
+   if(current.choices.some(c=>c.id.endsWith(':c:well-cautious'))&&same(scene,resolveEventScene(c.run.state,p,'well')))scene=current;
+  }
+  const d=await this._derived(c,scene,scene?buildMemoryDelta(p.receipt,scene):null);
+  if(scene!==entry.scene)d.state.currentScene=clone(entry.scene);
+  let hash=stateHash(d.state);
+  if(hash!==entry.stateHash&&prePost&&prior.node==='reunion'&&d.state.events.firstMeeting){
+   // The historical reunion settled identical costs and rewards but stored no initial meeting.
+   delete d.state.events.firstMeeting;
+   hash=stateHash(d.state);
+  }
+  check(hash===entry.stateHash,'ARCHIVE_BAD_HASH');
   await transaction(this.db,'readwrite',(s,get)=>get(s.runs,archiveId,run=>{check(run.status==='staging'&&run.hash===c.run.hash);this._writeMemory(s.memory,archiveId,d.records);s.runs.put({...run,state:d.state,hash:entry.stateHash});}));
  }
  async _stageChunk(archiveId,chunk) {verifyChunk(chunk);await transaction(this.db,'readwrite',(s,get)=>get(s.runs,archiveId,run=>{check(run.status==='staging'&&chunk.index===run.tailIndex+1&&chunk.previousHash===run.headHash);s.history.add({archiveId,index:chunk.index,chunk});s.runs.put({...run,tailIndex:chunk.index,headHash:chunk.hash});}));}

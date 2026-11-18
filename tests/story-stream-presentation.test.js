@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { liveBrowser } from './helpers/live-browser.js';
+import { liveBrowser, loadLegacyOpening } from './helpers/live-browser.js';
 import { createLiveGame, prepareOpening } from '../src/game/cultivation/live/engine.js';
 import { renderLiveJourney } from '../src/ui/journey.js';
 import { cultivationFixtureProse } from './helpers/live-story-fixture.js';
@@ -104,8 +104,8 @@ test('the app keeps streamed dialogue and choice nodes through completion and du
     };
   });
   await page.goto('https://wending-presentation.test/index.html');
-  await page.locator('[data-title-new]:enabled').click();
-  await page.locator('[data-live-start]:enabled').click();
+  await loadLegacyOpening(page);
+  await page.locator('[data-live-retry]:enabled').click();
   await page.waitForFunction(() => window.streamPacket);
   const firstNarration = cultivationFixtureProse('你沿着山路走近渡口。', 1);
   await page.evaluate(text => {

@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { liveBrowser } from './helpers/live-browser.js';
+import { liveBrowser, loadLegacyOpening } from './helpers/live-browser.js';
 import { liveStoryFixture } from './helpers/live-story-fixture.js';
 
 test('number keys select only offered model choices, and declining requests a new scene', async t => {
@@ -30,9 +30,7 @@ test('number keys select only offered model choices, and declining requests a ne
   const read=()=>page.evaluate(async()=>{const {openLiveArchive}=await import('/src/game/live-archive.js');const archive=await openLiveArchive();try{return await archive.load();}finally{archive.close();}});
   const revision=value=>page.locator(`[data-live-choice][data-revision="${value}"]:enabled`).first().waitFor();
   await page.goto('https://wending-v7.test/');
-  await page.locator('[data-title-new]:enabled').click();
-  await page.locator('#live-birth-form').waitFor();
-  await page.locator('#live-name').fill('问溪');await page.locator('[data-live-start]').click();await revision(1);
+  await loadLegacyOpening(page);await page.locator('[data-live-retry]').click();await revision(1);
   const opening=await read();assert.equal(opening.state.life.cultivationProfile.version,7);assert.equal(posts,1);
   assert.equal(await page.locator('[data-live-choice]').count(),3);
   assert.match(await page.locator('[data-character]').getAttribute('aria-label'),/16\.0 \/ 80/);

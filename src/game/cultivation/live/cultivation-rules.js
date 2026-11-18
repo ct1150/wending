@@ -82,15 +82,16 @@ function descriptions(profile){
   const selected=[ROOTS[profile.rootId],PHYSIQUES[profile.physiqueId],RELICS[profile.relicId],TECHNIQUES[profile.techniqueId]];
   return {advantages:[...selected.map(row=>row.advantage),...profile.inheritedBenefits.map(id=>INHERITED_BENEFITS[id].description)],defects:selected.map(row=>row.defect)};
 }
-export function createCultivationBirthProfile(draw,inheritedBenefits=[],experienceVersion){
+export function createCultivationBirthProfile(draw,inheritedBenefits=[],experienceVersion,eventVersion){
   validateInheritedBenefits(inheritedBenefits);
   const select=(table,label)=>Object.keys(table)[draw(Object.keys(table).length,label)];
   const profile={version:7,rootId:select(ROOTS),physiqueId:select(PHYSIQUES,'physique'),relicId:select(RELICS,'relic'),techniqueId:select(TECHNIQUES),inheritedBenefits:[...inheritedBenefits]};
-  return {...profile,...descriptions(profile),...(experienceVersion===undefined?{}:{experienceVersion})};
+  return {...profile,...descriptions(profile),...(experienceVersion===undefined?{}:{experienceVersion}),...(eventVersion===undefined?{}:{eventVersion})};
 }
 export function validateV7BirthProfile(profile){
-  exactKeys(profile,BIRTH_KEYS,['experienceVersion']);
+  exactKeys(profile,BIRTH_KEYS,['experienceVersion','eventVersion']);
   if(Object.hasOwn(profile,'experienceVersion'))requireValue(profile.experienceVersion===EXPERIENCE_VERSION);
+  if(Object.hasOwn(profile,'eventVersion'))requireValue(profile.eventVersion===1&&profile.experienceVersion===EXPERIENCE_VERSION);
   requireValue(profile.version===7&&Object.hasOwn(ROOTS,profile.rootId)&&Object.hasOwn(PHYSIQUES,profile.physiqueId)&&Object.hasOwn(RELICS,profile.relicId)&&Object.hasOwn(TECHNIQUES,profile.techniqueId),'灵根、体质、伴生遗物或功法无效。');
   validateInheritedBenefits(profile.inheritedBenefits);
   const expected=descriptions(profile);
@@ -162,11 +163,14 @@ function modifiers(life){
 
 // Proposals express a finite intention. All amounts, durations, checks and
 // consequences are supplied here; model text never supplies numeric effects.
+export function initialV7ActionRule(days){
+  return {days,items:{},gain:{},cultivation:0,injury:0,relationship:0,risk:0,realm:null,spiritCost:0,spiritGain:0,lifeLoss:0,lifeGain:0,exposure:0,checkKind:null,chance:100,failureInjury:0,art:null,worldTier:null,arrivalExposure:0,warnings:[]};
+}
 export function v7ActionRule(state,p){
   requireValue(validV7Target(state,p),'行动目标不属于可执行规则。');
   const life=state.life,realm=realmFor(life),profile=life.cultivationProfile,m=modifiers(life),factor=p.stake==='high'?2:p.stake==='low'?0:1;
   const hasStoryTalent=id=>Boolean(life.birth.backgroundId)&&life.birth.talentIds.includes(id);
-  const rule={days:30,items:{},gain:{},cultivation:0,injury:0,relationship:0,risk:0,realm:null,spiritCost:0,spiritGain:0,lifeLoss:0,lifeGain:0,exposure:0,checkKind:null,chance:100,failureInjury:0,art:null,worldTier:null,arrivalExposure:0,warnings:[]};
+  const rule=initialV7ActionRule(30);
   const check=(kind,chance,failureInjury=1)=>{rule.checkKind=kind;rule.chance=clamp(Math.round(chance),5,99);rule.failureInjury=failureInjury;};
   switch(p.intent){
     case 'rest':
@@ -338,6 +342,11 @@ export function v7ActionRule(state,p){
     const note=state.currentScene?.story?.opponent;
     rule.outlook={band,reason:!known?'未辨明对手境界，按谨慎估计行动。':('对手'+V7_REALMS[rank].name+'，你是'+realm.name+'。'+(!rule.checkKind?'此法以实际代价避开较量。':gap>0?'境界占优。':gap<0?'对方境界更高。':'双方境界相当。')),...(note?.entityId===foe.id?Object.fromEntries(['purpose','condition'].filter(k=>note[k]).map(k=>[k,note[k]])):{})};
   }
+  if(state.events?.node==='field-shrine'&&p.intent==='fight'&&p.approach==='guard'){
+    // The wardens use a real combat check, but call off any potentially fatal bout.
+    rule.days=1;rule.relationship=0;rule.gain={};
+    if(life.injury+rule.injury+rule.failureInjury>=10)rule.reason='伤势经不起试手，守泉会请你先疗伤。';
+  }
   for(const [id,count] of Object.entries(rule.items))if((life.items[id]??0)<count)rule.reason='缺少'+ITEMS[id]+'。';
   for(const [id,count] of Object.entries(rule.gain))if((life.items[id]??0)-(rule.items[id]??0)+count>9999)rule.reason='行囊已经装不下。';
   if(rule.cultivation>0&&life.cultivation+rule.cultivation>9999)rule.reason='当前修为已积累至上限。';
@@ -371,7 +380,7 @@ export function resolveV7Action(life,action,rule,roll,turnId){
       if(rule.lethalFailure&&roll>=98)injury=10;
       if(rule.checkKind==='breakthrough'){
         next.cultivation=Math.max(0,next.cultivation-Math.max(1,Math.ceil(V7_REALMS[rule.realm].threshold/2)));
-        if(V7_REALMS[rule.realm].rank>=7&&roll>=98)injury=10;
+        if(V7_REALMS[rule.realm].rank>=7&&roll>=98&&!rule.breakthroughWard)injury=10;
       }
       if(rule.checkKind==='forbidden'){
         profile.lifespanLoss+=rule.backlashLoss;next.lifeLimit=lifespanLimitFor(next);cause='forbidden-backlash';

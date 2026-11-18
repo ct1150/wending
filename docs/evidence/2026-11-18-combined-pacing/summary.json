@@ -1,0 +1,124 @@
+{
+  "runtimeRevision": "a0ac265322a127eda26700fc5b2e5c1aa06bb15c",
+  "fixtureHash": "77b64b5d460bf5d942533a6b92ed706db1e0e374fc2309aca53f73cc77ce3df1",
+  "turn": 1009,
+  "actions": 1008,
+  "totals": {
+    "exactCharacters": 44378,
+    "exactBlocks": 1080,
+    "normalizedCharacters": 39806,
+    "normalizedBlocks": 952
+  },
+  "byRealm": {
+    "mortal": {
+      "actions": 137,
+      "navigationWithoutEventChange": 74,
+      "navigationWithEventChange": 16,
+      "ordinaryPractice": 1,
+      "days": 2160,
+      "exactCharacters": 8639,
+      "exactBlocks": 206,
+      "normalizedCharacters": 8290,
+      "normalizedBlocks": 191
+    },
+    "qi": {
+      "actions": 63,
+      "navigationWithoutEventChange": 43,
+      "navigationWithEventChange": 7,
+      "ordinaryPractice": 0,
+      "days": 2625,
+      "exactCharacters": 3675,
+      "exactBlocks": 91,
+      "normalizedCharacters": 3576,
+      "normalizedBlocks": 88
+    },
+    "foundation": {
+      "actions": 85,
+      "navigationWithoutEventChange": 53,
+      "navigationWithEventChange": 11,
+      "ordinaryPractice": 0,
+      "days": 11508,
+      "exactCharacters": 5396,
+      "exactBlocks": 130,
+      "normalizedCharacters": 5271,
+      "normalizedBlocks": 126
+    },
+    "golden": {
+      "actions": 204,
+      "navigationWithoutEventChange": 125,
+      "navigationWithEventChange": 34,
+      "ordinaryPractice": 4,
+      "days": 15848,
+      "exactCharacters": 10642,
+      "exactBlocks": 284,
+      "normalizedCharacters": 10005,
+      "normalizedBlocks": 264
+    },
+    "nascent": {
+      "actions": 185,
+      "navigationWithoutEventChange": 125,
+      "navigationWithEventChange": 18,
+      "ordinaryPractice": 8,
+      "days": 82202,
+      "exactCharacters": 8750,
+      "exactBlocks": 229,
+      "normalizedCharacters": 8384,
+      "normalizedBlocks": 221
+    },
+    "spirit": {
+      "actions": 81,
+      "navigationWithoutEventChange": 50,
+      "navigationWithEventChange": 6,
+      "ordinaryPractice": 7,
+      "days": 110812,
+      "exactCharacters": 5906,
+      "exactBlocks": 137,
+      "normalizedCharacters": 5495,
+      "normalizedBlocks": 128
+    },
+    "void": {
+      "actions": 76,
+      "navigationWithoutEventChange": 47,
+      "navigationWithEventChange": 6,
+      "ordinaryPractice": 7,
+      "days": 255717,
+      "exactCharacters": 4067,
+      "exactBlocks": 111,
+      "normalizedCharacters": 3734,
+      "normalizedBlocks": 105
+    },
+    "unity": {
+      "actions": 66,
+      "navigationWithoutEventChange": 36,
+      "navigationWithEventChange": 3,
+      "ordinaryPractice": 16,
+      "days": 900103,
+      "exactCharacters": 3684,
+      "exactBlocks": 96,
+      "normalizedCharacters": 2982,
+      "normalizedBlocks": 82
+    },
+    "mahayana": {
+      "actions": 92,
+      "navigationWithoutEventChange": 61,
+      "navigationWithEventChange": 6,
+      "ordinaryPractice": 14,
+      "days": 1872101,
+      "exactCharacters": 4875,
+      "exactBlocks": 118,
+      "normalizedCharacters": 4225,
+      "normalizedBlocks": 105
+    },
+    "tribulation": {
+      "actions": 19,
+      "navigationWithoutEventChange": 15,
+      "navigationWithEventChange": 3,
+      "ordinaryPractice": 0,
+      "days": 3,
+      "exactCharacters": 2113,
+      "exactBlocks": 52,
+      "normalizedCharacters": 2113,
+      "normalizedBlocks": 52
+    }
+  }
+}

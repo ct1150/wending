@@ -1,0 +1,400 @@
+{
+  "version": 1,
+  "node": "convoy-book",
+  "entry": "joined",
+  "companion": "unmet",
+  "mentor": "unmet",
+  "page": 0,
+  "location": "upper",
+  "nursery": {
+    "start": 5760,
+    "rain": true,
+    "tool": "ditch",
+    "care": "beans",
+    "end": "beans",
+    "settled": 5763
+  },
+  "river": {
+    "record": "010101",
+    "seen": 0
+  },
+  "valley": {
+    "sample": true,
+    "slag": false,
+    "remedy": true,
+    "sleeve": false,
+    "pass": "medicine",
+    "settled": "infirmary"
+  },
+  "mine": {
+    "record": [
+      {
+        "seen": 1,
+        "move": 0
+      },
+      {
+        "seen": 1,
+        "move": 0
+      },
+      {
+        "seen": 1,
+        "move": 0
+      }
+    ],
+    "start": 5781,
+    "lamp": 0,
+    "seen": 0,
+    "pledge": "留井"
+  },
+  "expedition": {
+    "volume": 3,
+    "results": "000",
+    "place": "end",
+    "watch": 0,
+    "goods": 0
+  },
+  "garden": {
+    "plot": null,
+    "record": [
+      {
+        "bed": 0,
+        "sown": 5822,
+        "day": 6260,
+        "take": "root"
+      },
+      {
+        "bed": 1,
+        "sown": 7571,
+        "day": 8003,
+        "take": "fruit"
+      },
+      {
+        "bed": 2,
+        "sown": 10276,
+        "day": 11572,
+        "take": "root"
+      },
+      {
+        "bed": 3,
+        "sown": 27410,
+        "day": 30002,
+        "take": "fruit"
+      },
+      {
+        "bed": 4,
+        "sown": 74295,
+        "day": 76887,
+        "take": "tips"
+      },
+      {
+        "bed": 5,
+        "sown": 118434,
+        "day": 129234,
+        "take": "fruit"
+      },
+      {
+        "bed": 6,
+        "sown": 286416,
+        "day": 299466,
+        "take": "tips"
+      },
+      {
+        "bed": 7,
+        "sown": 721394,
+        "day": 773234,
+        "take": "fruit"
+      },
+      {
+        "bed": 8,
+        "sown": 1932534,
+        "day": 2040534,
+        "take": "root"
+      }
+    ]
+  },
+  "watch": {
+    "record": [
+      {
+        "keeper": 0,
+        "marks": 1,
+        "days": 432,
+        "success": true,
+        "shared": true
+      },
+      {
+        "keeper": 1,
+        "marks": 2,
+        "days": 432,
+        "success": true,
+        "shared": false
+      },
+      {
+        "keeper": 0,
+        "marks": 2,
+        "days": 1296,
+        "success": true,
+        "shared": true
+      },
+      {
+        "keeper": 1,
+        "marks": 1,
+        "days": 2592,
+        "success": true,
+        "shared": false
+      },
+      {
+        "keeper": 0,
+        "marks": 2,
+        "days": 5184,
+        "success": true,
+        "shared": true
+      },
+      {
+        "keeper": 1,
+        "marks": 2,
+        "days": 10800,
+        "success": true,
+        "shared": false
+      },
+      {
+        "keeper": 0,
+        "marks": 1,
+        "days": 25920,
+        "success": true,
+        "shared": true
+      },
+      {
+        "keeper": 1,
+        "marks": 2,
+        "days": 51840,
+        "success": true,
+        "shared": false
+      },
+      {
+        "keeper": 0,
+        "marks": 2,
+        "days": 108000,
+        "success": true,
+        "shared": true
+      }
+    ],
+    "draft": null,
+    "trail": {
+      "start": 6254,
+      "world": 0,
+      "place": "ford",
+      "traces": 3,
+      "outcome": "herd",
+      "reply": "answer"
+    },
+    "ding": {
+      "feet": [
+        0,
+        3,
+        8
+      ],
+      "form": "village"
+    }
+  },
+  "council": "000000000",
+  "well": {
+    "way": "cautious",
+    "total": 720,
+    "start": 25904,
+    "world": 0,
+    "clue": "chalk",
+    "rig": "sluice",
+    "claim": "share",
+    "found": true,
+    "finish": 26546,
+    "reply": "down"
+  },
+  "convoy": {
+    "chapters": [
+      {
+        "rig": "light",
+        "loads": [
+          5,
+          10
+        ]
+      },
+      {
+        "rig": "barge",
+        "loads": [
+          1,
+          14
+        ]
+      },
+      {
+        "rig": "light",
+        "loads": [
+          10,
+          5
+        ]
+      }
+    ],
+    "draft": 0,
+    "benches": [
+      {
+        "pattern": "LRLR",
+        "paid": true
+      },
+      {
+        "pattern": "RLRL",
+        "paid": true
+      }
+    ],
+    "shifts": [
+      {
+        "crew": "boat",
+        "pay": "stones"
+      },
+      null
+    ],
+    "resonance": {
+      "decisions": "COCOCO",
+      "seen": 0,
+      "trial": "none",
+      "concert": {
+        "venue": "window",
+        "visits": 5,
+        "performed": true
+      }
+    }
+  },
+  "charters": [
+    {
+      "start": 26555,
+      "steps": [
+        {
+          "at": 26555,
+          "kind": "load",
+          "n": 0
+        },
+        {
+          "at": 26556,
+          "kind": "tide",
+          "n": 1
+        },
+        {
+          "at": 26557,
+          "kind": "load",
+          "n": 2
+        },
+        {
+          "at": 26558,
+          "kind": "tide",
+          "n": 0
+        },
+        {
+          "at": 26560,
+          "kind": "load",
+          "n": 1
+        },
+        {
+          "at": 26561,
+          "kind": "tide",
+          "n": 2
+        },
+        {
+          "at": 26564,
+          "kind": "close",
+          "n": 2
+        }
+      ]
+    },
+    {
+      "start": 27390,
+      "steps": [
+        {
+          "at": 27390,
+          "kind": "load",
+          "n": 0
+        },
+        {
+          "at": 27391,
+          "kind": "load",
+          "n": 1
+        },
+        {
+          "at": 27392,
+          "kind": "tow",
+          "n": 2
+        },
+        {
+          "at": 27395,
+          "kind": "load",
+          "n": 2
+        },
+        {
+          "at": 27396,
+          "kind": "tide",
+          "n": 1
+        },
+        {
+          "at": 27400,
+          "kind": "close",
+          "n": 1
+        }
+      ]
+    },
+    {
+      "start": 69104,
+      "steps": [
+        {
+          "at": 69104,
+          "kind": "load",
+          "n": 1
+        },
+        {
+          "at": 69105,
+          "kind": "tow",
+          "n": 2
+        },
+        {
+          "at": 74294,
+          "kind": "close",
+          "n": 2
+        }
+      ]
+    }
+  ],
+  "saltField": {
+    "bed": "seep",
+    "sown": 27360,
+    "mended": true,
+    "parcel": "seed",
+    "sent": 65470,
+    "ending": "households"
+  },
+  "cloudPassage": [
+    {
+      "seat": 0,
+      "route": 1
+    },
+    {
+      "seat": 1,
+      "route": 0
+    },
+    {
+      "seat": 0,
+      "route": 0
+    }
+  ],
+  "ridgeRoad": [
+    {
+      "site": "unityjade",
+      "world": 2,
+      "missed": false,
+      "aligned": true,
+      "ending": 0
+    },
+    {
+      "site": "daofruit",
+      "world": 2,
+      "missed": false,
+      "aligned": true,
+      "ending": 0
+    }
+  ]
+}

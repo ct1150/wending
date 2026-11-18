@@ -1,13 +1,14 @@
+import {validateEventProseBrief,validateProseText} from '../game/cultivation/live/event-prose.js';
 // Browser transport: credentials remain in the same-origin HttpOnly cookie.
 const LIMITS = {maxRequestBytes:32768,maxResponseBytes:65536,maxContextBytes:7000,timeoutMs:105000};
 const error = code => Object.assign(new Error(code), {code});
 const identifier = value => typeof value === 'string' && /^[A-Za-z0-9][A-Za-z0-9:_-]{0,79}$/.test(value);
 export function createStoryClient({fetch:fetcher=globalThis.fetch,location=globalThis.location,timeoutMs=LIMITS.timeoutMs}={}) {
   let limits={...LIMITS};
-  async function json(path,body,streaming,storyActions=false) {
+  async function json(path,body,streaming,storyActions=false,deadlineMs=LIMITS.timeoutMs) {
     if(location?.protocol!=='https:') throw error('SERVICE_UNAVAILABLE');
     const controller=new AbortController();
-    const timer=setTimeout(()=>controller.abort(),Math.min(timeoutMs,limits.timeoutMs));
+    const timer=setTimeout(()=>controller.abort(),Math.min(timeoutMs,limits.timeoutMs,deadlineMs));
     let reader;
     try {
       const serialized=body===undefined?undefined:JSON.stringify(body);
@@ -76,5 +77,15 @@ export function createStoryClient({fetch:fetcher=globalThis.fetch,location=globa
   }
   async function requestTurn(pending,context,attempt,{onProgress,storyActions=false}={}){if(new TextEncoder().encode(JSON.stringify(context)).length>limits.maxContextBytes)throw error('REQUEST_TOO_LARGE');return turn(await json('turn',{context,attempt,...(storyActions===true?{storyActions:true}:{})},typeof onProgress==='function'?{requestId:pending.identity.requestId,attemptId:attempt.id,sessionRef:attempt.sessionRef,onProgress}:null,storyActions===true),pending,attempt);}
   async function getTurn(pending,attempt){return turn(await json('turn/'+encodeURIComponent(pending.identity.requestId)+'?attemptId='+encodeURIComponent(attempt.id),undefined,null,true),pending,attempt);}
-  return {capabilities,createSession,requestTurn,getTurn};
+  async function requestProse(brief,attempt){
+    validateEventProseBrief(brief);
+    const value=await json('prose',{brief,attempt},null,false,15000);
+    if(!['ready','paused','rejected'].includes(value.status))throw error('PROTOCOL_MISMATCH');
+    if(value.status==='ready'){
+      if(value.requestId!==brief.requestId||value.attemptId!==attempt.id||value.sessionRef!==attempt.sessionRef||value.errorCode!==null||value.retry!==null||value.scene!==undefined||value.prose?.sourceHash!==brief.sourceHash)throw error('RESPONSE_IDENTITY_MISMATCH');
+      try{validateProseText(value.prose.text);}catch{throw error('PROTOCOL_MISMATCH');}
+    }
+    return value;
+  }
+  return {capabilities,createSession,requestTurn,getTurn,requestProse};
 }

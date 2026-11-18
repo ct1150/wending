@@ -1,0 +1,123 @@
+{
+  "base": "5a9c838544a15a0101bf0cb5aeeb38f5e8dbe2a4",
+  "chapter": "归航者",
+  "productionDeployed": false,
+  "human20HoursVerified": false,
+  "tests": {
+    "rules": {
+      "pass": 7,
+      "fail": 0
+    },
+    "finalArchives": {
+      "pass": 2,
+      "fail": 0
+    },
+    "relatedFiltered": {
+      "pass": 3,
+      "fail": 0
+    }
+  },
+  "ui": {
+    "before": 1250,
+    "after": 1281,
+    "days": 29,
+    "elapsed": 146,
+    "middleBytes": 4121627,
+    "finalBytes": 4167469,
+    "calls": 0,
+    "errors": [],
+    "viewport": {
+      "width": 360,
+      "height": 760
+    },
+    "noHorizontalOverflow": true,
+    "visuallyReviewed": [
+      "cabin",
+      "route",
+      "finished"
+    ],
+    "initialImportWaitTimedOutAtSeconds": 30,
+    "successfulWaitLimitSeconds": 120
+  },
+  "bundle": {
+    "directory": "D:\\tmp\\wending\\试玩版\\d987a49\\homebound",
+    "sha256": "2c8213225de18025945e63735eb648634d8d04e74b0a1c4b3aca23d2dbb8d9c3",
+    "bytes": 1476186,
+    "sourceHashes": {
+      "README.md": "d0889204cfaf2730f87c5f2685ba93531ef616f745360ee0d6b797c92d1d912c",
+      "docs/PLAYTHROUGH_ROUTE.md": "001f70b39aa25783f05aa847598d38173d6a9017bb6a26ad5603b4edd93dbb5e",
+      "src/game/cultivation/live/event-content.js": "918960e8fca65491c72fc9a3bf3f91ac3770e660890f07e7735c7f7b0f2f3283",
+      "src/game/cultivation/live/events.js": "92c83ee3d792bbe2f5e06768ee08a8052cefd7244cc0b61e43a49c34a4fdb683",
+      "src/game/cultivation/live/journey-notes.js": "861d38728a2d58fe2a9883fe25faa6b726845473098f623ae5e902ffc91eb40f",
+      "src/game/live-archive.js": "091bfd7379596bc10e1c43b5238834261b1e3a58e0c5609bf416d2d44eabb5f0",
+      "src/game/cultivation/live/homebound.js": "ed72da27cb751a83f8115da9081b7fef4b656a6d05914d0eb162209267ba5665"
+    }
+  },
+  "nativeFixture": {
+    "source": "5a9c838",
+    "turn": 1250,
+    "derivedFrom": "native 1221-turn combined route plus actual supplies, iron and recovery"
+  },
+  "preSeedMenu": "synthetic exact historical menu on a native history, not a claimed pre-seed export",
+  "checkpoints": [
+    {
+      "name": "promise",
+      "turn": 1258,
+      "exact": true,
+      "bytes": 4079365
+    },
+    {
+      "name": "pending",
+      "turn": 1258,
+      "exact": true,
+      "bytes": 4082401
+    },
+    {
+      "name": "retreated",
+      "turn": 1263,
+      "exact": true,
+      "bytes": 4097536
+    },
+    {
+      "name": "unsealed",
+      "turn": 1284,
+      "exact": true,
+      "bytes": 4179758
+    },
+    {
+      "name": "finished",
+      "turn": 1287,
+      "exact": true,
+      "bytes": 4189330
+    },
+    {
+      "name": "successor",
+      "turn": 1,
+      "exact": true,
+      "bytes": 22431
+    }
+  ],
+  "naturalDeathAndSuccessor": true,
+  "forgeriesRejected": [
+    "rehashed earlier historical prose",
+    "rehashed earlier investigation flag"
+  ],
+  "interleavedFourRealmBrowserRouteVerified": false,
+  "samples": [
+    {
+      "name": "舱门已开.wending.jsonl",
+      "bytes": 4121627,
+      "sha256": "46f81527a502cbb0d2d93e84818df879c723abd57cff7f52a03daa2d9df1ec7a"
+    },
+    {
+      "name": "归航已成.wending.jsonl",
+      "bytes": 4167469,
+      "sha256": "80a961e1ebc33f2fa6faea669852f8cbc1b0812c18c062ddbef2ca25ca611c95"
+    },
+    {
+      "name": "封舱已解.wending.jsonl",
+      "bytes": 4179758,
+      "sha256": "107773e5b7572c63c52b065efe1e522d26992e78f9b9ed25646728b3fb045816"
+    }
+  ]
+}

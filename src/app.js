@@ -12,6 +12,7 @@ import { renderLiveJourney, renderLiveHistory, updateLiveJourney } from './ui/jo
 import { loadNavigation, saveNavigation, loadPreferences, savePreferences } from './ui/navigation.js';
 import { renderTitleScreen, renderGameScene, renderGameNavigation, renderReadingSettings } from './ui/title-screen.js';
 import { mountTitleScene } from './ui/title-scene.js';
+import { createPlaytestPanel } from './ui/playtest-panel.js';
 import { icon } from './ui/icons.js';
 
 const $ = selector => document.querySelector(selector);
@@ -41,6 +42,8 @@ const liveClient = createStoryClient();
 let view = navigation.screen;
 let toastTimer, dialogConfirm = null, dialogReturnTarget = null, retainedHistory = null;
 let disposeTitleScene = () => {}, disposeGameScene = null;
+const playtest=createPlaytestPanel({snapshot:()=>liveSnapshot,screen:()=>view,
+  enter:()=>{closeDialog(false);view='adventure';render();},render,openDialog,downloadText,notify,esc,version:appVersion});
 
 function rememberScreen() {
   return saveNavigation(navigationStorage, { screen: view, draft: liveBirthDraft, returnScreen });
@@ -56,7 +59,7 @@ function currentJourneySummary() {
 function renderSettingsPage() {
   const summary = currentJourneySummary();
   const body = `<p class="birth-kicker">收好行囊，再赴山河</p><h2 id="settings-title" tabindex="-1">游戏设置</h2>${renderReadingSettings(readingPreferences)}<section class="settings-section"><h3>当前进度</h3><p>${summary ? `${esc(summary.name)} · ${esc(summary.detail)}` : '尚未开启修仙人生。'}</p><p class="save-info">只有一个当前存档，进度自动保存在此浏览器。重新开始后，原人生保留为只读历史。</p>${summary ? `<button class="button" data-restart ${uiBusy || liveSnapshot?.busy ? 'disabled' : ''}>重新开始人生</button>` : ''}<details class="save-backup"><summary>备份与恢复</summary><div class="settings-actions"><button class="button" data-export ${summary ? '' : 'disabled'}>导出存档</button><button class="button" data-import>恢复备份</button></div><p class="save-info">更换设备前可导出备份。恢复备份会替换当前存档。</p><button class="button" data-retained>查看历世与旧备份</button>${hasLegacyData ? '<p class="save-info">旧版原始数据仍保留在本机，可下载留存。</p><button class="button" data-export-legacy>下载旧版原始数据</button>' : ''}</details></section><section class="settings-section"><h3>入世须知</h3><p>岁月只在落下一项选择时前行。</p><button class="button" data-help>查看游戏说明</button></section>`;
-  renderScreenShell(body, { title: '游戏设置', back: returnScreen === 'new' ? '返回角色创建' : returnScreen === 'adventure' ? '返回当前剧情' : '返回首页' });
+  renderScreenShell(body+'<section class="settings-section"><h3>试玩手记</h3><button class="button" data-diary-open>打开试玩手记</button></section>', { title: '游戏设置', back: returnScreen === 'new' ? '返回角色创建' : returnScreen === 'adventure' ? '返回当前剧情' : '返回首页' });
 }
 
 function currentBirthOptions() {
@@ -65,7 +68,7 @@ function currentBirthOptions() {
     : [];
   return {
     seed:liveBirthDraft.seed,
-    originStories:true,experienceVersion:EXPERIENCE_VERSION,
+    originStories:true,experienceVersion:EXPERIENCE_VERSION,eventVersion:1,
     ...(inheritedBenefits.length ? {inheritedBenefits} : {}),
     ...(liveBirthDraft.rolledTalentId ? {lockedTalentId:liveBirthDraft.rolledTalentId} : {}),
   };
@@ -137,10 +140,11 @@ function showCharacter() {
 }
 
 function showHelp() {
-  openDialog('入世须知', '<p>阅读眼前的剧情，选择你的做法，或写下自己的行动。岁月随选择前行；查看人物与历史不会推进时间。</p><p>故事需要联网续写。进度自动保存，刷新后可继续；请求未完成时会保留待续进度。</p><p>游戏只有一个存档。重新开始会覆盖当前进度；人物死亡后，可以在此生结算中选择传承、步入轮回。</p>', '<button class="button primary" data-close-dialog>继续阅读</button>');
+  openDialog('入世须知', '<p>阅读眼前的事件，选择自己的做法。修炼、历练与人物往来会留下真实后果；查看条件与菜单不会推进时间。</p><p>新人生的基础剧情与选择立即可用。可选的 AI 扩写需要联网，暂时不可用时仍可继续行动。旧人生继续使用原有的在线续写方式。</p><p>进度自动保存在此浏览器。重新开始会替换当前进度，原人生保留为只读历史；真实死亡后，可以选择传承、步入轮回。</p>', '<button class="button primary" data-close-dialog>继续阅读</button>');
 }
 
 function render() {
+  playtest.observe();
   disposeTitleScene(); disposeTitleScene = () => {};
   syncGameScene(); rememberScreen();
   if (!webContext) return renderScreenShell('<h2>前往山海，续写此生</h2><p>请通过在线地址游玩。</p><a class="button primary" href="https://wending.868656.xyz/">进入百世问鼎</a>');
@@ -214,7 +218,7 @@ function captureFocusTarget(element = document.activeElement) {
   // Action identity survives a redraw; revision/state metadata does not.
   const attributes = [...element.attributes].filter(({ name }) => name.startsWith('data-') && !['data-revision', 'data-state-hash', 'data-scene-id'].includes(name));
   const selector = element.id ? `#${CSS.escape(element.id)}` : attributes.length ? element.localName + attributes.map(({ name, value }) => `[${name}="${CSS.escape(value)}"]`).join('') : null;
-  return { element, selector, sceneFallback: element.matches('[data-live-choice], [data-live-start], [data-live-new], [data-live-retry], [data-live-resume], [data-live-reincarnate]') };
+  return { element, selector, sceneFallback: element.matches('[data-live-choice], [data-live-note], [data-live-start], [data-live-new], [data-live-retry], [data-live-resume], [data-live-reincarnate]') };
 }
 
 function resolveFocusTarget(target) {
@@ -312,7 +316,7 @@ async function beginLiveLife() {
 
 function liveStoryView(snapshot) {
   if(!snapshot?.state)return null;
-  return {...snapshot,stateHash:stateHash(snapshot.state),itemNames:LIVE_ITEMS,characterSummary:liveCharacterSummary(snapshot.state,liveCatalogs),selectedReincarnationRewards:liveBirthDraft.reincarnationRunId===snapshot.state.runId?liveBirthDraft.reincarnationRewardIds??[]:[]};
+  return {...snapshot,playtestActive:playtest.active,stateHash:stateHash(snapshot.state),itemNames:LIVE_ITEMS,characterSummary:liveCharacterSummary(snapshot.state,liveCatalogs),selectedReincarnationRewards:liveBirthDraft.reincarnationRunId===snapshot.state.runId?liveBirthDraft.reincarnationRewardIds??[]:[]};
 }
 
 function setReincarnationDraft(snapshot, rewardIds) {
@@ -422,6 +426,7 @@ document.addEventListener('click', event => {
   const button = event.target.closest('button,a');
   if (!button || button.disabled) return;
   const data = button.dataset;
+  if(Object.keys(data).some(key=>key.startsWith('diary')))return playtest.click(data);
   if ('closeDialog' in data) { closeDialog(); return; }
   if ('confirm' in data) { const callback = dialogConfirm; closeDialog(false); callback?.(); return; }
   if ('home' in data) return goHome();
@@ -438,8 +443,15 @@ document.addEventListener('click', event => {
   if ('liveReward' in data) return selectReincarnationReward(data.liveReward);
   if ('liveReincarnate' in data) return prepareReincarnation();
   if ('liveRetry' in data) return liveSession?.retry();
+  if ('liveProseExpand' in data) return liveSession?.expandProse();
   if ('liveResume' in data) return liveSession?.resume();
   if ('liveChoice' in data) return liveSession?.choose({ choiceId: data.liveChoice, baseRevision: Number(data.revision), stateHash: data.stateHash });
+  if ('liveNote' in data)return liveSession?.openJourneyNote({node:data.liveNote,archiveId:data.archiveId,baseRevision:Number(data.revision),stateHash:data.stateHash},()=>view==='adventure'&&!document.hidden&&!$('#dialog').open);
+  if ('livePractice' in data||'liveShortPractice' in data){
+    const count=Number(data.livePractice??button.closest('details').querySelector('[data-practice-count]').value);
+    return liveSession?.practiceUntil({count,archiveId:data.archiveId,baseRevision:Number(data.revision),stateHash:data.stateHash},()=>view==='adventure'&&!document.hidden&&!$('#dialog').open);
+  }
+  if ('liveStopPractice' in data) return liveSession?.stopPractice();
   if ('liveHistoryNext' in data) return showLiveHistory(false);
   if ('liveHistoryFirst' in data || 'history' in data) return showLiveHistory(true);
   if ('character' in data) return showCharacter();
@@ -483,6 +495,8 @@ $('#dialog').addEventListener('cancel', event => { event.preventDefault(); close
 $('#dialog').addEventListener('close', () => { const target = dialogReturnTarget; dialogReturnTarget = null; dialogConfirm = null; resolveFocusTarget(target)?.focus({ preventScroll: true }); });
 $('#dialog').addEventListener('click', event => { if (event.target === $('#dialog')) { const rect = $('#dialog').getBoundingClientRect(); if (event.clientX < rect.left || event.clientX > rect.right || event.clientY < rect.top || event.clientY > rect.bottom) closeDialog(); } });
 window.addEventListener?.('pageshow', event => { if (event.persisted && webContext) liveSession?.resume(); });
+window.addEventListener?.('pagehide',()=>liveSession?.stopPractice());
+document.addEventListener('visibilitychange',()=>{if(document.hidden)liveSession?.stopPractice();});
 
 render();
 initializeScreens();

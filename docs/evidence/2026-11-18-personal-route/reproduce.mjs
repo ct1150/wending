@@ -1,0 +1,14 @@
+import {execFileSync} from 'node:child_process';
+import {mkdtemp,mkdir,copyFile,writeFile} from 'node:fs/promises';
+import {join} from 'node:path';
+import {fileURLToPath} from 'node:url';
+const root=fileURLToPath(new URL('../../../',import.meta.url));
+const base=await mkdtemp(join(root,'.scratch/personal-route-audit-'));
+execFileSync('git',['archive','--output='+join(base,'source.tar'),'5b8631061ea6371db5c5522ed41ea861dad79dde'],{cwd:root});
+execFileSync('tar.exe',['-xf',join(base,'source.tar'),'-C',base]);
+await mkdir(join(base,'.scratch'));
+await copyFile(new URL('./generate.mjs',import.meta.url),join(base,'.scratch/generate.mjs'));
+execFileSync(process.execPath,['.scratch/generate.mjs'],{cwd:base});
+const output=execFileSync(process.execPath,['--test','--test-name-pattern=audit a connected personal','.scratch/personal-route.test.mjs'],{cwd:base,encoding:'utf8'});
+await writeFile(join(base,'.scratch/native-test.txt'),output);
+process.stdout.write(output);console.log('Evidence directory: '+join(base,'.scratch'));

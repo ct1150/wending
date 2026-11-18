@@ -1,0 +1,198 @@
+{
+  "revision": "5b8631061ea6371db5c5522ed41ea861dad79dde",
+  "choices": 185,
+  "turn": 186,
+  "ordinaryPractice": 23,
+  "blocks": 161,
+  "characters": 7681,
+  "realm": "spirit",
+  "ageDays": 125993,
+  "crossing": [
+    {
+      "id": "r:e705362b772768e0:t186:c:cross",
+      "label": "循正途飞升前往中界清河城",
+      "intent": "travel",
+      "targetId": "r:e705362b772768e0:t1:e:middle",
+      "stake": "low",
+      "approach": "ascend",
+      "enabled": false,
+      "reason": "缺少灵石。",
+      "costs": {
+        "days": 3600,
+        "items": {
+          "skykey": 1,
+          "stones": 30
+        },
+        "spirit": 30,
+        "lifeYears": 0
+      },
+      "warnings": [
+        "跨界需要实际资源与年月；失败会损失投入并受伤，成功后重新建立当地关系。",
+        "将增加1点伤势；伤势达到10即死亡。",
+        "此行动有受伤风险。"
+      ]
+    },
+    {
+      "id": "r:e705362b772768e0:t186:c:resources-menu",
+      "label": "回去备办资源",
+      "intent": "interact",
+      "targetId": "self",
+      "stake": "low",
+      "approach": "observe",
+      "enabled": true,
+      "reason": null,
+      "costs": {
+        "days": 0,
+        "items": {},
+        "spirit": 0,
+        "lifeYears": 0
+      },
+      "warnings": []
+    },
+    {
+      "id": "r:e705362b772768e0:t186:c:back",
+      "label": "暂且放下，回去安排修行",
+      "intent": "interact",
+      "targetId": "self",
+      "stake": "low",
+      "approach": "observe",
+      "enabled": true,
+      "reason": null,
+      "costs": {
+        "days": 0,
+        "items": {},
+        "spirit": 0,
+        "lifeYears": 0
+      },
+      "warnings": []
+    }
+  ],
+  "post": {
+    "start": 5761,
+    "origin": "helped",
+    "route": "relay",
+    "trace": 1,
+    "steps": [
+      {
+        "day": 6197,
+        "decision": "ferry"
+      },
+      {
+        "day": 7564,
+        "decision": "partner"
+      },
+      {
+        "day": 10082,
+        "decision": "anonymous"
+      }
+    ],
+    "ending": "leaves"
+  },
+  "mountain": {
+    "wish": "source",
+    "walk": [
+      {
+        "sense": 1,
+        "method": "steady",
+        "technique": "torn-meridian",
+        "ok": true,
+        "days": 432,
+        "woke": 16534,
+        "exit": "found"
+      },
+      {
+        "sense": 1,
+        "method": "steady",
+        "technique": "torn-meridian",
+        "ok": true,
+        "days": 432,
+        "woke": 16966,
+        "exit": "found"
+      },
+      {
+        "sense": 1,
+        "method": "steady",
+        "technique": "torn-meridian",
+        "ok": true,
+        "days": 1080,
+        "woke": 22213,
+        "exit": "found"
+      },
+      {
+        "sense": 1,
+        "method": "steady",
+        "technique": "torn-meridian",
+        "ok": true,
+        "days": 1080,
+        "woke": 23293,
+        "exit": "found"
+      },
+      {
+        "sense": 1,
+        "method": "steady",
+        "technique": "torn-meridian",
+        "ok": true,
+        "days": 9000,
+        "woke": 116984,
+        "exit": "attuned",
+        "echo": {
+          "form": "listen",
+          "day": 116985,
+          "ending": "send"
+        }
+      },
+      {
+        "sense": 1,
+        "method": "steady",
+        "technique": "torn-meridian",
+        "ok": true,
+        "days": 9000,
+        "woke": 125985,
+        "exit": "found"
+      }
+    ],
+    "gifts": [
+      "keep",
+      "keep"
+    ],
+    "ending": "send",
+    "wind": {
+      "form": "listen",
+      "day": 23294,
+      "ending": "own"
+    }
+  },
+  "forms": {
+    "known": "listen",
+    "draft": null
+  },
+  "ferry": {
+    "pages": [
+      {
+        "id": 0,
+        "way": "bank",
+        "start": 16087,
+        "marks": 1,
+        "end": "moult",
+        "day": 16102
+      },
+      {
+        "id": 1,
+        "way": "bank",
+        "start": 21116,
+        "marks": 3,
+        "end": "cold",
+        "day": 21133
+      },
+      {
+        "id": 2,
+        "way": "deck",
+        "start": 125985,
+        "marks": 4,
+        "end": "borrow",
+        "day": 125993
+      }
+    ],
+    "reply": null
+  }
+}

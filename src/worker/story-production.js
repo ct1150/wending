@@ -17,7 +17,7 @@ export function createStoryProductionWorker({staticFetch=()=>new Response('Not f
     }
     // The existing SQLite object owns heavy turn processing and its original
     // ledger. Only server-owned configuration crosses this internal boundary.
-    if(path==='/api/story/turn'||path.startsWith('/api/story/turn/')){
+    if(path==='/api/story/turn'||path.startsWith('/api/story/turn/')||path==='/api/story/prose'||path.startsWith('/api/story/prose/')){
       const binding=env.STORY_BUDGET;
       if(binding?.idFromName&&binding?.get){
         const headers=new Headers(request.headers);

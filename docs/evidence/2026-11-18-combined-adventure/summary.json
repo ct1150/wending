@@ -1,0 +1,93 @@
+{
+  "runtimeRevision": "a7ded3d01887eb952c51ba4f48c2011236d2681a",
+  "turn": 1009,
+  "deathCause": "lifespan",
+  "checkpoints": [
+    {
+      "name": "arrival",
+      "turn": 1,
+      "exact": true,
+      "bytes": 18011
+    },
+    {
+      "name": "friends",
+      "turn": 216,
+      "exact": true,
+      "bytes": 722511
+    },
+    {
+      "name": "mountain",
+      "turn": 689,
+      "exact": true,
+      "bytes": 2265989
+    },
+    {
+      "name": "ending",
+      "turn": 1009,
+      "exact": true,
+      "bytes": 3300571
+    },
+    {
+      "name": "successor",
+      "turn": 1,
+      "exact": true,
+      "bytes": 22443
+    }
+  ],
+  "artifact": {
+    "gameRevision": "a7ded3d01887eb952c51ba4f48c2011236d2681a",
+    "target": "D:\\tmp\\wending\\试玩版\\d987a49\\combined-life",
+    "outputs": {
+      "index.html": "c1f48ae314e2fbe9ee7424e5c4562650c2c0d5bfebd8776d5c835789acb746d2",
+      "游玩方向.md": "d5b41d9683415d24f3b6b59acf350e053a1cf4ca67f50f81993eaf027a276ac3",
+      "01-初入山门.wending.jsonl": "34f3cc3adac489fdc42120efa969cffaebff2a8b05c8f25b8b0ca22f1e93ef14",
+      "02-故人同行.wending.jsonl": "97c4ada3b7d5f5c0e9ec14f7c4b3e461f525142fa69ccf7314b1e6dcf3b5a3ea",
+      "03-折山归来.wending.jsonl": "b95fc94ea5c5845142253b1f214ad0f51cf405b190d2aa0ba0160965cf7041ed",
+      "04-此生问鼎.wending.jsonl": "bcd589785793d7736383c410dcf786cae9fd265f09e3cd011646604db16d99aa",
+      "05-下一世.wending.jsonl": "544fc3379d33199e3adf345898b1ed60bbfadc7d6180f7cea332b7e74db4bc93"
+    }
+  },
+  "ui": {
+    "results": [
+      {
+        "file": "arrival",
+        "turn": 1,
+        "realm": "mortal",
+        "bytes": 18011,
+        "resumed": "ask"
+      },
+      {
+        "file": "friends",
+        "turn": 216,
+        "realm": "foundation",
+        "bytes": 722511,
+        "resumed": "back"
+      },
+      {
+        "file": "mountain",
+        "turn": 689,
+        "realm": "spirit",
+        "bytes": 2265989,
+        "resumed": "mount-history"
+      },
+      {
+        "file": "ending",
+        "turn": 1009,
+        "realm": "tribulation",
+        "bytes": 3300571,
+        "resumed": "train-menu"
+      },
+      {
+        "file": "successor",
+        "turn": 1,
+        "realm": "mortal",
+        "bytes": 22443,
+        "resumed": "ask"
+      }
+    ],
+    "calls": 0,
+    "errors": []
+  },
+  "humanPlaytimeVerified": false,
+  "productionDeployed": false
+}

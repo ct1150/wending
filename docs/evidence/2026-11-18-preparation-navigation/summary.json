@@ -1,0 +1,78 @@
+{
+  "base": "6f83fa6de17826a110fe8f509c0a632411393261",
+  "productionDeployed": false,
+  "human20HoursVerified": false,
+  "tests": {
+    "rules": {
+      "pass": 3,
+      "fail": 0
+    },
+    "browser": {
+      "pass": 2,
+      "fail": 0
+    },
+    "related": {
+      "pass": 5,
+      "fail": 0
+    }
+  },
+  "ui": {
+    "before": 731,
+    "afterNavigation": 747,
+    "afterGather": 748,
+    "navigationLifeUnchanged": true,
+    "navigationRngUnchanged": true,
+    "promiseUnchanged": true,
+    "days": 90,
+    "records": [
+      {
+        "id": "recipe-artifact",
+        "revision": 736
+      },
+      {
+        "id": "recipe-array",
+        "revision": 738
+      },
+      {
+        "id": "resource-iron",
+        "revision": 747
+      }
+    ],
+    "exportBytes": 2453424,
+    "restoredExact": true,
+    "calls": 0,
+    "errors": [],
+    "noHorizontalOverflow": true,
+    "viewport": {
+      "width": 360,
+      "height": 760
+    },
+    "visuallyReviewed": [
+      "directory",
+      "iron"
+    ]
+  },
+  "bundle": {
+    "base": "D:\\tmp\\wending\\wending\\.scratch\\preparation-package-SlpAV7",
+    "revision": "6f83fa6de17826a110fe8f509c0a632411393261",
+    "target": "D:\\tmp\\wending\\试玩版\\d987a49\\preparation",
+    "bytes": 1478322,
+    "hash": "f30f368d69d1ddc5e0d13f483bb5aa90cb1c2d43f407f258fbef809a209602da",
+    "sources": {
+      "src/game/cultivation/live/journey-notes.js": "610bc148f63aee7a4e465337b8d1444098f74913e731082e2957c84ae4f6efb9",
+      "src/ui/live-session.js": "ed9977289879c951af15ac63fe9eef7a0fc751cbe9f8ab9454c7f4507bbb4fb5",
+      "src/ui/journey.js": "ae61ae482c8553f8fd1b2fb752a20e75f1c8294954e6241c32be75ce2e64db6d",
+      "docs/PLAYTHROUGH_ROUTE.md": "a400ef2bea1865fbd69f906254b9d9aca48d17c5b4f5515ff0f2ec9ad179fccf"
+    }
+  },
+  "review": {
+    "scope": "navigation authorization and state consistency",
+    "confirmedBypass": false,
+    "ruling": "existing zero-cost leave may postpone a conversation without answering it; native regression added"
+  },
+  "limits": [
+    "not the full project test suite",
+    "menu history still records each step",
+    "no human playtime or enjoyment conclusion"
+  ]
+}

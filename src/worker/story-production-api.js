@@ -34,5 +34,5 @@ export function createStoryProductionApi({config={},budget}={}){
     const {policy,evidence}=readPolicy(config);
     return assertProviderReady({enabled:true,modelId:policy.modelId,env:runtime,evidence,purpose:'production'});
   };
-  return createStoryApi({budget,config:{readiness,groundedChoices:true,knowledgeEnabled:config?.knowledge?.enabled===true}});
+  return createStoryApi({budget,config:{readiness,groundedChoices:true,proseEnabled:config?.modelId===GLM_MODEL_ID,knowledgeEnabled:config?.knowledge?.enabled===true}});
 }

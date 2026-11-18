@@ -154,7 +154,7 @@ export class StoryBudget {
   async fetch(request){
     // Reachable only through the singleton internal Durable Object binding.
     const path=new URL(request.url).pathname;
-    if(path==='/api/story/turn'||path.startsWith('/api/story/turn/')){
+    if(path==='/api/story/turn'||path.startsWith('/api/story/turn/')||path==='/api/story/prose'||path.startsWith('/api/story/prose/')){
       let config;
       try{const raw=request.headers.get(STORY_RUNTIME_POLICY_HEADER);if(!raw||raw.length>16384)throw Error();config=JSON.parse(raw);}catch{return new Response(null,{status:400});}
       return createStoryProductionApi({config,budget:this.coordinator}).fetch(request,this.env,this.ctx);

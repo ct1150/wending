@@ -1,0 +1,17 @@
+import {execFileSync} from 'node:child_process';
+import {mkdtemp,mkdir,copyFile,readFile,writeFile} from 'node:fs/promises';
+import {join} from 'node:path';
+import {fileURLToPath} from 'node:url';
+import assert from 'node:assert/strict';
+const root=fileURLToPath(new URL('../../../',import.meta.url));
+const base=await mkdtemp(join(root,'.scratch/campaign-pacing-'));
+execFileSync('git',['archive','--output='+join(base,'source.tar'),'edf6a40b8f5a66252d10ded5f58cb86ed88e4294'],{cwd:root});
+execFileSync(process.platform==='win32'?'tar.exe':'tar',['-xf',join(base,'source.tar'),'-C',base]);
+await mkdir(join(base,'.scratch'));
+for(const file of ['generate.mjs','summarize.mjs'])await copyFile(new URL('./'+file,import.meta.url),join(base,'.scratch',file));
+execFileSync(process.execPath,['.scratch/generate.mjs'],{cwd:base});
+const output=execFileSync(process.execPath,['--test','--test-name-pattern=one continuous birth','.scratch/pacing-audit.test.mjs'],{cwd:base,encoding:'utf8'});
+await writeFile(join(base,'.scratch/native-test.txt'),output);
+execFileSync(process.execPath,['.scratch/summarize.mjs'],{cwd:base});
+assert.deepEqual(JSON.parse(await readFile(join(base,'.scratch/pacing-summary.json'),'utf8')),JSON.parse(await readFile(new URL('./summary.json',import.meta.url),'utf8')));
+process.stdout.write(output);console.log('Verified evidence: '+join(base,'.scratch'));

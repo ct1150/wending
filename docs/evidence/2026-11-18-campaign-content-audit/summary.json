@@ -1,0 +1,139 @@
+{
+  "revision": "5cbcaba92956d2d05f878d3b5ff0ca9ae78c367c",
+  "committedChoices": 811,
+  "finalTurn": 812,
+  "categories": {
+    "story-state": 90,
+    "reading-menu": 480,
+    "authored-action": 127,
+    "authored-travel": 16,
+    "ordinary-practice": 70,
+    "breakthrough": 11,
+    "material-search": 10,
+    "recovery": 4,
+    "world-travel": 3
+  },
+  "realms": {
+    "mortal": {
+      "turns": 121,
+      "kinds": {
+        "story-state": 18,
+        "reading-menu": 62,
+        "authored-action": 24,
+        "authored-travel": 16,
+        "ordinary-practice": 1
+      }
+    },
+    "qi": {
+      "turns": 32,
+      "kinds": {
+        "breakthrough": 1,
+        "reading-menu": 19,
+        "authored-action": 6,
+        "story-state": 3,
+        "ordinary-practice": 2,
+        "material-search": 1
+      }
+    },
+    "foundation": {
+      "turns": 50,
+      "kinds": {
+        "breakthrough": 2,
+        "reading-menu": 29,
+        "authored-action": 6,
+        "story-state": 3,
+        "ordinary-practice": 6,
+        "material-search": 3,
+        "recovery": 1
+      }
+    },
+    "golden": {
+      "turns": 223,
+      "kinds": {
+        "breakthrough": 2,
+        "reading-menu": 133,
+        "authored-action": 41,
+        "material-search": 1,
+        "story-state": 34,
+        "world-travel": 2,
+        "recovery": 2,
+        "ordinary-practice": 8
+      }
+    },
+    "nascent": {
+      "turns": 160,
+      "kinds": {
+        "breakthrough": 1,
+        "reading-menu": 113,
+        "authored-action": 24,
+        "world-travel": 1,
+        "story-state": 16,
+        "ordinary-practice": 4,
+        "material-search": 1
+      }
+    },
+    "spirit": {
+      "turns": 47,
+      "kinds": {
+        "breakthrough": 1,
+        "reading-menu": 25,
+        "authored-action": 4,
+        "story-state": 3,
+        "ordinary-practice": 10,
+        "material-search": 3,
+        "recovery": 1
+      }
+    },
+    "void": {
+      "turns": 51,
+      "kinds": {
+        "breakthrough": 1,
+        "reading-menu": 27,
+        "authored-action": 10,
+        "story-state": 3,
+        "ordinary-practice": 10
+      }
+    },
+    "unity": {
+      "turns": 44,
+      "kinds": {
+        "breakthrough": 1,
+        "reading-menu": 18,
+        "authored-action": 6,
+        "story-state": 3,
+        "ordinary-practice": 15,
+        "material-search": 1
+      }
+    },
+    "mahayana": {
+      "turns": 63,
+      "kinds": {
+        "breakthrough": 1,
+        "reading-menu": 39,
+        "authored-action": 5,
+        "story-state": 4,
+        "ordinary-practice": 14
+      }
+    },
+    "tribulation": {
+      "turns": 20,
+      "kinds": {
+        "breakthrough": 1,
+        "reading-menu": 15,
+        "story-state": 3,
+        "authored-action": 1
+      }
+    }
+  },
+  "displayedUnique": {
+    "blocks": 885,
+    "characters": 35072
+  },
+  "numberNormalized": {
+    "blocks": 768,
+    "characters": 30554,
+    "longestConsecutiveSameScene": 14,
+    "endingAt": 718
+  },
+  "practiceSnapshotsWithBatchAvailable": 60
+}
