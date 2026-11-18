@@ -1,6 +1,6 @@
 import {eventNode} from './event-content.js';
 import {realmFor,nextRealmFor,V7_REALMS} from './cultivation-rules.js';
-import {DAYS_PER_YEAR} from './model.js';
+import {DAYS_PER_YEAR,ITEMS} from './model.js';
 import {harvestWindows} from './phenology.js';
 import {postWindows} from './lin-post.js';
 import {shellTide,ferryForMaterial} from './shell-ferry.js';
@@ -153,6 +153,15 @@ export function crossingDeadlines(state,notes,days){
  return (names.length?'此行结束时已过'+names.join('、')+'的期限。':'')+(wind?'此行结束时回风孤标已经变风，仍可继续探路，通路费用按新的风候结算。':'');
 }
 
+export function preparationStops(state){
+ if(state?.phase!=='active'||!state.events||state.events.entry==='unresolved')return [];
+ const life=state.life,materials=[...new Set([nextRealmFor(life)?.material??'relic','supplies','stones','herbs','iron'])];
+ return [
+  ...materials.map((item,page)=>({id:'resource-'+item,node:'resources',page,item,title:ITEMS[item]+'去处',detail:'行囊现有 '+(life.items[item]??0)})),
+  ...['medicine','artifact','talisman','array','elixir'].map((item,page)=>({id:'recipe-'+item,node:'workshop',page,item,title:ITEMS[item]+'配方',detail:'行囊现有 '+(life.items[item]??0)})),
+ ];
+}
+
 // These menu screens can be read on the way to a known entry. A trip, promise,
 // reward or quest patch is a player decision even when it happens to cost zero days.
 const shelves=new Set(['hub','training','rest','journey','resources','workshop','crossing','affairs','mentor','companion','post-index','post-book','post-history','watch-book','watch-visitors','field-guide','garden-book','garden-history','river-book','voyage-book','council-book','sky-book','sky-weather','sky-lodgings','sky-rift','sky-harbor']);
@@ -160,13 +169,13 @@ export function noteMenuSteps(state){
  return eventNode(state).choices.filter(c=>c.navigation&&c.targetId==='self'&&c.approach==='observe'&&!c.arrival&&!c.rule&&Object.keys(c.patch??{}).every(k=>k==='page'));
 }
 export function noteRoutes(state,notes){
- const routes=new Map(),wanted=new Set(notes.map(n=>n.node));
+ const routes=new Map(),targets=new Map(notes.map(n=>[n.id??n.node,n])),wanted=new Set(notes.map(n=>n.node));
  if(!wanted.size)return routes;
  const queue=[{s:state,path:[]}],visited=new Set();
- for(let i=0;i<queue.length&&routes.size<wanted.size;i++){
+ for(let i=0;i<queue.length&&routes.size<targets.size;i++){
   const {s,path}=queue[i],e=s.events,key=e.node+'#'+e.page;
   if(visited.has(key))continue;visited.add(key);
-  if(wanted.has(e.node)&&!routes.has(e.node))routes.set(e.node,path);
+  for(const [id,n] of targets)if(n.node===e.node&&(n.page===undefined||n.page===e.page)&&!routes.has(id))routes.set(id,path);
   if(path.length&&!shelves.has(e.node))continue;
   for(const c of noteMenuSteps(s)){
    if(!shelves.has(c.next)&&!wanted.has(c.next))continue;

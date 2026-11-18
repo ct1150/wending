@@ -4,7 +4,7 @@ import {describeEcho,getReincarnationSettlement,REINCARNATION_REWARDS} from '../
 import {buildOpeningBrief} from '../game/cultivation/live/experience-story.js';
 import {nextRealmFor} from '../game/cultivation/live/cultivation-rules.js';
 import {practicePlan} from '../game/cultivation/live/practice-plan.js';
-import {journeyNotes,adventureLeads,noteRoutes,crossingDeadlines} from '../game/cultivation/live/journey-notes.js';
+import {journeyNotes,adventureLeads,preparationStops,noteRoutes,crossingDeadlines} from '../game/cultivation/live/journey-notes.js';
 const esc = value => String(value ?? '').replace(/[&<>"']/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[char]);
 
 const endings = { retired: '归隐', lifespan: '寿尽', battle: '陨落', victory: '问鼎', burned: '燃命而终' };
@@ -217,16 +217,17 @@ function renderPracticePlan(view,notes){
   const shorter=options.length?`<details><summary>提前几关出定</summary><label>修期 <select data-practice-count>${options.join('')}</select></label> <button type="button" class="button" data-live-short-practice ${command}>按所选修期入定</button></details>`:'';
   return summary+resume+`<section class="event-prose practice-plan" aria-label="连续稳修"><p class="save-info" data-practice-cost>${plan.days} 日 · 灵力 −${plan.spirit} · 修为 +${plan.gain}${plan.exposure?' · 暴露 +'+plan.exposure:''}。 ${esc(plan.stop)}。</p><button type="button" class="button" data-live-practice="${plan.count}" ${command}>连续稳修 ${plan.count} 关</button>${shorter}</section>`;
 }
-function renderJourneyNotes(view,notes,invitations=false){
+function renderJourneyNotes(view,notes,kind='notes'){
   if(!notes.length)return '';
-  const routes=noteRoutes(view.state,notes),top=notes[0];
+  const routes=noteRoutes(view.state,notes),top=notes[0],invitations=kind==='leads',preparation=kind==='preparation';
   const rows=notes.map(n=>{
-    const path=routes.get(n.node);
-    const link=path?.length?`<button type="button" class="button" data-live-note="${esc(n.node)}"${invitations?' data-adventure-lead':''} data-archive-id="${esc(view.archiveId)}" data-revision="${view.state.revision}" data-state-hash="${esc(view.stateHash)}"${view.busy||view.pending?' disabled':''}>${invitations?'前往':'翻到'}${esc(n.title)}</button>`:
+    const path=routes.get(n.id??n.node);
+    const link=path?.length?`<button type="button" class="button" data-live-note="${esc(n.id??n.node)}"${invitations?' data-adventure-lead':''} data-archive-id="${esc(view.archiveId)}" data-revision="${view.state.revision}" data-state-hash="${esc(view.stateHash)}"${view.busy||view.pending?' disabled':''}>${preparation?'查看':invitations?'前往':'翻到'}${esc(n.title)}</button>`:
       `<small>${path?'正在这一页':'先离开眼前的场景，再翻到这一页'}</small>`;
+    if(preparation)return `<li>${path?.length?'':'<strong>'+esc(n.title)+'</strong> '}${link}<p>${esc(n.detail)}</p></li>`;
     return `<li><strong>${esc(n.title)}</strong><p>${esc(n.detail)}${n.timing?' '+esc(n.timing)+'。':''}</p>${link}</li>`;
   }).join('');
-  return `<details class="journey-notes" ${invitations?'data-adventure-leads':'data-journey-notes'} data-live-preserve-open><summary>${invitations?'仙路方向（'+notes.length+'条）':'此生行记'+(notes.length>1?'（'+notes.length+'件）':'')} · ${esc(top.title)}${top.timing?' · '+esc(top.timing):''}</summary>${invitations?'<p>这些道路随当前境界与经历出现。前往只翻到现场，是否相助、应约、练功或出发，仍由你决定。已接下的事可从「此生行记」续行。</p>':''}<ul>${rows}</ul></details>`;
+  return `<details class="journey-notes" ${preparation?'data-preparation-stops':invitations?'data-adventure-leads':'data-journey-notes'} data-live-preserve-open><summary>${preparation?'整备去处 · 物资与手艺':(invitations?'仙路方向（'+notes.length+'条）':'此生行记'+(notes.length>1?'（'+notes.length+'件）':''))+' · '+esc(top.title)+(top.timing?' · '+esc(top.timing):'')}</summary>${preparation?'<p>直接翻到所需材料或配方。翻页不耗时；搜寻、炼制与恢复仍须自己选择，按当时的条件结算。</p>':invitations?'<p>这些道路随当前境界与经历出现。前往只翻到现场，是否相助、应约、练功或出发，仍由你决定。已接下的事可从「此生行记」续行。</p>':''}<ul>${rows}</ul></details>`;
 }
 function renderEventExtras(view,notes){
   const state=view.state;
@@ -235,7 +236,7 @@ function renderEventExtras(view,notes){
   const growth=next?`修行目标：${next.name} · 修为 ${state.life.cultivation} / ${next.threshold} · ${view.itemNames?.[next.material]??ITEMS[next.material]} ${state.life.items[next.material]??0} / 1`:'继续此生：修炼、历练与未完的因果仍可推进。';
   const message=extra?.status==='loading'?'正在写一小段扩写，你可以继续选择。':extra?.status==='unavailable'?'这一段扩写暂不可用，你仍可继续当前故事。':'';
   return {
-    growth:`<p class="event-growth" data-event-growth>${esc(growth)}</p>${renderJourneyNotes(view,notes)}${renderJourneyNotes(view,adventureLeads(state),true)}`+renderPracticePlan(view,notes)+(view.playtestActive?'<button type="button" class="button" data-diary-stop>结束本段试玩计时</button>':''),
+    growth:`<p class="event-growth" data-event-growth>${esc(growth)}</p>${renderJourneyNotes(view,notes)}${renderJourneyNotes(view,adventureLeads(state),'leads')}${renderJourneyNotes(view,preparationStops(state),'preparation')}`+renderPracticePlan(view,notes)+(view.playtestActive?'<button type="button" class="button" data-diary-stop>结束本段试玩计时</button>':''),
     prose:`<section class="event-prose" data-event-prose aria-label="可选扩写"><button type="button" class="button" data-live-prose-expand${extra||view.busy||view.pending?' disabled':''}>${state.currentScene.blocks.some(block=>block.kind==='dialogue')?'展开对白':'展开描写'}</button><p class="save-info">可选的 AI 扩写，需要联网；随时可以继续行动。</p>${message?`<p data-event-prose-status role="status">${esc(message)}</p>`:''}${extra?.status==='ready'?`<p class="journey-block" data-event-prose-text>${esc(extra.text)}</p>`:''}</section>`,
   };
 }
