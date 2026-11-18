@@ -1,0 +1,327 @@
+{
+  "base": "0131e874f2ff05d528e622b218fd5671a204aab3",
+  "runtimeChanged": false,
+  "productionDeployed": false,
+  "human20HoursVerified": false,
+  "tests": {
+    "nativeGeneration": {
+      "pass": 1,
+      "fail": 0,
+      "fixtureReproduced": true
+    },
+    "continuousBrowser": {
+      "pass": 1,
+      "fail": 0,
+      "durationMs": 189449.7724
+    }
+  },
+  "native": {
+    "checks": [
+      {
+        "name": "arrival",
+        "turn": 1,
+        "realm": "mortal",
+        "ageDays": 5760,
+        "exact": true,
+        "bytes": 18011
+      },
+      {
+        "name": "before-voyages",
+        "turn": 714,
+        "realm": "spirit",
+        "ageDays": 138203,
+        "exact": true,
+        "bytes": 2344175
+      },
+      {
+        "name": "voyage-0",
+        "turn": 731,
+        "realm": "spirit",
+        "ageDays": 138241,
+        "exact": true,
+        "bytes": 2402700
+      },
+      {
+        "name": "voyage-1",
+        "turn": 777,
+        "realm": "void",
+        "ageDays": 253479,
+        "exact": true,
+        "bytes": 2552712
+      },
+      {
+        "name": "voyage-2",
+        "turn": 959,
+        "realm": "unity",
+        "ageDays": 688739,
+        "exact": true,
+        "bytes": 3125779
+      },
+      {
+        "name": "voyage-3",
+        "turn": 1086,
+        "realm": "mahayana",
+        "ageDays": 1639994,
+        "exact": true,
+        "bytes": 3528414
+      },
+      {
+        "name": "ending",
+        "turn": 1191,
+        "realm": "tribulation",
+        "ageDays": 3511435,
+        "exact": true,
+        "bytes": 3863509
+      },
+      {
+        "name": "successor",
+        "turn": 1,
+        "realm": "mortal",
+        "ageDays": 5760,
+        "exact": true,
+        "bytes": 22452
+      }
+    ],
+    "visits": [
+      {
+        "realm": "spirit",
+        "history": {
+          "pledge": "restore",
+          "visits": [
+            {
+              "start": 138235,
+              "seen": 3,
+              "choice": "skiff",
+              "decided": 138239,
+              "done": 138241
+            }
+          ],
+          "place": "shore",
+          "at": 138241,
+          "released": false,
+          "ending": null,
+          "ended": null
+        }
+      },
+      {
+        "realm": "void",
+        "history": {
+          "pledge": "restore",
+          "visits": [
+            {
+              "start": 138235,
+              "seen": 3,
+              "choice": "skiff",
+              "decided": 138239,
+              "done": 138241
+            },
+            {
+              "start": 253475,
+              "seen": 3,
+              "choice": "open",
+              "decided": 253477,
+              "done": 253479
+            }
+          ],
+          "place": "shore",
+          "at": 253479,
+          "released": false,
+          "ending": null,
+          "ended": null
+        }
+      },
+      {
+        "realm": "unity",
+        "history": {
+          "pledge": "restore",
+          "visits": [
+            {
+              "start": 138235,
+              "seen": 3,
+              "choice": "skiff",
+              "decided": 138239,
+              "done": 138241
+            },
+            {
+              "start": 253475,
+              "seen": 3,
+              "choice": "open",
+              "decided": 253477,
+              "done": 253479
+            },
+            {
+              "start": 688732,
+              "seen": 3,
+              "choice": "channel",
+              "decided": 688737,
+              "done": 688739
+            }
+          ],
+          "place": "shore",
+          "at": 688739,
+          "released": false,
+          "ending": null,
+          "ended": null
+        }
+      },
+      {
+        "realm": "mahayana",
+        "history": {
+          "pledge": "restore",
+          "visits": [
+            {
+              "start": 138235,
+              "seen": 3,
+              "choice": "skiff",
+              "decided": 138239,
+              "done": 138241
+            },
+            {
+              "start": 253475,
+              "seen": 3,
+              "choice": "open",
+              "decided": 253477,
+              "done": 253479
+            },
+            {
+              "start": 688732,
+              "seen": 3,
+              "choice": "channel",
+              "decided": 688737,
+              "done": 688739
+            },
+            {
+              "start": 1639989,
+              "seen": 3,
+              "choice": "sail",
+              "decided": 1639992,
+              "done": 1639994
+            }
+          ],
+          "place": "shore",
+          "at": 1639994,
+          "released": false,
+          "ending": "sail",
+          "ended": 1639994
+        }
+      }
+    ],
+    "cause": "lifespan"
+  },
+  "ui": {
+    "results": [
+      {
+        "key": "voyage-0",
+        "turn": 731,
+        "realm": "spirit",
+        "exact": true,
+        "gate": "炼虚",
+        "resumed": true
+      },
+      {
+        "key": "voyage-1",
+        "turn": 777,
+        "realm": "void",
+        "exact": true,
+        "gate": "合体",
+        "resumed": false
+      },
+      {
+        "key": "voyage-2",
+        "turn": 959,
+        "realm": "unity",
+        "exact": true,
+        "gate": "大乘",
+        "resumed": false
+      },
+      {
+        "key": "voyage-3",
+        "turn": 1086,
+        "realm": "mahayana",
+        "exact": true,
+        "gate": null,
+        "resumed": false
+      },
+      {
+        "key": "successor",
+        "turn": 1,
+        "realm": "mortal",
+        "exact": true,
+        "gate": null,
+        "resumed": false
+      }
+    ],
+    "calls": 0,
+    "errors": [],
+    "viewport": {
+      "width": 360,
+      "height": 760
+    },
+    "noHorizontalOverflow": true,
+    "visuallyReviewed": [
+      "voyage-0",
+      "voyage-3"
+    ]
+  },
+  "bundle": {
+    "runtimeRevision": "0131e874f2ff05d528e622b218fd5671a204aab3",
+    "target": "D:/tmp/wending/试玩版/d987a49/homebound-growth",
+    "indexHash": "2c8213225de18025945e63735eb648634d8d04e74b0a1c4b3aca23d2dbb8d9c3",
+    "indexBytes": 1476186,
+    "files": [
+      {
+        "key": "arrival",
+        "name": "寒村初行.wending.jsonl",
+        "bytes": 18011,
+        "sha256": "8b79246a53363b7bb8b0a4ff6eaa6134d40af9795f9324886d402565b250349a"
+      },
+      {
+        "key": "before-voyages",
+        "name": "化神来信.wending.jsonl",
+        "bytes": 2344175,
+        "sha256": "a3e5360d18e4f11c5819a5b12b8cbcad6ccbb3539160f319f1a5825a57bb714d"
+      },
+      {
+        "key": "voyage-0",
+        "name": "化神返港.wending.jsonl",
+        "bytes": 2402700,
+        "sha256": "8e1cccdf58b7c7a80bc572656543a43b651e22452ce982e09d1d93a9956e3fe7"
+      },
+      {
+        "key": "voyage-1",
+        "name": "炼虚返港.wending.jsonl",
+        "bytes": 2552712,
+        "sha256": "68059e2c219bfdc0ed4c744dc052d936cf88f9e3c369364f367ad1228a6bd7a2"
+      },
+      {
+        "key": "voyage-2",
+        "name": "合体返港.wending.jsonl",
+        "bytes": 3125779,
+        "sha256": "42bedfc7c2d7108cec04eb486801a5f0af11fe1605acab70b6156b675a6232d1"
+      },
+      {
+        "key": "voyage-3",
+        "name": "大乘归航.wending.jsonl",
+        "bytes": 3528414,
+        "sha256": "9982b3dd1af4bfc1a6de4d740a45f0ff888dfc807b41a7fc9d8e5519bf676204"
+      },
+      {
+        "key": "ending",
+        "name": "此生问鼎.wending.jsonl",
+        "bytes": 3863509,
+        "sha256": "74504abc283705e58d58d37edce7a3839d07163d02dd1937ad8a6d0fac59c1bc"
+      },
+      {
+        "key": "successor",
+        "name": "新世初行.wending.jsonl",
+        "bytes": 22452,
+        "sha256": "1e632eab991ead4fc52d7854e7a479fc50dbfebaaa0204492b136cf7962fed93"
+      }
+    ]
+  },
+  "limits": [
+    "one native seed; not all optional stories",
+    "continuous route through session API; separate mobile button checks",
+    "turns and game calendar are not human play duration"
+  ]
+}
