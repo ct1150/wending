@@ -24,6 +24,7 @@ import {beaconPlaces} from './rift-beacon.js';
 import {homeboundNode,homeboundPlaces} from './homebound.js';
 import {canStudyForm,formNode} from './technique-forms.js';
 import {campaignOpening} from './campaign-opening.js';
+import {campaignScene} from './campaign.js';
 
 // Authored situations supply every fact and executable choice. AI never edits
 // these definitions. Stable actors belong to a life, not a generated paragraph.
@@ -62,6 +63,7 @@ export function eventNode(state,historicMenu=null){
  if(oldHarbor)historicMenu=null;
  const e=state.events,life=state.life,actors=eventEntities(state),actor=key=>actors.find(row=>row.id.endsWith(':e:'+key)).id;
  if(e.node.startsWith('prologue-'))return campaignOpening(state,menu,choice);
+ if(e.node.startsWith('campaign-'))return campaignScene(state,menu,choice);
  const next=nextRealmFor(life),realm=realmFor(life),method=TECHNIQUES[life.cultivationProfile.experience.activeTechniqueId];
  const young=life.ageDays<80*DAYS_PER_YEAR;
  const row=(title,goal,blocks,choices)=>({title,goal,blocks,choices});
@@ -281,7 +283,9 @@ export function eventNode(state,historicMenu=null){
    const companion=young&&['helped','declined'].includes(e.companion)&&realm.rank>=1?'reunion':'companion';
    return row('旧事与来人','只有尚未完成的事情才需要再作决定',[
     narration(young?'回看故人的来处，也回看自己已经说出口的话。问候不等于答应，暂缓也不等于失信。':'闭关跨过了许多年。你能追索旧日记录，却不能假定当年的凡人仍站在原地等你。'),
-   ],[menu('mentor-menu','查看功法与校法之约','mentor'),menu('companion-menu',young?'看看林砚与当年的选择':'翻看故人的旧日记录',e.post?'post-index':young?companion:'old-record'),e.entry==='accepted'?menu('resume-work','回去完成三日药圃差事','work'):life.cultivationProfile.worldTier>=1&&e.convoy?.chapters[0]?.loads.length===2?menu('ear-book','读钟荻的信，续校六件音器','convoy-ear-book'):leave]);
+   ],[menu('mentor-menu','查看功法与校法之约','mentor'),menu('companion-menu',young?'看看林砚与当年的选择':'翻看故人的旧日记录',e.post?'post-index':young?companion:'old-record'),
+    e.version===2?menu('campaign-book','翻看三界主线，或经主线册回山','campaign-book'):
+    e.entry==='accepted'?menu('resume-work','回去完成三日药圃差事','work'):life.cultivationProfile.worldTier>=1&&e.convoy?.chapters[0]?.loads.length===2?menu('ear-book','读钟荻的信，续校六件音器','convoy-ear-book'):leave]);
   }
   case 'mentor':{
    const experience=life.cultivationProfile.experience,commitment=experience.commitment,young=life.ageDays<100*DAYS_PER_YEAR;

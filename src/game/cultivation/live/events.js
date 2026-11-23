@@ -26,9 +26,11 @@ import {validateCloudTrials} from './cloud-trial.js';
 import {validateRiftBeacon} from './rift-beacon.js';
 import {validateHomebound} from './homebound.js';
 import {openingNodes,validateCampaignOpening} from './campaign-opening.js';
+import {campaignNodes,validateCampaign} from './campaign.js';
 
 const eventNodeIds=new Set([
  ...openingNodes,
+ ...campaignNodes,
  'sky-harbor','home-book','home-talk','home-decide','home-final','home-leave',
  'sky-beacon-book','sky-beacon-rest','sky-beacon-works','sky-beacon-exit',
  'arrival','terms','work','entry-result','companion','companion-result','reunion','reunion-result',
@@ -65,8 +67,9 @@ export function createEventState(atlas,version=1){
   ...(atlas?copy(atlas):{}),...(version===2?{prologue:{water:null,help:null}}:{})};
 }
 export function validateEventState(events,life,gardenRoot,birthRoll){
- assertPlainData(events);exactKeys(events,['version','node','entry','companion','mentor','page','location'],['river','expedition','council','convoy','charters','valley','watch','mine','garden','firstMeeting','post','mountain','ferry','well','cloudPassage','nursery','saltField','ridgeRoad','forms','cloudRift','cloudTrials','riftBeacon','homebound','prologue']);
+ assertPlainData(events);exactKeys(events,['version','node','entry','companion','mentor','page','location'],['river','expedition','council','convoy','charters','valley','watch','mine','garden','firstMeeting','post','mountain','ferry','well','cloudPassage','nursery','saltField','ridgeRoad','forms','cloudRift','cloudTrials','riftBeacon','homebound','prologue','campaign']);
  validateCampaignOpening(events,life);
+ validateCampaign(events,life);
  if(Object.hasOwn(events,'homebound')||events.node.startsWith('home-'))validateHomebound(events,life);
  if(events.node==='sky-harbor'&&life&&(life.cultivationProfile.worldTier!==2||realmFor(life).rank<5))throw Error('港外来信须在上界化神后查看。');
  if(Object.hasOwn(events,'riftBeacon')||events.node.startsWith('sky-beacon-'))validateRiftBeacon(events,life);

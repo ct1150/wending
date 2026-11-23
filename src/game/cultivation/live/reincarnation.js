@@ -111,6 +111,8 @@ export function getReincarnationSettlement(state) {
   if(echoes[0].kind==='method')decisions.push(describeEcho(echoes[0]));
   const person=c&&(state.relatedEntities.find(row=>row.id===c.entityId)?.name??state.director?.memory.npcs.find(row=>row.id===c.entityId)?.name??'当时的指点者');
   if(c?.status==='fulfilled')decisions.push('第'+c.acceptedTurn+'回接受'+person+'的校法之约，此生已还行粮。');
+  const ending=state.events?.campaign?.ending;
+  if(ending)decisions.push(ending==='public'?'问鼎后将可用的路写入公鼎，交给三界轮值。':'问鼎后把三份手稿交给愿意接手的人。');
   if(state.lastReceipt.action)decisions.push('最后一次行动：'+state.lastReceipt.action.label+'。');
   return {...old,selectionLimit:2,decisions,unfinished:c?.status==='owed'?['第'+c.acceptedTurn+'回接受'+person+'的校法之约，直至身故尚欠行粮一份。']:[],echoes};
 }

@@ -11,6 +11,7 @@ import {riverCases} from './river-chronicle.js';
 import {councilHearings} from './mountain-council.js';
 import {canStudyForm} from './technique-forms.js';
 import {canVisitRift} from './cloud-rift.js';
+import {campaignProgress} from './campaign.js';
 
 // Invitations explain the existing long route without accepting its work or
 // putting undiscovered stories into the journal of actual commitments.
@@ -18,6 +19,7 @@ export function adventureLeads(state){
  if(state?.phase!=='active'||!state.events||state.events.entry==='unresolved')return [];
  const e=state.events,leads=[],rank=realmFor(state.life).rank,watch=e.watch?.record.length??0;
  const add=(node,title,detail)=>leads.push({node,title,detail});
+ const campaign=campaignProgress(state);
  if(e.entry==='accepted')add('work','先安顿这一程','三日药圃差事仍未交割。可先回棚看清约定，也可以辞工后另寻修行的路。');
  else if((e.river?.record.length??0)<riverCases)add('river-book','问川 · 从一条河开始','问川图已落款 '+(e.river?.record.length??0)+' / '+riverCases+' 折。沿河访人、辨清线索，自己的选择会带到后面的行旅和北山。');
  else if(e.expedition?.place!=='end')add('voyage-book','行旅 · 亲自走出河图','河上六折已合卷。接着走引灯、观星和雪营三程；路图里选过的苗契，也会改变沿途的处境。');
@@ -47,7 +49,7 @@ export function adventureLeads(state){
  if(tier===2&&rank>=5&&!e.homebound)invite('home-book','归航者 · 舟灵与醒来的人','港外残舟里有人开始说话。舟灵岑照想修成归乡船，他们却渐渐有了自己的愿望。从化神至大乘四次同行，承诺会改变往后的合作。先去听听，确认承诺后再自行备粮登船。');
  if(!e.cloudRift&&canVisitRift(state))invite('sky-rift','白脊风隙 · 用所学走进异变','化神后可循已经交接的旧渡路探访浮岩。调查支点与回流，勘路或施术入隙；首次定脉后，到合体再处理自己留下的变化。先看现场，出发才交粮。');
  if(e.cloudRift?.ending&&!e.riftBeacon)invite('sky-beacon-book','回风孤标 · 走一圈有回程的路','探路班想取回外岩标台的观风原纸。调查会耗时，第五日变风；旧定脉能帮你走不同入口，返岸的路仍须亲自决定。读信不算起行。');
- return [...opportunities,...leads];
+ return [...(campaign?[{node:'campaign-book',title:'三界主线 · '+campaign.title,detail:campaign.goal}]:[]),...opportunities,...leads];
 }
 
 // Only events the character has entered belong here. Reading a note never opens an event.
@@ -164,7 +166,7 @@ export function preparationStops(state){
 
 // These menu screens can be read on the way to a known entry. A trip, promise,
 // reward or quest patch is a player decision even when it happens to cost zero days.
-const shelves=new Set(['hub','training','rest','journey','resources','workshop','crossing','affairs','mentor','companion','post-index','post-book','post-history','watch-book','watch-visitors','field-guide','garden-book','garden-history','river-book','voyage-book','council-book','sky-book','sky-weather','sky-lodgings','sky-rift','sky-harbor']);
+const shelves=new Set(['hub','training','rest','journey','resources','workshop','crossing','affairs','mentor','companion','post-index','post-book','post-history','watch-book','watch-visitors','field-guide','garden-book','garden-history','river-book','voyage-book','council-book','sky-book','sky-weather','sky-lodgings','sky-rift','sky-harbor','campaign-book']);
 export function noteMenuSteps(state){
  return eventNode(state).choices.filter(c=>c.navigation&&c.targetId==='self'&&c.approach==='observe'&&!c.arrival&&!c.rule&&Object.keys(c.patch??{}).every(k=>k==='page'));
 }

@@ -3,7 +3,8 @@ import {ORIGINS,TALENTS,ITEMS,DAYS_PER_YEAR} from '../game/cultivation/live/mode
 import {describeEcho,getReincarnationSettlement,REINCARNATION_REWARDS} from '../game/cultivation/live/reincarnation.js';
 import {buildOpeningBrief} from '../game/cultivation/live/experience-story.js';
 import {nextRealmFor} from '../game/cultivation/live/cultivation-rules.js';
-import {practicePlan} from '../game/cultivation/live/practice-plan.js';
+import {practicePlan,gatherPlan} from '../game/cultivation/live/practice-plan.js';
+import {campaignProgress} from '../game/cultivation/live/campaign.js';
 import {journeyNotes,adventureLeads,preparationStops,noteRoutes,crossingDeadlines} from '../game/cultivation/live/journey-notes.js';
 const esc = value => String(value ?? '').replace(/[&<>"']/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[char]);
 
@@ -200,10 +201,13 @@ function renderLiveEnding(view) {
 
 function renderPracticePlan(view,notes){
   const report=view.practice;
+  if(report?.item&&report.running)return `<p role="status">正在搜寻${esc(ITEMS[report.item])}，已完成 ${report.done} / ${report.count} 次。 <button type="button" class="button" data-live-stop-practice>搜完这次就停</button></p>`;
   if(report?.running)return `<p role="status">连续稳修，已收功 ${report.done} / ${report.count} 关。 <button type="button" class="button" data-live-stop-practice>本关结束即停</button></p>`;
-  const summary=report?`<p role="status" data-practice-report>已完成 ${report.done} 关，共 ${report.days} 日，修为 +${report.gain}。 ${esc(report.reason)}。</p>`:'';
+  const summary=report?`<p role="status" data-practice-report>已完成 ${report.done} ${report.item?'次':'关'}，共 ${report.days} 日，${report.item?esc(ITEMS[report.item]):'修为'} +${report.gain}。 ${esc(report.reason)}。</p>`:'';
   const plan=practicePlan(view.state);
   const command=`data-archive-id="${esc(view.archiveId)}" data-revision="${view.state.revision}" data-state-hash="${esc(view.stateHash)}"${view.busy||view.pending?' disabled':''}`;
+  const gather=gatherPlan(view.state);
+  if(gather?.count>=2)return summary+`<p class="save-info">最多 ${gather.days} 日。中途若搜寻失利、受伤或将错过约期，会停下。</p><button type="button" class="button" data-live-gather="${gather.count}" ${command}>连续搜寻${esc(ITEMS[gather.item])}，最多 ${gather.count} 次</button>`;
   const node=report?.stopNode??(plan?.count<2?plan.stopNode:null),note=notes.find(n=>n.node===node);
   const route=note?noteRoutes(view.state,[note]).get(node):null;
   const resume=route?.length?`<p><button type="button" class="button" data-practice-resume data-live-note="${esc(node)}" ${command}>查看${esc(note.title)}</button></p>`:'';
@@ -233,11 +237,13 @@ function renderEventExtras(view,notes){
   const state=view.state;
   if(!state.events||state.phase!=='active')return {growth:'',prose:''};
   const opening=state.events.node.startsWith('prologue-');
+  const campaign=campaignProgress(state);
   const next=nextRealmFor(state.life),extra=view.prose;
   const growth=next?`修行目标：${next.name} · 修为 ${state.life.cultivation} / ${next.threshold} · ${view.itemNames?.[next.material]??ITEMS[next.material]} ${state.life.items[next.material]??0} / 1`:'继续此生：修炼、历练与未完的因果仍可推进。';
   const message=extra?.status==='loading'?'正在写一小段扩写，你可以继续选择。':extra?.status==='unavailable'?'这一段扩写暂不可用，你仍可继续当前故事。':'';
   return {
-    growth:`<p class="event-growth" data-event-growth>${esc(growth)}</p>`+
+    growth:(campaign&&!opening?`<p class="event-growth" data-campaign-progress>三界主线 · ${esc(campaign.title)} · ${campaign.done}/${campaign.total}<br>${esc(campaign.goal)}</p>`:'')+
+      `<p class="event-growth" data-event-growth>${esc(growth)}</p>`+
       (opening?'':renderJourneyNotes(view,notes)+renderJourneyNotes(view,adventureLeads(state),'leads')+
         renderJourneyNotes(view,preparationStops(state),'preparation')+renderPracticePlan(view,notes))+
       (view.playtestActive?'<button type="button" class="button" data-diary-stop>结束本段试玩计时</button>':''),
@@ -260,7 +266,7 @@ export function renderLiveJourney(view, choices) {
     ? '<button type="button" class="button primary" data-live-resume>查看续写进度</button>'
     : '<button type="button" class="button primary" data-live-retry>继续故事</button>';
   const status = message ? esc(message) : view.busy ? '<span aria-hidden="true">…</span><span class="live-sr-only">正在续写</span>' : '';
-  const chapter=state.phase==='active'&&state.events?.node.startsWith('prologue-');
+  const chapter=state.phase==='active'&&/^(?:prologue|campaign)-/.test(state.events?.node??'');
   const title=state.phase==='dead'?'此生已尽':scene?.title??'此生故事';
   return `<article class="journey live-journey${v7 ? ' live-cultivation-v7' : ''}" data-live-story data-live-run="${esc(state.runId)}" aria-label="此生故事"><section class="journey-current" aria-labelledby="journey-current-title"><h2 id="journey-current-title" class="${chapter?'live-chapter-title':'live-sr-only'}" tabindex="-1">${esc(title)}</h2><section class="live-intro" aria-label="本地开场"${opening ? '' : ' hidden'}>${intro}</section>${v7 ? renderLiveBirthFacts(view) : ''}${v7 ? renderLiveOutcome(view.pending?.receipt ?? state.lastReceipt, view) : ''}<div class="journey-prose" data-live-prose data-live-preview-text${presentation.preview ? ' data-live-preview' : ''} aria-busy="${Boolean(view.busy)}">${presentation.blocks.map(renderLiveBlock).join('')}</div>${v7 ? renderLiveState(view) : ''}${extras.growth}<div class="journey-choices" data-live-choices role="group" aria-label="眼前的选择"${presentation.choices.length ? '' : ' hidden'}>${presentation.choices.map((choice, index) => renderLiveChoice(choice, view, index, presentation)).join('')}</div>${extras.prose}<section class="live-status" aria-live="polite" aria-atomic="true"${status || recovery ? '' : ' hidden'}><p data-live-progress-status>${status}</p>${recovery}</section><section class="journey-ending"${state.phase === 'dead' ? '' : ' hidden'}>${renderLiveEnding(view)}</section></section></article>`;
 }

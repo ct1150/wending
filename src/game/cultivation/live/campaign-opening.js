@@ -123,6 +123,7 @@ export function campaignOpening(state,menu,choice){
    (e.prologue.help==='accepted'?' 你收下了他们递来的资用，也认得以后该如何寻回这处标记。':' 你把物资留了下来。水退以后，谁也不必假装当初没有受过难。'),
    apprentice?'林砚送你到离开外院的石桥。他留下照看药圃，把一卷问川图的去向告诉你。':'梁婶指着河道拐弯的地方。问川图在那里，循岸走过去，不必拿谁的名帖。',
   ],[
+   menu('campaign-book','翻开三界主线，去接下这一程','campaign-book'),
    menu('chapter-river','沿溪去看下游的问川图','river-book'),
    menu('chapter-out','先安顿行囊，再安排下一程','hub'),
   ]);
