@@ -126,7 +126,7 @@ export function buildRebirthOptions(deadState,rewardIds=[]) {
   const inscription=inscriptionFrom(events?.watch)??deadState.reincarnation?.inscription;
   const gardenRoot=gardenRootForChild(deadState);
   const atlas=events?.river?structuredClone({river:events.river,...(events.expedition?{expedition:events.expedition}:{}),...(events.council?{council:events.council}:{}),...(events.convoy?{convoy:events.convoy}:{}),...(events.valley?{valley:events.valley}:{})}):null;
-  return {engineVersion:7,...(isExperienceLife(deadState.life)?{experienceVersion:EXPERIENCE_VERSION}:{}),...(deadState.events?{eventVersion:1,originStories:true}:{}),inheritedBenefits:purchases,reincarnation:{
+  return {engineVersion:7,...(isExperienceLife(deadState.life)?{experienceVersion:EXPERIENCE_VERSION}:{}),...(deadState.events?{eventVersion:deadState.events.version,originStories:true}:{}),inheritedBenefits:purchases,reincarnation:{
     version:settlement.echoes?2:1,...(settlement.echoes?{carriedPoints:settlement.carriedPoints,echoes:settlement.echoes}:{}),lineageId:deadState.reincarnation?.lineageId??deadState.runId,
     generation:settlement.generation+1,parentRunId:deadState.runId,parentStateHash:stateHash(deadState),
     earnedPoints:settlement.earnedPoints,balance:settlement.availablePoints-spent,purchases,...(atlas?{atlas}:{}),...(inscription?{inscription:structuredClone(inscription)}:{}),...(gardenRoot!==undefined?{gardenRoot}:{}),

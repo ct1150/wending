@@ -102,7 +102,7 @@ export function createLiveSession({archive,client,engine=defaultEngine,onChange=
   // Decide the immutable birth contract BEFORE creating/replacing a physical
   // archive. Older available servers still support their original unmarked V7.
   async function birthContract(options,required=false){
-    if(options.eventVersion===1)return {options};
+    if([1,2].includes(options.eventVersion))return {options};
     if(options.engineVersion!==7&&!Object.hasOwn(options,'experienceVersion'))return {options};
     if(Object.hasOwn(options,'experienceVersion')&&(options.engineVersion!==7||options.experienceVersion!==EXPERIENCE_VERSION))throw fault('EXPERIENCE_UNSUPPORTED');
     const capability=await client.capabilities();

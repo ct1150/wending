@@ -47,7 +47,9 @@ function same(left, right) { return canonicalStringify(left) === canonicalString
 const lifeSummary=summarizeLife;
 export function validateReceipt(row,{turnId,birth}={}) {
   exactKeys(row, ['kind','choiceId','action','elapsedDays','itemChanges','relationChanges','random','before','after','death','birth'],['cultivationResult','eventVersion']);
-  if(Object.hasOwn(row,'eventVersion')&&row.eventVersion!==1||birth&&(row.eventVersion===1)!==(birth.cultivationProfile?.eventVersion===1))throw new Error('规则事件收据版本不符。');
+  const receiptBirth=birth??row.birth;
+  if((Object.hasOwn(row,'eventVersion')&&![1,2].includes(row.eventVersion))||
+     (receiptBirth&&row.eventVersion!==receiptBirth.cultivationProfile?.eventVersion))throw new Error('规则事件收据版本不符。');
   const modern=Object.hasOwn(row.before??{},'cultivationProfile');
   if(modern!==Object.hasOwn(row.after??{},'cultivationProfile')||modern!==Object.hasOwn(row,'cultivationResult'))throw new Error('收据规则版本不一致。');
   if (!['opening', 'choice'].includes(row.kind)) throw new Error('收据类型无效。');
@@ -95,7 +97,7 @@ export function validateReceipt(row,{turnId,birth}={}) {
     if (row.choiceId !== row.action.id || row.birth !== null || row.elapsedDays < (zeroTime?0:1) || row.random.roll === null) throw new Error('行动收据无效。');
     if(immediate&&(row.elapsedDays!==0||Object.keys(row.itemChanges).length||Object.keys(row.relationChanges).length||!same(row.before,row.after)||row.death!==null))throw new Error('短时互动不能产生资源或数值变化。');
     if (row.before.injury >= 10 || row.before.ageDays >= (modern?row.before.lifeLimit:REALMS[row.before.realm].lifeLimit)*DAYS_PER_YEAR) throw new Error('死亡后不能产生行动收据。');
-    const expectedRandom = row.eventVersion===1&&immediate?row.random.before:(Math.imul(row.random.before, 1664525) + 1013904223) >>> 0;
+    const expectedRandom = row.eventVersion!==undefined&&immediate?row.random.before:(Math.imul(row.random.before, 1664525) + 1013904223) >>> 0;
     if (row.random.after !== expectedRandom || row.random.roll !== expectedRandom % 100) throw new Error('行动随机收据不一致。');
   }
   if(modern)validateCultivationResult(row);
@@ -147,14 +149,16 @@ export function validateLiveState(state) {
   integer(state.archiveCursor);
   integer(state.rng, 0, 4294967295);
   validateLife(state.life);
-  if(state.life.birth.cultivationProfile?.eventVersion===1){
+  const eventVersion=state.life.birth.cultivationProfile?.eventVersion;
+  if(eventVersion!==undefined){
     validateEventState(state.events,state.life,state.reincarnation?.gardenRoot,state.birthReceipt.random.after);
+    if(state.events.version!==eventVersion)throw new Error('规则事件与出生版本不符。');
     if(state.events.mine?.start>state.life.ageDays)throw new Error('井下脚程不能始于未来。');
     if(state.events.node.startsWith('mine-')&&state.events.node!=='mine-journal'&&state.life.cultivationProfile.worldTier!==0)throw new Error('井下行程仅在下界开放。');
     const outing=state.events.watch?.trail;
     if(outing&&(outing.start>state.life.ageDays||outing.world>state.life.cultivationProfile.worldTier))throw new Error('栗溪行程不能始于未来。');
     if(!isExperienceLife(state.life)||state.life.birth.originId!==MORTAL_OPENING.originId)throw new Error('规则事件出生合同无效。');
-    if(state.turnId===0&&!same(state.events,createEventState(state.reincarnation?.atlas)))throw new Error('规则事件开场不可改写。');
+    if(state.turnId===0&&!same(state.events,createEventState(state.reincarnation?.atlas,eventVersion)))throw new Error('规则事件开场不可改写。');
   }else if(state.events!==undefined)throw new Error('旧人生不能静默切换规则事件。');
   if(isExperienceLife(state.life)&&!state.director)throw new Error('新人生缺少事件时钟。');
   if(state.director!==undefined){if(!isV7Life(state.life))throw new Error('旧人生不能静默切换世界规则。');validateStoryDirector(state.director,{turnId:state.turnId,life:state.life});}

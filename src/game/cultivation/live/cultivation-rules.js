@@ -91,7 +91,7 @@ export function createCultivationBirthProfile(draw,inheritedBenefits=[],experien
 export function validateV7BirthProfile(profile){
   exactKeys(profile,BIRTH_KEYS,['experienceVersion','eventVersion']);
   if(Object.hasOwn(profile,'experienceVersion'))requireValue(profile.experienceVersion===EXPERIENCE_VERSION);
-  if(Object.hasOwn(profile,'eventVersion'))requireValue(profile.eventVersion===1&&profile.experienceVersion===EXPERIENCE_VERSION);
+  if(Object.hasOwn(profile,'eventVersion'))requireValue([1,2].includes(profile.eventVersion)&&profile.experienceVersion===EXPERIENCE_VERSION);
   requireValue(profile.version===7&&Object.hasOwn(ROOTS,profile.rootId)&&Object.hasOwn(PHYSIQUES,profile.physiqueId)&&Object.hasOwn(RELICS,profile.relicId)&&Object.hasOwn(TECHNIQUES,profile.techniqueId),'灵根、体质、伴生遗物或功法无效。');
   validateInheritedBenefits(profile.inheritedBenefits);
   const expected=descriptions(profile);

@@ -25,8 +25,10 @@ import {validateCloudRift} from './cloud-rift.js';
 import {validateCloudTrials} from './cloud-trial.js';
 import {validateRiftBeacon} from './rift-beacon.js';
 import {validateHomebound} from './homebound.js';
+import {openingNodes,validateCampaignOpening} from './campaign-opening.js';
 
 const eventNodeIds=new Set([
+ ...openingNodes,
  'sky-harbor','home-book','home-talk','home-decide','home-final','home-leave',
  'sky-beacon-book','sky-beacon-rest','sky-beacon-works','sky-beacon-exit',
  'arrival','terms','work','entry-result','companion','companion-result','reunion','reunion-result',
@@ -58,9 +60,13 @@ const eventNodeIds=new Set([
  'hunt-sources','hunt-grounds','well-book','well-road','sky-book','sky-boat','sky-shore','sky-rift','sky-rift-way','sky-lodgings','sky-trial','sky-trial-arrange','sky-trial-other','sky-weather',
 ]);
 const copy=value=>JSON.parse(JSON.stringify(value));
-export function createEventState(atlas){return {version:1,node:'arrival',entry:'unresolved',companion:'unmet',mentor:'unmet',page:0,location:'gate',...(atlas?copy(atlas):{})};}
+export function createEventState(atlas,version=1){
+ return {version,node:version===2?'prologue-departure':'arrival',entry:'unresolved',companion:'unmet',mentor:'unmet',page:0,location:'gate',
+  ...(atlas?copy(atlas):{}),...(version===2?{prologue:{water:null,help:null}}:{})};
+}
 export function validateEventState(events,life,gardenRoot,birthRoll){
- assertPlainData(events);exactKeys(events,['version','node','entry','companion','mentor','page','location'],['river','expedition','council','convoy','charters','valley','watch','mine','garden','firstMeeting','post','mountain','ferry','well','cloudPassage','nursery','saltField','ridgeRoad','forms','cloudRift','cloudTrials','riftBeacon','homebound']);
+ assertPlainData(events);exactKeys(events,['version','node','entry','companion','mentor','page','location'],['river','expedition','council','convoy','charters','valley','watch','mine','garden','firstMeeting','post','mountain','ferry','well','cloudPassage','nursery','saltField','ridgeRoad','forms','cloudRift','cloudTrials','riftBeacon','homebound','prologue']);
+ validateCampaignOpening(events,life);
  if(Object.hasOwn(events,'homebound')||events.node.startsWith('home-'))validateHomebound(events,life);
  if(events.node==='sky-harbor'&&life&&(life.cultivationProfile.worldTier!==2||realmFor(life).rank<5))throw Error('港外来信须在上界化神后查看。');
  if(Object.hasOwn(events,'riftBeacon')||events.node.startsWith('sky-beacon-'))validateRiftBeacon(events,life);
@@ -144,7 +150,7 @@ export function validateEventState(events,life,gardenRoot,birthRoll){
  if(Object.hasOwn(events,'expedition'))validateExpedition(events.expedition);
  if((events.expedition||events.node.startsWith('voyage-'))&&events.river?.record.length!==riverCases||events.node==='voyage-result'&&!events.expedition?.volume)throw new Error('行旅录页次无效。');
  if(events.node==='river-result'&&!events.river?.record.length||events.node==='river-reading'&&!events.river?.seen||['river-site','river-reading','river-decision'].includes(events.node)&&events.river?.record.length===riverCases)throw new Error('问川图页次无效。');
- if(events.version!==1||!['unresolved','accepted','joined','declined'].includes(events.entry)||!['unmet','helped','declined','completed','parted'].includes(events.companion)||!['unmet','guided','self','repaid'].includes(events.mentor)||!Number.isInteger(events.page)||events.page<0||events.page>4||!['gate','retreat','middle','upper'].includes(events.location))throw new Error('规则事件状态无效。');
+ if(![1,2].includes(events.version)||!['unresolved','accepted','joined','declined'].includes(events.entry)||!['unmet','helped','declined','completed','parted'].includes(events.companion)||!['unmet','guided','self','repaid'].includes(events.mentor)||!Number.isInteger(events.page)||events.page<0||events.page>4||!['gate','retreat','middle','upper'].includes(events.location))throw new Error('规则事件状态无效。');
  return events;
 }
 function selected(state,action){

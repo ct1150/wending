@@ -24,7 +24,7 @@ function rollBirth({seed, originId, engineVersion, lockedTalentId, inheritedBene
  if(engineVersion!==undefined&&engineVersion!==7||inheritedBenefits!==undefined&&engineVersion!==7)throw new Error('修行引擎版本无效。');
  if(originStories!==undefined&&(originStories!==true||engineVersion!==7))throw new Error('出身故事版本无效。');
  if(experienceVersion!==undefined&&(experienceVersion!==1||engineVersion!==7))throw new Error('新体验版本无效。');
- if(eventVersion!==undefined&&(eventVersion!==1||engineVersion!==7||!originStories))throw new Error('规则事件版本无效。');
+ if(eventVersion!==undefined&&(![1,2].includes(eventVersion)||engineVersion!==7||!originStories))throw new Error('规则事件版本无效。');
  if(lockedTalentId!=null&&(engineVersion!==7||typeof lockedTalentId!=='string'||!Object.hasOwn(TALENTS,lockedTalentId)))throw new Error('锁定命格无效。');
  if(!['string','number'].includes(typeof seed)||typeof seed==='number'&&!Number.isFinite(seed)||String(seed).length>200)throw new Error('种子无效。');
  const seededIndex=(label,limit)=>parseInt(sha256('birth-'+label+':'+seed).slice(0,8),16)%limit;
@@ -77,9 +77,9 @@ export function createLiveGame(options={}) {
  const {birth,rng}=rollBirth({...options,seed:options.seed??runId,originId});
  const life=initialLifeForBirth(name,birth);
  const birthReceipt={kind:'opening',choiceId:null,action:null,elapsedDays:0,itemChanges:{},relationChanges:{},random:{before:rng,after:rng,roll:null},before:summary(life),after:summary(life),death:null,birth:copy(birth)};
- if(options.eventVersion===1)birthReceipt.eventVersion=1;
+ if(options.eventVersion!==undefined)birthReceipt.eventVersion=options.eventVersion;
  if(isV7Life(life))birthReceipt.cultivationResult={version:7,check:null,lifespanChange:{years:0,cause:null}};
- return validateLiveState({relationshipVersion:1,version:5,mode:'cultivation',contentVersion:4,rulesVersion:1,promptVersion:1,runId,revision:0,turnId:0,phase:'awaitingOpening',rng,life,birthReceipt,currentScene:null,lastReceipt:null,relatedEntities:[],archiveCursor:0,...(isV7Life(life)?{director:createStoryDirector(life,rng)}:{}),...(options.eventVersion===1?{events:createEventState(options.reincarnation?.atlas)}:{}),...(options.reincarnation?{reincarnation:copy(options.reincarnation)}:{})});
+ return validateLiveState({relationshipVersion:1,version:5,mode:'cultivation',contentVersion:4,rulesVersion:1,promptVersion:1,runId,revision:0,turnId:0,phase:'awaitingOpening',rng,life,birthReceipt,currentScene:null,lastReceipt:null,relatedEntities:[],archiveCursor:0,...(isV7Life(life)?{director:createStoryDirector(life,rng)}:{}),...(options.eventVersion!==undefined?{events:createEventState(options.reincarnation?.atlas,options.eventVersion)}:{}),...(options.reincarnation?{reincarnation:copy(options.reincarnation)}:{})});
 }
 function actionRule(state,p) {
  validateProposal(p);
@@ -170,7 +170,7 @@ function prepareChoiceCommand(state,command,replaying=false) {
  const itemChanges={};for(const id of Object.keys(ITEMS)){const delta=(nextLife.items[id]??0)-(state.life.items[id]??0);if(delta)itemChanges[id]=delta;}
  const relationChanges={};for(const [id,n] of Object.entries(nextLife.relations)){const delta=n-(state.life.relations[id]??0);if(delta)relationChanges[id]=delta;}
  const receipt={kind:'choice',choiceId:action.id,action:copy(action),elapsedDays,itemChanges,relationChanges,random:{before:state.rng,after:nextRng,roll},before:summary(state.life),after:summary(nextLife),death,birth:null};
- if(state.events)receipt.eventVersion=1;
+ if(state.events)receipt.eventVersion=state.events.version;
  if(cultivationResult)receipt.cultivationResult=cultivationResult;
  return {kind:'choice',identity:identity(state,command.requestId,action.id),receipt,nextLife,nextRng};
 }

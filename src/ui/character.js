@@ -2,7 +2,7 @@ import { currentStoryGoal } from '../game/cultivation/live/story-director.js';
 import { realmFor, initialItemsForBirth, ROOTS, PHYSIQUES, RELICS, TECHNIQUES, WORLD_TIERS, INHERITED_BENEFITS, ART_NAMES } from '../game/cultivation/live/cultivation-rules.js';
 import { ITEMS, ORIGINS, TALENTS } from '../game/cultivation/live/model.js';
 import { ORIGIN_BACKGROUNDS, TALENT_STORIES } from '../game/cultivation/live/birth-stories.js';
-import {MORTAL_OPENING} from '../game/cultivation/live/mortal-opening.js';
+import {MORTAL_OPENING,CAMPAIGN_BIRTH_HISTORY} from '../game/cultivation/live/mortal-opening.js';
 const esc = value => String(value ?? '').replace(/[&<>"']/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[char]);
 const realmNames = { mortal: '凡人', qi: '炼气', foundation: '筑基', golden: '金丹', nascent: '元婴' };
 const injuryNames = { 0: '无碍', 1: '轻伤', 2: '内伤', 3: '重伤', none: '无碍', well: '无碍', healthy: '无碍', hurt: '受伤', severe: '重伤' };
@@ -103,7 +103,7 @@ export function renderLiveBirth({ name = '', birth, lockedTalentId, available = 
     <form id="live-birth-form"><label for="live-name">名讳</label>
       <input id="live-name" name="name" autocomplete="off" spellcheck="false" maxlength="24" aria-required="true" value="${esc(name)}"${busy ? ' disabled' : ''}${invalid ? ' aria-invalid="true" aria-describedby="live-name-error"' : ''}>
       ${invalid ? '<p id="live-name-error" class="notice error" role="alert">姓名无法用于故事，请修改后重新开始。支持中文姓名与常用标点。</p>' : ''}
-      ${mortal?`<section class="live-opening-story" aria-labelledby="live-opening-title"><h3 id="live-opening-title">${esc(MORTAL_OPENING.title)}</h3><p id="live-origin-history">${esc(MORTAL_OPENING.history)}</p><p class="live-birth-kit">随身带着${esc(startingItems)}。身世已定，天资由你掷定。</p></section>`:''}
+      ${mortal?`<section class="live-opening-story" aria-labelledby="live-opening-title"><h3 id="live-opening-title">${esc(MORTAL_OPENING.title)}</h3><p id="live-origin-history">${esc(birth.cultivationProfile?.eventVersion===2?CAMPAIGN_BIRTH_HISTORY:MORTAL_OPENING.history)}</p><p class="live-birth-kit">随身带着${esc(startingItems)}。身世已定，天资由你掷定。</p></section>`:''}
       ${birth ? renderLiveBirthRoll(birth, lockedTalentId, busy) : ''}
       ${error ? `<p class="notice error" role="status">${esc(error)}</p>` : ''}
       <button type="submit" class="button primary birth-start" data-live-start${!available || !birth || busy ? ' disabled' : ''}>${busy ? '正在安放此身…' : '就以此身，入世'}</button>
