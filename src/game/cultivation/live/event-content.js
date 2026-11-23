@@ -172,8 +172,7 @@ export function eventNode(state,historicMenu=null){
     narration(variants[(state.turnId+state.life.birth.attributes.insight)%variants.length]),
     ...(appointment?[narration(appointment)]:[]),
     narration(e.entry==='accepted'?'药圃差事仍可回去做完；未做完时不会发放功法。':e.entry==='declined'?'你选择了独自求道。栖云门那份未接下的差事没有变成必须偿还的债。':'修为、功法与资用各有门槛。已经完成的差事不会再要求你重做。'),
-   ],[menu('train-menu','安排修炼与突破','training'),menu('journey-menu',journey,'journey'),
-    e.version===2?menu('campaign-book','翻看三界主线，找到下一程','campaign-book'):menu('affairs-menu','探访故人，处理未完之事','affairs')]);
+   ],[menu('train-menu','安排修炼与突破','training'),menu('journey-menu',journey,'journey'),menu('affairs-menu','探访故人，处理未完之事','affairs')]);
   }
   case 'training':{
    // A restored pre-garden training screen still contains its disabled breakthrough.
@@ -284,7 +283,9 @@ export function eventNode(state,historicMenu=null){
    const companion=young&&['helped','declined'].includes(e.companion)&&realm.rank>=1?'reunion':'companion';
    return row('旧事与来人','只有尚未完成的事情才需要再作决定',[
     narration(young?'回看故人的来处，也回看自己已经说出口的话。问候不等于答应，暂缓也不等于失信。':'闭关跨过了许多年。你能追索旧日记录，却不能假定当年的凡人仍站在原地等你。'),
-   ],[menu('mentor-menu','查看功法与校法之约','mentor'),menu('companion-menu',young?'看看林砚与当年的选择':'翻看故人的旧日记录',e.post?'post-index':young?companion:'old-record'),e.entry==='accepted'?menu('resume-work','回去完成三日药圃差事','work'):life.cultivationProfile.worldTier>=1&&e.convoy?.chapters[0]?.loads.length===2?menu('ear-book','读钟荻的信，续校六件音器','convoy-ear-book'):leave]);
+   ],[menu('mentor-menu','查看功法与校法之约','mentor'),menu('companion-menu',young?'看看林砚与当年的选择':'翻看故人的旧日记录',e.post?'post-index':young?companion:'old-record'),
+    e.version===2?menu('campaign-book','翻看三界主线，或经主线册回山','campaign-book'):
+    e.entry==='accepted'?menu('resume-work','回去完成三日药圃差事','work'):life.cultivationProfile.worldTier>=1&&e.convoy?.chapters[0]?.loads.length===2?menu('ear-book','读钟荻的信，续校六件音器','convoy-ear-book'):leave]);
   }
   case 'mentor':{
    const experience=life.cultivationProfile.experience,commitment=experience.commitment,young=life.ageDays<100*DAYS_PER_YEAR;

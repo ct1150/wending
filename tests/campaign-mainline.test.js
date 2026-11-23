@@ -94,7 +94,10 @@ function createRoute(){
   if(state.events.node==='prologue-result')pick('recover-first');
   else pick(compileChoices(state,state.currentScene.choices).find(c=>c.enabled).id.split(':').at(-1));
  }
- pick('take-help','campaign-book');
+ pick('take-help','chapter-out','affairs-menu');
+ assert.equal(state.lastReceipt.elapsedDays,0);
+ assert.ok(can('companion-menu'));
+ pick('campaign-book');
  for(const [rank,realm] of ['qi','foundation','golden','nascent','spirit','void','unity','mahayana'].entries()){
   if(rank===2)cross(1);
   if(rank===4)cross(2);
@@ -139,9 +142,11 @@ test('a new life crosses all three worlds and can leave two different legacies a
  assert.equal(route.state.phase,'active');
  assert.notEqual(publicEnding.lastReceipt.elapsedDays,route.state.lastReceipt.elapsedDays);
  const endTurn=route.state.turnId;
+ route.pick('back','affairs-menu');
+ assert.equal(route.state.lastReceipt.elapsedDays,0);
  route.pick('campaign-book','read-ending');
  assert.equal(route.state.lastReceipt.elapsedDays,0);
- assert.equal(route.state.turnId,endTurn+2);
+ assert.equal(route.state.turnId,endTurn+4);
  assert.equal(route.state.events.campaign.ending,'personal');
  if(process.env.WENDING_VERIFY_CAMPAIGN_BROWSER)await verifyNativeCampaignInBrowser(t,route);
  t.diagnostic(`Native continuous route: ${route.actions.length} actions from birth to ending and reread.`);

@@ -107,9 +107,9 @@ export function campaignProgress(state){
 
 export function validateCampaign(events,life){
  const inCampaign=campaignNodes.includes(events.node);
- if(!events.campaign&&!inCampaign)return;
+ if(!Object.hasOwn(events,'campaign')&&!inCampaign)return;
  if(events.version!==2||!events.prologue?.help)throw Error('须完成开篇才能续写三界主线。');
- const record=recordFor(events);
+ const record=Object.hasOwn(events,'campaign')?events.campaign:emptyCampaign();
  exactKeys(record,['marks','ending']);
  if(typeof record.marks!=='string'||!/^[01]*$/.test(record.marks)||record.marks.length>chapters.length||
     ![null,'public','personal'].includes(record.ending)||record.ending&&record.marks.length!==chapters.length||
@@ -131,6 +131,7 @@ export function validateCampaign(events,life){
 
 export function campaignScene(state,menu,choice){
  const {events,life}=state,record=recordFor(events),index=record.marks.length,chapter=chapters[index];
+ const away=chapter&&life.cultivationProfile.worldTier>chapter.tier;
  const progress=campaignProgress(state);
  const back=menu('back','把册子收好，继续自己的仙路','hub');
  const train=menu('train-menu','安排下一段修炼与整备','training');
@@ -152,12 +153,13 @@ export function campaignScene(state,menu,choice){
   ],[menu('read-ending','再读一遍此生的问鼎结局','campaign-ending'),back]);
   const going=chapter&&ready(life,chapter);
   const finalReady=!chapter&&life.realm==='tribulation'&&life.cultivationProfile.worldTier===2;
-  const side=going?chapterDetour(events,chapter):null;
+  const side=going&&!away?chapterDetour(events,chapter):null;
   const crossing=chapter&&life.cultivationProfile.worldTier<chapter.tier&&
    V7_REALMS[life.realm].rank>=(life.cultivationProfile.worldTier===0?2:4);
   return row(progress.title,progress.goal,[
    history,progress.goal,
-   going?'你可以就此接手眼前的难题。沿旧路亲自做过事的人，可以带那份实证回来，少走一趟。':
+   going?(away?'这一册由驿班从旧界送来。你可以留在本界，写信商定怎样交割。':
+    '你可以就此接手眼前的难题。沿旧路亲自做过事的人，可以带那份实证回来，少走一趟。'):
     crossing?'前一次交割可能已备下阵盘与路费。到界台核对时日与风险，再亲自开阵。':
     '还有未看过的路，就留到修行间隙再去。卷中已写明的决定会留在这里。',
   ],[
@@ -180,23 +182,25 @@ export function campaignScene(state,menu,choice){
   const gain={[chapter.material]:2,...(chapter.passage?{stones:chapter.passage,array:1}:{}),
    ...(index>=4?{artifact:1,...(!chapter.passage?{array:1}:{})}:{})};
   return row(chapter.title,'选定你愿意承担的做法',[
-   chapter.scene,
+   away?'驿信把旧界的实情写在纸上。'+chapter.scene:chapter.scene,
    assisted?'前一程有人愿意作证。他们能替你省一次往返，共办也须开一份行粮。':
     '这次无人替你作保。若想邀人共办，须多走一趟；分头实地做也仍有办法。',
    ...(evidence?[evidence+'带着实证，两种走法都能少花一半日数。']:[]),
    '交割可得'+ITEMS[chapter.material]+'两份。'+
     (chapter.passage?'当地另备一件阵盘和'+chapter.passage+'枚灵石，供你准备跨界。':index>=4?'当地另备一件阵盘和一件法器，可用于护阵。':''),
   ],[
-   paid('campaign-public',chapter.work[0],'steady','campaign-result',
+   paid('campaign-public',away?'寄回共办的办法，请当地人共同照看':chapter.work[0],'steady','campaign-result',
     {days:evidence?Math.ceil(publicDays/2):publicDays,spiritCost:8,items:{supplies:1},cultivation,gain},{...record,marks:record.marks+'0'}),
-   paid('campaign-personal',chapter.work[1],'intensive','campaign-result',
+   paid('campaign-personal',away?'分头写信，逐人核实后托驿班交割':chapter.work[1],'intensive','campaign-result',
     {days:evidence?Math.ceil(personalDays/2):personalDays,spiritCost:12,cultivation,gain},{...record,marks:record.marks+'1'}),
    book,
   ]);
  }
  case 'campaign-result': {
   const previous=chapters[index-1],method=Number(record.marks.at(-1));
-  return row(previous.title+' · 交割',progress.goal,[previous.result[method],
+  const distant=life.cultivationProfile.worldTier>previous.tier;
+  return row(previous.title+' · 交割',progress.goal,[
+   (distant?'驿班带来旧界的回单和资用。来信这样写：':'')+previous.result[method],
    method===0?'同行人各留下一份说得清来路的记录。若后面还能共办，就有人肯替这份底账作证。':
     '私下交付的路标跟着当事人走。下一程若需要多人作证，你得亲自把他们再请来。',
    progress.goal,
