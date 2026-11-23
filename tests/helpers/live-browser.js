@@ -19,6 +19,22 @@ export async function loadLegacyOpening(page){
  await page.locator('[data-title-continue]:enabled').click();
  await page.locator('[data-live-retry]:enabled').waitFor();
 }
+
+export async function loadClassicEventOpening(page){
+ await page.evaluate(async()=>{
+  const {createLiveSession}=await import('/src/ui/live-session.js');
+  const {openLiveArchive}=await import('/src/game/live-archive.js');
+  const archive=await openLiveArchive();
+  try{
+   const session=createLiveSession({archive,client:{}});
+   await session.startNew({runId:'classic-event-opening',name:'林照',seed:42,engineVersion:7,eventVersion:1,originStories:true});
+   if(session.view().state?.currentScene?.title!=='外院第一日')throw Error('无法准备旧版事件存档');
+  }finally{archive.close();}
+ });
+ await page.reload();
+ await page.locator('[data-title-continue]:enabled').click();
+ await page.locator('[data-live-choice$=":c:decline"]:enabled').waitFor();
+}
 export async function liveBrowser(t) {
  const root=resolve('.');
  const server=createServer(async(req,res)=>{try{const path=resolve(root,'.'+new URL(req.url,'http://localhost').pathname);if(!path.startsWith(root+sep))throw Error();const body=await readFile(path);res.writeHead(200,{'content-type':({'.js':'text/javascript','.css':'text/css','.svg':'image/svg+xml','.json':'application/json'})[extname(path)]??'text/html'});res.end(body);}catch{res.writeHead(404);res.end();}});

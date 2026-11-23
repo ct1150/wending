@@ -23,6 +23,8 @@ import {ridgeEntrance,ridgeNode} from './ridge-road.js';
 import {beaconPlaces} from './rift-beacon.js';
 import {homeboundNode,homeboundPlaces} from './homebound.js';
 import {canStudyForm,formNode} from './technique-forms.js';
+import {campaignOpening} from './campaign-opening.js';
+import {campaignScene} from './campaign.js';
 
 // Authored situations supply every fact and executable choice. AI never edits
 // these definitions. Stable actors belong to a life, not a generated paragraph.
@@ -60,6 +62,8 @@ export function eventNode(state,historicMenu=null){
  const oldHarbor=historicMenu==='harbor';
  if(oldHarbor)historicMenu=null;
  const e=state.events,life=state.life,actors=eventEntities(state),actor=key=>actors.find(row=>row.id.endsWith(':e:'+key)).id;
+ if(e.node.startsWith('prologue-'))return campaignOpening(state,menu,choice);
+ if(e.node.startsWith('campaign-'))return campaignScene(state,menu,choice);
  const next=nextRealmFor(life),realm=realmFor(life),method=TECHNIQUES[life.cultivationProfile.experience.activeTechniqueId];
  const young=life.ageDays<80*DAYS_PER_YEAR;
  const row=(title,goal,blocks,choices)=>({title,goal,blocks,choices});
@@ -145,7 +149,9 @@ export function eventNode(state,historicMenu=null){
    ]);
   }
   case 'companion-result':return row('各自记下的一日','这次决定已经保存，继续自己的道路',[
-   narration(e.companion==='helped'?'你分出行粮，陪林砚安顿好今晚的住处。他报上自己的名字，郑重记下了你的相助。你们没有因此替彼此决定未来。':'你说明自己的行粮也有限。林砚把布袋收好，道了声明白，转身去问灶房还有没有临时差事。'),
+   narration(e.companion==='helped'?(e.version===2&&e.entry==='joined'
+    ?'你分出行粮，陪林砚安顿好今晚的住处。他提起清沟那天你们合力扶住的木桩，也把这一回相助记了下来。'
+    :'你分出行粮，陪林砚安顿好今晚的住处。他报上自己的名字，郑重记下了你的相助。你们没有因此替彼此决定未来。'):'你说明自己的行粮也有限。林砚把布袋收好，道了声明白，转身去问灶房还有没有临时差事。'),
   ],[menu('continue','继续原来的打算',home(e)),menu('train-menu','查看自己的修行门槛','training'),leave]);
   case 'reunion':return row('山路再遇','决定是否与故人合做一次采药差事',[
    narration(e.companion==='helped'?'林砚如今在药堂做事。再遇时，他先问起你当年的行粮，随后才说起一份采药差事。':'山路上，林砚认出了你。他已经在药堂找到了差事，没有拿当年的分别来责怪你，只问你是否愿意合做一次采药。'),
@@ -166,7 +172,8 @@ export function eventNode(state,historicMenu=null){
     narration(variants[(state.turnId+state.life.birth.attributes.insight)%variants.length]),
     ...(appointment?[narration(appointment)]:[]),
     narration(e.entry==='accepted'?'药圃差事仍可回去做完；未做完时不会发放功法。':e.entry==='declined'?'你选择了独自求道。栖云门那份未接下的差事没有变成必须偿还的债。':'修为、功法与资用各有门槛。已经完成的差事不会再要求你重做。'),
-   ],[menu('train-menu','安排修炼与突破','training'),menu('journey-menu',journey,'journey'),menu('affairs-menu','探访故人，处理未完之事','affairs')]);
+   ],[menu('train-menu','安排修炼与突破','training'),menu('journey-menu',journey,'journey'),
+    e.version===2?menu('campaign-book','翻看三界主线，找到下一程','campaign-book'):menu('affairs-menu','探访故人，处理未完之事','affairs')]);
   }
   case 'training':{
    // A restored pre-garden training screen still contains its disabled breakthrough.

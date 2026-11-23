@@ -146,7 +146,7 @@ test('native app: HTTPS fixture, pending refresh/import, pages, legacy preservat
   }
   await page.locator('#live-name').fill('云归');await page.locator('[data-live-start]').click();await page.locator('[data-live-choice]:enabled').first().waitFor();
   const read=()=>page.evaluate(async()=>{const {openLiveArchive}=await import('/src/game/live-archive.js');const a=await openLiveArchive();const value=await a.load();a.close();return value;});
-  assert.equal((await read()).state.events.version,1);assert.equal(posts,0);
+  assert.equal((await read()).state.events.version,2);assert.equal(posts,0);
   await loadLegacyOpening(page);await page.locator('[data-live-retry]').click();await page.locator('[data-live-choice]:enabled').first().waitFor();
   const opening=await read();assert.equal(opening.state.revision,1);assert.equal(posts,1);assert.ok(!Object.hasOwn(contexts[0],'state'));
   nextPaused=true;await page.locator('[data-live-choice]').first().click();await page.locator('[data-live-retry]').waitFor();const pending=await read();assert.deepEqual(pending.state.life,opening.state.life);assert.ok(pending.pending);

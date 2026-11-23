@@ -68,7 +68,8 @@ function currentBirthOptions() {
     : [];
   return {
     seed:liveBirthDraft.seed,
-    originStories:true,experienceVersion:EXPERIENCE_VERSION,eventVersion:1,
+    originStories:true,experienceVersion:EXPERIENCE_VERSION,
+    eventVersion:liveBirthDraft.reincarnationRunId?(liveSnapshot?.state?.events?.version??1):2,
     ...(inheritedBenefits.length ? {inheritedBenefits} : {}),
     ...(liveBirthDraft.rolledTalentId ? {lockedTalentId:liveBirthDraft.rolledTalentId} : {}),
   };
@@ -447,9 +448,10 @@ document.addEventListener('click', event => {
   if ('liveResume' in data) return liveSession?.resume();
   if ('liveChoice' in data) return liveSession?.choose({ choiceId: data.liveChoice, baseRevision: Number(data.revision), stateHash: data.stateHash });
   if ('liveNote' in data)return liveSession?.openJourneyNote({node:data.liveNote,archiveId:data.archiveId,baseRevision:Number(data.revision),stateHash:data.stateHash},()=>view==='adventure'&&!document.hidden&&!$('#dialog').open);
-  if ('livePractice' in data||'liveShortPractice' in data){
-    const count=Number(data.livePractice??button.closest('details').querySelector('[data-practice-count]').value);
-    return liveSession?.practiceUntil({count,archiveId:data.archiveId,baseRevision:Number(data.revision),stateHash:data.stateHash},()=>view==='adventure'&&!document.hidden&&!$('#dialog').open);
+  if ('livePractice' in data||'liveShortPractice' in data||'liveGather' in data){
+    const count=Number(data.liveGather??data.livePractice??button.closest('details').querySelector('[data-practice-count]').value);
+    const kind='liveGather' in data?'gather':'practice';
+    return liveSession?.practiceUntil({kind,count,archiveId:data.archiveId,baseRevision:Number(data.revision),stateHash:data.stateHash},()=>view==='adventure'&&!document.hidden&&!$('#dialog').open);
   }
   if ('liveStopPractice' in data) return liveSession?.stopPractice();
   if ('liveHistoryNext' in data) return showLiveHistory(false);

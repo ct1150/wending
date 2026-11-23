@@ -111,6 +111,8 @@ export function getReincarnationSettlement(state) {
   if(echoes[0].kind==='method')decisions.push(describeEcho(echoes[0]));
   const person=c&&(state.relatedEntities.find(row=>row.id===c.entityId)?.name??state.director?.memory.npcs.find(row=>row.id===c.entityId)?.name??'当时的指点者');
   if(c?.status==='fulfilled')decisions.push('第'+c.acceptedTurn+'回接受'+person+'的校法之约，此生已还行粮。');
+  const ending=state.events?.campaign?.ending;
+  if(ending)decisions.push(ending==='public'?'问鼎后将可用的路写入公鼎，交给三界轮值。':'问鼎后把三份手稿交给愿意接手的人。');
   if(state.lastReceipt.action)decisions.push('最后一次行动：'+state.lastReceipt.action.label+'。');
   return {...old,selectionLimit:2,decisions,unfinished:c?.status==='owed'?['第'+c.acceptedTurn+'回接受'+person+'的校法之约，直至身故尚欠行粮一份。']:[],echoes};
 }
@@ -126,7 +128,7 @@ export function buildRebirthOptions(deadState,rewardIds=[]) {
   const inscription=inscriptionFrom(events?.watch)??deadState.reincarnation?.inscription;
   const gardenRoot=gardenRootForChild(deadState);
   const atlas=events?.river?structuredClone({river:events.river,...(events.expedition?{expedition:events.expedition}:{}),...(events.council?{council:events.council}:{}),...(events.convoy?{convoy:events.convoy}:{}),...(events.valley?{valley:events.valley}:{})}):null;
-  return {engineVersion:7,...(isExperienceLife(deadState.life)?{experienceVersion:EXPERIENCE_VERSION}:{}),...(deadState.events?{eventVersion:1,originStories:true}:{}),inheritedBenefits:purchases,reincarnation:{
+  return {engineVersion:7,...(isExperienceLife(deadState.life)?{experienceVersion:EXPERIENCE_VERSION}:{}),...(deadState.events?{eventVersion:deadState.events.version,originStories:true}:{}),inheritedBenefits:purchases,reincarnation:{
     version:settlement.echoes?2:1,...(settlement.echoes?{carriedPoints:settlement.carriedPoints,echoes:settlement.echoes}:{}),lineageId:deadState.reincarnation?.lineageId??deadState.runId,
     generation:settlement.generation+1,parentRunId:deadState.runId,parentStateHash:stateHash(deadState),
     earnedPoints:settlement.earnedPoints,balance:settlement.availablePoints-spent,purchases,...(atlas?{atlas}:{}),...(inscription?{inscription:structuredClone(inscription)}:{}),...(gardenRoot!==undefined?{gardenRoot}:{}),

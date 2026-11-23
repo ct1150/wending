@@ -6,6 +6,7 @@ import {shellTide} from './shell-ferry.js';
 import {nurseryWindow} from './entry-nursery.js';
 import {saltWindow} from './salt-field.js';
 import {charterNote} from './harbor-charters.js';
+import {crossingDeadlines,journeyNotes} from './journey-notes.js';
 
 // Only the repeatable, ordinary steady action is eligible. Story retreats
 // consume the same days but have a player decision on the other side.
@@ -46,4 +47,21 @@ export function practicePlan(state){
  }
  return {choiceId:action.id,requested,count,days:count*rule.days,spirit:count*rule.spiritCost,
   gain:count*rule.cultivation,exposure:Math.min(100-life.cultivationProfile.exposure,count*rule.exposure),exposurePerTurn:rule.exposure,stop,stopNode};
+}
+
+export function gatherPlan(state){
+ if(state?.phase!=='active'||state.events?.version!==2||state.life.injury>1)return null;
+ const action=state.currentScene.choices.find(c=>c.id.endsWith(':c:gather-again')&&c.intent==='explore'&&c.approach==='cautious');
+ if(!action)return null;
+ const life=state.life,rule=v7ActionRule(state,action);
+ if(rule.reason||rule.days<=0||life.cultivationProfile.spirit<rule.spiritCost)return null;
+ const remaining=life.lifeLimit*DAYS_PER_YEAR-life.ageDays;
+ const notes=journeyNotes(state);
+ let count=0;
+ while(count<3){
+  const days=rule.days*(count+1);
+  if(days>=remaining||crossingDeadlines(state,notes,days)||rule.spiritCost*(count+1)>life.cultivationProfile.spirit)break;
+  count++;
+ }
+ return {choiceId:action.id,item:action.targetId,count,days:rule.days*count,stop:'已搜完所选次数'};
 }

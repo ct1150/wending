@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
 import {gunzipSync} from 'node:zlib';
-import {liveBrowser} from './helpers/live-browser.js';
+import {liveBrowser,loadClassicEventOpening} from './helpers/live-browser.js';
 
 test('the old second cloud invitation restores its exit before exposing an unstarted first trial',async t=>{
  const text=gunzipSync(await readFile(new URL('./fixtures/9b4603a-cloud-ready.jsonl.gz',import.meta.url))).toString('utf8');
@@ -317,7 +317,7 @@ test('an old solo retreat preserves its pending exit and reaches paid intensive 
 test('mobile long-route directions open the actual story entrances without accepting either commission',async t=>{
  const {page}=await liveBrowser(t);await page.setViewportSize({width:360,height:760});
  const opt=key=>page.locator('[data-live-choice$=":c:'+key+'"]:enabled');
- await page.locator('[data-title-new]').click();await page.locator('[data-live-start]').click();await opt('decline').click();
+ await loadClassicEventOpening(page);await opt('decline').click();
  const state=()=>page.evaluate(async()=>{const {openLiveArchive}=await import('/src/game/live-archive.js');const a=await openLiveArchive();try{return (await a.load()).state;}finally{a.close();}});
  const before=await state();await page.locator('[data-adventure-leads] > summary').click();
  assert.match(await page.locator('[data-adventure-leads]').innerText(),/九关问鼎/);
