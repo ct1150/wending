@@ -247,7 +247,7 @@ function renderEventExtras(view,notes){
       (opening?'':renderJourneyNotes(view,notes)+renderJourneyNotes(view,adventureLeads(state),'leads')+
         renderJourneyNotes(view,preparationStops(state),'preparation')+renderPracticePlan(view,notes))+
       (view.playtestActive?'<button type="button" class="button" data-diary-stop>结束本段试玩计时</button>':''),
-    prose:`<section class="event-prose" data-event-prose aria-label="可选扩写"><button type="button" class="button" data-live-prose-expand${extra||view.busy||view.pending?' disabled':''}>${state.currentScene.blocks.some(block=>block.kind==='dialogue')?'展开对白':'展开描写'}</button><p class="save-info">可选的 AI 扩写，需要联网；随时可以继续行动。</p>${message?`<p data-event-prose-status role="status">${esc(message)}</p>`:''}${extra?.status==='ready'?`<p class="journey-block" data-event-prose-text>${esc(extra.text)}</p>`:''}</section>`,
+    prose:`<section class="event-prose" data-event-prose aria-label="行间景物润色"><button type="button" class="button" data-live-prose-expand${extra||view.busy||view.pending?' disabled':''}>${state.currentScene.blocks.some(block=>block.kind==='dialogue')?'展开对白':'展开描写'}</button><p class="save-info">联网时可补写几句行间景物，不点亦可直接前行。</p>${message?`<p data-event-prose-status role="status">${esc(message)}</p>`:''}${extra?.status==='ready'?`<p class="journey-block" data-event-prose-text>${esc(extra.text)}</p>`:''}</section>`,
   };
 }
 

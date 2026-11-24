@@ -113,6 +113,16 @@ export function getReincarnationSettlement(state) {
   if(c?.status==='fulfilled')decisions.push('第'+c.acceptedTurn+'回接受'+person+'的校法之约，此生已还行粮。');
   const ending=state.events?.campaign?.ending;
   if(ending)decisions.push(ending==='public'?'问鼎后将可用的路写入公鼎，交给三界轮值。':'问鼎后把三份手稿交给愿意接手的人。');
+  if(state.events?.version===2){
+   const wonDuels=state.events.duels?.won?.length??0;
+   if(wonDuels)decisions.push('问道斗法中力克三界强敌 '+wonDuels+' 场。');
+   const bondActs=Object.values(state.events.bonds??{}).reduce((sum,rec)=>sum+(rec?.stage??0),0);
+   if(bondActs)decisions.push('与红尘故人共历 '+bondActs+' 幕百年聚散。');
+   const realmsDone=Object.keys(state.events.realms?.done??{}).length;
+   if(realmsDone)decisions.push('亲身踏破三界秘境悬案 '+realmsDone+' 座。');
+   const talesDone=Object.keys(state.events.tales??{}).length;
+   if(talesDone)decisions.push('行脚三界江湖，亲历奇谭 '+talesDone+' 桩。');
+  }
   if(state.lastReceipt.action)decisions.push('最后一次行动：'+state.lastReceipt.action.label+'。');
   return {...old,selectionLimit:2,decisions,unfinished:c?.status==='owed'?['第'+c.acceptedTurn+'回接受'+person+'的校法之约，直至身故尚欠行粮一份。']:[],echoes};
 }

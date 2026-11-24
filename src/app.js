@@ -29,12 +29,12 @@ try { hasLegacyData = legacyKeys.some(key => storage.getItem(key) !== null); } c
 let navigationStorage = null;
 try { navigationStorage = window.sessionStorage; } catch {}
 const navigation = loadNavigation(navigationStorage, window.performance?.getEntriesByType?.('navigation')?.[0]?.type);
+let liveArchive = null, liveSession = null, liveSnapshot = null, liveError = '', liveHistoryCursor = null, liveHistoryRun = null;
 let liveBirthDraft = navigation.draft ?? { name: '云归', expectedArchiveId: null };
 if (!liveBirthDraft.seed) liveBirthDraft.seed = newSeed();
 if (liveBirthDraft.lockedTalentId && !rollLiveBirth(currentBirthOptions()).birth.talentIds.includes(liveBirthDraft.lockedTalentId)) {
   delete liveBirthDraft.lockedTalentId;
 }
-let liveArchive = null, liveSession = null, liveSnapshot = null, liveError = '', liveHistoryCursor = null, liveHistoryRun = null;
 let liveInitialization = null, homeReady = false, uiBusy = false, creatingRunId = null, returnScreen = navigation.returnScreen;
 let readingPreferences = loadPreferences(storage);
 const liveCatalogs = { REALMS: LIVE_REALMS, ORIGINS: LIVE_ORIGINS, TALENTS: LIVE_TALENTS, ITEMS: LIVE_ITEMS };

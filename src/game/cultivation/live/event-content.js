@@ -23,8 +23,13 @@ import {ridgeEntrance,ridgeNode} from './ridge-road.js';
 import {beaconPlaces} from './rift-beacon.js';
 import {homeboundNode,homeboundPlaces} from './homebound.js';
 import {canStudyForm,formNode} from './technique-forms.js';
-import {campaignOpening} from './campaign-opening.js';
+import {campaignOpening,openingEntities} from './campaign-opening.js';
 import {campaignScene} from './campaign.js';
+import {campaignEntities} from './campaign-chapters.js';
+import {duelNode,duelEntities} from './duel-engine.js';
+import {bondNode,bondEntities} from './bonds.js';
+import {secretRealmNode,realmEntities} from './secret-realms.js';
+import {taleNode,taleEntities} from './world-tales.js';
 
 // Authored situations supply every fact and executable choice. AI never edits
 // these definitions. Stable actors belong to a life, not a generated paragraph.
@@ -38,6 +43,12 @@ export function eventEntities(state){
   {id:prefix+'retreat',name:'青石山居',kind:'place'},
   {id:prefix+'middle',name:'中界清河城',kind:'place'},
   {id:prefix+'upper',name:'上界观星台',kind:'place'},
+  ...(state.events.node.startsWith('prologue-')?openingEntities(prefix):[]),
+  ...(state.events.node.startsWith('campaign-')?campaignEntities(prefix):[]),
+  ...(state.events.node.startsWith('duel-')?duelEntities(state,prefix):[]),
+  ...(state.events.node.startsWith('bond')?bondEntities(state,prefix):[]),
+  ...(state.events.node.startsWith('realm-')?realmEntities(state,prefix):[]),
+  ...(state.events.node.startsWith('tale-')?taleEntities(state,prefix):[]),
   ...(state.events.node.startsWith('shell-')?[{id:prefix+'ferrier',name:'蓼',kind:'person',status:'alive'}]:[]),
   ...(state.events.node.startsWith('sky-beacon-')?beaconPlaces(prefix):[]),
   ...(state.events.node.startsWith('home-')?homeboundPlaces(prefix):[]),
@@ -62,8 +73,39 @@ export function eventNode(state,historicMenu=null){
  const oldHarbor=historicMenu==='harbor';
  if(oldHarbor)historicMenu=null;
  const e=state.events,life=state.life,actors=eventEntities(state),actor=key=>actors.find(row=>row.id.endsWith(':e:'+key)).id;
- if(e.node.startsWith('prologue-'))return campaignOpening(state,menu,choice);
- if(e.node.startsWith('campaign-'))return campaignScene(state,menu,choice);
+ if(e.node.startsWith('prologue-'))return campaignOpening(state,menu,choice,actor);
+ if(e.node.startsWith('campaign-'))return campaignScene(state,menu,choice,actor);
+ if(e.node.startsWith('duel-'))return duelNode(state,menu,choice,actor);
+ if(e.node.startsWith('bond'))return bondNode(state,menu,choice,actor);
+ if(e.node.startsWith('realm-'))return secretRealmNode(state,menu,choice,actor);
+ if(e.node.startsWith('tale-'))return taleNode(state,menu,choice,actor);
+ if(e.node==='v2-chronicles')return {
+  title:'三界游历 · 风云录',goal:'遍访三界秘境、强敌战局与红尘故人',location:eventLocation(state),
+  blocks:[narration('三界苍茫，闭门枯坐终难证道。眼前摊开着你沿途攒下的江湖风声：八座暗藏杀机与奇遇的三界秘境、九场真刀真枪的宿命斗法，还有红尘故人的百年羁绊、二十四桩三界江湖奇谭与问川旧卷。')],
+  choices:[
+   menu('realm-book','三界秘境探幽 · 八大悬案与古修秘境','realm-book',{page:0}),
+   menu('duel-book','问道斗法 · 直面三界宿命强敌','duel-book'),
+   menu('v2-chronicles-more','红尘故人志、江湖奇谭与问川旧卷','v2-chronicles-more',{page:0}),
+  ],
+ };
+ if(e.node==='v2-chronicles-more')return {
+  title:'三界游历 · 故人与奇谭',goal:'寻访红尘故人、听江湖奇谭或续写旧卷',location:eventLocation(state),
+  blocks:[narration('长生路漫漫，除了大宗博弈与秘境杀机，更有茶肆里的散修奇谭，以及那些从石溪村一路走来、记着你旧模样的故人。')],
+  choices:[
+   menu('bonds-book','红尘故人志 · 六位核心故人百年浮沉','bonds-book',{page:0}),
+   menu('tale-book','江湖奇谭录 · 二十四桩三界散修见闻','tale-book',{page:0}),
+   menu('v2-chronicles-legacy','问川旧图、三程行旅与前代长线','v2-chronicles-legacy',{page:0}),
+  ],
+ };
+ if(e.node==='v2-chronicles-legacy')return {
+  title:'三界游历 · 问川旧卷',goal:'展开问川图与前代河海长线',location:eventLocation(state),
+  blocks:[narration('行囊底压着那卷前辈守闸人传下来的旧图与行旅记。若有闲暇，亦可循着水脉河港一路游历。')],
+  choices:[
+   menu('river-book',e.expedition?.place==='end'?'翻阅河簿、三程行旅与北山公簿':'展开《问川图》，探访江湖旧路','river-book'),
+   menu('v2-chronicles','返回三界风云录','v2-chronicles',{page:0}),
+   menu('back','收卷回山安排修行','hub'),
+  ],
+ };
  const next=nextRealmFor(life),realm=realmFor(life),method=TECHNIQUES[life.cultivationProfile.experience.activeTechniqueId];
  const young=life.ageDays<80*DAYS_PER_YEAR;
  const row=(title,goal,blocks,choices)=>({title,goal,blocks,choices});
@@ -225,8 +267,8 @@ export function eventNode(state,historicMenu=null){
    return row('山中药房 · 延寿方','按余寿与材料决定是否开炉',[narration(prior),narration('距寿尽尚有'+(life.lifeLimit*DAYS_PER_YEAR-life.ageDays)+'日。药草 '+herbs+' / 8，灵石 '+stones+' / 12，延寿丹 '+elixir+' 枚。这张方子需要十五分灵力；若炼制失败，材料仍会耗去。')],[work,choice('recover','在炉边调息养伤','rest','self','recover',{next:'apothecary'}),menu('train-menu','收起药方，安排修行','training')]);
   }
   case 'journey':return row('路与行囊','接续历练，或备办下一次修行的资用',[
-   narration(e.council?.length===councilHearings?'北山九次落款都在册。从河簿翻到北山最后一页，可以查到三界海路的舱单与来信。':e.expedition?.place==='end'?'你的行囊里放着三程图印。北山井户的一纸来信夹在其间，等你回去落款。':e.river?'问川图上夹着一根草绳，再打开仍是上次停下的地方。':'你在山口书摊翻到一卷旧图。卖书人说是好几代守闸人留的传习卷，问你愿不愿试着展开。桌的另一头还摊着采药与打铁的路引。'),
-  ],[menu('river-book',e.expedition?.place==='end'?'翻阅河簿、三程行旅与北山公簿':'展开问川图，历练河上人家','river-book'),menu('resources-menu','寻找修行材料与生活物资','resources',{page:0}),menu('workshop-menu','炼制、跨界与其他准备','workshop',{page:0})]);
+   narration(e.version===2?'山外风急，灵材不会自己落进丹炉，大道也不会在蒲团上凭空长出来。要闯三界风云、寻破境灵材，还是回炉炼器制符，都看你今日的盘算。':e.council?.length===councilHearings?'北山九次落款都在册。从河簿翻到北山最后一页，可以查到三界海路的舱单与来信。':e.expedition?.place==='end'?'你的行囊里放着三程图印。北山井户的一纸来信夹在其间，等你回去落款。':e.river?'问川图上夹着一根草绳，再打开仍是上次停下的地方。':'你在山口书摊翻到一卷旧图。卖书人说是好几代守闸人留的传习卷，问你愿不愿试着展开。桌的另一头还摊着采药与打铁的路引。'),
+  ],[e.version===2?menu('v2-chronicles','翻开三界风云录（秘境、斗法与问川旧图）','v2-chronicles'):menu('river-book',e.expedition?.place==='end'?'翻阅河簿、三程行旅与北山公簿':'展开问川图，历练河上人家','river-book'),menu('resources-menu','寻找修行材料与生活物资','resources',{page:0}),menu('workshop-menu','炼制、跨界与其他准备','workshop',{page:0})]);
   case 'resources':{
    const targets=[...new Set([next?.material??'relic','supplies','stones','herbs','iron'])],target=targets[e.page%targets.length];
    const oldSlip=historicMenu==='resources'||state.currentScene?.id.endsWith(':t'+state.turnId+':s:event_resources')&&!state.currentScene.choices.some(c=>c.id.endsWith(':c:well-road'));

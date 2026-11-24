@@ -12,6 +12,10 @@ import {councilHearings} from './mountain-council.js';
 import {canStudyForm} from './technique-forms.js';
 import {canVisitRift} from './cloud-rift.js';
 import {campaignProgress} from './campaign.js';
+import {nextAvailableDuel} from './duel-engine.js';
+import {nextAvailableBond} from './bonds.js';
+import {nextAvailableRealm} from './secret-realms.js';
+import {nextAvailableTale} from './world-tales.js';
 
 // Invitations explain the existing long route without accepting its work or
 // putting undiscovered stories into the journal of actual commitments.
@@ -48,7 +52,15 @@ export function adventureLeads(state){
  if(tier===2&&rank>=4&&!e.cloudPassage)invite('sky-book','白脊云渡 · 在上界亲历风候','随渡班在岸上或船中闭关，再亲自决定怎样试航。元婴、炼虚、大乘各有一班，旧井铃与先前的渡法会改变后来的办法。');
  if(tier===2&&rank>=5&&!e.homebound)invite('home-book','归航者 · 舟灵与醒来的人','港外残舟里有人开始说话。舟灵岑照想修成归乡船，他们却渐渐有了自己的愿望。从化神至大乘四次同行，承诺会改变往后的合作。先去听听，确认承诺后再自行备粮登船。');
  if(!e.cloudRift&&canVisitRift(state))invite('sky-rift','白脊风隙 · 用所学走进异变','化神后可循已经交接的旧渡路探访浮岩。调查支点与回流，勘路或施术入隙；首次定脉后，到合体再处理自己留下的变化。先看现场，出发才交粮。');
- if(e.cloudRift?.ending&&!e.riftBeacon)invite('sky-beacon-book','回风孤标 · 走一圈有回程的路','探路班想取回外岩标台的观风原纸。调查会耗时，第五日变风；旧定脉能帮你走不同入口，返岸的路仍须亲自决定。读信不算起行。');
+ if(e.cloudRift?.ending&&!e.riftBeacon)invite('sky-beacon-book','回风孤标 · 走一圈有回程的路',e.version===2?'探路班托人捎信，想取回外岩标台的观风原纸。山高风急，第五日便会变风，可先去看看来信再定是否起行。':'探路班想取回外岩标台的观风原纸。调查会耗时，第五日变风；旧定脉能帮你走不同入口，返岸的路仍须亲自决定。读信不算起行。');
+ const realm=nextAvailableRealm(state);
+ if(realm&&!e.realms?.active)invite('realm-book','三界秘境 · '+realm.title,'传闻'+realm.location+'异动频生（'+realm.subtitle+'），可带行囊前去查探真相与古修秘宝。');
+ const duel=nextAvailableDuel(state);
+ if(duel&&!e.duels?.active)invite('duel-book','问道斗法 · '+duel.title,'强敌「'+duel.name+'（'+duel.epithet+'）」已现身'+duel.location+'，可携符器前去一决生死。');
+ const bond=nextAvailableBond(state);
+ if(bond)invite('bonds-book','红尘故人志 · '+bond.char.name+'（'+bond.act.title+'）',bond.char.name+'在'+bond.act.location+'留有新消息，可前去叙旧、深谈或共赴险局。');
+ const tale=nextAvailableTale(state);
+ if(tale)invite('tale-book','江湖奇谭 · '+tale.title,tale.location+'新近传出一桩风声，涉及'+tale.npcName+'，可前去打探取舍。');
  return [...(campaign?[{node:'campaign-book',title:'三界主线 · '+campaign.title,detail:campaign.goal}]:[]),...opportunities,...leads];
 }
 
@@ -68,6 +80,8 @@ export function journeyNotes(state){
   notes.push({node,title,detail,timing,priority,date,close:window?.close});
  }
  const w=e.well;
+ if(e.duels?.active)add('duel-arena','激战未歇 · 问道斗法','正与强敌交锋至第'+e.duels.active.round+'回合（对手余势 '+e.duels.active.foeHp+'/'+e.duels.active.foeMax+'），须重返战局决出胜负。');
+ if(e.realms?.active)add('realm-room','秘境探幽未竟','仍在探索秘境之中，已查明线索 '+[0,1,2].filter(b=>e.realms.active.clues&(1<<b)).length+' / 3 处，可随时重返现场。');
  if(e.homebound&&!e.homebound.ending)add('home-book','与岑照的归航约定','已起行 '+e.homebound.visits.length+' / 4 幕。'+(e.homebound.place==='ship'?'人还在船上，须亲自走回港外才能修行或辞别。':'可从港外接着上一幕；尚未具备下一幕境界时，可以先继续自己的修行。'));
  if(e.riftBeacon&&!e.riftBeacon.ending){
   const r=e.riftBeacon;
@@ -166,7 +180,7 @@ export function preparationStops(state){
 
 // These menu screens can be read on the way to a known entry. A trip, promise,
 // reward or quest patch is a player decision even when it happens to cost zero days.
-const shelves=new Set(['hub','training','rest','journey','resources','workshop','crossing','affairs','mentor','companion','post-index','post-book','post-history','watch-book','watch-visitors','field-guide','garden-book','garden-history','river-book','voyage-book','council-book','sky-book','sky-weather','sky-lodgings','sky-rift','sky-harbor','campaign-book']);
+const shelves=new Set(['hub','training','rest','journey','resources','workshop','crossing','affairs','mentor','companion','post-index','post-book','post-history','watch-book','watch-visitors','field-guide','garden-book','garden-history','river-book','voyage-book','council-book','sky-book','sky-weather','sky-lodgings','sky-rift','sky-harbor','campaign-book','campaign-epilogue','v2-chronicles','v2-chronicles-more','v2-chronicles-legacy','duel-book','bonds-book','realm-book','tale-book']);
 export function noteMenuSteps(state){
  return eventNode(state).choices.filter(c=>c.navigation&&c.targetId==='self'&&c.approach==='observe'&&!c.arrival&&!c.rule&&Object.keys(c.patch??{}).every(k=>k==='page'));
 }

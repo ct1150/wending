@@ -27,10 +27,20 @@ import {validateRiftBeacon} from './rift-beacon.js';
 import {validateHomebound} from './homebound.js';
 import {openingNodes,validateCampaignOpening} from './campaign-opening.js';
 import {campaignNodes,validateCampaign} from './campaign.js';
+import {duelNodes,validateDuels} from './duel-engine.js';
+import {bondNodes,validateBonds} from './bonds.js';
+import {realmNodes,validateRealms} from './secret-realms.js';
+import {taleNodes,validateTales} from './world-tales.js';
+import {polishV2Scene} from './v2-polish.js';
 
 const eventNodeIds=new Set([
  ...openingNodes,
  ...campaignNodes,
+ ...duelNodes,
+ ...bondNodes,
+ ...realmNodes,
+ ...taleNodes,
+ 'v2-chronicles','v2-chronicles-more','v2-chronicles-legacy',
  'sky-harbor','home-book','home-talk','home-decide','home-final','home-leave',
  'sky-beacon-book','sky-beacon-rest','sky-beacon-works','sky-beacon-exit',
  'arrival','terms','work','entry-result','companion','companion-result','reunion','reunion-result',
@@ -67,9 +77,14 @@ export function createEventState(atlas,version=1){
   ...(atlas?copy(atlas):{}),...(version===2?{prologue:{water:null,help:null}}:{})};
 }
 export function validateEventState(events,life,gardenRoot,birthRoll){
- assertPlainData(events);exactKeys(events,['version','node','entry','companion','mentor','page','location'],['river','expedition','council','convoy','charters','valley','watch','mine','garden','firstMeeting','post','mountain','ferry','well','cloudPassage','nursery','saltField','ridgeRoad','forms','cloudRift','cloudTrials','riftBeacon','homebound','prologue','campaign']);
+ assertPlainData(events);exactKeys(events,['version','node','entry','companion','mentor','page','location'],['river','expedition','council','convoy','charters','valley','watch','mine','garden','firstMeeting','post','mountain','ferry','well','cloudPassage','nursery','saltField','ridgeRoad','forms','cloudRift','cloudTrials','riftBeacon','homebound','prologue','campaign','duels','bonds','realms','tales']);
  validateCampaignOpening(events,life);
  validateCampaign(events,life);
+ if(Object.hasOwn(events,'duels')||events.node.startsWith('duel-'))validateDuels(events,life);
+ if(Object.hasOwn(events,'bonds')||events.node.startsWith('bond'))validateBonds(events,life);
+ if(Object.hasOwn(events,'realms')||events.node.startsWith('realm-'))validateRealms(events,life);
+ if(Object.hasOwn(events,'tales')||events.node.startsWith('tale-'))validateTales(events,life);
+ if(['v2-chronicles','v2-chronicles-more','v2-chronicles-legacy'].includes(events.node)&&events.version!==2)throw Error('旧版人生无此游历总卷。');
  if(Object.hasOwn(events,'homebound')||events.node.startsWith('home-'))validateHomebound(events,life);
  if(events.node==='sky-harbor'&&life&&(life.cultivationProfile.worldTier!==2||realmFor(life).rank<5))throw Error('港外来信须在上界化神后查看。');
  if(Object.hasOwn(events,'riftBeacon')||events.node.startsWith('sky-beacon-'))validateRiftBeacon(events,life);
@@ -153,7 +168,7 @@ export function validateEventState(events,life,gardenRoot,birthRoll){
  if(Object.hasOwn(events,'expedition'))validateExpedition(events.expedition);
  if((events.expedition||events.node.startsWith('voyage-'))&&events.river?.record.length!==riverCases||events.node==='voyage-result'&&!events.expedition?.volume)throw new Error('行旅录页次无效。');
  if(events.node==='river-result'&&!events.river?.record.length||events.node==='river-reading'&&!events.river?.seen||['river-site','river-reading','river-decision'].includes(events.node)&&events.river?.record.length===riverCases)throw new Error('问川图页次无效。');
- if(![1,2].includes(events.version)||!['unresolved','accepted','joined','declined'].includes(events.entry)||!['unmet','helped','declined','completed','parted'].includes(events.companion)||!['unmet','guided','self','repaid'].includes(events.mentor)||!Number.isInteger(events.page)||events.page<0||events.page>4||!['gate','retreat','middle','upper'].includes(events.location))throw new Error('规则事件状态无效。');
+ if(![1,2].includes(events.version)||!['unresolved','accepted','joined','declined'].includes(events.entry)||!['unmet','helped','declined','completed','parted'].includes(events.companion)||!['unmet','guided','self','repaid'].includes(events.mentor)||!Number.isInteger(events.page)||events.page<0||events.page>(events.version===2?24:4)||!['gate','retreat','middle','upper'].includes(events.location))throw new Error('规则事件状态无效。');
  return events;
 }
 function selected(state,action){
@@ -202,7 +217,8 @@ export function advanceEvents(state,receipt){
 export function resolveEventScene(state,pending,historicMenu=null){
  const events=advanceEvents(state,pending.receipt),prospective={...state,life:pending.nextLife,events,lastReceipt:pending.receipt,turnId:pending.identity.turnId};
  const definition=eventNode(prospective,historicMenu),prefix='r:'+sha256(state.runId).slice(0,16)+':t'+pending.identity.turnId+':';
- return {id:prefix+'s:event_'+events.node,title:definition.title,location:definition.location??eventLocation(prospective),blocks:copy(definition.blocks),entities:eventEntities(prospective),choices:definition.choices.map(({key,label,intent,targetId,stake,approach})=>({id:prefix+'c:'+key,label,intent,targetId,stake,approach})),memoryDeltas:[]};
+ const scene={id:prefix+'s:event_'+events.node,title:definition.title,location:definition.location??eventLocation(prospective),blocks:copy(definition.blocks),entities:eventEntities(prospective),choices:definition.choices.map(({key,label,intent,targetId,stake,approach})=>({id:prefix+'c:'+key,label,intent,targetId,stake,approach})),memoryDeltas:[]};
+ return events.version===2?polishV2Scene(scene,prospective):scene;
 }
 export function assertRuleScene(state,pending,scene){
  if(canonicalStringify(scene)!==canonicalStringify(resolveEventScene(state,pending)))throw new Error('规则事件场景不可由生成内容改写。');

@@ -7,6 +7,7 @@ import { liveStoryFixture } from './helpers/live-story-fixture.js';
 import { ORIGINS, TALENTS } from '../src/game/cultivation/live/model.js';
 import { ROOTS } from '../src/game/cultivation/live/cultivation-rules.js';
 import { ORIGIN_BACKGROUNDS, TALENT_STORIES } from '../src/game/cultivation/live/birth-stories.js';
+import { CAMPAIGN_BIRTH_HISTORY } from '../src/game/cultivation/live/mortal-opening.js';
 import { rollLiveBirth } from '../src/game/cultivation/live/engine.js';
 
 function story(context) {
@@ -64,7 +65,10 @@ test('title is read-only, menus fit narrow screens, new defaults live, and draft
 });
 
 function assertBirthStory(text, birth) {
-  assert.ok(text.includes(ORIGIN_BACKGROUNDS[birth.originId][birth.backgroundId]));
+  const history = birth.cultivationProfile?.eventVersion === 2
+    ? CAMPAIGN_BIRTH_HISTORY
+    : ORIGIN_BACKGROUNDS[birth.originId][birth.backgroundId];
+  assert.ok(text.includes(history));
   for (const id of birth.talentIds) {
     assert.ok(text.includes(TALENT_STORIES[id].sense));
     assert.ok(text.includes(TALENT_STORIES[id].effect));
@@ -104,7 +108,7 @@ test('one selected talent survives a reroll and the last displayed hand becomes 
     if (new URL(request.url()).pathname.startsWith('/api/story/')) storyRequests.push(request.url());
   });
   assert.equal(await locks.count(), 2);
-  const currentRules = {eventVersion:1, experienceVersion: 1, originStories: true};
+  const currentRules = {eventVersion:2, experienceVersion: 1, originStories: true};
   assertDisplayedBirth(await form.innerText(), rollLiveBirth({seed: '1', ...currentRules}).birth);
   const held = await locks.nth(1).getAttribute('data-live-lock');
   await locks.first().click();
@@ -152,17 +156,17 @@ test('an older creation draft uses the sole background and cannot hide an off-ha
   await page.reload();
   const form = page.locator('#live-birth-form');
   assert.equal(await form.locator('#live-name').inputValue(), '林照');
-  assertDisplayedBirth(await form.innerText(), rollLiveBirth({seed: '2', lockedTalentId: 'sword-bone',originStories:true,experienceVersion:1}).birth);
+  assertDisplayedBirth(await form.innerText(), rollLiveBirth({seed: '2', lockedTalentId: 'sword-bone',eventVersion:2,originStories:true,experienceVersion:1}).birth);
   assert.equal(await form.locator('#live-origin-history').count(), 1);
   assert.doesNotMatch(await form.innerText(),/流亡孤儿|山村猎户|城坊匠徒|渡口短工/u);
   assert.equal(await form.locator('[data-live-lock="keen-memory"]').count(), 0);
   await form.locator('[data-live-reroll]').click();
   assert.equal(await form.locator('[data-live-lock][aria-pressed="true"]').count(), 0);
   const seed = await page.evaluate(() => JSON.parse(sessionStorage.getItem('wending-navigation-v1')).draft.seed);
-  assertDisplayedBirth(await form.innerText(), rollLiveBirth({seed, originStories: true, experienceVersion: 1}).birth);
+  assertDisplayedBirth(await form.innerText(), rollLiveBirth({seed, eventVersion: 2, originStories: true, experienceVersion: 1}).birth);
   assert.equal(await f.read(), null);
   assert.equal(f.posts, 0);
-  const expected=rollLiveBirth({seed,eventVersion:1,originStories:true,experienceVersion:1}).birth;
+  const expected=rollLiveBirth({seed,eventVersion:2,originStories:true,experienceVersion:1}).birth;
   await form.locator('[data-live-start]:enabled').click();
   await page.locator('[data-live-choice]:enabled').first().waitFor();
   const created=await f.read();assert.equal(created.state.life.birth.originId,'mortal');assert.deepEqual(created.state.life.birth,expected);
