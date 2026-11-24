@@ -35,7 +35,7 @@ if (!liveBirthDraft.seed) liveBirthDraft.seed = newSeed();
 if (liveBirthDraft.lockedTalentId && !rollLiveBirth(currentBirthOptions()).birth.talentIds.includes(liveBirthDraft.lockedTalentId)) {
   delete liveBirthDraft.lockedTalentId;
 }
-let liveInitialization = null, homeReady = false, uiBusy = false, creatingRunId = null, returnScreen = navigation.returnScreen;
+let liveInitialization = null, homeReady = false, uiBusy = false, creatingRunId = null, returnScreen = navigation.returnScreen, lastAdventureSceneId = null;
 let readingPreferences = loadPreferences(storage);
 const liveCatalogs = { REALMS: LIVE_REALMS, ORIGINS: LIVE_ORIGINS, TALENTS: LIVE_TALENTS, ITEMS: LIVE_ITEMS };
 const liveClient = createStoryClient();
@@ -197,6 +197,7 @@ function renderScreenShell(content,{title='百世问鼎',back='返回首页'}={}
 }
 
 function goHome() {
+  lastAdventureSceneId = null;
   closeDialog(false);view='home';returnScreen='home';render();
   $('#main-content')?.focus({preventScroll:true});window.scrollTo({top:0,behavior:'instant'});
 }
@@ -357,7 +358,15 @@ function renderLiveApp() {
   const content=storyView?renderLiveJourney(storyView,choices):'<p role="status">正在读取旅程…</p>';
   $('#app').innerHTML=`<div class="paper-page paper-page-immersive"><header class="paper-top paper-top-immersive">${header}</header><main id="main-content" class="paper-main" tabindex="-1">${liveError?`<p class="notice" role="status">${esc(liveError)}</p>`:''}${content}</main>${renderGameNavigation({history:Boolean(liveState)})}</div>`;
   if(previousStory&&storyView&&updateLiveJourney(previousStory,storyView,choices))$('#app').querySelector('[data-live-story]').replaceWith(previousStory);
-  resolveFocusTarget(focus)?.focus({ preventScroll: true });
+  const resolvedFocus=resolveFocusTarget(focus);
+  resolvedFocus?.focus({ preventScroll: true });
+  const sceneId=liveState?.currentScene?.id??null;
+  if(sceneId&&sceneId!==lastAdventureSceneId){
+    lastAdventureSceneId=sceneId;
+    if(!$('#dialog').open&&(!focus||focus.sceneFallback||resolvedFocus?.id==='journey-current-title')){
+      window.scrollTo({ top: 0, behavior: 'instant' });
+    }
+  }
 }
 
 async function showLiveHistory(first) {

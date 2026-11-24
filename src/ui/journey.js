@@ -122,6 +122,7 @@ function renderLiveChoice(choice, view, index, presentation) {
   const draft = presentation.preview;
   const numbered = view.state.life.cultivationProfile?.version === 7;
   const outlook=choice.outlook, bands={favorable:'胜算较高',even:'胜负未定',dangerous:'胜算偏低',unknown:'胜算未明'};
+  const deadlineNote = choice.enabled && presentation.notes.length ? crossingDeadlines(view.state, presentation.notes, choice.costs?.days) : '';
   const details = draft ? [] : [
     !choice.enabled && choice.reason ? choice.reason : '',
     choice.costs?.days > 0 ? `${choice.costs.days}日` : '',
@@ -132,9 +133,11 @@ function renderLiveChoice(choice, view, index, presentation) {
     outlook?.purpose ? '对方意图：'+outlook.purpose : '',
     outlook?.condition ? '可利用：'+outlook.condition : '',
     ...(choice.warnings ?? []),
-    choice.enabled&&presentation.notes.length?crossingDeadlines(view.state,presentation.notes,choice.costs?.days):'',
+    deadlineNote,
   ].filter(Boolean);
-  return `<button type="button" class="journey-choice${draft ? ' live-choice-draft' : ''}" data-live-choice-index="${index}"${draft ? ' data-live-choice-preview' : ` data-live-choice="${esc(choice.id)}" data-revision="${view.state.revision}" data-state-hash="${esc(view.stateHash)}"`}${draft || presentation.pending || !choice.enabled ? ' disabled' : ''}${details.length ? ` aria-describedby="live-cost-${index}"` : ''}><span class="journey-choice-label">${numbered ? `<span class="live-choice-number">${index + 1}. </span>` : ''}${esc(choice.label)}</span><span class="journey-choice-reason" id="live-cost-${index}"${details.length ? '' : ' hidden'}>${esc(details.join(' · '))}</span></button>`;
+  const hasDangerWarning = (choice.warnings ?? []).some(w => !String(w).startsWith('此择可得：') && !String(w).startsWith('胜可得：'));
+  const isMetaOnly = choice.enabled && !hasDangerWarning && !deadlineNote && outlook?.band !== 'dangerous';
+  return `<button type="button" class="journey-choice${draft ? ' live-choice-draft' : ''}" data-live-choice-index="${index}"${draft ? ' data-live-choice-preview' : ` data-live-choice="${esc(choice.id)}" data-revision="${view.state.revision}" data-state-hash="${esc(view.stateHash)}"`}${draft || presentation.pending || !choice.enabled ? ' disabled' : ''}${details.length ? ` aria-describedby="live-cost-${index}"` : ''}><span class="journey-choice-label">${numbered ? `<span class="live-choice-number">${index + 1}. </span>` : ''}${esc(choice.label)}</span><span class="journey-choice-reason${isMetaOnly ? ' is-meta' : ''}" id="live-cost-${index}"${details.length ? '' : ' hidden'}>${esc(details.join(' · '))}</span></button>`;
 }
 
 function renderLiveOutcome(receipt, view = {}) {
@@ -266,9 +269,10 @@ export function renderLiveJourney(view, choices) {
     ? '<button type="button" class="button primary" data-live-resume>查看续写进度</button>'
     : '<button type="button" class="button primary" data-live-retry>继续故事</button>';
   const status = message ? esc(message) : view.busy ? '<span aria-hidden="true">…</span><span class="live-sr-only">正在续写</span>' : '';
-  const chapter=state.phase==='active'&&/^(?:prologue|campaign)-/.test(state.events?.node??'');
+  const chapter=state.phase==='active'&&/^(?:prologue|campaign|duel|bond|realm|tale|v2-chronicles)/.test(state.events?.node??'');
   const title=state.phase==='dead'?'此生已尽':scene?.title??'此生故事';
-  return `<article class="journey live-journey${v7 ? ' live-cultivation-v7' : ''}" data-live-story data-live-run="${esc(state.runId)}" aria-label="此生故事"><section class="journey-current" aria-labelledby="journey-current-title"><h2 id="journey-current-title" class="${chapter?'live-chapter-title':'live-sr-only'}" tabindex="-1">${esc(title)}</h2><section class="live-intro" aria-label="本地开场"${opening ? '' : ' hidden'}>${intro}</section>${v7 ? renderLiveBirthFacts(view) : ''}${v7 ? renderLiveOutcome(view.pending?.receipt ?? state.lastReceipt, view) : ''}<div class="journey-prose" data-live-prose data-live-preview-text${presentation.preview ? ' data-live-preview' : ''} aria-busy="${Boolean(view.busy)}">${presentation.blocks.map(renderLiveBlock).join('')}</div>${v7 ? renderLiveState(view) : ''}${extras.growth}<div class="journey-choices" data-live-choices role="group" aria-label="眼前的选择"${presentation.choices.length ? '' : ' hidden'}>${presentation.choices.map((choice, index) => renderLiveChoice(choice, view, index, presentation)).join('')}</div>${extras.prose}<section class="live-status" aria-live="polite" aria-atomic="true"${status || recovery ? '' : ' hidden'}><p data-live-progress-status>${status}</p>${recovery}</section><section class="journey-ending"${state.phase === 'dead' ? '' : ' hidden'}>${renderLiveEnding(view)}</section></section></article>`;
+  const locationBadge=chapter&&scene?.location?`<p class="journey-location live-scene-location">${esc(scene.location)}</p>`:'';
+  return `<article class="journey live-journey${v7 ? ' live-cultivation-v7' : ''}" data-live-story data-live-run="${esc(state.runId)}" aria-label="此生故事"><section class="journey-current" aria-labelledby="journey-current-title">${locationBadge}<h2 id="journey-current-title" class="${chapter?'live-chapter-title':'live-sr-only'}" tabindex="-1">${esc(title)}</h2><section class="live-intro" aria-label="本地开场"${opening ? '' : ' hidden'}>${intro}</section>${v7 ? renderLiveBirthFacts(view) : ''}${v7 ? renderLiveOutcome(view.pending?.receipt ?? state.lastReceipt, view) : ''}<div class="journey-prose" data-live-prose data-live-preview-text${presentation.preview ? ' data-live-preview' : ''} aria-busy="${Boolean(view.busy)}">${presentation.blocks.map(renderLiveBlock).join('')}</div><div class="journey-choices" data-live-choices role="group" aria-label="眼前的选择"${presentation.choices.length ? '' : ' hidden'}>${presentation.choices.map((choice, index) => renderLiveChoice(choice, view, index, presentation)).join('')}</div><section class="live-status" aria-live="polite" aria-atomic="true"${status || recovery ? '' : ' hidden'}><p data-live-progress-status>${status}</p>${recovery}</section><section class="journey-ending"${state.phase === 'dead' ? '' : ' hidden'}>${renderLiveEnding(view)}</section>${v7 ? renderLiveState(view) : ''}${extras.growth}${extras.prose}</section></article>`;
 }
 
 // The live reading surface keeps its paragraph and choice nodes as text arrives
