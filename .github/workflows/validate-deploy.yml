@@ -76,4 +76,34 @@ jobs:
         run: |
           npm run publish:release | tee release/publication-result.txt
           cat release/publication-result.txt >> "$GITHUB_STEP_SUMMARY"
-          echo 'The ordinary static gateway refreshes the verified web game from release-channel. Production backend packages pin their frontend and require a separate compatible deployment, including retirement of the old offline download route. /healthz reports the frontend actually served. The story backend artifact is disabled and is not deployed by this workflow; HTML publication does not verify AI, account billing, bindings, or worldwide propagation.' >> "$GITHUB_STEP_SUMMARY"
+  deploy-cloudflare:
+    needs: [validate, publish]
+    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+      - uses: actions/setup-node@v6
+        with:
+          node-version-file: .node-version
+          package-manager-cache: false
+      - name: Download this run's validated artifact
+        uses: actions/download-artifact@v8
+        with:
+          name: baishi-wending-${{ github.sha }}
+      - name: Deploy verified production Worker to Cloudflare and verify /healthz
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          GITHUB_SHA: ${{ github.sha }}
+        run: |
+          if [ -z "$CLOUDFLARE_API_TOKEN" ]; then
+            echo "CLOUDFLARE_API_TOKEN secret is not configured; skipped automatic Cloudflare deployment." >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+          npm ci --ignore-scripts
+          npm run deploy:cloudflare | tee release/cloudflare-deployment.json
+          cat release/cloudflare-deployment.json >> "$GITHUB_STEP_SUMMARY"

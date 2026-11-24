@@ -14,6 +14,7 @@
     "build:worker": "node scripts/build-worker.js",
     "build:gateway": "node scripts/build-gateway.js",
     "publish:release": "node scripts/publish-release.js",
+    "deploy:cloudflare": "node scripts/deploy-cloudflare.js",
     "story:author": "node scripts/story-author.js",
     "check": "node scripts/check.js",
     "release": "npm test && npm run check && npm run build"
