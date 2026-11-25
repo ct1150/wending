@@ -238,17 +238,18 @@ function renderJourneyNotes(view,notes,kind='notes'){
 }
 function renderEventExtras(view,notes){
   const state=view.state;
-  if(!state.events||state.phase!=='active')return {growth:'',prose:''};
+  if(!state.events||state.phase!=='active')return {practice:'',growth:'',prose:''};
   const opening=state.events.node.startsWith('prologue-');
   const campaign=campaignProgress(state);
   const next=nextRealmFor(state.life),extra=view.prose;
   const growth=next?`修行目标：${next.name} · 修为 ${state.life.cultivation} / ${next.threshold} · ${view.itemNames?.[next.material]??ITEMS[next.material]} ${state.life.items[next.material]??0} / 1`:'继续此生：修炼、历练与未完的因果仍可推进。';
   const message=extra?.status==='loading'?'正在写一小段扩写，你可以继续选择。':extra?.status==='unavailable'?'这一段扩写暂不可用，你仍可继续当前故事。':'';
   return {
+    practice:opening?'':renderPracticePlan(view,notes),
     growth:(campaign&&!opening?`<p class="event-growth" data-campaign-progress>三界主线 · ${esc(campaign.title)} · ${campaign.done}/${campaign.total}<br>${esc(campaign.goal)}</p>`:'')+
       `<p class="event-growth" data-event-growth>${esc(growth)}</p>`+
       (opening?'':renderJourneyNotes(view,notes)+renderJourneyNotes(view,adventureLeads(state),'leads')+
-        renderJourneyNotes(view,preparationStops(state),'preparation')+renderPracticePlan(view,notes))+
+        renderJourneyNotes(view,preparationStops(state),'preparation'))+
       (view.playtestActive?'<button type="button" class="button" data-diary-stop>结束本段试玩计时</button>':''),
     prose:`<section class="event-prose" data-event-prose aria-label="行间景物润色"><button type="button" class="button" data-live-prose-expand${extra||view.busy||view.pending?' disabled':''}>${state.currentScene.blocks.some(block=>block.kind==='dialogue')?'展开对白':'展开描写'}</button><p class="save-info">联网时可补写几句行间景物，不点亦可直接前行。</p>${message?`<p data-event-prose-status role="status">${esc(message)}</p>`:''}${extra?.status==='ready'?`<p class="journey-block" data-event-prose-text>${esc(extra.text)}</p>`:''}</section>`,
   };
@@ -272,7 +273,7 @@ export function renderLiveJourney(view, choices) {
   const chapter=state.phase==='active'&&/^(?:prologue|campaign|duel|bond|realm|tale|v2-chronicles)/.test(state.events?.node??'');
   const title=state.phase==='dead'?'此生已尽':scene?.title??'此生故事';
   const locationBadge=chapter&&scene?.location?`<p class="journey-location live-scene-location">${esc(scene.location)}</p>`:'';
-  return `<article class="journey live-journey${v7 ? ' live-cultivation-v7' : ''}" data-live-story data-live-run="${esc(state.runId)}" aria-label="此生故事"><section class="journey-current" aria-labelledby="journey-current-title">${locationBadge}<h2 id="journey-current-title" class="${chapter?'live-chapter-title':'live-sr-only'}" tabindex="-1">${esc(title)}</h2><section class="live-intro" aria-label="本地开场"${opening ? '' : ' hidden'}>${intro}</section>${v7 ? renderLiveBirthFacts(view) : ''}${v7 ? renderLiveOutcome(view.pending?.receipt ?? state.lastReceipt, view) : ''}<div class="journey-prose" data-live-prose data-live-preview-text${presentation.preview ? ' data-live-preview' : ''} aria-busy="${Boolean(view.busy)}">${presentation.blocks.map(renderLiveBlock).join('')}</div>${v7 ? renderLiveState(view) : ''}<div class="journey-choices" data-live-choices role="group" aria-label="眼前的选择"${presentation.choices.length ? '' : ' hidden'}>${presentation.choices.map((choice, index) => renderLiveChoice(choice, view, index, presentation)).join('')}</div><section class="live-status" aria-live="polite" aria-atomic="true"${status || recovery ? '' : ' hidden'}><p data-live-progress-status>${status}</p>${recovery}</section><section class="journey-ending"${state.phase === 'dead' ? '' : ' hidden'}>${renderLiveEnding(view)}</section>${extras.growth}${extras.prose}</section></article>`;
+  return `<article class="journey live-journey${v7 ? ' live-cultivation-v7' : ''}" data-live-story data-live-run="${esc(state.runId)}" aria-label="此生故事"><section class="journey-current" aria-labelledby="journey-current-title">${locationBadge}<h2 id="journey-current-title" class="${chapter?'live-chapter-title':'live-sr-only'}" tabindex="-1">${esc(title)}</h2><section class="live-intro" aria-label="本地开场"${opening ? '' : ' hidden'}>${intro}</section>${v7 ? renderLiveBirthFacts(view) : ''}${v7 ? renderLiveOutcome(view.pending?.receipt ?? state.lastReceipt, view) : ''}<div class="journey-prose" data-live-prose data-live-preview-text${presentation.preview ? ' data-live-preview' : ''} aria-busy="${Boolean(view.busy)}">${presentation.blocks.map(renderLiveBlock).join('')}</div>${v7 ? renderLiveState(view) : ''}${extras.practice}<div class="journey-choices" data-live-choices role="group" aria-label="眼前的选择"${presentation.choices.length ? '' : ' hidden'}>${presentation.choices.map((choice, index) => renderLiveChoice(choice, view, index, presentation)).join('')}</div><section class="live-status" aria-live="polite" aria-atomic="true"${status || recovery ? '' : ' hidden'}><p data-live-progress-status>${status}</p>${recovery}</section><section class="journey-ending"${state.phase === 'dead' ? '' : ' hidden'}>${renderLiveEnding(view)}</section>${extras.growth}${extras.prose}</section></article>`;
 }
 
 // The live reading surface keeps its paragraph and choice nodes as text arrives
