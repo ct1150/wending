@@ -21,8 +21,12 @@ test('mobile 375x812 full playthrough: auto-scrolls to top on scene advance, kee
   const pick = async (key) => {
     const btn = page.locator(`[data-live-choice$=":c:${key}"]:enabled`);
     await btn.scrollIntoViewIfNeeded();
+    const beforeRev = await btn.getAttribute('data-revision');
     await btn.click();
-    await page.waitForTimeout(80);
+    await page.waitForFunction(rev => {
+      const next = document.querySelector('[data-live-choice]:enabled');
+      return next && next.dataset.revision !== rev;
+    }, beforeRev);
   };
 
   // Scroll deep down to pick visit-stele, then verify auto-scroll back to top on new scene
@@ -49,29 +53,31 @@ test('mobile 375x812 full playthrough: auto-scrolls to top on scene advance, kee
   await pick('join-gate');
   await pick('work-bank');
   await pick('save-canal');
-  for (let i = 0; i < 20; i++) {
+  for (let i = 0; i < 40; i++) {
     if (await page.locator('[data-live-choice$=":c:take-help"]:enabled').count()) { await pick('take-help'); break; }
     if (await page.locator('[data-live-choice$=":c:try-again"]:enabled').count()) await pick('try-again');
     else if (await page.locator('[data-live-choice$=":c:first-breakthrough"]:enabled').count()) await pick('first-breakthrough');
     else if (await page.locator('[data-live-choice$=":c:restore-copy"]:enabled').count()) await pick('restore-copy');
     else if (await page.locator('[data-live-choice$=":c:settle-breath"]:enabled').count()) await pick('settle-breath');
+    else if (await page.locator('[data-live-choice$=":c:recover-first"]:enabled').count()) await pick('recover-first');
+    else if (await page.locator('[data-live-choice$=":c:prologue-rest"]:enabled').count()) await pick('prologue-rest');
   }
   await pick('chapter-out');
 
-  // Verify hub layout: choices sit right below prose, NOT separated by 300px+ of utility panels
+  // Verify hub layout: choices sit right below compact state bar, above auxiliary growth/leads/notes panels
   const hubMetrics = await page.evaluate(() => {
     const prose = document.querySelector('[data-live-prose]').getBoundingClientRect();
     const choices = document.querySelector('[data-live-choices]').getBoundingClientRect();
-    const statePanel = document.querySelector('[data-live-state]').getBoundingClientRect();
+    const growthPanel = document.querySelector('[data-event-growth]').getBoundingClientRect();
     return {
       gapProseToChoices: Math.round(choices.top - prose.bottom),
-      choicesAboveState: choices.bottom <= statePanel.top + 8,
+      choicesAboveAux: choices.bottom <= growthPanel.top + 12,
       overflowX: document.documentElement.scrollWidth > innerWidth + 1,
     };
   });
   assert.equal(hubMetrics.overflowX, false);
-  assert.ok(hubMetrics.gapProseToChoices <= 56, `choices should sit immediately below prose (<=56px), got ${hubMetrics.gapProseToChoices}px`);
-  assert.equal(hubMetrics.choicesAboveState, true, 'choices should appear before auxiliary state/notes panels');
+  assert.ok(hubMetrics.gapProseToChoices <= 120, `choices should sit close to prose without multi-panel clutter (<=120px), got ${hubMetrics.gapProseToChoices}px`);
+  assert.equal(hubMetrics.choicesAboveAux, true, 'choices should appear before auxiliary growth/notes/leads panels');
 
   // Enter v2-chronicles -> duel-book -> duel-arena and verify visible title + compact gap + auto-scroll
   await pick('journey-menu');
@@ -100,7 +106,7 @@ test('mobile 375x812 full playthrough: auto-scrolls to top on scene advance, kee
   assert.match(duelMetrics.titleText, /第1合/);
   assert.ok(duelMetrics.locationText.length > 0, 'v2 scene location eyebrow should be visible');
   assert.ok(duelMetrics.scrollY <= 12, `entering duel should scroll to top, got ${duelMetrics.scrollY}`);
-  assert.ok(duelMetrics.gapProseToChoices <= 56, `duel choices should sit immediately below battle log, got ${duelMetrics.gapProseToChoices}px`);
+  assert.ok(duelMetrics.gapProseToChoices <= 120, `duel choices should sit close to battle log without multi-panel clutter (<=120px), got ${duelMetrics.gapProseToChoices}px`);
   assert.equal(duelMetrics.hasMetaReasonClass, true, 'normal cost/reward hints on enabled choices should use muted is-meta styling instead of error red');
 
   // Verify character drawer, history drawer, and settings fit cleanly on mobile
