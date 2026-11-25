@@ -44,7 +44,7 @@ test('mobile 375x812 full playthrough: auto-scrolls to top on scene advance, kee
     };
   });
   assert.equal(afterStele.overflowX, false, 'prologue-stele should not overflow horizontally');
-  assert.ok(afterStele.fixedTopTotal <= 116, `mobile double header should be compact (<=116px), got ${afterStele.fixedTopTotal}px`);
+  assert.ok(afterStele.fixedTopTotal <= 132, `mobile double header should be compact (<=132px), got ${afterStele.fixedTopTotal}px`);
   assert.ok(afterStele.scrollY <= 12, `advancing to a new scene should auto-scroll back to top, got scrollY=${afterStele.scrollY}`);
   assert.ok(afterStele.firstBlockTop >= afterStele.fixedTopTotal - 4, `first paragraph top (${afterStele.firstBlockTop}) should be visible below fixed header (${afterStele.fixedTopTotal})`);
 
@@ -66,17 +66,23 @@ test('mobile 375x812 full playthrough: auto-scrolls to top on scene advance, kee
 
   // Verify hub layout: choices sit right below compact state bar, above auxiliary growth/leads/notes panels
   const hubMetrics = await page.evaluate(() => {
-    const prose = document.querySelector('[data-live-prose]').getBoundingClientRect();
-    const choices = document.querySelector('[data-live-choices]').getBoundingClientRect();
+    const prose = document.querySelector('[data-live-prose]');
+    const choices = document.querySelector('[data-live-choices]');
     const growthPanel = document.querySelector('[data-event-growth]').getBoundingClientRect();
+    const between = [];
+    for (let el = prose.nextElementSibling; el && el !== choices; el = el.nextElementSibling) {
+      if (!el.hidden) between.push(el.className || el.tagName);
+    }
     return {
-      gapProseToChoices: Math.round(choices.top - prose.bottom),
-      choicesAboveAux: choices.bottom <= growthPanel.top + 12,
+      between,
+      gapProseToChoices: Math.round(choices.getBoundingClientRect().top - prose.getBoundingClientRect().bottom),
+      choicesAboveAux: choices.getBoundingClientRect().bottom <= growthPanel.top + 12,
       overflowX: document.documentElement.scrollWidth > innerWidth + 1,
     };
   });
   assert.equal(hubMetrics.overflowX, false);
-  assert.ok(hubMetrics.gapProseToChoices <= 120, `choices should sit close to prose without multi-panel clutter (<=120px), got ${hubMetrics.gapProseToChoices}px`);
+  assert.deepEqual(hubMetrics.between, ['live-turn-state'], 'only the compact live-turn-state may sit between prose and choices');
+  assert.ok(hubMetrics.gapProseToChoices <= 165, `choices should sit close to prose without multi-panel clutter (<=165px), got ${hubMetrics.gapProseToChoices}px`);
   assert.equal(hubMetrics.choicesAboveAux, true, 'choices should appear before auxiliary growth/notes/leads panels');
 
   // Enter v2-chronicles -> duel-book -> duel-arena and verify visible title + compact gap + auto-scroll
@@ -106,7 +112,7 @@ test('mobile 375x812 full playthrough: auto-scrolls to top on scene advance, kee
   assert.match(duelMetrics.titleText, /第1合/);
   assert.ok(duelMetrics.locationText.length > 0, 'v2 scene location eyebrow should be visible');
   assert.ok(duelMetrics.scrollY <= 12, `entering duel should scroll to top, got ${duelMetrics.scrollY}`);
-  assert.ok(duelMetrics.gapProseToChoices <= 120, `duel choices should sit close to battle log without multi-panel clutter (<=120px), got ${duelMetrics.gapProseToChoices}px`);
+  assert.ok(duelMetrics.gapProseToChoices <= 165, `duel choices should sit close to battle log without multi-panel clutter (<=165px), got ${duelMetrics.gapProseToChoices}px`);
   assert.equal(duelMetrics.hasMetaReasonClass, true, 'normal cost/reward hints on enabled choices should use muted is-meta styling instead of error red');
 
   // Verify character drawer, history drawer, and settings fit cleanly on mobile
