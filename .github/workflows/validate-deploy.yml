@@ -17,7 +17,7 @@ concurrency:
 jobs:
   validate:
     runs-on: ubuntu-latest
-    timeout-minutes: 25
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v6
         with:
@@ -25,19 +25,12 @@ jobs:
       - uses: actions/setup-node@v6
         with:
           node-version-file: .node-version
-          package-manager-cache: false
-      - name: Install test dependencies
-        run: npm ci --ignore-scripts
-      - name: Install native IndexedDB test browser
-        run: npx playwright install --with-deps chromium
-      - name: Test, syntax check, and build
-        run: npm run release
-      - name: Package static gateway and disabled compatible story backend
+      - name: Install dependencies
+        run: npm ci
+      - name: Typecheck, test, build static & single-file release
         env:
           SOURCE_COMMIT: ${{ github.sha }}
-        run: |
-          npm run build:gateway
-          test -f release/backend/deployment.json
+        run: npm run release
       - name: Preserve static site and web release
         uses: actions/upload-artifact@v7
         with:
@@ -45,10 +38,9 @@ jobs:
           path: |
             dist/
             release/
-            wrangler.story.json
-            config/story-deployment.json
           if-no-files-found: error
           retention-days: 14
+
   publish:
     needs: validate
     if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
@@ -64,8 +56,7 @@ jobs:
       - uses: actions/setup-node@v6
         with:
           node-version-file: .node-version
-          package-manager-cache: false
-      - name: Download this run's validated artifact
+      - name: Download validated artifact
         uses: actions/download-artifact@v8
         with:
           name: baishi-wending-${{ github.sha }}
@@ -76,6 +67,7 @@ jobs:
         run: |
           npm run publish:release | tee release/publication-result.txt
           cat release/publication-result.txt >> "$GITHUB_STEP_SUMMARY"
+
   deploy-cloudflare:
     needs: [validate, publish]
     if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
@@ -89,12 +81,11 @@ jobs:
       - uses: actions/setup-node@v6
         with:
           node-version-file: .node-version
-          package-manager-cache: false
-      - name: Download this run's validated artifact
+      - name: Download validated artifact
         uses: actions/download-artifact@v8
         with:
           name: baishi-wending-${{ github.sha }}
-      - name: Deploy verified production Worker to Cloudflare and verify /healthz
+      - name: Deploy static Worker to Cloudflare
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
@@ -104,6 +95,5 @@ jobs:
             echo "CLOUDFLARE_API_TOKEN secret is not configured; skipped automatic Cloudflare deployment." >> "$GITHUB_STEP_SUMMARY"
             exit 0
           fi
-          npm ci --ignore-scripts
           npm run deploy:cloudflare | tee release/cloudflare-deployment.json
           cat release/cloudflare-deployment.json >> "$GITHUB_STEP_SUMMARY"

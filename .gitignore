@@ -6,3 +6,5 @@ release/
 test-results/
 *.log
 .DS_Store
+
+dist-single/

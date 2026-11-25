@@ -1,27 +1,32 @@
 {
   "name": "baishi-wending",
-  "version": "7.1.1",
+  "version": "8.0.0",
   "private": true,
   "type": "module",
-  "description": "百世问鼎 — 寒村少年离乡入门，以随机天资与每一次选择走出凡人仙路",
+  "description": "百世问鼎 — 寿元劫数驱动的肉鸽修仙卡牌构筑游戏",
   "engines": {
     "node": ">=22"
   },
   "scripts": {
-    "dev": "node scripts/dev.js",
-    "test": "node --test tests/*.test.js",
-    "build": "node scripts/build.js",
-    "build:worker": "node scripts/build-worker.js",
-    "build:gateway": "node scripts/build-gateway.js",
+    "dev": "vite",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "build": "vite build",
+    "build:single": "vite build --mode single --outDir dist-single",
+    "build:release": "node scripts/build-release.js",
     "publish:release": "node scripts/publish-release.js",
     "deploy:cloudflare": "node scripts/deploy-cloudflare.js",
-    "story:author": "node scripts/story-author.js",
-    "check": "node scripts/check.js",
-    "release": "npm test && npm run check && npm run build"
+    "release": "npm run typecheck && npm test && npm run build && npm run build:single && npm run build:release"
+  },
+  "dependencies": {
+    "preact": "^10.25.4"
   },
   "devDependencies": {
-    "acorn": "8.19.0",
-    "miniflare": "4.20260730.0",
-    "playwright": "1.62.1"
+    "@preact/preset-vite": "^2.9.3",
+    "playwright": "^1.50.0",
+    "typescript": "^5.7.3",
+    "vite": "^6.1.0",
+    "vite-plugin-singlefile": "^2.1.0",
+    "vitest": "^3.0.5"
   }
 }
