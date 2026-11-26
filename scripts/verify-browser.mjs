@@ -44,10 +44,12 @@ async function verifyViewport(browser, name, viewport) {
   await reachable.click();
   await page.waitForSelector('.battle-stage');
 
-  // 4. 打出第一张可用神通牌并结束回合
-  const playableCard = page.locator('.card-tile:not([disabled])').first();
+  // 4. 校验双方水墨立绘与实体TCG卡牌渲染，打出第一张可用牌并结束回合
+  await page.waitForSelector('.duel-arena .portrait-svg');
+  const playableCard = page.locator('.tcg-card:not([disabled])').first();
   await playableCard.click();
   await page.click('button:has-text("结束回合")');
+  await page.waitForTimeout(450);
 
   // 检查是否横向溢出
   const overflow = await page.evaluate(() => document.documentElement.scrollWidth > window.innerWidth + 2);

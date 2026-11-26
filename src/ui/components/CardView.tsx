@@ -7,6 +7,7 @@ import {
   SEAL_LABELS,
 } from '../../core/combat-engine';
 import type { CardDef, CardInstance, ElementTag } from '../../core/types';
+import { CardArt } from './CardArt';
 
 export const ELEMENT_COLORS: Record<ElementTag, string> = {
   metal: 'var(--el-metal)',
@@ -35,6 +36,7 @@ interface CardViewProps {
   resonanceHint?: string | null;
   price?: number;
   selected?: boolean;
+  fanStyle?: Record<string, string>;
   onClick?: () => void;
 }
 
@@ -45,6 +47,7 @@ export function CardView({
   resonanceHint,
   price,
   selected,
+  fanStyle,
   onClick,
 }: CardViewProps) {
   const def = rawDef ?? getCardDef(instance!.defId);
@@ -57,34 +60,55 @@ export function CardView({
   return (
     <button
       type="button"
-      class={`card-tile rarity-${def.rarity}${resonanceHint ? ' resonates' : ''}`}
-      style={selected ? { borderColor: 'var(--gold-bright)', boxShadow: '0 0 18px rgba(250,224,174,0.45)' } : undefined}
+      class={`tcg-card rarity-${def.rarity}${resonanceHint ? ' resonates' : ''}${selected ? ' is-selected' : ''}`}
+      style={fanStyle}
       disabled={disabled}
       onClick={onClick}
     >
-      <div>
-        <div class="card-top">
-          <span class="card-cost">{cost}</span>
-          <span class="card-name">{name}</span>
-          {def.element !== 'none' && (
-            <span class="card-el" style={{ color: elColor }}>
-              {SEAL_LABELS[def.element]}
-            </span>
-          )}
-        </div>
-        <p class="card-desc">{desc}</p>
-        {enchant && (
-          <div class="enchant-pill">
-            [{enchant.badge}] {enchant.name} · {enchant.description}
-          </div>
+      {/* 左上角悬浮真元灵珠 */}
+      <span class="tcg-cost-orb" title={`消耗 ${cost} 点真元`}>
+        {cost}
+      </span>
+
+      {/* 顶栏卷轴牌名与五行印章 */}
+      <div class="tcg-header">
+        <span class="tcg-name">{name}</span>
+        {def.element !== 'none' && (
+          <span class="tcg-seal-stamp" style={{ color: elColor, borderColor: elColor }}>
+            {SEAL_LABELS[def.element]}
+          </span>
         )}
-        {resonanceHint && <div class="res-tag">✦ {resonanceHint}</div>}
       </div>
 
-      <div class="card-footer">
-        <span>{TYPE_LABELS[def.type]}</span>
-        {price !== undefined ? <span style={{ color: 'var(--gold-bright)' }}>{price} 灵石</span> : null}
+      {/* 中央水墨插画框 */}
+      <div class="tcg-art-frame">
+        <CardArt type={def.type} element={def.element} />
+        {enchant && (
+          <span class="tcg-enchant-badge" title={`${enchant.name}：${enchant.description}`}>
+            {enchant.badge}
+          </span>
+        )}
       </div>
+
+      {/* 类别绶带 */}
+      <div class="tcg-ribbon">
+        <span>— {TYPE_LABELS[def.type]}{def.element !== 'none' ? ` · ${SEAL_LABELS[def.element]}` : ''} —</span>
+      </div>
+
+      {/* 下半古卷效果区 */}
+      <div class="tcg-body">
+        <p class="tcg-desc">{desc}</p>
+        {enchant && (
+          <div class="tcg-enchant-line">
+            ❖ {enchant.name}：{enchant.description}
+          </div>
+        )}
+        {resonanceHint && <div class="tcg-res-banner">✦ {resonanceHint}</div>}
+      </div>
+
+      {price !== undefined && (
+        <div class="tcg-price-bar">💎 {price} 灵石</div>
+      )}
     </button>
   );
 }
