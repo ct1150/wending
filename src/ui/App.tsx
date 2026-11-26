@@ -33,6 +33,7 @@ import {
 } from '../core/run-manager';
 import type { LineageId, MetaSave, RunState } from '../core/types';
 import { CardView } from './components/CardView';
+import { PLAYER_PORTRAITS } from './components/Portraits';
 import { TopHud } from './components/TopHud';
 import { BattleArena } from './screens/BattleArena';
 import { StarMapView } from './screens/StarMapView';
@@ -125,10 +126,12 @@ export function App() {
     finalizeRun(dead);
   };
 
+  const inCombat = screen === 'run' && Boolean(run && run.phase === 'combat');
+
   return (
     <>
       <div class="backdrop" />
-      <div class="app-shell">
+      <div class={`app-shell${inCombat ? ' in-combat' : ''}`}>
         {/* ==================== 标题首页 ==================== */}
         {screen === 'title' && (
           <main class="title-screen">
@@ -245,6 +248,9 @@ export function App() {
                       setSelectedLineage(lin.id);
                     }}
                   >
+                    <div class="lineage-thumb-wrap">
+                      <img src={PLAYER_PORTRAITS[lin.id]} alt={lin.name} class="lineage-thumb" />
+                    </div>
                     <h3>{lin.name}</h3>
                     <div style={{ fontSize: '12px', color: 'var(--gold)' }}>
                       {lin.title} · 气血 {lin.baseHp} · 寿元 {lin.baseLifespan}年
@@ -361,6 +367,7 @@ export function App() {
             <TopHud
               run={run}
               muted={muted}
+              compact={run.phase === 'combat'}
               onToggleMute={toggleMute}
               onOpenDeck={() => setDeckOpen(true)}
               onAbandon={handleAbandon}
