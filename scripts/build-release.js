@@ -31,10 +31,15 @@ async function main() {
   };
   await writeFile(path.join(releaseDir, 'release.json'), JSON.stringify(releaseMeta, null, 2) + '\n');
 
-  // 生成极简 Cloudflare Worker 静态托管入口（零 AI 依赖，提供 / 与 /healthz）
   const sourceCommit = process.env.SOURCE_COMMIT || process.env.GITHUB_SHA || '0000000000000000000000000000000000000000';
   const htmlBase64 = htmlBytes.toString('base64');
-  const htmlModuleSource = `export const HTML_BASE64 = ${JSON.stringify(htmlBase64)};\nexport const META = ${JSON.stringify({ version: pkg.version, sourceCommit, sha256: htmlDigest })};\n`;
+  const htmlModuleSource = `export const HTML_BASE64 = ${JSON.stringify(htmlBase64)};\nexport const META = ${JSON.stringify({
+    version: pkg.version,
+    sourceCommit,
+    htmlSha256: htmlDigest,
+    htmlBytes: htmlBytes.byteLength,
+  })};\n`;
+
   const entrySource = `import { HTML_BASE64, META } from './html-bundle.mjs';
 
 let cachedHtml = null;
@@ -48,18 +53,26 @@ function getHtml() {
   return cachedHtml;
 }
 
+// Preserve exported class name so existing Cloudflare Durable Object bindings never break version uploads.
+export class StoryBudget {
+  async fetch() {
+    return new Response('Gone', { status: 410 });
+  }
+}
+
 export default {
   async fetch(request) {
     const url = new URL(request.url);
     if (url.pathname === '/healthz') {
-      return new Response(JSON.stringify({ ok: true, mode: 'roguelike', ...META }), {
-        headers: { 'content-type': 'application/json; charset=utf-8', 'cache-control': 'no-store' },
-      });
+      return new Response(
+        JSON.stringify({ status: 'ok', ok: true, mode: 'roguelike', releaseSource: 'embedded', ...META }),
+        { headers: { 'content-type': 'application/json; charset=utf-8', 'cache-control': 'no-store' } },
+      );
     }
     return new Response(getHtml(), {
       headers: {
         'content-type': 'text/html; charset=utf-8',
-        'cache-control': 'public, max-age=300',
+        'cache-control': 'no-cache',
       },
     });
   },
@@ -75,6 +88,7 @@ export default {
     main_module: 'entry.mjs',
     compatibility_date: '2026-07-30',
     sourceCommit,
+    version: pkg.version,
     frontend: releaseMeta.frontend,
     bindings: [],
     modules: [
