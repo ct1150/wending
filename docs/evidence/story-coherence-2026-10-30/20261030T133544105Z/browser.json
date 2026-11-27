@@ -1,0 +1,4020 @@
+{
+  "sourceCommit": "740a669d13e6fc7d1d197bd9eaa0dec4524debc1",
+  "version": "0ec61c51-00d5-413c-a37f-1304b284591f",
+  "recordedAt": "2026-10-30T13:45:07.800Z",
+  "continuedFrom": null,
+  "records": [
+    {
+      "caseId": "opening",
+      "start": 839.5999999940395,
+      "timeline": [
+        {
+          "atMs": 4091,
+          "chars": 1
+        },
+        {
+          "atMs": 4168,
+          "chars": 6
+        },
+        {
+          "atMs": 4245,
+          "chars": 9
+        },
+        {
+          "atMs": 4293,
+          "chars": 13
+        },
+        {
+          "atMs": 4340,
+          "chars": 17
+        },
+        {
+          "atMs": 4413,
+          "chars": 23
+        },
+        {
+          "atMs": 4507,
+          "chars": 29
+        },
+        {
+          "atMs": 4557,
+          "chars": 33
+        },
+        {
+          "atMs": 4635,
+          "chars": 37
+        },
+        {
+          "atMs": 4698,
+          "chars": 40
+        },
+        {
+          "atMs": 4760,
+          "chars": 42
+        },
+        {
+          "atMs": 4836,
+          "chars": 45
+        },
+        {
+          "atMs": 4900,
+          "chars": 50
+        },
+        {
+          "atMs": 4962,
+          "chars": 55
+        },
+        {
+          "atMs": 5023,
+          "chars": 58
+        },
+        {
+          "atMs": 5099,
+          "chars": 64
+        },
+        {
+          "atMs": 5161,
+          "chars": 68
+        },
+        {
+          "atMs": 5223,
+          "chars": 74
+        },
+        {
+          "atMs": 5299,
+          "chars": 80
+        },
+        {
+          "atMs": 5362,
+          "chars": 84
+        },
+        {
+          "atMs": 5427,
+          "chars": 88
+        },
+        {
+          "atMs": 5503,
+          "chars": 93
+        },
+        {
+          "atMs": 5566,
+          "chars": 98
+        },
+        {
+          "atMs": 5629,
+          "chars": 102
+        },
+        {
+          "atMs": 5688,
+          "chars": 105
+        },
+        {
+          "atMs": 5765,
+          "chars": 109
+        },
+        {
+          "atMs": 5825,
+          "chars": 113
+        },
+        {
+          "atMs": 5898,
+          "chars": 118
+        },
+        {
+          "atMs": 5961,
+          "chars": 123
+        },
+        {
+          "atMs": 6023,
+          "chars": 124
+        },
+        {
+          "atMs": 6187,
+          "chars": 134
+        },
+        {
+          "atMs": 6249,
+          "chars": 138
+        },
+        {
+          "atMs": 6431,
+          "chars": 152
+        },
+        {
+          "atMs": 6494,
+          "chars": 158
+        },
+        {
+          "atMs": 6555,
+          "chars": 161
+        },
+        {
+          "atMs": 6615,
+          "chars": 167
+        },
+        {
+          "atMs": 6692,
+          "chars": 170
+        },
+        {
+          "atMs": 6750,
+          "chars": 177
+        },
+        {
+          "atMs": 6815,
+          "chars": 182
+        },
+        {
+          "atMs": 6877,
+          "chars": 185
+        },
+        {
+          "atMs": 6954,
+          "chars": 190
+        },
+        {
+          "atMs": 7297,
+          "chars": 195
+        },
+        {
+          "atMs": 7359,
+          "chars": 199
+        },
+        {
+          "atMs": 7420,
+          "chars": 202
+        },
+        {
+          "atMs": 7499,
+          "chars": 208
+        },
+        {
+          "atMs": 7560,
+          "chars": 213
+        },
+        {
+          "atMs": 7622,
+          "chars": 216
+        },
+        {
+          "atMs": 7669,
+          "chars": 221
+        },
+        {
+          "atMs": 7730,
+          "chars": 227
+        },
+        {
+          "atMs": 7790,
+          "chars": 231
+        },
+        {
+          "atMs": 7850,
+          "chars": 237
+        },
+        {
+          "atMs": 7912,
+          "chars": 244
+        },
+        {
+          "atMs": 7989,
+          "chars": 249
+        },
+        {
+          "atMs": 8049,
+          "chars": 254
+        },
+        {
+          "atMs": 8107,
+          "chars": 259
+        },
+        {
+          "atMs": 8168,
+          "chars": 266
+        },
+        {
+          "atMs": 8246,
+          "chars": 270
+        },
+        {
+          "atMs": 8320,
+          "chars": 275
+        },
+        {
+          "atMs": 8377,
+          "chars": 279
+        },
+        {
+          "atMs": 8435,
+          "chars": 283
+        },
+        {
+          "atMs": 8512,
+          "chars": 289
+        },
+        {
+          "atMs": 8572,
+          "chars": 294
+        },
+        {
+          "atMs": 8647,
+          "chars": 300
+        },
+        {
+          "atMs": 8712,
+          "chars": 306
+        },
+        {
+          "atMs": 8773,
+          "chars": 310
+        },
+        {
+          "atMs": 8836,
+          "chars": 314
+        },
+        {
+          "atMs": 8912,
+          "chars": 317
+        },
+        {
+          "atMs": 8973,
+          "chars": 321
+        },
+        {
+          "atMs": 9034,
+          "chars": 325
+        },
+        {
+          "atMs": 9112,
+          "chars": 334
+        },
+        {
+          "atMs": 9182,
+          "chars": 337
+        },
+        {
+          "atMs": 9242,
+          "chars": 340
+        },
+        {
+          "atMs": 9584,
+          "chars": 343
+        },
+        {
+          "atMs": 10082,
+          "chars": 344
+        }
+      ],
+      "choicesEnabledDuringPreview": false,
+      "lastText": "云归，十六岁，凡人。你站在村口的老槐树下，手里攥着一把磨得发亮的猎刀。村头张屠户正蹲在血泊边，手里提着一只被开膛破肚的野猪，嘴里骂骂咧咧。这野猪显然不是普通野兽，皮糙肉厚，刀口却深可见骨，显然是冲着张屠户那把祖传的杀猪刀来的。张屠户抬头看见你，把刀往地上一扔，抹了一把脸上的血水，指着那野猪的獠牙说：'云归，你来看看，这獠牙怎么有点发黑？我刚才杀它的时候，它好像还冲我笑了一下。'\n\n你凑近了些，那野猪的獠牙确实隐隐透着一股腥臭的黑气，周围的空气似乎都凝滞了几分。你下意识地握紧了手中的猎刀，指尖触碰到刀柄上粗糙的纹路，心中隐隐有种想要拔刀的冲动。张屠户见你发愣，又补了一句：'这猪是我刚从后山打来的，怎么就突然暴毙了？你小子命格好，刚才那股子煞气冲过来的时候，你好像连眼皮都没眨一下。'",
+      "doneMs": 14903,
+      "result": {
+        "protocolVersion": 1,
+        "status": "ready",
+        "requestId": "28fe0b6b-6cbb-4faa-8aec-eff26a5493ea",
+        "attemptId": "7b25aef0-7d4d-4cad-94c3-58579526c989",
+        "sessionRef": "sess_7b01f904799ddf1a65f91b21a06ad966",
+        "errorCode": null,
+        "retry": null,
+        "scene": {
+          "id": "r:777f39e63f6e0dd9:t1:s:scene",
+          "title": "村口怪猪",
+          "location": "village",
+          "entities": [
+            {
+              "id": "r:777f39e63f6e0dd9:t1:e:person_1",
+              "name": "张屠户",
+              "status": "alive",
+              "kind": "person"
+            }
+          ],
+          "blocks": [
+            {
+              "kind": "narration",
+              "text": "云归，十六岁，凡人。你站在村口的老槐树下，手里攥着一把磨得发亮的猎刀。村头张屠户正蹲在血泊边，手里提着一只被开膛破肚的野猪，嘴里骂骂咧咧。这野猪显然不是普通野兽，皮糙肉厚，刀口却深可见骨，显然是冲着张屠户那把祖传的杀猪刀来的。张屠户抬头看见你，把刀往地上一扔，抹了一把脸上的血水，指着那野猪的獠牙说：'云归，你来看看，这獠牙怎么有点发黑？我刚才杀它的时候，它好像还冲我笑了一下。'"
+            },
+            {
+              "kind": "narration",
+              "text": "你凑近了些，那野猪的獠牙确实隐隐透着一股腥臭的黑气，周围的空气似乎都凝滞了几分。你下意识地握紧了手中的猎刀，指尖触碰到刀柄上粗糙的纹路，心中隐隐有种想要拔刀的冲动。张屠户见你发愣，又补了一句：'这猪是我刚从后山打来的，怎么就突然暴毙了？你小子命格好，刚才那股子煞气冲过来的时候，你好像连眼皮都没眨一下。'"
+            }
+          ],
+          "choices": [
+            {
+              "id": "r:777f39e63f6e0dd9:t1:c:a",
+              "label": "询问张屠户：询问张屠户关于野猪獠牙发黑和冲他笑的具体细节。",
+              "intent": "interact",
+              "targetId": "r:777f39e63f6e0dd9:t1:e:person_1",
+              "stake": "low",
+              "approach": "ask"
+            },
+            {
+              "id": "r:777f39e63f6e0dd9:t1:c:b",
+              "label": "婉拒张屠户：拒绝回答张屠户的问题，表示自己只是路过。",
+              "intent": "interact",
+              "targetId": "r:777f39e63f6e0dd9:t1:e:person_1",
+              "stake": "low",
+              "approach": "decline"
+            },
+            {
+              "id": "r:777f39e63f6e0dd9:t1:c:c",
+              "label": "援助张屠户：拿出1行粮援助张屠户，表示他处理这头猪很辛苦。",
+              "intent": "interact",
+              "targetId": "r:777f39e63f6e0dd9:t1:e:person_1",
+              "stake": "low",
+              "approach": "help"
+            }
+          ],
+          "memoryDeltas": [
+            {
+              "entityId": "r:777f39e63f6e0dd9:t1:e:person_1",
+              "kind": "clue",
+              "text": "云归，十六岁，凡人。你站在村口的老槐树下，手里攥着一把磨得发亮的猎刀。村头张屠户正蹲在血泊边，手里提着一只被开膛破肚的野猪，嘴里骂骂咧咧。这野猪显然不是普通野兽，皮糙肉厚，刀口却深可见骨，显然是冲着张屠户那把祖传的杀猪刀来的。张屠户抬头看见你，把刀往地上一扔，抹了一把脸上的血水，指着那野猪的獠牙说：'云归，你来看看，这獠牙怎么有点发黑？我刚才杀它的时候，它好像还冲我笑了一下。'",
+              "status": "open"
+            }
+          ]
+        }
+      },
+      "request": {
+        "context": {
+          "schemaVersion": 1,
+          "phase": "opening",
+          "identity": {
+            "runId": "b7c829af-5d43-4b3c-98e4-44a473063d6e",
+            "turnId": 1,
+            "baseRevision": 0,
+            "stateHash": "f2b41438e8ce5e53f613b13e14767d6b69849b99d96905ddaca34ea10da3a104",
+            "choiceId": null,
+            "rulesVersion": 1,
+            "promptVersion": 1,
+            "requestId": "28fe0b6b-6cbb-4faa-8aec-eff26a5493ea"
+          },
+          "namespace": "r:777f39e63f6e0dd9",
+          "receipt": {
+            "kind": "opening",
+            "choiceId": null,
+            "action": null,
+            "elapsedDays": 0,
+            "itemChanges": {},
+            "relationChanges": {},
+            "random": {
+              "before": 134918293,
+              "after": 134918293,
+              "roll": null
+            },
+            "before": {
+              "ageDays": 5760,
+              "realm": "mortal",
+              "cultivation": 0,
+              "injury": 0
+            },
+            "after": {
+              "ageDays": 5760,
+              "realm": "mortal",
+              "cultivation": 0,
+              "injury": 0
+            },
+            "death": null,
+            "birth": {
+              "originId": "village",
+              "talentIds": [
+                "flash-wisdom",
+                "sword-bone"
+              ],
+              "attributes": {
+                "constitution": 2,
+                "insight": 6,
+                "fortune": 4
+              }
+            }
+          },
+          "life": {
+            "name": "云归",
+            "ageDays": 5760,
+            "lifeLimit": 80,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0,
+            "items": {
+              "supplies": 3,
+              "stones": 0
+            },
+            "relations": {},
+            "birth": {
+              "originId": "village",
+              "talentIds": [
+                "flash-wisdom",
+                "sword-bone"
+              ],
+              "attributes": {
+                "constitution": 2,
+                "insight": 6,
+                "fortune": 4
+              }
+            }
+          },
+          "entities": [],
+          "memory": {
+            "facts": [],
+            "promises": [],
+            "clues": [],
+            "recent": [],
+            "summaries": []
+          },
+          "references": [],
+          "previousScene": null,
+          "relationshipVersion": 1,
+          "relationships": {},
+          "coverage": {
+            "policy": "relevance-v1",
+            "openTotal": 0,
+            "openIncluded": 0,
+            "openOmitted": 0
+          }
+        },
+        "attempt": {
+          "id": "7b25aef0-7d4d-4cad-94c3-58579526c989",
+          "sessionRef": "sess_7b01f904799ddf1a65f91b21a06ad966",
+          "retryOf": null
+        },
+        "storyActions": true
+      },
+      "decision": null,
+      "choices": [
+        {
+          "id": "r:777f39e63f6e0dd9:t1:c:a",
+          "enabled": true,
+          "label": "询问张屠户：询问张屠户关于野猪獠牙发黑和冲他笑的具体细节。",
+          "cost": "0日"
+        },
+        {
+          "id": "r:777f39e63f6e0dd9:t1:c:b",
+          "enabled": true,
+          "label": "婉拒张屠户：拒绝回答张屠户的问题，表示自己只是路过。",
+          "cost": "0日"
+        },
+        {
+          "id": "r:777f39e63f6e0dd9:t1:c:c",
+          "enabled": true,
+          "label": "援助张屠户：拿出1行粮援助张屠户，表示他处理这头猪很辛苦。",
+          "cost": "1日 · 行粮 1"
+        }
+      ],
+      "traces": [
+        {
+          "model": "@cf/zai-org/glm-4.7-flash",
+          "inputHash": "9032cf7aecf4ca2a06d0fddb9b301c68ea33495fd5a8d3996426ed6135b7a13d",
+          "inputBytes": 16130,
+          "startedAt": 1793367461481,
+          "bindingReturnedAt": 1793367461873,
+          "liveRawBytes": 180751,
+          "captureComplete": true,
+          "response": {
+            "model": "@cf/zai-org/glm-4.7-flash",
+            "choices": [
+              {
+                "finish_reason": "stop",
+                "message": {
+                  "content": "{\n  \"blocks\": [\n    {\n      \"kind\": \"narration\",\n      \"text\": \"云归，十六岁，凡人。你站在村口的老槐树下，手里攥着一把磨得发亮的猎刀。村头张屠户正蹲在血泊边，手里提着一只被开膛破肚的野猪，嘴里骂骂咧咧。这野猪显然不是普通野兽，皮糙肉厚，刀口却深可见骨，显然是冲着张屠户那把祖传的杀猪刀来的。张屠户抬头看见你，把刀往地上一扔，抹了一把脸上的血水，指着那野猪的獠牙说：'云归，你来看看，这獠牙怎么有点发黑？我刚才杀它的时候，它好像还冲我笑了一下。'\"\n    },\n    {\n      \"kind\": \"narration\",\n      \"text\": \"你凑近了些，那野猪的獠牙确实隐隐透着一股腥臭的黑气，周围的空气似乎都凝滞了几分。你下意识地握紧了手中的猎刀，指尖触碰到刀柄上粗糙的纹路，心中隐隐有种想要拔刀的冲动。张屠户见你发愣，又补了一句：'这猪是我刚从后山打来的，怎么就突然暴毙了？你小子命格好，刚才那股子煞气冲过来的时候，你好像连眼皮都没眨一下。'\"\n    }\n  ],\n  \"choices\": [\n    {\n      \"action\": \"interact:ask\",\n      \"targetId\": \"p1\",\n      \"stake\": \"low\",\n      \"purpose\": \"询问张屠户关于野猪獠牙发黑和冲他笑的具体细节。\",\n      \"anchor\": 0\n    },\n    {\n      \"action\": \"interact:decline\",\n      \"targetId\": \"p1\",\n      \"stake\": \"low\",\n      \"purpose\": \"拒绝回答张屠户的问题，表示自己只是路过。\",\n      \"anchor\": 0\n    },\n    {\n      \"action\": \"interact:help\",\n      \"targetId\": \"p1\",\n      \"stake\": \"low\",\n      \"purpose\": \"拿出1行粮援助张屠户，表示他处理这头猪很辛苦。\",\n      \"anchor\": 0\n    }\n  ],\n  \"title\": \"村口怪猪\",\n  \"location\": \"village\",\n  \"otherPeople\": [\n    {\n      \"id\": \"p1\",\n      \"name\": \"张屠户\",\n      \"status\": \"alive\"\n    }\n  ],\n  \"places\": [],\n  \"factions\": [],\n  \"memoryDeltas\": [\n    {\n      \"entityId\": \"p1\",\n      \"kind\": \"clue\",\n      \"anchor\": 0,\n      \"status\": \"open\"\n    }\n  ]\n}",
+                  "reasoning_content": ""
+                }
+              }
+            ],
+            "usage": {
+              "prompt_tokens": 1944,
+              "completion_tokens": 617,
+              "total_tokens": 2561,
+              "prompt_tokens_details": {
+                "cached_tokens": 0
+              },
+              "neurons": 33.15080000000027
+            }
+          },
+          "rawSseBytes": 180751
+        }
+      ],
+      "revision": 1,
+      "pending": false,
+      "state": {
+        "relationshipVersion": 1,
+        "version": 5,
+        "mode": "cultivation",
+        "contentVersion": 4,
+        "rulesVersion": 1,
+        "promptVersion": 1,
+        "runId": "b7c829af-5d43-4b3c-98e4-44a473063d6e",
+        "revision": 1,
+        "turnId": 1,
+        "phase": "active",
+        "rng": 134918293,
+        "life": {
+          "name": "云归",
+          "ageDays": 5760,
+          "lifeLimit": 80,
+          "realm": "mortal",
+          "cultivation": 0,
+          "injury": 0,
+          "items": {
+            "supplies": 3,
+            "stones": 0
+          },
+          "relations": {},
+          "birth": {
+            "originId": "village",
+            "talentIds": [
+              "flash-wisdom",
+              "sword-bone"
+            ],
+            "attributes": {
+              "constitution": 2,
+              "insight": 6,
+              "fortune": 4
+            }
+          }
+        },
+        "birthReceipt": {
+          "kind": "opening",
+          "choiceId": null,
+          "action": null,
+          "elapsedDays": 0,
+          "itemChanges": {},
+          "relationChanges": {},
+          "random": {
+            "before": 134918293,
+            "after": 134918293,
+            "roll": null
+          },
+          "before": {
+            "ageDays": 5760,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "after": {
+            "ageDays": 5760,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "death": null,
+          "birth": {
+            "originId": "village",
+            "talentIds": [
+              "flash-wisdom",
+              "sword-bone"
+            ],
+            "attributes": {
+              "constitution": 2,
+              "insight": 6,
+              "fortune": 4
+            }
+          }
+        },
+        "currentScene": {
+          "id": "r:777f39e63f6e0dd9:t1:s:scene",
+          "title": "村口怪猪",
+          "location": "village",
+          "entities": [
+            {
+              "id": "r:777f39e63f6e0dd9:t1:e:person_1",
+              "name": "张屠户",
+              "status": "alive",
+              "kind": "person"
+            }
+          ],
+          "blocks": [
+            {
+              "kind": "narration",
+              "text": "云归，十六岁，凡人。你站在村口的老槐树下，手里攥着一把磨得发亮的猎刀。村头张屠户正蹲在血泊边，手里提着一只被开膛破肚的野猪，嘴里骂骂咧咧。这野猪显然不是普通野兽，皮糙肉厚，刀口却深可见骨，显然是冲着张屠户那把祖传的杀猪刀来的。张屠户抬头看见你，把刀往地上一扔，抹了一把脸上的血水，指着那野猪的獠牙说：'云归，你来看看，这獠牙怎么有点发黑？我刚才杀它的时候，它好像还冲我笑了一下。'"
+            },
+            {
+              "kind": "narration",
+              "text": "你凑近了些，那野猪的獠牙确实隐隐透着一股腥臭的黑气，周围的空气似乎都凝滞了几分。你下意识地握紧了手中的猎刀，指尖触碰到刀柄上粗糙的纹路，心中隐隐有种想要拔刀的冲动。张屠户见你发愣，又补了一句：'这猪是我刚从后山打来的，怎么就突然暴毙了？你小子命格好，刚才那股子煞气冲过来的时候，你好像连眼皮都没眨一下。'"
+            }
+          ],
+          "choices": [
+            {
+              "id": "r:777f39e63f6e0dd9:t1:c:a",
+              "label": "询问张屠户：询问张屠户关于野猪獠牙发黑和冲他笑的具体细节。",
+              "intent": "interact",
+              "targetId": "r:777f39e63f6e0dd9:t1:e:person_1",
+              "stake": "low",
+              "approach": "ask"
+            },
+            {
+              "id": "r:777f39e63f6e0dd9:t1:c:b",
+              "label": "婉拒张屠户：拒绝回答张屠户的问题，表示自己只是路过。",
+              "intent": "interact",
+              "targetId": "r:777f39e63f6e0dd9:t1:e:person_1",
+              "stake": "low",
+              "approach": "decline"
+            },
+            {
+              "id": "r:777f39e63f6e0dd9:t1:c:c",
+              "label": "援助张屠户：拿出1行粮援助张屠户，表示他处理这头猪很辛苦。",
+              "intent": "interact",
+              "targetId": "r:777f39e63f6e0dd9:t1:e:person_1",
+              "stake": "low",
+              "approach": "help"
+            }
+          ],
+          "memoryDeltas": [
+            {
+              "entityId": "r:777f39e63f6e0dd9:t1:e:person_1",
+              "kind": "clue",
+              "text": "云归，十六岁，凡人。你站在村口的老槐树下，手里攥着一把磨得发亮的猎刀。村头张屠户正蹲在血泊边，手里提着一只被开膛破肚的野猪，嘴里骂骂咧咧。这野猪显然不是普通野兽，皮糙肉厚，刀口却深可见骨，显然是冲着张屠户那把祖传的杀猪刀来的。张屠户抬头看见你，把刀往地上一扔，抹了一把脸上的血水，指着那野猪的獠牙说：'云归，你来看看，这獠牙怎么有点发黑？我刚才杀它的时候，它好像还冲我笑了一下。'",
+              "status": "open"
+            }
+          ]
+        },
+        "lastReceipt": {
+          "kind": "opening",
+          "choiceId": null,
+          "action": null,
+          "elapsedDays": 0,
+          "itemChanges": {},
+          "relationChanges": {},
+          "random": {
+            "before": 134918293,
+            "after": 134918293,
+            "roll": null
+          },
+          "before": {
+            "ageDays": 5760,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "after": {
+            "ageDays": 5760,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "death": null,
+          "birth": {
+            "originId": "village",
+            "talentIds": [
+              "flash-wisdom",
+              "sword-bone"
+            ],
+            "attributes": {
+              "constitution": 2,
+              "insight": 6,
+              "fortune": 4
+            }
+          }
+        },
+        "relatedEntities": [
+          {
+            "id": "r:777f39e63f6e0dd9:t1:e:person_1",
+            "name": "张屠户",
+            "status": "alive",
+            "kind": "person"
+          }
+        ],
+        "archiveCursor": 0
+      },
+      "posts": 1,
+      "latency": {
+        "usable": true,
+        "errorCode": null,
+        "firstAnyPreviewMs": 4091,
+        "firstReadableMs": 4413,
+        "completionMs": 14903,
+        "narrativeChars": 344,
+        "maxPreviewGapMs": 498,
+        "readingFinishEstimateMs": 61746,
+        "readingStallEstimateMs": 0,
+        "optionsWaitEstimateMs": 0,
+        "prefetchWorthEvaluating": true,
+        "assumptions": {
+          "readingCharsPerSecond": 6,
+          "readableChars": 20,
+          "targetWaitMs": 2000
+        }
+      }
+    },
+    {
+      "caseId": "choice-1",
+      "start": 109170.59999999404,
+      "timeline": [
+        {
+          "atMs": 3299,
+          "chars": 2
+        },
+        {
+          "atMs": 3374,
+          "chars": 6
+        },
+        {
+          "atMs": 3437,
+          "chars": 9
+        },
+        {
+          "atMs": 3502,
+          "chars": 11
+        },
+        {
+          "atMs": 3563,
+          "chars": 15
+        },
+        {
+          "atMs": 3628,
+          "chars": 20
+        },
+        {
+          "atMs": 3690,
+          "chars": 25
+        },
+        {
+          "atMs": 3765,
+          "chars": 29
+        },
+        {
+          "atMs": 3824,
+          "chars": 35
+        },
+        {
+          "atMs": 3897,
+          "chars": 38
+        },
+        {
+          "atMs": 3958,
+          "chars": 42
+        },
+        {
+          "atMs": 4019,
+          "chars": 47
+        },
+        {
+          "atMs": 4095,
+          "chars": 50
+        },
+        {
+          "atMs": 4157,
+          "chars": 56
+        },
+        {
+          "atMs": 4218,
+          "chars": 60
+        },
+        {
+          "atMs": 4292,
+          "chars": 65
+        },
+        {
+          "atMs": 4353,
+          "chars": 72
+        },
+        {
+          "atMs": 4430,
+          "chars": 76
+        },
+        {
+          "atMs": 4477,
+          "chars": 80
+        },
+        {
+          "atMs": 4541,
+          "chars": 83
+        },
+        {
+          "atMs": 4773,
+          "chars": 84
+        },
+        {
+          "atMs": 4881,
+          "chars": 92
+        },
+        {
+          "atMs": 4945,
+          "chars": 96
+        },
+        {
+          "atMs": 5008,
+          "chars": 99
+        },
+        {
+          "atMs": 5089,
+          "chars": 104
+        },
+        {
+          "atMs": 5164,
+          "chars": 115
+        },
+        {
+          "atMs": 5228,
+          "chars": 120
+        },
+        {
+          "atMs": 5291,
+          "chars": 121
+        },
+        {
+          "atMs": 5588,
+          "chars": 130
+        },
+        {
+          "atMs": 5667,
+          "chars": 134
+        },
+        {
+          "atMs": 5730,
+          "chars": 138
+        },
+        {
+          "atMs": 5793,
+          "chars": 146
+        },
+        {
+          "atMs": 5871,
+          "chars": 151
+        },
+        {
+          "atMs": 5933,
+          "chars": 157
+        },
+        {
+          "atMs": 6008,
+          "chars": 163
+        },
+        {
+          "atMs": 6068,
+          "chars": 167
+        },
+        {
+          "atMs": 6130,
+          "chars": 174
+        },
+        {
+          "atMs": 6208,
+          "chars": 180
+        },
+        {
+          "atMs": 6268,
+          "chars": 185
+        },
+        {
+          "atMs": 6331,
+          "chars": 195
+        },
+        {
+          "atMs": 6409,
+          "chars": 203
+        },
+        {
+          "atMs": 6481,
+          "chars": 209
+        },
+        {
+          "atMs": 6542,
+          "chars": 212
+        },
+        {
+          "atMs": 6633,
+          "chars": 218
+        },
+        {
+          "atMs": 6709,
+          "chars": 224
+        },
+        {
+          "atMs": 6772,
+          "chars": 233
+        },
+        {
+          "atMs": 6835,
+          "chars": 239
+        },
+        {
+          "atMs": 6910,
+          "chars": 241
+        }
+      ],
+      "choicesEnabledDuringPreview": false,
+      "lastText": "你从腰间解下干粮，递给张屠户。他愣了一下，随即大口吞咽，连声道谢。吃饱后，他指着那头死猪，神色凝重地告诉你，这猪皮下的血肉呈现出诡异的紫黑色，且散发着一股令人作呕的腥臭，绝非寻常野兽。他怀疑这猪是误食了山中的毒物，或者是被什么东西冲撞了阳气。\n\n张屠户叹了口气，说这猪是他刚从后山打来的，怎么就突然暴毙了。他看着你，眼神中带着一丝希冀：“云归，你命格好，刚才那股子煞气冲过来的时候，你好像连眼皮都没眨一下。你有没有觉得这猪的獠牙有点不对劲？我刚才杀它的时候，它好像还冲我笑了一下。”",
+      "doneMs": 12017,
+      "result": {
+        "protocolVersion": 1,
+        "status": "ready",
+        "requestId": "2a175700-69ef-4412-bda2-e77cdd05aa68",
+        "attemptId": "1a7636fe-0b42-40ad-920b-7d9b0d4b21e5",
+        "sessionRef": "sess_7b01f904799ddf1a65f91b21a06ad966",
+        "errorCode": null,
+        "retry": null,
+        "scene": {
+          "id": "r:777f39e63f6e0dd9:t2:s:scene",
+          "title": "村口异猪",
+          "location": "village",
+          "entities": [
+            {
+              "id": "r:777f39e63f6e0dd9:t1:e:person_1",
+              "name": "张屠户",
+              "kind": "person",
+              "status": "alive"
+            }
+          ],
+          "blocks": [
+            {
+              "kind": "narration",
+              "text": "你从腰间解下干粮，递给张屠户。他愣了一下，随即大口吞咽，连声道谢。吃饱后，他指着那头死猪，神色凝重地告诉你，这猪皮下的血肉呈现出诡异的紫黑色，且散发着一股令人作呕的腥臭，绝非寻常野兽。他怀疑这猪是误食了山中的毒物，或者是被什么东西冲撞了阳气。"
+            },
+            {
+              "kind": "narration",
+              "text": "张屠户叹了口气，说这猪是他刚从后山打来的，怎么就突然暴毙了。他看着你，眼神中带着一丝希冀：“云归，你命格好，刚才那股子煞气冲过来的时候，你好像连眼皮都没眨一下。你有没有觉得这猪的獠牙有点不对劲？我刚才杀它的时候，它好像还冲我笑了一下。”"
+            }
+          ],
+          "choices": [
+            {
+              "id": "r:777f39e63f6e0dd9:t2:c:a",
+              "label": "询问张屠户：询问张屠户这头猪的具体来历和后山的情况，看看是否有人见过类似的异状。",
+              "intent": "interact",
+              "targetId": "r:777f39e63f6e0dd9:t1:e:person_1",
+              "stake": "low",
+              "approach": "ask"
+            },
+            {
+              "id": "r:777f39e63f6e0dd9:t2:c:b",
+              "label": "仔细观察：仔细观察那头死猪的獠牙和伤口，寻找是否有特殊的痕迹或毒物反应。",
+              "intent": "interact",
+              "targetId": "self",
+              "stake": "low",
+              "approach": "observe"
+            },
+            {
+              "id": "r:777f39e63f6e0dd9:t2:c:c",
+              "label": "婉拒张屠户：表示自己还要去后山打猎，暂时无法继续留在村口处理这头猪。",
+              "intent": "interact",
+              "targetId": "r:777f39e63f6e0dd9:t1:e:person_1",
+              "stake": "low",
+              "approach": "decline"
+            }
+          ],
+          "memoryDeltas": [
+            {
+              "entityId": "r:777f39e63f6e0dd9:t1:e:person_1",
+              "kind": "clue",
+              "text": "你从腰间解下干粮，递给张屠户。他愣了一下，随即大口吞咽，连声道谢。吃饱后，他指着那头死猪，神色凝重地告诉你，这猪皮下的血肉呈现出诡异的紫黑色，且散发着一股令人作呕的腥臭，绝非寻常野兽。他怀疑这猪是误食了山中的毒物，或者是被什么东西冲撞了阳气。",
+              "status": "open"
+            },
+            {
+              "entityId": "r:777f39e63f6e0dd9:t1:e:person_1",
+              "kind": "clue",
+              "text": "张屠户叹了口气，说这猪是他刚从后山打来的，怎么就突然暴毙了。他看着你，眼神中带着一丝希冀：“云归，你命格好，刚才那股子煞气冲过来的时候，你好像连眼皮都没眨一下。你有没有觉得这猪的獠牙有点不对劲？我刚才杀它的时候，它好像还冲我笑了一下。”",
+              "status": "open"
+            }
+          ]
+        }
+      },
+      "request": {
+        "context": {
+          "schemaVersion": 1,
+          "phase": "choice",
+          "identity": {
+            "runId": "b7c829af-5d43-4b3c-98e4-44a473063d6e",
+            "turnId": 2,
+            "baseRevision": 1,
+            "stateHash": "b8766e34a4b4b995546ff8d0c870a1a128756a8755af1df28c07bc126f379754",
+            "choiceId": "r:777f39e63f6e0dd9:t1:c:c",
+            "rulesVersion": 1,
+            "promptVersion": 1,
+            "requestId": "2a175700-69ef-4412-bda2-e77cdd05aa68"
+          },
+          "namespace": "r:777f39e63f6e0dd9",
+          "receipt": {
+            "kind": "choice",
+            "choiceId": "r:777f39e63f6e0dd9:t1:c:c",
+            "action": {
+              "id": "r:777f39e63f6e0dd9:t1:c:c",
+              "label": "援助张屠户：拿出1行粮援助张屠户，表示他处理这头猪很辛苦。",
+              "intent": "interact",
+              "targetId": "r:777f39e63f6e0dd9:t1:e:person_1",
+              "stake": "low",
+              "approach": "help"
+            },
+            "elapsedDays": 1,
+            "itemChanges": {
+              "supplies": -1
+            },
+            "relationChanges": {
+              "r:777f39e63f6e0dd9:t1:e:person_1": 2
+            },
+            "random": {
+              "before": 134918293,
+              "after": 635586800,
+              "roll": 0
+            },
+            "before": {
+              "ageDays": 5760,
+              "realm": "mortal",
+              "cultivation": 0,
+              "injury": 0
+            },
+            "after": {
+              "ageDays": 5761,
+              "realm": "mortal",
+              "cultivation": 0,
+              "injury": 0
+            },
+            "death": null,
+            "birth": null
+          },
+          "life": {
+            "name": "云归",
+            "ageDays": 5761,
+            "lifeLimit": 80,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0,
+            "items": {
+              "supplies": 2,
+              "stones": 0
+            },
+            "relations": {
+              "r:777f39e63f6e0dd9:t1:e:person_1": 2
+            },
+            "birth": {
+              "originId": "village",
+              "talentIds": [
+                "flash-wisdom",
+                "sword-bone"
+              ],
+              "attributes": {
+                "constitution": 2,
+                "insight": 6,
+                "fortune": 4
+              }
+            }
+          },
+          "entities": [
+            {
+              "id": "r:777f39e63f6e0dd9:t1:e:person_1",
+              "name": "张屠户",
+              "kind": "person",
+              "status": "alive"
+            }
+          ],
+          "memory": {
+            "facts": [],
+            "promises": [],
+            "clues": [
+              {
+                "id": "m:c9ecae1fd27298cb8211f4828ad43cc3",
+                "source": "narrative",
+                "kind": "clue",
+                "entityId": "r:777f39e63f6e0dd9:t1:e:person_1",
+                "text": "云归，十六岁，凡人。你站在村口的老槐树下，手里攥着一把磨得发亮的猎刀。村头张屠户正蹲在血泊边，手里提着一只被开膛破肚的野猪，嘴里骂骂咧咧。这野猪显然不是普通野兽，皮糙肉厚，刀口却深可见骨，显然是冲着张屠户那把祖传的杀猪刀来的。张屠户抬头看见你，把刀往地上一扔，抹了一把脸上的血水，指着那野猪的獠牙说：'云归，你来看看，这獠牙怎么有点发黑？我刚才杀它的时候，它好像还冲我笑了一下。'",
+                "status": "open",
+                "runId": "b7c829af-5d43-4b3c-98e4-44a473063d6e",
+                "turnId": 1
+              }
+            ],
+            "recent": [
+              {
+                "id": "turn:1",
+                "runId": "b7c829af-5d43-4b3c-98e4-44a473063d6e",
+                "turnId": 1,
+                "source": "narrative",
+                "kind": "turn",
+                "text": "地点：village\n云归，十六岁，凡人。你站在村口的老槐树下，手里攥着一把磨得发亮的猎刀。村头张屠户正蹲在血泊边，手里提着一只被开膛破肚的野猪，嘴里骂骂咧咧。这野猪显然不是普通野兽，皮糙肉厚，刀口却深可见骨，显然是冲着张屠户那把祖传的杀猪刀来的。张屠户抬头看见你，把刀往地上一扔，抹了一把脸上的血水，指着那野猪的獠牙说：'云归，你来看看，这獠牙怎么有点发黑？我刚才杀它的时候，它好像还冲我笑了一下。'\n你凑近了些，那野猪的獠牙确实隐隐透着一股腥臭的黑气，周围的空气似乎都凝滞了几分。你下意识地握紧了手中的猎刀，指尖触碰到刀柄上粗糙的纹路，心中隐隐有种想要拔刀的冲动。张屠户见你发愣，又补了一句：'这猪是我刚从后山打来的，怎么就突然暴毙了？你小子命格好，刚才那股子煞气冲过来的时候，你好像连眼皮都没眨一下。'",
+                "entityIds": []
+              }
+            ],
+            "summaries": []
+          },
+          "references": [
+            "m:c9ecae1fd27298cb8211f4828ad43cc3",
+            "turn:1"
+          ],
+          "previousScene": {
+            "id": "r:777f39e63f6e0dd9:t1:s:scene",
+            "blocksHash": "a779fe59d3fa8a1abc320c145b07f50ec84bef1976622255e3794f6d570bee05"
+          },
+          "relationshipVersion": 1,
+          "relationships": {
+            "r:777f39e63f6e0dd9:t1:e:person_1": 2
+          },
+          "coverage": {
+            "policy": "relevance-v1",
+            "openTotal": 1,
+            "openIncluded": 1,
+            "openOmitted": 0
+          }
+        },
+        "attempt": {
+          "id": "1a7636fe-0b42-40ad-920b-7d9b0d4b21e5",
+          "sessionRef": "sess_7b01f904799ddf1a65f91b21a06ad966",
+          "retryOf": null
+        },
+        "storyActions": true
+      },
+      "decision": {
+        "index": 2,
+        "reason": "张屠户刚处理异常野猪，选择分粮慰劳，不承诺处理煞气；核对仅1日、行粮-1、关系+2。",
+        "selected": {
+          "id": "r:777f39e63f6e0dd9:t1:c:c",
+          "label": "援助张屠户：拿出1行粮援助张屠户，表示他处理这头猪很辛苦。",
+          "intent": "interact",
+          "targetId": "r:777f39e63f6e0dd9:t1:e:person_1",
+          "stake": "low",
+          "approach": "help"
+        }
+      },
+      "choices": [
+        {
+          "id": "r:777f39e63f6e0dd9:t2:c:a",
+          "enabled": true,
+          "label": "询问张屠户：询问张屠户这头猪的具体来历和后山的情况，看看是否有人见过类似的异状。",
+          "cost": "0日"
+        },
+        {
+          "id": "r:777f39e63f6e0dd9:t2:c:b",
+          "enabled": true,
+          "label": "仔细观察：仔细观察那头死猪的獠牙和伤口，寻找是否有特殊的痕迹或毒物反应。",
+          "cost": "0日"
+        },
+        {
+          "id": "r:777f39e63f6e0dd9:t2:c:c",
+          "enabled": true,
+          "label": "婉拒张屠户：表示自己还要去后山打猎，暂时无法继续留在村口处理这头猪。",
+          "cost": "0日"
+        }
+      ],
+      "traces": [
+        {
+          "model": "@cf/zai-org/glm-4.7-flash",
+          "inputHash": "954c319e8b5df7f07325a3454eb59e5cd41543598c2d9613481cd1f3a5e961b4",
+          "inputBytes": 18612,
+          "startedAt": 1793367569254,
+          "bindingReturnedAt": 1793367569555,
+          "liveRawBytes": 159912,
+          "captureComplete": true,
+          "response": {
+            "model": "@cf/zai-org/glm-4.7-flash",
+            "choices": [
+              {
+                "finish_reason": "stop",
+                "message": {
+                  "content": "{\n  \"blocks\": [\n    {\n      \"kind\": \"narration\",\n      \"text\": \"你从腰间解下干粮，递给张屠户。他愣了一下，随即大口吞咽，连声道谢。吃饱后，他指着那头死猪，神色凝重地告诉你，这猪皮下的血肉呈现出诡异的紫黑色，且散发着一股令人作呕的腥臭，绝非寻常野兽。他怀疑这猪是误食了山中的毒物，或者是被什么东西冲撞了阳气。\"\n    },\n    {\n      \"kind\": \"narration\",\n      \"text\": \"张屠户叹了口气，说这猪是他刚从后山打来的，怎么就突然暴毙了。他看着你，眼神中带着一丝希冀：“云归，你命格好，刚才那股子煞气冲过来的时候，你好像连眼皮都没眨一下。你有没有觉得这猪的獠牙有点不对劲？我刚才杀它的时候，它好像还冲我笑了一下。”\"\n    }\n  ],\n  \"choices\": [\n    {\n      \"action\": \"interact:ask\",\n      \"targetId\": \"k1_person_张屠户\",\n      \"stake\": \"low\",\n      \"purpose\": \"询问张屠户这头猪的具体来历和后山的情况，看看是否有人见过类似的异状。\",\n      \"anchor\": 0\n    },\n    {\n      \"action\": \"interact:observe\",\n      \"targetId\": \"self\",\n      \"stake\": \"low\",\n      \"purpose\": \"仔细观察那头死猪的獠牙和伤口，寻找是否有特殊的痕迹或毒物反应。\",\n      \"anchor\": 1\n    },\n    {\n      \"action\": \"interact:decline\",\n      \"targetId\": \"k1_person_张屠户\",\n      \"stake\": \"low\",\n      \"purpose\": \"表示自己还要去后山打猎，暂时无法继续留在村口处理这头猪。\",\n      \"anchor\": 1\n    }\n  ],\n  \"title\": \"村口异猪\",\n  \"location\": \"village\",\n  \"otherPeople\": [\n    {\n      \"id\": \"k1_person_张屠户\",\n      \"status\": \"alive\"\n    }\n  ],\n  \"places\": [],\n  \"factions\": [],\n  \"memoryDeltas\": [\n    {\n      \"entityId\": \"k1_person_张屠户\",\n      \"kind\": \"clue\",\n      \"anchor\": 0,\n      \"status\": \"open\"\n    },\n    {\n      \"entityId\": \"k1_person_张屠户\",\n      \"kind\": \"clue\",\n      \"anchor\": 1,\n      \"status\": \"open\"\n    }\n  ]\n}",
+                  "reasoning_content": ""
+                }
+              }
+            ],
+            "usage": {
+              "prompt_tokens": 2681,
+              "completion_tokens": 591,
+              "total_tokens": 3272,
+              "prompt_tokens_details": {
+                "cached_tokens": 0
+              },
+              "neurons": 36.257900000000255
+            }
+          },
+          "rawSseBytes": 159912
+        }
+      ],
+      "revision": 2,
+      "pending": false,
+      "state": {
+        "relationshipVersion": 1,
+        "version": 5,
+        "mode": "cultivation",
+        "contentVersion": 4,
+        "rulesVersion": 1,
+        "promptVersion": 1,
+        "runId": "b7c829af-5d43-4b3c-98e4-44a473063d6e",
+        "revision": 2,
+        "turnId": 2,
+        "phase": "active",
+        "rng": 635586800,
+        "life": {
+          "name": "云归",
+          "ageDays": 5761,
+          "lifeLimit": 80,
+          "realm": "mortal",
+          "cultivation": 0,
+          "injury": 0,
+          "items": {
+            "supplies": 2,
+            "stones": 0
+          },
+          "relations": {
+            "r:777f39e63f6e0dd9:t1:e:person_1": 2
+          },
+          "birth": {
+            "originId": "village",
+            "talentIds": [
+              "flash-wisdom",
+              "sword-bone"
+            ],
+            "attributes": {
+              "constitution": 2,
+              "insight": 6,
+              "fortune": 4
+            }
+          }
+        },
+        "birthReceipt": {
+          "kind": "opening",
+          "choiceId": null,
+          "action": null,
+          "elapsedDays": 0,
+          "itemChanges": {},
+          "relationChanges": {},
+          "random": {
+            "before": 134918293,
+            "after": 134918293,
+            "roll": null
+          },
+          "before": {
+            "ageDays": 5760,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "after": {
+            "ageDays": 5760,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "death": null,
+          "birth": {
+            "originId": "village",
+            "talentIds": [
+              "flash-wisdom",
+              "sword-bone"
+            ],
+            "attributes": {
+              "constitution": 2,
+              "insight": 6,
+              "fortune": 4
+            }
+          }
+        },
+        "currentScene": {
+          "id": "r:777f39e63f6e0dd9:t2:s:scene",
+          "title": "村口异猪",
+          "location": "village",
+          "entities": [
+            {
+              "id": "r:777f39e63f6e0dd9:t1:e:person_1",
+              "name": "张屠户",
+              "kind": "person",
+              "status": "alive"
+            }
+          ],
+          "blocks": [
+            {
+              "kind": "narration",
+              "text": "你从腰间解下干粮，递给张屠户。他愣了一下，随即大口吞咽，连声道谢。吃饱后，他指着那头死猪，神色凝重地告诉你，这猪皮下的血肉呈现出诡异的紫黑色，且散发着一股令人作呕的腥臭，绝非寻常野兽。他怀疑这猪是误食了山中的毒物，或者是被什么东西冲撞了阳气。"
+            },
+            {
+              "kind": "narration",
+              "text": "张屠户叹了口气，说这猪是他刚从后山打来的，怎么就突然暴毙了。他看着你，眼神中带着一丝希冀：“云归，你命格好，刚才那股子煞气冲过来的时候，你好像连眼皮都没眨一下。你有没有觉得这猪的獠牙有点不对劲？我刚才杀它的时候，它好像还冲我笑了一下。”"
+            }
+          ],
+          "choices": [
+            {
+              "id": "r:777f39e63f6e0dd9:t2:c:a",
+              "label": "询问张屠户：询问张屠户这头猪的具体来历和后山的情况，看看是否有人见过类似的异状。",
+              "intent": "interact",
+              "targetId": "r:777f39e63f6e0dd9:t1:e:person_1",
+              "stake": "low",
+              "approach": "ask"
+            },
+            {
+              "id": "r:777f39e63f6e0dd9:t2:c:b",
+              "label": "仔细观察：仔细观察那头死猪的獠牙和伤口，寻找是否有特殊的痕迹或毒物反应。",
+              "intent": "interact",
+              "targetId": "self",
+              "stake": "low",
+              "approach": "observe"
+            },
+            {
+              "id": "r:777f39e63f6e0dd9:t2:c:c",
+              "label": "婉拒张屠户：表示自己还要去后山打猎，暂时无法继续留在村口处理这头猪。",
+              "intent": "interact",
+              "targetId": "r:777f39e63f6e0dd9:t1:e:person_1",
+              "stake": "low",
+              "approach": "decline"
+            }
+          ],
+          "memoryDeltas": [
+            {
+              "entityId": "r:777f39e63f6e0dd9:t1:e:person_1",
+              "kind": "clue",
+              "text": "你从腰间解下干粮，递给张屠户。他愣了一下，随即大口吞咽，连声道谢。吃饱后，他指着那头死猪，神色凝重地告诉你，这猪皮下的血肉呈现出诡异的紫黑色，且散发着一股令人作呕的腥臭，绝非寻常野兽。他怀疑这猪是误食了山中的毒物，或者是被什么东西冲撞了阳气。",
+              "status": "open"
+            },
+            {
+              "entityId": "r:777f39e63f6e0dd9:t1:e:person_1",
+              "kind": "clue",
+              "text": "张屠户叹了口气，说这猪是他刚从后山打来的，怎么就突然暴毙了。他看着你，眼神中带着一丝希冀：“云归，你命格好，刚才那股子煞气冲过来的时候，你好像连眼皮都没眨一下。你有没有觉得这猪的獠牙有点不对劲？我刚才杀它的时候，它好像还冲我笑了一下。”",
+              "status": "open"
+            }
+          ]
+        },
+        "lastReceipt": {
+          "kind": "choice",
+          "choiceId": "r:777f39e63f6e0dd9:t1:c:c",
+          "action": {
+            "id": "r:777f39e63f6e0dd9:t1:c:c",
+            "label": "援助张屠户：拿出1行粮援助张屠户，表示他处理这头猪很辛苦。",
+            "intent": "interact",
+            "targetId": "r:777f39e63f6e0dd9:t1:e:person_1",
+            "stake": "low",
+            "approach": "help"
+          },
+          "elapsedDays": 1,
+          "itemChanges": {
+            "supplies": -1
+          },
+          "relationChanges": {
+            "r:777f39e63f6e0dd9:t1:e:person_1": 2
+          },
+          "random": {
+            "before": 134918293,
+            "after": 635586800,
+            "roll": 0
+          },
+          "before": {
+            "ageDays": 5760,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "after": {
+            "ageDays": 5761,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "death": null,
+          "birth": null
+        },
+        "relatedEntities": [
+          {
+            "id": "r:777f39e63f6e0dd9:t1:e:person_1",
+            "name": "张屠户",
+            "kind": "person",
+            "status": "alive"
+          }
+        ],
+        "archiveCursor": 0
+      },
+      "posts": 2,
+      "latency": {
+        "usable": true,
+        "errorCode": null,
+        "firstAnyPreviewMs": 3299,
+        "firstReadableMs": 3628,
+        "completionMs": 12017,
+        "narrativeChars": 241,
+        "maxPreviewGapMs": 297,
+        "readingFinishEstimateMs": 43795,
+        "readingStallEstimateMs": 0,
+        "optionsWaitEstimateMs": 0,
+        "prefetchWorthEvaluating": true,
+        "assumptions": {
+          "readingCharsPerSecond": 6,
+          "readableChars": 20,
+          "targetWaitMs": 2000
+        }
+      }
+    },
+    {
+      "caseId": "choice-2",
+      "start": 142871.8999999985,
+      "timeline": [
+        {
+          "atMs": 3121,
+          "chars": 1
+        },
+        {
+          "atMs": 3167,
+          "chars": 3
+        },
+        {
+          "atMs": 3307,
+          "chars": 24
+        },
+        {
+          "atMs": 3369,
+          "chars": 37
+        },
+        {
+          "atMs": 3433,
+          "chars": 42
+        },
+        {
+          "atMs": 3479,
+          "chars": 47
+        },
+        {
+          "atMs": 3541,
+          "chars": 51
+        },
+        {
+          "atMs": 3590,
+          "chars": 56
+        },
+        {
+          "atMs": 3882,
+          "chars": 69
+        },
+        {
+          "atMs": 3992,
+          "chars": 90
+        },
+        {
+          "atMs": 4037,
+          "chars": 93
+        },
+        {
+          "atMs": 4751,
+          "chars": 105
+        }
+      ],
+      "choicesEnabledDuringPreview": false,
+      "lastText": "“这猪是刚从后山深处打来的，平时看着挺温顺，怎么突然就暴毙了？”张屠户抹了把脸上的血水，眉头紧锁，“后山最近不太平，常有村民说看见黑影窜过，但谁也没敢细看。至于这獠牙发黑，我杀了一辈子猪，从来没见过这种怪事。”",
+      "doneMs": 7978,
+      "result": {
+        "protocolVersion": 1,
+        "status": "ready",
+        "requestId": "bcddefb4-bc18-4371-b9c0-c707324bdf72",
+        "attemptId": "83eb9284-34df-4bd3-8002-e911dda59cbf",
+        "sessionRef": "sess_7b01f904799ddf1a65f91b21a06ad966",
+        "errorCode": null,
+        "retry": null,
+        "scene": {
+          "id": "r:777f39e63f6e0dd9:t3:s:scene",
+          "title": "血腥的猪",
+          "location": "village",
+          "entities": [
+            {
+              "id": "r:777f39e63f6e0dd9:t1:e:person_1",
+              "name": "张屠户",
+              "kind": "person",
+              "status": "alive"
+            }
+          ],
+          "blocks": [
+            {
+              "kind": "dialogue",
+              "text": "“这猪是刚从后山深处打来的，平时看着挺温顺，怎么突然就暴毙了？”张屠户抹了把脸上的血水，眉头紧锁，“后山最近不太平，常有村民说看见黑影窜过，但谁也没敢细看。至于这獠牙发黑，我杀了一辈子猪，从来没见过这种怪事。”",
+              "speaker": "r:777f39e63f6e0dd9:t1:e:person_1"
+            }
+          ],
+          "choices": [
+            {
+              "id": "r:777f39e63f6e0dd9:t3:c:a",
+              "label": "询问张屠户：询问张屠户：后山深处是否还有其他村民见过黑影或异状。",
+              "intent": "interact",
+              "targetId": "r:777f39e63f6e0dd9:t1:e:person_1",
+              "stake": "low",
+              "approach": "ask"
+            },
+            {
+              "id": "r:777f39e63f6e0dd9:t3:c:b",
+              "label": "询问张屠户：询问张屠户：这头猪的獠牙发黑是否意味着它吃了什么不干净的东西。",
+              "intent": "interact",
+              "targetId": "r:777f39e63f6e0dd9:t1:e:person_1",
+              "stake": "low",
+              "approach": "ask"
+            },
+            {
+              "id": "r:777f39e63f6e0dd9:t3:c:c",
+              "label": "婉拒张屠户：拒绝张屠户的追问，表示自己还要去别处看看。",
+              "intent": "interact",
+              "targetId": "r:777f39e63f6e0dd9:t1:e:person_1",
+              "stake": "low",
+              "approach": "decline"
+            }
+          ],
+          "memoryDeltas": [
+            {
+              "entityId": "r:777f39e63f6e0dd9:t1:e:person_1",
+              "kind": "clue",
+              "text": "“这猪是刚从后山深处打来的，平时看着挺温顺，怎么突然就暴毙了？”张屠户抹了把脸上的血水，眉头紧锁，“后山最近不太平，常有村民说看见黑影窜过，但谁也没敢细看。至于这獠牙发黑，我杀了一辈子猪，从来没见过这种怪事。”",
+              "status": "open"
+            }
+          ]
+        }
+      },
+      "request": {
+        "context": {
+          "schemaVersion": 1,
+          "phase": "choice",
+          "identity": {
+            "runId": "b7c829af-5d43-4b3c-98e4-44a473063d6e",
+            "turnId": 3,
+            "baseRevision": 2,
+            "stateHash": "7bfae419a91970161601fe15ed9feb5a7cc6f547c9cf3ccf3d45b8590e024364",
+            "choiceId": "r:777f39e63f6e0dd9:t2:c:a",
+            "rulesVersion": 1,
+            "promptVersion": 1,
+            "requestId": "bcddefb4-bc18-4371-b9c0-c707324bdf72"
+          },
+          "namespace": "r:777f39e63f6e0dd9",
+          "receipt": {
+            "kind": "choice",
+            "choiceId": "r:777f39e63f6e0dd9:t2:c:a",
+            "action": {
+              "id": "r:777f39e63f6e0dd9:t2:c:a",
+              "label": "询问张屠户：询问张屠户这头猪的具体来历和后山的情况，看看是否有人见过类似的异状。",
+              "intent": "interact",
+              "targetId": "r:777f39e63f6e0dd9:t1:e:person_1",
+              "stake": "low",
+              "approach": "ask"
+            },
+            "elapsedDays": 0,
+            "itemChanges": {},
+            "relationChanges": {},
+            "random": {
+              "before": 635586800,
+              "after": 1902921615,
+              "roll": 15
+            },
+            "before": {
+              "ageDays": 5761,
+              "realm": "mortal",
+              "cultivation": 0,
+              "injury": 0
+            },
+            "after": {
+              "ageDays": 5761,
+              "realm": "mortal",
+              "cultivation": 0,
+              "injury": 0
+            },
+            "death": null,
+            "birth": null
+          },
+          "life": {
+            "name": "云归",
+            "ageDays": 5761,
+            "lifeLimit": 80,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0,
+            "items": {
+              "supplies": 2,
+              "stones": 0
+            },
+            "relations": {
+              "r:777f39e63f6e0dd9:t1:e:person_1": 2
+            },
+            "birth": {
+              "originId": "village",
+              "talentIds": [
+                "flash-wisdom",
+                "sword-bone"
+              ],
+              "attributes": {
+                "constitution": 2,
+                "insight": 6,
+                "fortune": 4
+              }
+            }
+          },
+          "entities": [
+            {
+              "id": "r:777f39e63f6e0dd9:t1:e:person_1",
+              "name": "张屠户",
+              "kind": "person",
+              "status": "alive"
+            }
+          ],
+          "memory": {
+            "facts": [
+              {
+                "id": "decision:2",
+                "runId": "b7c829af-5d43-4b3c-98e4-44a473063d6e",
+                "turnId": 2,
+                "source": "rules",
+                "kind": "fact",
+                "entityId": "r:777f39e63f6e0dd9:t1:e:person_1",
+                "text": "你在village选择了“援助张屠户：拿出1行粮援助张屠户，表示他处理这头猪很辛苦。”。"
+              }
+            ],
+            "promises": [],
+            "clues": [
+              {
+                "id": "m:04e1ccdbe7d383b6b382d22dfdceecfa",
+                "source": "narrative",
+                "kind": "clue",
+                "entityId": "r:777f39e63f6e0dd9:t1:e:person_1",
+                "text": "你从腰间解下干粮，递给张屠户。他愣了一下，随即大口吞咽，连声道谢。吃饱后，他指着那头死猪，神色凝重地告诉你，这猪皮下的血肉呈现出诡异的紫黑色，且散发着一股令人作呕的腥臭，绝非寻常野兽。他怀疑这猪是误食了山中的毒物，或者是被什么东西冲撞了阳气。",
+                "status": "open",
+                "runId": "b7c829af-5d43-4b3c-98e4-44a473063d6e",
+                "turnId": 2
+              },
+              {
+                "id": "m:73467790dea864cc9f5742e6032df603",
+                "source": "narrative",
+                "kind": "clue",
+                "entityId": "r:777f39e63f6e0dd9:t1:e:person_1",
+                "text": "张屠户叹了口气，说这猪是他刚从后山打来的，怎么就突然暴毙了。他看着你，眼神中带着一丝希冀：“云归，你命格好，刚才那股子煞气冲过来的时候，你好像连眼皮都没眨一下。你有没有觉得这猪的獠牙有点不对劲？我刚才杀它的时候，它好像还冲我笑了一下。”",
+                "status": "open",
+                "runId": "b7c829af-5d43-4b3c-98e4-44a473063d6e",
+                "turnId": 2
+              },
+              {
+                "id": "m:c9ecae1fd27298cb8211f4828ad43cc3",
+                "source": "narrative",
+                "kind": "clue",
+                "entityId": "r:777f39e63f6e0dd9:t1:e:person_1",
+                "text": "云归，十六岁，凡人。你站在村口的老槐树下，手里攥着一把磨得发亮的猎刀。村头张屠户正蹲在血泊边，手里提着一只被开膛破肚的野猪，嘴里骂骂咧咧。这野猪显然不是普通野兽，皮糙肉厚，刀口却深可见骨，显然是冲着张屠户那把祖传的杀猪刀来的。张屠户抬头看见你，把刀往地上一扔，抹了一把脸上的血水，指着那野猪的獠牙说：'云归，你来看看，这獠牙怎么有点发黑？我刚才杀它的时候，它好像还冲我笑了一下。'",
+                "status": "open",
+                "runId": "b7c829af-5d43-4b3c-98e4-44a473063d6e",
+                "turnId": 1
+              }
+            ],
+            "recent": [
+              {
+                "id": "turn:2",
+                "runId": "b7c829af-5d43-4b3c-98e4-44a473063d6e",
+                "turnId": 2,
+                "source": "narrative",
+                "kind": "turn",
+                "text": "地点：village；刚才选择：援助张屠户：拿出1行粮援助张屠户，表示他处理这头猪很辛苦。\n你从腰间解下干粮，递给张屠户。他愣了一下，随即大口吞咽，连声道谢。吃饱后，他指着那头死猪，神色凝重地告诉你，这猪皮下的血肉呈现出诡异的紫黑色，且散发着一股令人作呕的腥臭，绝非寻常野兽。他怀疑这猪是误食了山中的毒物，或者是被什么东西冲撞了阳气。\n张屠户叹了口气，说这猪是他刚从后山打来的，怎么就突然暴毙了。他看着你，眼神中带着一丝希冀：“云归，你命格好，刚才那股子煞气冲过来的时候，你好像连眼皮都没眨一下。你有没有觉得这猪的獠牙有点不对劲？我刚才杀它的时候，它好像还冲我笑了一下。”",
+                "entityIds": []
+              },
+              {
+                "id": "turn:1",
+                "runId": "b7c829af-5d43-4b3c-98e4-44a473063d6e",
+                "turnId": 1,
+                "source": "narrative",
+                "kind": "turn",
+                "text": "地点：village\n云归，十六岁，凡人。你站在村口的老槐树下，手里攥着一把磨得发亮的猎刀。村头张屠户正蹲在血泊边，手里提着一只被开膛破肚的野猪，嘴里骂骂咧咧。这野猪显然不是普通野兽，皮糙肉厚，刀口却深可见骨，显然是冲着张屠户那把祖传的杀猪刀来的。张屠户抬头看见你，把刀往地上一扔，抹了一把脸上的血水，指着那野猪的獠牙说：'云归，你来看看，这獠牙怎么有点发黑？我刚才杀它的时候，它好像还冲我笑了一下。'\n你凑近了些，那野猪的獠牙确实隐隐透着一股腥臭的黑气，周围的空气似乎都凝滞了几分。你下意识地握紧了手中的猎刀，指尖触碰到刀柄上粗糙的纹路，心中隐隐有种想要拔刀的冲动。张屠户见你发愣，又补了一句：'这猪是我刚从后山打来的，怎么就突然暴毙了？你小子命格好，刚才那股子煞气冲过来的时候，你好像连眼皮都没眨一下。'",
+                "entityIds": []
+              }
+            ],
+            "summaries": []
+          },
+          "references": [
+            "decision:2",
+            "m:04e1ccdbe7d383b6b382d22dfdceecfa",
+            "m:73467790dea864cc9f5742e6032df603",
+            "m:c9ecae1fd27298cb8211f4828ad43cc3",
+            "turn:2",
+            "turn:1"
+          ],
+          "previousScene": {
+            "id": "r:777f39e63f6e0dd9:t2:s:scene",
+            "blocksHash": "f2cef5f4b4d0cc3b2e198e41ef934cee032782db4b9894fea2916173f050e997"
+          },
+          "relationshipVersion": 1,
+          "relationships": {
+            "r:777f39e63f6e0dd9:t1:e:person_1": 2
+          },
+          "coverage": {
+            "policy": "relevance-v1",
+            "openTotal": 3,
+            "openIncluded": 3,
+            "openOmitted": 0
+          }
+        },
+        "attempt": {
+          "id": "83eb9284-34df-4bd3-8002-e911dda59cbf",
+          "sessionRef": "sess_7b01f904799ddf1a65f91b21a06ad966",
+          "retryOf": null
+        },
+        "storyActions": true
+      },
+      "decision": {
+        "index": 0,
+        "reason": "援助被实际吃下并感谢，行粮3→2、年龄仅+1日；追问野猪来历、后山情况及类似异状，不代替玩家进山。",
+        "selected": {
+          "id": "r:777f39e63f6e0dd9:t2:c:a",
+          "label": "询问张屠户：询问张屠户这头猪的具体来历和后山的情况，看看是否有人见过类似的异状。",
+          "intent": "interact",
+          "targetId": "r:777f39e63f6e0dd9:t1:e:person_1",
+          "stake": "low",
+          "approach": "ask"
+        }
+      },
+      "choices": [
+        {
+          "id": "r:777f39e63f6e0dd9:t3:c:a",
+          "enabled": true,
+          "label": "询问张屠户：询问张屠户：后山深处是否还有其他村民见过黑影或异状。",
+          "cost": "0日"
+        },
+        {
+          "id": "r:777f39e63f6e0dd9:t3:c:b",
+          "enabled": true,
+          "label": "询问张屠户：询问张屠户：这头猪的獠牙发黑是否意味着它吃了什么不干净的东西。",
+          "cost": "0日"
+        },
+        {
+          "id": "r:777f39e63f6e0dd9:t3:c:c",
+          "enabled": true,
+          "label": "婉拒张屠户：拒绝张屠户的追问，表示自己还要去别处看看。",
+          "cost": "0日"
+        }
+      ],
+      "traces": [
+        {
+          "model": "@cf/zai-org/glm-4.7-flash",
+          "inputHash": "18c6e7b2eaa003ad57cdd684d5a0b53d03405c66864a72c92fc76681a5f29201",
+          "inputBytes": 20957,
+          "startedAt": 1793367602855,
+          "bindingReturnedAt": 1793367603153,
+          "liveRawBytes": 92643,
+          "captureComplete": true,
+          "response": {
+            "model": "@cf/zai-org/glm-4.7-flash",
+            "choices": [
+              {
+                "finish_reason": "stop",
+                "message": {
+                  "content": "{\"blocks\":[{\"kind\":\"dialogue\",\"text\":\"“这猪是刚从后山深处打来的，平时看着挺温顺，怎么突然就暴毙了？”张屠户抹了把脸上的血水，眉头紧锁，“后山最近不太平，常有村民说看见黑影窜过，但谁也没敢细看。至于这獠牙发黑，我杀了一辈子猪，从来没见过这种怪事。”\",\"speaker\":\"k1_person_张屠户\"}],\"choices\":[{\"action\":\"interact:ask\",\"targetId\":\"k1_person_张屠户\",\"stake\":\"low\",\"purpose\":\"询问张屠户：后山深处是否还有其他村民见过黑影或异状。\",\"anchor\":0},{\"action\":\"interact:ask\",\"targetId\":\"k1_person_张屠户\",\"stake\":\"low\",\"purpose\":\"询问张屠户：这头猪的獠牙发黑是否意味着它吃了什么不干净的东西。\",\"anchor\":0},{\"action\":\"interact:decline\",\"targetId\":\"k1_person_张屠户\",\"stake\":\"low\",\"purpose\":\"拒绝张屠户的追问，表示自己还要去别处看看。\",\"anchor\":0}],\"title\":\"血腥的猪\",\"location\":\"village\",\"otherPeople\":[{\"id\":\"k1_person_张屠户\",\"status\":\"alive\"}],\"places\":[],\"factions\":[],\"memoryDeltas\":[{\"entityId\":\"k1_person_张屠户\",\"kind\":\"clue\",\"anchor\":0,\"status\":\"open\"}]}",
+                  "reasoning_content": ""
+                }
+              }
+            ],
+            "usage": {
+              "prompt_tokens": 3439,
+              "completion_tokens": 321,
+              "total_tokens": 3760,
+              "prompt_tokens_details": {
+                "cached_tokens": 0
+              },
+              "neurons": 30.59890000000014
+            }
+          },
+          "rawSseBytes": 92643
+        }
+      ],
+      "revision": 3,
+      "pending": false,
+      "state": {
+        "relationshipVersion": 1,
+        "version": 5,
+        "mode": "cultivation",
+        "contentVersion": 4,
+        "rulesVersion": 1,
+        "promptVersion": 1,
+        "runId": "b7c829af-5d43-4b3c-98e4-44a473063d6e",
+        "revision": 3,
+        "turnId": 3,
+        "phase": "active",
+        "rng": 1902921615,
+        "life": {
+          "name": "云归",
+          "ageDays": 5761,
+          "lifeLimit": 80,
+          "realm": "mortal",
+          "cultivation": 0,
+          "injury": 0,
+          "items": {
+            "supplies": 2,
+            "stones": 0
+          },
+          "relations": {
+            "r:777f39e63f6e0dd9:t1:e:person_1": 2
+          },
+          "birth": {
+            "originId": "village",
+            "talentIds": [
+              "flash-wisdom",
+              "sword-bone"
+            ],
+            "attributes": {
+              "constitution": 2,
+              "insight": 6,
+              "fortune": 4
+            }
+          }
+        },
+        "birthReceipt": {
+          "kind": "opening",
+          "choiceId": null,
+          "action": null,
+          "elapsedDays": 0,
+          "itemChanges": {},
+          "relationChanges": {},
+          "random": {
+            "before": 134918293,
+            "after": 134918293,
+            "roll": null
+          },
+          "before": {
+            "ageDays": 5760,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "after": {
+            "ageDays": 5760,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "death": null,
+          "birth": {
+            "originId": "village",
+            "talentIds": [
+              "flash-wisdom",
+              "sword-bone"
+            ],
+            "attributes": {
+              "constitution": 2,
+              "insight": 6,
+              "fortune": 4
+            }
+          }
+        },
+        "currentScene": {
+          "id": "r:777f39e63f6e0dd9:t3:s:scene",
+          "title": "血腥的猪",
+          "location": "village",
+          "entities": [
+            {
+              "id": "r:777f39e63f6e0dd9:t1:e:person_1",
+              "name": "张屠户",
+              "kind": "person",
+              "status": "alive"
+            }
+          ],
+          "blocks": [
+            {
+              "kind": "dialogue",
+              "text": "“这猪是刚从后山深处打来的，平时看着挺温顺，怎么突然就暴毙了？”张屠户抹了把脸上的血水，眉头紧锁，“后山最近不太平，常有村民说看见黑影窜过，但谁也没敢细看。至于这獠牙发黑，我杀了一辈子猪，从来没见过这种怪事。”",
+              "speaker": "r:777f39e63f6e0dd9:t1:e:person_1"
+            }
+          ],
+          "choices": [
+            {
+              "id": "r:777f39e63f6e0dd9:t3:c:a",
+              "label": "询问张屠户：询问张屠户：后山深处是否还有其他村民见过黑影或异状。",
+              "intent": "interact",
+              "targetId": "r:777f39e63f6e0dd9:t1:e:person_1",
+              "stake": "low",
+              "approach": "ask"
+            },
+            {
+              "id": "r:777f39e63f6e0dd9:t3:c:b",
+              "label": "询问张屠户：询问张屠户：这头猪的獠牙发黑是否意味着它吃了什么不干净的东西。",
+              "intent": "interact",
+              "targetId": "r:777f39e63f6e0dd9:t1:e:person_1",
+              "stake": "low",
+              "approach": "ask"
+            },
+            {
+              "id": "r:777f39e63f6e0dd9:t3:c:c",
+              "label": "婉拒张屠户：拒绝张屠户的追问，表示自己还要去别处看看。",
+              "intent": "interact",
+              "targetId": "r:777f39e63f6e0dd9:t1:e:person_1",
+              "stake": "low",
+              "approach": "decline"
+            }
+          ],
+          "memoryDeltas": [
+            {
+              "entityId": "r:777f39e63f6e0dd9:t1:e:person_1",
+              "kind": "clue",
+              "text": "“这猪是刚从后山深处打来的，平时看着挺温顺，怎么突然就暴毙了？”张屠户抹了把脸上的血水，眉头紧锁，“后山最近不太平，常有村民说看见黑影窜过，但谁也没敢细看。至于这獠牙发黑，我杀了一辈子猪，从来没见过这种怪事。”",
+              "status": "open"
+            }
+          ]
+        },
+        "lastReceipt": {
+          "kind": "choice",
+          "choiceId": "r:777f39e63f6e0dd9:t2:c:a",
+          "action": {
+            "id": "r:777f39e63f6e0dd9:t2:c:a",
+            "label": "询问张屠户：询问张屠户这头猪的具体来历和后山的情况，看看是否有人见过类似的异状。",
+            "intent": "interact",
+            "targetId": "r:777f39e63f6e0dd9:t1:e:person_1",
+            "stake": "low",
+            "approach": "ask"
+          },
+          "elapsedDays": 0,
+          "itemChanges": {},
+          "relationChanges": {},
+          "random": {
+            "before": 635586800,
+            "after": 1902921615,
+            "roll": 15
+          },
+          "before": {
+            "ageDays": 5761,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "after": {
+            "ageDays": 5761,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "death": null,
+          "birth": null
+        },
+        "relatedEntities": [
+          {
+            "id": "r:777f39e63f6e0dd9:t1:e:person_1",
+            "name": "张屠户",
+            "kind": "person",
+            "status": "alive"
+          }
+        ],
+        "archiveCursor": 0
+      },
+      "posts": 3,
+      "latency": {
+        "usable": true,
+        "errorCode": null,
+        "firstAnyPreviewMs": 3121,
+        "firstReadableMs": 3307,
+        "completionMs": 7978,
+        "narrativeChars": 105,
+        "maxPreviewGapMs": 714,
+        "readingFinishEstimateMs": 20807,
+        "readingStallEstimateMs": 0,
+        "optionsWaitEstimateMs": 0,
+        "prefetchWorthEvaluating": true,
+        "assumptions": {
+          "readingCharsPerSecond": 6,
+          "readableChars": 20,
+          "targetWaitMs": 2000
+        }
+      }
+    },
+    {
+      "caseId": "choice-3",
+      "start": 226520.29999999702,
+      "timeline": [
+        {
+          "atMs": 5169,
+          "chars": 1
+        },
+        {
+          "atMs": 5322,
+          "chars": 3
+        },
+        {
+          "atMs": 5399,
+          "chars": 5
+        },
+        {
+          "atMs": 5477,
+          "chars": 6
+        },
+        {
+          "atMs": 5537,
+          "chars": 8
+        },
+        {
+          "atMs": 5647,
+          "chars": 10
+        },
+        {
+          "atMs": 5708,
+          "chars": 11
+        },
+        {
+          "atMs": 5755,
+          "chars": 15
+        },
+        {
+          "atMs": 5831,
+          "chars": 18
+        },
+        {
+          "atMs": 5910,
+          "chars": 21
+        },
+        {
+          "atMs": 5956,
+          "chars": 24
+        },
+        {
+          "atMs": 6062,
+          "chars": 28
+        }
+      ],
+      "choicesEnabledDuringPreview": false,
+      "lastText": "“张叔，这猪的事太邪门，我还要去别处看看，就不多留了。”",
+      "doneMs": 12291,
+      "result": {
+        "protocolVersion": 1,
+        "status": "ready",
+        "requestId": "aa205250-b674-417c-9735-408c6abf5f69",
+        "attemptId": "b08a0f96-6084-4733-81bb-c47db4a689dd",
+        "sessionRef": "sess_7b01f904799ddf1a65f91b21a06ad966",
+        "errorCode": null,
+        "retry": null,
+        "scene": {
+          "id": "r:777f39e63f6e0dd9:t4:s:scene",
+          "title": "村口血腥味",
+          "location": "village",
+          "entities": [
+            {
+              "id": "r:777f39e63f6e0dd9:t1:e:person_1",
+              "name": "张屠户",
+              "kind": "person",
+              "status": "alive"
+            },
+            {
+              "id": "r:777f39e63f6e0dd9:t4:e:place_1",
+              "name": "后山深处",
+              "kind": "place"
+            }
+          ],
+          "blocks": [
+            {
+              "kind": "dialogue",
+              "text": "“张叔，这猪的事太邪门，我还要去别处看看，就不多留了。”",
+              "speaker": "self"
+            }
+          ],
+          "choices": [
+            {
+              "id": "r:777f39e63f6e0dd9:t4:c:a",
+              "label": "询问张屠户：询问张屠户后山黑影的具体位置",
+              "intent": "interact",
+              "targetId": "r:777f39e63f6e0dd9:t1:e:person_1",
+              "stake": "low",
+              "approach": "ask"
+            },
+            {
+              "id": "r:777f39e63f6e0dd9:t4:c:b",
+              "label": "结束与张屠户的互动：结束与张屠户的交谈",
+              "intent": "interact",
+              "targetId": "r:777f39e63f6e0dd9:t1:e:person_1",
+              "stake": "low",
+              "approach": "leave"
+            },
+            {
+              "id": "r:777f39e63f6e0dd9:t4:c:c",
+              "label": "穿行荒野前往后山深处：前往后山深处寻找黑影",
+              "intent": "travel",
+              "targetId": "r:777f39e63f6e0dd9:t4:e:place_1",
+              "stake": "low",
+              "approach": "wilderness"
+            }
+          ],
+          "memoryDeltas": [
+            {
+              "entityId": "r:777f39e63f6e0dd9:t1:e:person_1",
+              "kind": "clue",
+              "text": "“张叔，这猪的事太邪门，我还要去别处看看，就不多留了。”",
+              "status": "open"
+            }
+          ]
+        }
+      },
+      "request": {
+        "context": {
+          "schemaVersion": 1,
+          "phase": "choice",
+          "identity": {
+            "runId": "b7c829af-5d43-4b3c-98e4-44a473063d6e",
+            "turnId": 4,
+            "baseRevision": 3,
+            "stateHash": "e776d768b73a04b445ac63326fd6579e213464b02c39d5555299b45c810bef4e",
+            "choiceId": "r:777f39e63f6e0dd9:t3:c:c",
+            "rulesVersion": 1,
+            "promptVersion": 1,
+            "requestId": "aa205250-b674-417c-9735-408c6abf5f69"
+          },
+          "namespace": "r:777f39e63f6e0dd9",
+          "receipt": {
+            "kind": "choice",
+            "choiceId": "r:777f39e63f6e0dd9:t3:c:c",
+            "action": {
+              "id": "r:777f39e63f6e0dd9:t3:c:c",
+              "label": "婉拒张屠户：拒绝张屠户的追问，表示自己还要去别处看看。",
+              "intent": "interact",
+              "targetId": "r:777f39e63f6e0dd9:t1:e:person_1",
+              "stake": "low",
+              "approach": "decline"
+            },
+            "elapsedDays": 0,
+            "itemChanges": {},
+            "relationChanges": {},
+            "random": {
+              "before": 1902921615,
+              "after": 543723426,
+              "roll": 26
+            },
+            "before": {
+              "ageDays": 5761,
+              "realm": "mortal",
+              "cultivation": 0,
+              "injury": 0
+            },
+            "after": {
+              "ageDays": 5761,
+              "realm": "mortal",
+              "cultivation": 0,
+              "injury": 0
+            },
+            "death": null,
+            "birth": null
+          },
+          "life": {
+            "name": "云归",
+            "ageDays": 5761,
+            "lifeLimit": 80,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0,
+            "items": {
+              "supplies": 2,
+              "stones": 0
+            },
+            "relations": {
+              "r:777f39e63f6e0dd9:t1:e:person_1": 2
+            },
+            "birth": {
+              "originId": "village",
+              "talentIds": [
+                "flash-wisdom",
+                "sword-bone"
+              ],
+              "attributes": {
+                "constitution": 2,
+                "insight": 6,
+                "fortune": 4
+              }
+            }
+          },
+          "entities": [
+            {
+              "id": "r:777f39e63f6e0dd9:t1:e:person_1",
+              "name": "张屠户",
+              "kind": "person",
+              "status": "alive"
+            }
+          ],
+          "memory": {
+            "facts": [
+              {
+                "id": "decision:3",
+                "runId": "b7c829af-5d43-4b3c-98e4-44a473063d6e",
+                "turnId": 3,
+                "source": "rules",
+                "kind": "fact",
+                "entityId": "r:777f39e63f6e0dd9:t1:e:person_1",
+                "text": "你在village选择了“询问张屠户：询问张屠户这头猪的具体来历和后山的情况，看看是否有人见过类似的异状。”。"
+              },
+              {
+                "id": "decision:2",
+                "runId": "b7c829af-5d43-4b3c-98e4-44a473063d6e",
+                "turnId": 2,
+                "source": "rules",
+                "kind": "fact",
+                "entityId": "r:777f39e63f6e0dd9:t1:e:person_1",
+                "text": "你在village选择了“援助张屠户：拿出1行粮援助张屠户，表示他处理这头猪很辛苦。”。"
+              }
+            ],
+            "promises": [],
+            "clues": [
+              {
+                "id": "m:66e19160c79da7ec9369227bf17ad7ef",
+                "source": "narrative",
+                "kind": "clue",
+                "entityId": "r:777f39e63f6e0dd9:t1:e:person_1",
+                "text": "“这猪是刚从后山深处打来的，平时看着挺温顺，怎么突然就暴毙了？”张屠户抹了把脸上的血水，眉头紧锁，“后山最近不太平，常有村民说看见黑影窜过，但谁也没敢细看。至于这獠牙发黑，我杀了一辈子猪，从来没见过这种怪事。”",
+                "status": "open",
+                "runId": "b7c829af-5d43-4b3c-98e4-44a473063d6e",
+                "turnId": 3
+              },
+              {
+                "id": "m:04e1ccdbe7d383b6b382d22dfdceecfa",
+                "source": "narrative",
+                "kind": "clue",
+                "entityId": "r:777f39e63f6e0dd9:t1:e:person_1",
+                "text": "你从腰间解下干粮，递给张屠户。他愣了一下，随即大口吞咽，连声道谢。吃饱后，他指着那头死猪，神色凝重地告诉你，这猪皮下的血肉呈现出诡异的紫黑色，且散发着一股令人作呕的腥臭，绝非寻常野兽。他怀疑这猪是误食了山中的毒物，或者是被什么东西冲撞了阳气。",
+                "status": "open",
+                "runId": "b7c829af-5d43-4b3c-98e4-44a473063d6e",
+                "turnId": 2
+              },
+              {
+                "id": "m:73467790dea864cc9f5742e6032df603",
+                "source": "narrative",
+                "kind": "clue",
+                "entityId": "r:777f39e63f6e0dd9:t1:e:person_1",
+                "text": "张屠户叹了口气，说这猪是他刚从后山打来的，怎么就突然暴毙了。他看着你，眼神中带着一丝希冀：“云归，你命格好，刚才那股子煞气冲过来的时候，你好像连眼皮都没眨一下。你有没有觉得这猪的獠牙有点不对劲？我刚才杀它的时候，它好像还冲我笑了一下。”",
+                "status": "open",
+                "runId": "b7c829af-5d43-4b3c-98e4-44a473063d6e",
+                "turnId": 2
+              },
+              {
+                "id": "m:c9ecae1fd27298cb8211f4828ad43cc3",
+                "source": "narrative",
+                "kind": "clue",
+                "entityId": "r:777f39e63f6e0dd9:t1:e:person_1",
+                "text": "云归，十六岁，凡人。你站在村口的老槐树下，手里攥着一把磨得发亮的猎刀。村头张屠户正蹲在血泊边，手里提着一只被开膛破肚的野猪，嘴里骂骂咧咧。这野猪显然不是普通野兽，皮糙肉厚，刀口却深可见骨，显然是冲着张屠户那把祖传的杀猪刀来的。张屠户抬头看见你，把刀往地上一扔，抹了一把脸上的血水，指着那野猪的獠牙说：'云归，你来看看，这獠牙怎么有点发黑？我刚才杀它的时候，它好像还冲我笑了一下。'",
+                "status": "open",
+                "runId": "b7c829af-5d43-4b3c-98e4-44a473063d6e",
+                "turnId": 1
+              }
+            ],
+            "recent": [
+              {
+                "id": "turn:3",
+                "runId": "b7c829af-5d43-4b3c-98e4-44a473063d6e",
+                "turnId": 3,
+                "source": "narrative",
+                "kind": "turn",
+                "text": "地点：village；刚才选择：询问张屠户：询问张屠户这头猪的具体来历和后山的情况，看看是否有人见过类似的异状。\n“这猪是刚从后山深处打来的，平时看着挺温顺，怎么突然就暴毙了？”张屠户抹了把脸上的血水，眉头紧锁，“后山最近不太平，常有村民说看见黑影窜过，但谁也没敢细看。至于这獠牙发黑，我杀了一辈子猪，从来没见过这种怪事。”",
+                "entityIds": []
+              }
+            ],
+            "summaries": []
+          },
+          "references": [
+            "decision:3",
+            "decision:2",
+            "m:66e19160c79da7ec9369227bf17ad7ef",
+            "m:04e1ccdbe7d383b6b382d22dfdceecfa",
+            "m:73467790dea864cc9f5742e6032df603",
+            "m:c9ecae1fd27298cb8211f4828ad43cc3",
+            "turn:3"
+          ],
+          "previousScene": {
+            "id": "r:777f39e63f6e0dd9:t3:s:scene",
+            "blocksHash": "c5f22ced28a611faaa4a4b1294a6b7137a122d25a57d836795de512e07ddda27"
+          },
+          "relationshipVersion": 1,
+          "relationships": {
+            "r:777f39e63f6e0dd9:t1:e:person_1": 2
+          },
+          "coverage": {
+            "policy": "relevance-v1",
+            "openTotal": 4,
+            "openIncluded": 4,
+            "openOmitted": 0
+          }
+        },
+        "attempt": {
+          "id": "b08a0f96-6084-4733-81bb-c47db4a689dd",
+          "sessionRef": "sess_7b01f904799ddf1a65f91b21a06ad966",
+          "retryOf": null
+        },
+        "storyActions": true
+      },
+      "decision": {
+        "index": 2,
+        "reason": "答复明确给出后山黑影及此前未见黑牙的线索，未移动或改资源；选择拒绝继续参与，核对不被强迫调查或立即旅行。",
+        "selected": {
+          "id": "r:777f39e63f6e0dd9:t3:c:c",
+          "label": "婉拒张屠户：拒绝张屠户的追问，表示自己还要去别处看看。",
+          "intent": "interact",
+          "targetId": "r:777f39e63f6e0dd9:t1:e:person_1",
+          "stake": "low",
+          "approach": "decline"
+        }
+      },
+      "choices": [
+        {
+          "id": "r:777f39e63f6e0dd9:t4:c:a",
+          "enabled": true,
+          "label": "询问张屠户：询问张屠户后山黑影的具体位置",
+          "cost": "0日"
+        },
+        {
+          "id": "r:777f39e63f6e0dd9:t4:c:b",
+          "enabled": true,
+          "label": "结束与张屠户的互动：结束与张屠户的交谈",
+          "cost": "0日"
+        },
+        {
+          "id": "r:777f39e63f6e0dd9:t4:c:c",
+          "enabled": true,
+          "label": "穿行荒野前往后山深处：前往后山深处寻找黑影",
+          "cost": "60日 · 行粮 1 · 历练受伤基础风险25%，根骨与坚韧筋骨可降低风险。"
+        }
+      ],
+      "traces": [
+        {
+          "model": "@cf/zai-org/glm-4.7-flash",
+          "inputHash": "2cce75d2d04b559c2d8b142293752f4d65f26a86bfa9d81a441c6e910cbbe929",
+          "inputBytes": 20269,
+          "startedAt": 1793367686568,
+          "bindingReturnedAt": 1793367686990,
+          "liveRawBytes": 65976,
+          "captureComplete": true,
+          "response": {
+            "model": "@cf/zai-org/glm-4.7-flash",
+            "choices": [
+              {
+                "finish_reason": "stop",
+                "message": {
+                  "content": "{\"blocks\":[{\"kind\":\"dialogue\",\"text\":\"“张叔，这猪的事太邪门，我还要去别处看看，就不多留了。”\",\"speaker\":\"self\"}],\"choices\":[{\"action\":\"interact:ask\",\"targetId\":\"k1_person_张屠户\",\"stake\":\"low\",\"purpose\":\"询问张屠户后山黑影的具体位置\",\"anchor\":0},{\"action\":\"interact:leave\",\"targetId\":\"k1_person_张屠户\",\"stake\":\"low\",\"purpose\":\"结束与张屠户的交谈\",\"anchor\":0},{\"action\":\"travel:wilderness\",\"targetId\":\"l1\",\"stake\":\"low\",\"purpose\":\"前往后山深处寻找黑影\",\"anchor\":0}],\"title\":\"村口血腥味\",\"location\":\"village\",\"otherPeople\":[{\"id\":\"k1_person_张屠户\",\"status\":\"alive\"}],\"places\":[{\"id\":\"l1\",\"name\":\"后山深处\"}],\"factions\":[],\"memoryDeltas\":[{\"entityId\":\"k1_person_张屠户\",\"kind\":\"clue\",\"anchor\":0,\"status\":\"open\"}]}",
+                  "reasoning_content": ""
+                }
+              }
+            ],
+            "usage": {
+              "prompt_tokens": 3258,
+              "completion_tokens": 230,
+              "total_tokens": 3488,
+              "prompt_tokens_details": {
+                "cached_tokens": 0
+              },
+              "neurons": 26.2910000000001
+            }
+          },
+          "rawSseBytes": 65976
+        }
+      ],
+      "revision": 4,
+      "pending": false,
+      "state": {
+        "relationshipVersion": 1,
+        "version": 5,
+        "mode": "cultivation",
+        "contentVersion": 4,
+        "rulesVersion": 1,
+        "promptVersion": 1,
+        "runId": "b7c829af-5d43-4b3c-98e4-44a473063d6e",
+        "revision": 4,
+        "turnId": 4,
+        "phase": "active",
+        "rng": 543723426,
+        "life": {
+          "name": "云归",
+          "ageDays": 5761,
+          "lifeLimit": 80,
+          "realm": "mortal",
+          "cultivation": 0,
+          "injury": 0,
+          "items": {
+            "supplies": 2,
+            "stones": 0
+          },
+          "relations": {
+            "r:777f39e63f6e0dd9:t1:e:person_1": 2
+          },
+          "birth": {
+            "originId": "village",
+            "talentIds": [
+              "flash-wisdom",
+              "sword-bone"
+            ],
+            "attributes": {
+              "constitution": 2,
+              "insight": 6,
+              "fortune": 4
+            }
+          }
+        },
+        "birthReceipt": {
+          "kind": "opening",
+          "choiceId": null,
+          "action": null,
+          "elapsedDays": 0,
+          "itemChanges": {},
+          "relationChanges": {},
+          "random": {
+            "before": 134918293,
+            "after": 134918293,
+            "roll": null
+          },
+          "before": {
+            "ageDays": 5760,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "after": {
+            "ageDays": 5760,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "death": null,
+          "birth": {
+            "originId": "village",
+            "talentIds": [
+              "flash-wisdom",
+              "sword-bone"
+            ],
+            "attributes": {
+              "constitution": 2,
+              "insight": 6,
+              "fortune": 4
+            }
+          }
+        },
+        "currentScene": {
+          "id": "r:777f39e63f6e0dd9:t4:s:scene",
+          "title": "村口血腥味",
+          "location": "village",
+          "entities": [
+            {
+              "id": "r:777f39e63f6e0dd9:t1:e:person_1",
+              "name": "张屠户",
+              "kind": "person",
+              "status": "alive"
+            },
+            {
+              "id": "r:777f39e63f6e0dd9:t4:e:place_1",
+              "name": "后山深处",
+              "kind": "place"
+            }
+          ],
+          "blocks": [
+            {
+              "kind": "dialogue",
+              "text": "“张叔，这猪的事太邪门，我还要去别处看看，就不多留了。”",
+              "speaker": "self"
+            }
+          ],
+          "choices": [
+            {
+              "id": "r:777f39e63f6e0dd9:t4:c:a",
+              "label": "询问张屠户：询问张屠户后山黑影的具体位置",
+              "intent": "interact",
+              "targetId": "r:777f39e63f6e0dd9:t1:e:person_1",
+              "stake": "low",
+              "approach": "ask"
+            },
+            {
+              "id": "r:777f39e63f6e0dd9:t4:c:b",
+              "label": "结束与张屠户的互动：结束与张屠户的交谈",
+              "intent": "interact",
+              "targetId": "r:777f39e63f6e0dd9:t1:e:person_1",
+              "stake": "low",
+              "approach": "leave"
+            },
+            {
+              "id": "r:777f39e63f6e0dd9:t4:c:c",
+              "label": "穿行荒野前往后山深处：前往后山深处寻找黑影",
+              "intent": "travel",
+              "targetId": "r:777f39e63f6e0dd9:t4:e:place_1",
+              "stake": "low",
+              "approach": "wilderness"
+            }
+          ],
+          "memoryDeltas": [
+            {
+              "entityId": "r:777f39e63f6e0dd9:t1:e:person_1",
+              "kind": "clue",
+              "text": "“张叔，这猪的事太邪门，我还要去别处看看，就不多留了。”",
+              "status": "open"
+            }
+          ]
+        },
+        "lastReceipt": {
+          "kind": "choice",
+          "choiceId": "r:777f39e63f6e0dd9:t3:c:c",
+          "action": {
+            "id": "r:777f39e63f6e0dd9:t3:c:c",
+            "label": "婉拒张屠户：拒绝张屠户的追问，表示自己还要去别处看看。",
+            "intent": "interact",
+            "targetId": "r:777f39e63f6e0dd9:t1:e:person_1",
+            "stake": "low",
+            "approach": "decline"
+          },
+          "elapsedDays": 0,
+          "itemChanges": {},
+          "relationChanges": {},
+          "random": {
+            "before": 1902921615,
+            "after": 543723426,
+            "roll": 26
+          },
+          "before": {
+            "ageDays": 5761,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "after": {
+            "ageDays": 5761,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "death": null,
+          "birth": null
+        },
+        "relatedEntities": [
+          {
+            "id": "r:777f39e63f6e0dd9:t1:e:person_1",
+            "name": "张屠户",
+            "kind": "person",
+            "status": "alive"
+          },
+          {
+            "id": "r:777f39e63f6e0dd9:t4:e:place_1",
+            "name": "后山深处",
+            "kind": "place"
+          }
+        ],
+        "archiveCursor": 0
+      },
+      "posts": 4,
+      "latency": {
+        "usable": true,
+        "errorCode": null,
+        "firstAnyPreviewMs": 5169,
+        "firstReadableMs": 5910,
+        "completionMs": 12291,
+        "narrativeChars": 28,
+        "maxPreviewGapMs": 153,
+        "readingFinishEstimateMs": 10577,
+        "readingStallEstimateMs": 0,
+        "optionsWaitEstimateMs": 1714,
+        "prefetchWorthEvaluating": true,
+        "assumptions": {
+          "readingCharsPerSecond": 6,
+          "readableChars": 20,
+          "targetWaitMs": 2000
+        }
+      }
+    },
+    {
+      "caseId": "choice-4",
+      "start": 283411.5,
+      "timeline": [
+        {
+          "atMs": 4050,
+          "chars": 1
+        },
+        {
+          "atMs": 4111,
+          "chars": 8
+        },
+        {
+          "atMs": 4158,
+          "chars": 15
+        },
+        {
+          "atMs": 4240,
+          "chars": 23
+        },
+        {
+          "atMs": 4297,
+          "chars": 29
+        },
+        {
+          "atMs": 4358,
+          "chars": 33
+        },
+        {
+          "atMs": 4436,
+          "chars": 34
+        }
+      ],
+      "choicesEnabledDuringPreview": false,
+      "lastText": "“张叔，这猪的事太邪门，我还要去别处看看，就不多留了。”你转身欲走。",
+      "doneMs": 8903,
+      "result": {
+        "protocolVersion": 1,
+        "status": "ready",
+        "requestId": "8b6ce1c2-7b31-41f6-bf64-51883514fdf5",
+        "attemptId": "bd93c74d-a23d-46ef-b1d2-7da790fd00df",
+        "sessionRef": "sess_7b01f904799ddf1a65f91b21a06ad966",
+        "errorCode": null,
+        "retry": null,
+        "scene": {
+          "id": "r:777f39e63f6e0dd9:t5:s:scene",
+          "title": "村口血腥",
+          "location": "village",
+          "entities": [
+            {
+              "id": "r:777f39e63f6e0dd9:t1:e:person_1",
+              "name": "张屠户",
+              "kind": "person",
+              "status": "alive"
+            },
+            {
+              "id": "r:777f39e63f6e0dd9:t4:e:place_1",
+              "name": "后山深处",
+              "kind": "place"
+            }
+          ],
+          "blocks": [
+            {
+              "kind": "dialogue",
+              "text": "“张叔，这猪的事太邪门，我还要去别处看看，就不多留了。”你转身欲走。",
+              "speaker": "self"
+            }
+          ],
+          "choices": [
+            {
+              "id": "r:777f39e63f6e0dd9:t5:c:a",
+              "label": "询问张屠户：询问张屠户后山深处是否还有其他村民进山",
+              "intent": "interact",
+              "targetId": "r:777f39e63f6e0dd9:t1:e:person_1",
+              "stake": "low",
+              "approach": "ask"
+            },
+            {
+              "id": "r:777f39e63f6e0dd9:t5:c:b",
+              "label": "穿行荒野前往后山深处：前往后山深处查看异状源头",
+              "intent": "travel",
+              "targetId": "r:777f39e63f6e0dd9:t4:e:place_1",
+              "stake": "low",
+              "approach": "wilderness"
+            },
+            {
+              "id": "r:777f39e63f6e0dd9:t5:c:c",
+              "label": "婉拒张屠户：拒绝张屠户的挽留",
+              "intent": "interact",
+              "targetId": "r:777f39e63f6e0dd9:t1:e:person_1",
+              "stake": "low",
+              "approach": "decline"
+            }
+          ],
+          "memoryDeltas": [
+            {
+              "entityId": "r:777f39e63f6e0dd9:t1:e:person_1",
+              "kind": "fact",
+              "text": "“张叔，这猪的事太邪门，我还要去别处看看，就不多留了。”你转身欲走。"
+            }
+          ]
+        }
+      },
+      "request": {
+        "context": {
+          "schemaVersion": 1,
+          "phase": "choice",
+          "identity": {
+            "runId": "b7c829af-5d43-4b3c-98e4-44a473063d6e",
+            "turnId": 5,
+            "baseRevision": 4,
+            "stateHash": "3b5b97871015be7a5b402cae522605807cf9626f7e58ec0477331d9b9453279c",
+            "choiceId": "r:777f39e63f6e0dd9:t4:c:b",
+            "rulesVersion": 1,
+            "promptVersion": 1,
+            "requestId": "8b6ce1c2-7b31-41f6-bf64-51883514fdf5"
+          },
+          "namespace": "r:777f39e63f6e0dd9",
+          "receipt": {
+            "kind": "choice",
+            "choiceId": "r:777f39e63f6e0dd9:t4:c:b",
+            "action": {
+              "id": "r:777f39e63f6e0dd9:t4:c:b",
+              "label": "结束与张屠户的互动：结束与张屠户的交谈",
+              "intent": "interact",
+              "targetId": "r:777f39e63f6e0dd9:t1:e:person_1",
+              "stake": "low",
+              "approach": "leave"
+            },
+            "elapsedDays": 0,
+            "itemChanges": {},
+            "relationChanges": {},
+            "random": {
+              "before": 543723426,
+              "after": 2445986457,
+              "roll": 57
+            },
+            "before": {
+              "ageDays": 5761,
+              "realm": "mortal",
+              "cultivation": 0,
+              "injury": 0
+            },
+            "after": {
+              "ageDays": 5761,
+              "realm": "mortal",
+              "cultivation": 0,
+              "injury": 0
+            },
+            "death": null,
+            "birth": null
+          },
+          "life": {
+            "name": "云归",
+            "ageDays": 5761,
+            "lifeLimit": 80,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0,
+            "items": {
+              "supplies": 2,
+              "stones": 0
+            },
+            "relations": {
+              "r:777f39e63f6e0dd9:t1:e:person_1": 2
+            },
+            "birth": {
+              "originId": "village",
+              "talentIds": [
+                "flash-wisdom",
+                "sword-bone"
+              ],
+              "attributes": {
+                "constitution": 2,
+                "insight": 6,
+                "fortune": 4
+              }
+            }
+          },
+          "entities": [
+            {
+              "id": "r:777f39e63f6e0dd9:t1:e:person_1",
+              "name": "张屠户",
+              "kind": "person",
+              "status": "alive"
+            },
+            {
+              "id": "r:777f39e63f6e0dd9:t4:e:place_1",
+              "name": "后山深处",
+              "kind": "place",
+              "status": "unknown"
+            }
+          ],
+          "memory": {
+            "facts": [
+              {
+                "id": "decision:4",
+                "runId": "b7c829af-5d43-4b3c-98e4-44a473063d6e",
+                "turnId": 4,
+                "source": "rules",
+                "kind": "fact",
+                "entityId": "r:777f39e63f6e0dd9:t1:e:person_1",
+                "text": "你在village选择了“婉拒张屠户：拒绝张屠户的追问，表示自己还要去别处看看。”。"
+              },
+              {
+                "id": "decision:3",
+                "runId": "b7c829af-5d43-4b3c-98e4-44a473063d6e",
+                "turnId": 3,
+                "source": "rules",
+                "kind": "fact",
+                "entityId": "r:777f39e63f6e0dd9:t1:e:person_1",
+                "text": "你在village选择了“询问张屠户：询问张屠户这头猪的具体来历和后山的情况，看看是否有人见过类似的异状。”。"
+              }
+            ],
+            "promises": [],
+            "clues": [
+              {
+                "id": "m:a6ab5e4c6532737ab05e16f4b01b6bef",
+                "source": "narrative",
+                "kind": "clue",
+                "entityId": "r:777f39e63f6e0dd9:t1:e:person_1",
+                "text": "“张叔，这猪的事太邪门，我还要去别处看看，就不多留了。”",
+                "status": "open",
+                "runId": "b7c829af-5d43-4b3c-98e4-44a473063d6e",
+                "turnId": 4
+              },
+              {
+                "id": "m:66e19160c79da7ec9369227bf17ad7ef",
+                "source": "narrative",
+                "kind": "clue",
+                "entityId": "r:777f39e63f6e0dd9:t1:e:person_1",
+                "text": "“这猪是刚从后山深处打来的，平时看着挺温顺，怎么突然就暴毙了？”张屠户抹了把脸上的血水，眉头紧锁，“后山最近不太平，常有村民说看见黑影窜过，但谁也没敢细看。至于这獠牙发黑，我杀了一辈子猪，从来没见过这种怪事。”",
+                "status": "open",
+                "runId": "b7c829af-5d43-4b3c-98e4-44a473063d6e",
+                "turnId": 3
+              },
+              {
+                "id": "m:04e1ccdbe7d383b6b382d22dfdceecfa",
+                "source": "narrative",
+                "kind": "clue",
+                "entityId": "r:777f39e63f6e0dd9:t1:e:person_1",
+                "text": "你从腰间解下干粮，递给张屠户。他愣了一下，随即大口吞咽，连声道谢。吃饱后，他指着那头死猪，神色凝重地告诉你，这猪皮下的血肉呈现出诡异的紫黑色，且散发着一股令人作呕的腥臭，绝非寻常野兽。他怀疑这猪是误食了山中的毒物，或者是被什么东西冲撞了阳气。",
+                "status": "open",
+                "runId": "b7c829af-5d43-4b3c-98e4-44a473063d6e",
+                "turnId": 2
+              },
+              {
+                "id": "m:73467790dea864cc9f5742e6032df603",
+                "source": "narrative",
+                "kind": "clue",
+                "entityId": "r:777f39e63f6e0dd9:t1:e:person_1",
+                "text": "张屠户叹了口气，说这猪是他刚从后山打来的，怎么就突然暴毙了。他看着你，眼神中带着一丝希冀：“云归，你命格好，刚才那股子煞气冲过来的时候，你好像连眼皮都没眨一下。你有没有觉得这猪的獠牙有点不对劲？我刚才杀它的时候，它好像还冲我笑了一下。”",
+                "status": "open",
+                "runId": "b7c829af-5d43-4b3c-98e4-44a473063d6e",
+                "turnId": 2
+              },
+              {
+                "id": "m:c9ecae1fd27298cb8211f4828ad43cc3",
+                "source": "narrative",
+                "kind": "clue",
+                "entityId": "r:777f39e63f6e0dd9:t1:e:person_1",
+                "text": "云归，十六岁，凡人。你站在村口的老槐树下，手里攥着一把磨得发亮的猎刀。村头张屠户正蹲在血泊边，手里提着一只被开膛破肚的野猪，嘴里骂骂咧咧。这野猪显然不是普通野兽，皮糙肉厚，刀口却深可见骨，显然是冲着张屠户那把祖传的杀猪刀来的。张屠户抬头看见你，把刀往地上一扔，抹了一把脸上的血水，指着那野猪的獠牙说：'云归，你来看看，这獠牙怎么有点发黑？我刚才杀它的时候，它好像还冲我笑了一下。'",
+                "status": "open",
+                "runId": "b7c829af-5d43-4b3c-98e4-44a473063d6e",
+                "turnId": 1
+              }
+            ],
+            "recent": [
+              {
+                "id": "turn:4",
+                "runId": "b7c829af-5d43-4b3c-98e4-44a473063d6e",
+                "turnId": 4,
+                "source": "narrative",
+                "kind": "turn",
+                "text": "地点：village；刚才选择：婉拒张屠户：拒绝张屠户的追问，表示自己还要去别处看看。\n“张叔，这猪的事太邪门，我还要去别处看看，就不多留了。”",
+                "entityIds": []
+              },
+              {
+                "id": "turn:3",
+                "runId": "b7c829af-5d43-4b3c-98e4-44a473063d6e",
+                "turnId": 3,
+                "source": "narrative",
+                "kind": "turn",
+                "text": "地点：village；刚才选择：询问张屠户：询问张屠户这头猪的具体来历和后山的情况，看看是否有人见过类似的异状。\n“这猪是刚从后山深处打来的，平时看着挺温顺，怎么突然就暴毙了？”张屠户抹了把脸上的血水，眉头紧锁，“后山最近不太平，常有村民说看见黑影窜过，但谁也没敢细看。至于这獠牙发黑，我杀了一辈子猪，从来没见过这种怪事。”",
+                "entityIds": []
+              }
+            ],
+            "summaries": []
+          },
+          "references": [
+            "decision:4",
+            "decision:3",
+            "m:a6ab5e4c6532737ab05e16f4b01b6bef",
+            "m:66e19160c79da7ec9369227bf17ad7ef",
+            "m:04e1ccdbe7d383b6b382d22dfdceecfa",
+            "m:73467790dea864cc9f5742e6032df603",
+            "m:c9ecae1fd27298cb8211f4828ad43cc3",
+            "turn:4",
+            "turn:3"
+          ],
+          "previousScene": {
+            "id": "r:777f39e63f6e0dd9:t4:s:scene",
+            "blocksHash": "07eeea96939d98c8dcd6b380e7688ed450ce49473514036152cc992b7ff338c1"
+          },
+          "relationshipVersion": 1,
+          "relationships": {
+            "r:777f39e63f6e0dd9:t1:e:person_1": 2
+          },
+          "coverage": {
+            "policy": "relevance-v1",
+            "openTotal": 5,
+            "openIncluded": 5,
+            "openOmitted": 0
+          }
+        },
+        "attempt": {
+          "id": "bd93c74d-a23d-46ef-b1d2-7da790fd00df",
+          "sessionRef": "sess_7b01f904799ddf1a65f91b21a06ad966",
+          "retryOf": null
+        },
+        "storyActions": true
+      },
+      "decision": {
+        "index": 1,
+        "reason": "拒绝正文没有擅自移动、承诺或惩罚，时间资源未变；这次明确结束与张屠户的交谈，要求告辞与上轮拒绝有区别。",
+        "selected": {
+          "id": "r:777f39e63f6e0dd9:t4:c:b",
+          "label": "结束与张屠户的互动：结束与张屠户的交谈",
+          "intent": "interact",
+          "targetId": "r:777f39e63f6e0dd9:t1:e:person_1",
+          "stake": "low",
+          "approach": "leave"
+        }
+      },
+      "choices": [
+        {
+          "id": "r:777f39e63f6e0dd9:t5:c:a",
+          "enabled": true,
+          "label": "询问张屠户：询问张屠户后山深处是否还有其他村民进山",
+          "cost": "0日"
+        },
+        {
+          "id": "r:777f39e63f6e0dd9:t5:c:b",
+          "enabled": true,
+          "label": "穿行荒野前往后山深处：前往后山深处查看异状源头",
+          "cost": "60日 · 行粮 1 · 历练受伤基础风险25%，根骨与坚韧筋骨可降低风险。"
+        },
+        {
+          "id": "r:777f39e63f6e0dd9:t5:c:c",
+          "enabled": true,
+          "label": "婉拒张屠户：拒绝张屠户的挽留",
+          "cost": "0日"
+        }
+      ],
+      "traces": [
+        {
+          "model": "@cf/zai-org/glm-4.7-flash",
+          "inputHash": "2f5dd9c6b8ca845eed55223708daea9ddbe96dbe370f5c39ccf87ae342bc59c9",
+          "inputBytes": 21154,
+          "startedAt": 1793367743371,
+          "bindingReturnedAt": 1793367743749,
+          "liveRawBytes": 93792,
+          "captureComplete": true,
+          "response": {
+            "model": "@cf/zai-org/glm-4.7-flash",
+            "choices": [
+              {
+                "finish_reason": "stop",
+                "message": {
+                  "content": "{\n  \"blocks\": [\n    {\n      \"kind\": \"dialogue\",\n      \"text\": \"“张叔，这猪的事太邪门，我还要去别处看看，就不多留了。”你转身欲走。\",\n      \"speaker\": \"self\"\n    }\n  ],\n  \"choices\": [\n    {\n      \"action\": \"interact:ask\",\n      \"targetId\": \"k1_person_张屠户\",\n      \"stake\": \"low\",\n      \"purpose\": \"询问张屠户后山深处是否还有其他村民进山\",\n      \"anchor\": 0\n    },\n    {\n      \"action\": \"travel:wilderness\",\n      \"targetId\": \"k2_place_后山深处\",\n      \"stake\": \"low\",\n      \"purpose\": \"前往后山深处查看异状源头\",\n      \"anchor\": 0\n    },\n    {\n      \"action\": \"interact:decline\",\n      \"targetId\": \"k1_person_张屠户\",\n      \"stake\": \"low\",\n      \"purpose\": \"拒绝张屠户的挽留\",\n      \"anchor\": 0\n    }\n  ],\n  \"title\": \"村口血腥\",\n  \"location\": \"village\",\n  \"otherPeople\": [\n    {\n      \"id\": \"k1_person_张屠户\",\n      \"status\": \"alive\"\n    }\n  ],\n  \"places\": [\n    {\n      \"id\": \"k2_place_后山深处\"\n    }\n  ],\n  \"factions\": [],\n  \"memoryDeltas\": [\n    {\n      \"entityId\": \"k1_person_张屠户\",\n      \"kind\": \"promise\",\n      \"anchor\": 0,\n      \"status\": \"open\"\n    }\n  ]\n}",
+                  "reasoning_content": ""
+                }
+              }
+            ],
+            "usage": {
+              "prompt_tokens": 3500,
+              "completion_tokens": 373,
+              "total_tokens": 3873,
+              "prompt_tokens_details": {
+                "cached_tokens": 0
+              },
+              "neurons": 32.82720000000016
+            }
+          },
+          "rawSseBytes": 93792
+        }
+      ],
+      "revision": 5,
+      "pending": false,
+      "state": {
+        "relationshipVersion": 1,
+        "version": 5,
+        "mode": "cultivation",
+        "contentVersion": 4,
+        "rulesVersion": 1,
+        "promptVersion": 1,
+        "runId": "b7c829af-5d43-4b3c-98e4-44a473063d6e",
+        "revision": 5,
+        "turnId": 5,
+        "phase": "active",
+        "rng": 2445986457,
+        "life": {
+          "name": "云归",
+          "ageDays": 5761,
+          "lifeLimit": 80,
+          "realm": "mortal",
+          "cultivation": 0,
+          "injury": 0,
+          "items": {
+            "supplies": 2,
+            "stones": 0
+          },
+          "relations": {
+            "r:777f39e63f6e0dd9:t1:e:person_1": 2
+          },
+          "birth": {
+            "originId": "village",
+            "talentIds": [
+              "flash-wisdom",
+              "sword-bone"
+            ],
+            "attributes": {
+              "constitution": 2,
+              "insight": 6,
+              "fortune": 4
+            }
+          }
+        },
+        "birthReceipt": {
+          "kind": "opening",
+          "choiceId": null,
+          "action": null,
+          "elapsedDays": 0,
+          "itemChanges": {},
+          "relationChanges": {},
+          "random": {
+            "before": 134918293,
+            "after": 134918293,
+            "roll": null
+          },
+          "before": {
+            "ageDays": 5760,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "after": {
+            "ageDays": 5760,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "death": null,
+          "birth": {
+            "originId": "village",
+            "talentIds": [
+              "flash-wisdom",
+              "sword-bone"
+            ],
+            "attributes": {
+              "constitution": 2,
+              "insight": 6,
+              "fortune": 4
+            }
+          }
+        },
+        "currentScene": {
+          "id": "r:777f39e63f6e0dd9:t5:s:scene",
+          "title": "村口血腥",
+          "location": "village",
+          "entities": [
+            {
+              "id": "r:777f39e63f6e0dd9:t1:e:person_1",
+              "name": "张屠户",
+              "kind": "person",
+              "status": "alive"
+            },
+            {
+              "id": "r:777f39e63f6e0dd9:t4:e:place_1",
+              "name": "后山深处",
+              "kind": "place"
+            }
+          ],
+          "blocks": [
+            {
+              "kind": "dialogue",
+              "text": "“张叔，这猪的事太邪门，我还要去别处看看，就不多留了。”你转身欲走。",
+              "speaker": "self"
+            }
+          ],
+          "choices": [
+            {
+              "id": "r:777f39e63f6e0dd9:t5:c:a",
+              "label": "询问张屠户：询问张屠户后山深处是否还有其他村民进山",
+              "intent": "interact",
+              "targetId": "r:777f39e63f6e0dd9:t1:e:person_1",
+              "stake": "low",
+              "approach": "ask"
+            },
+            {
+              "id": "r:777f39e63f6e0dd9:t5:c:b",
+              "label": "穿行荒野前往后山深处：前往后山深处查看异状源头",
+              "intent": "travel",
+              "targetId": "r:777f39e63f6e0dd9:t4:e:place_1",
+              "stake": "low",
+              "approach": "wilderness"
+            },
+            {
+              "id": "r:777f39e63f6e0dd9:t5:c:c",
+              "label": "婉拒张屠户：拒绝张屠户的挽留",
+              "intent": "interact",
+              "targetId": "r:777f39e63f6e0dd9:t1:e:person_1",
+              "stake": "low",
+              "approach": "decline"
+            }
+          ],
+          "memoryDeltas": [
+            {
+              "entityId": "r:777f39e63f6e0dd9:t1:e:person_1",
+              "kind": "fact",
+              "text": "“张叔，这猪的事太邪门，我还要去别处看看，就不多留了。”你转身欲走。"
+            }
+          ]
+        },
+        "lastReceipt": {
+          "kind": "choice",
+          "choiceId": "r:777f39e63f6e0dd9:t4:c:b",
+          "action": {
+            "id": "r:777f39e63f6e0dd9:t4:c:b",
+            "label": "结束与张屠户的互动：结束与张屠户的交谈",
+            "intent": "interact",
+            "targetId": "r:777f39e63f6e0dd9:t1:e:person_1",
+            "stake": "low",
+            "approach": "leave"
+          },
+          "elapsedDays": 0,
+          "itemChanges": {},
+          "relationChanges": {},
+          "random": {
+            "before": 543723426,
+            "after": 2445986457,
+            "roll": 57
+          },
+          "before": {
+            "ageDays": 5761,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "after": {
+            "ageDays": 5761,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "death": null,
+          "birth": null
+        },
+        "relatedEntities": [
+          {
+            "id": "r:777f39e63f6e0dd9:t1:e:person_1",
+            "name": "张屠户",
+            "kind": "person",
+            "status": "alive"
+          },
+          {
+            "id": "r:777f39e63f6e0dd9:t4:e:place_1",
+            "name": "后山深处",
+            "kind": "place"
+          }
+        ],
+        "archiveCursor": 0
+      },
+      "posts": 5,
+      "latency": {
+        "usable": true,
+        "errorCode": null,
+        "firstAnyPreviewMs": 4050,
+        "firstReadableMs": 4240,
+        "completionMs": 8903,
+        "narrativeChars": 34,
+        "maxPreviewGapMs": 82,
+        "readingFinishEstimateMs": 9907,
+        "readingStallEstimateMs": 0,
+        "optionsWaitEstimateMs": 0,
+        "prefetchWorthEvaluating": true,
+        "assumptions": {
+          "readingCharsPerSecond": 6,
+          "readableChars": 20,
+          "targetWaitMs": 2000
+        }
+      }
+    },
+    {
+      "caseId": "choice-5",
+      "start": 429596,
+      "timeline": [
+        {
+          "atMs": 5514,
+          "chars": 3
+        },
+        {
+          "atMs": 5588,
+          "chars": 5
+        },
+        {
+          "atMs": 5660,
+          "chars": 9
+        },
+        {
+          "atMs": 5722,
+          "chars": 11
+        },
+        {
+          "atMs": 5799,
+          "chars": 14
+        },
+        {
+          "atMs": 5846,
+          "chars": 19
+        },
+        {
+          "atMs": 5897,
+          "chars": 24
+        },
+        {
+          "atMs": 5977,
+          "chars": 28
+        },
+        {
+          "atMs": 6022,
+          "chars": 31
+        },
+        {
+          "atMs": 6083,
+          "chars": 33
+        },
+        {
+          "atMs": 6145,
+          "chars": 37
+        },
+        {
+          "atMs": 6224,
+          "chars": 39
+        },
+        {
+          "atMs": 6283,
+          "chars": 45
+        },
+        {
+          "atMs": 6327,
+          "chars": 47
+        },
+        {
+          "atMs": 6391,
+          "chars": 50
+        },
+        {
+          "atMs": 6454,
+          "chars": 52
+        },
+        {
+          "atMs": 6500,
+          "chars": 56
+        },
+        {
+          "atMs": 6562,
+          "chars": 59
+        },
+        {
+          "atMs": 6622,
+          "chars": 63
+        },
+        {
+          "atMs": 6670,
+          "chars": 66
+        },
+        {
+          "atMs": 6718,
+          "chars": 69
+        },
+        {
+          "atMs": 6800,
+          "chars": 73
+        },
+        {
+          "atMs": 6941,
+          "chars": 75
+        },
+        {
+          "atMs": 7003,
+          "chars": 77
+        },
+        {
+          "atMs": 7051,
+          "chars": 81
+        },
+        {
+          "atMs": 7114,
+          "chars": 83
+        },
+        {
+          "atMs": 7172,
+          "chars": 87
+        },
+        {
+          "atMs": 7232,
+          "chars": 89
+        },
+        {
+          "atMs": 7296,
+          "chars": 93
+        },
+        {
+          "atMs": 7356,
+          "chars": 95
+        },
+        {
+          "atMs": 7417,
+          "chars": 97
+        },
+        {
+          "atMs": 7476,
+          "chars": 100
+        },
+        {
+          "atMs": 7540,
+          "chars": 102
+        },
+        {
+          "atMs": 7587,
+          "chars": 106
+        },
+        {
+          "atMs": 7648,
+          "chars": 109
+        },
+        {
+          "atMs": 7711,
+          "chars": 113
+        },
+        {
+          "atMs": 7788,
+          "chars": 118
+        },
+        {
+          "atMs": 7867,
+          "chars": 121
+        },
+        {
+          "atMs": 7909,
+          "chars": 124
+        },
+        {
+          "atMs": 7971,
+          "chars": 128
+        },
+        {
+          "atMs": 8031,
+          "chars": 134
+        },
+        {
+          "atMs": 8094,
+          "chars": 138
+        },
+        {
+          "atMs": 8155,
+          "chars": 142
+        },
+        {
+          "atMs": 8217,
+          "chars": 144
+        },
+        {
+          "atMs": 8273,
+          "chars": 148
+        },
+        {
+          "atMs": 8335,
+          "chars": 153
+        },
+        {
+          "atMs": 8397,
+          "chars": 154
+        },
+        {
+          "atMs": 8787,
+          "chars": 162
+        },
+        {
+          "atMs": 8851,
+          "chars": 164
+        },
+        {
+          "atMs": 8911,
+          "chars": 166
+        },
+        {
+          "atMs": 8973,
+          "chars": 170
+        },
+        {
+          "atMs": 9021,
+          "chars": 174
+        },
+        {
+          "atMs": 9100,
+          "chars": 179
+        },
+        {
+          "atMs": 9149,
+          "chars": 183
+        },
+        {
+          "atMs": 9211,
+          "chars": 185
+        },
+        {
+          "atMs": 9287,
+          "chars": 190
+        },
+        {
+          "atMs": 9351,
+          "chars": 193
+        },
+        {
+          "atMs": 9408,
+          "chars": 196
+        },
+        {
+          "atMs": 9455,
+          "chars": 200
+        },
+        {
+          "atMs": 9520,
+          "chars": 203
+        },
+        {
+          "atMs": 9580,
+          "chars": 205
+        },
+        {
+          "atMs": 9644,
+          "chars": 209
+        },
+        {
+          "atMs": 9702,
+          "chars": 212
+        },
+        {
+          "atMs": 9765,
+          "chars": 218
+        },
+        {
+          "atMs": 9841,
+          "chars": 221
+        },
+        {
+          "atMs": 9887,
+          "chars": 225
+        },
+        {
+          "atMs": 9961,
+          "chars": 228
+        },
+        {
+          "atMs": 10024,
+          "chars": 230
+        },
+        {
+          "atMs": 10087,
+          "chars": 233
+        },
+        {
+          "atMs": 10133,
+          "chars": 237
+        },
+        {
+          "atMs": 10208,
+          "chars": 239
+        },
+        {
+          "atMs": 10267,
+          "chars": 243
+        },
+        {
+          "atMs": 10314,
+          "chars": 247
+        },
+        {
+          "atMs": 10372,
+          "chars": 251
+        },
+        {
+          "atMs": 10448,
+          "chars": 256
+        },
+        {
+          "atMs": 10495,
+          "chars": 260
+        },
+        {
+          "atMs": 10554,
+          "chars": 265
+        },
+        {
+          "atMs": 10861,
+          "chars": 271
+        },
+        {
+          "atMs": 10921,
+          "chars": 273
+        },
+        {
+          "atMs": 10983,
+          "chars": 276
+        },
+        {
+          "atMs": 11062,
+          "chars": 279
+        },
+        {
+          "atMs": 11110,
+          "chars": 282
+        },
+        {
+          "atMs": 11202,
+          "chars": 286
+        },
+        {
+          "atMs": 11292,
+          "chars": 288
+        }
+      ],
+      "choicesEnabledDuringPreview": false,
+      "lastText": "你穿过密林，避开几处塌方路段，六十日后终于抵达后山深处。这里古木参天，光线昏暗，空气中弥漫着浓重的血腥味。前方不远处，一头体型硕大的黑影正趴伏在一处断崖边，似乎在啃食着什么。那黑影浑身长满黑毛，獠牙漆黑如铁，正是张屠户口中那只死而复生的野猪。它似乎察觉到了你的气息，猛地抬起头，双眼泛着幽绿的光，死死盯着你。\n\n野猪发出一声低沉的咆哮，后腿猛蹬地面，带着一股腥风向你冲来。它的速度极快，瞬间便拉近了十丈距离。你下意识地握紧了手中的猎刀，感受着体内那股莫名的躁动。就在野猪即将撞上你的瞬间，你感觉体内似乎有什么东西被唤醒了，手中的猎刀竟隐隐发出嗡鸣声，刀刃上泛起一层淡淡的寒光。",
+      "doneMs": 18390,
+      "result": {
+        "protocolVersion": 1,
+        "status": "rejected",
+        "requestId": "dfa2f5d0-6bb7-4708-8992-6d01881ec190",
+        "attemptId": "cae3a5ec-7f1d-434e-85fe-19b04cb900c0",
+        "sessionRef": "sess_7b01f904799ddf1a65f91b21a06ad966",
+        "errorCode": "CHOICE_NOT_COMPILABLE",
+        "retry": null
+      },
+      "request": {
+        "context": {
+          "schemaVersion": 1,
+          "phase": "choice",
+          "identity": {
+            "runId": "b7c829af-5d43-4b3c-98e4-44a473063d6e",
+            "turnId": 6,
+            "baseRevision": 5,
+            "stateHash": "f7a04beded71713c033dcf249e64869c0417e6468612c158c01b849910361761",
+            "choiceId": "r:777f39e63f6e0dd9:t5:c:b",
+            "rulesVersion": 1,
+            "promptVersion": 1,
+            "requestId": "dfa2f5d0-6bb7-4708-8992-6d01881ec190"
+          },
+          "namespace": "r:777f39e63f6e0dd9",
+          "receipt": {
+            "kind": "choice",
+            "choiceId": "r:777f39e63f6e0dd9:t5:c:b",
+            "action": {
+              "id": "r:777f39e63f6e0dd9:t5:c:b",
+              "label": "穿行荒野前往后山深处：前往后山深处查看异状源头",
+              "intent": "travel",
+              "targetId": "r:777f39e63f6e0dd9:t4:e:place_1",
+              "stake": "low",
+              "approach": "wilderness"
+            },
+            "elapsedDays": 60,
+            "itemChanges": {
+              "supplies": -1
+            },
+            "relationChanges": {},
+            "random": {
+              "before": 2445986457,
+              "after": 962933540,
+              "roll": 40
+            },
+            "before": {
+              "ageDays": 5761,
+              "realm": "mortal",
+              "cultivation": 0,
+              "injury": 0
+            },
+            "after": {
+              "ageDays": 5821,
+              "realm": "mortal",
+              "cultivation": 0,
+              "injury": 0
+            },
+            "death": null,
+            "birth": null
+          },
+          "life": {
+            "name": "云归",
+            "ageDays": 5821,
+            "lifeLimit": 80,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0,
+            "items": {
+              "supplies": 1,
+              "stones": 0
+            },
+            "relations": {
+              "r:777f39e63f6e0dd9:t1:e:person_1": 2
+            },
+            "birth": {
+              "originId": "village",
+              "talentIds": [
+                "flash-wisdom",
+                "sword-bone"
+              ],
+              "attributes": {
+                "constitution": 2,
+                "insight": 6,
+                "fortune": 4
+              }
+            }
+          },
+          "entities": [
+            {
+              "id": "r:777f39e63f6e0dd9:t1:e:person_1",
+              "name": "张屠户",
+              "kind": "person",
+              "status": "alive"
+            },
+            {
+              "id": "r:777f39e63f6e0dd9:t4:e:place_1",
+              "name": "后山深处",
+              "kind": "place",
+              "status": "unknown"
+            }
+          ],
+          "memory": {
+            "facts": [
+              {
+                "id": "decision:5",
+                "runId": "b7c829af-5d43-4b3c-98e4-44a473063d6e",
+                "turnId": 5,
+                "source": "rules",
+                "kind": "fact",
+                "entityId": "r:777f39e63f6e0dd9:t1:e:person_1",
+                "text": "你在village选择了“结束与张屠户的互动：结束与张屠户的交谈”。"
+              },
+              {
+                "id": "m:6fad7cbfb693f2f6858960ffbbe84b15",
+                "source": "narrative",
+                "kind": "fact",
+                "entityId": "r:777f39e63f6e0dd9:t1:e:person_1",
+                "text": "“张叔，这猪的事太邪门，我还要去别处看看，就不多留了。”你转身欲走。",
+                "runId": "b7c829af-5d43-4b3c-98e4-44a473063d6e",
+                "turnId": 5
+              }
+            ],
+            "promises": [],
+            "clues": [
+              {
+                "id": "m:a6ab5e4c6532737ab05e16f4b01b6bef",
+                "source": "narrative",
+                "kind": "clue",
+                "entityId": "r:777f39e63f6e0dd9:t1:e:person_1",
+                "text": "“张叔，这猪的事太邪门，我还要去别处看看，就不多留了。”",
+                "status": "open",
+                "runId": "b7c829af-5d43-4b3c-98e4-44a473063d6e",
+                "turnId": 4
+              },
+              {
+                "id": "m:66e19160c79da7ec9369227bf17ad7ef",
+                "source": "narrative",
+                "kind": "clue",
+                "entityId": "r:777f39e63f6e0dd9:t1:e:person_1",
+                "text": "“这猪是刚从后山深处打来的，平时看着挺温顺，怎么突然就暴毙了？”张屠户抹了把脸上的血水，眉头紧锁，“后山最近不太平，常有村民说看见黑影窜过，但谁也没敢细看。至于这獠牙发黑，我杀了一辈子猪，从来没见过这种怪事。”",
+                "status": "open",
+                "runId": "b7c829af-5d43-4b3c-98e4-44a473063d6e",
+                "turnId": 3
+              },
+              {
+                "id": "m:04e1ccdbe7d383b6b382d22dfdceecfa",
+                "source": "narrative",
+                "kind": "clue",
+                "entityId": "r:777f39e63f6e0dd9:t1:e:person_1",
+                "text": "你从腰间解下干粮，递给张屠户。他愣了一下，随即大口吞咽，连声道谢。吃饱后，他指着那头死猪，神色凝重地告诉你，这猪皮下的血肉呈现出诡异的紫黑色，且散发着一股令人作呕的腥臭，绝非寻常野兽。他怀疑这猪是误食了山中的毒物，或者是被什么东西冲撞了阳气。",
+                "status": "open",
+                "runId": "b7c829af-5d43-4b3c-98e4-44a473063d6e",
+                "turnId": 2
+              },
+              {
+                "id": "m:73467790dea864cc9f5742e6032df603",
+                "source": "narrative",
+                "kind": "clue",
+                "entityId": "r:777f39e63f6e0dd9:t1:e:person_1",
+                "text": "张屠户叹了口气，说这猪是他刚从后山打来的，怎么就突然暴毙了。他看着你，眼神中带着一丝希冀：“云归，你命格好，刚才那股子煞气冲过来的时候，你好像连眼皮都没眨一下。你有没有觉得这猪的獠牙有点不对劲？我刚才杀它的时候，它好像还冲我笑了一下。”",
+                "status": "open",
+                "runId": "b7c829af-5d43-4b3c-98e4-44a473063d6e",
+                "turnId": 2
+              },
+              {
+                "id": "m:c9ecae1fd27298cb8211f4828ad43cc3",
+                "source": "narrative",
+                "kind": "clue",
+                "entityId": "r:777f39e63f6e0dd9:t1:e:person_1",
+                "text": "云归，十六岁，凡人。你站在村口的老槐树下，手里攥着一把磨得发亮的猎刀。村头张屠户正蹲在血泊边，手里提着一只被开膛破肚的野猪，嘴里骂骂咧咧。这野猪显然不是普通野兽，皮糙肉厚，刀口却深可见骨，显然是冲着张屠户那把祖传的杀猪刀来的。张屠户抬头看见你，把刀往地上一扔，抹了一把脸上的血水，指着那野猪的獠牙说：'云归，你来看看，这獠牙怎么有点发黑？我刚才杀它的时候，它好像还冲我笑了一下。'",
+                "status": "open",
+                "runId": "b7c829af-5d43-4b3c-98e4-44a473063d6e",
+                "turnId": 1
+              }
+            ],
+            "recent": [
+              {
+                "id": "turn:5",
+                "runId": "b7c829af-5d43-4b3c-98e4-44a473063d6e",
+                "turnId": 5,
+                "source": "narrative",
+                "kind": "turn",
+                "text": "地点：village；刚才选择：结束与张屠户的互动：结束与张屠户的交谈\n“张叔，这猪的事太邪门，我还要去别处看看，就不多留了。”你转身欲走。",
+                "entityIds": []
+              },
+              {
+                "id": "turn:4",
+                "runId": "b7c829af-5d43-4b3c-98e4-44a473063d6e",
+                "turnId": 4,
+                "source": "narrative",
+                "kind": "turn",
+                "text": "地点：village；刚才选择：婉拒张屠户：拒绝张屠户的追问，表示自己还要去别处看看。\n“张叔，这猪的事太邪门，我还要去别处看看，就不多留了。”",
+                "entityIds": []
+              }
+            ],
+            "summaries": []
+          },
+          "references": [
+            "decision:5",
+            "m:6fad7cbfb693f2f6858960ffbbe84b15",
+            "m:a6ab5e4c6532737ab05e16f4b01b6bef",
+            "m:66e19160c79da7ec9369227bf17ad7ef",
+            "m:04e1ccdbe7d383b6b382d22dfdceecfa",
+            "m:73467790dea864cc9f5742e6032df603",
+            "m:c9ecae1fd27298cb8211f4828ad43cc3",
+            "turn:5",
+            "turn:4"
+          ],
+          "previousScene": {
+            "id": "r:777f39e63f6e0dd9:t5:s:scene",
+            "blocksHash": "03cee6189bd942def8fc0a0e2a633d8a4b543d33b5c9574e6dc3260a59269aba"
+          },
+          "relationshipVersion": 1,
+          "relationships": {
+            "r:777f39e63f6e0dd9:t1:e:person_1": 2
+          },
+          "coverage": {
+            "policy": "relevance-v1",
+            "openTotal": 5,
+            "openIncluded": 5,
+            "openOmitted": 0
+          }
+        },
+        "attempt": {
+          "id": "cae3a5ec-7f1d-434e-85fe-19b04cb900c0",
+          "sessionRef": "sess_7b01f904799ddf1a65f91b21a06ad966",
+          "retryOf": null
+        },
+        "storyActions": true
+      },
+      "decision": {
+        "index": 1,
+        "reason": "告辞增加了起身欲走的动作，时间资源未变；台词重复上轮句子，记为文案限制。明确选择前往后山深处，核对60日/行粮-1及不会默认带走张屠户。",
+        "selected": {
+          "id": "r:777f39e63f6e0dd9:t5:c:b",
+          "label": "穿行荒野前往后山深处：前往后山深处查看异状源头",
+          "intent": "travel",
+          "targetId": "r:777f39e63f6e0dd9:t4:e:place_1",
+          "stake": "low",
+          "approach": "wilderness"
+        }
+      },
+      "choices": [
+        {
+          "id": "r:777f39e63f6e0dd9:t5:c:a",
+          "enabled": false,
+          "label": "询问张屠户：询问张屠户后山深处是否还有其他村民进山",
+          "cost": "0日"
+        },
+        {
+          "id": "r:777f39e63f6e0dd9:t5:c:b",
+          "enabled": false,
+          "label": "穿行荒野前往后山深处：前往后山深处查看异状源头",
+          "cost": "60日 · 行粮 1 · 历练受伤基础风险25%，根骨与坚韧筋骨可降低风险。"
+        },
+        {
+          "id": "r:777f39e63f6e0dd9:t5:c:c",
+          "enabled": false,
+          "label": "婉拒张屠户：拒绝张屠户的挽留",
+          "cost": "0日"
+        }
+      ],
+      "traces": [
+        {
+          "model": "@cf/zai-org/glm-4.7-flash",
+          "inputHash": "e0bf8144f74daec3ed66cf5fae479b6a26362eeb2ddeb9a080bd0213e43f88c5",
+          "inputBytes": 21283,
+          "startedAt": 1793367891229,
+          "bindingReturnedAt": 1793367891562,
+          "liveRawBytes": 163353,
+          "captureComplete": true,
+          "response": {
+            "model": "@cf/zai-org/glm-4.7-flash",
+            "choices": [
+              {
+                "finish_reason": "stop",
+                "message": {
+                  "content": "{\n  \"blocks\": [\n    {\n      \"kind\": \"narration\",\n      \"text\": \"你穿过密林，避开几处塌方路段，六十日后终于抵达后山深处。这里古木参天，光线昏暗，空气中弥漫着浓重的血腥味。前方不远处，一头体型硕大的黑影正趴伏在一处断崖边，似乎在啃食着什么。那黑影浑身长满黑毛，獠牙漆黑如铁，正是张屠户口中那只死而复生的野猪。它似乎察觉到了你的气息，猛地抬起头，双眼泛着幽绿的光，死死盯着你。\"\n    },\n    {\n      \"kind\": \"narration\",\n      \"text\": \"野猪发出一声低沉的咆哮，后腿猛蹬地面，带着一股腥风向你冲来。它的速度极快，瞬间便拉近了十丈距离。你下意识地握紧了手中的猎刀，感受着体内那股莫名的躁动。就在野猪即将撞上你的瞬间，你感觉体内似乎有什么东西被唤醒了，手中的猎刀竟隐隐发出嗡鸣声，刀刃上泛起一层淡淡的寒光。\"\n    }\n  ],\n  \"choices\": [\n    {\n      \"action\": \"fight:assault\",\n      \"targetId\": \"k1_person_张屠户\",\n      \"stake\": \"low\",\n      \"purpose\": \"攻击冲过来的野猪，试图将其击退或击杀\",\n      \"anchor\": 1\n    },\n    {\n      \"action\": \"evade:withdraw\",\n      \"targetId\": \"k1_person_张屠户\",\n      \"stake\": \"low\",\n      \"purpose\": \"向侧方闪避野猪的冲撞，拉开距离\",\n      \"anchor\": 1\n    },\n    {\n      \"action\": \"interact:ask\",\n      \"targetId\": \"k1_person_张屠户\",\n      \"stake\": \"low\",\n      \"purpose\": \"询问野猪为何会出现在这里，它身上散发出的气息有何不同\",\n      \"anchor\": 1\n    }\n  ],\n  \"title\": \"后山深处\",\n  \"location\": \"后山深处\",\n  \"otherPeople\": [\n    {\n      \"id\": \"k1_person_张屠户\",\n      \"status\": \"alive\"\n    }\n  ],\n  \"places\": [],\n  \"factions\": [],\n  \"memoryDeltas\": [\n    {\n      \"entityId\": \"k1_person_张屠户\",\n      \"kind\": \"clue\",\n      \"anchor\": 1,\n      \"status\": \"open\"\n    }\n  ]\n}",
+                  "reasoning_content": ""
+                }
+              }
+            ],
+            "usage": {
+              "prompt_tokens": 3456,
+              "completion_tokens": 569,
+              "total_tokens": 4025,
+              "prompt_tokens_details": {
+                "cached_tokens": 0
+              },
+              "neurons": 39.71960000000024
+            }
+          },
+          "rawSseBytes": 163353
+        }
+      ],
+      "revision": 5,
+      "pending": true,
+      "state": {
+        "relationshipVersion": 1,
+        "version": 5,
+        "mode": "cultivation",
+        "contentVersion": 4,
+        "rulesVersion": 1,
+        "promptVersion": 1,
+        "runId": "b7c829af-5d43-4b3c-98e4-44a473063d6e",
+        "revision": 5,
+        "turnId": 5,
+        "phase": "active",
+        "rng": 2445986457,
+        "life": {
+          "name": "云归",
+          "ageDays": 5761,
+          "lifeLimit": 80,
+          "realm": "mortal",
+          "cultivation": 0,
+          "injury": 0,
+          "items": {
+            "supplies": 2,
+            "stones": 0
+          },
+          "relations": {
+            "r:777f39e63f6e0dd9:t1:e:person_1": 2
+          },
+          "birth": {
+            "originId": "village",
+            "talentIds": [
+              "flash-wisdom",
+              "sword-bone"
+            ],
+            "attributes": {
+              "constitution": 2,
+              "insight": 6,
+              "fortune": 4
+            }
+          }
+        },
+        "birthReceipt": {
+          "kind": "opening",
+          "choiceId": null,
+          "action": null,
+          "elapsedDays": 0,
+          "itemChanges": {},
+          "relationChanges": {},
+          "random": {
+            "before": 134918293,
+            "after": 134918293,
+            "roll": null
+          },
+          "before": {
+            "ageDays": 5760,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "after": {
+            "ageDays": 5760,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "death": null,
+          "birth": {
+            "originId": "village",
+            "talentIds": [
+              "flash-wisdom",
+              "sword-bone"
+            ],
+            "attributes": {
+              "constitution": 2,
+              "insight": 6,
+              "fortune": 4
+            }
+          }
+        },
+        "currentScene": {
+          "id": "r:777f39e63f6e0dd9:t5:s:scene",
+          "title": "村口血腥",
+          "location": "village",
+          "entities": [
+            {
+              "id": "r:777f39e63f6e0dd9:t1:e:person_1",
+              "name": "张屠户",
+              "kind": "person",
+              "status": "alive"
+            },
+            {
+              "id": "r:777f39e63f6e0dd9:t4:e:place_1",
+              "name": "后山深处",
+              "kind": "place"
+            }
+          ],
+          "blocks": [
+            {
+              "kind": "dialogue",
+              "text": "“张叔，这猪的事太邪门，我还要去别处看看，就不多留了。”你转身欲走。",
+              "speaker": "self"
+            }
+          ],
+          "choices": [
+            {
+              "id": "r:777f39e63f6e0dd9:t5:c:a",
+              "label": "询问张屠户：询问张屠户后山深处是否还有其他村民进山",
+              "intent": "interact",
+              "targetId": "r:777f39e63f6e0dd9:t1:e:person_1",
+              "stake": "low",
+              "approach": "ask"
+            },
+            {
+              "id": "r:777f39e63f6e0dd9:t5:c:b",
+              "label": "穿行荒野前往后山深处：前往后山深处查看异状源头",
+              "intent": "travel",
+              "targetId": "r:777f39e63f6e0dd9:t4:e:place_1",
+              "stake": "low",
+              "approach": "wilderness"
+            },
+            {
+              "id": "r:777f39e63f6e0dd9:t5:c:c",
+              "label": "婉拒张屠户：拒绝张屠户的挽留",
+              "intent": "interact",
+              "targetId": "r:777f39e63f6e0dd9:t1:e:person_1",
+              "stake": "low",
+              "approach": "decline"
+            }
+          ],
+          "memoryDeltas": [
+            {
+              "entityId": "r:777f39e63f6e0dd9:t1:e:person_1",
+              "kind": "fact",
+              "text": "“张叔，这猪的事太邪门，我还要去别处看看，就不多留了。”你转身欲走。"
+            }
+          ]
+        },
+        "lastReceipt": {
+          "kind": "choice",
+          "choiceId": "r:777f39e63f6e0dd9:t4:c:b",
+          "action": {
+            "id": "r:777f39e63f6e0dd9:t4:c:b",
+            "label": "结束与张屠户的互动：结束与张屠户的交谈",
+            "intent": "interact",
+            "targetId": "r:777f39e63f6e0dd9:t1:e:person_1",
+            "stake": "low",
+            "approach": "leave"
+          },
+          "elapsedDays": 0,
+          "itemChanges": {},
+          "relationChanges": {},
+          "random": {
+            "before": 543723426,
+            "after": 2445986457,
+            "roll": 57
+          },
+          "before": {
+            "ageDays": 5761,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "after": {
+            "ageDays": 5761,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "death": null,
+          "birth": null
+        },
+        "relatedEntities": [
+          {
+            "id": "r:777f39e63f6e0dd9:t1:e:person_1",
+            "name": "张屠户",
+            "kind": "person",
+            "status": "alive"
+          },
+          {
+            "id": "r:777f39e63f6e0dd9:t4:e:place_1",
+            "name": "后山深处",
+            "kind": "place"
+          }
+        ],
+        "archiveCursor": 0
+      },
+      "posts": 6,
+      "latency": {
+        "usable": false,
+        "errorCode": "CHOICE_NOT_COMPILABLE",
+        "firstAnyPreviewMs": 5514,
+        "firstReadableMs": 5897,
+        "completionMs": 18390,
+        "narrativeChars": 288,
+        "maxPreviewGapMs": 390,
+        "readingFinishEstimateMs": null,
+        "readingStallEstimateMs": null,
+        "optionsWaitEstimateMs": null,
+        "prefetchWorthEvaluating": null,
+        "assumptions": {
+          "readingCharsPerSecond": 6,
+          "readableChars": 20,
+          "targetWaitMs": 2000
+        }
+      }
+    }
+  ],
+  "errors": [
+    "Native turn did not pass"
+  ],
+  "posts": 6,
+  "refreshed": null
+}

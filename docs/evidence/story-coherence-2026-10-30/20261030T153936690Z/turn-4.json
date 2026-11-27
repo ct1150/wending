@@ -1,0 +1,938 @@
+{
+  "caseId": "choice-4",
+  "start": 1548.2999999970198,
+  "timeline": [
+    {
+      "atMs": 3303,
+      "chars": 1
+    },
+    {
+      "atMs": 3365,
+      "chars": 4
+    },
+    {
+      "atMs": 3440,
+      "chars": 9
+    },
+    {
+      "atMs": 3487,
+      "chars": 12
+    },
+    {
+      "atMs": 3553,
+      "chars": 15
+    },
+    {
+      "atMs": 3615,
+      "chars": 17
+    },
+    {
+      "atMs": 3660,
+      "chars": 19
+    },
+    {
+      "atMs": 3724,
+      "chars": 22
+    },
+    {
+      "atMs": 3785,
+      "chars": 25
+    },
+    {
+      "atMs": 3844,
+      "chars": 27
+    },
+    {
+      "atMs": 3905,
+      "chars": 31
+    },
+    {
+      "atMs": 3954,
+      "chars": 36
+    },
+    {
+      "atMs": 4030,
+      "chars": 39
+    },
+    {
+      "atMs": 4074,
+      "chars": 43
+    },
+    {
+      "atMs": 4125,
+      "chars": 45
+    },
+    {
+      "atMs": 4185,
+      "chars": 47
+    },
+    {
+      "atMs": 4248,
+      "chars": 50
+    },
+    {
+      "atMs": 4310,
+      "chars": 52
+    },
+    {
+      "atMs": 4361,
+      "chars": 54
+    },
+    {
+      "atMs": 4424,
+      "chars": 57
+    },
+    {
+      "atMs": 4484,
+      "chars": 59
+    },
+    {
+      "atMs": 4543,
+      "chars": 61
+    },
+    {
+      "atMs": 4591,
+      "chars": 63
+    },
+    {
+      "atMs": 4653,
+      "chars": 66
+    },
+    {
+      "atMs": 4716,
+      "chars": 68
+    },
+    {
+      "atMs": 4762,
+      "chars": 72
+    },
+    {
+      "atMs": 4823,
+      "chars": 75
+    },
+    {
+      "atMs": 4885,
+      "chars": 78
+    },
+    {
+      "atMs": 4946,
+      "chars": 80
+    },
+    {
+      "atMs": 4993,
+      "chars": 84
+    },
+    {
+      "atMs": 5051,
+      "chars": 88
+    },
+    {
+      "atMs": 5114,
+      "chars": 90
+    },
+    {
+      "atMs": 5268,
+      "chars": 96
+    },
+    {
+      "atMs": 5332,
+      "chars": 98
+    },
+    {
+      "atMs": 5395,
+      "chars": 100
+    },
+    {
+      "atMs": 5442,
+      "chars": 102
+    },
+    {
+      "atMs": 5503,
+      "chars": 105
+    },
+    {
+      "atMs": 5563,
+      "chars": 110
+    },
+    {
+      "atMs": 5623,
+      "chars": 112
+    },
+    {
+      "atMs": 5686,
+      "chars": 114
+    },
+    {
+      "atMs": 5748,
+      "chars": 116
+    },
+    {
+      "atMs": 5797,
+      "chars": 122
+    },
+    {
+      "atMs": 5858,
+      "chars": 125
+    },
+    {
+      "atMs": 5920,
+      "chars": 130
+    },
+    {
+      "atMs": 5980,
+      "chars": 133
+    },
+    {
+      "atMs": 6041,
+      "chars": 135
+    },
+    {
+      "atMs": 6104,
+      "chars": 137
+    },
+    {
+      "atMs": 6151,
+      "chars": 141
+    },
+    {
+      "atMs": 6213,
+      "chars": 144
+    },
+    {
+      "atMs": 6274,
+      "chars": 149
+    },
+    {
+      "atMs": 6340,
+      "chars": 152
+    },
+    {
+      "atMs": 6389,
+      "chars": 156
+    },
+    {
+      "atMs": 6447,
+      "chars": 157
+    },
+    {
+      "atMs": 6635,
+      "chars": 162
+    },
+    {
+      "atMs": 6777,
+      "chars": 166
+    },
+    {
+      "atMs": 6792,
+      "chars": 169
+    },
+    {
+      "atMs": 6854,
+      "chars": 172
+    },
+    {
+      "atMs": 6914,
+      "chars": 174
+    },
+    {
+      "atMs": 6962,
+      "chars": 177
+    },
+    {
+      "atMs": 7026,
+      "chars": 180
+    },
+    {
+      "atMs": 7087,
+      "chars": 182
+    },
+    {
+      "atMs": 7149,
+      "chars": 184
+    },
+    {
+      "atMs": 7439,
+      "chars": 185
+    },
+    {
+      "atMs": 7728,
+      "chars": 189
+    },
+    {
+      "atMs": 7821,
+      "chars": 192
+    },
+    {
+      "atMs": 7866,
+      "chars": 193
+    },
+    {
+      "atMs": 8008,
+      "chars": 198
+    },
+    {
+      "atMs": 8070,
+      "chars": 202
+    },
+    {
+      "atMs": 8148,
+      "chars": 204
+    },
+    {
+      "atMs": 8180,
+      "chars": 209
+    },
+    {
+      "atMs": 8241,
+      "chars": 211
+    },
+    {
+      "atMs": 8300,
+      "chars": 213
+    },
+    {
+      "atMs": 8365,
+      "chars": 215
+    },
+    {
+      "atMs": 8423,
+      "chars": 217
+    },
+    {
+      "atMs": 8485,
+      "chars": 219
+    },
+    {
+      "atMs": 8736,
+      "chars": 229
+    },
+    {
+      "atMs": 8811,
+      "chars": 232
+    },
+    {
+      "atMs": 8872,
+      "chars": 237
+    },
+    {
+      "atMs": 8932,
+      "chars": 241
+    },
+    {
+      "atMs": 8979,
+      "chars": 246
+    },
+    {
+      "atMs": 9056,
+      "chars": 248
+    },
+    {
+      "atMs": 9120,
+      "chars": 251
+    },
+    {
+      "atMs": 9183,
+      "chars": 252
+    },
+    {
+      "atMs": 9306,
+      "chars": 254
+    },
+    {
+      "atMs": 9351,
+      "chars": 256
+    },
+    {
+      "atMs": 9415,
+      "chars": 259
+    },
+    {
+      "atMs": 9567,
+      "chars": 261
+    },
+    {
+      "atMs": 9689,
+      "chars": 264
+    },
+    {
+      "atMs": 10018,
+      "chars": 266
+    },
+    {
+      "atMs": 10096,
+      "chars": 270
+    },
+    {
+      "atMs": 10159,
+      "chars": 272
+    },
+    {
+      "atMs": 10220,
+      "chars": 277
+    },
+    {
+      "atMs": 10283,
+      "chars": 280
+    },
+    {
+      "atMs": 10345,
+      "chars": 284
+    },
+    {
+      "atMs": 10408,
+      "chars": 289
+    },
+    {
+      "atMs": 10470,
+      "chars": 292
+    },
+    {
+      "atMs": 10534,
+      "chars": 296
+    },
+    {
+      "atMs": 10596,
+      "chars": 298
+    }
+  ],
+  "choicesEnabledDuringPreview": false,
+  "lastText": "你穿行于荒野，六十日的跋涉让你满身尘土，脚底磨出了血泡。终于，后山密林的轮廓在眼前显现，古木参天，阴森的雾气弥漫在林间。你循着记忆中那抹诡异的红光，拨开层层荆棘，在一处隐蔽的岩洞前停下脚步。洞口隐约透出幽红的光芒，伴随着低沉的兽吼声，空气中弥漫着一股淡淡的血腥味。你握紧了腰间的猎刀，屏住呼吸，准备窥探洞内的景象。\n\n洞口处盘踞着一头体型硕大的赤焰虎，它正对着洞内发出威慑的低吼。那红光并非来自洞内，而是赤焰虎身上流淌的岩浆般纹路。赤焰虎似乎察觉到了你的气息，猛地转过头，那双燃烧着火焰的眼睛死死锁定了你，利爪在岩石上抓出深深的沟壑。它张开血盆大口，一股灼热的气息扑面而来，显然已经将你视为猎物。",
+  "doneMs": 16433,
+  "result": {
+    "protocolVersion": 1,
+    "status": "ready",
+    "requestId": "f3b0b3fb-36c7-4874-8ba8-a2c292acc111",
+    "attemptId": "8c85e109-d10d-4909-8706-85488088f4d4",
+    "sessionRef": "sess_bd8844f1d65eb4f3f82158c6a2dfc4d4",
+    "errorCode": null,
+    "retry": null,
+    "scene": {
+      "id": "r:87d03ccb7c322d16:t5:s:scene",
+      "title": "后山密林·赤焰虎洞口",
+      "location": "后山密林",
+      "entities": [
+        {
+          "id": "r:87d03ccb7c322d16:t5:e:person_1",
+          "name": "赤焰虎",
+          "kind": "person"
+        }
+      ],
+      "blocks": [
+        {
+          "kind": "narration",
+          "text": "你穿行于荒野，六十日的跋涉让你满身尘土，脚底磨出了血泡。终于，后山密林的轮廓在眼前显现，古木参天，阴森的雾气弥漫在林间。你循着记忆中那抹诡异的红光，拨开层层荆棘，在一处隐蔽的岩洞前停下脚步。洞口隐约透出幽红的光芒，伴随着低沉的兽吼声，空气中弥漫着一股淡淡的血腥味。你握紧了腰间的猎刀，屏住呼吸，准备窥探洞内的景象。"
+        },
+        {
+          "kind": "narration",
+          "text": "洞口处盘踞着一头体型硕大的赤焰虎，它正对着洞内发出威慑的低吼。那红光并非来自洞内，而是赤焰虎身上流淌的岩浆般纹路。赤焰虎似乎察觉到了你的气息，猛地转过头，那双燃烧着火焰的眼睛死死锁定了你，利爪在岩石上抓出深深的沟壑。它张开血盆大口，一股灼热的气息扑面而来，显然已经将你视为猎物。"
+        }
+      ],
+      "choices": [
+        {
+          "id": "r:87d03ccb7c322d16:t5:c:a",
+          "label": "询问赤焰虎：询问赤焰虎为何盘踞在此，是否挡住了去路",
+          "intent": "interact",
+          "targetId": "r:87d03ccb7c322d16:t5:e:person_1",
+          "stake": "low",
+          "approach": "ask"
+        },
+        {
+          "id": "r:87d03ccb7c322d16:t5:c:b",
+          "label": "观察赤焰虎：仔细观察赤焰虎的伤势和周围环境",
+          "intent": "interact",
+          "targetId": "r:87d03ccb7c322d16:t5:e:person_1",
+          "stake": "low",
+          "approach": "observe"
+        },
+        {
+          "id": "r:87d03ccb7c322d16:t5:c:leave",
+          "label": "结束当前互动：暂不介入此事",
+          "intent": "interact",
+          "targetId": "self",
+          "approach": "leave",
+          "stake": "low"
+        }
+      ],
+      "memoryDeltas": [
+        {
+          "entityId": "r:87d03ccb7c322d16:t5:e:person_1",
+          "kind": "clue",
+          "text": "你穿行于荒野，六十日的跋涉让你满身尘土，脚底磨出了血泡。终于，后山密林的轮廓在眼前显现，古木参天，阴森的雾气弥漫在林间。你循着记忆中那抹诡异的红光，拨开层层荆棘，在一处隐蔽的岩洞前停下脚步。洞口隐约透出幽红的光芒，伴随着低沉的兽吼声，空气中弥漫着一股淡淡的血腥味。你握紧了腰间的猎刀，屏住呼吸，准备窥探洞内的景象。",
+          "status": "open"
+        }
+      ]
+    }
+  },
+  "request": {
+    "context": {
+      "schemaVersion": 1,
+      "phase": "choice",
+      "identity": {
+        "runId": "caf13382-b594-411b-bfe6-0dc73bb9bd42",
+        "turnId": 5,
+        "baseRevision": 4,
+        "stateHash": "e38d50b54dd96cd80457d73a48628ca28215820fba89db4057e8694a5a1515a7",
+        "choiceId": "r:87d03ccb7c322d16:t4:c:b",
+        "rulesVersion": 1,
+        "promptVersion": 1,
+        "requestId": "f3b0b3fb-36c7-4874-8ba8-a2c292acc111"
+      },
+      "namespace": "r:87d03ccb7c322d16",
+      "receipt": {
+        "kind": "choice",
+        "choiceId": "r:87d03ccb7c322d16:t4:c:b",
+        "action": {
+          "id": "r:87d03ccb7c322d16:t4:c:b",
+          "label": "穿行荒野前往后山密林：前往后山密林查看红光来源",
+          "intent": "travel",
+          "targetId": "r:87d03ccb7c322d16:t3:e:place_1",
+          "stake": "low",
+          "approach": "wilderness"
+        },
+        "elapsedDays": 60,
+        "itemChanges": {
+          "supplies": -1
+        },
+        "relationChanges": {},
+        "random": {
+          "before": 2656582353,
+          "after": 750925308,
+          "roll": 8
+        },
+        "before": {
+          "ageDays": 5760,
+          "realm": "mortal",
+          "cultivation": 0,
+          "injury": 0
+        },
+        "after": {
+          "ageDays": 5820,
+          "realm": "mortal",
+          "cultivation": 0,
+          "injury": 1
+        },
+        "death": null,
+        "birth": null
+      },
+      "life": {
+        "name": "云归",
+        "ageDays": 5820,
+        "lifeLimit": 80,
+        "realm": "mortal",
+        "cultivation": 0,
+        "injury": 1,
+        "items": {
+          "supplies": 2,
+          "stones": 0
+        },
+        "relations": {},
+        "birth": {
+          "originId": "village",
+          "talentIds": [
+            "sword-bone",
+            "keen-memory"
+          ],
+          "attributes": {
+            "constitution": 6,
+            "insight": 4,
+            "fortune": 2
+          }
+        }
+      },
+      "entities": [
+        {
+          "id": "r:87d03ccb7c322d16:t1:e:person_1",
+          "name": "赵三",
+          "kind": "person",
+          "status": "unknown"
+        },
+        {
+          "id": "r:87d03ccb7c322d16:t3:e:place_1",
+          "name": "后山密林",
+          "kind": "place",
+          "status": "unknown"
+        }
+      ],
+      "memory": {
+        "facts": [
+          {
+            "id": "decision:4",
+            "runId": "caf13382-b594-411b-bfe6-0dc73bb9bd42",
+            "turnId": 4,
+            "source": "rules",
+            "kind": "fact",
+            "entityId": "r:87d03ccb7c322d16:t1:e:person_1",
+            "text": "你在village选择了“结束与赵三的互动：结束与赵三的对话”。"
+          },
+          {
+            "id": "decision:3",
+            "runId": "caf13382-b594-411b-bfe6-0dc73bb9bd42",
+            "turnId": 3,
+            "source": "rules",
+            "kind": "fact",
+            "entityId": "r:87d03ccb7c322d16:t1:e:person_1",
+            "text": "你在village选择了“婉拒赵三：拒绝赵三的请求”。"
+          }
+        ],
+        "promises": [],
+        "clues": [
+          {
+            "id": "m:f600861998c0f3fd979918aa610eb71d",
+            "source": "narrative",
+            "kind": "clue",
+            "entityId": "r:87d03ccb7c322d16:t1:e:person_1",
+            "text": "你背过身去，不再理会赵三的嘟囔，径直往自家破败的木屋走去。身后传来猎夹崩断的脆响，紧接着是野猪沉重的喘息声渐渐远去。村口的枯草在风中瑟瑟发抖，你推开吱呀作响的木门，屋内昏暗的光线瞬间将你吞没。",
+            "status": "open",
+            "runId": "caf13382-b594-411b-bfe6-0dc73bb9bd42",
+            "turnId": 4
+          },
+          {
+            "id": "m:9e0a57685186c11d483d5068ee316b51",
+            "source": "narrative",
+            "kind": "clue",
+            "entityId": "r:87d03ccb7c322d16:t1:e:person_1",
+            "text": "你摇了摇头，把猎刀插回腰间，没去碰那只还在流血的野猪。赵三愣了一下，随即苦笑着拍了拍手上的泥土，重新蹲下身子去摆弄那个快散架的猎夹。野猪的哼唧声在空旷的村口显得格外刺耳，他低声嘟囔着：“也是，你还得练剑，这等粗活儿还是留给我这把老骨头吧。”",
+            "status": "open",
+            "runId": "caf13382-b594-411b-bfe6-0dc73bb9bd42",
+            "turnId": 3
+          },
+          {
+            "id": "m:a2d23443844ca8bdbbbf3b397ff24cbd",
+            "source": "narrative",
+            "kind": "clue",
+            "entityId": "r:87d03ccb7c322d16:t1:e:person_1",
+            "text": "赵三直起身子，用满是老茧的手指了指那头还在挣扎的野猪，瓮声瓮气地说道：“这畜生看着眼生，皮糙肉厚，夹子夹了半日都没松。最近山里不太平，前几日我看见林子深处有红光闪过，也不知道是不是那帮修仙的又来寻宝了。”",
+            "status": "open",
+            "runId": "caf13382-b594-411b-bfe6-0dc73bb9bd42",
+            "turnId": 2
+          },
+          {
+            "id": "m:6ca3066b7e2661f51dcc7cb9e702981d",
+            "source": "narrative",
+            "kind": "clue",
+            "entityId": "r:87d03ccb7c322d16:t1:e:person_1",
+            "text": "你站在自家破旧的木屋前，手里攥着一把刚磨好的猎刀。村口的老猎户赵三正蹲在地上，对着一只被猎夹夹住后腿的野猪发愁，血已经染红了枯草。他抬头看见你，抹了一把脸上的汗，声音沙哑：“云归，这畜生劲儿大，夹子快被拔断了，你能不能帮把手？”",
+            "status": "open",
+            "runId": "caf13382-b594-411b-bfe6-0dc73bb9bd42",
+            "turnId": 1
+          }
+        ],
+        "recent": [
+          {
+            "id": "turn:4",
+            "runId": "caf13382-b594-411b-bfe6-0dc73bb9bd42",
+            "turnId": 4,
+            "source": "narrative",
+            "kind": "turn",
+            "text": "地点：village；刚才选择：结束与赵三的互动：结束与赵三的对话\n你背过身去，不再理会赵三的嘟囔，径直往自家破败的木屋走去。身后传来猎夹崩断的脆响，紧接着是野猪沉重的喘息声渐渐远去。村口的枯草在风中瑟瑟发抖，你推开吱呀作响的木门，屋内昏暗的光线瞬间将你吞没。",
+            "entityIds": []
+          },
+          {
+            "id": "turn:3",
+            "runId": "caf13382-b594-411b-bfe6-0dc73bb9bd42",
+            "turnId": 3,
+            "source": "narrative",
+            "kind": "turn",
+            "text": "地点：village；刚才选择：婉拒赵三：拒绝赵三的请求\n你摇了摇头，把猎刀插回腰间，没去碰那只还在流血的野猪。赵三愣了一下，随即苦笑着拍了拍手上的泥土，重新蹲下身子去摆弄那个快散架的猎夹。野猪的哼唧声在空旷的村口显得格外刺耳，他低声嘟囔着：“也是，你还得练剑，这等粗活儿还是留给我这把老骨头吧。”",
+            "entityIds": []
+          }
+        ],
+        "summaries": []
+      },
+      "references": [
+        "decision:4",
+        "decision:3",
+        "m:f600861998c0f3fd979918aa610eb71d",
+        "m:9e0a57685186c11d483d5068ee316b51",
+        "m:a2d23443844ca8bdbbbf3b397ff24cbd",
+        "m:6ca3066b7e2661f51dcc7cb9e702981d",
+        "turn:4",
+        "turn:3"
+      ],
+      "previousScene": {
+        "id": "r:87d03ccb7c322d16:t4:s:scene",
+        "blocksHash": "659f95a00b67049bee8592a24ec363bdaa2c933f610443a20523c450cba98ce4"
+      },
+      "relationshipVersion": 1,
+      "relationships": {},
+      "coverage": {
+        "policy": "relevance-v1",
+        "openTotal": 4,
+        "openIncluded": 4,
+        "openOmitted": 0
+      }
+    },
+    "attempt": {
+      "id": "8c85e109-d10d-4909-8706-85488088f4d4",
+      "sessionRef": "sess_bd8844f1d65eb4f3f82158c6a2dfc4d4",
+      "retryOf": {
+        "attemptId": "746615b7-5f9c-4269-95b3-b7f6f5ff9691",
+        "sessionRef": "sess_bd8844f1d65eb4f3f82158c6a2dfc4d4"
+      }
+    },
+    "storyActions": true
+  },
+  "decision": {
+    "index": 1,
+    "reason": "告辞已真实结束赵三互动，独立菜单无旧NPC问答；明确前往后山密林调查红光，目标名称与目的同地，核对60日、行粮-1及不默认带走赵三。",
+    "selected": {
+      "id": "r:87d03ccb7c322d16:t4:c:b",
+      "label": "穿行荒野前往后山密林：前往后山密林查看红光来源",
+      "intent": "travel",
+      "targetId": "r:87d03ccb7c322d16:t3:e:place_1",
+      "stake": "low",
+      "approach": "wilderness"
+    },
+    "explicitRetry": true
+  },
+  "choices": [
+    {
+      "id": "r:87d03ccb7c322d16:t5:c:a",
+      "enabled": true,
+      "label": "询问赤焰虎：询问赤焰虎为何盘踞在此，是否挡住了去路",
+      "cost": "0日"
+    },
+    {
+      "id": "r:87d03ccb7c322d16:t5:c:b",
+      "enabled": true,
+      "label": "观察赤焰虎：仔细观察赤焰虎的伤势和周围环境",
+      "cost": "0日"
+    },
+    {
+      "id": "r:87d03ccb7c322d16:t5:c:leave",
+      "enabled": true,
+      "label": "结束当前互动：暂不介入此事",
+      "cost": "0日"
+    }
+  ],
+  "traces": [
+    {
+      "model": "@cf/zai-org/glm-4.7-flash",
+      "inputHash": "61bf68f43e7e6cdca692d98e762682f34de7e1d7d37bb1521d40501c89eb1bed",
+      "inputBytes": 19034,
+      "startedAt": 1793375095662,
+      "bindingReturnedAt": 1793375096207,
+      "liveRawBytes": 149445,
+      "captureComplete": true,
+      "response": {
+        "model": "@cf/zai-org/glm-4.7-flash",
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "message": {
+              "content": "{\"blocks\":[{\"kind\":\"narration\",\"text\":\"你穿行于荒野，六十日的跋涉让你满身尘土，脚底磨出了血泡。终于，后山密林的轮廓在眼前显现，古木参天，阴森的雾气弥漫在林间。你循着记忆中那抹诡异的红光，拨开层层荆棘，在一处隐蔽的岩洞前停下脚步。洞口隐约透出幽红的光芒，伴随着低沉的兽吼声，空气中弥漫着一股淡淡的血腥味。你握紧了腰间的猎刀，屏住呼吸，准备窥探洞内的景象。\"},{\"kind\":\"narration\",\"text\":\"洞口处盘踞着一头体型硕大的赤焰虎，它正对着洞内发出威慑的低吼。那红光并非来自洞内，而是赤焰虎身上流淌的岩浆般纹路。赤焰虎似乎察觉到了你的气息，猛地转过头，那双燃烧着火焰的眼睛死死锁定了你，利爪在岩石上抓出深深的沟壑。它张开血盆大口，一股灼热的气息扑面而来，显然已经将你视为猎物。\"}],\"choices\":[{\"action\":\"interact:ask\",\"target\":{\"kind\":\"person\",\"name\":\"赤焰虎\",\"ref\":\"\",\"status\":null},\"stake\":\"low\",\"purpose\":\"询问赤焰虎为何盘踞在此，是否挡住了去路\",\"anchor\":0},{\"action\":\"interact:observe\",\"target\":{\"kind\":\"person\",\"name\":\"赤焰虎\",\"ref\":\"\",\"status\":null},\"stake\":\"low\",\"purpose\":\"仔细观察赤焰虎的伤势和周围环境\",\"anchor\":0},{\"action\":\"evade:withdraw\",\"target\":{\"kind\":\"person\",\"name\":\"赤焰虎\",\"ref\":\"\",\"status\":null},\"stake\":\"low\",\"purpose\":\"趁赤焰虎未完全苏醒，悄悄退回荒野\",\"anchor\":1}],\"title\":\"后山密林·赤焰虎洞口\",\"location\":\"后山密林\",\"memoryDeltas\":[{\"target\":{\"kind\":\"person\",\"name\":\"赤焰虎\",\"ref\":\"\",\"status\":null},\"kind\":\"clue\",\"anchor\":0,\"status\":\"open\"}]}",
+              "reasoning_content": ""
+            }
+          }
+        ],
+        "usage": {
+          "prompt_tokens": 3224,
+          "completion_tokens": 466,
+          "total_tokens": 3690,
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          },
+          "neurons": 34.6944000000002
+        }
+      },
+      "rawSseBytes": 149445
+    }
+  ],
+  "revision": 5,
+  "pending": false,
+  "state": {
+    "relationshipVersion": 1,
+    "version": 5,
+    "mode": "cultivation",
+    "contentVersion": 4,
+    "rulesVersion": 1,
+    "promptVersion": 1,
+    "runId": "caf13382-b594-411b-bfe6-0dc73bb9bd42",
+    "revision": 5,
+    "turnId": 5,
+    "phase": "active",
+    "rng": 750925308,
+    "life": {
+      "name": "云归",
+      "ageDays": 5820,
+      "lifeLimit": 80,
+      "realm": "mortal",
+      "cultivation": 0,
+      "injury": 1,
+      "items": {
+        "supplies": 2,
+        "stones": 0
+      },
+      "relations": {},
+      "birth": {
+        "originId": "village",
+        "talentIds": [
+          "sword-bone",
+          "keen-memory"
+        ],
+        "attributes": {
+          "constitution": 6,
+          "insight": 4,
+          "fortune": 2
+        }
+      }
+    },
+    "birthReceipt": {
+      "kind": "opening",
+      "choiceId": null,
+      "action": null,
+      "elapsedDays": 0,
+      "itemChanges": {},
+      "relationChanges": {},
+      "random": {
+        "before": 3298206280,
+        "after": 3298206280,
+        "roll": null
+      },
+      "before": {
+        "ageDays": 5760,
+        "realm": "mortal",
+        "cultivation": 0,
+        "injury": 0
+      },
+      "after": {
+        "ageDays": 5760,
+        "realm": "mortal",
+        "cultivation": 0,
+        "injury": 0
+      },
+      "death": null,
+      "birth": {
+        "originId": "village",
+        "talentIds": [
+          "sword-bone",
+          "keen-memory"
+        ],
+        "attributes": {
+          "constitution": 6,
+          "insight": 4,
+          "fortune": 2
+        }
+      }
+    },
+    "currentScene": {
+      "id": "r:87d03ccb7c322d16:t5:s:scene",
+      "title": "后山密林·赤焰虎洞口",
+      "location": "后山密林",
+      "entities": [
+        {
+          "id": "r:87d03ccb7c322d16:t5:e:person_1",
+          "name": "赤焰虎",
+          "kind": "person"
+        }
+      ],
+      "blocks": [
+        {
+          "kind": "narration",
+          "text": "你穿行于荒野，六十日的跋涉让你满身尘土，脚底磨出了血泡。终于，后山密林的轮廓在眼前显现，古木参天，阴森的雾气弥漫在林间。你循着记忆中那抹诡异的红光，拨开层层荆棘，在一处隐蔽的岩洞前停下脚步。洞口隐约透出幽红的光芒，伴随着低沉的兽吼声，空气中弥漫着一股淡淡的血腥味。你握紧了腰间的猎刀，屏住呼吸，准备窥探洞内的景象。"
+        },
+        {
+          "kind": "narration",
+          "text": "洞口处盘踞着一头体型硕大的赤焰虎，它正对着洞内发出威慑的低吼。那红光并非来自洞内，而是赤焰虎身上流淌的岩浆般纹路。赤焰虎似乎察觉到了你的气息，猛地转过头，那双燃烧着火焰的眼睛死死锁定了你，利爪在岩石上抓出深深的沟壑。它张开血盆大口，一股灼热的气息扑面而来，显然已经将你视为猎物。"
+        }
+      ],
+      "choices": [
+        {
+          "id": "r:87d03ccb7c322d16:t5:c:a",
+          "label": "询问赤焰虎：询问赤焰虎为何盘踞在此，是否挡住了去路",
+          "intent": "interact",
+          "targetId": "r:87d03ccb7c322d16:t5:e:person_1",
+          "stake": "low",
+          "approach": "ask"
+        },
+        {
+          "id": "r:87d03ccb7c322d16:t5:c:b",
+          "label": "观察赤焰虎：仔细观察赤焰虎的伤势和周围环境",
+          "intent": "interact",
+          "targetId": "r:87d03ccb7c322d16:t5:e:person_1",
+          "stake": "low",
+          "approach": "observe"
+        },
+        {
+          "id": "r:87d03ccb7c322d16:t5:c:leave",
+          "label": "结束当前互动：暂不介入此事",
+          "intent": "interact",
+          "targetId": "self",
+          "approach": "leave",
+          "stake": "low"
+        }
+      ],
+      "memoryDeltas": [
+        {
+          "entityId": "r:87d03ccb7c322d16:t5:e:person_1",
+          "kind": "clue",
+          "text": "你穿行于荒野，六十日的跋涉让你满身尘土，脚底磨出了血泡。终于，后山密林的轮廓在眼前显现，古木参天，阴森的雾气弥漫在林间。你循着记忆中那抹诡异的红光，拨开层层荆棘，在一处隐蔽的岩洞前停下脚步。洞口隐约透出幽红的光芒，伴随着低沉的兽吼声，空气中弥漫着一股淡淡的血腥味。你握紧了腰间的猎刀，屏住呼吸，准备窥探洞内的景象。",
+          "status": "open"
+        }
+      ]
+    },
+    "lastReceipt": {
+      "kind": "choice",
+      "choiceId": "r:87d03ccb7c322d16:t4:c:b",
+      "action": {
+        "id": "r:87d03ccb7c322d16:t4:c:b",
+        "label": "穿行荒野前往后山密林：前往后山密林查看红光来源",
+        "intent": "travel",
+        "targetId": "r:87d03ccb7c322d16:t3:e:place_1",
+        "stake": "low",
+        "approach": "wilderness"
+      },
+      "elapsedDays": 60,
+      "itemChanges": {
+        "supplies": -1
+      },
+      "relationChanges": {},
+      "random": {
+        "before": 2656582353,
+        "after": 750925308,
+        "roll": 8
+      },
+      "before": {
+        "ageDays": 5760,
+        "realm": "mortal",
+        "cultivation": 0,
+        "injury": 0
+      },
+      "after": {
+        "ageDays": 5820,
+        "realm": "mortal",
+        "cultivation": 0,
+        "injury": 1
+      },
+      "death": null,
+      "birth": null
+    },
+    "relatedEntities": [
+      {
+        "id": "r:87d03ccb7c322d16:t5:e:person_1",
+        "name": "赤焰虎",
+        "kind": "person"
+      }
+    ],
+    "archiveCursor": 0
+  },
+  "posts": 1,
+  "latency": {
+    "usable": true,
+    "errorCode": null,
+    "firstAnyPreviewMs": 3303,
+    "firstReadableMs": 3724,
+    "completionMs": 16433,
+    "narrativeChars": 298,
+    "maxPreviewGapMs": 329,
+    "readingFinishEstimateMs": 53391,
+    "readingStallEstimateMs": 0,
+    "optionsWaitEstimateMs": 0,
+    "prefetchWorthEvaluating": true,
+    "assumptions": {
+      "readingCharsPerSecond": 6,
+      "readableChars": 20,
+      "targetWaitMs": 2000
+    }
+  }
+}

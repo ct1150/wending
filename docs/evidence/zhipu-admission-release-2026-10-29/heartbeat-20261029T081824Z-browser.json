@@ -1,0 +1,179 @@
+{
+  "recordedAt": "2026-10-29T08:26:08.092Z",
+  "sourceCommit": "212873c415005743a0b0ce10a979f3da5dff4899",
+  "version": "dfe60cab-a52a-4648-994a-96e24d70d8cf",
+  "frontendSource": "local current release HTML served by browser harness; API and SQLite are real Workers",
+  "records": [
+    {
+      "caseId": "opening",
+      "mode": "browser-real-api",
+      "start": 519.0999999046326,
+      "timeline": [],
+      "firstBirthMs": 79,
+      "lastText": "",
+      "doneMs": 3783,
+      "result": {
+        "protocolVersion": 1,
+        "status": "paused",
+        "requestId": "d8ef15ab-8d01-4214-a15a-b9eb9004b100",
+        "attemptId": "321b2233-4c10-41a9-822a-41ff54c4db3b",
+        "sessionRef": "sess_951be7cd12e1b5be3e4830ae5ffb6781",
+        "errorCode": "FREE_QUOTA_EXHAUSTED",
+        "retry": {
+          "explicit": true,
+          "afterMs": 0,
+          "previousAttemptId": "321b2233-4c10-41a9-822a-41ff54c4db3b",
+          "previousSessionRef": "sess_951be7cd12e1b5be3e4830ae5ffb6781"
+        }
+      },
+      "revision": 0,
+      "pending": true,
+      "posts": 1,
+      "diagnostics": [
+        {
+          "requestId": "d8ef15ab-8d01-4214-a15a-b9eb9004b100",
+          "context": {
+            "schemaVersion": 1,
+            "phase": "opening",
+            "identity": {
+              "runId": "76f8e14d-5e45-41c4-8442-f907c2854b6a",
+              "turnId": 1,
+              "baseRevision": 0,
+              "stateHash": "11f692182c2f3d5dcfe6770019cf9f9e484c39b8a3f2e9b8785ad196a3a67522",
+              "choiceId": null,
+              "rulesVersion": 1,
+              "promptVersion": 1,
+              "requestId": "d8ef15ab-8d01-4214-a15a-b9eb9004b100"
+            },
+            "namespace": "r:f3bec364e2fbf631",
+            "receipt": {
+              "kind": "opening",
+              "choiceId": null,
+              "action": null,
+              "elapsedDays": 0,
+              "itemChanges": {},
+              "relationChanges": {},
+              "random": {
+                "before": 158876140,
+                "after": 158876140,
+                "roll": null
+              },
+              "before": {
+                "ageDays": 5760,
+                "realm": "mortal",
+                "cultivation": 0,
+                "injury": 0
+              },
+              "after": {
+                "ageDays": 5760,
+                "realm": "mortal",
+                "cultivation": 0,
+                "injury": 0
+              },
+              "death": null,
+              "birth": {
+                "originId": "village",
+                "talentIds": [
+                  "fortune-debt",
+                  "keen-memory"
+                ],
+                "attributes": {
+                  "constitution": 4,
+                  "insight": 4,
+                  "fortune": 4
+                }
+              }
+            },
+            "life": {
+              "name": "云归",
+              "ageDays": 5760,
+              "lifeLimit": 80,
+              "realm": "mortal",
+              "cultivation": 0,
+              "injury": 0,
+              "items": {
+                "supplies": 3,
+                "stones": 0
+              },
+              "relations": {},
+              "birth": {
+                "originId": "village",
+                "talentIds": [
+                  "fortune-debt",
+                  "keen-memory"
+                ],
+                "attributes": {
+                  "constitution": 4,
+                  "insight": 4,
+                  "fortune": 4
+                }
+              }
+            },
+            "entities": [],
+            "memory": {
+              "facts": [],
+              "promises": [],
+              "clues": [],
+              "recent": [],
+              "summaries": []
+            },
+            "references": [],
+            "previousScene": null,
+            "relationshipVersion": 1,
+            "relationships": {},
+            "coverage": {
+              "policy": "relevance-v1",
+              "openTotal": 0,
+              "openIncluded": 0,
+              "openOmitted": 0
+            }
+          },
+          "rawCompletion": null,
+          "result": {
+            "status": "paused",
+            "accountingStatus": "complete",
+            "modelId": "@cf/zai-org/glm-4.7-flash",
+            "attemptId": "321b2233-4c10-41a9-822a-41ff54c4db3b",
+            "inferencePerformed": true,
+            "usage": null,
+            "actualNeurons": null,
+            "stopReason": null,
+            "inputHash": "f220d2386dd61865db1096158f9cb6381e96a9f8d2a69fbd0a5eacfe8d1c5007",
+            "inputBytes": 10571,
+            "nonThinkingValidated": null,
+            "errorCode": "FREE_QUOTA_EXHAUSTED",
+            "providerSource": "cloudflare"
+          },
+          "source": "cloudflare"
+        }
+      ],
+      "wireEvents": [
+        {
+          "type": "status",
+          "status": "generating"
+        },
+        {
+          "type": "status",
+          "status": "generating"
+        },
+        {
+          "type": "status",
+          "status": "generating"
+        },
+        {
+          "type": "reset"
+        },
+        {
+          "type": "status",
+          "status": "switching"
+        },
+        {
+          "type": "result"
+        }
+      ]
+    }
+  ],
+  "refreshed": null,
+  "errors": [],
+  "posts": 1
+}

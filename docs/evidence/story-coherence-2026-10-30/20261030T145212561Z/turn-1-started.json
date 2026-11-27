@@ -1,0 +1,1 @@
+{"at":"2026-10-30T14:56:22.262Z","decision":{"index":0,"reason":"NPC赵三正处理猎夹中的野猪，追问来历与山里动静，目标名称与引用一致；0日且不消耗物品。","selected":{"id":"r:87d03ccb7c322d16:t1:c:b","label":"询问赵三：询问这只野猪的来历和最近山里的动静","intent":"interact","targetId":"r:87d03ccb7c322d16:t1:e:person_1","stake":"low","approach":"ask"}}}

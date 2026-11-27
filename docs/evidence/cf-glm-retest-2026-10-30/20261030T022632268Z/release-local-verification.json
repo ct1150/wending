@@ -1,0 +1,30 @@
+{
+  "recordedAt": "2026-10-30T03:25:10.821Z",
+  "sourceTree": "e46065c7488e458c399e7185c5c500c9a6fef571",
+  "localHead": "5ee49ba63b33f6c588046396ff756ed24f42864e",
+  "remoteCandidate": "ad4981f80eebe4c8970741f3d58cce142d37fc5c",
+  "verification": {
+    "release": {
+      "tests": 919,
+      "passed": 919,
+      "failed": 0,
+      "cancelled": 0,
+      "skipped": 0,
+      "log": ".scratch/cf-final-release-complete-20261030.log"
+    },
+    "syntaxFiles": 171,
+    "offlineBytes": 1040073,
+    "nativePackageAndSqliteTests": 28
+  },
+  "initialLocalEnvironmentFailure": {
+    "tests": 919,
+    "failed": 9,
+    "cause": "Isolated Linux copy omitted root index.html and wrangler.story.json; all tests passed after copying unchanged root fixtures.",
+    "retainedLog": ".scratch/cf-final-release-20261030.log"
+  },
+  "nativeModelAcceptanceSource": "006fed94523e63ec79bf539e001b90ae3d094f20",
+  "privateRoutesRemoved": true,
+  "privateCredentialDeleted": true,
+  "automationDeleted": true,
+  "noTemporaryWorkerOrNamespaceCreated": true
+}

@@ -1,0 +1,1 @@
+{"at":"2026-10-30T07:18:53.246Z","decision":{"index":0,"reason":"选择大道前往青石镇；下一段应实际到达该镇并围绕当地事件给选项，不擅自转去右侧迷雾林","selected":{"id":"r:f28528e6e121b03b:t1:c:a","label":"沿着大路前往青石镇","intent":"travel","targetId":"r:f28528e6e121b03b:t1:e:place_1","stake":"low","approach":"road"}}}

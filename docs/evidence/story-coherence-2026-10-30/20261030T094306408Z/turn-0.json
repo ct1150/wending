@@ -1,0 +1,793 @@
+{
+  "caseId": "opening",
+  "start": 1007.4000000022352,
+  "timeline": [
+    {
+      "atMs": 3357,
+      "chars": 1
+    },
+    {
+      "atMs": 3434,
+      "chars": 4
+    },
+    {
+      "atMs": 3608,
+      "chars": 7
+    },
+    {
+      "atMs": 3812,
+      "chars": 9
+    },
+    {
+      "atMs": 3952,
+      "chars": 12
+    },
+    {
+      "atMs": 3998,
+      "chars": 14
+    },
+    {
+      "atMs": 4076,
+      "chars": 17
+    },
+    {
+      "atMs": 4138,
+      "chars": 19
+    },
+    {
+      "atMs": 4216,
+      "chars": 22
+    },
+    {
+      "atMs": 4279,
+      "chars": 24
+    },
+    {
+      "atMs": 4343,
+      "chars": 27
+    },
+    {
+      "atMs": 4518,
+      "chars": 32
+    },
+    {
+      "atMs": 4565,
+      "chars": 36
+    },
+    {
+      "atMs": 4613,
+      "chars": 38
+    },
+    {
+      "atMs": 4690,
+      "chars": 40
+    },
+    {
+      "atMs": 4754,
+      "chars": 43
+    },
+    {
+      "atMs": 4834,
+      "chars": 47
+    },
+    {
+      "atMs": 4897,
+      "chars": 49
+    },
+    {
+      "atMs": 4962,
+      "chars": 52
+    },
+    {
+      "atMs": 5022,
+      "chars": 55
+    },
+    {
+      "atMs": 5100,
+      "chars": 58
+    },
+    {
+      "atMs": 5163,
+      "chars": 61
+    },
+    {
+      "atMs": 5226,
+      "chars": 63
+    },
+    {
+      "atMs": 5304,
+      "chars": 65
+    },
+    {
+      "atMs": 5367,
+      "chars": 66
+    },
+    {
+      "atMs": 5494,
+      "chars": 68
+    },
+    {
+      "atMs": 5542,
+      "chars": 70
+    },
+    {
+      "atMs": 5604,
+      "chars": 73
+    },
+    {
+      "atMs": 5683,
+      "chars": 75
+    },
+    {
+      "atMs": 5745,
+      "chars": 76
+    },
+    {
+      "atMs": 6108,
+      "chars": 79
+    },
+    {
+      "atMs": 6613,
+      "chars": 82
+    },
+    {
+      "atMs": 7275,
+      "chars": 84
+    },
+    {
+      "atMs": 8052,
+      "chars": 86
+    },
+    {
+      "atMs": 9031,
+      "chars": 87
+    },
+    {
+      "atMs": 10123,
+      "chars": 89
+    },
+    {
+      "atMs": 11368,
+      "chars": 91
+    },
+    {
+      "atMs": 11446,
+      "chars": 95
+    },
+    {
+      "atMs": 12174,
+      "chars": 98
+    },
+    {
+      "atMs": 12236,
+      "chars": 100
+    },
+    {
+      "atMs": 12297,
+      "chars": 104
+    },
+    {
+      "atMs": 12375,
+      "chars": 106
+    },
+    {
+      "atMs": 12435,
+      "chars": 110
+    },
+    {
+      "atMs": 12515,
+      "chars": 112
+    },
+    {
+      "atMs": 12591,
+      "chars": 115
+    },
+    {
+      "atMs": 12654,
+      "chars": 118
+    },
+    {
+      "atMs": 12734,
+      "chars": 124
+    },
+    {
+      "atMs": 12794,
+      "chars": 128
+    },
+    {
+      "atMs": 12872,
+      "chars": 132
+    },
+    {
+      "atMs": 12949,
+      "chars": 135
+    },
+    {
+      "atMs": 13351,
+      "chars": 137
+    },
+    {
+      "atMs": 13771,
+      "chars": 138
+    },
+    {
+      "atMs": 14112,
+      "chars": 139
+    },
+    {
+      "atMs": 14943,
+      "chars": 140
+    },
+    {
+      "atMs": 15129,
+      "chars": 144
+    },
+    {
+      "atMs": 15209,
+      "chars": 147
+    },
+    {
+      "atMs": 15286,
+      "chars": 149
+    },
+    {
+      "atMs": 15348,
+      "chars": 154
+    },
+    {
+      "atMs": 15426,
+      "chars": 157
+    },
+    {
+      "atMs": 15490,
+      "chars": 159
+    },
+    {
+      "atMs": 15569,
+      "chars": 163
+    },
+    {
+      "atMs": 15647,
+      "chars": 167
+    },
+    {
+      "atMs": 15709,
+      "chars": 170
+    },
+    {
+      "atMs": 15805,
+      "chars": 174
+    },
+    {
+      "atMs": 15883,
+      "chars": 179
+    },
+    {
+      "atMs": 15946,
+      "chars": 181
+    },
+    {
+      "atMs": 16009,
+      "chars": 184
+    },
+    {
+      "atMs": 16072,
+      "chars": 186
+    },
+    {
+      "atMs": 16134,
+      "chars": 189
+    },
+    {
+      "atMs": 16211,
+      "chars": 192
+    },
+    {
+      "atMs": 16416,
+      "chars": 198
+    },
+    {
+      "atMs": 16496,
+      "chars": 201
+    },
+    {
+      "atMs": 16573,
+      "chars": 203
+    },
+    {
+      "atMs": 16620,
+      "chars": 205
+    },
+    {
+      "atMs": 16684,
+      "chars": 206
+    },
+    {
+      "atMs": 16825,
+      "chars": 209
+    },
+    {
+      "atMs": 16873,
+      "chars": 211
+    },
+    {
+      "atMs": 16952,
+      "chars": 213
+    },
+    {
+      "atMs": 17016,
+      "chars": 216
+    },
+    {
+      "atMs": 17095,
+      "chars": 221
+    },
+    {
+      "atMs": 17159,
+      "chars": 224
+    },
+    {
+      "atMs": 17239,
+      "chars": 227
+    },
+    {
+      "atMs": 17301,
+      "chars": 230
+    },
+    {
+      "atMs": 17379,
+      "chars": 232
+    },
+    {
+      "atMs": 17441,
+      "chars": 234
+    },
+    {
+      "atMs": 17505,
+      "chars": 238
+    },
+    {
+      "atMs": 17598,
+      "chars": 241
+    },
+    {
+      "atMs": 17772,
+      "chars": 248
+    },
+    {
+      "atMs": 17804,
+      "chars": 250
+    },
+    {
+      "atMs": 17866,
+      "chars": 251
+    }
+  ],
+  "choicesEnabledDuringPreview": false,
+  "lastText": "你站在城西坊市边缘，晨雾未散。街角那家名为“听风阁”的杂货铺前，一个穿着灰布长衫的中年人正对着你招手，神色有些焦急。他身旁的竹筐里，几只灵雀正不安地扑腾着翅膀，发出细微的鸣叫。你认得他，这是负责给坊市运送灵材的脚夫，平日里总是一副笑呵呵的模样，此刻却眉头紧锁，似乎遇到了什么难处。\n\n“小友，可否行个方便？”中年人见你停下脚步，连忙迎上来，压低声音说道，“这批灵雀有些躁动，我查了半天也没找出原因。若是耽误了时辰，被坊市管事责罚事小，若是伤了这些生灵，我这张老脸往哪搁？”他指了指竹筐，眼神里满是恳求。",
+  "doneMs": 22495,
+  "result": {
+    "protocolVersion": 1,
+    "status": "ready",
+    "requestId": "f71e3a39-1e4f-485d-9d87-5d20b0eb2f0c",
+    "attemptId": "97f2459c-b75d-4292-a4d6-69a196827a68",
+    "sessionRef": "sess_66f901306f6300b330ff0254db08fd56",
+    "errorCode": null,
+    "retry": null,
+    "scene": {
+      "id": "r:c901c16f455b3d18:t1:s:scene",
+      "title": "坊市脚夫",
+      "location": "城西坊市",
+      "entities": [
+        {
+          "id": "r:c901c16f455b3d18:t1:e:person_1",
+          "name": "脚夫",
+          "status": "alive",
+          "kind": "person"
+        }
+      ],
+      "blocks": [
+        {
+          "kind": "narration",
+          "text": "你站在城西坊市边缘，晨雾未散。街角那家名为“听风阁”的杂货铺前，一个穿着灰布长衫的中年人正对着你招手，神色有些焦急。他身旁的竹筐里，几只灵雀正不安地扑腾着翅膀，发出细微的鸣叫。你认得他，这是负责给坊市运送灵材的脚夫，平日里总是一副笑呵呵的模样，此刻却眉头紧锁，似乎遇到了什么难处。"
+        },
+        {
+          "kind": "narration",
+          "text": "“小友，可否行个方便？”中年人见你停下脚步，连忙迎上来，压低声音说道，“这批灵雀有些躁动，我查了半天也没找出原因。若是耽误了时辰，被坊市管事责罚事小，若是伤了这些生灵，我这张老脸往哪搁？”他指了指竹筐，眼神里满是恳求。"
+        }
+      ],
+      "choices": [
+        {
+          "id": "r:c901c16f455b3d18:t1:c:a",
+          "label": "询问脚夫：询问灵雀躁动的原因",
+          "intent": "interact",
+          "targetId": "r:c901c16f455b3d18:t1:e:person_1",
+          "stake": "low",
+          "approach": "ask"
+        },
+        {
+          "id": "r:c901c16f455b3d18:t1:c:b",
+          "label": "观察脚夫：仔细观察灵雀和脚夫的状态",
+          "intent": "interact",
+          "targetId": "r:c901c16f455b3d18:t1:e:person_1",
+          "stake": "low",
+          "approach": "observe"
+        },
+        {
+          "id": "r:c901c16f455b3d18:t1:c:c",
+          "label": "援助脚夫：拿出行粮安抚灵雀",
+          "intent": "interact",
+          "targetId": "r:c901c16f455b3d18:t1:e:person_1",
+          "stake": "low",
+          "approach": "help"
+        }
+      ],
+      "memoryDeltas": [
+        {
+          "entityId": "r:c901c16f455b3d18:t1:e:person_1",
+          "kind": "clue",
+          "text": "你站在城西坊市边缘，晨雾未散。街角那家名为“听风阁”的杂货铺前，一个穿着灰布长衫的中年人正对着你招手，神色有些焦急。他身旁的竹筐里，几只灵雀正不安地扑腾着翅膀，发出细微的鸣叫。你认得他，这是负责给坊市运送灵材的脚夫，平日里总是一副笑呵呵的模样，此刻却眉头紧锁，似乎遇到了什么难处。",
+          "status": "open"
+        }
+      ]
+    }
+  },
+  "request": {
+    "context": {
+      "schemaVersion": 1,
+      "phase": "opening",
+      "identity": {
+        "runId": "842e4747-b574-4b65-849f-22d2089124ca",
+        "turnId": 1,
+        "baseRevision": 0,
+        "stateHash": "5d12d11c8fcb3f195af2e2457ffc1a11a1d62f21a8821f049e8c2380fc0bcc84",
+        "choiceId": null,
+        "rulesVersion": 1,
+        "promptVersion": 1,
+        "requestId": "f71e3a39-1e4f-485d-9d87-5d20b0eb2f0c"
+      },
+      "namespace": "r:c901c16f455b3d18",
+      "receipt": {
+        "kind": "opening",
+        "choiceId": null,
+        "action": null,
+        "elapsedDays": 0,
+        "itemChanges": {},
+        "relationChanges": {},
+        "random": {
+          "before": 798424255,
+          "after": 798424255,
+          "roll": null
+        },
+        "before": {
+          "ageDays": 5760,
+          "realm": "mortal",
+          "cultivation": 0,
+          "injury": 0
+        },
+        "after": {
+          "ageDays": 5760,
+          "realm": "mortal",
+          "cultivation": 0,
+          "injury": 0
+        },
+        "death": null,
+        "birth": {
+          "originId": "artisan",
+          "talentIds": [
+            "iron-bones",
+            "keen-memory"
+          ],
+          "attributes": {
+            "constitution": 3,
+            "insight": 3,
+            "fortune": 6
+          }
+        }
+      },
+      "life": {
+        "name": "云归",
+        "ageDays": 5760,
+        "lifeLimit": 80,
+        "realm": "mortal",
+        "cultivation": 0,
+        "injury": 0,
+        "items": {
+          "supplies": 3,
+          "stones": 0
+        },
+        "relations": {},
+        "birth": {
+          "originId": "artisan",
+          "talentIds": [
+            "iron-bones",
+            "keen-memory"
+          ],
+          "attributes": {
+            "constitution": 3,
+            "insight": 3,
+            "fortune": 6
+          }
+        }
+      },
+      "entities": [],
+      "memory": {
+        "facts": [],
+        "promises": [],
+        "clues": [],
+        "recent": [],
+        "summaries": []
+      },
+      "references": [],
+      "previousScene": null,
+      "relationshipVersion": 1,
+      "relationships": {},
+      "coverage": {
+        "policy": "relevance-v1",
+        "openTotal": 0,
+        "openIncluded": 0,
+        "openOmitted": 0
+      }
+    },
+    "attempt": {
+      "id": "97f2459c-b75d-4292-a4d6-69a196827a68",
+      "sessionRef": "sess_66f901306f6300b330ff0254db08fd56",
+      "retryOf": null
+    }
+  },
+  "decision": null,
+  "choices": [
+    {
+      "id": "r:c901c16f455b3d18:t1:c:a",
+      "enabled": true,
+      "label": "询问脚夫：询问灵雀躁动的原因",
+      "cost": "0日"
+    },
+    {
+      "id": "r:c901c16f455b3d18:t1:c:b",
+      "enabled": true,
+      "label": "观察脚夫：仔细观察灵雀和脚夫的状态",
+      "cost": "0日"
+    },
+    {
+      "id": "r:c901c16f455b3d18:t1:c:c",
+      "enabled": true,
+      "label": "援助脚夫：拿出行粮安抚灵雀",
+      "cost": "1日 · 行粮 1"
+    }
+  ],
+  "traces": [
+    {
+      "model": "@cf/zai-org/glm-4.7-flash",
+      "inputHash": "abc2d5cf77d76355b485f3fb2ec863176813a7adf1c8d33629d2753c86d0f718",
+      "inputBytes": 13163,
+      "startedAt": 1793353486801,
+      "bindingReturnedAt": 1793353487256,
+      "liveRawBytes": 121339,
+      "captureComplete": true,
+      "response": {
+        "model": "@cf/zai-org/glm-4.7-flash",
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "message": {
+              "content": "{\"blocks\":[{\"kind\":\"narration\",\"text\":\"你站在城西坊市边缘，晨雾未散。街角那家名为“听风阁”的杂货铺前，一个穿着灰布长衫的中年人正对着你招手，神色有些焦急。他身旁的竹筐里，几只灵雀正不安地扑腾着翅膀，发出细微的鸣叫。你认得他，这是负责给坊市运送灵材的脚夫，平日里总是一副笑呵呵的模样，此刻却眉头紧锁，似乎遇到了什么难处。\"},{\"kind\":\"narration\",\"text\":\"“小友，可否行个方便？”中年人见你停下脚步，连忙迎上来，压低声音说道，“这批灵雀有些躁动，我查了半天也没找出原因。若是耽误了时辰，被坊市管事责罚事小，若是伤了这些生灵，我这张老脸往哪搁？”他指了指竹筐，眼神里满是恳求。\"}],\"choices\":[{\"action\":\"interact:ask\",\"targetId\":\"p1\",\"stake\":\"low\",\"purpose\":\"询问灵雀躁动的原因\",\"anchor\":0},{\"action\":\"interact:observe\",\"targetId\":\"p1\",\"stake\":\"low\",\"purpose\":\"仔细观察灵雀和脚夫的状态\",\"anchor\":0},{\"action\":\"interact:help\",\"targetId\":\"p1\",\"stake\":\"low\",\"purpose\":\"拿出行粮安抚灵雀\",\"anchor\":0}],\"title\":\"坊市脚夫\",\"location\":\"城西坊市\",\"otherPeople\":[{\"id\":\"p1\",\"name\":\"脚夫\",\"status\":\"alive\"}],\"places\":[],\"factions\":[],\"memoryDeltas\":[{\"entityId\":\"p1\",\"kind\":\"clue\",\"anchor\":0,\"status\":\"open\"}]}",
+              "reasoning_content": ""
+            }
+          }
+        ],
+        "usage": {
+          "prompt_tokens": 2711,
+          "completion_tokens": 381,
+          "total_tokens": 3092,
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          },
+          "neurons": 28.778900000000164
+        }
+      },
+      "rawSseBytes": 121339
+    }
+  ],
+  "revision": 1,
+  "pending": false,
+  "state": {
+    "relationshipVersion": 1,
+    "version": 5,
+    "mode": "cultivation",
+    "contentVersion": 4,
+    "rulesVersion": 1,
+    "promptVersion": 1,
+    "runId": "842e4747-b574-4b65-849f-22d2089124ca",
+    "revision": 1,
+    "turnId": 1,
+    "phase": "active",
+    "rng": 798424255,
+    "life": {
+      "name": "云归",
+      "ageDays": 5760,
+      "lifeLimit": 80,
+      "realm": "mortal",
+      "cultivation": 0,
+      "injury": 0,
+      "items": {
+        "supplies": 3,
+        "stones": 0
+      },
+      "relations": {},
+      "birth": {
+        "originId": "artisan",
+        "talentIds": [
+          "iron-bones",
+          "keen-memory"
+        ],
+        "attributes": {
+          "constitution": 3,
+          "insight": 3,
+          "fortune": 6
+        }
+      }
+    },
+    "birthReceipt": {
+      "kind": "opening",
+      "choiceId": null,
+      "action": null,
+      "elapsedDays": 0,
+      "itemChanges": {},
+      "relationChanges": {},
+      "random": {
+        "before": 798424255,
+        "after": 798424255,
+        "roll": null
+      },
+      "before": {
+        "ageDays": 5760,
+        "realm": "mortal",
+        "cultivation": 0,
+        "injury": 0
+      },
+      "after": {
+        "ageDays": 5760,
+        "realm": "mortal",
+        "cultivation": 0,
+        "injury": 0
+      },
+      "death": null,
+      "birth": {
+        "originId": "artisan",
+        "talentIds": [
+          "iron-bones",
+          "keen-memory"
+        ],
+        "attributes": {
+          "constitution": 3,
+          "insight": 3,
+          "fortune": 6
+        }
+      }
+    },
+    "currentScene": {
+      "id": "r:c901c16f455b3d18:t1:s:scene",
+      "title": "坊市脚夫",
+      "location": "城西坊市",
+      "entities": [
+        {
+          "id": "r:c901c16f455b3d18:t1:e:person_1",
+          "name": "脚夫",
+          "status": "alive",
+          "kind": "person"
+        }
+      ],
+      "blocks": [
+        {
+          "kind": "narration",
+          "text": "你站在城西坊市边缘，晨雾未散。街角那家名为“听风阁”的杂货铺前，一个穿着灰布长衫的中年人正对着你招手，神色有些焦急。他身旁的竹筐里，几只灵雀正不安地扑腾着翅膀，发出细微的鸣叫。你认得他，这是负责给坊市运送灵材的脚夫，平日里总是一副笑呵呵的模样，此刻却眉头紧锁，似乎遇到了什么难处。"
+        },
+        {
+          "kind": "narration",
+          "text": "“小友，可否行个方便？”中年人见你停下脚步，连忙迎上来，压低声音说道，“这批灵雀有些躁动，我查了半天也没找出原因。若是耽误了时辰，被坊市管事责罚事小，若是伤了这些生灵，我这张老脸往哪搁？”他指了指竹筐，眼神里满是恳求。"
+        }
+      ],
+      "choices": [
+        {
+          "id": "r:c901c16f455b3d18:t1:c:a",
+          "label": "询问脚夫：询问灵雀躁动的原因",
+          "intent": "interact",
+          "targetId": "r:c901c16f455b3d18:t1:e:person_1",
+          "stake": "low",
+          "approach": "ask"
+        },
+        {
+          "id": "r:c901c16f455b3d18:t1:c:b",
+          "label": "观察脚夫：仔细观察灵雀和脚夫的状态",
+          "intent": "interact",
+          "targetId": "r:c901c16f455b3d18:t1:e:person_1",
+          "stake": "low",
+          "approach": "observe"
+        },
+        {
+          "id": "r:c901c16f455b3d18:t1:c:c",
+          "label": "援助脚夫：拿出行粮安抚灵雀",
+          "intent": "interact",
+          "targetId": "r:c901c16f455b3d18:t1:e:person_1",
+          "stake": "low",
+          "approach": "help"
+        }
+      ],
+      "memoryDeltas": [
+        {
+          "entityId": "r:c901c16f455b3d18:t1:e:person_1",
+          "kind": "clue",
+          "text": "你站在城西坊市边缘，晨雾未散。街角那家名为“听风阁”的杂货铺前，一个穿着灰布长衫的中年人正对着你招手，神色有些焦急。他身旁的竹筐里，几只灵雀正不安地扑腾着翅膀，发出细微的鸣叫。你认得他，这是负责给坊市运送灵材的脚夫，平日里总是一副笑呵呵的模样，此刻却眉头紧锁，似乎遇到了什么难处。",
+          "status": "open"
+        }
+      ]
+    },
+    "lastReceipt": {
+      "kind": "opening",
+      "choiceId": null,
+      "action": null,
+      "elapsedDays": 0,
+      "itemChanges": {},
+      "relationChanges": {},
+      "random": {
+        "before": 798424255,
+        "after": 798424255,
+        "roll": null
+      },
+      "before": {
+        "ageDays": 5760,
+        "realm": "mortal",
+        "cultivation": 0,
+        "injury": 0
+      },
+      "after": {
+        "ageDays": 5760,
+        "realm": "mortal",
+        "cultivation": 0,
+        "injury": 0
+      },
+      "death": null,
+      "birth": {
+        "originId": "artisan",
+        "talentIds": [
+          "iron-bones",
+          "keen-memory"
+        ],
+        "attributes": {
+          "constitution": 3,
+          "insight": 3,
+          "fortune": 6
+        }
+      }
+    },
+    "relatedEntities": [
+      {
+        "id": "r:c901c16f455b3d18:t1:e:person_1",
+        "name": "脚夫",
+        "status": "alive",
+        "kind": "person"
+      }
+    ],
+    "archiveCursor": 0
+  },
+  "posts": 1,
+  "latency": {
+    "usable": true,
+    "errorCode": null,
+    "firstAnyPreviewMs": 3357,
+    "firstReadableMs": 4216,
+    "completionMs": 22495,
+    "narrativeChars": 251,
+    "maxPreviewGapMs": 1245,
+    "readingFinishEstimateMs": 46049,
+    "readingStallEstimateMs": 0,
+    "optionsWaitEstimateMs": 0,
+    "prefetchWorthEvaluating": true,
+    "assumptions": {
+      "readingCharsPerSecond": 6,
+      "readableChars": 20,
+      "targetWaitMs": 2000
+    }
+  }
+}

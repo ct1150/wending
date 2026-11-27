@@ -1,0 +1,12 @@
+{
+  "sourceCommit": "3a61da3f2b6e4d4019c554aa750e86fdabb1024a",
+  "accepted": false,
+  "reason": "Second scene ignored the selected question about scrap origin and strangers, repeated the NPC request to examine the fragment. Verified actual receipt/action and provider input carried the correct selected question. Last message repeated historical NPC request after the selected purpose; removing that duplication is a hypothesis, not an established semantic fix.",
+  "cleanup": {
+    "productionVersion": "cad2a140-240f-4465-a837-e53f054c2589",
+    "percentage": 100,
+    "deployment": "2ed48e3f-8114-4d82-a3b6-7b1da29e6034",
+    "ownCredentialDeleted": true,
+    "noNewWorkerOrNamespace": true
+  }
+}

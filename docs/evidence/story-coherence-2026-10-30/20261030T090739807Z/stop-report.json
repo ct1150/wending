@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "sourceCommit": "6dbb5596485a6eaeb3561bbd7e8412a83cbf4ec2",
+  "status": "ACCEPTANCE_STOPPED",
+  "reason": "Actor aliases are natural in prose (掌柜/大汉) while declarations use full role names; strict full-name matching rejects valid questions.7d0d238 moves executable action/target wording to server and asks model only for concrete purpose; new native gate pending.",
+  "actualTurns": 1,
+  "productionRestored": {
+    "version": "cad2a140-240f-4465-a837-e53f054c2589",
+    "percentage": 100,
+    "deployment": "293509f9-2d59-45c8-917b-cfd6f41c660f"
+  },
+  "cleanup": {
+    "ownCredentialDeleted": true,
+    "newWorkerCreated": false,
+    "newNamespaceCreated": false,
+    "ledgerRetained": true
+  },
+  "recordedAt": "2026-10-30T09:45:24.621Z"
+}

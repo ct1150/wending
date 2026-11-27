@@ -1,0 +1,623 @@
+{
+  "caseId": "opening",
+  "start": 646.2000000029802,
+  "timeline": [
+    {
+      "atMs": 4253,
+      "chars": 1
+    },
+    {
+      "atMs": 4315,
+      "chars": 4
+    },
+    {
+      "atMs": 4378,
+      "chars": 8
+    },
+    {
+      "atMs": 4440,
+      "chars": 11
+    },
+    {
+      "atMs": 4597,
+      "chars": 18
+    },
+    {
+      "atMs": 4628,
+      "chars": 21
+    },
+    {
+      "atMs": 4707,
+      "chars": 25
+    },
+    {
+      "atMs": 4770,
+      "chars": 30
+    },
+    {
+      "atMs": 4834,
+      "chars": 32
+    },
+    {
+      "atMs": 4897,
+      "chars": 37
+    },
+    {
+      "atMs": 4944,
+      "chars": 42
+    },
+    {
+      "atMs": 5020,
+      "chars": 46
+    },
+    {
+      "atMs": 5082,
+      "chars": 52
+    },
+    {
+      "atMs": 5158,
+      "chars": 55
+    },
+    {
+      "atMs": 5221,
+      "chars": 62
+    },
+    {
+      "atMs": 5283,
+      "chars": 71
+    },
+    {
+      "atMs": 5360,
+      "chars": 75
+    },
+    {
+      "atMs": 5423,
+      "chars": 85
+    },
+    {
+      "atMs": 5516,
+      "chars": 88
+    },
+    {
+      "atMs": 5577,
+      "chars": 92
+    },
+    {
+      "atMs": 5639,
+      "chars": 97
+    },
+    {
+      "atMs": 5716,
+      "chars": 102
+    },
+    {
+      "atMs": 5779,
+      "chars": 107
+    },
+    {
+      "atMs": 5842,
+      "chars": 115
+    },
+    {
+      "atMs": 5904,
+      "chars": 122
+    },
+    {
+      "atMs": 5981,
+      "chars": 126
+    },
+    {
+      "atMs": 6044,
+      "chars": 128
+    },
+    {
+      "atMs": 6202,
+      "chars": 135
+    },
+    {
+      "atMs": 6358,
+      "chars": 142
+    },
+    {
+      "atMs": 6420,
+      "chars": 146
+    },
+    {
+      "atMs": 6482,
+      "chars": 151
+    },
+    {
+      "atMs": 6560,
+      "chars": 154
+    },
+    {
+      "atMs": 6623,
+      "chars": 158
+    },
+    {
+      "atMs": 6717,
+      "chars": 162
+    },
+    {
+      "atMs": 6780,
+      "chars": 172
+    },
+    {
+      "atMs": 6842,
+      "chars": 178
+    },
+    {
+      "atMs": 6889,
+      "chars": 180
+    },
+    {
+      "atMs": 6951,
+      "chars": 184
+    },
+    {
+      "atMs": 7012,
+      "chars": 187
+    },
+    {
+      "atMs": 7091,
+      "chars": 191
+    },
+    {
+      "atMs": 7153,
+      "chars": 192
+    },
+    {
+      "atMs": 7215,
+      "chars": 196
+    },
+    {
+      "atMs": 7277,
+      "chars": 202
+    },
+    {
+      "atMs": 7356,
+      "chars": 206
+    },
+    {
+      "atMs": 7512,
+      "chars": 217
+    },
+    {
+      "atMs": 7559,
+      "chars": 223
+    },
+    {
+      "atMs": 7622,
+      "chars": 226
+    },
+    {
+      "atMs": 7668,
+      "chars": 231
+    },
+    {
+      "atMs": 7730,
+      "chars": 236
+    },
+    {
+      "atMs": 7792,
+      "chars": 239
+    },
+    {
+      "atMs": 7855,
+      "chars": 241
+    }
+  ],
+  "choicesEnabledDuringPreview": false,
+  "lastText": "你站在城坊的街角，手里攥着刚领到的匠徒腰牌。不远处，一个穿着灰布短打的少年正蹲在地上，手里摆弄着一只断了腿的木鸢。他似乎察觉到了你的目光，抬起头，露出一个有些局促的笑容，指了指脚边的木鸢说：“这可是我花了三个月才做好的，刚才不小心摔断了，能不能请你帮个忙，看看怎么修？”\n\n少年名叫阿木，是坊间有名的巧手匠徒。他见你盯着木鸢看，便小心翼翼地问道：“我看你面生，也是来坊市找活计的？这木鸢的机关坏了，我试着修了几次都不行，若是能修好，我愿意分你两个灵石，或者教你几手简单的木工手艺。”",
+  "doneMs": 10263,
+  "result": {
+    "protocolVersion": 1,
+    "status": "ready",
+    "requestId": "d551232f-9356-47d6-96a6-faea992916ec",
+    "attemptId": "6fc09218-e940-42e4-ab71-db16f075aa7d",
+    "sessionRef": "sess_ca5831995c9de6ee1bf953823e473a79",
+    "errorCode": null,
+    "retry": null,
+    "scene": {
+      "id": "r:bd103e9818c4a005:t1:s:scene",
+      "title": "坊间巧手",
+      "location": "城坊",
+      "entities": [
+        {
+          "id": "r:bd103e9818c4a005:t1:e:person_1",
+          "name": "阿木",
+          "status": "alive",
+          "kind": "person"
+        }
+      ],
+      "blocks": [
+        {
+          "kind": "narration",
+          "text": "你站在城坊的街角，手里攥着刚领到的匠徒腰牌。不远处，一个穿着灰布短打的少年正蹲在地上，手里摆弄着一只断了腿的木鸢。他似乎察觉到了你的目光，抬起头，露出一个有些局促的笑容，指了指脚边的木鸢说：“这可是我花了三个月才做好的，刚才不小心摔断了，能不能请你帮个忙，看看怎么修？”"
+        },
+        {
+          "kind": "narration",
+          "text": "少年名叫阿木，是坊间有名的巧手匠徒。他见你盯着木鸢看，便小心翼翼地问道：“我看你面生，也是来坊市找活计的？这木鸢的机关坏了，我试着修了几次都不行，若是能修好，我愿意分你两个灵石，或者教你几手简单的木工手艺。”"
+        }
+      ],
+      "choices": [
+        {
+          "id": "r:bd103e9818c4a005:t1:c:a",
+          "label": "询问阿木：询问阿木关于木鸢机关的构造细节",
+          "intent": "interact",
+          "targetId": "r:bd103e9818c4a005:t1:e:person_1",
+          "stake": "low",
+          "approach": "ask"
+        },
+        {
+          "id": "r:bd103e9818c4a005:t1:c:b",
+          "label": "询问阿木：询问阿木是否需要帮忙寻找替代材料",
+          "intent": "interact",
+          "targetId": "r:bd103e9818c4a005:t1:e:person_1",
+          "stake": "low",
+          "approach": "ask"
+        },
+        {
+          "id": "r:bd103e9818c4a005:t1:c:c",
+          "label": "结束与阿木的互动：拒绝帮忙，离开这个位置",
+          "intent": "interact",
+          "targetId": "r:bd103e9818c4a005:t1:e:person_1",
+          "stake": "low",
+          "approach": "leave"
+        }
+      ],
+      "memoryDeltas": []
+    }
+  },
+  "request": {
+    "context": {
+      "schemaVersion": 1,
+      "phase": "opening",
+      "identity": {
+        "runId": "80c0952d-3a1a-4a8e-bdd3-67a5026ba7c0",
+        "turnId": 1,
+        "baseRevision": 0,
+        "stateHash": "70e23a95bd705e6cde24e719b73aeaa3d69afafa479a2ed126bb20d73d9a2c5a",
+        "choiceId": null,
+        "rulesVersion": 1,
+        "promptVersion": 1,
+        "requestId": "d551232f-9356-47d6-96a6-faea992916ec"
+      },
+      "namespace": "r:bd103e9818c4a005",
+      "receipt": {
+        "kind": "opening",
+        "choiceId": null,
+        "action": null,
+        "elapsedDays": 0,
+        "itemChanges": {},
+        "relationChanges": {},
+        "random": {
+          "before": 461199386,
+          "after": 461199386,
+          "roll": null
+        },
+        "before": {
+          "ageDays": 5760,
+          "realm": "mortal",
+          "cultivation": 0,
+          "injury": 0
+        },
+        "after": {
+          "ageDays": 5760,
+          "realm": "mortal",
+          "cultivation": 0,
+          "injury": 0
+        },
+        "death": null,
+        "birth": {
+          "originId": "artisan",
+          "talentIds": [
+            "fortune-debt",
+            "sensitive-breath"
+          ],
+          "attributes": {
+            "constitution": 6,
+            "insight": 3,
+            "fortune": 3
+          }
+        }
+      },
+      "life": {
+        "name": "云归",
+        "ageDays": 5760,
+        "lifeLimit": 80,
+        "realm": "mortal",
+        "cultivation": 0,
+        "injury": 0,
+        "items": {
+          "supplies": 3,
+          "stones": 0
+        },
+        "relations": {},
+        "birth": {
+          "originId": "artisan",
+          "talentIds": [
+            "fortune-debt",
+            "sensitive-breath"
+          ],
+          "attributes": {
+            "constitution": 6,
+            "insight": 3,
+            "fortune": 3
+          }
+        }
+      },
+      "entities": [],
+      "memory": {
+        "facts": [],
+        "promises": [],
+        "clues": [],
+        "recent": [],
+        "summaries": []
+      },
+      "references": [],
+      "previousScene": null,
+      "relationshipVersion": 1,
+      "relationships": {},
+      "coverage": {
+        "policy": "relevance-v1",
+        "openTotal": 0,
+        "openIncluded": 0,
+        "openOmitted": 0
+      }
+    },
+    "attempt": {
+      "id": "6fc09218-e940-42e4-ab71-db16f075aa7d",
+      "sessionRef": "sess_ca5831995c9de6ee1bf953823e473a79",
+      "retryOf": null
+    }
+  },
+  "decision": null,
+  "choices": [
+    {
+      "id": "r:bd103e9818c4a005:t1:c:a",
+      "enabled": true,
+      "label": "询问阿木：询问阿木关于木鸢机关的构造细节",
+      "cost": "0日"
+    },
+    {
+      "id": "r:bd103e9818c4a005:t1:c:b",
+      "enabled": true,
+      "label": "询问阿木：询问阿木是否需要帮忙寻找替代材料",
+      "cost": "0日"
+    },
+    {
+      "id": "r:bd103e9818c4a005:t1:c:c",
+      "enabled": true,
+      "label": "结束与阿木的互动：拒绝帮忙，离开这个位置",
+      "cost": "0日"
+    }
+  ],
+  "traces": [
+    {
+      "model": "@cf/zai-org/glm-4.7-flash",
+      "inputHash": "f699fdc8c51075bae0c8658ce9d72c021bdb5a77429d3b5711e1294d8f0a92ba",
+      "inputBytes": 13967,
+      "startedAt": 1793356878392,
+      "bindingReturnedAt": 1793356878706,
+      "liveRawBytes": 105334,
+      "captureComplete": true,
+      "response": {
+        "model": "@cf/zai-org/glm-4.7-flash",
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "message": {
+              "content": "{\"blocks\":[{\"kind\":\"narration\",\"text\":\"你站在城坊的街角，手里攥着刚领到的匠徒腰牌。不远处，一个穿着灰布短打的少年正蹲在地上，手里摆弄着一只断了腿的木鸢。他似乎察觉到了你的目光，抬起头，露出一个有些局促的笑容，指了指脚边的木鸢说：“这可是我花了三个月才做好的，刚才不小心摔断了，能不能请你帮个忙，看看怎么修？”\"},{\"kind\":\"narration\",\"text\":\"少年名叫阿木，是坊间有名的巧手匠徒。他见你盯着木鸢看，便小心翼翼地问道：“我看你面生，也是来坊市找活计的？这木鸢的机关坏了，我试着修了几次都不行，若是能修好，我愿意分你两个灵石，或者教你几手简单的木工手艺。”\"}],\"choices\":[{\"action\":\"interact:ask\",\"targetId\":\"p1\",\"stake\":\"low\",\"purpose\":\"询问阿木关于木鸢机关的构造细节\",\"anchor\":1},{\"action\":\"interact:ask\",\"targetId\":\"p1\",\"stake\":\"low\",\"purpose\":\"询问阿木是否需要帮忙寻找替代材料\",\"anchor\":1},{\"action\":\"interact:leave\",\"targetId\":\"p1\",\"stake\":\"low\",\"purpose\":\"拒绝帮忙，离开这个位置\",\"anchor\":1}],\"title\":\"坊间巧手\",\"location\":\"城坊\",\"otherPeople\":[{\"id\":\"p1\",\"name\":\"阿木\",\"status\":\"alive\"}],\"places\":[],\"factions\":[],\"memoryDeltas\":[]}",
+              "reasoning_content": ""
+            }
+          }
+        ],
+        "usage": {
+          "prompt_tokens": 2265,
+          "completion_tokens": 347,
+          "total_tokens": 2612,
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          },
+          "neurons": 25.08830000000015
+        }
+      },
+      "rawSseBytes": 105334
+    }
+  ],
+  "revision": 1,
+  "pending": false,
+  "state": {
+    "relationshipVersion": 1,
+    "version": 5,
+    "mode": "cultivation",
+    "contentVersion": 4,
+    "rulesVersion": 1,
+    "promptVersion": 1,
+    "runId": "80c0952d-3a1a-4a8e-bdd3-67a5026ba7c0",
+    "revision": 1,
+    "turnId": 1,
+    "phase": "active",
+    "rng": 461199386,
+    "life": {
+      "name": "云归",
+      "ageDays": 5760,
+      "lifeLimit": 80,
+      "realm": "mortal",
+      "cultivation": 0,
+      "injury": 0,
+      "items": {
+        "supplies": 3,
+        "stones": 0
+      },
+      "relations": {},
+      "birth": {
+        "originId": "artisan",
+        "talentIds": [
+          "fortune-debt",
+          "sensitive-breath"
+        ],
+        "attributes": {
+          "constitution": 6,
+          "insight": 3,
+          "fortune": 3
+        }
+      }
+    },
+    "birthReceipt": {
+      "kind": "opening",
+      "choiceId": null,
+      "action": null,
+      "elapsedDays": 0,
+      "itemChanges": {},
+      "relationChanges": {},
+      "random": {
+        "before": 461199386,
+        "after": 461199386,
+        "roll": null
+      },
+      "before": {
+        "ageDays": 5760,
+        "realm": "mortal",
+        "cultivation": 0,
+        "injury": 0
+      },
+      "after": {
+        "ageDays": 5760,
+        "realm": "mortal",
+        "cultivation": 0,
+        "injury": 0
+      },
+      "death": null,
+      "birth": {
+        "originId": "artisan",
+        "talentIds": [
+          "fortune-debt",
+          "sensitive-breath"
+        ],
+        "attributes": {
+          "constitution": 6,
+          "insight": 3,
+          "fortune": 3
+        }
+      }
+    },
+    "currentScene": {
+      "id": "r:bd103e9818c4a005:t1:s:scene",
+      "title": "坊间巧手",
+      "location": "城坊",
+      "entities": [
+        {
+          "id": "r:bd103e9818c4a005:t1:e:person_1",
+          "name": "阿木",
+          "status": "alive",
+          "kind": "person"
+        }
+      ],
+      "blocks": [
+        {
+          "kind": "narration",
+          "text": "你站在城坊的街角，手里攥着刚领到的匠徒腰牌。不远处，一个穿着灰布短打的少年正蹲在地上，手里摆弄着一只断了腿的木鸢。他似乎察觉到了你的目光，抬起头，露出一个有些局促的笑容，指了指脚边的木鸢说：“这可是我花了三个月才做好的，刚才不小心摔断了，能不能请你帮个忙，看看怎么修？”"
+        },
+        {
+          "kind": "narration",
+          "text": "少年名叫阿木，是坊间有名的巧手匠徒。他见你盯着木鸢看，便小心翼翼地问道：“我看你面生，也是来坊市找活计的？这木鸢的机关坏了，我试着修了几次都不行，若是能修好，我愿意分你两个灵石，或者教你几手简单的木工手艺。”"
+        }
+      ],
+      "choices": [
+        {
+          "id": "r:bd103e9818c4a005:t1:c:a",
+          "label": "询问阿木：询问阿木关于木鸢机关的构造细节",
+          "intent": "interact",
+          "targetId": "r:bd103e9818c4a005:t1:e:person_1",
+          "stake": "low",
+          "approach": "ask"
+        },
+        {
+          "id": "r:bd103e9818c4a005:t1:c:b",
+          "label": "询问阿木：询问阿木是否需要帮忙寻找替代材料",
+          "intent": "interact",
+          "targetId": "r:bd103e9818c4a005:t1:e:person_1",
+          "stake": "low",
+          "approach": "ask"
+        },
+        {
+          "id": "r:bd103e9818c4a005:t1:c:c",
+          "label": "结束与阿木的互动：拒绝帮忙，离开这个位置",
+          "intent": "interact",
+          "targetId": "r:bd103e9818c4a005:t1:e:person_1",
+          "stake": "low",
+          "approach": "leave"
+        }
+      ],
+      "memoryDeltas": []
+    },
+    "lastReceipt": {
+      "kind": "opening",
+      "choiceId": null,
+      "action": null,
+      "elapsedDays": 0,
+      "itemChanges": {},
+      "relationChanges": {},
+      "random": {
+        "before": 461199386,
+        "after": 461199386,
+        "roll": null
+      },
+      "before": {
+        "ageDays": 5760,
+        "realm": "mortal",
+        "cultivation": 0,
+        "injury": 0
+      },
+      "after": {
+        "ageDays": 5760,
+        "realm": "mortal",
+        "cultivation": 0,
+        "injury": 0
+      },
+      "death": null,
+      "birth": {
+        "originId": "artisan",
+        "talentIds": [
+          "fortune-debt",
+          "sensitive-breath"
+        ],
+        "attributes": {
+          "constitution": 6,
+          "insight": 3,
+          "fortune": 3
+        }
+      }
+    },
+    "relatedEntities": [
+      {
+        "id": "r:bd103e9818c4a005:t1:e:person_1",
+        "name": "阿木",
+        "status": "alive",
+        "kind": "person"
+      }
+    ],
+    "archiveCursor": 0
+  },
+  "posts": 1,
+  "latency": {
+    "usable": true,
+    "errorCode": null,
+    "firstAnyPreviewMs": 4253,
+    "firstReadableMs": 4628,
+    "completionMs": 10263,
+    "narrativeChars": 241,
+    "maxPreviewGapMs": 158,
+    "readingFinishEstimateMs": 44795,
+    "readingStallEstimateMs": 0,
+    "optionsWaitEstimateMs": 0,
+    "prefetchWorthEvaluating": true,
+    "assumptions": {
+      "readingCharsPerSecond": 6,
+      "readableChars": 20,
+      "targetWaitMs": 2000
+    }
+  }
+}

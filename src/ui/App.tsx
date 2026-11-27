@@ -186,7 +186,7 @@ export function App() {
             <div class="title-emblem">BAISHI WENDING · ROGUELIKE XIANXIA</div>
             <h1 class="title-main">百世问鼎</h1>
             <p class="title-sub">
-              寿元为筹，灵印相生，乾坤丹符瞬发破局。<br />
+              气血为筹，灵印相生，乾坤丹符瞬发破局。<br />
               兼修异派邪道心法、竞拍截胡稀世仙珍、迎战二阶段真魔与九重天劫。
             </p>
             <div class="title-actions">
@@ -305,7 +305,7 @@ export function App() {
                     </div>
                     <h3>{lin.name}</h3>
                     <div style={{ fontSize: '12px', color: 'var(--gold)' }}>
-                      {lin.title} · 气血 {lin.baseHp} · 寿元 {lin.baseLifespan}年
+                      {lin.title} · 初始气血 {lin.baseHp}
                     </div>
                     <p>{lin.description}</p>
                     <p style={{ color: '#c8d9d7', fontSize: '12px' }}>

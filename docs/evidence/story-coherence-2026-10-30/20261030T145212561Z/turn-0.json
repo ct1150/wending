@@ -1,0 +1,505 @@
+{
+  "caseId": "opening",
+  "start": 731.5,
+  "timeline": [
+    {
+      "atMs": 4756,
+      "chars": 1
+    },
+    {
+      "atMs": 4829,
+      "chars": 5
+    },
+    {
+      "atMs": 4891,
+      "chars": 11
+    },
+    {
+      "atMs": 4954,
+      "chars": 15
+    },
+    {
+      "atMs": 5004,
+      "chars": 20
+    },
+    {
+      "atMs": 5081,
+      "chars": 24
+    },
+    {
+      "atMs": 5128,
+      "chars": 29
+    },
+    {
+      "atMs": 5206,
+      "chars": 32
+    },
+    {
+      "atMs": 5269,
+      "chars": 35
+    },
+    {
+      "atMs": 5330,
+      "chars": 41
+    },
+    {
+      "atMs": 5406,
+      "chars": 46
+    },
+    {
+      "atMs": 5486,
+      "chars": 49
+    },
+    {
+      "atMs": 5562,
+      "chars": 53
+    },
+    {
+      "atMs": 5609,
+      "chars": 57
+    },
+    {
+      "atMs": 5669,
+      "chars": 62
+    },
+    {
+      "atMs": 5731,
+      "chars": 66
+    },
+    {
+      "atMs": 5793,
+      "chars": 71
+    },
+    {
+      "atMs": 5856,
+      "chars": 79
+    },
+    {
+      "atMs": 5916,
+      "chars": 83
+    },
+    {
+      "atMs": 5978,
+      "chars": 87
+    },
+    {
+      "atMs": 6038,
+      "chars": 92
+    },
+    {
+      "atMs": 6095,
+      "chars": 96
+    },
+    {
+      "atMs": 6170,
+      "chars": 100
+    },
+    {
+      "atMs": 6308,
+      "chars": 104
+    },
+    {
+      "atMs": 6356,
+      "chars": 110
+    },
+    {
+      "atMs": 6431,
+      "chars": 114
+    }
+  ],
+  "choicesEnabledDuringPreview": false,
+  "lastText": "你站在自家破旧的木屋前，手里攥着一把刚磨好的猎刀。村口的老猎户赵三正蹲在地上，对着一只被猎夹夹住后腿的野猪发愁，血已经染红了枯草。他抬头看见你，抹了一把脸上的汗，声音沙哑：“云归，这畜生劲儿大，夹子快被拔断了，你能不能帮把手？”",
+  "doneMs": 10820,
+  "result": {
+    "protocolVersion": 1,
+    "status": "ready",
+    "requestId": "60585ffe-1db0-421c-b07f-6900a748e536",
+    "attemptId": "5440b56e-4ad8-4a91-9419-432879718fa8",
+    "sessionRef": "sess_bd8844f1d65eb4f3f82158c6a2dfc4d4",
+    "errorCode": null,
+    "retry": null,
+    "scene": {
+      "id": "r:87d03ccb7c322d16:t1:s:scene",
+      "title": "村口遇险",
+      "location": "village",
+      "entities": [
+        {
+          "id": "r:87d03ccb7c322d16:t1:e:person_1",
+          "name": "赵三",
+          "kind": "person"
+        }
+      ],
+      "blocks": [
+        {
+          "kind": "narration",
+          "text": "你站在自家破旧的木屋前，手里攥着一把刚磨好的猎刀。村口的老猎户赵三正蹲在地上，对着一只被猎夹夹住后腿的野猪发愁，血已经染红了枯草。他抬头看见你，抹了一把脸上的汗，声音沙哑：“云归，这畜生劲儿大，夹子快被拔断了，你能不能帮把手？”"
+        }
+      ],
+      "choices": [
+        {
+          "id": "r:87d03ccb7c322d16:t1:c:b",
+          "label": "询问赵三：询问这只野猪的来历和最近山里的动静",
+          "intent": "interact",
+          "targetId": "r:87d03ccb7c322d16:t1:e:person_1",
+          "stake": "low",
+          "approach": "ask"
+        },
+        {
+          "id": "r:87d03ccb7c322d16:t1:c:c",
+          "label": "婉拒赵三：拒绝帮忙，转身回屋",
+          "intent": "interact",
+          "targetId": "r:87d03ccb7c322d16:t1:e:person_1",
+          "stake": "low",
+          "approach": "decline"
+        }
+      ],
+      "memoryDeltas": [
+        {
+          "entityId": "r:87d03ccb7c322d16:t1:e:person_1",
+          "kind": "clue",
+          "text": "你站在自家破旧的木屋前，手里攥着一把刚磨好的猎刀。村口的老猎户赵三正蹲在地上，对着一只被猎夹夹住后腿的野猪发愁，血已经染红了枯草。他抬头看见你，抹了一把脸上的汗，声音沙哑：“云归，这畜生劲儿大，夹子快被拔断了，你能不能帮把手？”",
+          "status": "open"
+        }
+      ]
+    }
+  },
+  "request": {
+    "context": {
+      "schemaVersion": 1,
+      "phase": "opening",
+      "identity": {
+        "runId": "caf13382-b594-411b-bfe6-0dc73bb9bd42",
+        "turnId": 1,
+        "baseRevision": 0,
+        "stateHash": "20176d3c9f8b1b616da786891386c45276db65105bcd9e760ec6ebc4b48c0226",
+        "choiceId": null,
+        "rulesVersion": 1,
+        "promptVersion": 1,
+        "requestId": "60585ffe-1db0-421c-b07f-6900a748e536"
+      },
+      "namespace": "r:87d03ccb7c322d16",
+      "receipt": {
+        "kind": "opening",
+        "choiceId": null,
+        "action": null,
+        "elapsedDays": 0,
+        "itemChanges": {},
+        "relationChanges": {},
+        "random": {
+          "before": 3298206280,
+          "after": 3298206280,
+          "roll": null
+        },
+        "before": {
+          "ageDays": 5760,
+          "realm": "mortal",
+          "cultivation": 0,
+          "injury": 0
+        },
+        "after": {
+          "ageDays": 5760,
+          "realm": "mortal",
+          "cultivation": 0,
+          "injury": 0
+        },
+        "death": null,
+        "birth": {
+          "originId": "village",
+          "talentIds": [
+            "sword-bone",
+            "keen-memory"
+          ],
+          "attributes": {
+            "constitution": 6,
+            "insight": 4,
+            "fortune": 2
+          }
+        }
+      },
+      "life": {
+        "name": "云归",
+        "ageDays": 5760,
+        "lifeLimit": 80,
+        "realm": "mortal",
+        "cultivation": 0,
+        "injury": 0,
+        "items": {
+          "supplies": 3,
+          "stones": 0
+        },
+        "relations": {},
+        "birth": {
+          "originId": "village",
+          "talentIds": [
+            "sword-bone",
+            "keen-memory"
+          ],
+          "attributes": {
+            "constitution": 6,
+            "insight": 4,
+            "fortune": 2
+          }
+        }
+      },
+      "entities": [],
+      "memory": {
+        "facts": [],
+        "promises": [],
+        "clues": [],
+        "recent": [],
+        "summaries": []
+      },
+      "references": [],
+      "previousScene": null,
+      "relationshipVersion": 1,
+      "relationships": {},
+      "coverage": {
+        "policy": "relevance-v1",
+        "openTotal": 0,
+        "openIncluded": 0,
+        "openOmitted": 0
+      }
+    },
+    "attempt": {
+      "id": "5440b56e-4ad8-4a91-9419-432879718fa8",
+      "sessionRef": "sess_bd8844f1d65eb4f3f82158c6a2dfc4d4",
+      "retryOf": null
+    },
+    "storyActions": true
+  },
+  "decision": null,
+  "choices": [
+    {
+      "id": "r:87d03ccb7c322d16:t1:c:b",
+      "enabled": true,
+      "label": "询问赵三：询问这只野猪的来历和最近山里的动静",
+      "cost": "0日"
+    },
+    {
+      "id": "r:87d03ccb7c322d16:t1:c:c",
+      "enabled": true,
+      "label": "婉拒赵三：拒绝帮忙，转身回屋",
+      "cost": "0日"
+    }
+  ],
+  "traces": [
+    {
+      "model": "@cf/zai-org/glm-4.7-flash",
+      "inputHash": "d8359ccd81dd12fc5cfa637ad1ee2e2bb1d048cb76988d0c07ef37abc7194a64",
+      "inputBytes": 14747,
+      "startedAt": 1793372028954,
+      "bindingReturnedAt": 1793372029368,
+      "liveRawBytes": 121311,
+      "captureComplete": true,
+      "response": {
+        "model": "@cf/zai-org/glm-4.7-flash",
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "message": {
+              "content": "{\n  \"blocks\": [\n    {\n      \"kind\": \"narration\",\n      \"text\": \"你站在自家破旧的木屋前，手里攥着一把刚磨好的猎刀。村口的老猎户赵三正蹲在地上，对着一只被猎夹夹住后腿的野猪发愁，血已经染红了枯草。他抬头看见你，抹了一把脸上的汗，声音沙哑：“云归，这畜生劲儿大，夹子快被拔断了，你能不能帮把手？”\"\n    }\n  ],\n  \"choices\": [\n    {\n      \"action\": \"interact:help\",\n      \"target\": {\n        \"kind\": \"person\",\n        \"name\": \"赵三\",\n        \"ref\": null,\n        \"status\": null\n      },\n      \"stake\": \"low\",\n      \"purpose\": \"帮忙按住野猪，协助赵三取下猎夹\",\n      \"anchor\": 0\n    },\n    {\n      \"action\": \"interact:ask\",\n      \"target\": {\n        \"kind\": \"person\",\n        \"name\": \"赵三\",\n        \"ref\": null,\n        \"status\": null\n      },\n      \"stake\": \"low\",\n      \"purpose\": \"询问这只野猪的来历和最近山里的动静\",\n      \"anchor\": 0\n    },\n    {\n      \"action\": \"interact:decline\",\n      \"target\": {\n        \"kind\": \"person\",\n        \"name\": \"赵三\",\n        \"ref\": null,\n        \"status\": null\n      },\n      \"stake\": \"low\",\n      \"purpose\": \"拒绝帮忙，转身回屋\",\n      \"anchor\": 0\n    }\n  ],\n  \"title\": \"村口遇险\",\n  \"location\": \"village\",\n  \"memoryDeltas\": [\n    {\n      \"target\": {\n        \"kind\": \"person\",\n        \"name\": \"赵三\",\n        \"ref\": null\n      ,\n      \"status\": null\n      },\n      \"kind\": \"clue\",\n      \"anchor\": 0,\n      \"status\": \"open\"\n    }\n  ]\n}",
+              "reasoning_content": ""
+            }
+          }
+        ],
+        "usage": {
+          "prompt_tokens": 1894,
+          "completion_tokens": 451,
+          "total_tokens": 2345,
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          },
+          "neurons": 26.833400000000193
+        }
+      },
+      "rawSseBytes": 121311
+    }
+  ],
+  "revision": 1,
+  "pending": false,
+  "state": {
+    "relationshipVersion": 1,
+    "version": 5,
+    "mode": "cultivation",
+    "contentVersion": 4,
+    "rulesVersion": 1,
+    "promptVersion": 1,
+    "runId": "caf13382-b594-411b-bfe6-0dc73bb9bd42",
+    "revision": 1,
+    "turnId": 1,
+    "phase": "active",
+    "rng": 3298206280,
+    "life": {
+      "name": "云归",
+      "ageDays": 5760,
+      "lifeLimit": 80,
+      "realm": "mortal",
+      "cultivation": 0,
+      "injury": 0,
+      "items": {
+        "supplies": 3,
+        "stones": 0
+      },
+      "relations": {},
+      "birth": {
+        "originId": "village",
+        "talentIds": [
+          "sword-bone",
+          "keen-memory"
+        ],
+        "attributes": {
+          "constitution": 6,
+          "insight": 4,
+          "fortune": 2
+        }
+      }
+    },
+    "birthReceipt": {
+      "kind": "opening",
+      "choiceId": null,
+      "action": null,
+      "elapsedDays": 0,
+      "itemChanges": {},
+      "relationChanges": {},
+      "random": {
+        "before": 3298206280,
+        "after": 3298206280,
+        "roll": null
+      },
+      "before": {
+        "ageDays": 5760,
+        "realm": "mortal",
+        "cultivation": 0,
+        "injury": 0
+      },
+      "after": {
+        "ageDays": 5760,
+        "realm": "mortal",
+        "cultivation": 0,
+        "injury": 0
+      },
+      "death": null,
+      "birth": {
+        "originId": "village",
+        "talentIds": [
+          "sword-bone",
+          "keen-memory"
+        ],
+        "attributes": {
+          "constitution": 6,
+          "insight": 4,
+          "fortune": 2
+        }
+      }
+    },
+    "currentScene": {
+      "id": "r:87d03ccb7c322d16:t1:s:scene",
+      "title": "村口遇险",
+      "location": "village",
+      "entities": [
+        {
+          "id": "r:87d03ccb7c322d16:t1:e:person_1",
+          "name": "赵三",
+          "kind": "person"
+        }
+      ],
+      "blocks": [
+        {
+          "kind": "narration",
+          "text": "你站在自家破旧的木屋前，手里攥着一把刚磨好的猎刀。村口的老猎户赵三正蹲在地上，对着一只被猎夹夹住后腿的野猪发愁，血已经染红了枯草。他抬头看见你，抹了一把脸上的汗，声音沙哑：“云归，这畜生劲儿大，夹子快被拔断了，你能不能帮把手？”"
+        }
+      ],
+      "choices": [
+        {
+          "id": "r:87d03ccb7c322d16:t1:c:b",
+          "label": "询问赵三：询问这只野猪的来历和最近山里的动静",
+          "intent": "interact",
+          "targetId": "r:87d03ccb7c322d16:t1:e:person_1",
+          "stake": "low",
+          "approach": "ask"
+        },
+        {
+          "id": "r:87d03ccb7c322d16:t1:c:c",
+          "label": "婉拒赵三：拒绝帮忙，转身回屋",
+          "intent": "interact",
+          "targetId": "r:87d03ccb7c322d16:t1:e:person_1",
+          "stake": "low",
+          "approach": "decline"
+        }
+      ],
+      "memoryDeltas": [
+        {
+          "entityId": "r:87d03ccb7c322d16:t1:e:person_1",
+          "kind": "clue",
+          "text": "你站在自家破旧的木屋前，手里攥着一把刚磨好的猎刀。村口的老猎户赵三正蹲在地上，对着一只被猎夹夹住后腿的野猪发愁，血已经染红了枯草。他抬头看见你，抹了一把脸上的汗，声音沙哑：“云归，这畜生劲儿大，夹子快被拔断了，你能不能帮把手？”",
+          "status": "open"
+        }
+      ]
+    },
+    "lastReceipt": {
+      "kind": "opening",
+      "choiceId": null,
+      "action": null,
+      "elapsedDays": 0,
+      "itemChanges": {},
+      "relationChanges": {},
+      "random": {
+        "before": 3298206280,
+        "after": 3298206280,
+        "roll": null
+      },
+      "before": {
+        "ageDays": 5760,
+        "realm": "mortal",
+        "cultivation": 0,
+        "injury": 0
+      },
+      "after": {
+        "ageDays": 5760,
+        "realm": "mortal",
+        "cultivation": 0,
+        "injury": 0
+      },
+      "death": null,
+      "birth": {
+        "originId": "village",
+        "talentIds": [
+          "sword-bone",
+          "keen-memory"
+        ],
+        "attributes": {
+          "constitution": 6,
+          "insight": 4,
+          "fortune": 2
+        }
+      }
+    },
+    "relatedEntities": [
+      {
+        "id": "r:87d03ccb7c322d16:t1:e:person_1",
+        "name": "赵三",
+        "kind": "person"
+      }
+    ],
+    "archiveCursor": 0
+  },
+  "posts": 1,
+  "latency": {
+    "usable": true,
+    "errorCode": null,
+    "firstAnyPreviewMs": 4756,
+    "firstReadableMs": 5004,
+    "completionMs": 10820,
+    "narrativeChars": 114,
+    "maxPreviewGapMs": 138,
+    "readingFinishEstimateMs": 24004,
+    "readingStallEstimateMs": 0,
+    "optionsWaitEstimateMs": 0,
+    "prefetchWorthEvaluating": true,
+    "assumptions": {
+      "readingCharsPerSecond": 6,
+      "readableChars": 20,
+      "targetWaitMs": 2000
+    }
+  }
+}

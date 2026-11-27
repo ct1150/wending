@@ -1,0 +1,1008 @@
+{
+  "sourceCommit": "45d38fa0518f9740b0dc82724c1f76049618c842",
+  "version": "a2926b9c-23c1-40b3-8247-36846b919d41",
+  "recordedAt": "2026-10-30T07:46:24.154Z",
+  "records": [
+    {
+      "caseId": "opening",
+      "start": 913.3000000007451,
+      "timeline": [
+        {
+          "atMs": 4232,
+          "chars": 2
+        },
+        {
+          "atMs": 4291,
+          "chars": 8
+        },
+        {
+          "atMs": 4371,
+          "chars": 12
+        },
+        {
+          "atMs": 4433,
+          "chars": 16
+        },
+        {
+          "atMs": 4494,
+          "chars": 21
+        },
+        {
+          "atMs": 4570,
+          "chars": 25
+        },
+        {
+          "atMs": 4633,
+          "chars": 30
+        },
+        {
+          "atMs": 4698,
+          "chars": 36
+        },
+        {
+          "atMs": 4758,
+          "chars": 37
+        },
+        {
+          "atMs": 4868,
+          "chars": 39
+        },
+        {
+          "atMs": 4958,
+          "chars": 41
+        },
+        {
+          "atMs": 5017,
+          "chars": 45
+        },
+        {
+          "atMs": 5065,
+          "chars": 49
+        },
+        {
+          "atMs": 5126,
+          "chars": 55
+        },
+        {
+          "atMs": 5191,
+          "chars": 59
+        },
+        {
+          "atMs": 5250,
+          "chars": 65
+        },
+        {
+          "atMs": 5312,
+          "chars": 69
+        },
+        {
+          "atMs": 5389,
+          "chars": 74
+        },
+        {
+          "atMs": 5453,
+          "chars": 78
+        },
+        {
+          "atMs": 5516,
+          "chars": 81
+        },
+        {
+          "atMs": 5720,
+          "chars": 90
+        },
+        {
+          "atMs": 5750,
+          "chars": 95
+        },
+        {
+          "atMs": 5812,
+          "chars": 100
+        },
+        {
+          "atMs": 5872,
+          "chars": 104
+        },
+        {
+          "atMs": 5935,
+          "chars": 107
+        },
+        {
+          "atMs": 6014,
+          "chars": 109
+        },
+        {
+          "atMs": 6061,
+          "chars": 114
+        },
+        {
+          "atMs": 6140,
+          "chars": 118
+        },
+        {
+          "atMs": 6219,
+          "chars": 123
+        },
+        {
+          "atMs": 6279,
+          "chars": 128
+        },
+        {
+          "atMs": 6358,
+          "chars": 131
+        },
+        {
+          "atMs": 6435,
+          "chars": 133
+        },
+        {
+          "atMs": 6480,
+          "chars": 137
+        },
+        {
+          "atMs": 6529,
+          "chars": 141
+        },
+        {
+          "atMs": 6592,
+          "chars": 145
+        },
+        {
+          "atMs": 6654,
+          "chars": 148
+        },
+        {
+          "atMs": 6732,
+          "chars": 152
+        },
+        {
+          "atMs": 6811,
+          "chars": 154
+        },
+        {
+          "atMs": 6857,
+          "chars": 161
+        },
+        {
+          "atMs": 7108,
+          "chars": 171
+        },
+        {
+          "atMs": 7141,
+          "chars": 176
+        },
+        {
+          "atMs": 7202,
+          "chars": 181
+        },
+        {
+          "atMs": 7264,
+          "chars": 186
+        },
+        {
+          "atMs": 7325,
+          "chars": 189
+        },
+        {
+          "atMs": 7920,
+          "chars": 190
+        },
+        {
+          "atMs": 7992,
+          "chars": 191
+        },
+        {
+          "atMs": 8386,
+          "chars": 192
+        },
+        {
+          "atMs": 8770,
+          "chars": 195
+        },
+        {
+          "atMs": 8946,
+          "chars": 196
+        },
+        {
+          "atMs": 9204,
+          "chars": 197
+        },
+        {
+          "atMs": 9241,
+          "chars": 201
+        },
+        {
+          "atMs": 9307,
+          "chars": 204
+        },
+        {
+          "atMs": 9366,
+          "chars": 208
+        },
+        {
+          "atMs": 9421,
+          "chars": 211
+        },
+        {
+          "atMs": 9479,
+          "chars": 214
+        },
+        {
+          "atMs": 9536,
+          "chars": 217
+        },
+        {
+          "atMs": 9596,
+          "chars": 219
+        },
+        {
+          "atMs": 9806,
+          "chars": 224
+        },
+        {
+          "atMs": 9848,
+          "chars": 226
+        },
+        {
+          "atMs": 9907,
+          "chars": 228
+        },
+        {
+          "atMs": 9956,
+          "chars": 232
+        },
+        {
+          "atMs": 10019,
+          "chars": 236
+        },
+        {
+          "atMs": 10081,
+          "chars": 238
+        },
+        {
+          "atMs": 10142,
+          "chars": 241
+        },
+        {
+          "atMs": 10194,
+          "chars": 243
+        },
+        {
+          "atMs": 10330,
+          "chars": 251
+        },
+        {
+          "atMs": 10376,
+          "chars": 255
+        },
+        {
+          "atMs": 10451,
+          "chars": 260
+        },
+        {
+          "atMs": 10512,
+          "chars": 262
+        },
+        {
+          "atMs": 10574,
+          "chars": 265
+        },
+        {
+          "atMs": 10623,
+          "chars": 268
+        },
+        {
+          "atMs": 10672,
+          "chars": 271
+        },
+        {
+          "atMs": 10731,
+          "chars": 275
+        },
+        {
+          "atMs": 10794,
+          "chars": 278
+        },
+        {
+          "atMs": 10845,
+          "chars": 283
+        },
+        {
+          "atMs": 10904,
+          "chars": 287
+        },
+        {
+          "atMs": 10953,
+          "chars": 291
+        },
+        {
+          "atMs": 11030,
+          "chars": 294
+        },
+        {
+          "atMs": 11062,
+          "chars": 299
+        },
+        {
+          "atMs": 11140,
+          "chars": 303
+        },
+        {
+          "atMs": 11191,
+          "chars": 305
+        },
+        {
+          "atMs": 11549,
+          "chars": 314
+        },
+        {
+          "atMs": 11581,
+          "chars": 325
+        },
+        {
+          "atMs": 11627,
+          "chars": 327
+        },
+        {
+          "atMs": 11697,
+          "chars": 330
+        },
+        {
+          "atMs": 11755,
+          "chars": 333
+        },
+        {
+          "atMs": 11816,
+          "chars": 337
+        },
+        {
+          "atMs": 11863,
+          "chars": 339
+        },
+        {
+          "atMs": 11925,
+          "chars": 343
+        },
+        {
+          "atMs": 11985,
+          "chars": 346
+        },
+        {
+          "atMs": 12032,
+          "chars": 349
+        },
+        {
+          "atMs": 12092,
+          "chars": 352
+        },
+        {
+          "atMs": 12153,
+          "chars": 356
+        },
+        {
+          "atMs": 12214,
+          "chars": 361
+        },
+        {
+          "atMs": 12354,
+          "chars": 370
+        },
+        {
+          "atMs": 12385,
+          "chars": 375
+        },
+        {
+          "atMs": 12759,
+          "chars": 380
+        },
+        {
+          "atMs": 12788,
+          "chars": 392
+        },
+        {
+          "atMs": 13022,
+          "chars": 399
+        },
+        {
+          "atMs": 13052,
+          "chars": 404
+        },
+        {
+          "atMs": 13129,
+          "chars": 407
+        },
+        {
+          "atMs": 13191,
+          "chars": 409
+        },
+        {
+          "atMs": 13239,
+          "chars": 414
+        },
+        {
+          "atMs": 13298,
+          "chars": 418
+        },
+        {
+          "atMs": 13343,
+          "chars": 421
+        },
+        {
+          "atMs": 13408,
+          "chars": 425
+        },
+        {
+          "atMs": 13451,
+          "chars": 428
+        },
+        {
+          "atMs": 13514,
+          "chars": 430
+        },
+        {
+          "atMs": 13562,
+          "chars": 432
+        },
+        {
+          "atMs": 13625,
+          "chars": 437
+        },
+        {
+          "atMs": 13689,
+          "chars": 439
+        },
+        {
+          "atMs": 13752,
+          "chars": 443
+        },
+        {
+          "atMs": 13827,
+          "chars": 446
+        },
+        {
+          "atMs": 14032,
+          "chars": 447
+        },
+        {
+          "atMs": 14126,
+          "chars": 451
+        },
+        {
+          "atMs": 14205,
+          "chars": 455
+        },
+        {
+          "atMs": 14265,
+          "chars": 457
+        },
+        {
+          "atMs": 14310,
+          "chars": 460
+        },
+        {
+          "atMs": 14373,
+          "chars": 464
+        },
+        {
+          "atMs": 14439,
+          "chars": 469
+        },
+        {
+          "atMs": 14484,
+          "chars": 472
+        },
+        {
+          "atMs": 14547,
+          "chars": 475
+        },
+        {
+          "atMs": 14605,
+          "chars": 478
+        },
+        {
+          "atMs": 14653,
+          "chars": 482
+        },
+        {
+          "atMs": 14717,
+          "chars": 488
+        },
+        {
+          "atMs": 14981,
+          "chars": 493
+        },
+        {
+          "atMs": 15044,
+          "chars": 499
+        },
+        {
+          "atMs": 15310,
+          "chars": 515
+        },
+        {
+          "atMs": 15699,
+          "chars": 523
+        },
+        {
+          "atMs": 15879,
+          "chars": 545
+        },
+        {
+          "atMs": 15893,
+          "chars": 551
+        },
+        {
+          "atMs": 15908,
+          "chars": 554
+        },
+        {
+          "atMs": 15971,
+          "chars": 556
+        },
+        {
+          "atMs": 16032,
+          "chars": 559
+        },
+        {
+          "atMs": 16237,
+          "chars": 563
+        },
+        {
+          "atMs": 16519,
+          "chars": 566
+        }
+      ],
+      "choicesEnabledDuringPreview": false,
+      "lastText": "十六岁的云归背着猎弓站在村口的老槐树下，晨雾还没散尽。他低头看了看脚边刚磨好的箭簇，那是他十六年来第一次独自进山。作为猎户之子，他天生剑骨，过目成诵，但此刻面对未知的深林，他只觉得手中的弓弦有些发紧。村口的老猎户张三正蹲在地上抽旱烟，见你出来，便指了指身后那片被晨雾笼罩的密林，那是通往‘黑风岭’的路。张三说最近林子里有些不对劲，常有野兽伤人，但他还是叮嘱你小心，毕竟家里还等着你带些肉回去。你握紧了弓，深吸一口气，踏入了这片未知的迷雾。\n\n刚进林子没多远，脚下的泥土变得松软，四周的鸟叫声突然消失了。云归停下脚步，目光扫过四周。根据他过目成诵的本事，他认出了这片林子的地形图，但他更在意的是前方不远处的一处空地。那里似乎有什么东西在反光，在晨光中若隐若现。他记得张三说过，黑风岭的野兽喜欢在清晨觅食，而这里地势平坦，水源充足，正是它们聚集的地方。他握紧了弓，屏住呼吸，向那处空地靠近。\n\n空地中央有一只体型硕大的黑熊，正背对着你，似乎在啃食着什么。它的皮毛油光水滑，显然是只成年的雄性黑熊。云归知道，这只黑熊的皮毛和胆汁都是好东西，但他更担心的是，黑熊的背上似乎背着什么东西。那东西在阳光下闪着寒光，像是一块玉佩。云归的心跳加速，他意识到这可能是一个机会，也可能是一个陷阱。他必须做出决定，凡人肉身，面对这头黑熊，他必须小心应对。",
+      "doneMs": 24510,
+      "result": {
+        "protocolVersion": 1,
+        "status": "ready",
+        "requestId": "1d95b6db-2dca-497f-9a29-241d8c735ea0",
+        "attemptId": "55229f9d-93df-46df-be87-02660420b859",
+        "sessionRef": "sess_dd1f8dcef8d14fdfd7daeb87ad80be27",
+        "errorCode": null,
+        "retry": null,
+        "scene": {
+          "id": "r:db30055e6f965a6c:t1:s:scene",
+          "title": "黑风岭晨雾",
+          "location": "village",
+          "entities": [
+            {
+              "id": "r:db30055e6f965a6c:t1:e:person_1",
+              "name": "张三",
+              "status": "alive",
+              "kind": "person"
+            },
+            {
+              "id": "r:db30055e6f965a6c:t1:e:place_1",
+              "name": "黑风岭",
+              "kind": "place"
+            }
+          ],
+          "blocks": [
+            {
+              "kind": "narration",
+              "text": "十六岁的云归背着猎弓站在村口的老槐树下，晨雾还没散尽。他低头看了看脚边刚磨好的箭簇，那是他十六年来第一次独自进山。作为猎户之子，他天生剑骨，过目成诵，但此刻面对未知的深林，他只觉得手中的弓弦有些发紧。村口的老猎户张三正蹲在地上抽旱烟，见你出来，便指了指身后那片被晨雾笼罩的密林，那是通往‘黑风岭’的路。张三说最近林子里有些不对劲，常有野兽伤人，但他还是叮嘱你小心，毕竟家里还等着你带些肉回去。你握紧了弓，深吸一口气，踏入了这片未知的迷雾。"
+            },
+            {
+              "kind": "narration",
+              "text": "刚进林子没多远，脚下的泥土变得松软，四周的鸟叫声突然消失了。云归停下脚步，目光扫过四周。根据他过目成诵的本事，他认出了这片林子的地形图，但他更在意的是前方不远处的一处空地。那里似乎有什么东西在反光，在晨光中若隐若现。他记得张三说过，黑风岭的野兽喜欢在清晨觅食，而这里地势平坦，水源充足，正是它们聚集的地方。他握紧了弓，屏住呼吸，向那处空地靠近。"
+            },
+            {
+              "kind": "narration",
+              "text": "空地中央有一只体型硕大的黑熊，正背对着你，似乎在啃食着什么。它的皮毛油光水滑，显然是只成年的雄性黑熊。云归知道，这只黑熊的皮毛和胆汁都是好东西，但他更担心的是，黑熊的背上似乎背着什么东西。那东西在阳光下闪着寒光，像是一块玉佩。云归的心跳加速，他意识到这可能是一个机会，也可能是一个陷阱。他必须做出决定，凡人肉身，面对这头黑熊，他必须小心应对。"
+            }
+          ],
+          "choices": [
+            {
+              "id": "r:db30055e6f965a6c:t1:c:a",
+              "label": "向张三打听黑风岭的野兽习性",
+              "intent": "interact",
+              "targetId": "r:db30055e6f965a6c:t1:e:person_1",
+              "stake": "low",
+              "approach": "ask"
+            },
+            {
+              "id": "r:db30055e6f965a6c:t1:c:b",
+              "label": "前往黑风岭",
+              "intent": "travel",
+              "targetId": "r:db30055e6f965a6c:t1:e:place_1",
+              "stake": "low",
+              "approach": "road"
+            },
+            {
+              "id": "r:db30055e6f965a6c:t1:c:c",
+              "label": "观察黑熊背上的反光物",
+              "intent": "interact",
+              "targetId": "self",
+              "stake": "low",
+              "approach": "observe"
+            }
+          ],
+          "memoryDeltas": [
+            {
+              "entityId": "r:db30055e6f965a6c:t1:e:person_1",
+              "kind": "relationship",
+              "text": "十六岁的云归背着猎弓站在村口的老槐树下，晨雾还没散尽。他低头看了看脚边刚磨好的箭簇，那是他十六年来第一次独自进山。作为猎户之子，他天生剑骨，过目成诵，但此刻面对未知的深林，他只觉得手中的弓弦有些发紧。村口的老猎户张三正蹲在地上抽旱烟，见你出来，便指了指身后那片被晨雾笼罩的密林，那是通往‘黑风岭’的路。张三说最近林子里有些不对劲，常有野兽伤人，但他还是叮嘱你小心，毕竟家里还等着你带些肉回去。你握紧了弓，深吸一口气，踏入了这片未知的迷雾。"
+            }
+          ]
+        }
+      },
+      "request": {
+        "context": {
+          "schemaVersion": 1,
+          "phase": "opening",
+          "identity": {
+            "runId": "43de1f32-2456-437f-b8f0-f4b2a3dab052",
+            "turnId": 1,
+            "baseRevision": 0,
+            "stateHash": "1ecdfcd5c18b1398a9b39ec707a2e23ae5f3647800799cbc845d3c4480860b94",
+            "choiceId": null,
+            "rulesVersion": 1,
+            "promptVersion": 1,
+            "requestId": "1d95b6db-2dca-497f-9a29-241d8c735ea0"
+          },
+          "namespace": "r:db30055e6f965a6c",
+          "receipt": {
+            "kind": "opening",
+            "choiceId": null,
+            "action": null,
+            "elapsedDays": 0,
+            "itemChanges": {},
+            "relationChanges": {},
+            "random": {
+              "before": 2344240800,
+              "after": 2344240800,
+              "roll": null
+            },
+            "before": {
+              "ageDays": 5760,
+              "realm": "mortal",
+              "cultivation": 0,
+              "injury": 0
+            },
+            "after": {
+              "ageDays": 5760,
+              "realm": "mortal",
+              "cultivation": 0,
+              "injury": 0
+            },
+            "death": null,
+            "birth": {
+              "originId": "village",
+              "talentIds": [
+                "sword-bone",
+                "keen-memory"
+              ],
+              "attributes": {
+                "constitution": 3,
+                "insight": 4,
+                "fortune": 5
+              }
+            }
+          },
+          "life": {
+            "name": "云归",
+            "ageDays": 5760,
+            "lifeLimit": 80,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0,
+            "items": {
+              "supplies": 3,
+              "stones": 0
+            },
+            "relations": {},
+            "birth": {
+              "originId": "village",
+              "talentIds": [
+                "sword-bone",
+                "keen-memory"
+              ],
+              "attributes": {
+                "constitution": 3,
+                "insight": 4,
+                "fortune": 5
+              }
+            }
+          },
+          "entities": [],
+          "memory": {
+            "facts": [],
+            "promises": [],
+            "clues": [],
+            "recent": [],
+            "summaries": []
+          },
+          "references": [],
+          "previousScene": null,
+          "relationshipVersion": 1,
+          "relationships": {},
+          "coverage": {
+            "policy": "relevance-v1",
+            "openTotal": 0,
+            "openIncluded": 0,
+            "openOmitted": 0
+          }
+        },
+        "attempt": {
+          "id": "55229f9d-93df-46df-be87-02660420b859",
+          "sessionRef": "sess_dd1f8dcef8d14fdfd7daeb87ad80be27",
+          "retryOf": null
+        }
+      },
+      "decision": null,
+      "choices": [
+        {
+          "id": "r:db30055e6f965a6c:t1:c:a",
+          "enabled": true,
+          "label": "向张三打听黑风岭的野兽习性",
+          "cost": "0日"
+        },
+        {
+          "id": "r:db30055e6f965a6c:t1:c:b",
+          "enabled": true,
+          "label": "前往黑风岭",
+          "cost": "30日 · 行粮 1"
+        },
+        {
+          "id": "r:db30055e6f965a6c:t1:c:c",
+          "enabled": true,
+          "label": "观察黑熊背上的反光物",
+          "cost": "0日"
+        }
+      ],
+      "traces": [
+        {
+          "model": "@cf/zai-org/glm-4.7-flash",
+          "inputHash": "237b32146ad099d63c76a9bcd60ed54192cb56c1e800d896845ff95f94954d1a",
+          "inputBytes": 13425,
+          "startedAt": 1793346265808,
+          "bindingReturnedAt": 1793346266341,
+          "response": {
+            "model": "@cf/zai-org/glm-4.7-flash",
+            "choices": [
+              {
+                "finish_reason": "stop",
+                "message": {
+                  "content": "{\"blocks\":[{\"kind\":\"narration\",\"text\":\"十六岁的云归背着猎弓站在村口的老槐树下，晨雾还没散尽。他低头看了看脚边刚磨好的箭簇，那是他十六年来第一次独自进山。作为猎户之子，他天生剑骨，过目成诵，但此刻面对未知的深林，他只觉得手中的弓弦有些发紧。村口的老猎户张三正蹲在地上抽旱烟，见你出来，便指了指身后那片被晨雾笼罩的密林，那是通往‘黑风岭’的路。张三说最近林子里有些不对劲，常有野兽伤人，但他还是叮嘱你小心，毕竟家里还等着你带些肉回去。你握紧了弓，深吸一口气，踏入了这片未知的迷雾。\"},{\"kind\":\"narration\",\"text\":\"刚进林子没多远，脚下的泥土变得松软，四周的鸟叫声突然消失了。云归停下脚步，目光扫过四周。根据他过目成诵的本事，他认出了这片林子的地形图，但他更在意的是前方不远处的一处空地。那里似乎有什么东西在反光，在晨光中若隐若现。他记得张三说过，黑风岭的野兽喜欢在清晨觅食，而这里地势平坦，水源充足，正是它们聚集的地方。他握紧了弓，屏住呼吸，向那处空地靠近。\"},{\"kind\":\"narration\",\"text\":\"空地中央有一只体型硕大的黑熊，正背对着你，似乎在啃食着什么。它的皮毛油光水滑，显然是只成年的雄性黑熊。云归知道，这只黑熊的皮毛和胆汁都是好东西，但他更担心的是，黑熊的背上似乎背着什么东西。那东西在阳光下闪着寒光，像是一块玉佩。云归的心跳加速，他意识到这可能是一个机会，也可能是一个陷阱。他必须做出决定，凡人肉身，面对这头黑熊，他必须小心应对。\"}],\"choices\":[{\"action\":\"interact:ask\",\"targetId\":\"p1\",\"stake\":\"low\",\"label\":\"向张三打听黑风岭的野兽习性\",\"anchor\":0},{\"action\":\"travel:road\",\"targetId\":\"l1\",\"stake\":\"low\",\"label\":\"前往黑风岭\",\"anchor\":0},{\"action\":\"interact:observe\",\"targetId\":\"self\",\"stake\":\"low\",\"label\":\"观察黑熊背上的反光物\",\"anchor\":2}],\"title\":\"黑风岭晨雾\",\"location\":\"village\",\"otherPeople\":[{\"id\":\"p1\",\"name\":\"张三\",\"status\":\"alive\"}],\"places\":[{\"id\":\"l1\",\"name\":\"黑风岭\"}],\"factions\":[],\"memoryDeltas\":[{\"entityId\":\"p1\",\"anchor\":0,\"kind\":\"relationship\"}]}",
+                  "reasoning_content": ""
+                }
+              }
+            ],
+            "usage": {
+              "prompt_tokens": 1350,
+              "completion_tokens": 612,
+              "total_tokens": 1962,
+              "prompt_tokens_details": {
+                "cached_tokens": 0
+              },
+              "neurons": 29.70180000000026
+            }
+          },
+          "rawSseBytes": 205854
+        }
+      ],
+      "revision": 1,
+      "pending": false,
+      "state": {
+        "relationshipVersion": 1,
+        "version": 5,
+        "mode": "cultivation",
+        "contentVersion": 4,
+        "rulesVersion": 1,
+        "promptVersion": 1,
+        "runId": "43de1f32-2456-437f-b8f0-f4b2a3dab052",
+        "revision": 1,
+        "turnId": 1,
+        "phase": "active",
+        "rng": 2344240800,
+        "life": {
+          "name": "云归",
+          "ageDays": 5760,
+          "lifeLimit": 80,
+          "realm": "mortal",
+          "cultivation": 0,
+          "injury": 0,
+          "items": {
+            "supplies": 3,
+            "stones": 0
+          },
+          "relations": {},
+          "birth": {
+            "originId": "village",
+            "talentIds": [
+              "sword-bone",
+              "keen-memory"
+            ],
+            "attributes": {
+              "constitution": 3,
+              "insight": 4,
+              "fortune": 5
+            }
+          }
+        },
+        "birthReceipt": {
+          "kind": "opening",
+          "choiceId": null,
+          "action": null,
+          "elapsedDays": 0,
+          "itemChanges": {},
+          "relationChanges": {},
+          "random": {
+            "before": 2344240800,
+            "after": 2344240800,
+            "roll": null
+          },
+          "before": {
+            "ageDays": 5760,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "after": {
+            "ageDays": 5760,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "death": null,
+          "birth": {
+            "originId": "village",
+            "talentIds": [
+              "sword-bone",
+              "keen-memory"
+            ],
+            "attributes": {
+              "constitution": 3,
+              "insight": 4,
+              "fortune": 5
+            }
+          }
+        },
+        "currentScene": {
+          "id": "r:db30055e6f965a6c:t1:s:scene",
+          "title": "黑风岭晨雾",
+          "location": "village",
+          "entities": [
+            {
+              "id": "r:db30055e6f965a6c:t1:e:person_1",
+              "name": "张三",
+              "status": "alive",
+              "kind": "person"
+            },
+            {
+              "id": "r:db30055e6f965a6c:t1:e:place_1",
+              "name": "黑风岭",
+              "kind": "place"
+            }
+          ],
+          "blocks": [
+            {
+              "kind": "narration",
+              "text": "十六岁的云归背着猎弓站在村口的老槐树下，晨雾还没散尽。他低头看了看脚边刚磨好的箭簇，那是他十六年来第一次独自进山。作为猎户之子，他天生剑骨，过目成诵，但此刻面对未知的深林，他只觉得手中的弓弦有些发紧。村口的老猎户张三正蹲在地上抽旱烟，见你出来，便指了指身后那片被晨雾笼罩的密林，那是通往‘黑风岭’的路。张三说最近林子里有些不对劲，常有野兽伤人，但他还是叮嘱你小心，毕竟家里还等着你带些肉回去。你握紧了弓，深吸一口气，踏入了这片未知的迷雾。"
+            },
+            {
+              "kind": "narration",
+              "text": "刚进林子没多远，脚下的泥土变得松软，四周的鸟叫声突然消失了。云归停下脚步，目光扫过四周。根据他过目成诵的本事，他认出了这片林子的地形图，但他更在意的是前方不远处的一处空地。那里似乎有什么东西在反光，在晨光中若隐若现。他记得张三说过，黑风岭的野兽喜欢在清晨觅食，而这里地势平坦，水源充足，正是它们聚集的地方。他握紧了弓，屏住呼吸，向那处空地靠近。"
+            },
+            {
+              "kind": "narration",
+              "text": "空地中央有一只体型硕大的黑熊，正背对着你，似乎在啃食着什么。它的皮毛油光水滑，显然是只成年的雄性黑熊。云归知道，这只黑熊的皮毛和胆汁都是好东西，但他更担心的是，黑熊的背上似乎背着什么东西。那东西在阳光下闪着寒光，像是一块玉佩。云归的心跳加速，他意识到这可能是一个机会，也可能是一个陷阱。他必须做出决定，凡人肉身，面对这头黑熊，他必须小心应对。"
+            }
+          ],
+          "choices": [
+            {
+              "id": "r:db30055e6f965a6c:t1:c:a",
+              "label": "向张三打听黑风岭的野兽习性",
+              "intent": "interact",
+              "targetId": "r:db30055e6f965a6c:t1:e:person_1",
+              "stake": "low",
+              "approach": "ask"
+            },
+            {
+              "id": "r:db30055e6f965a6c:t1:c:b",
+              "label": "前往黑风岭",
+              "intent": "travel",
+              "targetId": "r:db30055e6f965a6c:t1:e:place_1",
+              "stake": "low",
+              "approach": "road"
+            },
+            {
+              "id": "r:db30055e6f965a6c:t1:c:c",
+              "label": "观察黑熊背上的反光物",
+              "intent": "interact",
+              "targetId": "self",
+              "stake": "low",
+              "approach": "observe"
+            }
+          ],
+          "memoryDeltas": [
+            {
+              "entityId": "r:db30055e6f965a6c:t1:e:person_1",
+              "kind": "relationship",
+              "text": "十六岁的云归背着猎弓站在村口的老槐树下，晨雾还没散尽。他低头看了看脚边刚磨好的箭簇，那是他十六年来第一次独自进山。作为猎户之子，他天生剑骨，过目成诵，但此刻面对未知的深林，他只觉得手中的弓弦有些发紧。村口的老猎户张三正蹲在地上抽旱烟，见你出来，便指了指身后那片被晨雾笼罩的密林，那是通往‘黑风岭’的路。张三说最近林子里有些不对劲，常有野兽伤人，但他还是叮嘱你小心，毕竟家里还等着你带些肉回去。你握紧了弓，深吸一口气，踏入了这片未知的迷雾。"
+            }
+          ]
+        },
+        "lastReceipt": {
+          "kind": "opening",
+          "choiceId": null,
+          "action": null,
+          "elapsedDays": 0,
+          "itemChanges": {},
+          "relationChanges": {},
+          "random": {
+            "before": 2344240800,
+            "after": 2344240800,
+            "roll": null
+          },
+          "before": {
+            "ageDays": 5760,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "after": {
+            "ageDays": 5760,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "death": null,
+          "birth": {
+            "originId": "village",
+            "talentIds": [
+              "sword-bone",
+              "keen-memory"
+            ],
+            "attributes": {
+              "constitution": 3,
+              "insight": 4,
+              "fortune": 5
+            }
+          }
+        },
+        "relatedEntities": [
+          {
+            "id": "r:db30055e6f965a6c:t1:e:person_1",
+            "name": "张三",
+            "status": "alive",
+            "kind": "person"
+          },
+          {
+            "id": "r:db30055e6f965a6c:t1:e:place_1",
+            "name": "黑风岭",
+            "kind": "place"
+          }
+        ],
+        "archiveCursor": 0
+      },
+      "posts": 1,
+      "latency": {
+        "usable": true,
+        "errorCode": null,
+        "firstAnyPreviewMs": 4232,
+        "firstReadableMs": 4494,
+        "completionMs": 24510,
+        "narrativeChars": 566,
+        "maxPreviewGapMs": 595,
+        "readingFinishEstimateMs": 98827,
+        "readingStallEstimateMs": 0,
+        "optionsWaitEstimateMs": 0,
+        "prefetchWorthEvaluating": true,
+        "assumptions": {
+          "readingCharsPerSecond": 6,
+          "readableChars": 20,
+          "targetWaitMs": 2000
+        }
+      }
+    }
+  ],
+  "errors": [
+    "Invalid choice"
+  ],
+  "posts": 1,
+  "refreshed": null
+}

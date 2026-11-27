@@ -1,0 +1,576 @@
+{
+  "caseId": "opening",
+  "start": 799.8000000007451,
+  "timeline": [
+    {
+      "atMs": 6713,
+      "chars": 1
+    },
+    {
+      "atMs": 6789,
+      "chars": 3
+    },
+    {
+      "atMs": 7180,
+      "chars": 25
+    },
+    {
+      "atMs": 7211,
+      "chars": 28
+    },
+    {
+      "atMs": 7274,
+      "chars": 32
+    },
+    {
+      "atMs": 7336,
+      "chars": 34
+    },
+    {
+      "atMs": 7399,
+      "chars": 37
+    },
+    {
+      "atMs": 7459,
+      "chars": 43
+    },
+    {
+      "atMs": 7519,
+      "chars": 47
+    },
+    {
+      "atMs": 7583,
+      "chars": 51
+    },
+    {
+      "atMs": 7646,
+      "chars": 55
+    },
+    {
+      "atMs": 7709,
+      "chars": 58
+    },
+    {
+      "atMs": 7771,
+      "chars": 61
+    },
+    {
+      "atMs": 7834,
+      "chars": 65
+    },
+    {
+      "atMs": 7897,
+      "chars": 68
+    },
+    {
+      "atMs": 7961,
+      "chars": 71
+    },
+    {
+      "atMs": 8118,
+      "chars": 73
+    },
+    {
+      "atMs": 8179,
+      "chars": 76
+    },
+    {
+      "atMs": 8320,
+      "chars": 86
+    },
+    {
+      "atMs": 8445,
+      "chars": 89
+    },
+    {
+      "atMs": 8520,
+      "chars": 91
+    },
+    {
+      "atMs": 8581,
+      "chars": 94
+    },
+    {
+      "atMs": 8644,
+      "chars": 97
+    },
+    {
+      "atMs": 8705,
+      "chars": 102
+    },
+    {
+      "atMs": 9014,
+      "chars": 113
+    },
+    {
+      "atMs": 9169,
+      "chars": 116
+    },
+    {
+      "atMs": 9233,
+      "chars": 118
+    },
+    {
+      "atMs": 9310,
+      "chars": 122
+    },
+    {
+      "atMs": 9357,
+      "chars": 126
+    },
+    {
+      "atMs": 9447,
+      "chars": 127
+    },
+    {
+      "atMs": 9494,
+      "chars": 130
+    },
+    {
+      "atMs": 9587,
+      "chars": 134
+    },
+    {
+      "atMs": 9678,
+      "chars": 138
+    },
+    {
+      "atMs": 9771,
+      "chars": 140
+    },
+    {
+      "atMs": 9911,
+      "chars": 146
+    }
+  ],
+  "choicesEnabledDuringPreview": false,
+  "lastText": "你今年十六岁，是个在深山里长大的猎户。十六年的光阴让你练就了一身好筋骨，也让你习惯了与野兽为伴。你的命格有些古怪，福祸相依，这让你在山林间总能嗅到一丝不寻常的气息，哪怕只是风吹草动，你也能敏锐地察觉到。你背着一把磨得发亮的猎弓，腰间别着一把柴刀，正站在村口的古槐树下，准备开启你的第一次冒险。",
+  "doneMs": 16181,
+  "result": {
+    "protocolVersion": 1,
+    "status": "ready",
+    "requestId": "bfa6f452-fd85-41a8-a3ac-78c48ffb310f",
+    "attemptId": "9e7c49f2-b56a-47cb-91a3-01749e7fc762",
+    "sessionRef": "sess_a5707a4e97b34d482e38d2945fb3ac92",
+    "errorCode": null,
+    "retry": null,
+    "scene": {
+      "id": "r:4a6fc5e75d36ffc2:t1:s:scene",
+      "title": "山村猎户",
+      "location": "village",
+      "entities": [
+        {
+          "id": "r:4a6fc5e75d36ffc2:t1:e:person_1",
+          "name": "村长",
+          "status": "alive",
+          "kind": "person"
+        },
+        {
+          "id": "r:4a6fc5e75d36ffc2:t1:e:place_1",
+          "name": "后山深处",
+          "kind": "place"
+        }
+      ],
+      "blocks": [
+        {
+          "kind": "narration",
+          "text": "你今年十六岁，是个在深山里长大的猎户。十六年的光阴让你练就了一身好筋骨，也让你习惯了与野兽为伴。你的命格有些古怪，福祸相依，这让你在山林间总能嗅到一丝不寻常的气息，哪怕只是风吹草动，你也能敏锐地察觉到。你背着一把磨得发亮的猎弓，腰间别着一把柴刀，正站在村口的古槐树下，准备开启你的第一次冒险。"
+        }
+      ],
+      "choices": [
+        {
+          "id": "r:4a6fc5e75d36ffc2:t1:c:a",
+          "label": "询问村长关于山里的传闻",
+          "intent": "interact",
+          "targetId": "r:4a6fc5e75d36ffc2:t1:e:person_1",
+          "stake": "low",
+          "approach": "ask"
+        },
+        {
+          "id": "r:4a6fc5e75d36ffc2:t1:c:b",
+          "label": "独自前往后山深处",
+          "intent": "travel",
+          "targetId": "r:4a6fc5e75d36ffc2:t1:e:place_1",
+          "stake": "low",
+          "approach": "wilderness"
+        },
+        {
+          "id": "r:4a6fc5e75d36ffc2:t1:c:c",
+          "label": "检查自己的装备和身体",
+          "intent": "interact",
+          "targetId": "self",
+          "stake": "low",
+          "approach": "observe"
+        }
+      ],
+      "memoryDeltas": [
+        {
+          "entityId": "r:4a6fc5e75d36ffc2:t1:e:person_1",
+          "text": "云归询问村长关于山里的传闻。",
+          "kind": "fact"
+        }
+      ]
+    }
+  },
+  "request": {
+    "context": {
+      "schemaVersion": 1,
+      "phase": "opening",
+      "identity": {
+        "runId": "c72a71bb-5cce-40b9-8eef-c2b65e9506cf",
+        "turnId": 1,
+        "baseRevision": 0,
+        "stateHash": "2d8723220599828f2df0860216cccacb8cce27a03cabc2c8426a446e0949663a",
+        "choiceId": null,
+        "rulesVersion": 1,
+        "promptVersion": 1,
+        "requestId": "bfa6f452-fd85-41a8-a3ac-78c48ffb310f"
+      },
+      "namespace": "r:4a6fc5e75d36ffc2",
+      "receipt": {
+        "kind": "opening",
+        "choiceId": null,
+        "action": null,
+        "elapsedDays": 0,
+        "itemChanges": {},
+        "relationChanges": {},
+        "random": {
+          "before": 4183801396,
+          "after": 4183801396,
+          "roll": null
+        },
+        "before": {
+          "ageDays": 5760,
+          "realm": "mortal",
+          "cultivation": 0,
+          "injury": 0
+        },
+        "after": {
+          "ageDays": 5760,
+          "realm": "mortal",
+          "cultivation": 0,
+          "injury": 0
+        },
+        "death": null,
+        "birth": {
+          "originId": "village",
+          "talentIds": [
+            "fortune-debt",
+            "sensitive-breath"
+          ],
+          "attributes": {
+            "constitution": 3,
+            "insight": 3,
+            "fortune": 6
+          }
+        }
+      },
+      "life": {
+        "name": "云归",
+        "ageDays": 5760,
+        "lifeLimit": 80,
+        "realm": "mortal",
+        "cultivation": 0,
+        "injury": 0,
+        "items": {
+          "supplies": 3,
+          "stones": 0
+        },
+        "relations": {},
+        "birth": {
+          "originId": "village",
+          "talentIds": [
+            "fortune-debt",
+            "sensitive-breath"
+          ],
+          "attributes": {
+            "constitution": 3,
+            "insight": 3,
+            "fortune": 6
+          }
+        }
+      },
+      "entities": [],
+      "memory": {
+        "facts": [],
+        "promises": [],
+        "clues": [],
+        "recent": [],
+        "summaries": []
+      },
+      "references": [],
+      "previousScene": null,
+      "relationshipVersion": 1,
+      "relationships": {},
+      "coverage": {
+        "policy": "relevance-v1",
+        "openTotal": 0,
+        "openIncluded": 0,
+        "openOmitted": 0
+      }
+    },
+    "attempt": {
+      "id": "9e7c49f2-b56a-47cb-91a3-01749e7fc762",
+      "sessionRef": "sess_a5707a4e97b34d482e38d2945fb3ac92",
+      "retryOf": null
+    }
+  },
+  "decision": null,
+  "choices": [
+    {
+      "id": "r:4a6fc5e75d36ffc2:t1:c:a",
+      "enabled": true,
+      "label": "询问村长关于山里的传闻",
+      "cost": "0日"
+    },
+    {
+      "id": "r:4a6fc5e75d36ffc2:t1:c:b",
+      "enabled": true,
+      "label": "独自前往后山深处",
+      "cost": "60日 · 行粮 1 · 历练受伤基础风险25%，根骨与坚韧筋骨可降低风险。"
+    },
+    {
+      "id": "r:4a6fc5e75d36ffc2:t1:c:c",
+      "enabled": true,
+      "label": "检查自己的装备和身体",
+      "cost": "0日"
+    }
+  ],
+  "traces": [
+    {
+      "model": "@cf/zai-org/glm-4.7-flash",
+      "inputHash": "868a1f9fdcb4fb467c7e80c4bfbad040ed5bc5f347ef411e7f26be14b22d7e77",
+      "inputBytes": 13106,
+      "startedAt": 1793345742045,
+      "bindingReturnedAt": 1793345742401,
+      "response": {
+        "model": "@cf/zai-org/glm-4.7-flash",
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "message": {
+              "content": "{\n  \"blocks\": [\n    {\n      \"kind\": \"narration\",\n      \"text\": \"你今年十六岁，是个在深山里长大的猎户。十六年的光阴让你练就了一身好筋骨，也让你习惯了与野兽为伴。你的命格有些古怪，福祸相依，这让你在山林间总能嗅到一丝不寻常的气息，哪怕只是风吹草动，你也能敏锐地察觉到。你背着一把磨得发亮的猎弓，腰间别着一把柴刀，正站在村口的古槐树下，准备开启你的第一次冒险。\"\n    }\n  ],\n  \"choices\": [\n    {\n      \"action\": \"interact:ask\",\n      \"targetId\": \"p1\",\n      \"stake\": \"low\",\n      \"label\": \"询问村长关于山里的传闻\",\n      \"anchor\": 0\n    },\n    {\n      \"action\": \"travel:wilderness\",\n      \"targetId\": \"l1\",\n      \"stake\": \"low\",\n      \"label\": \"独自前往后山深处\",\n      \"anchor\": 0\n    },\n    {\n      \"action\": \"interact:observe\",\n      \"targetId\": \"self\",\n      \"stake\": \"low\",\n      \"label\": \"检查自己的装备和身体\",\n      \"anchor\": 0\n    }\n  ],\n  \"title\": \"山村猎户\",\n  \"location\": \"village\",\n  \"otherPeople\": [\n    {\n      \"id\": \"p1\",\n      \"name\": \"村长\",\n      \"status\": \"alive\"\n    }\n  ],\n  \"places\": [\n    {\n      \"id\": \"l1\",\n      \"name\": \"后山深处\"\n    }\n  ],\n  \"factions\": [],\n  \"memoryDeltas\": [\n    {\n      \"entityId\": \"p1\",\n      \"text\": \"云归询问村长关于山里的传闻。\",\n      \"kind\": \"fact\"\n    }\n  ]\n}",
+              "reasoning_content": ""
+            }
+          }
+        ],
+        "usage": {
+          "prompt_tokens": 1259,
+          "completion_tokens": 417,
+          "total_tokens": 1676,
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          },
+          "neurons": 22.10330000000017
+        }
+      },
+      "rawSseBytes": 117674
+    }
+  ],
+  "revision": 1,
+  "pending": false,
+  "state": {
+    "relationshipVersion": 1,
+    "version": 5,
+    "mode": "cultivation",
+    "contentVersion": 4,
+    "rulesVersion": 1,
+    "promptVersion": 1,
+    "runId": "c72a71bb-5cce-40b9-8eef-c2b65e9506cf",
+    "revision": 1,
+    "turnId": 1,
+    "phase": "active",
+    "rng": 4183801396,
+    "life": {
+      "name": "云归",
+      "ageDays": 5760,
+      "lifeLimit": 80,
+      "realm": "mortal",
+      "cultivation": 0,
+      "injury": 0,
+      "items": {
+        "supplies": 3,
+        "stones": 0
+      },
+      "relations": {},
+      "birth": {
+        "originId": "village",
+        "talentIds": [
+          "fortune-debt",
+          "sensitive-breath"
+        ],
+        "attributes": {
+          "constitution": 3,
+          "insight": 3,
+          "fortune": 6
+        }
+      }
+    },
+    "birthReceipt": {
+      "kind": "opening",
+      "choiceId": null,
+      "action": null,
+      "elapsedDays": 0,
+      "itemChanges": {},
+      "relationChanges": {},
+      "random": {
+        "before": 4183801396,
+        "after": 4183801396,
+        "roll": null
+      },
+      "before": {
+        "ageDays": 5760,
+        "realm": "mortal",
+        "cultivation": 0,
+        "injury": 0
+      },
+      "after": {
+        "ageDays": 5760,
+        "realm": "mortal",
+        "cultivation": 0,
+        "injury": 0
+      },
+      "death": null,
+      "birth": {
+        "originId": "village",
+        "talentIds": [
+          "fortune-debt",
+          "sensitive-breath"
+        ],
+        "attributes": {
+          "constitution": 3,
+          "insight": 3,
+          "fortune": 6
+        }
+      }
+    },
+    "currentScene": {
+      "id": "r:4a6fc5e75d36ffc2:t1:s:scene",
+      "title": "山村猎户",
+      "location": "village",
+      "entities": [
+        {
+          "id": "r:4a6fc5e75d36ffc2:t1:e:person_1",
+          "name": "村长",
+          "status": "alive",
+          "kind": "person"
+        },
+        {
+          "id": "r:4a6fc5e75d36ffc2:t1:e:place_1",
+          "name": "后山深处",
+          "kind": "place"
+        }
+      ],
+      "blocks": [
+        {
+          "kind": "narration",
+          "text": "你今年十六岁，是个在深山里长大的猎户。十六年的光阴让你练就了一身好筋骨，也让你习惯了与野兽为伴。你的命格有些古怪，福祸相依，这让你在山林间总能嗅到一丝不寻常的气息，哪怕只是风吹草动，你也能敏锐地察觉到。你背着一把磨得发亮的猎弓，腰间别着一把柴刀，正站在村口的古槐树下，准备开启你的第一次冒险。"
+        }
+      ],
+      "choices": [
+        {
+          "id": "r:4a6fc5e75d36ffc2:t1:c:a",
+          "label": "询问村长关于山里的传闻",
+          "intent": "interact",
+          "targetId": "r:4a6fc5e75d36ffc2:t1:e:person_1",
+          "stake": "low",
+          "approach": "ask"
+        },
+        {
+          "id": "r:4a6fc5e75d36ffc2:t1:c:b",
+          "label": "独自前往后山深处",
+          "intent": "travel",
+          "targetId": "r:4a6fc5e75d36ffc2:t1:e:place_1",
+          "stake": "low",
+          "approach": "wilderness"
+        },
+        {
+          "id": "r:4a6fc5e75d36ffc2:t1:c:c",
+          "label": "检查自己的装备和身体",
+          "intent": "interact",
+          "targetId": "self",
+          "stake": "low",
+          "approach": "observe"
+        }
+      ],
+      "memoryDeltas": [
+        {
+          "entityId": "r:4a6fc5e75d36ffc2:t1:e:person_1",
+          "text": "云归询问村长关于山里的传闻。",
+          "kind": "fact"
+        }
+      ]
+    },
+    "lastReceipt": {
+      "kind": "opening",
+      "choiceId": null,
+      "action": null,
+      "elapsedDays": 0,
+      "itemChanges": {},
+      "relationChanges": {},
+      "random": {
+        "before": 4183801396,
+        "after": 4183801396,
+        "roll": null
+      },
+      "before": {
+        "ageDays": 5760,
+        "realm": "mortal",
+        "cultivation": 0,
+        "injury": 0
+      },
+      "after": {
+        "ageDays": 5760,
+        "realm": "mortal",
+        "cultivation": 0,
+        "injury": 0
+      },
+      "death": null,
+      "birth": {
+        "originId": "village",
+        "talentIds": [
+          "fortune-debt",
+          "sensitive-breath"
+        ],
+        "attributes": {
+          "constitution": 3,
+          "insight": 3,
+          "fortune": 6
+        }
+      }
+    },
+    "relatedEntities": [
+      {
+        "id": "r:4a6fc5e75d36ffc2:t1:e:person_1",
+        "name": "村长",
+        "status": "alive",
+        "kind": "person"
+      },
+      {
+        "id": "r:4a6fc5e75d36ffc2:t1:e:place_1",
+        "name": "后山深处",
+        "kind": "place"
+      }
+    ],
+    "archiveCursor": 0
+  },
+  "posts": 1,
+  "latency": {
+    "usable": true,
+    "errorCode": null,
+    "firstAnyPreviewMs": 6713,
+    "firstReadableMs": 7180,
+    "completionMs": 16181,
+    "narrativeChars": 146,
+    "maxPreviewGapMs": 391,
+    "readingFinishEstimateMs": 31513,
+    "readingStallEstimateMs": 0,
+    "optionsWaitEstimateMs": 0,
+    "prefetchWorthEvaluating": true,
+    "assumptions": {
+      "readingCharsPerSecond": 6,
+      "readableChars": 20,
+      "targetWaitMs": 2000
+    }
+  }
+}

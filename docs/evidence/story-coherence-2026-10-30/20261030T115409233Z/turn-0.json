@@ -1,0 +1,774 @@
+{
+  "caseId": "opening",
+  "start": 819.5,
+  "timeline": [
+    {
+      "atMs": 16080,
+      "chars": 1
+    },
+    {
+      "atMs": 16173,
+      "chars": 3
+    },
+    {
+      "atMs": 16251,
+      "chars": 5
+    },
+    {
+      "atMs": 16310,
+      "chars": 8
+    },
+    {
+      "atMs": 16372,
+      "chars": 10
+    },
+    {
+      "atMs": 16450,
+      "chars": 13
+    },
+    {
+      "atMs": 16507,
+      "chars": 15
+    },
+    {
+      "atMs": 16583,
+      "chars": 17
+    },
+    {
+      "atMs": 16646,
+      "chars": 21
+    },
+    {
+      "atMs": 16726,
+      "chars": 24
+    },
+    {
+      "atMs": 16805,
+      "chars": 27
+    },
+    {
+      "atMs": 16897,
+      "chars": 32
+    },
+    {
+      "atMs": 16988,
+      "chars": 35
+    },
+    {
+      "atMs": 17048,
+      "chars": 38
+    },
+    {
+      "atMs": 17107,
+      "chars": 40
+    },
+    {
+      "atMs": 17169,
+      "chars": 44
+    },
+    {
+      "atMs": 17215,
+      "chars": 46
+    },
+    {
+      "atMs": 17279,
+      "chars": 49
+    },
+    {
+      "atMs": 17353,
+      "chars": 51
+    },
+    {
+      "atMs": 17523,
+      "chars": 55
+    },
+    {
+      "atMs": 17583,
+      "chars": 57
+    },
+    {
+      "atMs": 17645,
+      "chars": 59
+    },
+    {
+      "atMs": 17692,
+      "chars": 62
+    },
+    {
+      "atMs": 17753,
+      "chars": 64
+    },
+    {
+      "atMs": 17813,
+      "chars": 66
+    },
+    {
+      "atMs": 17859,
+      "chars": 68
+    },
+    {
+      "atMs": 17919,
+      "chars": 73
+    },
+    {
+      "atMs": 18011,
+      "chars": 77
+    },
+    {
+      "atMs": 18089,
+      "chars": 78
+    },
+    {
+      "atMs": 18138,
+      "chars": 81
+    },
+    {
+      "atMs": 18242,
+      "chars": 83
+    },
+    {
+      "atMs": 18334,
+      "chars": 84
+    },
+    {
+      "atMs": 18645,
+      "chars": 85
+    },
+    {
+      "atMs": 18946,
+      "chars": 89
+    },
+    {
+      "atMs": 19022,
+      "chars": 93
+    },
+    {
+      "atMs": 19115,
+      "chars": 94
+    },
+    {
+      "atMs": 19177,
+      "chars": 95
+    },
+    {
+      "atMs": 19219,
+      "chars": 97
+    },
+    {
+      "atMs": 19281,
+      "chars": 101
+    },
+    {
+      "atMs": 19330,
+      "chars": 104
+    },
+    {
+      "atMs": 19389,
+      "chars": 107
+    },
+    {
+      "atMs": 19450,
+      "chars": 111
+    },
+    {
+      "atMs": 19516,
+      "chars": 115
+    },
+    {
+      "atMs": 19562,
+      "chars": 119
+    },
+    {
+      "atMs": 19639,
+      "chars": 123
+    },
+    {
+      "atMs": 19809,
+      "chars": 128
+    },
+    {
+      "atMs": 19857,
+      "chars": 131
+    },
+    {
+      "atMs": 19922,
+      "chars": 134
+    },
+    {
+      "atMs": 19967,
+      "chars": 138
+    },
+    {
+      "atMs": 20030,
+      "chars": 142
+    },
+    {
+      "atMs": 20093,
+      "chars": 145
+    },
+    {
+      "atMs": 20170,
+      "chars": 147
+    },
+    {
+      "atMs": 20265,
+      "chars": 149
+    },
+    {
+      "atMs": 20373,
+      "chars": 153
+    },
+    {
+      "atMs": 20590,
+      "chars": 155
+    },
+    {
+      "atMs": 20667,
+      "chars": 157
+    },
+    {
+      "atMs": 20743,
+      "chars": 160
+    },
+    {
+      "atMs": 20804,
+      "chars": 162
+    },
+    {
+      "atMs": 20884,
+      "chars": 167
+    },
+    {
+      "atMs": 20945,
+      "chars": 170
+    },
+    {
+      "atMs": 21037,
+      "chars": 177
+    },
+    {
+      "atMs": 21119,
+      "chars": 180
+    },
+    {
+      "atMs": 21208,
+      "chars": 182
+    },
+    {
+      "atMs": 21379,
+      "chars": 184
+    },
+    {
+      "atMs": 21459,
+      "chars": 187
+    },
+    {
+      "atMs": 21507,
+      "chars": 189
+    },
+    {
+      "atMs": 21569,
+      "chars": 192
+    },
+    {
+      "atMs": 21616,
+      "chars": 194
+    },
+    {
+      "atMs": 21691,
+      "chars": 196
+    },
+    {
+      "atMs": 21753,
+      "chars": 197
+    },
+    {
+      "atMs": 21799,
+      "chars": 200
+    },
+    {
+      "atMs": 21860,
+      "chars": 203
+    },
+    {
+      "atMs": 21950,
+      "chars": 207
+    },
+    {
+      "atMs": 22028,
+      "chars": 212
+    },
+    {
+      "atMs": 22154,
+      "chars": 213
+    },
+    {
+      "atMs": 22218,
+      "chars": 214
+    },
+    {
+      "atMs": 22262,
+      "chars": 218
+    },
+    {
+      "atMs": 22356,
+      "chars": 221
+    },
+    {
+      "atMs": 22463,
+      "chars": 225
+    },
+    {
+      "atMs": 22558,
+      "chars": 227
+    },
+    {
+      "atMs": 22652,
+      "chars": 229
+    },
+    {
+      "atMs": 22715,
+      "chars": 233
+    }
+  ],
+  "choicesEnabledDuringPreview": false,
+  "lastText": "你正蹲在溪边擦拭猎弓，村口老猎户陈叔突然跌跌撞撞地跑来，手里紧紧攥着半截断裂的兽牙，脸色煞白。他喘着粗气，指着后山密林深处那团翻涌的浓雾，声音颤抖地告诉你，昨夜有猎户在雾中听到了类似婴儿啼哭的怪声，随后便失踪了，他不敢独自上山，想请你帮忙去看看。\n\n陈叔把那半截兽牙塞进你手里，那是只成年铁背熊的獠牙，上面还沾着暗红色的血迹，显然是刚从尸体上拔下来的。他神色慌张地催促道：“云归，你身手好，这獠牙看着不像是普通野兽留下的，你若敢去，务必小心，千万别碰那雾里的东西。”",
+  "doneMs": 27344,
+  "result": {
+    "protocolVersion": 1,
+    "status": "ready",
+    "requestId": "ff2f655d-4714-49e5-8184-cb07d0a16efb",
+    "attemptId": "0935992c-d0af-4ea6-850d-ab99a977bdc0",
+    "sessionRef": "sess_5ba0416126899e0390f25df5f6aa89c5",
+    "errorCode": null,
+    "retry": null,
+    "scene": {
+      "id": "r:4e5f4e69d842fd70:t1:s:scene",
+      "title": "雾中异响",
+      "location": "村口溪边",
+      "entities": [
+        {
+          "id": "r:4e5f4e69d842fd70:t1:e:person_1",
+          "name": "陈叔",
+          "status": "alive",
+          "kind": "person"
+        }
+      ],
+      "blocks": [
+        {
+          "kind": "narration",
+          "text": "你正蹲在溪边擦拭猎弓，村口老猎户陈叔突然跌跌撞撞地跑来，手里紧紧攥着半截断裂的兽牙，脸色煞白。他喘着粗气，指着后山密林深处那团翻涌的浓雾，声音颤抖地告诉你，昨夜有猎户在雾中听到了类似婴儿啼哭的怪声，随后便失踪了，他不敢独自上山，想请你帮忙去看看。"
+        },
+        {
+          "kind": "narration",
+          "text": "陈叔把那半截兽牙塞进你手里，那是只成年铁背熊的獠牙，上面还沾着暗红色的血迹，显然是刚从尸体上拔下来的。他神色慌张地催促道：“云归，你身手好，这獠牙看着不像是普通野兽留下的，你若敢去，务必小心，千万别碰那雾里的东西。”"
+        }
+      ],
+      "choices": [
+        {
+          "id": "r:4e5f4e69d842fd70:t1:c:a",
+          "label": "询问陈叔：询问陈叔那半截兽牙的具体来历和血迹来源",
+          "intent": "interact",
+          "targetId": "r:4e5f4e69d842fd70:t1:e:person_1",
+          "stake": "low",
+          "approach": "ask"
+        },
+        {
+          "id": "r:4e5f4e69d842fd70:t1:c:b",
+          "label": "询问陈叔：询问后山雾中除了婴儿啼哭声外还有没有其他异响",
+          "intent": "interact",
+          "targetId": "r:4e5f4e69d842fd70:t1:e:person_1",
+          "stake": "low",
+          "approach": "ask"
+        },
+        {
+          "id": "r:4e5f4e69d842fd70:t1:c:c",
+          "label": "婉拒陈叔：拒绝陈叔的请求，表示自己不想卷入此事",
+          "intent": "interact",
+          "targetId": "r:4e5f4e69d842fd70:t1:e:person_1",
+          "stake": "low",
+          "approach": "decline"
+        }
+      ],
+      "memoryDeltas": [
+        {
+          "entityId": "r:4e5f4e69d842fd70:t1:e:person_1",
+          "kind": "clue",
+          "text": "你正蹲在溪边擦拭猎弓，村口老猎户陈叔突然跌跌撞撞地跑来，手里紧紧攥着半截断裂的兽牙，脸色煞白。他喘着粗气，指着后山密林深处那团翻涌的浓雾，声音颤抖地告诉你，昨夜有猎户在雾中听到了类似婴儿啼哭的怪声，随后便失踪了，他不敢独自上山，想请你帮忙去看看。",
+          "status": "open"
+        },
+        {
+          "entityId": "r:4e5f4e69d842fd70:t1:e:person_1",
+          "kind": "clue",
+          "text": "陈叔把那半截兽牙塞进你手里，那是只成年铁背熊的獠牙，上面还沾着暗红色的血迹，显然是刚从尸体上拔下来的。他神色慌张地催促道：“云归，你身手好，这獠牙看着不像是普通野兽留下的，你若敢去，务必小心，千万别碰那雾里的东西。”",
+          "status": "open"
+        }
+      ]
+    }
+  },
+  "request": {
+    "context": {
+      "schemaVersion": 1,
+      "phase": "opening",
+      "identity": {
+        "runId": "4b46fdec-bfd0-41b5-a6c1-88ad002f99db",
+        "turnId": 1,
+        "baseRevision": 0,
+        "stateHash": "0657f65219b11a1111d1f36f2649db33b6ad4bba2bcc14eb889d203273a4d2c8",
+        "choiceId": null,
+        "rulesVersion": 1,
+        "promptVersion": 1,
+        "requestId": "ff2f655d-4714-49e5-8184-cb07d0a16efb"
+      },
+      "namespace": "r:4e5f4e69d842fd70",
+      "receipt": {
+        "kind": "opening",
+        "choiceId": null,
+        "action": null,
+        "elapsedDays": 0,
+        "itemChanges": {},
+        "relationChanges": {},
+        "random": {
+          "before": 2286379937,
+          "after": 2286379937,
+          "roll": null
+        },
+        "before": {
+          "ageDays": 5760,
+          "realm": "mortal",
+          "cultivation": 0,
+          "injury": 0
+        },
+        "after": {
+          "ageDays": 5760,
+          "realm": "mortal",
+          "cultivation": 0,
+          "injury": 0
+        },
+        "death": null,
+        "birth": {
+          "originId": "village",
+          "talentIds": [
+            "keen-memory",
+            "sword-bone"
+          ],
+          "attributes": {
+            "constitution": 2,
+            "insight": 6,
+            "fortune": 4
+          }
+        }
+      },
+      "life": {
+        "name": "云归",
+        "ageDays": 5760,
+        "lifeLimit": 80,
+        "realm": "mortal",
+        "cultivation": 0,
+        "injury": 0,
+        "items": {
+          "supplies": 3,
+          "stones": 0
+        },
+        "relations": {},
+        "birth": {
+          "originId": "village",
+          "talentIds": [
+            "keen-memory",
+            "sword-bone"
+          ],
+          "attributes": {
+            "constitution": 2,
+            "insight": 6,
+            "fortune": 4
+          }
+        }
+      },
+      "entities": [],
+      "memory": {
+        "facts": [],
+        "promises": [],
+        "clues": [],
+        "recent": [],
+        "summaries": []
+      },
+      "references": [],
+      "previousScene": null,
+      "relationshipVersion": 1,
+      "relationships": {},
+      "coverage": {
+        "policy": "relevance-v1",
+        "openTotal": 0,
+        "openIncluded": 0,
+        "openOmitted": 0
+      }
+    },
+    "attempt": {
+      "id": "0935992c-d0af-4ea6-850d-ab99a977bdc0",
+      "sessionRef": "sess_5ba0416126899e0390f25df5f6aa89c5",
+      "retryOf": null
+    },
+    "storyActions": true
+  },
+  "decision": null,
+  "choices": [
+    {
+      "id": "r:4e5f4e69d842fd70:t1:c:a",
+      "enabled": true,
+      "label": "询问陈叔：询问陈叔那半截兽牙的具体来历和血迹来源",
+      "cost": "0日"
+    },
+    {
+      "id": "r:4e5f4e69d842fd70:t1:c:b",
+      "enabled": true,
+      "label": "询问陈叔：询问后山雾中除了婴儿啼哭声外还有没有其他异响",
+      "cost": "0日"
+    },
+    {
+      "id": "r:4e5f4e69d842fd70:t1:c:c",
+      "enabled": true,
+      "label": "婉拒陈叔：拒绝陈叔的请求，表示自己不想卷入此事",
+      "cost": "0日"
+    }
+  ],
+  "traces": [
+    {
+      "model": "@cf/zai-org/glm-4.7-flash",
+      "inputHash": "d5bc22f08d14f9016a76914eabb43e47ccf4ac8fe43102c6a81601c01c306acc",
+      "inputBytes": 14199,
+      "startedAt": 1793361344957,
+      "bindingReturnedAt": 1793361345309,
+      "liveRawBytes": 128113,
+      "captureComplete": true,
+      "response": {
+        "model": "@cf/zai-org/glm-4.7-flash",
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "message": {
+              "content": "{\"blocks\":[{\"kind\":\"narration\",\"text\":\"你正蹲在溪边擦拭猎弓，村口老猎户陈叔突然跌跌撞撞地跑来，手里紧紧攥着半截断裂的兽牙，脸色煞白。他喘着粗气，指着后山密林深处那团翻涌的浓雾，声音颤抖地告诉你，昨夜有猎户在雾中听到了类似婴儿啼哭的怪声，随后便失踪了，他不敢独自上山，想请你帮忙去看看。\"},{\"kind\":\"narration\",\"text\":\"陈叔把那半截兽牙塞进你手里，那是只成年铁背熊的獠牙，上面还沾着暗红色的血迹，显然是刚从尸体上拔下来的。他神色慌张地催促道：“云归，你身手好，这獠牙看着不像是普通野兽留下的，你若敢去，务必小心，千万别碰那雾里的东西。”\"}],\"choices\":[{\"action\":\"interact:ask\",\"targetId\":\"p1\",\"stake\":\"low\",\"purpose\":\"询问陈叔那半截兽牙的具体来历和血迹来源\",\"anchor\":0},{\"action\":\"interact:ask\",\"targetId\":\"p1\",\"stake\":\"low\",\"purpose\":\"询问后山雾中除了婴儿啼哭声外还有没有其他异响\",\"anchor\":0},{\"action\":\"interact:decline\",\"targetId\":\"p1\",\"stake\":\"low\",\"purpose\":\"拒绝陈叔的请求，表示自己不想卷入此事\",\"anchor\":0}],\"title\":\"雾中异响\",\"location\":\"村口溪边\",\"otherPeople\":[{\"id\":\"p1\",\"name\":\"陈叔\",\"status\":\"alive\"}],\"places\":[],\"factions\":[],\"memoryDeltas\":[{\"entityId\":\"p1\",\"kind\":\"clue\",\"anchor\":0,\"status\":\"open\"},{\"entityId\":\"p1\",\"kind\":\"clue\",\"anchor\":1,\"status\":\"open\"}]}",
+              "reasoning_content": ""
+            }
+          }
+        ],
+        "usage": {
+          "prompt_tokens": 2316,
+          "completion_tokens": 411,
+          "total_tokens": 2727,
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          },
+          "neurons": 27.698400000000177
+        }
+      },
+      "rawSseBytes": 128113
+    }
+  ],
+  "revision": 1,
+  "pending": false,
+  "state": {
+    "relationshipVersion": 1,
+    "version": 5,
+    "mode": "cultivation",
+    "contentVersion": 4,
+    "rulesVersion": 1,
+    "promptVersion": 1,
+    "runId": "4b46fdec-bfd0-41b5-a6c1-88ad002f99db",
+    "revision": 1,
+    "turnId": 1,
+    "phase": "active",
+    "rng": 2286379937,
+    "life": {
+      "name": "云归",
+      "ageDays": 5760,
+      "lifeLimit": 80,
+      "realm": "mortal",
+      "cultivation": 0,
+      "injury": 0,
+      "items": {
+        "supplies": 3,
+        "stones": 0
+      },
+      "relations": {},
+      "birth": {
+        "originId": "village",
+        "talentIds": [
+          "keen-memory",
+          "sword-bone"
+        ],
+        "attributes": {
+          "constitution": 2,
+          "insight": 6,
+          "fortune": 4
+        }
+      }
+    },
+    "birthReceipt": {
+      "kind": "opening",
+      "choiceId": null,
+      "action": null,
+      "elapsedDays": 0,
+      "itemChanges": {},
+      "relationChanges": {},
+      "random": {
+        "before": 2286379937,
+        "after": 2286379937,
+        "roll": null
+      },
+      "before": {
+        "ageDays": 5760,
+        "realm": "mortal",
+        "cultivation": 0,
+        "injury": 0
+      },
+      "after": {
+        "ageDays": 5760,
+        "realm": "mortal",
+        "cultivation": 0,
+        "injury": 0
+      },
+      "death": null,
+      "birth": {
+        "originId": "village",
+        "talentIds": [
+          "keen-memory",
+          "sword-bone"
+        ],
+        "attributes": {
+          "constitution": 2,
+          "insight": 6,
+          "fortune": 4
+        }
+      }
+    },
+    "currentScene": {
+      "id": "r:4e5f4e69d842fd70:t1:s:scene",
+      "title": "雾中异响",
+      "location": "村口溪边",
+      "entities": [
+        {
+          "id": "r:4e5f4e69d842fd70:t1:e:person_1",
+          "name": "陈叔",
+          "status": "alive",
+          "kind": "person"
+        }
+      ],
+      "blocks": [
+        {
+          "kind": "narration",
+          "text": "你正蹲在溪边擦拭猎弓，村口老猎户陈叔突然跌跌撞撞地跑来，手里紧紧攥着半截断裂的兽牙，脸色煞白。他喘着粗气，指着后山密林深处那团翻涌的浓雾，声音颤抖地告诉你，昨夜有猎户在雾中听到了类似婴儿啼哭的怪声，随后便失踪了，他不敢独自上山，想请你帮忙去看看。"
+        },
+        {
+          "kind": "narration",
+          "text": "陈叔把那半截兽牙塞进你手里，那是只成年铁背熊的獠牙，上面还沾着暗红色的血迹，显然是刚从尸体上拔下来的。他神色慌张地催促道：“云归，你身手好，这獠牙看着不像是普通野兽留下的，你若敢去，务必小心，千万别碰那雾里的东西。”"
+        }
+      ],
+      "choices": [
+        {
+          "id": "r:4e5f4e69d842fd70:t1:c:a",
+          "label": "询问陈叔：询问陈叔那半截兽牙的具体来历和血迹来源",
+          "intent": "interact",
+          "targetId": "r:4e5f4e69d842fd70:t1:e:person_1",
+          "stake": "low",
+          "approach": "ask"
+        },
+        {
+          "id": "r:4e5f4e69d842fd70:t1:c:b",
+          "label": "询问陈叔：询问后山雾中除了婴儿啼哭声外还有没有其他异响",
+          "intent": "interact",
+          "targetId": "r:4e5f4e69d842fd70:t1:e:person_1",
+          "stake": "low",
+          "approach": "ask"
+        },
+        {
+          "id": "r:4e5f4e69d842fd70:t1:c:c",
+          "label": "婉拒陈叔：拒绝陈叔的请求，表示自己不想卷入此事",
+          "intent": "interact",
+          "targetId": "r:4e5f4e69d842fd70:t1:e:person_1",
+          "stake": "low",
+          "approach": "decline"
+        }
+      ],
+      "memoryDeltas": [
+        {
+          "entityId": "r:4e5f4e69d842fd70:t1:e:person_1",
+          "kind": "clue",
+          "text": "你正蹲在溪边擦拭猎弓，村口老猎户陈叔突然跌跌撞撞地跑来，手里紧紧攥着半截断裂的兽牙，脸色煞白。他喘着粗气，指着后山密林深处那团翻涌的浓雾，声音颤抖地告诉你，昨夜有猎户在雾中听到了类似婴儿啼哭的怪声，随后便失踪了，他不敢独自上山，想请你帮忙去看看。",
+          "status": "open"
+        },
+        {
+          "entityId": "r:4e5f4e69d842fd70:t1:e:person_1",
+          "kind": "clue",
+          "text": "陈叔把那半截兽牙塞进你手里，那是只成年铁背熊的獠牙，上面还沾着暗红色的血迹，显然是刚从尸体上拔下来的。他神色慌张地催促道：“云归，你身手好，这獠牙看着不像是普通野兽留下的，你若敢去，务必小心，千万别碰那雾里的东西。”",
+          "status": "open"
+        }
+      ]
+    },
+    "lastReceipt": {
+      "kind": "opening",
+      "choiceId": null,
+      "action": null,
+      "elapsedDays": 0,
+      "itemChanges": {},
+      "relationChanges": {},
+      "random": {
+        "before": 2286379937,
+        "after": 2286379937,
+        "roll": null
+      },
+      "before": {
+        "ageDays": 5760,
+        "realm": "mortal",
+        "cultivation": 0,
+        "injury": 0
+      },
+      "after": {
+        "ageDays": 5760,
+        "realm": "mortal",
+        "cultivation": 0,
+        "injury": 0
+      },
+      "death": null,
+      "birth": {
+        "originId": "village",
+        "talentIds": [
+          "keen-memory",
+          "sword-bone"
+        ],
+        "attributes": {
+          "constitution": 2,
+          "insight": 6,
+          "fortune": 4
+        }
+      }
+    },
+    "relatedEntities": [
+      {
+        "id": "r:4e5f4e69d842fd70:t1:e:person_1",
+        "name": "陈叔",
+        "status": "alive",
+        "kind": "person"
+      }
+    ],
+    "archiveCursor": 0
+  },
+  "posts": 1,
+  "latency": {
+    "usable": true,
+    "errorCode": null,
+    "firstAnyPreviewMs": 16080,
+    "firstReadableMs": 16646,
+    "completionMs": 27344,
+    "narrativeChars": 233,
+    "maxPreviewGapMs": 311,
+    "readingFinishEstimateMs": 55479,
+    "readingStallEstimateMs": 0,
+    "optionsWaitEstimateMs": 0,
+    "prefetchWorthEvaluating": true,
+    "assumptions": {
+      "readingCharsPerSecond": 6,
+      "readableChars": 20,
+      "targetWaitMs": 2000
+    }
+  }
+}

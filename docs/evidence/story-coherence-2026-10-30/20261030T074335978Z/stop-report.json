@@ -1,0 +1,39 @@
+{
+  "schemaVersion": 1,
+  "sourceCommit": "45d38fa0518f9740b0dc82724c1f76049618c842",
+  "status": "ACCEPTANCE_STOPPED",
+  "reason": "Grounded memories are source paragraphs, but overlong opening moves through several locations and offers earlier offstage interlocutor / repeated travel. Stopped before selecting; modern output now bounded to two paragraphs of160 characters.",
+  "actualTurns": 1,
+  "latencies": [
+    {
+      "usable": true,
+      "errorCode": null,
+      "firstAnyPreviewMs": 4232,
+      "firstReadableMs": 4494,
+      "completionMs": 24510,
+      "narrativeChars": 566,
+      "maxPreviewGapMs": 595,
+      "readingFinishEstimateMs": 98827,
+      "readingStallEstimateMs": 0,
+      "optionsWaitEstimateMs": 0,
+      "prefetchWorthEvaluating": true,
+      "assumptions": {
+        "readingCharsPerSecond": 6,
+        "readableChars": 20,
+        "targetWaitMs": 2000
+      }
+    }
+  ],
+  "productionRestored": {
+    "version": "cad2a140-240f-4465-a837-e53f054c2589",
+    "percentage": 100,
+    "deployment": "087e6bc3-f5f0-46b7-8516-5195db1aff37"
+  },
+  "cleanup": {
+    "ownCredentialDeleted": true,
+    "newWorkerCreated": false,
+    "newNamespaceCreated": false,
+    "ledgerRetained": true
+  },
+  "recordedAt": "2026-10-30T07:49:01.304Z"
+}

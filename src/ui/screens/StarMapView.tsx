@@ -14,6 +14,18 @@ const NODE_ICONS: Record<MapNodeType, string> = {
   boss: '⛈️',
 };
 
+const NODE_SUBTITLES: Record<MapNodeType, string> = {
+  battle: '寻常斗法',
+  elite: '秘境强敌 · 掉古宝',
+  'fury-elite': '狂暴真魔 · 必掉道果',
+  event: '红尘奇遇',
+  abode: '升牌 · 炼丹 · 删牌',
+  shop: '灵石采购',
+  auction: '竞拍 · 截胡夺宝',
+  remnant: '继承前世遗泽',
+  boss: '卷末渡劫破境',
+};
+
 interface StarMapViewProps {
   run: RunState;
   onSelectNode: (nodeId: string) => void;
@@ -52,8 +64,7 @@ export function StarMapView({ run, onSelectNode }: StarMapViewProps) {
   }
 
   const actInfo = ACT_TITLES[run.act];
-  const gradeLabel =
-    run.foundation >= 85 ? '天道破境（金色法则）' : run.foundation >= 50 ? '地道破境' : '凡品破境';
+  const hpHealthy = run.hp >= run.maxHp * 0.5;
 
   return (
     <main class="map-stage">
@@ -61,7 +72,11 @@ export function StarMapView({ run, onSelectNode }: StarMapViewProps) {
         <h2>{actInfo.name}</h2>
         <p>{actInfo.subtitle}</p>
         <div style={{ marginTop: '8px', fontSize: '12px', color: 'var(--gold)' }}>
-          预估破境品阶：<strong>{gradeLabel}</strong>（道基 {run.foundation}/100）
+          💡 破境法则：击败卷末大劫时气血 ≥ 50%（当前{' '}
+          <strong style={{ color: hpHealthy ? 'var(--green)' : '#ffada4' }}>
+            {Math.round((run.hp / run.maxHp) * 100)}%
+          </strong>
+          ）或直接斩灭雷劫劫眼，即达<strong>【天道破境】</strong>（真元+1 & 金色法则）
           {run.ascension > 0 ? ` · 天道劫数 第 ${run.ascension} 重` : ''}
           {run.isDailyChallenge ? ` · ☯ 每日天机 (${run.dailyDate})` : ''}
         </div>
@@ -100,7 +115,7 @@ export function StarMapView({ run, onSelectNode }: StarMapViewProps) {
                   >
                     <span class="node-icon">{NODE_ICONS[boss.type]}</span>
                     <span class="node-title">{boss.label}</span>
-                    <span class="node-cost">耗寿 {boss.ageCost} 年 · 卷末渡劫</span>
+                    <span class="node-cost">{NODE_SUBTITLES[boss.type]}</span>
                   </button>
                 </div>
               );
@@ -122,10 +137,7 @@ export function StarMapView({ run, onSelectNode }: StarMapViewProps) {
                     >
                       <span class="node-icon">{NODE_ICONS[node.type]}</span>
                       <span class="node-title">{node.label}</span>
-                      <span class="node-cost">
-                        耗寿 {node.ageCost} 年
-                        {node.type === 'fury-elite' ? ' · 必掉道果' : node.type === 'auction' ? ' · 竞拍/截胡' : ''}
-                      </span>
+                      <span class="node-cost">{NODE_SUBTITLES[node.type]}</span>
                     </button>
                   );
                 })}

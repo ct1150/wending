@@ -1,0 +1,57 @@
+{
+  "schemaVersion": 1,
+  "sourceCommit": "14121cd78649dafa26c1ec5626e5152ec98058bb",
+  "status": "ACCEPTANCE_STOPPED",
+  "reason": "Travel arrived at chosen town and modern questions compiled; prose invented possession/payment of 2 stones despite settled stones=0. Stop semantic acceptance.",
+  "actualTurns": 2,
+  "latencies": [
+    {
+      "usable": true,
+      "errorCode": null,
+      "firstAnyPreviewMs": 6443,
+      "firstReadableMs": 6723,
+      "completionMs": 18028,
+      "narrativeChars": 219,
+      "maxPreviewGapMs": 603,
+      "readingFinishEstimateMs": 43223,
+      "readingStallEstimateMs": 0,
+      "optionsWaitEstimateMs": 0,
+      "prefetchWorthEvaluating": true,
+      "assumptions": {
+        "readingCharsPerSecond": 6,
+        "readableChars": 20,
+        "targetWaitMs": 2000
+      }
+    },
+    {
+      "usable": true,
+      "errorCode": null,
+      "firstAnyPreviewMs": 5801,
+      "firstReadableMs": 6048,
+      "completionMs": 15686,
+      "narrativeChars": 382,
+      "maxPreviewGapMs": 314,
+      "readingFinishEstimateMs": 69715,
+      "readingStallEstimateMs": 0,
+      "optionsWaitEstimateMs": 0,
+      "prefetchWorthEvaluating": true,
+      "assumptions": {
+        "readingCharsPerSecond": 6,
+        "readableChars": 20,
+        "targetWaitMs": 2000
+      }
+    }
+  ],
+  "productionRestored": {
+    "version": "cad2a140-240f-4465-a837-e53f054c2589",
+    "percentage": 100,
+    "deployment": "3c9324c1-938c-4801-96ff-c9355a8fbc27"
+  },
+  "cleanup": {
+    "ownCredentialDeleted": true,
+    "newWorkerCreated": false,
+    "newNamespaceCreated": false,
+    "ledgerRetained": true
+  },
+  "recordedAt": "2026-10-30T07:22:16.632Z"
+}

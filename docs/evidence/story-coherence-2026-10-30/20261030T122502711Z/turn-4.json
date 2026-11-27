@@ -1,0 +1,637 @@
+{
+  "caseId": "choice-4",
+  "start": 819438,
+  "timeline": [
+    {
+      "atMs": 4314,
+      "chars": 1
+    },
+    {
+      "atMs": 4391,
+      "chars": 6
+    },
+    {
+      "atMs": 4454,
+      "chars": 10
+    },
+    {
+      "atMs": 4516,
+      "chars": 15
+    },
+    {
+      "atMs": 4597,
+      "chars": 19
+    },
+    {
+      "atMs": 4658,
+      "chars": 22
+    },
+    {
+      "atMs": 4723,
+      "chars": 28
+    },
+    {
+      "atMs": 4858,
+      "chars": 36
+    },
+    {
+      "atMs": 4919,
+      "chars": 42
+    },
+    {
+      "atMs": 4997,
+      "chars": 48
+    },
+    {
+      "atMs": 5075,
+      "chars": 51
+    },
+    {
+      "atMs": 5137,
+      "chars": 54
+    },
+    {
+      "atMs": 5197,
+      "chars": 60
+    },
+    {
+      "atMs": 5261,
+      "chars": 66
+    },
+    {
+      "atMs": 5323,
+      "chars": 68
+    },
+    {
+      "atMs": 5369,
+      "chars": 69
+    },
+    {
+      "atMs": 5618,
+      "chars": 74
+    },
+    {
+      "atMs": 5679,
+      "chars": 77
+    },
+    {
+      "atMs": 5743,
+      "chars": 84
+    },
+    {
+      "atMs": 5815,
+      "chars": 90
+    },
+    {
+      "atMs": 5878,
+      "chars": 97
+    },
+    {
+      "atMs": 6048,
+      "chars": 101
+    },
+    {
+      "atMs": 6247,
+      "chars": 106
+    },
+    {
+      "atMs": 6294,
+      "chars": 111
+    },
+    {
+      "atMs": 6354,
+      "chars": 118
+    },
+    {
+      "atMs": 6432,
+      "chars": 124
+    },
+    {
+      "atMs": 6511,
+      "chars": 130
+    },
+    {
+      "atMs": 6586,
+      "chars": 135
+    },
+    {
+      "atMs": 6646,
+      "chars": 138
+    },
+    {
+      "atMs": 6721,
+      "chars": 143
+    },
+    {
+      "atMs": 6784,
+      "chars": 149
+    },
+    {
+      "atMs": 6860,
+      "chars": 154
+    },
+    {
+      "atMs": 6922,
+      "chars": 156
+    },
+    {
+      "atMs": 6968,
+      "chars": 165
+    },
+    {
+      "atMs": 7029,
+      "chars": 169
+    },
+    {
+      "atMs": 7091,
+      "chars": 173
+    },
+    {
+      "atMs": 7167,
+      "chars": 177
+    },
+    {
+      "atMs": 7229,
+      "chars": 180
+    },
+    {
+      "atMs": 7305,
+      "chars": 184
+    },
+    {
+      "atMs": 7367,
+      "chars": 190
+    },
+    {
+      "atMs": 7446,
+      "chars": 192
+    }
+  ],
+  "choicesEnabledDuringPreview": false,
+  "lastText": "你站在村口，目光扫过四周。除了远处稀疏的炊烟，身后是自家破旧的木屋，面前是通往后山的蜿蜒土路。风卷起几片枯叶，四周静悄悄的，除了偶尔几声鸟鸣，并无异样。王大伯还在原地摆弄那只野猪崽，并未跟上来。\n\n确认暂时安全后，你握紧猎刀，沿着土路向深山走去。路边的野草渐渐茂密，阳光被树冠遮蔽，四周光线暗了下来。走了约莫一炷香的时间，前方出现了一处乱石堆，隐约能听到潺潺水声，似乎是个隐蔽的山泉。",
+  "doneMs": 10139,
+  "result": {
+    "protocolVersion": 1,
+    "status": "rejected",
+    "requestId": "0a6cc732-2934-48bb-90ab-edeb991a0933",
+    "attemptId": "463195b0-e7eb-4c29-87a0-f20c83539b9a",
+    "sessionRef": "sess_cbd4a68e2ce92387dc2158673ecfcad8",
+    "errorCode": "CHOICE_NOT_COMPILABLE",
+    "retry": null
+  },
+  "request": {
+    "context": {
+      "schemaVersion": 1,
+      "phase": "choice",
+      "identity": {
+        "runId": "5f679b5a-fbb7-47f2-a720-db12d9d21402",
+        "turnId": 5,
+        "baseRevision": 4,
+        "stateHash": "d4dce06b5bbe41c408b27b642b0d994e36567fac20b057857ad1f74c948fa57c",
+        "choiceId": "r:23279995f3353fe3:t4:c:a",
+        "rulesVersion": 1,
+        "promptVersion": 1,
+        "requestId": "0a6cc732-2934-48bb-90ab-edeb991a0933"
+      },
+      "namespace": "r:23279995f3353fe3",
+      "receipt": {
+        "kind": "choice",
+        "choiceId": "r:23279995f3353fe3:t4:c:a",
+        "action": {
+          "id": "r:23279995f3353fe3:t4:c:a",
+          "label": "仔细观察：观察周围环境，确认是否安全",
+          "intent": "interact",
+          "targetId": "self",
+          "stake": "low",
+          "approach": "observe"
+        },
+        "elapsedDays": 0,
+        "itemChanges": {},
+        "relationChanges": {},
+        "random": {
+          "before": 4138452078,
+          "after": 1646903541,
+          "roll": 41
+        },
+        "before": {
+          "ageDays": 5760,
+          "realm": "mortal",
+          "cultivation": 0,
+          "injury": 0
+        },
+        "after": {
+          "ageDays": 5760,
+          "realm": "mortal",
+          "cultivation": 0,
+          "injury": 0
+        },
+        "death": null,
+        "birth": null
+      },
+      "life": {
+        "name": "云归",
+        "ageDays": 5760,
+        "lifeLimit": 80,
+        "realm": "mortal",
+        "cultivation": 0,
+        "injury": 0,
+        "items": {
+          "supplies": 3,
+          "stones": 0
+        },
+        "relations": {},
+        "birth": {
+          "originId": "village",
+          "talentIds": [
+            "iron-bones",
+            "flash-wisdom"
+          ],
+          "attributes": {
+            "constitution": 4,
+            "insight": 4,
+            "fortune": 4
+          }
+        }
+      },
+      "entities": [
+        {
+          "id": "r:23279995f3353fe3:t1:e:person_1",
+          "name": "王大伯",
+          "kind": "person",
+          "status": "alive"
+        },
+        {
+          "id": "r:23279995f3353fe3:t3:e:place_1",
+          "name": "后山",
+          "kind": "place",
+          "status": "unknown"
+        }
+      ],
+      "memory": {
+        "facts": [
+          {
+            "id": "decision:4",
+            "runId": "5f679b5a-fbb7-47f2-a720-db12d9d21402",
+            "turnId": 4,
+            "source": "rules",
+            "kind": "fact",
+            "entityId": "r:23279995f3353fe3:t1:e:person_1",
+            "text": "你在村口选择了“结束与王大伯的互动：结束与王大伯的交谈，独自离开”。"
+          },
+          {
+            "id": "decision:3",
+            "runId": "5f679b5a-fbb7-47f2-a720-db12d9d21402",
+            "turnId": 3,
+            "source": "rules",
+            "kind": "fact",
+            "entityId": "r:23279995f3353fe3:t1:e:person_1",
+            "text": "你在村口选择了“婉拒王大伯：拒绝帮忙，转身离开”。"
+          }
+        ],
+        "promises": [],
+        "clues": [
+          {
+            "id": "m:fb8043d63ca797518942592d836413e7",
+            "source": "narrative",
+            "kind": "clue",
+            "entityId": "r:23279995f3353fe3:t1:e:person_1",
+            "text": "“大伯，这事儿我帮不上忙。我还要去后山看看有没有野兔，就不陪您了。”",
+            "status": "open",
+            "runId": "5f679b5a-fbb7-47f2-a720-db12d9d21402",
+            "turnId": 3
+          },
+          {
+            "id": "m:e18d1504216b92eb51455fd61693a82a",
+            "source": "narrative",
+            "kind": "clue",
+            "entityId": "r:23279995f3353fe3:t1:e:person_1",
+            "text": "“这小东西还不到两斤重，肉太柴，嚼着没味儿。再说，夹子是铁打的，若是硬生生砸烂了，铁片崩进肉里，以后这肉谁敢吃？留着它，等它长到百十斤，那才是真正的野味。”王大伯拍了拍手上的泥土，把猎刀收回腰间，“你按住它，别让它乱动，我再去拿把钳子来。”",
+            "status": "open",
+            "runId": "5f679b5a-fbb7-47f2-a720-db12d9d21402",
+            "turnId": 2
+          },
+          {
+            "id": "m:b42061325174924374b42c75887a2bce",
+            "source": "narrative",
+            "kind": "clue",
+            "entityId": "r:23279995f3353fe3:t1:e:person_1",
+            "text": "你站在自家破旧的木屋前，手里攥着刚磨好的猎刀。村口的老猎户王大伯正蹲在地上，眉头紧锁地摆弄着一只被猎夹夹住的野猪崽。野猪崽哼哼唧唧，血迹染红了枯草。王大伯抬头看了你一眼，把刀柄递向你，示意你帮忙按住猪腿。",
+            "status": "open",
+            "runId": "5f679b5a-fbb7-47f2-a720-db12d9d21402",
+            "turnId": 1
+          }
+        ],
+        "recent": [
+          {
+            "id": "turn:4",
+            "runId": "5f679b5a-fbb7-47f2-a720-db12d9d21402",
+            "turnId": 4,
+            "source": "narrative",
+            "kind": "turn",
+            "text": "地点：村口；刚才选择：结束与王大伯的互动：结束与王大伯的交谈，独自离开\n“大伯，那您忙。我这就去后山转转。”",
+            "entityIds": []
+          },
+          {
+            "id": "turn:3",
+            "runId": "5f679b5a-fbb7-47f2-a720-db12d9d21402",
+            "turnId": 3,
+            "source": "narrative",
+            "kind": "turn",
+            "text": "地点：村口；刚才选择：婉拒王大伯：拒绝帮忙，转身离开\n“大伯，这事儿我帮不上忙。我还要去后山看看有没有野兔，就不陪您了。”",
+            "entityIds": []
+          }
+        ],
+        "summaries": []
+      },
+      "references": [
+        "decision:4",
+        "decision:3",
+        "m:fb8043d63ca797518942592d836413e7",
+        "m:e18d1504216b92eb51455fd61693a82a",
+        "m:b42061325174924374b42c75887a2bce",
+        "turn:4",
+        "turn:3"
+      ],
+      "previousScene": {
+        "id": "r:23279995f3353fe3:t4:s:scene",
+        "blocksHash": "7f48ea7d49d4379dd3d415ebd84b4c501274c0b9d23ddcd6c7dd99a4eaa7d51a"
+      },
+      "relationshipVersion": 1,
+      "relationships": {},
+      "coverage": {
+        "policy": "relevance-v1",
+        "openTotal": 3,
+        "openIncluded": 3,
+        "openOmitted": 0
+      }
+    },
+    "attempt": {
+      "id": "463195b0-e7eb-4c29-87a0-f20c83539b9a",
+      "sessionRef": "sess_cbd4a68e2ce92387dc2158673ecfcad8",
+      "retryOf": null
+    },
+    "storyActions": true
+  },
+  "decision": {
+    "index": 0,
+    "reason": "Observe the current surroundings and safety after saying farewell. The character only mentioned a possible future mountain trip; no travel or hunting has been selected, and no rewards or injuries are settled.",
+    "selected": {
+      "id": "r:23279995f3353fe3:t4:c:a",
+      "label": "仔细观察：观察周围环境，确认是否安全",
+      "intent": "interact",
+      "targetId": "self",
+      "stake": "low",
+      "approach": "observe"
+    }
+  },
+  "choices": [
+    {
+      "id": "r:23279995f3353fe3:t4:c:a",
+      "enabled": false,
+      "label": "仔细观察：观察周围环境，确认是否安全",
+      "cost": "0日"
+    },
+    {
+      "id": "r:23279995f3353fe3:t4:c:b",
+      "enabled": false,
+      "label": "穿行荒野前往后山：前往后山寻找猎物",
+      "cost": "60日 · 行粮 1 · 历练受伤基础风险25%，根骨与坚韧筋骨可降低风险。"
+    },
+    {
+      "id": "r:23279995f3353fe3:t4:c:leave",
+      "enabled": false,
+      "label": "结束当前互动：暂不介入此事",
+      "cost": "0日"
+    }
+  ],
+  "traces": [
+    {
+      "model": "@cf/zai-org/glm-4.7-flash",
+      "inputHash": "bf189012c3b8544556985675980e8e80670900d09d3eef2f5f1a5413fac1d410",
+      "inputBytes": 17397,
+      "startedAt": 1793363985526,
+      "bindingReturnedAt": 1793363985810,
+      "liveRawBytes": 104399,
+      "captureComplete": true,
+      "response": {
+        "model": "@cf/zai-org/glm-4.7-flash",
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "message": {
+              "content": "{\"blocks\":[{\"kind\":\"narration\",\"text\":\"你站在村口，目光扫过四周。除了远处稀疏的炊烟，身后是自家破旧的木屋，面前是通往后山的蜿蜒土路。风卷起几片枯叶，四周静悄悄的，除了偶尔几声鸟鸣，并无异样。王大伯还在原地摆弄那只野猪崽，并未跟上来。\"},{\"kind\":\"narration\",\"text\":\"确认暂时安全后，你握紧猎刀，沿着土路向深山走去。路边的野草渐渐茂密，阳光被树冠遮蔽，四周光线暗了下来。走了约莫一炷香的时间，前方出现了一处乱石堆，隐约能听到潺潺水声，似乎是个隐蔽的山泉。\"}],\"choices\":[{\"action\":\"interact:ask\",\"targetId\":\"k1_person_王大伯\",\"stake\":\"low\",\"purpose\":\"询问王大伯关于后山猎场的事\",\"anchor\":0},{\"action\":\"interact:ask\",\"targetId\":\"k1_person_王大伯\",\"stake\":\"low\",\"purpose\":\"询问王大伯关于乱石堆附近是否有野兽出没\",\"anchor\":0},{\"action\":\"travel:wilderness\",\"targetId\":\"k2_place_后山\",\"stake\":\"low\",\"purpose\":\"前往乱石堆附近的隐蔽山泉\",\"anchor\":1}],\"title\":\"后山小径\",\"location\":\"后山\",\"otherPeople\":[{\"id\":\"k1_person_王大伯\",\"status\":\"alive\"}],\"places\":[{\"id\":\"k2_place_后山\"}],\"factions\":[],\"memoryDeltas\":[{\"entityId\":\"k1_person_王大伯\",\"kind\":\"clue\",\"anchor\":0,\"status\":\"open\"}]}",
+              "reasoning_content": ""
+            }
+          }
+        ],
+        "usage": {
+          "prompt_tokens": 3226,
+          "completion_tokens": 367,
+          "total_tokens": 3593,
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          },
+          "neurons": 31.101800000000157
+        }
+      },
+      "rawSseBytes": 104399
+    }
+  ],
+  "revision": 4,
+  "pending": true,
+  "state": {
+    "relationshipVersion": 1,
+    "version": 5,
+    "mode": "cultivation",
+    "contentVersion": 4,
+    "rulesVersion": 1,
+    "promptVersion": 1,
+    "runId": "5f679b5a-fbb7-47f2-a720-db12d9d21402",
+    "revision": 4,
+    "turnId": 4,
+    "phase": "active",
+    "rng": 4138452078,
+    "life": {
+      "name": "云归",
+      "ageDays": 5760,
+      "lifeLimit": 80,
+      "realm": "mortal",
+      "cultivation": 0,
+      "injury": 0,
+      "items": {
+        "supplies": 3,
+        "stones": 0
+      },
+      "relations": {},
+      "birth": {
+        "originId": "village",
+        "talentIds": [
+          "iron-bones",
+          "flash-wisdom"
+        ],
+        "attributes": {
+          "constitution": 4,
+          "insight": 4,
+          "fortune": 4
+        }
+      }
+    },
+    "birthReceipt": {
+      "kind": "opening",
+      "choiceId": null,
+      "action": null,
+      "elapsedDays": 0,
+      "itemChanges": {},
+      "relationChanges": {},
+      "random": {
+        "before": 1882843953,
+        "after": 1882843953,
+        "roll": null
+      },
+      "before": {
+        "ageDays": 5760,
+        "realm": "mortal",
+        "cultivation": 0,
+        "injury": 0
+      },
+      "after": {
+        "ageDays": 5760,
+        "realm": "mortal",
+        "cultivation": 0,
+        "injury": 0
+      },
+      "death": null,
+      "birth": {
+        "originId": "village",
+        "talentIds": [
+          "iron-bones",
+          "flash-wisdom"
+        ],
+        "attributes": {
+          "constitution": 4,
+          "insight": 4,
+          "fortune": 4
+        }
+      }
+    },
+    "currentScene": {
+      "id": "r:23279995f3353fe3:t4:s:scene",
+      "title": "村口告辞",
+      "location": "村口",
+      "entities": [
+        {
+          "id": "r:23279995f3353fe3:t1:e:person_1",
+          "name": "王大伯",
+          "kind": "person",
+          "status": "alive"
+        },
+        {
+          "id": "r:23279995f3353fe3:t3:e:place_1",
+          "name": "后山",
+          "kind": "place"
+        }
+      ],
+      "blocks": [
+        {
+          "kind": "dialogue",
+          "text": "“大伯，那您忙。我这就去后山转转。”",
+          "speaker": "self"
+        }
+      ],
+      "choices": [
+        {
+          "id": "r:23279995f3353fe3:t4:c:a",
+          "label": "仔细观察：观察周围环境，确认是否安全",
+          "intent": "interact",
+          "targetId": "self",
+          "stake": "low",
+          "approach": "observe"
+        },
+        {
+          "id": "r:23279995f3353fe3:t4:c:b",
+          "label": "穿行荒野前往后山：前往后山寻找猎物",
+          "intent": "travel",
+          "targetId": "r:23279995f3353fe3:t3:e:place_1",
+          "stake": "low",
+          "approach": "wilderness"
+        },
+        {
+          "id": "r:23279995f3353fe3:t4:c:leave",
+          "label": "结束当前互动：暂不介入此事",
+          "intent": "interact",
+          "targetId": "r:23279995f3353fe3:t1:e:person_1",
+          "approach": "leave",
+          "stake": "low"
+        }
+      ],
+      "memoryDeltas": []
+    },
+    "lastReceipt": {
+      "kind": "choice",
+      "choiceId": "r:23279995f3353fe3:t3:c:c",
+      "action": {
+        "id": "r:23279995f3353fe3:t3:c:c",
+        "label": "结束与王大伯的互动：结束与王大伯的交谈，独自离开",
+        "intent": "interact",
+        "targetId": "r:23279995f3353fe3:t1:e:person_1",
+        "stake": "low",
+        "approach": "leave"
+      },
+      "elapsedDays": 0,
+      "itemChanges": {},
+      "relationChanges": {},
+      "random": {
+        "before": 130680971,
+        "after": 4138452078,
+        "roll": 78
+      },
+      "before": {
+        "ageDays": 5760,
+        "realm": "mortal",
+        "cultivation": 0,
+        "injury": 0
+      },
+      "after": {
+        "ageDays": 5760,
+        "realm": "mortal",
+        "cultivation": 0,
+        "injury": 0
+      },
+      "death": null,
+      "birth": null
+    },
+    "relatedEntities": [
+      {
+        "id": "r:23279995f3353fe3:t1:e:person_1",
+        "name": "王大伯",
+        "kind": "person",
+        "status": "alive"
+      },
+      {
+        "id": "r:23279995f3353fe3:t3:e:place_1",
+        "name": "后山",
+        "kind": "place"
+      }
+    ],
+    "archiveCursor": 0
+  },
+  "posts": 5,
+  "latency": {
+    "usable": false,
+    "errorCode": "CHOICE_NOT_COMPILABLE",
+    "firstAnyPreviewMs": 4314,
+    "firstReadableMs": 4658,
+    "completionMs": 10139,
+    "narrativeChars": 192,
+    "maxPreviewGapMs": 249,
+    "readingFinishEstimateMs": null,
+    "readingStallEstimateMs": null,
+    "optionsWaitEstimateMs": null,
+    "prefetchWorthEvaluating": null,
+    "assumptions": {
+      "readingCharsPerSecond": 6,
+      "readableChars": 20,
+      "targetWaitMs": 2000
+    }
+  }
+}

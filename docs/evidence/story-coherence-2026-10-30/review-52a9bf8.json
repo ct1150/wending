@@ -1,0 +1,38 @@
+{
+  "sourceCommit": "52a9bf8e4c0970c52f4f9cbf4d124680a417d10f",
+  "recordedAt": "2026-10-30T07:06:35.827Z",
+  "review": "Independent read-only review; original two reproduced P2s fixed and rechecked",
+  "originalFindings": [
+    "22 entities with 80-character IDs made new mandatory recent memory reject old cache/import",
+    "24 NPC names of21-22 characters fit context but modern provider input exceeded24576"
+  ],
+  "fixed": {
+    "oldCacheDerivedHashPreserved": true,
+    "oldUnmarkedRelationshipFlagPreserved": true,
+    "modernExample": {
+      "encodedContextBytes": 5831,
+      "providerInputBytes": 19743
+    },
+    "optionalMemoryGrid": {
+      "combinations": 162,
+      "validContexts": 144,
+      "validProviderInputs": 144,
+      "contextRejected": 18,
+      "maxEncodedContextBytes": 6996,
+      "maxInputBytes": 21759
+    },
+    "independentNodeTests": {
+      "passed": 47,
+      "failed": 0
+    },
+    "mainCoreTests": {
+      "passed": 84,
+      "failed": 0
+    },
+    "mainNativeArchiveTests": {
+      "passed": 6,
+      "failed": 0
+    }
+  },
+  "scope": "Current GLM profile; independent archive reproduction was in memory. Main native Chrome tests separately cover export/import, old long-ID cache and frozen generation. Real model acceptance remains required."
+}

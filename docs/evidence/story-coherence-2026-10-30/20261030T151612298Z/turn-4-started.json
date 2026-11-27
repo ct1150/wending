@@ -1,0 +1,1 @@
+{"at":"2026-10-30T15:22:36.676Z","decision":{"index":1,"reason":"告辞已真实结束赵三互动，独立菜单无旧NPC问答；明确前往后山密林调查红光，目标名称与目的同地，核对60日、行粮-1及不默认带走赵三。","selected":{"id":"r:87d03ccb7c322d16:t4:c:b","label":"穿行荒野前往后山密林：前往后山密林查看红光来源","intent":"travel","targetId":"r:87d03ccb7c322d16:t3:e:place_1","stake":"low","approach":"wilderness"},"explicitRetry":true}}

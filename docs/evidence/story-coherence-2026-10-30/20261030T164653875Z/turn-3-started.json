@@ -1,0 +1,1 @@
+{"at":"2026-10-30T16:53:30.119Z","decision":{"index":0,"reason":"拒绝已在67毫秒内落盘，零POST、零日、物品不变；原NPC问题消失，仅有观察和休整。现在观察当前地点，确认不强迫回访老赵、不自动开始打猎。","selected":{"id":"r:d9da341062cbd87f:t3:c:observe","label":"观察周围：寻找新的线索","intent":"interact","targetId":"self","stake":"low","approach":"observe"}}}

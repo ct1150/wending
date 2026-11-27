@@ -1,0 +1,784 @@
+{
+  "caseId": "opening",
+  "start": 710.8000000007451,
+  "timeline": [
+    {
+      "atMs": 2234,
+      "chars": 1
+    },
+    {
+      "atMs": 2336,
+      "chars": 4
+    },
+    {
+      "atMs": 2399,
+      "chars": 7
+    },
+    {
+      "atMs": 2463,
+      "chars": 9
+    },
+    {
+      "atMs": 2526,
+      "chars": 11
+    },
+    {
+      "atMs": 2583,
+      "chars": 14
+    },
+    {
+      "atMs": 2653,
+      "chars": 18
+    },
+    {
+      "atMs": 2714,
+      "chars": 22
+    },
+    {
+      "atMs": 2763,
+      "chars": 23
+    },
+    {
+      "atMs": 2826,
+      "chars": 26
+    },
+    {
+      "atMs": 2888,
+      "chars": 30
+    },
+    {
+      "atMs": 2950,
+      "chars": 34
+    },
+    {
+      "atMs": 3014,
+      "chars": 37
+    },
+    {
+      "atMs": 3061,
+      "chars": 39
+    },
+    {
+      "atMs": 3123,
+      "chars": 42
+    },
+    {
+      "atMs": 3185,
+      "chars": 44
+    },
+    {
+      "atMs": 3247,
+      "chars": 46
+    },
+    {
+      "atMs": 3309,
+      "chars": 48
+    },
+    {
+      "atMs": 3371,
+      "chars": 51
+    },
+    {
+      "atMs": 3435,
+      "chars": 52
+    },
+    {
+      "atMs": 3823,
+      "chars": 53
+    },
+    {
+      "atMs": 4168,
+      "chars": 56
+    },
+    {
+      "atMs": 4479,
+      "chars": 59
+    },
+    {
+      "atMs": 4541,
+      "chars": 61
+    },
+    {
+      "atMs": 4603,
+      "chars": 64
+    },
+    {
+      "atMs": 4665,
+      "chars": 66
+    },
+    {
+      "atMs": 4712,
+      "chars": 69
+    },
+    {
+      "atMs": 4774,
+      "chars": 72
+    },
+    {
+      "atMs": 4837,
+      "chars": 75
+    },
+    {
+      "atMs": 4899,
+      "chars": 79
+    },
+    {
+      "atMs": 4961,
+      "chars": 83
+    },
+    {
+      "atMs": 5008,
+      "chars": 84
+    },
+    {
+      "atMs": 5302,
+      "chars": 87
+    },
+    {
+      "atMs": 5645,
+      "chars": 90
+    },
+    {
+      "atMs": 5708,
+      "chars": 94
+    },
+    {
+      "atMs": 6084,
+      "chars": 98
+    },
+    {
+      "atMs": 6147,
+      "chars": 102
+    },
+    {
+      "atMs": 6209,
+      "chars": 106
+    },
+    {
+      "atMs": 6270,
+      "chars": 109
+    },
+    {
+      "atMs": 6318,
+      "chars": 114
+    },
+    {
+      "atMs": 6758,
+      "chars": 117
+    },
+    {
+      "atMs": 6820,
+      "chars": 119
+    },
+    {
+      "atMs": 7322,
+      "chars": 124
+    },
+    {
+      "atMs": 7384,
+      "chars": 127
+    },
+    {
+      "atMs": 7463,
+      "chars": 132
+    },
+    {
+      "atMs": 7542,
+      "chars": 134
+    },
+    {
+      "atMs": 7604,
+      "chars": 136
+    },
+    {
+      "atMs": 7652,
+      "chars": 138
+    },
+    {
+      "atMs": 7715,
+      "chars": 142
+    },
+    {
+      "atMs": 7778,
+      "chars": 145
+    },
+    {
+      "atMs": 7825,
+      "chars": 149
+    },
+    {
+      "atMs": 7905,
+      "chars": 152
+    },
+    {
+      "atMs": 8158,
+      "chars": 154
+    },
+    {
+      "atMs": 8221,
+      "chars": 156
+    },
+    {
+      "atMs": 8282,
+      "chars": 159
+    },
+    {
+      "atMs": 8804,
+      "chars": 165
+    },
+    {
+      "atMs": 8867,
+      "chars": 167
+    },
+    {
+      "atMs": 8914,
+      "chars": 170
+    },
+    {
+      "atMs": 8978,
+      "chars": 175
+    },
+    {
+      "atMs": 9213,
+      "chars": 177
+    },
+    {
+      "atMs": 9276,
+      "chars": 182
+    },
+    {
+      "atMs": 9338,
+      "chars": 185
+    },
+    {
+      "atMs": 9400,
+      "chars": 189
+    },
+    {
+      "atMs": 9480,
+      "chars": 192
+    },
+    {
+      "atMs": 9543,
+      "chars": 198
+    },
+    {
+      "atMs": 9591,
+      "chars": 202
+    },
+    {
+      "atMs": 9670,
+      "chars": 206
+    },
+    {
+      "atMs": 9715,
+      "chars": 210
+    },
+    {
+      "atMs": 9793,
+      "chars": 215
+    },
+    {
+      "atMs": 9840,
+      "chars": 219
+    },
+    {
+      "atMs": 9917,
+      "chars": 221
+    },
+    {
+      "atMs": 10043,
+      "chars": 226
+    },
+    {
+      "atMs": 10105,
+      "chars": 229
+    }
+  ],
+  "choicesEnabledDuringPreview": false,
+  "lastText": "云归站在青云村口，晨雾还未散去。十六岁的少年身形单薄，却隐隐透着一股坚韧。你摸了摸腰间那把磨得发亮的旧铁剑，那是你离家闯荡的资本。村口的老槐树下，几个村民正聚在一起闲聊，似乎在议论着什么。\n\n“听说了吗？最近山里不太平，有些野兽伤人了。”\n\n“是啊，前些日子隔壁二狗子去后山砍柴，回来就受了伤，说是被什么黑影扑倒的。”\n\n村民们惊恐地交换着眼神，而你握紧了手中的剑柄。你并非为了逃避，而是为了证明自己。你决定先去后山看看情况，顺便寻找一些可以提升实力的方法。",
+  "doneMs": 19229,
+  "result": {
+    "protocolVersion": 1,
+    "status": "ready",
+    "requestId": "58e4316f-e3b3-4a0a-885b-72fd7a0bf5ba",
+    "attemptId": "cb147c50-1798-435a-b0bf-d9b07f3aebd2",
+    "sessionRef": "sess_fd0a20bebf395caff44269d53af8bebf",
+    "errorCode": null,
+    "retry": null,
+    "scene": {
+      "id": "r:e2948d572a8c766b:t1:s:scene",
+      "title": "青云村口",
+      "location": "青云村口",
+      "entities": [
+        {
+          "id": "r:e2948d572a8c766b:t1:e:person_1",
+          "name": "村民甲",
+          "status": "alive",
+          "kind": "person"
+        },
+        {
+          "id": "r:e2948d572a8c766b:t1:e:person_2",
+          "name": "村民乙",
+          "status": "alive",
+          "kind": "person"
+        },
+        {
+          "id": "r:e2948d572a8c766b:t1:e:place_1",
+          "name": "后山小径",
+          "kind": "place"
+        }
+      ],
+      "blocks": [
+        {
+          "kind": "narration",
+          "text": "云归站在青云村口，晨雾还未散去。十六岁的少年身形单薄，却隐隐透着一股坚韧。你摸了摸腰间那把磨得发亮的旧铁剑，那是你离家闯荡的资本。村口的老槐树下，几个村民正聚在一起闲聊，似乎在议论着什么。"
+        },
+        {
+          "kind": "dialogue",
+          "text": "“听说了吗？最近山里不太平，有些野兽伤人了。”",
+          "speaker": "r:e2948d572a8c766b:t1:e:person_1"
+        },
+        {
+          "kind": "dialogue",
+          "text": "“是啊，前些日子隔壁二狗子去后山砍柴，回来就受了伤，说是被什么黑影扑倒的。”",
+          "speaker": "r:e2948d572a8c766b:t1:e:person_2"
+        },
+        {
+          "kind": "narration",
+          "text": "村民们惊恐地交换着眼神，而你握紧了手中的剑柄。你并非为了逃避，而是为了证明自己。你决定先去后山看看情况，顺便寻找一些可以提升实力的方法。"
+        }
+      ],
+      "choices": [
+        {
+          "id": "r:e2948d572a8c766b:t1:c:a",
+          "label": "前往后山小径查看情况",
+          "intent": "travel",
+          "targetId": "r:e2948d572a8c766b:t1:e:place_1",
+          "stake": "low",
+          "approach": "road"
+        },
+        {
+          "id": "r:e2948d572a8c766b:t1:c:b",
+          "label": "向村民甲询问关于野兽的更多细节",
+          "intent": "negotiate",
+          "targetId": "r:e2948d572a8c766b:t1:e:person_1",
+          "stake": "low",
+          "approach": "bargain"
+        },
+        {
+          "id": "r:e2948d572a8c766b:t1:c:c",
+          "label": "向村民乙打听村里的传闻",
+          "intent": "negotiate",
+          "targetId": "r:e2948d572a8c766b:t1:e:person_2",
+          "stake": "low",
+          "approach": "bargain"
+        }
+      ],
+      "memoryDeltas": [
+        {
+          "entityId": "r:e2948d572a8c766b:t1:e:person_1",
+          "text": "村民甲提到最近山里不太平，有野兽伤人。",
+          "kind": "fact"
+        },
+        {
+          "entityId": "r:e2948d572a8c766b:t1:e:person_2",
+          "text": "村民乙提到二狗子去后山砍柴受伤，被黑影扑倒。",
+          "kind": "fact"
+        }
+      ]
+    }
+  },
+  "request": {
+    "context": {
+      "schemaVersion": 1,
+      "phase": "opening",
+      "identity": {
+        "runId": "fd33f87d-d02c-4037-9398-1e7311999d7e",
+        "turnId": 1,
+        "baseRevision": 0,
+        "stateHash": "97125168389c0611539e82fbfc2efbf413cf97c5cf3d2e83128da4a289c17dcf",
+        "choiceId": null,
+        "rulesVersion": 1,
+        "promptVersion": 1,
+        "requestId": "58e4316f-e3b3-4a0a-885b-72fd7a0bf5ba"
+      },
+      "namespace": "r:e2948d572a8c766b",
+      "receipt": {
+        "kind": "opening",
+        "choiceId": null,
+        "action": null,
+        "elapsedDays": 0,
+        "itemChanges": {},
+        "relationChanges": {},
+        "random": {
+          "before": 3929393174,
+          "after": 3929393174,
+          "roll": null
+        },
+        "before": {
+          "ageDays": 5760,
+          "realm": "mortal",
+          "cultivation": 0,
+          "injury": 0
+        },
+        "after": {
+          "ageDays": 5760,
+          "realm": "mortal",
+          "cultivation": 0,
+          "injury": 0
+        },
+        "death": null,
+        "birth": {
+          "originId": "village",
+          "talentIds": [
+            "sword-bone",
+            "fortune-debt"
+          ],
+          "attributes": {
+            "constitution": 2,
+            "insight": 4,
+            "fortune": 6
+          }
+        }
+      },
+      "life": {
+        "name": "云归",
+        "ageDays": 5760,
+        "lifeLimit": 80,
+        "realm": "mortal",
+        "cultivation": 0,
+        "injury": 0,
+        "items": {
+          "supplies": 3,
+          "stones": 0
+        },
+        "relations": {},
+        "birth": {
+          "originId": "village",
+          "talentIds": [
+            "sword-bone",
+            "fortune-debt"
+          ],
+          "attributes": {
+            "constitution": 2,
+            "insight": 4,
+            "fortune": 6
+          }
+        }
+      },
+      "entities": [],
+      "memory": {
+        "facts": [],
+        "promises": [],
+        "clues": [],
+        "recent": [],
+        "summaries": []
+      },
+      "references": [],
+      "previousScene": null,
+      "relationshipVersion": 1,
+      "relationships": {},
+      "coverage": {
+        "policy": "relevance-v1",
+        "openTotal": 0,
+        "openIncluded": 0,
+        "openOmitted": 0
+      }
+    },
+    "attempt": {
+      "id": "cb147c50-1798-435a-b0bf-d9b07f3aebd2",
+      "sessionRef": "sess_fd0a20bebf395caff44269d53af8bebf",
+      "retryOf": null
+    }
+  },
+  "decision": null,
+  "choices": [
+    {
+      "id": "r:e2948d572a8c766b:t1:c:a",
+      "enabled": true,
+      "label": "前往后山小径查看情况",
+      "cost": "30日 · 行粮 1"
+    },
+    {
+      "id": "r:e2948d572a8c766b:t1:c:b",
+      "enabled": false,
+      "label": "向村民甲询问关于野兽的更多细节",
+      "cost": "缺少灵石。 · 7日 · 灵石 1"
+    },
+    {
+      "id": "r:e2948d572a8c766b:t1:c:c",
+      "enabled": false,
+      "label": "向村民乙打听村里的传闻",
+      "cost": "缺少灵石。 · 7日 · 灵石 1"
+    }
+  ],
+  "traces": [
+    {
+      "model": "@cf/zai-org/glm-4.7-flash",
+      "inputHash": "d787b4337f9ed8c0b7f734d7f07ec98adc4706dbd4140ef558f58a05d99f9d44",
+      "inputBytes": 15084,
+      "startedAt": 1793344476469,
+      "bindingReturnedAt": 1793344476969,
+      "response": {
+        "model": "@cf/zai-org/glm-4.7-flash",
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "message": {
+              "content": "{\n  \"blocks\": [\n    {\n      \"kind\": \"narration\",\n      \"text\": \"云归站在青云村口，晨雾还未散去。十六岁的少年身形单薄，却隐隐透着一股坚韧。你摸了摸腰间那把磨得发亮的旧铁剑，那是你离家闯荡的资本。村口的老槐树下，几个村民正聚在一起闲聊，似乎在议论着什么。\"\n    },\n    {\n      \"kind\": \"dialogue\",\n      \"text\": \"“听说了吗？最近山里不太平，有些野兽伤人了。”\",\n      \"speaker\": \"p1\"\n    },\n    {\n      \"kind\": \"dialogue\",\n      \"text\": \"“是啊，前些日子隔壁二狗子去后山砍柴，回来就受了伤，说是被什么黑影扑倒的。”\",\n      \"speaker\": \"p2\"\n    },\n    {\n      \"kind\": \"narration\",\n      \"text\": \"村民们惊恐地交换着眼神，而你握紧了手中的剑柄。你并非为了逃避，而是为了证明自己。你决定先去后山看看情况，顺便寻找一些可以提升实力的方法。\"\n    }\n  ],\n  \"title\": \"青云村口\",\n  \"location\": \"青云村口\",\n  \"otherPeople\": [\n    {\n      \"id\": \"p1\",\n      \"name\": \"村民甲\",\n      \"status\": \"alive\"\n    },\n    {\n      \"id\": \"p2\",\n      \"name\": \"村民乙\",\n      \"status\": \"alive\"\n    }\n  ],\n  \"places\": [\n    {\n      \"id\": \"l1\",\n      \"name\": \"后山小径\"\n    }\n  ],\n  \"factions\": [],\n  \"choices\": [\n    {\n      \"action\": \"travel:road\",\n      \"targetId\": \"l1\",\n      \"stake\": \"low\",\n      \"label\": \"前往后山小径查看情况\",\n      \"anchor\": \"你并非为了逃避，而是为了证明自己。你决定先去后山看看情况，顺便寻找一些可以提升实力的方法。\"\n    },\n    {\n      \"action\": \"negotiate:bargain\",\n      \"targetId\": \"p1\",\n      \"stake\": \"low\",\n      \"label\": \"向村民甲询问关于野兽的更多细节\",\n      \"anchor\": \"村民们惊恐地交换着眼神，而你握紧了手中的剑柄。\"\n    },\n    {\n      \"action\": \"negotiate:bargain\",\n      \"targetId\": \"p2\",\n      \"stake\": \"low\",\n      \"label\": \"向村民乙打听村里的传闻\",\n      \"anchor\": \"“是啊，前些日子隔壁二狗子去后山砍柴，回来就受了伤，说是被什么黑影扑倒的。”\"\n    }\n  ]\n  ,\n  \"memoryDeltas\": [\n    {\n      \"entityId\": \"p1\",\n      \"text\": \"村民甲提到最近山里不太平，有野兽伤人。\",\n      \"kind\": \"fact\"\n    },\n    {\n      \"entityId\": \"p2\",\n      \"text\": \"村民乙提到二狗子去后山砍柴受伤，被黑影扑倒。\",\n      \"kind\": \"fact\"\n    }\n  ]\n}",
+              "reasoning_content": ""
+            }
+          }
+        ],
+        "usage": {
+          "prompt_tokens": 1693,
+          "completion_tokens": 704,
+          "total_tokens": 2397,
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          },
+          "neurons": 34.9371000000003
+        }
+      },
+      "rawSseBytes": 194989
+    }
+  ],
+  "revision": 1,
+  "pending": false,
+  "state": {
+    "relationshipVersion": 1,
+    "version": 5,
+    "mode": "cultivation",
+    "contentVersion": 4,
+    "rulesVersion": 1,
+    "promptVersion": 1,
+    "runId": "fd33f87d-d02c-4037-9398-1e7311999d7e",
+    "revision": 1,
+    "turnId": 1,
+    "phase": "active",
+    "rng": 3929393174,
+    "life": {
+      "name": "云归",
+      "ageDays": 5760,
+      "lifeLimit": 80,
+      "realm": "mortal",
+      "cultivation": 0,
+      "injury": 0,
+      "items": {
+        "supplies": 3,
+        "stones": 0
+      },
+      "relations": {},
+      "birth": {
+        "originId": "village",
+        "talentIds": [
+          "sword-bone",
+          "fortune-debt"
+        ],
+        "attributes": {
+          "constitution": 2,
+          "insight": 4,
+          "fortune": 6
+        }
+      }
+    },
+    "birthReceipt": {
+      "kind": "opening",
+      "choiceId": null,
+      "action": null,
+      "elapsedDays": 0,
+      "itemChanges": {},
+      "relationChanges": {},
+      "random": {
+        "before": 3929393174,
+        "after": 3929393174,
+        "roll": null
+      },
+      "before": {
+        "ageDays": 5760,
+        "realm": "mortal",
+        "cultivation": 0,
+        "injury": 0
+      },
+      "after": {
+        "ageDays": 5760,
+        "realm": "mortal",
+        "cultivation": 0,
+        "injury": 0
+      },
+      "death": null,
+      "birth": {
+        "originId": "village",
+        "talentIds": [
+          "sword-bone",
+          "fortune-debt"
+        ],
+        "attributes": {
+          "constitution": 2,
+          "insight": 4,
+          "fortune": 6
+        }
+      }
+    },
+    "currentScene": {
+      "id": "r:e2948d572a8c766b:t1:s:scene",
+      "title": "青云村口",
+      "location": "青云村口",
+      "entities": [
+        {
+          "id": "r:e2948d572a8c766b:t1:e:person_1",
+          "name": "村民甲",
+          "status": "alive",
+          "kind": "person"
+        },
+        {
+          "id": "r:e2948d572a8c766b:t1:e:person_2",
+          "name": "村民乙",
+          "status": "alive",
+          "kind": "person"
+        },
+        {
+          "id": "r:e2948d572a8c766b:t1:e:place_1",
+          "name": "后山小径",
+          "kind": "place"
+        }
+      ],
+      "blocks": [
+        {
+          "kind": "narration",
+          "text": "云归站在青云村口，晨雾还未散去。十六岁的少年身形单薄，却隐隐透着一股坚韧。你摸了摸腰间那把磨得发亮的旧铁剑，那是你离家闯荡的资本。村口的老槐树下，几个村民正聚在一起闲聊，似乎在议论着什么。"
+        },
+        {
+          "kind": "dialogue",
+          "text": "“听说了吗？最近山里不太平，有些野兽伤人了。”",
+          "speaker": "r:e2948d572a8c766b:t1:e:person_1"
+        },
+        {
+          "kind": "dialogue",
+          "text": "“是啊，前些日子隔壁二狗子去后山砍柴，回来就受了伤，说是被什么黑影扑倒的。”",
+          "speaker": "r:e2948d572a8c766b:t1:e:person_2"
+        },
+        {
+          "kind": "narration",
+          "text": "村民们惊恐地交换着眼神，而你握紧了手中的剑柄。你并非为了逃避，而是为了证明自己。你决定先去后山看看情况，顺便寻找一些可以提升实力的方法。"
+        }
+      ],
+      "choices": [
+        {
+          "id": "r:e2948d572a8c766b:t1:c:a",
+          "label": "前往后山小径查看情况",
+          "intent": "travel",
+          "targetId": "r:e2948d572a8c766b:t1:e:place_1",
+          "stake": "low",
+          "approach": "road"
+        },
+        {
+          "id": "r:e2948d572a8c766b:t1:c:b",
+          "label": "向村民甲询问关于野兽的更多细节",
+          "intent": "negotiate",
+          "targetId": "r:e2948d572a8c766b:t1:e:person_1",
+          "stake": "low",
+          "approach": "bargain"
+        },
+        {
+          "id": "r:e2948d572a8c766b:t1:c:c",
+          "label": "向村民乙打听村里的传闻",
+          "intent": "negotiate",
+          "targetId": "r:e2948d572a8c766b:t1:e:person_2",
+          "stake": "low",
+          "approach": "bargain"
+        }
+      ],
+      "memoryDeltas": [
+        {
+          "entityId": "r:e2948d572a8c766b:t1:e:person_1",
+          "text": "村民甲提到最近山里不太平，有野兽伤人。",
+          "kind": "fact"
+        },
+        {
+          "entityId": "r:e2948d572a8c766b:t1:e:person_2",
+          "text": "村民乙提到二狗子去后山砍柴受伤，被黑影扑倒。",
+          "kind": "fact"
+        }
+      ]
+    },
+    "lastReceipt": {
+      "kind": "opening",
+      "choiceId": null,
+      "action": null,
+      "elapsedDays": 0,
+      "itemChanges": {},
+      "relationChanges": {},
+      "random": {
+        "before": 3929393174,
+        "after": 3929393174,
+        "roll": null
+      },
+      "before": {
+        "ageDays": 5760,
+        "realm": "mortal",
+        "cultivation": 0,
+        "injury": 0
+      },
+      "after": {
+        "ageDays": 5760,
+        "realm": "mortal",
+        "cultivation": 0,
+        "injury": 0
+      },
+      "death": null,
+      "birth": {
+        "originId": "village",
+        "talentIds": [
+          "sword-bone",
+          "fortune-debt"
+        ],
+        "attributes": {
+          "constitution": 2,
+          "insight": 4,
+          "fortune": 6
+        }
+      }
+    },
+    "relatedEntities": [
+      {
+        "id": "r:e2948d572a8c766b:t1:e:person_1",
+        "name": "村民甲",
+        "status": "alive",
+        "kind": "person"
+      },
+      {
+        "id": "r:e2948d572a8c766b:t1:e:person_2",
+        "name": "村民乙",
+        "status": "alive",
+        "kind": "person"
+      },
+      {
+        "id": "r:e2948d572a8c766b:t1:e:place_1",
+        "name": "后山小径",
+        "kind": "place"
+      }
+    ],
+    "archiveCursor": 0
+  },
+  "posts": 1,
+  "latency": {
+    "usable": true,
+    "errorCode": null,
+    "firstAnyPreviewMs": 2234,
+    "firstReadableMs": 2714,
+    "completionMs": 19229,
+    "narrativeChars": 229,
+    "maxPreviewGapMs": 522,
+    "readingFinishEstimateMs": 40881,
+    "readingStallEstimateMs": 0,
+    "optionsWaitEstimateMs": 0,
+    "prefetchWorthEvaluating": true,
+    "assumptions": {
+      "readingCharsPerSecond": 6,
+      "readableChars": 20,
+      "targetWaitMs": 2000
+    }
+  }
+}

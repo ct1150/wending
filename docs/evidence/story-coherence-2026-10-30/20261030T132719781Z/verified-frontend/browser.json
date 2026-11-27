@@ -1,0 +1,618 @@
+{
+  "sourceCommit": "9a08654e268574623b8763415d412acf6206d038",
+  "version": "22a8954a-4292-479a-8144-ffde370aec25",
+  "recordedAt": "2026-10-30T13:35:12.150Z",
+  "continuedFrom": null,
+  "records": [
+    {
+      "caseId": "opening",
+      "start": 845,
+      "timeline": [
+        {
+          "atMs": 4416,
+          "chars": 1
+        },
+        {
+          "atMs": 4494,
+          "chars": 6
+        },
+        {
+          "atMs": 4555,
+          "chars": 11
+        },
+        {
+          "atMs": 4633,
+          "chars": 16
+        },
+        {
+          "atMs": 4696,
+          "chars": 21
+        },
+        {
+          "atMs": 4774,
+          "chars": 25
+        },
+        {
+          "atMs": 4837,
+          "chars": 30
+        },
+        {
+          "atMs": 4914,
+          "chars": 33
+        },
+        {
+          "atMs": 4976,
+          "chars": 37
+        },
+        {
+          "atMs": 5057,
+          "chars": 41
+        },
+        {
+          "atMs": 5133,
+          "chars": 45
+        },
+        {
+          "atMs": 5194,
+          "chars": 51
+        },
+        {
+          "atMs": 5274,
+          "chars": 59
+        },
+        {
+          "atMs": 5337,
+          "chars": 63
+        },
+        {
+          "atMs": 5382,
+          "chars": 68
+        },
+        {
+          "atMs": 5444,
+          "chars": 70
+        },
+        {
+          "atMs": 5506,
+          "chars": 76
+        },
+        {
+          "atMs": 5568,
+          "chars": 81
+        },
+        {
+          "atMs": 5645,
+          "chars": 84
+        },
+        {
+          "atMs": 5690,
+          "chars": 87
+        },
+        {
+          "atMs": 5800,
+          "chars": 90
+        },
+        {
+          "atMs": 5877,
+          "chars": 92
+        },
+        {
+          "atMs": 6158,
+          "chars": 96
+        },
+        {
+          "atMs": 6221,
+          "chars": 101
+        },
+        {
+          "atMs": 6284,
+          "chars": 105
+        },
+        {
+          "atMs": 6363,
+          "chars": 110
+        },
+        {
+          "atMs": 6425,
+          "chars": 114
+        },
+        {
+          "atMs": 6488,
+          "chars": 120
+        },
+        {
+          "atMs": 6552,
+          "chars": 125
+        },
+        {
+          "atMs": 6630,
+          "chars": 129
+        },
+        {
+          "atMs": 6708,
+          "chars": 135
+        },
+        {
+          "atMs": 6772,
+          "chars": 138
+        },
+        {
+          "atMs": 6818,
+          "chars": 142
+        },
+        {
+          "atMs": 6897,
+          "chars": 146
+        },
+        {
+          "atMs": 6959,
+          "chars": 149
+        },
+        {
+          "atMs": 7230,
+          "chars": 153
+        },
+        {
+          "atMs": 7293,
+          "chars": 158
+        },
+        {
+          "atMs": 7341,
+          "chars": 161
+        },
+        {
+          "atMs": 7420,
+          "chars": 166
+        }
+      ],
+      "choicesEnabledDuringPreview": false,
+      "lastText": "你站在自家破旧的木屋前，手里握着一把磨得发亮的猎刀。村口的老猎户陈叔正蹲在泥地里，眉头紧锁，似乎在处理什么棘手的麻烦。他身旁趴着一只通体漆黑、只有眼睛泛着红光的猎犬，正对着你低声呜咽。\n\n“云归，快过来帮把手，这畜生刚才在林子里带回来的东西，把我的手都划破了。”陈叔抬起头，指了指地上一个用破布裹着的长条状物体，语气里透着几分焦急。",
+      "doneMs": 12211,
+      "result": {
+        "protocolVersion": 1,
+        "status": "ready",
+        "requestId": "3e7c0425-8723-4326-add9-f00791c8eec9",
+        "attemptId": "9bef58ab-92e6-4bf4-97a8-f8f77ba31cf3",
+        "sessionRef": "sess_03b67a6370d95c08721e0306fba15183",
+        "errorCode": null,
+        "retry": null,
+        "scene": {
+          "id": "r:9f811e2cfbef87cf:t1:s:scene",
+          "title": "村口老猎户",
+          "location": "village",
+          "entities": [
+            {
+              "id": "r:9f811e2cfbef87cf:t1:e:person_1",
+              "name": "陈叔",
+              "status": "alive",
+              "kind": "person"
+            },
+            {
+              "id": "r:9f811e2cfbef87cf:t1:e:place_1",
+              "name": "村口",
+              "kind": "place"
+            }
+          ],
+          "blocks": [
+            {
+              "kind": "narration",
+              "text": "你站在自家破旧的木屋前，手里握着一把磨得发亮的猎刀。村口的老猎户陈叔正蹲在泥地里，眉头紧锁，似乎在处理什么棘手的麻烦。他身旁趴着一只通体漆黑、只有眼睛泛着红光的猎犬，正对着你低声呜咽。"
+            },
+            {
+              "kind": "dialogue",
+              "text": "“云归，快过来帮把手，这畜生刚才在林子里带回来的东西，把我的手都划破了。”陈叔抬起头，指了指地上一个用破布裹着的长条状物体，语气里透着几分焦急。",
+              "speaker": "self"
+            }
+          ],
+          "choices": [
+            {
+              "id": "r:9f811e2cfbef87cf:t1:c:a",
+              "label": "询问陈叔：询问陈叔包裹里是什么，为什么猎犬会带回来",
+              "intent": "interact",
+              "targetId": "r:9f811e2cfbef87cf:t1:e:person_1",
+              "stake": "low",
+              "approach": "ask"
+            },
+            {
+              "id": "r:9f811e2cfbef87cf:t1:c:b",
+              "label": "援助陈叔：拿出1行粮给陈叔处理伤口",
+              "intent": "interact",
+              "targetId": "r:9f811e2cfbef87cf:t1:e:person_1",
+              "stake": "low",
+              "approach": "help"
+            },
+            {
+              "id": "r:9f811e2cfbef87cf:t1:c:c",
+              "label": "婉拒陈叔：拒绝帮忙，转身回屋",
+              "intent": "interact",
+              "targetId": "r:9f811e2cfbef87cf:t1:e:person_1",
+              "stake": "low",
+              "approach": "decline"
+            }
+          ],
+          "memoryDeltas": [
+            {
+              "entityId": "r:9f811e2cfbef87cf:t1:e:person_1",
+              "kind": "fact",
+              "text": "“云归，快过来帮把手，这畜生刚才在林子里带回来的东西，把我的手都划破了。”陈叔抬起头，指了指地上一个用破布裹着的长条状物体，语气里透着几分焦急。"
+            }
+          ]
+        }
+      },
+      "request": {
+        "context": {
+          "schemaVersion": 1,
+          "phase": "opening",
+          "identity": {
+            "runId": "77a48ad1-fcd6-4521-bf04-51b32e5c015b",
+            "turnId": 1,
+            "baseRevision": 0,
+            "stateHash": "b346d1149f6b7e34e2557ecaa4a486c3b8cc9a03ed2046e45c65330e8be05b59",
+            "choiceId": null,
+            "rulesVersion": 1,
+            "promptVersion": 1,
+            "requestId": "3e7c0425-8723-4326-add9-f00791c8eec9"
+          },
+          "namespace": "r:9f811e2cfbef87cf",
+          "receipt": {
+            "kind": "opening",
+            "choiceId": null,
+            "action": null,
+            "elapsedDays": 0,
+            "itemChanges": {},
+            "relationChanges": {},
+            "random": {
+              "before": 3924136871,
+              "after": 3924136871,
+              "roll": null
+            },
+            "before": {
+              "ageDays": 5760,
+              "realm": "mortal",
+              "cultivation": 0,
+              "injury": 0
+            },
+            "after": {
+              "ageDays": 5760,
+              "realm": "mortal",
+              "cultivation": 0,
+              "injury": 0
+            },
+            "death": null,
+            "birth": {
+              "originId": "village",
+              "talentIds": [
+                "iron-bones",
+                "sensitive-breath"
+              ],
+              "attributes": {
+                "constitution": 5,
+                "insight": 2,
+                "fortune": 5
+              }
+            }
+          },
+          "life": {
+            "name": "云归",
+            "ageDays": 5760,
+            "lifeLimit": 80,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0,
+            "items": {
+              "supplies": 3,
+              "stones": 0
+            },
+            "relations": {},
+            "birth": {
+              "originId": "village",
+              "talentIds": [
+                "iron-bones",
+                "sensitive-breath"
+              ],
+              "attributes": {
+                "constitution": 5,
+                "insight": 2,
+                "fortune": 5
+              }
+            }
+          },
+          "entities": [],
+          "memory": {
+            "facts": [],
+            "promises": [],
+            "clues": [],
+            "recent": [],
+            "summaries": []
+          },
+          "references": [],
+          "previousScene": null,
+          "relationshipVersion": 1,
+          "relationships": {},
+          "coverage": {
+            "policy": "relevance-v1",
+            "openTotal": 0,
+            "openIncluded": 0,
+            "openOmitted": 0
+          }
+        },
+        "attempt": {
+          "id": "9bef58ab-92e6-4bf4-97a8-f8f77ba31cf3",
+          "sessionRef": "sess_03b67a6370d95c08721e0306fba15183",
+          "retryOf": null
+        },
+        "storyActions": true
+      },
+      "decision": null,
+      "choices": [
+        {
+          "id": "r:9f811e2cfbef87cf:t1:c:a",
+          "enabled": true,
+          "label": "询问陈叔：询问陈叔包裹里是什么，为什么猎犬会带回来",
+          "cost": "0日"
+        },
+        {
+          "id": "r:9f811e2cfbef87cf:t1:c:b",
+          "enabled": true,
+          "label": "援助陈叔：拿出1行粮给陈叔处理伤口",
+          "cost": "1日 · 行粮 1"
+        },
+        {
+          "id": "r:9f811e2cfbef87cf:t1:c:c",
+          "enabled": true,
+          "label": "婉拒陈叔：拒绝帮忙，转身回屋",
+          "cost": "0日"
+        }
+      ],
+      "traces": [
+        {
+          "model": "@cf/zai-org/glm-4.7-flash",
+          "inputHash": "6efaa72c780f9b473cf75e8722f4499573934488bdbf9296cd13e4fda8b05ca8",
+          "inputBytes": 16147,
+          "startedAt": 1793367158418,
+          "bindingReturnedAt": 1793367158791,
+          "liveRawBytes": 131019,
+          "captureComplete": true,
+          "response": {
+            "model": "@cf/zai-org/glm-4.7-flash",
+            "choices": [
+              {
+                "finish_reason": "stop",
+                "message": {
+                  "content": "{\n  \"blocks\": [\n    {\n      \"kind\": \"narration\",\n      \"text\": \"你站在自家破旧的木屋前，手里握着一把磨得发亮的猎刀。村口的老猎户陈叔正蹲在泥地里，眉头紧锁，似乎在处理什么棘手的麻烦。他身旁趴着一只通体漆黑、只有眼睛泛着红光的猎犬，正对着你低声呜咽。\"\n    },\n    {\n      \"kind\": \"dialogue\",\n      \"text\": \"“云归，快过来帮把手，这畜生刚才在林子里带回来的东西，把我的手都划破了。”陈叔抬起头，指了指地上一个用破布裹着的长条状物体，语气里透着几分焦急。\",\n      \"speaker\": \"self\"\n    }\n  ],\n  \"choices\": [\n    {\n      \"action\": \"interact:ask\",\n      \"targetId\": \"p1\",\n      \"stake\": \"low\",\n      \"purpose\": \"询问陈叔包裹里是什么，为什么猎犬会带回来\",\n      \"anchor\": 1\n    },\n    {\n      \"action\": \"interact:help\",\n      \"targetId\": \"p1\",\n      \"stake\": \"low\",\n      \"purpose\": \"拿出1行粮给陈叔处理伤口\",\n      \"anchor\": 1\n    },\n    {\n      \"action\": \"interact:decline\",\n      \"targetId\": \"p1\",\n      \"stake\": \"low\",\n      \"purpose\": \"拒绝帮忙，转身回屋\",\n      \"anchor\": 1\n    }\n  ],\n  \"title\": \"村口老猎户\",\n  \"location\": \"village\",\n  \"otherPeople\": [\n    {\n      \"id\": \"p1\",\n      \"name\": \"陈叔\",\n      \"status\": \"alive\"\n    }\n  ],\n  \"places\": [\n    {\n      \"id\": \"l1\",\n      \"name\": \"村口\"\n    }\n  ],\n  \"factions\": [],\n  \"memoryDeltas\": [\n    {\n      \"entityId\": \"p1\",\n      \"kind\": \"fact\",\n      \"anchor\": 1\n    }\n  ]\n}",
+                  "reasoning_content": ""
+                }
+              }
+            ],
+            "usage": {
+              "prompt_tokens": 1948,
+              "completion_tokens": 470,
+              "total_tokens": 2418,
+              "prompt_tokens_details": {
+                "cached_tokens": 0
+              },
+              "neurons": 27.8220000000002
+            }
+          },
+          "rawSseBytes": 131019
+        }
+      ],
+      "revision": 1,
+      "pending": false,
+      "state": {
+        "relationshipVersion": 1,
+        "version": 5,
+        "mode": "cultivation",
+        "contentVersion": 4,
+        "rulesVersion": 1,
+        "promptVersion": 1,
+        "runId": "77a48ad1-fcd6-4521-bf04-51b32e5c015b",
+        "revision": 1,
+        "turnId": 1,
+        "phase": "active",
+        "rng": 3924136871,
+        "life": {
+          "name": "云归",
+          "ageDays": 5760,
+          "lifeLimit": 80,
+          "realm": "mortal",
+          "cultivation": 0,
+          "injury": 0,
+          "items": {
+            "supplies": 3,
+            "stones": 0
+          },
+          "relations": {},
+          "birth": {
+            "originId": "village",
+            "talentIds": [
+              "iron-bones",
+              "sensitive-breath"
+            ],
+            "attributes": {
+              "constitution": 5,
+              "insight": 2,
+              "fortune": 5
+            }
+          }
+        },
+        "birthReceipt": {
+          "kind": "opening",
+          "choiceId": null,
+          "action": null,
+          "elapsedDays": 0,
+          "itemChanges": {},
+          "relationChanges": {},
+          "random": {
+            "before": 3924136871,
+            "after": 3924136871,
+            "roll": null
+          },
+          "before": {
+            "ageDays": 5760,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "after": {
+            "ageDays": 5760,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "death": null,
+          "birth": {
+            "originId": "village",
+            "talentIds": [
+              "iron-bones",
+              "sensitive-breath"
+            ],
+            "attributes": {
+              "constitution": 5,
+              "insight": 2,
+              "fortune": 5
+            }
+          }
+        },
+        "currentScene": {
+          "id": "r:9f811e2cfbef87cf:t1:s:scene",
+          "title": "村口老猎户",
+          "location": "village",
+          "entities": [
+            {
+              "id": "r:9f811e2cfbef87cf:t1:e:person_1",
+              "name": "陈叔",
+              "status": "alive",
+              "kind": "person"
+            },
+            {
+              "id": "r:9f811e2cfbef87cf:t1:e:place_1",
+              "name": "村口",
+              "kind": "place"
+            }
+          ],
+          "blocks": [
+            {
+              "kind": "narration",
+              "text": "你站在自家破旧的木屋前，手里握着一把磨得发亮的猎刀。村口的老猎户陈叔正蹲在泥地里，眉头紧锁，似乎在处理什么棘手的麻烦。他身旁趴着一只通体漆黑、只有眼睛泛着红光的猎犬，正对着你低声呜咽。"
+            },
+            {
+              "kind": "dialogue",
+              "text": "“云归，快过来帮把手，这畜生刚才在林子里带回来的东西，把我的手都划破了。”陈叔抬起头，指了指地上一个用破布裹着的长条状物体，语气里透着几分焦急。",
+              "speaker": "self"
+            }
+          ],
+          "choices": [
+            {
+              "id": "r:9f811e2cfbef87cf:t1:c:a",
+              "label": "询问陈叔：询问陈叔包裹里是什么，为什么猎犬会带回来",
+              "intent": "interact",
+              "targetId": "r:9f811e2cfbef87cf:t1:e:person_1",
+              "stake": "low",
+              "approach": "ask"
+            },
+            {
+              "id": "r:9f811e2cfbef87cf:t1:c:b",
+              "label": "援助陈叔：拿出1行粮给陈叔处理伤口",
+              "intent": "interact",
+              "targetId": "r:9f811e2cfbef87cf:t1:e:person_1",
+              "stake": "low",
+              "approach": "help"
+            },
+            {
+              "id": "r:9f811e2cfbef87cf:t1:c:c",
+              "label": "婉拒陈叔：拒绝帮忙，转身回屋",
+              "intent": "interact",
+              "targetId": "r:9f811e2cfbef87cf:t1:e:person_1",
+              "stake": "low",
+              "approach": "decline"
+            }
+          ],
+          "memoryDeltas": [
+            {
+              "entityId": "r:9f811e2cfbef87cf:t1:e:person_1",
+              "kind": "fact",
+              "text": "“云归，快过来帮把手，这畜生刚才在林子里带回来的东西，把我的手都划破了。”陈叔抬起头，指了指地上一个用破布裹着的长条状物体，语气里透着几分焦急。"
+            }
+          ]
+        },
+        "lastReceipt": {
+          "kind": "opening",
+          "choiceId": null,
+          "action": null,
+          "elapsedDays": 0,
+          "itemChanges": {},
+          "relationChanges": {},
+          "random": {
+            "before": 3924136871,
+            "after": 3924136871,
+            "roll": null
+          },
+          "before": {
+            "ageDays": 5760,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "after": {
+            "ageDays": 5760,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "death": null,
+          "birth": {
+            "originId": "village",
+            "talentIds": [
+              "iron-bones",
+              "sensitive-breath"
+            ],
+            "attributes": {
+              "constitution": 5,
+              "insight": 2,
+              "fortune": 5
+            }
+          }
+        },
+        "relatedEntities": [
+          {
+            "id": "r:9f811e2cfbef87cf:t1:e:person_1",
+            "name": "陈叔",
+            "status": "alive",
+            "kind": "person"
+          },
+          {
+            "id": "r:9f811e2cfbef87cf:t1:e:place_1",
+            "name": "村口",
+            "kind": "place"
+          }
+        ],
+        "archiveCursor": 0
+      },
+      "posts": 1,
+      "latency": {
+        "usable": true,
+        "errorCode": null,
+        "firstAnyPreviewMs": 4416,
+        "firstReadableMs": 4696,
+        "completionMs": 12211,
+        "narrativeChars": 166,
+        "maxPreviewGapMs": 281,
+        "readingFinishEstimateMs": 32363,
+        "readingStallEstimateMs": 0,
+        "optionsWaitEstimateMs": 0,
+        "prefetchWorthEvaluating": true,
+        "assumptions": {
+          "readingCharsPerSecond": 6,
+          "readableChars": 20,
+          "targetWaitMs": 2000
+        }
+      }
+    }
+  ],
+  "errors": [
+    "Invalid choice"
+  ],
+  "posts": 1,
+  "refreshed": null
+}

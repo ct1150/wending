@@ -1,0 +1,2116 @@
+{
+  "sourceCommit": "634bdf6c7afb318b4e3230fd592829d624d36edc",
+  "version": "66910e4c-6902-4b46-a5ea-33b0743fbabc",
+  "recordedAt": "2026-10-30T10:43:39.205Z",
+  "records": [
+    {
+      "caseId": "opening",
+      "start": 646.2000000029802,
+      "timeline": [
+        {
+          "atMs": 4253,
+          "chars": 1
+        },
+        {
+          "atMs": 4315,
+          "chars": 4
+        },
+        {
+          "atMs": 4378,
+          "chars": 8
+        },
+        {
+          "atMs": 4440,
+          "chars": 11
+        },
+        {
+          "atMs": 4597,
+          "chars": 18
+        },
+        {
+          "atMs": 4628,
+          "chars": 21
+        },
+        {
+          "atMs": 4707,
+          "chars": 25
+        },
+        {
+          "atMs": 4770,
+          "chars": 30
+        },
+        {
+          "atMs": 4834,
+          "chars": 32
+        },
+        {
+          "atMs": 4897,
+          "chars": 37
+        },
+        {
+          "atMs": 4944,
+          "chars": 42
+        },
+        {
+          "atMs": 5020,
+          "chars": 46
+        },
+        {
+          "atMs": 5082,
+          "chars": 52
+        },
+        {
+          "atMs": 5158,
+          "chars": 55
+        },
+        {
+          "atMs": 5221,
+          "chars": 62
+        },
+        {
+          "atMs": 5283,
+          "chars": 71
+        },
+        {
+          "atMs": 5360,
+          "chars": 75
+        },
+        {
+          "atMs": 5423,
+          "chars": 85
+        },
+        {
+          "atMs": 5516,
+          "chars": 88
+        },
+        {
+          "atMs": 5577,
+          "chars": 92
+        },
+        {
+          "atMs": 5639,
+          "chars": 97
+        },
+        {
+          "atMs": 5716,
+          "chars": 102
+        },
+        {
+          "atMs": 5779,
+          "chars": 107
+        },
+        {
+          "atMs": 5842,
+          "chars": 115
+        },
+        {
+          "atMs": 5904,
+          "chars": 122
+        },
+        {
+          "atMs": 5981,
+          "chars": 126
+        },
+        {
+          "atMs": 6044,
+          "chars": 128
+        },
+        {
+          "atMs": 6202,
+          "chars": 135
+        },
+        {
+          "atMs": 6358,
+          "chars": 142
+        },
+        {
+          "atMs": 6420,
+          "chars": 146
+        },
+        {
+          "atMs": 6482,
+          "chars": 151
+        },
+        {
+          "atMs": 6560,
+          "chars": 154
+        },
+        {
+          "atMs": 6623,
+          "chars": 158
+        },
+        {
+          "atMs": 6717,
+          "chars": 162
+        },
+        {
+          "atMs": 6780,
+          "chars": 172
+        },
+        {
+          "atMs": 6842,
+          "chars": 178
+        },
+        {
+          "atMs": 6889,
+          "chars": 180
+        },
+        {
+          "atMs": 6951,
+          "chars": 184
+        },
+        {
+          "atMs": 7012,
+          "chars": 187
+        },
+        {
+          "atMs": 7091,
+          "chars": 191
+        },
+        {
+          "atMs": 7153,
+          "chars": 192
+        },
+        {
+          "atMs": 7215,
+          "chars": 196
+        },
+        {
+          "atMs": 7277,
+          "chars": 202
+        },
+        {
+          "atMs": 7356,
+          "chars": 206
+        },
+        {
+          "atMs": 7512,
+          "chars": 217
+        },
+        {
+          "atMs": 7559,
+          "chars": 223
+        },
+        {
+          "atMs": 7622,
+          "chars": 226
+        },
+        {
+          "atMs": 7668,
+          "chars": 231
+        },
+        {
+          "atMs": 7730,
+          "chars": 236
+        },
+        {
+          "atMs": 7792,
+          "chars": 239
+        },
+        {
+          "atMs": 7855,
+          "chars": 241
+        }
+      ],
+      "choicesEnabledDuringPreview": false,
+      "lastText": "你站在城坊的街角，手里攥着刚领到的匠徒腰牌。不远处，一个穿着灰布短打的少年正蹲在地上，手里摆弄着一只断了腿的木鸢。他似乎察觉到了你的目光，抬起头，露出一个有些局促的笑容，指了指脚边的木鸢说：“这可是我花了三个月才做好的，刚才不小心摔断了，能不能请你帮个忙，看看怎么修？”\n\n少年名叫阿木，是坊间有名的巧手匠徒。他见你盯着木鸢看，便小心翼翼地问道：“我看你面生，也是来坊市找活计的？这木鸢的机关坏了，我试着修了几次都不行，若是能修好，我愿意分你两个灵石，或者教你几手简单的木工手艺。”",
+      "doneMs": 10263,
+      "result": {
+        "protocolVersion": 1,
+        "status": "ready",
+        "requestId": "d551232f-9356-47d6-96a6-faea992916ec",
+        "attemptId": "6fc09218-e940-42e4-ab71-db16f075aa7d",
+        "sessionRef": "sess_ca5831995c9de6ee1bf953823e473a79",
+        "errorCode": null,
+        "retry": null,
+        "scene": {
+          "id": "r:bd103e9818c4a005:t1:s:scene",
+          "title": "坊间巧手",
+          "location": "城坊",
+          "entities": [
+            {
+              "id": "r:bd103e9818c4a005:t1:e:person_1",
+              "name": "阿木",
+              "status": "alive",
+              "kind": "person"
+            }
+          ],
+          "blocks": [
+            {
+              "kind": "narration",
+              "text": "你站在城坊的街角，手里攥着刚领到的匠徒腰牌。不远处，一个穿着灰布短打的少年正蹲在地上，手里摆弄着一只断了腿的木鸢。他似乎察觉到了你的目光，抬起头，露出一个有些局促的笑容，指了指脚边的木鸢说：“这可是我花了三个月才做好的，刚才不小心摔断了，能不能请你帮个忙，看看怎么修？”"
+            },
+            {
+              "kind": "narration",
+              "text": "少年名叫阿木，是坊间有名的巧手匠徒。他见你盯着木鸢看，便小心翼翼地问道：“我看你面生，也是来坊市找活计的？这木鸢的机关坏了，我试着修了几次都不行，若是能修好，我愿意分你两个灵石，或者教你几手简单的木工手艺。”"
+            }
+          ],
+          "choices": [
+            {
+              "id": "r:bd103e9818c4a005:t1:c:a",
+              "label": "询问阿木：询问阿木关于木鸢机关的构造细节",
+              "intent": "interact",
+              "targetId": "r:bd103e9818c4a005:t1:e:person_1",
+              "stake": "low",
+              "approach": "ask"
+            },
+            {
+              "id": "r:bd103e9818c4a005:t1:c:b",
+              "label": "询问阿木：询问阿木是否需要帮忙寻找替代材料",
+              "intent": "interact",
+              "targetId": "r:bd103e9818c4a005:t1:e:person_1",
+              "stake": "low",
+              "approach": "ask"
+            },
+            {
+              "id": "r:bd103e9818c4a005:t1:c:c",
+              "label": "结束与阿木的互动：拒绝帮忙，离开这个位置",
+              "intent": "interact",
+              "targetId": "r:bd103e9818c4a005:t1:e:person_1",
+              "stake": "low",
+              "approach": "leave"
+            }
+          ],
+          "memoryDeltas": []
+        }
+      },
+      "request": {
+        "context": {
+          "schemaVersion": 1,
+          "phase": "opening",
+          "identity": {
+            "runId": "80c0952d-3a1a-4a8e-bdd3-67a5026ba7c0",
+            "turnId": 1,
+            "baseRevision": 0,
+            "stateHash": "70e23a95bd705e6cde24e719b73aeaa3d69afafa479a2ed126bb20d73d9a2c5a",
+            "choiceId": null,
+            "rulesVersion": 1,
+            "promptVersion": 1,
+            "requestId": "d551232f-9356-47d6-96a6-faea992916ec"
+          },
+          "namespace": "r:bd103e9818c4a005",
+          "receipt": {
+            "kind": "opening",
+            "choiceId": null,
+            "action": null,
+            "elapsedDays": 0,
+            "itemChanges": {},
+            "relationChanges": {},
+            "random": {
+              "before": 461199386,
+              "after": 461199386,
+              "roll": null
+            },
+            "before": {
+              "ageDays": 5760,
+              "realm": "mortal",
+              "cultivation": 0,
+              "injury": 0
+            },
+            "after": {
+              "ageDays": 5760,
+              "realm": "mortal",
+              "cultivation": 0,
+              "injury": 0
+            },
+            "death": null,
+            "birth": {
+              "originId": "artisan",
+              "talentIds": [
+                "fortune-debt",
+                "sensitive-breath"
+              ],
+              "attributes": {
+                "constitution": 6,
+                "insight": 3,
+                "fortune": 3
+              }
+            }
+          },
+          "life": {
+            "name": "云归",
+            "ageDays": 5760,
+            "lifeLimit": 80,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0,
+            "items": {
+              "supplies": 3,
+              "stones": 0
+            },
+            "relations": {},
+            "birth": {
+              "originId": "artisan",
+              "talentIds": [
+                "fortune-debt",
+                "sensitive-breath"
+              ],
+              "attributes": {
+                "constitution": 6,
+                "insight": 3,
+                "fortune": 3
+              }
+            }
+          },
+          "entities": [],
+          "memory": {
+            "facts": [],
+            "promises": [],
+            "clues": [],
+            "recent": [],
+            "summaries": []
+          },
+          "references": [],
+          "previousScene": null,
+          "relationshipVersion": 1,
+          "relationships": {},
+          "coverage": {
+            "policy": "relevance-v1",
+            "openTotal": 0,
+            "openIncluded": 0,
+            "openOmitted": 0
+          }
+        },
+        "attempt": {
+          "id": "6fc09218-e940-42e4-ab71-db16f075aa7d",
+          "sessionRef": "sess_ca5831995c9de6ee1bf953823e473a79",
+          "retryOf": null
+        }
+      },
+      "decision": null,
+      "choices": [
+        {
+          "id": "r:bd103e9818c4a005:t1:c:a",
+          "enabled": true,
+          "label": "询问阿木：询问阿木关于木鸢机关的构造细节",
+          "cost": "0日"
+        },
+        {
+          "id": "r:bd103e9818c4a005:t1:c:b",
+          "enabled": true,
+          "label": "询问阿木：询问阿木是否需要帮忙寻找替代材料",
+          "cost": "0日"
+        },
+        {
+          "id": "r:bd103e9818c4a005:t1:c:c",
+          "enabled": true,
+          "label": "结束与阿木的互动：拒绝帮忙，离开这个位置",
+          "cost": "0日"
+        }
+      ],
+      "traces": [
+        {
+          "model": "@cf/zai-org/glm-4.7-flash",
+          "inputHash": "f699fdc8c51075bae0c8658ce9d72c021bdb5a77429d3b5711e1294d8f0a92ba",
+          "inputBytes": 13967,
+          "startedAt": 1793356878392,
+          "bindingReturnedAt": 1793356878706,
+          "liveRawBytes": 105334,
+          "captureComplete": true,
+          "response": {
+            "model": "@cf/zai-org/glm-4.7-flash",
+            "choices": [
+              {
+                "finish_reason": "stop",
+                "message": {
+                  "content": "{\"blocks\":[{\"kind\":\"narration\",\"text\":\"你站在城坊的街角，手里攥着刚领到的匠徒腰牌。不远处，一个穿着灰布短打的少年正蹲在地上，手里摆弄着一只断了腿的木鸢。他似乎察觉到了你的目光，抬起头，露出一个有些局促的笑容，指了指脚边的木鸢说：“这可是我花了三个月才做好的，刚才不小心摔断了，能不能请你帮个忙，看看怎么修？”\"},{\"kind\":\"narration\",\"text\":\"少年名叫阿木，是坊间有名的巧手匠徒。他见你盯着木鸢看，便小心翼翼地问道：“我看你面生，也是来坊市找活计的？这木鸢的机关坏了，我试着修了几次都不行，若是能修好，我愿意分你两个灵石，或者教你几手简单的木工手艺。”\"}],\"choices\":[{\"action\":\"interact:ask\",\"targetId\":\"p1\",\"stake\":\"low\",\"purpose\":\"询问阿木关于木鸢机关的构造细节\",\"anchor\":1},{\"action\":\"interact:ask\",\"targetId\":\"p1\",\"stake\":\"low\",\"purpose\":\"询问阿木是否需要帮忙寻找替代材料\",\"anchor\":1},{\"action\":\"interact:leave\",\"targetId\":\"p1\",\"stake\":\"low\",\"purpose\":\"拒绝帮忙，离开这个位置\",\"anchor\":1}],\"title\":\"坊间巧手\",\"location\":\"城坊\",\"otherPeople\":[{\"id\":\"p1\",\"name\":\"阿木\",\"status\":\"alive\"}],\"places\":[],\"factions\":[],\"memoryDeltas\":[]}",
+                  "reasoning_content": ""
+                }
+              }
+            ],
+            "usage": {
+              "prompt_tokens": 2265,
+              "completion_tokens": 347,
+              "total_tokens": 2612,
+              "prompt_tokens_details": {
+                "cached_tokens": 0
+              },
+              "neurons": 25.08830000000015
+            }
+          },
+          "rawSseBytes": 105334
+        }
+      ],
+      "revision": 1,
+      "pending": false,
+      "state": {
+        "relationshipVersion": 1,
+        "version": 5,
+        "mode": "cultivation",
+        "contentVersion": 4,
+        "rulesVersion": 1,
+        "promptVersion": 1,
+        "runId": "80c0952d-3a1a-4a8e-bdd3-67a5026ba7c0",
+        "revision": 1,
+        "turnId": 1,
+        "phase": "active",
+        "rng": 461199386,
+        "life": {
+          "name": "云归",
+          "ageDays": 5760,
+          "lifeLimit": 80,
+          "realm": "mortal",
+          "cultivation": 0,
+          "injury": 0,
+          "items": {
+            "supplies": 3,
+            "stones": 0
+          },
+          "relations": {},
+          "birth": {
+            "originId": "artisan",
+            "talentIds": [
+              "fortune-debt",
+              "sensitive-breath"
+            ],
+            "attributes": {
+              "constitution": 6,
+              "insight": 3,
+              "fortune": 3
+            }
+          }
+        },
+        "birthReceipt": {
+          "kind": "opening",
+          "choiceId": null,
+          "action": null,
+          "elapsedDays": 0,
+          "itemChanges": {},
+          "relationChanges": {},
+          "random": {
+            "before": 461199386,
+            "after": 461199386,
+            "roll": null
+          },
+          "before": {
+            "ageDays": 5760,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "after": {
+            "ageDays": 5760,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "death": null,
+          "birth": {
+            "originId": "artisan",
+            "talentIds": [
+              "fortune-debt",
+              "sensitive-breath"
+            ],
+            "attributes": {
+              "constitution": 6,
+              "insight": 3,
+              "fortune": 3
+            }
+          }
+        },
+        "currentScene": {
+          "id": "r:bd103e9818c4a005:t1:s:scene",
+          "title": "坊间巧手",
+          "location": "城坊",
+          "entities": [
+            {
+              "id": "r:bd103e9818c4a005:t1:e:person_1",
+              "name": "阿木",
+              "status": "alive",
+              "kind": "person"
+            }
+          ],
+          "blocks": [
+            {
+              "kind": "narration",
+              "text": "你站在城坊的街角，手里攥着刚领到的匠徒腰牌。不远处，一个穿着灰布短打的少年正蹲在地上，手里摆弄着一只断了腿的木鸢。他似乎察觉到了你的目光，抬起头，露出一个有些局促的笑容，指了指脚边的木鸢说：“这可是我花了三个月才做好的，刚才不小心摔断了，能不能请你帮个忙，看看怎么修？”"
+            },
+            {
+              "kind": "narration",
+              "text": "少年名叫阿木，是坊间有名的巧手匠徒。他见你盯着木鸢看，便小心翼翼地问道：“我看你面生，也是来坊市找活计的？这木鸢的机关坏了，我试着修了几次都不行，若是能修好，我愿意分你两个灵石，或者教你几手简单的木工手艺。”"
+            }
+          ],
+          "choices": [
+            {
+              "id": "r:bd103e9818c4a005:t1:c:a",
+              "label": "询问阿木：询问阿木关于木鸢机关的构造细节",
+              "intent": "interact",
+              "targetId": "r:bd103e9818c4a005:t1:e:person_1",
+              "stake": "low",
+              "approach": "ask"
+            },
+            {
+              "id": "r:bd103e9818c4a005:t1:c:b",
+              "label": "询问阿木：询问阿木是否需要帮忙寻找替代材料",
+              "intent": "interact",
+              "targetId": "r:bd103e9818c4a005:t1:e:person_1",
+              "stake": "low",
+              "approach": "ask"
+            },
+            {
+              "id": "r:bd103e9818c4a005:t1:c:c",
+              "label": "结束与阿木的互动：拒绝帮忙，离开这个位置",
+              "intent": "interact",
+              "targetId": "r:bd103e9818c4a005:t1:e:person_1",
+              "stake": "low",
+              "approach": "leave"
+            }
+          ],
+          "memoryDeltas": []
+        },
+        "lastReceipt": {
+          "kind": "opening",
+          "choiceId": null,
+          "action": null,
+          "elapsedDays": 0,
+          "itemChanges": {},
+          "relationChanges": {},
+          "random": {
+            "before": 461199386,
+            "after": 461199386,
+            "roll": null
+          },
+          "before": {
+            "ageDays": 5760,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "after": {
+            "ageDays": 5760,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "death": null,
+          "birth": {
+            "originId": "artisan",
+            "talentIds": [
+              "fortune-debt",
+              "sensitive-breath"
+            ],
+            "attributes": {
+              "constitution": 6,
+              "insight": 3,
+              "fortune": 3
+            }
+          }
+        },
+        "relatedEntities": [
+          {
+            "id": "r:bd103e9818c4a005:t1:e:person_1",
+            "name": "阿木",
+            "status": "alive",
+            "kind": "person"
+          }
+        ],
+        "archiveCursor": 0
+      },
+      "posts": 1,
+      "latency": {
+        "usable": true,
+        "errorCode": null,
+        "firstAnyPreviewMs": 4253,
+        "firstReadableMs": 4628,
+        "completionMs": 10263,
+        "narrativeChars": 241,
+        "maxPreviewGapMs": 158,
+        "readingFinishEstimateMs": 44795,
+        "readingStallEstimateMs": 0,
+        "optionsWaitEstimateMs": 0,
+        "prefetchWorthEvaluating": true,
+        "assumptions": {
+          "readingCharsPerSecond": 6,
+          "readableChars": 20,
+          "targetWaitMs": 2000
+        }
+      }
+    },
+    {
+      "caseId": "choice-1",
+      "start": 30483.20000000298,
+      "timeline": [
+        {
+          "atMs": 3502,
+          "chars": 1
+        },
+        {
+          "atMs": 3549,
+          "chars": 5
+        },
+        {
+          "atMs": 3643,
+          "chars": 11
+        },
+        {
+          "atMs": 3705,
+          "chars": 13
+        },
+        {
+          "atMs": 3768,
+          "chars": 17
+        },
+        {
+          "atMs": 3830,
+          "chars": 20
+        },
+        {
+          "atMs": 3893,
+          "chars": 23
+        },
+        {
+          "atMs": 3954,
+          "chars": 26
+        },
+        {
+          "atMs": 4018,
+          "chars": 30
+        },
+        {
+          "atMs": 4128,
+          "chars": 32
+        },
+        {
+          "atMs": 4190,
+          "chars": 36
+        },
+        {
+          "atMs": 4268,
+          "chars": 45
+        },
+        {
+          "atMs": 4346,
+          "chars": 48
+        },
+        {
+          "atMs": 4393,
+          "chars": 52
+        },
+        {
+          "atMs": 4456,
+          "chars": 53
+        },
+        {
+          "atMs": 4518,
+          "chars": 58
+        },
+        {
+          "atMs": 4596,
+          "chars": 61
+        },
+        {
+          "atMs": 4766,
+          "chars": 64
+        },
+        {
+          "atMs": 4860,
+          "chars": 65
+        },
+        {
+          "atMs": 4922,
+          "chars": 70
+        },
+        {
+          "atMs": 4970,
+          "chars": 72
+        },
+        {
+          "atMs": 5032,
+          "chars": 77
+        },
+        {
+          "atMs": 5094,
+          "chars": 82
+        },
+        {
+          "atMs": 5156,
+          "chars": 84
+        },
+        {
+          "atMs": 5328,
+          "chars": 89
+        },
+        {
+          "atMs": 5391,
+          "chars": 91
+        },
+        {
+          "atMs": 5469,
+          "chars": 93
+        },
+        {
+          "atMs": 5545,
+          "chars": 95
+        },
+        {
+          "atMs": 5968,
+          "chars": 97
+        },
+        {
+          "atMs": 6548,
+          "chars": 99
+        },
+        {
+          "atMs": 7303,
+          "chars": 100
+        },
+        {
+          "atMs": 8065,
+          "chars": 101
+        },
+        {
+          "atMs": 8255,
+          "chars": 105
+        },
+        {
+          "atMs": 8398,
+          "chars": 109
+        },
+        {
+          "atMs": 8619,
+          "chars": 115
+        },
+        {
+          "atMs": 8697,
+          "chars": 118
+        },
+        {
+          "atMs": 8777,
+          "chars": 120
+        },
+        {
+          "atMs": 8825,
+          "chars": 126
+        },
+        {
+          "atMs": 8904,
+          "chars": 129
+        },
+        {
+          "atMs": 8967,
+          "chars": 132
+        },
+        {
+          "atMs": 9014,
+          "chars": 134
+        },
+        {
+          "atMs": 9078,
+          "chars": 141
+        },
+        {
+          "atMs": 9157,
+          "chars": 143
+        },
+        {
+          "atMs": 9314,
+          "chars": 148
+        },
+        {
+          "atMs": 9376,
+          "chars": 151
+        },
+        {
+          "atMs": 9439,
+          "chars": 153
+        },
+        {
+          "atMs": 9595,
+          "chars": 155
+        },
+        {
+          "atMs": 9831,
+          "chars": 157
+        },
+        {
+          "atMs": 9894,
+          "chars": 159
+        },
+        {
+          "atMs": 9958,
+          "chars": 164
+        },
+        {
+          "atMs": 10035,
+          "chars": 166
+        },
+        {
+          "atMs": 10096,
+          "chars": 170
+        },
+        {
+          "atMs": 10174,
+          "chars": 173
+        },
+        {
+          "atMs": 10237,
+          "chars": 179
+        },
+        {
+          "atMs": 10282,
+          "chars": 183
+        },
+        {
+          "atMs": 10361,
+          "chars": 185
+        },
+        {
+          "atMs": 10406,
+          "chars": 187
+        },
+        {
+          "atMs": 10469,
+          "chars": 190
+        },
+        {
+          "atMs": 10530,
+          "chars": 194
+        },
+        {
+          "atMs": 10623,
+          "chars": 198
+        },
+        {
+          "atMs": 10702,
+          "chars": 202
+        },
+        {
+          "atMs": 10781,
+          "chars": 204
+        },
+        {
+          "atMs": 10829,
+          "chars": 206
+        },
+        {
+          "atMs": 10891,
+          "chars": 211
+        },
+        {
+          "atMs": 10954,
+          "chars": 212
+        },
+        {
+          "atMs": 11001,
+          "chars": 215
+        },
+        {
+          "atMs": 11064,
+          "chars": 217
+        },
+        {
+          "atMs": 11126,
+          "chars": 219
+        },
+        {
+          "atMs": 11188,
+          "chars": 222
+        },
+        {
+          "atMs": 11249,
+          "chars": 225
+        },
+        {
+          "atMs": 11311,
+          "chars": 229
+        },
+        {
+          "atMs": 11358,
+          "chars": 234
+        },
+        {
+          "atMs": 11436,
+          "chars": 239
+        },
+        {
+          "atMs": 11483,
+          "chars": 244
+        }
+      ],
+      "choicesEnabledDuringPreview": false,
+      "lastText": "你蹲下身，仔细端详那只木鸢。阿木见你点头，连忙凑过来，指着木鸢腹部的核心部件说道：“这机关叫‘引风枢’，全靠里面的铜丝牵引，一旦铜丝断了，风轮就转不动了。刚才我试着接上，但总觉得风轮转得不对劲，声音也发涩。”他顿了顿，又补充道，“这铜丝是特制的，寻常铁丝根本不行，得用‘玄铁丝’才行。”\n\n阿木见你听得认真，便把木鸢翻过来，指着底座上的一行小字说：“你看这里，刻着‘天工开物’的残篇，这木鸢的构造其实暗合某种阵法，只是我不懂阵法，只能照着图纸修。若是能找到那阵法的源头，或许就能修好它。”",
+      "doneMs": 15549,
+      "result": {
+        "protocolVersion": 1,
+        "status": "ready",
+        "requestId": "6c0b1566-ae9c-4a63-9163-846c0f2a78a8",
+        "attemptId": "e663daf0-c32c-44ca-9cf7-e51c61c06032",
+        "sessionRef": "sess_ca5831995c9de6ee1bf953823e473a79",
+        "errorCode": null,
+        "retry": null,
+        "scene": {
+          "id": "r:bd103e9818c4a005:t2:s:scene",
+          "title": "木鸢机关",
+          "location": "城坊",
+          "entities": [
+            {
+              "id": "r:bd103e9818c4a005:t1:e:person_1",
+              "name": "阿木",
+              "kind": "person",
+              "status": "alive"
+            }
+          ],
+          "blocks": [
+            {
+              "kind": "narration",
+              "text": "你蹲下身，仔细端详那只木鸢。阿木见你点头，连忙凑过来，指着木鸢腹部的核心部件说道：“这机关叫‘引风枢’，全靠里面的铜丝牵引，一旦铜丝断了，风轮就转不动了。刚才我试着接上，但总觉得风轮转得不对劲，声音也发涩。”他顿了顿，又补充道，“这铜丝是特制的，寻常铁丝根本不行，得用‘玄铁丝’才行。”"
+            },
+            {
+              "kind": "narration",
+              "text": "阿木见你听得认真，便把木鸢翻过来，指着底座上的一行小字说：“你看这里，刻着‘天工开物’的残篇，这木鸢的构造其实暗合某种阵法，只是我不懂阵法，只能照着图纸修。若是能找到那阵法的源头，或许就能修好它。”"
+            }
+          ],
+          "choices": [
+            {
+              "id": "r:bd103e9818c4a005:t2:c:a",
+              "label": "询问阿木：询问阿木阵法残篇的具体内容",
+              "intent": "interact",
+              "targetId": "r:bd103e9818c4a005:t1:e:person_1",
+              "stake": "low",
+              "approach": "ask"
+            },
+            {
+              "id": "r:bd103e9818c4a005:t2:c:b",
+              "label": "询问阿木：询问阿木哪里能买到玄铁丝",
+              "intent": "interact",
+              "targetId": "r:bd103e9818c4a005:t1:e:person_1",
+              "stake": "low",
+              "approach": "ask"
+            },
+            {
+              "id": "r:bd103e9818c4a005:t2:c:c",
+              "label": "结束与阿木的互动：结束交谈，离开城坊",
+              "intent": "interact",
+              "targetId": "r:bd103e9818c4a005:t1:e:person_1",
+              "stake": "low",
+              "approach": "leave"
+            }
+          ],
+          "memoryDeltas": [
+            {
+              "entityId": "r:bd103e9818c4a005:t1:e:person_1",
+              "kind": "clue",
+              "text": "你蹲下身，仔细端详那只木鸢。阿木见你点头，连忙凑过来，指着木鸢腹部的核心部件说道：“这机关叫‘引风枢’，全靠里面的铜丝牵引，一旦铜丝断了，风轮就转不动了。刚才我试着接上，但总觉得风轮转得不对劲，声音也发涩。”他顿了顿，又补充道，“这铜丝是特制的，寻常铁丝根本不行，得用‘玄铁丝’才行。”",
+              "status": "open"
+            },
+            {
+              "entityId": "r:bd103e9818c4a005:t1:e:person_1",
+              "kind": "clue",
+              "text": "阿木见你听得认真，便把木鸢翻过来，指着底座上的一行小字说：“你看这里，刻着‘天工开物’的残篇，这木鸢的构造其实暗合某种阵法，只是我不懂阵法，只能照着图纸修。若是能找到那阵法的源头，或许就能修好它。”",
+              "status": "open"
+            }
+          ]
+        }
+      },
+      "request": {
+        "context": {
+          "schemaVersion": 1,
+          "phase": "choice",
+          "identity": {
+            "runId": "80c0952d-3a1a-4a8e-bdd3-67a5026ba7c0",
+            "turnId": 2,
+            "baseRevision": 1,
+            "stateHash": "778dca536e0eb82e991c061f2040aee4c24300a805ed1c753d9f48a8d4ca8877",
+            "choiceId": "r:bd103e9818c4a005:t1:c:a",
+            "rulesVersion": 1,
+            "promptVersion": 1,
+            "requestId": "6c0b1566-ae9c-4a63-9163-846c0f2a78a8"
+          },
+          "namespace": "r:bd103e9818c4a005",
+          "receipt": {
+            "kind": "choice",
+            "choiceId": "r:bd103e9818c4a005:t1:c:a",
+            "action": {
+              "id": "r:bd103e9818c4a005:t1:c:a",
+              "label": "询问阿木：询问阿木关于木鸢机关的构造细节",
+              "intent": "interact",
+              "targetId": "r:bd103e9818c4a005:t1:e:person_1",
+              "stake": "low",
+              "approach": "ask"
+            },
+            "elapsedDays": 0,
+            "itemChanges": {},
+            "relationChanges": {},
+            "random": {
+              "before": 461199386,
+              "after": 762366129,
+              "roll": 29
+            },
+            "before": {
+              "ageDays": 5760,
+              "realm": "mortal",
+              "cultivation": 0,
+              "injury": 0
+            },
+            "after": {
+              "ageDays": 5760,
+              "realm": "mortal",
+              "cultivation": 0,
+              "injury": 0
+            },
+            "death": null,
+            "birth": null
+          },
+          "life": {
+            "name": "云归",
+            "ageDays": 5760,
+            "lifeLimit": 80,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0,
+            "items": {
+              "supplies": 3,
+              "stones": 0
+            },
+            "relations": {},
+            "birth": {
+              "originId": "artisan",
+              "talentIds": [
+                "fortune-debt",
+                "sensitive-breath"
+              ],
+              "attributes": {
+                "constitution": 6,
+                "insight": 3,
+                "fortune": 3
+              }
+            }
+          },
+          "entities": [
+            {
+              "id": "r:bd103e9818c4a005:t1:e:person_1",
+              "name": "阿木",
+              "kind": "person",
+              "status": "alive"
+            }
+          ],
+          "memory": {
+            "facts": [],
+            "promises": [],
+            "clues": [],
+            "recent": [
+              {
+                "id": "turn:1",
+                "runId": "80c0952d-3a1a-4a8e-bdd3-67a5026ba7c0",
+                "turnId": 1,
+                "source": "narrative",
+                "kind": "turn",
+                "text": "地点：城坊\n你站在城坊的街角，手里攥着刚领到的匠徒腰牌。不远处，一个穿着灰布短打的少年正蹲在地上，手里摆弄着一只断了腿的木鸢。他似乎察觉到了你的目光，抬起头，露出一个有些局促的笑容，指了指脚边的木鸢说：“这可是我花了三个月才做好的，刚才不小心摔断了，能不能请你帮个忙，看看怎么修？”\n少年名叫阿木，是坊间有名的巧手匠徒。他见你盯着木鸢看，便小心翼翼地问道：“我看你面生，也是来坊市找活计的？这木鸢的机关坏了，我试着修了几次都不行，若是能修好，我愿意分你两个灵石，或者教你几手简单的木工手艺。”",
+                "entityIds": []
+              }
+            ],
+            "summaries": []
+          },
+          "references": [
+            "turn:1"
+          ],
+          "previousScene": {
+            "id": "r:bd103e9818c4a005:t1:s:scene",
+            "blocksHash": "df05b1a78e886bdaf554f5225028f7822c7994d89db04f156b508c1611dae18f"
+          },
+          "relationshipVersion": 1,
+          "relationships": {},
+          "coverage": {
+            "policy": "relevance-v1",
+            "openTotal": 0,
+            "openIncluded": 0,
+            "openOmitted": 0
+          }
+        },
+        "attempt": {
+          "id": "e663daf0-c32c-44ca-9cf7-e51c61c06032",
+          "sessionRef": "sess_ca5831995c9de6ee1bf953823e473a79",
+          "retryOf": null
+        }
+      },
+      "decision": {
+        "index": 0,
+        "reason": "Ask A Mu for concrete mechanism construction details; require an actual explanation of the wooden kite rather than repeating his request. No repair or reward has been chosen.",
+        "selected": {
+          "id": "r:bd103e9818c4a005:t1:c:a",
+          "label": "询问阿木：询问阿木关于木鸢机关的构造细节",
+          "intent": "interact",
+          "targetId": "r:bd103e9818c4a005:t1:e:person_1",
+          "stake": "low",
+          "approach": "ask"
+        }
+      },
+      "choices": [
+        {
+          "id": "r:bd103e9818c4a005:t2:c:a",
+          "enabled": true,
+          "label": "询问阿木：询问阿木阵法残篇的具体内容",
+          "cost": "0日"
+        },
+        {
+          "id": "r:bd103e9818c4a005:t2:c:b",
+          "enabled": true,
+          "label": "询问阿木：询问阿木哪里能买到玄铁丝",
+          "cost": "0日"
+        },
+        {
+          "id": "r:bd103e9818c4a005:t2:c:c",
+          "enabled": true,
+          "label": "结束与阿木的互动：结束交谈，离开城坊",
+          "cost": "0日"
+        }
+      ],
+      "traces": [
+        {
+          "model": "@cf/zai-org/glm-4.7-flash",
+          "inputHash": "1973cc95d9d7f5aea2cf8504a2ebba0d5a237b978f2fbc7eb84573b18763ecfb",
+          "inputBytes": 15210,
+          "startedAt": 1793356907544,
+          "bindingReturnedAt": 1793356907827,
+          "liveRawBytes": 124206,
+          "captureComplete": true,
+          "response": {
+            "model": "@cf/zai-org/glm-4.7-flash",
+            "choices": [
+              {
+                "finish_reason": "stop",
+                "message": {
+                  "content": "{\"blocks\":[{\"kind\":\"narration\",\"text\":\"你蹲下身，仔细端详那只木鸢。阿木见你点头，连忙凑过来，指着木鸢腹部的核心部件说道：“这机关叫‘引风枢’，全靠里面的铜丝牵引，一旦铜丝断了，风轮就转不动了。刚才我试着接上，但总觉得风轮转得不对劲，声音也发涩。”他顿了顿，又补充道，“这铜丝是特制的，寻常铁丝根本不行，得用‘玄铁丝’才行。”\"},{\"kind\":\"narration\",\"text\":\"阿木见你听得认真，便把木鸢翻过来，指着底座上的一行小字说：“你看这里，刻着‘天工开物’的残篇，这木鸢的构造其实暗合某种阵法，只是我不懂阵法，只能照着图纸修。若是能找到那阵法的源头，或许就能修好它。”\"}],\"choices\":[{\"action\":\"interact:ask\",\"targetId\":\"k1_person_阿木\",\"stake\":\"low\",\"purpose\":\"询问阿木阵法残篇的具体内容\",\"anchor\":0},{\"action\":\"interact:ask\",\"targetId\":\"k1_person_阿木\",\"stake\":\"low\",\"purpose\":\"询问阿木哪里能买到玄铁丝\",\"anchor\":0},{\"action\":\"interact:leave\",\"targetId\":\"k1_person_阿木\",\"stake\":\"low\",\"purpose\":\"结束交谈，离开城坊\",\"anchor\":1}],\"title\":\"木鸢机关\",\"location\":\"城坊\",\"otherPeople\":[{\"id\":\"k1_person_阿木\",\"status\":\"alive\"}],\"places\":[],\"factions\":[],\"memoryDeltas\":[{\"entityId\":\"k1_person_阿木\",\"kind\":\"clue\",\"anchor\":0,\"status\":\"open\"},{\"entityId\":\"k1_person_阿木\",\"kind\":\"clue\",\"anchor\":1,\"status\":\"open\"}]}",
+                  "reasoning_content": ""
+                }
+              }
+            ],
+            "usage": {
+              "prompt_tokens": 2615,
+              "completion_tokens": 414,
+              "total_tokens": 3029,
+              "prompt_tokens_details": {
+                "cached_tokens": 0
+              },
+              "neurons": 29.452100000000176
+            }
+          },
+          "rawSseBytes": 124206
+        }
+      ],
+      "revision": 2,
+      "pending": false,
+      "state": {
+        "relationshipVersion": 1,
+        "version": 5,
+        "mode": "cultivation",
+        "contentVersion": 4,
+        "rulesVersion": 1,
+        "promptVersion": 1,
+        "runId": "80c0952d-3a1a-4a8e-bdd3-67a5026ba7c0",
+        "revision": 2,
+        "turnId": 2,
+        "phase": "active",
+        "rng": 762366129,
+        "life": {
+          "name": "云归",
+          "ageDays": 5760,
+          "lifeLimit": 80,
+          "realm": "mortal",
+          "cultivation": 0,
+          "injury": 0,
+          "items": {
+            "supplies": 3,
+            "stones": 0
+          },
+          "relations": {},
+          "birth": {
+            "originId": "artisan",
+            "talentIds": [
+              "fortune-debt",
+              "sensitive-breath"
+            ],
+            "attributes": {
+              "constitution": 6,
+              "insight": 3,
+              "fortune": 3
+            }
+          }
+        },
+        "birthReceipt": {
+          "kind": "opening",
+          "choiceId": null,
+          "action": null,
+          "elapsedDays": 0,
+          "itemChanges": {},
+          "relationChanges": {},
+          "random": {
+            "before": 461199386,
+            "after": 461199386,
+            "roll": null
+          },
+          "before": {
+            "ageDays": 5760,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "after": {
+            "ageDays": 5760,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "death": null,
+          "birth": {
+            "originId": "artisan",
+            "talentIds": [
+              "fortune-debt",
+              "sensitive-breath"
+            ],
+            "attributes": {
+              "constitution": 6,
+              "insight": 3,
+              "fortune": 3
+            }
+          }
+        },
+        "currentScene": {
+          "id": "r:bd103e9818c4a005:t2:s:scene",
+          "title": "木鸢机关",
+          "location": "城坊",
+          "entities": [
+            {
+              "id": "r:bd103e9818c4a005:t1:e:person_1",
+              "name": "阿木",
+              "kind": "person",
+              "status": "alive"
+            }
+          ],
+          "blocks": [
+            {
+              "kind": "narration",
+              "text": "你蹲下身，仔细端详那只木鸢。阿木见你点头，连忙凑过来，指着木鸢腹部的核心部件说道：“这机关叫‘引风枢’，全靠里面的铜丝牵引，一旦铜丝断了，风轮就转不动了。刚才我试着接上，但总觉得风轮转得不对劲，声音也发涩。”他顿了顿，又补充道，“这铜丝是特制的，寻常铁丝根本不行，得用‘玄铁丝’才行。”"
+            },
+            {
+              "kind": "narration",
+              "text": "阿木见你听得认真，便把木鸢翻过来，指着底座上的一行小字说：“你看这里，刻着‘天工开物’的残篇，这木鸢的构造其实暗合某种阵法，只是我不懂阵法，只能照着图纸修。若是能找到那阵法的源头，或许就能修好它。”"
+            }
+          ],
+          "choices": [
+            {
+              "id": "r:bd103e9818c4a005:t2:c:a",
+              "label": "询问阿木：询问阿木阵法残篇的具体内容",
+              "intent": "interact",
+              "targetId": "r:bd103e9818c4a005:t1:e:person_1",
+              "stake": "low",
+              "approach": "ask"
+            },
+            {
+              "id": "r:bd103e9818c4a005:t2:c:b",
+              "label": "询问阿木：询问阿木哪里能买到玄铁丝",
+              "intent": "interact",
+              "targetId": "r:bd103e9818c4a005:t1:e:person_1",
+              "stake": "low",
+              "approach": "ask"
+            },
+            {
+              "id": "r:bd103e9818c4a005:t2:c:c",
+              "label": "结束与阿木的互动：结束交谈，离开城坊",
+              "intent": "interact",
+              "targetId": "r:bd103e9818c4a005:t1:e:person_1",
+              "stake": "low",
+              "approach": "leave"
+            }
+          ],
+          "memoryDeltas": [
+            {
+              "entityId": "r:bd103e9818c4a005:t1:e:person_1",
+              "kind": "clue",
+              "text": "你蹲下身，仔细端详那只木鸢。阿木见你点头，连忙凑过来，指着木鸢腹部的核心部件说道：“这机关叫‘引风枢’，全靠里面的铜丝牵引，一旦铜丝断了，风轮就转不动了。刚才我试着接上，但总觉得风轮转得不对劲，声音也发涩。”他顿了顿，又补充道，“这铜丝是特制的，寻常铁丝根本不行，得用‘玄铁丝’才行。”",
+              "status": "open"
+            },
+            {
+              "entityId": "r:bd103e9818c4a005:t1:e:person_1",
+              "kind": "clue",
+              "text": "阿木见你听得认真，便把木鸢翻过来，指着底座上的一行小字说：“你看这里，刻着‘天工开物’的残篇，这木鸢的构造其实暗合某种阵法，只是我不懂阵法，只能照着图纸修。若是能找到那阵法的源头，或许就能修好它。”",
+              "status": "open"
+            }
+          ]
+        },
+        "lastReceipt": {
+          "kind": "choice",
+          "choiceId": "r:bd103e9818c4a005:t1:c:a",
+          "action": {
+            "id": "r:bd103e9818c4a005:t1:c:a",
+            "label": "询问阿木：询问阿木关于木鸢机关的构造细节",
+            "intent": "interact",
+            "targetId": "r:bd103e9818c4a005:t1:e:person_1",
+            "stake": "low",
+            "approach": "ask"
+          },
+          "elapsedDays": 0,
+          "itemChanges": {},
+          "relationChanges": {},
+          "random": {
+            "before": 461199386,
+            "after": 762366129,
+            "roll": 29
+          },
+          "before": {
+            "ageDays": 5760,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "after": {
+            "ageDays": 5760,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "death": null,
+          "birth": null
+        },
+        "relatedEntities": [
+          {
+            "id": "r:bd103e9818c4a005:t1:e:person_1",
+            "name": "阿木",
+            "kind": "person",
+            "status": "alive"
+          }
+        ],
+        "archiveCursor": 0
+      },
+      "posts": 2,
+      "latency": {
+        "usable": true,
+        "errorCode": null,
+        "firstAnyPreviewMs": 3502,
+        "firstReadableMs": 3830,
+        "completionMs": 15549,
+        "narrativeChars": 244,
+        "maxPreviewGapMs": 762,
+        "readingFinishEstimateMs": 44497,
+        "readingStallEstimateMs": 0,
+        "optionsWaitEstimateMs": 0,
+        "prefetchWorthEvaluating": true,
+        "assumptions": {
+          "readingCharsPerSecond": 6,
+          "readableChars": 20,
+          "targetWaitMs": 2000
+        }
+      }
+    },
+    {
+      "caseId": "choice-2",
+      "start": 130535.40000000224,
+      "timeline": [
+        {
+          "atMs": 3390,
+          "chars": 1
+        },
+        {
+          "atMs": 3453,
+          "chars": 5
+        },
+        {
+          "atMs": 3515,
+          "chars": 9
+        },
+        {
+          "atMs": 3576,
+          "chars": 13
+        },
+        {
+          "atMs": 3638,
+          "chars": 19
+        },
+        {
+          "atMs": 3700,
+          "chars": 26
+        },
+        {
+          "atMs": 3763,
+          "chars": 31
+        },
+        {
+          "atMs": 3825,
+          "chars": 37
+        },
+        {
+          "atMs": 3887,
+          "chars": 39
+        },
+        {
+          "atMs": 3948,
+          "chars": 46
+        },
+        {
+          "atMs": 4011,
+          "chars": 50
+        },
+        {
+          "atMs": 4073,
+          "chars": 52
+        },
+        {
+          "atMs": 4136,
+          "chars": 59
+        },
+        {
+          "atMs": 4199,
+          "chars": 64
+        },
+        {
+          "atMs": 4276,
+          "chars": 72
+        },
+        {
+          "atMs": 4355,
+          "chars": 73
+        },
+        {
+          "atMs": 4681,
+          "chars": 74
+        },
+        {
+          "atMs": 5182,
+          "chars": 75
+        },
+        {
+          "atMs": 5495,
+          "chars": 79
+        },
+        {
+          "atMs": 5557,
+          "chars": 81
+        },
+        {
+          "atMs": 5746,
+          "chars": 85
+        },
+        {
+          "atMs": 5794,
+          "chars": 89
+        },
+        {
+          "atMs": 5857,
+          "chars": 94
+        },
+        {
+          "atMs": 5935,
+          "chars": 97
+        },
+        {
+          "atMs": 5998,
+          "chars": 100
+        },
+        {
+          "atMs": 6046,
+          "chars": 103
+        },
+        {
+          "atMs": 6125,
+          "chars": 108
+        },
+        {
+          "atMs": 6188,
+          "chars": 111
+        },
+        {
+          "atMs": 6250,
+          "chars": 115
+        },
+        {
+          "atMs": 6328,
+          "chars": 121
+        },
+        {
+          "atMs": 6420,
+          "chars": 125
+        },
+        {
+          "atMs": 6575,
+          "chars": 131
+        },
+        {
+          "atMs": 6652,
+          "chars": 136
+        },
+        {
+          "atMs": 6699,
+          "chars": 138
+        },
+        {
+          "atMs": 6776,
+          "chars": 142
+        },
+        {
+          "atMs": 6854,
+          "chars": 146
+        },
+        {
+          "atMs": 6915,
+          "chars": 151
+        },
+        {
+          "atMs": 6961,
+          "chars": 156
+        },
+        {
+          "atMs": 7039,
+          "chars": 161
+        },
+        {
+          "atMs": 7085,
+          "chars": 163
+        },
+        {
+          "atMs": 7224,
+          "chars": 168
+        },
+        {
+          "atMs": 7286,
+          "chars": 171
+        },
+        {
+          "atMs": 7333,
+          "chars": 175
+        },
+        {
+          "atMs": 7443,
+          "chars": 179
+        },
+        {
+          "atMs": 7490,
+          "chars": 182
+        },
+        {
+          "atMs": 7568,
+          "chars": 189
+        },
+        {
+          "atMs": 7631,
+          "chars": 194
+        },
+        {
+          "atMs": 7695,
+          "chars": 199
+        },
+        {
+          "atMs": 7757,
+          "chars": 204
+        },
+        {
+          "atMs": 7819,
+          "chars": 209
+        },
+        {
+          "atMs": 7882,
+          "chars": 213
+        },
+        {
+          "atMs": 7944,
+          "chars": 217
+        },
+        {
+          "atMs": 8005,
+          "chars": 222
+        },
+        {
+          "atMs": 8067,
+          "chars": 227
+        },
+        {
+          "atMs": 8129,
+          "chars": 231
+        },
+        {
+          "atMs": 8209,
+          "chars": 237
+        },
+        {
+          "atMs": 8255,
+          "chars": 242
+        },
+        {
+          "atMs": 8318,
+          "chars": 246
+        },
+        {
+          "atMs": 8379,
+          "chars": 250
+        },
+        {
+          "atMs": 8457,
+          "chars": 258
+        },
+        {
+          "atMs": 8503,
+          "chars": 265
+        },
+        {
+          "atMs": 8566,
+          "chars": 272
+        },
+        {
+          "atMs": 8627,
+          "chars": 276
+        },
+        {
+          "atMs": 8988,
+          "chars": 278
+        },
+        {
+          "atMs": 9285,
+          "chars": 285
+        },
+        {
+          "atMs": 9347,
+          "chars": 291
+        }
+      ],
+      "choicesEnabledDuringPreview": false,
+      "lastText": "阿木听你问起阵法残篇，神色变得有些凝重。他左右看了看，确定没人注意这边，才压低声音说道：“这残篇刻在木鸢底座内侧，只有翻过来才能看见。上面写着‘风引三转，气贯九宫’，后面还有几句口诀，但我只认得前两句。这阵法讲究的是借风势，把木鸢腹部的‘引风枢’和底座上的机关连起来，才能让木鸢飞起来。可惜我只会做木工，不懂这些玄虚的道理。”\n\n他顿了顿，又指了指木鸢断裂的腿，叹了口气：“这阵法残篇虽然只有寥寥数语，但若是能参透，这木鸢就能飞得更高更远。只是这残篇太过晦涩，我琢磨了半个月也没弄明白。你既然懂阵法，能不能帮我看看这残篇到底说的是什么意思？若是能修好它，我愿意把剩下的灵石都给你。”",
+      "doneMs": 11747,
+      "result": {
+        "protocolVersion": 1,
+        "status": "rejected",
+        "requestId": "9f135aa8-1772-4286-a86c-e2d42014e740",
+        "attemptId": "fb7c6cd2-0b98-4727-b7fe-1cae6f1102a3",
+        "sessionRef": "sess_ca5831995c9de6ee1bf953823e473a79",
+        "errorCode": "CHOICE_NOT_COMPILABLE",
+        "retry": null
+      },
+      "request": {
+        "context": {
+          "schemaVersion": 1,
+          "phase": "choice",
+          "identity": {
+            "runId": "80c0952d-3a1a-4a8e-bdd3-67a5026ba7c0",
+            "turnId": 3,
+            "baseRevision": 2,
+            "stateHash": "b3803a71af282d6a1366c6b2239dd98156257c70cd6dbc757f1169753a7d2c84",
+            "choiceId": "r:bd103e9818c4a005:t2:c:a",
+            "rulesVersion": 1,
+            "promptVersion": 1,
+            "requestId": "9f135aa8-1772-4286-a86c-e2d42014e740"
+          },
+          "namespace": "r:bd103e9818c4a005",
+          "receipt": {
+            "kind": "choice",
+            "choiceId": "r:bd103e9818c4a005:t2:c:a",
+            "action": {
+              "id": "r:bd103e9818c4a005:t2:c:a",
+              "label": "询问阿木：询问阿木阵法残篇的具体内容",
+              "intent": "interact",
+              "targetId": "r:bd103e9818c4a005:t1:e:person_1",
+              "stake": "low",
+              "approach": "ask"
+            },
+            "elapsedDays": 0,
+            "itemChanges": {},
+            "relationChanges": {},
+            "random": {
+              "before": 762366129,
+              "after": 342403676,
+              "roll": 76
+            },
+            "before": {
+              "ageDays": 5760,
+              "realm": "mortal",
+              "cultivation": 0,
+              "injury": 0
+            },
+            "after": {
+              "ageDays": 5760,
+              "realm": "mortal",
+              "cultivation": 0,
+              "injury": 0
+            },
+            "death": null,
+            "birth": null
+          },
+          "life": {
+            "name": "云归",
+            "ageDays": 5760,
+            "lifeLimit": 80,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0,
+            "items": {
+              "supplies": 3,
+              "stones": 0
+            },
+            "relations": {},
+            "birth": {
+              "originId": "artisan",
+              "talentIds": [
+                "fortune-debt",
+                "sensitive-breath"
+              ],
+              "attributes": {
+                "constitution": 6,
+                "insight": 3,
+                "fortune": 3
+              }
+            }
+          },
+          "entities": [
+            {
+              "id": "r:bd103e9818c4a005:t1:e:person_1",
+              "name": "阿木",
+              "kind": "person",
+              "status": "alive"
+            }
+          ],
+          "memory": {
+            "facts": [
+              {
+                "id": "decision:2",
+                "runId": "80c0952d-3a1a-4a8e-bdd3-67a5026ba7c0",
+                "turnId": 2,
+                "source": "rules",
+                "kind": "fact",
+                "entityId": "r:bd103e9818c4a005:t1:e:person_1",
+                "text": "你在城坊选择了“询问阿木：询问阿木关于木鸢机关的构造细节”。"
+              }
+            ],
+            "promises": [],
+            "clues": [
+              {
+                "id": "m:473d04c07246c49c6742cf85821e8105",
+                "source": "narrative",
+                "kind": "clue",
+                "entityId": "r:bd103e9818c4a005:t1:e:person_1",
+                "text": "阿木见你听得认真，便把木鸢翻过来，指着底座上的一行小字说：“你看这里，刻着‘天工开物’的残篇，这木鸢的构造其实暗合某种阵法，只是我不懂阵法，只能照着图纸修。若是能找到那阵法的源头，或许就能修好它。”",
+                "status": "open",
+                "runId": "80c0952d-3a1a-4a8e-bdd3-67a5026ba7c0",
+                "turnId": 2
+              },
+              {
+                "id": "m:7986fdf28378d74ddc07c1cf2102171c",
+                "source": "narrative",
+                "kind": "clue",
+                "entityId": "r:bd103e9818c4a005:t1:e:person_1",
+                "text": "你蹲下身，仔细端详那只木鸢。阿木见你点头，连忙凑过来，指着木鸢腹部的核心部件说道：“这机关叫‘引风枢’，全靠里面的铜丝牵引，一旦铜丝断了，风轮就转不动了。刚才我试着接上，但总觉得风轮转得不对劲，声音也发涩。”他顿了顿，又补充道，“这铜丝是特制的，寻常铁丝根本不行，得用‘玄铁丝’才行。”",
+                "status": "open",
+                "runId": "80c0952d-3a1a-4a8e-bdd3-67a5026ba7c0",
+                "turnId": 2
+              }
+            ],
+            "recent": [
+              {
+                "id": "turn:2",
+                "runId": "80c0952d-3a1a-4a8e-bdd3-67a5026ba7c0",
+                "turnId": 2,
+                "source": "narrative",
+                "kind": "turn",
+                "text": "地点：城坊；刚才选择：询问阿木：询问阿木关于木鸢机关的构造细节\n你蹲下身，仔细端详那只木鸢。阿木见你点头，连忙凑过来，指着木鸢腹部的核心部件说道：“这机关叫‘引风枢’，全靠里面的铜丝牵引，一旦铜丝断了，风轮就转不动了。刚才我试着接上，但总觉得风轮转得不对劲，声音也发涩。”他顿了顿，又补充道，“这铜丝是特制的，寻常铁丝根本不行，得用‘玄铁丝’才行。”\n阿木见你听得认真，便把木鸢翻过来，指着底座上的一行小字说：“你看这里，刻着‘天工开物’的残篇，这木鸢的构造其实暗合某种阵法，只是我不懂阵法，只能照着图纸修。若是能找到那阵法的源头，或许就能修好它。”",
+                "entityIds": []
+              },
+              {
+                "id": "turn:1",
+                "runId": "80c0952d-3a1a-4a8e-bdd3-67a5026ba7c0",
+                "turnId": 1,
+                "source": "narrative",
+                "kind": "turn",
+                "text": "地点：城坊\n你站在城坊的街角，手里攥着刚领到的匠徒腰牌。不远处，一个穿着灰布短打的少年正蹲在地上，手里摆弄着一只断了腿的木鸢。他似乎察觉到了你的目光，抬起头，露出一个有些局促的笑容，指了指脚边的木鸢说：“这可是我花了三个月才做好的，刚才不小心摔断了，能不能请你帮个忙，看看怎么修？”\n少年名叫阿木，是坊间有名的巧手匠徒。他见你盯着木鸢看，便小心翼翼地问道：“我看你面生，也是来坊市找活计的？这木鸢的机关坏了，我试着修了几次都不行，若是能修好，我愿意分你两个灵石，或者教你几手简单的木工手艺。”",
+                "entityIds": []
+              }
+            ],
+            "summaries": []
+          },
+          "references": [
+            "decision:2",
+            "m:473d04c07246c49c6742cf85821e8105",
+            "m:7986fdf28378d74ddc07c1cf2102171c",
+            "turn:2",
+            "turn:1"
+          ],
+          "previousScene": {
+            "id": "r:bd103e9818c4a005:t2:s:scene",
+            "blocksHash": "04ddae74fb3f42525ce8ade6286189ee32eae6f30a1eb4002e6cbee9f160faa3"
+          },
+          "relationshipVersion": 1,
+          "relationships": {},
+          "coverage": {
+            "policy": "relevance-v1",
+            "openTotal": 2,
+            "openIncluded": 2,
+            "openOmitted": 0
+          }
+        },
+        "attempt": {
+          "id": "fb7c6cd2-0b98-4727-b7fe-1cae6f1102a3",
+          "sessionRef": "sess_ca5831995c9de6ee1bf953823e473a79",
+          "retryOf": null
+        }
+      },
+      "decision": {
+        "index": 0,
+        "reason": "The previous answer explained the mechanism. Ask for the actual formation excerpt now; require concrete quoted or described content, without receiving a book, skill, repair or reward.",
+        "selected": {
+          "id": "r:bd103e9818c4a005:t2:c:a",
+          "label": "询问阿木：询问阿木阵法残篇的具体内容",
+          "intent": "interact",
+          "targetId": "r:bd103e9818c4a005:t1:e:person_1",
+          "stake": "low",
+          "approach": "ask"
+        }
+      },
+      "choices": [
+        {
+          "id": "r:bd103e9818c4a005:t2:c:a",
+          "enabled": false,
+          "label": "询问阿木：询问阿木阵法残篇的具体内容",
+          "cost": "0日"
+        },
+        {
+          "id": "r:bd103e9818c4a005:t2:c:b",
+          "enabled": false,
+          "label": "询问阿木：询问阿木哪里能买到玄铁丝",
+          "cost": "0日"
+        },
+        {
+          "id": "r:bd103e9818c4a005:t2:c:c",
+          "enabled": false,
+          "label": "结束与阿木的互动：结束交谈，离开城坊",
+          "cost": "0日"
+        }
+      ],
+      "traces": [
+        {
+          "model": "@cf/zai-org/glm-4.7-flash",
+          "inputHash": "113764a96308e0d48eab325b1660591b5ee1bbc0a35d98a05657585c7d04d4c5",
+          "inputBytes": 17592,
+          "startedAt": 1793357007658,
+          "bindingReturnedAt": 1793357008012,
+          "liveRawBytes": 120931,
+          "captureComplete": true,
+          "response": {
+            "model": "@cf/zai-org/glm-4.7-flash",
+            "choices": [
+              {
+                "finish_reason": "stop",
+                "message": {
+                  "content": "{\"blocks\":[{\"kind\":\"narration\",\"text\":\"阿木听你问起阵法残篇，神色变得有些凝重。他左右看了看，确定没人注意这边，才压低声音说道：“这残篇刻在木鸢底座内侧，只有翻过来才能看见。上面写着‘风引三转，气贯九宫’，后面还有几句口诀，但我只认得前两句。这阵法讲究的是借风势，把木鸢腹部的‘引风枢’和底座上的机关连起来，才能让木鸢飞起来。可惜我只会做木工，不懂这些玄虚的道理。”\"},{\"kind\":\"narration\",\"text\":\"他顿了顿，又指了指木鸢断裂的腿，叹了口气：“这阵法残篇虽然只有寥寥数语，但若是能参透，这木鸢就能飞得更高更远。只是这残篇太过晦涩，我琢磨了半个月也没弄明白。你既然懂阵法，能不能帮我看看这残篇到底说的是什么意思？若是能修好它，我愿意把剩下的灵石都给你。”\"}],\"choices\":[{\"action\":\"interact:ask\",\"targetId\":\"k1_person_阿木\",\"stake\":\"low\",\"purpose\":\"询问阿木阵法残篇的具体内容\",\"anchor\":0},{\"action\":\"interact:leave\",\"targetId\":\"k1_person_阿木\",\"stake\":\"low\",\"purpose\":\"结束交谈，离开城坊\",\"anchor\":1}],\"title\":\"城坊木鸢\",\"location\":\"城坊\",\"otherPeople\":[{\"id\":\"k1_person_阿木\",\"status\":\"alive\"}],\"places\":[],\"factions\":[],\"memoryDeltas\":[{\"entityId\":\"k1_person_阿木\",\"kind\":\"clue\",\"anchor\":0,\"status\":\"open\"},{\"entityId\":\"k1_person_阿木\",\"kind\":\"clue\",\"anchor\":1,\"status\":\"open\"}]}",
+                  "reasoning_content": ""
+                }
+              }
+            ],
+            "usage": {
+              "prompt_tokens": 3319,
+              "completion_tokens": 408,
+              "total_tokens": 3727,
+              "prompt_tokens_details": {
+                "cached_tokens": 0
+              },
+              "neurons": 33.105700000000176
+            }
+          },
+          "rawSseBytes": 120931
+        }
+      ],
+      "revision": 2,
+      "pending": true,
+      "state": {
+        "relationshipVersion": 1,
+        "version": 5,
+        "mode": "cultivation",
+        "contentVersion": 4,
+        "rulesVersion": 1,
+        "promptVersion": 1,
+        "runId": "80c0952d-3a1a-4a8e-bdd3-67a5026ba7c0",
+        "revision": 2,
+        "turnId": 2,
+        "phase": "active",
+        "rng": 762366129,
+        "life": {
+          "name": "云归",
+          "ageDays": 5760,
+          "lifeLimit": 80,
+          "realm": "mortal",
+          "cultivation": 0,
+          "injury": 0,
+          "items": {
+            "supplies": 3,
+            "stones": 0
+          },
+          "relations": {},
+          "birth": {
+            "originId": "artisan",
+            "talentIds": [
+              "fortune-debt",
+              "sensitive-breath"
+            ],
+            "attributes": {
+              "constitution": 6,
+              "insight": 3,
+              "fortune": 3
+            }
+          }
+        },
+        "birthReceipt": {
+          "kind": "opening",
+          "choiceId": null,
+          "action": null,
+          "elapsedDays": 0,
+          "itemChanges": {},
+          "relationChanges": {},
+          "random": {
+            "before": 461199386,
+            "after": 461199386,
+            "roll": null
+          },
+          "before": {
+            "ageDays": 5760,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "after": {
+            "ageDays": 5760,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "death": null,
+          "birth": {
+            "originId": "artisan",
+            "talentIds": [
+              "fortune-debt",
+              "sensitive-breath"
+            ],
+            "attributes": {
+              "constitution": 6,
+              "insight": 3,
+              "fortune": 3
+            }
+          }
+        },
+        "currentScene": {
+          "id": "r:bd103e9818c4a005:t2:s:scene",
+          "title": "木鸢机关",
+          "location": "城坊",
+          "entities": [
+            {
+              "id": "r:bd103e9818c4a005:t1:e:person_1",
+              "name": "阿木",
+              "kind": "person",
+              "status": "alive"
+            }
+          ],
+          "blocks": [
+            {
+              "kind": "narration",
+              "text": "你蹲下身，仔细端详那只木鸢。阿木见你点头，连忙凑过来，指着木鸢腹部的核心部件说道：“这机关叫‘引风枢’，全靠里面的铜丝牵引，一旦铜丝断了，风轮就转不动了。刚才我试着接上，但总觉得风轮转得不对劲，声音也发涩。”他顿了顿，又补充道，“这铜丝是特制的，寻常铁丝根本不行，得用‘玄铁丝’才行。”"
+            },
+            {
+              "kind": "narration",
+              "text": "阿木见你听得认真，便把木鸢翻过来，指着底座上的一行小字说：“你看这里，刻着‘天工开物’的残篇，这木鸢的构造其实暗合某种阵法，只是我不懂阵法，只能照着图纸修。若是能找到那阵法的源头，或许就能修好它。”"
+            }
+          ],
+          "choices": [
+            {
+              "id": "r:bd103e9818c4a005:t2:c:a",
+              "label": "询问阿木：询问阿木阵法残篇的具体内容",
+              "intent": "interact",
+              "targetId": "r:bd103e9818c4a005:t1:e:person_1",
+              "stake": "low",
+              "approach": "ask"
+            },
+            {
+              "id": "r:bd103e9818c4a005:t2:c:b",
+              "label": "询问阿木：询问阿木哪里能买到玄铁丝",
+              "intent": "interact",
+              "targetId": "r:bd103e9818c4a005:t1:e:person_1",
+              "stake": "low",
+              "approach": "ask"
+            },
+            {
+              "id": "r:bd103e9818c4a005:t2:c:c",
+              "label": "结束与阿木的互动：结束交谈，离开城坊",
+              "intent": "interact",
+              "targetId": "r:bd103e9818c4a005:t1:e:person_1",
+              "stake": "low",
+              "approach": "leave"
+            }
+          ],
+          "memoryDeltas": [
+            {
+              "entityId": "r:bd103e9818c4a005:t1:e:person_1",
+              "kind": "clue",
+              "text": "你蹲下身，仔细端详那只木鸢。阿木见你点头，连忙凑过来，指着木鸢腹部的核心部件说道：“这机关叫‘引风枢’，全靠里面的铜丝牵引，一旦铜丝断了，风轮就转不动了。刚才我试着接上，但总觉得风轮转得不对劲，声音也发涩。”他顿了顿，又补充道，“这铜丝是特制的，寻常铁丝根本不行，得用‘玄铁丝’才行。”",
+              "status": "open"
+            },
+            {
+              "entityId": "r:bd103e9818c4a005:t1:e:person_1",
+              "kind": "clue",
+              "text": "阿木见你听得认真，便把木鸢翻过来，指着底座上的一行小字说：“你看这里，刻着‘天工开物’的残篇，这木鸢的构造其实暗合某种阵法，只是我不懂阵法，只能照着图纸修。若是能找到那阵法的源头，或许就能修好它。”",
+              "status": "open"
+            }
+          ]
+        },
+        "lastReceipt": {
+          "kind": "choice",
+          "choiceId": "r:bd103e9818c4a005:t1:c:a",
+          "action": {
+            "id": "r:bd103e9818c4a005:t1:c:a",
+            "label": "询问阿木：询问阿木关于木鸢机关的构造细节",
+            "intent": "interact",
+            "targetId": "r:bd103e9818c4a005:t1:e:person_1",
+            "stake": "low",
+            "approach": "ask"
+          },
+          "elapsedDays": 0,
+          "itemChanges": {},
+          "relationChanges": {},
+          "random": {
+            "before": 461199386,
+            "after": 762366129,
+            "roll": 29
+          },
+          "before": {
+            "ageDays": 5760,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "after": {
+            "ageDays": 5760,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "death": null,
+          "birth": null
+        },
+        "relatedEntities": [
+          {
+            "id": "r:bd103e9818c4a005:t1:e:person_1",
+            "name": "阿木",
+            "kind": "person",
+            "status": "alive"
+          }
+        ],
+        "archiveCursor": 0
+      },
+      "posts": 3,
+      "latency": {
+        "usable": false,
+        "errorCode": "CHOICE_NOT_COMPILABLE",
+        "firstAnyPreviewMs": 3390,
+        "firstReadableMs": 3700,
+        "completionMs": 11747,
+        "narrativeChars": 291,
+        "maxPreviewGapMs": 501,
+        "readingFinishEstimateMs": null,
+        "readingStallEstimateMs": null,
+        "optionsWaitEstimateMs": null,
+        "prefetchWorthEvaluating": null,
+        "assumptions": {
+          "readingCharsPerSecond": 6,
+          "readableChars": 20,
+          "targetWaitMs": 2000
+        }
+      }
+    }
+  ],
+  "errors": [
+    "Native turn did not pass"
+  ],
+  "posts": 3,
+  "refreshed": null
+}

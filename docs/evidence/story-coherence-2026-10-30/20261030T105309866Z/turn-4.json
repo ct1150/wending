@@ -1,0 +1,725 @@
+{
+  "caseId": "choice-4",
+  "start": 436375.5,
+  "timeline": [
+    {
+      "atMs": 3499,
+      "chars": 1
+    },
+    {
+      "atMs": 3575,
+      "chars": 4
+    },
+    {
+      "atMs": 3623,
+      "chars": 8
+    },
+    {
+      "atMs": 3684,
+      "chars": 10
+    },
+    {
+      "atMs": 3747,
+      "chars": 14
+    },
+    {
+      "atMs": 4123,
+      "chars": 16
+    },
+    {
+      "atMs": 4387,
+      "chars": 17
+    },
+    {
+      "atMs": 4463,
+      "chars": 24
+    },
+    {
+      "atMs": 4527,
+      "chars": 28
+    },
+    {
+      "atMs": 4590,
+      "chars": 29
+    },
+    {
+      "atMs": 4699,
+      "chars": 34
+    },
+    {
+      "atMs": 4760,
+      "chars": 38
+    },
+    {
+      "atMs": 4808,
+      "chars": 41
+    },
+    {
+      "atMs": 4871,
+      "chars": 45
+    },
+    {
+      "atMs": 4915,
+      "chars": 48
+    },
+    {
+      "atMs": 4977,
+      "chars": 51
+    },
+    {
+      "atMs": 5037,
+      "chars": 55
+    },
+    {
+      "atMs": 5084,
+      "chars": 59
+    },
+    {
+      "atMs": 5146,
+      "chars": 62
+    },
+    {
+      "atMs": 5209,
+      "chars": 66
+    },
+    {
+      "atMs": 5256,
+      "chars": 69
+    },
+    {
+      "atMs": 5317,
+      "chars": 73
+    },
+    {
+      "atMs": 5381,
+      "chars": 76
+    },
+    {
+      "atMs": 5429,
+      "chars": 79
+    },
+    {
+      "atMs": 5491,
+      "chars": 83
+    },
+    {
+      "atMs": 5537,
+      "chars": 86
+    },
+    {
+      "atMs": 5597,
+      "chars": 88
+    },
+    {
+      "atMs": 5802,
+      "chars": 93
+    },
+    {
+      "atMs": 5956,
+      "chars": 99
+    },
+    {
+      "atMs": 6034,
+      "chars": 108
+    },
+    {
+      "atMs": 6113,
+      "chars": 110
+    },
+    {
+      "atMs": 6160,
+      "chars": 115
+    },
+    {
+      "atMs": 6222,
+      "chars": 121
+    },
+    {
+      "atMs": 6269,
+      "chars": 123
+    },
+    {
+      "atMs": 6330,
+      "chars": 127
+    },
+    {
+      "atMs": 6421,
+      "chars": 130
+    },
+    {
+      "atMs": 6467,
+      "chars": 133
+    },
+    {
+      "atMs": 6528,
+      "chars": 136
+    },
+    {
+      "atMs": 6587,
+      "chars": 139
+    },
+    {
+      "atMs": 6633,
+      "chars": 143
+    },
+    {
+      "atMs": 6694,
+      "chars": 146
+    },
+    {
+      "atMs": 6756,
+      "chars": 148
+    },
+    {
+      "atMs": 6804,
+      "chars": 149
+    },
+    {
+      "atMs": 7039,
+      "chars": 155
+    },
+    {
+      "atMs": 7102,
+      "chars": 158
+    },
+    {
+      "atMs": 7167,
+      "chars": 161
+    },
+    {
+      "atMs": 7209,
+      "chars": 164
+    },
+    {
+      "atMs": 7269,
+      "chars": 166
+    },
+    {
+      "atMs": 7330,
+      "chars": 169
+    },
+    {
+      "atMs": 7377,
+      "chars": 171
+    },
+    {
+      "atMs": 7439,
+      "chars": 174
+    },
+    {
+      "atMs": 7501,
+      "chars": 176
+    },
+    {
+      "atMs": 7562,
+      "chars": 179
+    },
+    {
+      "atMs": 7624,
+      "chars": 181
+    },
+    {
+      "atMs": 7673,
+      "chars": 186
+    },
+    {
+      "atMs": 7734,
+      "chars": 191
+    },
+    {
+      "atMs": 7780,
+      "chars": 192
+    }
+  ],
+  "choicesEnabledDuringPreview": false,
+  "lastText": "你站起身，拍了拍衣摆上的铁屑，向老赵点了点头。老赵见你神色平静，似乎松了口气，连忙把那块黑铁踢回炉火旁，重新挥起铁锤。你转身走出铁匠铺，外头的喧嚣声重新涌入耳中，阳光有些刺眼。\n\n你沿着街道缓缓前行，不知不觉来到了城西的乱葬岗附近。这里的空气比别处要阴冷些，路边的野草长得格外茂盛，隐隐透着一股腐朽的气息。前方不远处，几个穿着灰布长衫的修士正围在一处新翻开的土堆旁，似乎在争论着什么。",
+  "doneMs": 15991,
+  "result": {
+    "protocolVersion": 1,
+    "status": "rejected",
+    "requestId": "82f147cf-6f39-43d9-82e4-9f1e0c26d62c",
+    "attemptId": "00d24586-482f-4d50-97be-089dbd34640d",
+    "sessionRef": "sess_790b1912f07982eadc9a9f60240d920a",
+    "errorCode": "CHOICE_NOT_COMPILABLE",
+    "retry": null
+  },
+  "request": {
+    "context": {
+      "schemaVersion": 1,
+      "phase": "choice",
+      "identity": {
+        "runId": "781abbba-cd97-4e04-b76b-cc98fdd36f1c",
+        "turnId": 5,
+        "baseRevision": 4,
+        "stateHash": "70dcd9cd2909c139f22e5b19417f043edffd3e617c9d087973b38c28c7870014",
+        "choiceId": "r:51e7226de70b1337:t4:c:b",
+        "rulesVersion": 1,
+        "promptVersion": 1,
+        "requestId": "82f147cf-6f39-43d9-82e4-9f1e0c26d62c"
+      },
+      "namespace": "r:51e7226de70b1337",
+      "receipt": {
+        "kind": "choice",
+        "choiceId": "r:51e7226de70b1337:t4:c:b",
+        "action": {
+          "id": "r:51e7226de70b1337:t4:c:b",
+          "label": "结束与老赵的互动：结束与老赵的交谈，离开铁匠铺",
+          "intent": "interact",
+          "targetId": "r:51e7226de70b1337:t1:e:person_1",
+          "stake": "low",
+          "approach": "leave"
+        },
+        "elapsedDays": 0,
+        "itemChanges": {},
+        "relationChanges": {},
+        "random": {
+          "before": 3397629691,
+          "after": 3733602334,
+          "roll": 34
+        },
+        "before": {
+          "ageDays": 5760,
+          "realm": "mortal",
+          "cultivation": 0,
+          "injury": 0
+        },
+        "after": {
+          "ageDays": 5760,
+          "realm": "mortal",
+          "cultivation": 0,
+          "injury": 0
+        },
+        "death": null,
+        "birth": null
+      },
+      "life": {
+        "name": "云归",
+        "ageDays": 5760,
+        "lifeLimit": 80,
+        "realm": "mortal",
+        "cultivation": 0,
+        "injury": 0,
+        "items": {
+          "supplies": 3,
+          "stones": 0
+        },
+        "relations": {},
+        "birth": {
+          "originId": "artisan",
+          "talentIds": [
+            "fortune-debt",
+            "sword-bone"
+          ],
+          "attributes": {
+            "constitution": 5,
+            "insight": 4,
+            "fortune": 3
+          }
+        }
+      },
+      "entities": [
+        {
+          "id": "r:51e7226de70b1337:t1:e:person_1",
+          "name": "老赵",
+          "kind": "person",
+          "status": "alive"
+        }
+      ],
+      "memory": {
+        "facts": [
+          {
+            "id": "decision:4",
+            "runId": "781abbba-cd97-4e04-b76b-cc98fdd36f1c",
+            "turnId": 4,
+            "source": "rules",
+            "kind": "fact",
+            "entityId": "r:51e7226de70b1337:t1:e:person_1",
+            "text": "你在城坊铁匠铺选择了“询问老赵：询问这块废铁的具体来历和危险程度”。"
+          },
+          {
+            "id": "decision:3",
+            "runId": "781abbba-cd97-4e04-b76b-cc98fdd36f1c",
+            "turnId": 3,
+            "source": "rules",
+            "kind": "fact",
+            "entityId": "r:51e7226de70b1337:t1:e:person_1",
+            "text": "你在城坊铁匠铺选择了“观察老赵：仔细观察这块废铁的质地和特征”。"
+          }
+        ],
+        "promises": [],
+        "clues": [
+          {
+            "id": "m:3ec64ccd71fd755c4e4663cf09d49084",
+            "source": "narrative",
+            "kind": "clue",
+            "entityId": "r:51e7226de70b1337:t1:e:person_1",
+            "text": "老赵搓了搓手，神色变得有些古怪：“这东西……我刚才去查了查，说是城西乱葬岗挖出来的，但奇怪的是，那地方最近闹鬼，挖出来的东西都透着股邪气。至于危险程度，我刚才试着用铁锤敲了一下，结果锤子直接崩了，连个印子都没留下。小云，你剑骨厉害，这东西要是真有灵，你可得小心点。”",
+            "status": "open",
+            "runId": "781abbba-cd97-4e04-b76b-cc98fdd36f1c",
+            "turnId": 4
+          },
+          {
+            "id": "m:5bbb16c084c416548ea2db53bbcf2131",
+            "source": "narrative",
+            "kind": "clue",
+            "entityId": "r:51e7226de70b1337:t1:e:person_1",
+            "text": "老赵搓了搓手，神色变得有些古怪：“这东西……我刚才去查了查，说是城西乱葬岗挖出来的，但奇怪的是，那地方最近闹鬼，挖出来的东西都透着股邪气。至于危险程度，我刚才试着用铁锤敲了一下，结果锤子直接崩了，连个印子都没留下。小云，你剑骨厉害，这东西要是真有灵，你可得小心点。”",
+            "status": "open",
+            "runId": "781abbba-cd97-4e04-b76b-cc98fdd36f1c",
+            "turnId": 4
+          },
+          {
+            "id": "m:cbdf0ff64de90fd01e1f6047f8b1e7dd",
+            "source": "narrative",
+            "kind": "clue",
+            "entityId": "r:51e7226de70b1337:t1:e:person_1",
+            "text": "你蹲下身，手指触碰到那块黑铁。入手冰凉刺骨，仿佛握着一块万年玄冰，与周围滚烫的炉火格格不入。细看之下，铁质并非凡品，表面隐隐流转着暗红色的血丝，隐约能闻到一丝腥甜气息。剑骨本能让你感到一丝战栗，这东西绝非凡铁，倒像是某种活物的残骸。",
+            "status": "open",
+            "runId": "781abbba-cd97-4e04-b76b-cc98fdd36f1c",
+            "turnId": 3
+          },
+          {
+            "id": "m:cce9d135d500de65473d4e13dd8928db",
+            "source": "narrative",
+            "kind": "clue",
+            "entityId": "r:51e7226de70b1337:t1:e:person_1",
+            "text": "老赵见你神色凝重，连忙凑近问道：“怎么样？是不是有什么古怪？若是凶物，我这就把它扔出去。”",
+            "status": "open",
+            "runId": "781abbba-cd97-4e04-b76b-cc98fdd36f1c",
+            "turnId": 3
+          },
+          {
+            "id": "m:9a60ce0d2f0649ba67cba19d18f72112",
+            "source": "narrative",
+            "kind": "clue",
+            "entityId": "r:51e7226de70b1337:t1:e:person_1",
+            "text": "他抬起头看了你一眼，眼神里带着几分试探：“小云，你天生剑骨，对兵器灵物最是敏感。你帮我看看，这东西到底是个什么来头？若是凶物，我可不敢再留。”",
+            "status": "open",
+            "runId": "781abbba-cd97-4e04-b76b-cc98fdd36f1c",
+            "turnId": 2
+          },
+          {
+            "id": "m:ce1294cb48a61325589432dfe1225c44",
+            "source": "narrative",
+            "kind": "clue",
+            "entityId": "r:51e7226de70b1337:t1:e:person_1",
+            "text": "“小云，你来得正好。这批废铁里似乎混进了一块不寻常的东西，烧了半天也没化开，你帮我看看，是不是有什么古怪？”老赵把那块黑乎乎的金属扔到你脚边，发出沉闷的声响。",
+            "status": "open",
+            "runId": "781abbba-cd97-4e04-b76b-cc98fdd36f1c",
+            "turnId": 1
+          }
+        ],
+        "recent": [
+          {
+            "id": "turn:4",
+            "runId": "781abbba-cd97-4e04-b76b-cc98fdd36f1c",
+            "turnId": 4,
+            "source": "narrative",
+            "kind": "turn",
+            "text": "地点：城坊铁匠铺；刚才选择：询问老赵：询问这块废铁的具体来历和危险程度\n老赵搓了搓手，神色变得有些古怪：“这东西……我刚才去查了查，说是城西乱葬岗挖出来的，但奇怪的是，那地方最近闹鬼，挖出来的东西都透着股邪气。至于危险程度，我刚才试着用铁锤敲了一下，结果锤子直接崩了，连个印子都没留下。小云，你剑骨厉害，这东西要是真有灵，你可得小心点。”\n他压低了声音，眼神警惕地扫视四周：“我寻思着，这莫不是哪位大能留下的残片，或者是某种妖兽的骨头炼化成的？若是凶物，我可不敢再留。”",
+            "entityIds": []
+          }
+        ],
+        "summaries": []
+      },
+      "references": [
+        "decision:4",
+        "decision:3",
+        "m:3ec64ccd71fd755c4e4663cf09d49084",
+        "m:5bbb16c084c416548ea2db53bbcf2131",
+        "m:cbdf0ff64de90fd01e1f6047f8b1e7dd",
+        "m:cce9d135d500de65473d4e13dd8928db",
+        "m:9a60ce0d2f0649ba67cba19d18f72112",
+        "m:ce1294cb48a61325589432dfe1225c44",
+        "turn:4"
+      ],
+      "previousScene": {
+        "id": "r:51e7226de70b1337:t4:s:scene",
+        "blocksHash": "d407a5cb27f703844f7ea5dfff956304eb59845076ac1acc1efc95747ed1842c"
+      },
+      "relationshipVersion": 1,
+      "relationships": {},
+      "coverage": {
+        "policy": "relevance-v1",
+        "openTotal": 6,
+        "openIncluded": 6,
+        "openOmitted": 0
+      }
+    },
+    "attempt": {
+      "id": "00d24586-482f-4d50-97be-089dbd34640d",
+      "sessionRef": "sess_790b1912f07982eadc9a9f60240d920a",
+      "retryOf": null
+    }
+  },
+  "decision": {
+    "index": 1,
+    "reason": "End the conversation and decline further involvement. Keep the clue known but no promise, repair, gift or punishment; leave is not travelling to a new distant place. The incorrectly phrased food-help proposal is not selected and will be filtered in final candidate.",
+    "selected": {
+      "id": "r:51e7226de70b1337:t4:c:b",
+      "label": "结束与老赵的互动：结束与老赵的交谈，离开铁匠铺",
+      "intent": "interact",
+      "targetId": "r:51e7226de70b1337:t1:e:person_1",
+      "stake": "low",
+      "approach": "leave"
+    }
+  },
+  "choices": [
+    {
+      "id": "r:51e7226de70b1337:t4:c:a",
+      "enabled": false,
+      "label": "询问老赵：询问这块废铁是否真的有灵性或妖气",
+      "cost": "0日"
+    },
+    {
+      "id": "r:51e7226de70b1337:t4:c:b",
+      "enabled": false,
+      "label": "结束与老赵的互动：结束与老赵的交谈，离开铁匠铺",
+      "cost": "0日"
+    },
+    {
+      "id": "r:51e7226de70b1337:t4:c:c",
+      "enabled": false,
+      "label": "援助老赵：询问老赵是否需要帮忙处理这块废铁",
+      "cost": "1日 · 行粮 1"
+    }
+  ],
+  "traces": [
+    {
+      "model": "@cf/zai-org/glm-4.7-flash",
+      "inputHash": "2d5da217a2f9bbd84f3535662eba5becc11bd5fdc6c887be47b8fb9f658baceb",
+      "inputBytes": 18688,
+      "startedAt": 1793358102600,
+      "bindingReturnedAt": 1793358102994,
+      "liveRawBytes": 181317,
+      "captureComplete": true,
+      "response": {
+        "model": "@cf/zai-org/glm-4.7-flash",
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "message": {
+              "content": "{\"blocks\":[{\"kind\":\"narration\",\"text\":\"你站起身，拍了拍衣摆上的铁屑，向老赵点了点头。老赵见你神色平静，似乎松了口气，连忙把那块黑铁踢回炉火旁，重新挥起铁锤。你转身走出铁匠铺，外头的喧嚣声重新涌入耳中，阳光有些刺眼。\"},{\"kind\":\"narration\",\"text\":\"你沿着街道缓缓前行，不知不觉来到了城西的乱葬岗附近。这里的空气比别处要阴冷些，路边的野草长得格外茂盛，隐隐透着一股腐朽的气息。前方不远处，几个穿着灰布长衫的修士正围在一处新翻开的土堆旁，似乎在争论着什么。\"}],\"choices\":[{\"action\":\"interact:ask\",\"targetId\":\"p1\",\"stake\":\"low\",\"purpose\":\"询问那些修士在争论什么\",\"anchor\":1},{\"action\":\"travel:wilderness\",\"targetId\":\"l1\",\"stake\":\"low\",\"purpose\":\"前往乱葬岗深处寻找线索\",\"anchor\":1},{\"action\":\"evade:conceal\",\"targetId\":\"self\",\"stake\":\"low\",\"purpose\":\"避开修士，悄悄观察\",\"anchor\":1}],\"title\":\"城西乱葬岗\",\"location\":\"城西乱葬岗\",\"otherPeople\":[{\"id\":\"p1\",\"name\":\"修士甲\",\"status\":\"alive\"}],\"places\":[{\"id\":\"l1\",\"name\":\"乱葬岗深处\"}],\"factions\":[],\"memoryDeltas\":[{\"entityId\":\"k1_person_老赵\",\"kind\":\"clue\",\"anchor\":0,\"status\":\"open\"},{\"entityId\":\"k1_person_老赵\",\"kind\":\"clue\",\"anchor\":0,\"status\":\"open\"},{\"entityId\":\"k1_person_老赵\",\"kind\":\"clue\",\"anchor\":0,\"status\":\"open\"},{\"entityId\":\"k1_person_老赵\",\"kind\":\"clue\",\"anchor\":0,\"status\":\"open\"},{\"entityId\":\"k1_person_老赵\",\"kind\":\"clue\",\"anchor\":0,\"status\":\"open\"},{\"entityId\":\"k1_person_老赵\",\"kind\":\"clue\",\"anchor\":0,\"status\":\"open\"},{\"entityId\":\"k1_person_老赵\",\"kind\":\"clue\",\"anchor\":0,\"status\":\"open\"},{\"entityId\":\"k1_person_老赵\",\"kind\":\"clue\",\"anchor\":0,\"status\":\"open\"},{\"entityId\":\"k1_person_老赵\",\"kind\":\"clue\",\"anchor\":0,\"status\":\"open\"},{\"entityId\":\"k1_person_老赵\",\"kind\":\"clue\",\"anchor\":0,\"status\":\"open\"},{\"entityId\":\"k1_person_老赵\",\"kind\":\"clue\",\"anchor\":0,\"status\":\"open\"},{\"entityId\":\"k1_person_老赵\",\"kind\":\"clue\",\"anchor\":0,\"status\":\"open\"},{\"entityId\":\"k1_person_老赵\",\"kind\":\"clue\",\"anchor\":0,\"status\":\"open\"},{\"entityId\":\"k1_person_老赵\",\"kind\":\"clue\",\"anchor\":0,\"status\":\"open\"},{\"entityId\":\"k1_person_老赵\",\"kind\":\"clue\",\"anchor\":0,\"status\":\"open\"},{\"entityId\":\"k1_person_老赵\",\"kind\":\"clue\",\"anchor\":0,\"status\":\"open\"}]}",
+              "reasoning_content": ""
+            }
+          }
+        ],
+        "usage": {
+          "prompt_tokens": 3606,
+          "completion_tokens": 691,
+          "total_tokens": 4297,
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          },
+          "neurons": 44.9854000000003
+        }
+      },
+      "rawSseBytes": 181317
+    }
+  ],
+  "revision": 4,
+  "pending": true,
+  "state": {
+    "relationshipVersion": 1,
+    "version": 5,
+    "mode": "cultivation",
+    "contentVersion": 4,
+    "rulesVersion": 1,
+    "promptVersion": 1,
+    "runId": "781abbba-cd97-4e04-b76b-cc98fdd36f1c",
+    "revision": 4,
+    "turnId": 4,
+    "phase": "active",
+    "rng": 3397629691,
+    "life": {
+      "name": "云归",
+      "ageDays": 5760,
+      "lifeLimit": 80,
+      "realm": "mortal",
+      "cultivation": 0,
+      "injury": 0,
+      "items": {
+        "supplies": 3,
+        "stones": 0
+      },
+      "relations": {},
+      "birth": {
+        "originId": "artisan",
+        "talentIds": [
+          "fortune-debt",
+          "sword-bone"
+        ],
+        "attributes": {
+          "constitution": 5,
+          "insight": 4,
+          "fortune": 3
+        }
+      }
+    },
+    "birthReceipt": {
+      "kind": "opening",
+      "choiceId": null,
+      "action": null,
+      "elapsedDays": 0,
+      "itemChanges": {},
+      "relationChanges": {},
+      "random": {
+        "before": 2447879498,
+        "after": 2447879498,
+        "roll": null
+      },
+      "before": {
+        "ageDays": 5760,
+        "realm": "mortal",
+        "cultivation": 0,
+        "injury": 0
+      },
+      "after": {
+        "ageDays": 5760,
+        "realm": "mortal",
+        "cultivation": 0,
+        "injury": 0
+      },
+      "death": null,
+      "birth": {
+        "originId": "artisan",
+        "talentIds": [
+          "fortune-debt",
+          "sword-bone"
+        ],
+        "attributes": {
+          "constitution": 5,
+          "insight": 4,
+          "fortune": 3
+        }
+      }
+    },
+    "currentScene": {
+      "id": "r:51e7226de70b1337:t4:s:scene",
+      "title": "铁匠铺内的异铁",
+      "location": "城坊铁匠铺",
+      "entities": [
+        {
+          "id": "r:51e7226de70b1337:t1:e:person_1",
+          "name": "老赵",
+          "kind": "person",
+          "status": "alive"
+        }
+      ],
+      "blocks": [
+        {
+          "kind": "dialogue",
+          "text": "老赵搓了搓手，神色变得有些古怪：“这东西……我刚才去查了查，说是城西乱葬岗挖出来的，但奇怪的是，那地方最近闹鬼，挖出来的东西都透着股邪气。至于危险程度，我刚才试着用铁锤敲了一下，结果锤子直接崩了，连个印子都没留下。小云，你剑骨厉害，这东西要是真有灵，你可得小心点。”",
+          "speaker": "r:51e7226de70b1337:t1:e:person_1"
+        },
+        {
+          "kind": "dialogue",
+          "text": "他压低了声音，眼神警惕地扫视四周：“我寻思着，这莫不是哪位大能留下的残片，或者是某种妖兽的骨头炼化成的？若是凶物，我可不敢再留。”",
+          "speaker": "r:51e7226de70b1337:t1:e:person_1"
+        }
+      ],
+      "choices": [
+        {
+          "id": "r:51e7226de70b1337:t4:c:a",
+          "label": "询问老赵：询问这块废铁是否真的有灵性或妖气",
+          "intent": "interact",
+          "targetId": "r:51e7226de70b1337:t1:e:person_1",
+          "stake": "low",
+          "approach": "ask"
+        },
+        {
+          "id": "r:51e7226de70b1337:t4:c:b",
+          "label": "结束与老赵的互动：结束与老赵的交谈，离开铁匠铺",
+          "intent": "interact",
+          "targetId": "r:51e7226de70b1337:t1:e:person_1",
+          "stake": "low",
+          "approach": "leave"
+        },
+        {
+          "id": "r:51e7226de70b1337:t4:c:c",
+          "label": "援助老赵：询问老赵是否需要帮忙处理这块废铁",
+          "intent": "interact",
+          "targetId": "r:51e7226de70b1337:t1:e:person_1",
+          "stake": "low",
+          "approach": "help"
+        }
+      ],
+      "memoryDeltas": [
+        {
+          "entityId": "r:51e7226de70b1337:t1:e:person_1",
+          "kind": "clue",
+          "text": "老赵搓了搓手，神色变得有些古怪：“这东西……我刚才去查了查，说是城西乱葬岗挖出来的，但奇怪的是，那地方最近闹鬼，挖出来的东西都透着股邪气。至于危险程度，我刚才试着用铁锤敲了一下，结果锤子直接崩了，连个印子都没留下。小云，你剑骨厉害，这东西要是真有灵，你可得小心点。”",
+          "status": "open"
+        },
+        {
+          "entityId": "r:51e7226de70b1337:t1:e:person_1",
+          "kind": "clue",
+          "text": "老赵搓了搓手，神色变得有些古怪：“这东西……我刚才去查了查，说是城西乱葬岗挖出来的，但奇怪的是，那地方最近闹鬼，挖出来的东西都透着股邪气。至于危险程度，我刚才试着用铁锤敲了一下，结果锤子直接崩了，连个印子都没留下。小云，你剑骨厉害，这东西要是真有灵，你可得小心点。”",
+          "status": "open"
+        }
+      ]
+    },
+    "lastReceipt": {
+      "kind": "choice",
+      "choiceId": "r:51e7226de70b1337:t3:c:a",
+      "action": {
+        "id": "r:51e7226de70b1337:t3:c:a",
+        "label": "询问老赵：询问这块废铁的具体来历和危险程度",
+        "intent": "interact",
+        "targetId": "r:51e7226de70b1337:t1:e:person_1",
+        "stake": "low",
+        "approach": "ask"
+      },
+      "elapsedDays": 0,
+      "itemChanges": {},
+      "relationChanges": {},
+      "random": {
+        "before": 1773676300,
+        "after": 3397629691,
+        "roll": 91
+      },
+      "before": {
+        "ageDays": 5760,
+        "realm": "mortal",
+        "cultivation": 0,
+        "injury": 0
+      },
+      "after": {
+        "ageDays": 5760,
+        "realm": "mortal",
+        "cultivation": 0,
+        "injury": 0
+      },
+      "death": null,
+      "birth": null
+    },
+    "relatedEntities": [
+      {
+        "id": "r:51e7226de70b1337:t1:e:person_1",
+        "name": "老赵",
+        "kind": "person",
+        "status": "alive"
+      }
+    ],
+    "archiveCursor": 0
+  },
+  "posts": 5,
+  "latency": {
+    "usable": false,
+    "errorCode": "CHOICE_NOT_COMPILABLE",
+    "firstAnyPreviewMs": 3499,
+    "firstReadableMs": 4463,
+    "completionMs": 15991,
+    "narrativeChars": 192,
+    "maxPreviewGapMs": 376,
+    "readingFinishEstimateMs": null,
+    "readingStallEstimateMs": null,
+    "optionsWaitEstimateMs": null,
+    "prefetchWorthEvaluating": null,
+    "assumptions": {
+      "readingCharsPerSecond": 6,
+      "readableChars": 20,
+      "targetWaitMs": 2000
+    }
+  }
+}

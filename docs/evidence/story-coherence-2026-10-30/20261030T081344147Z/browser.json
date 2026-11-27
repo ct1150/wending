@@ -1,0 +1,1975 @@
+{
+  "sourceCommit": "6a406e4de71bae33b7b57bac4ef55eac4322fb31",
+  "version": "ead6162b-a964-4dcf-89d8-a9be0c5263b9",
+  "recordedAt": "2026-10-30T08:21:08.853Z",
+  "records": [
+    {
+      "caseId": "opening",
+      "start": 904.6999999992549,
+      "timeline": [
+        {
+          "atMs": 3036,
+          "chars": 1
+        },
+        {
+          "atMs": 3114,
+          "chars": 3
+        },
+        {
+          "atMs": 3178,
+          "chars": 7
+        },
+        {
+          "atMs": 3255,
+          "chars": 13
+        },
+        {
+          "atMs": 3318,
+          "chars": 15
+        },
+        {
+          "atMs": 3364,
+          "chars": 20
+        },
+        {
+          "atMs": 3442,
+          "chars": 22
+        },
+        {
+          "atMs": 3505,
+          "chars": 24
+        },
+        {
+          "atMs": 3569,
+          "chars": 27
+        },
+        {
+          "atMs": 3635,
+          "chars": 30
+        },
+        {
+          "atMs": 3696,
+          "chars": 35
+        },
+        {
+          "atMs": 3759,
+          "chars": 38
+        },
+        {
+          "atMs": 3838,
+          "chars": 42
+        },
+        {
+          "atMs": 3900,
+          "chars": 50
+        },
+        {
+          "atMs": 3983,
+          "chars": 54
+        },
+        {
+          "atMs": 4042,
+          "chars": 59
+        },
+        {
+          "atMs": 4112,
+          "chars": 65
+        },
+        {
+          "atMs": 4186,
+          "chars": 70
+        },
+        {
+          "atMs": 4248,
+          "chars": 73
+        },
+        {
+          "atMs": 4299,
+          "chars": 78
+        },
+        {
+          "atMs": 4375,
+          "chars": 83
+        },
+        {
+          "atMs": 4439,
+          "chars": 87
+        },
+        {
+          "atMs": 4501,
+          "chars": 93
+        },
+        {
+          "atMs": 4580,
+          "chars": 99
+        },
+        {
+          "atMs": 4640,
+          "chars": 102
+        },
+        {
+          "atMs": 4704,
+          "chars": 107
+        },
+        {
+          "atMs": 4767,
+          "chars": 114
+        },
+        {
+          "atMs": 4828,
+          "chars": 117
+        },
+        {
+          "atMs": 5002,
+          "chars": 122
+        },
+        {
+          "atMs": 5066,
+          "chars": 130
+        },
+        {
+          "atMs": 5128,
+          "chars": 135
+        },
+        {
+          "atMs": 5207,
+          "chars": 139
+        },
+        {
+          "atMs": 5274,
+          "chars": 142
+        },
+        {
+          "atMs": 5335,
+          "chars": 147
+        },
+        {
+          "atMs": 5412,
+          "chars": 154
+        },
+        {
+          "atMs": 5475,
+          "chars": 156
+        },
+        {
+          "atMs": 5539,
+          "chars": 162
+        },
+        {
+          "atMs": 5601,
+          "chars": 166
+        },
+        {
+          "atMs": 5666,
+          "chars": 171
+        },
+        {
+          "atMs": 5758,
+          "chars": 173
+        },
+        {
+          "atMs": 5809,
+          "chars": 177
+        },
+        {
+          "atMs": 5868,
+          "chars": 180
+        },
+        {
+          "atMs": 5936,
+          "chars": 185
+        },
+        {
+          "atMs": 6010,
+          "chars": 187
+        },
+        {
+          "atMs": 6092,
+          "chars": 194
+        },
+        {
+          "atMs": 6168,
+          "chars": 199
+        },
+        {
+          "atMs": 6246,
+          "chars": 204
+        },
+        {
+          "atMs": 6308,
+          "chars": 205
+        },
+        {
+          "atMs": 6451,
+          "chars": 211
+        },
+        {
+          "atMs": 6498,
+          "chars": 213
+        },
+        {
+          "atMs": 6562,
+          "chars": 220
+        },
+        {
+          "atMs": 6624,
+          "chars": 223
+        }
+      ],
+      "choicesEnabledDuringPreview": false,
+      "lastText": "云归，十六岁的猎户少年，正蹲在自家屋后的枯井旁。井口结着薄霜，井底传来几声沉闷的回响，像是有什么东西在撞击井壁。你握紧了手中的铁叉，听息敏锐的直觉让你察觉到那声音并非来自井底，而是来自井口边缘的泥土里，正以一种极其缓慢的速度向外拱动。\n\n“咚、咚……”泥土松动，一只满是泥垢的手猛地扒住了井沿，紧接着一个黑影从井底爬了出来，浑身湿透，手里死死攥着半块残缺的玉佩。那是个衣衫褴褛的陌生人，他抬头看了你一眼，眼神涣散，嘴唇颤抖着吐出一个字：“救……”",
+      "doneMs": 11756,
+      "result": {
+        "protocolVersion": 1,
+        "status": "ready",
+        "requestId": "8a9f3089-289b-4cbc-8f65-66251e4183c0",
+        "attemptId": "793e28d5-1bbc-45cd-aa5f-b5423dc5f99a",
+        "sessionRef": "sess_a2f5c0bc858fc123664ced4d75a7096f",
+        "errorCode": null,
+        "retry": null,
+        "scene": {
+          "id": "r:6049e35f97c78102:t1:s:scene",
+          "title": "枯井异人",
+          "location": "猎户屋后",
+          "entities": [
+            {
+              "id": "r:6049e35f97c78102:t1:e:person_1",
+              "name": "陌生人",
+              "status": "alive",
+              "kind": "person"
+            }
+          ],
+          "blocks": [
+            {
+              "kind": "narration",
+              "text": "云归，十六岁的猎户少年，正蹲在自家屋后的枯井旁。井口结着薄霜，井底传来几声沉闷的回响，像是有什么东西在撞击井壁。你握紧了手中的铁叉，听息敏锐的直觉让你察觉到那声音并非来自井底，而是来自井口边缘的泥土里，正以一种极其缓慢的速度向外拱动。"
+            },
+            {
+              "kind": "narration",
+              "text": "“咚、咚……”泥土松动，一只满是泥垢的手猛地扒住了井沿，紧接着一个黑影从井底爬了出来，浑身湿透，手里死死攥着半块残缺的玉佩。那是个衣衫褴褛的陌生人，他抬头看了你一眼，眼神涣散，嘴唇颤抖着吐出一个字：“救……”"
+            }
+          ],
+          "choices": [
+            {
+              "id": "r:6049e35f97c78102:t1:c:a",
+              "label": "询问陌生人从何而来",
+              "intent": "interact",
+              "targetId": "r:6049e35f97c78102:t1:e:person_1",
+              "stake": "low",
+              "approach": "ask"
+            },
+            {
+              "id": "r:6049e35f97c78102:t1:c:b",
+              "label": "递给陌生人一块干粮",
+              "intent": "interact",
+              "targetId": "r:6049e35f97c78102:t1:e:person_1",
+              "stake": "low",
+              "approach": "help"
+            },
+            {
+              "id": "r:6049e35f97c78102:t1:c:c",
+              "label": "仔细观察陌生人的伤势",
+              "intent": "interact",
+              "targetId": "r:6049e35f97c78102:t1:e:person_1",
+              "stake": "low",
+              "approach": "observe"
+            }
+          ],
+          "memoryDeltas": [
+            {
+              "entityId": "r:6049e35f97c78102:t1:e:person_1",
+              "kind": "clue",
+              "text": "“咚、咚……”泥土松动，一只满是泥垢的手猛地扒住了井沿，紧接着一个黑影从井底爬了出来，浑身湿透，手里死死攥着半块残缺的玉佩。那是个衣衫褴褛的陌生人，他抬头看了你一眼，眼神涣散，嘴唇颤抖着吐出一个字：“救……”",
+              "status": "open"
+            }
+          ]
+        }
+      },
+      "request": {
+        "context": {
+          "schemaVersion": 1,
+          "phase": "opening",
+          "identity": {
+            "runId": "d4aa2c7e-ac0d-4251-ba24-3c7f597b0cd8",
+            "turnId": 1,
+            "baseRevision": 0,
+            "stateHash": "c40aca1153a2da7dd3f6412ba0dec5a2424df6e14c5c5fb169a91e4903617c75",
+            "choiceId": null,
+            "rulesVersion": 1,
+            "promptVersion": 1,
+            "requestId": "8a9f3089-289b-4cbc-8f65-66251e4183c0"
+          },
+          "namespace": "r:6049e35f97c78102",
+          "receipt": {
+            "kind": "opening",
+            "choiceId": null,
+            "action": null,
+            "elapsedDays": 0,
+            "itemChanges": {},
+            "relationChanges": {},
+            "random": {
+              "before": 121001066,
+              "after": 121001066,
+              "roll": null
+            },
+            "before": {
+              "ageDays": 5760,
+              "realm": "mortal",
+              "cultivation": 0,
+              "injury": 0
+            },
+            "after": {
+              "ageDays": 5760,
+              "realm": "mortal",
+              "cultivation": 0,
+              "injury": 0
+            },
+            "death": null,
+            "birth": {
+              "originId": "village",
+              "talentIds": [
+                "sensitive-breath",
+                "iron-bones"
+              ],
+              "attributes": {
+                "constitution": 5,
+                "insight": 5,
+                "fortune": 2
+              }
+            }
+          },
+          "life": {
+            "name": "云归",
+            "ageDays": 5760,
+            "lifeLimit": 80,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0,
+            "items": {
+              "supplies": 3,
+              "stones": 0
+            },
+            "relations": {},
+            "birth": {
+              "originId": "village",
+              "talentIds": [
+                "sensitive-breath",
+                "iron-bones"
+              ],
+              "attributes": {
+                "constitution": 5,
+                "insight": 5,
+                "fortune": 2
+              }
+            }
+          },
+          "entities": [],
+          "memory": {
+            "facts": [],
+            "promises": [],
+            "clues": [],
+            "recent": [],
+            "summaries": []
+          },
+          "references": [],
+          "previousScene": null,
+          "relationshipVersion": 1,
+          "relationships": {},
+          "coverage": {
+            "policy": "relevance-v1",
+            "openTotal": 0,
+            "openIncluded": 0,
+            "openOmitted": 0
+          }
+        },
+        "attempt": {
+          "id": "793e28d5-1bbc-45cd-aa5f-b5423dc5f99a",
+          "sessionRef": "sess_a2f5c0bc858fc123664ced4d75a7096f",
+          "retryOf": null
+        }
+      },
+      "decision": null,
+      "choices": [
+        {
+          "id": "r:6049e35f97c78102:t1:c:a",
+          "enabled": true,
+          "label": "询问陌生人从何而来",
+          "cost": "0日"
+        },
+        {
+          "id": "r:6049e35f97c78102:t1:c:b",
+          "enabled": true,
+          "label": "递给陌生人一块干粮",
+          "cost": "1日 · 行粮 1"
+        },
+        {
+          "id": "r:6049e35f97c78102:t1:c:c",
+          "enabled": true,
+          "label": "仔细观察陌生人的伤势",
+          "cost": "0日"
+        }
+      ],
+      "traces": [
+        {
+          "model": "@cf/zai-org/glm-4.7-flash",
+          "inputHash": "98b252b432b25cbb965a16618563e53b480fa61e4ae6258ccf3965cf19b6b8e5",
+          "inputBytes": 11496,
+          "startedAt": 1793348086513,
+          "bindingReturnedAt": 1793348086859,
+          "liveRawBytes": 107016,
+          "captureComplete": true,
+          "response": {
+            "model": "@cf/zai-org/glm-4.7-flash",
+            "choices": [
+              {
+                "finish_reason": "stop",
+                "message": {
+                  "content": "{\"blocks\":[{\"kind\":\"narration\",\"text\":\"云归，十六岁的猎户少年，正蹲在自家屋后的枯井旁。井口结着薄霜，井底传来几声沉闷的回响，像是有什么东西在撞击井壁。你握紧了手中的铁叉，听息敏锐的直觉让你察觉到那声音并非来自井底，而是来自井口边缘的泥土里，正以一种极其缓慢的速度向外拱动。\"},{\"kind\":\"narration\",\"text\":\"“咚、咚……”泥土松动，一只满是泥垢的手猛地扒住了井沿，紧接着一个黑影从井底爬了出来，浑身湿透，手里死死攥着半块残缺的玉佩。那是个衣衫褴褛的陌生人，他抬头看了你一眼，眼神涣散，嘴唇颤抖着吐出一个字：“救……”\"}],\"choices\":[{\"action\":\"interact:ask\",\"targetId\":\"p1\",\"stake\":\"low\",\"label\":\"询问陌生人从何而来\",\"anchor\":1},{\"action\":\"interact:help\",\"targetId\":\"p1\",\"stake\":\"low\",\"label\":\"递给陌生人一块干粮\",\"anchor\":1},{\"action\":\"interact:observe\",\"targetId\":\"p1\",\"stake\":\"low\",\"label\":\"仔细观察陌生人的伤势\",\"anchor\":1}],\"title\":\"枯井异人\",\"location\":\"猎户屋后\",\"otherPeople\":[{\"id\":\"p1\",\"name\":\"陌生人\",\"status\":\"alive\"}],\"places\":[],\"factions\":[],\"memoryDeltas\":[{\"entityId\":\"p1\",\"kind\":\"clue\",\"anchor\":1,\"status\":\"open\"}]}",
+                  "reasoning_content": ""
+                }
+              }
+            ],
+            "usage": {
+              "prompt_tokens": 2439,
+              "completion_tokens": 345,
+              "total_tokens": 2784,
+              "prompt_tokens_details": {
+                "cached_tokens": 0
+              },
+              "neurons": 25.972500000000146
+            }
+          },
+          "rawSseBytes": 107016
+        }
+      ],
+      "revision": 1,
+      "pending": false,
+      "state": {
+        "relationshipVersion": 1,
+        "version": 5,
+        "mode": "cultivation",
+        "contentVersion": 4,
+        "rulesVersion": 1,
+        "promptVersion": 1,
+        "runId": "d4aa2c7e-ac0d-4251-ba24-3c7f597b0cd8",
+        "revision": 1,
+        "turnId": 1,
+        "phase": "active",
+        "rng": 121001066,
+        "life": {
+          "name": "云归",
+          "ageDays": 5760,
+          "lifeLimit": 80,
+          "realm": "mortal",
+          "cultivation": 0,
+          "injury": 0,
+          "items": {
+            "supplies": 3,
+            "stones": 0
+          },
+          "relations": {},
+          "birth": {
+            "originId": "village",
+            "talentIds": [
+              "sensitive-breath",
+              "iron-bones"
+            ],
+            "attributes": {
+              "constitution": 5,
+              "insight": 5,
+              "fortune": 2
+            }
+          }
+        },
+        "birthReceipt": {
+          "kind": "opening",
+          "choiceId": null,
+          "action": null,
+          "elapsedDays": 0,
+          "itemChanges": {},
+          "relationChanges": {},
+          "random": {
+            "before": 121001066,
+            "after": 121001066,
+            "roll": null
+          },
+          "before": {
+            "ageDays": 5760,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "after": {
+            "ageDays": 5760,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "death": null,
+          "birth": {
+            "originId": "village",
+            "talentIds": [
+              "sensitive-breath",
+              "iron-bones"
+            ],
+            "attributes": {
+              "constitution": 5,
+              "insight": 5,
+              "fortune": 2
+            }
+          }
+        },
+        "currentScene": {
+          "id": "r:6049e35f97c78102:t1:s:scene",
+          "title": "枯井异人",
+          "location": "猎户屋后",
+          "entities": [
+            {
+              "id": "r:6049e35f97c78102:t1:e:person_1",
+              "name": "陌生人",
+              "status": "alive",
+              "kind": "person"
+            }
+          ],
+          "blocks": [
+            {
+              "kind": "narration",
+              "text": "云归，十六岁的猎户少年，正蹲在自家屋后的枯井旁。井口结着薄霜，井底传来几声沉闷的回响，像是有什么东西在撞击井壁。你握紧了手中的铁叉，听息敏锐的直觉让你察觉到那声音并非来自井底，而是来自井口边缘的泥土里，正以一种极其缓慢的速度向外拱动。"
+            },
+            {
+              "kind": "narration",
+              "text": "“咚、咚……”泥土松动，一只满是泥垢的手猛地扒住了井沿，紧接着一个黑影从井底爬了出来，浑身湿透，手里死死攥着半块残缺的玉佩。那是个衣衫褴褛的陌生人，他抬头看了你一眼，眼神涣散，嘴唇颤抖着吐出一个字：“救……”"
+            }
+          ],
+          "choices": [
+            {
+              "id": "r:6049e35f97c78102:t1:c:a",
+              "label": "询问陌生人从何而来",
+              "intent": "interact",
+              "targetId": "r:6049e35f97c78102:t1:e:person_1",
+              "stake": "low",
+              "approach": "ask"
+            },
+            {
+              "id": "r:6049e35f97c78102:t1:c:b",
+              "label": "递给陌生人一块干粮",
+              "intent": "interact",
+              "targetId": "r:6049e35f97c78102:t1:e:person_1",
+              "stake": "low",
+              "approach": "help"
+            },
+            {
+              "id": "r:6049e35f97c78102:t1:c:c",
+              "label": "仔细观察陌生人的伤势",
+              "intent": "interact",
+              "targetId": "r:6049e35f97c78102:t1:e:person_1",
+              "stake": "low",
+              "approach": "observe"
+            }
+          ],
+          "memoryDeltas": [
+            {
+              "entityId": "r:6049e35f97c78102:t1:e:person_1",
+              "kind": "clue",
+              "text": "“咚、咚……”泥土松动，一只满是泥垢的手猛地扒住了井沿，紧接着一个黑影从井底爬了出来，浑身湿透，手里死死攥着半块残缺的玉佩。那是个衣衫褴褛的陌生人，他抬头看了你一眼，眼神涣散，嘴唇颤抖着吐出一个字：“救……”",
+              "status": "open"
+            }
+          ]
+        },
+        "lastReceipt": {
+          "kind": "opening",
+          "choiceId": null,
+          "action": null,
+          "elapsedDays": 0,
+          "itemChanges": {},
+          "relationChanges": {},
+          "random": {
+            "before": 121001066,
+            "after": 121001066,
+            "roll": null
+          },
+          "before": {
+            "ageDays": 5760,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "after": {
+            "ageDays": 5760,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "death": null,
+          "birth": {
+            "originId": "village",
+            "talentIds": [
+              "sensitive-breath",
+              "iron-bones"
+            ],
+            "attributes": {
+              "constitution": 5,
+              "insight": 5,
+              "fortune": 2
+            }
+          }
+        },
+        "relatedEntities": [
+          {
+            "id": "r:6049e35f97c78102:t1:e:person_1",
+            "name": "陌生人",
+            "status": "alive",
+            "kind": "person"
+          }
+        ],
+        "archiveCursor": 0
+      },
+      "posts": 1,
+      "latency": {
+        "usable": true,
+        "errorCode": null,
+        "firstAnyPreviewMs": 3036,
+        "firstReadableMs": 3364,
+        "completionMs": 11756,
+        "narrativeChars": 223,
+        "maxPreviewGapMs": 174,
+        "readingFinishEstimateMs": 40531,
+        "readingStallEstimateMs": 0,
+        "optionsWaitEstimateMs": 0,
+        "prefetchWorthEvaluating": true,
+        "assumptions": {
+          "readingCharsPerSecond": 6,
+          "readableChars": 20,
+          "targetWaitMs": 2000
+        }
+      }
+    },
+    {
+      "caseId": "choice-1",
+      "start": 95171,
+      "timeline": [
+        {
+          "atMs": 2647,
+          "chars": 1
+        },
+        {
+          "atMs": 2724,
+          "chars": 3
+        },
+        {
+          "atMs": 2817,
+          "chars": 7
+        },
+        {
+          "atMs": 2923,
+          "chars": 10
+        },
+        {
+          "atMs": 3002,
+          "chars": 13
+        },
+        {
+          "atMs": 3045,
+          "chars": 16
+        },
+        {
+          "atMs": 3119,
+          "chars": 22
+        },
+        {
+          "atMs": 3182,
+          "chars": 25
+        },
+        {
+          "atMs": 3418,
+          "chars": 27
+        },
+        {
+          "atMs": 3479,
+          "chars": 30
+        },
+        {
+          "atMs": 3548,
+          "chars": 32
+        },
+        {
+          "atMs": 3605,
+          "chars": 34
+        },
+        {
+          "atMs": 3765,
+          "chars": 35
+        },
+        {
+          "atMs": 3836,
+          "chars": 37
+        },
+        {
+          "atMs": 3898,
+          "chars": 39
+        },
+        {
+          "atMs": 3945,
+          "chars": 40
+        },
+        {
+          "atMs": 4290,
+          "chars": 41
+        },
+        {
+          "atMs": 4784,
+          "chars": 43
+        },
+        {
+          "atMs": 5438,
+          "chars": 44
+        },
+        {
+          "atMs": 6202,
+          "chars": 45
+        },
+        {
+          "atMs": 7158,
+          "chars": 46
+        },
+        {
+          "atMs": 8235,
+          "chars": 47
+        },
+        {
+          "atMs": 9052,
+          "chars": 52
+        },
+        {
+          "atMs": 9129,
+          "chars": 55
+        },
+        {
+          "atMs": 9204,
+          "chars": 57
+        },
+        {
+          "atMs": 9283,
+          "chars": 60
+        },
+        {
+          "atMs": 9327,
+          "chars": 64
+        },
+        {
+          "atMs": 9388,
+          "chars": 69
+        },
+        {
+          "atMs": 9448,
+          "chars": 73
+        }
+      ],
+      "choicesEnabledDuringPreview": false,
+      "lastText": "你从腰间解下干粮，掰下一块递过去。陌生人接过干粮，狼吞虎咽地塞进嘴里，噎得直翻白眼。他抹了把嘴，眼神稍微聚焦，指了指井底：“下面……还有个东西。”",
+      "doneMs": 13722,
+      "result": {
+        "protocolVersion": 1,
+        "status": "ready",
+        "requestId": "b5355049-6d89-41a3-a184-9cdafaf715cc",
+        "attemptId": "b264a3c3-4a28-4a83-ad30-dcca6b390cc8",
+        "sessionRef": "sess_a2f5c0bc858fc123664ced4d75a7096f",
+        "errorCode": null,
+        "retry": null,
+        "scene": {
+          "id": "r:6049e35f97c78102:t2:s:scene",
+          "title": "井边对谈",
+          "location": "猎户屋后",
+          "entities": [
+            {
+              "id": "r:6049e35f97c78102:t1:e:person_1",
+              "name": "陌生人",
+              "status": "alive",
+              "kind": "person"
+            }
+          ],
+          "blocks": [
+            {
+              "kind": "narration",
+              "text": "你从腰间解下干粮，掰下一块递过去。陌生人接过干粮，狼吞虎咽地塞进嘴里，噎得直翻白眼。他抹了把嘴，眼神稍微聚焦，指了指井底：“下面……还有个东西。”"
+            }
+          ],
+          "choices": [
+            {
+              "id": "r:6049e35f97c78102:t2:c:a",
+              "label": "询问井底还有何物",
+              "intent": "interact",
+              "targetId": "r:6049e35f97c78102:t1:e:person_1",
+              "stake": "low",
+              "approach": "ask"
+            },
+            {
+              "id": "r:6049e35f97c78102:t2:c:b",
+              "label": "转身离开，不再理会",
+              "intent": "interact",
+              "targetId": "r:6049e35f97c78102:t1:e:person_1",
+              "stake": "low",
+              "approach": "leave"
+            }
+          ],
+          "memoryDeltas": [
+            {
+              "entityId": "r:6049e35f97c78102:t1:e:person_1",
+              "kind": "clue",
+              "text": "你从腰间解下干粮，掰下一块递过去。陌生人接过干粮，狼吞虎咽地塞进嘴里，噎得直翻白眼。他抹了把嘴，眼神稍微聚焦，指了指井底：“下面……还有个东西。”",
+              "status": "open"
+            }
+          ]
+        }
+      },
+      "request": {
+        "context": {
+          "schemaVersion": 1,
+          "phase": "choice",
+          "identity": {
+            "runId": "d4aa2c7e-ac0d-4251-ba24-3c7f597b0cd8",
+            "turnId": 2,
+            "baseRevision": 1,
+            "stateHash": "dd177bd9c7be4b852bdb85caa4b708435c467d41b5a3284e69c7e5757d1d868a",
+            "choiceId": "r:6049e35f97c78102:t1:c:b",
+            "rulesVersion": 1,
+            "promptVersion": 1,
+            "requestId": "b5355049-6d89-41a3-a184-9cdafaf715cc"
+          },
+          "namespace": "r:6049e35f97c78102",
+          "receipt": {
+            "kind": "choice",
+            "choiceId": "r:6049e35f97c78102:t1:c:b",
+            "action": {
+              "id": "r:6049e35f97c78102:t1:c:b",
+              "label": "递给陌生人一块干粮",
+              "intent": "interact",
+              "targetId": "r:6049e35f97c78102:t1:e:person_1",
+              "stake": "low",
+              "approach": "help"
+            },
+            "elapsedDays": 1,
+            "itemChanges": {
+              "supplies": -1
+            },
+            "relationChanges": {
+              "r:6049e35f97c78102:t1:e:person_1": 2
+            },
+            "random": {
+              "before": 121001066,
+              "after": 2116909249,
+              "roll": 49
+            },
+            "before": {
+              "ageDays": 5760,
+              "realm": "mortal",
+              "cultivation": 0,
+              "injury": 0
+            },
+            "after": {
+              "ageDays": 5761,
+              "realm": "mortal",
+              "cultivation": 0,
+              "injury": 0
+            },
+            "death": null,
+            "birth": null
+          },
+          "life": {
+            "name": "云归",
+            "ageDays": 5761,
+            "lifeLimit": 80,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0,
+            "items": {
+              "supplies": 2,
+              "stones": 0
+            },
+            "relations": {
+              "r:6049e35f97c78102:t1:e:person_1": 2
+            },
+            "birth": {
+              "originId": "village",
+              "talentIds": [
+                "sensitive-breath",
+                "iron-bones"
+              ],
+              "attributes": {
+                "constitution": 5,
+                "insight": 5,
+                "fortune": 2
+              }
+            }
+          },
+          "entities": [
+            {
+              "id": "r:6049e35f97c78102:t1:e:person_1",
+              "name": "陌生人",
+              "kind": "person",
+              "status": "alive"
+            }
+          ],
+          "memory": {
+            "facts": [],
+            "promises": [],
+            "clues": [
+              {
+                "id": "m:0e3301eaff36150e0d7d88fa343c73bb",
+                "source": "narrative",
+                "kind": "clue",
+                "entityId": "r:6049e35f97c78102:t1:e:person_1",
+                "text": "“咚、咚……”泥土松动，一只满是泥垢的手猛地扒住了井沿，紧接着一个黑影从井底爬了出来，浑身湿透，手里死死攥着半块残缺的玉佩。那是个衣衫褴褛的陌生人，他抬头看了你一眼，眼神涣散，嘴唇颤抖着吐出一个字：“救……”",
+                "status": "open",
+                "runId": "d4aa2c7e-ac0d-4251-ba24-3c7f597b0cd8",
+                "turnId": 1
+              }
+            ],
+            "recent": [
+              {
+                "id": "turn:1",
+                "runId": "d4aa2c7e-ac0d-4251-ba24-3c7f597b0cd8",
+                "turnId": 1,
+                "source": "narrative",
+                "kind": "turn",
+                "text": "地点：猎户屋后\n云归，十六岁的猎户少年，正蹲在自家屋后的枯井旁。井口结着薄霜，井底传来几声沉闷的回响，像是有什么东西在撞击井壁。你握紧了手中的铁叉，听息敏锐的直觉让你察觉到那声音并非来自井底，而是来自井口边缘的泥土里，正以一种极其缓慢的速度向外拱动。\n“咚、咚……”泥土松动，一只满是泥垢的手猛地扒住了井沿，紧接着一个黑影从井底爬了出来，浑身湿透，手里死死攥着半块残缺的玉佩。那是个衣衫褴褛的陌生人，他抬头看了你一眼，眼神涣散，嘴唇颤抖着吐出一个字：“救……”",
+                "entityIds": []
+              }
+            ],
+            "summaries": []
+          },
+          "references": [
+            "m:0e3301eaff36150e0d7d88fa343c73bb",
+            "turn:1"
+          ],
+          "previousScene": {
+            "id": "r:6049e35f97c78102:t1:s:scene",
+            "blocksHash": "93c75d949dbcacaba31e2f37e878cea9d63ddcddc62dee5a79433dae5bf9ea2b"
+          },
+          "relationshipVersion": 1,
+          "relationships": {
+            "r:6049e35f97c78102:t1:e:person_1": 2
+          },
+          "coverage": {
+            "policy": "relevance-v1",
+            "openTotal": 1,
+            "openIncluded": 1,
+            "openOmitted": 0
+          }
+        },
+        "attempt": {
+          "id": "b264a3c3-4a28-4a83-ad30-dcca6b390cc8",
+          "sessionRef": "sess_a2f5c0bc858fc123664ced4d75a7096f",
+          "retryOf": null
+        }
+      },
+      "decision": {
+        "index": 1,
+        "reason": "递一份行粮援助井边求救陌生人；规则应经过1日、行粮3减到2、关系加2；后文回应援助，不自动治愈或获得玉佩",
+        "selected": {
+          "id": "r:6049e35f97c78102:t1:c:b",
+          "label": "递给陌生人一块干粮",
+          "intent": "interact",
+          "targetId": "r:6049e35f97c78102:t1:e:person_1",
+          "stake": "low",
+          "approach": "help"
+        }
+      },
+      "choices": [
+        {
+          "id": "r:6049e35f97c78102:t2:c:a",
+          "enabled": true,
+          "label": "询问井底还有何物",
+          "cost": "0日"
+        },
+        {
+          "id": "r:6049e35f97c78102:t2:c:b",
+          "enabled": true,
+          "label": "转身离开，不再理会",
+          "cost": "0日"
+        }
+      ],
+      "traces": [
+        {
+          "model": "@cf/zai-org/glm-4.7-flash",
+          "inputHash": "586afc961b9af507a9d2d861ae73e3f9a891802e794bc297593d2ba0ca213bea",
+          "inputBytes": 13165,
+          "startedAt": 1793348180269,
+          "bindingReturnedAt": 1793348180647,
+          "liveRawBytes": 60632,
+          "captureComplete": true,
+          "response": {
+            "model": "@cf/zai-org/glm-4.7-flash",
+            "choices": [
+              {
+                "finish_reason": "stop",
+                "message": {
+                  "content": "{\"blocks\":[{\"kind\":\"narration\",\"text\":\"你从腰间解下干粮，掰下一块递过去。陌生人接过干粮，狼吞虎咽地塞进嘴里，噎得直翻白眼。他抹了把嘴，眼神稍微聚焦，指了指井底：“下面……还有个东西。”\"}],\"choices\":[{\"action\":\"interact:ask\",\"targetId\":\"k1\",\"stake\":\"low\",\"label\":\"询问井底还有何物\",\"anchor\":0},{\"action\":\"interact:leave\",\"targetId\":\"k1\",\"stake\":\"low\",\"label\":\"转身离开，不再理会\",\"anchor\":0}],\"title\":\"井边对谈\",\"location\":\"猎户屋后\",\"otherPeople\":[{\"id\":\"k1\",\"name\":\"陌生人\",\"status\":\"alive\"}],\"places\":[],\"factions\":[],\"memoryDeltas\":[{\"entityId\":\"k1\",\"kind\":\"clue\",\"anchor\":0,\"status\":\"open\"}]}",
+                  "reasoning_content": ""
+                }
+              }
+            ],
+            "usage": {
+              "prompt_tokens": 2959,
+              "completion_tokens": 199,
+              "total_tokens": 3158,
+              "prompt_tokens_details": {
+                "cached_tokens": 0
+              },
+              "neurons": 23.518100000000086
+            }
+          },
+          "rawSseBytes": 60632
+        }
+      ],
+      "revision": 2,
+      "pending": false,
+      "state": {
+        "relationshipVersion": 1,
+        "version": 5,
+        "mode": "cultivation",
+        "contentVersion": 4,
+        "rulesVersion": 1,
+        "promptVersion": 1,
+        "runId": "d4aa2c7e-ac0d-4251-ba24-3c7f597b0cd8",
+        "revision": 2,
+        "turnId": 2,
+        "phase": "active",
+        "rng": 2116909249,
+        "life": {
+          "name": "云归",
+          "ageDays": 5761,
+          "lifeLimit": 80,
+          "realm": "mortal",
+          "cultivation": 0,
+          "injury": 0,
+          "items": {
+            "supplies": 2,
+            "stones": 0
+          },
+          "relations": {
+            "r:6049e35f97c78102:t1:e:person_1": 2
+          },
+          "birth": {
+            "originId": "village",
+            "talentIds": [
+              "sensitive-breath",
+              "iron-bones"
+            ],
+            "attributes": {
+              "constitution": 5,
+              "insight": 5,
+              "fortune": 2
+            }
+          }
+        },
+        "birthReceipt": {
+          "kind": "opening",
+          "choiceId": null,
+          "action": null,
+          "elapsedDays": 0,
+          "itemChanges": {},
+          "relationChanges": {},
+          "random": {
+            "before": 121001066,
+            "after": 121001066,
+            "roll": null
+          },
+          "before": {
+            "ageDays": 5760,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "after": {
+            "ageDays": 5760,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "death": null,
+          "birth": {
+            "originId": "village",
+            "talentIds": [
+              "sensitive-breath",
+              "iron-bones"
+            ],
+            "attributes": {
+              "constitution": 5,
+              "insight": 5,
+              "fortune": 2
+            }
+          }
+        },
+        "currentScene": {
+          "id": "r:6049e35f97c78102:t2:s:scene",
+          "title": "井边对谈",
+          "location": "猎户屋后",
+          "entities": [
+            {
+              "id": "r:6049e35f97c78102:t1:e:person_1",
+              "name": "陌生人",
+              "status": "alive",
+              "kind": "person"
+            }
+          ],
+          "blocks": [
+            {
+              "kind": "narration",
+              "text": "你从腰间解下干粮，掰下一块递过去。陌生人接过干粮，狼吞虎咽地塞进嘴里，噎得直翻白眼。他抹了把嘴，眼神稍微聚焦，指了指井底：“下面……还有个东西。”"
+            }
+          ],
+          "choices": [
+            {
+              "id": "r:6049e35f97c78102:t2:c:a",
+              "label": "询问井底还有何物",
+              "intent": "interact",
+              "targetId": "r:6049e35f97c78102:t1:e:person_1",
+              "stake": "low",
+              "approach": "ask"
+            },
+            {
+              "id": "r:6049e35f97c78102:t2:c:b",
+              "label": "转身离开，不再理会",
+              "intent": "interact",
+              "targetId": "r:6049e35f97c78102:t1:e:person_1",
+              "stake": "low",
+              "approach": "leave"
+            }
+          ],
+          "memoryDeltas": [
+            {
+              "entityId": "r:6049e35f97c78102:t1:e:person_1",
+              "kind": "clue",
+              "text": "你从腰间解下干粮，掰下一块递过去。陌生人接过干粮，狼吞虎咽地塞进嘴里，噎得直翻白眼。他抹了把嘴，眼神稍微聚焦，指了指井底：“下面……还有个东西。”",
+              "status": "open"
+            }
+          ]
+        },
+        "lastReceipt": {
+          "kind": "choice",
+          "choiceId": "r:6049e35f97c78102:t1:c:b",
+          "action": {
+            "id": "r:6049e35f97c78102:t1:c:b",
+            "label": "递给陌生人一块干粮",
+            "intent": "interact",
+            "targetId": "r:6049e35f97c78102:t1:e:person_1",
+            "stake": "low",
+            "approach": "help"
+          },
+          "elapsedDays": 1,
+          "itemChanges": {
+            "supplies": -1
+          },
+          "relationChanges": {
+            "r:6049e35f97c78102:t1:e:person_1": 2
+          },
+          "random": {
+            "before": 121001066,
+            "after": 2116909249,
+            "roll": 49
+          },
+          "before": {
+            "ageDays": 5760,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "after": {
+            "ageDays": 5761,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "death": null,
+          "birth": null
+        },
+        "relatedEntities": [
+          {
+            "id": "r:6049e35f97c78102:t1:e:person_1",
+            "name": "陌生人",
+            "status": "alive",
+            "kind": "person"
+          }
+        ],
+        "archiveCursor": 0
+      },
+      "posts": 2,
+      "latency": {
+        "usable": true,
+        "errorCode": null,
+        "firstAnyPreviewMs": 2647,
+        "firstReadableMs": 3119,
+        "completionMs": 13722,
+        "narrativeChars": 73,
+        "maxPreviewGapMs": 1077,
+        "readingFinishEstimateMs": 15286,
+        "readingStallEstimateMs": 0,
+        "optionsWaitEstimateMs": 0,
+        "prefetchWorthEvaluating": true,
+        "assumptions": {
+          "readingCharsPerSecond": 6,
+          "readableChars": 20,
+          "targetWaitMs": 2000
+        }
+      }
+    },
+    {
+      "caseId": "choice-2",
+      "start": 172756.09999999776,
+      "timeline": [
+        {
+          "atMs": 2642,
+          "chars": 1
+        },
+        {
+          "atMs": 2735,
+          "chars": 2
+        },
+        {
+          "atMs": 2892,
+          "chars": 7
+        },
+        {
+          "atMs": 2967,
+          "chars": 10
+        },
+        {
+          "atMs": 3042,
+          "chars": 15
+        },
+        {
+          "atMs": 3089,
+          "chars": 17
+        },
+        {
+          "atMs": 3150,
+          "chars": 21
+        },
+        {
+          "atMs": 3195,
+          "chars": 23
+        },
+        {
+          "atMs": 3338,
+          "chars": 27
+        },
+        {
+          "atMs": 3491,
+          "chars": 29
+        },
+        {
+          "atMs": 3651,
+          "chars": 33
+        },
+        {
+          "atMs": 3712,
+          "chars": 38
+        },
+        {
+          "atMs": 3777,
+          "chars": 42
+        },
+        {
+          "atMs": 3855,
+          "chars": 46
+        },
+        {
+          "atMs": 3933,
+          "chars": 48
+        },
+        {
+          "atMs": 4026,
+          "chars": 51
+        },
+        {
+          "atMs": 4088,
+          "chars": 53
+        },
+        {
+          "atMs": 4150,
+          "chars": 57
+        },
+        {
+          "atMs": 4212,
+          "chars": 62
+        },
+        {
+          "atMs": 4273,
+          "chars": 65
+        },
+        {
+          "atMs": 4337,
+          "chars": 68
+        },
+        {
+          "atMs": 4399,
+          "chars": 72
+        },
+        {
+          "atMs": 4447,
+          "chars": 75
+        },
+        {
+          "atMs": 4648,
+          "chars": 81
+        },
+        {
+          "atMs": 4710,
+          "chars": 89
+        },
+        {
+          "atMs": 4790,
+          "chars": 94
+        },
+        {
+          "atMs": 4854,
+          "chars": 103
+        },
+        {
+          "atMs": 4933,
+          "chars": 110
+        },
+        {
+          "atMs": 4979,
+          "chars": 114
+        },
+        {
+          "atMs": 5040,
+          "chars": 116
+        },
+        {
+          "atMs": 5084,
+          "chars": 118
+        },
+        {
+          "atMs": 5162,
+          "chars": 121
+        },
+        {
+          "atMs": 5209,
+          "chars": 123
+        },
+        {
+          "atMs": 5380,
+          "chars": 126
+        },
+        {
+          "atMs": 5460,
+          "chars": 128
+        },
+        {
+          "atMs": 5618,
+          "chars": 132
+        },
+        {
+          "atMs": 6007,
+          "chars": 135
+        },
+        {
+          "atMs": 6303,
+          "chars": 140
+        },
+        {
+          "atMs": 6363,
+          "chars": 146
+        },
+        {
+          "atMs": 6585,
+          "chars": 150
+        },
+        {
+          "atMs": 6633,
+          "chars": 157
+        },
+        {
+          "atMs": 6692,
+          "chars": 162
+        },
+        {
+          "atMs": 6754,
+          "chars": 168
+        },
+        {
+          "atMs": 6818,
+          "chars": 173
+        },
+        {
+          "atMs": 6882,
+          "chars": 179
+        },
+        {
+          "atMs": 6957,
+          "chars": 184
+        },
+        {
+          "atMs": 7004,
+          "chars": 190
+        },
+        {
+          "atMs": 7065,
+          "chars": 195
+        },
+        {
+          "atMs": 7142,
+          "chars": 200
+        },
+        {
+          "atMs": 7206,
+          "chars": 203
+        },
+        {
+          "atMs": 7272,
+          "chars": 207
+        },
+        {
+          "atMs": 7334,
+          "chars": 211
+        },
+        {
+          "atMs": 7426,
+          "chars": 215
+        },
+        {
+          "atMs": 7490,
+          "chars": 216
+        },
+        {
+          "atMs": 7533,
+          "chars": 221
+        },
+        {
+          "atMs": 7610,
+          "chars": 227
+        },
+        {
+          "atMs": 7656,
+          "chars": 233
+        },
+        {
+          "atMs": 7734,
+          "chars": 236
+        },
+        {
+          "atMs": 7779,
+          "chars": 242
+        },
+        {
+          "atMs": 7842,
+          "chars": 246
+        },
+        {
+          "atMs": 7921,
+          "chars": 252
+        }
+      ],
+      "choicesEnabledDuringPreview": false,
+      "lastText": "你蹲下身，目光落在那陌生人手中紧攥的残玉上。井底那东西似乎还在撞击井壁，声音沉闷而急促，震得井沿的泥土簌簌落下。你听息敏锐，察觉到那声音并非来自井底，而是来自井口边缘的泥土里，正以一种极其缓慢的速度向外拱动。陌生人似乎也察觉到了，他猛地抬头，眼神涣散地盯着你，嘴唇颤抖着吐出一个字：“救……”\n\n“咚、咚……”泥土松动，一只满是泥垢的手猛地扒住了井沿，紧接着一个黑影从井底爬了出来，浑身湿透，手里死死攥着半块残缺的玉佩。那是个衣衫褴褛的陌生人，他抬头看了你一眼，眼神涣散，嘴唇颤抖着吐出一个字：“救……”",
+      "doneMs": 12043,
+      "result": {
+        "protocolVersion": 1,
+        "status": "ready",
+        "requestId": "a4563551-f12e-4dcf-9838-22127d03b9c9",
+        "attemptId": "65e9ba41-f8e3-4b5e-96b1-cf52d04e9dc1",
+        "sessionRef": "sess_a2f5c0bc858fc123664ced4d75a7096f",
+        "errorCode": null,
+        "retry": null,
+        "scene": {
+          "id": "r:6049e35f97c78102:t3:s:scene",
+          "title": "井边求救",
+          "location": "猎户屋后",
+          "entities": [
+            {
+              "id": "r:6049e35f97c78102:t1:e:person_1",
+              "name": "陌生人",
+              "status": "alive",
+              "kind": "person"
+            }
+          ],
+          "blocks": [
+            {
+              "kind": "narration",
+              "text": "你蹲下身，目光落在那陌生人手中紧攥的残玉上。井底那东西似乎还在撞击井壁，声音沉闷而急促，震得井沿的泥土簌簌落下。你听息敏锐，察觉到那声音并非来自井底，而是来自井口边缘的泥土里，正以一种极其缓慢的速度向外拱动。陌生人似乎也察觉到了，他猛地抬头，眼神涣散地盯着你，嘴唇颤抖着吐出一个字：“救……”"
+            },
+            {
+              "kind": "narration",
+              "text": "“咚、咚……”泥土松动，一只满是泥垢的手猛地扒住了井沿，紧接着一个黑影从井底爬了出来，浑身湿透，手里死死攥着半块残缺的玉佩。那是个衣衫褴褛的陌生人，他抬头看了你一眼，眼神涣散，嘴唇颤抖着吐出一个字：“救……”"
+            }
+          ],
+          "choices": [
+            {
+              "id": "r:6049e35f97c78102:t3:c:a",
+              "label": "询问井底还有何物",
+              "intent": "interact",
+              "targetId": "r:6049e35f97c78102:t1:e:person_1",
+              "stake": "low",
+              "approach": "ask"
+            },
+            {
+              "id": "r:6049e35f97c78102:t3:c:b",
+              "label": "询问陌生人身份来历",
+              "intent": "interact",
+              "targetId": "r:6049e35f97c78102:t1:e:person_1",
+              "stake": "low",
+              "approach": "ask"
+            },
+            {
+              "id": "r:6049e35f97c78102:t3:c:c",
+              "label": "递给陌生人另一块干粮",
+              "intent": "interact",
+              "targetId": "r:6049e35f97c78102:t1:e:person_1",
+              "stake": "low",
+              "approach": "help"
+            }
+          ],
+          "memoryDeltas": [
+            {
+              "entityId": "r:6049e35f97c78102:t1:e:person_1",
+              "kind": "clue",
+              "text": "你蹲下身，目光落在那陌生人手中紧攥的残玉上。井底那东西似乎还在撞击井壁，声音沉闷而急促，震得井沿的泥土簌簌落下。你听息敏锐，察觉到那声音并非来自井底，而是来自井口边缘的泥土里，正以一种极其缓慢的速度向外拱动。陌生人似乎也察觉到了，他猛地抬头，眼神涣散地盯着你，嘴唇颤抖着吐出一个字：“救……”",
+              "status": "open"
+            }
+          ]
+        }
+      },
+      "request": {
+        "context": {
+          "schemaVersion": 1,
+          "phase": "choice",
+          "identity": {
+            "runId": "d4aa2c7e-ac0d-4251-ba24-3c7f597b0cd8",
+            "turnId": 3,
+            "baseRevision": 2,
+            "stateHash": "e10b532569544b3414f84ac7b9546b4d8013c233715e3c517c22be65720b87b4",
+            "choiceId": "r:6049e35f97c78102:t2:c:a",
+            "rulesVersion": 1,
+            "promptVersion": 1,
+            "requestId": "a4563551-f12e-4dcf-9838-22127d03b9c9"
+          },
+          "namespace": "r:6049e35f97c78102",
+          "receipt": {
+            "kind": "choice",
+            "choiceId": "r:6049e35f97c78102:t2:c:a",
+            "action": {
+              "id": "r:6049e35f97c78102:t2:c:a",
+              "label": "询问井底还有何物",
+              "intent": "interact",
+              "targetId": "r:6049e35f97c78102:t1:e:person_1",
+              "stake": "low",
+              "approach": "ask"
+            },
+            "elapsedDays": 0,
+            "itemChanges": {},
+            "relationChanges": {},
+            "random": {
+              "before": 2116909249,
+              "after": 2377382700,
+              "roll": 0
+            },
+            "before": {
+              "ageDays": 5761,
+              "realm": "mortal",
+              "cultivation": 0,
+              "injury": 0
+            },
+            "after": {
+              "ageDays": 5761,
+              "realm": "mortal",
+              "cultivation": 0,
+              "injury": 0
+            },
+            "death": null,
+            "birth": null
+          },
+          "life": {
+            "name": "云归",
+            "ageDays": 5761,
+            "lifeLimit": 80,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0,
+            "items": {
+              "supplies": 2,
+              "stones": 0
+            },
+            "relations": {
+              "r:6049e35f97c78102:t1:e:person_1": 2
+            },
+            "birth": {
+              "originId": "village",
+              "talentIds": [
+                "sensitive-breath",
+                "iron-bones"
+              ],
+              "attributes": {
+                "constitution": 5,
+                "insight": 5,
+                "fortune": 2
+              }
+            }
+          },
+          "entities": [
+            {
+              "id": "r:6049e35f97c78102:t1:e:person_1",
+              "name": "陌生人",
+              "kind": "person",
+              "status": "alive"
+            }
+          ],
+          "memory": {
+            "facts": [
+              {
+                "id": "decision:2",
+                "runId": "d4aa2c7e-ac0d-4251-ba24-3c7f597b0cd8",
+                "turnId": 2,
+                "source": "rules",
+                "kind": "fact",
+                "entityId": "r:6049e35f97c78102:t1:e:person_1",
+                "text": "你在猎户屋后选择了“递给陌生人一块干粮”。"
+              }
+            ],
+            "promises": [],
+            "clues": [
+              {
+                "id": "m:ff20c8e41f3b01ef80ad338f0946879b",
+                "source": "narrative",
+                "kind": "clue",
+                "entityId": "r:6049e35f97c78102:t1:e:person_1",
+                "text": "你从腰间解下干粮，掰下一块递过去。陌生人接过干粮，狼吞虎咽地塞进嘴里，噎得直翻白眼。他抹了把嘴，眼神稍微聚焦，指了指井底：“下面……还有个东西。”",
+                "status": "open",
+                "runId": "d4aa2c7e-ac0d-4251-ba24-3c7f597b0cd8",
+                "turnId": 2
+              },
+              {
+                "id": "m:0e3301eaff36150e0d7d88fa343c73bb",
+                "source": "narrative",
+                "kind": "clue",
+                "entityId": "r:6049e35f97c78102:t1:e:person_1",
+                "text": "“咚、咚……”泥土松动，一只满是泥垢的手猛地扒住了井沿，紧接着一个黑影从井底爬了出来，浑身湿透，手里死死攥着半块残缺的玉佩。那是个衣衫褴褛的陌生人，他抬头看了你一眼，眼神涣散，嘴唇颤抖着吐出一个字：“救……”",
+                "status": "open",
+                "runId": "d4aa2c7e-ac0d-4251-ba24-3c7f597b0cd8",
+                "turnId": 1
+              }
+            ],
+            "recent": [
+              {
+                "id": "turn:2",
+                "runId": "d4aa2c7e-ac0d-4251-ba24-3c7f597b0cd8",
+                "turnId": 2,
+                "source": "narrative",
+                "kind": "turn",
+                "text": "地点：猎户屋后；刚才选择：递给陌生人一块干粮\n你从腰间解下干粮，掰下一块递过去。陌生人接过干粮，狼吞虎咽地塞进嘴里，噎得直翻白眼。他抹了把嘴，眼神稍微聚焦，指了指井底：“下面……还有个东西。”",
+                "entityIds": []
+              },
+              {
+                "id": "turn:1",
+                "runId": "d4aa2c7e-ac0d-4251-ba24-3c7f597b0cd8",
+                "turnId": 1,
+                "source": "narrative",
+                "kind": "turn",
+                "text": "地点：猎户屋后\n云归，十六岁的猎户少年，正蹲在自家屋后的枯井旁。井口结着薄霜，井底传来几声沉闷的回响，像是有什么东西在撞击井壁。你握紧了手中的铁叉，听息敏锐的直觉让你察觉到那声音并非来自井底，而是来自井口边缘的泥土里，正以一种极其缓慢的速度向外拱动。\n“咚、咚……”泥土松动，一只满是泥垢的手猛地扒住了井沿，紧接着一个黑影从井底爬了出来，浑身湿透，手里死死攥着半块残缺的玉佩。那是个衣衫褴褛的陌生人，他抬头看了你一眼，眼神涣散，嘴唇颤抖着吐出一个字：“救……”",
+                "entityIds": []
+              }
+            ],
+            "summaries": []
+          },
+          "references": [
+            "decision:2",
+            "m:ff20c8e41f3b01ef80ad338f0946879b",
+            "m:0e3301eaff36150e0d7d88fa343c73bb",
+            "turn:2",
+            "turn:1"
+          ],
+          "previousScene": {
+            "id": "r:6049e35f97c78102:t2:s:scene",
+            "blocksHash": "38c78533a08bf5354e306158da787269e7d4d13b767367ed122f9114df5d0811"
+          },
+          "relationshipVersion": 1,
+          "relationships": {
+            "r:6049e35f97c78102:t1:e:person_1": 2
+          },
+          "coverage": {
+            "policy": "relevance-v1",
+            "openTotal": 2,
+            "openIncluded": 2,
+            "openOmitted": 0
+          }
+        },
+        "attempt": {
+          "id": "65e9ba41-f8e3-4b5e-96b1-cf52d04e9dc1",
+          "sessionRef": "sess_a2f5c0bc858fc123664ced4d75a7096f",
+          "retryOf": null
+        }
+      },
+      "decision": {
+        "index": 0,
+        "reason": "援助后的陌生人指出井底还有东西，询问其所指何物；同日回应线索，不擅自下井或取得玉佩",
+        "selected": {
+          "id": "r:6049e35f97c78102:t2:c:a",
+          "label": "询问井底还有何物",
+          "intent": "interact",
+          "targetId": "r:6049e35f97c78102:t1:e:person_1",
+          "stake": "low",
+          "approach": "ask"
+        }
+      },
+      "choices": [
+        {
+          "id": "r:6049e35f97c78102:t3:c:a",
+          "enabled": true,
+          "label": "询问井底还有何物",
+          "cost": "0日"
+        },
+        {
+          "id": "r:6049e35f97c78102:t3:c:b",
+          "enabled": true,
+          "label": "询问陌生人身份来历",
+          "cost": "0日"
+        },
+        {
+          "id": "r:6049e35f97c78102:t3:c:c",
+          "enabled": true,
+          "label": "递给陌生人另一块干粮",
+          "cost": "1日 · 行粮 1"
+        }
+      ],
+      "traces": [
+        {
+          "model": "@cf/zai-org/glm-4.7-flash",
+          "inputHash": "0bafb8586e5cc784581dc38f2d0aaf63b0fcb803c05ee9302d05825f4e76248c",
+          "inputBytes": 14236,
+          "startedAt": 1793348257663,
+          "bindingReturnedAt": 1793348258012,
+          "liveRawBytes": 99372,
+          "captureComplete": true,
+          "response": {
+            "model": "@cf/zai-org/glm-4.7-flash",
+            "choices": [
+              {
+                "finish_reason": "stop",
+                "message": {
+                  "content": "{\"blocks\":[{\"kind\":\"narration\",\"text\":\"你蹲下身，目光落在那陌生人手中紧攥的残玉上。井底那东西似乎还在撞击井壁，声音沉闷而急促，震得井沿的泥土簌簌落下。你听息敏锐，察觉到那声音并非来自井底，而是来自井口边缘的泥土里，正以一种极其缓慢的速度向外拱动。陌生人似乎也察觉到了，他猛地抬头，眼神涣散地盯着你，嘴唇颤抖着吐出一个字：“救……”\"},{\"kind\":\"narration\",\"text\":\"“咚、咚……”泥土松动，一只满是泥垢的手猛地扒住了井沿，紧接着一个黑影从井底爬了出来，浑身湿透，手里死死攥着半块残缺的玉佩。那是个衣衫褴褛的陌生人，他抬头看了你一眼，眼神涣散，嘴唇颤抖着吐出一个字：“救……”\"}],\"choices\":[{\"action\":\"interact:ask\",\"targetId\":\"k1\",\"stake\":\"low\",\"label\":\"询问井底还有何物\",\"anchor\":0},{\"action\":\"interact:ask\",\"targetId\":\"k1\",\"stake\":\"low\",\"label\":\"询问陌生人身份来历\",\"anchor\":0},{\"action\":\"interact:help\",\"targetId\":\"k1\",\"stake\":\"low\",\"label\":\"递给陌生人另一块干粮\",\"anchor\":0}],\"title\":\"井边求救\",\"location\":\"猎户屋后\",\"otherPeople\":[{\"id\":\"k1\",\"name\":\"陌生人\",\"status\":\"alive\"}],\"places\":[],\"factions\":[],\"memoryDeltas\":[{\"entityId\":\"k1\",\"kind\":\"clue\",\"anchor\":0,\"status\":\"open\"}]}",
+                  "reasoning_content": ""
+                }
+              }
+            ],
+            "usage": {
+              "prompt_tokens": 3305,
+              "completion_tokens": 366,
+              "total_tokens": 3671,
+              "prompt_tokens_details": {
+                "cached_tokens": 0
+              },
+              "neurons": 31.499900000000157
+            }
+          },
+          "rawSseBytes": 99372
+        }
+      ],
+      "revision": 3,
+      "pending": false,
+      "state": {
+        "relationshipVersion": 1,
+        "version": 5,
+        "mode": "cultivation",
+        "contentVersion": 4,
+        "rulesVersion": 1,
+        "promptVersion": 1,
+        "runId": "d4aa2c7e-ac0d-4251-ba24-3c7f597b0cd8",
+        "revision": 3,
+        "turnId": 3,
+        "phase": "active",
+        "rng": 2377382700,
+        "life": {
+          "name": "云归",
+          "ageDays": 5761,
+          "lifeLimit": 80,
+          "realm": "mortal",
+          "cultivation": 0,
+          "injury": 0,
+          "items": {
+            "supplies": 2,
+            "stones": 0
+          },
+          "relations": {
+            "r:6049e35f97c78102:t1:e:person_1": 2
+          },
+          "birth": {
+            "originId": "village",
+            "talentIds": [
+              "sensitive-breath",
+              "iron-bones"
+            ],
+            "attributes": {
+              "constitution": 5,
+              "insight": 5,
+              "fortune": 2
+            }
+          }
+        },
+        "birthReceipt": {
+          "kind": "opening",
+          "choiceId": null,
+          "action": null,
+          "elapsedDays": 0,
+          "itemChanges": {},
+          "relationChanges": {},
+          "random": {
+            "before": 121001066,
+            "after": 121001066,
+            "roll": null
+          },
+          "before": {
+            "ageDays": 5760,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "after": {
+            "ageDays": 5760,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "death": null,
+          "birth": {
+            "originId": "village",
+            "talentIds": [
+              "sensitive-breath",
+              "iron-bones"
+            ],
+            "attributes": {
+              "constitution": 5,
+              "insight": 5,
+              "fortune": 2
+            }
+          }
+        },
+        "currentScene": {
+          "id": "r:6049e35f97c78102:t3:s:scene",
+          "title": "井边求救",
+          "location": "猎户屋后",
+          "entities": [
+            {
+              "id": "r:6049e35f97c78102:t1:e:person_1",
+              "name": "陌生人",
+              "status": "alive",
+              "kind": "person"
+            }
+          ],
+          "blocks": [
+            {
+              "kind": "narration",
+              "text": "你蹲下身，目光落在那陌生人手中紧攥的残玉上。井底那东西似乎还在撞击井壁，声音沉闷而急促，震得井沿的泥土簌簌落下。你听息敏锐，察觉到那声音并非来自井底，而是来自井口边缘的泥土里，正以一种极其缓慢的速度向外拱动。陌生人似乎也察觉到了，他猛地抬头，眼神涣散地盯着你，嘴唇颤抖着吐出一个字：“救……”"
+            },
+            {
+              "kind": "narration",
+              "text": "“咚、咚……”泥土松动，一只满是泥垢的手猛地扒住了井沿，紧接着一个黑影从井底爬了出来，浑身湿透，手里死死攥着半块残缺的玉佩。那是个衣衫褴褛的陌生人，他抬头看了你一眼，眼神涣散，嘴唇颤抖着吐出一个字：“救……”"
+            }
+          ],
+          "choices": [
+            {
+              "id": "r:6049e35f97c78102:t3:c:a",
+              "label": "询问井底还有何物",
+              "intent": "interact",
+              "targetId": "r:6049e35f97c78102:t1:e:person_1",
+              "stake": "low",
+              "approach": "ask"
+            },
+            {
+              "id": "r:6049e35f97c78102:t3:c:b",
+              "label": "询问陌生人身份来历",
+              "intent": "interact",
+              "targetId": "r:6049e35f97c78102:t1:e:person_1",
+              "stake": "low",
+              "approach": "ask"
+            },
+            {
+              "id": "r:6049e35f97c78102:t3:c:c",
+              "label": "递给陌生人另一块干粮",
+              "intent": "interact",
+              "targetId": "r:6049e35f97c78102:t1:e:person_1",
+              "stake": "low",
+              "approach": "help"
+            }
+          ],
+          "memoryDeltas": [
+            {
+              "entityId": "r:6049e35f97c78102:t1:e:person_1",
+              "kind": "clue",
+              "text": "你蹲下身，目光落在那陌生人手中紧攥的残玉上。井底那东西似乎还在撞击井壁，声音沉闷而急促，震得井沿的泥土簌簌落下。你听息敏锐，察觉到那声音并非来自井底，而是来自井口边缘的泥土里，正以一种极其缓慢的速度向外拱动。陌生人似乎也察觉到了，他猛地抬头，眼神涣散地盯着你，嘴唇颤抖着吐出一个字：“救……”",
+              "status": "open"
+            }
+          ]
+        },
+        "lastReceipt": {
+          "kind": "choice",
+          "choiceId": "r:6049e35f97c78102:t2:c:a",
+          "action": {
+            "id": "r:6049e35f97c78102:t2:c:a",
+            "label": "询问井底还有何物",
+            "intent": "interact",
+            "targetId": "r:6049e35f97c78102:t1:e:person_1",
+            "stake": "low",
+            "approach": "ask"
+          },
+          "elapsedDays": 0,
+          "itemChanges": {},
+          "relationChanges": {},
+          "random": {
+            "before": 2116909249,
+            "after": 2377382700,
+            "roll": 0
+          },
+          "before": {
+            "ageDays": 5761,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "after": {
+            "ageDays": 5761,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "death": null,
+          "birth": null
+        },
+        "relatedEntities": [
+          {
+            "id": "r:6049e35f97c78102:t1:e:person_1",
+            "name": "陌生人",
+            "status": "alive",
+            "kind": "person"
+          }
+        ],
+        "archiveCursor": 0
+      },
+      "posts": 3,
+      "latency": {
+        "usable": true,
+        "errorCode": null,
+        "firstAnyPreviewMs": 2642,
+        "firstReadableMs": 3150,
+        "completionMs": 12043,
+        "narrativeChars": 252,
+        "maxPreviewGapMs": 389,
+        "readingFinishEstimateMs": 45150,
+        "readingStallEstimateMs": 0,
+        "optionsWaitEstimateMs": 0,
+        "prefetchWorthEvaluating": true,
+        "assumptions": {
+          "readingCharsPerSecond": 6,
+          "readableChars": 20,
+          "targetWaitMs": 2000
+        }
+      }
+    }
+  ],
+  "errors": [
+    "Invalid choice"
+  ],
+  "posts": 3,
+  "refreshed": null
+}

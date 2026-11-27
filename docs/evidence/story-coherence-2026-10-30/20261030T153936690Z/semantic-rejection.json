@@ -1,0 +1,11 @@
+{
+  "status": "SEMANTIC_REJECTED",
+  "sourceCommit": "3e8799629af56e66ceb6fade11ed279661ace97f",
+  "reason": "Travel scene offered a question to a non-speaking tiger and replaced its real withdrawal with a free conversation exit. Revision5 was saved only in the private test journey; it is not accepted or released.",
+  "normalProduction": {
+    "version": "cad2a140-240f-4465-a837-e53f054c2589",
+    "percentage": 100
+  },
+  "cleanupDeployment": "26628b35-0404-493f-8ec3-73bff9bac33e",
+  "at": "2026-10-30T15:53:24.447Z"
+}

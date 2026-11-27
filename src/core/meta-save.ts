@@ -1,7 +1,7 @@
 import type { LineageId, MetaSave, PastLifeRemnant, RunState } from './types';
 
 const META_KEY = 'baishi-wending-roguelike-meta-v1';
-const RUN_KEY = 'baishi-wending-roguelike-run-v1';
+const RUN_KEY = 'baishi-wending-roguelike-run-v2';
 
 export function defaultMetaSave(): MetaSave {
   return {
@@ -47,7 +47,7 @@ export function loadActiveRun(): RunState | null {
     const raw = globalThis.localStorage?.getItem(RUN_KEY);
     if (!raw) return null;
     const parsed = JSON.parse(raw) as RunState;
-    if (!parsed || parsed.version !== 1 || !Array.isArray(parsed.deck)) return null;
+    if (!parsed || parsed.version !== 2 || !Array.isArray(parsed.deck)) return null;
     parsed.consumables = parsed.consumables ?? [];
     parsed.secondaryMethod = parsed.secondaryMethod ?? null;
     return parsed;
@@ -84,7 +84,11 @@ export function syncDiscoveriesToMeta(meta: MetaSave, run: RunState): MetaSave {
   return next;
 }
 
-export function checkNewAchievements(meta: MetaSave, run: RunState, outcome?: 'victory' | 'true-victory' | 'death'): string[] {
+export function checkNewAchievements(
+  meta: MetaSave,
+  run: RunState,
+  outcome?: 'victory' | 'true-victory' | 'death',
+): string[] {
   const owned = new Set(meta.achievements);
   const unlocked: string[] = [];
   const grant = (id: string) => {
@@ -99,7 +103,7 @@ export function checkNewAchievements(meta: MetaSave, run: RunState, outcome?: 'v
   if ((run.stats.maxCardsInSingleTurn ?? 0) >= 7) grant('ach-eight-cards');
   if ((run.stats.tribulationsSlain ?? 0) >= 1) grant('ach-tribulation-slayer');
   if (outcome === 'true-victory') grant('ach-true-ending');
-  if ((run.stats.bossesWon ?? 0) >= 1 && run.maxLifespan - run.age <= 8 && run.hp > 0) {
+  if ((run.stats.bossesWon ?? 0) >= 1 && run.hp > 0 && run.hp <= 18) {
     grant('ach-dying-boss');
   }
   return unlocked;
@@ -132,14 +136,14 @@ export function settleRunIntoMeta(
     name: run.name,
     lineage: run.lineage,
     act: Math.min(3, run.act) as 1 | 2 | 3,
-    deathCause: run.deathCause ?? (outcome === 'death' ? '寿尽坐化' : '飞升留蜕'),
+    deathCause: run.deathCause ?? (outcome === 'death' ? '力战道消' : '飞升留蜕'),
     leftCard: enchantedOrUpgraded ? { ...enchantedOrUpgraded } : undefined,
     leftTreasureId: run.treasures[0],
   };
 
   const dailyBestScores = { ...synced.dailyBestScores };
   if (run.isDailyChallenge && run.dailyDate) {
-    const score = karmaEarned * 10 + run.gold + run.foundation * 5;
+    const score = karmaEarned * 10 + run.gold + run.maxHp * 3;
     dailyBestScores[run.dailyDate] = Math.max(dailyBestScores[run.dailyDate] ?? 0, score);
   }
 
@@ -163,7 +167,7 @@ export function settleRunIntoMeta(
         name: run.name,
         lineage: run.lineage,
         realm: run.realm,
-        age: Math.round(run.age),
+        maxHp: run.maxHp,
         outcome,
         cause: run.deathCause ?? run.endingTitle ?? '问道飞升',
         karmaEarned,

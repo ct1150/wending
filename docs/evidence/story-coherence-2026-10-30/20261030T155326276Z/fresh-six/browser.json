@@ -1,0 +1,2994 @@
+{
+  "sourceCommit": "ccc00153431b574772ca7e0b4c00abd437e0f147",
+  "version": "dea06ba2-adb8-4717-90b3-d8955757e66e",
+  "recordedAt": "2026-10-30T15:59:08.318Z",
+  "continuedFrom": null,
+  "records": [
+    {
+      "caseId": "opening",
+      "start": 722.1000000014901,
+      "timeline": [
+        {
+          "atMs": 5212,
+          "chars": 2
+        },
+        {
+          "atMs": 5291,
+          "chars": 6
+        },
+        {
+          "atMs": 5337,
+          "chars": 9
+        },
+        {
+          "atMs": 5446,
+          "chars": 12
+        },
+        {
+          "atMs": 5491,
+          "chars": 14
+        },
+        {
+          "atMs": 5570,
+          "chars": 16
+        },
+        {
+          "atMs": 5647,
+          "chars": 21
+        },
+        {
+          "atMs": 5695,
+          "chars": 23
+        },
+        {
+          "atMs": 6053,
+          "chars": 35
+        },
+        {
+          "atMs": 6115,
+          "chars": 37
+        },
+        {
+          "atMs": 6195,
+          "chars": 40
+        },
+        {
+          "atMs": 6258,
+          "chars": 44
+        },
+        {
+          "atMs": 6321,
+          "chars": 47
+        },
+        {
+          "atMs": 6402,
+          "chars": 50
+        },
+        {
+          "atMs": 6708,
+          "chars": 53
+        },
+        {
+          "atMs": 6720,
+          "chars": 55
+        },
+        {
+          "atMs": 6779,
+          "chars": 58
+        },
+        {
+          "atMs": 6858,
+          "chars": 61
+        },
+        {
+          "atMs": 6951,
+          "chars": 65
+        },
+        {
+          "atMs": 7033,
+          "chars": 71
+        },
+        {
+          "atMs": 7094,
+          "chars": 73
+        },
+        {
+          "atMs": 7451,
+          "chars": 77
+        },
+        {
+          "atMs": 7514,
+          "chars": 82
+        },
+        {
+          "atMs": 7572,
+          "chars": 86
+        },
+        {
+          "atMs": 7620,
+          "chars": 90
+        },
+        {
+          "atMs": 7678,
+          "chars": 93
+        },
+        {
+          "atMs": 7756,
+          "chars": 95
+        },
+        {
+          "atMs": 7804,
+          "chars": 98
+        },
+        {
+          "atMs": 7867,
+          "chars": 104
+        },
+        {
+          "atMs": 7942,
+          "chars": 106
+        },
+        {
+          "atMs": 8125,
+          "chars": 113
+        },
+        {
+          "atMs": 8265,
+          "chars": 122
+        },
+        {
+          "atMs": 8312,
+          "chars": 125
+        },
+        {
+          "atMs": 8359,
+          "chars": 129
+        },
+        {
+          "atMs": 8591,
+          "chars": 132
+        },
+        {
+          "atMs": 8636,
+          "chars": 135
+        },
+        {
+          "atMs": 8701,
+          "chars": 138
+        }
+      ],
+      "choicesEnabledDuringPreview": false,
+      "lastText": "十六岁的云归背着竹篓站在村口老槐树下，手里握着把磨得发亮的猎刀。村头铁匠王大锤正蹲在地上，对着一块黑乎乎的废铁发愁，嘴里嘟囔着这铁怎么也打不成器。\n\n王大锤见你过来，抬头抹了一把汗，把那块废铁往你面前一推：“云归，你眼尖，帮叔看看这铁是不是废了？若是能炼，叔请你吃两个烧饼。”",
+      "doneMs": 15239,
+      "result": {
+        "protocolVersion": 1,
+        "status": "ready",
+        "requestId": "1f2e3907-19ec-4c1a-b268-e21f2130050d",
+        "attemptId": "2eea645c-47f4-480d-b4d8-c224411840cc",
+        "sessionRef": "sess_0a51778421ab0202426df9e22b7e82fd",
+        "errorCode": null,
+        "retry": null,
+        "scene": {
+          "id": "r:eb23fe6aca0e5570:t1:s:scene",
+          "title": "村口铁匠铺",
+          "location": "山村",
+          "entities": [
+            {
+              "id": "r:eb23fe6aca0e5570:t1:e:person_1",
+              "name": "王大锤",
+              "kind": "person"
+            }
+          ],
+          "blocks": [
+            {
+              "kind": "narration",
+              "text": "十六岁的云归背着竹篓站在村口老槐树下，手里握着把磨得发亮的猎刀。村头铁匠王大锤正蹲在地上，对着一块黑乎乎的废铁发愁，嘴里嘟囔着这铁怎么也打不成器。"
+            },
+            {
+              "kind": "narration",
+              "text": "王大锤见你过来，抬头抹了一把汗，把那块废铁往你面前一推：“云归，你眼尖，帮叔看看这铁是不是废了？若是能炼，叔请你吃两个烧饼。”"
+            }
+          ],
+          "choices": [
+            {
+              "id": "r:eb23fe6aca0e5570:t1:c:a",
+              "label": "询问王大锤：询问这块铁的具体用途和成色",
+              "intent": "interact",
+              "targetId": "r:eb23fe6aca0e5570:t1:e:person_1",
+              "stake": "low",
+              "approach": "ask"
+            },
+            {
+              "id": "r:eb23fe6aca0e5570:t1:c:b",
+              "label": "观察王大锤：观察王大锤的神态和铁块的特征",
+              "intent": "interact",
+              "targetId": "r:eb23fe6aca0e5570:t1:e:person_1",
+              "stake": "low",
+              "approach": "observe"
+            },
+            {
+              "id": "r:eb23fe6aca0e5570:t1:c:c",
+              "label": "婉拒王大锤：拒绝帮忙并离开",
+              "intent": "interact",
+              "targetId": "r:eb23fe6aca0e5570:t1:e:person_1",
+              "stake": "low",
+              "approach": "decline"
+            }
+          ],
+          "memoryDeltas": [
+            {
+              "entityId": "r:eb23fe6aca0e5570:t1:e:person_1",
+              "kind": "fact",
+              "text": "十六岁的云归背着竹篓站在村口老槐树下，手里握着把磨得发亮的猎刀。村头铁匠王大锤正蹲在地上，对着一块黑乎乎的废铁发愁，嘴里嘟囔着这铁怎么也打不成器。"
+            },
+            {
+              "entityId": "r:eb23fe6aca0e5570:t1:e:person_1",
+              "kind": "clue",
+              "text": "王大锤见你过来，抬头抹了一把汗，把那块废铁往你面前一推：“云归，你眼尖，帮叔看看这铁是不是废了？若是能炼，叔请你吃两个烧饼。”",
+              "status": "open"
+            }
+          ]
+        }
+      },
+      "request": {
+        "context": {
+          "schemaVersion": 1,
+          "phase": "opening",
+          "identity": {
+            "runId": "a5055d8e-11bc-4c7c-b055-d1fc05cfd787",
+            "turnId": 1,
+            "baseRevision": 0,
+            "stateHash": "351bdcd8a3c18c7c90b48ffa5c71e8830937addd306546057fe3cf521bb689f0",
+            "choiceId": null,
+            "rulesVersion": 1,
+            "promptVersion": 1,
+            "requestId": "1f2e3907-19ec-4c1a-b268-e21f2130050d"
+          },
+          "namespace": "r:eb23fe6aca0e5570",
+          "receipt": {
+            "kind": "opening",
+            "choiceId": null,
+            "action": null,
+            "elapsedDays": 0,
+            "itemChanges": {},
+            "relationChanges": {},
+            "random": {
+              "before": 371814938,
+              "after": 371814938,
+              "roll": null
+            },
+            "before": {
+              "ageDays": 5760,
+              "realm": "mortal",
+              "cultivation": 0,
+              "injury": 0
+            },
+            "after": {
+              "ageDays": 5760,
+              "realm": "mortal",
+              "cultivation": 0,
+              "injury": 0
+            },
+            "death": null,
+            "birth": {
+              "originId": "village",
+              "talentIds": [
+                "sword-bone",
+                "flash-wisdom"
+              ],
+              "attributes": {
+                "constitution": 5,
+                "insight": 3,
+                "fortune": 4
+              }
+            }
+          },
+          "life": {
+            "name": "云归",
+            "ageDays": 5760,
+            "lifeLimit": 80,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0,
+            "items": {
+              "supplies": 3,
+              "stones": 0
+            },
+            "relations": {},
+            "birth": {
+              "originId": "village",
+              "talentIds": [
+                "sword-bone",
+                "flash-wisdom"
+              ],
+              "attributes": {
+                "constitution": 5,
+                "insight": 3,
+                "fortune": 4
+              }
+            }
+          },
+          "entities": [],
+          "memory": {
+            "facts": [],
+            "promises": [],
+            "clues": [],
+            "recent": [],
+            "summaries": []
+          },
+          "references": [],
+          "previousScene": null,
+          "relationshipVersion": 1,
+          "relationships": {},
+          "coverage": {
+            "policy": "relevance-v1",
+            "openTotal": 0,
+            "openIncluded": 0,
+            "openOmitted": 0
+          }
+        },
+        "attempt": {
+          "id": "2eea645c-47f4-480d-b4d8-c224411840cc",
+          "sessionRef": "sess_0a51778421ab0202426df9e22b7e82fd",
+          "retryOf": null
+        },
+        "storyActions": true
+      },
+      "decision": null,
+      "choices": [
+        {
+          "id": "r:eb23fe6aca0e5570:t1:c:a",
+          "enabled": true,
+          "label": "询问王大锤：询问这块铁的具体用途和成色",
+          "cost": "0日"
+        },
+        {
+          "id": "r:eb23fe6aca0e5570:t1:c:b",
+          "enabled": true,
+          "label": "观察王大锤：观察王大锤的神态和铁块的特征",
+          "cost": "0日"
+        },
+        {
+          "id": "r:eb23fe6aca0e5570:t1:c:c",
+          "enabled": true,
+          "label": "婉拒王大锤：拒绝帮忙并离开",
+          "cost": "0日"
+        }
+      ],
+      "traces": [
+        {
+          "model": "@cf/zai-org/glm-4.7-flash",
+          "inputHash": "dd7d4886181c109002db3b3f719c80e56199eb799a3f40e43d88c59cfe331797",
+          "inputBytes": 14752,
+          "startedAt": 1793375775607,
+          "bindingReturnedAt": 1793375776001,
+          "liveRawBytes": 144923,
+          "captureComplete": true,
+          "response": {
+            "model": "@cf/zai-org/glm-4.7-flash",
+            "choices": [
+              {
+                "finish_reason": "stop",
+                "message": {
+                  "content": "{\n  \"blocks\": [\n    {\n      \"kind\": \"narration\",\n      \"text\": \"十六岁的云归背着竹篓站在村口老槐树下，手里握着把磨得发亮的猎刀。村头铁匠王大锤正蹲在地上，对着一块黑乎乎的废铁发愁，嘴里嘟囔着这铁怎么也打不成器。\"\n    },\n    {\n      \"kind\": \"narration\",\n      \"text\": \"王大锤见你过来，抬头抹了一把汗，把那块废铁往你面前一推：“云归，你眼尖，帮叔看看这铁是不是废了？若是能炼，叔请你吃两个烧饼。”\"\n    }\n  ],\n  \"choices\": [\n    {\n      \"action\": \"interact:ask\",\n      \"target\": {\n        \"kind\": \"person\",\n        \"name\": \"王大锤\",\n        \"ref\": \"\",\n        \"status\": null\n      },\n      \"stake\": \"low\",\n      \"purpose\": \"询问这块铁的具体用途和成色\",\n      \"anchor\": 1\n    },\n    {\n      \"action\": \"interact:observe\",\n      \"target\": {\n        \"kind\": \"person\",\n        \"name\": \"王大锤\",\n        \"ref\": \"\",\n        \"status\": null\n      },\n      \"stake\": \"low\",\n      \"purpose\": \"观察王大锤的神态和铁块的特征\",\n      \"anchor\": 1\n    },\n    {\n      \"action\": \"interact:decline\",\n      \"target\": {\n        \"kind\": \"person\",\n        \"name\": \"王大锤\",\n        \"ref\": \"\",\n        \"status\": null\n      },\n      \"stake\": \"low\",\n      \"purpose\": \"拒绝帮忙并离开\",\n      \"anchor\": 1\n    }\n  ],\n  \"title\": \"村口铁匠铺\",\n  \"location\": \"山村\",\n  \"memoryDeltas\": [\n    {\n      \"target\": {\n        \"kind\": \"person\",\n        \"name\": \"王大锤\",\n        \"ref\": \"\",\n        \"status\": null\n      },\n      \"kind\": \"fact\",\n      \"anchor\": 0\n    },\n    {\n      \"target\": {\n        \"kind\": \"person\",\n        \"name\": \"王大锤\",\n        \"ref\": \"\",\n        \"status\": null\n      },\n      \"kind\": \"clue\",\n      \"anchor\": 1\n   ,\n      \"status\": \"open\"\n    }\n  ]\n}",
+                  "reasoning_content": ""
+                }
+              }
+            ],
+            "usage": {
+              "prompt_tokens": 1939,
+              "completion_tokens": 536,
+              "total_tokens": 2475,
+              "prompt_tokens_details": {
+                "cached_tokens": 0
+              },
+              "neurons": 30.17490000000023
+            }
+          },
+          "rawSseBytes": 144923
+        }
+      ],
+      "revision": 1,
+      "pending": false,
+      "state": {
+        "relationshipVersion": 1,
+        "version": 5,
+        "mode": "cultivation",
+        "contentVersion": 4,
+        "rulesVersion": 1,
+        "promptVersion": 1,
+        "runId": "a5055d8e-11bc-4c7c-b055-d1fc05cfd787",
+        "revision": 1,
+        "turnId": 1,
+        "phase": "active",
+        "rng": 371814938,
+        "life": {
+          "name": "云归",
+          "ageDays": 5760,
+          "lifeLimit": 80,
+          "realm": "mortal",
+          "cultivation": 0,
+          "injury": 0,
+          "items": {
+            "supplies": 3,
+            "stones": 0
+          },
+          "relations": {},
+          "birth": {
+            "originId": "village",
+            "talentIds": [
+              "sword-bone",
+              "flash-wisdom"
+            ],
+            "attributes": {
+              "constitution": 5,
+              "insight": 3,
+              "fortune": 4
+            }
+          }
+        },
+        "birthReceipt": {
+          "kind": "opening",
+          "choiceId": null,
+          "action": null,
+          "elapsedDays": 0,
+          "itemChanges": {},
+          "relationChanges": {},
+          "random": {
+            "before": 371814938,
+            "after": 371814938,
+            "roll": null
+          },
+          "before": {
+            "ageDays": 5760,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "after": {
+            "ageDays": 5760,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "death": null,
+          "birth": {
+            "originId": "village",
+            "talentIds": [
+              "sword-bone",
+              "flash-wisdom"
+            ],
+            "attributes": {
+              "constitution": 5,
+              "insight": 3,
+              "fortune": 4
+            }
+          }
+        },
+        "currentScene": {
+          "id": "r:eb23fe6aca0e5570:t1:s:scene",
+          "title": "村口铁匠铺",
+          "location": "山村",
+          "entities": [
+            {
+              "id": "r:eb23fe6aca0e5570:t1:e:person_1",
+              "name": "王大锤",
+              "kind": "person"
+            }
+          ],
+          "blocks": [
+            {
+              "kind": "narration",
+              "text": "十六岁的云归背着竹篓站在村口老槐树下，手里握着把磨得发亮的猎刀。村头铁匠王大锤正蹲在地上，对着一块黑乎乎的废铁发愁，嘴里嘟囔着这铁怎么也打不成器。"
+            },
+            {
+              "kind": "narration",
+              "text": "王大锤见你过来，抬头抹了一把汗，把那块废铁往你面前一推：“云归，你眼尖，帮叔看看这铁是不是废了？若是能炼，叔请你吃两个烧饼。”"
+            }
+          ],
+          "choices": [
+            {
+              "id": "r:eb23fe6aca0e5570:t1:c:a",
+              "label": "询问王大锤：询问这块铁的具体用途和成色",
+              "intent": "interact",
+              "targetId": "r:eb23fe6aca0e5570:t1:e:person_1",
+              "stake": "low",
+              "approach": "ask"
+            },
+            {
+              "id": "r:eb23fe6aca0e5570:t1:c:b",
+              "label": "观察王大锤：观察王大锤的神态和铁块的特征",
+              "intent": "interact",
+              "targetId": "r:eb23fe6aca0e5570:t1:e:person_1",
+              "stake": "low",
+              "approach": "observe"
+            },
+            {
+              "id": "r:eb23fe6aca0e5570:t1:c:c",
+              "label": "婉拒王大锤：拒绝帮忙并离开",
+              "intent": "interact",
+              "targetId": "r:eb23fe6aca0e5570:t1:e:person_1",
+              "stake": "low",
+              "approach": "decline"
+            }
+          ],
+          "memoryDeltas": [
+            {
+              "entityId": "r:eb23fe6aca0e5570:t1:e:person_1",
+              "kind": "fact",
+              "text": "十六岁的云归背着竹篓站在村口老槐树下，手里握着把磨得发亮的猎刀。村头铁匠王大锤正蹲在地上，对着一块黑乎乎的废铁发愁，嘴里嘟囔着这铁怎么也打不成器。"
+            },
+            {
+              "entityId": "r:eb23fe6aca0e5570:t1:e:person_1",
+              "kind": "clue",
+              "text": "王大锤见你过来，抬头抹了一把汗，把那块废铁往你面前一推：“云归，你眼尖，帮叔看看这铁是不是废了？若是能炼，叔请你吃两个烧饼。”",
+              "status": "open"
+            }
+          ]
+        },
+        "lastReceipt": {
+          "kind": "opening",
+          "choiceId": null,
+          "action": null,
+          "elapsedDays": 0,
+          "itemChanges": {},
+          "relationChanges": {},
+          "random": {
+            "before": 371814938,
+            "after": 371814938,
+            "roll": null
+          },
+          "before": {
+            "ageDays": 5760,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "after": {
+            "ageDays": 5760,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "death": null,
+          "birth": {
+            "originId": "village",
+            "talentIds": [
+              "sword-bone",
+              "flash-wisdom"
+            ],
+            "attributes": {
+              "constitution": 5,
+              "insight": 3,
+              "fortune": 4
+            }
+          }
+        },
+        "relatedEntities": [
+          {
+            "id": "r:eb23fe6aca0e5570:t1:e:person_1",
+            "name": "王大锤",
+            "kind": "person"
+          }
+        ],
+        "archiveCursor": 0
+      },
+      "posts": 1,
+      "latency": {
+        "usable": true,
+        "errorCode": null,
+        "firstAnyPreviewMs": 5212,
+        "firstReadableMs": 5647,
+        "completionMs": 15239,
+        "narrativeChars": 138,
+        "maxPreviewGapMs": 358,
+        "readingFinishEstimateMs": 28647,
+        "readingStallEstimateMs": 0,
+        "optionsWaitEstimateMs": 0,
+        "prefetchWorthEvaluating": true,
+        "assumptions": {
+          "readingCharsPerSecond": 6,
+          "readableChars": 20,
+          "targetWaitMs": 2000
+        }
+      }
+    },
+    {
+      "caseId": "choice-1",
+      "start": 35318.39999999851,
+      "timeline": [
+        {
+          "atMs": 5186,
+          "chars": 2
+        },
+        {
+          "atMs": 5280,
+          "chars": 4
+        },
+        {
+          "atMs": 5355,
+          "chars": 6
+        },
+        {
+          "atMs": 5401,
+          "chars": 9
+        },
+        {
+          "atMs": 5480,
+          "chars": 12
+        },
+        {
+          "atMs": 5574,
+          "chars": 13
+        },
+        {
+          "atMs": 5761,
+          "chars": 18
+        },
+        {
+          "atMs": 5809,
+          "chars": 21
+        },
+        {
+          "atMs": 5902,
+          "chars": 24
+        },
+        {
+          "atMs": 5967,
+          "chars": 28
+        },
+        {
+          "atMs": 6042,
+          "chars": 32
+        },
+        {
+          "atMs": 6151,
+          "chars": 36
+        },
+        {
+          "atMs": 6257,
+          "chars": 38
+        },
+        {
+          "atMs": 6397,
+          "chars": 39
+        },
+        {
+          "atMs": 6444,
+          "chars": 41
+        },
+        {
+          "atMs": 6556,
+          "chars": 44
+        },
+        {
+          "atMs": 6647,
+          "chars": 46
+        },
+        {
+          "atMs": 6710,
+          "chars": 51
+        },
+        {
+          "atMs": 6805,
+          "chars": 54
+        },
+        {
+          "atMs": 6881,
+          "chars": 56
+        },
+        {
+          "atMs": 6961,
+          "chars": 58
+        },
+        {
+          "atMs": 7026,
+          "chars": 60
+        },
+        {
+          "atMs": 7103,
+          "chars": 63
+        },
+        {
+          "atMs": 7163,
+          "chars": 65
+        },
+        {
+          "atMs": 7274,
+          "chars": 70
+        },
+        {
+          "atMs": 7364,
+          "chars": 72
+        },
+        {
+          "atMs": 7490,
+          "chars": 75
+        },
+        {
+          "atMs": 7843,
+          "chars": 76
+        },
+        {
+          "atMs": 8317,
+          "chars": 77
+        },
+        {
+          "atMs": 8993,
+          "chars": 79
+        },
+        {
+          "atMs": 9819,
+          "chars": 81
+        },
+        {
+          "atMs": 10347,
+          "chars": 82
+        },
+        {
+          "atMs": 10836,
+          "chars": 84
+        },
+        {
+          "atMs": 11454,
+          "chars": 85
+        },
+        {
+          "atMs": 11639,
+          "chars": 87
+        },
+        {
+          "atMs": 11730,
+          "chars": 88
+        },
+        {
+          "atMs": 11778,
+          "chars": 89
+        },
+        {
+          "atMs": 11839,
+          "chars": 91
+        },
+        {
+          "atMs": 11993,
+          "chars": 95
+        },
+        {
+          "atMs": 12040,
+          "chars": 98
+        }
+      ],
+      "choicesEnabledDuringPreview": false,
+      "lastText": "王大锤把那块黑铁举到眼前，眯着眼端详了半天，才叹了口气说：“这铁看着像是某种兽骨炼化后的残渣，杂质太多，火候没压住，硬是打不成形。若是寻常铁匠铺，早当废料扔了，可这东西透着股子怪味儿，不像凡铁。”",
+      "doneMs": 20792,
+      "result": {
+        "protocolVersion": 1,
+        "status": "ready",
+        "requestId": "2c444b9b-b09d-44ae-92f4-5f8bdcbbee90",
+        "attemptId": "e7ce40c7-9791-4d39-9960-3af1f8ca738a",
+        "sessionRef": "sess_0a51778421ab0202426df9e22b7e82fd",
+        "errorCode": null,
+        "retry": null,
+        "scene": {
+          "id": "r:eb23fe6aca0e5570:t2:s:scene",
+          "title": "山村",
+          "location": "山村",
+          "entities": [
+            {
+              "id": "r:eb23fe6aca0e5570:t1:e:person_1",
+              "name": "王大锤",
+              "kind": "person"
+            }
+          ],
+          "blocks": [
+            {
+              "kind": "dialogue",
+              "text": "王大锤把那块黑铁举到眼前，眯着眼端详了半天，才叹了口气说：“这铁看着像是某种兽骨炼化后的残渣，杂质太多，火候没压住，硬是打不成形。若是寻常铁匠铺，早当废料扔了，可这东西透着股子怪味儿，不像凡铁。”",
+              "speaker": "r:eb23fe6aca0e5570:t1:e:person_1"
+            }
+          ],
+          "choices": [
+            {
+              "id": "r:eb23fe6aca0e5570:t2:c:a",
+              "label": "询问王大锤：询问这铁的来源和怪味具体是什么",
+              "intent": "interact",
+              "targetId": "r:eb23fe6aca0e5570:t1:e:person_1",
+              "stake": "low",
+              "approach": "ask"
+            },
+            {
+              "id": "r:eb23fe6aca0e5570:t2:c:b",
+              "label": "婉拒王大锤：拒绝帮忙看铁",
+              "intent": "interact",
+              "targetId": "r:eb23fe6aca0e5570:t1:e:person_1",
+              "stake": "low",
+              "approach": "decline"
+            },
+            {
+              "id": "r:eb23fe6aca0e5570:t2:c:c",
+              "label": "结束与王大锤的互动：离开铁匠铺",
+              "intent": "interact",
+              "targetId": "r:eb23fe6aca0e5570:t1:e:person_1",
+              "stake": "low",
+              "approach": "leave"
+            }
+          ],
+          "memoryDeltas": [
+            {
+              "entityId": "r:eb23fe6aca0e5570:t1:e:person_1",
+              "kind": "clue",
+              "text": "王大锤把那块黑铁举到眼前，眯着眼端详了半天，才叹了口气说：“这铁看着像是某种兽骨炼化后的残渣，杂质太多，火候没压住，硬是打不成形。若是寻常铁匠铺，早当废料扔了，可这东西透着股子怪味儿，不像凡铁。”",
+              "status": "open"
+            }
+          ]
+        }
+      },
+      "request": {
+        "context": {
+          "schemaVersion": 1,
+          "phase": "choice",
+          "identity": {
+            "runId": "a5055d8e-11bc-4c7c-b055-d1fc05cfd787",
+            "turnId": 2,
+            "baseRevision": 1,
+            "stateHash": "34e0b131d3bcabffc929360ccf7a7f3657e8f9c311b7b77fc2d1211531556687",
+            "choiceId": "r:eb23fe6aca0e5570:t1:c:a",
+            "rulesVersion": 1,
+            "promptVersion": 1,
+            "requestId": "2c444b9b-b09d-44ae-92f4-5f8bdcbbee90"
+          },
+          "namespace": "r:eb23fe6aca0e5570",
+          "receipt": {
+            "kind": "choice",
+            "choiceId": "r:eb23fe6aca0e5570:t1:c:a",
+            "action": {
+              "id": "r:eb23fe6aca0e5570:t1:c:a",
+              "label": "询问王大锤：询问这块铁的具体用途和成色",
+              "intent": "interact",
+              "targetId": "r:eb23fe6aca0e5570:t1:e:person_1",
+              "stake": "low",
+              "approach": "ask"
+            },
+            "elapsedDays": 0,
+            "itemChanges": {},
+            "relationChanges": {},
+            "random": {
+              "before": 371814938,
+              "after": 76159665,
+              "roll": 65
+            },
+            "before": {
+              "ageDays": 5760,
+              "realm": "mortal",
+              "cultivation": 0,
+              "injury": 0
+            },
+            "after": {
+              "ageDays": 5760,
+              "realm": "mortal",
+              "cultivation": 0,
+              "injury": 0
+            },
+            "death": null,
+            "birth": null
+          },
+          "life": {
+            "name": "云归",
+            "ageDays": 5760,
+            "lifeLimit": 80,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0,
+            "items": {
+              "supplies": 3,
+              "stones": 0
+            },
+            "relations": {},
+            "birth": {
+              "originId": "village",
+              "talentIds": [
+                "sword-bone",
+                "flash-wisdom"
+              ],
+              "attributes": {
+                "constitution": 5,
+                "insight": 3,
+                "fortune": 4
+              }
+            }
+          },
+          "entities": [
+            {
+              "id": "r:eb23fe6aca0e5570:t1:e:person_1",
+              "name": "王大锤",
+              "kind": "person",
+              "status": "unknown"
+            }
+          ],
+          "memory": {
+            "facts": [
+              {
+                "id": "m:7bd953f203593a9e7de55207b0f7c2d1",
+                "source": "narrative",
+                "kind": "fact",
+                "entityId": "r:eb23fe6aca0e5570:t1:e:person_1",
+                "text": "十六岁的云归背着竹篓站在村口老槐树下，手里握着把磨得发亮的猎刀。村头铁匠王大锤正蹲在地上，对着一块黑乎乎的废铁发愁，嘴里嘟囔着这铁怎么也打不成器。",
+                "runId": "a5055d8e-11bc-4c7c-b055-d1fc05cfd787",
+                "turnId": 1
+              }
+            ],
+            "promises": [],
+            "clues": [
+              {
+                "id": "m:1f011587860ff1a916f178b751d99290",
+                "source": "narrative",
+                "kind": "clue",
+                "entityId": "r:eb23fe6aca0e5570:t1:e:person_1",
+                "text": "王大锤见你过来，抬头抹了一把汗，把那块废铁往你面前一推：“云归，你眼尖，帮叔看看这铁是不是废了？若是能炼，叔请你吃两个烧饼。”",
+                "status": "open",
+                "runId": "a5055d8e-11bc-4c7c-b055-d1fc05cfd787",
+                "turnId": 1
+              }
+            ],
+            "recent": [
+              {
+                "id": "turn:1",
+                "runId": "a5055d8e-11bc-4c7c-b055-d1fc05cfd787",
+                "turnId": 1,
+                "source": "narrative",
+                "kind": "turn",
+                "text": "地点：山村\n十六岁的云归背着竹篓站在村口老槐树下，手里握着把磨得发亮的猎刀。村头铁匠王大锤正蹲在地上，对着一块黑乎乎的废铁发愁，嘴里嘟囔着这铁怎么也打不成器。\n王大锤见你过来，抬头抹了一把汗，把那块废铁往你面前一推：“云归，你眼尖，帮叔看看这铁是不是废了？若是能炼，叔请你吃两个烧饼。”",
+                "entityIds": []
+              }
+            ],
+            "summaries": []
+          },
+          "references": [
+            "m:7bd953f203593a9e7de55207b0f7c2d1",
+            "m:1f011587860ff1a916f178b751d99290",
+            "turn:1"
+          ],
+          "previousScene": {
+            "id": "r:eb23fe6aca0e5570:t1:s:scene",
+            "blocksHash": "e73154a61491ff4e187f1519b6943c45c5efbe64283b08b2192579daa4405305"
+          },
+          "relationshipVersion": 1,
+          "relationships": {},
+          "coverage": {
+            "policy": "relevance-v1",
+            "openTotal": 1,
+            "openIncluded": 1,
+            "openOmitted": 0
+          }
+        },
+        "attempt": {
+          "id": "e7ce40c7-9791-4d39-9960-3af1f8ca738a",
+          "sessionRef": "sess_0a51778421ab0202426df9e22b7e82fd",
+          "retryOf": null
+        },
+        "storyActions": true
+      },
+      "decision": {
+        "index": 0,
+        "reason": "正文铁匠正愁废铁，先问用途与成色；选项分别询问、观察、拒绝，具体且无提前结算。",
+        "selected": {
+          "id": "r:eb23fe6aca0e5570:t1:c:a",
+          "label": "询问王大锤：询问这块铁的具体用途和成色",
+          "intent": "interact",
+          "targetId": "r:eb23fe6aca0e5570:t1:e:person_1",
+          "stake": "low",
+          "approach": "ask"
+        }
+      },
+      "choices": [
+        {
+          "id": "r:eb23fe6aca0e5570:t2:c:a",
+          "enabled": true,
+          "label": "询问王大锤：询问这铁的来源和怪味具体是什么",
+          "cost": "0日"
+        },
+        {
+          "id": "r:eb23fe6aca0e5570:t2:c:b",
+          "enabled": true,
+          "label": "婉拒王大锤：拒绝帮忙看铁",
+          "cost": "0日"
+        },
+        {
+          "id": "r:eb23fe6aca0e5570:t2:c:c",
+          "enabled": true,
+          "label": "结束与王大锤的互动：离开铁匠铺",
+          "cost": "0日"
+        }
+      ],
+      "traces": [
+        {
+          "model": "@cf/zai-org/glm-4.7-flash",
+          "inputHash": "e19768ccdf15b99ee5358e9641d8065c77590d729b80eef5e3eef35637e26898",
+          "inputBytes": 16566,
+          "startedAt": 1793375809583,
+          "bindingReturnedAt": 1793375809908,
+          "liveRawBytes": 123965,
+          "captureComplete": true,
+          "response": {
+            "model": "@cf/zai-org/glm-4.7-flash",
+            "choices": [
+              {
+                "finish_reason": "stop",
+                "message": {
+                  "content": "{\n  \"blocks\": [\n    {\n      \"kind\": \"dialogue\",\n      \"text\": \"王大锤把那块黑铁举到眼前，眯着眼端详了半天，才叹了口气说：“这铁看着像是某种兽骨炼化后的残渣，杂质太多，火候没压住，硬是打不成形。若是寻常铁匠铺，早当废料扔了，可这东西透着股子怪味儿，不像凡铁。”\",\n      \"speaker\": {\n        \"kind\": \"person\",\n        \"name\": \"王大锤\",\n        \"ref\": \"k1_person_王大锤\",\n        \"status\": null\n      }\n    }\n  ],\n  \"choices\": [\n    {\n      \"action\": \"interact:ask\",\n      \"target\": {\n        \"kind\": \"person\",\n        \"name\": \"王大锤\",\n        \"ref\": \"\",\n        \"status\": null\n      },\n      \"stake\": \"low\",\n      \"purpose\": \"询问这铁的来源和怪味具体是什么\",\n      \"anchor\": 0\n    },\n    {\n      \"action\": \"interact:decline\",\n      \"target\": {\n        \"kind\": \"person\",\n        \"name\": \"王大锤\",\n        \"ref\": \"\",\n        \"status\": null\n      },\n      \"stake\": \"low\",\n      \"purpose\": \"拒绝帮忙看铁\",\n      \"anchor\": 0\n    },\n    {\n      \"action\": \"interact:leave\",\n      \"target\": {\n        \"kind\": \"person\",\n        \"name\": \"王大锤\",\n        \"ref\": \"\",\n        \"status\": null\n      },\n      \"stake\": \"low\",\n      \"purpose\": \"离开铁匠铺\",\n      \"anchor\": 0\n    }\n  ],\n  \"title\": \"山村\",\n  \"location\": \"山村\",\n  \"memoryDeltas\": [\n    {\n      \"target\": {\n        \"kind\": \"person\",\n        \"name\": \"王大锤\",\n        \"ref\": \"\",\n        \"status\": null\n      },\n      \"kind\": \"clue\",\n      \"anchor\": 0,\n      \"status\": \"open\"\n    }\n  ]\n}",
+                  "reasoning_content": ""
+                }
+              }
+            ],
+            "usage": {
+              "prompt_tokens": 2561,
+              "completion_tokens": 468,
+              "total_tokens": 3029,
+              "prompt_tokens_details": {
+                "cached_tokens": 0
+              },
+              "neurons": 31.120700000000202
+            }
+          },
+          "rawSseBytes": 123965
+        }
+      ],
+      "revision": 2,
+      "pending": false,
+      "state": {
+        "relationshipVersion": 1,
+        "version": 5,
+        "mode": "cultivation",
+        "contentVersion": 4,
+        "rulesVersion": 1,
+        "promptVersion": 1,
+        "runId": "a5055d8e-11bc-4c7c-b055-d1fc05cfd787",
+        "revision": 2,
+        "turnId": 2,
+        "phase": "active",
+        "rng": 76159665,
+        "life": {
+          "name": "云归",
+          "ageDays": 5760,
+          "lifeLimit": 80,
+          "realm": "mortal",
+          "cultivation": 0,
+          "injury": 0,
+          "items": {
+            "supplies": 3,
+            "stones": 0
+          },
+          "relations": {},
+          "birth": {
+            "originId": "village",
+            "talentIds": [
+              "sword-bone",
+              "flash-wisdom"
+            ],
+            "attributes": {
+              "constitution": 5,
+              "insight": 3,
+              "fortune": 4
+            }
+          }
+        },
+        "birthReceipt": {
+          "kind": "opening",
+          "choiceId": null,
+          "action": null,
+          "elapsedDays": 0,
+          "itemChanges": {},
+          "relationChanges": {},
+          "random": {
+            "before": 371814938,
+            "after": 371814938,
+            "roll": null
+          },
+          "before": {
+            "ageDays": 5760,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "after": {
+            "ageDays": 5760,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "death": null,
+          "birth": {
+            "originId": "village",
+            "talentIds": [
+              "sword-bone",
+              "flash-wisdom"
+            ],
+            "attributes": {
+              "constitution": 5,
+              "insight": 3,
+              "fortune": 4
+            }
+          }
+        },
+        "currentScene": {
+          "id": "r:eb23fe6aca0e5570:t2:s:scene",
+          "title": "山村",
+          "location": "山村",
+          "entities": [
+            {
+              "id": "r:eb23fe6aca0e5570:t1:e:person_1",
+              "name": "王大锤",
+              "kind": "person"
+            }
+          ],
+          "blocks": [
+            {
+              "kind": "dialogue",
+              "text": "王大锤把那块黑铁举到眼前，眯着眼端详了半天，才叹了口气说：“这铁看着像是某种兽骨炼化后的残渣，杂质太多，火候没压住，硬是打不成形。若是寻常铁匠铺，早当废料扔了，可这东西透着股子怪味儿，不像凡铁。”",
+              "speaker": "r:eb23fe6aca0e5570:t1:e:person_1"
+            }
+          ],
+          "choices": [
+            {
+              "id": "r:eb23fe6aca0e5570:t2:c:a",
+              "label": "询问王大锤：询问这铁的来源和怪味具体是什么",
+              "intent": "interact",
+              "targetId": "r:eb23fe6aca0e5570:t1:e:person_1",
+              "stake": "low",
+              "approach": "ask"
+            },
+            {
+              "id": "r:eb23fe6aca0e5570:t2:c:b",
+              "label": "婉拒王大锤：拒绝帮忙看铁",
+              "intent": "interact",
+              "targetId": "r:eb23fe6aca0e5570:t1:e:person_1",
+              "stake": "low",
+              "approach": "decline"
+            },
+            {
+              "id": "r:eb23fe6aca0e5570:t2:c:c",
+              "label": "结束与王大锤的互动：离开铁匠铺",
+              "intent": "interact",
+              "targetId": "r:eb23fe6aca0e5570:t1:e:person_1",
+              "stake": "low",
+              "approach": "leave"
+            }
+          ],
+          "memoryDeltas": [
+            {
+              "entityId": "r:eb23fe6aca0e5570:t1:e:person_1",
+              "kind": "clue",
+              "text": "王大锤把那块黑铁举到眼前，眯着眼端详了半天，才叹了口气说：“这铁看着像是某种兽骨炼化后的残渣，杂质太多，火候没压住，硬是打不成形。若是寻常铁匠铺，早当废料扔了，可这东西透着股子怪味儿，不像凡铁。”",
+              "status": "open"
+            }
+          ]
+        },
+        "lastReceipt": {
+          "kind": "choice",
+          "choiceId": "r:eb23fe6aca0e5570:t1:c:a",
+          "action": {
+            "id": "r:eb23fe6aca0e5570:t1:c:a",
+            "label": "询问王大锤：询问这块铁的具体用途和成色",
+            "intent": "interact",
+            "targetId": "r:eb23fe6aca0e5570:t1:e:person_1",
+            "stake": "low",
+            "approach": "ask"
+          },
+          "elapsedDays": 0,
+          "itemChanges": {},
+          "relationChanges": {},
+          "random": {
+            "before": 371814938,
+            "after": 76159665,
+            "roll": 65
+          },
+          "before": {
+            "ageDays": 5760,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "after": {
+            "ageDays": 5760,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "death": null,
+          "birth": null
+        },
+        "relatedEntities": [
+          {
+            "id": "r:eb23fe6aca0e5570:t1:e:person_1",
+            "name": "王大锤",
+            "kind": "person"
+          }
+        ],
+        "archiveCursor": 0
+      },
+      "posts": 2,
+      "latency": {
+        "usable": true,
+        "errorCode": null,
+        "firstAnyPreviewMs": 5186,
+        "firstReadableMs": 5809,
+        "completionMs": 20792,
+        "narrativeChars": 98,
+        "maxPreviewGapMs": 826,
+        "readingFinishEstimateMs": 22142,
+        "readingStallEstimateMs": 0,
+        "optionsWaitEstimateMs": 0,
+        "prefetchWorthEvaluating": true,
+        "assumptions": {
+          "readingCharsPerSecond": 6,
+          "readableChars": 20,
+          "targetWaitMs": 2000
+        }
+      }
+    },
+    {
+      "caseId": "choice-2",
+      "start": 77237.5,
+      "timeline": [
+        {
+          "atMs": 3115,
+          "chars": 1
+        },
+        {
+          "atMs": 3193,
+          "chars": 6
+        },
+        {
+          "atMs": 3256,
+          "chars": 11
+        },
+        {
+          "atMs": 3334,
+          "chars": 17
+        },
+        {
+          "atMs": 3396,
+          "chars": 23
+        },
+        {
+          "atMs": 3471,
+          "chars": 27
+        },
+        {
+          "atMs": 3547,
+          "chars": 32
+        },
+        {
+          "atMs": 3609,
+          "chars": 37
+        },
+        {
+          "atMs": 3669,
+          "chars": 43
+        },
+        {
+          "atMs": 3745,
+          "chars": 49
+        },
+        {
+          "atMs": 3809,
+          "chars": 55
+        },
+        {
+          "atMs": 3875,
+          "chars": 59
+        },
+        {
+          "atMs": 3937,
+          "chars": 65
+        },
+        {
+          "atMs": 4015,
+          "chars": 68
+        },
+        {
+          "atMs": 4079,
+          "chars": 73
+        },
+        {
+          "atMs": 4141,
+          "chars": 78
+        },
+        {
+          "atMs": 4222,
+          "chars": 84
+        },
+        {
+          "atMs": 4284,
+          "chars": 86
+        }
+      ],
+      "choicesEnabledDuringPreview": false,
+      "lastText": "你摇了摇头，把目光从那块黑铁上移开，语气平淡地回绝了王大锤的请求。王大锤愣了一下，随即咧嘴笑了笑，也不恼，只是重新蹲下身，继续在那块废铁上敲打起来，嘴里哼着不成调的小曲儿。",
+      "doneMs": 7081,
+      "result": {
+        "protocolVersion": 1,
+        "status": "ready",
+        "requestId": "798c3235-5e95-4e39-842d-31e6fe6b769a",
+        "attemptId": "744d4c5d-f32a-42a2-a033-6c2f8922b675",
+        "sessionRef": "sess_0a51778421ab0202426df9e22b7e82fd",
+        "errorCode": null,
+        "retry": null,
+        "scene": {
+          "id": "r:eb23fe6aca0e5570:t3:s:scene",
+          "title": "山村",
+          "location": "山村",
+          "entities": [
+            {
+              "id": "r:eb23fe6aca0e5570:t1:e:person_1",
+              "name": "王大锤",
+              "kind": "person"
+            },
+            {
+              "id": "r:eb23fe6aca0e5570:t3:e:place_1",
+              "name": "后山",
+              "kind": "place"
+            }
+          ],
+          "blocks": [
+            {
+              "kind": "narration",
+              "text": "你摇了摇头，把目光从那块黑铁上移开，语气平淡地回绝了王大锤的请求。王大锤愣了一下，随即咧嘴笑了笑，也不恼，只是重新蹲下身，继续在那块废铁上敲打起来，嘴里哼着不成调的小曲儿。"
+            }
+          ],
+          "choices": [
+            {
+              "id": "r:eb23fe6aca0e5570:t3:c:a",
+              "label": "询问王大锤：询问王大锤这铁的怪味儿到底是什么来源",
+              "intent": "interact",
+              "targetId": "r:eb23fe6aca0e5570:t1:e:person_1",
+              "stake": "low",
+              "approach": "ask"
+            },
+            {
+              "id": "r:eb23fe6aca0e5570:t3:c:b",
+              "label": "观察王大锤：观察王大锤的神色和周围环境",
+              "intent": "interact",
+              "targetId": "r:eb23fe6aca0e5570:t1:e:person_1",
+              "stake": "low",
+              "approach": "observe"
+            },
+            {
+              "id": "r:eb23fe6aca0e5570:t3:c:leave",
+              "label": "结束当前互动：暂不介入此事",
+              "intent": "interact",
+              "targetId": "r:eb23fe6aca0e5570:t1:e:person_1",
+              "approach": "leave",
+              "stake": "low"
+            }
+          ],
+          "memoryDeltas": [
+            {
+              "entityId": "r:eb23fe6aca0e5570:t1:e:person_1",
+              "kind": "fact",
+              "text": "你摇了摇头，把目光从那块黑铁上移开，语气平淡地回绝了王大锤的请求。王大锤愣了一下，随即咧嘴笑了笑，也不恼，只是重新蹲下身，继续在那块废铁上敲打起来，嘴里哼着不成调的小曲儿。"
+            }
+          ]
+        }
+      },
+      "request": {
+        "context": {
+          "schemaVersion": 1,
+          "phase": "choice",
+          "identity": {
+            "runId": "a5055d8e-11bc-4c7c-b055-d1fc05cfd787",
+            "turnId": 3,
+            "baseRevision": 2,
+            "stateHash": "50fa8c699fe7056f4964f7a87b1c6bff7b9f051f377f41f37f91a17bf03770e8",
+            "choiceId": "r:eb23fe6aca0e5570:t2:c:b",
+            "rulesVersion": 1,
+            "promptVersion": 1,
+            "requestId": "798c3235-5e95-4e39-842d-31e6fe6b769a"
+          },
+          "namespace": "r:eb23fe6aca0e5570",
+          "receipt": {
+            "kind": "choice",
+            "choiceId": "r:eb23fe6aca0e5570:t2:c:b",
+            "action": {
+              "id": "r:eb23fe6aca0e5570:t2:c:b",
+              "label": "婉拒王大锤：拒绝帮忙看铁",
+              "intent": "interact",
+              "targetId": "r:eb23fe6aca0e5570:t1:e:person_1",
+              "stake": "low",
+              "approach": "decline"
+            },
+            "elapsedDays": 0,
+            "itemChanges": {},
+            "relationChanges": {},
+            "random": {
+              "before": 76159665,
+              "after": 425579612,
+              "roll": 12
+            },
+            "before": {
+              "ageDays": 5760,
+              "realm": "mortal",
+              "cultivation": 0,
+              "injury": 0
+            },
+            "after": {
+              "ageDays": 5760,
+              "realm": "mortal",
+              "cultivation": 0,
+              "injury": 0
+            },
+            "death": null,
+            "birth": null
+          },
+          "life": {
+            "name": "云归",
+            "ageDays": 5760,
+            "lifeLimit": 80,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0,
+            "items": {
+              "supplies": 3,
+              "stones": 0
+            },
+            "relations": {},
+            "birth": {
+              "originId": "village",
+              "talentIds": [
+                "sword-bone",
+                "flash-wisdom"
+              ],
+              "attributes": {
+                "constitution": 5,
+                "insight": 3,
+                "fortune": 4
+              }
+            }
+          },
+          "entities": [
+            {
+              "id": "r:eb23fe6aca0e5570:t1:e:person_1",
+              "name": "王大锤",
+              "kind": "person",
+              "status": "unknown"
+            }
+          ],
+          "memory": {
+            "facts": [
+              {
+                "id": "decision:2",
+                "runId": "a5055d8e-11bc-4c7c-b055-d1fc05cfd787",
+                "turnId": 2,
+                "source": "rules",
+                "kind": "fact",
+                "entityId": "r:eb23fe6aca0e5570:t1:e:person_1",
+                "text": "你在山村选择了“询问王大锤：询问这块铁的具体用途和成色”。"
+              },
+              {
+                "id": "m:7bd953f203593a9e7de55207b0f7c2d1",
+                "source": "narrative",
+                "kind": "fact",
+                "entityId": "r:eb23fe6aca0e5570:t1:e:person_1",
+                "text": "十六岁的云归背着竹篓站在村口老槐树下，手里握着把磨得发亮的猎刀。村头铁匠王大锤正蹲在地上，对着一块黑乎乎的废铁发愁，嘴里嘟囔着这铁怎么也打不成器。",
+                "runId": "a5055d8e-11bc-4c7c-b055-d1fc05cfd787",
+                "turnId": 1
+              }
+            ],
+            "promises": [],
+            "clues": [
+              {
+                "id": "m:f3381f02d94b6b8e5c941ad3d4d08b5c",
+                "source": "narrative",
+                "kind": "clue",
+                "entityId": "r:eb23fe6aca0e5570:t1:e:person_1",
+                "text": "王大锤把那块黑铁举到眼前，眯着眼端详了半天，才叹了口气说：“这铁看着像是某种兽骨炼化后的残渣，杂质太多，火候没压住，硬是打不成形。若是寻常铁匠铺，早当废料扔了，可这东西透着股子怪味儿，不像凡铁。”",
+                "status": "open",
+                "runId": "a5055d8e-11bc-4c7c-b055-d1fc05cfd787",
+                "turnId": 2
+              },
+              {
+                "id": "m:1f011587860ff1a916f178b751d99290",
+                "source": "narrative",
+                "kind": "clue",
+                "entityId": "r:eb23fe6aca0e5570:t1:e:person_1",
+                "text": "王大锤见你过来，抬头抹了一把汗，把那块废铁往你面前一推：“云归，你眼尖，帮叔看看这铁是不是废了？若是能炼，叔请你吃两个烧饼。”",
+                "status": "open",
+                "runId": "a5055d8e-11bc-4c7c-b055-d1fc05cfd787",
+                "turnId": 1
+              }
+            ],
+            "recent": [
+              {
+                "id": "turn:2",
+                "runId": "a5055d8e-11bc-4c7c-b055-d1fc05cfd787",
+                "turnId": 2,
+                "source": "narrative",
+                "kind": "turn",
+                "text": "地点：山村；刚才选择：询问王大锤：询问这块铁的具体用途和成色\n王大锤把那块黑铁举到眼前，眯着眼端详了半天，才叹了口气说：“这铁看着像是某种兽骨炼化后的残渣，杂质太多，火候没压住，硬是打不成形。若是寻常铁匠铺，早当废料扔了，可这东西透着股子怪味儿，不像凡铁。”",
+                "entityIds": []
+              },
+              {
+                "id": "turn:1",
+                "runId": "a5055d8e-11bc-4c7c-b055-d1fc05cfd787",
+                "turnId": 1,
+                "source": "narrative",
+                "kind": "turn",
+                "text": "地点：山村\n十六岁的云归背着竹篓站在村口老槐树下，手里握着把磨得发亮的猎刀。村头铁匠王大锤正蹲在地上，对着一块黑乎乎的废铁发愁，嘴里嘟囔着这铁怎么也打不成器。\n王大锤见你过来，抬头抹了一把汗，把那块废铁往你面前一推：“云归，你眼尖，帮叔看看这铁是不是废了？若是能炼，叔请你吃两个烧饼。”",
+                "entityIds": []
+              }
+            ],
+            "summaries": []
+          },
+          "references": [
+            "decision:2",
+            "m:7bd953f203593a9e7de55207b0f7c2d1",
+            "m:f3381f02d94b6b8e5c941ad3d4d08b5c",
+            "m:1f011587860ff1a916f178b751d99290",
+            "turn:2",
+            "turn:1"
+          ],
+          "previousScene": {
+            "id": "r:eb23fe6aca0e5570:t2:s:scene",
+            "blocksHash": "ea85a48fffc15f09887a05521f3db01679bf94b9cd51dc4617eeb25a49d81420"
+          },
+          "relationshipVersion": 1,
+          "relationships": {},
+          "coverage": {
+            "policy": "relevance-v1",
+            "openTotal": 2,
+            "openIncluded": 2,
+            "openOmitted": 0
+          }
+        },
+        "attempt": {
+          "id": "744d4c5d-f32a-42a2-a033-6c2f8922b675",
+          "sessionRef": "sess_0a51778421ab0202426df9e22b7e82fd",
+          "retryOf": null
+        },
+        "storyActions": true
+      },
+      "decision": {
+        "index": 1,
+        "reason": "答复解释材质与难以锻造的成色，给出追问来源、拒绝、告辞；选择明确拒绝，不替玩家帮忙或领烧饼，保持同日与原资源。",
+        "selected": {
+          "id": "r:eb23fe6aca0e5570:t2:c:b",
+          "label": "婉拒王大锤：拒绝帮忙看铁",
+          "intent": "interact",
+          "targetId": "r:eb23fe6aca0e5570:t1:e:person_1",
+          "stake": "low",
+          "approach": "decline"
+        }
+      },
+      "choices": [
+        {
+          "id": "r:eb23fe6aca0e5570:t3:c:a",
+          "enabled": true,
+          "label": "询问王大锤：询问王大锤这铁的怪味儿到底是什么来源",
+          "cost": "0日"
+        },
+        {
+          "id": "r:eb23fe6aca0e5570:t3:c:b",
+          "enabled": true,
+          "label": "观察王大锤：观察王大锤的神色和周围环境",
+          "cost": "0日"
+        },
+        {
+          "id": "r:eb23fe6aca0e5570:t3:c:leave",
+          "enabled": true,
+          "label": "结束当前互动：暂不介入此事",
+          "cost": "0日"
+        }
+      ],
+      "traces": [
+        {
+          "model": "@cf/zai-org/glm-4.7-flash",
+          "inputHash": "49d7b58930eac4c1503bbb79dcba9346fbb1d1e39377852fdc48914204530de9",
+          "inputBytes": 17743,
+          "startedAt": 1793375851474,
+          "bindingReturnedAt": 1793375851785,
+          "liveRawBytes": 76732,
+          "captureComplete": true,
+          "response": {
+            "model": "@cf/zai-org/glm-4.7-flash",
+            "choices": [
+              {
+                "finish_reason": "stop",
+                "message": {
+                  "content": "{\"blocks\":[{\"kind\":\"narration\",\"text\":\"你摇了摇头，把目光从那块黑铁上移开，语气平淡地回绝了王大锤的请求。王大锤愣了一下，随即咧嘴笑了笑，也不恼，只是重新蹲下身，继续在那块废铁上敲打起来，嘴里哼着不成调的小曲儿。\"}],\"choices\":[{\"action\":\"interact:ask\",\"target\":{\"kind\":\"person\",\"name\":\"王大锤\",\"ref\":\"\",\"status\":null},\"stake\":\"low\",\"purpose\":\"询问王大锤这铁的怪味儿到底是什么来源\",\"anchor\":0},{\"action\":\"interact:observe\",\"target\":{\"kind\":\"person\",\"name\":\"王大锤\",\"ref\":\"\",\"status\":null},\"stake\":\"low\",\"purpose\":\"观察王大锤的神色和周围环境\",\"anchor\":0},{\"action\":\"travel:wilderness\",\"target\":{\"kind\":\"place\",\"name\":\"后山\",\"ref\":\"\",\"status\":null},\"stake\":\"low\",\"purpose\":\"前往后山寻找猎物\",\"anchor\":0}],\"title\":\"山村\",\"location\":\"山村\",\"memoryDeltas\":[{\"target\":{\"kind\":\"person\",\"name\":\"王大锤\",\"ref\":\"\",\"status\":null},\"kind\":\"fact\",\"anchor\":0}]}",
+                  "reasoning_content": ""
+                }
+              }
+            ],
+            "usage": {
+              "prompt_tokens": 2978,
+              "completion_tokens": 261,
+              "total_tokens": 3239,
+              "prompt_tokens_details": {
+                "cached_tokens": 0
+              },
+              "neurons": 25.87940000000011
+            }
+          },
+          "rawSseBytes": 76732
+        }
+      ],
+      "revision": 3,
+      "pending": false,
+      "state": {
+        "relationshipVersion": 1,
+        "version": 5,
+        "mode": "cultivation",
+        "contentVersion": 4,
+        "rulesVersion": 1,
+        "promptVersion": 1,
+        "runId": "a5055d8e-11bc-4c7c-b055-d1fc05cfd787",
+        "revision": 3,
+        "turnId": 3,
+        "phase": "active",
+        "rng": 425579612,
+        "life": {
+          "name": "云归",
+          "ageDays": 5760,
+          "lifeLimit": 80,
+          "realm": "mortal",
+          "cultivation": 0,
+          "injury": 0,
+          "items": {
+            "supplies": 3,
+            "stones": 0
+          },
+          "relations": {},
+          "birth": {
+            "originId": "village",
+            "talentIds": [
+              "sword-bone",
+              "flash-wisdom"
+            ],
+            "attributes": {
+              "constitution": 5,
+              "insight": 3,
+              "fortune": 4
+            }
+          }
+        },
+        "birthReceipt": {
+          "kind": "opening",
+          "choiceId": null,
+          "action": null,
+          "elapsedDays": 0,
+          "itemChanges": {},
+          "relationChanges": {},
+          "random": {
+            "before": 371814938,
+            "after": 371814938,
+            "roll": null
+          },
+          "before": {
+            "ageDays": 5760,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "after": {
+            "ageDays": 5760,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "death": null,
+          "birth": {
+            "originId": "village",
+            "talentIds": [
+              "sword-bone",
+              "flash-wisdom"
+            ],
+            "attributes": {
+              "constitution": 5,
+              "insight": 3,
+              "fortune": 4
+            }
+          }
+        },
+        "currentScene": {
+          "id": "r:eb23fe6aca0e5570:t3:s:scene",
+          "title": "山村",
+          "location": "山村",
+          "entities": [
+            {
+              "id": "r:eb23fe6aca0e5570:t1:e:person_1",
+              "name": "王大锤",
+              "kind": "person"
+            },
+            {
+              "id": "r:eb23fe6aca0e5570:t3:e:place_1",
+              "name": "后山",
+              "kind": "place"
+            }
+          ],
+          "blocks": [
+            {
+              "kind": "narration",
+              "text": "你摇了摇头，把目光从那块黑铁上移开，语气平淡地回绝了王大锤的请求。王大锤愣了一下，随即咧嘴笑了笑，也不恼，只是重新蹲下身，继续在那块废铁上敲打起来，嘴里哼着不成调的小曲儿。"
+            }
+          ],
+          "choices": [
+            {
+              "id": "r:eb23fe6aca0e5570:t3:c:a",
+              "label": "询问王大锤：询问王大锤这铁的怪味儿到底是什么来源",
+              "intent": "interact",
+              "targetId": "r:eb23fe6aca0e5570:t1:e:person_1",
+              "stake": "low",
+              "approach": "ask"
+            },
+            {
+              "id": "r:eb23fe6aca0e5570:t3:c:b",
+              "label": "观察王大锤：观察王大锤的神色和周围环境",
+              "intent": "interact",
+              "targetId": "r:eb23fe6aca0e5570:t1:e:person_1",
+              "stake": "low",
+              "approach": "observe"
+            },
+            {
+              "id": "r:eb23fe6aca0e5570:t3:c:leave",
+              "label": "结束当前互动：暂不介入此事",
+              "intent": "interact",
+              "targetId": "r:eb23fe6aca0e5570:t1:e:person_1",
+              "approach": "leave",
+              "stake": "low"
+            }
+          ],
+          "memoryDeltas": [
+            {
+              "entityId": "r:eb23fe6aca0e5570:t1:e:person_1",
+              "kind": "fact",
+              "text": "你摇了摇头，把目光从那块黑铁上移开，语气平淡地回绝了王大锤的请求。王大锤愣了一下，随即咧嘴笑了笑，也不恼，只是重新蹲下身，继续在那块废铁上敲打起来，嘴里哼着不成调的小曲儿。"
+            }
+          ]
+        },
+        "lastReceipt": {
+          "kind": "choice",
+          "choiceId": "r:eb23fe6aca0e5570:t2:c:b",
+          "action": {
+            "id": "r:eb23fe6aca0e5570:t2:c:b",
+            "label": "婉拒王大锤：拒绝帮忙看铁",
+            "intent": "interact",
+            "targetId": "r:eb23fe6aca0e5570:t1:e:person_1",
+            "stake": "low",
+            "approach": "decline"
+          },
+          "elapsedDays": 0,
+          "itemChanges": {},
+          "relationChanges": {},
+          "random": {
+            "before": 76159665,
+            "after": 425579612,
+            "roll": 12
+          },
+          "before": {
+            "ageDays": 5760,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "after": {
+            "ageDays": 5760,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "death": null,
+          "birth": null
+        },
+        "relatedEntities": [
+          {
+            "id": "r:eb23fe6aca0e5570:t1:e:person_1",
+            "name": "王大锤",
+            "kind": "person"
+          },
+          {
+            "id": "r:eb23fe6aca0e5570:t3:e:place_1",
+            "name": "后山",
+            "kind": "place"
+          }
+        ],
+        "archiveCursor": 0
+      },
+      "posts": 3,
+      "latency": {
+        "usable": true,
+        "errorCode": null,
+        "firstAnyPreviewMs": 3115,
+        "firstReadableMs": 3396,
+        "completionMs": 7081,
+        "narrativeChars": 86,
+        "maxPreviewGapMs": 81,
+        "readingFinishEstimateMs": 17729,
+        "readingStallEstimateMs": 0,
+        "optionsWaitEstimateMs": 0,
+        "prefetchWorthEvaluating": true,
+        "assumptions": {
+          "readingCharsPerSecond": 6,
+          "readableChars": 20,
+          "targetWaitMs": 2000
+        }
+      }
+    },
+    {
+      "caseId": "choice-3",
+      "start": 118353.10000000149,
+      "timeline": [
+        {
+          "atMs": 3926,
+          "chars": 1
+        },
+        {
+          "atMs": 3992,
+          "chars": 7
+        },
+        {
+          "atMs": 4055,
+          "chars": 12
+        },
+        {
+          "atMs": 4133,
+          "chars": 15
+        },
+        {
+          "atMs": 4194,
+          "chars": 22
+        },
+        {
+          "atMs": 4259,
+          "chars": 26
+        },
+        {
+          "atMs": 4336,
+          "chars": 31
+        },
+        {
+          "atMs": 4399,
+          "chars": 37
+        },
+        {
+          "atMs": 4463,
+          "chars": 40
+        },
+        {
+          "atMs": 4526,
+          "chars": 42
+        },
+        {
+          "atMs": 4590,
+          "chars": 47
+        },
+        {
+          "atMs": 4665,
+          "chars": 53
+        },
+        {
+          "atMs": 4728,
+          "chars": 59
+        },
+        {
+          "atMs": 4789,
+          "chars": 62
+        },
+        {
+          "atMs": 5084,
+          "chars": 69
+        },
+        {
+          "atMs": 5158,
+          "chars": 73
+        },
+        {
+          "atMs": 5256,
+          "chars": 77
+        },
+        {
+          "atMs": 5319,
+          "chars": 84
+        },
+        {
+          "atMs": 5396,
+          "chars": 91
+        },
+        {
+          "atMs": 5457,
+          "chars": 96
+        },
+        {
+          "atMs": 5542,
+          "chars": 99
+        }
+      ],
+      "choicesEnabledDuringPreview": false,
+      "lastText": "你转身背对着王大锤，迈步向村口走去。身后传来叮叮当当的打铁声，渐渐被风吹散。日头偏西，山村的炊烟袅袅升起，空气中弥漫着柴火和饭菜的香气。你摸了摸干瘪的行囊，肚子适时地叫了一声，决定先去集市找点吃的。",
+      "doneMs": 10652,
+      "result": {
+        "protocolVersion": 1,
+        "status": "ready",
+        "requestId": "078be197-5132-4d19-9679-63b66c9bff91",
+        "attemptId": "5caab4a1-3406-4e22-b67c-b2dfc4b90f88",
+        "sessionRef": "sess_0a51778421ab0202426df9e22b7e82fd",
+        "errorCode": null,
+        "retry": null,
+        "scene": {
+          "id": "r:eb23fe6aca0e5570:t4:s:scene",
+          "title": "山村集市",
+          "location": "山村",
+          "entities": [
+            {
+              "id": "r:eb23fe6aca0e5570:t1:e:person_1",
+              "name": "王大锤",
+              "kind": "person"
+            },
+            {
+              "id": "r:eb23fe6aca0e5570:t4:e:place_1",
+              "name": "集市",
+              "kind": "place"
+            }
+          ],
+          "blocks": [
+            {
+              "kind": "narration",
+              "text": "你转身背对着王大锤，迈步向村口走去。身后传来叮叮当当的打铁声，渐渐被风吹散。日头偏西，山村的炊烟袅袅升起，空气中弥漫着柴火和饭菜的香气。你摸了摸干瘪的行囊，肚子适时地叫了一声，决定先去集市找点吃的。"
+            }
+          ],
+          "choices": [
+            {
+              "id": "r:eb23fe6aca0e5570:t4:c:observe",
+              "label": "仔细观察：留意周围的动静",
+              "intent": "interact",
+              "targetId": "self",
+              "approach": "observe",
+              "stake": "low"
+            },
+            {
+              "id": "r:eb23fe6aca0e5570:t4:c:a",
+              "label": "沿路前往集市：前往集市寻找食物和补给",
+              "intent": "travel",
+              "targetId": "r:eb23fe6aca0e5570:t4:e:place_1",
+              "stake": "low",
+              "approach": "road"
+            },
+            {
+              "id": "r:eb23fe6aca0e5570:t4:c:leave",
+              "label": "结束当前互动：暂不介入此事",
+              "intent": "interact",
+              "targetId": "r:eb23fe6aca0e5570:t4:e:place_1",
+              "approach": "leave",
+              "stake": "low"
+            }
+          ],
+          "memoryDeltas": [
+            {
+              "entityId": "r:eb23fe6aca0e5570:t1:e:person_1",
+              "kind": "fact",
+              "text": "你转身背对着王大锤，迈步向村口走去。身后传来叮叮当当的打铁声，渐渐被风吹散。日头偏西，山村的炊烟袅袅升起，空气中弥漫着柴火和饭菜的香气。你摸了摸干瘪的行囊，肚子适时地叫了一声，决定先去集市找点吃的。"
+            }
+          ]
+        }
+      },
+      "request": {
+        "context": {
+          "schemaVersion": 1,
+          "phase": "choice",
+          "identity": {
+            "runId": "a5055d8e-11bc-4c7c-b055-d1fc05cfd787",
+            "turnId": 4,
+            "baseRevision": 3,
+            "stateHash": "e149727f802f73e097a4c7032e491b773a12c6d9df96eeb7948ee1927baf4742",
+            "choiceId": "r:eb23fe6aca0e5570:t3:c:leave",
+            "rulesVersion": 1,
+            "promptVersion": 1,
+            "requestId": "078be197-5132-4d19-9679-63b66c9bff91"
+          },
+          "namespace": "r:eb23fe6aca0e5570",
+          "receipt": {
+            "kind": "choice",
+            "choiceId": "r:eb23fe6aca0e5570:t3:c:leave",
+            "action": {
+              "id": "r:eb23fe6aca0e5570:t3:c:leave",
+              "label": "结束当前互动：暂不介入此事",
+              "intent": "interact",
+              "targetId": "r:eb23fe6aca0e5570:t1:e:person_1",
+              "approach": "leave",
+              "stake": "low"
+            },
+            "elapsedDays": 0,
+            "itemChanges": {},
+            "relationChanges": {},
+            "random": {
+              "before": 425579612,
+              "after": 2781570059,
+              "roll": 59
+            },
+            "before": {
+              "ageDays": 5760,
+              "realm": "mortal",
+              "cultivation": 0,
+              "injury": 0
+            },
+            "after": {
+              "ageDays": 5760,
+              "realm": "mortal",
+              "cultivation": 0,
+              "injury": 0
+            },
+            "death": null,
+            "birth": null
+          },
+          "life": {
+            "name": "云归",
+            "ageDays": 5760,
+            "lifeLimit": 80,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0,
+            "items": {
+              "supplies": 3,
+              "stones": 0
+            },
+            "relations": {},
+            "birth": {
+              "originId": "village",
+              "talentIds": [
+                "sword-bone",
+                "flash-wisdom"
+              ],
+              "attributes": {
+                "constitution": 5,
+                "insight": 3,
+                "fortune": 4
+              }
+            }
+          },
+          "entities": [
+            {
+              "id": "r:eb23fe6aca0e5570:t1:e:person_1",
+              "name": "王大锤",
+              "kind": "person",
+              "status": "unknown"
+            },
+            {
+              "id": "r:eb23fe6aca0e5570:t3:e:place_1",
+              "name": "后山",
+              "kind": "place",
+              "status": "unknown"
+            }
+          ],
+          "memory": {
+            "facts": [
+              {
+                "id": "decision:3",
+                "runId": "a5055d8e-11bc-4c7c-b055-d1fc05cfd787",
+                "turnId": 3,
+                "source": "rules",
+                "kind": "fact",
+                "entityId": "r:eb23fe6aca0e5570:t1:e:person_1",
+                "text": "你在山村选择了“婉拒王大锤：拒绝帮忙看铁”。"
+              },
+              {
+                "id": "m:48d7fab6195462cdcb33eeb689c47c58",
+                "source": "narrative",
+                "kind": "fact",
+                "entityId": "r:eb23fe6aca0e5570:t1:e:person_1",
+                "text": "你摇了摇头，把目光从那块黑铁上移开，语气平淡地回绝了王大锤的请求。王大锤愣了一下，随即咧嘴笑了笑，也不恼，只是重新蹲下身，继续在那块废铁上敲打起来，嘴里哼着不成调的小曲儿。",
+                "runId": "a5055d8e-11bc-4c7c-b055-d1fc05cfd787",
+                "turnId": 3
+              }
+            ],
+            "promises": [],
+            "clues": [
+              {
+                "id": "m:f3381f02d94b6b8e5c941ad3d4d08b5c",
+                "source": "narrative",
+                "kind": "clue",
+                "entityId": "r:eb23fe6aca0e5570:t1:e:person_1",
+                "text": "王大锤把那块黑铁举到眼前，眯着眼端详了半天，才叹了口气说：“这铁看着像是某种兽骨炼化后的残渣，杂质太多，火候没压住，硬是打不成形。若是寻常铁匠铺，早当废料扔了，可这东西透着股子怪味儿，不像凡铁。”",
+                "status": "open",
+                "runId": "a5055d8e-11bc-4c7c-b055-d1fc05cfd787",
+                "turnId": 2
+              },
+              {
+                "id": "m:1f011587860ff1a916f178b751d99290",
+                "source": "narrative",
+                "kind": "clue",
+                "entityId": "r:eb23fe6aca0e5570:t1:e:person_1",
+                "text": "王大锤见你过来，抬头抹了一把汗，把那块废铁往你面前一推：“云归，你眼尖，帮叔看看这铁是不是废了？若是能炼，叔请你吃两个烧饼。”",
+                "status": "open",
+                "runId": "a5055d8e-11bc-4c7c-b055-d1fc05cfd787",
+                "turnId": 1
+              }
+            ],
+            "recent": [
+              {
+                "id": "turn:3",
+                "runId": "a5055d8e-11bc-4c7c-b055-d1fc05cfd787",
+                "turnId": 3,
+                "source": "narrative",
+                "kind": "turn",
+                "text": "地点：山村；刚才选择：婉拒王大锤：拒绝帮忙看铁\n你摇了摇头，把目光从那块黑铁上移开，语气平淡地回绝了王大锤的请求。王大锤愣了一下，随即咧嘴笑了笑，也不恼，只是重新蹲下身，继续在那块废铁上敲打起来，嘴里哼着不成调的小曲儿。",
+                "entityIds": []
+              },
+              {
+                "id": "turn:2",
+                "runId": "a5055d8e-11bc-4c7c-b055-d1fc05cfd787",
+                "turnId": 2,
+                "source": "narrative",
+                "kind": "turn",
+                "text": "地点：山村；刚才选择：询问王大锤：询问这块铁的具体用途和成色\n王大锤把那块黑铁举到眼前，眯着眼端详了半天，才叹了口气说：“这铁看着像是某种兽骨炼化后的残渣，杂质太多，火候没压住，硬是打不成形。若是寻常铁匠铺，早当废料扔了，可这东西透着股子怪味儿，不像凡铁。”",
+                "entityIds": []
+              }
+            ],
+            "summaries": []
+          },
+          "references": [
+            "decision:3",
+            "m:48d7fab6195462cdcb33eeb689c47c58",
+            "m:f3381f02d94b6b8e5c941ad3d4d08b5c",
+            "m:1f011587860ff1a916f178b751d99290",
+            "turn:3",
+            "turn:2"
+          ],
+          "previousScene": {
+            "id": "r:eb23fe6aca0e5570:t3:s:scene",
+            "blocksHash": "c5bf7f732ce5c1b41988b4b47423e78fb7bd3f8194f7e9bb76ff8ebd820d075e"
+          },
+          "relationshipVersion": 1,
+          "relationships": {},
+          "coverage": {
+            "policy": "relevance-v1",
+            "openTotal": 2,
+            "openIncluded": 2,
+            "openOmitted": 0
+          }
+        },
+        "attempt": {
+          "id": "5caab4a1-3406-4e22-b67c-b2dfc4b90f88",
+          "sessionRef": "sess_0a51778421ab0202426df9e22b7e82fd",
+          "retryOf": null
+        },
+        "storyActions": true
+      },
+      "decision": {
+        "index": 2,
+        "reason": "拒绝后铁匠接受决定并继续自己的事，没有惩罚或收益；现在告辞，验证旧事件真正结束而非继续强迫追问。",
+        "selected": {
+          "id": "r:eb23fe6aca0e5570:t3:c:leave",
+          "label": "结束当前互动：暂不介入此事",
+          "intent": "interact",
+          "targetId": "r:eb23fe6aca0e5570:t1:e:person_1",
+          "approach": "leave",
+          "stake": "low"
+        }
+      },
+      "choices": [
+        {
+          "id": "r:eb23fe6aca0e5570:t4:c:observe",
+          "enabled": true,
+          "label": "仔细观察：留意周围的动静",
+          "cost": "0日"
+        },
+        {
+          "id": "r:eb23fe6aca0e5570:t4:c:a",
+          "enabled": true,
+          "label": "沿路前往集市：前往集市寻找食物和补给",
+          "cost": "30日 · 行粮 1"
+        },
+        {
+          "id": "r:eb23fe6aca0e5570:t4:c:leave",
+          "enabled": true,
+          "label": "结束当前互动：暂不介入此事",
+          "cost": "0日"
+        }
+      ],
+      "traces": [
+        {
+          "model": "@cf/zai-org/glm-4.7-flash",
+          "inputHash": "0fac87606f4f6c80812950bdd379cf022faaecdbf2a97114e3dc9e8ae029dd07",
+          "inputBytes": 17797,
+          "startedAt": 1793375892628,
+          "bindingReturnedAt": 1793375893033,
+          "liveRawBytes": 79805,
+          "captureComplete": true,
+          "response": {
+            "model": "@cf/zai-org/glm-4.7-flash",
+            "choices": [
+              {
+                "finish_reason": "stop",
+                "message": {
+                  "content": "{\"blocks\":[{\"kind\":\"narration\",\"text\":\"你转身背对着王大锤，迈步向村口走去。身后传来叮叮当当的打铁声，渐渐被风吹散。日头偏西，山村的炊烟袅袅升起，空气中弥漫着柴火和饭菜的香气。你摸了摸干瘪的行囊，肚子适时地叫了一声，决定先去集市找点吃的。\"}],\"choices\":[{\"action\":\"travel:road\",\"target\":{\"kind\":\"place\",\"name\":\"集市\",\"ref\":\"\",\"status\":null},\"stake\":\"low\",\"purpose\":\"前往集市寻找食物和补给\",\"anchor\":0},{\"action\":\"interact:ask\",\"target\":{\"kind\":\"person\",\"name\":\"王大锤\",\"ref\":\"\",\"status\":null},\"stake\":\"low\",\"purpose\":\"询问王大锤关于那块怪铁的后续情况\",\"anchor\":0},{\"action\":\"interact:observe\",\"target\":{\"kind\":\"person\",\"name\":\"王大锤\",\"ref\":\"\",\"status\":null},\"stake\":\"low\",\"purpose\":\"观察王大锤打铁时的神态和动作\",\"anchor\":0}],\"title\":\"山村集市\",\"location\":\"山村\",\"memoryDeltas\":[{\"target\":{\"kind\":\"person\",\"name\":\"王大锤\",\"ref\":\"\",\"status\":null},\"kind\":\"fact\",\"anchor\":0}]}",
+                  "reasoning_content": ""
+                }
+              }
+            ],
+            "usage": {
+              "prompt_tokens": 2981,
+              "completion_tokens": 274,
+              "total_tokens": 3255,
+              "prompt_tokens_details": {
+                "cached_tokens": 0
+              },
+              "neurons": 26.369100000000117
+            }
+          },
+          "rawSseBytes": 79805
+        }
+      ],
+      "revision": 4,
+      "pending": false,
+      "state": {
+        "relationshipVersion": 1,
+        "version": 5,
+        "mode": "cultivation",
+        "contentVersion": 4,
+        "rulesVersion": 1,
+        "promptVersion": 1,
+        "runId": "a5055d8e-11bc-4c7c-b055-d1fc05cfd787",
+        "revision": 4,
+        "turnId": 4,
+        "phase": "active",
+        "rng": 2781570059,
+        "life": {
+          "name": "云归",
+          "ageDays": 5760,
+          "lifeLimit": 80,
+          "realm": "mortal",
+          "cultivation": 0,
+          "injury": 0,
+          "items": {
+            "supplies": 3,
+            "stones": 0
+          },
+          "relations": {},
+          "birth": {
+            "originId": "village",
+            "talentIds": [
+              "sword-bone",
+              "flash-wisdom"
+            ],
+            "attributes": {
+              "constitution": 5,
+              "insight": 3,
+              "fortune": 4
+            }
+          }
+        },
+        "birthReceipt": {
+          "kind": "opening",
+          "choiceId": null,
+          "action": null,
+          "elapsedDays": 0,
+          "itemChanges": {},
+          "relationChanges": {},
+          "random": {
+            "before": 371814938,
+            "after": 371814938,
+            "roll": null
+          },
+          "before": {
+            "ageDays": 5760,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "after": {
+            "ageDays": 5760,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "death": null,
+          "birth": {
+            "originId": "village",
+            "talentIds": [
+              "sword-bone",
+              "flash-wisdom"
+            ],
+            "attributes": {
+              "constitution": 5,
+              "insight": 3,
+              "fortune": 4
+            }
+          }
+        },
+        "currentScene": {
+          "id": "r:eb23fe6aca0e5570:t4:s:scene",
+          "title": "山村集市",
+          "location": "山村",
+          "entities": [
+            {
+              "id": "r:eb23fe6aca0e5570:t1:e:person_1",
+              "name": "王大锤",
+              "kind": "person"
+            },
+            {
+              "id": "r:eb23fe6aca0e5570:t4:e:place_1",
+              "name": "集市",
+              "kind": "place"
+            }
+          ],
+          "blocks": [
+            {
+              "kind": "narration",
+              "text": "你转身背对着王大锤，迈步向村口走去。身后传来叮叮当当的打铁声，渐渐被风吹散。日头偏西，山村的炊烟袅袅升起，空气中弥漫着柴火和饭菜的香气。你摸了摸干瘪的行囊，肚子适时地叫了一声，决定先去集市找点吃的。"
+            }
+          ],
+          "choices": [
+            {
+              "id": "r:eb23fe6aca0e5570:t4:c:observe",
+              "label": "仔细观察：留意周围的动静",
+              "intent": "interact",
+              "targetId": "self",
+              "approach": "observe",
+              "stake": "low"
+            },
+            {
+              "id": "r:eb23fe6aca0e5570:t4:c:a",
+              "label": "沿路前往集市：前往集市寻找食物和补给",
+              "intent": "travel",
+              "targetId": "r:eb23fe6aca0e5570:t4:e:place_1",
+              "stake": "low",
+              "approach": "road"
+            },
+            {
+              "id": "r:eb23fe6aca0e5570:t4:c:leave",
+              "label": "结束当前互动：暂不介入此事",
+              "intent": "interact",
+              "targetId": "r:eb23fe6aca0e5570:t4:e:place_1",
+              "approach": "leave",
+              "stake": "low"
+            }
+          ],
+          "memoryDeltas": [
+            {
+              "entityId": "r:eb23fe6aca0e5570:t1:e:person_1",
+              "kind": "fact",
+              "text": "你转身背对着王大锤，迈步向村口走去。身后传来叮叮当当的打铁声，渐渐被风吹散。日头偏西，山村的炊烟袅袅升起，空气中弥漫着柴火和饭菜的香气。你摸了摸干瘪的行囊，肚子适时地叫了一声，决定先去集市找点吃的。"
+            }
+          ]
+        },
+        "lastReceipt": {
+          "kind": "choice",
+          "choiceId": "r:eb23fe6aca0e5570:t3:c:leave",
+          "action": {
+            "id": "r:eb23fe6aca0e5570:t3:c:leave",
+            "label": "结束当前互动：暂不介入此事",
+            "intent": "interact",
+            "targetId": "r:eb23fe6aca0e5570:t1:e:person_1",
+            "approach": "leave",
+            "stake": "low"
+          },
+          "elapsedDays": 0,
+          "itemChanges": {},
+          "relationChanges": {},
+          "random": {
+            "before": 425579612,
+            "after": 2781570059,
+            "roll": 59
+          },
+          "before": {
+            "ageDays": 5760,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "after": {
+            "ageDays": 5760,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "death": null,
+          "birth": null
+        },
+        "relatedEntities": [
+          {
+            "id": "r:eb23fe6aca0e5570:t1:e:person_1",
+            "name": "王大锤",
+            "kind": "person"
+          },
+          {
+            "id": "r:eb23fe6aca0e5570:t4:e:place_1",
+            "name": "集市",
+            "kind": "place"
+          }
+        ],
+        "archiveCursor": 0
+      },
+      "posts": 4,
+      "latency": {
+        "usable": true,
+        "errorCode": null,
+        "firstAnyPreviewMs": 3926,
+        "firstReadableMs": 4194,
+        "completionMs": 10652,
+        "narrativeChars": 99,
+        "maxPreviewGapMs": 295,
+        "readingFinishEstimateMs": 20694,
+        "readingStallEstimateMs": 0,
+        "optionsWaitEstimateMs": 0,
+        "prefetchWorthEvaluating": true,
+        "assumptions": {
+          "readingCharsPerSecond": 6,
+          "readableChars": 20,
+          "targetWaitMs": 2000
+        }
+      }
+    },
+    {
+      "caseId": "choice-4",
+      "start": 161175.80000000447,
+      "timeline": [
+        {
+          "atMs": 3926,
+          "chars": 4
+        },
+        {
+          "atMs": 4002,
+          "chars": 10
+        },
+        {
+          "atMs": 4065,
+          "chars": 12
+        },
+        {
+          "atMs": 4111,
+          "chars": 17
+        },
+        {
+          "atMs": 4189,
+          "chars": 21
+        },
+        {
+          "atMs": 4266,
+          "chars": 27
+        },
+        {
+          "atMs": 4329,
+          "chars": 32
+        },
+        {
+          "atMs": 4422,
+          "chars": 42
+        },
+        {
+          "atMs": 4497,
+          "chars": 46
+        },
+        {
+          "atMs": 4559,
+          "chars": 49
+        },
+        {
+          "atMs": 4869,
+          "chars": 52
+        },
+        {
+          "atMs": 4943,
+          "chars": 59
+        },
+        {
+          "atMs": 5006,
+          "chars": 63
+        },
+        {
+          "atMs": 5086,
+          "chars": 64
+        },
+        {
+          "atMs": 5266,
+          "chars": 68
+        },
+        {
+          "atMs": 5342,
+          "chars": 73
+        },
+        {
+          "atMs": 5405,
+          "chars": 77
+        },
+        {
+          "atMs": 5469,
+          "chars": 80
+        },
+        {
+          "atMs": 5527,
+          "chars": 83
+        },
+        {
+          "atMs": 5572,
+          "chars": 87
+        },
+        {
+          "atMs": 5647,
+          "chars": 91
+        },
+        {
+          "atMs": 5725,
+          "chars": 94
+        },
+        {
+          "atMs": 5805,
+          "chars": 98
+        },
+        {
+          "atMs": 5881,
+          "chars": 101
+        },
+        {
+          "atMs": 5945,
+          "chars": 103
+        }
+      ],
+      "choicesEnabledDuringPreview": false,
+      "lastText": "三十日的奔波让你双腿发酸，集市那喧闹的人声终于传入耳中。你穿过熙攘的人群，空气中混杂着牲畜的腥气和叫卖声。集市中央有个卖烧饼的摊位，摊主是个满脸油光的汉子，正挥舞着大铲子翻烤着面饼，热气腾腾的白烟直冲面门。",
+      "doneMs": 13080,
+      "result": {
+        "protocolVersion": 1,
+        "status": "rejected",
+        "requestId": "f208a150-2760-4e2a-9c71-02e3ada7757d",
+        "attemptId": "d506fca6-c5b3-4f74-9d44-318312bff104",
+        "sessionRef": "sess_0a51778421ab0202426df9e22b7e82fd",
+        "errorCode": "CHOICE_NOT_COMPILABLE",
+        "retry": null
+      },
+      "request": {
+        "context": {
+          "schemaVersion": 1,
+          "phase": "choice",
+          "identity": {
+            "runId": "a5055d8e-11bc-4c7c-b055-d1fc05cfd787",
+            "turnId": 5,
+            "baseRevision": 4,
+            "stateHash": "cf297e1c7f7bad290871e1dec4dab322179ab66b6fe79142fa9e86967e8a159f",
+            "choiceId": "r:eb23fe6aca0e5570:t4:c:a",
+            "rulesVersion": 1,
+            "promptVersion": 1,
+            "requestId": "f208a150-2760-4e2a-9c71-02e3ada7757d"
+          },
+          "namespace": "r:eb23fe6aca0e5570",
+          "receipt": {
+            "kind": "choice",
+            "choiceId": "r:eb23fe6aca0e5570:t4:c:a",
+            "action": {
+              "id": "r:eb23fe6aca0e5570:t4:c:a",
+              "label": "沿路前往集市：前往集市寻找食物和补给",
+              "intent": "travel",
+              "targetId": "r:eb23fe6aca0e5570:t4:e:place_1",
+              "stake": "low",
+              "approach": "road"
+            },
+            "elapsedDays": 30,
+            "itemChanges": {
+              "supplies": -1
+            },
+            "relationChanges": {},
+            "random": {
+              "before": 2781570059,
+              "after": 1991404014,
+              "roll": 14
+            },
+            "before": {
+              "ageDays": 5760,
+              "realm": "mortal",
+              "cultivation": 0,
+              "injury": 0
+            },
+            "after": {
+              "ageDays": 5790,
+              "realm": "mortal",
+              "cultivation": 0,
+              "injury": 0
+            },
+            "death": null,
+            "birth": null
+          },
+          "life": {
+            "name": "云归",
+            "ageDays": 5790,
+            "lifeLimit": 80,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0,
+            "items": {
+              "supplies": 2,
+              "stones": 0
+            },
+            "relations": {},
+            "birth": {
+              "originId": "village",
+              "talentIds": [
+                "sword-bone",
+                "flash-wisdom"
+              ],
+              "attributes": {
+                "constitution": 5,
+                "insight": 3,
+                "fortune": 4
+              }
+            }
+          },
+          "entities": [
+            {
+              "id": "r:eb23fe6aca0e5570:t1:e:person_1",
+              "name": "王大锤",
+              "kind": "person",
+              "status": "unknown"
+            },
+            {
+              "id": "r:eb23fe6aca0e5570:t4:e:place_1",
+              "name": "集市",
+              "kind": "place",
+              "status": "unknown"
+            }
+          ],
+          "memory": {
+            "facts": [
+              {
+                "id": "decision:4",
+                "runId": "a5055d8e-11bc-4c7c-b055-d1fc05cfd787",
+                "turnId": 4,
+                "source": "rules",
+                "kind": "fact",
+                "entityId": "r:eb23fe6aca0e5570:t1:e:person_1",
+                "text": "你在山村选择了“结束当前互动：暂不介入此事”。"
+              },
+              {
+                "id": "m:7697d73be4b0eed6cee468e604ee31d3",
+                "source": "narrative",
+                "kind": "fact",
+                "entityId": "r:eb23fe6aca0e5570:t1:e:person_1",
+                "text": "你转身背对着王大锤，迈步向村口走去。身后传来叮叮当当的打铁声，渐渐被风吹散。日头偏西，山村的炊烟袅袅升起，空气中弥漫着柴火和饭菜的香气。你摸了摸干瘪的行囊，肚子适时地叫了一声，决定先去集市找点吃的。",
+                "runId": "a5055d8e-11bc-4c7c-b055-d1fc05cfd787",
+                "turnId": 4
+              }
+            ],
+            "promises": [],
+            "clues": [
+              {
+                "id": "m:f3381f02d94b6b8e5c941ad3d4d08b5c",
+                "source": "narrative",
+                "kind": "clue",
+                "entityId": "r:eb23fe6aca0e5570:t1:e:person_1",
+                "text": "王大锤把那块黑铁举到眼前，眯着眼端详了半天，才叹了口气说：“这铁看着像是某种兽骨炼化后的残渣，杂质太多，火候没压住，硬是打不成形。若是寻常铁匠铺，早当废料扔了，可这东西透着股子怪味儿，不像凡铁。”",
+                "status": "open",
+                "runId": "a5055d8e-11bc-4c7c-b055-d1fc05cfd787",
+                "turnId": 2
+              },
+              {
+                "id": "m:1f011587860ff1a916f178b751d99290",
+                "source": "narrative",
+                "kind": "clue",
+                "entityId": "r:eb23fe6aca0e5570:t1:e:person_1",
+                "text": "王大锤见你过来，抬头抹了一把汗，把那块废铁往你面前一推：“云归，你眼尖，帮叔看看这铁是不是废了？若是能炼，叔请你吃两个烧饼。”",
+                "status": "open",
+                "runId": "a5055d8e-11bc-4c7c-b055-d1fc05cfd787",
+                "turnId": 1
+              }
+            ],
+            "recent": [
+              {
+                "id": "turn:4",
+                "runId": "a5055d8e-11bc-4c7c-b055-d1fc05cfd787",
+                "turnId": 4,
+                "source": "narrative",
+                "kind": "turn",
+                "text": "地点：山村；刚才选择：结束当前互动：暂不介入此事\n你转身背对着王大锤，迈步向村口走去。身后传来叮叮当当的打铁声，渐渐被风吹散。日头偏西，山村的炊烟袅袅升起，空气中弥漫着柴火和饭菜的香气。你摸了摸干瘪的行囊，肚子适时地叫了一声，决定先去集市找点吃的。",
+                "entityIds": []
+              },
+              {
+                "id": "turn:3",
+                "runId": "a5055d8e-11bc-4c7c-b055-d1fc05cfd787",
+                "turnId": 3,
+                "source": "narrative",
+                "kind": "turn",
+                "text": "地点：山村；刚才选择：婉拒王大锤：拒绝帮忙看铁\n你摇了摇头，把目光从那块黑铁上移开，语气平淡地回绝了王大锤的请求。王大锤愣了一下，随即咧嘴笑了笑，也不恼，只是重新蹲下身，继续在那块废铁上敲打起来，嘴里哼着不成调的小曲儿。",
+                "entityIds": []
+              }
+            ],
+            "summaries": []
+          },
+          "references": [
+            "decision:4",
+            "m:7697d73be4b0eed6cee468e604ee31d3",
+            "m:f3381f02d94b6b8e5c941ad3d4d08b5c",
+            "m:1f011587860ff1a916f178b751d99290",
+            "turn:4",
+            "turn:3"
+          ],
+          "previousScene": {
+            "id": "r:eb23fe6aca0e5570:t4:s:scene",
+            "blocksHash": "e97bda749fba8df28e715ae30e3ee0739c1f174eb482f807e0a2b65e900e1e3b"
+          },
+          "relationshipVersion": 1,
+          "relationships": {},
+          "coverage": {
+            "policy": "relevance-v1",
+            "openTotal": 2,
+            "openIncluded": 2,
+            "openOmitted": 0
+          }
+        },
+        "attempt": {
+          "id": "d506fca6-c5b3-4f74-9d44-318312bff104",
+          "sessionRef": "sess_0a51778421ab0202426df9e22b7e82fd",
+          "retryOf": null
+        },
+        "storyActions": true
+      },
+      "decision": {
+        "index": 1,
+        "reason": "告辞实际结束铁匠交谈，后续选项转向当前观察或前往集市，不强迫回访；正文提议去集市尚未结算，现在明确选择旅行，核对实际到达与耗时。",
+        "selected": {
+          "id": "r:eb23fe6aca0e5570:t4:c:a",
+          "label": "沿路前往集市：前往集市寻找食物和补给",
+          "intent": "travel",
+          "targetId": "r:eb23fe6aca0e5570:t4:e:place_1",
+          "stake": "low",
+          "approach": "road"
+        }
+      },
+      "choices": [
+        {
+          "id": "r:eb23fe6aca0e5570:t4:c:observe",
+          "enabled": false,
+          "label": "仔细观察：留意周围的动静",
+          "cost": "0日"
+        },
+        {
+          "id": "r:eb23fe6aca0e5570:t4:c:a",
+          "enabled": false,
+          "label": "沿路前往集市：前往集市寻找食物和补给",
+          "cost": "30日 · 行粮 1"
+        },
+        {
+          "id": "r:eb23fe6aca0e5570:t4:c:leave",
+          "enabled": false,
+          "label": "结束当前互动：暂不介入此事",
+          "cost": "0日"
+        }
+      ],
+      "traces": [
+        {
+          "model": "@cf/zai-org/glm-4.7-flash",
+          "inputHash": "9c0c3709f8da0ced312caf7d7b1934b06fba20d21defb4dfd94515c735510410",
+          "inputBytes": 18144,
+          "startedAt": 1793375935434,
+          "bindingReturnedAt": 1793375935774,
+          "liveRawBytes": 114571,
+          "captureComplete": true,
+          "response": {
+            "model": "@cf/zai-org/glm-4.7-flash",
+            "choices": [
+              {
+                "finish_reason": "stop",
+                "message": {
+                  "content": "{\n  \"blocks\": [\n    {\n      \"kind\": \"narration\",\n      \"text\": \"三十日的奔波让你双腿发酸，集市那喧闹的人声终于传入耳中。你穿过熙攘的人群，空气中混杂着牲畜的腥气和叫卖声。集市中央有个卖烧饼的摊位，摊主是个满脸油光的汉子，正挥舞着大铲子翻烤着面饼，热气腾腾的白烟直冲面门。\"\n    }\n  ],\n  \"choices\": [\n    {\n      \"action\": \"interact:ask\",\n      \"target\": {\n        \"kind\": \"person\",\n        \"name\": \"卖烧饼的汉子\",\n        \"ref\": \"\",\n        \"status\": null\n      },\n      \"stake\": \"low\",\n      \"purpose\": \"询问烧饼的价格和是否还有存货\",\n      \"anchor\": 0\n    },\n    {\n      \"action\": \"interact:decline\",\n      \"target\": {\n        \"kind\": \"person\",\n        \"name\": \"卖烧饼的汉子\",\n        \"ref\": \"\",\n        \"status\": null\n      },\n      \"stake\": \"low\",\n      \"purpose\": \"拒绝购买烧饼\",\n      \"anchor\": 0\n    },\n    {\n      \"action\": \"travel:road\",\n      \"target\": {\n        \"kind\": \"place\",\n        \"name\": \"集市\",\n        \"ref\": \"\",\n        \"status\": null\n      },\n      \"stake\": \"low\",\n      \"purpose\": \"离开集市前往其他地方\",\n      \"anchor\": 0\n    }\n  ],\n  \"title\": \"集市喧嚣\",\n  \"location\": \"集市\",\n  \"memoryDeltas\": [\n    {\n      \"target\": {\n        \"kind\": \"person\",\n        \"name\": \"卖烧饼的汉子\",\n        \"ref\": \"\",\n        \"status\": null\n      },\n      \"kind\": \"fact\",\n      \"anchor\": 0\n    }\n  ]\n}",
+                  "reasoning_content": ""
+                }
+              }
+            ],
+            "usage": {
+              "prompt_tokens": 2982,
+              "completion_tokens": 420,
+              "total_tokens": 3402,
+              "prompt_tokens_details": {
+                "cached_tokens": 0
+              },
+              "neurons": 31.68900000000018
+            }
+          },
+          "rawSseBytes": 114571
+        }
+      ],
+      "revision": 4,
+      "pending": true,
+      "state": {
+        "relationshipVersion": 1,
+        "version": 5,
+        "mode": "cultivation",
+        "contentVersion": 4,
+        "rulesVersion": 1,
+        "promptVersion": 1,
+        "runId": "a5055d8e-11bc-4c7c-b055-d1fc05cfd787",
+        "revision": 4,
+        "turnId": 4,
+        "phase": "active",
+        "rng": 2781570059,
+        "life": {
+          "name": "云归",
+          "ageDays": 5760,
+          "lifeLimit": 80,
+          "realm": "mortal",
+          "cultivation": 0,
+          "injury": 0,
+          "items": {
+            "supplies": 3,
+            "stones": 0
+          },
+          "relations": {},
+          "birth": {
+            "originId": "village",
+            "talentIds": [
+              "sword-bone",
+              "flash-wisdom"
+            ],
+            "attributes": {
+              "constitution": 5,
+              "insight": 3,
+              "fortune": 4
+            }
+          }
+        },
+        "birthReceipt": {
+          "kind": "opening",
+          "choiceId": null,
+          "action": null,
+          "elapsedDays": 0,
+          "itemChanges": {},
+          "relationChanges": {},
+          "random": {
+            "before": 371814938,
+            "after": 371814938,
+            "roll": null
+          },
+          "before": {
+            "ageDays": 5760,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "after": {
+            "ageDays": 5760,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "death": null,
+          "birth": {
+            "originId": "village",
+            "talentIds": [
+              "sword-bone",
+              "flash-wisdom"
+            ],
+            "attributes": {
+              "constitution": 5,
+              "insight": 3,
+              "fortune": 4
+            }
+          }
+        },
+        "currentScene": {
+          "id": "r:eb23fe6aca0e5570:t4:s:scene",
+          "title": "山村集市",
+          "location": "山村",
+          "entities": [
+            {
+              "id": "r:eb23fe6aca0e5570:t1:e:person_1",
+              "name": "王大锤",
+              "kind": "person"
+            },
+            {
+              "id": "r:eb23fe6aca0e5570:t4:e:place_1",
+              "name": "集市",
+              "kind": "place"
+            }
+          ],
+          "blocks": [
+            {
+              "kind": "narration",
+              "text": "你转身背对着王大锤，迈步向村口走去。身后传来叮叮当当的打铁声，渐渐被风吹散。日头偏西，山村的炊烟袅袅升起，空气中弥漫着柴火和饭菜的香气。你摸了摸干瘪的行囊，肚子适时地叫了一声，决定先去集市找点吃的。"
+            }
+          ],
+          "choices": [
+            {
+              "id": "r:eb23fe6aca0e5570:t4:c:observe",
+              "label": "仔细观察：留意周围的动静",
+              "intent": "interact",
+              "targetId": "self",
+              "approach": "observe",
+              "stake": "low"
+            },
+            {
+              "id": "r:eb23fe6aca0e5570:t4:c:a",
+              "label": "沿路前往集市：前往集市寻找食物和补给",
+              "intent": "travel",
+              "targetId": "r:eb23fe6aca0e5570:t4:e:place_1",
+              "stake": "low",
+              "approach": "road"
+            },
+            {
+              "id": "r:eb23fe6aca0e5570:t4:c:leave",
+              "label": "结束当前互动：暂不介入此事",
+              "intent": "interact",
+              "targetId": "r:eb23fe6aca0e5570:t4:e:place_1",
+              "approach": "leave",
+              "stake": "low"
+            }
+          ],
+          "memoryDeltas": [
+            {
+              "entityId": "r:eb23fe6aca0e5570:t1:e:person_1",
+              "kind": "fact",
+              "text": "你转身背对着王大锤，迈步向村口走去。身后传来叮叮当当的打铁声，渐渐被风吹散。日头偏西，山村的炊烟袅袅升起，空气中弥漫着柴火和饭菜的香气。你摸了摸干瘪的行囊，肚子适时地叫了一声，决定先去集市找点吃的。"
+            }
+          ]
+        },
+        "lastReceipt": {
+          "kind": "choice",
+          "choiceId": "r:eb23fe6aca0e5570:t3:c:leave",
+          "action": {
+            "id": "r:eb23fe6aca0e5570:t3:c:leave",
+            "label": "结束当前互动：暂不介入此事",
+            "intent": "interact",
+            "targetId": "r:eb23fe6aca0e5570:t1:e:person_1",
+            "approach": "leave",
+            "stake": "low"
+          },
+          "elapsedDays": 0,
+          "itemChanges": {},
+          "relationChanges": {},
+          "random": {
+            "before": 425579612,
+            "after": 2781570059,
+            "roll": 59
+          },
+          "before": {
+            "ageDays": 5760,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "after": {
+            "ageDays": 5760,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "death": null,
+          "birth": null
+        },
+        "relatedEntities": [
+          {
+            "id": "r:eb23fe6aca0e5570:t1:e:person_1",
+            "name": "王大锤",
+            "kind": "person"
+          },
+          {
+            "id": "r:eb23fe6aca0e5570:t4:e:place_1",
+            "name": "集市",
+            "kind": "place"
+          }
+        ],
+        "archiveCursor": 0
+      },
+      "posts": 5,
+      "latency": {
+        "usable": false,
+        "errorCode": "CHOICE_NOT_COMPILABLE",
+        "firstAnyPreviewMs": 3926,
+        "firstReadableMs": 4189,
+        "completionMs": 13080,
+        "narrativeChars": 103,
+        "maxPreviewGapMs": 310,
+        "readingFinishEstimateMs": null,
+        "readingStallEstimateMs": null,
+        "optionsWaitEstimateMs": null,
+        "prefetchWorthEvaluating": null,
+        "assumptions": {
+          "readingCharsPerSecond": 6,
+          "readableChars": 20,
+          "targetWaitMs": 2000
+        }
+      }
+    }
+  ],
+  "errors": [
+    "Native turn did not pass"
+  ],
+  "posts": 5,
+  "refreshed": null
+}

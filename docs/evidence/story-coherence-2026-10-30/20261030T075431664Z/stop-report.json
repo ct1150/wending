@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "sourceCommit": "7cfe74931984306536f8e2a3332325eb3f3b3d45",
+  "status": "ACCEPTANCE_STOPPED",
+  "reason": "JSON object control opening rejected PROVIDER_RESPONSE_TOO_LARGE before any readable preview. Capture was not complete when traces were retrieved; raw output absent, cause unclassified. Unknown accounting retained; capture tooling made incremental for next diagnostic.",
+  "actualTurns": 1,
+  "productionRestored": {
+    "version": "cad2a140-240f-4465-a837-e53f054c2589",
+    "percentage": 100,
+    "deployment": "8c09c3fe-19dd-4785-bdd9-75297f76d29c"
+  },
+  "cleanup": {
+    "ownCredentialDeleted": true,
+    "newWorkerCreated": false,
+    "newNamespaceCreated": false,
+    "ledgerRetained": true
+  },
+  "recordedAt": "2026-10-30T07:59:00.336Z"
+}

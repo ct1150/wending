@@ -1,0 +1,489 @@
+{
+  "caseId": "opening",
+  "start": 1109.300000000745,
+  "timeline": [
+    {
+      "atMs": 3084,
+      "chars": 1
+    },
+    {
+      "atMs": 3199,
+      "chars": 4
+    },
+    {
+      "atMs": 3241,
+      "chars": 6
+    },
+    {
+      "atMs": 3309,
+      "chars": 10
+    },
+    {
+      "atMs": 3385,
+      "chars": 13
+    },
+    {
+      "atMs": 3447,
+      "chars": 16
+    },
+    {
+      "atMs": 3522,
+      "chars": 20
+    },
+    {
+      "atMs": 3615,
+      "chars": 22
+    },
+    {
+      "atMs": 3704,
+      "chars": 25
+    },
+    {
+      "atMs": 3783,
+      "chars": 27
+    },
+    {
+      "atMs": 3830,
+      "chars": 31
+    },
+    {
+      "atMs": 3925,
+      "chars": 33
+    },
+    {
+      "atMs": 3987,
+      "chars": 35
+    },
+    {
+      "atMs": 4067,
+      "chars": 38
+    },
+    {
+      "atMs": 4170,
+      "chars": 41
+    },
+    {
+      "atMs": 4222,
+      "chars": 45
+    },
+    {
+      "atMs": 4316,
+      "chars": 49
+    },
+    {
+      "atMs": 4381,
+      "chars": 52
+    },
+    {
+      "atMs": 4458,
+      "chars": 56
+    },
+    {
+      "atMs": 4522,
+      "chars": 59
+    },
+    {
+      "atMs": 4571,
+      "chars": 61
+    },
+    {
+      "atMs": 4650,
+      "chars": 63
+    },
+    {
+      "atMs": 4739,
+      "chars": 66
+    },
+    {
+      "atMs": 4816,
+      "chars": 68
+    },
+    {
+      "atMs": 4895,
+      "chars": 70
+    },
+    {
+      "atMs": 4957,
+      "chars": 72
+    },
+    {
+      "atMs": 5035,
+      "chars": 74
+    },
+    {
+      "atMs": 5113,
+      "chars": 76
+    },
+    {
+      "atMs": 5191,
+      "chars": 79
+    },
+    {
+      "atMs": 5253,
+      "chars": 82
+    },
+    {
+      "atMs": 5434,
+      "chars": 90
+    },
+    {
+      "atMs": 5465,
+      "chars": 95
+    },
+    {
+      "atMs": 5544,
+      "chars": 100
+    },
+    {
+      "atMs": 5607,
+      "chars": 103
+    },
+    {
+      "atMs": 5701,
+      "chars": 104
+    },
+    {
+      "atMs": 5949,
+      "chars": 107
+    },
+    {
+      "atMs": 6104,
+      "chars": 111
+    },
+    {
+      "atMs": 6178,
+      "chars": 113
+    },
+    {
+      "atMs": 6255,
+      "chars": 115
+    },
+    {
+      "atMs": 6315,
+      "chars": 119
+    },
+    {
+      "atMs": 6376,
+      "chars": 123
+    },
+    {
+      "atMs": 6470,
+      "chars": 126
+    },
+    {
+      "atMs": 6514,
+      "chars": 130
+    },
+    {
+      "atMs": 6577,
+      "chars": 132
+    },
+    {
+      "atMs": 6640,
+      "chars": 135
+    },
+    {
+      "atMs": 6812,
+      "chars": 139
+    },
+    {
+      "atMs": 6874,
+      "chars": 142
+    },
+    {
+      "atMs": 6951,
+      "chars": 145
+    },
+    {
+      "atMs": 7011,
+      "chars": 148
+    },
+    {
+      "atMs": 7247,
+      "chars": 159
+    },
+    {
+      "atMs": 7278,
+      "chars": 164
+    },
+    {
+      "atMs": 7342,
+      "chars": 166
+    },
+    {
+      "atMs": 7513,
+      "chars": 174
+    },
+    {
+      "atMs": 7559,
+      "chars": 178
+    },
+    {
+      "atMs": 7622,
+      "chars": 183
+    },
+    {
+      "atMs": 7684,
+      "chars": 186
+    },
+    {
+      "atMs": 7743,
+      "chars": 190
+    },
+    {
+      "atMs": 7806,
+      "chars": 193
+    }
+  ],
+  "choicesEnabledDuringPreview": false,
+  "lastText": "你背着旧猎弓，站在猎户村口的老槐树下。晨雾未散，你感到体内有一股微弱却坚韧的气流在经脉中游走，这是你十六年来从未察觉的异象。村口的老猎户正蹲在树根旁抽旱烟，见你出来，浑浊的眼珠动了动，似乎想说什么，又止住了。\n\n老猎户磕了磕烟袋锅，指着村后那片终年云雾缭绕的断崖，声音沙哑：“云归，那地方邪门得很，昨儿个夜里，我听见断崖那边有剑鸣声，像是有人在那儿练剑，可那地方除了野猴子，哪有人去？”",
+  "doneMs": 30125,
+  "result": {
+    "protocolVersion": 1,
+    "status": "rejected",
+    "requestId": "a1793b84-48ef-46cb-a12f-348ac3a3d78e",
+    "attemptId": "fcacc153-0916-46dc-ab53-5e4f83dd9796",
+    "sessionRef": "sess_53f0502a6517f5305775d00f5df0c780",
+    "errorCode": "GENERATED_SCENE_INVALID",
+    "retry": null
+  },
+  "request": {
+    "context": {
+      "schemaVersion": 1,
+      "phase": "opening",
+      "identity": {
+        "runId": "0894fd3e-347e-44d2-8a82-4de3a474498a",
+        "turnId": 1,
+        "baseRevision": 0,
+        "stateHash": "8425ef183cd51d5c9fb85f78706ab3b6f87c86f9eccae766e867b868254619a5",
+        "choiceId": null,
+        "rulesVersion": 1,
+        "promptVersion": 1,
+        "requestId": "a1793b84-48ef-46cb-a12f-348ac3a3d78e"
+      },
+      "namespace": "r:4029f3cae51b5bf9",
+      "receipt": {
+        "kind": "opening",
+        "choiceId": null,
+        "action": null,
+        "elapsedDays": 0,
+        "itemChanges": {},
+        "relationChanges": {},
+        "random": {
+          "before": 2201799398,
+          "after": 2201799398,
+          "roll": null
+        },
+        "before": {
+          "ageDays": 5760,
+          "realm": "mortal",
+          "cultivation": 0,
+          "injury": 0
+        },
+        "after": {
+          "ageDays": 5760,
+          "realm": "mortal",
+          "cultivation": 0,
+          "injury": 0
+        },
+        "death": null,
+        "birth": {
+          "originId": "village",
+          "talentIds": [
+            "sword-bone",
+            "flash-wisdom"
+          ],
+          "attributes": {
+            "constitution": 4,
+            "insight": 6,
+            "fortune": 2
+          }
+        }
+      },
+      "life": {
+        "name": "云归",
+        "ageDays": 5760,
+        "lifeLimit": 80,
+        "realm": "mortal",
+        "cultivation": 0,
+        "injury": 0,
+        "items": {
+          "supplies": 3,
+          "stones": 0
+        },
+        "relations": {},
+        "birth": {
+          "originId": "village",
+          "talentIds": [
+            "sword-bone",
+            "flash-wisdom"
+          ],
+          "attributes": {
+            "constitution": 4,
+            "insight": 6,
+            "fortune": 2
+          }
+        }
+      },
+      "entities": [],
+      "memory": {
+        "facts": [],
+        "promises": [],
+        "clues": [],
+        "recent": [],
+        "summaries": []
+      },
+      "references": [],
+      "previousScene": null,
+      "relationshipVersion": 1,
+      "relationships": {},
+      "coverage": {
+        "policy": "relevance-v1",
+        "openTotal": 0,
+        "openIncluded": 0,
+        "openOmitted": 0
+      }
+    },
+    "attempt": {
+      "id": "fcacc153-0916-46dc-ab53-5e4f83dd9796",
+      "sessionRef": "sess_53f0502a6517f5305775d00f5df0c780",
+      "retryOf": null
+    }
+  },
+  "decision": null,
+  "choices": [],
+  "traces": [
+    {
+      "model": "@cf/zai-org/glm-4.7-flash",
+      "inputHash": "c585f0de90cdf3adba240d687dc28489834e2c01a37a3148338abb4c10f87c26",
+      "inputBytes": 9060,
+      "startedAt": 1793347155562,
+      "bindingReturnedAt": 1793347156231,
+      "liveRawBytes": 180805,
+      "captureComplete": true,
+      "response": {
+        "model": "@cf/zai-org/glm-4.7-flash",
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "message": {
+              "content": "{\"blocks\":[{\"kind\":\"narration\",\"text\":\"你背着旧猎弓，站在猎户村口的老槐树下。晨雾未散，你感到体内有一股微弱却坚韧的气流在经脉中游走，这是你十六年来从未察觉的异象。村口的老猎户正蹲在树根旁抽旱烟，见你出来，浑浊的眼珠动了动，似乎想说什么，又止住了。\"},{\"kind\":\"narration\",\"text\":\"老猎户磕了磕烟袋锅，指着村后那片终年云雾缭绕的断崖，声音沙哑：“云归，那地方邪门得很，昨儿个夜里，我听见断崖那边有剑鸣声，像是有人在那儿练剑，可那地方除了野猴子，哪有人去？”\"}],\"choices\":[{\"action\":\"interact:ask\",\"targetId\":\"p1\",\"stake\":\"low\",\"label\":\"向老猎户询问剑鸣的缘由\",\"anchor\":0},{\"action\":\"interact:observe\",\"targetId\":\"p1\",\"stake\":\"low\",\"label\":\"仔细观察老猎户的神情和断崖的方向\",\"anchor\":0},{\"action\":\"travel:wilderness\",\"targetId\":\"l1\",\"stake\":\"low\",\"label\":\"无视警告，径直前往断崖\",\"anchor\":1}],\"title\":\"猎户村的晨雾\",\"location\":\"猎户村口\",\"otherPeople\":[{\"id\":\"p1\",\"name\":\"老猎户\",\"status\":\"alive\"}],\"places\":[{\"id\":\"l1\",\"name\":\"断崖\"}],\"factions\":[],\"memoryDeltas\":[],\"receipt\":{\"kind\":\"opening\",\"choiceId\":null,\"action\":null,\"elapsedDays\":0,\"itemChanges\":{},\"relationChanges\":{},\"random\":{\"before\":2201799398,\"after\":2201799398,\"roll\":null},\"before\":{\"ageDays\":5760,\"realm\":\"mortal\",\"cultivation\":0,\"injury\":0},\"after\":{\"ageDays\":5760,\"realm\":\"mortal\",\"cultivation\":0,\"injury\":0},\"death\":null,\"birth\":{\"originId\":\"village\",\"talentIds\":[\"sword-bone\",\"flash-wisdom\"],\"attributes\":{\"constitution\":4,\"insight\":6,\"fortune\":2}}},\"life\":{\"name\":\"云归\",\"ageDays\":5760,\"lifeLimit\":80,\"realm\":\"mortal\",\"cultivation\":0,\"injury\":0,\"items\":{\"supplies\":3,\"stones\":0},\"relations\":{},\"birth\":{\"originId\":\"village\",\"talentIds\":[\"sword-bone\",\"flash-wisdom\"],\"attributes\":{\"constitution\":4,\"insight\":6,\"fortune\":2}}},\"entities\":[],\"memory\":{\"facts\":[],\"promises\":[],\"clues\":[],\"recent\":[],\"summaries\":[]},\"references\":[],\"previousScene\":null,\"relationshipVersion\":1,\"relationships\":{},\"coverage\":{\"policy\":\"relevance-v1\",\"openTotal\":0,\"openIncluded\":0,\"openOmitted\":0},\"turn\":1}",
+              "reasoning_content": ""
+            }
+          }
+        ],
+        "usage": {
+          "prompt_tokens": 2386,
+          "completion_tokens": 635,
+          "total_tokens": 3021,
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          },
+          "neurons": 36.23700000000027
+        }
+      },
+      "rawSseBytes": 180805
+    }
+  ],
+  "revision": 0,
+  "pending": true,
+  "state": {
+    "relationshipVersion": 1,
+    "version": 5,
+    "mode": "cultivation",
+    "contentVersion": 4,
+    "rulesVersion": 1,
+    "promptVersion": 1,
+    "runId": "0894fd3e-347e-44d2-8a82-4de3a474498a",
+    "revision": 0,
+    "turnId": 0,
+    "phase": "awaitingOpening",
+    "rng": 2201799398,
+    "life": {
+      "name": "云归",
+      "ageDays": 5760,
+      "lifeLimit": 80,
+      "realm": "mortal",
+      "cultivation": 0,
+      "injury": 0,
+      "items": {
+        "supplies": 3,
+        "stones": 0
+      },
+      "relations": {},
+      "birth": {
+        "originId": "village",
+        "talentIds": [
+          "sword-bone",
+          "flash-wisdom"
+        ],
+        "attributes": {
+          "constitution": 4,
+          "insight": 6,
+          "fortune": 2
+        }
+      }
+    },
+    "birthReceipt": {
+      "kind": "opening",
+      "choiceId": null,
+      "action": null,
+      "elapsedDays": 0,
+      "itemChanges": {},
+      "relationChanges": {},
+      "random": {
+        "before": 2201799398,
+        "after": 2201799398,
+        "roll": null
+      },
+      "before": {
+        "ageDays": 5760,
+        "realm": "mortal",
+        "cultivation": 0,
+        "injury": 0
+      },
+      "after": {
+        "ageDays": 5760,
+        "realm": "mortal",
+        "cultivation": 0,
+        "injury": 0
+      },
+      "death": null,
+      "birth": {
+        "originId": "village",
+        "talentIds": [
+          "sword-bone",
+          "flash-wisdom"
+        ],
+        "attributes": {
+          "constitution": 4,
+          "insight": 6,
+          "fortune": 2
+        }
+      }
+    },
+    "currentScene": null,
+    "lastReceipt": null,
+    "relatedEntities": [],
+    "archiveCursor": 0
+  },
+  "posts": 1,
+  "latency": {
+    "usable": false,
+    "errorCode": "GENERATED_SCENE_INVALID",
+    "firstAnyPreviewMs": 3084,
+    "firstReadableMs": 3522,
+    "completionMs": 30125,
+    "narrativeChars": 193,
+    "maxPreviewGapMs": 248,
+    "readingFinishEstimateMs": null,
+    "readingStallEstimateMs": null,
+    "optionsWaitEstimateMs": null,
+    "prefetchWorthEvaluating": null,
+    "assumptions": {
+      "readingCharsPerSecond": 6,
+      "readableChars": 20,
+      "targetWaitMs": 2000
+    }
+  }
+}

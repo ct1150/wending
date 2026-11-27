@@ -1,0 +1,799 @@
+{
+  "caseId": "choice-5",
+  "start": 877110.200000003,
+  "timeline": [
+    {
+      "atMs": 3284,
+      "chars": 1
+    },
+    {
+      "atMs": 3364,
+      "chars": 5
+    },
+    {
+      "atMs": 3524,
+      "chars": 12
+    },
+    {
+      "atMs": 3555,
+      "chars": 14
+    },
+    {
+      "atMs": 3713,
+      "chars": 15
+    },
+    {
+      "atMs": 3821,
+      "chars": 18
+    },
+    {
+      "atMs": 4137,
+      "chars": 25
+    },
+    {
+      "atMs": 4200,
+      "chars": 32
+    },
+    {
+      "atMs": 4277,
+      "chars": 36
+    },
+    {
+      "atMs": 4339,
+      "chars": 40
+    },
+    {
+      "atMs": 4402,
+      "chars": 43
+    },
+    {
+      "atMs": 4464,
+      "chars": 48
+    },
+    {
+      "atMs": 4541,
+      "chars": 50
+    },
+    {
+      "atMs": 4604,
+      "chars": 55
+    },
+    {
+      "atMs": 5027,
+      "chars": 61
+    },
+    {
+      "atMs": 5058,
+      "chars": 70
+    },
+    {
+      "atMs": 5073,
+      "chars": 73
+    },
+    {
+      "atMs": 5229,
+      "chars": 81
+    },
+    {
+      "atMs": 5276,
+      "chars": 83
+    },
+    {
+      "atMs": 5338,
+      "chars": 85
+    },
+    {
+      "atMs": 5416,
+      "chars": 88
+    },
+    {
+      "atMs": 5493,
+      "chars": 91
+    },
+    {
+      "atMs": 5555,
+      "chars": 93
+    },
+    {
+      "atMs": 5633,
+      "chars": 97
+    },
+    {
+      "atMs": 5697,
+      "chars": 100
+    },
+    {
+      "atMs": 5774,
+      "chars": 104
+    },
+    {
+      "atMs": 5853,
+      "chars": 107
+    },
+    {
+      "atMs": 5915,
+      "chars": 108
+    },
+    {
+      "atMs": 5961,
+      "chars": 110
+    },
+    {
+      "atMs": 6024,
+      "chars": 113
+    },
+    {
+      "atMs": 6088,
+      "chars": 116
+    },
+    {
+      "atMs": 6150,
+      "chars": 119
+    },
+    {
+      "atMs": 6213,
+      "chars": 123
+    },
+    {
+      "atMs": 6275,
+      "chars": 125
+    },
+    {
+      "atMs": 6352,
+      "chars": 126
+    },
+    {
+      "atMs": 6414,
+      "chars": 130
+    },
+    {
+      "atMs": 6476,
+      "chars": 133
+    },
+    {
+      "atMs": 6539,
+      "chars": 135
+    },
+    {
+      "atMs": 6586,
+      "chars": 138
+    },
+    {
+      "atMs": 6648,
+      "chars": 141
+    },
+    {
+      "atMs": 6726,
+      "chars": 144
+    },
+    {
+      "atMs": 6773,
+      "chars": 147
+    },
+    {
+      "atMs": 6835,
+      "chars": 151
+    },
+    {
+      "atMs": 6897,
+      "chars": 154
+    },
+    {
+      "atMs": 6975,
+      "chars": 158
+    },
+    {
+      "atMs": 7163,
+      "chars": 162
+    },
+    {
+      "atMs": 7225,
+      "chars": 165
+    },
+    {
+      "atMs": 7289,
+      "chars": 167
+    },
+    {
+      "atMs": 7368,
+      "chars": 171
+    },
+    {
+      "atMs": 7414,
+      "chars": 176
+    },
+    {
+      "atMs": 7475,
+      "chars": 179
+    },
+    {
+      "atMs": 7569,
+      "chars": 181
+    },
+    {
+      "atMs": 7740,
+      "chars": 188
+    },
+    {
+      "atMs": 7771,
+      "chars": 193
+    },
+    {
+      "atMs": 7835,
+      "chars": 195
+    },
+    {
+      "atMs": 7897,
+      "chars": 200
+    },
+    {
+      "atMs": 7959,
+      "chars": 202
+    },
+    {
+      "atMs": 8131,
+      "chars": 210
+    },
+    {
+      "atMs": 8163,
+      "chars": 213
+    },
+    {
+      "atMs": 8210,
+      "chars": 214
+    },
+    {
+      "atMs": 8349,
+      "chars": 219
+    },
+    {
+      "atMs": 8397,
+      "chars": 222
+    },
+    {
+      "atMs": 8443,
+      "chars": 226
+    },
+    {
+      "atMs": 8521,
+      "chars": 230
+    },
+    {
+      "atMs": 8582,
+      "chars": 233
+    },
+    {
+      "atMs": 8644,
+      "chars": 239
+    },
+    {
+      "atMs": 8801,
+      "chars": 244
+    },
+    {
+      "atMs": 8847,
+      "chars": 248
+    },
+    {
+      "atMs": 9472,
+      "chars": 259
+    },
+    {
+      "atMs": 9504,
+      "chars": 267
+    },
+    {
+      "atMs": 9689,
+      "chars": 273
+    },
+    {
+      "atMs": 9768,
+      "chars": 276
+    },
+    {
+      "atMs": 9830,
+      "chars": 277
+    },
+    {
+      "atMs": 9968,
+      "chars": 281
+    },
+    {
+      "atMs": 10471,
+      "chars": 290
+    },
+    {
+      "atMs": 10502,
+      "chars": 298
+    },
+    {
+      "atMs": 10533,
+      "chars": 300
+    }
+  ],
+  "choicesEnabledDuringPreview": false,
+  "lastText": "你上前一步，指着那本修补过的册子问道：“这册子缺了哪些内容？”光鲜青年停住动作，瞥了你一眼，随即冷笑一声：“缺了什么？缺了让我能筑基的灵气！这长春宗功法，入门第一层‘引气入体’就被删了三页，后面全是些怎么练气、怎么打坐的废话。那老头说是孤本，我看是废纸堆！”他随手将册子扔回摊主怀里，又踢了一脚地上的灵石，扬长而去。\n\n摊主慌忙捡起册子，对着青年的背影连连作揖赔罪，随后转头看向你，眼中闪过一丝感激，压低声音道：“小兄弟，多谢你刚才没拆穿我。这册子确实缺了关键的一页，那是‘长春诀’的口诀，没了它，练气永远只能停留在皮毛。不过……”他犹豫了一下，目光扫过四周，“这东西若是传出去，怕是会惹来大麻烦。”",
+  "doneMs": 14790,
+  "result": {
+    "protocolVersion": 1,
+    "status": "rejected",
+    "requestId": "11de838d-0296-448a-b59f-02f044b4647d",
+    "attemptId": "267bdad3-6ede-47a0-bce3-f9ce96c62f6e",
+    "sessionRef": "sess_66f901306f6300b330ff0254db08fd56",
+    "errorCode": "GENERATED_SCENE_INVALID",
+    "retry": null
+  },
+  "request": {
+    "context": {
+      "schemaVersion": 1,
+      "phase": "choice",
+      "identity": {
+        "runId": "842e4747-b574-4b65-849f-22d2089124ca",
+        "turnId": 6,
+        "baseRevision": 5,
+        "stateHash": "8c978efa4695182ffc45c7eacc840be12e10808d14684cef3d9a15712ef87d9b",
+        "choiceId": "r:c901c16f455b3d18:t5:c:a",
+        "rulesVersion": 1,
+        "promptVersion": 1,
+        "requestId": "11de838d-0296-448a-b59f-02f044b4647d"
+      },
+      "namespace": "r:c901c16f455b3d18",
+      "receipt": {
+        "kind": "choice",
+        "choiceId": "r:c901c16f455b3d18:t5:c:a",
+        "action": {
+          "id": "r:c901c16f455b3d18:t5:c:a",
+          "label": "询问光鲜青年：询问青年这册子具体缺了哪些内容",
+          "intent": "interact",
+          "targetId": "r:c901c16f455b3d18:t4:e:person_1",
+          "stake": "low",
+          "approach": "ask"
+        },
+        "elapsedDays": 0,
+        "itemChanges": {},
+        "relationChanges": {},
+        "random": {
+          "before": 181785699,
+          "after": 3113561702,
+          "roll": 2
+        },
+        "before": {
+          "ageDays": 5760,
+          "realm": "mortal",
+          "cultivation": 0,
+          "injury": 0
+        },
+        "after": {
+          "ageDays": 5760,
+          "realm": "mortal",
+          "cultivation": 0,
+          "injury": 0
+        },
+        "death": null,
+        "birth": null
+      },
+      "life": {
+        "name": "云归",
+        "ageDays": 5760,
+        "lifeLimit": 80,
+        "realm": "mortal",
+        "cultivation": 0,
+        "injury": 0,
+        "items": {
+          "supplies": 3,
+          "stones": 0
+        },
+        "relations": {},
+        "birth": {
+          "originId": "artisan",
+          "talentIds": [
+            "iron-bones",
+            "keen-memory"
+          ],
+          "attributes": {
+            "constitution": 3,
+            "insight": 3,
+            "fortune": 6
+          }
+        }
+      },
+      "entities": [
+        {
+          "id": "r:c901c16f455b3d18:t4:e:person_1",
+          "name": "光鲜青年",
+          "kind": "person",
+          "status": "alive"
+        },
+        {
+          "id": "r:c901c16f455b3d18:t4:e:place_1",
+          "name": "地摊前",
+          "kind": "place",
+          "status": "unknown"
+        },
+        {
+          "id": "r:c901c16f455b3d18:t1:e:person_1",
+          "name": "脚夫",
+          "kind": "person",
+          "status": "alive"
+        },
+        {
+          "id": "r:c901c16f455b3d18:t3:e:faction_1",
+          "name": "黑煞门",
+          "kind": "faction",
+          "status": "unknown"
+        }
+      ],
+      "memory": {
+        "facts": [],
+        "promises": [],
+        "clues": [
+          {
+            "id": "m:a3dc0a187bb028e847d9072c1dd2f01e",
+            "source": "narrative",
+            "kind": "clue",
+            "entityId": "r:c901c16f455b3d18:t4:e:person_1",
+            "text": "你低头扫视地上的册子，发现其中一本封皮虽破，但内页字迹工整，显然是被人精心修补过的。那青年似乎并未察觉，正弯腰去捡地上的灵石，嘴里还在嘟囔着要退钱。你注意到摊主的手在微微颤抖，似乎在犹豫是否要阻止，却又不敢造次。周围看热闹的人指指点点，有人低声议论这长春宗功法如今已无人问津。",
+            "status": "open",
+            "runId": "842e4747-b574-4b65-849f-22d2089124ca",
+            "turnId": 5
+          },
+          {
+            "id": "m:672a01864026507f50ee5a62545561aa",
+            "source": "narrative",
+            "kind": "clue",
+            "entityId": "r:c901c16f455b3d18:t4:e:place_1",
+            "text": "你低头扫视地上的册子，发现其中一本封皮虽破，但内页字迹工整，显然是被人精心修补过的。那青年似乎并未察觉，正弯腰去捡地上的灵石，嘴里还在嘟囔着要退钱。你注意到摊主的手在微微颤抖，似乎在犹豫是否要阻止，却又不敢造次。周围看热闹的人指指点点，有人低声议论这长春宗功法如今已无人问津。",
+            "status": "open",
+            "runId": "842e4747-b574-4b65-849f-22d2089124ca",
+            "turnId": 5
+          },
+          {
+            "id": "m:68fab1949d84032b3b9e66430e43e824",
+            "source": "narrative",
+            "kind": "clue",
+            "entityId": "r:c901c16f455b3d18:t1:e:person_1",
+            "text": "你盯着脚夫的手腕，冷声追问那银针的来历。脚夫见瞒不过去，神色慌张地松开手，从怀里摸出一块发黑的木牌塞进你手里，低声道：“这是‘黑煞门’的催魂针，专门用来控制灵兽。我本不想接这趟活，可为了那点碎银，只能硬着头皮干。小兄弟，这东西烫手，你快还给我，别惹麻烦。”",
+            "status": "open",
+            "runId": "842e4747-b574-4b65-849f-22d2089124ca",
+            "turnId": 3
+          },
+          {
+            "id": "m:e3afc935f39247c78f2291ca91e4fae6",
+            "source": "narrative",
+            "kind": "clue",
+            "entityId": "r:c901c16f455b3d18:t3:e:faction_1",
+            "text": "你盯着脚夫的手腕，冷声追问那银针的来历。脚夫见瞒不过去，神色慌张地松开手，从怀里摸出一块发黑的木牌塞进你手里，低声道：“这是‘黑煞门’的催魂针，专门用来控制灵兽。我本不想接这趟活，可为了那点碎银，只能硬着头皮干。小兄弟，这东西烫手，你快还给我，别惹麻烦。”",
+            "status": "open",
+            "runId": "842e4747-b574-4b65-849f-22d2089124ca",
+            "turnId": 3
+          },
+          {
+            "id": "m:6cd62087d25cc3c05adb006de4ea4617",
+            "source": "narrative",
+            "kind": "clue",
+            "entityId": "r:c901c16f455b3d18:t1:e:person_1",
+            "text": "你凑近竹筐，灵雀的羽毛有些凌乱，几只灵雀的翅膀下似乎藏着什么异物。你伸手拨开羽毛，发现几根细小的银针正扎在它们脚踝的皮肤下，针尾连着极细的丝线，正随着灵雀的挣扎微微颤动。那脚夫见状，脸色一变，连忙伸手想要遮掩，却被你抢先一步按住了手腕。",
+            "status": "open",
+            "runId": "842e4747-b574-4b65-849f-22d2089124ca",
+            "turnId": 2
+          }
+        ],
+        "recent": [
+          {
+            "id": "turn:5",
+            "runId": "842e4747-b574-4b65-849f-22d2089124ca",
+            "turnId": 5,
+            "source": "narrative",
+            "kind": "turn",
+            "text": "地点：城西坊市；刚才选择：观察地摊前：观察地摊上的册子和摊主的神态\n你挤进人群，目光落在那本刻有“长春”二字的册子上。摊主是个干瘦的老头，此刻正缩着脖子，眼神却时不时飘向那光鲜青年腰间的玉佩。青年怒气未消，手指在册子上狠狠一戳，骂道：“这破书里全是些没用的废话，老子花了十块灵石买回来，全是残卷！”摊主苦着脸辩解：“客官，这可是孤本，前朝长春宗的入门功法……”青年冷哼一声，一脚踢翻了旁边的竹筐，几本册子散落一地，扬起一阵尘土。\n你低头扫视地上的册子，发现其中一本封皮虽破，但内页字迹工整，显然是被人精心修补过的。那青年似乎并未察觉，正弯腰去捡地上的灵石，嘴里还在嘟囔着要退钱。你注意到摊主的手在微微颤抖，似乎在犹豫是否要阻止，却又不敢造次。周围看热闹的人指指点点，有人低声议论这长春宗功法如今已无人问津。",
+            "entityIds": []
+          }
+        ],
+        "summaries": []
+      },
+      "references": [
+        "m:a3dc0a187bb028e847d9072c1dd2f01e",
+        "m:672a01864026507f50ee5a62545561aa",
+        "m:68fab1949d84032b3b9e66430e43e824",
+        "m:e3afc935f39247c78f2291ca91e4fae6",
+        "m:6cd62087d25cc3c05adb006de4ea4617",
+        "turn:5"
+      ],
+      "previousScene": {
+        "id": "r:c901c16f455b3d18:t5:s:scene",
+        "blocksHash": "5914cf58ebed36d63fb70dfdb05aeb21fe61ce136d9172588cff79d7ee69c8d2"
+      },
+      "relationshipVersion": 1,
+      "relationships": {},
+      "coverage": {
+        "policy": "relevance-v1",
+        "openTotal": 6,
+        "openIncluded": 5,
+        "openOmitted": 1
+      }
+    },
+    "attempt": {
+      "id": "267bdad3-6ede-47a0-bce3-f9ce96c62f6e",
+      "sessionRef": "sess_66f901306f6300b330ff0254db08fd56",
+      "retryOf": null
+    }
+  },
+  "decision": {
+    "index": 0,
+    "reason": "询问当前争执中的光鲜青年：这册子究竟缺了哪些内容；后文应回应缺页/残卷问题，不收下书或灵石，不替我购买。",
+    "selected": {
+      "id": "r:c901c16f455b3d18:t5:c:a",
+      "label": "询问光鲜青年：询问青年这册子具体缺了哪些内容",
+      "intent": "interact",
+      "targetId": "r:c901c16f455b3d18:t4:e:person_1",
+      "stake": "low",
+      "approach": "ask"
+    }
+  },
+  "choices": [
+    {
+      "id": "r:c901c16f455b3d18:t5:c:a",
+      "enabled": false,
+      "label": "询问光鲜青年：询问青年这册子具体缺了哪些内容",
+      "cost": "0日"
+    },
+    {
+      "id": "r:c901c16f455b3d18:t5:c:b",
+      "enabled": false,
+      "label": "询问光鲜青年：询问摊主这册子原本的来历和修补经过",
+      "cost": "0日"
+    },
+    {
+      "id": "r:c901c16f455b3d18:t5:c:c",
+      "enabled": false,
+      "label": "观察地摊前：仔细检查散落在地上的其他册子是否有价值",
+      "cost": "0日"
+    }
+  ],
+  "traces": [
+    {
+      "model": "@cf/zai-org/glm-4.7-flash",
+      "inputHash": "a08f177afc9894a71b4e92d4f2ce03df53661ebdafb9c7d63e6a46d8960b6440",
+      "inputBytes": 18985,
+      "startedAt": 1793354362402,
+      "bindingReturnedAt": 1793354362721,
+      "liveRawBytes": 130462,
+      "captureComplete": true,
+      "response": {
+        "model": "@cf/zai-org/glm-4.7-flash",
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "message": {
+              "content": "{\"blocks\":[{\"kind\":\"narration\",\"text\":\"你上前一步，指着那本修补过的册子问道：“这册子缺了哪些内容？”光鲜青年停住动作，瞥了你一眼，随即冷笑一声：“缺了什么？缺了让我能筑基的灵气！这长春宗功法，入门第一层‘引气入体’就被删了三页，后面全是些怎么练气、怎么打坐的废话。那老头说是孤本，我看是废纸堆！”他随手将册子扔回摊主怀里，又踢了一脚地上的灵石，扬长而去。\"},{\"kind\":\"narration\",\"text\":\"摊主慌忙捡起册子，对着青年的背影连连作揖赔罪，随后转头看向你，眼中闪过一丝感激，压低声音道：“小兄弟，多谢你刚才没拆穿我。这册子确实缺了关键的一页，那是‘长春诀’的口诀，没了它，练气永远只能停留在皮毛。不过……”他犹豫了一下，目光扫过四周，“这东西若是传出去，怕是会惹来大麻烦。”\"}],\"choices\":[{\"action\":\"interact:ask\",\"targetId\":\"k2\",\"stake\":\"low\",\"purpose\":\"询问摊主如何获得缺失的那一页\",\"anchor\":0},{\"action\":\"interact:ask\",\"targetId\":\"k2\",\"stake\":\"low\",\"purpose\":\"询问摊主这册子原本的来历\",\"anchor\":0},{\"action\":\"interact:leave\",\"targetId\":\"k2\",\"stake\":\"low\",\"purpose\":\"结束与摊主的交谈，离开此地\",\"anchor\":1}],\"title\":\"坊市风波\",\"location\":\"城西坊市\",\"otherPeople\":[{\"id\":\"k2\",\"name\":\"摊主\",\"status\":\"alive\"}],\"places\":[],\"factions\":[],\"memoryDeltas\":[{\"entityId\":\"k2\",\"kind\":\"clue\",\"anchor\":1,\"status\":\"open\"}]}",
+              "reasoning_content": ""
+            }
+          }
+        ],
+        "usage": {
+          "prompt_tokens": 4369,
+          "completion_tokens": 412,
+          "total_tokens": 4781,
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          },
+          "neurons": 39.02630000000018
+        }
+      },
+      "rawSseBytes": 130462
+    }
+  ],
+  "revision": 5,
+  "pending": true,
+  "state": {
+    "relationshipVersion": 1,
+    "version": 5,
+    "mode": "cultivation",
+    "contentVersion": 4,
+    "rulesVersion": 1,
+    "promptVersion": 1,
+    "runId": "842e4747-b574-4b65-849f-22d2089124ca",
+    "revision": 5,
+    "turnId": 5,
+    "phase": "active",
+    "rng": 181785699,
+    "life": {
+      "name": "云归",
+      "ageDays": 5760,
+      "lifeLimit": 80,
+      "realm": "mortal",
+      "cultivation": 0,
+      "injury": 0,
+      "items": {
+        "supplies": 3,
+        "stones": 0
+      },
+      "relations": {},
+      "birth": {
+        "originId": "artisan",
+        "talentIds": [
+          "iron-bones",
+          "keen-memory"
+        ],
+        "attributes": {
+          "constitution": 3,
+          "insight": 3,
+          "fortune": 6
+        }
+      }
+    },
+    "birthReceipt": {
+      "kind": "opening",
+      "choiceId": null,
+      "action": null,
+      "elapsedDays": 0,
+      "itemChanges": {},
+      "relationChanges": {},
+      "random": {
+        "before": 798424255,
+        "after": 798424255,
+        "roll": null
+      },
+      "before": {
+        "ageDays": 5760,
+        "realm": "mortal",
+        "cultivation": 0,
+        "injury": 0
+      },
+      "after": {
+        "ageDays": 5760,
+        "realm": "mortal",
+        "cultivation": 0,
+        "injury": 0
+      },
+      "death": null,
+      "birth": {
+        "originId": "artisan",
+        "talentIds": [
+          "iron-bones",
+          "keen-memory"
+        ],
+        "attributes": {
+          "constitution": 3,
+          "insight": 3,
+          "fortune": 6
+        }
+      }
+    },
+    "currentScene": {
+      "id": "r:c901c16f455b3d18:t5:s:scene",
+      "title": "坊市争执",
+      "location": "城西坊市",
+      "entities": [
+        {
+          "id": "r:c901c16f455b3d18:t4:e:person_1",
+          "name": "光鲜青年",
+          "status": "alive",
+          "kind": "person"
+        },
+        {
+          "id": "r:c901c16f455b3d18:t4:e:place_1",
+          "name": "地摊前",
+          "kind": "place"
+        }
+      ],
+      "blocks": [
+        {
+          "kind": "narration",
+          "text": "你挤进人群，目光落在那本刻有“长春”二字的册子上。摊主是个干瘦的老头，此刻正缩着脖子，眼神却时不时飘向那光鲜青年腰间的玉佩。青年怒气未消，手指在册子上狠狠一戳，骂道：“这破书里全是些没用的废话，老子花了十块灵石买回来，全是残卷！”摊主苦着脸辩解：“客官，这可是孤本，前朝长春宗的入门功法……”青年冷哼一声，一脚踢翻了旁边的竹筐，几本册子散落一地，扬起一阵尘土。"
+        },
+        {
+          "kind": "narration",
+          "text": "你低头扫视地上的册子，发现其中一本封皮虽破，但内页字迹工整，显然是被人精心修补过的。那青年似乎并未察觉，正弯腰去捡地上的灵石，嘴里还在嘟囔着要退钱。你注意到摊主的手在微微颤抖，似乎在犹豫是否要阻止，却又不敢造次。周围看热闹的人指指点点，有人低声议论这长春宗功法如今已无人问津。"
+        }
+      ],
+      "choices": [
+        {
+          "id": "r:c901c16f455b3d18:t5:c:a",
+          "label": "询问光鲜青年：询问青年这册子具体缺了哪些内容",
+          "intent": "interact",
+          "targetId": "r:c901c16f455b3d18:t4:e:person_1",
+          "stake": "low",
+          "approach": "ask"
+        },
+        {
+          "id": "r:c901c16f455b3d18:t5:c:b",
+          "label": "询问光鲜青年：询问摊主这册子原本的来历和修补经过",
+          "intent": "interact",
+          "targetId": "r:c901c16f455b3d18:t4:e:person_1",
+          "stake": "low",
+          "approach": "ask"
+        },
+        {
+          "id": "r:c901c16f455b3d18:t5:c:c",
+          "label": "观察地摊前：仔细检查散落在地上的其他册子是否有价值",
+          "intent": "interact",
+          "targetId": "r:c901c16f455b3d18:t4:e:place_1",
+          "stake": "low",
+          "approach": "observe"
+        }
+      ],
+      "memoryDeltas": [
+        {
+          "entityId": "r:c901c16f455b3d18:t4:e:person_1",
+          "kind": "clue",
+          "text": "你低头扫视地上的册子，发现其中一本封皮虽破，但内页字迹工整，显然是被人精心修补过的。那青年似乎并未察觉，正弯腰去捡地上的灵石，嘴里还在嘟囔着要退钱。你注意到摊主的手在微微颤抖，似乎在犹豫是否要阻止，却又不敢造次。周围看热闹的人指指点点，有人低声议论这长春宗功法如今已无人问津。",
+          "status": "open"
+        },
+        {
+          "entityId": "r:c901c16f455b3d18:t4:e:place_1",
+          "kind": "clue",
+          "text": "你低头扫视地上的册子，发现其中一本封皮虽破，但内页字迹工整，显然是被人精心修补过的。那青年似乎并未察觉，正弯腰去捡地上的灵石，嘴里还在嘟囔着要退钱。你注意到摊主的手在微微颤抖，似乎在犹豫是否要阻止，却又不敢造次。周围看热闹的人指指点点，有人低声议论这长春宗功法如今已无人问津。",
+          "status": "open"
+        }
+      ]
+    },
+    "lastReceipt": {
+      "kind": "choice",
+      "choiceId": "r:c901c16f455b3d18:t4:c:b",
+      "action": {
+        "id": "r:c901c16f455b3d18:t4:c:b",
+        "label": "观察地摊前：观察地摊上的册子和摊主的神态",
+        "intent": "interact",
+        "targetId": "r:c901c16f455b3d18:t4:e:place_1",
+        "stake": "low",
+        "approach": "observe"
+      },
+      "elapsedDays": 0,
+      "itemChanges": {},
+      "relationChanges": {},
+      "random": {
+        "before": 235178004,
+        "after": 181785699,
+        "roll": 99
+      },
+      "before": {
+        "ageDays": 5760,
+        "realm": "mortal",
+        "cultivation": 0,
+        "injury": 0
+      },
+      "after": {
+        "ageDays": 5760,
+        "realm": "mortal",
+        "cultivation": 0,
+        "injury": 0
+      },
+      "death": null,
+      "birth": null
+    },
+    "relatedEntities": [
+      {
+        "id": "r:c901c16f455b3d18:t4:e:person_1",
+        "name": "光鲜青年",
+        "status": "alive",
+        "kind": "person"
+      },
+      {
+        "id": "r:c901c16f455b3d18:t4:e:place_1",
+        "name": "地摊前",
+        "kind": "place"
+      }
+    ],
+    "archiveCursor": 0
+  },
+  "posts": 6,
+  "latency": {
+    "usable": false,
+    "errorCode": "GENERATED_SCENE_INVALID",
+    "firstAnyPreviewMs": 3284,
+    "firstReadableMs": 4137,
+    "completionMs": 14790,
+    "narrativeChars": 300,
+    "maxPreviewGapMs": 625,
+    "readingFinishEstimateMs": null,
+    "readingStallEstimateMs": null,
+    "optionsWaitEstimateMs": null,
+    "prefetchWorthEvaluating": null,
+    "assumptions": {
+      "readingCharsPerSecond": 6,
+      "readableChars": 20,
+      "targetWaitMs": 2000
+    }
+  }
+}

@@ -1,0 +1,596 @@
+{
+  "sourceCommit": "961b9041ff8b05919a87b9b0cb983f01b3dcf2ff",
+  "version": "e86db116-f9a3-41c5-9d0c-76cb843277c7",
+  "recordedAt": "2026-10-30T06:45:59.518Z",
+  "records": [
+    {
+      "caseId": "opening",
+      "start": 4846.900000002235,
+      "timeline": [
+        {
+          "atMs": 7643,
+          "chars": 1
+        },
+        {
+          "atMs": 7722,
+          "chars": 6
+        },
+        {
+          "atMs": 7802,
+          "chars": 9
+        },
+        {
+          "atMs": 7863,
+          "chars": 13
+        },
+        {
+          "atMs": 7925,
+          "chars": 19
+        },
+        {
+          "atMs": 7989,
+          "chars": 23
+        },
+        {
+          "atMs": 8054,
+          "chars": 27
+        },
+        {
+          "atMs": 8132,
+          "chars": 33
+        },
+        {
+          "atMs": 8493,
+          "chars": 35
+        },
+        {
+          "atMs": 8869,
+          "chars": 40
+        },
+        {
+          "atMs": 8932,
+          "chars": 44
+        },
+        {
+          "atMs": 9007,
+          "chars": 49
+        },
+        {
+          "atMs": 9068,
+          "chars": 55
+        },
+        {
+          "atMs": 9288,
+          "chars": 58
+        },
+        {
+          "atMs": 9346,
+          "chars": 63
+        },
+        {
+          "atMs": 9473,
+          "chars": 70
+        },
+        {
+          "atMs": 9548,
+          "chars": 76
+        },
+        {
+          "atMs": 9707,
+          "chars": 85
+        },
+        {
+          "atMs": 9720,
+          "chars": 90
+        },
+        {
+          "atMs": 9796,
+          "chars": 96
+        },
+        {
+          "atMs": 9860,
+          "chars": 102
+        },
+        {
+          "atMs": 9921,
+          "chars": 105
+        },
+        {
+          "atMs": 9981,
+          "chars": 110
+        },
+        {
+          "atMs": 10059,
+          "chars": 113
+        },
+        {
+          "atMs": 10106,
+          "chars": 116
+        },
+        {
+          "atMs": 10262,
+          "chars": 122
+        },
+        {
+          "atMs": 10324,
+          "chars": 129
+        },
+        {
+          "atMs": 10402,
+          "chars": 134
+        },
+        {
+          "atMs": 10556,
+          "chars": 144
+        },
+        {
+          "atMs": 10681,
+          "chars": 156
+        },
+        {
+          "atMs": 10711,
+          "chars": 161
+        },
+        {
+          "atMs": 11067,
+          "chars": 174
+        },
+        {
+          "atMs": 11409,
+          "chars": 178
+        },
+        {
+          "atMs": 11456,
+          "chars": 182
+        },
+        {
+          "atMs": 11517,
+          "chars": 189
+        },
+        {
+          "atMs": 11565,
+          "chars": 193
+        },
+        {
+          "atMs": 11629,
+          "chars": 198
+        },
+        {
+          "atMs": 11706,
+          "chars": 205
+        },
+        {
+          "atMs": 11770,
+          "chars": 208
+        },
+        {
+          "atMs": 11830,
+          "chars": 211
+        },
+        {
+          "atMs": 11875,
+          "chars": 217
+        },
+        {
+          "atMs": 11951,
+          "chars": 223
+        },
+        {
+          "atMs": 12015,
+          "chars": 228
+        },
+        {
+          "atMs": 12076,
+          "chars": 231
+        },
+        {
+          "atMs": 12141,
+          "chars": 235
+        },
+        {
+          "atMs": 12202,
+          "chars": 240
+        },
+        {
+          "atMs": 12265,
+          "chars": 250
+        },
+        {
+          "atMs": 12341,
+          "chars": 256
+        },
+        {
+          "atMs": 12403,
+          "chars": 260
+        },
+        {
+          "atMs": 12465,
+          "chars": 265
+        },
+        {
+          "atMs": 12525,
+          "chars": 269
+        },
+        {
+          "atMs": 12589,
+          "chars": 272
+        },
+        {
+          "atMs": 12652,
+          "chars": 276
+        },
+        {
+          "atMs": 12714,
+          "chars": 282
+        },
+        {
+          "atMs": 12778,
+          "chars": 290
+        },
+        {
+          "atMs": 12844,
+          "chars": 292
+        },
+        {
+          "atMs": 12885,
+          "chars": 296
+        },
+        {
+          "atMs": 13134,
+          "chars": 302
+        },
+        {
+          "atMs": 13196,
+          "chars": 308
+        },
+        {
+          "atMs": 13256,
+          "chars": 314
+        },
+        {
+          "atMs": 13318,
+          "chars": 322
+        },
+        {
+          "atMs": 13382,
+          "chars": 326
+        },
+        {
+          "atMs": 13445,
+          "chars": 328
+        },
+        {
+          "atMs": 13752,
+          "chars": 334
+        },
+        {
+          "atMs": 13815,
+          "chars": 340
+        },
+        {
+          "atMs": 13892,
+          "chars": 344
+        },
+        {
+          "atMs": 13952,
+          "chars": 347
+        },
+        {
+          "atMs": 14095,
+          "chars": 356
+        },
+        {
+          "atMs": 14123,
+          "chars": 362
+        },
+        {
+          "atMs": 14185,
+          "chars": 366
+        },
+        {
+          "atMs": 14496,
+          "chars": 369
+        },
+        {
+          "atMs": 14573,
+          "chars": 374
+        },
+        {
+          "atMs": 14632,
+          "chars": 376
+        },
+        {
+          "atMs": 14695,
+          "chars": 381
+        },
+        {
+          "atMs": 14759,
+          "chars": 386
+        },
+        {
+          "atMs": 14818,
+          "chars": 390
+        },
+        {
+          "atMs": 15002,
+          "chars": 395
+        },
+        {
+          "atMs": 15079,
+          "chars": 401
+        },
+        {
+          "atMs": 15122,
+          "chars": 406
+        },
+        {
+          "atMs": 15184,
+          "chars": 411
+        },
+        {
+          "atMs": 15262,
+          "chars": 417
+        },
+        {
+          "atMs": 15321,
+          "chars": 420
+        },
+        {
+          "atMs": 15385,
+          "chars": 430
+        },
+        {
+          "atMs": 15462,
+          "chars": 438
+        },
+        {
+          "atMs": 15519,
+          "chars": 443
+        },
+        {
+          "atMs": 15580,
+          "chars": 448
+        },
+        {
+          "atMs": 15660,
+          "chars": 450
+        },
+        {
+          "atMs": 15706,
+          "chars": 456
+        },
+        {
+          "atMs": 15767,
+          "chars": 462
+        },
+        {
+          "atMs": 15827,
+          "chars": 463
+        }
+      ],
+      "choicesEnabledDuringPreview": false,
+      "lastText": "你站在青云村口，晨雾还未散去。十六岁的云归站在村口的老槐树下，手里紧紧攥着一把生锈的铁剑。作为凡人，你尚未踏入修仙界的大门，但你的记忆似乎比常人更为清晰，呼吸间也能察觉到一丝微弱的气流波动。村子里偶尔传来几声鸡鸣，远处山峦起伏，云雾缭绕。你看着手中的剑，心中明白，今日便是你离开这个生活了十六年的地方，去往外界闯荡的日子。\n\n“十六年了，该走了。”\n\n你深吸一口气，感受着空气中那丝若有若无的灵气。虽然目前境界尚浅，但你的直觉告诉你，这股力量就在不远处。你决定先在村子里转转，看看有没有什么遗漏的东西，或者能让你稍微强身健体的方法。你迈步走向村中的杂货铺，那里或许能买到一些基础的行粮和工具。\n\n“掌柜的，给我来两斤行粮，再看看有没有什么适合练武的书籍。”\n\n杂货铺的掌柜抬起头，打量了你一番，从柜台下拿出一个布袋，里面装着两斤糙米和几块干饼。他又从身后的架子上取下一本泛黄的册子，递给你。那是一本名为《基础呼吸法》的残卷，虽然只是凡俗武学，但对于现在的你来说，或许是个不错的开始。你付了钱，拿着行粮和残卷，心中有了些许底气。",
+      "doneMs": 22102,
+      "result": {
+        "protocolVersion": 1,
+        "status": "rejected",
+        "requestId": "b3d6124d-a41e-4908-a18f-c08136e417f5",
+        "attemptId": "64dfb6ec-5733-473b-b804-5879a05e1dd8",
+        "sessionRef": "sess_6ed20474eb86f4d8892e94a43ff4de63",
+        "errorCode": "GENERATED_SCENE_INVALID",
+        "retry": null
+      },
+      "request": {
+        "context": {
+          "schemaVersion": 1,
+          "phase": "opening",
+          "identity": {
+            "runId": "ec3687ec-9bee-454a-82b2-abe529a09611",
+            "turnId": 1,
+            "baseRevision": 0,
+            "stateHash": "794d70c73ec1515203948eeeace6c7cade239facaf959adf5a360c085d65202d",
+            "choiceId": null,
+            "rulesVersion": 1,
+            "promptVersion": 1,
+            "requestId": "b3d6124d-a41e-4908-a18f-c08136e417f5"
+          },
+          "namespace": "r:bdb4ecae32303b0a",
+          "receipt": {
+            "kind": "opening",
+            "choiceId": null,
+            "action": null,
+            "elapsedDays": 0,
+            "itemChanges": {},
+            "relationChanges": {},
+            "random": {
+              "before": 1702436585,
+              "after": 1702436585,
+              "roll": null
+            },
+            "before": {
+              "ageDays": 5760,
+              "realm": "mortal",
+              "cultivation": 0,
+              "injury": 0
+            },
+            "after": {
+              "ageDays": 5760,
+              "realm": "mortal",
+              "cultivation": 0,
+              "injury": 0
+            },
+            "death": null,
+            "birth": {
+              "originId": "village",
+              "talentIds": [
+                "keen-memory",
+                "sensitive-breath"
+              ],
+              "attributes": {
+                "constitution": 3,
+                "insight": 6,
+                "fortune": 3
+              }
+            }
+          },
+          "life": {
+            "name": "云归",
+            "ageDays": 5760,
+            "lifeLimit": 80,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0,
+            "items": {
+              "supplies": 3,
+              "stones": 0
+            },
+            "relations": {},
+            "birth": {
+              "originId": "village",
+              "talentIds": [
+                "keen-memory",
+                "sensitive-breath"
+              ],
+              "attributes": {
+                "constitution": 3,
+                "insight": 6,
+                "fortune": 3
+              }
+            }
+          },
+          "entities": [],
+          "memory": {
+            "facts": [],
+            "promises": [],
+            "clues": [],
+            "recent": [],
+            "summaries": []
+          },
+          "references": [],
+          "previousScene": null,
+          "relationshipVersion": 1,
+          "relationships": {},
+          "coverage": {
+            "policy": "relevance-v1",
+            "openTotal": 0,
+            "openIncluded": 0,
+            "openOmitted": 0
+          }
+        },
+        "attempt": {
+          "id": "64dfb6ec-5733-473b-b804-5879a05e1dd8",
+          "sessionRef": "sess_6ed20474eb86f4d8892e94a43ff4de63",
+          "retryOf": null
+        }
+      },
+      "decision": null,
+      "choices": [],
+      "revision": 0,
+      "pending": true,
+      "state": {
+        "relationshipVersion": 1,
+        "version": 5,
+        "mode": "cultivation",
+        "contentVersion": 4,
+        "rulesVersion": 1,
+        "promptVersion": 1,
+        "runId": "ec3687ec-9bee-454a-82b2-abe529a09611",
+        "revision": 0,
+        "turnId": 0,
+        "phase": "awaitingOpening",
+        "rng": 1702436585,
+        "life": {
+          "name": "云归",
+          "ageDays": 5760,
+          "lifeLimit": 80,
+          "realm": "mortal",
+          "cultivation": 0,
+          "injury": 0,
+          "items": {
+            "supplies": 3,
+            "stones": 0
+          },
+          "relations": {},
+          "birth": {
+            "originId": "village",
+            "talentIds": [
+              "keen-memory",
+              "sensitive-breath"
+            ],
+            "attributes": {
+              "constitution": 3,
+              "insight": 6,
+              "fortune": 3
+            }
+          }
+        },
+        "birthReceipt": {
+          "kind": "opening",
+          "choiceId": null,
+          "action": null,
+          "elapsedDays": 0,
+          "itemChanges": {},
+          "relationChanges": {},
+          "random": {
+            "before": 1702436585,
+            "after": 1702436585,
+            "roll": null
+          },
+          "before": {
+            "ageDays": 5760,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "after": {
+            "ageDays": 5760,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "death": null,
+          "birth": {
+            "originId": "village",
+            "talentIds": [
+              "keen-memory",
+              "sensitive-breath"
+            ],
+            "attributes": {
+              "constitution": 3,
+              "insight": 6,
+              "fortune": 3
+            }
+          }
+        },
+        "currentScene": null,
+        "lastReceipt": null,
+        "relatedEntities": [],
+        "archiveCursor": 0
+      },
+      "posts": 1,
+      "latency": {
+        "usable": false,
+        "errorCode": "GENERATED_SCENE_INVALID",
+        "firstAnyPreviewMs": 7643,
+        "firstReadableMs": 7989,
+        "completionMs": 22102,
+        "narrativeChars": 463,
+        "maxPreviewGapMs": 376,
+        "readingFinishEstimateMs": null,
+        "readingStallEstimateMs": null,
+        "optionsWaitEstimateMs": null,
+        "prefetchWorthEvaluating": null,
+        "assumptions": {
+          "readingCharsPerSecond": 6,
+          "readableChars": 20,
+          "targetWaitMs": 2000
+        }
+      }
+    }
+  ],
+  "errors": [
+    "Native turn did not pass"
+  ],
+  "posts": 1,
+  "refreshed": null
+}

@@ -1709,3 +1709,251 @@ html, body {
 .blessing-card:hover {
   border-color: #ffd875;
 }
+
+/* ==================== v9.2.0 极简气血体系、白话词条注释预览与触屏气泡样式 ==================== */
+.hud-pill-btn {
+  cursor: pointer;
+  font-family: inherit;
+  color: inherit;
+}
+.hud-pill-btn:hover {
+  border-color: var(--gold-bright);
+}
+.relic-chip {
+  font-family: inherit;
+  cursor: pointer;
+}
+.inline-stat-btn {
+  appearance: none;
+  background: transparent;
+  border: none;
+  padding: 0 2px;
+  font-size: inherit;
+  font-family: inherit;
+  cursor: pointer;
+  text-decoration: underline dotted rgba(223, 196, 149, 0.45);
+}
+button.status-tag {
+  cursor: pointer;
+  font-family: inherit;
+  color: var(--text);
+}
+.seal-bar-btn {
+  appearance: none;
+  background: transparent;
+  border: none;
+  padding: 2px 4px;
+  cursor: pointer;
+  border-radius: 999px;
+}
+.seal-bar-btn:hover {
+  background: rgba(250, 224, 174, 0.08);
+}
+
+.tcg-card.is-unplayable {
+  opacity: 0.56;
+  filter: grayscale(0.32);
+}
+.tcg-card.is-selected {
+  z-index: 16 !important;
+  border-color: #fff2b8 !important;
+  transform: rotate(0deg) translateY(-14px) scale(1.04) !important;
+  box-shadow:
+    inset 0 0 0 1.5px #fff2b8,
+    0 0 24px rgba(255, 226, 138, 0.78),
+    0 14px 28px rgba(0, 0, 0, 0.8) !important;
+}
+
+.treasure-btn.is-charging {
+  opacity: 0.78;
+}
+
+/* 首次进战一句话轻提示条 */
+.onboard-banner {
+  position: absolute;
+  top: 6px;
+  left: 8px;
+  right: 8px;
+  z-index: 19;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 5px 10px;
+  border-radius: 8px;
+  background: rgba(12, 26, 34, 0.94);
+  border: 1px solid var(--gold-bright);
+  font-size: 12px;
+  color: var(--gold-bright);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.65);
+}
+
+/* 场上状态/灵印/敌方意图轻触说明气泡 */
+.tip-popover {
+  position: absolute;
+  top: 8px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 23;
+  width: min(94%, 460px);
+  max-height: calc(100% - 16px);
+  overflow-y: auto;
+  padding: 10px 12px;
+  background: rgba(10, 22, 29, 0.97);
+  border-color: var(--gold-bright);
+  box-shadow: 0 12px 34px rgba(0, 0, 0, 0.82);
+}
+.tip-popover-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 6px;
+  color: var(--gold-bright);
+  font-size: 13px;
+}
+.tip-popover-body {
+  font-size: 12.5px;
+  line-height: 1.55;
+  color: var(--text);
+}
+.tip-recipe-list {
+  margin-top: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  border-top: 1px dashed var(--line);
+  padding-top: 6px;
+  font-size: 11.5px;
+  color: #dce8e6;
+}
+.tip-recipe-row strong {
+  color: var(--gold-bright);
+}
+
+/* 选中手牌：放大详情 + 全词条白话注释浮层（绝对定位于对峙区底部，不触发任何页面滚动） */
+.card-preview-overlay {
+  position: absolute;
+  left: 8px;
+  right: 8px;
+  bottom: 6px;
+  z-index: 22;
+  max-height: calc(100% - 12px);
+  overflow-y: auto;
+  padding: 9px 12px;
+  background: rgba(9, 20, 27, 0.97);
+  border: 1.5px solid var(--gold-bright);
+  box-shadow: 0 12px 34px rgba(0, 0, 0, 0.85);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.preview-top-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.preview-title-group {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+.preview-card-name {
+  font-size: 14px;
+  color: var(--gold-bright);
+}
+.preview-cost-pill {
+  font-size: 11px;
+  padding: 1px 7px;
+  border-radius: 999px;
+  background: rgba(27, 77, 104, 0.85);
+  border: 1px solid #8fd2ff;
+  color: #e6f6ff;
+}
+.preview-res-pill {
+  font-size: 11px;
+  padding: 1px 7px;
+  border-radius: 999px;
+  background: rgba(181, 141, 77, 0.3);
+  border: 1px solid #ffe394;
+  color: #ffe69e;
+}
+.preview-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.preview-desc-line {
+  font-size: 12.5px;
+  color: #eef3f2;
+  line-height: 1.45;
+}
+.preview-glossary-box {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  padding-top: 5px;
+  border-top: 1px dashed rgba(223, 196, 149, 0.28);
+  font-size: 11.5px;
+  line-height: 1.42;
+  color: var(--muted);
+}
+.preview-glossary-line strong {
+  color: #ffe299;
+}
+.preview-glossary-line.combo {
+  color: #9cf5be;
+}
+
+/* 顶部词条速查表网格 */
+.glossary-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 8px;
+}
+.glossary-item {
+  padding: 8px 10px;
+  border-radius: 6px;
+  background: rgba(16, 32, 40, 0.85);
+  border: 1px solid var(--line);
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  font-size: 12px;
+}
+.glossary-item strong {
+  color: var(--gold-bright);
+}
+.glossary-item span {
+  color: var(--muted);
+  line-height: 1.45;
+}
+
+@media (max-height: 480px) {
+  .onboard-banner {
+    padding: 3px 8px;
+    font-size: 11px;
+  }
+  .card-preview-overlay {
+    padding: 6px 9px;
+    gap: 4px;
+  }
+  .preview-desc-line {
+    font-size: 11.5px;
+  }
+  .preview-glossary-box {
+    font-size: 10.5px;
+  }
+  .one-row-hand .tcg-card.is-selected {
+    transform: translateY(-7px) !important;
+  }
+}
+
+@media (max-width: 680px) and (orientation: portrait) {
+  .one-row-hand .tcg-card.is-selected {
+    transform: translateY(-7px) !important;
+  }
+}

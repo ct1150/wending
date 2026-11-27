@@ -1,0 +1,11 @@
+{
+  "sourceCommit": "961b9041ff8b05919a87b9b0cb983f01b3dcf2ff",
+  "status": "NATIVE_OPENING_REJECTED_NOT_RELEASED",
+  "errorCode": "GENERATED_SCENE_INVALID",
+  "turns": 1,
+  "rawProviderOutputCaptured": false,
+  "normalProduction": "4.3.0 cad2a140 at 100%",
+  "localCredentialDeleted": true,
+  "noTemporaryWorkerOrNamespaceCreated": true,
+  "independentReview": "Two P2 context/provider input budget compatibility issues must be fixed before a new candidate."
+}

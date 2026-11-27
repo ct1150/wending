@@ -1,0 +1,1 @@
+{"at":"2026-10-30T17:12:20.672Z","decision":{"index":0,"reason":"拒绝75毫秒完成，零POST、原地零日、行粮灵石不变，父亲菜单已关闭。现在观察周围，必须转向独立环境或去向，不能重新要求查看药方。","selected":{"id":"r:60efb6672ac907de:t3:c:observe","label":"观察周围：寻找新的线索","intent":"interact","targetId":"self","stake":"low","approach":"observe"}}}

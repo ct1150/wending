@@ -1,0 +1,7 @@
+{
+  "status": "NOT_ACCEPTED",
+  "turn": 0,
+  "reason": "Manual semantic failure: NPC dialogue was labeled self and food help purported to treat a wound; stopped before next action.",
+  "apiStatus": "ready",
+  "evidence": "docs/evidence/story-coherence-2026-10-30/20261030T132719781Z/verified-frontend/turn-0.json"
+}

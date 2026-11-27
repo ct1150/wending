@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "sourceCommit": "502614a61a9f2ffc15b20fd160aed537bcf0d3d5",
+  "status": "ACCEPTANCE_STOPPED",
+  "reason": "Opening structurally ready but shoot-boar label targeted an old hunter absent from scene. Human stopped;5b9fb0f adds actual actor name/presence binding.",
+  "actualTurns": 1,
+  "productionRestored": {
+    "version": "cad2a140-240f-4465-a837-e53f054c2589",
+    "percentage": 100,
+    "deployment": "1ee18f07-2b6a-4493-bba2-0fcf0a6e01ca"
+  },
+  "cleanup": {
+    "ownCredentialDeleted": true,
+    "newWorkerCreated": false,
+    "newNamespaceCreated": false,
+    "ledgerRetained": true
+  },
+  "recordedAt": "2026-10-30T08:47:45.023Z"
+}

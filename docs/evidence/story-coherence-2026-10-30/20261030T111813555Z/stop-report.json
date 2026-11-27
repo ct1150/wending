@@ -1,0 +1,11 @@
+{
+  "sourceCommit": "e2b6ea3bbdae979d0483ea3fbc44e440a4d335d8",
+  "accepted": false,
+  "reason": "Two scenes committed on this source after explicit opening retry. Origin/use was answered, but second dialogue was repetitive and remaining model choices were exit-only after filtering unsupported help. Stopped before departing after reviewer reproduced current-location parser mixing prior choice text. Subsequent fix limits person answers to one block, parses the known header delimiter, retains one exit plus environment observation, and adds fail-closed request-body mode marking for API version transitions. Do not count this as six-turn acceptance.",
+  "cleanup": {
+    "productionVersion": "cad2a140-240f-4465-a837-e53f054c2589",
+    "percentage": 100,
+    "deployment": "0df6ee70-8798-44a8-bcc3-07db2cbd5b3c",
+    "ownBearerDeleted": true
+  }
+}

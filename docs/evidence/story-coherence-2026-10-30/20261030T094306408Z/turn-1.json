@@ -1,0 +1,618 @@
+{
+  "caseId": "choice-1",
+  "start": 98745.10000000149,
+  "timeline": [
+    {
+      "atMs": 8365,
+      "chars": 1
+    },
+    {
+      "atMs": 8442,
+      "chars": 3
+    },
+    {
+      "atMs": 8520,
+      "chars": 6
+    },
+    {
+      "atMs": 8597,
+      "chars": 8
+    },
+    {
+      "atMs": 8659,
+      "chars": 11
+    },
+    {
+      "atMs": 8753,
+      "chars": 14
+    },
+    {
+      "atMs": 8815,
+      "chars": 17
+    },
+    {
+      "atMs": 8893,
+      "chars": 20
+    },
+    {
+      "atMs": 8972,
+      "chars": 23
+    },
+    {
+      "atMs": 9035,
+      "chars": 26
+    },
+    {
+      "atMs": 9114,
+      "chars": 30
+    },
+    {
+      "atMs": 9176,
+      "chars": 33
+    },
+    {
+      "atMs": 9236,
+      "chars": 37
+    },
+    {
+      "atMs": 9330,
+      "chars": 40
+    },
+    {
+      "atMs": 9393,
+      "chars": 44
+    },
+    {
+      "atMs": 9456,
+      "chars": 46
+    },
+    {
+      "atMs": 9533,
+      "chars": 49
+    },
+    {
+      "atMs": 9595,
+      "chars": 52
+    },
+    {
+      "atMs": 9673,
+      "chars": 56
+    },
+    {
+      "atMs": 9752,
+      "chars": 58
+    },
+    {
+      "atMs": 9815,
+      "chars": 61
+    },
+    {
+      "atMs": 9892,
+      "chars": 65
+    },
+    {
+      "atMs": 9954,
+      "chars": 67
+    },
+    {
+      "atMs": 10034,
+      "chars": 69
+    },
+    {
+      "atMs": 10096,
+      "chars": 71
+    },
+    {
+      "atMs": 10159,
+      "chars": 72
+    },
+    {
+      "atMs": 10206,
+      "chars": 75
+    },
+    {
+      "atMs": 10268,
+      "chars": 78
+    },
+    {
+      "atMs": 10330,
+      "chars": 82
+    },
+    {
+      "atMs": 10408,
+      "chars": 84
+    },
+    {
+      "atMs": 10470,
+      "chars": 88
+    },
+    {
+      "atMs": 10548,
+      "chars": 93
+    },
+    {
+      "atMs": 10609,
+      "chars": 95
+    },
+    {
+      "atMs": 10673,
+      "chars": 100
+    },
+    {
+      "atMs": 10735,
+      "chars": 103
+    },
+    {
+      "atMs": 10813,
+      "chars": 107
+    },
+    {
+      "atMs": 10876,
+      "chars": 110
+    },
+    {
+      "atMs": 10938,
+      "chars": 115
+    },
+    {
+      "atMs": 11017,
+      "chars": 118
+    }
+  ],
+  "choicesEnabledDuringPreview": false,
+  "lastText": "你凑近竹筐，灵雀的羽毛有些凌乱，几只灵雀的翅膀下似乎藏着什么异物。你伸手拨开羽毛，发现几根细小的银针正扎在它们脚踝的皮肤下，针尾连着极细的丝线，正随着灵雀的挣扎微微颤动。那脚夫见状，脸色一变，连忙伸手想要遮掩，却被你抢先一步按住了手腕。",
+  "doneMs": 19199,
+  "result": {
+    "protocolVersion": 1,
+    "status": "ready",
+    "requestId": "a80d8db1-5224-4e25-a5fc-46afe91a9cc0",
+    "attemptId": "9bd89a15-d1f9-4f45-9958-7559b69e34fe",
+    "sessionRef": "sess_66f901306f6300b330ff0254db08fd56",
+    "errorCode": null,
+    "retry": null,
+    "scene": {
+      "id": "r:c901c16f455b3d18:t2:s:scene",
+      "title": "灵雀异状",
+      "location": "城西坊市",
+      "entities": [
+        {
+          "id": "r:c901c16f455b3d18:t1:e:person_1",
+          "name": "脚夫",
+          "status": "alive",
+          "kind": "person"
+        }
+      ],
+      "blocks": [
+        {
+          "kind": "narration",
+          "text": "你凑近竹筐，灵雀的羽毛有些凌乱，几只灵雀的翅膀下似乎藏着什么异物。你伸手拨开羽毛，发现几根细小的银针正扎在它们脚踝的皮肤下，针尾连着极细的丝线，正随着灵雀的挣扎微微颤动。那脚夫见状，脸色一变，连忙伸手想要遮掩，却被你抢先一步按住了手腕。"
+        }
+      ],
+      "choices": [
+        {
+          "id": "r:c901c16f455b3d18:t2:c:a",
+          "label": "询问脚夫：询问脚夫银针的来历",
+          "intent": "interact",
+          "targetId": "r:c901c16f455b3d18:t1:e:person_1",
+          "stake": "low",
+          "approach": "ask"
+        },
+        {
+          "id": "r:c901c16f455b3d18:t2:c:b",
+          "label": "援助脚夫：拔除灵雀脚踝上的银针",
+          "intent": "interact",
+          "targetId": "r:c901c16f455b3d18:t1:e:person_1",
+          "stake": "low",
+          "approach": "help"
+        },
+        {
+          "id": "r:c901c16f455b3d18:t2:c:c",
+          "label": "婉拒脚夫：拒绝插手此事",
+          "intent": "interact",
+          "targetId": "r:c901c16f455b3d18:t1:e:person_1",
+          "stake": "low",
+          "approach": "decline"
+        }
+      ],
+      "memoryDeltas": [
+        {
+          "entityId": "r:c901c16f455b3d18:t1:e:person_1",
+          "kind": "clue",
+          "text": "你凑近竹筐，灵雀的羽毛有些凌乱，几只灵雀的翅膀下似乎藏着什么异物。你伸手拨开羽毛，发现几根细小的银针正扎在它们脚踝的皮肤下，针尾连着极细的丝线，正随着灵雀的挣扎微微颤动。那脚夫见状，脸色一变，连忙伸手想要遮掩，却被你抢先一步按住了手腕。",
+          "status": "open"
+        }
+      ]
+    }
+  },
+  "request": {
+    "context": {
+      "schemaVersion": 1,
+      "phase": "choice",
+      "identity": {
+        "runId": "842e4747-b574-4b65-849f-22d2089124ca",
+        "turnId": 2,
+        "baseRevision": 1,
+        "stateHash": "bc15c00cea518a6a32add57dffe7d30632e74894555767e45fe9a215e803726c",
+        "choiceId": "r:c901c16f455b3d18:t1:c:b",
+        "rulesVersion": 1,
+        "promptVersion": 1,
+        "requestId": "a80d8db1-5224-4e25-a5fc-46afe91a9cc0"
+      },
+      "namespace": "r:c901c16f455b3d18",
+      "receipt": {
+        "kind": "choice",
+        "choiceId": "r:c901c16f455b3d18:t1:c:b",
+        "action": {
+          "id": "r:c901c16f455b3d18:t1:c:b",
+          "label": "观察脚夫：仔细观察灵雀和脚夫的状态",
+          "intent": "interact",
+          "targetId": "r:c901c16f455b3d18:t1:e:person_1",
+          "stake": "low",
+          "approach": "observe"
+        },
+        "elapsedDays": 0,
+        "itemChanges": {},
+        "relationChanges": {},
+        "random": {
+          "before": 798424255,
+          "after": 2121589522,
+          "roll": 22
+        },
+        "before": {
+          "ageDays": 5760,
+          "realm": "mortal",
+          "cultivation": 0,
+          "injury": 0
+        },
+        "after": {
+          "ageDays": 5760,
+          "realm": "mortal",
+          "cultivation": 0,
+          "injury": 0
+        },
+        "death": null,
+        "birth": null
+      },
+      "life": {
+        "name": "云归",
+        "ageDays": 5760,
+        "lifeLimit": 80,
+        "realm": "mortal",
+        "cultivation": 0,
+        "injury": 0,
+        "items": {
+          "supplies": 3,
+          "stones": 0
+        },
+        "relations": {},
+        "birth": {
+          "originId": "artisan",
+          "talentIds": [
+            "iron-bones",
+            "keen-memory"
+          ],
+          "attributes": {
+            "constitution": 3,
+            "insight": 3,
+            "fortune": 6
+          }
+        }
+      },
+      "entities": [
+        {
+          "id": "r:c901c16f455b3d18:t1:e:person_1",
+          "name": "脚夫",
+          "kind": "person",
+          "status": "alive"
+        }
+      ],
+      "memory": {
+        "facts": [],
+        "promises": [],
+        "clues": [
+          {
+            "id": "m:84ec0d88b07ee0b923e35a26732d80f3",
+            "source": "narrative",
+            "kind": "clue",
+            "entityId": "r:c901c16f455b3d18:t1:e:person_1",
+            "text": "你站在城西坊市边缘，晨雾未散。街角那家名为“听风阁”的杂货铺前，一个穿着灰布长衫的中年人正对着你招手，神色有些焦急。他身旁的竹筐里，几只灵雀正不安地扑腾着翅膀，发出细微的鸣叫。你认得他，这是负责给坊市运送灵材的脚夫，平日里总是一副笑呵呵的模样，此刻却眉头紧锁，似乎遇到了什么难处。",
+            "status": "open",
+            "runId": "842e4747-b574-4b65-849f-22d2089124ca",
+            "turnId": 1
+          }
+        ],
+        "recent": [
+          {
+            "id": "turn:1",
+            "runId": "842e4747-b574-4b65-849f-22d2089124ca",
+            "turnId": 1,
+            "source": "narrative",
+            "kind": "turn",
+            "text": "地点：城西坊市\n你站在城西坊市边缘，晨雾未散。街角那家名为“听风阁”的杂货铺前，一个穿着灰布长衫的中年人正对着你招手，神色有些焦急。他身旁的竹筐里，几只灵雀正不安地扑腾着翅膀，发出细微的鸣叫。你认得他，这是负责给坊市运送灵材的脚夫，平日里总是一副笑呵呵的模样，此刻却眉头紧锁，似乎遇到了什么难处。\n“小友，可否行个方便？”中年人见你停下脚步，连忙迎上来，压低声音说道，“这批灵雀有些躁动，我查了半天也没找出原因。若是耽误了时辰，被坊市管事责罚事小，若是伤了这些生灵，我这张老脸往哪搁？”他指了指竹筐，眼神里满是恳求。",
+            "entityIds": []
+          }
+        ],
+        "summaries": []
+      },
+      "references": [
+        "m:84ec0d88b07ee0b923e35a26732d80f3",
+        "turn:1"
+      ],
+      "previousScene": {
+        "id": "r:c901c16f455b3d18:t1:s:scene",
+        "blocksHash": "0af510175235d484e4f281d2d5ce3fe1d0d181d45a728071df4943ce588e08a6"
+      },
+      "relationshipVersion": 1,
+      "relationships": {},
+      "coverage": {
+        "policy": "relevance-v1",
+        "openTotal": 1,
+        "openIncluded": 1,
+        "openOmitted": 0
+      }
+    },
+    "attempt": {
+      "id": "9bd89a15-d1f9-4f45-9958-7559b69e34fe",
+      "sessionRef": "sess_66f901306f6300b330ff0254db08fd56",
+      "retryOf": null
+    }
+  },
+  "decision": {
+    "index": 1,
+    "reason": "先观察躁动灵雀与脚夫的状态，得到具体观察信息；本回合0日无资源变化，不提前安抚成功或给予物品。",
+    "selected": {
+      "id": "r:c901c16f455b3d18:t1:c:b",
+      "label": "观察脚夫：仔细观察灵雀和脚夫的状态",
+      "intent": "interact",
+      "targetId": "r:c901c16f455b3d18:t1:e:person_1",
+      "stake": "low",
+      "approach": "observe"
+    }
+  },
+  "choices": [
+    {
+      "id": "r:c901c16f455b3d18:t2:c:a",
+      "enabled": true,
+      "label": "询问脚夫：询问脚夫银针的来历",
+      "cost": "0日"
+    },
+    {
+      "id": "r:c901c16f455b3d18:t2:c:b",
+      "enabled": true,
+      "label": "援助脚夫：拔除灵雀脚踝上的银针",
+      "cost": "1日 · 行粮 1"
+    },
+    {
+      "id": "r:c901c16f455b3d18:t2:c:c",
+      "enabled": true,
+      "label": "婉拒脚夫：拒绝插手此事",
+      "cost": "0日"
+    }
+  ],
+  "traces": [
+    {
+      "model": "@cf/zai-org/glm-4.7-flash",
+      "inputHash": "0bda3d7a02ea6b4e38c26652e3375e139739b836e7fec86ba53cbb86b9d7b266",
+      "inputBytes": 15809,
+      "startedAt": 1793353583976,
+      "bindingReturnedAt": 1793353584298,
+      "liveRawBytes": 80804,
+      "captureComplete": true,
+      "response": {
+        "model": "@cf/zai-org/glm-4.7-flash",
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "message": {
+              "content": "{\"blocks\":[{\"kind\":\"narration\",\"text\":\"你凑近竹筐，灵雀的羽毛有些凌乱，几只灵雀的翅膀下似乎藏着什么异物。你伸手拨开羽毛，发现几根细小的银针正扎在它们脚踝的皮肤下，针尾连着极细的丝线，正随着灵雀的挣扎微微颤动。那脚夫见状，脸色一变，连忙伸手想要遮掩，却被你抢先一步按住了手腕。\"}],\"choices\":[{\"action\":\"interact:ask\",\"targetId\":\"k1\",\"stake\":\"low\",\"purpose\":\"询问脚夫银针的来历\",\"anchor\":0},{\"action\":\"interact:help\",\"targetId\":\"k1\",\"stake\":\"low\",\"purpose\":\"拔除灵雀脚踝上的银针\",\"anchor\":0},{\"action\":\"interact:decline\",\"targetId\":\"k1\",\"stake\":\"low\",\"purpose\":\"拒绝插手此事\",\"anchor\":0}],\"title\":\"灵雀异状\",\"location\":\"城西坊市\",\"otherPeople\":[{\"id\":\"k1\",\"name\":\"脚夫\",\"status\":\"alive\"}],\"places\":[],\"factions\":[],\"memoryDeltas\":[{\"entityId\":\"k1\",\"kind\":\"clue\",\"anchor\":0,\"status\":\"open\"}]}",
+              "reasoning_content": ""
+            }
+          }
+        ],
+        "usage": {
+          "prompt_tokens": 3503,
+          "completion_tokens": 269,
+          "total_tokens": 3772,
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          },
+          "neurons": 29.058100000000117
+        }
+      },
+      "rawSseBytes": 80804
+    }
+  ],
+  "revision": 2,
+  "pending": false,
+  "state": {
+    "relationshipVersion": 1,
+    "version": 5,
+    "mode": "cultivation",
+    "contentVersion": 4,
+    "rulesVersion": 1,
+    "promptVersion": 1,
+    "runId": "842e4747-b574-4b65-849f-22d2089124ca",
+    "revision": 2,
+    "turnId": 2,
+    "phase": "active",
+    "rng": 2121589522,
+    "life": {
+      "name": "云归",
+      "ageDays": 5760,
+      "lifeLimit": 80,
+      "realm": "mortal",
+      "cultivation": 0,
+      "injury": 0,
+      "items": {
+        "supplies": 3,
+        "stones": 0
+      },
+      "relations": {},
+      "birth": {
+        "originId": "artisan",
+        "talentIds": [
+          "iron-bones",
+          "keen-memory"
+        ],
+        "attributes": {
+          "constitution": 3,
+          "insight": 3,
+          "fortune": 6
+        }
+      }
+    },
+    "birthReceipt": {
+      "kind": "opening",
+      "choiceId": null,
+      "action": null,
+      "elapsedDays": 0,
+      "itemChanges": {},
+      "relationChanges": {},
+      "random": {
+        "before": 798424255,
+        "after": 798424255,
+        "roll": null
+      },
+      "before": {
+        "ageDays": 5760,
+        "realm": "mortal",
+        "cultivation": 0,
+        "injury": 0
+      },
+      "after": {
+        "ageDays": 5760,
+        "realm": "mortal",
+        "cultivation": 0,
+        "injury": 0
+      },
+      "death": null,
+      "birth": {
+        "originId": "artisan",
+        "talentIds": [
+          "iron-bones",
+          "keen-memory"
+        ],
+        "attributes": {
+          "constitution": 3,
+          "insight": 3,
+          "fortune": 6
+        }
+      }
+    },
+    "currentScene": {
+      "id": "r:c901c16f455b3d18:t2:s:scene",
+      "title": "灵雀异状",
+      "location": "城西坊市",
+      "entities": [
+        {
+          "id": "r:c901c16f455b3d18:t1:e:person_1",
+          "name": "脚夫",
+          "status": "alive",
+          "kind": "person"
+        }
+      ],
+      "blocks": [
+        {
+          "kind": "narration",
+          "text": "你凑近竹筐，灵雀的羽毛有些凌乱，几只灵雀的翅膀下似乎藏着什么异物。你伸手拨开羽毛，发现几根细小的银针正扎在它们脚踝的皮肤下，针尾连着极细的丝线，正随着灵雀的挣扎微微颤动。那脚夫见状，脸色一变，连忙伸手想要遮掩，却被你抢先一步按住了手腕。"
+        }
+      ],
+      "choices": [
+        {
+          "id": "r:c901c16f455b3d18:t2:c:a",
+          "label": "询问脚夫：询问脚夫银针的来历",
+          "intent": "interact",
+          "targetId": "r:c901c16f455b3d18:t1:e:person_1",
+          "stake": "low",
+          "approach": "ask"
+        },
+        {
+          "id": "r:c901c16f455b3d18:t2:c:b",
+          "label": "援助脚夫：拔除灵雀脚踝上的银针",
+          "intent": "interact",
+          "targetId": "r:c901c16f455b3d18:t1:e:person_1",
+          "stake": "low",
+          "approach": "help"
+        },
+        {
+          "id": "r:c901c16f455b3d18:t2:c:c",
+          "label": "婉拒脚夫：拒绝插手此事",
+          "intent": "interact",
+          "targetId": "r:c901c16f455b3d18:t1:e:person_1",
+          "stake": "low",
+          "approach": "decline"
+        }
+      ],
+      "memoryDeltas": [
+        {
+          "entityId": "r:c901c16f455b3d18:t1:e:person_1",
+          "kind": "clue",
+          "text": "你凑近竹筐，灵雀的羽毛有些凌乱，几只灵雀的翅膀下似乎藏着什么异物。你伸手拨开羽毛，发现几根细小的银针正扎在它们脚踝的皮肤下，针尾连着极细的丝线，正随着灵雀的挣扎微微颤动。那脚夫见状，脸色一变，连忙伸手想要遮掩，却被你抢先一步按住了手腕。",
+          "status": "open"
+        }
+      ]
+    },
+    "lastReceipt": {
+      "kind": "choice",
+      "choiceId": "r:c901c16f455b3d18:t1:c:b",
+      "action": {
+        "id": "r:c901c16f455b3d18:t1:c:b",
+        "label": "观察脚夫：仔细观察灵雀和脚夫的状态",
+        "intent": "interact",
+        "targetId": "r:c901c16f455b3d18:t1:e:person_1",
+        "stake": "low",
+        "approach": "observe"
+      },
+      "elapsedDays": 0,
+      "itemChanges": {},
+      "relationChanges": {},
+      "random": {
+        "before": 798424255,
+        "after": 2121589522,
+        "roll": 22
+      },
+      "before": {
+        "ageDays": 5760,
+        "realm": "mortal",
+        "cultivation": 0,
+        "injury": 0
+      },
+      "after": {
+        "ageDays": 5760,
+        "realm": "mortal",
+        "cultivation": 0,
+        "injury": 0
+      },
+      "death": null,
+      "birth": null
+    },
+    "relatedEntities": [
+      {
+        "id": "r:c901c16f455b3d18:t1:e:person_1",
+        "name": "脚夫",
+        "status": "alive",
+        "kind": "person"
+      }
+    ],
+    "archiveCursor": 0
+  },
+  "posts": 2,
+  "latency": {
+    "usable": true,
+    "errorCode": null,
+    "firstAnyPreviewMs": 8365,
+    "firstReadableMs": 8893,
+    "completionMs": 19199,
+    "narrativeChars": 118,
+    "maxPreviewGapMs": 94,
+    "readingFinishEstimateMs": 28560,
+    "readingStallEstimateMs": 0,
+    "optionsWaitEstimateMs": 0,
+    "prefetchWorthEvaluating": true,
+    "assumptions": {
+      "readingCharsPerSecond": 6,
+      "readableChars": 20,
+      "targetWaitMs": 2000
+    }
+  }
+}

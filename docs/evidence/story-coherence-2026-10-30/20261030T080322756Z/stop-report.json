@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "sourceCommit": "90372d63c16cd019189bf4d94e91018e36dd04e3",
+  "status": "ACCEPTANCE_STOPPED",
+  "reason": "First browser rejected session before inference. Fresh session diagnostic opened successfully in7.4s; first ask outputs only changed input context without required scene fields, correctly rejected. Telemetry confirms same-origin cookie and modern action header. Source native envelope revision follows.",
+  "actualDiagnosticTurns": 2,
+  "productionRestored": {
+    "version": "cad2a140-240f-4465-a837-e53f054c2589",
+    "percentage": 100,
+    "deployment": "934ea580-0c9e-49dd-916c-dcf78ed64f5f"
+  },
+  "cleanup": {
+    "ownCredentialDeleted": true,
+    "newWorkerCreated": false,
+    "newNamespaceCreated": false,
+    "ledgerRetained": true
+  },
+  "recordedAt": "2026-10-30T08:16:21.426Z"
+}

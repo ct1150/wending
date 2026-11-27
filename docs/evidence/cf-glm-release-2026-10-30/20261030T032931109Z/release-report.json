@@ -1,0 +1,396 @@
+{
+  "recordedAt": "2026-10-30T03:33:20.017Z",
+  "status": "RELEASED_AND_PUBLICLY_ACCEPTED",
+  "sourceCommit": "c00f56781dc120394c7d96785350d2e583c55207",
+  "sourceTree": "e46065c7488e458c399e7185c5c500c9a6fef571",
+  "pullRequest": "https://github.com/ct1150/wending/pull/16",
+  "candidate": {
+    "sha": "ad4981f80eebe4c8970741f3d58cce142d37fc5c",
+    "ciRun": "https://github.com/ct1150/wending/actions/runs/40997060266",
+    "ciMergeCommit": "dcc6898348af971715ad50d29bf99455b2b1384d",
+    "tests": 919,
+    "pass": 919,
+    "fail": 0,
+    "syntaxFiles": 171
+  },
+  "main": {
+    "ciRun": "https://github.com/ct1150/wending/actions/runs/40997360323",
+    "tests": 919,
+    "pass": 919,
+    "fail": 0,
+    "publish": "success"
+  },
+  "productionManifest": {
+    "schemaVersion": 1,
+    "main_module": "entry.mjs",
+    "compatibility_date": "2026-07-30",
+    "sourceCommit": "c00f56781dc120394c7d96785350d2e583c55207",
+    "frontend": {
+      "version": "4.3.0",
+      "htmlSha256": "7af0315444f98bcb7e956a3a69a6ca12714111ff57cca39500d2211504dee041"
+    },
+    "versions": {
+      "protocolVersion": 1,
+      "rulesVersion": 1,
+      "promptVersion": 1,
+      "saveVersion": 5,
+      "contentVersion": 4
+    },
+    "enabled": true,
+    "publicEnabled": true,
+    "accessMode": "production",
+    "candidateModelId": "@cf/zai-org/glm-4.7-flash",
+    "activeModelId": "@cf/zai-org/glm-4.7-flash",
+    "modelValidated": true,
+    "providerRoute": {
+      "primary": "cloudflare",
+      "primaryModelId": "@cf/zai-org/glm-4.7-flash"
+    },
+    "coordinatorName": "story-budget-v1-global",
+    "bindings": [
+      {
+        "name": "AI",
+        "type": "ai"
+      },
+      {
+        "name": "STORY_BUDGET",
+        "type": "durable_object_namespace",
+        "class_name": "StoryBudget",
+        "namespace_id": "1de1df3929534a8d8d495d6db6604e99"
+      }
+    ],
+    "migrations": [],
+    "optionalSecrets": [],
+    "modules": [
+      {
+        "name": "entry.mjs",
+        "type": "esm",
+        "bytes": 1045310,
+        "sha256": "f51e48bdce5fbd51f58f4793a584e74c13e38bd39055224aea0e81c7a7401394"
+      },
+      {
+        "name": "src/game/cultivation/live/engine.js",
+        "type": "esm",
+        "bytes": 12171,
+        "sha256": "5d824d1e58a73da0b085d7be3c5ec57f920f683710330c0e1648b4473fa951a4"
+      },
+      {
+        "name": "src/game/cultivation/live/identity.js",
+        "type": "esm",
+        "bytes": 3931,
+        "sha256": "d619269073a7b9afcaa6245ae013ead2e82677d76698a372ff21a51a11cab232"
+      },
+      {
+        "name": "src/game/cultivation/live/memory.js",
+        "type": "esm",
+        "bytes": 24732,
+        "sha256": "4c22df151d7264308026e39de32abc0b5675dfc767232759ae2bad80c0dfc5d9"
+      },
+      {
+        "name": "src/game/cultivation/live/model.js",
+        "type": "esm",
+        "bytes": 1379,
+        "sha256": "1b1b208631bac405395d84c240957a15db080333abe174b98e0eb5412336846a"
+      },
+      {
+        "name": "src/game/cultivation/live/schema.js",
+        "type": "esm",
+        "bytes": 5120,
+        "sha256": "dfdbdcadf35deb39315f571821203d61bd9f5a10d8c359b074001d16b0cdd0c9"
+      },
+      {
+        "name": "src/game/cultivation/live/story-preview.js",
+        "type": "esm",
+        "bytes": 2598,
+        "sha256": "1ae676efb131af53191f366abb35e5410a82c6a4a987ee7f5fc1ec8bc2951f13"
+      },
+      {
+        "name": "src/game/cultivation/live/validation.js",
+        "type": "esm",
+        "bytes": 10250,
+        "sha256": "44137cda97b87d78bdcf5513aa939e7549dd3c5406b699ac6491827a6514516a"
+      },
+      {
+        "name": "src/worker/index.js",
+        "type": "esm",
+        "bytes": 1731,
+        "sha256": "f5824bc0f42b4780f74935045770698e3f877cabfb7a04c4d3d50470f0353917"
+      },
+      {
+        "name": "src/worker/release-gateway.js",
+        "type": "esm",
+        "bytes": 8492,
+        "sha256": "db66b3b90e40e8695dfd0a9ddd4815591e85784c31d02d223a7565a0b2065276"
+      },
+      {
+        "name": "src/worker/story-api.js",
+        "type": "esm",
+        "bytes": 16922,
+        "sha256": "ce74556ac5824f28c0382785244af1124be221ec05bdc135f9bd2690bf1d9040"
+      },
+      {
+        "name": "src/worker/story-budget.js",
+        "type": "esm",
+        "bytes": 16783,
+        "sha256": "ccb6c35fc1ec3a876c8c99ebd84a9ea4188e8bd48a2fe673bb4be2fc9fa4b772"
+      },
+      {
+        "name": "src/worker/story-config.js",
+        "type": "esm",
+        "bytes": 9841,
+        "sha256": "9e9c604f225a2d0ea86d00aeeb4421d1c2589af064de71d21e9071a71a8dbd36"
+      },
+      {
+        "name": "src/worker/story-generation-schema.js",
+        "type": "esm",
+        "bytes": 5670,
+        "sha256": "e7793c441af00345165643ec2ae11fef3a3f16b59e980fabcef82a496de84620"
+      },
+      {
+        "name": "src/worker/story-glm-provider.js",
+        "type": "esm",
+        "bytes": 6059,
+        "sha256": "a297d5563609afc7a01958580c41afdc8aab54a252da955c758e08661c74bd4b"
+      },
+      {
+        "name": "src/worker/story-glm-wire.js",
+        "type": "esm",
+        "bytes": 14910,
+        "sha256": "c040ed2e8474959cac3f5f15b222767061b499fb70da7e38460779d58a18f8bb"
+      },
+      {
+        "name": "src/worker/story-observation.js",
+        "type": "esm",
+        "bytes": 5375,
+        "sha256": "5a3a4641434d55d6fdf34c187e802918292aa5f35a09cdb50452f6fc6523ecb2"
+      },
+      {
+        "name": "src/worker/story-production.js",
+        "type": "esm",
+        "bytes": 3026,
+        "sha256": "da9477ad7a6abcfbd8d9155f22185b242a3af1c86f92a4f4755b4ddf9b73e118"
+      },
+      {
+        "name": "src/worker/story-provider-core.js",
+        "type": "esm",
+        "bytes": 15986,
+        "sha256": "f55302190e77e03abc92fb8abccc52ea8235b5b6a9dcc2d0f9ade45a58e740d9"
+      },
+      {
+        "name": "src/worker/story-provider.js",
+        "type": "esm",
+        "bytes": 1570,
+        "sha256": "4f7ca5c3d9b79ecc4768ba0482d19a5c61ad2f38c519a674154c4b0775b2421b"
+      },
+      {
+        "name": "src/worker/story-request-body.js",
+        "type": "esm",
+        "bytes": 3486,
+        "sha256": "53c441cb50bba79d467d0e24779fa8ba89c80711d2703f4af4f19da6a93d5e5a"
+      }
+    ]
+  },
+  "moduleReadback": {
+    "moduleHashesVerified": true,
+    "moduleCount": 21,
+    "version": "cad2a140-240f-4465-a837-e53f054c2589",
+    "sourceCommit": "c00f56781dc120394c7d96785350d2e583c55207",
+    "bindings": [
+      {
+        "name": "AI",
+        "type": "ai"
+      },
+      {
+        "name": "STORY_BUDGET",
+        "type": "durable_object_namespace",
+        "namespace_id": "1de1df3929534a8d8d495d6db6604e99"
+      },
+      {
+        "name": "STORY_OPERATOR_TOKEN",
+        "type": "secret_text"
+      },
+      {
+        "name": "ZHIPU_API_KEY",
+        "type": "secret_text"
+      }
+    ],
+    "checkedAt": "2026-10-30T03:30:23.330Z"
+  },
+  "activation": {
+    "deployment": "69949aae-8eb2-4e73-8d63-a5ffaf1b0f21",
+    "version": "cad2a140-240f-4465-a837-e53f054c2589",
+    "sourceCommit": "c00f56781dc120394c7d96785350d2e583c55207",
+    "activatedAt": "2026-10-30T03:30:36.746Z"
+  },
+  "readback": {
+    "deployment": "69949aae-8eb2-4e73-8d63-a5ffaf1b0f21",
+    "versions": [
+      {
+        "version_id": "cad2a140-240f-4465-a837-e53f054c2589",
+        "percentage": 100
+      }
+    ],
+    "previewsEnabled": false,
+    "checkedAt": "2026-10-30T03:31:44.827Z"
+  },
+  "staticRelease": {
+    "schemaVersion": 1,
+    "version": "4.3.0",
+    "sourceCommit": "c00f56781dc120394c7d96785350d2e583c55207",
+    "artifactCommit": "0036518a597343bcd366cc0f73e2387c7ffd635f",
+    "htmlSha256": "7af0315444f98bcb7e956a3a69a6ca12714111ff57cca39500d2211504dee041",
+    "htmlBytes": 1031384,
+    "artifactPath": "releases/7af0315444f98bcb7e956a3a69a6ca12714111ff57cca39500d2211504dee041.html"
+  },
+  "provider": {
+    "modelId": "@cf/zai-org/glm-4.7-flash",
+    "source": "Cloudflare native AI binding only",
+    "paidFallback": false,
+    "preload": false,
+    "automaticRetry": false
+  },
+  "billing": {
+    "preservedWorkersFreeBoundary": true,
+    "proof": "docs/evidence/realtime-release-2026-10-28/operations/stage6-deployment.json",
+    "originalCheckedAt": "2026-10-28T16:34:32.885Z",
+    "freshSubscriptionsCheck": "OAuth returned 403; no new billing verification timestamp claimed",
+    "noPlanChange": true
+  },
+  "storage": {
+    "namespace": "1de1df3929534a8d8d495d6db6604e99",
+    "coordinator": "story-budget-v1-global",
+    "noMigration": true,
+    "unknownHistoryRetained": true
+  },
+  "rollback": {
+    "productionVersion": "f17816a1-da95-4095-b13d-406a2610a9c0",
+    "staticManifestBlob": "128de078affea4a318f808325620e51860ed014e",
+    "staticSource": "1f5b9e18dae06e4b74e6d60403c46964cf45e1f9"
+  },
+  "cleanup": {
+    "zeroPercentRoutesRemoved": true,
+    "temporaryWorkerOrNamespaceCreated": false,
+    "ownLocalTesterCredentialDeleted": true,
+    "previewsEnabled": false,
+    "automationDeleted": true,
+    "existingSecretsPreservedNotRead": true
+  },
+  "buildReproducibility": {
+    "releaseWasRebuiltWithGitArchiveAutocrlfFalse": true,
+    "windowsWorkingCopyHtmlBytes": 1040073,
+    "actualCiAndProductionHtmlBytes": 1031384,
+    "ciAndProductionSha256": "7af0315444f98bcb7e956a3a69a6ca12714111ff57cca39500d2211504dee041"
+  },
+  "completedAt": "2026-10-30T03:33:23.194Z",
+  "public": {
+    "url": "https://baishi-wending.ct1150.workers.dev/",
+    "acceptance": "docs/evidence/cf-glm-release-2026-10-30/20261030T032931109Z/public-browser.json",
+    "latency": "docs/evidence/cf-glm-release-2026-10-30/20261030T032931109Z/public-latency.json",
+    "posts": 2,
+    "errors": [],
+    "refreshed": {
+      "beforeRevision": 2,
+      "afterRevision": 2,
+      "sameRng": true,
+      "sameState": true,
+      "noNewPost": true
+    },
+    "choicesEnabledDuringPreview": false,
+    "samples": [
+      {
+        "usable": true,
+        "errorCode": null,
+        "firstAnyPreviewMs": 3467,
+        "firstReadableMs": 3967,
+        "completionMs": 23632,
+        "narrativeChars": 344,
+        "maxPreviewGapMs": 1112,
+        "readingFinishEstimateMs": 61300,
+        "readingStallEstimateMs": 0,
+        "optionsWaitEstimateMs": 0,
+        "prefetchWorthEvaluating": true,
+        "assumptions": {
+          "readingCharsPerSecond": 6,
+          "readableChars": 20,
+          "targetWaitMs": 2000
+        }
+      },
+      {
+        "usable": true,
+        "errorCode": null,
+        "firstAnyPreviewMs": 5883,
+        "firstReadableMs": 6330,
+        "completionMs": 14638,
+        "narrativeChars": 167,
+        "maxPreviewGapMs": 289,
+        "readingFinishEstimateMs": 34163,
+        "readingStallEstimateMs": 0,
+        "optionsWaitEstimateMs": 0,
+        "prefetchWorthEvaluating": true,
+        "assumptions": {
+          "readingCharsPerSecond": 6,
+          "readableChars": 20,
+          "targetWaitMs": 2000
+        }
+      }
+    ],
+    "checks": [
+      {
+        "path": "/healthz",
+        "status": 200,
+        "data": {
+          "status": "ok",
+          "version": "4.3.0",
+          "sourceCommit": "c00f56781dc120394c7d96785350d2e583c55207",
+          "htmlSha256": "7af0315444f98bcb7e956a3a69a6ca12714111ff57cca39500d2211504dee041",
+          "htmlBytes": 1031384,
+          "releaseSource": "embedded",
+          "lastAttemptAt": null,
+          "lastSuccessAt": null,
+          "lastError": ""
+        }
+      },
+      {
+        "path": "/api/story/capabilities",
+        "status": 200,
+        "data": {
+          "protocolVersion": 1,
+          "available": true,
+          "status": "ready",
+          "errorCode": null,
+          "limits": {
+            "maxRequestBytes": 32768,
+            "maxResponseBytes": 65536,
+            "maxContextBytes": 7000,
+            "timeoutMs": 105000
+          }
+        }
+      },
+      {
+        "path": "/",
+        "status": 200,
+        "bytes": 1031384,
+        "sha256": "7af0315444f98bcb7e956a3a69a6ca12714111ff57cca39500d2211504dee041"
+      },
+      {
+        "path": "/baishi-wending-offline.html",
+        "status": 200,
+        "bytes": 1031384,
+        "sha256": "7af0315444f98bcb7e956a3a69a6ca12714111ff57cca39500d2211504dee041"
+      },
+      {
+        "path": "/glm-debug",
+        "status": 404
+      },
+      {
+        "path": "/probe-info",
+        "status": 404
+      }
+    ]
+  },
+  "limitations": [
+    "Four successful final private/public turns are a small, non-random sample, not a percentile guarantee. Earlier rejected scenes remain archived.",
+    "First public preview 3.467/5.883 seconds, readable 20 characters 3.967/6.330 seconds; full validated save 23.632/14.638 seconds. Under the explicit 6 chars/second reading assumption neither public sample waits for options after reading.",
+    "Model content can still fail canonical validation. Incomplete previews remain unsaved and cannot enable choices. Preloading remains off."
+  ]
+}

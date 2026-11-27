@@ -1,0 +1,1198 @@
+{
+  "caseId": "choice-1",
+  "start": 148528.09999999776,
+  "timeline": [
+    {
+      "atMs": 5939,
+      "chars": 1
+    },
+    {
+      "atMs": 6017,
+      "chars": 7
+    },
+    {
+      "atMs": 6095,
+      "chars": 11
+    },
+    {
+      "atMs": 6155,
+      "chars": 15
+    },
+    {
+      "atMs": 6217,
+      "chars": 19
+    },
+    {
+      "atMs": 6263,
+      "chars": 24
+    },
+    {
+      "atMs": 6341,
+      "chars": 27
+    },
+    {
+      "atMs": 6387,
+      "chars": 30
+    },
+    {
+      "atMs": 6464,
+      "chars": 36
+    },
+    {
+      "atMs": 6525,
+      "chars": 38
+    },
+    {
+      "atMs": 6805,
+      "chars": 42
+    },
+    {
+      "atMs": 6866,
+      "chars": 45
+    },
+    {
+      "atMs": 6988,
+      "chars": 54
+    },
+    {
+      "atMs": 7047,
+      "chars": 62
+    },
+    {
+      "atMs": 7126,
+      "chars": 66
+    },
+    {
+      "atMs": 7202,
+      "chars": 71
+    },
+    {
+      "atMs": 7247,
+      "chars": 77
+    },
+    {
+      "atMs": 7312,
+      "chars": 85
+    },
+    {
+      "atMs": 7389,
+      "chars": 90
+    },
+    {
+      "atMs": 7464,
+      "chars": 97
+    },
+    {
+      "atMs": 7521,
+      "chars": 99
+    },
+    {
+      "atMs": 7598,
+      "chars": 101
+    },
+    {
+      "atMs": 7724,
+      "chars": 107
+    },
+    {
+      "atMs": 7816,
+      "chars": 111
+    },
+    {
+      "atMs": 7878,
+      "chars": 116
+    },
+    {
+      "atMs": 7940,
+      "chars": 120
+    },
+    {
+      "atMs": 8003,
+      "chars": 125
+    },
+    {
+      "atMs": 8051,
+      "chars": 129
+    },
+    {
+      "atMs": 8127,
+      "chars": 135
+    },
+    {
+      "atMs": 8190,
+      "chars": 141
+    },
+    {
+      "atMs": 8253,
+      "chars": 145
+    },
+    {
+      "atMs": 8314,
+      "chars": 148
+    },
+    {
+      "atMs": 8434,
+      "chars": 150
+    },
+    {
+      "atMs": 8495,
+      "chars": 154
+    },
+    {
+      "atMs": 8568,
+      "chars": 156
+    },
+    {
+      "atMs": 8631,
+      "chars": 158
+    },
+    {
+      "atMs": 8693,
+      "chars": 166
+    },
+    {
+      "atMs": 8770,
+      "chars": 171
+    },
+    {
+      "atMs": 8845,
+      "chars": 176
+    },
+    {
+      "atMs": 8893,
+      "chars": 178
+    },
+    {
+      "atMs": 8957,
+      "chars": 181
+    },
+    {
+      "atMs": 9016,
+      "chars": 185
+    },
+    {
+      "atMs": 9095,
+      "chars": 188
+    },
+    {
+      "atMs": 9158,
+      "chars": 191
+    },
+    {
+      "atMs": 9215,
+      "chars": 194
+    },
+    {
+      "atMs": 9275,
+      "chars": 197
+    },
+    {
+      "atMs": 9337,
+      "chars": 200
+    },
+    {
+      "atMs": 9599,
+      "chars": 220
+    },
+    {
+      "atMs": 9660,
+      "chars": 222
+    },
+    {
+      "atMs": 9708,
+      "chars": 227
+    },
+    {
+      "atMs": 9786,
+      "chars": 230
+    },
+    {
+      "atMs": 9869,
+      "chars": 235
+    },
+    {
+      "atMs": 9936,
+      "chars": 240
+    },
+    {
+      "atMs": 10002,
+      "chars": 244
+    },
+    {
+      "atMs": 10043,
+      "chars": 246
+    },
+    {
+      "atMs": 10150,
+      "chars": 251
+    },
+    {
+      "atMs": 10152,
+      "chars": 254
+    },
+    {
+      "atMs": 10352,
+      "chars": 259
+    },
+    {
+      "atMs": 10417,
+      "chars": 261
+    },
+    {
+      "atMs": 10493,
+      "chars": 264
+    },
+    {
+      "atMs": 10538,
+      "chars": 267
+    },
+    {
+      "atMs": 10710,
+      "chars": 270
+    },
+    {
+      "atMs": 10846,
+      "chars": 273
+    },
+    {
+      "atMs": 10918,
+      "chars": 275
+    },
+    {
+      "atMs": 10983,
+      "chars": 277
+    },
+    {
+      "atMs": 11029,
+      "chars": 279
+    },
+    {
+      "atMs": 11218,
+      "chars": 284
+    },
+    {
+      "atMs": 11265,
+      "chars": 285
+    },
+    {
+      "atMs": 11373,
+      "chars": 287
+    },
+    {
+      "atMs": 11511,
+      "chars": 290
+    },
+    {
+      "atMs": 11572,
+      "chars": 292
+    },
+    {
+      "atMs": 11648,
+      "chars": 294
+    },
+    {
+      "atMs": 11711,
+      "chars": 298
+    },
+    {
+      "atMs": 11773,
+      "chars": 300
+    },
+    {
+      "atMs": 11835,
+      "chars": 303
+    },
+    {
+      "atMs": 11979,
+      "chars": 305
+    },
+    {
+      "atMs": 12039,
+      "chars": 307
+    },
+    {
+      "atMs": 12102,
+      "chars": 313
+    },
+    {
+      "atMs": 12165,
+      "chars": 315
+    },
+    {
+      "atMs": 12292,
+      "chars": 321
+    },
+    {
+      "atMs": 12338,
+      "chars": 327
+    },
+    {
+      "atMs": 12399,
+      "chars": 332
+    },
+    {
+      "atMs": 12446,
+      "chars": 335
+    },
+    {
+      "atMs": 12537,
+      "chars": 338
+    },
+    {
+      "atMs": 12598,
+      "chars": 342
+    },
+    {
+      "atMs": 12676,
+      "chars": 349
+    },
+    {
+      "atMs": 12737,
+      "chars": 352
+    },
+    {
+      "atMs": 12800,
+      "chars": 355
+    },
+    {
+      "atMs": 12848,
+      "chars": 358
+    },
+    {
+      "atMs": 12925,
+      "chars": 361
+    },
+    {
+      "atMs": 12988,
+      "chars": 366
+    },
+    {
+      "atMs": 13065,
+      "chars": 372
+    },
+    {
+      "atMs": 13112,
+      "chars": 375
+    },
+    {
+      "atMs": 13173,
+      "chars": 377
+    },
+    {
+      "atMs": 13251,
+      "chars": 380
+    },
+    {
+      "atMs": 13315,
+      "chars": 382
+    },
+    {
+      "atMs": 13360,
+      "chars": 385
+    },
+    {
+      "atMs": 13462,
+      "chars": 388
+    },
+    {
+      "atMs": 13483,
+      "chars": 391
+    },
+    {
+      "atMs": 13548,
+      "chars": 394
+    },
+    {
+      "atMs": 13605,
+      "chars": 397
+    },
+    {
+      "atMs": 13667,
+      "chars": 400
+    },
+    {
+      "atMs": 13746,
+      "chars": 402
+    },
+    {
+      "atMs": 13806,
+      "chars": 407
+    },
+    {
+      "atMs": 13886,
+      "chars": 412
+    },
+    {
+      "atMs": 13947,
+      "chars": 420
+    },
+    {
+      "atMs": 14025,
+      "chars": 424
+    },
+    {
+      "atMs": 14086,
+      "chars": 426
+    },
+    {
+      "atMs": 14132,
+      "chars": 429
+    },
+    {
+      "atMs": 14272,
+      "chars": 437
+    },
+    {
+      "atMs": 14334,
+      "chars": 443
+    },
+    {
+      "atMs": 14413,
+      "chars": 445
+    },
+    {
+      "atMs": 14474,
+      "chars": 448
+    },
+    {
+      "atMs": 14536,
+      "chars": 452
+    },
+    {
+      "atMs": 14584,
+      "chars": 458
+    },
+    {
+      "atMs": 14648,
+      "chars": 462
+    },
+    {
+      "atMs": 14711,
+      "chars": 468
+    },
+    {
+      "atMs": 14773,
+      "chars": 470
+    },
+    {
+      "atMs": 15040,
+      "chars": 495
+    },
+    {
+      "atMs": 15103,
+      "chars": 499
+    },
+    {
+      "atMs": 15179,
+      "chars": 504
+    },
+    {
+      "atMs": 15256,
+      "chars": 510
+    },
+    {
+      "atMs": 15318,
+      "chars": 512
+    },
+    {
+      "atMs": 15366,
+      "chars": 515
+    },
+    {
+      "atMs": 15428,
+      "chars": 519
+    },
+    {
+      "atMs": 15491,
+      "chars": 525
+    },
+    {
+      "atMs": 15571,
+      "chars": 532
+    },
+    {
+      "atMs": 15631,
+      "chars": 539
+    },
+    {
+      "atMs": 15709,
+      "chars": 543
+    },
+    {
+      "atMs": 15789,
+      "chars": 549
+    },
+    {
+      "atMs": 15850,
+      "chars": 553
+    },
+    {
+      "atMs": 15925,
+      "chars": 557
+    },
+    {
+      "atMs": 15986,
+      "chars": 564
+    },
+    {
+      "atMs": 16063,
+      "chars": 568
+    },
+    {
+      "atMs": 16236,
+      "chars": 576
+    },
+    {
+      "atMs": 16308,
+      "chars": 581
+    },
+    {
+      "atMs": 16368,
+      "chars": 584
+    },
+    {
+      "atMs": 16431,
+      "chars": 585
+    },
+    {
+      "atMs": 16570,
+      "chars": 590
+    },
+    {
+      "atMs": 16634,
+      "chars": 594
+    },
+    {
+      "atMs": 16681,
+      "chars": 601
+    },
+    {
+      "atMs": 16757,
+      "chars": 604
+    },
+    {
+      "atMs": 16821,
+      "chars": 609
+    },
+    {
+      "atMs": 16880,
+      "chars": 612
+    },
+    {
+      "atMs": 16940,
+      "chars": 615
+    },
+    {
+      "atMs": 17128,
+      "chars": 624
+    },
+    {
+      "atMs": 17300,
+      "chars": 637
+    },
+    {
+      "atMs": 17363,
+      "chars": 642
+    },
+    {
+      "atMs": 17443,
+      "chars": 649
+    },
+    {
+      "atMs": 17505,
+      "chars": 655
+    },
+    {
+      "atMs": 17585,
+      "chars": 659
+    },
+    {
+      "atMs": 17628,
+      "chars": 662
+    },
+    {
+      "atMs": 17722,
+      "chars": 667
+    },
+    {
+      "atMs": 17782,
+      "chars": 671
+    },
+    {
+      "atMs": 17859,
+      "chars": 677
+    },
+    {
+      "atMs": 17921,
+      "chars": 680
+    },
+    {
+      "atMs": 17969,
+      "chars": 694
+    },
+    {
+      "atMs": 18046,
+      "chars": 697
+    },
+    {
+      "atMs": 18125,
+      "chars": 703
+    },
+    {
+      "atMs": 18187,
+      "chars": 711
+    },
+    {
+      "atMs": 18267,
+      "chars": 720
+    },
+    {
+      "atMs": 18328,
+      "chars": 727
+    },
+    {
+      "atMs": 18387,
+      "chars": 732
+    },
+    {
+      "atMs": 18450,
+      "chars": 738
+    },
+    {
+      "atMs": 18497,
+      "chars": 742
+    },
+    {
+      "atMs": 18730,
+      "chars": 745
+    },
+    {
+      "atMs": 18776,
+      "chars": 748
+    },
+    {
+      "atMs": 19076,
+      "chars": 772
+    },
+    {
+      "atMs": 19138,
+      "chars": 777
+    },
+    {
+      "atMs": 19215,
+      "chars": 782
+    },
+    {
+      "atMs": 19278,
+      "chars": 787
+    },
+    {
+      "atMs": 19357,
+      "chars": 792
+    },
+    {
+      "atMs": 19418,
+      "chars": 797
+    },
+    {
+      "atMs": 19481,
+      "chars": 798
+    }
+  ],
+  "choicesEnabledDuringPreview": false,
+  "lastText": "你走到村长面前，目光扫过他满是皱纹的脸庞。村长正坐在石磨旁，手里拿着一根旱烟管，吧嗒吧嗒地抽着。见你过来，他停下动作，眯着眼打量了你一番，似乎在确认你是否真的准备好了。你开口询问山里的传闻，声音在空旷的村口显得有些突兀。村长听了你的话，沉默了片刻，吐出一口烟圈，眼神变得有些深邃。他缓缓说道：“山里头，有些事是老辈人传下来的，有些事是这几年才冒出来的。老辈人说，后山深处有灵气，但那地方邪门得很，进去的人没几个能活着出来的。这几年，倒是有些怪事，比如夜里能听到奇怪的歌声，还有野兽变得异常凶猛，甚至有人看见过发光的东西。你小子，才十六岁，就想去探探那后山？”\n\n村长顿了顿，似乎在斟酌词句，又像是怕吓着你。他指了指后山的方向，语气变得严肃起来：“后山深处，以前是个修仙门派的地界，后来不知道怎么回事，门派覆灭了。现在那里头，除了野兽，可能还有些残留的灵气。不过，那地方凶险得很，你若真要去，最好带上些干粮，别走回头路。还有，那地方有些东西，不是凡人能碰的。”\n\n你听着村长的警告，心中暗自思量。后山深处有灵气，还有修仙门派覆灭的旧事，这对你来说，既是一个诱惑，1也是一个警告。你摸了摸腰间的猎弓，握紧了柴刀，心中已有计较。村长见你神色坚定，便不再多言，只是叹了口气，说：“去吧，小心点。要是真有什么不测，你爹娘要是知道了，肯定要骂我。”\n\n村长从怀里掏出一块有些发黑的布条，递给你，说：“这是我家祖传的护身符，虽然不值钱，但能挡一挡小灾小难。你拿着吧，别嫌旧。”你接过布条，感觉它沉甸甸的，上面似乎还残留着一点温热。你收下护身符，心中涌起一股暖意。村长见你收下，interact:help了护符，便不再多言，只是叹了口气，说：“去吧，小心点。要是真有什么不测，你爹娘要是知道了，灵石=0，行粮=3，护符=1，完整功法=0，地脉灵晶=0，金丹灵髓=0，归魂印=0，护符=0，玄铁=0，古修遗物=0。",
+  "doneMs": 22775,
+  "result": {
+    "protocolVersion": 1,
+    "status": "ready",
+    "requestId": "3759f0fe-b3ad-40dc-b641-cd3dfec576ee",
+    "attemptId": "d0e6a64f-4e84-4156-bb1c-68934122c1de",
+    "sessionRef": "sess_a5707a4e97b34d482e38d2945fb3ac92",
+    "errorCode": null,
+    "retry": null,
+    "scene": {
+      "id": "r:4a6fc5e75d36ffc2:t2:s:scene",
+      "title": "村口古槐树下",
+      "location": "village",
+      "entities": [
+        {
+          "id": "r:4a6fc5e75d36ffc2:t1:e:person_1",
+          "name": "村长",
+          "kind": "person",
+          "status": "alive"
+        },
+        {
+          "id": "r:4a6fc5e75d36ffc2:t1:e:place_1",
+          "name": "后山深处",
+          "kind": "place"
+        }
+      ],
+      "blocks": [
+        {
+          "kind": "narration",
+          "text": "你走到村长面前，目光扫过他满是皱纹的脸庞。村长正坐在石磨旁，手里拿着一根旱烟管，吧嗒吧嗒地抽着。见你过来，他停下动作，眯着眼打量了你一番，似乎在确认你是否真的准备好了。你开口询问山里的传闻，声音在空旷的村口显得有些突兀。村长听了你的话，沉默了片刻，吐出一口烟圈，眼神变得有些深邃。他缓缓说道：“山里头，有些事是老辈人传下来的，有些事是这几年才冒出来的。老辈人说，后山深处有灵气，但那地方邪门得很，进去的人没几个能活着出来的。这几年，倒是有些怪事，比如夜里能听到奇怪的歌声，还有野兽变得异常凶猛，甚至有人看见过发光的东西。你小子，才十六岁，就想去探探那后山？”"
+        },
+        {
+          "kind": "narration",
+          "text": "村长顿了顿，似乎在斟酌词句，又像是怕吓着你。他指了指后山的方向，语气变得严肃起来：“后山深处，以前是个修仙门派的地界，后来不知道怎么回事，门派覆灭了。现在那里头，除了野兽，可能还有些残留的灵气。不过，那地方凶险得很，你若真要去，最好带上些干粮，别走回头路。还有，那地方有些东西，不是凡人能碰的。”"
+        },
+        {
+          "kind": "narration",
+          "text": "你听着村长的警告，心中暗自思量。后山深处有灵气，还有修仙门派覆灭的旧事，这对你来说，既是一个诱惑，1也是一个警告。你摸了摸腰间的猎弓，握紧了柴刀，心中已有计较。村长见你神色坚定，便不再多言，只是叹了口气，说：“去吧，小心点。要是真有什么不测，你爹娘要是知道了，肯定要骂我。”"
+        },
+        {
+          "kind": "narration",
+          "text": "村长从怀里掏出一块有些发黑的布条，递给你，说：“这是我家祖传的护身符，虽然不值钱，但能挡一挡小灾小难。你拿着吧，别嫌旧。”你接过布条，感觉它沉甸甸的，上面似乎还残留着一点温热。你收下护身符，心中涌起一股暖意。村长见你收下，interact:help了护符，便不再多言，只是叹了口气，说：“去吧，小心点。要是真有什么不测，你爹娘要是知道了，灵石=0，行粮=3，护符=1，完整功法=0，地脉灵晶=0，金丹灵髓=0，归魂印=0，护符=0，玄铁=0，古修遗物=0。"
+        }
+      ],
+      "choices": [
+        {
+          "id": "r:4a6fc5e75d36ffc2:t2:c:a",
+          "label": "询问后山深处具体有什么危险",
+          "intent": "interact",
+          "targetId": "r:4a6fc5e75d36ffc2:t1:e:person_1",
+          "stake": "low",
+          "approach": "ask"
+        },
+        {
+          "id": "r:4a6fc5e75d36ffc2:t2:c:b",
+          "label": "前往后山深处",
+          "intent": "travel",
+          "targetId": "r:4a6fc5e75d36ffc2:t1:e:place_1",
+          "stake": "low",
+          "approach": "wilderness"
+        },
+        {
+          "id": "r:4a6fc5e75d36ffc2:t2:c:c",
+          "label": "婉拒村长的护身符",
+          "intent": "interact",
+          "targetId": "r:4a6fc5e75d36ffc2:t1:e:person_1",
+          "stake": "low",
+          "approach": "decline"
+        }
+      ],
+      "memoryDeltas": [
+        {
+          "entityId": "r:4a6fc5e75d36ffc2:t1:e:person_1",
+          "text": "云归询问村长关于山里的传闻。",
+          "kind": "fact"
+        }
+      ]
+    }
+  },
+  "request": {
+    "context": {
+      "schemaVersion": 1,
+      "phase": "choice",
+      "identity": {
+        "runId": "c72a71bb-5cce-40b9-8eef-c2b65e9506cf",
+        "turnId": 2,
+        "baseRevision": 1,
+        "stateHash": "3a6880c8c7680ab43155a87842d04e57a765138c77716b49c5fd98c79218fef3",
+        "choiceId": "r:4a6fc5e75d36ffc2:t1:c:a",
+        "rulesVersion": 1,
+        "promptVersion": 1,
+        "requestId": "3759f0fe-b3ad-40dc-b641-cd3dfec576ee"
+      },
+      "namespace": "r:4a6fc5e75d36ffc2",
+      "receipt": {
+        "kind": "choice",
+        "choiceId": "r:4a6fc5e75d36ffc2:t1:c:a",
+        "action": {
+          "id": "r:4a6fc5e75d36ffc2:t1:c:a",
+          "label": "询问村长关于山里的传闻",
+          "intent": "interact",
+          "targetId": "r:4a6fc5e75d36ffc2:t1:e:person_1",
+          "stake": "low",
+          "approach": "ask"
+        },
+        "elapsedDays": 0,
+        "itemChanges": {},
+        "relationChanges": {},
+        "random": {
+          "before": 4183801396,
+          "after": 2670220291,
+          "roll": 91
+        },
+        "before": {
+          "ageDays": 5760,
+          "realm": "mortal",
+          "cultivation": 0,
+          "injury": 0
+        },
+        "after": {
+          "ageDays": 5760,
+          "realm": "mortal",
+          "cultivation": 0,
+          "injury": 0
+        },
+        "death": null,
+        "birth": null
+      },
+      "life": {
+        "name": "云归",
+        "ageDays": 5760,
+        "lifeLimit": 80,
+        "realm": "mortal",
+        "cultivation": 0,
+        "injury": 0,
+        "items": {
+          "supplies": 3,
+          "stones": 0
+        },
+        "relations": {},
+        "birth": {
+          "originId": "village",
+          "talentIds": [
+            "fortune-debt",
+            "sensitive-breath"
+          ],
+          "attributes": {
+            "constitution": 3,
+            "insight": 3,
+            "fortune": 6
+          }
+        }
+      },
+      "entities": [
+        {
+          "id": "r:4a6fc5e75d36ffc2:t1:e:person_1",
+          "name": "村长",
+          "kind": "person",
+          "status": "alive"
+        },
+        {
+          "id": "r:4a6fc5e75d36ffc2:t1:e:place_1",
+          "name": "后山深处",
+          "kind": "place",
+          "status": "unknown"
+        }
+      ],
+      "memory": {
+        "facts": [
+          {
+            "id": "m:7d2925a1fc619287936447675e99bc61",
+            "source": "narrative",
+            "kind": "fact",
+            "entityId": "r:4a6fc5e75d36ffc2:t1:e:person_1",
+            "text": "云归询问村长关于山里的传闻。",
+            "runId": "c72a71bb-5cce-40b9-8eef-c2b65e9506cf",
+            "turnId": 1
+          }
+        ],
+        "promises": [],
+        "clues": [],
+        "recent": [
+          {
+            "id": "turn:1",
+            "runId": "c72a71bb-5cce-40b9-8eef-c2b65e9506cf",
+            "turnId": 1,
+            "source": "narrative",
+            "kind": "turn",
+            "text": "地点：village\n你今年十六岁，是个在深山里长大的猎户。十六年的光阴让你练就了一身好筋骨，也让你习惯了与野兽为伴。你的命格有些古怪，福祸相依，这让你在山林间总能嗅到一丝不寻常的气息，哪怕只是风吹草动，你也能敏锐地察觉到。你背着一把磨得发亮的猎弓，腰间别着一把柴刀，正站在村口的古槐树下，准备开启你的第一次冒险。",
+            "entityIds": []
+          }
+        ],
+        "summaries": []
+      },
+      "references": [
+        "m:7d2925a1fc619287936447675e99bc61",
+        "turn:1"
+      ],
+      "previousScene": {
+        "id": "r:4a6fc5e75d36ffc2:t1:s:scene",
+        "blocksHash": "46812295421cab377eee58b448819c9c8fead0b236be3355b0ba22a892623079"
+      },
+      "relationshipVersion": 1,
+      "relationships": {},
+      "coverage": {
+        "policy": "relevance-v1",
+        "openTotal": 0,
+        "openIncluded": 0,
+        "openOmitted": 0
+      }
+    },
+    "attempt": {
+      "id": "d0e6a64f-4e84-4156-bb1c-68934122c1de",
+      "sessionRef": "sess_a5707a4e97b34d482e38d2945fb3ac92",
+      "retryOf": null
+    }
+  },
+  "decision": {
+    "index": 0,
+    "reason": "询问村长山里传闻，继续同日问答；本开局memory提前记录未选询问已标为语义缺陷，本轮仅继续诊断连续性，不自动认定验收通过",
+    "selected": {
+      "id": "r:4a6fc5e75d36ffc2:t1:c:a",
+      "label": "询问村长关于山里的传闻",
+      "intent": "interact",
+      "targetId": "r:4a6fc5e75d36ffc2:t1:e:person_1",
+      "stake": "low",
+      "approach": "ask"
+    }
+  },
+  "choices": [
+    {
+      "id": "r:4a6fc5e75d36ffc2:t2:c:a",
+      "enabled": true,
+      "label": "询问后山深处具体有什么危险",
+      "cost": "0日"
+    },
+    {
+      "id": "r:4a6fc5e75d36ffc2:t2:c:b",
+      "enabled": true,
+      "label": "前往后山深处",
+      "cost": "60日 · 行粮 1 · 历练受伤基础风险25%，根骨与坚韧筋骨可降低风险。"
+    },
+    {
+      "id": "r:4a6fc5e75d36ffc2:t2:c:c",
+      "enabled": true,
+      "label": "婉拒村长的护身符",
+      "cost": "0日"
+    }
+  ],
+  "traces": [
+    {
+      "model": "@cf/zai-org/glm-4.7-flash",
+      "inputHash": "7ea2c09cf620d5fe87ddf64a45375501293829d9e168bbca0e82405cb9d2a81b",
+      "inputBytes": 14609,
+      "startedAt": 1793345889302,
+      "bindingReturnedAt": 1793345889730,
+      "response": {
+        "model": "@cf/zai-org/glm-4.7-flash",
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "message": {
+              "content": "{\"blocks\":[{\"kind\":\"narration\",\"text\":\"你走到村长面前，目光扫过他满是皱纹的脸庞。村长正坐在石磨旁，手里拿着一根旱烟管，吧嗒吧嗒地抽着。见你过来，他停下动作，眯着眼打量了你一番，似乎在确认你是否真的准备好了。你开口询问山里的传闻，声音在空旷的村口显得有些突兀。村长听了你的话，沉默了片刻，吐出一口烟圈，眼神变得有些深邃。他缓缓说道：“山里头，有些事是老辈人传下来的，有些事是这几年才冒出来的。老辈人说，后山深处有灵气，但那地方邪门得很，进去的人没几个能活着出来的。这几年，倒是有些怪事，比如夜里能听到奇怪的歌声，还有野兽变得异常凶猛，甚至有人看见过发光的东西。你小子，才十六岁，就想去探探那后山？”\"},{\"kind\":\"narration\",\"text\":\"村长顿了顿，似乎在斟酌词句，又像是怕吓着你。他指了指后山的方向，语气变得严肃起来：“后山深处，以前是个修仙门派的地界，后来不知道怎么回事，门派覆灭了。现在那里头，除了野兽，可能还有些残留的灵气。不过，那地方凶险得很，你若真要去，最好带上些干粮，别走回头路。还有，那地方有些东西，不是凡人能碰的。”\"},{\"kind\":\"narration\",\"text\":\"你听着村长的警告，心中暗自思量。后山深处有灵气，还有修仙门派覆灭的旧事，这对你来说，既是一个诱惑，1也是一个警告。你摸了摸腰间的猎弓，握紧了柴刀，心中已有计较。村长见你神色坚定，便不再多言，只是叹了口气，说：“去吧，小心点。要是真有什么不测，你爹娘要是知道了，肯定要骂我。”\"},{\"kind\":\"narration\",\"text\":\"村长从怀里掏出一块有些发黑的布条，递给你，说：“这是我家祖传的护身符，虽然不值钱，但能挡一挡小灾小难。你拿着吧，别嫌旧。”你接过布条，感觉它沉甸甸的，上面似乎还残留着一点温热。你收下护身符，心中涌起一股暖意。村长见你收下，interact:help了护符，便不再多言，只是叹了口气，说：“去吧，小心点。要是真有什么不测，你爹娘要是知道了，灵石=0，行粮=3，护符=1，完整功法=0，地脉灵晶=0，金丹灵髓=0，归魂印=0，护符=0，玄铁=0，古修遗物=0。\"}],\"choices\":[{\"action\":\"interact:ask\",\"targetId\":\"k1\",\"stake\":\"low\",\"label\":\"询问后山深处具体有什么危险\",\"anchor\":0},{\"action\":\"travel:wilderness\",\"targetId\":\"k2\",\"stake\":\"low\",\"label\":\"前往后山深处\",\"anchor\":0},{\"action\":\"interact:decline\",\"targetId\":\"k1\",\"stake\":\"low\",\"label\":\"婉拒村长的护身符\",\"anchor\":0}],\"title\":\"村口古槐树下\",\"location\":\"village\",\"otherPeople\":[{\"id\":\"k1\",\"status\":\"alive\"}],\"places\":[{\"id\":\"k2\"}],\"factions\":[],\"memoryDeltas\":[{\"entityId\":\"k1\",\"text\":\"云归询问村长关于山里的传闻。\",\"kind\":\"fact\"}]}",
+              "reasoning_content": ""
+            }
+          }
+        ],
+        "usage": {
+          "prompt_tokens": 1677,
+          "completion_tokens": 794,
+          "total_tokens": 2471,
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          },
+          "neurons": 38.12510000000034
+        }
+      },
+      "rawSseBytes": 250876
+    }
+  ],
+  "revision": 2,
+  "pending": false,
+  "state": {
+    "relationshipVersion": 1,
+    "version": 5,
+    "mode": "cultivation",
+    "contentVersion": 4,
+    "rulesVersion": 1,
+    "promptVersion": 1,
+    "runId": "c72a71bb-5cce-40b9-8eef-c2b65e9506cf",
+    "revision": 2,
+    "turnId": 2,
+    "phase": "active",
+    "rng": 2670220291,
+    "life": {
+      "name": "云归",
+      "ageDays": 5760,
+      "lifeLimit": 80,
+      "realm": "mortal",
+      "cultivation": 0,
+      "injury": 0,
+      "items": {
+        "supplies": 3,
+        "stones": 0
+      },
+      "relations": {},
+      "birth": {
+        "originId": "village",
+        "talentIds": [
+          "fortune-debt",
+          "sensitive-breath"
+        ],
+        "attributes": {
+          "constitution": 3,
+          "insight": 3,
+          "fortune": 6
+        }
+      }
+    },
+    "birthReceipt": {
+      "kind": "opening",
+      "choiceId": null,
+      "action": null,
+      "elapsedDays": 0,
+      "itemChanges": {},
+      "relationChanges": {},
+      "random": {
+        "before": 4183801396,
+        "after": 4183801396,
+        "roll": null
+      },
+      "before": {
+        "ageDays": 5760,
+        "realm": "mortal",
+        "cultivation": 0,
+        "injury": 0
+      },
+      "after": {
+        "ageDays": 5760,
+        "realm": "mortal",
+        "cultivation": 0,
+        "injury": 0
+      },
+      "death": null,
+      "birth": {
+        "originId": "village",
+        "talentIds": [
+          "fortune-debt",
+          "sensitive-breath"
+        ],
+        "attributes": {
+          "constitution": 3,
+          "insight": 3,
+          "fortune": 6
+        }
+      }
+    },
+    "currentScene": {
+      "id": "r:4a6fc5e75d36ffc2:t2:s:scene",
+      "title": "村口古槐树下",
+      "location": "village",
+      "entities": [
+        {
+          "id": "r:4a6fc5e75d36ffc2:t1:e:person_1",
+          "name": "村长",
+          "kind": "person",
+          "status": "alive"
+        },
+        {
+          "id": "r:4a6fc5e75d36ffc2:t1:e:place_1",
+          "name": "后山深处",
+          "kind": "place"
+        }
+      ],
+      "blocks": [
+        {
+          "kind": "narration",
+          "text": "你走到村长面前，目光扫过他满是皱纹的脸庞。村长正坐在石磨旁，手里拿着一根旱烟管，吧嗒吧嗒地抽着。见你过来，他停下动作，眯着眼打量了你一番，似乎在确认你是否真的准备好了。你开口询问山里的传闻，声音在空旷的村口显得有些突兀。村长听了你的话，沉默了片刻，吐出一口烟圈，眼神变得有些深邃。他缓缓说道：“山里头，有些事是老辈人传下来的，有些事是这几年才冒出来的。老辈人说，后山深处有灵气，但那地方邪门得很，进去的人没几个能活着出来的。这几年，倒是有些怪事，比如夜里能听到奇怪的歌声，还有野兽变得异常凶猛，甚至有人看见过发光的东西。你小子，才十六岁，就想去探探那后山？”"
+        },
+        {
+          "kind": "narration",
+          "text": "村长顿了顿，似乎在斟酌词句，又像是怕吓着你。他指了指后山的方向，语气变得严肃起来：“后山深处，以前是个修仙门派的地界，后来不知道怎么回事，门派覆灭了。现在那里头，除了野兽，可能还有些残留的灵气。不过，那地方凶险得很，你若真要去，最好带上些干粮，别走回头路。还有，那地方有些东西，不是凡人能碰的。”"
+        },
+        {
+          "kind": "narration",
+          "text": "你听着村长的警告，心中暗自思量。后山深处有灵气，还有修仙门派覆灭的旧事，这对你来说，既是一个诱惑，1也是一个警告。你摸了摸腰间的猎弓，握紧了柴刀，心中已有计较。村长见你神色坚定，便不再多言，只是叹了口气，说：“去吧，小心点。要是真有什么不测，你爹娘要是知道了，肯定要骂我。”"
+        },
+        {
+          "kind": "narration",
+          "text": "村长从怀里掏出一块有些发黑的布条，递给你，说：“这是我家祖传的护身符，虽然不值钱，但能挡一挡小灾小难。你拿着吧，别嫌旧。”你接过布条，感觉它沉甸甸的，上面似乎还残留着一点温热。你收下护身符，心中涌起一股暖意。村长见你收下，interact:help了护符，便不再多言，只是叹了口气，说：“去吧，小心点。要是真有什么不测，你爹娘要是知道了，灵石=0，行粮=3，护符=1，完整功法=0，地脉灵晶=0，金丹灵髓=0，归魂印=0，护符=0，玄铁=0，古修遗物=0。"
+        }
+      ],
+      "choices": [
+        {
+          "id": "r:4a6fc5e75d36ffc2:t2:c:a",
+          "label": "询问后山深处具体有什么危险",
+          "intent": "interact",
+          "targetId": "r:4a6fc5e75d36ffc2:t1:e:person_1",
+          "stake": "low",
+          "approach": "ask"
+        },
+        {
+          "id": "r:4a6fc5e75d36ffc2:t2:c:b",
+          "label": "前往后山深处",
+          "intent": "travel",
+          "targetId": "r:4a6fc5e75d36ffc2:t1:e:place_1",
+          "stake": "low",
+          "approach": "wilderness"
+        },
+        {
+          "id": "r:4a6fc5e75d36ffc2:t2:c:c",
+          "label": "婉拒村长的护身符",
+          "intent": "interact",
+          "targetId": "r:4a6fc5e75d36ffc2:t1:e:person_1",
+          "stake": "low",
+          "approach": "decline"
+        }
+      ],
+      "memoryDeltas": [
+        {
+          "entityId": "r:4a6fc5e75d36ffc2:t1:e:person_1",
+          "text": "云归询问村长关于山里的传闻。",
+          "kind": "fact"
+        }
+      ]
+    },
+    "lastReceipt": {
+      "kind": "choice",
+      "choiceId": "r:4a6fc5e75d36ffc2:t1:c:a",
+      "action": {
+        "id": "r:4a6fc5e75d36ffc2:t1:c:a",
+        "label": "询问村长关于山里的传闻",
+        "intent": "interact",
+        "targetId": "r:4a6fc5e75d36ffc2:t1:e:person_1",
+        "stake": "low",
+        "approach": "ask"
+      },
+      "elapsedDays": 0,
+      "itemChanges": {},
+      "relationChanges": {},
+      "random": {
+        "before": 4183801396,
+        "after": 2670220291,
+        "roll": 91
+      },
+      "before": {
+        "ageDays": 5760,
+        "realm": "mortal",
+        "cultivation": 0,
+        "injury": 0
+      },
+      "after": {
+        "ageDays": 5760,
+        "realm": "mortal",
+        "cultivation": 0,
+        "injury": 0
+      },
+      "death": null,
+      "birth": null
+    },
+    "relatedEntities": [
+      {
+        "id": "r:4a6fc5e75d36ffc2:t1:e:person_1",
+        "name": "村长",
+        "kind": "person",
+        "status": "alive"
+      },
+      {
+        "id": "r:4a6fc5e75d36ffc2:t1:e:place_1",
+        "name": "后山深处",
+        "kind": "place"
+      }
+    ],
+    "archiveCursor": 0
+  },
+  "posts": 2,
+  "latency": {
+    "usable": true,
+    "errorCode": null,
+    "firstAnyPreviewMs": 5939,
+    "firstReadableMs": 6263,
+    "completionMs": 22775,
+    "narrativeChars": 798,
+    "maxPreviewGapMs": 300,
+    "readingFinishEstimateMs": 139263,
+    "readingStallEstimateMs": 0,
+    "optionsWaitEstimateMs": 0,
+    "prefetchWorthEvaluating": true,
+    "assumptions": {
+      "readingCharsPerSecond": 6,
+      "readableChars": 20,
+      "targetWaitMs": 2000
+    }
+  }
+}

@@ -1,0 +1,1 @@
+{"at":"2026-10-30T13:40:02.467Z","decision":{"index":0,"reason":"援助被实际吃下并感谢，行粮3→2、年龄仅+1日；追问野猪来历、后山情况及类似异状，不代替玩家进山。","selected":{"id":"r:777f39e63f6e0dd9:t2:c:a","label":"询问张屠户：询问张屠户这头猪的具体来历和后山的情况，看看是否有人见过类似的异状。","intent":"interact","targetId":"r:777f39e63f6e0dd9:t1:e:person_1","stake":"low","approach":"ask"}}}

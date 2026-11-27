@@ -1,0 +1,2155 @@
+{
+  "sourceCommit": "e211c08905d61ba549146fbeedb79e0e54211f82",
+  "version": "07951fa3-3ddd-428e-b4b3-90e293814a4a",
+  "recordedAt": "2026-10-30T16:59:18.014Z",
+  "continuedFrom": null,
+  "records": [
+    {
+      "caseId": "opening",
+      "origin": "ai",
+      "postDelta": 1,
+      "localEntry": null,
+      "start": 788.3000000044703,
+      "timeline": [
+        {
+          "atMs": 4867,
+          "chars": 1
+        },
+        {
+          "atMs": 4960,
+          "chars": 5
+        },
+        {
+          "atMs": 5039,
+          "chars": 8
+        },
+        {
+          "atMs": 5101,
+          "chars": 13
+        },
+        {
+          "atMs": 5333,
+          "chars": 14
+        },
+        {
+          "atMs": 5595,
+          "chars": 16
+        },
+        {
+          "atMs": 5716,
+          "chars": 18
+        },
+        {
+          "atMs": 5763,
+          "chars": 22
+        },
+        {
+          "atMs": 5812,
+          "chars": 24
+        },
+        {
+          "atMs": 5890,
+          "chars": 27
+        },
+        {
+          "atMs": 5954,
+          "chars": 28
+        },
+        {
+          "atMs": 6016,
+          "chars": 29
+        },
+        {
+          "atMs": 6078,
+          "chars": 31
+        },
+        {
+          "atMs": 6157,
+          "chars": 36
+        },
+        {
+          "atMs": 6206,
+          "chars": 38
+        },
+        {
+          "atMs": 6298,
+          "chars": 41
+        },
+        {
+          "atMs": 6377,
+          "chars": 46
+        },
+        {
+          "atMs": 6468,
+          "chars": 49
+        },
+        {
+          "atMs": 6531,
+          "chars": 53
+        },
+        {
+          "atMs": 6606,
+          "chars": 55
+        },
+        {
+          "atMs": 6664,
+          "chars": 60
+        },
+        {
+          "atMs": 6726,
+          "chars": 63
+        },
+        {
+          "atMs": 6788,
+          "chars": 66
+        },
+        {
+          "atMs": 6850,
+          "chars": 68
+        },
+        {
+          "atMs": 6914,
+          "chars": 72
+        },
+        {
+          "atMs": 6991,
+          "chars": 77
+        },
+        {
+          "atMs": 7066,
+          "chars": 82
+        },
+        {
+          "atMs": 7110,
+          "chars": 85
+        },
+        {
+          "atMs": 7190,
+          "chars": 88
+        },
+        {
+          "atMs": 7575,
+          "chars": 93
+        },
+        {
+          "atMs": 7619,
+          "chars": 97
+        },
+        {
+          "atMs": 7697,
+          "chars": 103
+        },
+        {
+          "atMs": 7787,
+          "chars": 104
+        },
+        {
+          "atMs": 7850,
+          "chars": 108
+        },
+        {
+          "atMs": 7912,
+          "chars": 113
+        },
+        {
+          "atMs": 7977,
+          "chars": 118
+        },
+        {
+          "atMs": 8054,
+          "chars": 121
+        },
+        {
+          "atMs": 8100,
+          "chars": 126
+        },
+        {
+          "atMs": 8174,
+          "chars": 130
+        },
+        {
+          "atMs": 8359,
+          "chars": 133
+        },
+        {
+          "atMs": 8435,
+          "chars": 136
+        },
+        {
+          "atMs": 8498,
+          "chars": 138
+        },
+        {
+          "atMs": 8545,
+          "chars": 139
+        },
+        {
+          "atMs": 8604,
+          "chars": 144
+        },
+        {
+          "atMs": 8775,
+          "chars": 146
+        },
+        {
+          "atMs": 8839,
+          "chars": 153
+        },
+        {
+          "atMs": 8901,
+          "chars": 156
+        },
+        {
+          "atMs": 8950,
+          "chars": 158
+        },
+        {
+          "atMs": 9105,
+          "chars": 160
+        },
+        {
+          "atMs": 9246,
+          "chars": 163
+        },
+        {
+          "atMs": 9322,
+          "chars": 165
+        },
+        {
+          "atMs": 9383,
+          "chars": 168
+        },
+        {
+          "atMs": 9458,
+          "chars": 170
+        },
+        {
+          "atMs": 9508,
+          "chars": 173
+        },
+        {
+          "atMs": 9587,
+          "chars": 175
+        },
+        {
+          "atMs": 9633,
+          "chars": 177
+        },
+        {
+          "atMs": 9725,
+          "chars": 180
+        }
+      ],
+      "choicesEnabledDuringPreview": false,
+      "lastText": "你站在自家破旧的木屋前，晨雾还未散尽。隔壁的猎户老赵正蹲在院角，手里拿着把生锈的柴刀，正费力地劈开一块从深山里带回来的黑铁矿石。他满头大汗，眉头紧锁，似乎遇到了什么棘手的难题。\n\n老赵停下手里的活，抬头看了你一眼，叹了口气说道：“云归，这铁太硬了，我的刀都快卷刃了。你从小在山里长大，力气大，能不能帮我看看这东西到底是个什么路数？要是劈不开，这批货可就废了。”",
+      "doneMs": 21575,
+      "result": {
+        "protocolVersion": 1,
+        "status": "ready",
+        "requestId": "0f67e9d4-a910-48bc-a0ea-6037df546fe5",
+        "attemptId": "fbf49cd3-2591-41ab-a67f-9eccc30e7111",
+        "sessionRef": "sess_8afdee86f4939c4b1019b7a71928a7e0",
+        "errorCode": null,
+        "retry": null,
+        "scene": {
+          "id": "r:d9da341062cbd87f:t1:s:scene",
+          "title": "山村晨雾",
+          "location": "village",
+          "entities": [
+            {
+              "id": "r:d9da341062cbd87f:t1:e:person_1",
+              "name": "老赵",
+              "kind": "person"
+            }
+          ],
+          "blocks": [
+            {
+              "kind": "narration",
+              "text": "你站在自家破旧的木屋前，晨雾还未散尽。隔壁的猎户老赵正蹲在院角，手里拿着把生锈的柴刀，正费力地劈开一块从深山里带回来的黑铁矿石。他满头大汗，眉头紧锁，似乎遇到了什么棘手的难题。"
+            },
+            {
+              "kind": "narration",
+              "text": "老赵停下手里的活，抬头看了你一眼，叹了口气说道：“云归，这铁太硬了，我的刀都快卷刃了。你从小在山里长大，力气大，能不能帮我看看这东西到底是个什么路数？要是劈不开，这批货可就废了。”"
+            }
+          ],
+          "choices": [
+            {
+              "id": "r:d9da341062cbd87f:t1:c:a",
+              "label": "询问老赵：询问老赵这矿石的来源和具体困难",
+              "intent": "interact",
+              "targetId": "r:d9da341062cbd87f:t1:e:person_1",
+              "stake": "low",
+              "approach": "ask"
+            },
+            {
+              "id": "r:d9da341062cbd87f:t1:c:b",
+              "label": "援助老赵：拿出1行粮援助老赵解决困难",
+              "intent": "interact",
+              "targetId": "r:d9da341062cbd87f:t1:e:person_1",
+              "stake": "low",
+              "approach": "help"
+            },
+            {
+              "id": "r:d9da341062cbd87f:t1:c:c",
+              "label": "婉拒老赵：拒绝老赵的请求",
+              "intent": "interact",
+              "targetId": "r:d9da341062cbd87f:t1:e:person_1",
+              "stake": "low",
+              "approach": "decline"
+            }
+          ],
+          "memoryDeltas": [
+            {
+              "entityId": "r:d9da341062cbd87f:t1:e:person_1",
+              "kind": "clue",
+              "text": "你站在自家破旧的木屋前，晨雾还未散尽。隔壁的猎户老赵正蹲在院角，手里拿着把生锈的柴刀，正费力地劈开一块从深山里带回来的黑铁矿石。他满头大汗，眉头紧锁，似乎遇到了什么棘手的难题。",
+              "status": "open"
+            }
+          ]
+        }
+      },
+      "request": {
+        "context": {
+          "schemaVersion": 1,
+          "phase": "opening",
+          "identity": {
+            "runId": "0222535f-c4b7-40dd-98c6-cbe51e723b4c",
+            "turnId": 1,
+            "baseRevision": 0,
+            "stateHash": "eb9ba50d45007d09daed5a5568fc36873a49588a05dfa6ec4c6f82eef8dcbce6",
+            "choiceId": null,
+            "rulesVersion": 1,
+            "promptVersion": 1,
+            "requestId": "0f67e9d4-a910-48bc-a0ea-6037df546fe5"
+          },
+          "namespace": "r:d9da341062cbd87f",
+          "receipt": {
+            "kind": "opening",
+            "choiceId": null,
+            "action": null,
+            "elapsedDays": 0,
+            "itemChanges": {},
+            "relationChanges": {},
+            "random": {
+              "before": 4221886671,
+              "after": 4221886671,
+              "roll": null
+            },
+            "before": {
+              "ageDays": 5760,
+              "realm": "mortal",
+              "cultivation": 0,
+              "injury": 0
+            },
+            "after": {
+              "ageDays": 5760,
+              "realm": "mortal",
+              "cultivation": 0,
+              "injury": 0
+            },
+            "death": null,
+            "birth": {
+              "originId": "village",
+              "talentIds": [
+                "flash-wisdom",
+                "sensitive-breath"
+              ],
+              "attributes": {
+                "constitution": 2,
+                "insight": 5,
+                "fortune": 5
+              }
+            }
+          },
+          "life": {
+            "name": "云归",
+            "ageDays": 5760,
+            "lifeLimit": 80,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0,
+            "items": {
+              "supplies": 3,
+              "stones": 0
+            },
+            "relations": {},
+            "birth": {
+              "originId": "village",
+              "talentIds": [
+                "flash-wisdom",
+                "sensitive-breath"
+              ],
+              "attributes": {
+                "constitution": 2,
+                "insight": 5,
+                "fortune": 5
+              }
+            }
+          },
+          "entities": [],
+          "memory": {
+            "facts": [],
+            "promises": [],
+            "clues": [],
+            "recent": [],
+            "summaries": []
+          },
+          "references": [],
+          "previousScene": null,
+          "relationshipVersion": 1,
+          "relationships": {},
+          "coverage": {
+            "policy": "relevance-v1",
+            "openTotal": 0,
+            "openIncluded": 0,
+            "openOmitted": 0
+          }
+        },
+        "attempt": {
+          "id": "fbf49cd3-2591-41ab-a67f-9eccc30e7111",
+          "sessionRef": "sess_8afdee86f4939c4b1019b7a71928a7e0",
+          "retryOf": null
+        },
+        "storyActions": true
+      },
+      "decision": null,
+      "choices": [
+        {
+          "id": "r:d9da341062cbd87f:t1:c:a",
+          "enabled": true,
+          "label": "询问老赵：询问老赵这矿石的来源和具体困难",
+          "cost": "0日"
+        },
+        {
+          "id": "r:d9da341062cbd87f:t1:c:b",
+          "enabled": true,
+          "label": "援助老赵：拿出1行粮援助老赵解决困难",
+          "cost": "1日 · 行粮 1"
+        },
+        {
+          "id": "r:d9da341062cbd87f:t1:c:c",
+          "enabled": true,
+          "label": "婉拒老赵：拒绝老赵的请求",
+          "cost": "0日"
+        }
+      ],
+      "traces": [
+        {
+          "model": "@cf/zai-org/glm-4.7-flash",
+          "inputHash": "9e8b8080527fac6d6ce7c205b7532fc439dc88cc70453edcb79bf988ed3285a7",
+          "inputBytes": 14800,
+          "startedAt": 1793378950317,
+          "bindingReturnedAt": 1793378950687,
+          "liveRawBytes": 137383,
+          "captureComplete": true,
+          "response": {
+            "model": "@cf/zai-org/glm-4.7-flash",
+            "choices": [
+              {
+                "finish_reason": "stop",
+                "message": {
+                  "content": "{\n  \"blocks\": [\n    {\n      \"kind\": \"narration\",\n      \"text\": \"你站在自家破旧的木屋前，晨雾还未散尽。隔壁的猎户老赵正蹲在院角，手里拿着把生锈的柴刀，正费力地劈开一块从深山里带回来的黑铁矿石。他满头大汗，眉头紧锁，似乎遇到了什么棘手的难题。\"\n    },\n    {\n      \"kind\": \"narration\",\n      \"text\": \"老赵停下手里的活，抬头看了你一眼，叹了口气说道：“云归，这铁太硬了，我的刀都快卷刃了。你从小在山里长大，力气大，能不能帮我看看这东西到底是个什么路数？要是劈不开，这批货可就废了。”\"\n    }\n  ],\n  \"choices\": [\n    {\n      \"action\": \"interact:ask\",\n      \"target\": {\n        \"kind\": \"person\",\n        \"name\": \"老赵\",\n        \"ref\": \"\",\n        \"status\": null\n      },\n      \"stake\": \"low\",\n      \"purpose\": \"询问老赵这矿石的来源和具体困难\",\n      \"anchor\": 0\n    },\n    {\n      \"action\": \"interact:help\",\n      \"target\": {\n        \"kind\": \"person\",\n        \"name\": \"老赵\",\n        \"ref\": \"\",\n        \"status\": null\n      },\n      \"stake\": \"low\",\n      \"purpose\": \"拿出1行粮援助老赵解决困难\",\n      \"anchor\": 0\n    },\n    {\n      \"action\": \"interact:decline\",\n      \"target\": {\n        \"kind\": \"person\",\n        \"name\": \"老赵\",\n        \"ref\": \"\",\n        \"status\": null\n      },\n      \"stake\": \"low\",\n      \"purpose\": \"拒绝老赵的请求\",\n      \"anchor\": 0\n    }\n  ],\n  \"title\": \"山村晨雾\",\n  \"location\": \"village\",\n  \"memoryDeltas\": [\n    {\n      \"target\": {\n        \"kind\": \"person\",\n        \"name\": \"老赵\",\n        \"ref\": \"\",\n        \"status\": null\n      },\n      \"kind\": \"clue\",\n      \"anchor\": 0,\n      \"status\": \"open\"\n    }\n  ]\n}",
+                  "reasoning_content": ""
+                }
+              }
+            ],
+            "usage": {
+              "prompt_tokens": 1946,
+              "completion_tokens": 503,
+              "total_tokens": 2449,
+              "prompt_tokens_details": {
+                "cached_tokens": 0
+              },
+              "neurons": 29.012200000000217
+            }
+          },
+          "rawSseBytes": 137383
+        }
+      ],
+      "revision": 1,
+      "pending": false,
+      "state": {
+        "relationshipVersion": 1,
+        "version": 5,
+        "mode": "cultivation",
+        "contentVersion": 4,
+        "rulesVersion": 1,
+        "promptVersion": 1,
+        "runId": "0222535f-c4b7-40dd-98c6-cbe51e723b4c",
+        "revision": 1,
+        "turnId": 1,
+        "phase": "active",
+        "rng": 4221886671,
+        "life": {
+          "name": "云归",
+          "ageDays": 5760,
+          "lifeLimit": 80,
+          "realm": "mortal",
+          "cultivation": 0,
+          "injury": 0,
+          "items": {
+            "supplies": 3,
+            "stones": 0
+          },
+          "relations": {},
+          "birth": {
+            "originId": "village",
+            "talentIds": [
+              "flash-wisdom",
+              "sensitive-breath"
+            ],
+            "attributes": {
+              "constitution": 2,
+              "insight": 5,
+              "fortune": 5
+            }
+          }
+        },
+        "birthReceipt": {
+          "kind": "opening",
+          "choiceId": null,
+          "action": null,
+          "elapsedDays": 0,
+          "itemChanges": {},
+          "relationChanges": {},
+          "random": {
+            "before": 4221886671,
+            "after": 4221886671,
+            "roll": null
+          },
+          "before": {
+            "ageDays": 5760,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "after": {
+            "ageDays": 5760,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "death": null,
+          "birth": {
+            "originId": "village",
+            "talentIds": [
+              "flash-wisdom",
+              "sensitive-breath"
+            ],
+            "attributes": {
+              "constitution": 2,
+              "insight": 5,
+              "fortune": 5
+            }
+          }
+        },
+        "currentScene": {
+          "id": "r:d9da341062cbd87f:t1:s:scene",
+          "title": "山村晨雾",
+          "location": "village",
+          "entities": [
+            {
+              "id": "r:d9da341062cbd87f:t1:e:person_1",
+              "name": "老赵",
+              "kind": "person"
+            }
+          ],
+          "blocks": [
+            {
+              "kind": "narration",
+              "text": "你站在自家破旧的木屋前，晨雾还未散尽。隔壁的猎户老赵正蹲在院角，手里拿着把生锈的柴刀，正费力地劈开一块从深山里带回来的黑铁矿石。他满头大汗，眉头紧锁，似乎遇到了什么棘手的难题。"
+            },
+            {
+              "kind": "narration",
+              "text": "老赵停下手里的活，抬头看了你一眼，叹了口气说道：“云归，这铁太硬了，我的刀都快卷刃了。你从小在山里长大，力气大，能不能帮我看看这东西到底是个什么路数？要是劈不开，这批货可就废了。”"
+            }
+          ],
+          "choices": [
+            {
+              "id": "r:d9da341062cbd87f:t1:c:a",
+              "label": "询问老赵：询问老赵这矿石的来源和具体困难",
+              "intent": "interact",
+              "targetId": "r:d9da341062cbd87f:t1:e:person_1",
+              "stake": "low",
+              "approach": "ask"
+            },
+            {
+              "id": "r:d9da341062cbd87f:t1:c:b",
+              "label": "援助老赵：拿出1行粮援助老赵解决困难",
+              "intent": "interact",
+              "targetId": "r:d9da341062cbd87f:t1:e:person_1",
+              "stake": "low",
+              "approach": "help"
+            },
+            {
+              "id": "r:d9da341062cbd87f:t1:c:c",
+              "label": "婉拒老赵：拒绝老赵的请求",
+              "intent": "interact",
+              "targetId": "r:d9da341062cbd87f:t1:e:person_1",
+              "stake": "low",
+              "approach": "decline"
+            }
+          ],
+          "memoryDeltas": [
+            {
+              "entityId": "r:d9da341062cbd87f:t1:e:person_1",
+              "kind": "clue",
+              "text": "你站在自家破旧的木屋前，晨雾还未散尽。隔壁的猎户老赵正蹲在院角，手里拿着把生锈的柴刀，正费力地劈开一块从深山里带回来的黑铁矿石。他满头大汗，眉头紧锁，似乎遇到了什么棘手的难题。",
+              "status": "open"
+            }
+          ]
+        },
+        "lastReceipt": {
+          "kind": "opening",
+          "choiceId": null,
+          "action": null,
+          "elapsedDays": 0,
+          "itemChanges": {},
+          "relationChanges": {},
+          "random": {
+            "before": 4221886671,
+            "after": 4221886671,
+            "roll": null
+          },
+          "before": {
+            "ageDays": 5760,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "after": {
+            "ageDays": 5760,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "death": null,
+          "birth": {
+            "originId": "village",
+            "talentIds": [
+              "flash-wisdom",
+              "sensitive-breath"
+            ],
+            "attributes": {
+              "constitution": 2,
+              "insight": 5,
+              "fortune": 5
+            }
+          }
+        },
+        "relatedEntities": [
+          {
+            "id": "r:d9da341062cbd87f:t1:e:person_1",
+            "name": "老赵",
+            "kind": "person"
+          }
+        ],
+        "archiveCursor": 0
+      },
+      "posts": 1,
+      "latency": {
+        "usable": true,
+        "errorCode": null,
+        "firstAnyPreviewMs": 4867,
+        "firstReadableMs": 5763,
+        "completionMs": 21575,
+        "narrativeChars": 180,
+        "maxPreviewGapMs": 385,
+        "readingFinishEstimateMs": 35763,
+        "readingStallEstimateMs": 0,
+        "optionsWaitEstimateMs": 0,
+        "prefetchWorthEvaluating": true,
+        "assumptions": {
+          "readingCharsPerSecond": 6,
+          "readableChars": 20,
+          "targetWaitMs": 2000
+        }
+      }
+    },
+    {
+      "caseId": "choice-1",
+      "origin": "ai",
+      "postDelta": 1,
+      "localEntry": null,
+      "start": 119765,
+      "timeline": [
+        {
+          "atMs": 3862,
+          "chars": 2
+        },
+        {
+          "atMs": 3935,
+          "chars": 5
+        },
+        {
+          "atMs": 3996,
+          "chars": 9
+        },
+        {
+          "atMs": 4069,
+          "chars": 14
+        },
+        {
+          "atMs": 4132,
+          "chars": 20
+        },
+        {
+          "atMs": 4195,
+          "chars": 24
+        },
+        {
+          "atMs": 4257,
+          "chars": 32
+        },
+        {
+          "atMs": 4335,
+          "chars": 37
+        },
+        {
+          "atMs": 4383,
+          "chars": 40
+        },
+        {
+          "atMs": 4459,
+          "chars": 46
+        },
+        {
+          "atMs": 4521,
+          "chars": 49
+        },
+        {
+          "atMs": 4598,
+          "chars": 54
+        },
+        {
+          "atMs": 4659,
+          "chars": 58
+        },
+        {
+          "atMs": 4721,
+          "chars": 63
+        },
+        {
+          "atMs": 4782,
+          "chars": 67
+        },
+        {
+          "atMs": 4842,
+          "chars": 71
+        },
+        {
+          "atMs": 4888,
+          "chars": 76
+        },
+        {
+          "atMs": 4965,
+          "chars": 80
+        },
+        {
+          "atMs": 5028,
+          "chars": 82
+        },
+        {
+          "atMs": 5072,
+          "chars": 85
+        },
+        {
+          "atMs": 5133,
+          "chars": 89
+        },
+        {
+          "atMs": 5180,
+          "chars": 92
+        },
+        {
+          "atMs": 5253,
+          "chars": 97
+        },
+        {
+          "atMs": 5316,
+          "chars": 102
+        },
+        {
+          "atMs": 5390,
+          "chars": 106
+        }
+      ],
+      "choicesEnabledDuringPreview": false,
+      "lastText": "老赵直起腰，用袖子抹了一把额头的汗，指着那块黑铁矿石说道：“云归，这东西叫‘玄铁精’，是我在黑风岭深处挖到的。这铁太硬，寻常柴刀根本劈不动，我本来想把它劈成小块卖钱，可这硬度连刀都卷了，看来这批货是卖不出去了。”",
+      "doneMs": 10989,
+      "result": {
+        "protocolVersion": 1,
+        "status": "ready",
+        "requestId": "64f85154-608d-4b58-b708-50b6718d822d",
+        "attemptId": "7b3a55c3-4004-45a0-995f-71df7b974c00",
+        "sessionRef": "sess_8afdee86f4939c4b1019b7a71928a7e0",
+        "errorCode": null,
+        "retry": null,
+        "scene": {
+          "id": "r:d9da341062cbd87f:t2:s:scene",
+          "title": "玄铁精的难题",
+          "location": "village",
+          "entities": [
+            {
+              "id": "r:d9da341062cbd87f:t1:e:person_1",
+              "name": "老赵",
+              "kind": "person"
+            }
+          ],
+          "blocks": [
+            {
+              "kind": "dialogue",
+              "text": "老赵直起腰，用袖子抹了一把额头的汗，指着那块黑铁矿石说道：“云归，这东西叫‘玄铁精’，是我在黑风岭深处挖到的。这铁太硬，寻常柴刀根本劈不动，我本来想把它劈成小块卖钱，可这硬度连刀都卷了，看来这批货是卖不出去了。”",
+              "speaker": "r:d9da341062cbd87f:t1:e:person_1"
+            }
+          ],
+          "choices": [
+            {
+              "id": "r:d9da341062cbd87f:t2:c:a",
+              "label": "询问老赵：询问这矿石的成色和价值，看是否值得冒险尝试",
+              "intent": "interact",
+              "targetId": "r:d9da341062cbd87f:t1:e:person_1",
+              "stake": "low",
+              "approach": "ask"
+            },
+            {
+              "id": "r:d9da341062cbd87f:t2:c:b",
+              "label": "婉拒老赵：拒绝帮忙，表示自己还要去山上打猎",
+              "intent": "interact",
+              "targetId": "r:d9da341062cbd87f:t1:e:person_1",
+              "stake": "low",
+              "approach": "decline"
+            },
+            {
+              "id": "r:d9da341062cbd87f:t2:c:c",
+              "label": "结束与老赵的互动：结束对话，转身离开",
+              "intent": "interact",
+              "targetId": "r:d9da341062cbd87f:t1:e:person_1",
+              "stake": "low",
+              "approach": "leave"
+            }
+          ],
+          "memoryDeltas": [
+            {
+              "entityId": "r:d9da341062cbd87f:t1:e:person_1",
+              "kind": "clue",
+              "text": "老赵直起腰，用袖子抹了一把额头的汗，指着那块黑铁矿石说道：“云归，这东西叫‘玄铁精’，是我在黑风岭深处挖到的。这铁太硬，寻常柴刀根本劈不动，我本来想把它劈成小块卖钱，可这硬度连刀都卷了，看来这批货是卖不出去了。”",
+              "status": "open"
+            }
+          ]
+        }
+      },
+      "request": {
+        "context": {
+          "schemaVersion": 1,
+          "phase": "choice",
+          "identity": {
+            "runId": "0222535f-c4b7-40dd-98c6-cbe51e723b4c",
+            "turnId": 2,
+            "baseRevision": 1,
+            "stateHash": "1434ba3f861a0d80e2e2d991d63f37d5f6fd4ba78ff71ad651a898383c358082",
+            "choiceId": "r:d9da341062cbd87f:t1:c:a",
+            "rulesVersion": 1,
+            "promptVersion": 1,
+            "requestId": "64f85154-608d-4b58-b708-50b6718d822d"
+          },
+          "namespace": "r:d9da341062cbd87f",
+          "receipt": {
+            "kind": "choice",
+            "choiceId": "r:d9da341062cbd87f:t1:c:a",
+            "action": {
+              "id": "r:d9da341062cbd87f:t1:c:a",
+              "label": "询问老赵：询问老赵这矿石的来源和具体困难",
+              "intent": "interact",
+              "targetId": "r:d9da341062cbd87f:t1:e:person_1",
+              "stake": "low",
+              "approach": "ask"
+            },
+            "elapsedDays": 0,
+            "itemChanges": {},
+            "relationChanges": {},
+            "random": {
+              "before": 4221886671,
+              "after": 2845300706,
+              "roll": 6
+            },
+            "before": {
+              "ageDays": 5760,
+              "realm": "mortal",
+              "cultivation": 0,
+              "injury": 0
+            },
+            "after": {
+              "ageDays": 5760,
+              "realm": "mortal",
+              "cultivation": 0,
+              "injury": 0
+            },
+            "death": null,
+            "birth": null
+          },
+          "life": {
+            "name": "云归",
+            "ageDays": 5760,
+            "lifeLimit": 80,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0,
+            "items": {
+              "supplies": 3,
+              "stones": 0
+            },
+            "relations": {},
+            "birth": {
+              "originId": "village",
+              "talentIds": [
+                "flash-wisdom",
+                "sensitive-breath"
+              ],
+              "attributes": {
+                "constitution": 2,
+                "insight": 5,
+                "fortune": 5
+              }
+            }
+          },
+          "entities": [
+            {
+              "id": "r:d9da341062cbd87f:t1:e:person_1",
+              "name": "老赵",
+              "kind": "person",
+              "status": "unknown"
+            }
+          ],
+          "memory": {
+            "facts": [],
+            "promises": [],
+            "clues": [
+              {
+                "id": "m:424b118d7883eb19cb442f702cd5cd9c",
+                "source": "narrative",
+                "kind": "clue",
+                "entityId": "r:d9da341062cbd87f:t1:e:person_1",
+                "text": "你站在自家破旧的木屋前，晨雾还未散尽。隔壁的猎户老赵正蹲在院角，手里拿着把生锈的柴刀，正费力地劈开一块从深山里带回来的黑铁矿石。他满头大汗，眉头紧锁，似乎遇到了什么棘手的难题。",
+                "status": "open",
+                "runId": "0222535f-c4b7-40dd-98c6-cbe51e723b4c",
+                "turnId": 1
+              }
+            ],
+            "recent": [
+              {
+                "id": "turn:1",
+                "runId": "0222535f-c4b7-40dd-98c6-cbe51e723b4c",
+                "turnId": 1,
+                "source": "narrative",
+                "kind": "turn",
+                "text": "地点：village\n你站在自家破旧的木屋前，晨雾还未散尽。隔壁的猎户老赵正蹲在院角，手里拿着把生锈的柴刀，正费力地劈开一块从深山里带回来的黑铁矿石。他满头大汗，眉头紧锁，似乎遇到了什么棘手的难题。\n老赵停下手里的活，抬头看了你一眼，叹了口气说道：“云归，这铁太硬了，我的刀都快卷刃了。你从小在山里长大，力气大，能不能帮我看看这东西到底是个什么路数？要是劈不开，这批货可就废了。”",
+                "entityIds": []
+              }
+            ],
+            "summaries": []
+          },
+          "references": [
+            "m:424b118d7883eb19cb442f702cd5cd9c",
+            "turn:1"
+          ],
+          "previousScene": {
+            "id": "r:d9da341062cbd87f:t1:s:scene",
+            "blocksHash": "7a0d97789453207185f9a5c855d150aa2e12feeb90727f4f341c7c5383ce61d5"
+          },
+          "relationshipVersion": 1,
+          "relationships": {},
+          "coverage": {
+            "policy": "relevance-v1",
+            "openTotal": 1,
+            "openIncluded": 1,
+            "openOmitted": 0
+          }
+        },
+        "attempt": {
+          "id": "7b3a55c3-4004-45a0-995f-71df7b974c00",
+          "sessionRef": "sess_8afdee86f4939c4b1019b7a71928a7e0",
+          "retryOf": null
+        },
+        "storyActions": true
+      },
+      "decision": {
+        "index": 0,
+        "reason": "正文老赵被黑铁矿石难住；先问矿石来源与具体困难，另外有明确拒绝出口。援助选项明示消耗行粮，仅按援助规则解释，不视为保证修好矿石。",
+        "selected": {
+          "id": "r:d9da341062cbd87f:t1:c:a",
+          "label": "询问老赵：询问老赵这矿石的来源和具体困难",
+          "intent": "interact",
+          "targetId": "r:d9da341062cbd87f:t1:e:person_1",
+          "stake": "low",
+          "approach": "ask"
+        }
+      },
+      "choices": [
+        {
+          "id": "r:d9da341062cbd87f:t2:c:a",
+          "enabled": true,
+          "label": "询问老赵：询问这矿石的成色和价值，看是否值得冒险尝试",
+          "cost": "0日"
+        },
+        {
+          "id": "r:d9da341062cbd87f:t2:c:b",
+          "enabled": true,
+          "label": "婉拒老赵：拒绝帮忙，表示自己还要去山上打猎",
+          "cost": "0日"
+        },
+        {
+          "id": "r:d9da341062cbd87f:t2:c:c",
+          "enabled": true,
+          "label": "结束与老赵的互动：结束对话，转身离开",
+          "cost": "0日"
+        }
+      ],
+      "traces": [
+        {
+          "model": "@cf/zai-org/glm-4.7-flash",
+          "inputHash": "e6547eaee3f0847ae7111957a38ede80e1f250cad0f8ab2f4f0cbfd934181392",
+          "inputBytes": 16337,
+          "startedAt": 1793379068205,
+          "bindingReturnedAt": 1793379068557,
+          "liveRawBytes": 128558,
+          "captureComplete": true,
+          "response": {
+            "model": "@cf/zai-org/glm-4.7-flash",
+            "choices": [
+              {
+                "finish_reason": "stop",
+                "message": {
+                  "content": "{\n  \"blocks\": [\n    {\n      \"kind\": \"dialogue\",\n      \"text\": \"老赵直起腰，用袖子抹了一把额头的汗，指着那块黑铁矿石说道：“云归，这东西叫‘玄铁精’，是我在黑风岭深处挖到的。这铁太硬，寻常柴刀根本劈不动，我本来想把它劈成小块卖钱，可这硬度连刀都卷了，看来这批货是卖不出去了。”\"\n   ,\n      \"speaker\": {\n        \"kind\": \"person\",\n        \"name\": \"老赵\",\n        \"ref\": \"k1_person_老赵\",\n        \"status\": null\n      }\n    }\n  ],\n  \"choices\": [\n    {\n      \"action\": \"interact:ask\",\n      \"target\": {\n        \"kind\": \"person\",\n        \"name\": \"老赵\",\n        \"ref\": \"\",\n        \"status\": null\n      },\n      \"stake\": \"low\",\n      \"purpose\": \"询问这矿石的成色和价值，看是否值得冒险尝试\",\n      \"anchor\": 0\n    },\n    {\n      \"action\": \"interact:decline\",\n      \"target\": {\n        \"kind\": \"person\",\n        \"name\": \"老赵\",\n        \"ref\": \"\",\n        \"status\": null\n      },\n      \"stake\": \"low\",\n      \"purpose\": \"拒绝帮忙，表示自己还要去山上打猎\",\n      \"anchor\": 0\n    },\n    {\n      \"action\": \"interact:leave\",\n      \"target\": {\n        \"kind\": \"person\",\n        \"name\": \"老赵\",\n        \"ref\": \"\",\n        \"status\": null\n      },\n      \"stake\": \"low\",\n      \"purpose\": \"结束对话，转身离开\",\n      \"anchor\": 0\n    }\n  ],\n  \"title\": \"玄铁精的难题\",\n  \"location\": \"village\",\n  \"memoryDeltas\": [\n    {\n      \"target\": {\n        \"kind\": \"person\",\n        \"name\": \"老赵\",\n        \"ref\": \"\",\n        \"status\": null\n      },\n      \"kind\": \"clue\",\n      \"anchor\": 0,\n      \"status\": \"open\"\n    }\n  ]\n}",
+                  "reasoning_content": ""
+                }
+              }
+            ],
+            "usage": {
+              "prompt_tokens": 2437,
+              "completion_tokens": 482,
+              "total_tokens": 2919,
+              "prompt_tokens_details": {
+                "cached_tokens": 0
+              },
+              "neurons": 30.948300000000206
+            }
+          },
+          "rawSseBytes": 128558
+        }
+      ],
+      "revision": 2,
+      "pending": false,
+      "state": {
+        "relationshipVersion": 1,
+        "version": 5,
+        "mode": "cultivation",
+        "contentVersion": 4,
+        "rulesVersion": 1,
+        "promptVersion": 1,
+        "runId": "0222535f-c4b7-40dd-98c6-cbe51e723b4c",
+        "revision": 2,
+        "turnId": 2,
+        "phase": "active",
+        "rng": 2845300706,
+        "life": {
+          "name": "云归",
+          "ageDays": 5760,
+          "lifeLimit": 80,
+          "realm": "mortal",
+          "cultivation": 0,
+          "injury": 0,
+          "items": {
+            "supplies": 3,
+            "stones": 0
+          },
+          "relations": {},
+          "birth": {
+            "originId": "village",
+            "talentIds": [
+              "flash-wisdom",
+              "sensitive-breath"
+            ],
+            "attributes": {
+              "constitution": 2,
+              "insight": 5,
+              "fortune": 5
+            }
+          }
+        },
+        "birthReceipt": {
+          "kind": "opening",
+          "choiceId": null,
+          "action": null,
+          "elapsedDays": 0,
+          "itemChanges": {},
+          "relationChanges": {},
+          "random": {
+            "before": 4221886671,
+            "after": 4221886671,
+            "roll": null
+          },
+          "before": {
+            "ageDays": 5760,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "after": {
+            "ageDays": 5760,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "death": null,
+          "birth": {
+            "originId": "village",
+            "talentIds": [
+              "flash-wisdom",
+              "sensitive-breath"
+            ],
+            "attributes": {
+              "constitution": 2,
+              "insight": 5,
+              "fortune": 5
+            }
+          }
+        },
+        "currentScene": {
+          "id": "r:d9da341062cbd87f:t2:s:scene",
+          "title": "玄铁精的难题",
+          "location": "village",
+          "entities": [
+            {
+              "id": "r:d9da341062cbd87f:t1:e:person_1",
+              "name": "老赵",
+              "kind": "person"
+            }
+          ],
+          "blocks": [
+            {
+              "kind": "dialogue",
+              "text": "老赵直起腰，用袖子抹了一把额头的汗，指着那块黑铁矿石说道：“云归，这东西叫‘玄铁精’，是我在黑风岭深处挖到的。这铁太硬，寻常柴刀根本劈不动，我本来想把它劈成小块卖钱，可这硬度连刀都卷了，看来这批货是卖不出去了。”",
+              "speaker": "r:d9da341062cbd87f:t1:e:person_1"
+            }
+          ],
+          "choices": [
+            {
+              "id": "r:d9da341062cbd87f:t2:c:a",
+              "label": "询问老赵：询问这矿石的成色和价值，看是否值得冒险尝试",
+              "intent": "interact",
+              "targetId": "r:d9da341062cbd87f:t1:e:person_1",
+              "stake": "low",
+              "approach": "ask"
+            },
+            {
+              "id": "r:d9da341062cbd87f:t2:c:b",
+              "label": "婉拒老赵：拒绝帮忙，表示自己还要去山上打猎",
+              "intent": "interact",
+              "targetId": "r:d9da341062cbd87f:t1:e:person_1",
+              "stake": "low",
+              "approach": "decline"
+            },
+            {
+              "id": "r:d9da341062cbd87f:t2:c:c",
+              "label": "结束与老赵的互动：结束对话，转身离开",
+              "intent": "interact",
+              "targetId": "r:d9da341062cbd87f:t1:e:person_1",
+              "stake": "low",
+              "approach": "leave"
+            }
+          ],
+          "memoryDeltas": [
+            {
+              "entityId": "r:d9da341062cbd87f:t1:e:person_1",
+              "kind": "clue",
+              "text": "老赵直起腰，用袖子抹了一把额头的汗，指着那块黑铁矿石说道：“云归，这东西叫‘玄铁精’，是我在黑风岭深处挖到的。这铁太硬，寻常柴刀根本劈不动，我本来想把它劈成小块卖钱，可这硬度连刀都卷了，看来这批货是卖不出去了。”",
+              "status": "open"
+            }
+          ]
+        },
+        "lastReceipt": {
+          "kind": "choice",
+          "choiceId": "r:d9da341062cbd87f:t1:c:a",
+          "action": {
+            "id": "r:d9da341062cbd87f:t1:c:a",
+            "label": "询问老赵：询问老赵这矿石的来源和具体困难",
+            "intent": "interact",
+            "targetId": "r:d9da341062cbd87f:t1:e:person_1",
+            "stake": "low",
+            "approach": "ask"
+          },
+          "elapsedDays": 0,
+          "itemChanges": {},
+          "relationChanges": {},
+          "random": {
+            "before": 4221886671,
+            "after": 2845300706,
+            "roll": 6
+          },
+          "before": {
+            "ageDays": 5760,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "after": {
+            "ageDays": 5760,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "death": null,
+          "birth": null
+        },
+        "relatedEntities": [
+          {
+            "id": "r:d9da341062cbd87f:t1:e:person_1",
+            "name": "老赵",
+            "kind": "person"
+          }
+        ],
+        "archiveCursor": 0
+      },
+      "posts": 2,
+      "latency": {
+        "usable": true,
+        "errorCode": null,
+        "firstAnyPreviewMs": 3862,
+        "firstReadableMs": 4132,
+        "completionMs": 10989,
+        "narrativeChars": 106,
+        "maxPreviewGapMs": 78,
+        "readingFinishEstimateMs": 21799,
+        "readingStallEstimateMs": 0,
+        "optionsWaitEstimateMs": 0,
+        "prefetchWorthEvaluating": true,
+        "assumptions": {
+          "readingCharsPerSecond": 6,
+          "readableChars": 20,
+          "targetWaitMs": 2000
+        }
+      }
+    },
+    {
+      "caseId": "choice-2",
+      "origin": "rules",
+      "postDelta": 0,
+      "localEntry": {
+        "identity": {
+          "runId": "0222535f-c4b7-40dd-98c6-cbe51e723b4c",
+          "turnId": 3,
+          "baseRevision": 2,
+          "stateHash": "fbd0deff377610af40bd8886fb7ae189adc771319532ce343e2604dd07813103",
+          "choiceId": "r:d9da341062cbd87f:t2:c:b",
+          "rulesVersion": 1,
+          "promptVersion": 1,
+          "requestId": "23e374bb-7b9a-470e-bfa7-cfe4ba716fa3"
+        },
+        "receipt": {
+          "kind": "choice",
+          "choiceId": "r:d9da341062cbd87f:t2:c:b",
+          "action": {
+            "id": "r:d9da341062cbd87f:t2:c:b",
+            "label": "婉拒老赵：拒绝帮忙，表示自己还要去山上打猎",
+            "intent": "interact",
+            "targetId": "r:d9da341062cbd87f:t1:e:person_1",
+            "stake": "low",
+            "approach": "decline"
+          },
+          "elapsedDays": 0,
+          "itemChanges": {},
+          "relationChanges": {},
+          "random": {
+            "before": 2845300706,
+            "after": 1849357785,
+            "roll": 85
+          },
+          "before": {
+            "ageDays": 5760,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "after": {
+            "ageDays": 5760,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "death": null,
+          "birth": null
+        },
+        "scene": {
+          "id": "r:d9da341062cbd87f:t3:s:closed",
+          "title": "暂别此事",
+          "location": "village",
+          "blocks": [
+            {
+              "kind": "narration",
+              "text": "你婉拒了老赵的请求，结束了这次交谈。你仍在village附近，接下来可以自行观察或行动。"
+            }
+          ],
+          "entities": [
+            {
+              "id": "r:d9da341062cbd87f:t1:e:person_1",
+              "name": "老赵",
+              "kind": "person"
+            }
+          ],
+          "choices": [
+            {
+              "id": "r:d9da341062cbd87f:t3:c:observe",
+              "label": "观察周围：寻找新的线索",
+              "intent": "interact",
+              "targetId": "self",
+              "stake": "low",
+              "approach": "observe"
+            },
+            {
+              "id": "r:d9da341062cbd87f:t3:c:rest",
+              "label": "留在原地休整",
+              "intent": "rest",
+              "targetId": "self",
+              "stake": "low",
+              "approach": "recover"
+            }
+          ],
+          "memoryDeltas": []
+        },
+        "stateHash": "84f83db6ba2c2b70506eda2bddd5755ca3a5c21bc444ecf21882ff08a3a70e01"
+      },
+      "start": 167706.1000000015,
+      "timeline": [],
+      "choicesEnabledDuringPreview": false,
+      "lastText": "",
+      "doneMs": 67,
+      "result": {
+        "status": "ready",
+        "scene": {
+          "id": "r:d9da341062cbd87f:t3:s:closed",
+          "title": "暂别此事",
+          "location": "village",
+          "blocks": [
+            {
+              "kind": "narration",
+              "text": "你婉拒了老赵的请求，结束了这次交谈。你仍在village附近，接下来可以自行观察或行动。"
+            }
+          ],
+          "entities": [
+            {
+              "id": "r:d9da341062cbd87f:t1:e:person_1",
+              "name": "老赵",
+              "kind": "person"
+            }
+          ],
+          "choices": [
+            {
+              "id": "r:d9da341062cbd87f:t3:c:observe",
+              "label": "观察周围：寻找新的线索",
+              "intent": "interact",
+              "targetId": "self",
+              "stake": "low",
+              "approach": "observe"
+            },
+            {
+              "id": "r:d9da341062cbd87f:t3:c:rest",
+              "label": "留在原地休整",
+              "intent": "rest",
+              "targetId": "self",
+              "stake": "low",
+              "approach": "recover"
+            }
+          ],
+          "memoryDeltas": []
+        }
+      },
+      "request": null,
+      "decision": {
+        "index": 1,
+        "reason": "已回答矿石来自黑风岭、硬度使柴刀卷刃。现在拒绝帮忙；只结束对话，不因选项里提及打猎就替玩家旅行或获取猎物。核对零AI请求和原地零日。",
+        "selected": {
+          "id": "r:d9da341062cbd87f:t2:c:b",
+          "label": "婉拒老赵：拒绝帮忙，表示自己还要去山上打猎",
+          "intent": "interact",
+          "targetId": "r:d9da341062cbd87f:t1:e:person_1",
+          "stake": "low",
+          "approach": "decline"
+        }
+      },
+      "choices": [
+        {
+          "id": "r:d9da341062cbd87f:t3:c:observe",
+          "enabled": true,
+          "label": "观察周围：寻找新的线索",
+          "cost": "0日"
+        },
+        {
+          "id": "r:d9da341062cbd87f:t3:c:rest",
+          "enabled": true,
+          "label": "留在原地休整",
+          "cost": "30日"
+        }
+      ],
+      "traces": [],
+      "revision": 3,
+      "pending": false,
+      "state": {
+        "relationshipVersion": 1,
+        "version": 5,
+        "mode": "cultivation",
+        "contentVersion": 4,
+        "rulesVersion": 1,
+        "promptVersion": 1,
+        "runId": "0222535f-c4b7-40dd-98c6-cbe51e723b4c",
+        "revision": 3,
+        "turnId": 3,
+        "phase": "active",
+        "rng": 1849357785,
+        "life": {
+          "name": "云归",
+          "ageDays": 5760,
+          "lifeLimit": 80,
+          "realm": "mortal",
+          "cultivation": 0,
+          "injury": 0,
+          "items": {
+            "supplies": 3,
+            "stones": 0
+          },
+          "relations": {},
+          "birth": {
+            "originId": "village",
+            "talentIds": [
+              "flash-wisdom",
+              "sensitive-breath"
+            ],
+            "attributes": {
+              "constitution": 2,
+              "insight": 5,
+              "fortune": 5
+            }
+          }
+        },
+        "birthReceipt": {
+          "kind": "opening",
+          "choiceId": null,
+          "action": null,
+          "elapsedDays": 0,
+          "itemChanges": {},
+          "relationChanges": {},
+          "random": {
+            "before": 4221886671,
+            "after": 4221886671,
+            "roll": null
+          },
+          "before": {
+            "ageDays": 5760,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "after": {
+            "ageDays": 5760,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "death": null,
+          "birth": {
+            "originId": "village",
+            "talentIds": [
+              "flash-wisdom",
+              "sensitive-breath"
+            ],
+            "attributes": {
+              "constitution": 2,
+              "insight": 5,
+              "fortune": 5
+            }
+          }
+        },
+        "currentScene": {
+          "id": "r:d9da341062cbd87f:t3:s:closed",
+          "title": "暂别此事",
+          "location": "village",
+          "blocks": [
+            {
+              "kind": "narration",
+              "text": "你婉拒了老赵的请求，结束了这次交谈。你仍在village附近，接下来可以自行观察或行动。"
+            }
+          ],
+          "entities": [
+            {
+              "id": "r:d9da341062cbd87f:t1:e:person_1",
+              "name": "老赵",
+              "kind": "person"
+            }
+          ],
+          "choices": [
+            {
+              "id": "r:d9da341062cbd87f:t3:c:observe",
+              "label": "观察周围：寻找新的线索",
+              "intent": "interact",
+              "targetId": "self",
+              "stake": "low",
+              "approach": "observe"
+            },
+            {
+              "id": "r:d9da341062cbd87f:t3:c:rest",
+              "label": "留在原地休整",
+              "intent": "rest",
+              "targetId": "self",
+              "stake": "low",
+              "approach": "recover"
+            }
+          ],
+          "memoryDeltas": []
+        },
+        "lastReceipt": {
+          "kind": "choice",
+          "choiceId": "r:d9da341062cbd87f:t2:c:b",
+          "action": {
+            "id": "r:d9da341062cbd87f:t2:c:b",
+            "label": "婉拒老赵：拒绝帮忙，表示自己还要去山上打猎",
+            "intent": "interact",
+            "targetId": "r:d9da341062cbd87f:t1:e:person_1",
+            "stake": "low",
+            "approach": "decline"
+          },
+          "elapsedDays": 0,
+          "itemChanges": {},
+          "relationChanges": {},
+          "random": {
+            "before": 2845300706,
+            "after": 1849357785,
+            "roll": 85
+          },
+          "before": {
+            "ageDays": 5760,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "after": {
+            "ageDays": 5760,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "death": null,
+          "birth": null
+        },
+        "relatedEntities": [
+          {
+            "id": "r:d9da341062cbd87f:t1:e:person_1",
+            "name": "老赵",
+            "kind": "person"
+          }
+        ],
+        "archiveCursor": 0
+      },
+      "posts": 2,
+      "latency": {
+        "usable": true,
+        "errorCode": null,
+        "firstAnyPreviewMs": null,
+        "firstReadableMs": null,
+        "completionMs": 67,
+        "narrativeChars": 0,
+        "maxPreviewGapMs": 0,
+        "readingFinishEstimateMs": null,
+        "readingStallEstimateMs": null,
+        "optionsWaitEstimateMs": null,
+        "prefetchWorthEvaluating": null,
+        "assumptions": {
+          "readingCharsPerSecond": 6,
+          "readableChars": 20,
+          "targetWaitMs": 2000
+        }
+      }
+    },
+    {
+      "caseId": "choice-3",
+      "origin": "ai",
+      "postDelta": 1,
+      "localEntry": null,
+      "start": 262208.80000000447,
+      "timeline": [
+        {
+          "atMs": 4364,
+          "chars": 1
+        },
+        {
+          "atMs": 4458,
+          "chars": 8
+        },
+        {
+          "atMs": 4521,
+          "chars": 12
+        },
+        {
+          "atMs": 4585,
+          "chars": 14
+        },
+        {
+          "atMs": 4955,
+          "chars": 18
+        },
+        {
+          "atMs": 5049,
+          "chars": 24
+        },
+        {
+          "atMs": 5125,
+          "chars": 30
+        },
+        {
+          "atMs": 5200,
+          "chars": 36
+        },
+        {
+          "atMs": 5245,
+          "chars": 41
+        },
+        {
+          "atMs": 5321,
+          "chars": 44
+        },
+        {
+          "atMs": 5367,
+          "chars": 48
+        },
+        {
+          "atMs": 5446,
+          "chars": 53
+        },
+        {
+          "atMs": 5491,
+          "chars": 59
+        },
+        {
+          "atMs": 5675,
+          "chars": 60
+        },
+        {
+          "atMs": 5859,
+          "chars": 67
+        },
+        {
+          "atMs": 5952,
+          "chars": 74
+        },
+        {
+          "atMs": 6122,
+          "chars": 82
+        },
+        {
+          "atMs": 6198,
+          "chars": 88
+        }
+      ],
+      "choicesEnabledDuringPreview": false,
+      "lastText": "你站在自家破旧的木屋前，晨雾还未散尽。隔壁的猎户老赵正蹲在院角，手里拿着把生锈的柴刀，正费力地劈开一块从深山里带回来的黑铁矿石。他满头大汗，眉头紧锁，似乎遇到了什么棘手的难题。",
+      "doneMs": 12487,
+      "result": {
+        "protocolVersion": 1,
+        "status": "ready",
+        "requestId": "47658dc3-a3f5-4275-835f-0b26f2c7edd0",
+        "attemptId": "f2851bef-1b8e-405e-a3a1-2fe0634f9123",
+        "sessionRef": "sess_8afdee86f4939c4b1019b7a71928a7e0",
+        "errorCode": null,
+        "retry": null,
+        "scene": {
+          "id": "r:d9da341062cbd87f:t4:s:scene",
+          "title": "晨雾中的黑铁矿石",
+          "location": "village",
+          "entities": [
+            {
+              "id": "r:d9da341062cbd87f:t1:e:person_1",
+              "name": "老赵",
+              "kind": "person"
+            }
+          ],
+          "blocks": [
+            {
+              "kind": "narration",
+              "text": "你站在自家破旧的木屋前，晨雾还未散尽。隔壁的猎户老赵正蹲在院角，手里拿着把生锈的柴刀，正费力地劈开一块从深山里带回来的黑铁矿石。他满头大汗，眉头紧锁，似乎遇到了什么棘手的难题。"
+            }
+          ],
+          "choices": [
+            {
+              "id": "r:d9da341062cbd87f:t4:c:a",
+              "label": "询问老赵：询问老赵：既然这矿石劈不动，有没有别的办法处理或出售？",
+              "intent": "interact",
+              "targetId": "r:d9da341062cbd87f:t1:e:person_1",
+              "stake": "low",
+              "approach": "ask"
+            },
+            {
+              "id": "r:d9da341062cbd87f:t4:c:b",
+              "label": "援助老赵：拿出1行粮援助老赵，表示可以帮他分担一些体力。",
+              "intent": "interact",
+              "targetId": "r:d9da341062cbd87f:t1:e:person_1",
+              "stake": "low",
+              "approach": "help"
+            },
+            {
+              "id": "r:d9da341062cbd87f:t4:c:c",
+              "label": "婉拒老赵：婉拒老赵：拒绝帮忙，表示自己还要去山上打猎。",
+              "intent": "interact",
+              "targetId": "r:d9da341062cbd87f:t1:e:person_1",
+              "stake": "low",
+              "approach": "decline"
+            }
+          ],
+          "memoryDeltas": [
+            {
+              "entityId": "r:d9da341062cbd87f:t1:e:person_1",
+              "kind": "clue",
+              "text": "你站在自家破旧的木屋前，晨雾还未散尽。隔壁的猎户老赵正蹲在院角，手里拿着把生锈的柴刀，正费力地劈开一块从深山里带回来的黑铁矿石。他满头大汗，眉头紧锁，似乎遇到了什么棘手的难题。",
+              "status": "open"
+            }
+          ]
+        }
+      },
+      "request": {
+        "context": {
+          "schemaVersion": 1,
+          "phase": "choice",
+          "identity": {
+            "runId": "0222535f-c4b7-40dd-98c6-cbe51e723b4c",
+            "turnId": 4,
+            "baseRevision": 3,
+            "stateHash": "84f83db6ba2c2b70506eda2bddd5755ca3a5c21bc444ecf21882ff08a3a70e01",
+            "choiceId": "r:d9da341062cbd87f:t3:c:observe",
+            "rulesVersion": 1,
+            "promptVersion": 1,
+            "requestId": "47658dc3-a3f5-4275-835f-0b26f2c7edd0"
+          },
+          "namespace": "r:d9da341062cbd87f",
+          "receipt": {
+            "kind": "choice",
+            "choiceId": "r:d9da341062cbd87f:t3:c:observe",
+            "action": {
+              "id": "r:d9da341062cbd87f:t3:c:observe",
+              "label": "观察周围：寻找新的线索",
+              "intent": "interact",
+              "targetId": "self",
+              "stake": "low",
+              "approach": "observe"
+            },
+            "elapsedDays": 0,
+            "itemChanges": {},
+            "relationChanges": {},
+            "random": {
+              "before": 1849357785,
+              "after": 1435690340,
+              "roll": 40
+            },
+            "before": {
+              "ageDays": 5760,
+              "realm": "mortal",
+              "cultivation": 0,
+              "injury": 0
+            },
+            "after": {
+              "ageDays": 5760,
+              "realm": "mortal",
+              "cultivation": 0,
+              "injury": 0
+            },
+            "death": null,
+            "birth": null
+          },
+          "life": {
+            "name": "云归",
+            "ageDays": 5760,
+            "lifeLimit": 80,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0,
+            "items": {
+              "supplies": 3,
+              "stones": 0
+            },
+            "relations": {},
+            "birth": {
+              "originId": "village",
+              "talentIds": [
+                "flash-wisdom",
+                "sensitive-breath"
+              ],
+              "attributes": {
+                "constitution": 2,
+                "insight": 5,
+                "fortune": 5
+              }
+            }
+          },
+          "entities": [
+            {
+              "id": "r:d9da341062cbd87f:t1:e:person_1",
+              "name": "老赵",
+              "kind": "person",
+              "status": "unknown"
+            }
+          ],
+          "memory": {
+            "facts": [
+              {
+                "id": "decision:3",
+                "runId": "0222535f-c4b7-40dd-98c6-cbe51e723b4c",
+                "turnId": 3,
+                "source": "rules",
+                "kind": "fact",
+                "entityId": "r:d9da341062cbd87f:t1:e:person_1",
+                "text": "你在village选择了“婉拒老赵：拒绝帮忙，表示自己还要去山上打猎”。"
+              },
+              {
+                "id": "decision:2",
+                "runId": "0222535f-c4b7-40dd-98c6-cbe51e723b4c",
+                "turnId": 2,
+                "source": "rules",
+                "kind": "fact",
+                "entityId": "r:d9da341062cbd87f:t1:e:person_1",
+                "text": "你在village选择了“询问老赵：询问老赵这矿石的来源和具体困难”。"
+              }
+            ],
+            "promises": [],
+            "clues": [
+              {
+                "id": "m:918ac7d7aeadbaedb5eb3b6c5f3572b7",
+                "source": "narrative",
+                "kind": "clue",
+                "entityId": "r:d9da341062cbd87f:t1:e:person_1",
+                "text": "老赵直起腰，用袖子抹了一把额头的汗，指着那块黑铁矿石说道：“云归，这东西叫‘玄铁精’，是我在黑风岭深处挖到的。这铁太硬，寻常柴刀根本劈不动，我本来想把它劈成小块卖钱，可这硬度连刀都卷了，看来这批货是卖不出去了。”",
+                "status": "open",
+                "runId": "0222535f-c4b7-40dd-98c6-cbe51e723b4c",
+                "turnId": 2
+              },
+              {
+                "id": "m:424b118d7883eb19cb442f702cd5cd9c",
+                "source": "narrative",
+                "kind": "clue",
+                "entityId": "r:d9da341062cbd87f:t1:e:person_1",
+                "text": "你站在自家破旧的木屋前，晨雾还未散尽。隔壁的猎户老赵正蹲在院角，手里拿着把生锈的柴刀，正费力地劈开一块从深山里带回来的黑铁矿石。他满头大汗，眉头紧锁，似乎遇到了什么棘手的难题。",
+                "status": "open",
+                "runId": "0222535f-c4b7-40dd-98c6-cbe51e723b4c",
+                "turnId": 1
+              }
+            ],
+            "recent": [
+              {
+                "id": "turn:3",
+                "runId": "0222535f-c4b7-40dd-98c6-cbe51e723b4c",
+                "turnId": 3,
+                "source": "narrative",
+                "kind": "turn",
+                "text": "地点：village；刚才选择：婉拒老赵：拒绝帮忙，表示自己还要去山上打猎\n你婉拒了老赵的请求，结束了这次交谈。你仍在village附近，接下来可以自行观察或行动。",
+                "entityIds": []
+              },
+              {
+                "id": "turn:2",
+                "runId": "0222535f-c4b7-40dd-98c6-cbe51e723b4c",
+                "turnId": 2,
+                "source": "narrative",
+                "kind": "turn",
+                "text": "地点：village；刚才选择：询问老赵：询问老赵这矿石的来源和具体困难\n老赵直起腰，用袖子抹了一把额头的汗，指着那块黑铁矿石说道：“云归，这东西叫‘玄铁精’，是我在黑风岭深处挖到的。这铁太硬，寻常柴刀根本劈不动，我本来想把它劈成小块卖钱，可这硬度连刀都卷了，看来这批货是卖不出去了。”",
+                "entityIds": []
+              }
+            ],
+            "summaries": []
+          },
+          "references": [
+            "decision:3",
+            "decision:2",
+            "m:918ac7d7aeadbaedb5eb3b6c5f3572b7",
+            "m:424b118d7883eb19cb442f702cd5cd9c",
+            "turn:3",
+            "turn:2"
+          ],
+          "previousScene": {
+            "id": "r:d9da341062cbd87f:t3:s:closed",
+            "blocksHash": "592a9dc2215be557abd7647af92962ad54e422188c4e03615a01f0b527100144"
+          },
+          "relationshipVersion": 1,
+          "relationships": {},
+          "coverage": {
+            "policy": "relevance-v1",
+            "openTotal": 2,
+            "openIncluded": 2,
+            "openOmitted": 0
+          }
+        },
+        "attempt": {
+          "id": "f2851bef-1b8e-405e-a3a1-2fe0634f9123",
+          "sessionRef": "sess_8afdee86f4939c4b1019b7a71928a7e0",
+          "retryOf": null
+        },
+        "storyActions": true
+      },
+      "decision": {
+        "index": 0,
+        "reason": "拒绝已在67毫秒内落盘，零POST、零日、物品不变；原NPC问题消失，仅有观察和休整。现在观察当前地点，确认不强迫回访老赵、不自动开始打猎。",
+        "selected": {
+          "id": "r:d9da341062cbd87f:t3:c:observe",
+          "label": "观察周围：寻找新的线索",
+          "intent": "interact",
+          "targetId": "self",
+          "stake": "low",
+          "approach": "observe"
+        }
+      },
+      "choices": [
+        {
+          "id": "r:d9da341062cbd87f:t4:c:a",
+          "enabled": true,
+          "label": "询问老赵：询问老赵：既然这矿石劈不动，有没有别的办法处理或出售？",
+          "cost": "0日"
+        },
+        {
+          "id": "r:d9da341062cbd87f:t4:c:b",
+          "enabled": true,
+          "label": "援助老赵：拿出1行粮援助老赵，表示可以帮他分担一些体力。",
+          "cost": "1日 · 行粮 1"
+        },
+        {
+          "id": "r:d9da341062cbd87f:t4:c:c",
+          "enabled": true,
+          "label": "婉拒老赵：婉拒老赵：拒绝帮忙，表示自己还要去山上打猎。",
+          "cost": "0日"
+        }
+      ],
+      "traces": [
+        {
+          "model": "@cf/zai-org/glm-4.7-flash",
+          "inputHash": "864a5996eb97530479c4c1eaa2e3043faa0bf58ecb0880bb31ce62b451b9f279",
+          "inputBytes": 17324,
+          "startedAt": 1793379210667,
+          "bindingReturnedAt": 1793379211019,
+          "liveRawBytes": 111026,
+          "captureComplete": true,
+          "response": {
+            "model": "@cf/zai-org/glm-4.7-flash",
+            "choices": [
+              {
+                "finish_reason": "stop",
+                "message": {
+                  "content": "{\n  \"blocks\": [\n    {\n      \"kind\": \"narration\",\n      \"text\": \"你站在自家破旧的木屋前，晨雾还未散尽。隔壁的猎户老赵正蹲在院角，手里拿着把生锈的柴刀，正费力地劈开一块从深山里带回来的黑铁矿石。他满头大汗，眉头紧锁，似乎遇到了什么棘手的难题。\"\n    }\n  ],\n  \"choices\": [\n    {\n      \"action\": \"interact:ask\",\n      \"target\": {\n        \"kind\": \"person\",\n        \"name\": \"老赵\",\n        \"ref\": \"\",\n        \"status\": null\n      },\n      \"stake\": \"low\",\n      \"purpose\": \"询问老赵：既然这矿石劈不动，有没有别的办法处理或出售？\",\n      \"anchor\": 0\n    },\n    {\n      \"action\": \"interact:help\",\n      \"target\": {\n        \"kind\": \"person\",\n        \"name\": \"老赵\",\n        \"ref\": \"\",\n        \"status\": null\n      },\n      \"stake\": \"low\",\n      \"purpose\": \"拿出1行粮援助老赵，表示可以帮他分担一些体力。\",\n      \"anchor\": 0\n    },\n    {\n      \"action\": \"interact:decline\",\n      \"target\": {\n        \"kind\": \"person\",\n        \"name\": \"老赵\",\n        \"ref\": \"\",\n        \"status\": null\n      },\n      \"stake\": \"low\",\n      \"purpose\": \"婉拒老赵：拒绝帮忙，表示自己还要去山上打猎。\",\n      \"anchor\": 0\n    }\n  ],\n  \"title\": \"晨雾中的黑铁矿石\",\n  \"location\": \"village\",\n  \"memoryDeltas\": [\n    {\n      \"target\": {\n        \"kind\": \"person\",\n        \"name\": \"老赵\",\n        \"ref\": \"\",\n        \"status\": null\n      },\n      \"kind\": \"clue\",\n      \"anchor\": 0,\n      \"status\": \"open\"\n    }\n  ]\n}",
+                  "reasoning_content": ""
+                }
+              }
+            ],
+            "usage": {
+              "prompt_tokens": 2800,
+              "completion_tokens": 445,
+              "total_tokens": 3245,
+              "prompt_tokens_details": {
+                "cached_tokens": 0
+              },
+              "neurons": 31.59800000000019
+            }
+          },
+          "rawSseBytes": 111026
+        }
+      ],
+      "revision": 4,
+      "pending": false,
+      "state": {
+        "relationshipVersion": 1,
+        "version": 5,
+        "mode": "cultivation",
+        "contentVersion": 4,
+        "rulesVersion": 1,
+        "promptVersion": 1,
+        "runId": "0222535f-c4b7-40dd-98c6-cbe51e723b4c",
+        "revision": 4,
+        "turnId": 4,
+        "phase": "active",
+        "rng": 1435690340,
+        "life": {
+          "name": "云归",
+          "ageDays": 5760,
+          "lifeLimit": 80,
+          "realm": "mortal",
+          "cultivation": 0,
+          "injury": 0,
+          "items": {
+            "supplies": 3,
+            "stones": 0
+          },
+          "relations": {},
+          "birth": {
+            "originId": "village",
+            "talentIds": [
+              "flash-wisdom",
+              "sensitive-breath"
+            ],
+            "attributes": {
+              "constitution": 2,
+              "insight": 5,
+              "fortune": 5
+            }
+          }
+        },
+        "birthReceipt": {
+          "kind": "opening",
+          "choiceId": null,
+          "action": null,
+          "elapsedDays": 0,
+          "itemChanges": {},
+          "relationChanges": {},
+          "random": {
+            "before": 4221886671,
+            "after": 4221886671,
+            "roll": null
+          },
+          "before": {
+            "ageDays": 5760,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "after": {
+            "ageDays": 5760,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "death": null,
+          "birth": {
+            "originId": "village",
+            "talentIds": [
+              "flash-wisdom",
+              "sensitive-breath"
+            ],
+            "attributes": {
+              "constitution": 2,
+              "insight": 5,
+              "fortune": 5
+            }
+          }
+        },
+        "currentScene": {
+          "id": "r:d9da341062cbd87f:t4:s:scene",
+          "title": "晨雾中的黑铁矿石",
+          "location": "village",
+          "entities": [
+            {
+              "id": "r:d9da341062cbd87f:t1:e:person_1",
+              "name": "老赵",
+              "kind": "person"
+            }
+          ],
+          "blocks": [
+            {
+              "kind": "narration",
+              "text": "你站在自家破旧的木屋前，晨雾还未散尽。隔壁的猎户老赵正蹲在院角，手里拿着把生锈的柴刀，正费力地劈开一块从深山里带回来的黑铁矿石。他满头大汗，眉头紧锁，似乎遇到了什么棘手的难题。"
+            }
+          ],
+          "choices": [
+            {
+              "id": "r:d9da341062cbd87f:t4:c:a",
+              "label": "询问老赵：询问老赵：既然这矿石劈不动，有没有别的办法处理或出售？",
+              "intent": "interact",
+              "targetId": "r:d9da341062cbd87f:t1:e:person_1",
+              "stake": "low",
+              "approach": "ask"
+            },
+            {
+              "id": "r:d9da341062cbd87f:t4:c:b",
+              "label": "援助老赵：拿出1行粮援助老赵，表示可以帮他分担一些体力。",
+              "intent": "interact",
+              "targetId": "r:d9da341062cbd87f:t1:e:person_1",
+              "stake": "low",
+              "approach": "help"
+            },
+            {
+              "id": "r:d9da341062cbd87f:t4:c:c",
+              "label": "婉拒老赵：婉拒老赵：拒绝帮忙，表示自己还要去山上打猎。",
+              "intent": "interact",
+              "targetId": "r:d9da341062cbd87f:t1:e:person_1",
+              "stake": "low",
+              "approach": "decline"
+            }
+          ],
+          "memoryDeltas": [
+            {
+              "entityId": "r:d9da341062cbd87f:t1:e:person_1",
+              "kind": "clue",
+              "text": "你站在自家破旧的木屋前，晨雾还未散尽。隔壁的猎户老赵正蹲在院角，手里拿着把生锈的柴刀，正费力地劈开一块从深山里带回来的黑铁矿石。他满头大汗，眉头紧锁，似乎遇到了什么棘手的难题。",
+              "status": "open"
+            }
+          ]
+        },
+        "lastReceipt": {
+          "kind": "choice",
+          "choiceId": "r:d9da341062cbd87f:t3:c:observe",
+          "action": {
+            "id": "r:d9da341062cbd87f:t3:c:observe",
+            "label": "观察周围：寻找新的线索",
+            "intent": "interact",
+            "targetId": "self",
+            "stake": "low",
+            "approach": "observe"
+          },
+          "elapsedDays": 0,
+          "itemChanges": {},
+          "relationChanges": {},
+          "random": {
+            "before": 1849357785,
+            "after": 1435690340,
+            "roll": 40
+          },
+          "before": {
+            "ageDays": 5760,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "after": {
+            "ageDays": 5760,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "death": null,
+          "birth": null
+        },
+        "relatedEntities": [
+          {
+            "id": "r:d9da341062cbd87f:t1:e:person_1",
+            "name": "老赵",
+            "kind": "person"
+          }
+        ],
+        "archiveCursor": 0
+      },
+      "posts": 3,
+      "latency": {
+        "usable": true,
+        "errorCode": null,
+        "firstAnyPreviewMs": 4364,
+        "firstReadableMs": 5049,
+        "completionMs": 12487,
+        "narrativeChars": 88,
+        "maxPreviewGapMs": 370,
+        "readingFinishEstimateMs": 19716,
+        "readingStallEstimateMs": 0,
+        "optionsWaitEstimateMs": 0,
+        "prefetchWorthEvaluating": true,
+        "assumptions": {
+          "readingCharsPerSecond": 6,
+          "readableChars": 20,
+          "targetWaitMs": 2000
+        }
+      }
+    }
+  ],
+  "errors": [
+    "Invalid choice"
+  ],
+  "posts": 3,
+  "refreshed": null
+}

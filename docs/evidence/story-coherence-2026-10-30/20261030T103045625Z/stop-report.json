@@ -1,0 +1,12 @@
+{
+  "sourceCommit": "2fe58f8d3d4cb3c1f4f3dbfac98bc6d1a3676db6",
+  "accepted": false,
+  "reason": "Opening offered asking an ordinary dog that had not been established as speaking; another choice referenced a wooden stick absent from player inventory. Main manually stopped before choosing. One committed test opening is not six-turn acceptance.",
+  "cleanup": {
+    "productionVersion": "cad2a140-240f-4465-a837-e53f054c2589",
+    "percentage": 100,
+    "deployment": "e511b7c4-5fee-46fc-a151-f317c657aef2",
+    "ownCredentialDeleted": true,
+    "noNewWorkerOrNamespace": true
+  }
+}

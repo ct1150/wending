@@ -1,0 +1,1 @@
+{"at":"2026-10-30T13:22:25.333Z","decision":{"index":0,"reason":"援助后行粮3→2、时间+1日，刘二叔实际吃下并感谢，没有代替玩家去调查；追问骨头摩擦声之外的细节。","selected":{"id":"r:135ea8f52168f34c:t2:c:a","label":"询问刘二叔：询问刘二叔昨晚具体听到了什么动静，除了骨头摩擦声还有没有其他细节。","intent":"interact","targetId":"r:135ea8f52168f34c:t1:e:person_1","stake":"low","approach":"ask"}}}

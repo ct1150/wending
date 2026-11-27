@@ -1,0 +1,1 @@
+{"at":"2026-10-30T17:13:55.175Z","decision":{"index":1,"reason":"拒绝后的观察描写小屋环境，药方已收起，父亲的请求菜单没有重开；当前给出独立观察、后山旅行、结束互动。明确选择后山旅行，核对60日、行粮消耗及旧人物不自动随行。","selected":{"id":"r:60efb6672ac907de:t4:c:c","label":"穿行荒野前往后山：前往后山：去后山寻找猎物或散心。","intent":"travel","targetId":"r:60efb6672ac907de:t4:e:place_1","stake":"low","approach":"wilderness"}}}

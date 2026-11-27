@@ -31,9 +31,9 @@ export interface CardEffect {
   draw?: number;
   gainQi?: number;
   heal?: number;
-  selfHpCost?: number;
-  lifeCost?: number;
-  gainLifespan?: number;
+  selfHpCost?: number;       // 燃血：消耗当前气血
+  maxHpCost?: number;        // 禁术献祭：扣除最大气血上限
+  gainMaxHp?: number;        // 夺元/驻颜：永久提升最大气血上限
   poison?: number;
   detonatePoison?: number;
   vulnerable?: number;
@@ -54,16 +54,14 @@ export interface CardEffect {
   addCurseToDiscard?: string;
   exhaustCursesInHand?: boolean;
   damagePerExhaustedCurse?: number;
-  gainFoundation?: number;
   extraSeal?: SealType;
-  // v9.0 进阶算子
-  xCost?: boolean;               // 倾泻当前全部真元 X，按 X 放大连击/引爆/护盾
-  xHitsBase?: number;            // X 费攻击连段 = X + xHitsBase
-  xPoisonDetonate?: boolean;     // X 费连续引爆 X 次丹毒并回血
-  counterAura?: number;          // 剑罡反击：受击时回敬穿甲伤
-  exhaustRandomHand?: number;    // 献祭：随机消耗手牌中 N 张牌
-  damagePerExhausted?: number;   // 本场每有一张已消耗牌额外增伤
-  detonateAllArrays?: number;    // 引爆场上全部阵盘，每座造成 N 伤害并回 1 真元
+  xCost?: boolean;
+  xHitsBase?: number;
+  xPoisonDetonate?: boolean;
+  counterAura?: number;
+  exhaustRandomHand?: number;
+  damagePerExhausted?: number;
+  detonateAllArrays?: number;
 }
 
 export interface CardDef {
@@ -73,11 +71,11 @@ export interface CardDef {
   type: CardType;
   rarity: CardRarity;
   element: ElementTag;
-  cost: number; // xCost 卡牌 cost 设为 0 (UI 显示为 X)
+  cost: number;
   exhaust?: boolean;
   ethereal?: boolean;
   innate?: boolean;
-  tokenOnly?: boolean; // 衍生专用牌（不进常规掉落池）
+  tokenOnly?: boolean;
   unlockAchievement?: string;
   description: string;
   effect: CardEffect;
@@ -103,7 +101,6 @@ export interface RootDef {
   description: string;
   passiveText: string;
   bonusMaxHp?: number;
-  bonusLifespan?: number;
   bonusQi?: number;
   mixedFiveBonus?: boolean;
 }
@@ -116,7 +113,6 @@ export interface LineageDef {
   description: string;
   primaryElements: SealType[];
   baseHp: number;
-  baseLifespan: number;
   starterMethodName: string;
   starterMethodDesc: string;
   starterTreasureId: string;
@@ -146,7 +142,7 @@ export interface ConsumableDef {
   rarity: 'common' | 'rare';
   icon: string;
   price: number;
-  passiveRevive?: boolean; // 替死木偶符：致死自动触发
+  passiveRevive?: boolean;
   description: string;
 }
 
@@ -172,15 +168,15 @@ export interface RelicDef {
     | 'start-draw'
     | 'sword-cascade'
     | 'poison-boost'
-    | 'life-leech-kill'
-    | 'abode-discount'
+    | 'maxhp-leech-kill'
+    | 'abode-heal'
     | 'resonance-amp'
     | 'block-retain-half'
     | 'curse-power'
     | 'gold-magnet'
     | 'tribulation-ward'
     | 'heal-after-battle'
-    | 'foundation-boost'
+    | 'maxhp-pickup'
     | 'array-echo'
     | 'counter-start'
     | 'exhaust-qi'
@@ -282,7 +278,6 @@ export interface MapNode {
   col: number;
   type: MapNodeType;
   label: string;
-  ageCost: number;
   nextIds: string[];
   visited: boolean;
 }
@@ -311,10 +306,10 @@ export interface CombatState {
   retainBlockThisTurn: boolean;
   swordIntent: number;
   counterAura: number;
-  damageBoostPct: number;      // 暴血燃魂丹等本回合增伤百分比
-  nextResonanceDouble: boolean;// 五行聚印丹下次共鸣翻倍
-  enemyDmgWeakenPct: number;   // 玄冰敛息符本回合减伤百分比
-  maxSealSlots: number;        // 默认 3，受封灵魔瘴词条降为 2
+  damageBoostPct: number;
+  nextResonanceDouble: boolean;
+  enemyDmgWeakenPct: number;
+  maxSealSlots: number;
   vulnerable: number;
   weak: number;
   seals: SealType[];
@@ -326,28 +321,25 @@ export interface CombatState {
   treasureCharges: Record<string, number>;
   cardsPlayedThisTurn: number;
   swordCardsPlayedThisTurn: number;
-  lifeSpentInCombat: number;
+  hpSacrificedInCombat: number;
   lastResonance: ResonanceEvent | null;
   phase2Banner: string | null;
   combatLog: string[];
   outcome: 'ongoing' | 'victory' | 'tribulation-survived' | 'defeat';
-  defeatCause?: 'hp' | 'lifespan';
 }
 
 export interface EncounterChoice {
   id: string;
   label: string;
   detail: string;
-  ageCost?: number;
   goldCost?: number;
   hpCost?: number;
+  maxHpCost?: number;
   rewardText: string;
   effect: {
     gold?: number;
     hp?: number;
     maxHp?: number;
-    lifespan?: number;
-    foundation?: number;
     addRandomCard?: CardRarity;
     addSpecificCard?: string;
     addCurse?: string;
@@ -369,11 +361,10 @@ export interface EncounterDef {
 }
 
 export type RealmId = 'qi' | 'foundation' | 'core' | 'nascent' | 'ascended';
-export type BreakthroughGrade = 'mortal' | 'earth' | 'heaven';
+export type BreakthroughGrade = 'earth' | 'heaven';
 
 export interface RewardState {
   gold: number;
-  foundation: number;
   cardChoices: CardDef[];
   relicReward?: RelicDef;
   treasureReward?: TreasureDef;
@@ -390,7 +381,7 @@ export interface RewardState {
   breakthroughGrade?: BreakthroughGrade;
   lawChoices?: RelicDef[];
   pickedLaw?: boolean;
-  lifespanGained?: number;
+  maxHpGained?: number;
   daoTokenGained?: boolean;
 }
 
@@ -410,13 +401,13 @@ export interface AuctionLot {
   name: string;
   description: string;
   price: number;
-  kind: 'card' | 'relic' | 'consumable' | 'lifespan';
+  kind: 'card' | 'relic' | 'consumable' | 'maxhp';
   refId: string;
   claimed: boolean;
 }
 
 export interface BlessingOption {
-  id: 'gold' | 'lifespan-foundation' | 'purge-two' | 'gamble-relic' | 'mythic-treasure';
+  id: 'gold' | 'purge-two' | 'gamble-relic' | 'mythic-treasure';
   title: string;
   costText: string;
   rewardText: string;
@@ -457,19 +448,16 @@ export interface RunState {
   rootId: string;
   act: 1 | 2 | 3 | 4;
   realm: RealmId;
-  age: number;
-  maxLifespan: number;
   hp: number;
   maxHp: number;
   baseQi: number;
   gold: number;
-  foundation: number;
   daoTokens: number;
   deck: CardInstance[];
   treasures: string[];
   relics: string[];
   materials: EnchantId[];
-  consumables: string[]; // 至多 3 格乾坤丹符袋
+  consumables: string[];
   blessingOptions?: BlessingOption[];
   isDailyChallenge?: boolean;
   dailyDate?: string;
@@ -505,10 +493,9 @@ export interface RunState {
     maxSingleHit: number;
     maxPoisonApplied: number;
     resonancesTriggered: number;
-    lifeBurned: number;
+    hpSacrificed: number;
     tribulationsSlain: number;
   };
-  newlyUnlockedAchievements?: string[];
   deathCause?: string;
   endingTitle?: string;
   uidCounter: number;
@@ -536,7 +523,7 @@ export interface MetaSave {
     name: string;
     lineage: LineageId;
     realm: RealmId;
-    age: number;
+    maxHp: number;
     outcome: 'victory' | 'true-victory' | 'death';
     cause: string;
     karmaEarned: number;

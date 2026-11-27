@@ -1,0 +1,728 @@
+{
+  "caseId": "choice-1",
+  "start": 39577.10000000149,
+  "timeline": [
+    {
+      "atMs": 4784,
+      "chars": 1
+    },
+    {
+      "atMs": 4860,
+      "chars": 6
+    },
+    {
+      "atMs": 4937,
+      "chars": 9
+    },
+    {
+      "atMs": 4981,
+      "chars": 12
+    },
+    {
+      "atMs": 5166,
+      "chars": 18
+    },
+    {
+      "atMs": 5211,
+      "chars": 21
+    },
+    {
+      "atMs": 5272,
+      "chars": 25
+    },
+    {
+      "atMs": 5337,
+      "chars": 28
+    },
+    {
+      "atMs": 5414,
+      "chars": 32
+    },
+    {
+      "atMs": 5506,
+      "chars": 35
+    },
+    {
+      "atMs": 5567,
+      "chars": 37
+    },
+    {
+      "atMs": 5629,
+      "chars": 39
+    },
+    {
+      "atMs": 5706,
+      "chars": 43
+    },
+    {
+      "atMs": 5781,
+      "chars": 45
+    },
+    {
+      "atMs": 5843,
+      "chars": 51
+    },
+    {
+      "atMs": 5907,
+      "chars": 55
+    },
+    {
+      "atMs": 5984,
+      "chars": 56
+    },
+    {
+      "atMs": 6029,
+      "chars": 59
+    },
+    {
+      "atMs": 6230,
+      "chars": 61
+    },
+    {
+      "atMs": 6292,
+      "chars": 63
+    },
+    {
+      "atMs": 6352,
+      "chars": 66
+    },
+    {
+      "atMs": 6443,
+      "chars": 69
+    },
+    {
+      "atMs": 6489,
+      "chars": 72
+    },
+    {
+      "atMs": 6551,
+      "chars": 74
+    },
+    {
+      "atMs": 6625,
+      "chars": 78
+    },
+    {
+      "atMs": 6686,
+      "chars": 81
+    },
+    {
+      "atMs": 6750,
+      "chars": 87
+    },
+    {
+      "atMs": 6826,
+      "chars": 89
+    },
+    {
+      "atMs": 6952,
+      "chars": 91
+    },
+    {
+      "atMs": 7014,
+      "chars": 95
+    },
+    {
+      "atMs": 7091,
+      "chars": 99
+    },
+    {
+      "atMs": 7151,
+      "chars": 102
+    },
+    {
+      "atMs": 7244,
+      "chars": 104
+    },
+    {
+      "atMs": 7288,
+      "chars": 107
+    },
+    {
+      "atMs": 7377,
+      "chars": 108
+    },
+    {
+      "atMs": 7413,
+      "chars": 112
+    },
+    {
+      "atMs": 7603,
+      "chars": 115
+    },
+    {
+      "atMs": 7724,
+      "chars": 121
+    },
+    {
+      "atMs": 7756,
+      "chars": 123
+    },
+    {
+      "atMs": 7836,
+      "chars": 127
+    },
+    {
+      "atMs": 7896,
+      "chars": 134
+    },
+    {
+      "atMs": 7980,
+      "chars": 136
+    },
+    {
+      "atMs": 8084,
+      "chars": 140
+    },
+    {
+      "atMs": 8161,
+      "chars": 143
+    },
+    {
+      "atMs": 8223,
+      "chars": 147
+    },
+    {
+      "atMs": 8301,
+      "chars": 151
+    },
+    {
+      "atMs": 8365,
+      "chars": 153
+    },
+    {
+      "atMs": 8742,
+      "chars": 159
+    },
+    {
+      "atMs": 8804,
+      "chars": 163
+    },
+    {
+      "atMs": 8880,
+      "chars": 167
+    },
+    {
+      "atMs": 8958,
+      "chars": 170
+    },
+    {
+      "atMs": 9021,
+      "chars": 175
+    },
+    {
+      "atMs": 9084,
+      "chars": 181
+    },
+    {
+      "atMs": 9162,
+      "chars": 187
+    },
+    {
+      "atMs": 9222,
+      "chars": 192
+    },
+    {
+      "atMs": 9284,
+      "chars": 197
+    },
+    {
+      "atMs": 9519,
+      "chars": 201
+    },
+    {
+      "atMs": 9534,
+      "chars": 206
+    },
+    {
+      "atMs": 9595,
+      "chars": 210
+    },
+    {
+      "atMs": 9671,
+      "chars": 216
+    },
+    {
+      "atMs": 9717,
+      "chars": 222
+    },
+    {
+      "atMs": 9779,
+      "chars": 227
+    },
+    {
+      "atMs": 9844,
+      "chars": 233
+    },
+    {
+      "atMs": 9907,
+      "chars": 237
+    },
+    {
+      "atMs": 9971,
+      "chars": 242
+    },
+    {
+      "atMs": 10031,
+      "chars": 248
+    },
+    {
+      "atMs": 10098,
+      "chars": 253
+    },
+    {
+      "atMs": 10156,
+      "chars": 258
+    },
+    {
+      "atMs": 10234,
+      "chars": 263
+    },
+    {
+      "atMs": 10295,
+      "chars": 270
+    },
+    {
+      "atMs": 10359,
+      "chars": 277
+    },
+    {
+      "atMs": 10403,
+      "chars": 285
+    }
+  ],
+  "choicesEnabledDuringPreview": false,
+  "lastText": "老张嘿嘿一笑，把残片凑近了些，眉头却皱得更紧了。“这东西看着眼熟，像是城外那座废弃矿坑里挖出来的，但我也不确定。这上面刻着些古怪的纹路，我琢磨着，怕不是什么机关的碎片，说不定还能拼出个什么小玩意儿来。”他顿了顿，压低声音，“不过，这玩意儿看着邪乎，你要是感兴趣，我可以便宜点卖给你，或者咱们一起研究研究？”\n\n“这玩意儿看着眼熟，像是城外那座废弃矿坑里挖出来的，但我也不确定。这上面刻着些古怪的纹路，我琢磨着，怕不是什么机关的碎片，说不定还能拼出个什么小玩意儿来。”他顿了顿，压低声音，“不过，这玩意儿看着邪乎，你要是感兴趣，我可以便宜点卖给你，或者咱们一起研究研究？”",
+  "doneMs": 15125,
+  "result": {
+    "protocolVersion": 1,
+    "status": "ready",
+    "requestId": "44b199ef-9be4-4669-98b0-9d573b5c03ee",
+    "attemptId": "6e27cb56-dd73-4d9a-a985-55bb06c4f516",
+    "sessionRef": "sess_588035e85956b56d6fe7b21ffa6f55e9",
+    "errorCode": null,
+    "retry": null,
+    "scene": {
+      "id": "r:06b27f47c2986061:t2:s:scene",
+      "title": "残片之谜",
+      "location": "城坊",
+      "entities": [
+        {
+          "id": "r:06b27f47c2986061:t1:e:person_1",
+          "name": "老张",
+          "kind": "person",
+          "status": "alive"
+        }
+      ],
+      "blocks": [
+        {
+          "kind": "dialogue",
+          "text": "老张嘿嘿一笑，把残片凑近了些，眉头却皱得更紧了。“这东西看着眼熟，像是城外那座废弃矿坑里挖出来的，但我也不确定。这上面刻着些古怪的纹路，我琢磨着，怕不是什么机关的碎片，说不定还能拼出个什么小玩意儿来。”他顿了顿，压低声音，“不过，这玩意儿看着邪乎，你要是感兴趣，我可以便宜点卖给你，或者咱们一起研究研究？”",
+          "speaker": "r:06b27f47c2986061:t1:e:person_1"
+        },
+        {
+          "kind": "dialogue",
+          "text": "“这玩意儿看着眼熟，像是城外那座废弃矿坑里挖出来的，但我也不确定。这上面刻着些古怪的纹路，我琢磨着，怕不是什么机关的碎片，说不定还能拼出个什么小玩意儿来。”他顿了顿，压低声音，“不过，这玩意儿看着邪乎，你要是感兴趣，我可以便宜点卖给你，或者咱们一起研究研究？”",
+          "speaker": "r:06b27f47c2986061:t1:e:person_1"
+        }
+      ],
+      "choices": [
+        {
+          "id": "r:06b27f47c2986061:t2:c:b",
+          "label": "婉拒老张：拒绝购买或研究，转身离开",
+          "intent": "interact",
+          "targetId": "r:06b27f47c2986061:t1:e:person_1",
+          "stake": "low",
+          "approach": "decline"
+        },
+        {
+          "id": "r:06b27f47c2986061:t2:c:c",
+          "label": "结束与老张的互动：结束对话，继续在城坊游荡",
+          "intent": "interact",
+          "targetId": "r:06b27f47c2986061:t1:e:person_1",
+          "stake": "low",
+          "approach": "leave"
+        }
+      ],
+      "memoryDeltas": [
+        {
+          "entityId": "r:06b27f47c2986061:t1:e:person_1",
+          "kind": "clue",
+          "text": "“这玩意儿看着眼熟，像是城外那座废弃矿坑里挖出来的，但我也不确定。这上面刻着些古怪的纹路，我琢磨着，怕不是什么机关的碎片，说不定还能拼出个什么小玩意儿来。”他顿了顿，压低声音，“不过，这玩意儿看着邪乎，你要是感兴趣，我可以便宜点卖给你，或者咱们一起研究研究？”",
+          "status": "open"
+        }
+      ]
+    }
+  },
+  "request": {
+    "context": {
+      "schemaVersion": 1,
+      "phase": "choice",
+      "identity": {
+        "runId": "ee8518e7-e7ce-43bd-85d9-ec668f552688",
+        "turnId": 2,
+        "baseRevision": 1,
+        "stateHash": "4d40de16c57cc1a547e95d89003189c806f74026a02bb1322de6723243f6c0db",
+        "choiceId": "r:06b27f47c2986061:t1:c:a",
+        "rulesVersion": 1,
+        "promptVersion": 1,
+        "requestId": "44b199ef-9be4-4669-98b0-9d573b5c03ee"
+      },
+      "namespace": "r:06b27f47c2986061",
+      "receipt": {
+        "kind": "choice",
+        "choiceId": "r:06b27f47c2986061:t1:c:a",
+        "action": {
+          "id": "r:06b27f47c2986061:t1:c:a",
+          "label": "询问老张：询问这残片的具体来历和用途",
+          "intent": "interact",
+          "targetId": "r:06b27f47c2986061:t1:e:person_1",
+          "stake": "low",
+          "approach": "ask"
+        },
+        "elapsedDays": 0,
+        "itemChanges": {},
+        "relationChanges": {},
+        "random": {
+          "before": 2756372443,
+          "after": 285277054,
+          "roll": 54
+        },
+        "before": {
+          "ageDays": 5760,
+          "realm": "mortal",
+          "cultivation": 0,
+          "injury": 0
+        },
+        "after": {
+          "ageDays": 5760,
+          "realm": "mortal",
+          "cultivation": 0,
+          "injury": 0
+        },
+        "death": null,
+        "birth": null
+      },
+      "life": {
+        "name": "云归",
+        "ageDays": 5760,
+        "lifeLimit": 80,
+        "realm": "mortal",
+        "cultivation": 0,
+        "injury": 0,
+        "items": {
+          "supplies": 3,
+          "stones": 0
+        },
+        "relations": {},
+        "birth": {
+          "originId": "artisan",
+          "talentIds": [
+            "iron-bones",
+            "flash-wisdom"
+          ],
+          "attributes": {
+            "constitution": 1,
+            "insight": 5,
+            "fortune": 6
+          }
+        }
+      },
+      "entities": [
+        {
+          "id": "r:06b27f47c2986061:t1:e:person_1",
+          "name": "老张",
+          "kind": "person",
+          "status": "alive"
+        }
+      ],
+      "memory": {
+        "facts": [],
+        "promises": [],
+        "clues": [],
+        "recent": [
+          {
+            "id": "turn:1",
+            "runId": "ee8518e7-e7ce-43bd-85d9-ec668f552688",
+            "turnId": 1,
+            "source": "narrative",
+            "kind": "turn",
+            "text": "地点：城坊\n你站在城坊的街角，手里攥着刚领到的匠徒腰牌。不远处，一个满脸油污的汉子正蹲在地上，对着一块断裂的青铜残片发愁。他似乎察觉到了你的目光，抬起头，用满是老茧的手指了指那残片，又指了指自己腰间空荡荡的布袋，发出一声无奈的叹息。\n“这玩意儿看着像是个机关零件，可我实在琢磨不透它怎么装回去。”汉子搓了搓手，眼神里透着焦急，“兄弟，你是个匠徒，眼力活儿应该比我强，能不能帮我看看？要是能修好，我请你喝碗热汤。”",
+            "entityIds": []
+          }
+        ],
+        "summaries": []
+      },
+      "references": [
+        "turn:1"
+      ],
+      "previousScene": {
+        "id": "r:06b27f47c2986061:t1:s:scene",
+        "blocksHash": "5bfe986e80ce8ae8d3dfbdea630075f4baac0c22faa057013cf4bbeb6cb48c8c"
+      },
+      "relationshipVersion": 1,
+      "relationships": {},
+      "coverage": {
+        "policy": "relevance-v1",
+        "openTotal": 0,
+        "openIncluded": 0,
+        "openOmitted": 0
+      }
+    },
+    "attempt": {
+      "id": "6e27cb56-dd73-4d9a-a985-55bb06c4f516",
+      "sessionRef": "sess_588035e85956b56d6fe7b21ffa6f55e9",
+      "retryOf": null
+    }
+  },
+  "decision": {
+    "index": 0,
+    "reason": "Ask Lao Zhang the specific origin and use of his bronze fragment. No repair, gift, soup, payment or commitment is chosen.",
+    "selected": {
+      "id": "r:06b27f47c2986061:t1:c:a",
+      "label": "询问老张：询问这残片的具体来历和用途",
+      "intent": "interact",
+      "targetId": "r:06b27f47c2986061:t1:e:person_1",
+      "stake": "low",
+      "approach": "ask"
+    }
+  },
+  "choices": [
+    {
+      "id": "r:06b27f47c2986061:t2:c:b",
+      "enabled": true,
+      "label": "婉拒老张：拒绝购买或研究，转身离开",
+      "cost": "0日"
+    },
+    {
+      "id": "r:06b27f47c2986061:t2:c:c",
+      "enabled": true,
+      "label": "结束与老张的互动：结束对话，继续在城坊游荡",
+      "cost": "0日"
+    }
+  ],
+  "traces": [
+    {
+      "model": "@cf/zai-org/glm-4.7-flash",
+      "inputHash": "315ccec2b1de20d472d6e8b92128a611721c9a0a2b58fc638e3f11084da93902",
+      "inputBytes": 15179,
+      "startedAt": 1793359286093,
+      "bindingReturnedAt": 1793359286498,
+      "liveRawBytes": 116461,
+      "captureComplete": true,
+      "response": {
+        "model": "@cf/zai-org/glm-4.7-flash",
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "message": {
+              "content": "{\"blocks\":[{\"kind\":\"dialogue\",\"text\":\"老张嘿嘿一笑，把残片凑近了些，眉头却皱得更紧了。“这东西看着眼熟，像是城外那座废弃矿坑里挖出来的，但我也不确定。这上面刻着些古怪的纹路，我琢磨着，怕不是什么机关的碎片，说不定还能拼出个什么小玩意儿来。”他顿了顿，压低声音，“不过，这玩意儿看着邪乎，你要是感兴趣，我可以便宜点卖给你，或者咱们一起研究研究？”\",\"speaker\":\"k1_person_老张\"},{\"kind\":\"dialogue\",\"text\":\"“这玩意儿看着眼熟，像是城外那座废弃矿坑里挖出来的，但我也不确定。这上面刻着些古怪的纹路，我琢磨着，怕不是什么机关的碎片，说不定还能拼出个什么小玩意儿来。”他顿了顿，压低声音，“不过，这玩意儿看着邪乎，你要是感兴趣，我可以便宜点卖给你，或者咱们一起研究研究？”\",\"speaker\":\"k1_person_老张\"}],\"choices\":[{\"action\":\"interact:ask\",\"targetId\":\"k1_person_老张\",\"stake\":\"low\",\"purpose\":\"询问这残片的具体来历和用途\",\"anchor\":1},{\"action\":\"interact:decline\",\"targetId\":\"k1_person_老张\",\"stake\":\"low\",\"purpose\":\"拒绝购买或研究，转身离开\",\"anchor\":1},{\"action\":\"interact:leave\",\"targetId\":\"k1_person_老张\",\"stake\":\"low\",\"purpose\":\"结束对话，继续在城坊游荡\",\"anchor\":1}],\"title\":\"残片之谜\",\"location\":\"城坊\",\"otherPeople\":[{\"id\":\"k1_person_老张\",\"status\":\"alive\"}],\"places\":[],\"factions\":[],\"memoryDeltas\":[{\"entityId\":\"k1_person_老张\",\"kind\":\"clue\",\"anchor\":1,\"status\":\"open\"}]}",
+              "reasoning_content": ""
+            }
+          }
+        ],
+        "usage": {
+          "prompt_tokens": 2667,
+          "completion_tokens": 415,
+          "total_tokens": 3082,
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          },
+          "neurons": 29.774500000000177
+        }
+      },
+      "rawSseBytes": 116461
+    }
+  ],
+  "revision": 2,
+  "pending": false,
+  "state": {
+    "relationshipVersion": 1,
+    "version": 5,
+    "mode": "cultivation",
+    "contentVersion": 4,
+    "rulesVersion": 1,
+    "promptVersion": 1,
+    "runId": "ee8518e7-e7ce-43bd-85d9-ec668f552688",
+    "revision": 2,
+    "turnId": 2,
+    "phase": "active",
+    "rng": 285277054,
+    "life": {
+      "name": "云归",
+      "ageDays": 5760,
+      "lifeLimit": 80,
+      "realm": "mortal",
+      "cultivation": 0,
+      "injury": 0,
+      "items": {
+        "supplies": 3,
+        "stones": 0
+      },
+      "relations": {},
+      "birth": {
+        "originId": "artisan",
+        "talentIds": [
+          "iron-bones",
+          "flash-wisdom"
+        ],
+        "attributes": {
+          "constitution": 1,
+          "insight": 5,
+          "fortune": 6
+        }
+      }
+    },
+    "birthReceipt": {
+      "kind": "opening",
+      "choiceId": null,
+      "action": null,
+      "elapsedDays": 0,
+      "itemChanges": {},
+      "relationChanges": {},
+      "random": {
+        "before": 2756372443,
+        "after": 2756372443,
+        "roll": null
+      },
+      "before": {
+        "ageDays": 5760,
+        "realm": "mortal",
+        "cultivation": 0,
+        "injury": 0
+      },
+      "after": {
+        "ageDays": 5760,
+        "realm": "mortal",
+        "cultivation": 0,
+        "injury": 0
+      },
+      "death": null,
+      "birth": {
+        "originId": "artisan",
+        "talentIds": [
+          "iron-bones",
+          "flash-wisdom"
+        ],
+        "attributes": {
+          "constitution": 1,
+          "insight": 5,
+          "fortune": 6
+        }
+      }
+    },
+    "currentScene": {
+      "id": "r:06b27f47c2986061:t2:s:scene",
+      "title": "残片之谜",
+      "location": "城坊",
+      "entities": [
+        {
+          "id": "r:06b27f47c2986061:t1:e:person_1",
+          "name": "老张",
+          "kind": "person",
+          "status": "alive"
+        }
+      ],
+      "blocks": [
+        {
+          "kind": "dialogue",
+          "text": "老张嘿嘿一笑，把残片凑近了些，眉头却皱得更紧了。“这东西看着眼熟，像是城外那座废弃矿坑里挖出来的，但我也不确定。这上面刻着些古怪的纹路，我琢磨着，怕不是什么机关的碎片，说不定还能拼出个什么小玩意儿来。”他顿了顿，压低声音，“不过，这玩意儿看着邪乎，你要是感兴趣，我可以便宜点卖给你，或者咱们一起研究研究？”",
+          "speaker": "r:06b27f47c2986061:t1:e:person_1"
+        },
+        {
+          "kind": "dialogue",
+          "text": "“这玩意儿看着眼熟，像是城外那座废弃矿坑里挖出来的，但我也不确定。这上面刻着些古怪的纹路，我琢磨着，怕不是什么机关的碎片，说不定还能拼出个什么小玩意儿来。”他顿了顿，压低声音，“不过，这玩意儿看着邪乎，你要是感兴趣，我可以便宜点卖给你，或者咱们一起研究研究？”",
+          "speaker": "r:06b27f47c2986061:t1:e:person_1"
+        }
+      ],
+      "choices": [
+        {
+          "id": "r:06b27f47c2986061:t2:c:b",
+          "label": "婉拒老张：拒绝购买或研究，转身离开",
+          "intent": "interact",
+          "targetId": "r:06b27f47c2986061:t1:e:person_1",
+          "stake": "low",
+          "approach": "decline"
+        },
+        {
+          "id": "r:06b27f47c2986061:t2:c:c",
+          "label": "结束与老张的互动：结束对话，继续在城坊游荡",
+          "intent": "interact",
+          "targetId": "r:06b27f47c2986061:t1:e:person_1",
+          "stake": "low",
+          "approach": "leave"
+        }
+      ],
+      "memoryDeltas": [
+        {
+          "entityId": "r:06b27f47c2986061:t1:e:person_1",
+          "kind": "clue",
+          "text": "“这玩意儿看着眼熟，像是城外那座废弃矿坑里挖出来的，但我也不确定。这上面刻着些古怪的纹路，我琢磨着，怕不是什么机关的碎片，说不定还能拼出个什么小玩意儿来。”他顿了顿，压低声音，“不过，这玩意儿看着邪乎，你要是感兴趣，我可以便宜点卖给你，或者咱们一起研究研究？”",
+          "status": "open"
+        }
+      ]
+    },
+    "lastReceipt": {
+      "kind": "choice",
+      "choiceId": "r:06b27f47c2986061:t1:c:a",
+      "action": {
+        "id": "r:06b27f47c2986061:t1:c:a",
+        "label": "询问老张：询问这残片的具体来历和用途",
+        "intent": "interact",
+        "targetId": "r:06b27f47c2986061:t1:e:person_1",
+        "stake": "low",
+        "approach": "ask"
+      },
+      "elapsedDays": 0,
+      "itemChanges": {},
+      "relationChanges": {},
+      "random": {
+        "before": 2756372443,
+        "after": 285277054,
+        "roll": 54
+      },
+      "before": {
+        "ageDays": 5760,
+        "realm": "mortal",
+        "cultivation": 0,
+        "injury": 0
+      },
+      "after": {
+        "ageDays": 5760,
+        "realm": "mortal",
+        "cultivation": 0,
+        "injury": 0
+      },
+      "death": null,
+      "birth": null
+    },
+    "relatedEntities": [
+      {
+        "id": "r:06b27f47c2986061:t1:e:person_1",
+        "name": "老张",
+        "kind": "person",
+        "status": "alive"
+      }
+    ],
+    "archiveCursor": 0
+  },
+  "posts": 2,
+  "latency": {
+    "usable": true,
+    "errorCode": null,
+    "firstAnyPreviewMs": 4784,
+    "firstReadableMs": 5211,
+    "completionMs": 15125,
+    "narrativeChars": 285,
+    "maxPreviewGapMs": 377,
+    "readingFinishEstimateMs": 52711,
+    "readingStallEstimateMs": 0,
+    "optionsWaitEstimateMs": 0,
+    "prefetchWorthEvaluating": true,
+    "assumptions": {
+      "readingCharsPerSecond": 6,
+      "readableChars": 20,
+      "targetWaitMs": 2000
+    }
+  }
+}

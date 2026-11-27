@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest';
 import { getUnlockedRewardCardPool } from '../src/content/cards';
 import { ENEMIES } from '../src/content/enemies';
+import { describeStatusTag, extractCardGlossary } from '../src/content/glossary';
 import {
-  activateTreasure,
   endPlayerTurn,
   initCombat,
   playCard,
@@ -10,7 +10,7 @@ import {
   useConsumable,
 } from '../src/core/combat-engine';
 import { generateActMap, getReachableNodeIds } from '../src/core/map-generator';
-import { defaultMetaSave, settleRunIntoMeta, unlockLineageInMeta } from '../src/core/meta-save';
+import { defaultMetaSave, settleRunIntoMeta } from '../src/core/meta-save';
 import { SeededRng } from '../src/core/rng';
 import {
   abodeBrewElixir,
@@ -19,7 +19,6 @@ import {
   auctionAmbushBuyer,
   chooseStartingBlessing,
   claimBreakthroughLaw,
-  claimPastLifeRemnant,
   claimSecondaryMethod,
   createNewRun,
   enterMapNode,
@@ -30,7 +29,7 @@ import {
 } from '../src/core/run-manager';
 
 describe('星宿路线图、狂暴精英、百年拍卖与前世遗蜕', () => {
-  it('生成含狂暴精英、拍卖会与前世遗蜕的连通星宿图', () => {
+  it('生成含狂暴精英、拍卖会与前世遗蜕的连通星宿图且赶路零损耗', () => {
     const rng = new SeededRng(42);
     const remnant = {
       generation: 1,
@@ -71,8 +70,8 @@ describe('星宿路线图、狂暴精英、百年拍卖与前世遗蜕', () => {
   });
 });
 
-describe('灵印相生、敌方法则、Boss二阶段与进阶新算子', () => {
-  it('准确判定七大灵印相生共鸣', () => {
+describe('单一气血体系、灵印相生、Boss二阶段与白话词条解析', () => {
+  it('准确判定七大灵印相生共鸣并自动提取卡牌白话词条注释', () => {
     expect(previewResonance(['wood'], 'fire', false)?.name).toContain('木火相生');
     expect(previewResonance(['metal'], 'thunder', false)?.name).toContain('金雷引煞');
     expect(previewResonance(['earth'], 'metal', false)?.name).toContain('厚土孕剑');
@@ -80,9 +79,16 @@ describe('灵印相生、敌方法则、Boss二阶段与进阶新算子', () => 
     expect(previewResonance(['earth'], 'water', false)?.name).toContain('山泽通气');
     expect(previewResonance(['sha'], 'sha', false)?.name).toContain('魔威滔天');
     expect(previewResonance(['metal', 'wood'], 'water', true)?.name).toContain('五行混元');
+
+    const gl = extractCardGlossary({ uid: 't1', defId: 'sw-x-zhuxian', upgraded: false });
+    expect(gl.entries.some((e) => e.term === 'X费')).toBe(true);
+    expect(gl.entries.some((e) => e.term === '剑意')).toBe(true);
+    expect(gl.entries.some((e) => e.term === '消耗')).toBe(true);
+    expect(gl.comboTip).toContain('雷印连招');
+    expect(describeStatusTag('poison', 6).title).toContain('丹毒');
   });
 
-  it('支持 X 费诛仙剑、辅修毒剑联动、Boss 半血二阶段化相与乾坤丹符瞬发', () => {
+  it('支持 X 费诛仙剑、辅修毒剑联动、燃血丹符、Boss 二阶段与替死木偶', () => {
     const meta = defaultMetaSave();
     let run = createNewRun({
       name: '毒剑仙',
@@ -97,12 +103,13 @@ describe('灵印相生、敌方法则、Boss二阶段与进阶新算子', () => 
     run.consumables = ['con-berserk-pill', 'con-revive-doll'];
 
     run = initCombat(run, ENEMIES['e2-boss-demon'], 'boss');
-    // 封灵魔瘴词条令灵印上限变为 2
     expect(run.combat!.maxSealSlots).toBe(2);
 
-    // 瞬发暴血燃魂丹：真元 +2，伤害 +50%
+    // 瞬发暴血燃魂丹：扣 6 气血，真元 +2，伤害 +50%
+    const hpBefore = run.hp;
     const qiBefore = run.combat!.qi;
     run = useConsumable(run, 0);
+    expect(run.hp).toBe(hpBefore - 6);
     expect(run.combat!.qi).toBe(qiBefore + 2);
     expect(run.combat!.damageBoostPct).toBe(50);
 
@@ -148,7 +155,6 @@ describe('灵印相生、敌方法则、Boss二阶段与进阶新算子', () => 
     run.combat!.enemy.hp = 30;
     run.combat!.hand.push({ uid: 'boom', defId: 'ar-detonate-arrays', upgraded: true });
     run = playCard(run, 'boom');
-    // 凤凰首次归零触发涅槃真火重生！
     expect(run.combat!.enemy.rebirthUsed).toBe(true);
     expect(run.combat!.enemy.hp).toBeGreaterThan(0);
     expect(run.combat!.arrays.length).toBe(0);
@@ -176,8 +182,8 @@ describe('灵印相生、敌方法则、Boss二阶段与进阶新算子', () => 
   });
 });
 
-describe('辅修心法跨系池、百年拍卖截胡、成就解锁与每日天机', () => {
-  it('破境解锁辅修心法开放跨系卡池，达成名场面成就解锁暗金禁术', () => {
+describe('气血≥50%天道破境、辅修跨系池、百年拍卖截胡与洞府闭关', () => {
+  it('击败卷末 Boss 时气血≥50%或斩碎劫眼触发天道破境，解锁辅修心法与成就禁术', () => {
     let meta = defaultMetaSave();
     let run = createNewRun({
       name: '问鼎客',
@@ -189,15 +195,18 @@ describe('辅修心法跨系池、百年拍卖截胡、成就解锁与每日天�
       skipBlessing: true,
     });
 
-    run.foundation = 90;
     run.stats.maxSingleHit = 92; // 触发【一剑开天门】成就
     run = initCombat(run, ENEMIES['e1-boss-tribulation'], 'boss');
     run.combat!.enemy.hp = 0;
     run.combat!.outcome = 'victory';
     run.stats.tribulationsSlain = 1;
 
+    const maxHpBefore = run.maxHp;
     run = resolveCombatVictory(run, meta.achievements);
     expect(run.phase).toBe('breakthrough');
+    expect(run.reward?.breakthroughGrade).toBe('heaven');
+    expect(run.maxHp).toBe(maxHpBefore + 18);
+    expect(run.hp).toBe(run.maxHp);
     expect(run.reward?.methodChoices?.length).toBe(3);
 
     // 习得《万毒淬剑录》后，掉落池应包含丹修神通
@@ -212,7 +221,7 @@ describe('辅修心法跨系池、百年拍卖截胡、成就解锁与每日天�
     expect(run.act).toBe(2);
 
     // 轮回结算校验成就解锁暗金卡入池
-    const settled = settleRunIntoMeta(meta, { ...run, phase: 'gameover', deathCause: '寿尽坐化' }, 'death');
+    const settled = settleRunIntoMeta(meta, { ...run, phase: 'gameover', deathCause: '力竭道消' }, 'death');
     meta = settled.nextMeta;
     expect(settled.newAchievements).toContain('ach-one-strike-80');
     expect(settled.newAchievements).toContain('ach-tribulation-slayer');
@@ -220,7 +229,7 @@ describe('辅修心法跨系池、百年拍卖截胡、成就解锁与每日天�
     expect(poolAfter.some((c) => c.id === 'nu-four-swords-formation')).toBe(true);
   });
 
-  it('百年拍卖会支持杀人夺宝直接进入狂暴精英战，且每日天机生成稳定同种配置', () => {
+  it('百年拍卖会支持杀人夺宝提升气血上限并进入狂暴精英战，每日天机稳定同种', () => {
     const d1 = getDailyChallengeConfig('2026-11-27');
     const d2 = getDailyChallengeConfig('2026-11-27');
     expect(d1.seed).toBe(d2.seed);
@@ -239,21 +248,21 @@ describe('辅修心法跨系池、百年拍卖截胡、成就解锁与每日天�
     run.phase = 'auction';
     run.auction = {
       lots: [
-        { id: 'l1', name: '孤品', description: '测试', price: 99, kind: 'lifespan', refId: 'lifespan', claimed: false },
+        { id: 'l1', name: '龙血果', description: '测试', price: 90, kind: 'maxhp', refId: 'maxhp', claimed: false },
       ],
       settled: false,
     };
-    const lifeBefore = run.maxLifespan;
+    const maxHpBefore = run.maxHp;
     run = auctionAmbushBuyer(run);
-    expect(run.maxLifespan).toBe(lifeBefore + 24);
+    expect(run.maxHp).toBe(maxHpBefore + 18);
     expect(run.phase).toBe('combat');
     expect(run.combat?.nodeType).toBe('fury-elite');
   });
 
-  it('洞府升级附魔、炼丹凝奇丹、删牌与赶路寿尽正常运作', () => {
+  it('洞府升级附魔、炼丹回血凝奇丹、删牌调息与赶路无损气血正常运作', () => {
     const meta = defaultMetaSave();
     let run = createNewRun({
-      name: '老朽',
+      name: '剑客',
       lineage: 'sword',
       rootId: 'root-heaven-sword',
       seed: 123,
@@ -268,15 +277,20 @@ describe('辅修心法跨系池、百年拍卖截胡、成就解锁与每日天�
 
     run.abodeUsed = false;
     run.consumables = [];
+    run.hp = 30;
     const brew = abodeBrewElixir(run, 'steady');
     expect(brew.nextRun.consumables.length).toBe(1);
+    expect(brew.nextRun.hp).toBeGreaterThan(30);
 
     run = brew.nextRun;
     run.abodeUsed = false;
+    const lenBefore = run.deck.length;
     run = abodePurgeCard(run, run.deck[1].uid);
+    expect(run.deck.length).toBe(lenBefore - 1);
+
     run.phase = 'map';
-    run.age = run.maxLifespan - 1;
-    const dead = enterMapNode(run, getReachableNodeIds(run.map, null)[0]);
-    expect(dead.phase).toBe('gameover');
+    const hpBeforeMove = run.hp;
+    const moved = enterMapNode(run, getReachableNodeIds(run.map, null)[0]);
+    expect(moved.hp).toBe(hpBeforeMove);
   });
 });

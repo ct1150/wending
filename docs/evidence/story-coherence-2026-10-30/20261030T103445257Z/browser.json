@@ -1,0 +1,601 @@
+{
+  "sourceCommit": "120497b91eb8184ecc7b5dc4a1ed6fa149fcf6f9",
+  "version": "0b4a3888-73eb-433d-af04-eb6b3e82a3f9",
+  "recordedAt": "2026-10-30T10:37:12.556Z",
+  "records": [
+    {
+      "caseId": "opening",
+      "start": 760.8000000007451,
+      "timeline": [
+        {
+          "atMs": 4401,
+          "chars": 1
+        },
+        {
+          "atMs": 4462,
+          "chars": 5
+        },
+        {
+          "atMs": 4525,
+          "chars": 9
+        },
+        {
+          "atMs": 4589,
+          "chars": 13
+        },
+        {
+          "atMs": 4652,
+          "chars": 17
+        },
+        {
+          "atMs": 4700,
+          "chars": 22
+        },
+        {
+          "atMs": 4762,
+          "chars": 26
+        },
+        {
+          "atMs": 4809,
+          "chars": 30
+        },
+        {
+          "atMs": 4873,
+          "chars": 38
+        },
+        {
+          "atMs": 4937,
+          "chars": 42
+        },
+        {
+          "atMs": 4999,
+          "chars": 46
+        },
+        {
+          "atMs": 5063,
+          "chars": 53
+        },
+        {
+          "atMs": 5143,
+          "chars": 55
+        },
+        {
+          "atMs": 5191,
+          "chars": 59
+        },
+        {
+          "atMs": 5253,
+          "chars": 62
+        },
+        {
+          "atMs": 5299,
+          "chars": 67
+        },
+        {
+          "atMs": 5441,
+          "chars": 81
+        },
+        {
+          "atMs": 5472,
+          "chars": 87
+        },
+        {
+          "atMs": 5534,
+          "chars": 94
+        },
+        {
+          "atMs": 5676,
+          "chars": 103
+        },
+        {
+          "atMs": 5738,
+          "chars": 110
+        },
+        {
+          "atMs": 5801,
+          "chars": 117
+        },
+        {
+          "atMs": 5865,
+          "chars": 124
+        },
+        {
+          "atMs": 5928,
+          "chars": 127
+        },
+        {
+          "atMs": 5974,
+          "chars": 131
+        },
+        {
+          "atMs": 6036,
+          "chars": 133
+        },
+        {
+          "atMs": 6162,
+          "chars": 138
+        },
+        {
+          "atMs": 6211,
+          "chars": 141
+        },
+        {
+          "atMs": 6274,
+          "chars": 146
+        },
+        {
+          "atMs": 6335,
+          "chars": 150
+        },
+        {
+          "atMs": 6381,
+          "chars": 156
+        },
+        {
+          "atMs": 6445,
+          "chars": 160
+        },
+        {
+          "atMs": 6494,
+          "chars": 165
+        },
+        {
+          "atMs": 6557,
+          "chars": 168
+        },
+        {
+          "atMs": 6681,
+          "chars": 173
+        },
+        {
+          "atMs": 6744,
+          "chars": 178
+        },
+        {
+          "atMs": 6806,
+          "chars": 185
+        },
+        {
+          "atMs": 6869,
+          "chars": 189
+        },
+        {
+          "atMs": 6918,
+          "chars": 190
+        }
+      ],
+      "choicesEnabledDuringPreview": false,
+      "lastText": "你站在城西的废弃铁匠铺前，炉火早已熄灭，只剩下一堆暗红的余烬。空气中弥漫着硫磺与铁锈混合的刺鼻气味，一只瘦骨嶙峋的野狗正趴在门口啃食着什么，听到脚步声，它抬起头，浑浊的眼珠死死盯着你，喉咙里发出低沉的呜咽。\n\n那野狗嘴里叼着的并非骨头，而是一块残缺的、泛着微弱青光的铁片，上面隐约刻着几个模糊的篆字。它似乎在犹豫是否要松口，又似乎在警惕着你的靠近，尾巴夹在两腿之间，随时准备逃窜。",
+      "doneMs": 9630,
+      "result": {
+        "protocolVersion": 1,
+        "status": "ready",
+        "requestId": "8745e876-ac1f-4d0d-b192-d084d88a45de",
+        "attemptId": "bfc16a37-489f-470e-ba1c-fc3d45065b22",
+        "sessionRef": "sess_acf91f7268433c396d5f1adb34b19fff",
+        "errorCode": null,
+        "retry": null,
+        "scene": {
+          "id": "r:00534a27dc029c2e:t1:s:scene",
+          "title": "废弃铁铺",
+          "location": "城西废铺",
+          "entities": [
+            {
+              "id": "r:00534a27dc029c2e:t1:e:person_1",
+              "name": "野狗",
+              "status": "alive",
+              "kind": "person"
+            }
+          ],
+          "blocks": [
+            {
+              "kind": "narration",
+              "text": "你站在城西的废弃铁匠铺前，炉火早已熄灭，只剩下一堆暗红的余烬。空气中弥漫着硫磺与铁锈混合的刺鼻气味，一只瘦骨嶙峋的野狗正趴在门口啃食着什么，听到脚步声，它抬起头，浑浊的眼珠死死盯着你，喉咙里发出低沉的呜咽。"
+            },
+            {
+              "kind": "narration",
+              "text": "那野狗嘴里叼着的并非骨头，而是一块残缺的、泛着微弱青光的铁片，上面隐约刻着几个模糊的篆字。它似乎在犹豫是否要松口，又似乎在警惕着你的靠近，尾巴夹在两腿之间，随时准备逃窜。"
+            }
+          ],
+          "choices": [
+            {
+              "id": "r:00534a27dc029c2e:t1:c:a",
+              "label": "询问野狗：询问野狗嘴里的铁片是什么",
+              "intent": "interact",
+              "targetId": "r:00534a27dc029c2e:t1:e:person_1",
+              "stake": "low",
+              "approach": "ask"
+            },
+            {
+              "id": "r:00534a27dc029c2e:t1:c:b",
+              "label": "观察野狗：仔细观察野狗和铁片上的字迹",
+              "intent": "interact",
+              "targetId": "r:00534a27dc029c2e:t1:e:person_1",
+              "stake": "low",
+              "approach": "observe"
+            },
+            {
+              "id": "r:00534a27dc029c2e:t1:c:c",
+              "label": "避开野狗，后撤：悄悄退后，避免惊扰野狗",
+              "intent": "evade",
+              "targetId": "r:00534a27dc029c2e:t1:e:person_1",
+              "stake": "low",
+              "approach": "withdraw"
+            }
+          ],
+          "memoryDeltas": [
+            {
+              "entityId": "r:00534a27dc029c2e:t1:e:person_1",
+              "kind": "clue",
+              "text": "你站在城西的废弃铁匠铺前，炉火早已熄灭，只剩下一堆暗红的余烬。空气中弥漫着硫磺与铁锈混合的刺鼻气味，一只瘦骨嶙峋的野狗正趴在门口啃食着什么，听到脚步声，它抬起头，浑浊的眼珠死死盯着你，喉咙里发出低沉的呜咽。",
+              "status": "open"
+            }
+          ]
+        }
+      },
+      "request": {
+        "context": {
+          "schemaVersion": 1,
+          "phase": "opening",
+          "identity": {
+            "runId": "017c4794-8a02-4351-aa17-607d488d92f6",
+            "turnId": 1,
+            "baseRevision": 0,
+            "stateHash": "122e36cc3dfbac25b58985a2d362c3fb6ee30cbfdc53f88c63a588b6cb8471e1",
+            "choiceId": null,
+            "rulesVersion": 1,
+            "promptVersion": 1,
+            "requestId": "8745e876-ac1f-4d0d-b192-d084d88a45de"
+          },
+          "namespace": "r:00534a27dc029c2e",
+          "receipt": {
+            "kind": "opening",
+            "choiceId": null,
+            "action": null,
+            "elapsedDays": 0,
+            "itemChanges": {},
+            "relationChanges": {},
+            "random": {
+              "before": 1222997174,
+              "after": 1222997174,
+              "roll": null
+            },
+            "before": {
+              "ageDays": 5760,
+              "realm": "mortal",
+              "cultivation": 0,
+              "injury": 0
+            },
+            "after": {
+              "ageDays": 5760,
+              "realm": "mortal",
+              "cultivation": 0,
+              "injury": 0
+            },
+            "death": null,
+            "birth": {
+              "originId": "artisan",
+              "talentIds": [
+                "sword-bone",
+                "fortune-debt"
+              ],
+              "attributes": {
+                "constitution": 4,
+                "insight": 3,
+                "fortune": 5
+              }
+            }
+          },
+          "life": {
+            "name": "云归",
+            "ageDays": 5760,
+            "lifeLimit": 80,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0,
+            "items": {
+              "supplies": 3,
+              "stones": 0
+            },
+            "relations": {},
+            "birth": {
+              "originId": "artisan",
+              "talentIds": [
+                "sword-bone",
+                "fortune-debt"
+              ],
+              "attributes": {
+                "constitution": 4,
+                "insight": 3,
+                "fortune": 5
+              }
+            }
+          },
+          "entities": [],
+          "memory": {
+            "facts": [],
+            "promises": [],
+            "clues": [],
+            "recent": [],
+            "summaries": []
+          },
+          "references": [],
+          "previousScene": null,
+          "relationshipVersion": 1,
+          "relationships": {},
+          "coverage": {
+            "policy": "relevance-v1",
+            "openTotal": 0,
+            "openIncluded": 0,
+            "openOmitted": 0
+          }
+        },
+        "attempt": {
+          "id": "bfc16a37-489f-470e-ba1c-fc3d45065b22",
+          "sessionRef": "sess_acf91f7268433c396d5f1adb34b19fff",
+          "retryOf": null
+        }
+      },
+      "decision": null,
+      "choices": [
+        {
+          "id": "r:00534a27dc029c2e:t1:c:a",
+          "enabled": true,
+          "label": "询问野狗：询问野狗嘴里的铁片是什么",
+          "cost": "0日"
+        },
+        {
+          "id": "r:00534a27dc029c2e:t1:c:b",
+          "enabled": true,
+          "label": "观察野狗：仔细观察野狗和铁片上的字迹",
+          "cost": "0日"
+        },
+        {
+          "id": "r:00534a27dc029c2e:t1:c:c",
+          "enabled": true,
+          "label": "避开野狗，后撤：悄悄退后，避免惊扰野狗",
+          "cost": "14日 · 历练受伤基础风险15%，根骨与坚韧筋骨可降低风险。"
+        }
+      ],
+      "traces": [
+        {
+          "model": "@cf/zai-org/glm-4.7-flash",
+          "inputHash": "feb02a9b36bf35b3ac79455466cd93f297df4eba011034c98dccb95d363e4085",
+          "inputBytes": 13635,
+          "startedAt": 1793356535039,
+          "bindingReturnedAt": 1793356535515,
+          "liveRawBytes": 102369,
+          "captureComplete": true,
+          "response": {
+            "model": "@cf/zai-org/glm-4.7-flash",
+            "choices": [
+              {
+                "finish_reason": "stop",
+                "message": {
+                  "content": "{\"blocks\":[{\"kind\":\"narration\",\"text\":\"你站在城西的废弃铁匠铺前，炉火早已熄灭，只剩下一堆暗红的余烬。空气中弥漫着硫磺与铁锈混合的刺鼻气味，一只瘦骨嶙峋的野狗正趴在门口啃食着什么，听到脚步声，它抬起头，浑浊的眼珠死死盯着你，喉咙里发出低沉的呜咽。\"},{\"kind\":\"narration\",\"text\":\"那野狗嘴里叼着的并非骨头，而是一块残缺的、泛着微弱青光的铁片，上面隐约刻着几个模糊的篆字。它似乎在犹豫是否要松口，又似乎在警惕着你的靠近，尾巴夹在两腿之间，随时准备逃窜。\"}],\"choices\":[{\"action\":\"interact:ask\",\"targetId\":\"p1\",\"stake\":\"low\",\"purpose\":\"询问野狗嘴里的铁片是什么\",\"anchor\":0},{\"action\":\"interact:observe\",\"targetId\":\"p1\",\"stake\":\"low\",\"purpose\":\"仔细观察野狗和铁片上的字迹\",\"anchor\":1},{\"action\":\"evade:withdraw\",\"targetId\":\"p1\",\"stake\":\"low\",\"purpose\":\"悄悄退后，避免惊扰野狗\",\"anchor\":1}],\"title\":\"废弃铁铺\",\"location\":\"城西废铺\",\"otherPeople\":[{\"id\":\"p1\",\"name\":\"野狗\",\"status\":\"alive\"}],\"places\":[],\"factions\":[],\"memoryDeltas\":[{\"entityId\":\"p1\",\"kind\":\"clue\",\"anchor\":0,\"status\":\"open\"}]}",
+                  "reasoning_content": ""
+                }
+              }
+            ],
+            "usage": {
+              "prompt_tokens": 2197,
+              "completion_tokens": 341,
+              "total_tokens": 2538,
+              "prompt_tokens_details": {
+                "cached_tokens": 0
+              },
+              "neurons": 24.495900000000145
+            }
+          },
+          "rawSseBytes": 102369
+        }
+      ],
+      "revision": 1,
+      "pending": false,
+      "state": {
+        "relationshipVersion": 1,
+        "version": 5,
+        "mode": "cultivation",
+        "contentVersion": 4,
+        "rulesVersion": 1,
+        "promptVersion": 1,
+        "runId": "017c4794-8a02-4351-aa17-607d488d92f6",
+        "revision": 1,
+        "turnId": 1,
+        "phase": "active",
+        "rng": 1222997174,
+        "life": {
+          "name": "云归",
+          "ageDays": 5760,
+          "lifeLimit": 80,
+          "realm": "mortal",
+          "cultivation": 0,
+          "injury": 0,
+          "items": {
+            "supplies": 3,
+            "stones": 0
+          },
+          "relations": {},
+          "birth": {
+            "originId": "artisan",
+            "talentIds": [
+              "sword-bone",
+              "fortune-debt"
+            ],
+            "attributes": {
+              "constitution": 4,
+              "insight": 3,
+              "fortune": 5
+            }
+          }
+        },
+        "birthReceipt": {
+          "kind": "opening",
+          "choiceId": null,
+          "action": null,
+          "elapsedDays": 0,
+          "itemChanges": {},
+          "relationChanges": {},
+          "random": {
+            "before": 1222997174,
+            "after": 1222997174,
+            "roll": null
+          },
+          "before": {
+            "ageDays": 5760,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "after": {
+            "ageDays": 5760,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "death": null,
+          "birth": {
+            "originId": "artisan",
+            "talentIds": [
+              "sword-bone",
+              "fortune-debt"
+            ],
+            "attributes": {
+              "constitution": 4,
+              "insight": 3,
+              "fortune": 5
+            }
+          }
+        },
+        "currentScene": {
+          "id": "r:00534a27dc029c2e:t1:s:scene",
+          "title": "废弃铁铺",
+          "location": "城西废铺",
+          "entities": [
+            {
+              "id": "r:00534a27dc029c2e:t1:e:person_1",
+              "name": "野狗",
+              "status": "alive",
+              "kind": "person"
+            }
+          ],
+          "blocks": [
+            {
+              "kind": "narration",
+              "text": "你站在城西的废弃铁匠铺前，炉火早已熄灭，只剩下一堆暗红的余烬。空气中弥漫着硫磺与铁锈混合的刺鼻气味，一只瘦骨嶙峋的野狗正趴在门口啃食着什么，听到脚步声，它抬起头，浑浊的眼珠死死盯着你，喉咙里发出低沉的呜咽。"
+            },
+            {
+              "kind": "narration",
+              "text": "那野狗嘴里叼着的并非骨头，而是一块残缺的、泛着微弱青光的铁片，上面隐约刻着几个模糊的篆字。它似乎在犹豫是否要松口，又似乎在警惕着你的靠近，尾巴夹在两腿之间，随时准备逃窜。"
+            }
+          ],
+          "choices": [
+            {
+              "id": "r:00534a27dc029c2e:t1:c:a",
+              "label": "询问野狗：询问野狗嘴里的铁片是什么",
+              "intent": "interact",
+              "targetId": "r:00534a27dc029c2e:t1:e:person_1",
+              "stake": "low",
+              "approach": "ask"
+            },
+            {
+              "id": "r:00534a27dc029c2e:t1:c:b",
+              "label": "观察野狗：仔细观察野狗和铁片上的字迹",
+              "intent": "interact",
+              "targetId": "r:00534a27dc029c2e:t1:e:person_1",
+              "stake": "low",
+              "approach": "observe"
+            },
+            {
+              "id": "r:00534a27dc029c2e:t1:c:c",
+              "label": "避开野狗，后撤：悄悄退后，避免惊扰野狗",
+              "intent": "evade",
+              "targetId": "r:00534a27dc029c2e:t1:e:person_1",
+              "stake": "low",
+              "approach": "withdraw"
+            }
+          ],
+          "memoryDeltas": [
+            {
+              "entityId": "r:00534a27dc029c2e:t1:e:person_1",
+              "kind": "clue",
+              "text": "你站在城西的废弃铁匠铺前，炉火早已熄灭，只剩下一堆暗红的余烬。空气中弥漫着硫磺与铁锈混合的刺鼻气味，一只瘦骨嶙峋的野狗正趴在门口啃食着什么，听到脚步声，它抬起头，浑浊的眼珠死死盯着你，喉咙里发出低沉的呜咽。",
+              "status": "open"
+            }
+          ]
+        },
+        "lastReceipt": {
+          "kind": "opening",
+          "choiceId": null,
+          "action": null,
+          "elapsedDays": 0,
+          "itemChanges": {},
+          "relationChanges": {},
+          "random": {
+            "before": 1222997174,
+            "after": 1222997174,
+            "roll": null
+          },
+          "before": {
+            "ageDays": 5760,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "after": {
+            "ageDays": 5760,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "death": null,
+          "birth": {
+            "originId": "artisan",
+            "talentIds": [
+              "sword-bone",
+              "fortune-debt"
+            ],
+            "attributes": {
+              "constitution": 4,
+              "insight": 3,
+              "fortune": 5
+            }
+          }
+        },
+        "relatedEntities": [
+          {
+            "id": "r:00534a27dc029c2e:t1:e:person_1",
+            "name": "野狗",
+            "status": "alive",
+            "kind": "person"
+          }
+        ],
+        "archiveCursor": 0
+      },
+      "posts": 1,
+      "latency": {
+        "usable": true,
+        "errorCode": null,
+        "firstAnyPreviewMs": 4401,
+        "firstReadableMs": 4700,
+        "completionMs": 9630,
+        "narrativeChars": 190,
+        "maxPreviewGapMs": 142,
+        "readingFinishEstimateMs": 36367,
+        "readingStallEstimateMs": 0,
+        "optionsWaitEstimateMs": 0,
+        "prefetchWorthEvaluating": true,
+        "assumptions": {
+          "readingCharsPerSecond": 6,
+          "readableChars": 20,
+          "targetWaitMs": 2000
+        }
+      }
+    }
+  ],
+  "errors": [
+    "Invalid choice"
+  ],
+  "posts": 1,
+  "refreshed": null
+}

@@ -1,0 +1,541 @@
+{
+  "sourceCommit": "0274a109fc358a3280aa1d273f749ece97e55b52",
+  "version": "2d070013-49af-4eea-962e-d55dd4134da7",
+  "recordedAt": "2026-10-30T08:25:28.831Z",
+  "records": [
+    {
+      "caseId": "opening",
+      "start": 1151.3999999985099,
+      "timeline": [
+        {
+          "atMs": 2799,
+          "chars": 1
+        },
+        {
+          "atMs": 2882,
+          "chars": 4
+        },
+        {
+          "atMs": 2954,
+          "chars": 8
+        },
+        {
+          "atMs": 3035,
+          "chars": 11
+        },
+        {
+          "atMs": 3099,
+          "chars": 14
+        },
+        {
+          "atMs": 3194,
+          "chars": 18
+        },
+        {
+          "atMs": 3272,
+          "chars": 21
+        },
+        {
+          "atMs": 3320,
+          "chars": 24
+        },
+        {
+          "atMs": 3382,
+          "chars": 27
+        },
+        {
+          "atMs": 3459,
+          "chars": 28
+        },
+        {
+          "atMs": 3788,
+          "chars": 29
+        },
+        {
+          "atMs": 4095,
+          "chars": 31
+        },
+        {
+          "atMs": 4252,
+          "chars": 37
+        },
+        {
+          "atMs": 4284,
+          "chars": 40
+        },
+        {
+          "atMs": 4349,
+          "chars": 42
+        },
+        {
+          "atMs": 4410,
+          "chars": 45
+        },
+        {
+          "atMs": 4488,
+          "chars": 47
+        },
+        {
+          "atMs": 4632,
+          "chars": 53
+        },
+        {
+          "atMs": 4709,
+          "chars": 55
+        },
+        {
+          "atMs": 4771,
+          "chars": 58
+        },
+        {
+          "atMs": 4833,
+          "chars": 60
+        },
+        {
+          "atMs": 4894,
+          "chars": 62
+        },
+        {
+          "atMs": 4971,
+          "chars": 64
+        },
+        {
+          "atMs": 5033,
+          "chars": 66
+        },
+        {
+          "atMs": 5096,
+          "chars": 70
+        },
+        {
+          "atMs": 5159,
+          "chars": 75
+        },
+        {
+          "atMs": 5222,
+          "chars": 77
+        },
+        {
+          "atMs": 5284,
+          "chars": 80
+        },
+        {
+          "atMs": 5332,
+          "chars": 82
+        },
+        {
+          "atMs": 5394,
+          "chars": 84
+        },
+        {
+          "atMs": 5455,
+          "chars": 87
+        },
+        {
+          "atMs": 5517,
+          "chars": 89
+        },
+        {
+          "atMs": 5580,
+          "chars": 93
+        },
+        {
+          "atMs": 5641,
+          "chars": 95
+        },
+        {
+          "atMs": 5703,
+          "chars": 98
+        },
+        {
+          "atMs": 5750,
+          "chars": 103
+        },
+        {
+          "atMs": 5813,
+          "chars": 107
+        },
+        {
+          "atMs": 5875,
+          "chars": 111
+        },
+        {
+          "atMs": 5952,
+          "chars": 114
+        },
+        {
+          "atMs": 6018,
+          "chars": 116
+        },
+        {
+          "atMs": 6062,
+          "chars": 120
+        },
+        {
+          "atMs": 6219,
+          "chars": 127
+        },
+        {
+          "atMs": 6235,
+          "chars": 130
+        },
+        {
+          "atMs": 6390,
+          "chars": 141
+        },
+        {
+          "atMs": 6546,
+          "chars": 146
+        },
+        {
+          "atMs": 6606,
+          "chars": 150
+        },
+        {
+          "atMs": 6747,
+          "chars": 158
+        },
+        {
+          "atMs": 6780,
+          "chars": 163
+        },
+        {
+          "atMs": 6827,
+          "chars": 167
+        },
+        {
+          "atMs": 6889,
+          "chars": 170
+        },
+        {
+          "atMs": 6952,
+          "chars": 174
+        },
+        {
+          "atMs": 6997,
+          "chars": 180
+        },
+        {
+          "atMs": 7058,
+          "chars": 182
+        },
+        {
+          "atMs": 7121,
+          "chars": 187
+        },
+        {
+          "atMs": 7168,
+          "chars": 194
+        },
+        {
+          "atMs": 7326,
+          "chars": 203
+        },
+        {
+          "atMs": 7357,
+          "chars": 208
+        },
+        {
+          "atMs": 7436,
+          "chars": 210
+        },
+        {
+          "atMs": 7592,
+          "chars": 215
+        },
+        {
+          "atMs": 7670,
+          "chars": 217
+        },
+        {
+          "atMs": 7738,
+          "chars": 221
+        },
+        {
+          "atMs": 7782,
+          "chars": 224
+        },
+        {
+          "atMs": 7922,
+          "chars": 232
+        },
+        {
+          "atMs": 7954,
+          "chars": 237
+        },
+        {
+          "atMs": 8018,
+          "chars": 239
+        },
+        {
+          "atMs": 8065,
+          "chars": 245
+        },
+        {
+          "atMs": 8128,
+          "chars": 248
+        },
+        {
+          "atMs": 8193,
+          "chars": 250
+        }
+      ],
+      "choicesEnabledDuringPreview": false,
+      "lastText": "你正站在村口的老槐树下，手里攥着一把磨得发亮的猎弓。村长正愁眉苦脸地望着你，手里捏着一张皱巴巴的告示，上面画着一只长着双翼的怪鸟。他叹了口气，说道：“云归，这‘双翼雕’最近闹得凶，村里的牛羊都被叼走了好几只，连我也没敢出门。你身手好，能不能帮我去后山看看，那怪鸟是不是就在那附近？”\n\n你点了点头，正准备起身，村长又急忙补充道：“那怪鸟很凶，你可得小心点。要是能抓回来或者赶走，村里少不了你的好处。”说完，他塞给你一包干粮，便匆匆忙忙地走了。你站在原地，看着手中的干粮，心里盘算着该怎么应对这只怪鸟。",
+      "doneMs": 11692,
+      "result": {
+        "protocolVersion": 1,
+        "status": "rejected",
+        "requestId": "c945467d-9b11-4a63-98af-3cae5d633aee",
+        "attemptId": "cc2ee6f8-9383-439d-80fe-168ec25dec28",
+        "sessionRef": "sess_505e36960cf9115676c7865cdfb29b83",
+        "errorCode": "GENERATED_SCENE_INVALID",
+        "retry": null
+      },
+      "request": {
+        "context": {
+          "schemaVersion": 1,
+          "phase": "opening",
+          "identity": {
+            "runId": "61b1bfdf-4a00-4978-8ca1-bafb92341571",
+            "turnId": 1,
+            "baseRevision": 0,
+            "stateHash": "59fdccf8798d05eff5dc6cf678f1c51e13fc137704a813f6b7a7b610066d8e5f",
+            "choiceId": null,
+            "rulesVersion": 1,
+            "promptVersion": 1,
+            "requestId": "c945467d-9b11-4a63-98af-3cae5d633aee"
+          },
+          "namespace": "r:f9b1eff6bcf77277",
+          "receipt": {
+            "kind": "opening",
+            "choiceId": null,
+            "action": null,
+            "elapsedDays": 0,
+            "itemChanges": {},
+            "relationChanges": {},
+            "random": {
+              "before": 3248518714,
+              "after": 3248518714,
+              "roll": null
+            },
+            "before": {
+              "ageDays": 5760,
+              "realm": "mortal",
+              "cultivation": 0,
+              "injury": 0
+            },
+            "after": {
+              "ageDays": 5760,
+              "realm": "mortal",
+              "cultivation": 0,
+              "injury": 0
+            },
+            "death": null,
+            "birth": {
+              "originId": "village",
+              "talentIds": [
+                "sword-bone",
+                "fortune-debt"
+              ],
+              "attributes": {
+                "constitution": 2,
+                "insight": 5,
+                "fortune": 5
+              }
+            }
+          },
+          "life": {
+            "name": "云归",
+            "ageDays": 5760,
+            "lifeLimit": 80,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0,
+            "items": {
+              "supplies": 3,
+              "stones": 0
+            },
+            "relations": {},
+            "birth": {
+              "originId": "village",
+              "talentIds": [
+                "sword-bone",
+                "fortune-debt"
+              ],
+              "attributes": {
+                "constitution": 2,
+                "insight": 5,
+                "fortune": 5
+              }
+            }
+          },
+          "entities": [],
+          "memory": {
+            "facts": [],
+            "promises": [],
+            "clues": [],
+            "recent": [],
+            "summaries": []
+          },
+          "references": [],
+          "previousScene": null,
+          "relationshipVersion": 1,
+          "relationships": {},
+          "coverage": {
+            "policy": "relevance-v1",
+            "openTotal": 0,
+            "openIncluded": 0,
+            "openOmitted": 0
+          }
+        },
+        "attempt": {
+          "id": "cc2ee6f8-9383-439d-80fe-168ec25dec28",
+          "sessionRef": "sess_505e36960cf9115676c7865cdfb29b83",
+          "retryOf": null
+        }
+      },
+      "decision": null,
+      "choices": [],
+      "traces": [
+        {
+          "model": "@cf/zai-org/glm-4.7-flash",
+          "inputHash": "6c6dbbdde68a0ac7f6204d8bd69dc274e7439b55006396d06ba48f7482058161",
+          "inputBytes": 12045,
+          "startedAt": 1793348717827,
+          "bindingReturnedAt": 1793348718132,
+          "liveRawBytes": 117238,
+          "captureComplete": true,
+          "response": {
+            "model": "@cf/zai-org/glm-4.7-flash",
+            "choices": [
+              {
+                "finish_reason": "stop",
+                "message": {
+                  "content": "{\"blocks\":[{\"kind\":\"narration\",\"text\":\"你正站在村口的老槐树下，手里攥着一把磨得发亮的猎弓。村长正愁眉苦脸地望着你，手里捏着一张皱巴巴的告示，上面画着一只长着双翼的怪鸟。他叹了口气，说道：“云归，这‘双翼雕’最近闹得凶，村里的牛羊都被叼走了好几只，连我也没敢出门。你身手好，能不能帮我去后山看看，那怪鸟是不是就在那附近？”\"},{\"kind\":\"narration\",\"text\":\"你点了点头，正准备起身，村长又急忙补充道：“那怪鸟很凶，你可得小心点。要是能抓回来或者赶走，村里少不了你的好处。”说完，他塞给你一包干粮，便匆匆忙忙地走了。你站在原地，看着手中的干粮，心里盘算着该怎么应对这只怪鸟。\"}],\"choices\":[{\"action\":\"interact:ask\",\"targetId\":\"p1\",\"stake\":\"low\",\"label\":\"询问村长关于怪鸟的更多细节\",\"anchor\":0},{\"action\":\"interact:ask\",\"targetId\":\"p1\",\"stake\":\"low\",\"label\":\"询问村长怪鸟出没的具体时间\",\"anchor\":0},{\"action\":\"travel:wilderness\",\"targetId\":\"l1\",\"stake\":\"low\",\"label\":\"前往后山寻找怪鸟踪迹\",\"anchor\":1}],\"title\":\"村口告示\",\"location\":\"村口\",\"otherPeople\":[{\"id\":\"p1\",\"name\":\"村长\",\"status\":\"alive\"}],\"places\":[{\"id\":\"l1\",\"name\":\"后山\"}],\"factions\":[],\"memoryDeltas\":[{\"entityId\":\"p1\",\"kind\":\"promise\",\"status\":\"open\"}]}",
+                  "reasoning_content": ""
+                }
+              }
+            ],
+            "usage": {
+              "prompt_tokens": 2556,
+              "completion_tokens": 378,
+              "total_tokens": 2934,
+              "prompt_tokens_details": {
+                "cached_tokens": 0
+              },
+              "neurons": 27.817200000000163
+            }
+          },
+          "rawSseBytes": 117238
+        }
+      ],
+      "revision": 0,
+      "pending": true,
+      "state": {
+        "relationshipVersion": 1,
+        "version": 5,
+        "mode": "cultivation",
+        "contentVersion": 4,
+        "rulesVersion": 1,
+        "promptVersion": 1,
+        "runId": "61b1bfdf-4a00-4978-8ca1-bafb92341571",
+        "revision": 0,
+        "turnId": 0,
+        "phase": "awaitingOpening",
+        "rng": 3248518714,
+        "life": {
+          "name": "云归",
+          "ageDays": 5760,
+          "lifeLimit": 80,
+          "realm": "mortal",
+          "cultivation": 0,
+          "injury": 0,
+          "items": {
+            "supplies": 3,
+            "stones": 0
+          },
+          "relations": {},
+          "birth": {
+            "originId": "village",
+            "talentIds": [
+              "sword-bone",
+              "fortune-debt"
+            ],
+            "attributes": {
+              "constitution": 2,
+              "insight": 5,
+              "fortune": 5
+            }
+          }
+        },
+        "birthReceipt": {
+          "kind": "opening",
+          "choiceId": null,
+          "action": null,
+          "elapsedDays": 0,
+          "itemChanges": {},
+          "relationChanges": {},
+          "random": {
+            "before": 3248518714,
+            "after": 3248518714,
+            "roll": null
+          },
+          "before": {
+            "ageDays": 5760,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "after": {
+            "ageDays": 5760,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "death": null,
+          "birth": {
+            "originId": "village",
+            "talentIds": [
+              "sword-bone",
+              "fortune-debt"
+            ],
+            "attributes": {
+              "constitution": 2,
+              "insight": 5,
+              "fortune": 5
+            }
+          }
+        },
+        "currentScene": null,
+        "lastReceipt": null,
+        "relatedEntities": [],
+        "archiveCursor": 0
+      },
+      "posts": 1,
+      "latency": {
+        "usable": false,
+        "errorCode": "GENERATED_SCENE_INVALID",
+        "firstAnyPreviewMs": 2799,
+        "firstReadableMs": 3272,
+        "completionMs": 11692,
+        "narrativeChars": 250,
+        "maxPreviewGapMs": 329,
+        "readingFinishEstimateMs": null,
+        "readingStallEstimateMs": null,
+        "optionsWaitEstimateMs": null,
+        "prefetchWorthEvaluating": null,
+        "assumptions": {
+          "readingCharsPerSecond": 6,
+          "readableChars": 20,
+          "targetWaitMs": 2000
+        }
+      }
+    }
+  ],
+  "errors": [
+    "Native turn did not pass"
+  ],
+  "posts": 1,
+  "refreshed": null
+}

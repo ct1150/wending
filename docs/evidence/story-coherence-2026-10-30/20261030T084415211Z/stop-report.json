@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "sourceCommit": "361b5660f05aa929500c8468b1f47f9aec9ad0c4",
+  "status": "ACCEPTANCE_STOPPED",
+  "reason": "Artisan opening ready. Ask gets a concrete route answer but a nearby boy is not renamed in current prose and generic leave omits actor name; literal actor checks reject. Promise annotations also lack commitment language.6db corrects these cases.",
+  "actualTurns": 2,
+  "productionRestored": {
+    "version": "cad2a140-240f-4465-a837-e53f054c2589",
+    "percentage": 100,
+    "deployment": "5e5d65f3-7df5-49d5-8101-0e226f55edd1"
+  },
+  "cleanup": {
+    "ownCredentialDeleted": true,
+    "newWorkerCreated": false,
+    "newNamespaceCreated": false,
+    "ledgerRetained": true
+  },
+  "recordedAt": "2026-10-30T09:45:24.618Z"
+}

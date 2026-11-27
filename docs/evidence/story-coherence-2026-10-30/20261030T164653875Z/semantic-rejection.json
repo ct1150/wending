@@ -1,0 +1,15 @@
+{
+  "status": "SEMANTIC_REJECTED",
+  "sourceCommit": "e211c08905d61ba549146fbeedb79e0e54211f82",
+  "successfulImmediateRefusal": {
+    "turn": 2,
+    "milliseconds": 67,
+    "aiPostCount": 0,
+    "days": 0
+  },
+  "reason": "Following observation copied the opening paragraph from an old clue and offered only the same NPC request again. Do not count this journey as completed six-AI acceptance.",
+  "rejectedTurn": 3,
+  "cleanupDeployment": "895c8ad6-88b1-4440-af91-64a25153967e",
+  "normalVersion": "cad2a140-240f-4465-a837-e53f054c2589",
+  "at": "2026-10-30T17:04:26.356Z"
+}

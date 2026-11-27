@@ -1,0 +1,12 @@
+{
+  "sourceCommit": "120497b91eb8184ecc7b5dc4a1ed6fa149fcf6f9",
+  "accepted": false,
+  "reason": "Opening again offered asking an ordinary dog; manually stopped before choice. Protocol tests alone do not establish narrative acceptance.",
+  "cleanup": {
+    "productionVersion": "cad2a140-240f-4465-a837-e53f054c2589",
+    "percentage": 100,
+    "deployment": "d0aa073f-1327-4164-b5e5-ae4217d59b36",
+    "ownCredentialDeleted": true,
+    "noNewWorkerOrNamespace": true
+  }
+}

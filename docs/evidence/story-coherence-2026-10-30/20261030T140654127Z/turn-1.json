@@ -1,0 +1,549 @@
+{
+  "caseId": "choice-1",
+  "start": 31721,
+  "timeline": [
+    {
+      "atMs": 3926,
+      "chars": 1
+    },
+    {
+      "atMs": 3986,
+      "chars": 7
+    },
+    {
+      "atMs": 4064,
+      "chars": 11
+    },
+    {
+      "atMs": 4122,
+      "chars": 16
+    },
+    {
+      "atMs": 4185,
+      "chars": 24
+    },
+    {
+      "atMs": 4249,
+      "chars": 28
+    },
+    {
+      "atMs": 4311,
+      "chars": 33
+    },
+    {
+      "atMs": 4373,
+      "chars": 38
+    },
+    {
+      "atMs": 4434,
+      "chars": 47
+    },
+    {
+      "atMs": 4494,
+      "chars": 52
+    },
+    {
+      "atMs": 4551,
+      "chars": 56
+    },
+    {
+      "atMs": 4613,
+      "chars": 62
+    },
+    {
+      "atMs": 4690,
+      "chars": 68
+    },
+    {
+      "atMs": 4734,
+      "chars": 73
+    },
+    {
+      "atMs": 4797,
+      "chars": 77
+    },
+    {
+      "atMs": 4872,
+      "chars": 79
+    }
+  ],
+  "choicesEnabledDuringPreview": false,
+  "lastText": "“后腿那儿，断得整整齐齐，骨头茬子都露出来了。”陈叔蹲下身，用粗糙的手指比划了一下，“要是还能接上，今晚就有肉吃；要是接不上，这兔子也就废了，只能拿去喂狗。”",
+  "doneMs": 9657,
+  "result": {
+    "protocolVersion": 1,
+    "status": "ready",
+    "requestId": "bf4cfcaf-f62c-4613-8120-a85dd320d2f1",
+    "attemptId": "134b17bb-9c2b-4240-b196-51f864b7fcb2",
+    "sessionRef": "sess_641b93865a44c0170eb9fcd8a51026a7",
+    "errorCode": null,
+    "retry": null,
+    "scene": {
+      "id": "r:7da02f058e919927:t2:s:scene",
+      "title": "村口",
+      "location": "village",
+      "entities": [
+        {
+          "id": "r:7da02f058e919927:t1:e:person_1",
+          "name": "陈叔",
+          "kind": "person",
+          "status": "alive"
+        },
+        {
+          "id": "r:7da02f058e919927:t1:e:place_1",
+          "name": "村口",
+          "kind": "place"
+        }
+      ],
+      "blocks": [
+        {
+          "kind": "dialogue",
+          "text": "“后腿那儿，断得整整齐齐，骨头茬子都露出来了。”陈叔蹲下身，用粗糙的手指比划了一下，“要是还能接上，今晚就有肉吃；要是接不上，这兔子也就废了，只能拿去喂狗。”",
+          "speaker": "r:7da02f058e919927:t1:e:person_1"
+        }
+      ],
+      "choices": [
+        {
+          "id": "r:7da02f058e919927:t2:c:a",
+          "label": "询问陈叔：询问陈叔：询问陈叔是否有草药或工具可以用来处理伤口",
+          "intent": "interact",
+          "targetId": "r:7da02f058e919927:t1:e:person_1",
+          "stake": "low",
+          "approach": "ask"
+        },
+        {
+          "id": "r:7da02f058e919927:t2:c:b",
+          "label": "婉拒陈叔：拒绝陈叔的请求，表示不想处理这只兔子",
+          "intent": "interact",
+          "targetId": "r:7da02f058e919927:t1:e:person_1",
+          "stake": "low",
+          "approach": "decline"
+        },
+        {
+          "id": "r:7da02f058e919927:t2:c:c",
+          "label": "结束与陈叔的互动：结束与陈叔的对话，转身离开",
+          "intent": "interact",
+          "targetId": "r:7da02f058e919927:t1:e:person_1",
+          "stake": "low",
+          "approach": "leave"
+        }
+      ],
+      "memoryDeltas": [
+        {
+          "entityId": "r:7da02f058e919927:t1:e:person_1",
+          "kind": "clue",
+          "text": "“后腿那儿，断得整整齐齐，骨头茬子都露出来了。”陈叔蹲下身，用粗糙的手指比划了一下，“要是还能接上，今晚就有肉吃；要是接不上，这兔子也就废了，只能拿去喂狗。”",
+          "status": "open"
+        }
+      ]
+    }
+  },
+  "request": {
+    "context": {
+      "schemaVersion": 1,
+      "phase": "choice",
+      "identity": {
+        "runId": "804209c5-2e7f-44f2-87cf-bb181ace9f9e",
+        "turnId": 2,
+        "baseRevision": 1,
+        "stateHash": "f15ba01aa13b0fd9d0193508f6a6786fcccc2cd1a9767d8e87c3df269339f6b2",
+        "choiceId": "r:7da02f058e919927:t1:c:a",
+        "rulesVersion": 1,
+        "promptVersion": 1,
+        "requestId": "bf4cfcaf-f62c-4613-8120-a85dd320d2f1"
+      },
+      "namespace": "r:7da02f058e919927",
+      "receipt": {
+        "kind": "choice",
+        "choiceId": "r:7da02f058e919927:t1:c:a",
+        "action": {
+          "id": "r:7da02f058e919927:t1:c:a",
+          "label": "询问陈叔：询问陈叔兔子受伤的具体位置和严重程度",
+          "intent": "interact",
+          "targetId": "r:7da02f058e919927:t1:e:person_1",
+          "stake": "low",
+          "approach": "ask"
+        },
+        "elapsedDays": 0,
+        "itemChanges": {},
+        "relationChanges": {},
+        "random": {
+          "before": 3249199130,
+          "after": 1052788913,
+          "roll": 13
+        },
+        "before": {
+          "ageDays": 5760,
+          "realm": "mortal",
+          "cultivation": 0,
+          "injury": 0
+        },
+        "after": {
+          "ageDays": 5760,
+          "realm": "mortal",
+          "cultivation": 0,
+          "injury": 0
+        },
+        "death": null,
+        "birth": null
+      },
+      "life": {
+        "name": "云归",
+        "ageDays": 5760,
+        "lifeLimit": 80,
+        "realm": "mortal",
+        "cultivation": 0,
+        "injury": 0,
+        "items": {
+          "supplies": 3,
+          "stones": 0
+        },
+        "relations": {},
+        "birth": {
+          "originId": "village",
+          "talentIds": [
+            "fortune-debt",
+            "keen-memory"
+          ],
+          "attributes": {
+            "constitution": 2,
+            "insight": 4,
+            "fortune": 6
+          }
+        }
+      },
+      "entities": [
+        {
+          "id": "r:7da02f058e919927:t1:e:person_1",
+          "name": "陈叔",
+          "kind": "person",
+          "status": "alive"
+        },
+        {
+          "id": "r:7da02f058e919927:t1:e:place_1",
+          "name": "村口",
+          "kind": "place",
+          "status": "unknown"
+        }
+      ],
+      "memory": {
+        "facts": [
+          {
+            "id": "m:03aacfcca8ead4033b3574f6bc9e3b85",
+            "source": "narrative",
+            "kind": "fact",
+            "entityId": "r:7da02f058e919927:t1:e:person_1",
+            "text": "“这畜生怎么偏偏撞在路中间，害我白跑一趟。”陈叔直起身子，拍了拍膝盖上的土，转头看见你，眼神里闪过一丝无奈，“云归，你来得正好，帮叔看看这兔子还能不能救，今晚还得靠它下酒呢。”",
+            "runId": "804209c5-2e7f-44f2-87cf-bb181ace9f9e",
+            "turnId": 1
+          }
+        ],
+        "promises": [],
+        "clues": [],
+        "recent": [
+          {
+            "id": "turn:1",
+            "runId": "804209c5-2e7f-44f2-87cf-bb181ace9f9e",
+            "turnId": 1,
+            "source": "narrative",
+            "kind": "turn",
+            "text": "地点：village\n你站在自家破旧的木屋前，手里攥着一把刚磨好的柴刀。村口的老猎户陈叔正蹲在地上，眉头紧锁地盯着脚边一只被压扁的野兔，嘴里嘟囔着什么。\n“这畜生怎么偏偏撞在路中间，害我白跑一趟。”陈叔直起身子，拍了拍膝盖上的土，转头看见你，眼神里闪过一丝无奈，“云归，你来得正好，帮叔看看这兔子还能不能救，今晚还得靠它下酒呢。”",
+            "entityIds": []
+          }
+        ],
+        "summaries": []
+      },
+      "references": [
+        "m:03aacfcca8ead4033b3574f6bc9e3b85",
+        "turn:1"
+      ],
+      "previousScene": {
+        "id": "r:7da02f058e919927:t1:s:scene",
+        "blocksHash": "8122dd09f3aa0031f6eb8f7f5093219a818f180477ac689ec4d518445fd3cf0a"
+      },
+      "relationshipVersion": 1,
+      "relationships": {},
+      "coverage": {
+        "policy": "relevance-v1",
+        "openTotal": 0,
+        "openIncluded": 0,
+        "openOmitted": 0
+      }
+    },
+    "attempt": {
+      "id": "134b17bb-9c2b-4240-b196-51f864b7fcb2",
+      "sessionRef": "sess_641b93865a44c0170eb9fcd8a51026a7",
+      "retryOf": null
+    },
+    "storyActions": true
+  },
+  "decision": {
+    "index": 0,
+    "reason": "陈叔请求查看受伤野兔，追问伤处和严重程度，直接承接眼前事件；应0日、无资源变化，不代替玩家施救。",
+    "selected": {
+      "id": "r:7da02f058e919927:t1:c:a",
+      "label": "询问陈叔：询问陈叔兔子受伤的具体位置和严重程度",
+      "intent": "interact",
+      "targetId": "r:7da02f058e919927:t1:e:person_1",
+      "stake": "low",
+      "approach": "ask"
+    }
+  },
+  "choices": [
+    {
+      "id": "r:7da02f058e919927:t2:c:a",
+      "enabled": true,
+      "label": "询问陈叔：询问陈叔：询问陈叔是否有草药或工具可以用来处理伤口",
+      "cost": "0日"
+    },
+    {
+      "id": "r:7da02f058e919927:t2:c:b",
+      "enabled": true,
+      "label": "婉拒陈叔：拒绝陈叔的请求，表示不想处理这只兔子",
+      "cost": "0日"
+    },
+    {
+      "id": "r:7da02f058e919927:t2:c:c",
+      "enabled": true,
+      "label": "结束与陈叔的互动：结束与陈叔的对话，转身离开",
+      "cost": "0日"
+    }
+  ],
+  "traces": [
+    {
+      "model": "@cf/zai-org/glm-4.7-flash",
+      "inputHash": "2b91e73a5f3697fb11e3b82ed1bedb45bbe41fcd66271d73750b95f6d713dcac",
+      "inputBytes": 17715,
+      "startedAt": 1793369431262,
+      "bindingReturnedAt": 1793369431875,
+      "liveRawBytes": 108137,
+      "captureComplete": true,
+      "response": {
+        "model": "@cf/zai-org/glm-4.7-flash",
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "message": {
+              "content": "{\n  \"blocks\": [\n    {\n      \"kind\": \"dialogue\",\n      \"text\": \"“后腿那儿，断得整整齐齐，骨头茬子都露出来了。”陈叔蹲下身，用粗糙的手指比划了一下，“要是还能接上，今晚就有肉吃；要是接不上，这兔子也就废了，只能拿去喂狗。”\",\n      \"speaker\": \"k1_person_陈叔\"\n    }\n  ],\n  \"choices\": [\n    {\n      \"action\": \"interact:ask\",\n      \"targetId\": \"k1_person_陈叔\",\n      \"stake\": \"low\",\n      \"purpose\": \"询问陈叔：询问陈叔是否有草药或工具可以用来处理伤口\",\n      \"anchor\": 0\n    },\n    {\n      \"action\": \"interact:decline\",\n      \"targetId\": \"k1_person_陈叔\",\n      \"stake\": \"low\",\n      \"purpose\": \"拒绝陈叔的请求，表示不想处理这只兔子\",\n      \"anchor\": 0\n    },\n    {\n      \"action\": \"interact:leave\",\n      \"targetId\": \"k1_person_陈叔\",\n      \"stake\": \"low\",\n      \"purpose\": \"结束与陈叔的对话，转身离开\",\n      \"anchor\": 0\n    }\n  ],\n  \"title\": \"村口\",\n  \"location\": \"village\",\n  \"otherPeople\": [\n    {\n      \"id\": \"k1_person_陈叔\",\n      \"status\": \"alive\"\n    }\n  ],\n  \"places\": [\n    {\n      \"id\": \"k2_place_村口\"\n    }\n  ],\n  \"factions\": [],\n  \"memoryDeltas\": [\n    {\n      \"entityId\": \"k1_person_陈叔\",\n      \"kind\": \"clue\",\n      \"anchor\": 0,\n      \"status\": \"open\"\n    }\n  ]\n}",
+              "reasoning_content": ""
+            }
+          }
+        ],
+        "usage": {
+          "prompt_tokens": 2471,
+          "completion_tokens": 409,
+          "total_tokens": 2880,
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          },
+          "neurons": 28.478100000000175
+        }
+      },
+      "rawSseBytes": 108137
+    }
+  ],
+  "revision": 2,
+  "pending": false,
+  "state": {
+    "relationshipVersion": 1,
+    "version": 5,
+    "mode": "cultivation",
+    "contentVersion": 4,
+    "rulesVersion": 1,
+    "promptVersion": 1,
+    "runId": "804209c5-2e7f-44f2-87cf-bb181ace9f9e",
+    "revision": 2,
+    "turnId": 2,
+    "phase": "active",
+    "rng": 1052788913,
+    "life": {
+      "name": "云归",
+      "ageDays": 5760,
+      "lifeLimit": 80,
+      "realm": "mortal",
+      "cultivation": 0,
+      "injury": 0,
+      "items": {
+        "supplies": 3,
+        "stones": 0
+      },
+      "relations": {},
+      "birth": {
+        "originId": "village",
+        "talentIds": [
+          "fortune-debt",
+          "keen-memory"
+        ],
+        "attributes": {
+          "constitution": 2,
+          "insight": 4,
+          "fortune": 6
+        }
+      }
+    },
+    "birthReceipt": {
+      "kind": "opening",
+      "choiceId": null,
+      "action": null,
+      "elapsedDays": 0,
+      "itemChanges": {},
+      "relationChanges": {},
+      "random": {
+        "before": 3249199130,
+        "after": 3249199130,
+        "roll": null
+      },
+      "before": {
+        "ageDays": 5760,
+        "realm": "mortal",
+        "cultivation": 0,
+        "injury": 0
+      },
+      "after": {
+        "ageDays": 5760,
+        "realm": "mortal",
+        "cultivation": 0,
+        "injury": 0
+      },
+      "death": null,
+      "birth": {
+        "originId": "village",
+        "talentIds": [
+          "fortune-debt",
+          "keen-memory"
+        ],
+        "attributes": {
+          "constitution": 2,
+          "insight": 4,
+          "fortune": 6
+        }
+      }
+    },
+    "currentScene": {
+      "id": "r:7da02f058e919927:t2:s:scene",
+      "title": "村口",
+      "location": "village",
+      "entities": [
+        {
+          "id": "r:7da02f058e919927:t1:e:person_1",
+          "name": "陈叔",
+          "kind": "person",
+          "status": "alive"
+        },
+        {
+          "id": "r:7da02f058e919927:t1:e:place_1",
+          "name": "村口",
+          "kind": "place"
+        }
+      ],
+      "blocks": [
+        {
+          "kind": "dialogue",
+          "text": "“后腿那儿，断得整整齐齐，骨头茬子都露出来了。”陈叔蹲下身，用粗糙的手指比划了一下，“要是还能接上，今晚就有肉吃；要是接不上，这兔子也就废了，只能拿去喂狗。”",
+          "speaker": "r:7da02f058e919927:t1:e:person_1"
+        }
+      ],
+      "choices": [
+        {
+          "id": "r:7da02f058e919927:t2:c:a",
+          "label": "询问陈叔：询问陈叔：询问陈叔是否有草药或工具可以用来处理伤口",
+          "intent": "interact",
+          "targetId": "r:7da02f058e919927:t1:e:person_1",
+          "stake": "low",
+          "approach": "ask"
+        },
+        {
+          "id": "r:7da02f058e919927:t2:c:b",
+          "label": "婉拒陈叔：拒绝陈叔的请求，表示不想处理这只兔子",
+          "intent": "interact",
+          "targetId": "r:7da02f058e919927:t1:e:person_1",
+          "stake": "low",
+          "approach": "decline"
+        },
+        {
+          "id": "r:7da02f058e919927:t2:c:c",
+          "label": "结束与陈叔的互动：结束与陈叔的对话，转身离开",
+          "intent": "interact",
+          "targetId": "r:7da02f058e919927:t1:e:person_1",
+          "stake": "low",
+          "approach": "leave"
+        }
+      ],
+      "memoryDeltas": [
+        {
+          "entityId": "r:7da02f058e919927:t1:e:person_1",
+          "kind": "clue",
+          "text": "“后腿那儿，断得整整齐齐，骨头茬子都露出来了。”陈叔蹲下身，用粗糙的手指比划了一下，“要是还能接上，今晚就有肉吃；要是接不上，这兔子也就废了，只能拿去喂狗。”",
+          "status": "open"
+        }
+      ]
+    },
+    "lastReceipt": {
+      "kind": "choice",
+      "choiceId": "r:7da02f058e919927:t1:c:a",
+      "action": {
+        "id": "r:7da02f058e919927:t1:c:a",
+        "label": "询问陈叔：询问陈叔兔子受伤的具体位置和严重程度",
+        "intent": "interact",
+        "targetId": "r:7da02f058e919927:t1:e:person_1",
+        "stake": "low",
+        "approach": "ask"
+      },
+      "elapsedDays": 0,
+      "itemChanges": {},
+      "relationChanges": {},
+      "random": {
+        "before": 3249199130,
+        "after": 1052788913,
+        "roll": 13
+      },
+      "before": {
+        "ageDays": 5760,
+        "realm": "mortal",
+        "cultivation": 0,
+        "injury": 0
+      },
+      "after": {
+        "ageDays": 5760,
+        "realm": "mortal",
+        "cultivation": 0,
+        "injury": 0
+      },
+      "death": null,
+      "birth": null
+    },
+    "relatedEntities": [
+      {
+        "id": "r:7da02f058e919927:t1:e:person_1",
+        "name": "陈叔",
+        "kind": "person",
+        "status": "alive"
+      },
+      {
+        "id": "r:7da02f058e919927:t1:e:place_1",
+        "name": "村口",
+        "kind": "place"
+      }
+    ],
+    "archiveCursor": 0
+  },
+  "posts": 2,
+  "latency": {
+    "usable": true,
+    "errorCode": null,
+    "firstAnyPreviewMs": 3926,
+    "firstReadableMs": 4185,
+    "completionMs": 9657,
+    "narrativeChars": 79,
+    "maxPreviewGapMs": 78,
+    "readingFinishEstimateMs": 17352,
+    "readingStallEstimateMs": 0,
+    "optionsWaitEstimateMs": 0,
+    "prefetchWorthEvaluating": true,
+    "assumptions": {
+      "readingCharsPerSecond": 6,
+      "readableChars": 20,
+      "targetWaitMs": 2000
+    }
+  }
+}

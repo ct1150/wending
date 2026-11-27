@@ -1,0 +1,776 @@
+{
+  "caseId": "choice-5",
+  "start": 47183.39999999851,
+  "timeline": [
+    {
+      "atMs": 10858,
+      "chars": 1
+    },
+    {
+      "atMs": 10879,
+      "chars": 5
+    },
+    {
+      "atMs": 10957,
+      "chars": 10
+    },
+    {
+      "atMs": 11019,
+      "chars": 14
+    },
+    {
+      "atMs": 11095,
+      "chars": 20
+    },
+    {
+      "atMs": 11158,
+      "chars": 22
+    },
+    {
+      "atMs": 11205,
+      "chars": 25
+    },
+    {
+      "atMs": 11285,
+      "chars": 27
+    },
+    {
+      "atMs": 11331,
+      "chars": 31
+    },
+    {
+      "atMs": 11411,
+      "chars": 35
+    },
+    {
+      "atMs": 11577,
+      "chars": 42
+    },
+    {
+      "atMs": 11598,
+      "chars": 45
+    },
+    {
+      "atMs": 11649,
+      "chars": 48
+    },
+    {
+      "atMs": 11707,
+      "chars": 50
+    },
+    {
+      "atMs": 11753,
+      "chars": 54
+    },
+    {
+      "atMs": 11836,
+      "chars": 56
+    },
+    {
+      "atMs": 11878,
+      "chars": 60
+    },
+    {
+      "atMs": 11943,
+      "chars": 62
+    },
+    {
+      "atMs": 12019,
+      "chars": 69
+    },
+    {
+      "atMs": 12085,
+      "chars": 72
+    },
+    {
+      "atMs": 12146,
+      "chars": 76
+    },
+    {
+      "atMs": 12214,
+      "chars": 80
+    },
+    {
+      "atMs": 12286,
+      "chars": 84
+    },
+    {
+      "atMs": 12347,
+      "chars": 87
+    },
+    {
+      "atMs": 12409,
+      "chars": 93
+    },
+    {
+      "atMs": 12487,
+      "chars": 101
+    },
+    {
+      "atMs": 12565,
+      "chars": 105
+    },
+    {
+      "atMs": 12642,
+      "chars": 110
+    },
+    {
+      "atMs": 12720,
+      "chars": 115
+    },
+    {
+      "atMs": 12782,
+      "chars": 118
+    },
+    {
+      "atMs": 13045,
+      "chars": 129
+    },
+    {
+      "atMs": 13765,
+      "chars": 166
+    },
+    {
+      "atMs": 13796,
+      "chars": 169
+    },
+    {
+      "atMs": 13921,
+      "chars": 174
+    },
+    {
+      "atMs": 13969,
+      "chars": 183
+    },
+    {
+      "atMs": 14045,
+      "chars": 186
+    },
+    {
+      "atMs": 14106,
+      "chars": 190
+    },
+    {
+      "atMs": 14172,
+      "chars": 192
+    },
+    {
+      "atMs": 14244,
+      "chars": 196
+    },
+    {
+      "atMs": 14279,
+      "chars": 202
+    },
+    {
+      "atMs": 14358,
+      "chars": 204
+    },
+    {
+      "atMs": 14419,
+      "chars": 207
+    },
+    {
+      "atMs": 14466,
+      "chars": 211
+    },
+    {
+      "atMs": 14513,
+      "chars": 213
+    },
+    {
+      "atMs": 14560,
+      "chars": 216
+    },
+    {
+      "atMs": 14636,
+      "chars": 219
+    },
+    {
+      "atMs": 14700,
+      "chars": 223
+    },
+    {
+      "atMs": 14775,
+      "chars": 226
+    },
+    {
+      "atMs": 14856,
+      "chars": 230
+    },
+    {
+      "atMs": 14918,
+      "chars": 234
+    },
+    {
+      "atMs": 15342,
+      "chars": 255
+    }
+  ],
+  "choicesEnabledDuringPreview": false,
+  "lastText": "你站在铁匠铺外的街道上，深吸一口气，试图平复体内那股莫名的躁动。剑骨在脊椎深处微微震颤，像是一头被囚禁的野兽在低吼，那种冰凉刺骨的感觉顺着经脉游走，让你原本有些发僵的手指重新变得灵活。你低头看了看自己的双手，掌心微微出汗，确认身体并无大碍，只是精神有些紧绷。\n\n街道上人来人往，喧闹声逐渐掩盖了铁匠铺内传来的打铁声。你摸了摸腰间，行粮还在，但那块黑铁已经被你远远抛在脑后。此时天色渐晚，街边的灯笼开始一盏盏亮起，映照着这座凡人城池的烟火气。你站在路口，不知道该往哪里去，是回匠徒居所休息，还是去城西乱葬岗看看？",
+  "doneMs": 18580,
+  "result": {
+    "protocolVersion": 1,
+    "status": "ready",
+    "requestId": "65d0b853-3b35-4c75-b011-fd2acea3b08f",
+    "attemptId": "efdddd83-f1da-490a-b032-bbc024b463d7",
+    "sessionRef": "sess_790b1912f07982eadc9a9f60240d920a",
+    "errorCode": null,
+    "retry": null,
+    "scene": {
+      "id": "r:51e7226de70b1337:t6:s:scene",
+      "title": "街角徘徊",
+      "location": "城坊街道",
+      "entities": [
+        {
+          "id": "r:51e7226de70b1337:t1:e:person_1",
+          "name": "老赵",
+          "kind": "person",
+          "status": "alive"
+        },
+        {
+          "id": "r:51e7226de70b1337:t5:e:place_1",
+          "name": "城西乱葬岗",
+          "kind": "place"
+        },
+        {
+          "id": "r:51e7226de70b1337:t6:e:place_1",
+          "name": "匠徒居所",
+          "kind": "place"
+        }
+      ],
+      "blocks": [
+        {
+          "kind": "narration",
+          "text": "你站在铁匠铺外的街道上，深吸一口气，试图平复体内那股莫名的躁动。剑骨在脊椎深处微微震颤，像是一头被囚禁的野兽在低吼，那种冰凉刺骨的感觉顺着经脉游走，让你原本有些发僵的手指重新变得灵活。你低头看了看自己的双手，掌心微微出汗，确认身体并无大碍，只是精神有些紧绷。"
+        },
+        {
+          "kind": "narration",
+          "text": "街道上人来人往，喧闹声逐渐掩盖了铁匠铺内传来的打铁声。你摸了摸腰间，行粮还在，但那块黑铁已经被你远远抛在脑后。此时天色渐晚，街边的灯笼开始一盏盏亮起，映照着这座凡人城池的烟火气。你站在路口，不知道该往哪里去，是回匠徒居所休息，还是去城西乱葬岗看看？"
+        }
+      ],
+      "choices": [
+        {
+          "id": "r:51e7226de70b1337:t6:c:a",
+          "label": "沿路前往城西乱葬岗：前往城西乱葬岗，调查那块黑铁的来历",
+          "intent": "travel",
+          "targetId": "r:51e7226de70b1337:t5:e:place_1",
+          "stake": "low",
+          "approach": "road"
+        },
+        {
+          "id": "r:51e7226de70b1337:t6:c:b",
+          "label": "沿路前往匠徒居所：回匠徒居所休息，整理今日的收获",
+          "intent": "travel",
+          "targetId": "r:51e7226de70b1337:t6:e:place_1",
+          "stake": "low",
+          "approach": "road"
+        },
+        {
+          "id": "r:51e7226de70b1337:t6:c:c",
+          "label": "询问老赵：折返铁匠铺，向老赵询问更多关于黑铁的细节",
+          "intent": "interact",
+          "targetId": "r:51e7226de70b1337:t1:e:person_1",
+          "stake": "low",
+          "approach": "ask"
+        }
+      ],
+      "memoryDeltas": [
+        {
+          "entityId": "r:51e7226de70b1337:t1:e:person_1",
+          "kind": "clue",
+          "text": "街道上人来人往，喧闹声逐渐掩盖了铁匠铺内传来的打铁声。你摸了摸腰间，行粮还在，但那块黑铁已经被你远远抛在脑后。此时天色渐晚，街边的灯笼开始一盏盏亮起，映照着这座凡人城池的烟火气。你站在路口，不知道该往哪里去，是回匠徒居所休息，还是去城西乱葬岗看看？",
+          "status": "open"
+        }
+      ]
+    }
+  },
+  "request": {
+    "context": {
+      "schemaVersion": 1,
+      "phase": "choice",
+      "identity": {
+        "runId": "781abbba-cd97-4e04-b76b-cc98fdd36f1c",
+        "turnId": 6,
+        "baseRevision": 5,
+        "stateHash": "c6a0ed959b10cdeec0309efacb4c0f9dfe191036edc34696a6d98ae957eaf836",
+        "choiceId": "r:51e7226de70b1337:t5:c:a",
+        "rulesVersion": 1,
+        "promptVersion": 1,
+        "requestId": "65d0b853-3b35-4c75-b011-fd2acea3b08f"
+      },
+      "namespace": "r:51e7226de70b1337",
+      "receipt": {
+        "kind": "choice",
+        "choiceId": "r:51e7226de70b1337:t5:c:a",
+        "action": {
+          "id": "r:51e7226de70b1337:t5:c:a",
+          "label": "仔细观察：感受剑骨的躁动，确认身体状况",
+          "intent": "interact",
+          "targetId": "self",
+          "stake": "low",
+          "approach": "observe"
+        },
+        "elapsedDays": 0,
+        "itemChanges": {},
+        "relationChanges": {},
+        "random": {
+          "before": 3733602334,
+          "after": 3790481637,
+          "roll": 37
+        },
+        "before": {
+          "ageDays": 5760,
+          "realm": "mortal",
+          "cultivation": 0,
+          "injury": 0
+        },
+        "after": {
+          "ageDays": 5760,
+          "realm": "mortal",
+          "cultivation": 0,
+          "injury": 0
+        },
+        "death": null,
+        "birth": null
+      },
+      "life": {
+        "name": "云归",
+        "ageDays": 5760,
+        "lifeLimit": 80,
+        "realm": "mortal",
+        "cultivation": 0,
+        "injury": 0,
+        "items": {
+          "supplies": 3,
+          "stones": 0
+        },
+        "relations": {},
+        "birth": {
+          "originId": "artisan",
+          "talentIds": [
+            "fortune-debt",
+            "sword-bone"
+          ],
+          "attributes": {
+            "constitution": 5,
+            "insight": 4,
+            "fortune": 3
+          }
+        }
+      },
+      "entities": [
+        {
+          "id": "r:51e7226de70b1337:t1:e:person_1",
+          "name": "老赵",
+          "kind": "person",
+          "status": "alive"
+        },
+        {
+          "id": "r:51e7226de70b1337:t5:e:place_1",
+          "name": "城西乱葬岗",
+          "kind": "place",
+          "status": "unknown"
+        }
+      ],
+      "memory": {
+        "facts": [],
+        "promises": [],
+        "clues": [
+          {
+            "id": "m:52f9143a02def86862ad1a7cf018e668",
+            "source": "narrative",
+            "kind": "clue",
+            "entityId": "r:51e7226de70b1337:t1:e:person_1",
+            "text": "“多谢赵叔指点，这东西确实邪门，我受教了。”你站起身，拍了拍衣摆上的铁屑，向老赵拱了拱手，“既然没什么急事，我就先回去了。”老赵见你答应得爽快，脸上的古怪神色也缓和了不少，连连点头示意你慢走。你转身走出铁匠铺，将那块散发着寒气的黑铁彻底抛在脑后，只觉得背后的剑骨隐隐有些躁动，仿佛在抗拒着刚才的接触。",
+            "status": "open",
+            "runId": "781abbba-cd97-4e04-b76b-cc98fdd36f1c",
+            "turnId": 5
+          },
+          {
+            "id": "m:3ec64ccd71fd755c4e4663cf09d49084",
+            "source": "narrative",
+            "kind": "clue",
+            "entityId": "r:51e7226de70b1337:t1:e:person_1",
+            "text": "老赵搓了搓手，神色变得有些古怪：“这东西……我刚才去查了查，说是城西乱葬岗挖出来的，但奇怪的是，那地方最近闹鬼，挖出来的东西都透着股邪气。至于危险程度，我刚才试着用铁锤敲了一下，结果锤子直接崩了，连个印子都没留下。小云，你剑骨厉害，这东西要是真有灵，你可得小心点。”",
+            "status": "open",
+            "runId": "781abbba-cd97-4e04-b76b-cc98fdd36f1c",
+            "turnId": 4
+          },
+          {
+            "id": "m:5bbb16c084c416548ea2db53bbcf2131",
+            "source": "narrative",
+            "kind": "clue",
+            "entityId": "r:51e7226de70b1337:t1:e:person_1",
+            "text": "老赵搓了搓手，神色变得有些古怪：“这东西……我刚才去查了查，说是城西乱葬岗挖出来的，但奇怪的是，那地方最近闹鬼，挖出来的东西都透着股邪气。至于危险程度，我刚才试着用铁锤敲了一下，结果锤子直接崩了，连个印子都没留下。小云，你剑骨厉害，这东西要是真有灵，你可得小心点。”",
+            "status": "open",
+            "runId": "781abbba-cd97-4e04-b76b-cc98fdd36f1c",
+            "turnId": 4
+          },
+          {
+            "id": "m:cbdf0ff64de90fd01e1f6047f8b1e7dd",
+            "source": "narrative",
+            "kind": "clue",
+            "entityId": "r:51e7226de70b1337:t1:e:person_1",
+            "text": "你蹲下身，手指触碰到那块黑铁。入手冰凉刺骨，仿佛握着一块万年玄冰，与周围滚烫的炉火格格不入。细看之下，铁质并非凡品，表面隐隐流转着暗红色的血丝，隐约能闻到一丝腥甜气息。剑骨本能让你感到一丝战栗，这东西绝非凡铁，倒像是某种活物的残骸。",
+            "status": "open",
+            "runId": "781abbba-cd97-4e04-b76b-cc98fdd36f1c",
+            "turnId": 3
+          },
+          {
+            "id": "m:cce9d135d500de65473d4e13dd8928db",
+            "source": "narrative",
+            "kind": "clue",
+            "entityId": "r:51e7226de70b1337:t1:e:person_1",
+            "text": "老赵见你神色凝重，连忙凑近问道：“怎么样？是不是有什么古怪？若是凶物，我这就把它扔出去。”",
+            "status": "open",
+            "runId": "781abbba-cd97-4e04-b76b-cc98fdd36f1c",
+            "turnId": 3
+          },
+          {
+            "id": "m:9a60ce0d2f0649ba67cba19d18f72112",
+            "source": "narrative",
+            "kind": "clue",
+            "entityId": "r:51e7226de70b1337:t1:e:person_1",
+            "text": "他抬起头看了你一眼，眼神里带着几分试探：“小云，你天生剑骨，对兵器灵物最是敏感。你帮我看看，这东西到底是个什么来头？若是凶物，我可不敢再留。”",
+            "status": "open",
+            "runId": "781abbba-cd97-4e04-b76b-cc98fdd36f1c",
+            "turnId": 2
+          },
+          {
+            "id": "m:ce1294cb48a61325589432dfe1225c44",
+            "source": "narrative",
+            "kind": "clue",
+            "entityId": "r:51e7226de70b1337:t1:e:person_1",
+            "text": "“小云，你来得正好。这批废铁里似乎混进了一块不寻常的东西，烧了半天也没化开，你帮我看看，是不是有什么古怪？”老赵把那块黑乎乎的金属扔到你脚边，发出沉闷的声响。",
+            "status": "open",
+            "runId": "781abbba-cd97-4e04-b76b-cc98fdd36f1c",
+            "turnId": 1
+          }
+        ],
+        "recent": [
+          {
+            "id": "turn:5",
+            "runId": "781abbba-cd97-4e04-b76b-cc98fdd36f1c",
+            "turnId": 5,
+            "source": "narrative",
+            "kind": "turn",
+            "text": "地点：城坊铁匠铺；刚才选择：询问老赵：询问这块废铁的具体来历和危险程度；刚才选择：结束与老赵的互动：结束与老赵的交谈，离开铁匠铺\n“多谢赵叔指点，这东西确实邪门，我受教了。”你站起身，拍了拍衣摆上的铁屑，向老赵拱了拱手，“既然没什么急事，我就先回去了。”老赵见你答应得爽快，脸上的古怪神色也缓和了不少，连连点头示意你慢走。你转身走出铁匠铺，将那块散发着寒气的黑铁彻底抛在脑后，只觉得背后的剑骨隐隐有些躁动，仿佛在抗拒着刚才的接触。",
+            "entityIds": []
+          }
+        ],
+        "summaries": []
+      },
+      "references": [
+        "m:52f9143a02def86862ad1a7cf018e668",
+        "m:3ec64ccd71fd755c4e4663cf09d49084",
+        "m:5bbb16c084c416548ea2db53bbcf2131",
+        "m:cbdf0ff64de90fd01e1f6047f8b1e7dd",
+        "m:cce9d135d500de65473d4e13dd8928db",
+        "m:9a60ce0d2f0649ba67cba19d18f72112",
+        "m:ce1294cb48a61325589432dfe1225c44",
+        "turn:5"
+      ],
+      "previousScene": {
+        "id": "r:51e7226de70b1337:t5:s:scene",
+        "blocksHash": "d82e39185391416da3f15f2adcdfc5ad4a9f8fbd76813768b6a1caf0afa8569f"
+      },
+      "relationshipVersion": 1,
+      "relationships": {},
+      "coverage": {
+        "policy": "relevance-v1",
+        "openTotal": 7,
+        "openIncluded": 7,
+        "openOmitted": 0
+      }
+    },
+    "attempt": {
+      "id": "efdddd83-f1da-490a-b032-bbc024b463d7",
+      "sessionRef": "sess_790b1912f07982eadc9a9f60240d920a",
+      "retryOf": null
+    }
+  },
+  "decision": {
+    "index": 0,
+    "reason": "Recovered departure stayed local, did not travel or promise a return. Observe the existing bodily sensation only; no injury, cultivation, item or relation gain is authorized.",
+    "selected": {
+      "id": "r:51e7226de70b1337:t5:c:a",
+      "label": "仔细观察：感受剑骨的躁动，确认身体状况",
+      "intent": "interact",
+      "targetId": "self",
+      "stake": "low",
+      "approach": "observe"
+    }
+  },
+  "choices": [
+    {
+      "id": "r:51e7226de70b1337:t6:c:a",
+      "enabled": true,
+      "label": "沿路前往城西乱葬岗：前往城西乱葬岗，调查那块黑铁的来历",
+      "cost": "30日 · 行粮 1"
+    },
+    {
+      "id": "r:51e7226de70b1337:t6:c:b",
+      "enabled": true,
+      "label": "沿路前往匠徒居所：回匠徒居所休息，整理今日的收获",
+      "cost": "30日 · 行粮 1"
+    },
+    {
+      "id": "r:51e7226de70b1337:t6:c:c",
+      "enabled": true,
+      "label": "询问老赵：折返铁匠铺，向老赵询问更多关于黑铁的细节",
+      "cost": "0日"
+    }
+  ],
+  "traces": [
+    {
+      "model": "@cf/zai-org/glm-4.7-flash",
+      "inputHash": "b089e7e34040604f93e8faa8feed395edc99088644c9d58fe293044ededed93c",
+      "inputBytes": 19130,
+      "startedAt": 1793358600157,
+      "bindingReturnedAt": 1793358600478,
+      "liveRawBytes": 124616,
+      "captureComplete": true,
+      "response": {
+        "model": "@cf/zai-org/glm-4.7-flash",
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "message": {
+              "content": "{\"blocks\":[{\"kind\":\"narration\",\"text\":\"你站在铁匠铺外的街道上，深吸一口气，试图平复体内那股莫名的躁动。剑骨在脊椎深处微微震颤，像是一头被囚禁的野兽在低吼，那种冰凉刺骨的感觉顺着经脉游走，让你原本有些发僵的手指重新变得灵活。你低头看了看自己的双手，掌心微微出汗，确认身体并无大碍，只是精神有些紧绷。\"},{\"kind\":\"narration\",\"text\":\"街道上人来人往，喧闹声逐渐掩盖了铁匠铺内传来的打铁声。你摸了摸腰间，行粮还在，但那块黑铁已经被你远远抛在脑后。此时天色渐晚，街边的灯笼开始一盏盏亮起，映照着这座凡人城池的烟火气。你站在路口，不知道该往哪里去，是回匠徒居所休息，还是去城西乱葬岗看看？\"}],\"choices\":[{\"action\":\"travel:road\",\"targetId\":\"k2_place_城西乱葬\",\"stake\":\"low\",\"purpose\":\"前往城西乱葬岗，调查那块黑铁的来历\",\"anchor\":1},{\"action\":\"travel:road\",\"targetId\":\"l1\",\"stake\":\"low\",\"purpose\":\"回匠徒居所休息，整理今日的收获\",\"anchor\":1},{\"action\":\"interact:ask\",\"targetId\":\"k1_person_老赵\",\"stake\":\"low\",\"purpose\":\"折返铁匠铺，向老赵询问更多关于黑铁的细节\",\"anchor\":1}],\"title\":\"街角徘徊\",\"location\":\"城坊街道\",\"otherPeople\":[{\"id\":\"k1_person_老赵\",\"status\":\"alive\"}],\"places\":[{\"id\":\"k2_place_城西乱葬\"},{\"id\":\"l1\",\"name\":\"匠徒居所\"}],\"factions\":[],\"memoryDeltas\":[{\"entityId\":\"k1_person_老赵\",\"kind\":\"clue\",\"anchor\":1,\"status\":\"open\"}]}",
+              "reasoning_content": ""
+            }
+          }
+        ],
+        "usage": {
+          "prompt_tokens": 3653,
+          "completion_tokens": 428,
+          "total_tokens": 4081,
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          },
+          "neurons": 35.67070000000018
+        }
+      },
+      "rawSseBytes": 124616
+    }
+  ],
+  "revision": 6,
+  "pending": false,
+  "state": {
+    "relationshipVersion": 1,
+    "version": 5,
+    "mode": "cultivation",
+    "contentVersion": 4,
+    "rulesVersion": 1,
+    "promptVersion": 1,
+    "runId": "781abbba-cd97-4e04-b76b-cc98fdd36f1c",
+    "revision": 6,
+    "turnId": 6,
+    "phase": "active",
+    "rng": 3790481637,
+    "life": {
+      "name": "云归",
+      "ageDays": 5760,
+      "lifeLimit": 80,
+      "realm": "mortal",
+      "cultivation": 0,
+      "injury": 0,
+      "items": {
+        "supplies": 3,
+        "stones": 0
+      },
+      "relations": {},
+      "birth": {
+        "originId": "artisan",
+        "talentIds": [
+          "fortune-debt",
+          "sword-bone"
+        ],
+        "attributes": {
+          "constitution": 5,
+          "insight": 4,
+          "fortune": 3
+        }
+      }
+    },
+    "birthReceipt": {
+      "kind": "opening",
+      "choiceId": null,
+      "action": null,
+      "elapsedDays": 0,
+      "itemChanges": {},
+      "relationChanges": {},
+      "random": {
+        "before": 2447879498,
+        "after": 2447879498,
+        "roll": null
+      },
+      "before": {
+        "ageDays": 5760,
+        "realm": "mortal",
+        "cultivation": 0,
+        "injury": 0
+      },
+      "after": {
+        "ageDays": 5760,
+        "realm": "mortal",
+        "cultivation": 0,
+        "injury": 0
+      },
+      "death": null,
+      "birth": {
+        "originId": "artisan",
+        "talentIds": [
+          "fortune-debt",
+          "sword-bone"
+        ],
+        "attributes": {
+          "constitution": 5,
+          "insight": 4,
+          "fortune": 3
+        }
+      }
+    },
+    "currentScene": {
+      "id": "r:51e7226de70b1337:t6:s:scene",
+      "title": "街角徘徊",
+      "location": "城坊街道",
+      "entities": [
+        {
+          "id": "r:51e7226de70b1337:t1:e:person_1",
+          "name": "老赵",
+          "kind": "person",
+          "status": "alive"
+        },
+        {
+          "id": "r:51e7226de70b1337:t5:e:place_1",
+          "name": "城西乱葬岗",
+          "kind": "place"
+        },
+        {
+          "id": "r:51e7226de70b1337:t6:e:place_1",
+          "name": "匠徒居所",
+          "kind": "place"
+        }
+      ],
+      "blocks": [
+        {
+          "kind": "narration",
+          "text": "你站在铁匠铺外的街道上，深吸一口气，试图平复体内那股莫名的躁动。剑骨在脊椎深处微微震颤，像是一头被囚禁的野兽在低吼，那种冰凉刺骨的感觉顺着经脉游走，让你原本有些发僵的手指重新变得灵活。你低头看了看自己的双手，掌心微微出汗，确认身体并无大碍，只是精神有些紧绷。"
+        },
+        {
+          "kind": "narration",
+          "text": "街道上人来人往，喧闹声逐渐掩盖了铁匠铺内传来的打铁声。你摸了摸腰间，行粮还在，但那块黑铁已经被你远远抛在脑后。此时天色渐晚，街边的灯笼开始一盏盏亮起，映照着这座凡人城池的烟火气。你站在路口，不知道该往哪里去，是回匠徒居所休息，还是去城西乱葬岗看看？"
+        }
+      ],
+      "choices": [
+        {
+          "id": "r:51e7226de70b1337:t6:c:a",
+          "label": "沿路前往城西乱葬岗：前往城西乱葬岗，调查那块黑铁的来历",
+          "intent": "travel",
+          "targetId": "r:51e7226de70b1337:t5:e:place_1",
+          "stake": "low",
+          "approach": "road"
+        },
+        {
+          "id": "r:51e7226de70b1337:t6:c:b",
+          "label": "沿路前往匠徒居所：回匠徒居所休息，整理今日的收获",
+          "intent": "travel",
+          "targetId": "r:51e7226de70b1337:t6:e:place_1",
+          "stake": "low",
+          "approach": "road"
+        },
+        {
+          "id": "r:51e7226de70b1337:t6:c:c",
+          "label": "询问老赵：折返铁匠铺，向老赵询问更多关于黑铁的细节",
+          "intent": "interact",
+          "targetId": "r:51e7226de70b1337:t1:e:person_1",
+          "stake": "low",
+          "approach": "ask"
+        }
+      ],
+      "memoryDeltas": [
+        {
+          "entityId": "r:51e7226de70b1337:t1:e:person_1",
+          "kind": "clue",
+          "text": "街道上人来人往，喧闹声逐渐掩盖了铁匠铺内传来的打铁声。你摸了摸腰间，行粮还在，但那块黑铁已经被你远远抛在脑后。此时天色渐晚，街边的灯笼开始一盏盏亮起，映照着这座凡人城池的烟火气。你站在路口，不知道该往哪里去，是回匠徒居所休息，还是去城西乱葬岗看看？",
+          "status": "open"
+        }
+      ]
+    },
+    "lastReceipt": {
+      "kind": "choice",
+      "choiceId": "r:51e7226de70b1337:t5:c:a",
+      "action": {
+        "id": "r:51e7226de70b1337:t5:c:a",
+        "label": "仔细观察：感受剑骨的躁动，确认身体状况",
+        "intent": "interact",
+        "targetId": "self",
+        "stake": "low",
+        "approach": "observe"
+      },
+      "elapsedDays": 0,
+      "itemChanges": {},
+      "relationChanges": {},
+      "random": {
+        "before": 3733602334,
+        "after": 3790481637,
+        "roll": 37
+      },
+      "before": {
+        "ageDays": 5760,
+        "realm": "mortal",
+        "cultivation": 0,
+        "injury": 0
+      },
+      "after": {
+        "ageDays": 5760,
+        "realm": "mortal",
+        "cultivation": 0,
+        "injury": 0
+      },
+      "death": null,
+      "birth": null
+    },
+    "relatedEntities": [
+      {
+        "id": "r:51e7226de70b1337:t1:e:person_1",
+        "name": "老赵",
+        "kind": "person",
+        "status": "alive"
+      },
+      {
+        "id": "r:51e7226de70b1337:t5:e:place_1",
+        "name": "城西乱葬岗",
+        "kind": "place"
+      },
+      {
+        "id": "r:51e7226de70b1337:t6:e:place_1",
+        "name": "匠徒居所",
+        "kind": "place"
+      }
+    ],
+    "archiveCursor": 0
+  },
+  "posts": 2,
+  "latency": {
+    "usable": true,
+    "errorCode": null,
+    "firstAnyPreviewMs": 10858,
+    "firstReadableMs": 11095,
+    "completionMs": 18580,
+    "narrativeChars": 255,
+    "maxPreviewGapMs": 720,
+    "readingFinishEstimateMs": 53595,
+    "readingStallEstimateMs": 0,
+    "optionsWaitEstimateMs": 0,
+    "prefetchWorthEvaluating": true,
+    "assumptions": {
+      "readingCharsPerSecond": 6,
+      "readableChars": 20,
+      "targetWaitMs": 2000
+    }
+  }
+}

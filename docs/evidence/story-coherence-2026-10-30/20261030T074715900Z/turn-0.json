@@ -1,0 +1,601 @@
+{
+  "caseId": "opening",
+  "start": 826.5,
+  "timeline": [
+    {
+      "atMs": 5367,
+      "chars": 1
+    },
+    {
+      "atMs": 5441,
+      "chars": 3
+    },
+    {
+      "atMs": 5488,
+      "chars": 6
+    },
+    {
+      "atMs": 5551,
+      "chars": 9
+    },
+    {
+      "atMs": 5613,
+      "chars": 12
+    },
+    {
+      "atMs": 5754,
+      "chars": 16
+    },
+    {
+      "atMs": 5831,
+      "chars": 20
+    },
+    {
+      "atMs": 5893,
+      "chars": 23
+    },
+    {
+      "atMs": 5958,
+      "chars": 26
+    },
+    {
+      "atMs": 6030,
+      "chars": 31
+    },
+    {
+      "atMs": 6078,
+      "chars": 34
+    },
+    {
+      "atMs": 6126,
+      "chars": 37
+    },
+    {
+      "atMs": 6223,
+      "chars": 41
+    },
+    {
+      "atMs": 6298,
+      "chars": 44
+    },
+    {
+      "atMs": 6360,
+      "chars": 46
+    },
+    {
+      "atMs": 6422,
+      "chars": 49
+    },
+    {
+      "atMs": 6484,
+      "chars": 51
+    },
+    {
+      "atMs": 6561,
+      "chars": 54
+    },
+    {
+      "atMs": 6655,
+      "chars": 57
+    },
+    {
+      "atMs": 6749,
+      "chars": 59
+    },
+    {
+      "atMs": 6811,
+      "chars": 62
+    },
+    {
+      "atMs": 6860,
+      "chars": 66
+    },
+    {
+      "atMs": 6921,
+      "chars": 69
+    },
+    {
+      "atMs": 6999,
+      "chars": 71
+    },
+    {
+      "atMs": 7044,
+      "chars": 75
+    },
+    {
+      "atMs": 7109,
+      "chars": 80
+    },
+    {
+      "atMs": 7171,
+      "chars": 83
+    },
+    {
+      "atMs": 7235,
+      "chars": 86
+    },
+    {
+      "atMs": 7310,
+      "chars": 90
+    },
+    {
+      "atMs": 7359,
+      "chars": 94
+    },
+    {
+      "atMs": 7419,
+      "chars": 97
+    },
+    {
+      "atMs": 7495,
+      "chars": 101
+    },
+    {
+      "atMs": 7573,
+      "chars": 104
+    },
+    {
+      "atMs": 7620,
+      "chars": 107
+    },
+    {
+      "atMs": 7697,
+      "chars": 111
+    },
+    {
+      "atMs": 7791,
+      "chars": 116
+    },
+    {
+      "atMs": 7835,
+      "chars": 121
+    },
+    {
+      "atMs": 7912,
+      "chars": 124
+    },
+    {
+      "atMs": 7980,
+      "chars": 128
+    },
+    {
+      "atMs": 8034,
+      "chars": 133
+    },
+    {
+      "atMs": 8098,
+      "chars": 138
+    },
+    {
+      "atMs": 8161,
+      "chars": 142
+    },
+    {
+      "atMs": 8212,
+      "chars": 147
+    },
+    {
+      "atMs": 8268,
+      "chars": 149
+    },
+    {
+      "atMs": 8327,
+      "chars": 151
+    },
+    {
+      "atMs": 8532,
+      "chars": 152
+    },
+    {
+      "atMs": 8690,
+      "chars": 157
+    },
+    {
+      "atMs": 8753,
+      "chars": 160
+    }
+  ],
+  "choicesEnabledDuringPreview": false,
+  "lastText": "你正蹲在溪边洗刷猎弓，溪水冰凉刺骨，映出你稚嫩却坚毅的脸庞。村口老猎户张三正对着山坳里那团诡异的紫雾指指点点，声音里透着掩饰不住的惊恐。那雾气并非静止，而是像活物般在林间游走，偶尔发出类似婴儿啼哭的怪响，引得林中飞鸟惊散。你收起弓箭，目光扫过那团紫雾，心中隐隐觉得这雾气有些眼熟，仿佛在梦中见过。张三见你过来，压低声音道",
+  "doneMs": 11626,
+  "result": {
+    "protocolVersion": 1,
+    "status": "ready",
+    "requestId": "1819378b-ba1e-4940-ab2f-274f8f937e95",
+    "attemptId": "6b4fa0ce-feae-43e6-bc62-98fb229003a9",
+    "sessionRef": "sess_dbbdb1301865b9fb5caeb14c73dc035d",
+    "errorCode": null,
+    "retry": null,
+    "scene": {
+      "id": "r:50794a5b02c269e0:t1:s:scene",
+      "title": "溪边遇雾",
+      "location": "village",
+      "entities": [
+        {
+          "id": "r:50794a5b02c269e0:t1:e:person_1",
+          "name": "张三",
+          "status": "alive",
+          "kind": "person"
+        }
+      ],
+      "blocks": [
+        {
+          "kind": "narration",
+          "text": "你正蹲在溪边洗刷猎弓，溪水冰凉刺骨，映出你稚嫩却坚毅的脸庞。村口老猎户张三正对着山坳里那团诡异的紫雾指指点点，声音里透着掩饰不住的惊恐。那雾气并非静止，而是像活物般在林间游走，偶尔发出类似婴儿啼哭的怪响，引得林中飞鸟惊散。你收起弓箭，目光扫过那团紫雾，心中隐隐觉得这雾气有些眼熟，仿佛在梦中见过。张三见你过来，压低声音道"
+        }
+      ],
+      "choices": [
+        {
+          "id": "r:50794a5b02c269e0:t1:c:a",
+          "label": "询问张三这雾的来历",
+          "intent": "interact",
+          "targetId": "r:50794a5b02c269e0:t1:e:person_1",
+          "stake": "low",
+          "approach": "ask"
+        },
+        {
+          "id": "r:50794a5b02c269e0:t1:c:b",
+          "label": "向张三打听附近是否有猎物",
+          "intent": "interact",
+          "targetId": "r:50794a5b02c269e0:t1:e:person_1",
+          "stake": "low",
+          "approach": "ask"
+        },
+        {
+          "id": "r:50794a5b02c269e0:t1:c:c",
+          "label": "观察紫雾的动静",
+          "intent": "interact",
+          "targetId": "self",
+          "stake": "low",
+          "approach": "observe"
+        }
+      ],
+      "memoryDeltas": []
+    }
+  },
+  "request": {
+    "context": {
+      "schemaVersion": 1,
+      "phase": "opening",
+      "identity": {
+        "runId": "1b16320d-e57e-47c3-ab7b-951156afdb5d",
+        "turnId": 1,
+        "baseRevision": 0,
+        "stateHash": "e558e8a61f77a4cff6b5ade851de338ac20c368278310dc03defb57903adfa43",
+        "choiceId": null,
+        "rulesVersion": 1,
+        "promptVersion": 1,
+        "requestId": "1819378b-ba1e-4940-ab2f-274f8f937e95"
+      },
+      "namespace": "r:50794a5b02c269e0",
+      "receipt": {
+        "kind": "opening",
+        "choiceId": null,
+        "action": null,
+        "elapsedDays": 0,
+        "itemChanges": {},
+        "relationChanges": {},
+        "random": {
+          "before": 1591631305,
+          "after": 1591631305,
+          "roll": null
+        },
+        "before": {
+          "ageDays": 5760,
+          "realm": "mortal",
+          "cultivation": 0,
+          "injury": 0
+        },
+        "after": {
+          "ageDays": 5760,
+          "realm": "mortal",
+          "cultivation": 0,
+          "injury": 0
+        },
+        "death": null,
+        "birth": {
+          "originId": "village",
+          "talentIds": [
+            "keen-memory",
+            "sensitive-breath"
+          ],
+          "attributes": {
+            "constitution": 4,
+            "insight": 5,
+            "fortune": 3
+          }
+        }
+      },
+      "life": {
+        "name": "云归",
+        "ageDays": 5760,
+        "lifeLimit": 80,
+        "realm": "mortal",
+        "cultivation": 0,
+        "injury": 0,
+        "items": {
+          "supplies": 3,
+          "stones": 0
+        },
+        "relations": {},
+        "birth": {
+          "originId": "village",
+          "talentIds": [
+            "keen-memory",
+            "sensitive-breath"
+          ],
+          "attributes": {
+            "constitution": 4,
+            "insight": 5,
+            "fortune": 3
+          }
+        }
+      },
+      "entities": [],
+      "memory": {
+        "facts": [],
+        "promises": [],
+        "clues": [],
+        "recent": [],
+        "summaries": []
+      },
+      "references": [],
+      "previousScene": null,
+      "relationshipVersion": 1,
+      "relationships": {},
+      "coverage": {
+        "policy": "relevance-v1",
+        "openTotal": 0,
+        "openIncluded": 0,
+        "openOmitted": 0
+      }
+    },
+    "attempt": {
+      "id": "6b4fa0ce-feae-43e6-bc62-98fb229003a9",
+      "sessionRef": "sess_dbbdb1301865b9fb5caeb14c73dc035d",
+      "retryOf": null
+    }
+  },
+  "decision": null,
+  "choices": [
+    {
+      "id": "r:50794a5b02c269e0:t1:c:a",
+      "enabled": true,
+      "label": "询问张三这雾的来历",
+      "cost": "0日"
+    },
+    {
+      "id": "r:50794a5b02c269e0:t1:c:b",
+      "enabled": true,
+      "label": "向张三打听附近是否有猎物",
+      "cost": "0日"
+    },
+    {
+      "id": "r:50794a5b02c269e0:t1:c:c",
+      "enabled": true,
+      "label": "观察紫雾的动静",
+      "cost": "0日"
+    }
+  ],
+  "traces": [
+    {
+      "model": "@cf/zai-org/glm-4.7-flash",
+      "inputHash": "75def02db1dee83a1981bbcc71632ffacb2d3266e3bbbcbe412dea4212bc1b2f",
+      "inputBytes": 13559,
+      "startedAt": 1793346502198,
+      "bindingReturnedAt": 1793346502561,
+      "response": {
+        "model": "@cf/zai-org/glm-4.7-flash",
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "message": {
+              "content": "{\"blocks\":[{\"kind\":\"narration\",\"text\":\"你正蹲在溪边洗刷猎弓，溪水冰凉刺骨，映出你稚嫩却坚毅的脸庞。村口老猎户张三正对着山坳里那团诡异的紫雾指指点点，声音里透着掩饰不住的惊恐。那雾气并非静止，而是像活物般在林间游走，偶尔发出类似婴儿啼哭的怪响，引得林中飞鸟惊散。你收起弓箭，目光扫过那团紫雾，心中隐隐觉得这雾气有些眼熟，仿佛在梦中见过。张三见你过来，压低声音道\" }],\"choices\":[{\"action\":\"interact:ask\",\"targetId\":\"p1\",\"stake\":\"low\",\"label\":\"询问张三这雾的来历\",\"anchor\":0},{\"action\":\"interact:ask\",\"targetId\":\"p1\",\"stake\":\"low\",\"label\":\"向张三打听附近是否有猎物\",\"anchor\":0},{\"action\":\"interact:observe\",\"targetId\":\"self\",\"stake\":\"low\",\"label\":\"观察紫雾的动静\",\"anchor\":0}],\"title\":\"溪边遇雾\",\"location\":\"village\",\"otherPeople\":[{\"id\":\"p1\",\"name\":\"张三\",\"status\":\"alive\"}],\"places\":[],\"factions\":[],\"memoryDeltas\":[]}",
+              "reasoning_content": ""
+            }
+          }
+        ],
+        "usage": {
+          "prompt_tokens": 1371,
+          "completion_tokens": 294,
+          "total_tokens": 1665,
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          },
+          "neurons": 18.242100000000125
+        }
+      },
+      "rawSseBytes": 100460
+    }
+  ],
+  "revision": 1,
+  "pending": false,
+  "state": {
+    "relationshipVersion": 1,
+    "version": 5,
+    "mode": "cultivation",
+    "contentVersion": 4,
+    "rulesVersion": 1,
+    "promptVersion": 1,
+    "runId": "1b16320d-e57e-47c3-ab7b-951156afdb5d",
+    "revision": 1,
+    "turnId": 1,
+    "phase": "active",
+    "rng": 1591631305,
+    "life": {
+      "name": "云归",
+      "ageDays": 5760,
+      "lifeLimit": 80,
+      "realm": "mortal",
+      "cultivation": 0,
+      "injury": 0,
+      "items": {
+        "supplies": 3,
+        "stones": 0
+      },
+      "relations": {},
+      "birth": {
+        "originId": "village",
+        "talentIds": [
+          "keen-memory",
+          "sensitive-breath"
+        ],
+        "attributes": {
+          "constitution": 4,
+          "insight": 5,
+          "fortune": 3
+        }
+      }
+    },
+    "birthReceipt": {
+      "kind": "opening",
+      "choiceId": null,
+      "action": null,
+      "elapsedDays": 0,
+      "itemChanges": {},
+      "relationChanges": {},
+      "random": {
+        "before": 1591631305,
+        "after": 1591631305,
+        "roll": null
+      },
+      "before": {
+        "ageDays": 5760,
+        "realm": "mortal",
+        "cultivation": 0,
+        "injury": 0
+      },
+      "after": {
+        "ageDays": 5760,
+        "realm": "mortal",
+        "cultivation": 0,
+        "injury": 0
+      },
+      "death": null,
+      "birth": {
+        "originId": "village",
+        "talentIds": [
+          "keen-memory",
+          "sensitive-breath"
+        ],
+        "attributes": {
+          "constitution": 4,
+          "insight": 5,
+          "fortune": 3
+        }
+      }
+    },
+    "currentScene": {
+      "id": "r:50794a5b02c269e0:t1:s:scene",
+      "title": "溪边遇雾",
+      "location": "village",
+      "entities": [
+        {
+          "id": "r:50794a5b02c269e0:t1:e:person_1",
+          "name": "张三",
+          "status": "alive",
+          "kind": "person"
+        }
+      ],
+      "blocks": [
+        {
+          "kind": "narration",
+          "text": "你正蹲在溪边洗刷猎弓，溪水冰凉刺骨，映出你稚嫩却坚毅的脸庞。村口老猎户张三正对着山坳里那团诡异的紫雾指指点点，声音里透着掩饰不住的惊恐。那雾气并非静止，而是像活物般在林间游走，偶尔发出类似婴儿啼哭的怪响，引得林中飞鸟惊散。你收起弓箭，目光扫过那团紫雾，心中隐隐觉得这雾气有些眼熟，仿佛在梦中见过。张三见你过来，压低声音道"
+        }
+      ],
+      "choices": [
+        {
+          "id": "r:50794a5b02c269e0:t1:c:a",
+          "label": "询问张三这雾的来历",
+          "intent": "interact",
+          "targetId": "r:50794a5b02c269e0:t1:e:person_1",
+          "stake": "low",
+          "approach": "ask"
+        },
+        {
+          "id": "r:50794a5b02c269e0:t1:c:b",
+          "label": "向张三打听附近是否有猎物",
+          "intent": "interact",
+          "targetId": "r:50794a5b02c269e0:t1:e:person_1",
+          "stake": "low",
+          "approach": "ask"
+        },
+        {
+          "id": "r:50794a5b02c269e0:t1:c:c",
+          "label": "观察紫雾的动静",
+          "intent": "interact",
+          "targetId": "self",
+          "stake": "low",
+          "approach": "observe"
+        }
+      ],
+      "memoryDeltas": []
+    },
+    "lastReceipt": {
+      "kind": "opening",
+      "choiceId": null,
+      "action": null,
+      "elapsedDays": 0,
+      "itemChanges": {},
+      "relationChanges": {},
+      "random": {
+        "before": 1591631305,
+        "after": 1591631305,
+        "roll": null
+      },
+      "before": {
+        "ageDays": 5760,
+        "realm": "mortal",
+        "cultivation": 0,
+        "injury": 0
+      },
+      "after": {
+        "ageDays": 5760,
+        "realm": "mortal",
+        "cultivation": 0,
+        "injury": 0
+      },
+      "death": null,
+      "birth": {
+        "originId": "village",
+        "talentIds": [
+          "keen-memory",
+          "sensitive-breath"
+        ],
+        "attributes": {
+          "constitution": 4,
+          "insight": 5,
+          "fortune": 3
+        }
+      }
+    },
+    "relatedEntities": [
+      {
+        "id": "r:50794a5b02c269e0:t1:e:person_1",
+        "name": "张三",
+        "status": "alive",
+        "kind": "person"
+      }
+    ],
+    "archiveCursor": 0
+  },
+  "posts": 1,
+  "latency": {
+    "usable": true,
+    "errorCode": null,
+    "firstAnyPreviewMs": 5367,
+    "firstReadableMs": 5831,
+    "completionMs": 11626,
+    "narrativeChars": 160,
+    "maxPreviewGapMs": 205,
+    "readingFinishEstimateMs": 32498,
+    "readingStallEstimateMs": 0,
+    "optionsWaitEstimateMs": 0,
+    "prefetchWorthEvaluating": true,
+    "assumptions": {
+      "readingCharsPerSecond": 6,
+      "readableChars": 20,
+      "targetWaitMs": 2000
+    }
+  }
+}

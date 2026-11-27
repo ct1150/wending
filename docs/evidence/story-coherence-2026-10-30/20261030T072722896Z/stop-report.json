@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "sourceCommit": "25181a3cbac6441cb9999404b1559c9a06917859",
+  "status": "ACCEPTANCE_STOPPED",
+  "reason": "Opening passed. First ask quoted previous-scene text for travel anchor, not current prose; strict decode rejected. Also maps two investigations to resource exploration, so semantic acceptance not passed. Modern protocol subsequently simplified and current block indices replace newly generated copied anchors.",
+  "actualTurns": 2,
+  "productionRestored": {
+    "version": "cad2a140-240f-4465-a837-e53f054c2589",
+    "percentage": 100,
+    "deployment": "64e2515b-fa3b-420c-9b71-de49f7d37fd2"
+  },
+  "cleanup": {
+    "ownCredentialDeleted": true,
+    "newWorkerCreated": false,
+    "newNamespaceCreated": false,
+    "ledgerRetained": true
+  },
+  "recordedAt": "2026-10-30T07:35:29.291Z"
+}

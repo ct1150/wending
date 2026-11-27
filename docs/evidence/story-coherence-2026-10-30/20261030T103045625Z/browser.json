@@ -1,0 +1,697 @@
+{
+  "sourceCommit": "2fe58f8d3d4cb3c1f4f3dbfac98bc6d1a3676db6",
+  "version": "7e272fb1-6ab8-4884-b2bc-c11227628d7f",
+  "recordedAt": "2026-10-30T10:32:43.294Z",
+  "records": [
+    {
+      "caseId": "opening",
+      "start": 896.5,
+      "timeline": [
+        {
+          "atMs": 8861,
+          "chars": 1
+        },
+        {
+          "atMs": 8957,
+          "chars": 4
+        },
+        {
+          "atMs": 9035,
+          "chars": 7
+        },
+        {
+          "atMs": 9082,
+          "chars": 9
+        },
+        {
+          "atMs": 9161,
+          "chars": 11
+        },
+        {
+          "atMs": 9224,
+          "chars": 13
+        },
+        {
+          "atMs": 9287,
+          "chars": 16
+        },
+        {
+          "atMs": 9366,
+          "chars": 18
+        },
+        {
+          "atMs": 9443,
+          "chars": 20
+        },
+        {
+          "atMs": 9635,
+          "chars": 23
+        },
+        {
+          "atMs": 9727,
+          "chars": 25
+        },
+        {
+          "atMs": 9825,
+          "chars": 28
+        },
+        {
+          "atMs": 9904,
+          "chars": 32
+        },
+        {
+          "atMs": 9983,
+          "chars": 36
+        },
+        {
+          "atMs": 10046,
+          "chars": 38
+        },
+        {
+          "atMs": 10110,
+          "chars": 41
+        },
+        {
+          "atMs": 10173,
+          "chars": 46
+        },
+        {
+          "atMs": 10252,
+          "chars": 50
+        },
+        {
+          "atMs": 10313,
+          "chars": 54
+        },
+        {
+          "atMs": 10392,
+          "chars": 59
+        },
+        {
+          "atMs": 10488,
+          "chars": 61
+        },
+        {
+          "atMs": 10535,
+          "chars": 66
+        },
+        {
+          "atMs": 10582,
+          "chars": 69
+        },
+        {
+          "atMs": 10660,
+          "chars": 74
+        },
+        {
+          "atMs": 10725,
+          "chars": 78
+        },
+        {
+          "atMs": 10802,
+          "chars": 81
+        },
+        {
+          "atMs": 10864,
+          "chars": 87
+        },
+        {
+          "atMs": 10928,
+          "chars": 91
+        },
+        {
+          "atMs": 10990,
+          "chars": 94
+        },
+        {
+          "atMs": 11054,
+          "chars": 96
+        },
+        {
+          "atMs": 11133,
+          "chars": 100
+        },
+        {
+          "atMs": 11211,
+          "chars": 102
+        },
+        {
+          "atMs": 11273,
+          "chars": 105
+        },
+        {
+          "atMs": 11338,
+          "chars": 107
+        },
+        {
+          "atMs": 11573,
+          "chars": 111
+        },
+        {
+          "atMs": 11653,
+          "chars": 113
+        },
+        {
+          "atMs": 11714,
+          "chars": 115
+        },
+        {
+          "atMs": 11777,
+          "chars": 119
+        },
+        {
+          "atMs": 11855,
+          "chars": 121
+        },
+        {
+          "atMs": 11917,
+          "chars": 123
+        },
+        {
+          "atMs": 11981,
+          "chars": 125
+        },
+        {
+          "atMs": 12044,
+          "chars": 130
+        },
+        {
+          "atMs": 12106,
+          "chars": 134
+        },
+        {
+          "atMs": 12168,
+          "chars": 138
+        },
+        {
+          "atMs": 12245,
+          "chars": 140
+        },
+        {
+          "atMs": 12308,
+          "chars": 143
+        },
+        {
+          "atMs": 12355,
+          "chars": 147
+        },
+        {
+          "atMs": 12432,
+          "chars": 149
+        },
+        {
+          "atMs": 12494,
+          "chars": 151
+        },
+        {
+          "atMs": 12556,
+          "chars": 154
+        },
+        {
+          "atMs": 12618,
+          "chars": 157
+        },
+        {
+          "atMs": 12696,
+          "chars": 161
+        },
+        {
+          "atMs": 12758,
+          "chars": 164
+        },
+        {
+          "atMs": 12820,
+          "chars": 167
+        },
+        {
+          "atMs": 12882,
+          "chars": 171
+        },
+        {
+          "atMs": 12943,
+          "chars": 174
+        },
+        {
+          "atMs": 13006,
+          "chars": 178
+        },
+        {
+          "atMs": 13069,
+          "chars": 180
+        },
+        {
+          "atMs": 13132,
+          "chars": 184
+        },
+        {
+          "atMs": 13194,
+          "chars": 188
+        },
+        {
+          "atMs": 13272,
+          "chars": 191
+        },
+        {
+          "atMs": 13335,
+          "chars": 193
+        },
+        {
+          "atMs": 13617,
+          "chars": 196
+        }
+      ],
+      "choicesEnabledDuringPreview": false,
+      "lastText": "你站在城坊匠徒的工坊前，晨光透过木窗洒在满是划痕的桌案上。隔壁铁匠铺传来叮当的打铁声，空气中弥漫着铁锈与机油的味道。你低头看了看自己粗糙的双手，这是十六年来最普通的一天，也是你第一次走出这方寸之地，去往城外的荒野。\n\n刚出城门没多远，前方小路旁的草丛突然剧烈晃动，一只浑身长满黑毛的野狗窜了出来，龇着牙挡住了去路。它喉咙里发出低沉的呜咽，显然把你当成了某种猎物，又或是某种可以欺负的弱小存在。",
+      "doneMs": 17558,
+      "result": {
+        "protocolVersion": 1,
+        "status": "ready",
+        "requestId": "42bf57c4-f5b5-4055-be41-cf3565df4045",
+        "attemptId": "a286d6ea-167f-481e-ab09-441ae3a282f6",
+        "sessionRef": "sess_c4e15a0467e1db9e29fd18f435c6310e",
+        "errorCode": null,
+        "retry": null,
+        "scene": {
+          "id": "r:349168cfea194c0d:t1:s:scene",
+          "title": "荒野拦路",
+          "location": "城外荒野",
+          "entities": [
+            {
+              "id": "r:349168cfea194c0d:t1:e:person_1",
+              "name": "黑毛野狗",
+              "status": "alive",
+              "kind": "person"
+            }
+          ],
+          "blocks": [
+            {
+              "kind": "narration",
+              "text": "你站在城坊匠徒的工坊前，晨光透过木窗洒在满是划痕的桌案上。隔壁铁匠铺传来叮当的打铁声，空气中弥漫着铁锈与机油的味道。你低头看了看自己粗糙的双手，这是十六年来最普通的一天，也是你第一次走出这方寸之地，去往城外的荒野。"
+            },
+            {
+              "kind": "narration",
+              "text": "刚出城门没多远，前方小路旁的草丛突然剧烈晃动，一只浑身长满黑毛的野狗窜了出来，龇着牙挡住了去路。它喉咙里发出低沉的呜咽，显然把你当成了某种猎物，又或是某种可以欺负的弱小存在。"
+            }
+          ],
+          "choices": [
+            {
+              "id": "r:349168cfea194c0d:t1:c:a",
+              "label": "询问黑毛野狗：询问这只野狗为何挡路",
+              "intent": "interact",
+              "targetId": "r:349168cfea194c0d:t1:e:person_1",
+              "stake": "low",
+              "approach": "ask"
+            },
+            {
+              "id": "r:349168cfea194c0d:t1:c:b",
+              "label": "迎战黑毛野狗，强攻：尝试用木棍击退挡路的野狗",
+              "intent": "fight",
+              "targetId": "r:349168cfea194c0d:t1:e:person_1",
+              "stake": "low",
+              "approach": "assault"
+            },
+            {
+              "id": "r:349168cfea194c0d:t1:c:c",
+              "label": "避开黑毛野狗，后撤：绕过这只野狗继续前行",
+              "intent": "evade",
+              "targetId": "r:349168cfea194c0d:t1:e:person_1",
+              "stake": "low",
+              "approach": "withdraw"
+            }
+          ],
+          "memoryDeltas": [
+            {
+              "entityId": "r:349168cfea194c0d:t1:e:person_1",
+              "kind": "clue",
+              "text": "你站在城坊匠徒的工坊前，晨光透过木窗洒在满是划痕的桌案上。隔壁铁匠铺传来叮当的打铁声，空气中弥漫着铁锈与机油的味道。你低头看了看自己粗糙的双手，这是十六年来最普通的一天，也是你第一次走出这方寸之地，去往城外的荒野。",
+              "status": "open"
+            }
+          ]
+        }
+      },
+      "request": {
+        "context": {
+          "schemaVersion": 1,
+          "phase": "opening",
+          "identity": {
+            "runId": "621f0eb0-43cb-42c9-9396-3ef0b98ab75a",
+            "turnId": 1,
+            "baseRevision": 0,
+            "stateHash": "17ed5b43c4309fa4da2521e573396e01766076f709068b7aad1dd6a1b95f8e0e",
+            "choiceId": null,
+            "rulesVersion": 1,
+            "promptVersion": 1,
+            "requestId": "42bf57c4-f5b5-4055-be41-cf3565df4045"
+          },
+          "namespace": "r:349168cfea194c0d",
+          "receipt": {
+            "kind": "opening",
+            "choiceId": null,
+            "action": null,
+            "elapsedDays": 0,
+            "itemChanges": {},
+            "relationChanges": {},
+            "random": {
+              "before": 3733948539,
+              "after": 3733948539,
+              "roll": null
+            },
+            "before": {
+              "ageDays": 5760,
+              "realm": "mortal",
+              "cultivation": 0,
+              "injury": 0
+            },
+            "after": {
+              "ageDays": 5760,
+              "realm": "mortal",
+              "cultivation": 0,
+              "injury": 0
+            },
+            "death": null,
+            "birth": {
+              "originId": "artisan",
+              "talentIds": [
+                "iron-bones",
+                "fortune-debt"
+              ],
+              "attributes": {
+                "constitution": 3,
+                "insight": 5,
+                "fortune": 4
+              }
+            }
+          },
+          "life": {
+            "name": "云归",
+            "ageDays": 5760,
+            "lifeLimit": 80,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0,
+            "items": {
+              "supplies": 3,
+              "stones": 0
+            },
+            "relations": {},
+            "birth": {
+              "originId": "artisan",
+              "talentIds": [
+                "iron-bones",
+                "fortune-debt"
+              ],
+              "attributes": {
+                "constitution": 3,
+                "insight": 5,
+                "fortune": 4
+              }
+            }
+          },
+          "entities": [],
+          "memory": {
+            "facts": [],
+            "promises": [],
+            "clues": [],
+            "recent": [],
+            "summaries": []
+          },
+          "references": [],
+          "previousScene": null,
+          "relationshipVersion": 1,
+          "relationships": {},
+          "coverage": {
+            "policy": "relevance-v1",
+            "openTotal": 0,
+            "openIncluded": 0,
+            "openOmitted": 0
+          }
+        },
+        "attempt": {
+          "id": "a286d6ea-167f-481e-ab09-441ae3a282f6",
+          "sessionRef": "sess_c4e15a0467e1db9e29fd18f435c6310e",
+          "retryOf": null
+        }
+      },
+      "decision": null,
+      "choices": [
+        {
+          "id": "r:349168cfea194c0d:t1:c:a",
+          "enabled": true,
+          "label": "询问黑毛野狗：询问这只野狗为何挡路",
+          "cost": "0日"
+        },
+        {
+          "id": "r:349168cfea194c0d:t1:c:b",
+          "enabled": true,
+          "label": "迎战黑毛野狗，强攻：尝试用木棍击退挡路的野狗",
+          "cost": "7日 · 历练受伤基础风险30%，根骨与坚韧筋骨可降低风险。；将增加2点伤势；伤势达到10即死亡。"
+        },
+        {
+          "id": "r:349168cfea194c0d:t1:c:c",
+          "enabled": true,
+          "label": "避开黑毛野狗，后撤：绕过这只野狗继续前行",
+          "cost": "14日 · 历练受伤基础风险15%，根骨与坚韧筋骨可降低风险。"
+        }
+      ],
+      "traces": [
+        {
+          "model": "@cf/zai-org/glm-4.7-flash",
+          "inputHash": "4581c673ebd2356c63d09c4617505acf5d1bcf490bd9904295684d1f0a192a4e",
+          "inputBytes": 13425,
+          "startedAt": 1793356306525,
+          "bindingReturnedAt": 1793356307085,
+          "liveRawBytes": 102890,
+          "captureComplete": true,
+          "response": {
+            "model": "@cf/zai-org/glm-4.7-flash",
+            "choices": [
+              {
+                "finish_reason": "stop",
+                "message": {
+                  "content": "{\"blocks\":[{\"kind\":\"narration\",\"text\":\"你站在城坊匠徒的工坊前，晨光透过木窗洒在满是划痕的桌案上。隔壁铁匠铺传来叮当的打铁声，空气中弥漫着铁锈与机油的味道。你低头看了看自己粗糙的双手，这是十六年来最普通的一天，也是你第一次走出这方寸之地，去往城外的荒野。\"},{\"kind\":\"narration\",\"text\":\"刚出城门没多远，前方小路旁的草丛突然剧烈晃动，一只浑身长满黑毛的野狗窜了出来，龇着牙挡住了去路。它喉咙里发出低沉的呜咽，显然把你当成了某种猎物，又或是某种可以欺负的弱小存在。\"}],\"choices\":[{\"action\":\"interact:ask\",\"targetId\":\"p1\",\"stake\":\"low\",\"purpose\":\"询问这只野狗为何挡路\",\"anchor\":0},{\"action\":\"fight:assault\",\"targetId\":\"p1\",\"stake\":\"low\",\"purpose\":\"尝试用木棍击退挡路的野狗\",\"anchor\":0},{\"action\":\"evade:withdraw\",\"targetId\":\"p1\",\"stake\":\"low\",\"purpose\":\"绕过这只野狗继续前行\",\"anchor\":0}],\"title\":\"荒野拦路\",\"location\":\"城外荒野\",\"otherPeople\":[{\"id\":\"p1\",\"name\":\"黑毛野狗\",\"status\":\"alive\"}],\"places\":[],\"factions\":[],\"memoryDeltas\":[{\"entityId\":\"p1\",\"kind\":\"clue\",\"anchor\":0,\"status\":\"open\"}]}",
+                  "reasoning_content": ""
+                }
+              }
+            ],
+            "usage": {
+              "prompt_tokens": 2153,
+              "completion_tokens": 337,
+              "total_tokens": 2490,
+              "prompt_tokens_details": {
+                "cached_tokens": 0
+              },
+              "neurons": 24.108300000000146
+            }
+          },
+          "rawSseBytes": 102890
+        }
+      ],
+      "revision": 1,
+      "pending": false,
+      "state": {
+        "relationshipVersion": 1,
+        "version": 5,
+        "mode": "cultivation",
+        "contentVersion": 4,
+        "rulesVersion": 1,
+        "promptVersion": 1,
+        "runId": "621f0eb0-43cb-42c9-9396-3ef0b98ab75a",
+        "revision": 1,
+        "turnId": 1,
+        "phase": "active",
+        "rng": 3733948539,
+        "life": {
+          "name": "云归",
+          "ageDays": 5760,
+          "lifeLimit": 80,
+          "realm": "mortal",
+          "cultivation": 0,
+          "injury": 0,
+          "items": {
+            "supplies": 3,
+            "stones": 0
+          },
+          "relations": {},
+          "birth": {
+            "originId": "artisan",
+            "talentIds": [
+              "iron-bones",
+              "fortune-debt"
+            ],
+            "attributes": {
+              "constitution": 3,
+              "insight": 5,
+              "fortune": 4
+            }
+          }
+        },
+        "birthReceipt": {
+          "kind": "opening",
+          "choiceId": null,
+          "action": null,
+          "elapsedDays": 0,
+          "itemChanges": {},
+          "relationChanges": {},
+          "random": {
+            "before": 3733948539,
+            "after": 3733948539,
+            "roll": null
+          },
+          "before": {
+            "ageDays": 5760,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "after": {
+            "ageDays": 5760,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "death": null,
+          "birth": {
+            "originId": "artisan",
+            "talentIds": [
+              "iron-bones",
+              "fortune-debt"
+            ],
+            "attributes": {
+              "constitution": 3,
+              "insight": 5,
+              "fortune": 4
+            }
+          }
+        },
+        "currentScene": {
+          "id": "r:349168cfea194c0d:t1:s:scene",
+          "title": "荒野拦路",
+          "location": "城外荒野",
+          "entities": [
+            {
+              "id": "r:349168cfea194c0d:t1:e:person_1",
+              "name": "黑毛野狗",
+              "status": "alive",
+              "kind": "person"
+            }
+          ],
+          "blocks": [
+            {
+              "kind": "narration",
+              "text": "你站在城坊匠徒的工坊前，晨光透过木窗洒在满是划痕的桌案上。隔壁铁匠铺传来叮当的打铁声，空气中弥漫着铁锈与机油的味道。你低头看了看自己粗糙的双手，这是十六年来最普通的一天，也是你第一次走出这方寸之地，去往城外的荒野。"
+            },
+            {
+              "kind": "narration",
+              "text": "刚出城门没多远，前方小路旁的草丛突然剧烈晃动，一只浑身长满黑毛的野狗窜了出来，龇着牙挡住了去路。它喉咙里发出低沉的呜咽，显然把你当成了某种猎物，又或是某种可以欺负的弱小存在。"
+            }
+          ],
+          "choices": [
+            {
+              "id": "r:349168cfea194c0d:t1:c:a",
+              "label": "询问黑毛野狗：询问这只野狗为何挡路",
+              "intent": "interact",
+              "targetId": "r:349168cfea194c0d:t1:e:person_1",
+              "stake": "low",
+              "approach": "ask"
+            },
+            {
+              "id": "r:349168cfea194c0d:t1:c:b",
+              "label": "迎战黑毛野狗，强攻：尝试用木棍击退挡路的野狗",
+              "intent": "fight",
+              "targetId": "r:349168cfea194c0d:t1:e:person_1",
+              "stake": "low",
+              "approach": "assault"
+            },
+            {
+              "id": "r:349168cfea194c0d:t1:c:c",
+              "label": "避开黑毛野狗，后撤：绕过这只野狗继续前行",
+              "intent": "evade",
+              "targetId": "r:349168cfea194c0d:t1:e:person_1",
+              "stake": "low",
+              "approach": "withdraw"
+            }
+          ],
+          "memoryDeltas": [
+            {
+              "entityId": "r:349168cfea194c0d:t1:e:person_1",
+              "kind": "clue",
+              "text": "你站在城坊匠徒的工坊前，晨光透过木窗洒在满是划痕的桌案上。隔壁铁匠铺传来叮当的打铁声，空气中弥漫着铁锈与机油的味道。你低头看了看自己粗糙的双手，这是十六年来最普通的一天，也是你第一次走出这方寸之地，去往城外的荒野。",
+              "status": "open"
+            }
+          ]
+        },
+        "lastReceipt": {
+          "kind": "opening",
+          "choiceId": null,
+          "action": null,
+          "elapsedDays": 0,
+          "itemChanges": {},
+          "relationChanges": {},
+          "random": {
+            "before": 3733948539,
+            "after": 3733948539,
+            "roll": null
+          },
+          "before": {
+            "ageDays": 5760,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "after": {
+            "ageDays": 5760,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "death": null,
+          "birth": {
+            "originId": "artisan",
+            "talentIds": [
+              "iron-bones",
+              "fortune-debt"
+            ],
+            "attributes": {
+              "constitution": 3,
+              "insight": 5,
+              "fortune": 4
+            }
+          }
+        },
+        "relatedEntities": [
+          {
+            "id": "r:349168cfea194c0d:t1:e:person_1",
+            "name": "黑毛野狗",
+            "status": "alive",
+            "kind": "person"
+          }
+        ],
+        "archiveCursor": 0
+      },
+      "posts": 1,
+      "latency": {
+        "usable": true,
+        "errorCode": null,
+        "firstAnyPreviewMs": 8861,
+        "firstReadableMs": 9443,
+        "completionMs": 17558,
+        "narrativeChars": 196,
+        "maxPreviewGapMs": 282,
+        "readingFinishEstimateMs": 42110,
+        "readingStallEstimateMs": 0,
+        "optionsWaitEstimateMs": 0,
+        "prefetchWorthEvaluating": true,
+        "assumptions": {
+          "readingCharsPerSecond": 6,
+          "readableChars": 20,
+          "targetWaitMs": 2000
+        }
+      }
+    }
+  ],
+  "errors": [
+    "Invalid choice"
+  ],
+  "posts": 1,
+  "refreshed": null
+}

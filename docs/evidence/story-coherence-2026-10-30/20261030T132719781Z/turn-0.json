@@ -1,0 +1,994 @@
+{
+  "caseId": "opening",
+  "start": 718.3999999985099,
+  "timeline": [
+    {
+      "atMs": 8684,
+      "chars": 1
+    },
+    {
+      "atMs": 8758,
+      "chars": 2
+    },
+    {
+      "atMs": 8817,
+      "chars": 4
+    },
+    {
+      "atMs": 8881,
+      "chars": 10
+    },
+    {
+      "atMs": 8960,
+      "chars": 14
+    },
+    {
+      "atMs": 9040,
+      "chars": 17
+    },
+    {
+      "atMs": 9117,
+      "chars": 19
+    },
+    {
+      "atMs": 9179,
+      "chars": 22
+    },
+    {
+      "atMs": 9239,
+      "chars": 27
+    },
+    {
+      "atMs": 9318,
+      "chars": 30
+    },
+    {
+      "atMs": 9393,
+      "chars": 34
+    },
+    {
+      "atMs": 9453,
+      "chars": 36
+    },
+    {
+      "atMs": 9530,
+      "chars": 39
+    },
+    {
+      "atMs": 9592,
+      "chars": 45
+    },
+    {
+      "atMs": 9671,
+      "chars": 48
+    },
+    {
+      "atMs": 9729,
+      "chars": 51
+    },
+    {
+      "atMs": 9808,
+      "chars": 52
+    },
+    {
+      "atMs": 9854,
+      "chars": 55
+    },
+    {
+      "atMs": 9914,
+      "chars": 58
+    },
+    {
+      "atMs": 9992,
+      "chars": 60
+    },
+    {
+      "atMs": 10053,
+      "chars": 63
+    },
+    {
+      "atMs": 10128,
+      "chars": 67
+    },
+    {
+      "atMs": 10190,
+      "chars": 70
+    },
+    {
+      "atMs": 10249,
+      "chars": 73
+    },
+    {
+      "atMs": 10326,
+      "chars": 77
+    },
+    {
+      "atMs": 10774,
+      "chars": 80
+    },
+    {
+      "atMs": 10836,
+      "chars": 82
+    },
+    {
+      "atMs": 10912,
+      "chars": 87
+    },
+    {
+      "atMs": 10990,
+      "chars": 89
+    },
+    {
+      "atMs": 11052,
+      "chars": 93
+    },
+    {
+      "atMs": 11112,
+      "chars": 96
+    },
+    {
+      "atMs": 11174,
+      "chars": 97
+    },
+    {
+      "atMs": 11232,
+      "chars": 101
+    },
+    {
+      "atMs": 11291,
+      "chars": 103
+    },
+    {
+      "atMs": 11350,
+      "chars": 106
+    },
+    {
+      "atMs": 11411,
+      "chars": 109
+    },
+    {
+      "atMs": 11474,
+      "chars": 112
+    },
+    {
+      "atMs": 11535,
+      "chars": 114
+    },
+    {
+      "atMs": 11596,
+      "chars": 119
+    },
+    {
+      "atMs": 11685,
+      "chars": 122
+    },
+    {
+      "atMs": 11747,
+      "chars": 126
+    },
+    {
+      "atMs": 11819,
+      "chars": 128
+    },
+    {
+      "atMs": 11879,
+      "chars": 131
+    },
+    {
+      "atMs": 11957,
+      "chars": 133
+    },
+    {
+      "atMs": 12033,
+      "chars": 137
+    },
+    {
+      "atMs": 12096,
+      "chars": 140
+    },
+    {
+      "atMs": 12156,
+      "chars": 142
+    },
+    {
+      "atMs": 12217,
+      "chars": 146
+    },
+    {
+      "atMs": 12308,
+      "chars": 149
+    },
+    {
+      "atMs": 12371,
+      "chars": 151
+    },
+    {
+      "atMs": 12447,
+      "chars": 154
+    },
+    {
+      "atMs": 12550,
+      "chars": 156
+    },
+    {
+      "atMs": 12611,
+      "chars": 159
+    },
+    {
+      "atMs": 13183,
+      "chars": 163
+    },
+    {
+      "atMs": 13245,
+      "chars": 166
+    },
+    {
+      "atMs": 13321,
+      "chars": 169
+    },
+    {
+      "atMs": 13382,
+      "chars": 171
+    },
+    {
+      "atMs": 13474,
+      "chars": 178
+    },
+    {
+      "atMs": 13520,
+      "chars": 180
+    },
+    {
+      "atMs": 13598,
+      "chars": 184
+    },
+    {
+      "atMs": 13659,
+      "chars": 186
+    },
+    {
+      "atMs": 13766,
+      "chars": 189
+    },
+    {
+      "atMs": 13826,
+      "chars": 193
+    },
+    {
+      "atMs": 13934,
+      "chars": 197
+    },
+    {
+      "atMs": 14011,
+      "chars": 199
+    },
+    {
+      "atMs": 14088,
+      "chars": 202
+    },
+    {
+      "atMs": 14147,
+      "chars": 204
+    },
+    {
+      "atMs": 14210,
+      "chars": 205
+    },
+    {
+      "atMs": 14254,
+      "chars": 208
+    },
+    {
+      "atMs": 14303,
+      "chars": 209
+    },
+    {
+      "atMs": 14362,
+      "chars": 213
+    },
+    {
+      "atMs": 14439,
+      "chars": 215
+    },
+    {
+      "atMs": 14499,
+      "chars": 219
+    },
+    {
+      "atMs": 14576,
+      "chars": 221
+    },
+    {
+      "atMs": 14657,
+      "chars": 226
+    },
+    {
+      "atMs": 14701,
+      "chars": 228
+    },
+    {
+      "atMs": 14868,
+      "chars": 230
+    },
+    {
+      "atMs": 14945,
+      "chars": 232
+    },
+    {
+      "atMs": 15518,
+      "chars": 236
+    },
+    {
+      "atMs": 15595,
+      "chars": 238
+    },
+    {
+      "atMs": 15655,
+      "chars": 242
+    },
+    {
+      "atMs": 15748,
+      "chars": 246
+    },
+    {
+      "atMs": 15809,
+      "chars": 248
+    },
+    {
+      "atMs": 15886,
+      "chars": 250
+    },
+    {
+      "atMs": 16230,
+      "chars": 253
+    },
+    {
+      "atMs": 16738,
+      "chars": 254
+    },
+    {
+      "atMs": 17371,
+      "chars": 255
+    },
+    {
+      "atMs": 18206,
+      "chars": 257
+    },
+    {
+      "atMs": 19138,
+      "chars": 258
+    },
+    {
+      "atMs": 19200,
+      "chars": 262
+    },
+    {
+      "atMs": 19249,
+      "chars": 264
+    },
+    {
+      "atMs": 19320,
+      "chars": 269
+    },
+    {
+      "atMs": 19399,
+      "chars": 272
+    },
+    {
+      "atMs": 19474,
+      "chars": 279
+    },
+    {
+      "atMs": 19565,
+      "chars": 283
+    },
+    {
+      "atMs": 19656,
+      "chars": 286
+    },
+    {
+      "atMs": 19720,
+      "chars": 289
+    },
+    {
+      "atMs": 19776,
+      "chars": 291
+    },
+    {
+      "atMs": 19852,
+      "chars": 294
+    },
+    {
+      "atMs": 19930,
+      "chars": 297
+    },
+    {
+      "atMs": 20009,
+      "chars": 300
+    },
+    {
+      "atMs": 20070,
+      "chars": 302
+    },
+    {
+      "atMs": 20133,
+      "chars": 309
+    },
+    {
+      "atMs": 20210,
+      "chars": 314
+    },
+    {
+      "atMs": 20268,
+      "chars": 317
+    },
+    {
+      "atMs": 20330,
+      "chars": 322
+    },
+    {
+      "atMs": 20935,
+      "chars": 326
+    },
+    {
+      "atMs": 20997,
+      "chars": 332
+    },
+    {
+      "atMs": 21089,
+      "chars": 333
+    },
+    {
+      "atMs": 21333,
+      "chars": 336
+    },
+    {
+      "atMs": 21410,
+      "chars": 340
+    },
+    {
+      "atMs": 21472,
+      "chars": 343
+    },
+    {
+      "atMs": 21548,
+      "chars": 347
+    },
+    {
+      "atMs": 21611,
+      "chars": 352
+    },
+    {
+      "atMs": 21690,
+      "chars": 356
+    },
+    {
+      "atMs": 21753,
+      "chars": 360
+    },
+    {
+      "atMs": 21846,
+      "chars": 362
+    },
+    {
+      "atMs": 21891,
+      "chars": 367
+    },
+    {
+      "atMs": 21955,
+      "chars": 369
+    },
+    {
+      "atMs": 22012,
+      "chars": 374
+    },
+    {
+      "atMs": 22088,
+      "chars": 377
+    },
+    {
+      "atMs": 22137,
+      "chars": 380
+    },
+    {
+      "atMs": 22213,
+      "chars": 384
+    },
+    {
+      "atMs": 22274,
+      "chars": 389
+    },
+    {
+      "atMs": 22339,
+      "chars": 391
+    }
+  ],
+  "choicesEnabledDuringPreview": false,
+  "lastText": "你叫云归，今年十六岁，是个凡人。你生在青云村，身体结实，骨骼坚硬，但命格里似乎带着某种因果债。村口的老槐树下，几个同村的少年正聚在一起，似乎在议论着什么。\n\n“喂，云归，你也来凑热闹？”一个叫赵虎的少年大声喊道，手里抛着一颗石子，“听说镇上的修仙者又要来收‘灵石’了，咱们村这三年没交够，今年怕是要被征召去矿洞挖矿。”\n\n“挖矿？那不是送死吗？”另一个叫李秀才的少年缩了缩脖子，手里紧紧攥着一块干硬的馒头，“我听说矿洞里常有妖兽出没，而且那帮修仙者根本不管死活。”\n\n“怕什么，咱们村有‘铁骨’的命格，身体硬朗，去矿洞还能混口饭吃。”赵虎不屑地哼了一声，目光却时不时瞟向村后的那座荒山，“不过，听说那座荒山最近有些动静，有人看见过发光的东西。”\n\n赵虎的话让你心头一跳。你虽然只是个凡人，但直觉敏锐，似乎感应到了某种不安。你看着手中的干粮，又看了看远处若隐若现的荒山，心中开始盘算。",
+  "doneMs": 36758,
+  "result": {
+    "protocolVersion": 1,
+    "status": "ready",
+    "requestId": "82d12a36-9d3c-439f-aa1c-322c3d071068",
+    "attemptId": "e5175144-0cff-4813-8788-ed87b381bb59",
+    "sessionRef": "sess_2aa975132da17d10fe8a2c8bdf3c408a",
+    "errorCode": null,
+    "retry": null,
+    "scene": {
+      "id": "r:1f8925b85c4c9fc1:t1:s:scene",
+      "title": "青云村口",
+      "location": "青云村",
+      "entities": [
+        {
+          "id": "r:1f8925b85c4c9fc1:t1:e:person_1",
+          "name": "赵虎",
+          "status": "alive",
+          "kind": "person"
+        },
+        {
+          "id": "r:1f8925b85c4c9fc1:t1:e:person_2",
+          "name": "李秀才",
+          "status": "alive",
+          "kind": "person"
+        },
+        {
+          "id": "r:1f8925b85c4c9fc1:t1:e:place_1",
+          "name": "荒山",
+          "kind": "place"
+        }
+      ],
+      "blocks": [
+        {
+          "kind": "narration",
+          "text": "你叫云归，今年十六岁，是个凡人。你生在青云村，身体结实，骨骼坚硬，但命格里似乎带着某种因果债。村口的老槐树下，几个同村的少年正聚在一起，似乎在议论着什么。"
+        },
+        {
+          "kind": "dialogue",
+          "text": "“喂，云归，你也来凑热闹？”一个叫赵虎的少年大声喊道，手里抛着一颗石子，“听说镇上的修仙者又要来收‘灵石’了，咱们村这三年没交够，今年怕是要被征召去矿洞挖矿。”",
+          "speaker": "r:1f8925b85c4c9fc1:t1:e:person_1"
+        },
+        {
+          "kind": "dialogue",
+          "text": "“挖矿？那不是送死吗？”另一个叫李秀才的少年缩了缩脖子，手里紧紧攥着一块干硬的馒头，“我听说矿洞里常有妖兽出没，而且那帮修仙者根本不管死活。”",
+          "speaker": "r:1f8925b85c4c9fc1:t1:e:person_2"
+        },
+        {
+          "kind": "dialogue",
+          "text": "“怕什么，咱们村有‘铁骨’的命格，身体硬朗，去矿洞还能混口饭吃。”赵虎不屑地哼了一声，目光却时不时瞟向村后的那座荒山，“不过，听说那座荒山最近有些动静，有人看见过发光的东西。”",
+          "speaker": "r:1f8925b85c4c9fc1:t1:e:person_1"
+        },
+        {
+          "kind": "narration",
+          "text": "赵虎的话让你心头一跳。你虽然只是个凡人，但直觉敏锐，似乎感应到了某种不安。你看着手中的干粮，又看了看远处若隐若现的荒山，心中开始盘算。"
+        }
+      ],
+      "choices": [
+        {
+          "id": "r:1f8925b85c4c9fc1:t1:c:a",
+          "label": "向赵虎施压（谨慎）",
+          "intent": "negotiate",
+          "targetId": "r:1f8925b85c4c9fc1:t1:e:person_1",
+          "stake": "low",
+          "approach": "pressure"
+        },
+        {
+          "id": "r:1f8925b85c4c9fc1:t1:c:b",
+          "label": "寻找行粮（谨慎）",
+          "intent": "explore",
+          "targetId": "supplies",
+          "stake": "low",
+          "approach": "cautious"
+        },
+        {
+          "id": "r:1f8925b85c4c9fc1:t1:c:c",
+          "label": "沿路前往荒山（谨慎）",
+          "intent": "travel",
+          "targetId": "r:1f8925b85c4c9fc1:t1:e:place_1",
+          "stake": "low",
+          "approach": "road"
+        }
+      ],
+      "memoryDeltas": [
+        {
+          "entityId": "r:1f8925b85c4c9fc1:t1:e:person_1",
+          "text": "赵虎提到村后荒山最近有发光的东西，且修仙者要来收灵石。",
+          "kind": "fact"
+        }
+      ]
+    }
+  },
+  "request": {
+    "context": {
+      "schemaVersion": 1,
+      "phase": "opening",
+      "identity": {
+        "runId": "f24ca234-9efe-4357-8ed8-b0e94768b839",
+        "turnId": 1,
+        "baseRevision": 0,
+        "stateHash": "f5a77310c1befa4922f5b5906f2bd30f21c25da36ba856a8334b55855d7773dc",
+        "choiceId": null,
+        "rulesVersion": 1,
+        "promptVersion": 1,
+        "requestId": "82d12a36-9d3c-439f-aa1c-322c3d071068"
+      },
+      "namespace": "r:1f8925b85c4c9fc1",
+      "receipt": {
+        "kind": "opening",
+        "choiceId": null,
+        "action": null,
+        "elapsedDays": 0,
+        "itemChanges": {},
+        "relationChanges": {},
+        "random": {
+          "before": 3802939959,
+          "after": 3802939959,
+          "roll": null
+        },
+        "before": {
+          "ageDays": 5760,
+          "realm": "mortal",
+          "cultivation": 0,
+          "injury": 0
+        },
+        "after": {
+          "ageDays": 5760,
+          "realm": "mortal",
+          "cultivation": 0,
+          "injury": 0
+        },
+        "death": null,
+        "birth": {
+          "originId": "village",
+          "talentIds": [
+            "iron-bones",
+            "fortune-debt"
+          ],
+          "attributes": {
+            "constitution": 3,
+            "insight": 4,
+            "fortune": 5
+          }
+        }
+      },
+      "life": {
+        "name": "云归",
+        "ageDays": 5760,
+        "lifeLimit": 80,
+        "realm": "mortal",
+        "cultivation": 0,
+        "injury": 0,
+        "items": {
+          "supplies": 3,
+          "stones": 0
+        },
+        "relations": {},
+        "birth": {
+          "originId": "village",
+          "talentIds": [
+            "iron-bones",
+            "fortune-debt"
+          ],
+          "attributes": {
+            "constitution": 3,
+            "insight": 4,
+            "fortune": 5
+          }
+        }
+      },
+      "entities": [],
+      "memory": {
+        "facts": [],
+        "promises": [],
+        "clues": [],
+        "recent": [],
+        "summaries": []
+      },
+      "references": [],
+      "previousScene": null,
+      "relationshipVersion": 1,
+      "relationships": {},
+      "coverage": {
+        "policy": "relevance-v1",
+        "openTotal": 0,
+        "openIncluded": 0,
+        "openOmitted": 0
+      }
+    },
+    "attempt": {
+      "id": "e5175144-0cff-4813-8788-ed87b381bb59",
+      "sessionRef": "sess_2aa975132da17d10fe8a2c8bdf3c408a",
+      "retryOf": null
+    }
+  },
+  "decision": null,
+  "choices": [
+    {
+      "id": "r:1f8925b85c4c9fc1:t1:c:a",
+      "enabled": true,
+      "label": "向赵虎施压（谨慎）",
+      "cost": "7日 · 历练受伤基础风险20%，根骨与坚韧筋骨可降低风险。；将增加1点伤势；伤势达到10即死亡。"
+    },
+    {
+      "id": "r:1f8925b85c4c9fc1:t1:c:b",
+      "enabled": true,
+      "label": "寻找行粮（谨慎）",
+      "cost": "90日 · 历练受伤基础风险5%，根骨与坚韧筋骨可降低风险。"
+    },
+    {
+      "id": "r:1f8925b85c4c9fc1:t1:c:c",
+      "enabled": true,
+      "label": "沿路前往荒山（谨慎）",
+      "cost": "30日 · 行粮 1"
+    }
+  ],
+  "traces": [
+    {
+      "model": "@cf/zai-org/glm-4.7-flash",
+      "inputHash": "a5f3cb025450809e9ce88c7663cd4ff54d730cfd6f5f420b7d9fdf03b2efd32e",
+      "inputBytes": 12844,
+      "startedAt": 1793366932652,
+      "bindingReturnedAt": 1793366933773,
+      "liveRawBytes": 244601,
+      "captureComplete": true,
+      "response": {
+        "model": "@cf/zai-org/glm-4.7-flash",
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "message": {
+              "content": "{\n  \"blocks\": [\n    {\n      \"kind\": \"narration\",\n      \"text\": \"你叫云归，今年十六岁，是个凡人。你生在青云村，身体结实，骨骼坚硬，但命格里似乎带着某种因果债。村口的老槐树下，几个同村的少年正聚在一起，似乎在议论着什么。\"\n    },\n    {\n      \"kind\": \"dialogue\",\n      \"text\": \"“喂，云归，你也来凑热闹？”一个叫赵虎的少年大声喊道，手里抛着一颗石子，“听说镇上的修仙者又要来收‘灵石’了，咱们村这三年没交够，今年怕是要被征召去矿洞挖矿。”\",\n      \"speaker\": \"p1\"\n    },\n    {\n      \"kind\": \"dialogue\",\n      \"text\": \"“挖矿？那不是送死吗？”另一个叫李秀才的少年缩了缩脖子，手里紧紧攥着一块干硬的馒头，“我听说矿洞里常有妖兽出没，而且那帮修仙者根本不管死活。”\",\n      \"speaker\": \"p2\"\n    },\n    {\n      \"kind\": \"dialogue\",\n      \"text\": \"“怕什么，咱们村有‘铁骨’的命格，身体硬朗，去矿洞还能混口饭吃。”赵虎不屑地哼了一声，目光却时不时瞟向村后的那座荒山，“不过，听说那座荒山最近有些动静，有人看见过发光的东西。”\",\n      \"speaker\": \"p1\"\n    },\n    {\n      \"kind\": \"narration\",\n      \"text\": \"赵虎的话让你心头一跳。你虽然只是个凡人，但直觉敏锐，似乎感应到了某种不安。你看着手中的干粮，又看了看远处若隐若现的荒山，心中开始盘算。\"\n    }\n  ],\n  \"title\": \"青云村口\",\n  \"location\": \"青云村\",\n  \"otherPeople\": [\n    {\n      \"id\": \"p1\",\n      \"name\": \"赵虎\",\n      \"status\": \"alive\"\n    },\n    {\n      \"id\": \"p2\",\n      \"name\": \"李秀才\",\n      \"status\": \"alive\"\n    }\n  ],\n  \"places\": [\n    {\n      \"id\": \"l1\",\n      \"name\": \"荒山\"\n    }\n  ],\n  \"factions\": [],\n  \"choices\": [\n    {\n      \"action\": \"negotiate:pressure\",\n      \"targetId\": \"p1\",\n      \"stake\": \"low\",\n      \"label\": \"向赵虎打听更多关于荒山发光的事\",\n      \"anchor\": \"“怕什么，咱们村有‘铁骨’的命格，身体硬朗，去矿洞还能混口饭吃。”赵虎不屑地哼了一声，目光却时不时瞟向村后的那座荒山，“不过，听说那座荒山最近有些动静，有人看见\"\n    },\n    {\n      \"action\": \"explore:cautious\",\n      \"targetId\": \"supplies\",\n      \"stake\": \"low\",\n      \"label\": \"检查自己的干粮和水袋，准备离开\",\n      \"anchor\": \"你看着手中的干粮，又看了看远处若隐若现的荒山，心中开始盘算。\"\n    },\n    {\n      \"action\": \"travel:road\",\n      \"targetId\": \"l1\",\n      \"stake\": \"low\",\n      \"label\": \"无视众人，独自前往荒山查看\",\n      \"anchor\": \"赵虎的话让你心头一跳。你虽然只是个凡人，但直觉敏锐，似乎感应到了某种不安。\"\n    }\n  ],\n  \"memoryDeltas\": [\n    {\n      \"entityId\": \"p1\",\n      \"text\": \"赵虎提到村后荒山最近有发光的东西，且修仙者要来收灵石。\"\n   ,\n      \"kind\": \"fact\"\n    }\n  ]\n}",
+              "reasoning_content": ""
+            }
+          }
+        ],
+        "usage": {
+          "prompt_tokens": 1550,
+          "completion_tokens": 856,
+          "total_tokens": 2406,
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          },
+          "neurons": 39.68340000000036
+        }
+      },
+      "rawSseBytes": 244601
+    }
+  ],
+  "revision": 1,
+  "pending": false,
+  "state": {
+    "relationshipVersion": 1,
+    "version": 5,
+    "mode": "cultivation",
+    "contentVersion": 4,
+    "rulesVersion": 1,
+    "promptVersion": 1,
+    "runId": "f24ca234-9efe-4357-8ed8-b0e94768b839",
+    "revision": 1,
+    "turnId": 1,
+    "phase": "active",
+    "rng": 3802939959,
+    "life": {
+      "name": "云归",
+      "ageDays": 5760,
+      "lifeLimit": 80,
+      "realm": "mortal",
+      "cultivation": 0,
+      "injury": 0,
+      "items": {
+        "supplies": 3,
+        "stones": 0
+      },
+      "relations": {},
+      "birth": {
+        "originId": "village",
+        "talentIds": [
+          "iron-bones",
+          "fortune-debt"
+        ],
+        "attributes": {
+          "constitution": 3,
+          "insight": 4,
+          "fortune": 5
+        }
+      }
+    },
+    "birthReceipt": {
+      "kind": "opening",
+      "choiceId": null,
+      "action": null,
+      "elapsedDays": 0,
+      "itemChanges": {},
+      "relationChanges": {},
+      "random": {
+        "before": 3802939959,
+        "after": 3802939959,
+        "roll": null
+      },
+      "before": {
+        "ageDays": 5760,
+        "realm": "mortal",
+        "cultivation": 0,
+        "injury": 0
+      },
+      "after": {
+        "ageDays": 5760,
+        "realm": "mortal",
+        "cultivation": 0,
+        "injury": 0
+      },
+      "death": null,
+      "birth": {
+        "originId": "village",
+        "talentIds": [
+          "iron-bones",
+          "fortune-debt"
+        ],
+        "attributes": {
+          "constitution": 3,
+          "insight": 4,
+          "fortune": 5
+        }
+      }
+    },
+    "currentScene": {
+      "id": "r:1f8925b85c4c9fc1:t1:s:scene",
+      "title": "青云村口",
+      "location": "青云村",
+      "entities": [
+        {
+          "id": "r:1f8925b85c4c9fc1:t1:e:person_1",
+          "name": "赵虎",
+          "status": "alive",
+          "kind": "person"
+        },
+        {
+          "id": "r:1f8925b85c4c9fc1:t1:e:person_2",
+          "name": "李秀才",
+          "status": "alive",
+          "kind": "person"
+        },
+        {
+          "id": "r:1f8925b85c4c9fc1:t1:e:place_1",
+          "name": "荒山",
+          "kind": "place"
+        }
+      ],
+      "blocks": [
+        {
+          "kind": "narration",
+          "text": "你叫云归，今年十六岁，是个凡人。你生在青云村，身体结实，骨骼坚硬，但命格里似乎带着某种因果债。村口的老槐树下，几个同村的少年正聚在一起，似乎在议论着什么。"
+        },
+        {
+          "kind": "dialogue",
+          "text": "“喂，云归，你也来凑热闹？”一个叫赵虎的少年大声喊道，手里抛着一颗石子，“听说镇上的修仙者又要来收‘灵石’了，咱们村这三年没交够，今年怕是要被征召去矿洞挖矿。”",
+          "speaker": "r:1f8925b85c4c9fc1:t1:e:person_1"
+        },
+        {
+          "kind": "dialogue",
+          "text": "“挖矿？那不是送死吗？”另一个叫李秀才的少年缩了缩脖子，手里紧紧攥着一块干硬的馒头，“我听说矿洞里常有妖兽出没，而且那帮修仙者根本不管死活。”",
+          "speaker": "r:1f8925b85c4c9fc1:t1:e:person_2"
+        },
+        {
+          "kind": "dialogue",
+          "text": "“怕什么，咱们村有‘铁骨’的命格，身体硬朗，去矿洞还能混口饭吃。”赵虎不屑地哼了一声，目光却时不时瞟向村后的那座荒山，“不过，听说那座荒山最近有些动静，有人看见过发光的东西。”",
+          "speaker": "r:1f8925b85c4c9fc1:t1:e:person_1"
+        },
+        {
+          "kind": "narration",
+          "text": "赵虎的话让你心头一跳。你虽然只是个凡人，但直觉敏锐，似乎感应到了某种不安。你看着手中的干粮，又看了看远处若隐若现的荒山，心中开始盘算。"
+        }
+      ],
+      "choices": [
+        {
+          "id": "r:1f8925b85c4c9fc1:t1:c:a",
+          "label": "向赵虎施压（谨慎）",
+          "intent": "negotiate",
+          "targetId": "r:1f8925b85c4c9fc1:t1:e:person_1",
+          "stake": "low",
+          "approach": "pressure"
+        },
+        {
+          "id": "r:1f8925b85c4c9fc1:t1:c:b",
+          "label": "寻找行粮（谨慎）",
+          "intent": "explore",
+          "targetId": "supplies",
+          "stake": "low",
+          "approach": "cautious"
+        },
+        {
+          "id": "r:1f8925b85c4c9fc1:t1:c:c",
+          "label": "沿路前往荒山（谨慎）",
+          "intent": "travel",
+          "targetId": "r:1f8925b85c4c9fc1:t1:e:place_1",
+          "stake": "low",
+          "approach": "road"
+        }
+      ],
+      "memoryDeltas": [
+        {
+          "entityId": "r:1f8925b85c4c9fc1:t1:e:person_1",
+          "text": "赵虎提到村后荒山最近有发光的东西，且修仙者要来收灵石。",
+          "kind": "fact"
+        }
+      ]
+    },
+    "lastReceipt": {
+      "kind": "opening",
+      "choiceId": null,
+      "action": null,
+      "elapsedDays": 0,
+      "itemChanges": {},
+      "relationChanges": {},
+      "random": {
+        "before": 3802939959,
+        "after": 3802939959,
+        "roll": null
+      },
+      "before": {
+        "ageDays": 5760,
+        "realm": "mortal",
+        "cultivation": 0,
+        "injury": 0
+      },
+      "after": {
+        "ageDays": 5760,
+        "realm": "mortal",
+        "cultivation": 0,
+        "injury": 0
+      },
+      "death": null,
+      "birth": {
+        "originId": "village",
+        "talentIds": [
+          "iron-bones",
+          "fortune-debt"
+        ],
+        "attributes": {
+          "constitution": 3,
+          "insight": 4,
+          "fortune": 5
+        }
+      }
+    },
+    "relatedEntities": [
+      {
+        "id": "r:1f8925b85c4c9fc1:t1:e:person_1",
+        "name": "赵虎",
+        "status": "alive",
+        "kind": "person"
+      },
+      {
+        "id": "r:1f8925b85c4c9fc1:t1:e:person_2",
+        "name": "李秀才",
+        "status": "alive",
+        "kind": "person"
+      },
+      {
+        "id": "r:1f8925b85c4c9fc1:t1:e:place_1",
+        "name": "荒山",
+        "kind": "place"
+      }
+    ],
+    "archiveCursor": 0
+  },
+  "posts": 1,
+  "latency": {
+    "usable": true,
+    "errorCode": null,
+    "firstAnyPreviewMs": 8684,
+    "firstReadableMs": 9179,
+    "completionMs": 36758,
+    "narrativeChars": 391,
+    "maxPreviewGapMs": 932,
+    "readingFinishEstimateMs": 74346,
+    "readingStallEstimateMs": 0,
+    "optionsWaitEstimateMs": 0,
+    "prefetchWorthEvaluating": true,
+    "assumptions": {
+      "readingCharsPerSecond": 6,
+      "readableChars": 20,
+      "targetWaitMs": 2000
+    }
+  }
+}

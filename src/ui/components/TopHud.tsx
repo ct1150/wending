@@ -1,5 +1,6 @@
 import { useState } from 'preact/hooks';
 import { CONSUMABLES } from '../../content/consumables';
+import { ALL_SEAL_RECIPES, KEYWORD_GLOSSARY } from '../../content/glossary';
 import { REALM_NAMES } from '../../content/lineages';
 import { SECONDARY_METHODS } from '../../content/methods';
 import { ENCHANTS, RELICS } from '../../content/treasures';
@@ -30,8 +31,10 @@ export function TopHud({
   onAbandon,
 }: TopHudProps) {
   const [isFullscreen, setIsFullscreen] = useState(false);
-  const lifeLeft = Math.max(0, run.maxLifespan - run.age);
-  const lowLife = lifeLeft <= 15;
+  const [glossaryOpen, setGlossaryOpen] = useState(false);
+  const [selectedPouchIdx, setSelectedPouchIdx] = useState<number | null>(null);
+  const [hudTip, setHudTip] = useState<{ title: string; body: string } | null>(null);
+
   const lowHp = run.hp <= run.maxHp * 0.3;
   const secMethod = run.secondaryMethod ? SECONDARY_METHODS[run.secondaryMethod] : null;
   const canUsePouch = run.phase === 'combat' && run.combat?.outcome === 'ongoing';
@@ -50,6 +53,9 @@ export function TopHud({
     } catch {}
   };
 
+  const selectedPouchId = selectedPouchIdx !== null ? run.consumables[selectedPouchIdx] : undefined;
+  const selectedPouchDef = selectedPouchId ? CONSUMABLES[selectedPouchId] : null;
+
   return (
     <header class={`hud-wrapper${compact ? ' is-compact' : ''}`}>
       <div class="top-hud">
@@ -58,50 +64,68 @@ export function TopHud({
             {run.name}·{REALM_NAMES[run.realm]}
           </span>
           {secMethod && (
-            <span class="hud-pill gold" title={`${secMethod.name}：${secMethod.description}`}>
+            <button
+              type="button"
+              class="hud-pill gold hud-pill-btn"
+              onClick={() => {
+                sfx.click();
+                setHudTip({ title: `☯ 辅修心法 · ${secMethod.name}`, body: secMethod.description });
+              }}
+            >
               ☯ {secMethod.badge}
-            </span>
+            </button>
           )}
-          <span class={`hud-pill${lowHp ? ' danger' : ''}`}>
+          <button
+            type="button"
+            class={`hud-pill hud-pill-btn${lowHp ? ' danger' : ''}`}
+            onClick={() => {
+              sfx.click();
+              setHudTip({
+                title: `❤ 气血（${run.hp} / ${run.maxHp}）`,
+                body: '你的唯一生存数值，归零则道消身陨（除非持有替死木偶符）。击败卷末大劫时若剩余气血 ≥ 50%，可直接触发【天道破境】获得真元上限 +1 与金色法则！',
+              });
+            }}
+          >
             ❤ {run.hp}/{run.maxHp}
-          </span>
-          <span class={`hud-pill${lowLife ? ' danger' : ''}`} title="赶路、洞府与燃寿禁术消耗寿元，寿尽坐化">
-            ⏳ {run.age}/{run.maxLifespan}岁
-          </span>
-          <span class="hud-pill gold" title="道基纯度 ≥50 地道，≥85 天道破境">
-            ☯ {run.foundation}
-          </span>
+          </button>
           <span class="hud-pill">💎 {run.gold}</span>
           {run.daoTokens > 0 && (
-            <span class="hud-pill gold" title="集齐 2 枚道果开启隐藏第四卷">
+            <button
+              type="button"
+              class="hud-pill gold hud-pill-btn"
+              onClick={() => {
+                sfx.click();
+                setHudTip({
+                  title: `✦ 三界道果信物（${run.daoTokens} / 2）`,
+                  body: '集齐 2 枚道果信物后击败第 3 卷大劫，即可开启第 4 卷隐藏真结局【斩破太初天道】！',
+                });
+              }}
+            >
               ✦ {run.daoTokens}/2
-            </span>
+            </button>
           )}
 
-          {/* 3 格随身乾坤丹符袋 */}
-          <div class="pouch-inline" title="乾坤丹符袋（战中点击 0 真元瞬发）">
+          {/* 3 格随身乾坤丹符袋（轻触查看说明，战中可确认瞬发，防手机误触） */}
+          <div class="pouch-inline">
             {[0, 1, 2].map((idx) => {
               const cid = run.consumables[idx];
               const def = cid ? CONSUMABLES[cid] : null;
               if (!def) {
                 return (
-                  <span key={idx} class="pouch-slot empty" title="空丹符格">
+                  <span key={idx} class="pouch-slot empty">
                     ·
                   </span>
                 );
               }
-              const clickable = canUsePouch && !def.passiveRevive;
+              const usableNow = canUsePouch && !def.passiveRevive;
               return (
                 <button
                   key={`${cid}-${idx}`}
                   type="button"
-                  class={`pouch-slot filled${clickable ? ' active' : ''}`}
-                  disabled={!clickable}
-                  title={`${def.name}：${def.description}${clickable ? '（点击瞬发！）' : ''}`}
+                  class={`pouch-slot filled${usableNow ? ' active' : ''}`}
                   onClick={() => {
-                    if (!clickable || !onUseConsumable) return;
-                    sfx.heal();
-                    onUseConsumable(idx);
+                    sfx.click();
+                    setSelectedPouchIdx(idx);
                   }}
                 >
                   {def.icon}
@@ -114,8 +138,17 @@ export function TopHud({
         <div class="hud-group">
           <button
             type="button"
+            class="btn btn-sm"
+            onClick={() => {
+              sfx.click();
+              setGlossaryOpen(true);
+            }}
+          >
+            ? 词条
+          </button>
+          <button
+            type="button"
             class="btn btn-sm landscape-btn"
-            title="切换全屏横屏一屏沉浸模式"
             onClick={toggleLandscapeFullscreen}
           >
             {isFullscreen ? '⤢ 退出' : '↻ 横屏'}
@@ -123,7 +156,7 @@ export function TopHud({
           <button type="button" class="btn btn-sm" onClick={onOpenDeck}>
             牌库({run.deck.length})
           </button>
-          <button type="button" class="btn btn-sm" onClick={onToggleBgm} title="开关山海云风与五声古琴氛围仙乐">
+          <button type="button" class="btn btn-sm" onClick={onToggleBgm}>
             {bgmOn ? '🎵 仙乐' : '🎵 静'}
           </button>
           <button type="button" class="btn btn-sm" onClick={onToggleMute} aria-label="切换音效">
@@ -141,25 +174,136 @@ export function TopHud({
             const rel = RELICS[id];
             if (!rel) return null;
             return (
-              <span key={id} class={`relic-chip${rel.rarity === 'law' ? ' law' : ''}`} title={rel.description}>
+              <button
+                key={id}
+                type="button"
+                class={`relic-chip${rel.rarity === 'law' ? ' law' : ''}`}
+                onClick={() => {
+                  sfx.click();
+                  setHudTip({
+                    title: `${rel.rarity === 'law' ? '★ 天道法则' : '◈ 随身古宝'} · ${rel.name}`,
+                    body: rel.description,
+                  });
+                }}
+              >
                 {rel.rarity === 'law' ? '★ ' : '◈ '}
                 {rel.name}
-              </span>
+              </button>
             );
           })}
           {run.materials.map((m, idx) => {
             const def = ENCHANTS[m];
             return (
-              <span
+              <button
                 key={`${m}-${idx}`}
+                type="button"
                 class="relic-chip"
                 style={{ borderColor: '#b68cff', color: '#e2d1ff' }}
-                title={`附魔材料（洞府可用）：${def.description}`}
+                onClick={() => {
+                  sfx.click();
+                  setHudTip({
+                    title: `❖ 附魔灵材 · ${def.materialName}`,
+                    body: `可在【洞府丹庐】熔入任意神通牌，赋予永久词条【${def.name}】：${def.description}`,
+                  });
+                }}
               >
                 ❖ {def.materialName}
-              </span>
+              </button>
             );
           })}
+        </div>
+      )}
+
+      {/* 乾坤丹符详情与防误触确认弹窗 */}
+      {selectedPouchDef && selectedPouchIdx !== null && (
+        <div class="modal-backdrop" onClick={() => setSelectedPouchIdx(null)}>
+          <div class="panel modal-box" style={{ maxWidth: '400px' }} onClick={(e) => e.stopPropagation()}>
+            <h3 style={{ margin: '0 0 8px', color: 'var(--gold-bright)' }}>
+              {selectedPouchDef.icon} {selectedPouchDef.name}
+            </h3>
+            <p style={{ margin: '0 0 10px', fontSize: '14px', lineHeight: 1.6 }}>{selectedPouchDef.description}</p>
+            <div style={{ fontSize: '12px', color: 'var(--muted)', marginBottom: '14px' }}>
+              {selectedPouchDef.passiveRevive
+                ? '💡 被动护身灵符：受到致命伤害时自动替死生效，无需手动使用。'
+                : canUsePouch
+                  ? '⚡ 战斗中 0 真元瞬发，不占出牌回合！'
+                  : '💡 请在进入斗法战斗后点击使用（0 真元瞬发）。'}
+            </div>
+            <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '8px' }}>
+              <button type="button" class="btn btn-sm" onClick={() => setSelectedPouchIdx(null)}>
+                收起
+              </button>
+              {canUsePouch && !selectedPouchDef.passiveRevive && onUseConsumable && (
+                <button
+                  type="button"
+                  class="btn btn-sm btn-primary confirm-pouch-btn"
+                  onClick={() => {
+                    const idx = selectedPouchIdx;
+                    setSelectedPouchIdx(null);
+                    sfx.heal();
+                    onUseConsumable(idx);
+                  }}
+                >
+                  ⚡ 立即使用
+                </button>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* 顶部古宝/状态轻触说明弹窗 */}
+      {hudTip && (
+        <div class="modal-backdrop" onClick={() => setHudTip(null)}>
+          <div class="panel modal-box" style={{ maxWidth: '400px' }} onClick={(e) => e.stopPropagation()}>
+            <h3 style={{ margin: '0 0 8px', color: 'var(--gold-bright)' }}>{hudTip.title}</h3>
+            <p style={{ margin: '0 0 14px', fontSize: '14px', lineHeight: 1.6, color: 'var(--text)' }}>{hudTip.body}</p>
+            <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+              <button type="button" class="btn btn-sm btn-primary" onClick={() => setHudTip(null)}>
+                知道了
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* 修仙专有名词白话速查 & 五行连招表 */}
+      {glossaryOpen && (
+        <div class="modal-backdrop" onClick={() => setGlossaryOpen(false)}>
+          <div class="panel modal-box" style={{ maxWidth: '640px' }} onClick={(e) => e.stopPropagation()}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
+              <h3 style={{ margin: 0, color: 'var(--gold-bright)' }}>📖 修仙词条白话指南 & 五行连招表</h3>
+              <button type="button" class="btn btn-sm" onClick={() => setGlossaryOpen(false)}>
+                关闭
+              </button>
+            </div>
+
+            <div style={{ fontSize: '13px', color: 'var(--gold)', fontWeight: 700, marginBottom: '6px' }}>
+              ✦ 七大五行灵印连招（先打前牌留印，再打后牌自动爆发！）
+            </div>
+            <div class="glossary-grid" style={{ marginBottom: '14px' }}>
+              {ALL_SEAL_RECIPES.map((r) => (
+                <div key={r.name} class="glossary-item">
+                  <strong>
+                    {r.combo} · 【{r.name}】
+                  </strong>
+                  <span>{r.effect}</span>
+                </div>
+              ))}
+            </div>
+
+            <div style={{ fontSize: '13px', color: 'var(--gold)', fontWeight: 700, marginBottom: '6px' }}>
+              ✦ 战斗专有名词白话速查
+            </div>
+            <div class="glossary-grid">
+              {Object.values(KEYWORD_GLOSSARY).map((g) => (
+                <div key={g.term} class="glossary-item">
+                  <strong>{g.plainTitle}</strong>
+                  <span>{g.desc}</span>
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
       )}
     </header>

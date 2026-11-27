@@ -1,0 +1,1 @@
+{"at":"2026-10-30T07:38:08.619Z","decision":{"index":0,"reason":"询问村长山里传闻，继续同日问答；本开局memory提前记录未选询问已标为语义缺陷，本轮仅继续诊断连续性，不自动认定验收通过","selected":{"id":"r:4a6fc5e75d36ffc2:t1:c:a","label":"询问村长关于山里的传闻","intent":"interact","targetId":"r:4a6fc5e75d36ffc2:t1:e:person_1","stake":"low","approach":"ask"}}}

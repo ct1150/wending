@@ -1,0 +1,42 @@
+{
+  "sourceCommit": "c00f56781dc120394c7d96785350d2e583c55207",
+  "samples": [
+    {
+      "usable": true,
+      "errorCode": null,
+      "firstAnyPreviewMs": 3467,
+      "firstReadableMs": 3967,
+      "completionMs": 23632,
+      "narrativeChars": 344,
+      "maxPreviewGapMs": 1112,
+      "readingFinishEstimateMs": 61300,
+      "readingStallEstimateMs": 0,
+      "optionsWaitEstimateMs": 0,
+      "prefetchWorthEvaluating": true,
+      "assumptions": {
+        "readingCharsPerSecond": 6,
+        "readableChars": 20,
+        "targetWaitMs": 2000
+      }
+    },
+    {
+      "usable": true,
+      "errorCode": null,
+      "firstAnyPreviewMs": 5883,
+      "firstReadableMs": 6330,
+      "completionMs": 14638,
+      "narrativeChars": 167,
+      "maxPreviewGapMs": 289,
+      "readingFinishEstimateMs": 34163,
+      "readingStallEstimateMs": 0,
+      "optionsWaitEstimateMs": 0,
+      "prefetchWorthEvaluating": true,
+      "assumptions": {
+        "readingCharsPerSecond": 6,
+        "readableChars": 20,
+        "targetWaitMs": 2000
+      }
+    }
+  ],
+  "assumption": "6 Chinese characters per second; small non-random sample; preload remains off"
+}

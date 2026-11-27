@@ -1,0 +1,7 @@
+{
+  "status": "NOT_ACCEPTED",
+  "turn": 3,
+  "reason": "API ready but manual semantic failure: remote mountain observation purpose required unselected travel with zero days; stopped before next action.",
+  "apiStatus": "ready",
+  "evidence": "docs/evidence/story-coherence-2026-10-30/20261030T131914504Z/turn-3.json"
+}

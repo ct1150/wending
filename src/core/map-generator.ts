@@ -1,16 +1,16 @@
 import { SeededRng } from './rng';
 import type { MapNode, MapNodeType, PastLifeRemnant } from './types';
 
-const NODE_META: Record<MapNodeType, { label: string; ageMin: number; ageMax: number }> = {
-  battle: { label: '荒野遇敌', ageMin: 1, ageMax: 2 },
-  elite: { label: '秘境夺宝', ageMin: 3, ageMax: 3 },
-  'fury-elite': { label: '灵脉狂暴主', ageMin: 3, ageMax: 4 },
-  event: { label: '红尘奇遇', ageMin: 1, ageMax: 2 },
-  abode: { label: '洞府丹庐', ageMin: 2, ageMax: 2 },
-  shop: { label: '仙城坊市', ageMin: 1, ageMax: 1 },
-  auction: { label: '百年拍卖会', ageMin: 2, ageMax: 2 },
-  remnant: { label: '前世遗蜕', ageMin: 2, ageMax: 2 },
-  boss: { label: '破境大劫', ageMin: 3, ageMax: 3 },
+const NODE_LABELS: Record<MapNodeType, string> = {
+  battle: '荒野遇敌',
+  elite: '秘境夺宝',
+  'fury-elite': '灵脉狂暴主',
+  event: '红尘奇遇',
+  abode: '洞府丹庐',
+  shop: '仙城坊市',
+  auction: '百年拍卖会',
+  remnant: '前世遗蜕',
+  boss: '破境大劫',
 };
 
 const ACT_BOSS_LABELS: Record<1 | 2 | 3 | 4, string> = {
@@ -26,11 +26,11 @@ export function generateActMap(
   remnant: PastLifeRemnant | null,
 ): MapNode[] {
   if (act === 4) {
-    const n1: MapNode = { id: 'a4-r0-c1', act: 4, row: 0, col: 1, type: 'elite', label: '南天门 · 巡界仙卫', ageCost: 2, nextIds: ['a4-r1-c1'], visited: false };
-    const n2: MapNode = { id: 'a4-r1-c1', act: 4, row: 1, col: 1, type: 'abode', label: '凌霄洞府 · 最后整备', ageCost: 2, nextIds: ['a4-r2-c0', 'a4-r2-c2'], visited: false };
-    const n3a: MapNode = { id: 'a4-r2-c0', act: 4, row: 2, col: 0, type: 'auction', label: '仙界万宝拍卖', ageCost: 1, nextIds: ['a4-r3-c1'], visited: false };
-    const n3b: MapNode = { id: 'a4-r2-c2', act: 4, row: 2, col: 2, type: 'fury-elite', label: '太初劫兽 · 狂暴仙灵', ageCost: 3, nextIds: ['a4-r3-c1'], visited: false };
-    const boss: MapNode = { id: 'a4-r3-c1', act: 4, row: 3, col: 1, type: 'boss', label: ACT_BOSS_LABELS[4], ageCost: 3, nextIds: [], visited: false };
+    const n1: MapNode = { id: 'a4-r0-c1', act: 4, row: 0, col: 1, type: 'elite', label: '南天门 · 巡界仙卫', nextIds: ['a4-r1-c1'], visited: false };
+    const n2: MapNode = { id: 'a4-r1-c1', act: 4, row: 1, col: 1, type: 'abode', label: '凌霄洞府 · 最后整备', nextIds: ['a4-r2-c0', 'a4-r2-c2'], visited: false };
+    const n3a: MapNode = { id: 'a4-r2-c0', act: 4, row: 2, col: 0, type: 'auction', label: '仙界万宝拍卖', nextIds: ['a4-r3-c1'], visited: false };
+    const n3b: MapNode = { id: 'a4-r2-c2', act: 4, row: 2, col: 2, type: 'fury-elite', label: '太初劫兽 · 狂暴仙灵', nextIds: ['a4-r3-c1'], visited: false };
+    const boss: MapNode = { id: 'a4-r3-c1', act: 4, row: 3, col: 1, type: 'boss', label: ACT_BOSS_LABELS[4], nextIds: [], visited: false };
     return [n1, n2, n3a, n3b, boss];
   }
 
@@ -51,9 +51,9 @@ export function generateActMap(
       } else if (row === 4) {
         type = col === cols[0] ? 'elite' : rng.next() < 0.5 ? 'abode' : 'event';
       } else if (row === 5 && act >= 2 && col === cols[cols.length - 1]) {
-        type = 'auction'; // 第2~3卷固定刷出百年拍卖会分支
+        type = 'auction';
       } else if (row === 6 && col === cols[0]) {
-        type = 'fury-elite'; // 每卷1个高风险高回报【灵脉狂暴精英】（必掉道果信物）
+        type = 'fury-elite';
       } else if (row === 7) {
         type = col === cols[cols.length - 1] ? 'shop' : 'elite';
       } else {
@@ -69,15 +69,13 @@ export function generateActMap(
           },
         );
       }
-      const meta = NODE_META[type];
       rowNodes.push({
         id: `a${act}-r${row}-c${col}`,
         act,
         row,
         col,
         type,
-        label: meta.label,
-        ageCost: rng.int(meta.ageMin, meta.ageMax),
+        label: NODE_LABELS[type],
         nextIds: [],
         visited: false,
       });
@@ -90,7 +88,6 @@ export function generateActMap(
     const candidate = rows[targetRow].find((n) => n.type !== 'auction' && n.type !== 'fury-elite') ?? rows[targetRow][0];
     candidate.type = 'remnant';
     candidate.label = `前世遗蜕 · ${remnant.name}`;
-    candidate.ageCost = 2;
   }
 
   const bossNode: MapNode = {
@@ -100,7 +97,6 @@ export function generateActMap(
     col: 1,
     type: 'boss',
     label: ACT_BOSS_LABELS[act],
-    ageCost: 3,
     nextIds: [],
     visited: false,
   };

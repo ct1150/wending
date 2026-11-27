@@ -1,0 +1,757 @@
+{
+  "caseId": "choice-5",
+  "start": 2983.89999999851,
+  "timeline": [
+    {
+      "atMs": 7701,
+      "chars": 3
+    },
+    {
+      "atMs": 7791,
+      "chars": 6
+    },
+    {
+      "atMs": 7869,
+      "chars": 8
+    },
+    {
+      "atMs": 7961,
+      "chars": 10
+    },
+    {
+      "atMs": 8113,
+      "chars": 11
+    },
+    {
+      "atMs": 8175,
+      "chars": 12
+    },
+    {
+      "atMs": 8254,
+      "chars": 15
+    },
+    {
+      "atMs": 8301,
+      "chars": 19
+    },
+    {
+      "atMs": 8377,
+      "chars": 23
+    },
+    {
+      "atMs": 8456,
+      "chars": 28
+    },
+    {
+      "atMs": 8543,
+      "chars": 30
+    },
+    {
+      "atMs": 8623,
+      "chars": 32
+    },
+    {
+      "atMs": 8712,
+      "chars": 35
+    },
+    {
+      "atMs": 8786,
+      "chars": 37
+    },
+    {
+      "atMs": 8847,
+      "chars": 38
+    },
+    {
+      "atMs": 8909,
+      "chars": 44
+    },
+    {
+      "atMs": 8971,
+      "chars": 47
+    },
+    {
+      "atMs": 9051,
+      "chars": 49
+    },
+    {
+      "atMs": 9114,
+      "chars": 54
+    },
+    {
+      "atMs": 9205,
+      "chars": 58
+    },
+    {
+      "atMs": 9269,
+      "chars": 59
+    },
+    {
+      "atMs": 9331,
+      "chars": 60
+    },
+    {
+      "atMs": 9395,
+      "chars": 62
+    },
+    {
+      "atMs": 9473,
+      "chars": 63
+    },
+    {
+      "atMs": 9533,
+      "chars": 66
+    },
+    {
+      "atMs": 9731,
+      "chars": 68
+    },
+    {
+      "atMs": 9793,
+      "chars": 70
+    },
+    {
+      "atMs": 9869,
+      "chars": 73
+    },
+    {
+      "atMs": 9947,
+      "chars": 77
+    },
+    {
+      "atMs": 10040,
+      "chars": 78
+    },
+    {
+      "atMs": 10104,
+      "chars": 82
+    },
+    {
+      "atMs": 10165,
+      "chars": 88
+    },
+    {
+      "atMs": 10244,
+      "chars": 89
+    },
+    {
+      "atMs": 10322,
+      "chars": 92
+    },
+    {
+      "atMs": 10400,
+      "chars": 95
+    },
+    {
+      "atMs": 10494,
+      "chars": 98
+    },
+    {
+      "atMs": 10647,
+      "chars": 100
+    },
+    {
+      "atMs": 10769,
+      "chars": 101
+    },
+    {
+      "atMs": 10847,
+      "chars": 103
+    },
+    {
+      "atMs": 11074,
+      "chars": 105
+    },
+    {
+      "atMs": 11135,
+      "chars": 107
+    },
+    {
+      "atMs": 11212,
+      "chars": 110
+    },
+    {
+      "atMs": 11276,
+      "chars": 113
+    },
+    {
+      "atMs": 11338,
+      "chars": 114
+    },
+    {
+      "atMs": 11416,
+      "chars": 118
+    },
+    {
+      "atMs": 11526,
+      "chars": 119
+    },
+    {
+      "atMs": 11579,
+      "chars": 120
+    },
+    {
+      "atMs": 11623,
+      "chars": 122
+    },
+    {
+      "atMs": 11700,
+      "chars": 123
+    },
+    {
+      "atMs": 11760,
+      "chars": 128
+    },
+    {
+      "atMs": 11821,
+      "chars": 130
+    },
+    {
+      "atMs": 12010,
+      "chars": 133
+    },
+    {
+      "atMs": 12089,
+      "chars": 135
+    },
+    {
+      "atMs": 12396,
+      "chars": 136
+    }
+  ],
+  "choicesEnabledDuringPreview": false,
+  "lastText": "你沿着杂草丛生的土路跋涉了六十日，终于抵达后山深处。这里古木参天，藤蔓缠绕，空气中弥漫着腐叶与湿土的气息。脚下的落叶厚积，每走一步都发出沙沙的轻响，四周静得只能听见你自己的呼吸声。前方不远处，一只体型硕大的黑熊正背对着你，在一棵巨大的古松下翻找着什么，偶尔发出低沉的吼声。",
+  "doneMs": 23208,
+  "result": {
+    "protocolVersion": 1,
+    "status": "ready",
+    "requestId": "35bd697d-9bc7-493f-a102-b34c0584a108",
+    "attemptId": "5480186b-bac4-499a-a34d-d64421e647f6",
+    "sessionRef": "sess_cbd4a68e2ce92387dc2158673ecfcad8",
+    "errorCode": null,
+    "retry": null,
+    "scene": {
+      "id": "r:23279995f3353fe3:t6:s:scene",
+      "title": "后山深处",
+      "location": "后山",
+      "entities": [
+        {
+          "id": "r:23279995f3353fe3:t1:e:person_1",
+          "name": "王大伯",
+          "kind": "person",
+          "status": "alive"
+        }
+      ],
+      "blocks": [
+        {
+          "kind": "narration",
+          "text": "你沿着杂草丛生的土路跋涉了六十日，终于抵达后山深处。这里古木参天，藤蔓缠绕，空气中弥漫着腐叶与湿土的气息。脚下的落叶厚积，每走一步都发出沙沙的轻响，四周静得只能听见你自己的呼吸声。前方不远处，一只体型硕大的黑熊正背对着你，在一棵巨大的古松下翻找着什么，偶尔发出低沉的吼声。"
+        }
+      ],
+      "choices": [
+        {
+          "id": "r:23279995f3353fe3:t6:c:a",
+          "label": "询问王大伯：询问王大伯这只黑熊的习性，了解它是否经常出没于此。",
+          "intent": "interact",
+          "targetId": "r:23279995f3353fe3:t1:e:person_1",
+          "stake": "low",
+          "approach": "ask"
+        },
+        {
+          "id": "r:23279995f3353fe3:t6:c:b",
+          "label": "观察王大伯：观察黑熊的体型、动作以及它正在寻找的东西。",
+          "intent": "interact",
+          "targetId": "r:23279995f3353fe3:t1:e:person_1",
+          "stake": "low",
+          "approach": "observe"
+        },
+        {
+          "id": "r:23279995f3353fe3:t6:c:leave",
+          "label": "结束当前互动：暂不介入此事",
+          "intent": "interact",
+          "targetId": "r:23279995f3353fe3:t1:e:person_1",
+          "approach": "leave",
+          "stake": "low"
+        }
+      ],
+      "memoryDeltas": [
+        {
+          "entityId": "r:23279995f3353fe3:t1:e:person_1",
+          "kind": "clue",
+          "text": "你沿着杂草丛生的土路跋涉了六十日，终于抵达后山深处。这里古木参天，藤蔓缠绕，空气中弥漫着腐叶与湿土的气息。脚下的落叶厚积，每走一步都发出沙沙的轻响，四周静得只能听见你自己的呼吸声。前方不远处，一只体型硕大的黑熊正背对着你，在一棵巨大的古松下翻找着什么，偶尔发出低沉的吼声。",
+          "status": "open"
+        }
+      ]
+    }
+  },
+  "request": {
+    "context": {
+      "schemaVersion": 1,
+      "phase": "choice",
+      "identity": {
+        "runId": "5f679b5a-fbb7-47f2-a720-db12d9d21402",
+        "turnId": 6,
+        "baseRevision": 5,
+        "stateHash": "d0a22e44e633931ff95b446f71a6fb5fb64eea572b7851598296e4455f988122",
+        "choiceId": "r:23279995f3353fe3:t5:c:b",
+        "rulesVersion": 1,
+        "promptVersion": 1,
+        "requestId": "35bd697d-9bc7-493f-a102-b34c0584a108"
+      },
+      "namespace": "r:23279995f3353fe3",
+      "receipt": {
+        "kind": "choice",
+        "choiceId": "r:23279995f3353fe3:t5:c:b",
+        "action": {
+          "id": "r:23279995f3353fe3:t5:c:b",
+          "label": "穿行荒野前往后山：前往后山寻找猎物",
+          "intent": "travel",
+          "targetId": "r:23279995f3353fe3:t3:e:place_1",
+          "stake": "low",
+          "approach": "wilderness"
+        },
+        "elapsedDays": 60,
+        "itemChanges": {
+          "supplies": -1
+        },
+        "relationChanges": {},
+        "random": {
+          "before": 1646903541,
+          "after": 3009174992,
+          "roll": 92
+        },
+        "before": {
+          "ageDays": 5760,
+          "realm": "mortal",
+          "cultivation": 0,
+          "injury": 0
+        },
+        "after": {
+          "ageDays": 5820,
+          "realm": "mortal",
+          "cultivation": 0,
+          "injury": 0
+        },
+        "death": null,
+        "birth": null
+      },
+      "life": {
+        "name": "云归",
+        "ageDays": 5820,
+        "lifeLimit": 80,
+        "realm": "mortal",
+        "cultivation": 0,
+        "injury": 0,
+        "items": {
+          "supplies": 2,
+          "stones": 0
+        },
+        "relations": {},
+        "birth": {
+          "originId": "village",
+          "talentIds": [
+            "iron-bones",
+            "flash-wisdom"
+          ],
+          "attributes": {
+            "constitution": 4,
+            "insight": 4,
+            "fortune": 4
+          }
+        }
+      },
+      "entities": [
+        {
+          "id": "r:23279995f3353fe3:t1:e:person_1",
+          "name": "王大伯",
+          "kind": "person",
+          "status": "alive"
+        },
+        {
+          "id": "r:23279995f3353fe3:t3:e:place_1",
+          "name": "后山",
+          "kind": "place",
+          "status": "unknown"
+        }
+      ],
+      "memory": {
+        "facts": [
+          {
+            "id": "decision:4",
+            "runId": "5f679b5a-fbb7-47f2-a720-db12d9d21402",
+            "turnId": 4,
+            "source": "rules",
+            "kind": "fact",
+            "entityId": "r:23279995f3353fe3:t1:e:person_1",
+            "text": "你在村口选择了“结束与王大伯的互动：结束与王大伯的交谈，独自离开”。"
+          },
+          {
+            "id": "decision:3",
+            "runId": "5f679b5a-fbb7-47f2-a720-db12d9d21402",
+            "turnId": 3,
+            "source": "rules",
+            "kind": "fact",
+            "entityId": "r:23279995f3353fe3:t1:e:person_1",
+            "text": "你在村口选择了“婉拒王大伯：拒绝帮忙，转身离开”。"
+          }
+        ],
+        "promises": [],
+        "clues": [
+          {
+            "id": "m:9336e412ea35481bd4736969e73fe3bb",
+            "source": "narrative",
+            "kind": "clue",
+            "entityId": "r:23279995f3353fe3:t1:e:person_1",
+            "text": "你站在村口，目光扫过四周。除了远处几户人家升起的袅袅炊烟，脚下的青石板路有些斑驳，路边野草疯长，似乎很久没人打理。身后是自家破旧的木屋，前方通往后山的土路被灌木遮掩了大半，隐约能听到几声不知名的鸟鸣，除此之外，四周静得有些过分。",
+            "status": "open",
+            "runId": "5f679b5a-fbb7-47f2-a720-db12d9d21402",
+            "turnId": 5
+          },
+          {
+            "id": "m:fb8043d63ca797518942592d836413e7",
+            "source": "narrative",
+            "kind": "clue",
+            "entityId": "r:23279995f3353fe3:t1:e:person_1",
+            "text": "“大伯，这事儿我帮不上忙。我还要去后山看看有没有野兔，就不陪您了。”",
+            "status": "open",
+            "runId": "5f679b5a-fbb7-47f2-a720-db12d9d21402",
+            "turnId": 3
+          },
+          {
+            "id": "m:e18d1504216b92eb51455fd61693a82a",
+            "source": "narrative",
+            "kind": "clue",
+            "entityId": "r:23279995f3353fe3:t1:e:person_1",
+            "text": "“这小东西还不到两斤重，肉太柴，嚼着没味儿。再说，夹子是铁打的，若是硬生生砸烂了，铁片崩进肉里，以后这肉谁敢吃？留着它，等它长到百十斤，那才是真正的野味。”王大伯拍了拍手上的泥土，把猎刀收回腰间，“你按住它，别让它乱动，我再去拿把钳子来。”",
+            "status": "open",
+            "runId": "5f679b5a-fbb7-47f2-a720-db12d9d21402",
+            "turnId": 2
+          },
+          {
+            "id": "m:b42061325174924374b42c75887a2bce",
+            "source": "narrative",
+            "kind": "clue",
+            "entityId": "r:23279995f3353fe3:t1:e:person_1",
+            "text": "你站在自家破旧的木屋前，手里攥着刚磨好的猎刀。村口的老猎户王大伯正蹲在地上，眉头紧锁地摆弄着一只被猎夹夹住的野猪崽。野猪崽哼哼唧唧，血迹染红了枯草。王大伯抬头看了你一眼，把刀柄递向你，示意你帮忙按住猪腿。",
+            "status": "open",
+            "runId": "5f679b5a-fbb7-47f2-a720-db12d9d21402",
+            "turnId": 1
+          }
+        ],
+        "recent": [
+          {
+            "id": "turn:5",
+            "runId": "5f679b5a-fbb7-47f2-a720-db12d9d21402",
+            "turnId": 5,
+            "source": "narrative",
+            "kind": "turn",
+            "text": "地点：村口；刚才选择：仔细观察：观察周围环境，确认是否安全\n你站在村口，目光扫过四周。除了远处几户人家升起的袅袅炊烟，脚下的青石板路有些斑驳，路边野草疯长，似乎很久没人打理。身后是自家破旧的木屋，前方通往后山的土路被灌木遮掩了大半，隐约能听到几声不知名的鸟鸣，除此之外，四周静得有些过分。",
+            "entityIds": []
+          },
+          {
+            "id": "turn:4",
+            "runId": "5f679b5a-fbb7-47f2-a720-db12d9d21402",
+            "turnId": 4,
+            "source": "narrative",
+            "kind": "turn",
+            "text": "地点：村口；刚才选择：结束与王大伯的互动：结束与王大伯的交谈，独自离开\n“大伯，那您忙。我这就去后山转转。”",
+            "entityIds": []
+          }
+        ],
+        "summaries": []
+      },
+      "references": [
+        "decision:4",
+        "decision:3",
+        "m:9336e412ea35481bd4736969e73fe3bb",
+        "m:fb8043d63ca797518942592d836413e7",
+        "m:e18d1504216b92eb51455fd61693a82a",
+        "m:b42061325174924374b42c75887a2bce",
+        "turn:5",
+        "turn:4"
+      ],
+      "previousScene": {
+        "id": "r:23279995f3353fe3:t5:s:scene",
+        "blocksHash": "f304fc624bfd13fe8d0625ad67efd1bdeea0c1db543aa918485ceded545c0da9"
+      },
+      "relationshipVersion": 1,
+      "relationships": {},
+      "coverage": {
+        "policy": "relevance-v1",
+        "openTotal": 4,
+        "openIncluded": 4,
+        "openOmitted": 0
+      }
+    },
+    "attempt": {
+      "id": "5480186b-bac4-499a-a34d-d64421e647f6",
+      "sessionRef": "sess_cbd4a68e2ce92387dc2158673ecfcad8",
+      "retryOf": {
+        "attemptId": "ad4a0228-7094-4986-acf8-3d15a87dce89",
+        "sessionRef": "sess_cbd4a68e2ce92387dc2158673ecfcad8"
+      }
+    },
+    "storyActions": true
+  },
+  "decision": {
+    "index": 1,
+    "reason": "观察已停留村口且未擅自旅行；明确选择前往后山寻找猎物，验收目的地与旅行收据。",
+    "selected": {
+      "id": "r:23279995f3353fe3:t5:c:b",
+      "label": "穿行荒野前往后山：前往后山寻找猎物",
+      "intent": "travel",
+      "targetId": "r:23279995f3353fe3:t3:e:place_1",
+      "stake": "low",
+      "approach": "wilderness"
+    },
+    "explicitRetry": true
+  },
+  "choices": [
+    {
+      "id": "r:23279995f3353fe3:t6:c:a",
+      "enabled": true,
+      "label": "询问王大伯：询问王大伯这只黑熊的习性，了解它是否经常出没于此。",
+      "cost": "0日"
+    },
+    {
+      "id": "r:23279995f3353fe3:t6:c:b",
+      "enabled": true,
+      "label": "观察王大伯：观察黑熊的体型、动作以及它正在寻找的东西。",
+      "cost": "0日"
+    },
+    {
+      "id": "r:23279995f3353fe3:t6:c:leave",
+      "enabled": true,
+      "label": "结束当前互动：暂不介入此事",
+      "cost": "0日"
+    }
+  ],
+  "traces": [
+    {
+      "model": "@cf/zai-org/glm-4.7-flash",
+      "inputHash": "60c972b182c5d6aaac0f2ccd9fdabe6c32e1756ca1bed41da4bb3e600aa37731",
+      "inputBytes": 20505,
+      "startedAt": 1793366122338,
+      "bindingReturnedAt": 1793366122764,
+      "liveRawBytes": 121210,
+      "captureComplete": true,
+      "response": {
+        "model": "@cf/zai-org/glm-4.7-flash",
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "message": {
+              "content": "{\n  \"blocks\": [\n    {\n      \"kind\": \"narration\",\n      \"text\": \"你沿着杂草丛生的土路跋涉了六十日，终于抵达后山深处。这里古木参天，藤蔓缠绕，空气中弥漫着腐叶与湿土的气息。脚下的落叶厚积，每走一步都发出沙沙的轻响，四周静得只能听见你自己的呼吸声。前方不远处，一只体型硕大的黑熊正背对着你，在一棵巨大的古松下翻找着什么，偶尔发出低沉的吼声。\"\n    }\n  ],\n  \"choices\": [\n    {\n      \"action\": \"interact:ask\",\n      \"targetId\": \"k1_person_王大伯\",\n      \"stake\": \"low\",\n      \"purpose\": \"询问王大伯这只黑熊的习性，了解它是否经常出没于此。\",\n      \"anchor\": 0\n    },\n    {\n      \"action\": \"interact:observe\",\n      \"targetId\": \"k1_person_王大伯\",\n      \"stake\": \"low\",\n      \"purpose\": \"观察黑熊的体型、动作以及它正在寻找的东西。\",\n      \"anchor\": 0\n    },\n    {\n      \"action\": \"evade:withdraw\",\n      \"targetId\": \"k1_person_王大伯\",\n      \"stake\": \"low\",\n      \"purpose\": \"悄悄后退，避免惊动黑熊并保持安全距离。\",\n      \"anchor\": 0\n    }\n  ],\n  \"title\": \"后山深处\",\n  \"location\": \"后山\",\n  \"otherPeople\": [\n    {\n      \"id\": \"k1_person_王大伯\",\n      \"status\": \"alive\"\n    }\n  ],\n  \"places\": [],\n  \"factions\": [],\n  \"memoryDeltas\": [\n    {\n      \"entityId\": \"k1_person_王大伯\",\n      \"kind\": \"clue\",\n      \"anchor\": 0,\n      \"status\": \"open\"\n    }\n  ]\n}",
+              "reasoning_content": ""
+            }
+          }
+        ],
+        "usage": {
+          "prompt_tokens": 3133,
+          "completion_tokens": 433,
+          "total_tokens": 3566,
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          },
+          "neurons": 32.992700000000184
+        }
+      },
+      "rawSseBytes": 121210
+    }
+  ],
+  "revision": 6,
+  "pending": false,
+  "state": {
+    "relationshipVersion": 1,
+    "version": 5,
+    "mode": "cultivation",
+    "contentVersion": 4,
+    "rulesVersion": 1,
+    "promptVersion": 1,
+    "runId": "5f679b5a-fbb7-47f2-a720-db12d9d21402",
+    "revision": 6,
+    "turnId": 6,
+    "phase": "active",
+    "rng": 3009174992,
+    "life": {
+      "name": "云归",
+      "ageDays": 5820,
+      "lifeLimit": 80,
+      "realm": "mortal",
+      "cultivation": 0,
+      "injury": 0,
+      "items": {
+        "supplies": 2,
+        "stones": 0
+      },
+      "relations": {},
+      "birth": {
+        "originId": "village",
+        "talentIds": [
+          "iron-bones",
+          "flash-wisdom"
+        ],
+        "attributes": {
+          "constitution": 4,
+          "insight": 4,
+          "fortune": 4
+        }
+      }
+    },
+    "birthReceipt": {
+      "kind": "opening",
+      "choiceId": null,
+      "action": null,
+      "elapsedDays": 0,
+      "itemChanges": {},
+      "relationChanges": {},
+      "random": {
+        "before": 1882843953,
+        "after": 1882843953,
+        "roll": null
+      },
+      "before": {
+        "ageDays": 5760,
+        "realm": "mortal",
+        "cultivation": 0,
+        "injury": 0
+      },
+      "after": {
+        "ageDays": 5760,
+        "realm": "mortal",
+        "cultivation": 0,
+        "injury": 0
+      },
+      "death": null,
+      "birth": {
+        "originId": "village",
+        "talentIds": [
+          "iron-bones",
+          "flash-wisdom"
+        ],
+        "attributes": {
+          "constitution": 4,
+          "insight": 4,
+          "fortune": 4
+        }
+      }
+    },
+    "currentScene": {
+      "id": "r:23279995f3353fe3:t6:s:scene",
+      "title": "后山深处",
+      "location": "后山",
+      "entities": [
+        {
+          "id": "r:23279995f3353fe3:t1:e:person_1",
+          "name": "王大伯",
+          "kind": "person",
+          "status": "alive"
+        }
+      ],
+      "blocks": [
+        {
+          "kind": "narration",
+          "text": "你沿着杂草丛生的土路跋涉了六十日，终于抵达后山深处。这里古木参天，藤蔓缠绕，空气中弥漫着腐叶与湿土的气息。脚下的落叶厚积，每走一步都发出沙沙的轻响，四周静得只能听见你自己的呼吸声。前方不远处，一只体型硕大的黑熊正背对着你，在一棵巨大的古松下翻找着什么，偶尔发出低沉的吼声。"
+        }
+      ],
+      "choices": [
+        {
+          "id": "r:23279995f3353fe3:t6:c:a",
+          "label": "询问王大伯：询问王大伯这只黑熊的习性，了解它是否经常出没于此。",
+          "intent": "interact",
+          "targetId": "r:23279995f3353fe3:t1:e:person_1",
+          "stake": "low",
+          "approach": "ask"
+        },
+        {
+          "id": "r:23279995f3353fe3:t6:c:b",
+          "label": "观察王大伯：观察黑熊的体型、动作以及它正在寻找的东西。",
+          "intent": "interact",
+          "targetId": "r:23279995f3353fe3:t1:e:person_1",
+          "stake": "low",
+          "approach": "observe"
+        },
+        {
+          "id": "r:23279995f3353fe3:t6:c:leave",
+          "label": "结束当前互动：暂不介入此事",
+          "intent": "interact",
+          "targetId": "r:23279995f3353fe3:t1:e:person_1",
+          "approach": "leave",
+          "stake": "low"
+        }
+      ],
+      "memoryDeltas": [
+        {
+          "entityId": "r:23279995f3353fe3:t1:e:person_1",
+          "kind": "clue",
+          "text": "你沿着杂草丛生的土路跋涉了六十日，终于抵达后山深处。这里古木参天，藤蔓缠绕，空气中弥漫着腐叶与湿土的气息。脚下的落叶厚积，每走一步都发出沙沙的轻响，四周静得只能听见你自己的呼吸声。前方不远处，一只体型硕大的黑熊正背对着你，在一棵巨大的古松下翻找着什么，偶尔发出低沉的吼声。",
+          "status": "open"
+        }
+      ]
+    },
+    "lastReceipt": {
+      "kind": "choice",
+      "choiceId": "r:23279995f3353fe3:t5:c:b",
+      "action": {
+        "id": "r:23279995f3353fe3:t5:c:b",
+        "label": "穿行荒野前往后山：前往后山寻找猎物",
+        "intent": "travel",
+        "targetId": "r:23279995f3353fe3:t3:e:place_1",
+        "stake": "low",
+        "approach": "wilderness"
+      },
+      "elapsedDays": 60,
+      "itemChanges": {
+        "supplies": -1
+      },
+      "relationChanges": {},
+      "random": {
+        "before": 1646903541,
+        "after": 3009174992,
+        "roll": 92
+      },
+      "before": {
+        "ageDays": 5760,
+        "realm": "mortal",
+        "cultivation": 0,
+        "injury": 0
+      },
+      "after": {
+        "ageDays": 5820,
+        "realm": "mortal",
+        "cultivation": 0,
+        "injury": 0
+      },
+      "death": null,
+      "birth": null
+    },
+    "relatedEntities": [
+      {
+        "id": "r:23279995f3353fe3:t1:e:person_1",
+        "name": "王大伯",
+        "kind": "person",
+        "status": "alive"
+      }
+    ],
+    "archiveCursor": 0
+  },
+  "posts": 1,
+  "latency": {
+    "usable": true,
+    "errorCode": null,
+    "firstAnyPreviewMs": 7701,
+    "firstReadableMs": 8377,
+    "completionMs": 23208,
+    "narrativeChars": 136,
+    "maxPreviewGapMs": 307,
+    "readingFinishEstimateMs": 31044,
+    "readingStallEstimateMs": 0,
+    "optionsWaitEstimateMs": 0,
+    "prefetchWorthEvaluating": true,
+    "assumptions": {
+      "readingCharsPerSecond": 6,
+      "readableChars": 20,
+      "targetWaitMs": 2000
+    }
+  }
+}

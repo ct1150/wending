@@ -18,9 +18,9 @@ export const ENCHANTS: Record<EnchantId, EnchantDef> = {
   'leech-life': {
     id: 'leech-life',
     name: '长生血髓',
-    materialName: '万年寿元果核',
-    badge: '寿',
-    description: '打出时恢复 4 点气血；若借此牌斩杀敌人，寿元上限 +4 年。',
+    materialName: '千年血灵芝',
+    badge: '血',
+    description: '打出时恢复 4 点气血；若借此牌斩杀敌人，永久提升 2 点最大气血。',
   },
   'toxic-edge': {
     id: 'toxic-edge',
@@ -34,7 +34,7 @@ export const ENCHANTS: Record<EnchantId, EnchantDef> = {
     name: '灵犀天启',
     materialName: '通天灵犀角',
     badge: '固',
-    description: '固有（首回合必在手牌）且打出时额外抽 1 张牌。',
+    description: '首回合必在手牌，且打出时额外抽 1 张牌。',
   },
   'spirit-surge': {
     id: 'spirit-surge',
@@ -68,7 +68,7 @@ export const TREASURES: Record<string, TreasureDef> = {
     rarity: 'common',
     lineage: 'sword',
     maxCharge: 5,
-    description: '充能 5：释放 2 道 8 伤飞剑，并获 2 层【剑意】与 1 枚【金印】。',
+    description: '充能 5（每打1牌+1）：释放 2 道 8 伤飞剑，获 2 层【剑意】与【金印】。',
     effect: { damage: 8, hits: 2, swordIntent: 2, extraSeal: 'metal' },
   },
   'tr-soul-banner': {
@@ -95,7 +95,7 @@ export const TREASURES: Record<string, TreasureDef> = {
     rarity: 'common',
     lineage: 'array',
     maxCharge: 5,
-    description: '充能 5：获得 18 点【护体罡气】，本回合罡气不清空，注入【土印】。',
+    description: '充能 5：获得 18 点【护体罡气】，本回合护盾保留不清空，注入【土印】。',
     effect: { block: 18, retainBlock: true, extraSeal: 'earth' },
   },
   'tr-thunder-mirror': {
@@ -124,6 +124,24 @@ export const TREASURES: Record<string, TreasureDef> = {
     maxCharge: 6,
     description: '充能 6：造成 26 点伤害，获 16 点护体罡气，施加 2 层虚弱与破绽。',
     effect: { damage: 26, block: 16, weak: 2, vulnerable: 2 },
+  },
+  'tr-nine-dragon-caluldron': {
+    id: 'tr-nine-dragon-caluldron',
+    name: '九龙神火罩',
+    rarity: 'mythic',
+    lineage: 'neutral',
+    maxCharge: 5,
+    description: '充能 5：轰出 3 道 10 点火伤，施加 8 层【丹毒】并立即引爆 1 次，注入【火印】。',
+    effect: { damage: 10, hits: 3, poison: 8, detonatePoison: 1, extraSeal: 'fire' },
+  },
+  'tr-zhuxian-blade': {
+    id: 'tr-zhuxian-blade',
+    name: '戮仙古剑胎',
+    rarity: 'mythic',
+    lineage: 'neutral',
+    maxCharge: 5,
+    description: '充能 5：造成 32 点穿甲剑伤，获 4 层【剑意】与 6 层【剑罡反击】，注入【雷印】。',
+    effect: { damage: 32, pierce: true, swordIntent: 4, counterAura: 6, extraSeal: 'thunder' },
   },
 };
 
@@ -158,7 +176,7 @@ export const RELICS: Record<string, RelicDef> = {
     id: 'rel-calm-incense',
     name: '养魂沉香炉',
     rarity: 'common',
-    description: '每场战斗胜利后额外恢复 6 点气血。',
+    description: '每场战斗胜利后自动恢复 6 点气血。',
     hook: 'heal-after-battle',
     value: 6,
   },
@@ -166,9 +184,9 @@ export const RELICS: Record<string, RelicDef> = {
     id: 'rel-palm-vial',
     name: '掌天残瓶',
     rarity: 'rare',
-    description: '进入【洞府丹庐】节点不消耗寿元，且道基纯度额外 +5。',
-    hook: 'abode-discount',
-    value: 2,
+    description: '每次进入【洞府丹庐】节点时，自动额外恢复 12 点气血。',
+    hook: 'abode-heal',
+    value: 12,
   },
   'rel-venom-gourd': {
     id: 'rel-venom-gourd',
@@ -196,21 +214,74 @@ export const RELICS: Record<string, RelicDef> = {
   },
   'rel-dao-mirror': {
     id: 'rel-dao-mirror',
-    name: '问心明镜',
+    name: '太乙锻体金丹',
     rarity: 'rare',
-    description: '每次战斗或奇遇获得的道基纯度额外 +5。',
-    hook: 'foundation-boost',
-    value: 5,
+    description: '拾取时立即永久提升 14 点最大气血上限并等量回血。',
+    hook: 'maxhp-pickup',
+    value: 14,
   },
   'rel-blood-beads': {
     id: 'rel-blood-beads',
     name: '嗜血菩提珠',
     rarity: 'rare',
-    description: '斩杀敌人时，自身寿元上限额外 +2 年。',
-    hook: 'life-leech-kill',
+    description: '每次斩杀敌人时，永久提升 2 点最大气血上限。',
+    hook: 'maxhp-leech-kill',
     value: 2,
   },
-  // 天道破境金色法则（天道筑基 / 一品金丹专属三选一）
+  'rel-counter-jade': {
+    id: 'rel-counter-jade',
+    name: '太白逆鳞佩',
+    rarity: 'common',
+    description: '每场战斗开始时自带 5 层【剑罡反击】。',
+    hook: 'counter-start',
+    value: 5,
+  },
+  'rel-ash-urn': {
+    id: 'rel-ash-urn',
+    name: '炼魂骨瓮',
+    rarity: 'rare',
+    description: '每当你消耗（Exhaust）卡牌时，回复 1 点真元。',
+    hook: 'exhaust-qi',
+    value: 1,
+  },
+  // 成就解锁暗金古宝
+  'rel-defy-fate-pearl': {
+    id: 'rel-defy-fate-pearl',
+    name: '暗金古宝 · 逆命天珠',
+    rarity: 'mythic',
+    unlockAchievement: 'ach-dying-boss',
+    description: '【成就解锁】当当前气血 ≤ 45% 最大气血时，你的所有攻伐伤害提高 40%！',
+    hook: 'dying-fury',
+    value: 40,
+  },
+  'rel-shennong-whip': {
+    id: 'rel-shennong-whip',
+    name: '暗金古宝 · 神农百草鞭',
+    rarity: 'mythic',
+    unlockAchievement: 'ach-poison-50',
+    description: '【成就解锁】乾坤丹符袋中所有丹药效果提升 50%，且施加丹毒额外 +2。',
+    hook: 'pill-master',
+    value: 50,
+  },
+  'rel-shadowless-tassel': {
+    id: 'rel-shadowless-tassel',
+    name: '暗金古宝 · 无影剑穗',
+    rarity: 'mythic',
+    unlockAchievement: 'ach-eight-cards',
+    description: '【成就解锁】消耗卡牌恢复 1 点真元，且每场战斗首回合额外抽 1 牌。',
+    hook: 'exhaust-qi',
+    value: 1,
+  },
+  'rel-thunder-emperor-seal': {
+    id: 'rel-thunder-emperor-seal',
+    name: '暗金古宝 · 雷帝镇劫印',
+    rarity: 'mythic',
+    unlockAchievement: 'ach-tribulation-slayer',
+    description: '【成就解锁】每场战斗初始自带 8 层【剑罡反击】。',
+    hook: 'counter-start',
+    value: 8,
+  },
+  // 天道破境金色法则
   'law-myriad-swords': {
     id: 'law-myriad-swords',
     name: '天道法则 · 一剑生万法',
@@ -253,86 +324,7 @@ export const RELICS: Record<string, RelicDef> = {
   },
 };
 
-export const RELIC_LIST = Object.values(RELICS).filter((r) => r.rarity !== 'law');
 export const LAW_RELIC_LIST = Object.values(RELICS).filter((r) => r.rarity === 'law');
-
-// ==================== v9.0 新增神话法宝与名场面成就专属暗金古宝 ====================
-Object.assign(TREASURES, {
-  'tr-nine-dragon-caluldron': {
-    id: 'tr-nine-dragon-caluldron',
-    name: '九龙神火罩',
-    rarity: 'mythic',
-    lineage: 'neutral',
-    maxCharge: 5,
-    description: '充能 5：轰出 3 道 10 点火伤，施加 8 层【丹毒】并立即引爆 1 次，注入【火印】。',
-    effect: { damage: 10, hits: 3, poison: 8, detonatePoison: 1, extraSeal: 'fire' },
-  },
-  'tr-zhuxian-blade': {
-    id: 'tr-zhuxian-blade',
-    name: '戮仙古剑胎',
-    rarity: 'mythic',
-    lineage: 'neutral',
-    maxCharge: 5,
-    description: '充能 5：造成 32 点穿甲剑伤，获 4 层【剑意】与 6 层【剑罡反击】，注入【雷印】。',
-    effect: { damage: 32, pierce: true, swordIntent: 4, counterAura: 6, extraSeal: 'thunder' },
-  },
-});
-
-Object.assign(RELICS, {
-  'rel-counter-jade': {
-    id: 'rel-counter-jade',
-    name: '太白逆鳞佩',
-    rarity: 'common',
-    description: '每场战斗开始时获得 5 层【剑罡反击】。',
-    hook: 'counter-start',
-    value: 5,
-  },
-  'rel-ash-urn': {
-    id: 'rel-ash-urn',
-    name: '炼魂骨瓮',
-    rarity: 'rare',
-    description: '每当你消耗（Exhaust）卡牌时，有真元流转（每回合首次消耗恢复 1 点真元）。',
-    hook: 'exhaust-qi',
-    value: 1,
-  },
-  // 成就解锁暗金古宝
-  'rel-defy-fate-pearl': {
-    id: 'rel-defy-fate-pearl',
-    name: '暗金古宝 · 逆命天珠',
-    rarity: 'mythic',
-    unlockAchievement: 'ach-dying-boss',
-    description: '【成就解锁】当剩余可用寿元 ≤ 20 年时，你的所有攻伐伤害提高 40%！',
-    hook: 'dying-fury',
-    value: 40,
-  },
-  'rel-shennong-whip': {
-    id: 'rel-shennong-whip',
-    name: '暗金古宝 · 神农百草鞭',
-    rarity: 'mythic',
-    unlockAchievement: 'ach-poison-50',
-    description: '【成就解锁】乾坤丹符袋中所有丹药效果提升 50%，且施加丹毒额外 +2。',
-    hook: 'pill-master',
-    value: 50,
-  },
-  'rel-shadowless-tassel': {
-    id: 'rel-shadowless-tassel',
-    name: '暗金古宝 · 无影剑穗',
-    rarity: 'mythic',
-    unlockAchievement: 'ach-eight-cards',
-    description: '【成就解锁】每回合首次消耗卡牌额外恢复 1 点真元，开战额外抽 1 牌。',
-    hook: 'exhaust-qi',
-    value: 1,
-  },
-  'rel-thunder-emperor-seal': {
-    id: 'rel-thunder-emperor-seal',
-    name: '暗金古宝 · 雷帝镇劫印',
-    rarity: 'mythic',
-    unlockAchievement: 'ach-tribulation-slayer',
-    description: '【成就解锁】每场战斗初始自带 8 层【剑罡反击】。',
-    hook: 'counter-start',
-    value: 8,
-  },
-});
 
 export function getUnlockedRelicList(unlockedAchievements: string[] = []): RelicDef[] {
   return Object.values(RELICS).filter(

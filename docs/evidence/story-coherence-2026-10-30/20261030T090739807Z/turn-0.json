@@ -1,0 +1,537 @@
+{
+  "caseId": "opening",
+  "start": 947.3000000007451,
+  "timeline": [
+    {
+      "atMs": 3073,
+      "chars": 1
+    },
+    {
+      "atMs": 3156,
+      "chars": 4
+    },
+    {
+      "atMs": 3304,
+      "chars": 7
+    },
+    {
+      "atMs": 3370,
+      "chars": 14
+    },
+    {
+      "atMs": 3431,
+      "chars": 19
+    },
+    {
+      "atMs": 3506,
+      "chars": 21
+    },
+    {
+      "atMs": 3567,
+      "chars": 27
+    },
+    {
+      "atMs": 3633,
+      "chars": 30
+    },
+    {
+      "atMs": 3706,
+      "chars": 34
+    },
+    {
+      "atMs": 3756,
+      "chars": 38
+    },
+    {
+      "atMs": 3831,
+      "chars": 42
+    },
+    {
+      "atMs": 3895,
+      "chars": 47
+    },
+    {
+      "atMs": 3970,
+      "chars": 49
+    },
+    {
+      "atMs": 4016,
+      "chars": 50
+    },
+    {
+      "atMs": 4311,
+      "chars": 51
+    },
+    {
+      "atMs": 4402,
+      "chars": 55
+    },
+    {
+      "atMs": 4464,
+      "chars": 58
+    },
+    {
+      "atMs": 4530,
+      "chars": 62
+    },
+    {
+      "atMs": 4606,
+      "chars": 67
+    },
+    {
+      "atMs": 4667,
+      "chars": 71
+    },
+    {
+      "atMs": 4745,
+      "chars": 75
+    },
+    {
+      "atMs": 4821,
+      "chars": 78
+    },
+    {
+      "atMs": 4862,
+      "chars": 81
+    },
+    {
+      "atMs": 4924,
+      "chars": 83
+    },
+    {
+      "atMs": 4985,
+      "chars": 86
+    },
+    {
+      "atMs": 5060,
+      "chars": 91
+    },
+    {
+      "atMs": 5124,
+      "chars": 94
+    },
+    {
+      "atMs": 5181,
+      "chars": 98
+    },
+    {
+      "atMs": 5241,
+      "chars": 101
+    },
+    {
+      "atMs": 5303,
+      "chars": 104
+    },
+    {
+      "atMs": 5365,
+      "chars": 107
+    },
+    {
+      "atMs": 5428,
+      "chars": 111
+    },
+    {
+      "atMs": 5506,
+      "chars": 117
+    },
+    {
+      "atMs": 5570,
+      "chars": 120
+    },
+    {
+      "atMs": 5650,
+      "chars": 124
+    },
+    {
+      "atMs": 5708,
+      "chars": 127
+    },
+    {
+      "atMs": 5786,
+      "chars": 133
+    },
+    {
+      "atMs": 5867,
+      "chars": 135
+    },
+    {
+      "atMs": 5991,
+      "chars": 140
+    },
+    {
+      "atMs": 6049,
+      "chars": 144
+    },
+    {
+      "atMs": 6129,
+      "chars": 147
+    },
+    {
+      "atMs": 6175,
+      "chars": 148
+    },
+    {
+      "atMs": 6285,
+      "chars": 150
+    },
+    {
+      "atMs": 6393,
+      "chars": 155
+    },
+    {
+      "atMs": 6454,
+      "chars": 158
+    },
+    {
+      "atMs": 6516,
+      "chars": 162
+    },
+    {
+      "atMs": 6593,
+      "chars": 165
+    },
+    {
+      "atMs": 6658,
+      "chars": 168
+    },
+    {
+      "atMs": 6705,
+      "chars": 174
+    },
+    {
+      "atMs": 6795,
+      "chars": 177
+    },
+    {
+      "atMs": 6841,
+      "chars": 181
+    },
+    {
+      "atMs": 6904,
+      "chars": 184
+    },
+    {
+      "atMs": 6967,
+      "chars": 187
+    },
+    {
+      "atMs": 7035,
+      "chars": 192
+    },
+    {
+      "atMs": 7109,
+      "chars": 195
+    },
+    {
+      "atMs": 7172,
+      "chars": 198
+    },
+    {
+      "atMs": 7219,
+      "chars": 201
+    },
+    {
+      "atMs": 7294,
+      "chars": 208
+    },
+    {
+      "atMs": 7357,
+      "chars": 210
+    },
+    {
+      "atMs": 7419,
+      "chars": 213
+    },
+    {
+      "atMs": 7482,
+      "chars": 217
+    },
+    {
+      "atMs": 7594,
+      "chars": 221
+    },
+    {
+      "atMs": 7666,
+      "chars": 223
+    },
+    {
+      "atMs": 7716,
+      "chars": 225
+    },
+    {
+      "atMs": 7759,
+      "chars": 226
+    },
+    {
+      "atMs": 7883,
+      "chars": 230
+    },
+    {
+      "atMs": 7942,
+      "chars": 234
+    },
+    {
+      "atMs": 8021,
+      "chars": 240
+    },
+    {
+      "atMs": 8100,
+      "chars": 244
+    },
+    {
+      "atMs": 8177,
+      "chars": 246
+    }
+  ],
+  "choicesEnabledDuringPreview": false,
+  "lastText": "你站在城西坊市边缘，面前是一间挂着“百草堂”招牌的药铺。药铺门口蹲着个满脸横肉的大汉，正把一只断腿的野狗往柜台里拖，嘴里骂骂咧咧。那狗腿被生生扯断，血肉模糊，显然是刚从哪处荒野拖来的。大汉见你盯着看，把眼一瞪，粗声粗气地吼道：“看什么看？这畜生也是药引子，懂不懂规矩？”\n\n药铺掌柜是个瘦削的老头，正低头擦拭着一只玉瓶，对这惨状视若无睹，只是淡淡道：“老三，别在门口丢人现眼，把东西扔进后院，别挡着生客的路。”那大汉骂骂咧咧地转身，却故意把狗腿往你脚边一甩，腥臭的断肢滚落在地，溅起几滴黑血。",
+  "doneMs": 10922,
+  "result": {
+    "protocolVersion": 1,
+    "status": "rejected",
+    "requestId": "2189dd8a-5fce-420e-99cc-e1013d883ca9",
+    "attemptId": "54fbb138-c7f3-492d-87cc-17d992e3a153",
+    "sessionRef": "sess_0643652154173ac45351f5f5bf9bfc3e",
+    "errorCode": "CHOICE_NOT_COMPILABLE",
+    "retry": null
+  },
+  "request": {
+    "context": {
+      "schemaVersion": 1,
+      "phase": "opening",
+      "identity": {
+        "runId": "33327dc3-1c52-432e-b807-88de89ebb79f",
+        "turnId": 1,
+        "baseRevision": 0,
+        "stateHash": "a4548dd3372e0add50eae47fd4bcff08bc8b670f24e6802da1a0543d0ae74069",
+        "choiceId": null,
+        "rulesVersion": 1,
+        "promptVersion": 1,
+        "requestId": "2189dd8a-5fce-420e-99cc-e1013d883ca9"
+      },
+      "namespace": "r:7162274421f6317b",
+      "receipt": {
+        "kind": "opening",
+        "choiceId": null,
+        "action": null,
+        "elapsedDays": 0,
+        "itemChanges": {},
+        "relationChanges": {},
+        "random": {
+          "before": 1501128403,
+          "after": 1501128403,
+          "roll": null
+        },
+        "before": {
+          "ageDays": 5760,
+          "realm": "mortal",
+          "cultivation": 0,
+          "injury": 0
+        },
+        "after": {
+          "ageDays": 5760,
+          "realm": "mortal",
+          "cultivation": 0,
+          "injury": 0
+        },
+        "death": null,
+        "birth": {
+          "originId": "artisan",
+          "talentIds": [
+            "keen-memory",
+            "flash-wisdom"
+          ],
+          "attributes": {
+            "constitution": 6,
+            "insight": 2,
+            "fortune": 4
+          }
+        }
+      },
+      "life": {
+        "name": "云归",
+        "ageDays": 5760,
+        "lifeLimit": 80,
+        "realm": "mortal",
+        "cultivation": 0,
+        "injury": 0,
+        "items": {
+          "supplies": 3,
+          "stones": 0
+        },
+        "relations": {},
+        "birth": {
+          "originId": "artisan",
+          "talentIds": [
+            "keen-memory",
+            "flash-wisdom"
+          ],
+          "attributes": {
+            "constitution": 6,
+            "insight": 2,
+            "fortune": 4
+          }
+        }
+      },
+      "entities": [],
+      "memory": {
+        "facts": [],
+        "promises": [],
+        "clues": [],
+        "recent": [],
+        "summaries": []
+      },
+      "references": [],
+      "previousScene": null,
+      "relationshipVersion": 1,
+      "relationships": {},
+      "coverage": {
+        "policy": "relevance-v1",
+        "openTotal": 0,
+        "openIncluded": 0,
+        "openOmitted": 0
+      }
+    },
+    "attempt": {
+      "id": "54fbb138-c7f3-492d-87cc-17d992e3a153",
+      "sessionRef": "sess_0643652154173ac45351f5f5bf9bfc3e",
+      "retryOf": null
+    }
+  },
+  "decision": null,
+  "choices": [],
+  "traces": [
+    {
+      "model": "@cf/zai-org/glm-4.7-flash",
+      "inputHash": "592a14aaf49be2361a62a81270c537857cf3f27aedcd4377f5593bc191232610",
+      "inputBytes": 13058,
+      "startedAt": 1793351371551,
+      "bindingReturnedAt": 1793351371939,
+      "liveRawBytes": 122896,
+      "captureComplete": true,
+      "response": {
+        "model": "@cf/zai-org/glm-4.7-flash",
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "message": {
+              "content": "{\"blocks\":[{\"kind\":\"narration\",\"text\":\"你站在城西坊市边缘，面前是一间挂着“百草堂”招牌的药铺。药铺门口蹲着个满脸横肉的大汉，正把一只断腿的野狗往柜台里拖，嘴里骂骂咧咧。那狗腿被生生扯断，血肉模糊，显然是刚从哪处荒野拖来的。大汉见你盯着看，把眼一瞪，粗声粗气地吼道：“看什么看？这畜生也是药引子，懂不懂规矩？”\"},{\"kind\":\"narration\",\"text\":\"药铺掌柜是个瘦削的老头，正低头擦拭着一只玉瓶，对这惨状视若无睹，只是淡淡道：“老三，别在门口丢人现眼，把东西扔进后院，别挡着生客的路。”那大汉骂骂咧咧地转身，却故意把狗腿往你脚边一甩，腥臭的断肢滚落在地，溅起几滴黑血。\"}],\"choices\":[{\"action\":\"interact:ask\",\"targetId\":\"p1\",\"stake\":\"low\",\"label\":\"询问掌柜这狗的来历\",\"anchor\":0},{\"action\":\"interact:ask\",\"targetId\":\"p2\",\"stake\":\"low\",\"label\":\"质问大汉为何如此残暴\",\"anchor\":0},{\"action\":\"interact:observe\",\"targetId\":\"self\",\"stake\":\"low\",\"label\":\"观察周围环境与动静\",\"anchor\":1}],\"title\":\"坊市药铺\",\"location\":\"城西坊市\",\"otherPeople\":[{\"id\":\"p1\",\"name\":\"百草堂掌柜\",\"status\":\"alive\"},{\"id\":\"p2\",\"name\":\"药铺伙计老三\",\"status\":\"alive\"}],\"places\":[],\"factions\":[],\"memoryDeltas\":[]}",
+              "reasoning_content": ""
+            }
+          }
+        ],
+        "usage": {
+          "prompt_tokens": 2698,
+          "completion_tokens": 390,
+          "total_tokens": 3088,
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          },
+          "neurons": 29.035000000000167
+        }
+      },
+      "rawSseBytes": 122896
+    }
+  ],
+  "revision": 0,
+  "pending": true,
+  "state": {
+    "relationshipVersion": 1,
+    "version": 5,
+    "mode": "cultivation",
+    "contentVersion": 4,
+    "rulesVersion": 1,
+    "promptVersion": 1,
+    "runId": "33327dc3-1c52-432e-b807-88de89ebb79f",
+    "revision": 0,
+    "turnId": 0,
+    "phase": "awaitingOpening",
+    "rng": 1501128403,
+    "life": {
+      "name": "云归",
+      "ageDays": 5760,
+      "lifeLimit": 80,
+      "realm": "mortal",
+      "cultivation": 0,
+      "injury": 0,
+      "items": {
+        "supplies": 3,
+        "stones": 0
+      },
+      "relations": {},
+      "birth": {
+        "originId": "artisan",
+        "talentIds": [
+          "keen-memory",
+          "flash-wisdom"
+        ],
+        "attributes": {
+          "constitution": 6,
+          "insight": 2,
+          "fortune": 4
+        }
+      }
+    },
+    "birthReceipt": {
+      "kind": "opening",
+      "choiceId": null,
+      "action": null,
+      "elapsedDays": 0,
+      "itemChanges": {},
+      "relationChanges": {},
+      "random": {
+        "before": 1501128403,
+        "after": 1501128403,
+        "roll": null
+      },
+      "before": {
+        "ageDays": 5760,
+        "realm": "mortal",
+        "cultivation": 0,
+        "injury": 0
+      },
+      "after": {
+        "ageDays": 5760,
+        "realm": "mortal",
+        "cultivation": 0,
+        "injury": 0
+      },
+      "death": null,
+      "birth": {
+        "originId": "artisan",
+        "talentIds": [
+          "keen-memory",
+          "flash-wisdom"
+        ],
+        "attributes": {
+          "constitution": 6,
+          "insight": 2,
+          "fortune": 4
+        }
+      }
+    },
+    "currentScene": null,
+    "lastReceipt": null,
+    "relatedEntities": [],
+    "archiveCursor": 0
+  },
+  "posts": 1,
+  "latency": {
+    "usable": false,
+    "errorCode": "CHOICE_NOT_COMPILABLE",
+    "firstAnyPreviewMs": 3073,
+    "firstReadableMs": 3506,
+    "completionMs": 10922,
+    "narrativeChars": 246,
+    "maxPreviewGapMs": 295,
+    "readingFinishEstimateMs": null,
+    "readingStallEstimateMs": null,
+    "optionsWaitEstimateMs": null,
+    "prefetchWorthEvaluating": null,
+    "assumptions": {
+      "readingCharsPerSecond": 6,
+      "readableChars": 20,
+      "targetWaitMs": 2000
+    }
+  }
+}

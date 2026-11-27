@@ -1,0 +1,694 @@
+{
+  "caseId": "choice-3",
+  "start": 429859,
+  "timeline": [
+    {
+      "atMs": 5686,
+      "chars": 1
+    },
+    {
+      "atMs": 5792,
+      "chars": 3
+    },
+    {
+      "atMs": 6129,
+      "chars": 5
+    },
+    {
+      "atMs": 6223,
+      "chars": 8
+    },
+    {
+      "atMs": 6561,
+      "chars": 10
+    },
+    {
+      "atMs": 6624,
+      "chars": 11
+    },
+    {
+      "atMs": 6704,
+      "chars": 12
+    },
+    {
+      "atMs": 6955,
+      "chars": 13
+    },
+    {
+      "atMs": 7231,
+      "chars": 14
+    },
+    {
+      "atMs": 7340,
+      "chars": 17
+    },
+    {
+      "atMs": 7414,
+      "chars": 18
+    },
+    {
+      "atMs": 7781,
+      "chars": 19
+    },
+    {
+      "atMs": 8092,
+      "chars": 21
+    },
+    {
+      "atMs": 8139,
+      "chars": 23
+    },
+    {
+      "atMs": 8275,
+      "chars": 28
+    },
+    {
+      "atMs": 8371,
+      "chars": 33
+    },
+    {
+      "atMs": 8465,
+      "chars": 36
+    },
+    {
+      "atMs": 8649,
+      "chars": 38
+    },
+    {
+      "atMs": 8727,
+      "chars": 40
+    },
+    {
+      "atMs": 8833,
+      "chars": 45
+    },
+    {
+      "atMs": 8926,
+      "chars": 47
+    },
+    {
+      "atMs": 8991,
+      "chars": 52
+    },
+    {
+      "atMs": 9083,
+      "chars": 56
+    },
+    {
+      "atMs": 9160,
+      "chars": 57
+    },
+    {
+      "atMs": 9220,
+      "chars": 62
+    },
+    {
+      "atMs": 9313,
+      "chars": 64
+    },
+    {
+      "atMs": 9360,
+      "chars": 67
+    },
+    {
+      "atMs": 9435,
+      "chars": 70
+    },
+    {
+      "atMs": 9497,
+      "chars": 74
+    },
+    {
+      "atMs": 9575,
+      "chars": 76
+    },
+    {
+      "atMs": 9652,
+      "chars": 78
+    },
+    {
+      "atMs": 9729,
+      "chars": 79
+    },
+    {
+      "atMs": 9792,
+      "chars": 81
+    },
+    {
+      "atMs": 9855,
+      "chars": 83
+    },
+    {
+      "atMs": 10026,
+      "chars": 85
+    },
+    {
+      "atMs": 10090,
+      "chars": 88
+    },
+    {
+      "atMs": 10197,
+      "chars": 91
+    },
+    {
+      "atMs": 10259,
+      "chars": 93
+    },
+    {
+      "atMs": 10322,
+      "chars": 95
+    },
+    {
+      "atMs": 10381,
+      "chars": 96
+    }
+  ],
+  "choicesEnabledDuringPreview": false,
+  "lastText": "你背过身去，不再理会赵三的嘟囔，径直往自家破败的木屋走去。身后传来猎夹崩断的脆响，紧接着是野猪沉重的喘息声渐渐远去。村口的枯草在风中瑟瑟发抖，你推开吱呀作响的木门，屋内昏暗的光线瞬间将你吞没。",
+  "doneMs": 22738,
+  "result": {
+    "protocolVersion": 1,
+    "status": "ready",
+    "requestId": "844a2395-0587-45b0-970e-011ff34c2193",
+    "attemptId": "badfdbee-4c83-46cb-8f91-77acfb370d18",
+    "sessionRef": "sess_bd8844f1d65eb4f3f82158c6a2dfc4d4",
+    "errorCode": null,
+    "retry": null,
+    "scene": {
+      "id": "r:87d03ccb7c322d16:t4:s:scene",
+      "title": "归家",
+      "location": "village",
+      "entities": [
+        {
+          "id": "r:87d03ccb7c322d16:t1:e:person_1",
+          "name": "赵三",
+          "kind": "person"
+        },
+        {
+          "id": "r:87d03ccb7c322d16:t3:e:place_1",
+          "name": "后山密林",
+          "kind": "place"
+        }
+      ],
+      "blocks": [
+        {
+          "kind": "narration",
+          "text": "你背过身去，不再理会赵三的嘟囔，径直往自家破败的木屋走去。身后传来猎夹崩断的脆响，紧接着是野猪沉重的喘息声渐渐远去。村口的枯草在风中瑟瑟发抖，你推开吱呀作响的木门，屋内昏暗的光线瞬间将你吞没。"
+        }
+      ],
+      "choices": [
+        {
+          "id": "r:87d03ccb7c322d16:t4:c:observe",
+          "label": "仔细观察：留意周围的动静",
+          "intent": "interact",
+          "targetId": "self",
+          "approach": "observe",
+          "stake": "low"
+        },
+        {
+          "id": "r:87d03ccb7c322d16:t4:c:b",
+          "label": "穿行荒野前往后山密林：前往后山密林查看红光来源",
+          "intent": "travel",
+          "targetId": "r:87d03ccb7c322d16:t3:e:place_1",
+          "stake": "low",
+          "approach": "wilderness"
+        },
+        {
+          "id": "r:87d03ccb7c322d16:t4:c:leave",
+          "label": "结束当前互动：暂不介入此事",
+          "intent": "interact",
+          "targetId": "self",
+          "approach": "leave",
+          "stake": "low"
+        }
+      ],
+      "memoryDeltas": [
+        {
+          "entityId": "r:87d03ccb7c322d16:t1:e:person_1",
+          "kind": "clue",
+          "text": "你背过身去，不再理会赵三的嘟囔，径直往自家破败的木屋走去。身后传来猎夹崩断的脆响，紧接着是野猪沉重的喘息声渐渐远去。村口的枯草在风中瑟瑟发抖，你推开吱呀作响的木门，屋内昏暗的光线瞬间将你吞没。",
+          "status": "open"
+        }
+      ]
+    }
+  },
+  "request": {
+    "context": {
+      "schemaVersion": 1,
+      "phase": "choice",
+      "identity": {
+        "runId": "caf13382-b594-411b-bfe6-0dc73bb9bd42",
+        "turnId": 4,
+        "baseRevision": 3,
+        "stateHash": "3ffeec7557a2ecdf8a379b0cf1cc1fa03fcf30d2476a113670840401700efc63",
+        "choiceId": "r:87d03ccb7c322d16:t3:c:c",
+        "rulesVersion": 1,
+        "promptVersion": 1,
+        "requestId": "844a2395-0587-45b0-970e-011ff34c2193"
+      },
+      "namespace": "r:87d03ccb7c322d16",
+      "receipt": {
+        "kind": "choice",
+        "choiceId": "r:87d03ccb7c322d16:t3:c:c",
+        "action": {
+          "id": "r:87d03ccb7c322d16:t3:c:c",
+          "label": "结束与赵三的互动：结束与赵三的对话",
+          "intent": "interact",
+          "targetId": "r:87d03ccb7c322d16:t1:e:person_1",
+          "stake": "low",
+          "approach": "leave"
+        },
+        "elapsedDays": 0,
+        "itemChanges": {},
+        "relationChanges": {},
+        "random": {
+          "before": 684927674,
+          "after": 2656582353,
+          "roll": 53
+        },
+        "before": {
+          "ageDays": 5760,
+          "realm": "mortal",
+          "cultivation": 0,
+          "injury": 0
+        },
+        "after": {
+          "ageDays": 5760,
+          "realm": "mortal",
+          "cultivation": 0,
+          "injury": 0
+        },
+        "death": null,
+        "birth": null
+      },
+      "life": {
+        "name": "云归",
+        "ageDays": 5760,
+        "lifeLimit": 80,
+        "realm": "mortal",
+        "cultivation": 0,
+        "injury": 0,
+        "items": {
+          "supplies": 3,
+          "stones": 0
+        },
+        "relations": {},
+        "birth": {
+          "originId": "village",
+          "talentIds": [
+            "sword-bone",
+            "keen-memory"
+          ],
+          "attributes": {
+            "constitution": 6,
+            "insight": 4,
+            "fortune": 2
+          }
+        }
+      },
+      "entities": [
+        {
+          "id": "r:87d03ccb7c322d16:t1:e:person_1",
+          "name": "赵三",
+          "kind": "person",
+          "status": "unknown"
+        },
+        {
+          "id": "r:87d03ccb7c322d16:t3:e:place_1",
+          "name": "后山密林",
+          "kind": "place",
+          "status": "unknown"
+        }
+      ],
+      "memory": {
+        "facts": [
+          {
+            "id": "decision:3",
+            "runId": "caf13382-b594-411b-bfe6-0dc73bb9bd42",
+            "turnId": 3,
+            "source": "rules",
+            "kind": "fact",
+            "entityId": "r:87d03ccb7c322d16:t1:e:person_1",
+            "text": "你在village选择了“婉拒赵三：拒绝赵三的请求”。"
+          },
+          {
+            "id": "decision:2",
+            "runId": "caf13382-b594-411b-bfe6-0dc73bb9bd42",
+            "turnId": 2,
+            "source": "rules",
+            "kind": "fact",
+            "entityId": "r:87d03ccb7c322d16:t1:e:person_1",
+            "text": "你在village选择了“询问赵三：询问这只野猪的来历和最近山里的动静”。"
+          }
+        ],
+        "promises": [],
+        "clues": [
+          {
+            "id": "m:9e0a57685186c11d483d5068ee316b51",
+            "source": "narrative",
+            "kind": "clue",
+            "entityId": "r:87d03ccb7c322d16:t1:e:person_1",
+            "text": "你摇了摇头，把猎刀插回腰间，没去碰那只还在流血的野猪。赵三愣了一下，随即苦笑着拍了拍手上的泥土，重新蹲下身子去摆弄那个快散架的猎夹。野猪的哼唧声在空旷的村口显得格外刺耳，他低声嘟囔着：“也是，你还得练剑，这等粗活儿还是留给我这把老骨头吧。”",
+            "status": "open",
+            "runId": "caf13382-b594-411b-bfe6-0dc73bb9bd42",
+            "turnId": 3
+          },
+          {
+            "id": "m:a2d23443844ca8bdbbbf3b397ff24cbd",
+            "source": "narrative",
+            "kind": "clue",
+            "entityId": "r:87d03ccb7c322d16:t1:e:person_1",
+            "text": "赵三直起身子，用满是老茧的手指了指那头还在挣扎的野猪，瓮声瓮气地说道：“这畜生看着眼生，皮糙肉厚，夹子夹了半日都没松。最近山里不太平，前几日我看见林子深处有红光闪过，也不知道是不是那帮修仙的又来寻宝了。”",
+            "status": "open",
+            "runId": "caf13382-b594-411b-bfe6-0dc73bb9bd42",
+            "turnId": 2
+          },
+          {
+            "id": "m:6ca3066b7e2661f51dcc7cb9e702981d",
+            "source": "narrative",
+            "kind": "clue",
+            "entityId": "r:87d03ccb7c322d16:t1:e:person_1",
+            "text": "你站在自家破旧的木屋前，手里攥着一把刚磨好的猎刀。村口的老猎户赵三正蹲在地上，对着一只被猎夹夹住后腿的野猪发愁，血已经染红了枯草。他抬头看见你，抹了一把脸上的汗，声音沙哑：“云归，这畜生劲儿大，夹子快被拔断了，你能不能帮把手？”",
+            "status": "open",
+            "runId": "caf13382-b594-411b-bfe6-0dc73bb9bd42",
+            "turnId": 1
+          }
+        ],
+        "recent": [
+          {
+            "id": "turn:3",
+            "runId": "caf13382-b594-411b-bfe6-0dc73bb9bd42",
+            "turnId": 3,
+            "source": "narrative",
+            "kind": "turn",
+            "text": "地点：village；刚才选择：婉拒赵三：拒绝赵三的请求\n你摇了摇头，把猎刀插回腰间，没去碰那只还在流血的野猪。赵三愣了一下，随即苦笑着拍了拍手上的泥土，重新蹲下身子去摆弄那个快散架的猎夹。野猪的哼唧声在空旷的村口显得格外刺耳，他低声嘟囔着：“也是，你还得练剑，这等粗活儿还是留给我这把老骨头吧。”",
+            "entityIds": []
+          },
+          {
+            "id": "turn:2",
+            "runId": "caf13382-b594-411b-bfe6-0dc73bb9bd42",
+            "turnId": 2,
+            "source": "narrative",
+            "kind": "turn",
+            "text": "地点：village；刚才选择：询问赵三：询问这只野猪的来历和最近山里的动静\n赵三直起身子，用满是老茧的手指了指那头还在挣扎的野猪，瓮声瓮气地说道：“这畜生看着眼生，皮糙肉厚，夹子夹了半日都没松。最近山里不太平，前几日我看见林子深处有红光闪过，也不知道是不是那帮修仙的又来寻宝了。”",
+            "entityIds": []
+          }
+        ],
+        "summaries": []
+      },
+      "references": [
+        "decision:3",
+        "decision:2",
+        "m:9e0a57685186c11d483d5068ee316b51",
+        "m:a2d23443844ca8bdbbbf3b397ff24cbd",
+        "m:6ca3066b7e2661f51dcc7cb9e702981d",
+        "turn:3",
+        "turn:2"
+      ],
+      "previousScene": {
+        "id": "r:87d03ccb7c322d16:t3:s:scene",
+        "blocksHash": "e76d1ccd023b0ef17c646f0dda1c5fdbdb2bbca28d2c2968b9caf531d533870f"
+      },
+      "relationshipVersion": 1,
+      "relationships": {},
+      "coverage": {
+        "policy": "relevance-v1",
+        "openTotal": 3,
+        "openIncluded": 3,
+        "openOmitted": 0
+      }
+    },
+    "attempt": {
+      "id": "badfdbee-4c83-46cb-8f91-77acfb370d18",
+      "sessionRef": "sess_bd8844f1d65eb4f3f82158c6a2dfc4d4",
+      "retryOf": null
+    },
+    "storyActions": true
+  },
+  "decision": {
+    "index": 2,
+    "reason": "拒绝后旁白准确写了没碰野猪、由赵三继续处理，无资源或时间变化；主动告辞结束这位NPC的互动，下一步转向独立行动。",
+    "selected": {
+      "id": "r:87d03ccb7c322d16:t3:c:c",
+      "label": "结束与赵三的互动：结束与赵三的对话",
+      "intent": "interact",
+      "targetId": "r:87d03ccb7c322d16:t1:e:person_1",
+      "stake": "low",
+      "approach": "leave"
+    }
+  },
+  "choices": [
+    {
+      "id": "r:87d03ccb7c322d16:t4:c:observe",
+      "enabled": true,
+      "label": "仔细观察：留意周围的动静",
+      "cost": "0日"
+    },
+    {
+      "id": "r:87d03ccb7c322d16:t4:c:b",
+      "enabled": true,
+      "label": "穿行荒野前往后山密林：前往后山密林查看红光来源",
+      "cost": "60日 · 行粮 1 · 历练受伤基础风险25%，根骨与坚韧筋骨可降低风险。"
+    },
+    {
+      "id": "r:87d03ccb7c322d16:t4:c:leave",
+      "enabled": true,
+      "label": "结束当前互动：暂不介入此事",
+      "cost": "0日"
+    }
+  ],
+  "traces": [
+    {
+      "model": "@cf/zai-org/glm-4.7-flash",
+      "inputHash": "5e37e71ec0f79979da141ffe2a9908b28f031a3b393aa67bde25cf222d90a993",
+      "inputBytes": 18436,
+      "startedAt": 1793372457510,
+      "bindingReturnedAt": 1793372457952,
+      "liveRawBytes": 90898,
+      "captureComplete": true,
+      "response": {
+        "model": "@cf/zai-org/glm-4.7-flash",
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "message": {
+              "content": "{\"blocks\":[{\"kind\":\"narration\",\"text\":\"你背过身去，不再理会赵三的嘟囔，径直往自家破败的木屋走去。身后传来猎夹崩断的脆响，紧接着是野猪沉重的喘息声渐渐远去。村口的枯草在风中瑟瑟发抖，你推开吱呀作响的木门，屋内昏暗的光线瞬间将你吞没。\"}],\"choices\":[{\"action\":\"interact:ask\",\"target\":{\"kind\":\"person\",\"name\":\"赵三\",\"ref\":\"k1_person_赵三\",\"status\":null},\"stake\":\"low\",\"purpose\":\"询问赵三关于林子里红光的具体方位\",\"anchor\":0},{\"action\":\"travel:wilderness\",\"target\":{\"kind\":\"place\",\"name\":\"后山密林\",\"ref\":\"k2_place_后山密林\",\"status\":null},\"stake\":\"low\",\"purpose\":\"前往后山密林查看红光来源\",\"anchor\":0},{\"action\":\"interact:leave\",\"target\":{\"kind\":\"person\",\"name\":\"赵三\",\"ref\":\"k1_person_赵三\",\"status\":null},\"stake\":\"low\",\"purpose\":\"结束与赵三的对话\",\"anchor\":0}],\"title\":\"归家\",\"location\":\"village\",\"memoryDeltas\":[{\"target\":{\"kind\":\"person\",\"name\":\"赵三\",\"ref\":\"k1_person_赵三\",\"status\":null},\"kind\":\"clue\",\"anchor\":0,\"status\":\"open\"}]}",
+              "reasoning_content": ""
+            }
+          }
+        ],
+        "usage": {
+          "prompt_tokens": 3070,
+          "completion_tokens": 308,
+          "total_tokens": 3378,
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          },
+          "neurons": 28.09620000000013
+        }
+      },
+      "rawSseBytes": 90898
+    }
+  ],
+  "revision": 4,
+  "pending": false,
+  "state": {
+    "relationshipVersion": 1,
+    "version": 5,
+    "mode": "cultivation",
+    "contentVersion": 4,
+    "rulesVersion": 1,
+    "promptVersion": 1,
+    "runId": "caf13382-b594-411b-bfe6-0dc73bb9bd42",
+    "revision": 4,
+    "turnId": 4,
+    "phase": "active",
+    "rng": 2656582353,
+    "life": {
+      "name": "云归",
+      "ageDays": 5760,
+      "lifeLimit": 80,
+      "realm": "mortal",
+      "cultivation": 0,
+      "injury": 0,
+      "items": {
+        "supplies": 3,
+        "stones": 0
+      },
+      "relations": {},
+      "birth": {
+        "originId": "village",
+        "talentIds": [
+          "sword-bone",
+          "keen-memory"
+        ],
+        "attributes": {
+          "constitution": 6,
+          "insight": 4,
+          "fortune": 2
+        }
+      }
+    },
+    "birthReceipt": {
+      "kind": "opening",
+      "choiceId": null,
+      "action": null,
+      "elapsedDays": 0,
+      "itemChanges": {},
+      "relationChanges": {},
+      "random": {
+        "before": 3298206280,
+        "after": 3298206280,
+        "roll": null
+      },
+      "before": {
+        "ageDays": 5760,
+        "realm": "mortal",
+        "cultivation": 0,
+        "injury": 0
+      },
+      "after": {
+        "ageDays": 5760,
+        "realm": "mortal",
+        "cultivation": 0,
+        "injury": 0
+      },
+      "death": null,
+      "birth": {
+        "originId": "village",
+        "talentIds": [
+          "sword-bone",
+          "keen-memory"
+        ],
+        "attributes": {
+          "constitution": 6,
+          "insight": 4,
+          "fortune": 2
+        }
+      }
+    },
+    "currentScene": {
+      "id": "r:87d03ccb7c322d16:t4:s:scene",
+      "title": "归家",
+      "location": "village",
+      "entities": [
+        {
+          "id": "r:87d03ccb7c322d16:t1:e:person_1",
+          "name": "赵三",
+          "kind": "person"
+        },
+        {
+          "id": "r:87d03ccb7c322d16:t3:e:place_1",
+          "name": "后山密林",
+          "kind": "place"
+        }
+      ],
+      "blocks": [
+        {
+          "kind": "narration",
+          "text": "你背过身去，不再理会赵三的嘟囔，径直往自家破败的木屋走去。身后传来猎夹崩断的脆响，紧接着是野猪沉重的喘息声渐渐远去。村口的枯草在风中瑟瑟发抖，你推开吱呀作响的木门，屋内昏暗的光线瞬间将你吞没。"
+        }
+      ],
+      "choices": [
+        {
+          "id": "r:87d03ccb7c322d16:t4:c:observe",
+          "label": "仔细观察：留意周围的动静",
+          "intent": "interact",
+          "targetId": "self",
+          "approach": "observe",
+          "stake": "low"
+        },
+        {
+          "id": "r:87d03ccb7c322d16:t4:c:b",
+          "label": "穿行荒野前往后山密林：前往后山密林查看红光来源",
+          "intent": "travel",
+          "targetId": "r:87d03ccb7c322d16:t3:e:place_1",
+          "stake": "low",
+          "approach": "wilderness"
+        },
+        {
+          "id": "r:87d03ccb7c322d16:t4:c:leave",
+          "label": "结束当前互动：暂不介入此事",
+          "intent": "interact",
+          "targetId": "self",
+          "approach": "leave",
+          "stake": "low"
+        }
+      ],
+      "memoryDeltas": [
+        {
+          "entityId": "r:87d03ccb7c322d16:t1:e:person_1",
+          "kind": "clue",
+          "text": "你背过身去，不再理会赵三的嘟囔，径直往自家破败的木屋走去。身后传来猎夹崩断的脆响，紧接着是野猪沉重的喘息声渐渐远去。村口的枯草在风中瑟瑟发抖，你推开吱呀作响的木门，屋内昏暗的光线瞬间将你吞没。",
+          "status": "open"
+        }
+      ]
+    },
+    "lastReceipt": {
+      "kind": "choice",
+      "choiceId": "r:87d03ccb7c322d16:t3:c:c",
+      "action": {
+        "id": "r:87d03ccb7c322d16:t3:c:c",
+        "label": "结束与赵三的互动：结束与赵三的对话",
+        "intent": "interact",
+        "targetId": "r:87d03ccb7c322d16:t1:e:person_1",
+        "stake": "low",
+        "approach": "leave"
+      },
+      "elapsedDays": 0,
+      "itemChanges": {},
+      "relationChanges": {},
+      "random": {
+        "before": 684927674,
+        "after": 2656582353,
+        "roll": 53
+      },
+      "before": {
+        "ageDays": 5760,
+        "realm": "mortal",
+        "cultivation": 0,
+        "injury": 0
+      },
+      "after": {
+        "ageDays": 5760,
+        "realm": "mortal",
+        "cultivation": 0,
+        "injury": 0
+      },
+      "death": null,
+      "birth": null
+    },
+    "relatedEntities": [
+      {
+        "id": "r:87d03ccb7c322d16:t1:e:person_1",
+        "name": "赵三",
+        "kind": "person"
+      },
+      {
+        "id": "r:87d03ccb7c322d16:t3:e:place_1",
+        "name": "后山密林",
+        "kind": "place"
+      }
+    ],
+    "archiveCursor": 0
+  },
+  "posts": 4,
+  "latency": {
+    "usable": true,
+    "errorCode": null,
+    "firstAnyPreviewMs": 5686,
+    "firstReadableMs": 8092,
+    "completionMs": 22738,
+    "narrativeChars": 96,
+    "maxPreviewGapMs": 367,
+    "readingFinishEstimateMs": 24092,
+    "readingStallEstimateMs": 0,
+    "optionsWaitEstimateMs": 0,
+    "prefetchWorthEvaluating": true,
+    "assumptions": {
+      "readingCharsPerSecond": 6,
+      "readableChars": 20,
+      "targetWaitMs": 2000
+    }
+  }
+}

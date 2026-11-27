@@ -1,0 +1,1 @@
+{"at":"2026-10-30T15:00:56.908Z","decision":{"index":2,"reason":"拒绝后旁白准确写了没碰野猪、由赵三继续处理，无资源或时间变化；主动告辞结束这位NPC的互动，下一步转向独立行动。","selected":{"id":"r:87d03ccb7c322d16:t3:c:c","label":"结束与赵三的互动：结束与赵三的对话","intent":"interact","targetId":"r:87d03ccb7c322d16:t1:e:person_1","stake":"low","approach":"leave"}}}

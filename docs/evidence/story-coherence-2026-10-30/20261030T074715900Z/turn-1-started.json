@@ -1,0 +1,1 @@
+{"at":"2026-10-30T07:49:45.717Z","decision":{"index":0,"reason":"询问现场张三紫雾来历；回应此问题并保留紫雾当前事件，同日不增减资源","selected":{"id":"r:50794a5b02c269e0:t1:c:a","label":"询问张三这雾的来历","intent":"interact","targetId":"r:50794a5b02c269e0:t1:e:person_1","stake":"low","approach":"ask"}}}

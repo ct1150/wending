@@ -1,0 +1,771 @@
+{
+  "caseId": "choice-5",
+  "start": 1574.9000000059605,
+  "timeline": [
+    {
+      "atMs": 5029,
+      "chars": 3
+    },
+    {
+      "atMs": 5103,
+      "chars": 10
+    },
+    {
+      "atMs": 5180,
+      "chars": 14
+    },
+    {
+      "atMs": 5226,
+      "chars": 17
+    },
+    {
+      "atMs": 5303,
+      "chars": 22
+    },
+    {
+      "atMs": 5350,
+      "chars": 25
+    },
+    {
+      "atMs": 5409,
+      "chars": 27
+    },
+    {
+      "atMs": 5488,
+      "chars": 29
+    },
+    {
+      "atMs": 5549,
+      "chars": 32
+    },
+    {
+      "atMs": 5593,
+      "chars": 34
+    },
+    {
+      "atMs": 5654,
+      "chars": 38
+    },
+    {
+      "atMs": 5700,
+      "chars": 45
+    },
+    {
+      "atMs": 5778,
+      "chars": 50
+    },
+    {
+      "atMs": 5858,
+      "chars": 56
+    },
+    {
+      "atMs": 5919,
+      "chars": 58
+    },
+    {
+      "atMs": 5997,
+      "chars": 62
+    },
+    {
+      "atMs": 6060,
+      "chars": 68
+    },
+    {
+      "atMs": 6123,
+      "chars": 73
+    },
+    {
+      "atMs": 6204,
+      "chars": 75
+    },
+    {
+      "atMs": 6248,
+      "chars": 78
+    },
+    {
+      "atMs": 6311,
+      "chars": 82
+    },
+    {
+      "atMs": 6371,
+      "chars": 86
+    },
+    {
+      "atMs": 6466,
+      "chars": 95
+    },
+    {
+      "atMs": 6530,
+      "chars": 96
+    },
+    {
+      "atMs": 6844,
+      "chars": 102
+    },
+    {
+      "atMs": 6922,
+      "chars": 105
+    },
+    {
+      "atMs": 6995,
+      "chars": 108
+    },
+    {
+      "atMs": 7050,
+      "chars": 110
+    },
+    {
+      "atMs": 7142,
+      "chars": 117
+    },
+    {
+      "atMs": 7220,
+      "chars": 125
+    },
+    {
+      "atMs": 7282,
+      "chars": 129
+    },
+    {
+      "atMs": 7345,
+      "chars": 137
+    },
+    {
+      "atMs": 7406,
+      "chars": 139
+    },
+    {
+      "atMs": 7468,
+      "chars": 142
+    },
+    {
+      "atMs": 7532,
+      "chars": 146
+    },
+    {
+      "atMs": 7593,
+      "chars": 150
+    },
+    {
+      "atMs": 7653,
+      "chars": 153
+    },
+    {
+      "atMs": 7745,
+      "chars": 157
+    },
+    {
+      "atMs": 7808,
+      "chars": 161
+    },
+    {
+      "atMs": 7854,
+      "chars": 166
+    },
+    {
+      "atMs": 7931,
+      "chars": 170
+    },
+    {
+      "atMs": 8007,
+      "chars": 177
+    },
+    {
+      "atMs": 8111,
+      "chars": 183
+    },
+    {
+      "atMs": 8159,
+      "chars": 185
+    },
+    {
+      "atMs": 8221,
+      "chars": 186
+    }
+  ],
+  "choicesEnabledDuringPreview": false,
+  "lastText": "你告别了张屠户，独自一人穿行荒野，六十日的跋涉让你衣衫褴褛，满身尘土。终于，后山深处的轮廓在眼前清晰起来，这里古木参天，浓雾弥漫，空气中弥漫着一股腐朽的腥气，与村口那头死猪身上的味道如出一辙。\n\n在一处被藤蔓遮蔽的断崖边，你发现了一具巨大的兽骨，骨骼呈现出诡异的紫黑色，断裂处锋利如刀削，显然是被某种极快极利的东西瞬间斩断。兽骨旁散落着几片巨大的黑色羽毛，在风中微微颤动。",
+  "doneMs": 14600,
+  "result": {
+    "protocolVersion": 1,
+    "status": "ready",
+    "requestId": "dfa2f5d0-6bb7-4708-8992-6d01881ec190",
+    "attemptId": "fb8edb29-2466-40ef-af27-8ab3555c30fb",
+    "sessionRef": "sess_7b01f904799ddf1a65f91b21a06ad966",
+    "errorCode": null,
+    "retry": null,
+    "scene": {
+      "id": "r:777f39e63f6e0dd9:t6:s:scene",
+      "title": "后山深处",
+      "location": "后山深处",
+      "entities": [
+        {
+          "id": "r:777f39e63f6e0dd9:t1:e:person_1",
+          "name": "张屠户",
+          "kind": "person",
+          "status": "alive"
+        },
+        {
+          "id": "r:777f39e63f6e0dd9:t6:e:place_1",
+          "name": "密林深处",
+          "kind": "place"
+        }
+      ],
+      "blocks": [
+        {
+          "kind": "narration",
+          "text": "你告别了张屠户，独自一人穿行荒野，六十日的跋涉让你衣衫褴褛，满身尘土。终于，后山深处的轮廓在眼前清晰起来，这里古木参天，浓雾弥漫，空气中弥漫着一股腐朽的腥气，与村口那头死猪身上的味道如出一辙。"
+        },
+        {
+          "kind": "narration",
+          "text": "在一处被藤蔓遮蔽的断崖边，你发现了一具巨大的兽骨，骨骼呈现出诡异的紫黑色，断裂处锋利如刀削，显然是被某种极快极利的东西瞬间斩断。兽骨旁散落着几片巨大的黑色羽毛，在风中微微颤动。"
+        }
+      ],
+      "choices": [
+        {
+          "id": "r:777f39e63f6e0dd9:t6:c:a",
+          "label": "询问张屠户：询问张屠户关于后山黑影的细节，确认是否与这具兽骨有关。",
+          "intent": "interact",
+          "targetId": "r:777f39e63f6e0dd9:t1:e:person_1",
+          "stake": "low",
+          "approach": "ask"
+        },
+        {
+          "id": "r:777f39e63f6e0dd9:t6:c:b",
+          "label": "仔细观察：观察兽骨断裂处的锋利程度和黑色羽毛的来源。",
+          "intent": "interact",
+          "targetId": "self",
+          "stake": "low",
+          "approach": "observe"
+        },
+        {
+          "id": "r:777f39e63f6e0dd9:t6:c:leave",
+          "label": "结束当前互动：暂不介入此事",
+          "intent": "interact",
+          "targetId": "r:777f39e63f6e0dd9:t1:e:person_1",
+          "approach": "leave",
+          "stake": "low"
+        }
+      ],
+      "memoryDeltas": [
+        {
+          "entityId": "r:777f39e63f6e0dd9:t1:e:person_1",
+          "kind": "clue",
+          "text": "在一处被藤蔓遮蔽的断崖边，你发现了一具巨大的兽骨，骨骼呈现出诡异的紫黑色，断裂处锋利如刀削，显然是被某种极快极利的东西瞬间斩断。兽骨旁散落着几片巨大的黑色羽毛，在风中微微颤动。",
+          "status": "open"
+        },
+        {
+          "entityId": "r:777f39e63f6e0dd9:t1:e:person_1",
+          "kind": "fact",
+          "text": "在一处被藤蔓遮蔽的断崖边，你发现了一具巨大的兽骨，骨骼呈现出诡异的紫黑色，断裂处锋利如刀削，显然是被某种极快极利的东西瞬间斩断。兽骨旁散落着几片巨大的黑色羽毛，在风中微微颤动。"
+        }
+      ]
+    }
+  },
+  "request": {
+    "context": {
+      "schemaVersion": 1,
+      "phase": "choice",
+      "identity": {
+        "runId": "b7c829af-5d43-4b3c-98e4-44a473063d6e",
+        "turnId": 6,
+        "baseRevision": 5,
+        "stateHash": "f7a04beded71713c033dcf249e64869c0417e6468612c158c01b849910361761",
+        "choiceId": "r:777f39e63f6e0dd9:t5:c:b",
+        "rulesVersion": 1,
+        "promptVersion": 1,
+        "requestId": "dfa2f5d0-6bb7-4708-8992-6d01881ec190"
+      },
+      "namespace": "r:777f39e63f6e0dd9",
+      "receipt": {
+        "kind": "choice",
+        "choiceId": "r:777f39e63f6e0dd9:t5:c:b",
+        "action": {
+          "id": "r:777f39e63f6e0dd9:t5:c:b",
+          "label": "穿行荒野前往后山深处：前往后山深处查看异状源头",
+          "intent": "travel",
+          "targetId": "r:777f39e63f6e0dd9:t4:e:place_1",
+          "stake": "low",
+          "approach": "wilderness"
+        },
+        "elapsedDays": 60,
+        "itemChanges": {
+          "supplies": -1
+        },
+        "relationChanges": {},
+        "random": {
+          "before": 2445986457,
+          "after": 962933540,
+          "roll": 40
+        },
+        "before": {
+          "ageDays": 5761,
+          "realm": "mortal",
+          "cultivation": 0,
+          "injury": 0
+        },
+        "after": {
+          "ageDays": 5821,
+          "realm": "mortal",
+          "cultivation": 0,
+          "injury": 0
+        },
+        "death": null,
+        "birth": null
+      },
+      "life": {
+        "name": "云归",
+        "ageDays": 5821,
+        "lifeLimit": 80,
+        "realm": "mortal",
+        "cultivation": 0,
+        "injury": 0,
+        "items": {
+          "supplies": 1,
+          "stones": 0
+        },
+        "relations": {
+          "r:777f39e63f6e0dd9:t1:e:person_1": 2
+        },
+        "birth": {
+          "originId": "village",
+          "talentIds": [
+            "flash-wisdom",
+            "sword-bone"
+          ],
+          "attributes": {
+            "constitution": 2,
+            "insight": 6,
+            "fortune": 4
+          }
+        }
+      },
+      "entities": [
+        {
+          "id": "r:777f39e63f6e0dd9:t1:e:person_1",
+          "name": "张屠户",
+          "kind": "person",
+          "status": "alive"
+        },
+        {
+          "id": "r:777f39e63f6e0dd9:t4:e:place_1",
+          "name": "后山深处",
+          "kind": "place",
+          "status": "unknown"
+        }
+      ],
+      "memory": {
+        "facts": [
+          {
+            "id": "decision:5",
+            "runId": "b7c829af-5d43-4b3c-98e4-44a473063d6e",
+            "turnId": 5,
+            "source": "rules",
+            "kind": "fact",
+            "entityId": "r:777f39e63f6e0dd9:t1:e:person_1",
+            "text": "你在village选择了“结束与张屠户的互动：结束与张屠户的交谈”。"
+          },
+          {
+            "id": "m:6fad7cbfb693f2f6858960ffbbe84b15",
+            "source": "narrative",
+            "kind": "fact",
+            "entityId": "r:777f39e63f6e0dd9:t1:e:person_1",
+            "text": "“张叔，这猪的事太邪门，我还要去别处看看，就不多留了。”你转身欲走。",
+            "runId": "b7c829af-5d43-4b3c-98e4-44a473063d6e",
+            "turnId": 5
+          }
+        ],
+        "promises": [],
+        "clues": [
+          {
+            "id": "m:a6ab5e4c6532737ab05e16f4b01b6bef",
+            "source": "narrative",
+            "kind": "clue",
+            "entityId": "r:777f39e63f6e0dd9:t1:e:person_1",
+            "text": "“张叔，这猪的事太邪门，我还要去别处看看，就不多留了。”",
+            "status": "open",
+            "runId": "b7c829af-5d43-4b3c-98e4-44a473063d6e",
+            "turnId": 4
+          },
+          {
+            "id": "m:66e19160c79da7ec9369227bf17ad7ef",
+            "source": "narrative",
+            "kind": "clue",
+            "entityId": "r:777f39e63f6e0dd9:t1:e:person_1",
+            "text": "“这猪是刚从后山深处打来的，平时看着挺温顺，怎么突然就暴毙了？”张屠户抹了把脸上的血水，眉头紧锁，“后山最近不太平，常有村民说看见黑影窜过，但谁也没敢细看。至于这獠牙发黑，我杀了一辈子猪，从来没见过这种怪事。”",
+            "status": "open",
+            "runId": "b7c829af-5d43-4b3c-98e4-44a473063d6e",
+            "turnId": 3
+          },
+          {
+            "id": "m:04e1ccdbe7d383b6b382d22dfdceecfa",
+            "source": "narrative",
+            "kind": "clue",
+            "entityId": "r:777f39e63f6e0dd9:t1:e:person_1",
+            "text": "你从腰间解下干粮，递给张屠户。他愣了一下，随即大口吞咽，连声道谢。吃饱后，他指着那头死猪，神色凝重地告诉你，这猪皮下的血肉呈现出诡异的紫黑色，且散发着一股令人作呕的腥臭，绝非寻常野兽。他怀疑这猪是误食了山中的毒物，或者是被什么东西冲撞了阳气。",
+            "status": "open",
+            "runId": "b7c829af-5d43-4b3c-98e4-44a473063d6e",
+            "turnId": 2
+          },
+          {
+            "id": "m:73467790dea864cc9f5742e6032df603",
+            "source": "narrative",
+            "kind": "clue",
+            "entityId": "r:777f39e63f6e0dd9:t1:e:person_1",
+            "text": "张屠户叹了口气，说这猪是他刚从后山打来的，怎么就突然暴毙了。他看着你，眼神中带着一丝希冀：“云归，你命格好，刚才那股子煞气冲过来的时候，你好像连眼皮都没眨一下。你有没有觉得这猪的獠牙有点不对劲？我刚才杀它的时候，它好像还冲我笑了一下。”",
+            "status": "open",
+            "runId": "b7c829af-5d43-4b3c-98e4-44a473063d6e",
+            "turnId": 2
+          },
+          {
+            "id": "m:c9ecae1fd27298cb8211f4828ad43cc3",
+            "source": "narrative",
+            "kind": "clue",
+            "entityId": "r:777f39e63f6e0dd9:t1:e:person_1",
+            "text": "云归，十六岁，凡人。你站在村口的老槐树下，手里攥着一把磨得发亮的猎刀。村头张屠户正蹲在血泊边，手里提着一只被开膛破肚的野猪，嘴里骂骂咧咧。这野猪显然不是普通野兽，皮糙肉厚，刀口却深可见骨，显然是冲着张屠户那把祖传的杀猪刀来的。张屠户抬头看见你，把刀往地上一扔，抹了一把脸上的血水，指着那野猪的獠牙说：'云归，你来看看，这獠牙怎么有点发黑？我刚才杀它的时候，它好像还冲我笑了一下。'",
+            "status": "open",
+            "runId": "b7c829af-5d43-4b3c-98e4-44a473063d6e",
+            "turnId": 1
+          }
+        ],
+        "recent": [
+          {
+            "id": "turn:5",
+            "runId": "b7c829af-5d43-4b3c-98e4-44a473063d6e",
+            "turnId": 5,
+            "source": "narrative",
+            "kind": "turn",
+            "text": "地点：village；刚才选择：结束与张屠户的互动：结束与张屠户的交谈\n“张叔，这猪的事太邪门，我还要去别处看看，就不多留了。”你转身欲走。",
+            "entityIds": []
+          },
+          {
+            "id": "turn:4",
+            "runId": "b7c829af-5d43-4b3c-98e4-44a473063d6e",
+            "turnId": 4,
+            "source": "narrative",
+            "kind": "turn",
+            "text": "地点：village；刚才选择：婉拒张屠户：拒绝张屠户的追问，表示自己还要去别处看看。\n“张叔，这猪的事太邪门，我还要去别处看看，就不多留了。”",
+            "entityIds": []
+          }
+        ],
+        "summaries": []
+      },
+      "references": [
+        "decision:5",
+        "m:6fad7cbfb693f2f6858960ffbbe84b15",
+        "m:a6ab5e4c6532737ab05e16f4b01b6bef",
+        "m:66e19160c79da7ec9369227bf17ad7ef",
+        "m:04e1ccdbe7d383b6b382d22dfdceecfa",
+        "m:73467790dea864cc9f5742e6032df603",
+        "m:c9ecae1fd27298cb8211f4828ad43cc3",
+        "turn:5",
+        "turn:4"
+      ],
+      "previousScene": {
+        "id": "r:777f39e63f6e0dd9:t5:s:scene",
+        "blocksHash": "03cee6189bd942def8fc0a0e2a633d8a4b543d33b5c9574e6dc3260a59269aba"
+      },
+      "relationshipVersion": 1,
+      "relationships": {
+        "r:777f39e63f6e0dd9:t1:e:person_1": 2
+      },
+      "coverage": {
+        "policy": "relevance-v1",
+        "openTotal": 5,
+        "openIncluded": 5,
+        "openOmitted": 0
+      }
+    },
+    "attempt": {
+      "id": "fb8edb29-2466-40ef-af27-8ab3555c30fb",
+      "sessionRef": "sess_7b01f904799ddf1a65f91b21a06ad966",
+      "retryOf": {
+        "attemptId": "cae3a5ec-7f1d-434e-85fe-19b04cb900c0",
+        "sessionRef": "sess_7b01f904799ddf1a65f91b21a06ad966"
+      }
+    },
+    "storyActions": true
+  },
+  "decision": {
+    "index": 1,
+    "reason": "告辞增加了起身欲走的动作，时间资源未变；台词重复上轮句子，记为文案限制。明确选择前往后山深处，核对60日/行粮-1及不会默认带走张屠户。",
+    "selected": {
+      "id": "r:777f39e63f6e0dd9:t5:c:b",
+      "label": "穿行荒野前往后山深处：前往后山深处查看异状源头",
+      "intent": "travel",
+      "targetId": "r:777f39e63f6e0dd9:t4:e:place_1",
+      "stake": "low",
+      "approach": "wilderness"
+    },
+    "explicitRetry": true
+  },
+  "choices": [
+    {
+      "id": "r:777f39e63f6e0dd9:t6:c:a",
+      "enabled": true,
+      "label": "询问张屠户：询问张屠户关于后山黑影的细节，确认是否与这具兽骨有关。",
+      "cost": "0日"
+    },
+    {
+      "id": "r:777f39e63f6e0dd9:t6:c:b",
+      "enabled": true,
+      "label": "仔细观察：观察兽骨断裂处的锋利程度和黑色羽毛的来源。",
+      "cost": "0日"
+    },
+    {
+      "id": "r:777f39e63f6e0dd9:t6:c:leave",
+      "enabled": true,
+      "label": "结束当前互动：暂不介入此事",
+      "cost": "0日"
+    }
+  ],
+  "traces": [
+    {
+      "model": "@cf/zai-org/glm-4.7-flash",
+      "inputHash": "e0bf8144f74daec3ed66cf5fae479b6a26362eeb2ddeb9a080bd0213e43f88c5",
+      "inputBytes": 21283,
+      "startedAt": 1793368066862,
+      "bindingReturnedAt": 1793368067260,
+      "liveRawBytes": 147538,
+      "captureComplete": true,
+      "response": {
+        "model": "@cf/zai-org/glm-4.7-flash",
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "message": {
+              "content": "{\n  \"blocks\": [\n    {\n      \"kind\": \"narration\",\n      \"text\": \"你告别了张屠户，独自一人穿行荒野，六十日的跋涉让你衣衫褴褛，满身尘土。终于，后山深处的轮廓在眼前清晰起来，这里古木参天，浓雾弥漫，空气中弥漫着一股腐朽的腥气，与村口那头死猪身上的味道如出一辙。\"\n    },\n    {\n      \"kind\": \"narration\",\n      \"text\": \"在一处被藤蔓遮蔽的断崖边，你发现了一具巨大的兽骨，骨骼呈现出诡异的紫黑色，断裂处锋利如刀削，显然是被某种极快极利的东西瞬间斩断。兽骨旁散落着几片巨大的黑色羽毛，在风中微微颤动。\"\n    }\n  ],\n  \"choices\": [\n    {\n      \"action\": \"interact:ask\",\n      \"targetId\": \"k1_person_张屠户\",\n      \"stake\": \"low\",\n      \"purpose\": \"询问张屠户关于后山黑影的细节，确认是否与这具兽骨有关。\",\n      \"anchor\": 1\n    },\n    {\n      \"action\": \"interact:observe\",\n      \"targetId\": \"self\",\n      \"stake\": \"low\",\n      \"purpose\": \"观察兽骨断裂处的锋利程度和黑色羽毛的来源。\",\n      \"anchor\": 1\n    },\n    {\n      \"action\": \"travel:wilderness\",\n      \"targetId\": \"l1\",\n      \"stake\": \"low\",\n      \"purpose\": \"沿着兽骨散落的痕迹向更深处的密林探索。\",\n      \"anchor\": 1\n    }\n  ],\n  \"title\": \"后山深处\",\n  \"location\": \"后山深处\",\n  \"otherPeople\": [\n    {\n      \"id\": \"k1_person_张屠户\",\n      \"status\": \"alive\"\n    }\n  ],\n  \"places\": [\n    {\n      \"id\": \"l1\",\n      \"name\": \"密林深处\"\n    }\n  ],\n  \"factions\": [],\n  \"memoryDeltas\": [\n    {\n      \"entityId\": \"k1_person_张屠户\",\n      \"kind\": \"clue\",\n      \"anchor\": 1,\n      \"status\": \"open\"\n    },\n    {\n      \"entityId\": \"k1_person_张屠户\",\n      \"kind\": \"fact\",\n      \"anchor\": 1\n    }\n  ]\n}",
+              "reasoning_content": ""
+            }
+          }
+        ],
+        "usage": {
+          "prompt_tokens": 3456,
+          "completion_tokens": 542,
+          "total_tokens": 3998,
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          },
+          "neurons": 38.73680000000023
+        }
+      },
+      "rawSseBytes": 147538
+    }
+  ],
+  "revision": 6,
+  "pending": false,
+  "state": {
+    "relationshipVersion": 1,
+    "version": 5,
+    "mode": "cultivation",
+    "contentVersion": 4,
+    "rulesVersion": 1,
+    "promptVersion": 1,
+    "runId": "b7c829af-5d43-4b3c-98e4-44a473063d6e",
+    "revision": 6,
+    "turnId": 6,
+    "phase": "active",
+    "rng": 962933540,
+    "life": {
+      "name": "云归",
+      "ageDays": 5821,
+      "lifeLimit": 80,
+      "realm": "mortal",
+      "cultivation": 0,
+      "injury": 0,
+      "items": {
+        "supplies": 1,
+        "stones": 0
+      },
+      "relations": {
+        "r:777f39e63f6e0dd9:t1:e:person_1": 2
+      },
+      "birth": {
+        "originId": "village",
+        "talentIds": [
+          "flash-wisdom",
+          "sword-bone"
+        ],
+        "attributes": {
+          "constitution": 2,
+          "insight": 6,
+          "fortune": 4
+        }
+      }
+    },
+    "birthReceipt": {
+      "kind": "opening",
+      "choiceId": null,
+      "action": null,
+      "elapsedDays": 0,
+      "itemChanges": {},
+      "relationChanges": {},
+      "random": {
+        "before": 134918293,
+        "after": 134918293,
+        "roll": null
+      },
+      "before": {
+        "ageDays": 5760,
+        "realm": "mortal",
+        "cultivation": 0,
+        "injury": 0
+      },
+      "after": {
+        "ageDays": 5760,
+        "realm": "mortal",
+        "cultivation": 0,
+        "injury": 0
+      },
+      "death": null,
+      "birth": {
+        "originId": "village",
+        "talentIds": [
+          "flash-wisdom",
+          "sword-bone"
+        ],
+        "attributes": {
+          "constitution": 2,
+          "insight": 6,
+          "fortune": 4
+        }
+      }
+    },
+    "currentScene": {
+      "id": "r:777f39e63f6e0dd9:t6:s:scene",
+      "title": "后山深处",
+      "location": "后山深处",
+      "entities": [
+        {
+          "id": "r:777f39e63f6e0dd9:t1:e:person_1",
+          "name": "张屠户",
+          "kind": "person",
+          "status": "alive"
+        },
+        {
+          "id": "r:777f39e63f6e0dd9:t6:e:place_1",
+          "name": "密林深处",
+          "kind": "place"
+        }
+      ],
+      "blocks": [
+        {
+          "kind": "narration",
+          "text": "你告别了张屠户，独自一人穿行荒野，六十日的跋涉让你衣衫褴褛，满身尘土。终于，后山深处的轮廓在眼前清晰起来，这里古木参天，浓雾弥漫，空气中弥漫着一股腐朽的腥气，与村口那头死猪身上的味道如出一辙。"
+        },
+        {
+          "kind": "narration",
+          "text": "在一处被藤蔓遮蔽的断崖边，你发现了一具巨大的兽骨，骨骼呈现出诡异的紫黑色，断裂处锋利如刀削，显然是被某种极快极利的东西瞬间斩断。兽骨旁散落着几片巨大的黑色羽毛，在风中微微颤动。"
+        }
+      ],
+      "choices": [
+        {
+          "id": "r:777f39e63f6e0dd9:t6:c:a",
+          "label": "询问张屠户：询问张屠户关于后山黑影的细节，确认是否与这具兽骨有关。",
+          "intent": "interact",
+          "targetId": "r:777f39e63f6e0dd9:t1:e:person_1",
+          "stake": "low",
+          "approach": "ask"
+        },
+        {
+          "id": "r:777f39e63f6e0dd9:t6:c:b",
+          "label": "仔细观察：观察兽骨断裂处的锋利程度和黑色羽毛的来源。",
+          "intent": "interact",
+          "targetId": "self",
+          "stake": "low",
+          "approach": "observe"
+        },
+        {
+          "id": "r:777f39e63f6e0dd9:t6:c:leave",
+          "label": "结束当前互动：暂不介入此事",
+          "intent": "interact",
+          "targetId": "r:777f39e63f6e0dd9:t1:e:person_1",
+          "approach": "leave",
+          "stake": "low"
+        }
+      ],
+      "memoryDeltas": [
+        {
+          "entityId": "r:777f39e63f6e0dd9:t1:e:person_1",
+          "kind": "clue",
+          "text": "在一处被藤蔓遮蔽的断崖边，你发现了一具巨大的兽骨，骨骼呈现出诡异的紫黑色，断裂处锋利如刀削，显然是被某种极快极利的东西瞬间斩断。兽骨旁散落着几片巨大的黑色羽毛，在风中微微颤动。",
+          "status": "open"
+        },
+        {
+          "entityId": "r:777f39e63f6e0dd9:t1:e:person_1",
+          "kind": "fact",
+          "text": "在一处被藤蔓遮蔽的断崖边，你发现了一具巨大的兽骨，骨骼呈现出诡异的紫黑色，断裂处锋利如刀削，显然是被某种极快极利的东西瞬间斩断。兽骨旁散落着几片巨大的黑色羽毛，在风中微微颤动。"
+        }
+      ]
+    },
+    "lastReceipt": {
+      "kind": "choice",
+      "choiceId": "r:777f39e63f6e0dd9:t5:c:b",
+      "action": {
+        "id": "r:777f39e63f6e0dd9:t5:c:b",
+        "label": "穿行荒野前往后山深处：前往后山深处查看异状源头",
+        "intent": "travel",
+        "targetId": "r:777f39e63f6e0dd9:t4:e:place_1",
+        "stake": "low",
+        "approach": "wilderness"
+      },
+      "elapsedDays": 60,
+      "itemChanges": {
+        "supplies": -1
+      },
+      "relationChanges": {},
+      "random": {
+        "before": 2445986457,
+        "after": 962933540,
+        "roll": 40
+      },
+      "before": {
+        "ageDays": 5761,
+        "realm": "mortal",
+        "cultivation": 0,
+        "injury": 0
+      },
+      "after": {
+        "ageDays": 5821,
+        "realm": "mortal",
+        "cultivation": 0,
+        "injury": 0
+      },
+      "death": null,
+      "birth": null
+    },
+    "relatedEntities": [
+      {
+        "id": "r:777f39e63f6e0dd9:t1:e:person_1",
+        "name": "张屠户",
+        "kind": "person",
+        "status": "alive"
+      },
+      {
+        "id": "r:777f39e63f6e0dd9:t6:e:place_1",
+        "name": "密林深处",
+        "kind": "place"
+      }
+    ],
+    "archiveCursor": 0
+  },
+  "posts": 1,
+  "latency": {
+    "usable": true,
+    "errorCode": null,
+    "firstAnyPreviewMs": 5029,
+    "firstReadableMs": 5303,
+    "completionMs": 14600,
+    "narrativeChars": 186,
+    "maxPreviewGapMs": 314,
+    "readingFinishEstimateMs": 36303,
+    "readingStallEstimateMs": 0,
+    "optionsWaitEstimateMs": 0,
+    "prefetchWorthEvaluating": true,
+    "assumptions": {
+      "readingCharsPerSecond": 6,
+      "readableChars": 20,
+      "targetWaitMs": 2000
+    }
+  }
+}

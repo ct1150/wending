@@ -1,0 +1,483 @@
+{
+  "caseId": "opening",
+  "start": 769.9000000022352,
+  "timeline": [
+    {
+      "atMs": 9242,
+      "chars": 2
+    },
+    {
+      "atMs": 9320,
+      "chars": 4
+    },
+    {
+      "atMs": 9382,
+      "chars": 9
+    },
+    {
+      "atMs": 9477,
+      "chars": 12
+    },
+    {
+      "atMs": 9555,
+      "chars": 15
+    },
+    {
+      "atMs": 9633,
+      "chars": 18
+    },
+    {
+      "atMs": 9694,
+      "chars": 22
+    },
+    {
+      "atMs": 9771,
+      "chars": 25
+    },
+    {
+      "atMs": 9849,
+      "chars": 27
+    },
+    {
+      "atMs": 9911,
+      "chars": 30
+    },
+    {
+      "atMs": 10005,
+      "chars": 32
+    },
+    {
+      "atMs": 10068,
+      "chars": 35
+    },
+    {
+      "atMs": 10162,
+      "chars": 38
+    },
+    {
+      "atMs": 10240,
+      "chars": 41
+    },
+    {
+      "atMs": 10332,
+      "chars": 43
+    },
+    {
+      "atMs": 10442,
+      "chars": 45
+    },
+    {
+      "atMs": 10504,
+      "chars": 46
+    },
+    {
+      "atMs": 10551,
+      "chars": 47
+    },
+    {
+      "atMs": 10626,
+      "chars": 53
+    },
+    {
+      "atMs": 10692,
+      "chars": 56
+    },
+    {
+      "atMs": 10770,
+      "chars": 59
+    },
+    {
+      "atMs": 10848,
+      "chars": 62
+    },
+    {
+      "atMs": 10912,
+      "chars": 66
+    },
+    {
+      "atMs": 10975,
+      "chars": 68
+    },
+    {
+      "atMs": 11036,
+      "chars": 72
+    },
+    {
+      "atMs": 11116,
+      "chars": 76
+    },
+    {
+      "atMs": 11193,
+      "chars": 78
+    },
+    {
+      "atMs": 11270,
+      "chars": 80
+    },
+    {
+      "atMs": 11348,
+      "chars": 82
+    },
+    {
+      "atMs": 11425,
+      "chars": 87
+    },
+    {
+      "atMs": 11488,
+      "chars": 92
+    },
+    {
+      "atMs": 11550,
+      "chars": 95
+    },
+    {
+      "atMs": 11612,
+      "chars": 98
+    },
+    {
+      "atMs": 11689,
+      "chars": 101
+    },
+    {
+      "atMs": 11751,
+      "chars": 103
+    },
+    {
+      "atMs": 11828,
+      "chars": 107
+    },
+    {
+      "atMs": 11906,
+      "chars": 110
+    },
+    {
+      "atMs": 11969,
+      "chars": 112
+    },
+    {
+      "atMs": 12047,
+      "chars": 115
+    },
+    {
+      "atMs": 12108,
+      "chars": 117
+    },
+    {
+      "atMs": 12171,
+      "chars": 121
+    },
+    {
+      "atMs": 12249,
+      "chars": 124
+    },
+    {
+      "atMs": 12311,
+      "chars": 127
+    },
+    {
+      "atMs": 12373,
+      "chars": 132
+    },
+    {
+      "atMs": 12451,
+      "chars": 135
+    },
+    {
+      "atMs": 12530,
+      "chars": 140
+    },
+    {
+      "atMs": 12592,
+      "chars": 144
+    },
+    {
+      "atMs": 12670,
+      "chars": 146
+    },
+    {
+      "atMs": 12750,
+      "chars": 149
+    },
+    {
+      "atMs": 12813,
+      "chars": 152
+    },
+    {
+      "atMs": 12889,
+      "chars": 156
+    },
+    {
+      "atMs": 12967,
+      "chars": 159
+    },
+    {
+      "atMs": 13123,
+      "chars": 162
+    },
+    {
+      "atMs": 13172,
+      "chars": 166
+    },
+    {
+      "atMs": 13265,
+      "chars": 168
+    },
+    {
+      "atMs": 13328,
+      "chars": 171
+    },
+    {
+      "atMs": 13406,
+      "chars": 174
+    }
+  ],
+  "choicesEnabledDuringPreview": false,
+  "lastText": "你叫云归，今年十六岁。你出生在青云村，是个凡人。你生来便带着两样天赋：一是过目不忘的“天机之智”，二是命中注定要背负的“福祸相依”。这“福祸相依”让你在村中颇受排挤，却也让你在关键时刻总能化险为夷。你身无长物，只有行囊中尚存的三日口粮，以及那颗时刻提醒你命运无常的“福祸相依”之心。你站在村口，望着蜿蜒向外的山道，心中明白，这便是你凡人修行的起点。",
+  "doneMs": 18091,
+  "result": {
+    "protocolVersion": 1,
+    "status": "rejected",
+    "requestId": "362586f1-0e60-402b-9f77-174548e230ea",
+    "attemptId": "30c688f0-ada3-478f-876c-2e2faeb49381",
+    "sessionRef": "sess_5356d2cfea80cff28ec21c17821346b8",
+    "errorCode": "GENERATED_SCENE_INVALID",
+    "retry": null
+  },
+  "request": {
+    "context": {
+      "schemaVersion": 1,
+      "phase": "opening",
+      "identity": {
+        "runId": "b6fb72c4-c65e-48e0-9007-52de69e446ec",
+        "turnId": 1,
+        "baseRevision": 0,
+        "stateHash": "b34c85aa204bd0f0db6e964989d5d2bf8e9d8e7e1978ae7f167f8b9443410524",
+        "choiceId": null,
+        "rulesVersion": 1,
+        "promptVersion": 1,
+        "requestId": "362586f1-0e60-402b-9f77-174548e230ea"
+      },
+      "namespace": "r:6fe0f8e164b6555e",
+      "receipt": {
+        "kind": "opening",
+        "choiceId": null,
+        "action": null,
+        "elapsedDays": 0,
+        "itemChanges": {},
+        "relationChanges": {},
+        "random": {
+          "before": 2376923969,
+          "after": 2376923969,
+          "roll": null
+        },
+        "before": {
+          "ageDays": 5760,
+          "realm": "mortal",
+          "cultivation": 0,
+          "injury": 0
+        },
+        "after": {
+          "ageDays": 5760,
+          "realm": "mortal",
+          "cultivation": 0,
+          "injury": 0
+        },
+        "death": null,
+        "birth": {
+          "originId": "village",
+          "talentIds": [
+            "flash-wisdom",
+            "fortune-debt"
+          ],
+          "attributes": {
+            "constitution": 5,
+            "insight": 3,
+            "fortune": 4
+          }
+        }
+      },
+      "life": {
+        "name": "云归",
+        "ageDays": 5760,
+        "lifeLimit": 80,
+        "realm": "mortal",
+        "cultivation": 0,
+        "injury": 0,
+        "items": {
+          "supplies": 3,
+          "stones": 0
+        },
+        "relations": {},
+        "birth": {
+          "originId": "village",
+          "talentIds": [
+            "flash-wisdom",
+            "fortune-debt"
+          ],
+          "attributes": {
+            "constitution": 5,
+            "insight": 3,
+            "fortune": 4
+          }
+        }
+      },
+      "entities": [],
+      "memory": {
+        "facts": [],
+        "promises": [],
+        "clues": [],
+        "recent": [],
+        "summaries": []
+      },
+      "references": [],
+      "previousScene": null,
+      "relationshipVersion": 1,
+      "relationships": {},
+      "coverage": {
+        "policy": "relevance-v1",
+        "openTotal": 0,
+        "openIncluded": 0,
+        "openOmitted": 0
+      }
+    },
+    "attempt": {
+      "id": "30c688f0-ada3-478f-876c-2e2faeb49381",
+      "sessionRef": "sess_5356d2cfea80cff28ec21c17821346b8",
+      "retryOf": null
+    }
+  },
+  "decision": null,
+  "choices": [],
+  "traces": [
+    {
+      "model": "@cf/zai-org/glm-4.7-flash",
+      "inputHash": "9947c5c3d721e271ea1bc00185d82eee4ef3b893ba31c36a32e701fa7a87a105",
+      "inputBytes": 15766,
+      "startedAt": 1793344904371,
+      "bindingReturnedAt": 1793344904751,
+      "response": {
+        "model": "@cf/zai-org/glm-4.7-flash",
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "message": {
+              "content": "{\n  \"blocks\": [\n    {\n      \"kind\": \"narration\",\n      \"text\": \"你叫云归，今年十六岁。你出生在青云村，是个凡人。你生来便带着两样天赋：一是过目不忘的“天机之智”，二是命中注定要背负的“福祸相依”。这“福祸相依”让你在村中颇受排挤，却也让你在关键时刻总能化险为夷。你身无长物，只有行囊中尚存的三日口粮，以及那颗时刻提醒你命运无常的“福祸相依”之心。你站在村口，望着蜿蜒向外的山道，心中明白，这便是你凡人修行的起点。\"\n    }\n  ],\n  \"title\": \"青云村口\",\n  \"location\": \"青云村口\",\n  \"otherPeople\": [],\n  \"places\": [\n    {\n      \"id\": \"l1\",\n      \"name\": \"山道\"\n    },\n    {\n      \"id\": \"l2\",\n      \"name\": \"青云宗山门\"\n    }\n  ],\n  \"factions\": [],\n  \"choices\": [\n    {\n      \"action\": \"travel:road\",\n      \"targetId\": \"l1\",\n      \"stake\": \"low\",\n      \"label\": \"沿着山道向山外走去\",\n      \"anchor\": \"你站在村口，望着蜿蜒向外的山道，心中明白，这便是你凡人修行的起点。\"\n    },\n    {\n      \"action\": \"interact:ask\",\n      \"targetId\": \"p1\",\n      \"stake\": \"low\",\n      \"label\": \"向村中的老猎户打听消息\",\n      \"anchor\": \"你站在村口，望着蜿蜒向外的山道，心中明白，这便是你凡人修行的起点。\"\n    },\n    {\n      \"action\": \"interact:ask\",\n      \"targetId\": \"p2\",\n      \"stake\": \"low\",\n      \"label\": \"向村中的教书先生询问修仙之事\",\n      \"anchor\": \"你站在村口，望着蜿蜒向外的山道，心中明白，这便是你凡人修行的起点。\"\n    }\n  ]\n  ,\n  \"memoryDeltas\": []\n}",
+              "reasoning_content": ""
+            }
+          }
+        ],
+        "usage": {
+          "prompt_tokens": 1875,
+          "completion_tokens": 480,
+          "total_tokens": 2355,
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          },
+          "neurons": 27.784500000000207
+        }
+      },
+      "rawSseBytes": 135576
+    }
+  ],
+  "revision": 0,
+  "pending": true,
+  "state": {
+    "relationshipVersion": 1,
+    "version": 5,
+    "mode": "cultivation",
+    "contentVersion": 4,
+    "rulesVersion": 1,
+    "promptVersion": 1,
+    "runId": "b6fb72c4-c65e-48e0-9007-52de69e446ec",
+    "revision": 0,
+    "turnId": 0,
+    "phase": "awaitingOpening",
+    "rng": 2376923969,
+    "life": {
+      "name": "云归",
+      "ageDays": 5760,
+      "lifeLimit": 80,
+      "realm": "mortal",
+      "cultivation": 0,
+      "injury": 0,
+      "items": {
+        "supplies": 3,
+        "stones": 0
+      },
+      "relations": {},
+      "birth": {
+        "originId": "village",
+        "talentIds": [
+          "flash-wisdom",
+          "fortune-debt"
+        ],
+        "attributes": {
+          "constitution": 5,
+          "insight": 3,
+          "fortune": 4
+        }
+      }
+    },
+    "birthReceipt": {
+      "kind": "opening",
+      "choiceId": null,
+      "action": null,
+      "elapsedDays": 0,
+      "itemChanges": {},
+      "relationChanges": {},
+      "random": {
+        "before": 2376923969,
+        "after": 2376923969,
+        "roll": null
+      },
+      "before": {
+        "ageDays": 5760,
+        "realm": "mortal",
+        "cultivation": 0,
+        "injury": 0
+      },
+      "after": {
+        "ageDays": 5760,
+        "realm": "mortal",
+        "cultivation": 0,
+        "injury": 0
+      },
+      "death": null,
+      "birth": {
+        "originId": "village",
+        "talentIds": [
+          "flash-wisdom",
+          "fortune-debt"
+        ],
+        "attributes": {
+          "constitution": 5,
+          "insight": 3,
+          "fortune": 4
+        }
+      }
+    },
+    "currentScene": null,
+    "lastReceipt": null,
+    "relatedEntities": [],
+    "archiveCursor": 0
+  },
+  "posts": 1,
+  "latency": {
+    "usable": false,
+    "errorCode": "GENERATED_SCENE_INVALID",
+    "firstAnyPreviewMs": 9242,
+    "firstReadableMs": 9694,
+    "completionMs": 18091,
+    "narrativeChars": 174,
+    "maxPreviewGapMs": 156,
+    "readingFinishEstimateMs": null,
+    "readingStallEstimateMs": null,
+    "optionsWaitEstimateMs": null,
+    "prefetchWorthEvaluating": null,
+    "assumptions": {
+      "readingCharsPerSecond": 6,
+      "readableChars": 20,
+      "targetWaitMs": 2000
+    }
+  }
+}

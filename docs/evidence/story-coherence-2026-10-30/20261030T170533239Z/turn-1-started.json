@@ -1,0 +1,1 @@
+{"at":"2026-10-30T17:09:17.752Z","decision":{"index":0,"reason":"前文父亲持村长送来的药方并担心符文；询问药方及符文来历直接承接当前疑问，另有不介入的明确出口。先听具体来源，不能自动替玩家识读、用药或治疗。","selected":{"id":"r:60efb6672ac907de:t1:c:a","label":"询问父亲：询问父亲关于药方和符文的来历","intent":"interact","targetId":"r:60efb6672ac907de:t1:e:person_1","stake":"low","approach":"ask"}}}

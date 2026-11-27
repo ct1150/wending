@@ -1,0 +1,232 @@
+{
+  "caseId": "opening",
+  "start": 685.1000000014901,
+  "timeline": [],
+  "choicesEnabledDuringPreview": false,
+  "lastText": "",
+  "doneMs": 18243,
+  "result": {
+    "protocolVersion": 1,
+    "status": "rejected",
+    "requestId": "5885086b-6e9f-49a2-abf2-2d07d079bf3f",
+    "attemptId": "0b307edf-fc2c-4f6e-ae7d-f0b5537e5b6d",
+    "sessionRef": "sess_bfdbaa78ffd73c11824d73e48dc79967",
+    "errorCode": "PROVIDER_RESPONSE_TOO_LARGE",
+    "retry": null
+  },
+  "request": {
+    "context": {
+      "schemaVersion": 1,
+      "phase": "opening",
+      "identity": {
+        "runId": "faa362bc-19cc-40c4-9b71-2f1c138fc558",
+        "turnId": 1,
+        "baseRevision": 0,
+        "stateHash": "f53aa065bd231726c519134e11ece44a903f58ee6a6549a3c12d5e93af492f59",
+        "choiceId": null,
+        "rulesVersion": 1,
+        "promptVersion": 1,
+        "requestId": "5885086b-6e9f-49a2-abf2-2d07d079bf3f"
+      },
+      "namespace": "r:c137148fcb3f0e6d",
+      "receipt": {
+        "kind": "opening",
+        "choiceId": null,
+        "action": null,
+        "elapsedDays": 0,
+        "itemChanges": {},
+        "relationChanges": {},
+        "random": {
+          "before": 2512929966,
+          "after": 2512929966,
+          "roll": null
+        },
+        "before": {
+          "ageDays": 5760,
+          "realm": "mortal",
+          "cultivation": 0,
+          "injury": 0
+        },
+        "after": {
+          "ageDays": 5760,
+          "realm": "mortal",
+          "cultivation": 0,
+          "injury": 0
+        },
+        "death": null,
+        "birth": {
+          "originId": "village",
+          "talentIds": [
+            "sword-bone",
+            "sensitive-breath"
+          ],
+          "attributes": {
+            "constitution": 3,
+            "insight": 4,
+            "fortune": 5
+          }
+        }
+      },
+      "life": {
+        "name": "云归",
+        "ageDays": 5760,
+        "lifeLimit": 80,
+        "realm": "mortal",
+        "cultivation": 0,
+        "injury": 0,
+        "items": {
+          "supplies": 3,
+          "stones": 0
+        },
+        "relations": {},
+        "birth": {
+          "originId": "village",
+          "talentIds": [
+            "sword-bone",
+            "sensitive-breath"
+          ],
+          "attributes": {
+            "constitution": 3,
+            "insight": 4,
+            "fortune": 5
+          }
+        }
+      },
+      "entities": [],
+      "memory": {
+        "facts": [],
+        "promises": [],
+        "clues": [],
+        "recent": [],
+        "summaries": []
+      },
+      "references": [],
+      "previousScene": null,
+      "relationshipVersion": 1,
+      "relationships": {},
+      "coverage": {
+        "policy": "relevance-v1",
+        "openTotal": 0,
+        "openIncluded": 0,
+        "openOmitted": 0
+      }
+    },
+    "attempt": {
+      "id": "0b307edf-fc2c-4f6e-ae7d-f0b5537e5b6d",
+      "sessionRef": "sess_bfdbaa78ffd73c11824d73e48dc79967",
+      "retryOf": null
+    }
+  },
+  "decision": null,
+  "choices": [],
+  "traces": [
+    {
+      "model": "@cf/zai-org/glm-4.7-flash",
+      "inputHash": "66e2853089a273210b007334d53402713467c7f0c3ff0725ea82662db992000a",
+      "inputBytes": 9068,
+      "startedAt": 1793346919949,
+      "bindingReturnedAt": 1793346920242
+    }
+  ],
+  "revision": 0,
+  "pending": true,
+  "state": {
+    "relationshipVersion": 1,
+    "version": 5,
+    "mode": "cultivation",
+    "contentVersion": 4,
+    "rulesVersion": 1,
+    "promptVersion": 1,
+    "runId": "faa362bc-19cc-40c4-9b71-2f1c138fc558",
+    "revision": 0,
+    "turnId": 0,
+    "phase": "awaitingOpening",
+    "rng": 2512929966,
+    "life": {
+      "name": "云归",
+      "ageDays": 5760,
+      "lifeLimit": 80,
+      "realm": "mortal",
+      "cultivation": 0,
+      "injury": 0,
+      "items": {
+        "supplies": 3,
+        "stones": 0
+      },
+      "relations": {},
+      "birth": {
+        "originId": "village",
+        "talentIds": [
+          "sword-bone",
+          "sensitive-breath"
+        ],
+        "attributes": {
+          "constitution": 3,
+          "insight": 4,
+          "fortune": 5
+        }
+      }
+    },
+    "birthReceipt": {
+      "kind": "opening",
+      "choiceId": null,
+      "action": null,
+      "elapsedDays": 0,
+      "itemChanges": {},
+      "relationChanges": {},
+      "random": {
+        "before": 2512929966,
+        "after": 2512929966,
+        "roll": null
+      },
+      "before": {
+        "ageDays": 5760,
+        "realm": "mortal",
+        "cultivation": 0,
+        "injury": 0
+      },
+      "after": {
+        "ageDays": 5760,
+        "realm": "mortal",
+        "cultivation": 0,
+        "injury": 0
+      },
+      "death": null,
+      "birth": {
+        "originId": "village",
+        "talentIds": [
+          "sword-bone",
+          "sensitive-breath"
+        ],
+        "attributes": {
+          "constitution": 3,
+          "insight": 4,
+          "fortune": 5
+        }
+      }
+    },
+    "currentScene": null,
+    "lastReceipt": null,
+    "relatedEntities": [],
+    "archiveCursor": 0
+  },
+  "posts": 1,
+  "latency": {
+    "usable": false,
+    "errorCode": "PROVIDER_RESPONSE_TOO_LARGE",
+    "firstAnyPreviewMs": null,
+    "firstReadableMs": null,
+    "completionMs": 18243,
+    "narrativeChars": 0,
+    "maxPreviewGapMs": 0,
+    "readingFinishEstimateMs": null,
+    "readingStallEstimateMs": null,
+    "optionsWaitEstimateMs": null,
+    "prefetchWorthEvaluating": null,
+    "assumptions": {
+      "readingCharsPerSecond": 6,
+      "readableChars": 20,
+      "targetWaitMs": 2000
+    }
+  }
+}

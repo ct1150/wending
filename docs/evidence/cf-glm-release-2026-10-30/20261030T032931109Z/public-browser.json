@@ -1,0 +1,1439 @@
+{
+  "recordedAt": "2026-10-30T03:31:31.530Z",
+  "sourceCommit": "c00f56781dc120394c7d96785350d2e583c55207",
+  "version": "cad2a140-240f-4465-a837-e53f054c2589",
+  "frontendSource": "Public deployed HTML and actual API/SQLite; no request interception",
+  "records": [
+    {
+      "caseId": "opening",
+      "mode": "browser-real-api",
+      "start": 935.5999999996275,
+      "timeline": [
+        {
+          "atMs": 3467,
+          "chars": 1
+        },
+        {
+          "atMs": 3544,
+          "chars": 4
+        },
+        {
+          "atMs": 3607,
+          "chars": 7
+        },
+        {
+          "atMs": 3653,
+          "chars": 10
+        },
+        {
+          "atMs": 3731,
+          "chars": 13
+        },
+        {
+          "atMs": 3779,
+          "chars": 17
+        },
+        {
+          "atMs": 3906,
+          "chars": 19
+        },
+        {
+          "atMs": 3967,
+          "chars": 21
+        },
+        {
+          "atMs": 4030,
+          "chars": 23
+        },
+        {
+          "atMs": 4106,
+          "chars": 27
+        },
+        {
+          "atMs": 4182,
+          "chars": 29
+        },
+        {
+          "atMs": 4242,
+          "chars": 32
+        },
+        {
+          "atMs": 4320,
+          "chars": 35
+        },
+        {
+          "atMs": 4382,
+          "chars": 40
+        },
+        {
+          "atMs": 4461,
+          "chars": 43
+        },
+        {
+          "atMs": 4525,
+          "chars": 47
+        },
+        {
+          "atMs": 4897,
+          "chars": 49
+        },
+        {
+          "atMs": 5392,
+          "chars": 50
+        },
+        {
+          "atMs": 6023,
+          "chars": 51
+        },
+        {
+          "atMs": 6830,
+          "chars": 52
+        },
+        {
+          "atMs": 7757,
+          "chars": 55
+        },
+        {
+          "atMs": 8823,
+          "chars": 56
+        },
+        {
+          "atMs": 9935,
+          "chars": 58
+        },
+        {
+          "atMs": 10272,
+          "chars": 59
+        },
+        {
+          "atMs": 10609,
+          "chars": 60
+        },
+        {
+          "atMs": 11014,
+          "chars": 61
+        },
+        {
+          "atMs": 11413,
+          "chars": 63
+        },
+        {
+          "atMs": 11585,
+          "chars": 67
+        },
+        {
+          "atMs": 11664,
+          "chars": 70
+        },
+        {
+          "atMs": 11738,
+          "chars": 72
+        },
+        {
+          "atMs": 11801,
+          "chars": 76
+        },
+        {
+          "atMs": 11876,
+          "chars": 80
+        },
+        {
+          "atMs": 11940,
+          "chars": 83
+        },
+        {
+          "atMs": 12033,
+          "chars": 86
+        },
+        {
+          "atMs": 12081,
+          "chars": 88
+        },
+        {
+          "atMs": 12144,
+          "chars": 90
+        },
+        {
+          "atMs": 12221,
+          "chars": 91
+        },
+        {
+          "atMs": 12302,
+          "chars": 94
+        },
+        {
+          "atMs": 12365,
+          "chars": 97
+        },
+        {
+          "atMs": 12426,
+          "chars": 100
+        },
+        {
+          "atMs": 12535,
+          "chars": 103
+        },
+        {
+          "atMs": 12597,
+          "chars": 107
+        },
+        {
+          "atMs": 12673,
+          "chars": 110
+        },
+        {
+          "atMs": 12750,
+          "chars": 113
+        },
+        {
+          "atMs": 12813,
+          "chars": 116
+        },
+        {
+          "atMs": 12883,
+          "chars": 119
+        },
+        {
+          "atMs": 12970,
+          "chars": 121
+        },
+        {
+          "atMs": 13047,
+          "chars": 123
+        },
+        {
+          "atMs": 13124,
+          "chars": 127
+        },
+        {
+          "atMs": 13187,
+          "chars": 131
+        },
+        {
+          "atMs": 13264,
+          "chars": 134
+        },
+        {
+          "atMs": 13341,
+          "chars": 137
+        },
+        {
+          "atMs": 13405,
+          "chars": 140
+        },
+        {
+          "atMs": 13481,
+          "chars": 142
+        },
+        {
+          "atMs": 13542,
+          "chars": 145
+        },
+        {
+          "atMs": 13620,
+          "chars": 147
+        },
+        {
+          "atMs": 13685,
+          "chars": 150
+        },
+        {
+          "atMs": 13761,
+          "chars": 154
+        },
+        {
+          "atMs": 13839,
+          "chars": 155
+        },
+        {
+          "atMs": 13898,
+          "chars": 159
+        },
+        {
+          "atMs": 13973,
+          "chars": 162
+        },
+        {
+          "atMs": 14036,
+          "chars": 164
+        },
+        {
+          "atMs": 14130,
+          "chars": 166
+        },
+        {
+          "atMs": 14285,
+          "chars": 174
+        },
+        {
+          "atMs": 14316,
+          "chars": 177
+        },
+        {
+          "atMs": 14379,
+          "chars": 178
+        },
+        {
+          "atMs": 14535,
+          "chars": 180
+        },
+        {
+          "atMs": 14609,
+          "chars": 182
+        },
+        {
+          "atMs": 14686,
+          "chars": 184
+        },
+        {
+          "atMs": 15135,
+          "chars": 188
+        },
+        {
+          "atMs": 15247,
+          "chars": 190
+        },
+        {
+          "atMs": 15340,
+          "chars": 192
+        },
+        {
+          "atMs": 15416,
+          "chars": 195
+        },
+        {
+          "atMs": 15463,
+          "chars": 198
+        },
+        {
+          "atMs": 15526,
+          "chars": 200
+        },
+        {
+          "atMs": 15853,
+          "chars": 202
+        },
+        {
+          "atMs": 16144,
+          "chars": 205
+        },
+        {
+          "atMs": 16680,
+          "chars": 210
+        },
+        {
+          "atMs": 16775,
+          "chars": 212
+        },
+        {
+          "atMs": 16840,
+          "chars": 215
+        },
+        {
+          "atMs": 16934,
+          "chars": 219
+        },
+        {
+          "atMs": 17027,
+          "chars": 220
+        },
+        {
+          "atMs": 17071,
+          "chars": 223
+        },
+        {
+          "atMs": 17177,
+          "chars": 225
+        },
+        {
+          "atMs": 17234,
+          "chars": 230
+        },
+        {
+          "atMs": 17326,
+          "chars": 234
+        },
+        {
+          "atMs": 17386,
+          "chars": 236
+        },
+        {
+          "atMs": 17492,
+          "chars": 241
+        },
+        {
+          "atMs": 17598,
+          "chars": 243
+        },
+        {
+          "atMs": 17707,
+          "chars": 246
+        },
+        {
+          "atMs": 17865,
+          "chars": 248
+        },
+        {
+          "atMs": 17944,
+          "chars": 252
+        },
+        {
+          "atMs": 18007,
+          "chars": 254
+        },
+        {
+          "atMs": 18070,
+          "chars": 258
+        },
+        {
+          "atMs": 18146,
+          "chars": 262
+        },
+        {
+          "atMs": 18223,
+          "chars": 266
+        },
+        {
+          "atMs": 18271,
+          "chars": 268
+        },
+        {
+          "atMs": 18363,
+          "chars": 271
+        },
+        {
+          "atMs": 18430,
+          "chars": 274
+        },
+        {
+          "atMs": 18492,
+          "chars": 276
+        },
+        {
+          "atMs": 18647,
+          "chars": 279
+        },
+        {
+          "atMs": 18709,
+          "chars": 283
+        },
+        {
+          "atMs": 18757,
+          "chars": 285
+        },
+        {
+          "atMs": 18837,
+          "chars": 288
+        },
+        {
+          "atMs": 18916,
+          "chars": 291
+        },
+        {
+          "atMs": 18964,
+          "chars": 293
+        },
+        {
+          "atMs": 19043,
+          "chars": 298
+        },
+        {
+          "atMs": 19106,
+          "chars": 301
+        },
+        {
+          "atMs": 19183,
+          "chars": 304
+        },
+        {
+          "atMs": 19253,
+          "chars": 309
+        },
+        {
+          "atMs": 19299,
+          "chars": 312
+        },
+        {
+          "atMs": 19374,
+          "chars": 315
+        },
+        {
+          "atMs": 19431,
+          "chars": 317
+        },
+        {
+          "atMs": 19492,
+          "chars": 322
+        },
+        {
+          "atMs": 19554,
+          "chars": 324
+        },
+        {
+          "atMs": 19615,
+          "chars": 327
+        },
+        {
+          "atMs": 19677,
+          "chars": 332
+        },
+        {
+          "atMs": 19738,
+          "chars": 338
+        },
+        {
+          "atMs": 19802,
+          "chars": 341
+        },
+        {
+          "atMs": 19864,
+          "chars": 343
+        },
+        {
+          "atMs": 19926,
+          "chars": 344
+        }
+      ],
+      "firstBirthMs": 68,
+      "choicesEnabledDuringPreview": false,
+      "lastText": "云归站在青云村的老槐树下，十六岁的身躯虽显单薄，但眼神中透着一股与年龄不符的沉稳。你自幼便知晓自己与旁人不同，那名为“过目不忘”的天赋让你在村中读书识字时总是一目了然，而“命带债”的命数则像一道无形的枷锁，时刻提醒着你这辈子的因果。村口的石碑上刻着“青云村”三个大字，夕阳的余晖洒在斑驳的树影上，远处传来几声犬吠。你摸了摸腰间干瘪的行囊，里面只有三天的行粮和几枚铜板。\n\n“爹，娘，孩儿要去外面的世界看看了。”\n\n你转身向村外走去，脚下的路蜿蜒伸向未知的远方。虽然只是凡人，但心中的那团火并未熄灭。你路过村西头的铁匠铺，听到里面传来叮叮当当的打铁声；又路过村东头的杂货铺，掌柜正对着账本发愁。前方不远处，一条通往山里的岔路口分开了去路，左边似乎通向更深的山林，右边则是一条通往镇子的官道。",
+      "doneMs": 23632,
+      "result": {
+        "protocolVersion": 1,
+        "status": "ready",
+        "requestId": "f77b41cd-2422-4de4-adf9-a74987aaa96e",
+        "attemptId": "7214ffcf-880c-48fe-a860-a3f162d1ead9",
+        "sessionRef": "sess_dc5ef1cd5ef401bb6fe235c5be351189",
+        "errorCode": null,
+        "retry": null,
+        "scene": {
+          "id": "r:9587eaa21060af00:t1:s:scene",
+          "title": "青云村口",
+          "location": "青云村口",
+          "entities": [
+            {
+              "id": "r:9587eaa21060af00:t1:e:place_1",
+              "name": "山道",
+              "kind": "place"
+            },
+            {
+              "id": "r:9587eaa21060af00:t1:e:place_2",
+              "name": "官道",
+              "kind": "place"
+            }
+          ],
+          "blocks": [
+            {
+              "kind": "narration",
+              "text": "云归站在青云村的老槐树下，十六岁的身躯虽显单薄，但眼神中透着一股与年龄不符的沉稳。你自幼便知晓自己与旁人不同，那名为“过目不忘”的天赋让你在村中读书识字时总是一目了然，而“命带债”的命数则像一道无形的枷锁，时刻提醒着你这辈子的因果。村口的石碑上刻着“青云村”三个大字，夕阳的余晖洒在斑驳的树影上，远处传来几声犬吠。你摸了摸腰间干瘪的行囊，里面只有三天的行粮和几枚铜板。"
+            },
+            {
+              "kind": "dialogue",
+              "text": "“爹，娘，孩儿要去外面的世界看看了。”",
+              "speaker": "self"
+            },
+            {
+              "kind": "narration",
+              "text": "你转身向村外走去，脚下的路蜿蜒伸向未知的远方。虽然只是凡人，但心中的那团火并未熄灭。你路过村西头的铁匠铺，听到里面传来叮叮当当的打铁声；又路过村东头的杂货铺，掌柜正对着账本发愁。前方不远处，一条通往山里的岔路口分开了去路，左边似乎通向更深的山林，右边则是一条通往镇子的官道。"
+            }
+          ],
+          "choices": [
+            {
+              "id": "r:9587eaa21060af00:t1:c:a",
+              "label": "沿路前往山道（谨慎）",
+              "intent": "travel",
+              "targetId": "r:9587eaa21060af00:t1:e:place_1",
+              "stake": "low",
+              "approach": "road"
+            },
+            {
+              "id": "r:9587eaa21060af00:t1:c:b",
+              "label": "沿路前往官道（谨慎）",
+              "intent": "travel",
+              "targetId": "r:9587eaa21060af00:t1:e:place_2",
+              "stake": "low",
+              "approach": "road"
+            }
+          ],
+          "memoryDeltas": []
+        }
+      },
+      "revision": 1,
+      "pending": false,
+      "posts": 1,
+      "diagnostics": [],
+      "wireEvents": [
+        {
+          "type": "status",
+          "status": "generating"
+        },
+        {
+          "type": "status",
+          "status": "generating"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "status",
+          "status": "generating"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "status",
+          "status": "generating"
+        },
+        {
+          "type": "result"
+        }
+      ]
+    },
+    {
+      "caseId": "choice",
+      "mode": "browser-real-api",
+      "start": 24588.5,
+      "timeline": [
+        {
+          "atMs": 5883,
+          "chars": 1
+        },
+        {
+          "atMs": 5959,
+          "chars": 5
+        },
+        {
+          "atMs": 6049,
+          "chars": 10
+        },
+        {
+          "atMs": 6143,
+          "chars": 13
+        },
+        {
+          "atMs": 6252,
+          "chars": 16
+        },
+        {
+          "atMs": 6330,
+          "chars": 20
+        },
+        {
+          "atMs": 6407,
+          "chars": 24
+        },
+        {
+          "atMs": 6559,
+          "chars": 26
+        },
+        {
+          "atMs": 6605,
+          "chars": 30
+        },
+        {
+          "atMs": 6693,
+          "chars": 33
+        },
+        {
+          "atMs": 6971,
+          "chars": 34
+        },
+        {
+          "atMs": 7036,
+          "chars": 35
+        },
+        {
+          "atMs": 7097,
+          "chars": 36
+        },
+        {
+          "atMs": 7160,
+          "chars": 39
+        },
+        {
+          "atMs": 7235,
+          "chars": 42
+        },
+        {
+          "atMs": 7437,
+          "chars": 44
+        },
+        {
+          "atMs": 7499,
+          "chars": 47
+        },
+        {
+          "atMs": 7559,
+          "chars": 51
+        },
+        {
+          "atMs": 7620,
+          "chars": 52
+        },
+        {
+          "atMs": 7668,
+          "chars": 54
+        },
+        {
+          "atMs": 7760,
+          "chars": 56
+        },
+        {
+          "atMs": 7853,
+          "chars": 60
+        },
+        {
+          "atMs": 7935,
+          "chars": 64
+        },
+        {
+          "atMs": 8028,
+          "chars": 66
+        },
+        {
+          "atMs": 8168,
+          "chars": 70
+        },
+        {
+          "atMs": 8245,
+          "chars": 75
+        },
+        {
+          "atMs": 8322,
+          "chars": 79
+        },
+        {
+          "atMs": 8413,
+          "chars": 84
+        },
+        {
+          "atMs": 8490,
+          "chars": 88
+        },
+        {
+          "atMs": 8555,
+          "chars": 92
+        },
+        {
+          "atMs": 8630,
+          "chars": 95
+        },
+        {
+          "atMs": 8691,
+          "chars": 98
+        },
+        {
+          "atMs": 8881,
+          "chars": 103
+        },
+        {
+          "atMs": 8926,
+          "chars": 106
+        },
+        {
+          "atMs": 8988,
+          "chars": 108
+        },
+        {
+          "atMs": 9064,
+          "chars": 115
+        },
+        {
+          "atMs": 9125,
+          "chars": 118
+        },
+        {
+          "atMs": 9187,
+          "chars": 122
+        },
+        {
+          "atMs": 9251,
+          "chars": 125
+        },
+        {
+          "atMs": 9330,
+          "chars": 128
+        },
+        {
+          "atMs": 9408,
+          "chars": 133
+        },
+        {
+          "atMs": 9470,
+          "chars": 135
+        },
+        {
+          "atMs": 9532,
+          "chars": 138
+        },
+        {
+          "atMs": 9821,
+          "chars": 142
+        },
+        {
+          "atMs": 9881,
+          "chars": 146
+        },
+        {
+          "atMs": 9959,
+          "chars": 149
+        },
+        {
+          "atMs": 10021,
+          "chars": 151
+        },
+        {
+          "atMs": 10081,
+          "chars": 152
+        },
+        {
+          "atMs": 10191,
+          "chars": 153
+        },
+        {
+          "atMs": 10237,
+          "chars": 157
+        },
+        {
+          "atMs": 10284,
+          "chars": 161
+        },
+        {
+          "atMs": 10343,
+          "chars": 162
+        },
+        {
+          "atMs": 10404,
+          "chars": 167
+        }
+      ],
+      "firstBirthMs": null,
+      "choicesEnabledDuringPreview": false,
+      "lastText": "你沿着蜿蜒的山道前行，四周林木葱郁，偶尔传来几声不知名的鸟鸣。山道崎岖难行，你不得不时刻注意脚下的碎石与湿滑的苔藓。三十天的时光在跋涉中悄然流逝，你的行粮消耗了不少，但并未遇到什么危险。当你终于翻过一道山梁，视野豁然开朗，前方出现了一条宽阔平坦的官道，隐约可见远处有炊烟升起。\n\n“这山道倒是比我想象中难走，不过总算是到了官道附近。”",
+      "doneMs": 14638,
+      "result": {
+        "protocolVersion": 1,
+        "status": "ready",
+        "requestId": "a9113e33-fcfe-4911-aee4-7aef8c149cea",
+        "attemptId": "86562c7f-1987-4cb6-a321-dd24f826b1bb",
+        "sessionRef": "sess_dc5ef1cd5ef401bb6fe235c5be351189",
+        "errorCode": null,
+        "retry": null,
+        "scene": {
+          "id": "r:9587eaa21060af00:t2:s:scene",
+          "title": "山道尽头",
+          "location": "山道尽头",
+          "entities": [
+            {
+              "id": "r:9587eaa21060af00:t1:e:place_1",
+              "name": "山道",
+              "kind": "place"
+            },
+            {
+              "id": "r:9587eaa21060af00:t1:e:place_2",
+              "name": "官道",
+              "kind": "place"
+            }
+          ],
+          "blocks": [
+            {
+              "kind": "narration",
+              "text": "你沿着蜿蜒的山道前行，四周林木葱郁，偶尔传来几声不知名的鸟鸣。山道崎岖难行，你不得不时刻注意脚下的碎石与湿滑的苔藓。三十天的时光在跋涉中悄然流逝，你的行粮消耗了不少，但并未遇到什么危险。当你终于翻过一道山梁，视野豁然开朗，前方出现了一条宽阔平坦的官道，隐约可见远处有炊烟升起。"
+            },
+            {
+              "kind": "dialogue",
+              "text": "“这山道倒是比我想象中难走，不过总算是到了官道附近。”",
+              "speaker": "self"
+            }
+          ],
+          "choices": [
+            {
+              "id": "r:9587eaa21060af00:t2:c:a",
+              "label": "沿路前往官道（谨慎）",
+              "intent": "travel",
+              "targetId": "r:9587eaa21060af00:t1:e:place_2",
+              "stake": "low",
+              "approach": "road"
+            },
+            {
+              "id": "r:9587eaa21060af00:t2:c:b",
+              "label": "寻找灵石（谨慎）",
+              "intent": "explore",
+              "targetId": "stones",
+              "stake": "low",
+              "approach": "cautious"
+            },
+            {
+              "id": "r:9587eaa21060af00:t2:c:c",
+              "label": "寻找行粮（谨慎）",
+              "intent": "explore",
+              "targetId": "supplies",
+              "stake": "low",
+              "approach": "cautious"
+            }
+          ],
+          "memoryDeltas": [
+            {
+              "entityId": "r:9587eaa21060af00:t1:e:place_1",
+              "text": "山道尽头连接着官道，视野开阔。",
+              "kind": "fact"
+            }
+          ]
+        }
+      },
+      "revision": 2,
+      "pending": false,
+      "posts": 2,
+      "diagnostics": [],
+      "wireEvents": [
+        {
+          "type": "status",
+          "status": "generating"
+        },
+        {
+          "type": "status",
+          "status": "generating"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "preview"
+        },
+        {
+          "type": "status",
+          "status": "generating"
+        },
+        {
+          "type": "result"
+        }
+      ]
+    }
+  ],
+  "refreshed": {
+    "beforeRevision": 2,
+    "afterRevision": 2,
+    "sameRng": true,
+    "sameState": true,
+    "noNewPost": true
+  },
+  "errors": [],
+  "posts": 2
+}

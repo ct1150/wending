@@ -1,0 +1,570 @@
+{
+  "caseId": "choice-1",
+  "start": 95171,
+  "timeline": [
+    {
+      "atMs": 2647,
+      "chars": 1
+    },
+    {
+      "atMs": 2724,
+      "chars": 3
+    },
+    {
+      "atMs": 2817,
+      "chars": 7
+    },
+    {
+      "atMs": 2923,
+      "chars": 10
+    },
+    {
+      "atMs": 3002,
+      "chars": 13
+    },
+    {
+      "atMs": 3045,
+      "chars": 16
+    },
+    {
+      "atMs": 3119,
+      "chars": 22
+    },
+    {
+      "atMs": 3182,
+      "chars": 25
+    },
+    {
+      "atMs": 3418,
+      "chars": 27
+    },
+    {
+      "atMs": 3479,
+      "chars": 30
+    },
+    {
+      "atMs": 3548,
+      "chars": 32
+    },
+    {
+      "atMs": 3605,
+      "chars": 34
+    },
+    {
+      "atMs": 3765,
+      "chars": 35
+    },
+    {
+      "atMs": 3836,
+      "chars": 37
+    },
+    {
+      "atMs": 3898,
+      "chars": 39
+    },
+    {
+      "atMs": 3945,
+      "chars": 40
+    },
+    {
+      "atMs": 4290,
+      "chars": 41
+    },
+    {
+      "atMs": 4784,
+      "chars": 43
+    },
+    {
+      "atMs": 5438,
+      "chars": 44
+    },
+    {
+      "atMs": 6202,
+      "chars": 45
+    },
+    {
+      "atMs": 7158,
+      "chars": 46
+    },
+    {
+      "atMs": 8235,
+      "chars": 47
+    },
+    {
+      "atMs": 9052,
+      "chars": 52
+    },
+    {
+      "atMs": 9129,
+      "chars": 55
+    },
+    {
+      "atMs": 9204,
+      "chars": 57
+    },
+    {
+      "atMs": 9283,
+      "chars": 60
+    },
+    {
+      "atMs": 9327,
+      "chars": 64
+    },
+    {
+      "atMs": 9388,
+      "chars": 69
+    },
+    {
+      "atMs": 9448,
+      "chars": 73
+    }
+  ],
+  "choicesEnabledDuringPreview": false,
+  "lastText": "你从腰间解下干粮，掰下一块递过去。陌生人接过干粮，狼吞虎咽地塞进嘴里，噎得直翻白眼。他抹了把嘴，眼神稍微聚焦，指了指井底：“下面……还有个东西。”",
+  "doneMs": 13722,
+  "result": {
+    "protocolVersion": 1,
+    "status": "ready",
+    "requestId": "b5355049-6d89-41a3-a184-9cdafaf715cc",
+    "attemptId": "b264a3c3-4a28-4a83-ad30-dcca6b390cc8",
+    "sessionRef": "sess_a2f5c0bc858fc123664ced4d75a7096f",
+    "errorCode": null,
+    "retry": null,
+    "scene": {
+      "id": "r:6049e35f97c78102:t2:s:scene",
+      "title": "井边对谈",
+      "location": "猎户屋后",
+      "entities": [
+        {
+          "id": "r:6049e35f97c78102:t1:e:person_1",
+          "name": "陌生人",
+          "status": "alive",
+          "kind": "person"
+        }
+      ],
+      "blocks": [
+        {
+          "kind": "narration",
+          "text": "你从腰间解下干粮，掰下一块递过去。陌生人接过干粮，狼吞虎咽地塞进嘴里，噎得直翻白眼。他抹了把嘴，眼神稍微聚焦，指了指井底：“下面……还有个东西。”"
+        }
+      ],
+      "choices": [
+        {
+          "id": "r:6049e35f97c78102:t2:c:a",
+          "label": "询问井底还有何物",
+          "intent": "interact",
+          "targetId": "r:6049e35f97c78102:t1:e:person_1",
+          "stake": "low",
+          "approach": "ask"
+        },
+        {
+          "id": "r:6049e35f97c78102:t2:c:b",
+          "label": "转身离开，不再理会",
+          "intent": "interact",
+          "targetId": "r:6049e35f97c78102:t1:e:person_1",
+          "stake": "low",
+          "approach": "leave"
+        }
+      ],
+      "memoryDeltas": [
+        {
+          "entityId": "r:6049e35f97c78102:t1:e:person_1",
+          "kind": "clue",
+          "text": "你从腰间解下干粮，掰下一块递过去。陌生人接过干粮，狼吞虎咽地塞进嘴里，噎得直翻白眼。他抹了把嘴，眼神稍微聚焦，指了指井底：“下面……还有个东西。”",
+          "status": "open"
+        }
+      ]
+    }
+  },
+  "request": {
+    "context": {
+      "schemaVersion": 1,
+      "phase": "choice",
+      "identity": {
+        "runId": "d4aa2c7e-ac0d-4251-ba24-3c7f597b0cd8",
+        "turnId": 2,
+        "baseRevision": 1,
+        "stateHash": "dd177bd9c7be4b852bdb85caa4b708435c467d41b5a3284e69c7e5757d1d868a",
+        "choiceId": "r:6049e35f97c78102:t1:c:b",
+        "rulesVersion": 1,
+        "promptVersion": 1,
+        "requestId": "b5355049-6d89-41a3-a184-9cdafaf715cc"
+      },
+      "namespace": "r:6049e35f97c78102",
+      "receipt": {
+        "kind": "choice",
+        "choiceId": "r:6049e35f97c78102:t1:c:b",
+        "action": {
+          "id": "r:6049e35f97c78102:t1:c:b",
+          "label": "递给陌生人一块干粮",
+          "intent": "interact",
+          "targetId": "r:6049e35f97c78102:t1:e:person_1",
+          "stake": "low",
+          "approach": "help"
+        },
+        "elapsedDays": 1,
+        "itemChanges": {
+          "supplies": -1
+        },
+        "relationChanges": {
+          "r:6049e35f97c78102:t1:e:person_1": 2
+        },
+        "random": {
+          "before": 121001066,
+          "after": 2116909249,
+          "roll": 49
+        },
+        "before": {
+          "ageDays": 5760,
+          "realm": "mortal",
+          "cultivation": 0,
+          "injury": 0
+        },
+        "after": {
+          "ageDays": 5761,
+          "realm": "mortal",
+          "cultivation": 0,
+          "injury": 0
+        },
+        "death": null,
+        "birth": null
+      },
+      "life": {
+        "name": "云归",
+        "ageDays": 5761,
+        "lifeLimit": 80,
+        "realm": "mortal",
+        "cultivation": 0,
+        "injury": 0,
+        "items": {
+          "supplies": 2,
+          "stones": 0
+        },
+        "relations": {
+          "r:6049e35f97c78102:t1:e:person_1": 2
+        },
+        "birth": {
+          "originId": "village",
+          "talentIds": [
+            "sensitive-breath",
+            "iron-bones"
+          ],
+          "attributes": {
+            "constitution": 5,
+            "insight": 5,
+            "fortune": 2
+          }
+        }
+      },
+      "entities": [
+        {
+          "id": "r:6049e35f97c78102:t1:e:person_1",
+          "name": "陌生人",
+          "kind": "person",
+          "status": "alive"
+        }
+      ],
+      "memory": {
+        "facts": [],
+        "promises": [],
+        "clues": [
+          {
+            "id": "m:0e3301eaff36150e0d7d88fa343c73bb",
+            "source": "narrative",
+            "kind": "clue",
+            "entityId": "r:6049e35f97c78102:t1:e:person_1",
+            "text": "“咚、咚……”泥土松动，一只满是泥垢的手猛地扒住了井沿，紧接着一个黑影从井底爬了出来，浑身湿透，手里死死攥着半块残缺的玉佩。那是个衣衫褴褛的陌生人，他抬头看了你一眼，眼神涣散，嘴唇颤抖着吐出一个字：“救……”",
+            "status": "open",
+            "runId": "d4aa2c7e-ac0d-4251-ba24-3c7f597b0cd8",
+            "turnId": 1
+          }
+        ],
+        "recent": [
+          {
+            "id": "turn:1",
+            "runId": "d4aa2c7e-ac0d-4251-ba24-3c7f597b0cd8",
+            "turnId": 1,
+            "source": "narrative",
+            "kind": "turn",
+            "text": "地点：猎户屋后\n云归，十六岁的猎户少年，正蹲在自家屋后的枯井旁。井口结着薄霜，井底传来几声沉闷的回响，像是有什么东西在撞击井壁。你握紧了手中的铁叉，听息敏锐的直觉让你察觉到那声音并非来自井底，而是来自井口边缘的泥土里，正以一种极其缓慢的速度向外拱动。\n“咚、咚……”泥土松动，一只满是泥垢的手猛地扒住了井沿，紧接着一个黑影从井底爬了出来，浑身湿透，手里死死攥着半块残缺的玉佩。那是个衣衫褴褛的陌生人，他抬头看了你一眼，眼神涣散，嘴唇颤抖着吐出一个字：“救……”",
+            "entityIds": []
+          }
+        ],
+        "summaries": []
+      },
+      "references": [
+        "m:0e3301eaff36150e0d7d88fa343c73bb",
+        "turn:1"
+      ],
+      "previousScene": {
+        "id": "r:6049e35f97c78102:t1:s:scene",
+        "blocksHash": "93c75d949dbcacaba31e2f37e878cea9d63ddcddc62dee5a79433dae5bf9ea2b"
+      },
+      "relationshipVersion": 1,
+      "relationships": {
+        "r:6049e35f97c78102:t1:e:person_1": 2
+      },
+      "coverage": {
+        "policy": "relevance-v1",
+        "openTotal": 1,
+        "openIncluded": 1,
+        "openOmitted": 0
+      }
+    },
+    "attempt": {
+      "id": "b264a3c3-4a28-4a83-ad30-dcca6b390cc8",
+      "sessionRef": "sess_a2f5c0bc858fc123664ced4d75a7096f",
+      "retryOf": null
+    }
+  },
+  "decision": {
+    "index": 1,
+    "reason": "递一份行粮援助井边求救陌生人；规则应经过1日、行粮3减到2、关系加2；后文回应援助，不自动治愈或获得玉佩",
+    "selected": {
+      "id": "r:6049e35f97c78102:t1:c:b",
+      "label": "递给陌生人一块干粮",
+      "intent": "interact",
+      "targetId": "r:6049e35f97c78102:t1:e:person_1",
+      "stake": "low",
+      "approach": "help"
+    }
+  },
+  "choices": [
+    {
+      "id": "r:6049e35f97c78102:t2:c:a",
+      "enabled": true,
+      "label": "询问井底还有何物",
+      "cost": "0日"
+    },
+    {
+      "id": "r:6049e35f97c78102:t2:c:b",
+      "enabled": true,
+      "label": "转身离开，不再理会",
+      "cost": "0日"
+    }
+  ],
+  "traces": [
+    {
+      "model": "@cf/zai-org/glm-4.7-flash",
+      "inputHash": "586afc961b9af507a9d2d861ae73e3f9a891802e794bc297593d2ba0ca213bea",
+      "inputBytes": 13165,
+      "startedAt": 1793348180269,
+      "bindingReturnedAt": 1793348180647,
+      "liveRawBytes": 60632,
+      "captureComplete": true,
+      "response": {
+        "model": "@cf/zai-org/glm-4.7-flash",
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "message": {
+              "content": "{\"blocks\":[{\"kind\":\"narration\",\"text\":\"你从腰间解下干粮，掰下一块递过去。陌生人接过干粮，狼吞虎咽地塞进嘴里，噎得直翻白眼。他抹了把嘴，眼神稍微聚焦，指了指井底：“下面……还有个东西。”\"}],\"choices\":[{\"action\":\"interact:ask\",\"targetId\":\"k1\",\"stake\":\"low\",\"label\":\"询问井底还有何物\",\"anchor\":0},{\"action\":\"interact:leave\",\"targetId\":\"k1\",\"stake\":\"low\",\"label\":\"转身离开，不再理会\",\"anchor\":0}],\"title\":\"井边对谈\",\"location\":\"猎户屋后\",\"otherPeople\":[{\"id\":\"k1\",\"name\":\"陌生人\",\"status\":\"alive\"}],\"places\":[],\"factions\":[],\"memoryDeltas\":[{\"entityId\":\"k1\",\"kind\":\"clue\",\"anchor\":0,\"status\":\"open\"}]}",
+              "reasoning_content": ""
+            }
+          }
+        ],
+        "usage": {
+          "prompt_tokens": 2959,
+          "completion_tokens": 199,
+          "total_tokens": 3158,
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          },
+          "neurons": 23.518100000000086
+        }
+      },
+      "rawSseBytes": 60632
+    }
+  ],
+  "revision": 2,
+  "pending": false,
+  "state": {
+    "relationshipVersion": 1,
+    "version": 5,
+    "mode": "cultivation",
+    "contentVersion": 4,
+    "rulesVersion": 1,
+    "promptVersion": 1,
+    "runId": "d4aa2c7e-ac0d-4251-ba24-3c7f597b0cd8",
+    "revision": 2,
+    "turnId": 2,
+    "phase": "active",
+    "rng": 2116909249,
+    "life": {
+      "name": "云归",
+      "ageDays": 5761,
+      "lifeLimit": 80,
+      "realm": "mortal",
+      "cultivation": 0,
+      "injury": 0,
+      "items": {
+        "supplies": 2,
+        "stones": 0
+      },
+      "relations": {
+        "r:6049e35f97c78102:t1:e:person_1": 2
+      },
+      "birth": {
+        "originId": "village",
+        "talentIds": [
+          "sensitive-breath",
+          "iron-bones"
+        ],
+        "attributes": {
+          "constitution": 5,
+          "insight": 5,
+          "fortune": 2
+        }
+      }
+    },
+    "birthReceipt": {
+      "kind": "opening",
+      "choiceId": null,
+      "action": null,
+      "elapsedDays": 0,
+      "itemChanges": {},
+      "relationChanges": {},
+      "random": {
+        "before": 121001066,
+        "after": 121001066,
+        "roll": null
+      },
+      "before": {
+        "ageDays": 5760,
+        "realm": "mortal",
+        "cultivation": 0,
+        "injury": 0
+      },
+      "after": {
+        "ageDays": 5760,
+        "realm": "mortal",
+        "cultivation": 0,
+        "injury": 0
+      },
+      "death": null,
+      "birth": {
+        "originId": "village",
+        "talentIds": [
+          "sensitive-breath",
+          "iron-bones"
+        ],
+        "attributes": {
+          "constitution": 5,
+          "insight": 5,
+          "fortune": 2
+        }
+      }
+    },
+    "currentScene": {
+      "id": "r:6049e35f97c78102:t2:s:scene",
+      "title": "井边对谈",
+      "location": "猎户屋后",
+      "entities": [
+        {
+          "id": "r:6049e35f97c78102:t1:e:person_1",
+          "name": "陌生人",
+          "status": "alive",
+          "kind": "person"
+        }
+      ],
+      "blocks": [
+        {
+          "kind": "narration",
+          "text": "你从腰间解下干粮，掰下一块递过去。陌生人接过干粮，狼吞虎咽地塞进嘴里，噎得直翻白眼。他抹了把嘴，眼神稍微聚焦，指了指井底：“下面……还有个东西。”"
+        }
+      ],
+      "choices": [
+        {
+          "id": "r:6049e35f97c78102:t2:c:a",
+          "label": "询问井底还有何物",
+          "intent": "interact",
+          "targetId": "r:6049e35f97c78102:t1:e:person_1",
+          "stake": "low",
+          "approach": "ask"
+        },
+        {
+          "id": "r:6049e35f97c78102:t2:c:b",
+          "label": "转身离开，不再理会",
+          "intent": "interact",
+          "targetId": "r:6049e35f97c78102:t1:e:person_1",
+          "stake": "low",
+          "approach": "leave"
+        }
+      ],
+      "memoryDeltas": [
+        {
+          "entityId": "r:6049e35f97c78102:t1:e:person_1",
+          "kind": "clue",
+          "text": "你从腰间解下干粮，掰下一块递过去。陌生人接过干粮，狼吞虎咽地塞进嘴里，噎得直翻白眼。他抹了把嘴，眼神稍微聚焦，指了指井底：“下面……还有个东西。”",
+          "status": "open"
+        }
+      ]
+    },
+    "lastReceipt": {
+      "kind": "choice",
+      "choiceId": "r:6049e35f97c78102:t1:c:b",
+      "action": {
+        "id": "r:6049e35f97c78102:t1:c:b",
+        "label": "递给陌生人一块干粮",
+        "intent": "interact",
+        "targetId": "r:6049e35f97c78102:t1:e:person_1",
+        "stake": "low",
+        "approach": "help"
+      },
+      "elapsedDays": 1,
+      "itemChanges": {
+        "supplies": -1
+      },
+      "relationChanges": {
+        "r:6049e35f97c78102:t1:e:person_1": 2
+      },
+      "random": {
+        "before": 121001066,
+        "after": 2116909249,
+        "roll": 49
+      },
+      "before": {
+        "ageDays": 5760,
+        "realm": "mortal",
+        "cultivation": 0,
+        "injury": 0
+      },
+      "after": {
+        "ageDays": 5761,
+        "realm": "mortal",
+        "cultivation": 0,
+        "injury": 0
+      },
+      "death": null,
+      "birth": null
+    },
+    "relatedEntities": [
+      {
+        "id": "r:6049e35f97c78102:t1:e:person_1",
+        "name": "陌生人",
+        "status": "alive",
+        "kind": "person"
+      }
+    ],
+    "archiveCursor": 0
+  },
+  "posts": 2,
+  "latency": {
+    "usable": true,
+    "errorCode": null,
+    "firstAnyPreviewMs": 2647,
+    "firstReadableMs": 3119,
+    "completionMs": 13722,
+    "narrativeChars": 73,
+    "maxPreviewGapMs": 1077,
+    "readingFinishEstimateMs": 15286,
+    "readingStallEstimateMs": 0,
+    "optionsWaitEstimateMs": 0,
+    "prefetchWorthEvaluating": true,
+    "assumptions": {
+      "readingCharsPerSecond": 6,
+      "readableChars": 20,
+      "targetWaitMs": 2000
+    }
+  }
+}

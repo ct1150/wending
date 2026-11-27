@@ -1,0 +1,1 @@
+{"at":"2026-10-30T13:15:20.043Z","decision":{"index":1,"reason":"观察已停留村口且未擅自旅行；明确选择前往后山寻找猎物，验收目的地与旅行收据。","selected":{"id":"r:23279995f3353fe3:t5:c:b","label":"穿行荒野前往后山：前往后山寻找猎物","intent":"travel","targetId":"r:23279995f3353fe3:t3:e:place_1","stake":"low","approach":"wilderness"},"explicitRetry":true}}

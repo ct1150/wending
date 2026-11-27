@@ -1,0 +1,589 @@
+{
+  "caseId": "choice-1",
+  "start": 159526.69999999925,
+  "timeline": [
+    {
+      "atMs": 2392,
+      "chars": 8
+    },
+    {
+      "atMs": 2420,
+      "chars": 13
+    },
+    {
+      "atMs": 2497,
+      "chars": 16
+    },
+    {
+      "atMs": 2560,
+      "chars": 19
+    },
+    {
+      "atMs": 2623,
+      "chars": 22
+    },
+    {
+      "atMs": 2702,
+      "chars": 25
+    },
+    {
+      "atMs": 3231,
+      "chars": 32
+    },
+    {
+      "atMs": 3262,
+      "chars": 52
+    },
+    {
+      "atMs": 3278,
+      "chars": 58
+    },
+    {
+      "atMs": 3340,
+      "chars": 62
+    },
+    {
+      "atMs": 3418,
+      "chars": 67
+    },
+    {
+      "atMs": 3465,
+      "chars": 72
+    },
+    {
+      "atMs": 3527,
+      "chars": 75
+    },
+    {
+      "atMs": 3588,
+      "chars": 80
+    },
+    {
+      "atMs": 3652,
+      "chars": 83
+    },
+    {
+      "atMs": 3698,
+      "chars": 89
+    },
+    {
+      "atMs": 3746,
+      "chars": 94
+    },
+    {
+      "atMs": 3808,
+      "chars": 98
+    },
+    {
+      "atMs": 3870,
+      "chars": 103
+    },
+    {
+      "atMs": 3932,
+      "chars": 106
+    },
+    {
+      "atMs": 4004,
+      "chars": 111
+    },
+    {
+      "atMs": 4050,
+      "chars": 114
+    },
+    {
+      "atMs": 4112,
+      "chars": 120
+    },
+    {
+      "atMs": 4173,
+      "chars": 125
+    },
+    {
+      "atMs": 4250,
+      "chars": 133
+    },
+    {
+      "atMs": 4309,
+      "chars": 139
+    },
+    {
+      "atMs": 4372,
+      "chars": 143
+    },
+    {
+      "atMs": 4433,
+      "chars": 145
+    },
+    {
+      "atMs": 4876,
+      "chars": 154
+    },
+    {
+      "atMs": 4906,
+      "chars": 168
+    }
+  ],
+  "choicesEnabledDuringPreview": false,
+  "lastText": "老张停下手中的活计，抬头望向坊市西边那片连绵的屋脊，指了指远处那座高耸入云的孤峰。“顺着西街一直走，出了坊市大门，往西走半个时辰，就能看见那座孤峰了。不过云归，那地方可不是什么善地，平日里除了练剑的散修，连只野狗都不愿靠近。”他顿了顿，又压低声音说道，“问剑台就在孤峰顶上，那里常年云雾缭绕，听说还有剑灵出没，你若真要去，可得小心些。”",
+  "doneMs": 7799,
+  "result": {
+    "protocolVersion": 1,
+    "status": "rejected",
+    "requestId": "32c1691a-ac14-4f26-b77e-4100c644c49c",
+    "attemptId": "a12b9f76-4df8-42d0-b9b0-f32e7acfed30",
+    "sessionRef": "sess_2ee61f0138930168248826d9a5dbd1ab",
+    "errorCode": "CHOICE_NOT_COMPILABLE",
+    "retry": null
+  },
+  "request": {
+    "context": {
+      "schemaVersion": 1,
+      "phase": "choice",
+      "identity": {
+        "runId": "a2969794-6d18-4af8-92eb-1c89af95dc08",
+        "turnId": 2,
+        "baseRevision": 1,
+        "stateHash": "116b5f02c951bfbd8fb26869d817ea2be7bc2a903053cec8d71473a1d4b074f3",
+        "choiceId": "r:7a380a06b17b4c6e:t1:c:a",
+        "rulesVersion": 1,
+        "promptVersion": 1,
+        "requestId": "32c1691a-ac14-4f26-b77e-4100c644c49c"
+      },
+      "namespace": "r:7a380a06b17b4c6e",
+      "receipt": {
+        "kind": "choice",
+        "choiceId": "r:7a380a06b17b4c6e:t1:c:a",
+        "action": {
+          "id": "r:7a380a06b17b4c6e:t1:c:a",
+          "label": "向老张询问问剑台的具体位置",
+          "intent": "interact",
+          "targetId": "r:7a380a06b17b4c6e:t1:e:person_1",
+          "stake": "low",
+          "approach": "ask"
+        },
+        "elapsedDays": 0,
+        "itemChanges": {},
+        "relationChanges": {},
+        "random": {
+          "before": 696087338,
+          "after": 2462746753,
+          "roll": 53
+        },
+        "before": {
+          "ageDays": 5760,
+          "realm": "mortal",
+          "cultivation": 0,
+          "injury": 0
+        },
+        "after": {
+          "ageDays": 5760,
+          "realm": "mortal",
+          "cultivation": 0,
+          "injury": 0
+        },
+        "death": null,
+        "birth": null
+      },
+      "life": {
+        "name": "云归",
+        "ageDays": 5760,
+        "lifeLimit": 80,
+        "realm": "mortal",
+        "cultivation": 0,
+        "injury": 0,
+        "items": {
+          "supplies": 3,
+          "stones": 0
+        },
+        "relations": {},
+        "birth": {
+          "originId": "artisan",
+          "talentIds": [
+            "fortune-debt",
+            "sword-bone"
+          ],
+          "attributes": {
+            "constitution": 2,
+            "insight": 5,
+            "fortune": 5
+          }
+        }
+      },
+      "entities": [
+        {
+          "id": "r:7a380a06b17b4c6e:t1:e:person_1",
+          "name": "老张",
+          "kind": "person",
+          "status": "alive"
+        },
+        {
+          "id": "r:7a380a06b17b4c6e:t1:e:person_2",
+          "name": "少年",
+          "kind": "person",
+          "status": "alive"
+        },
+        {
+          "id": "r:7a380a06b17b4c6e:t1:e:place_1",
+          "name": "问剑台",
+          "kind": "place",
+          "status": "unknown"
+        }
+      ],
+      "memory": {
+        "facts": [],
+        "promises": [
+          {
+            "id": "m:c0a5fee35167385849e6fc7bd06afb77",
+            "source": "narrative",
+            "kind": "promise",
+            "entityId": "r:7a380a06b17b4c6e:t1:e:person_1",
+            "text": "你站在青云坊市边缘的打铁铺前，手中紧握着刚出炉的铁胚。铁匠老张正对着你摇头叹气，那把名为“断水”的旧剑在炉火映照下显得格外黯淡。老张指着你手腕上隐隐泛起的青色剑痕，那是天生剑骨的征兆，也是你作为匠徒无法修行的诅咒。他叹了口气，将那把剑扔进废铁堆，转身去擦拭满是油污的围裙。",
+            "status": "open",
+            "runId": "a2969794-6d18-4af8-92eb-1c89af95dc08",
+            "turnId": 1
+          }
+        ],
+        "clues": [
+          {
+            "id": "m:ea3aa26210df38f450b888f3a981cad0",
+            "source": "narrative",
+            "kind": "clue",
+            "entityId": "r:7a380a06b17b4c6e:t1:e:person_2",
+            "text": "“云归，这把剑的剑胚已经毁了，你若想修仙，得去城西的‘问剑台’看看，或许那里有能让你剑骨成器的机缘。”老张的声音在嘈杂的坊市中显得有些飘忽。你看着那堆废铁，心中涌起一股莫名的冲动，那是剑骨在渴望锋芒。此时，一个背着药篓的少年正路过，似乎听到了你们的谈话，停下脚步，好奇地打量着你。",
+            "status": "open",
+            "runId": "a2969794-6d18-4af8-92eb-1c89af95dc08",
+            "turnId": 1
+          }
+        ],
+        "recent": [
+          {
+            "id": "turn:1",
+            "runId": "a2969794-6d18-4af8-92eb-1c89af95dc08",
+            "turnId": 1,
+            "source": "narrative",
+            "kind": "turn",
+            "text": "地点：青云坊市\n你站在青云坊市边缘的打铁铺前，手中紧握着刚出炉的铁胚。铁匠老张正对着你摇头叹气，那把名为“断水”的旧剑在炉火映照下显得格外黯淡。老张指着你手腕上隐隐泛起的青色剑痕，那是天生剑骨的征兆，也是你作为匠徒无法修行的诅咒。他叹了口气，将那把剑扔进废铁堆，转身去擦拭满是油污的围裙。\n“云归，这把剑的剑胚已经毁了，你若想修仙，得去城西的‘问剑台’看看，或许那里有能让你剑骨成器的机缘。”老张的声音在嘈杂的坊市中显得有些飘忽。你看着那堆废铁，心中涌起一股莫名的冲动，那是剑骨在渴望锋芒。此时，一个背着药篓的少年正路过，似乎听到了你们的谈话，停下脚步，好奇地打量着你。",
+            "entityIds": []
+          }
+        ],
+        "summaries": []
+      },
+      "references": [
+        "m:c0a5fee35167385849e6fc7bd06afb77",
+        "m:ea3aa26210df38f450b888f3a981cad0",
+        "turn:1"
+      ],
+      "previousScene": {
+        "id": "r:7a380a06b17b4c6e:t1:s:scene",
+        "blocksHash": "bea7204ac2afa451792a3305c0d3aad32c0411cca6a6662eb247e81ade0d5f2c"
+      },
+      "relationshipVersion": 1,
+      "relationships": {},
+      "coverage": {
+        "policy": "relevance-v1",
+        "openTotal": 2,
+        "openIncluded": 2,
+        "openOmitted": 0
+      }
+    },
+    "attempt": {
+      "id": "a12b9f76-4df8-42d0-b9b0-f32e7acfed30",
+      "sessionRef": "sess_2ee61f0138930168248826d9a5dbd1ab",
+      "retryOf": null
+    }
+  },
+  "decision": {
+    "index": 0,
+    "reason": "向现场老张询问问剑台的具体位置；需要实际路线答复，同日不提前旅行。开局promise记忆未含明确承诺，已记录为分类待核验项。",
+    "selected": {
+      "id": "r:7a380a06b17b4c6e:t1:c:a",
+      "label": "向老张询问问剑台的具体位置",
+      "intent": "interact",
+      "targetId": "r:7a380a06b17b4c6e:t1:e:person_1",
+      "stake": "low",
+      "approach": "ask"
+    }
+  },
+  "choices": [
+    {
+      "id": "r:7a380a06b17b4c6e:t1:c:a",
+      "enabled": false,
+      "label": "向老张询问问剑台的具体位置",
+      "cost": "0日"
+    },
+    {
+      "id": "r:7a380a06b17b4c6e:t1:c:b",
+      "enabled": false,
+      "label": "向路过的少年打听老张的话",
+      "cost": "0日"
+    },
+    {
+      "id": "r:7a380a06b17b4c6e:t1:c:c",
+      "enabled": false,
+      "label": "前往城西的问剑台",
+      "cost": "30日 · 行粮 1"
+    }
+  ],
+  "traces": [
+    {
+      "model": "@cf/zai-org/glm-4.7-flash",
+      "inputHash": "bdb017c98db147c535c220eaf086011931db8a723739abab84e710f8487a1e84",
+      "inputBytes": 16338,
+      "startedAt": 1793350186974,
+      "bindingReturnedAt": 1793350187277,
+      "liveRawBytes": 109645,
+      "captureComplete": true,
+      "response": {
+        "model": "@cf/zai-org/glm-4.7-flash",
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "message": {
+              "content": "{\"blocks\":[{\"kind\":\"narration\",\"text\":\"老张停下手中的活计，抬头望向坊市西边那片连绵的屋脊，指了指远处那座高耸入云的孤峰。“顺着西街一直走，出了坊市大门，往西走半个时辰，就能看见那座孤峰了。不过云归，那地方可不是什么善地，平日里除了练剑的散修，连只野狗都不愿靠近。”他顿了顿，又压低声音说道，“问剑台就在孤峰顶上，那里常年云雾缭绕，听说还有剑灵出没，你若真要去，可得小心些。”\"}],\"choices\":[{\"action\":\"interact:ask\",\"targetId\":\"k2\",\"stake\":\"low\",\"label\":\"向少年打听问剑台的传闻\",\"anchor\":0},{\"action\":\"travel:road\",\"targetId\":\"k3\",\"stake\":\"low\",\"label\":\"告别老张，前往问剑台\",\"anchor\":0},{\"action\":\"interact:leave\",\"targetId\":\"k1\",\"stake\":\"low\",\"label\":\"离开打铁铺，独自思考\",\"anchor\":0}],\"title\":\"问路\",\"location\":\"青云坊市\",\"otherPeople\":[{\"id\":\"k1\",\"name\":\"老张\",\"status\":\"alive\"},{\"id\":\"k2\",\"name\":\"少年\",\"status\":\"alive\"}],\"places\":[{\"id\":\"k3\",\"name\":\"问剑台\"}],\"factions\":[],\"memoryDeltas\":[{\"entityId\":\"k1\",\"kind\":\"promise\",\"anchor\":0,\"status\":\"open\"},{\"entityId\":\"k2\",\"kind\":\"clue\",\"anchor\":0,\"status\":\"open\"},{\"entityId\":\"k1\",\"kind\":\"clue\",\"anchor\":0,\"status\":\"open\"}]}",
+              "reasoning_content": ""
+            }
+          }
+        ],
+        "usage": {
+          "prompt_tokens": 3676,
+          "completion_tokens": 367,
+          "total_tokens": 4043,
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          },
+          "neurons": 33.576800000000155
+        }
+      },
+      "rawSseBytes": 109645
+    }
+  ],
+  "revision": 1,
+  "pending": true,
+  "state": {
+    "relationshipVersion": 1,
+    "version": 5,
+    "mode": "cultivation",
+    "contentVersion": 4,
+    "rulesVersion": 1,
+    "promptVersion": 1,
+    "runId": "a2969794-6d18-4af8-92eb-1c89af95dc08",
+    "revision": 1,
+    "turnId": 1,
+    "phase": "active",
+    "rng": 696087338,
+    "life": {
+      "name": "云归",
+      "ageDays": 5760,
+      "lifeLimit": 80,
+      "realm": "mortal",
+      "cultivation": 0,
+      "injury": 0,
+      "items": {
+        "supplies": 3,
+        "stones": 0
+      },
+      "relations": {},
+      "birth": {
+        "originId": "artisan",
+        "talentIds": [
+          "fortune-debt",
+          "sword-bone"
+        ],
+        "attributes": {
+          "constitution": 2,
+          "insight": 5,
+          "fortune": 5
+        }
+      }
+    },
+    "birthReceipt": {
+      "kind": "opening",
+      "choiceId": null,
+      "action": null,
+      "elapsedDays": 0,
+      "itemChanges": {},
+      "relationChanges": {},
+      "random": {
+        "before": 696087338,
+        "after": 696087338,
+        "roll": null
+      },
+      "before": {
+        "ageDays": 5760,
+        "realm": "mortal",
+        "cultivation": 0,
+        "injury": 0
+      },
+      "after": {
+        "ageDays": 5760,
+        "realm": "mortal",
+        "cultivation": 0,
+        "injury": 0
+      },
+      "death": null,
+      "birth": {
+        "originId": "artisan",
+        "talentIds": [
+          "fortune-debt",
+          "sword-bone"
+        ],
+        "attributes": {
+          "constitution": 2,
+          "insight": 5,
+          "fortune": 5
+        }
+      }
+    },
+    "currentScene": {
+      "id": "r:7a380a06b17b4c6e:t1:s:scene",
+      "title": "废剑与剑骨",
+      "location": "青云坊市",
+      "entities": [
+        {
+          "id": "r:7a380a06b17b4c6e:t1:e:person_1",
+          "name": "老张",
+          "status": "alive",
+          "kind": "person"
+        },
+        {
+          "id": "r:7a380a06b17b4c6e:t1:e:person_2",
+          "name": "少年",
+          "status": "alive",
+          "kind": "person"
+        },
+        {
+          "id": "r:7a380a06b17b4c6e:t1:e:place_1",
+          "name": "问剑台",
+          "kind": "place"
+        }
+      ],
+      "blocks": [
+        {
+          "kind": "narration",
+          "text": "你站在青云坊市边缘的打铁铺前，手中紧握着刚出炉的铁胚。铁匠老张正对着你摇头叹气，那把名为“断水”的旧剑在炉火映照下显得格外黯淡。老张指着你手腕上隐隐泛起的青色剑痕，那是天生剑骨的征兆，也是你作为匠徒无法修行的诅咒。他叹了口气，将那把剑扔进废铁堆，转身去擦拭满是油污的围裙。"
+        },
+        {
+          "kind": "narration",
+          "text": "“云归，这把剑的剑胚已经毁了，你若想修仙，得去城西的‘问剑台’看看，或许那里有能让你剑骨成器的机缘。”老张的声音在嘈杂的坊市中显得有些飘忽。你看着那堆废铁，心中涌起一股莫名的冲动，那是剑骨在渴望锋芒。此时，一个背着药篓的少年正路过，似乎听到了你们的谈话，停下脚步，好奇地打量着你。"
+        }
+      ],
+      "choices": [
+        {
+          "id": "r:7a380a06b17b4c6e:t1:c:a",
+          "label": "向老张询问问剑台的具体位置",
+          "intent": "interact",
+          "targetId": "r:7a380a06b17b4c6e:t1:e:person_1",
+          "stake": "low",
+          "approach": "ask"
+        },
+        {
+          "id": "r:7a380a06b17b4c6e:t1:c:b",
+          "label": "向路过的少年打听老张的话",
+          "intent": "interact",
+          "targetId": "r:7a380a06b17b4c6e:t1:e:person_2",
+          "stake": "low",
+          "approach": "ask"
+        },
+        {
+          "id": "r:7a380a06b17b4c6e:t1:c:c",
+          "label": "前往城西的问剑台",
+          "intent": "travel",
+          "targetId": "r:7a380a06b17b4c6e:t1:e:place_1",
+          "stake": "low",
+          "approach": "road"
+        }
+      ],
+      "memoryDeltas": [
+        {
+          "entityId": "r:7a380a06b17b4c6e:t1:e:person_1",
+          "kind": "promise",
+          "text": "你站在青云坊市边缘的打铁铺前，手中紧握着刚出炉的铁胚。铁匠老张正对着你摇头叹气，那把名为“断水”的旧剑在炉火映照下显得格外黯淡。老张指着你手腕上隐隐泛起的青色剑痕，那是天生剑骨的征兆，也是你作为匠徒无法修行的诅咒。他叹了口气，将那把剑扔进废铁堆，转身去擦拭满是油污的围裙。",
+          "status": "open"
+        },
+        {
+          "entityId": "r:7a380a06b17b4c6e:t1:e:person_2",
+          "kind": "clue",
+          "text": "“云归，这把剑的剑胚已经毁了，你若想修仙，得去城西的‘问剑台’看看，或许那里有能让你剑骨成器的机缘。”老张的声音在嘈杂的坊市中显得有些飘忽。你看着那堆废铁，心中涌起一股莫名的冲动，那是剑骨在渴望锋芒。此时，一个背着药篓的少年正路过，似乎听到了你们的谈话，停下脚步，好奇地打量着你。",
+          "status": "open"
+        }
+      ]
+    },
+    "lastReceipt": {
+      "kind": "opening",
+      "choiceId": null,
+      "action": null,
+      "elapsedDays": 0,
+      "itemChanges": {},
+      "relationChanges": {},
+      "random": {
+        "before": 696087338,
+        "after": 696087338,
+        "roll": null
+      },
+      "before": {
+        "ageDays": 5760,
+        "realm": "mortal",
+        "cultivation": 0,
+        "injury": 0
+      },
+      "after": {
+        "ageDays": 5760,
+        "realm": "mortal",
+        "cultivation": 0,
+        "injury": 0
+      },
+      "death": null,
+      "birth": {
+        "originId": "artisan",
+        "talentIds": [
+          "fortune-debt",
+          "sword-bone"
+        ],
+        "attributes": {
+          "constitution": 2,
+          "insight": 5,
+          "fortune": 5
+        }
+      }
+    },
+    "relatedEntities": [
+      {
+        "id": "r:7a380a06b17b4c6e:t1:e:person_1",
+        "name": "老张",
+        "status": "alive",
+        "kind": "person"
+      },
+      {
+        "id": "r:7a380a06b17b4c6e:t1:e:person_2",
+        "name": "少年",
+        "status": "alive",
+        "kind": "person"
+      },
+      {
+        "id": "r:7a380a06b17b4c6e:t1:e:place_1",
+        "name": "问剑台",
+        "kind": "place"
+      }
+    ],
+    "archiveCursor": 0
+  },
+  "posts": 2,
+  "latency": {
+    "usable": false,
+    "errorCode": "CHOICE_NOT_COMPILABLE",
+    "firstAnyPreviewMs": 2392,
+    "firstReadableMs": 2623,
+    "completionMs": 7799,
+    "narrativeChars": 168,
+    "maxPreviewGapMs": 529,
+    "readingFinishEstimateMs": null,
+    "readingStallEstimateMs": null,
+    "optionsWaitEstimateMs": null,
+    "prefetchWorthEvaluating": null,
+    "assumptions": {
+      "readingCharsPerSecond": 6,
+      "readableChars": 20,
+      "targetWaitMs": 2000
+    }
+  }
+}

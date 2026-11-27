@@ -151,16 +151,14 @@ export function RewardView({
   const gradeTitle =
     rew.breakthroughGrade === 'heaven'
       ? '【天道破境】金光贯顶，真元上限 +1！'
-      : rew.breakthroughGrade === 'earth'
-        ? '【地道破境】道基稳固，寿元大涨！'
-        : '【凡品破境】勉强冲关，留下一道【道基裂痕】！';
+      : '【地道破境】根基稳固，气血上限大涨！';
 
   return (
     <main class="panel sub-stage">
       <h2>{rew.isBossReward ? `破境功成 · ${gradeTitle}` : '战利品与机缘收取'}</h2>
       <p style={{ margin: 0, color: 'var(--muted)' }}>
-        获得 <strong>{rew.gold} 灵石</strong>、道基纯度 <strong>+{rew.foundation}</strong>
-        {rew.lifespanGained ? `、寿元上限 +${rew.lifespanGained} 年` : ''}
+        获得 <strong>{rew.gold} 灵石</strong>
+        {rew.maxHpGained ? `、气血上限 +${rew.maxHpGained}（已回满全部气血）` : ''}
         {rew.daoTokenGained ? '、✦ 斩获【三界道果信物】×1！' : ''}
       </p>
 
@@ -315,7 +313,7 @@ export function AbodeView({
               ✨ 参悟升级 / 熔材附魔
             </button>
             <button type="button" class={`btn${tab === 'brew' ? ' btn-primary' : ''}`} onClick={() => setTab('brew')}>
-              ⚗️ 开炉炼丹（涨道基/凝奇丹）
+              ⚗️ 开炉炼丹（回血/凝奇丹/涨上限）
             </button>
             <button type="button" class={`btn${tab === 'purge' ? ' btn-primary' : ''}`} onClick={() => setTab('purge')}>
               ✂️ 斩三尸（删废牌/心魔）
@@ -378,7 +376,7 @@ export function AbodeView({
                 }}
               >
                 <strong>文火稳炼 · 固本培元丹（附赠战中奇丹！）</strong>
-                <span class="choice-reward">100% 成功：恢复 35% 气血，道基 +14，且若丹符袋未满额外凝出 1 枚战中奇丹</span>
+                <span class="choice-reward">100% 成功：恢复 40% 最大气血，且若丹符袋未满额外凝出 1 枚战中奇丹</span>
               </button>
               <button
                 type="button"
@@ -389,7 +387,7 @@ export function AbodeView({
                 }}
               >
                 <strong>猛火冲品 · 博炼九转金丹</strong>
-                <span class="choice-reward">68% 绝世成丹：寿元上限 +14 年、道基纯度 +24、回 18 气血</span>
+                <span class="choice-reward">68% 绝世成丹：最大气血永久 +12、恢复 22 点气血</span>
                 <span class="choice-cost">32% 炸炉反噬：扣 10 气血并塞入 1 张【心魔低语】</span>
               </button>
             </div>
@@ -398,7 +396,7 @@ export function AbodeView({
           {tab === 'purge' && (
             <div>
               <p style={{ fontSize: '13px', color: 'var(--muted)' }}>
-                点击永久删除一张牌（顺带道基纯度 +6，牌库最少保留 5 张）：
+                点击永久删除一张牌（顺带调息恢复 6 点气血，牌库最少保留 5 张）：
               </p>
               <div class="hand-grid">
                 {run.deck.map((inst) => (
@@ -510,7 +508,7 @@ export function ShopView({
           disabled={shop.elixirBought || run.gold < shop.elixirPrice}
           onClick={() => { sfx.coin(); onBuyElixir(); }}
         >
-          🍶 购延寿青灵丹（{shop.elixirPrice} 灵石：寿元+12年、回20血）{shop.elixirBought ? ' [已售罄]' : ''}
+          🍶 购壮魄青灵丹（{shop.elixirPrice} 灵石：最大气血+10、回25血）{shop.elixirBought ? ' [已售罄]' : ''}
         </button>
         <button
           type="button"
@@ -632,7 +630,7 @@ export function RemnantView({
         )}
         <button type="button" class="btn choice-btn" onClick={() => { sfx.resonance(); onClaim('enlighten'); }}>
           <strong>敛骨拜别，参悟前世道果</strong>
-          <span class="choice-reward">本卷道基纯度 +30，寿元上限 +15 年</span>
+          <span class="choice-reward">最大气血永久 +15，并恢复 30 点气血</span>
         </button>
       </div>
     </main>
@@ -656,7 +654,7 @@ export function SettlementView({
     <main class="panel sub-stage" style={{ textAlign: 'center', borderColor: isWin ? 'var(--gold-bright)' : 'var(--red)' }}>
       <h2>{isWin ? `✦ ${run.endingTitle ?? '问道飞升'}` : '⏳ 尘缘已尽 · 步入轮回'}</h2>
       <p style={{ color: 'var(--muted)', margin: 0 }}>
-        第 {run.generation} 世 · {run.name} · {LINEAGES[run.lineage].name} · 止步 {REALM_NAMES[run.realm]}（{run.age} 岁）
+        第 {run.generation} 世 · {run.name} · {LINEAGES[run.lineage].name} · 止步 {REALM_NAMES[run.realm]}（气血上限 {run.maxHp}）
       </p>
       <p style={{ margin: 0 }}>{isWin ? '你的道名已刻入三界碑，并解锁更高重【天道劫数】！' : run.deathCause}</p>
 
@@ -772,7 +770,7 @@ export function CodexScreen({
               <div class="choice-list">
                 {meta.hallOfFame.slice(0, 8).map((row) => (
                   <div key={`${row.generation}-${row.name}`} class="panel" style={{ padding: '10px 14px', fontSize: '13px' }}>
-                    <strong>第 {row.generation} 世 · {row.name}</strong>（{LINEAGES[row.lineage].name} · {REALM_NAMES[row.realm]} · {row.age} 岁）— {row.cause} · 道果 +{row.karmaEarned}
+                    <strong>第 {row.generation} 世 · {row.name}</strong>（{LINEAGES[row.lineage].name} · {REALM_NAMES[row.realm]} · 气血上限 {row.maxHp}）— {row.cause} · 道果 +{row.karmaEarned}
                   </div>
                 ))}
               </div>

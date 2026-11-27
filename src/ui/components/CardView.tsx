@@ -33,6 +33,7 @@ interface CardViewProps {
   instance?: CardInstance;
   def?: CardDef;
   disabled?: boolean;
+  unplayable?: boolean;
   resonanceHint?: string | null;
   price?: number;
   selected?: boolean;
@@ -44,6 +45,7 @@ export function CardView({
   instance,
   def: rawDef,
   disabled,
+  unplayable,
   resonanceHint,
   price,
   selected,
@@ -61,7 +63,7 @@ export function CardView({
   return (
     <button
       type="button"
-      class={`tcg-card rarity-${def.rarity}${resonanceHint ? ' resonates' : ''}${selected ? ' is-selected' : ''}`}
+      class={`tcg-card rarity-${def.rarity}${resonanceHint ? ' resonates' : ''}${selected ? ' is-selected' : ''}${unplayable ? ' is-unplayable' : ''}`}
       style={fanStyle}
       disabled={disabled}
       onClick={onClick}

@@ -1,0 +1,564 @@
+{
+  "sourceCommit": "ccc00153431b574772ca7e0b4c00abd437e0f147",
+  "version": "dea06ba2-adb8-4717-90b3-d8955757e66e",
+  "recordedAt": "2026-10-30T16:00:55.526Z",
+  "continuedFrom": {
+    "sourceCommit": "ccc00153431b574772ca7e0b4c00abd437e0f147",
+    "evidenceDir": "docs/evidence/story-coherence-2026-10-30/20261030T155326276Z/fresh-six",
+    "readyTurns": 4
+  },
+  "records": [
+    {
+      "caseId": "choice-4",
+      "start": 993.7000000029802,
+      "timeline": [
+        {
+          "atMs": 3832,
+          "chars": 4
+        },
+        {
+          "atMs": 3907,
+          "chars": 9
+        },
+        {
+          "atMs": 3970,
+          "chars": 16
+        },
+        {
+          "atMs": 4033,
+          "chars": 21
+        },
+        {
+          "atMs": 4080,
+          "chars": 29
+        },
+        {
+          "atMs": 4143,
+          "chars": 36
+        },
+        {
+          "atMs": 4223,
+          "chars": 40
+        },
+        {
+          "atMs": 4270,
+          "chars": 45
+        },
+        {
+          "atMs": 4317,
+          "chars": 49
+        },
+        {
+          "atMs": 4378,
+          "chars": 56
+        },
+        {
+          "atMs": 4453,
+          "chars": 61
+        },
+        {
+          "atMs": 4484,
+          "chars": 64
+        },
+        {
+          "atMs": 4546,
+          "chars": 71
+        },
+        {
+          "atMs": 4625,
+          "chars": 78
+        },
+        {
+          "atMs": 4689,
+          "chars": 84
+        },
+        {
+          "atMs": 4754,
+          "chars": 91
+        },
+        {
+          "atMs": 4816,
+          "chars": 97
+        },
+        {
+          "atMs": 4875,
+          "chars": 104
+        },
+        {
+          "atMs": 4936,
+          "chars": 105
+        }
+      ],
+      "choicesEnabledDuringPreview": false,
+      "lastText": "三十日的山路并不好走，脚底磨出了血泡，好在终于看见了集市那熙熙攘攘的人影。喧闹声扑面而来，叫卖声此起彼伏，空气中混杂着汗味和劣质脂粉气。你站在集市入口，看着眼前这花花绿绿的世界，肚子又是一阵抗议，急需填饱肚子。",
+      "doneMs": 8743,
+      "result": {
+        "protocolVersion": 1,
+        "status": "rejected",
+        "requestId": "f208a150-2760-4e2a-9c71-02e3ada7757d",
+        "attemptId": "bda8fdf6-058c-4f96-82f2-66766037f27a",
+        "sessionRef": "sess_0a51778421ab0202426df9e22b7e82fd",
+        "errorCode": "CHOICE_NOT_COMPILABLE",
+        "retry": null
+      },
+      "request": {
+        "context": {
+          "schemaVersion": 1,
+          "phase": "choice",
+          "identity": {
+            "runId": "a5055d8e-11bc-4c7c-b055-d1fc05cfd787",
+            "turnId": 5,
+            "baseRevision": 4,
+            "stateHash": "cf297e1c7f7bad290871e1dec4dab322179ab66b6fe79142fa9e86967e8a159f",
+            "choiceId": "r:eb23fe6aca0e5570:t4:c:a",
+            "rulesVersion": 1,
+            "promptVersion": 1,
+            "requestId": "f208a150-2760-4e2a-9c71-02e3ada7757d"
+          },
+          "namespace": "r:eb23fe6aca0e5570",
+          "receipt": {
+            "kind": "choice",
+            "choiceId": "r:eb23fe6aca0e5570:t4:c:a",
+            "action": {
+              "id": "r:eb23fe6aca0e5570:t4:c:a",
+              "label": "沿路前往集市：前往集市寻找食物和补给",
+              "intent": "travel",
+              "targetId": "r:eb23fe6aca0e5570:t4:e:place_1",
+              "stake": "low",
+              "approach": "road"
+            },
+            "elapsedDays": 30,
+            "itemChanges": {
+              "supplies": -1
+            },
+            "relationChanges": {},
+            "random": {
+              "before": 2781570059,
+              "after": 1991404014,
+              "roll": 14
+            },
+            "before": {
+              "ageDays": 5760,
+              "realm": "mortal",
+              "cultivation": 0,
+              "injury": 0
+            },
+            "after": {
+              "ageDays": 5790,
+              "realm": "mortal",
+              "cultivation": 0,
+              "injury": 0
+            },
+            "death": null,
+            "birth": null
+          },
+          "life": {
+            "name": "云归",
+            "ageDays": 5790,
+            "lifeLimit": 80,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0,
+            "items": {
+              "supplies": 2,
+              "stones": 0
+            },
+            "relations": {},
+            "birth": {
+              "originId": "village",
+              "talentIds": [
+                "sword-bone",
+                "flash-wisdom"
+              ],
+              "attributes": {
+                "constitution": 5,
+                "insight": 3,
+                "fortune": 4
+              }
+            }
+          },
+          "entities": [
+            {
+              "id": "r:eb23fe6aca0e5570:t1:e:person_1",
+              "name": "王大锤",
+              "kind": "person",
+              "status": "unknown"
+            },
+            {
+              "id": "r:eb23fe6aca0e5570:t4:e:place_1",
+              "name": "集市",
+              "kind": "place",
+              "status": "unknown"
+            }
+          ],
+          "memory": {
+            "facts": [
+              {
+                "id": "decision:4",
+                "runId": "a5055d8e-11bc-4c7c-b055-d1fc05cfd787",
+                "turnId": 4,
+                "source": "rules",
+                "kind": "fact",
+                "entityId": "r:eb23fe6aca0e5570:t1:e:person_1",
+                "text": "你在山村选择了“结束当前互动：暂不介入此事”。"
+              },
+              {
+                "id": "m:7697d73be4b0eed6cee468e604ee31d3",
+                "source": "narrative",
+                "kind": "fact",
+                "entityId": "r:eb23fe6aca0e5570:t1:e:person_1",
+                "text": "你转身背对着王大锤，迈步向村口走去。身后传来叮叮当当的打铁声，渐渐被风吹散。日头偏西，山村的炊烟袅袅升起，空气中弥漫着柴火和饭菜的香气。你摸了摸干瘪的行囊，肚子适时地叫了一声，决定先去集市找点吃的。",
+                "runId": "a5055d8e-11bc-4c7c-b055-d1fc05cfd787",
+                "turnId": 4
+              }
+            ],
+            "promises": [],
+            "clues": [
+              {
+                "id": "m:f3381f02d94b6b8e5c941ad3d4d08b5c",
+                "source": "narrative",
+                "kind": "clue",
+                "entityId": "r:eb23fe6aca0e5570:t1:e:person_1",
+                "text": "王大锤把那块黑铁举到眼前，眯着眼端详了半天，才叹了口气说：“这铁看着像是某种兽骨炼化后的残渣，杂质太多，火候没压住，硬是打不成形。若是寻常铁匠铺，早当废料扔了，可这东西透着股子怪味儿，不像凡铁。”",
+                "status": "open",
+                "runId": "a5055d8e-11bc-4c7c-b055-d1fc05cfd787",
+                "turnId": 2
+              },
+              {
+                "id": "m:1f011587860ff1a916f178b751d99290",
+                "source": "narrative",
+                "kind": "clue",
+                "entityId": "r:eb23fe6aca0e5570:t1:e:person_1",
+                "text": "王大锤见你过来，抬头抹了一把汗，把那块废铁往你面前一推：“云归，你眼尖，帮叔看看这铁是不是废了？若是能炼，叔请你吃两个烧饼。”",
+                "status": "open",
+                "runId": "a5055d8e-11bc-4c7c-b055-d1fc05cfd787",
+                "turnId": 1
+              }
+            ],
+            "recent": [
+              {
+                "id": "turn:4",
+                "runId": "a5055d8e-11bc-4c7c-b055-d1fc05cfd787",
+                "turnId": 4,
+                "source": "narrative",
+                "kind": "turn",
+                "text": "地点：山村；刚才选择：结束当前互动：暂不介入此事\n你转身背对着王大锤，迈步向村口走去。身后传来叮叮当当的打铁声，渐渐被风吹散。日头偏西，山村的炊烟袅袅升起，空气中弥漫着柴火和饭菜的香气。你摸了摸干瘪的行囊，肚子适时地叫了一声，决定先去集市找点吃的。",
+                "entityIds": []
+              },
+              {
+                "id": "turn:3",
+                "runId": "a5055d8e-11bc-4c7c-b055-d1fc05cfd787",
+                "turnId": 3,
+                "source": "narrative",
+                "kind": "turn",
+                "text": "地点：山村；刚才选择：婉拒王大锤：拒绝帮忙看铁\n你摇了摇头，把目光从那块黑铁上移开，语气平淡地回绝了王大锤的请求。王大锤愣了一下，随即咧嘴笑了笑，也不恼，只是重新蹲下身，继续在那块废铁上敲打起来，嘴里哼着不成调的小曲儿。",
+                "entityIds": []
+              }
+            ],
+            "summaries": []
+          },
+          "references": [
+            "decision:4",
+            "m:7697d73be4b0eed6cee468e604ee31d3",
+            "m:f3381f02d94b6b8e5c941ad3d4d08b5c",
+            "m:1f011587860ff1a916f178b751d99290",
+            "turn:4",
+            "turn:3"
+          ],
+          "previousScene": {
+            "id": "r:eb23fe6aca0e5570:t4:s:scene",
+            "blocksHash": "e97bda749fba8df28e715ae30e3ee0739c1f174eb482f807e0a2b65e900e1e3b"
+          },
+          "relationshipVersion": 1,
+          "relationships": {},
+          "coverage": {
+            "policy": "relevance-v1",
+            "openTotal": 2,
+            "openIncluded": 2,
+            "openOmitted": 0
+          }
+        },
+        "attempt": {
+          "id": "bda8fdf6-058c-4f96-82f2-66766037f27a",
+          "sessionRef": "sess_0a51778421ab0202426df9e22b7e82fd",
+          "retryOf": {
+            "attemptId": "d506fca6-c5b3-4f74-9d44-318312bff104",
+            "sessionRef": "sess_0a51778421ab0202426df9e22b7e82fd"
+          }
+        },
+        "storyActions": true
+      },
+      "decision": {
+        "index": 1,
+        "reason": "告辞实际结束铁匠交谈，后续选项转向当前观察或前往集市，不强迫回访；正文提议去集市尚未结算，现在明确选择旅行，核对实际到达与耗时。",
+        "selected": {
+          "id": "r:eb23fe6aca0e5570:t4:c:a",
+          "label": "沿路前往集市：前往集市寻找食物和补给",
+          "intent": "travel",
+          "targetId": "r:eb23fe6aca0e5570:t4:e:place_1",
+          "stake": "low",
+          "approach": "road"
+        },
+        "explicitRetry": true
+      },
+      "choices": [
+        {
+          "id": "r:eb23fe6aca0e5570:t4:c:observe",
+          "enabled": false,
+          "label": "仔细观察：留意周围的动静",
+          "cost": "0日"
+        },
+        {
+          "id": "r:eb23fe6aca0e5570:t4:c:a",
+          "enabled": false,
+          "label": "沿路前往集市：前往集市寻找食物和补给",
+          "cost": "30日 · 行粮 1"
+        },
+        {
+          "id": "r:eb23fe6aca0e5570:t4:c:leave",
+          "enabled": false,
+          "label": "结束当前互动：暂不介入此事",
+          "cost": "0日"
+        }
+      ],
+      "traces": [
+        {
+          "model": "@cf/zai-org/glm-4.7-flash",
+          "inputHash": "9c0c3709f8da0ced312caf7d7b1934b06fba20d21defb4dfd94515c735510410",
+          "inputBytes": 18144,
+          "startedAt": 1793376047129,
+          "bindingReturnedAt": 1793376047605,
+          "liveRawBytes": 112858,
+          "captureComplete": true,
+          "response": {
+            "model": "@cf/zai-org/glm-4.7-flash",
+            "choices": [
+              {
+                "finish_reason": "stop",
+                "message": {
+                  "content": "{\n  \"blocks\": [\n    {\n      \"kind\": \"narration\",\n      \"text\": \"三十日的山路并不好走，脚底磨出了血泡，好在终于看见了集市那熙熙攘攘的人影。喧闹声扑面而来，叫卖声此起彼伏，空气中混杂着汗味和劣质脂粉气。你站在集市入口，看着眼前这花花绿绿的世界，肚子又是一阵抗议，急需填饱肚子。\"\n    }\n  ],\n  \"choices\": [\n    {\n      \"action\": \"interact:ask\",\n      \"target\": {\n        \"kind\": \"person\",\n        \"name\": \"卖烧饼的老汉\",\n        \"ref\": \"\",\n        \"status\": null\n      },\n      \"stake\": \"low\",\n      \"purpose\": \"询问烧饼的价格和是否赊账\",\n      \"anchor\": 0\n    },\n    {\n      \"action\": \"interact:ask\",\n      \"target\": {\n        \"kind\": \"person\",\n        \"name\": \"卖菜的大婶\",\n        \"ref\": \"\",\n        \"status\": null\n      },\n      \"stake\": \"low\",\n      \"purpose\": \"打听最近有没有奇怪的兽骨或黑铁\",\n      \"anchor\": 0\n    },\n    {\n      \"action\": \"interact:decline\",\n      \"target\": {\n        \"kind\": \"person\",\n        \"name\": \"纠缠的乞丐\",\n        \"ref\": \"\",\n        \"status\": null\n      },\n      \"stake\": \"low\",\n      \"purpose\": \"拒绝乞丐的乞讨请求\",\n      \"anchor\": 0\n    }\n  ],\n  \"title\": \"集市喧嚣\",\n  \"location\": \"集市\",\n  \"memoryDeltas\": [\n    {\n      \"target\": {\n        \"kind\": \"place\",\n        \"name\": \"集市\",\n        \"ref\": \"\",\n        \"status\": null\n      },\n      \"kind\": \"fact\",\n      \"anchor\": 0\n    }\n  ]\n}",
+                  "reasoning_content": ""
+                }
+              }
+            ],
+            "usage": {
+              "prompt_tokens": 2982,
+              "completion_tokens": 422,
+              "total_tokens": 3404,
+              "prompt_tokens_details": {
+                "cached_tokens": 0
+              },
+              "neurons": 31.761800000000182
+            }
+          },
+          "rawSseBytes": 112858
+        }
+      ],
+      "revision": 4,
+      "pending": true,
+      "state": {
+        "relationshipVersion": 1,
+        "version": 5,
+        "mode": "cultivation",
+        "contentVersion": 4,
+        "rulesVersion": 1,
+        "promptVersion": 1,
+        "runId": "a5055d8e-11bc-4c7c-b055-d1fc05cfd787",
+        "revision": 4,
+        "turnId": 4,
+        "phase": "active",
+        "rng": 2781570059,
+        "life": {
+          "name": "云归",
+          "ageDays": 5760,
+          "lifeLimit": 80,
+          "realm": "mortal",
+          "cultivation": 0,
+          "injury": 0,
+          "items": {
+            "supplies": 3,
+            "stones": 0
+          },
+          "relations": {},
+          "birth": {
+            "originId": "village",
+            "talentIds": [
+              "sword-bone",
+              "flash-wisdom"
+            ],
+            "attributes": {
+              "constitution": 5,
+              "insight": 3,
+              "fortune": 4
+            }
+          }
+        },
+        "birthReceipt": {
+          "kind": "opening",
+          "choiceId": null,
+          "action": null,
+          "elapsedDays": 0,
+          "itemChanges": {},
+          "relationChanges": {},
+          "random": {
+            "before": 371814938,
+            "after": 371814938,
+            "roll": null
+          },
+          "before": {
+            "ageDays": 5760,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "after": {
+            "ageDays": 5760,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "death": null,
+          "birth": {
+            "originId": "village",
+            "talentIds": [
+              "sword-bone",
+              "flash-wisdom"
+            ],
+            "attributes": {
+              "constitution": 5,
+              "insight": 3,
+              "fortune": 4
+            }
+          }
+        },
+        "currentScene": {
+          "id": "r:eb23fe6aca0e5570:t4:s:scene",
+          "title": "山村集市",
+          "location": "山村",
+          "entities": [
+            {
+              "id": "r:eb23fe6aca0e5570:t1:e:person_1",
+              "name": "王大锤",
+              "kind": "person"
+            },
+            {
+              "id": "r:eb23fe6aca0e5570:t4:e:place_1",
+              "name": "集市",
+              "kind": "place"
+            }
+          ],
+          "blocks": [
+            {
+              "kind": "narration",
+              "text": "你转身背对着王大锤，迈步向村口走去。身后传来叮叮当当的打铁声，渐渐被风吹散。日头偏西，山村的炊烟袅袅升起，空气中弥漫着柴火和饭菜的香气。你摸了摸干瘪的行囊，肚子适时地叫了一声，决定先去集市找点吃的。"
+            }
+          ],
+          "choices": [
+            {
+              "id": "r:eb23fe6aca0e5570:t4:c:observe",
+              "label": "仔细观察：留意周围的动静",
+              "intent": "interact",
+              "targetId": "self",
+              "approach": "observe",
+              "stake": "low"
+            },
+            {
+              "id": "r:eb23fe6aca0e5570:t4:c:a",
+              "label": "沿路前往集市：前往集市寻找食物和补给",
+              "intent": "travel",
+              "targetId": "r:eb23fe6aca0e5570:t4:e:place_1",
+              "stake": "low",
+              "approach": "road"
+            },
+            {
+              "id": "r:eb23fe6aca0e5570:t4:c:leave",
+              "label": "结束当前互动：暂不介入此事",
+              "intent": "interact",
+              "targetId": "r:eb23fe6aca0e5570:t4:e:place_1",
+              "approach": "leave",
+              "stake": "low"
+            }
+          ],
+          "memoryDeltas": [
+            {
+              "entityId": "r:eb23fe6aca0e5570:t1:e:person_1",
+              "kind": "fact",
+              "text": "你转身背对着王大锤，迈步向村口走去。身后传来叮叮当当的打铁声，渐渐被风吹散。日头偏西，山村的炊烟袅袅升起，空气中弥漫着柴火和饭菜的香气。你摸了摸干瘪的行囊，肚子适时地叫了一声，决定先去集市找点吃的。"
+            }
+          ]
+        },
+        "lastReceipt": {
+          "kind": "choice",
+          "choiceId": "r:eb23fe6aca0e5570:t3:c:leave",
+          "action": {
+            "id": "r:eb23fe6aca0e5570:t3:c:leave",
+            "label": "结束当前互动：暂不介入此事",
+            "intent": "interact",
+            "targetId": "r:eb23fe6aca0e5570:t1:e:person_1",
+            "approach": "leave",
+            "stake": "low"
+          },
+          "elapsedDays": 0,
+          "itemChanges": {},
+          "relationChanges": {},
+          "random": {
+            "before": 425579612,
+            "after": 2781570059,
+            "roll": 59
+          },
+          "before": {
+            "ageDays": 5760,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "after": {
+            "ageDays": 5760,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "death": null,
+          "birth": null
+        },
+        "relatedEntities": [
+          {
+            "id": "r:eb23fe6aca0e5570:t1:e:person_1",
+            "name": "王大锤",
+            "kind": "person"
+          },
+          {
+            "id": "r:eb23fe6aca0e5570:t4:e:place_1",
+            "name": "集市",
+            "kind": "place"
+          }
+        ],
+        "archiveCursor": 0
+      },
+      "posts": 1,
+      "latency": {
+        "usable": false,
+        "errorCode": "CHOICE_NOT_COMPILABLE",
+        "firstAnyPreviewMs": 3832,
+        "firstReadableMs": 4033,
+        "completionMs": 8743,
+        "narrativeChars": 105,
+        "maxPreviewGapMs": 80,
+        "readingFinishEstimateMs": null,
+        "readingStallEstimateMs": null,
+        "optionsWaitEstimateMs": null,
+        "prefetchWorthEvaluating": null,
+        "assumptions": {
+          "readingCharsPerSecond": 6,
+          "readableChars": 20,
+          "targetWaitMs": 2000
+        }
+      }
+    }
+  ],
+  "errors": [
+    "Native turn did not pass"
+  ],
+  "posts": 1,
+  "refreshed": null
+}

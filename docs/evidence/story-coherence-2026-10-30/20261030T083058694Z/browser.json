@@ -1,0 +1,527 @@
+{
+  "sourceCommit": "502614a61a9f2ffc15b20fd160aed537bcf0d3d5",
+  "version": "d16a62f3-fd4b-48e3-a884-492aeeb4221d",
+  "recordedAt": "2026-10-30T08:37:31.102Z",
+  "records": [
+    {
+      "caseId": "opening",
+      "start": 916.5,
+      "timeline": [
+        {
+          "atMs": 3770,
+          "chars": 1
+        },
+        {
+          "atMs": 3847,
+          "chars": 3
+        },
+        {
+          "atMs": 3909,
+          "chars": 7
+        },
+        {
+          "atMs": 3973,
+          "chars": 9
+        },
+        {
+          "atMs": 4034,
+          "chars": 13
+        },
+        {
+          "atMs": 4351,
+          "chars": 19
+        },
+        {
+          "atMs": 4398,
+          "chars": 24
+        },
+        {
+          "atMs": 4539,
+          "chars": 27
+        },
+        {
+          "atMs": 4618,
+          "chars": 30
+        },
+        {
+          "atMs": 4680,
+          "chars": 36
+        },
+        {
+          "atMs": 4743,
+          "chars": 40
+        },
+        {
+          "atMs": 4804,
+          "chars": 42
+        },
+        {
+          "atMs": 4865,
+          "chars": 45
+        },
+        {
+          "atMs": 4923,
+          "chars": 49
+        },
+        {
+          "atMs": 4985,
+          "chars": 53
+        },
+        {
+          "atMs": 5047,
+          "chars": 58
+        },
+        {
+          "atMs": 5109,
+          "chars": 62
+        },
+        {
+          "atMs": 5155,
+          "chars": 66
+        },
+        {
+          "atMs": 5327,
+          "chars": 72
+        },
+        {
+          "atMs": 5389,
+          "chars": 75
+        },
+        {
+          "atMs": 5450,
+          "chars": 77
+        },
+        {
+          "atMs": 5622,
+          "chars": 80
+        },
+        {
+          "atMs": 5683,
+          "chars": 82
+        },
+        {
+          "atMs": 5761,
+          "chars": 85
+        },
+        {
+          "atMs": 5851,
+          "chars": 87
+        },
+        {
+          "atMs": 5914,
+          "chars": 88
+        }
+      ],
+      "choicesEnabledDuringPreview": false,
+      "lastText": "你握紧了手中的猎弓，目光扫过四周。林子深处传来几声凄厉的猿啼，似乎有什么东西正在撕扯着什么。你顺着声音望去，只见不远处的灌木丛剧烈晃动，一只浑身是血的野猪正发狂般冲向林间小道。",
+      "doneMs": 8657,
+      "result": {
+        "protocolVersion": 1,
+        "status": "ready",
+        "requestId": "1bf9e018-7b6f-4d13-ac38-10a86fee37d6",
+        "attemptId": "bbe1f609-3db5-4d87-85af-3828649e6cff",
+        "sessionRef": "sess_7c2d4b0c7c2b0de06e37660229be00bf",
+        "errorCode": null,
+        "retry": null,
+        "scene": {
+          "id": "r:35e8dd380ff34981:t1:s:scene",
+          "title": "林中惊变",
+          "location": "猎户村外",
+          "entities": [
+            {
+              "id": "r:35e8dd380ff34981:t1:e:person_1",
+              "name": "老猎户",
+              "status": "alive",
+              "kind": "person"
+            }
+          ],
+          "blocks": [
+            {
+              "kind": "narration",
+              "text": "你握紧了手中的猎弓，目光扫过四周。林子深处传来几声凄厉的猿啼，似乎有什么东西正在撕扯着什么。你顺着声音望去，只见不远处的灌木丛剧烈晃动，一只浑身是血的野猪正发狂般冲向林间小道。"
+            }
+          ],
+          "choices": [
+            {
+              "id": "r:35e8dd380ff34981:t1:c:a",
+              "label": "询问野猪的去向",
+              "intent": "interact",
+              "targetId": "r:35e8dd380ff34981:t1:e:person_1",
+              "stake": "low",
+              "approach": "ask"
+            },
+            {
+              "id": "r:35e8dd380ff34981:t1:c:b",
+              "label": "尝试射杀野猪",
+              "intent": "fight",
+              "targetId": "r:35e8dd380ff34981:t1:e:person_1",
+              "stake": "low",
+              "approach": "assault"
+            },
+            {
+              "id": "r:35e8dd380ff34981:t1:c:c",
+              "label": "绕道离开",
+              "intent": "interact",
+              "targetId": "r:35e8dd380ff34981:t1:e:person_1",
+              "stake": "low",
+              "approach": "leave"
+            }
+          ],
+          "memoryDeltas": []
+        }
+      },
+      "request": {
+        "context": {
+          "schemaVersion": 1,
+          "phase": "opening",
+          "identity": {
+            "runId": "ad70c13e-431b-4d74-9296-17b691ecffe9",
+            "turnId": 1,
+            "baseRevision": 0,
+            "stateHash": "eaa4d7a7bd94e70e2cf73b22045b92cede20d1d50aa14a306119eded75e4ad71",
+            "choiceId": null,
+            "rulesVersion": 1,
+            "promptVersion": 1,
+            "requestId": "1bf9e018-7b6f-4d13-ac38-10a86fee37d6"
+          },
+          "namespace": "r:35e8dd380ff34981",
+          "receipt": {
+            "kind": "opening",
+            "choiceId": null,
+            "action": null,
+            "elapsedDays": 0,
+            "itemChanges": {},
+            "relationChanges": {},
+            "random": {
+              "before": 645656708,
+              "after": 645656708,
+              "roll": null
+            },
+            "before": {
+              "ageDays": 5760,
+              "realm": "mortal",
+              "cultivation": 0,
+              "injury": 0
+            },
+            "after": {
+              "ageDays": 5760,
+              "realm": "mortal",
+              "cultivation": 0,
+              "injury": 0
+            },
+            "death": null,
+            "birth": {
+              "originId": "village",
+              "talentIds": [
+                "fortune-debt",
+                "sword-bone"
+              ],
+              "attributes": {
+                "constitution": 6,
+                "insight": 2,
+                "fortune": 4
+              }
+            }
+          },
+          "life": {
+            "name": "云归",
+            "ageDays": 5760,
+            "lifeLimit": 80,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0,
+            "items": {
+              "supplies": 3,
+              "stones": 0
+            },
+            "relations": {},
+            "birth": {
+              "originId": "village",
+              "talentIds": [
+                "fortune-debt",
+                "sword-bone"
+              ],
+              "attributes": {
+                "constitution": 6,
+                "insight": 2,
+                "fortune": 4
+              }
+            }
+          },
+          "entities": [],
+          "memory": {
+            "facts": [],
+            "promises": [],
+            "clues": [],
+            "recent": [],
+            "summaries": []
+          },
+          "references": [],
+          "previousScene": null,
+          "relationshipVersion": 1,
+          "relationships": {},
+          "coverage": {
+            "policy": "relevance-v1",
+            "openTotal": 0,
+            "openIncluded": 0,
+            "openOmitted": 0
+          }
+        },
+        "attempt": {
+          "id": "bbe1f609-3db5-4d87-85af-3828649e6cff",
+          "sessionRef": "sess_7c2d4b0c7c2b0de06e37660229be00bf",
+          "retryOf": null
+        }
+      },
+      "decision": null,
+      "choices": [
+        {
+          "id": "r:35e8dd380ff34981:t1:c:a",
+          "enabled": true,
+          "label": "询问野猪的去向",
+          "cost": "0日"
+        },
+        {
+          "id": "r:35e8dd380ff34981:t1:c:b",
+          "enabled": true,
+          "label": "尝试射杀野猪",
+          "cost": "7日 · 历练受伤基础风险30%，根骨与坚韧筋骨可降低风险。；将增加2点伤势；伤势达到10即死亡。"
+        },
+        {
+          "id": "r:35e8dd380ff34981:t1:c:c",
+          "enabled": true,
+          "label": "绕道离开",
+          "cost": "0日"
+        }
+      ],
+      "traces": [
+        {
+          "model": "@cf/zai-org/glm-4.7-flash",
+          "inputHash": "f1fd9761128ad0faa98292672cbf7a3e0d56132a1d770e16ac9bb108f7577e49",
+          "inputBytes": 12422,
+          "startedAt": 1793349184019,
+          "bindingReturnedAt": 1793349184471,
+          "liveRawBytes": 64707,
+          "captureComplete": true,
+          "response": {
+            "model": "@cf/zai-org/glm-4.7-flash",
+            "choices": [
+              {
+                "finish_reason": "stop",
+                "message": {
+                  "content": "{\"blocks\":[{\"kind\":\"narration\",\"text\":\"你握紧了手中的猎弓，目光扫过四周。林子深处传来几声凄厉的猿啼，似乎有什么东西正在撕扯着什么。你顺着声音望去，只见不远处的灌木丛剧烈晃动，一只浑身是血的野猪正发狂般冲向林间小道。\"}],\"choices\":[{\"action\":\"interact:ask\",\"targetId\":\"p1\",\"stake\":\"low\",\"label\":\"询问野猪的去向\",\"anchor\":0},{\"action\":\"fight:assault\",\"targetId\":\"p1\",\"stake\":\"low\",\"label\":\"尝试射杀野猪\",\"anchor\":0},{\"action\":\"interact:leave\",\"targetId\":\"p1\",\"stake\":\"low\",\"label\":\"绕道离开\",\"anchor\":0}],\"title\":\"林中惊变\",\"location\":\"猎户村外\",\"otherPeople\":[{\"id\":\"p1\",\"name\":\"老猎户\",\"status\":\"alive\"}],\"places\":[],\"factions\":[],\"memoryDeltas\":[]}",
+                  "reasoning_content": ""
+                }
+              }
+            ],
+            "usage": {
+              "prompt_tokens": 2554,
+              "completion_tokens": 215,
+              "total_tokens": 2769,
+              "prompt_tokens_details": {
+                "cached_tokens": 0
+              },
+              "neurons": 21.87300000000009
+            }
+          },
+          "rawSseBytes": 64707
+        }
+      ],
+      "revision": 1,
+      "pending": false,
+      "state": {
+        "relationshipVersion": 1,
+        "version": 5,
+        "mode": "cultivation",
+        "contentVersion": 4,
+        "rulesVersion": 1,
+        "promptVersion": 1,
+        "runId": "ad70c13e-431b-4d74-9296-17b691ecffe9",
+        "revision": 1,
+        "turnId": 1,
+        "phase": "active",
+        "rng": 645656708,
+        "life": {
+          "name": "云归",
+          "ageDays": 5760,
+          "lifeLimit": 80,
+          "realm": "mortal",
+          "cultivation": 0,
+          "injury": 0,
+          "items": {
+            "supplies": 3,
+            "stones": 0
+          },
+          "relations": {},
+          "birth": {
+            "originId": "village",
+            "talentIds": [
+              "fortune-debt",
+              "sword-bone"
+            ],
+            "attributes": {
+              "constitution": 6,
+              "insight": 2,
+              "fortune": 4
+            }
+          }
+        },
+        "birthReceipt": {
+          "kind": "opening",
+          "choiceId": null,
+          "action": null,
+          "elapsedDays": 0,
+          "itemChanges": {},
+          "relationChanges": {},
+          "random": {
+            "before": 645656708,
+            "after": 645656708,
+            "roll": null
+          },
+          "before": {
+            "ageDays": 5760,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "after": {
+            "ageDays": 5760,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "death": null,
+          "birth": {
+            "originId": "village",
+            "talentIds": [
+              "fortune-debt",
+              "sword-bone"
+            ],
+            "attributes": {
+              "constitution": 6,
+              "insight": 2,
+              "fortune": 4
+            }
+          }
+        },
+        "currentScene": {
+          "id": "r:35e8dd380ff34981:t1:s:scene",
+          "title": "林中惊变",
+          "location": "猎户村外",
+          "entities": [
+            {
+              "id": "r:35e8dd380ff34981:t1:e:person_1",
+              "name": "老猎户",
+              "status": "alive",
+              "kind": "person"
+            }
+          ],
+          "blocks": [
+            {
+              "kind": "narration",
+              "text": "你握紧了手中的猎弓，目光扫过四周。林子深处传来几声凄厉的猿啼，似乎有什么东西正在撕扯着什么。你顺着声音望去，只见不远处的灌木丛剧烈晃动，一只浑身是血的野猪正发狂般冲向林间小道。"
+            }
+          ],
+          "choices": [
+            {
+              "id": "r:35e8dd380ff34981:t1:c:a",
+              "label": "询问野猪的去向",
+              "intent": "interact",
+              "targetId": "r:35e8dd380ff34981:t1:e:person_1",
+              "stake": "low",
+              "approach": "ask"
+            },
+            {
+              "id": "r:35e8dd380ff34981:t1:c:b",
+              "label": "尝试射杀野猪",
+              "intent": "fight",
+              "targetId": "r:35e8dd380ff34981:t1:e:person_1",
+              "stake": "low",
+              "approach": "assault"
+            },
+            {
+              "id": "r:35e8dd380ff34981:t1:c:c",
+              "label": "绕道离开",
+              "intent": "interact",
+              "targetId": "r:35e8dd380ff34981:t1:e:person_1",
+              "stake": "low",
+              "approach": "leave"
+            }
+          ],
+          "memoryDeltas": []
+        },
+        "lastReceipt": {
+          "kind": "opening",
+          "choiceId": null,
+          "action": null,
+          "elapsedDays": 0,
+          "itemChanges": {},
+          "relationChanges": {},
+          "random": {
+            "before": 645656708,
+            "after": 645656708,
+            "roll": null
+          },
+          "before": {
+            "ageDays": 5760,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "after": {
+            "ageDays": 5760,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "death": null,
+          "birth": {
+            "originId": "village",
+            "talentIds": [
+              "fortune-debt",
+              "sword-bone"
+            ],
+            "attributes": {
+              "constitution": 6,
+              "insight": 2,
+              "fortune": 4
+            }
+          }
+        },
+        "relatedEntities": [
+          {
+            "id": "r:35e8dd380ff34981:t1:e:person_1",
+            "name": "老猎户",
+            "status": "alive",
+            "kind": "person"
+          }
+        ],
+        "archiveCursor": 0
+      },
+      "posts": 1,
+      "latency": {
+        "usable": true,
+        "errorCode": null,
+        "firstAnyPreviewMs": 3770,
+        "firstReadableMs": 4398,
+        "completionMs": 8657,
+        "narrativeChars": 88,
+        "maxPreviewGapMs": 317,
+        "readingFinishEstimateMs": 19065,
+        "readingStallEstimateMs": 0,
+        "optionsWaitEstimateMs": 0,
+        "prefetchWorthEvaluating": true,
+        "assumptions": {
+          "readingCharsPerSecond": 6,
+          "readableChars": 20,
+          "targetWaitMs": 2000
+        }
+      }
+    }
+  ],
+  "errors": [
+    "Invalid choice"
+  ],
+  "posts": 1,
+  "refreshed": null
+}

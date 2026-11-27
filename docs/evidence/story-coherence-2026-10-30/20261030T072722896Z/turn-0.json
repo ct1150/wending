@@ -1,0 +1,749 @@
+{
+  "caseId": "opening",
+  "start": 652,
+  "timeline": [
+    {
+      "atMs": 7552,
+      "chars": 1
+    },
+    {
+      "atMs": 7643,
+      "chars": 4
+    },
+    {
+      "atMs": 7701,
+      "chars": 10
+    },
+    {
+      "atMs": 7747,
+      "chars": 14
+    },
+    {
+      "atMs": 7809,
+      "chars": 16
+    },
+    {
+      "atMs": 7869,
+      "chars": 20
+    },
+    {
+      "atMs": 7928,
+      "chars": 25
+    },
+    {
+      "atMs": 7989,
+      "chars": 28
+    },
+    {
+      "atMs": 8065,
+      "chars": 32
+    },
+    {
+      "atMs": 8109,
+      "chars": 35
+    },
+    {
+      "atMs": 8171,
+      "chars": 39
+    },
+    {
+      "atMs": 8233,
+      "chars": 41
+    },
+    {
+      "atMs": 8295,
+      "chars": 45
+    },
+    {
+      "atMs": 8343,
+      "chars": 48
+    },
+    {
+      "atMs": 8404,
+      "chars": 52
+    },
+    {
+      "atMs": 8465,
+      "chars": 54
+    },
+    {
+      "atMs": 8527,
+      "chars": 56
+    },
+    {
+      "atMs": 8591,
+      "chars": 60
+    },
+    {
+      "atMs": 8669,
+      "chars": 66
+    },
+    {
+      "atMs": 8732,
+      "chars": 68
+    },
+    {
+      "atMs": 8791,
+      "chars": 74
+    },
+    {
+      "atMs": 8850,
+      "chars": 76
+    },
+    {
+      "atMs": 8912,
+      "chars": 78
+    },
+    {
+      "atMs": 8959,
+      "chars": 81
+    },
+    {
+      "atMs": 9038,
+      "chars": 85
+    },
+    {
+      "atMs": 9101,
+      "chars": 88
+    },
+    {
+      "atMs": 9161,
+      "chars": 91
+    },
+    {
+      "atMs": 9206,
+      "chars": 95
+    },
+    {
+      "atMs": 9268,
+      "chars": 97
+    },
+    {
+      "atMs": 9332,
+      "chars": 102
+    },
+    {
+      "atMs": 9393,
+      "chars": 104
+    },
+    {
+      "atMs": 9439,
+      "chars": 105
+    },
+    {
+      "atMs": 9498,
+      "chars": 109
+    },
+    {
+      "atMs": 9668,
+      "chars": 112
+    },
+    {
+      "atMs": 9715,
+      "chars": 115
+    },
+    {
+      "atMs": 9778,
+      "chars": 117
+    },
+    {
+      "atMs": 9839,
+      "chars": 119
+    },
+    {
+      "atMs": 9900,
+      "chars": 123
+    },
+    {
+      "atMs": 9960,
+      "chars": 128
+    },
+    {
+      "atMs": 10623,
+      "chars": 132
+    },
+    {
+      "atMs": 10702,
+      "chars": 136
+    },
+    {
+      "atMs": 10764,
+      "chars": 139
+    },
+    {
+      "atMs": 10838,
+      "chars": 141
+    },
+    {
+      "atMs": 11527,
+      "chars": 147
+    },
+    {
+      "atMs": 11591,
+      "chars": 151
+    },
+    {
+      "atMs": 11654,
+      "chars": 152
+    },
+    {
+      "atMs": 11888,
+      "chars": 155
+    },
+    {
+      "atMs": 11935,
+      "chars": 157
+    },
+    {
+      "atMs": 12029,
+      "chars": 160
+    },
+    {
+      "atMs": 12088,
+      "chars": 163
+    },
+    {
+      "atMs": 12134,
+      "chars": 168
+    },
+    {
+      "atMs": 12196,
+      "chars": 171
+    },
+    {
+      "atMs": 12258,
+      "chars": 173
+    },
+    {
+      "atMs": 12335,
+      "chars": 177
+    },
+    {
+      "atMs": 12400,
+      "chars": 181
+    },
+    {
+      "atMs": 12462,
+      "chars": 184
+    },
+    {
+      "atMs": 12525,
+      "chars": 185
+    },
+    {
+      "atMs": 12633,
+      "chars": 191
+    },
+    {
+      "atMs": 12696,
+      "chars": 195
+    },
+    {
+      "atMs": 12868,
+      "chars": 200
+    },
+    {
+      "atMs": 13051,
+      "chars": 203
+    },
+    {
+      "atMs": 13114,
+      "chars": 208
+    },
+    {
+      "atMs": 13191,
+      "chars": 212
+    },
+    {
+      "atMs": 13236,
+      "chars": 214
+    },
+    {
+      "atMs": 13330,
+      "chars": 218
+    },
+    {
+      "atMs": 13468,
+      "chars": 221
+    },
+    {
+      "atMs": 13528,
+      "chars": 223
+    },
+    {
+      "atMs": 13590,
+      "chars": 229
+    },
+    {
+      "atMs": 13649,
+      "chars": 233
+    },
+    {
+      "atMs": 13709,
+      "chars": 234
+    }
+  ],
+  "choicesEnabledDuringPreview": false,
+  "lastText": "你睁开眼，发现自己正站在青云村村口的老槐树下。十六岁的云归，身体里流淌着名为“铁骨”与“灵慧”的血脉。你摸了摸干瘪的行囊，里面只有三块行粮，除此之外空空如也。村口的风带着几分凉意，吹动着你的衣摆。远处传来几声犬吠，似乎在提醒你，这凡尘俗世的一天才刚刚开始。\n\n“这便是我的起点了。”\n\n你站在村口，目光扫过四周。东边是连绵起伏的青山，隐约可见云雾缭绕；西边是通往外界的官道，偶尔有行商经过；北边则是村长家的方向，似乎有些动静。你决定先在村子里转转，看看有没有什么机会。",
+  "doneMs": 23679,
+  "result": {
+    "protocolVersion": 1,
+    "status": "ready",
+    "requestId": "80f15a4f-6ed7-40d3-ae0e-43a764f4bb1e",
+    "attemptId": "b041c335-e9f1-4027-8685-c1ef3aa14e83",
+    "sessionRef": "sess_e6ce86ac6e3f70875a81a8de64661cdb",
+    "errorCode": null,
+    "retry": null,
+    "scene": {
+      "id": "r:347505484bb41b78:t1:s:scene",
+      "title": "青云村口",
+      "location": "青云村口",
+      "entities": [
+        {
+          "id": "r:347505484bb41b78:t1:e:person_1",
+          "name": "村长",
+          "status": "alive",
+          "kind": "person"
+        },
+        {
+          "id": "r:347505484bb41b78:t1:e:place_1",
+          "name": "青山",
+          "kind": "place"
+        },
+        {
+          "id": "r:347505484bb41b78:t1:e:place_2",
+          "name": "官道",
+          "kind": "place"
+        }
+      ],
+      "blocks": [
+        {
+          "kind": "narration",
+          "text": "你睁开眼，发现自己正站在青云村村口的老槐树下。十六岁的云归，身体里流淌着名为“铁骨”与“灵慧”的血脉。你摸了摸干瘪的行囊，里面只有三块行粮，除此之外空空如也。村口的风带着几分凉意，吹动着你的衣摆。远处传来几声犬吠，似乎在提醒你，这凡尘俗世的一天才刚刚开始。"
+        },
+        {
+          "kind": "dialogue",
+          "text": "“这便是我的起点了。”",
+          "speaker": "self"
+        },
+        {
+          "kind": "narration",
+          "text": "你站在村口，目光扫过四周。东边是连绵起伏的青山，隐约可见云雾缭绕；西边是通往外界的官道，偶尔有行商经过；北边则是村长家的方向，似乎有些动静。你决定先在村子里转转，看看有没有什么机会。"
+        }
+      ],
+      "choices": [
+        {
+          "id": "r:347505484bb41b78:t1:c:a",
+          "label": "向村长询问村里的情况",
+          "intent": "interact",
+          "targetId": "r:347505484bb41b78:t1:e:person_1",
+          "stake": "low",
+          "approach": "ask"
+        },
+        {
+          "id": "r:347505484bb41b78:t1:c:b",
+          "label": "前往东边的青山",
+          "intent": "travel",
+          "targetId": "r:347505484bb41b78:t1:e:place_1",
+          "stake": "low",
+          "approach": "road"
+        },
+        {
+          "id": "r:347505484bb41b78:t1:c:c",
+          "label": "前往西边的官道",
+          "intent": "travel",
+          "targetId": "r:347505484bb41b78:t1:e:place_2",
+          "stake": "low",
+          "approach": "road"
+        }
+      ],
+      "memoryDeltas": [
+        {
+          "entityId": "r:347505484bb41b78:t1:e:person_1",
+          "text": "村长是青云村的长者，似乎对村里的情况了如指掌。",
+          "kind": "relationship"
+        }
+      ]
+    }
+  },
+  "request": {
+    "context": {
+      "schemaVersion": 1,
+      "phase": "opening",
+      "identity": {
+        "runId": "8d50dc4f-804a-49ad-8a8a-03bbacc71542",
+        "turnId": 1,
+        "baseRevision": 0,
+        "stateHash": "70cc585506391df3c4c03fb23a5cda834a354da17e2f3db15c9365432182c39f",
+        "choiceId": null,
+        "rulesVersion": 1,
+        "promptVersion": 1,
+        "requestId": "80f15a4f-6ed7-40d3-ae0e-43a764f4bb1e"
+      },
+      "namespace": "r:347505484bb41b78",
+      "receipt": {
+        "kind": "opening",
+        "choiceId": null,
+        "action": null,
+        "elapsedDays": 0,
+        "itemChanges": {},
+        "relationChanges": {},
+        "random": {
+          "before": 852376717,
+          "after": 852376717,
+          "roll": null
+        },
+        "before": {
+          "ageDays": 5760,
+          "realm": "mortal",
+          "cultivation": 0,
+          "injury": 0
+        },
+        "after": {
+          "ageDays": 5760,
+          "realm": "mortal",
+          "cultivation": 0,
+          "injury": 0
+        },
+        "death": null,
+        "birth": {
+          "originId": "village",
+          "talentIds": [
+            "flash-wisdom",
+            "iron-bones"
+          ],
+          "attributes": {
+            "constitution": 4,
+            "insight": 5,
+            "fortune": 3
+          }
+        }
+      },
+      "life": {
+        "name": "云归",
+        "ageDays": 5760,
+        "lifeLimit": 80,
+        "realm": "mortal",
+        "cultivation": 0,
+        "injury": 0,
+        "items": {
+          "supplies": 3,
+          "stones": 0
+        },
+        "relations": {},
+        "birth": {
+          "originId": "village",
+          "talentIds": [
+            "flash-wisdom",
+            "iron-bones"
+          ],
+          "attributes": {
+            "constitution": 4,
+            "insight": 5,
+            "fortune": 3
+          }
+        }
+      },
+      "entities": [],
+      "memory": {
+        "facts": [],
+        "promises": [],
+        "clues": [],
+        "recent": [],
+        "summaries": []
+      },
+      "references": [],
+      "previousScene": null,
+      "relationshipVersion": 1,
+      "relationships": {},
+      "coverage": {
+        "policy": "relevance-v1",
+        "openTotal": 0,
+        "openIncluded": 0,
+        "openOmitted": 0
+      }
+    },
+    "attempt": {
+      "id": "b041c335-e9f1-4027-8685-c1ef3aa14e83",
+      "sessionRef": "sess_e6ce86ac6e3f70875a81a8de64661cdb",
+      "retryOf": null
+    }
+  },
+  "decision": null,
+  "choices": [
+    {
+      "id": "r:347505484bb41b78:t1:c:a",
+      "enabled": true,
+      "label": "向村长询问村里的情况",
+      "cost": "0日"
+    },
+    {
+      "id": "r:347505484bb41b78:t1:c:b",
+      "enabled": true,
+      "label": "前往东边的青山",
+      "cost": "30日 · 行粮 1"
+    },
+    {
+      "id": "r:347505484bb41b78:t1:c:c",
+      "enabled": true,
+      "label": "前往西边的官道",
+      "cost": "30日 · 行粮 1"
+    }
+  ],
+  "traces": [
+    {
+      "model": "@cf/zai-org/glm-4.7-flash",
+      "inputHash": "13be084f64b527ff8c81ca29c4924e2876b38e4350798164ba67d543c92b945d",
+      "inputBytes": 15991,
+      "startedAt": 1793345305901,
+      "bindingReturnedAt": 1793345306309,
+      "response": {
+        "model": "@cf/zai-org/glm-4.7-flash",
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "message": {
+              "content": "{\n  \"blocks\": [\n    {\n      \"kind\": \"narration\",\n      \"text\": \"你睁开眼，发现自己正站在青云村村口的老槐树下。十六岁的云归，身体里流淌着名为“铁骨”与“灵慧”的血脉。你摸了摸干瘪的行囊，里面只有三块行粮，除此之外空空如也。村口的风带着几分凉意，吹动着你的衣摆。远处传来几声犬吠，似乎在提醒你，这凡尘俗世的一天才刚刚开始。\"\n    },\n    {\n      \"kind\": \"dialogue\",\n      \"text\": \"“这便是我的起点了。”\",\n      \"speaker\": \"self\"\n    },\n    {\n      \"kind\": \"narration\",\n      \"text\": \"你站在村口，目光扫过四周。东边是连绵起伏的青山，隐约可见云雾缭绕；西边是通往外界的官道，偶尔有行商经过；北边则是村长家的方向，似乎有些动静。你决定先在村子里转转，看看有没有什么机会。\"\n    }\n  ],\n  \"choices\": [\n    {\n      \"action\": \"interact:ask\",\n      \"targetId\": \"p1\",\n      \"stake\": \"low\",\n      \"label\": \"向村长询问村里的情况\",\n      \"anchor\": \"你站在村口，目光扫过四周。东边是连绵起伏的青山，隐约可见云雾缭绕；西边是通往外界的官道，偶尔有行商经过；北边则是村长家的方向，似乎有些动静。\"\n    },\n    {\n      \"action\": \"travel:road\",\n      \"targetId\": \"l1\",\n      \"stake\": \"low\",\n      \"label\": \"前往东边的青山\",\n      \"anchor\": \"你站在村口，目光扫过四周。东边是连绵起伏的青山，隐约可见云雾缭绕；西边是通往外界的官道，偶尔有行商经过；北边则是村长家的方向，似乎有些动静。\"\n    },\n    {\n      \"action\": \"travel:road\",\n      \"targetId\": \"l2\",\n      \"stake\": \"low\",\n      \"label\": \"前往西边的官道\",\n      \"anchor\": \"你站在村口，目光扫过四周。东边是连绵起伏的青山，隐约可见云雾缭绕；西边是通往外界的官道，偶尔有行商经过；北边则是村长家的方向，似乎有些动静。\"\n    }\n  ],\n  \"title\": \"青云村口\",\n  \"location\": \"青云村口\",\n  \"otherPeople\": [\n    {\n      \"id\": \"p1\",\n      \"name\": \"村长\",\n      \"status\": \"alive\"\n    }\n  ],\n  \"places\": [\n    {\n      \"id\": \"l1\",\n      \"name\": \"青山\"\n    },\n    {\n      \"id\": \"l2\",\n      \"name\": \"官道\"\n    }\n  ],\n  \"factions\": [],\n  \"memoryDeltas\": [\n    {\n      \"entityId\": \"p1\",\n      \"text\": \"村长是青云村的长者，似乎对村里的情况了如指掌。\",\n      \"kind\": \"relationship\"\n    }\n  ]\n}",
+              "reasoning_content": ""
+            }
+          }
+        ],
+        "usage": {
+          "prompt_tokens": 1917,
+          "completion_tokens": 713,
+          "total_tokens": 2630,
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          },
+          "neurons": 36.4967000000003
+        }
+      },
+      "rawSseBytes": 197921
+    }
+  ],
+  "revision": 1,
+  "pending": false,
+  "state": {
+    "relationshipVersion": 1,
+    "version": 5,
+    "mode": "cultivation",
+    "contentVersion": 4,
+    "rulesVersion": 1,
+    "promptVersion": 1,
+    "runId": "8d50dc4f-804a-49ad-8a8a-03bbacc71542",
+    "revision": 1,
+    "turnId": 1,
+    "phase": "active",
+    "rng": 852376717,
+    "life": {
+      "name": "云归",
+      "ageDays": 5760,
+      "lifeLimit": 80,
+      "realm": "mortal",
+      "cultivation": 0,
+      "injury": 0,
+      "items": {
+        "supplies": 3,
+        "stones": 0
+      },
+      "relations": {},
+      "birth": {
+        "originId": "village",
+        "talentIds": [
+          "flash-wisdom",
+          "iron-bones"
+        ],
+        "attributes": {
+          "constitution": 4,
+          "insight": 5,
+          "fortune": 3
+        }
+      }
+    },
+    "birthReceipt": {
+      "kind": "opening",
+      "choiceId": null,
+      "action": null,
+      "elapsedDays": 0,
+      "itemChanges": {},
+      "relationChanges": {},
+      "random": {
+        "before": 852376717,
+        "after": 852376717,
+        "roll": null
+      },
+      "before": {
+        "ageDays": 5760,
+        "realm": "mortal",
+        "cultivation": 0,
+        "injury": 0
+      },
+      "after": {
+        "ageDays": 5760,
+        "realm": "mortal",
+        "cultivation": 0,
+        "injury": 0
+      },
+      "death": null,
+      "birth": {
+        "originId": "village",
+        "talentIds": [
+          "flash-wisdom",
+          "iron-bones"
+        ],
+        "attributes": {
+          "constitution": 4,
+          "insight": 5,
+          "fortune": 3
+        }
+      }
+    },
+    "currentScene": {
+      "id": "r:347505484bb41b78:t1:s:scene",
+      "title": "青云村口",
+      "location": "青云村口",
+      "entities": [
+        {
+          "id": "r:347505484bb41b78:t1:e:person_1",
+          "name": "村长",
+          "status": "alive",
+          "kind": "person"
+        },
+        {
+          "id": "r:347505484bb41b78:t1:e:place_1",
+          "name": "青山",
+          "kind": "place"
+        },
+        {
+          "id": "r:347505484bb41b78:t1:e:place_2",
+          "name": "官道",
+          "kind": "place"
+        }
+      ],
+      "blocks": [
+        {
+          "kind": "narration",
+          "text": "你睁开眼，发现自己正站在青云村村口的老槐树下。十六岁的云归，身体里流淌着名为“铁骨”与“灵慧”的血脉。你摸了摸干瘪的行囊，里面只有三块行粮，除此之外空空如也。村口的风带着几分凉意，吹动着你的衣摆。远处传来几声犬吠，似乎在提醒你，这凡尘俗世的一天才刚刚开始。"
+        },
+        {
+          "kind": "dialogue",
+          "text": "“这便是我的起点了。”",
+          "speaker": "self"
+        },
+        {
+          "kind": "narration",
+          "text": "你站在村口，目光扫过四周。东边是连绵起伏的青山，隐约可见云雾缭绕；西边是通往外界的官道，偶尔有行商经过；北边则是村长家的方向，似乎有些动静。你决定先在村子里转转，看看有没有什么机会。"
+        }
+      ],
+      "choices": [
+        {
+          "id": "r:347505484bb41b78:t1:c:a",
+          "label": "向村长询问村里的情况",
+          "intent": "interact",
+          "targetId": "r:347505484bb41b78:t1:e:person_1",
+          "stake": "low",
+          "approach": "ask"
+        },
+        {
+          "id": "r:347505484bb41b78:t1:c:b",
+          "label": "前往东边的青山",
+          "intent": "travel",
+          "targetId": "r:347505484bb41b78:t1:e:place_1",
+          "stake": "low",
+          "approach": "road"
+        },
+        {
+          "id": "r:347505484bb41b78:t1:c:c",
+          "label": "前往西边的官道",
+          "intent": "travel",
+          "targetId": "r:347505484bb41b78:t1:e:place_2",
+          "stake": "low",
+          "approach": "road"
+        }
+      ],
+      "memoryDeltas": [
+        {
+          "entityId": "r:347505484bb41b78:t1:e:person_1",
+          "text": "村长是青云村的长者，似乎对村里的情况了如指掌。",
+          "kind": "relationship"
+        }
+      ]
+    },
+    "lastReceipt": {
+      "kind": "opening",
+      "choiceId": null,
+      "action": null,
+      "elapsedDays": 0,
+      "itemChanges": {},
+      "relationChanges": {},
+      "random": {
+        "before": 852376717,
+        "after": 852376717,
+        "roll": null
+      },
+      "before": {
+        "ageDays": 5760,
+        "realm": "mortal",
+        "cultivation": 0,
+        "injury": 0
+      },
+      "after": {
+        "ageDays": 5760,
+        "realm": "mortal",
+        "cultivation": 0,
+        "injury": 0
+      },
+      "death": null,
+      "birth": {
+        "originId": "village",
+        "talentIds": [
+          "flash-wisdom",
+          "iron-bones"
+        ],
+        "attributes": {
+          "constitution": 4,
+          "insight": 5,
+          "fortune": 3
+        }
+      }
+    },
+    "relatedEntities": [
+      {
+        "id": "r:347505484bb41b78:t1:e:person_1",
+        "name": "村长",
+        "status": "alive",
+        "kind": "person"
+      },
+      {
+        "id": "r:347505484bb41b78:t1:e:place_1",
+        "name": "青山",
+        "kind": "place"
+      },
+      {
+        "id": "r:347505484bb41b78:t1:e:place_2",
+        "name": "官道",
+        "kind": "place"
+      }
+    ],
+    "archiveCursor": 0
+  },
+  "posts": 1,
+  "latency": {
+    "usable": true,
+    "errorCode": null,
+    "firstAnyPreviewMs": 7552,
+    "firstReadableMs": 7869,
+    "completionMs": 23679,
+    "narrativeChars": 234,
+    "maxPreviewGapMs": 689,
+    "readingFinishEstimateMs": 46869,
+    "readingStallEstimateMs": 0,
+    "optionsWaitEstimateMs": 0,
+    "prefetchWorthEvaluating": true,
+    "assumptions": {
+      "readingCharsPerSecond": 6,
+      "readableChars": 20,
+      "targetWaitMs": 2000
+    }
+  }
+}

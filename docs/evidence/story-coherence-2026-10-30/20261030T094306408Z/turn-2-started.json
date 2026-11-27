@@ -1,0 +1,1 @@
+{"at":"2026-10-30T09:49:35.085Z","decision":{"index":0,"reason":"观察发现银针及脚夫遮掩后，询问银针来历；后文须解释/辩解这条新线索，不重复初始求助，不提前拔针或奖励物品。","selected":{"id":"r:c901c16f455b3d18:t2:c:a","label":"询问脚夫：询问脚夫银针的来历","intent":"interact","targetId":"r:c901c16f455b3d18:t1:e:person_1","stake":"low","approach":"ask"}}}

@@ -1,0 +1,764 @@
+{
+  "caseId": "choice-3",
+  "start": 446114.30000000075,
+  "timeline": [
+    {
+      "atMs": 2984,
+      "chars": 1
+    },
+    {
+      "atMs": 3078,
+      "chars": 3
+    },
+    {
+      "atMs": 3125,
+      "chars": 7
+    },
+    {
+      "atMs": 3171,
+      "chars": 10
+    },
+    {
+      "atMs": 3232,
+      "chars": 13
+    },
+    {
+      "atMs": 3310,
+      "chars": 19
+    },
+    {
+      "atMs": 3372,
+      "chars": 22
+    },
+    {
+      "atMs": 3435,
+      "chars": 26
+    },
+    {
+      "atMs": 3512,
+      "chars": 30
+    },
+    {
+      "atMs": 3560,
+      "chars": 33
+    },
+    {
+      "atMs": 3622,
+      "chars": 36
+    },
+    {
+      "atMs": 3670,
+      "chars": 44
+    },
+    {
+      "atMs": 3732,
+      "chars": 50
+    },
+    {
+      "atMs": 3779,
+      "chars": 52
+    },
+    {
+      "atMs": 3841,
+      "chars": 56
+    },
+    {
+      "atMs": 3888,
+      "chars": 59
+    },
+    {
+      "atMs": 3935,
+      "chars": 61
+    },
+    {
+      "atMs": 3997,
+      "chars": 66
+    },
+    {
+      "atMs": 4075,
+      "chars": 69
+    },
+    {
+      "atMs": 4137,
+      "chars": 72
+    },
+    {
+      "atMs": 4184,
+      "chars": 74
+    },
+    {
+      "atMs": 4230,
+      "chars": 80
+    },
+    {
+      "atMs": 4309,
+      "chars": 82
+    },
+    {
+      "atMs": 4371,
+      "chars": 86
+    },
+    {
+      "atMs": 4417,
+      "chars": 90
+    },
+    {
+      "atMs": 4480,
+      "chars": 93
+    },
+    {
+      "atMs": 4541,
+      "chars": 94
+    },
+    {
+      "atMs": 4666,
+      "chars": 100
+    },
+    {
+      "atMs": 4746,
+      "chars": 105
+    },
+    {
+      "atMs": 4807,
+      "chars": 109
+    },
+    {
+      "atMs": 4853,
+      "chars": 115
+    },
+    {
+      "atMs": 4946,
+      "chars": 120
+    },
+    {
+      "atMs": 5008,
+      "chars": 123
+    },
+    {
+      "atMs": 5055,
+      "chars": 128
+    },
+    {
+      "atMs": 5134,
+      "chars": 130
+    },
+    {
+      "atMs": 5196,
+      "chars": 137
+    },
+    {
+      "atMs": 5259,
+      "chars": 139
+    },
+    {
+      "atMs": 5322,
+      "chars": 143
+    },
+    {
+      "atMs": 5384,
+      "chars": 148
+    },
+    {
+      "atMs": 5446,
+      "chars": 156
+    },
+    {
+      "atMs": 5540,
+      "chars": 162
+    },
+    {
+      "atMs": 5602,
+      "chars": 165
+    },
+    {
+      "atMs": 5680,
+      "chars": 169
+    },
+    {
+      "atMs": 5726,
+      "chars": 172
+    },
+    {
+      "atMs": 5789,
+      "chars": 175
+    },
+    {
+      "atMs": 5836,
+      "chars": 177
+    },
+    {
+      "atMs": 5898,
+      "chars": 181
+    },
+    {
+      "atMs": 5976,
+      "chars": 186
+    },
+    {
+      "atMs": 6023,
+      "chars": 189
+    },
+    {
+      "atMs": 6102,
+      "chars": 191
+    },
+    {
+      "atMs": 6148,
+      "chars": 194
+    },
+    {
+      "atMs": 6193,
+      "chars": 200
+    }
+  ],
+  "choicesEnabledDuringPreview": false,
+  "lastText": "你将那块发黑的木牌塞回脚夫手中，转身欲走。脚夫如释重负，连连点头哈腰，竹筐里的灵雀似乎也跟着安静了几分。你走出坊市，晨雾渐散，街道上行人渐多，你混入人群，心中却将“黑煞门”三个字暗暗记下。\n\n正走着，前方不远处传来一阵喧哗，似乎是有人在地摊前争执。一个衣着光鲜的青年正指着摊主大骂，周围围了一圈看热闹的人。你停下脚步，目光扫过那摊位，只见地上散落着几本泛黄的册子，其中一本封皮上隐约刻着“长春”二字。",
+  "doneMs": 9282,
+  "result": {
+    "protocolVersion": 1,
+    "status": "ready",
+    "requestId": "13fa9e0e-ac71-4b21-b5c1-c0f1af8632d1",
+    "attemptId": "651f1b67-b156-4bf9-ac20-d14b832f96d6",
+    "sessionRef": "sess_66f901306f6300b330ff0254db08fd56",
+    "errorCode": null,
+    "retry": null,
+    "scene": {
+      "id": "r:c901c16f455b3d18:t4:s:scene",
+      "title": "坊市喧哗",
+      "location": "城西坊市",
+      "entities": [
+        {
+          "id": "r:c901c16f455b3d18:t4:e:person_1",
+          "name": "光鲜青年",
+          "status": "alive",
+          "kind": "person"
+        },
+        {
+          "id": "r:c901c16f455b3d18:t4:e:place_1",
+          "name": "地摊前",
+          "kind": "place"
+        },
+        {
+          "id": "r:c901c16f455b3d18:t4:e:place_2",
+          "name": "城东",
+          "kind": "place"
+        }
+      ],
+      "blocks": [
+        {
+          "kind": "narration",
+          "text": "你将那块发黑的木牌塞回脚夫手中，转身欲走。脚夫如释重负，连连点头哈腰，竹筐里的灵雀似乎也跟着安静了几分。你走出坊市，晨雾渐散，街道上行人渐多，你混入人群，心中却将“黑煞门”三个字暗暗记下。"
+        },
+        {
+          "kind": "narration",
+          "text": "正走着，前方不远处传来一阵喧哗，似乎是有人在地摊前争执。一个衣着光鲜的青年正指着摊主大骂，周围围了一圈看热闹的人。你停下脚步，目光扫过那摊位，只见地上散落着几本泛黄的册子，其中一本封皮上隐约刻着“长春”二字。"
+        }
+      ],
+      "choices": [
+        {
+          "id": "r:c901c16f455b3d18:t4:c:a",
+          "label": "询问光鲜青年：询问青年争执的原因",
+          "intent": "interact",
+          "targetId": "r:c901c16f455b3d18:t4:e:person_1",
+          "stake": "low",
+          "approach": "ask"
+        },
+        {
+          "id": "r:c901c16f455b3d18:t4:c:b",
+          "label": "观察地摊前：观察地摊上的册子和摊主的神态",
+          "intent": "interact",
+          "targetId": "r:c901c16f455b3d18:t4:e:place_1",
+          "stake": "low",
+          "approach": "observe"
+        },
+        {
+          "id": "r:c901c16f455b3d18:t4:c:c",
+          "label": "沿路前往城东：离开喧闹的街道，前往城东",
+          "intent": "travel",
+          "targetId": "r:c901c16f455b3d18:t4:e:place_2",
+          "stake": "low",
+          "approach": "road"
+        }
+      ],
+      "memoryDeltas": []
+    }
+  },
+  "request": {
+    "context": {
+      "schemaVersion": 1,
+      "phase": "choice",
+      "identity": {
+        "runId": "842e4747-b574-4b65-849f-22d2089124ca",
+        "turnId": 4,
+        "baseRevision": 3,
+        "stateHash": "c8f6cf74e3ed572b497899e8bf426e9f4bdf95335efcce28f5da68fa605bfd74",
+        "choiceId": "r:c901c16f455b3d18:t3:c:c",
+        "rulesVersion": 1,
+        "promptVersion": 1,
+        "requestId": "13fa9e0e-ac71-4b21-b5c1-c0f1af8632d1"
+      },
+      "namespace": "r:c901c16f455b3d18",
+      "receipt": {
+        "kind": "choice",
+        "choiceId": "r:c901c16f455b3d18:t3:c:c",
+        "action": {
+          "id": "r:c901c16f455b3d18:t3:c:c",
+          "label": "结束与脚夫的互动：归还木牌并离开，不想卷入此事",
+          "intent": "interact",
+          "targetId": "r:c901c16f455b3d18:t1:e:person_1",
+          "stake": "low",
+          "approach": "leave"
+        },
+        "elapsedDays": 0,
+        "itemChanges": {},
+        "relationChanges": {},
+        "random": {
+          "before": 1738123081,
+          "after": 235178004,
+          "roll": 4
+        },
+        "before": {
+          "ageDays": 5760,
+          "realm": "mortal",
+          "cultivation": 0,
+          "injury": 0
+        },
+        "after": {
+          "ageDays": 5760,
+          "realm": "mortal",
+          "cultivation": 0,
+          "injury": 0
+        },
+        "death": null,
+        "birth": null
+      },
+      "life": {
+        "name": "云归",
+        "ageDays": 5760,
+        "lifeLimit": 80,
+        "realm": "mortal",
+        "cultivation": 0,
+        "injury": 0,
+        "items": {
+          "supplies": 3,
+          "stones": 0
+        },
+        "relations": {},
+        "birth": {
+          "originId": "artisan",
+          "talentIds": [
+            "iron-bones",
+            "keen-memory"
+          ],
+          "attributes": {
+            "constitution": 3,
+            "insight": 3,
+            "fortune": 6
+          }
+        }
+      },
+      "entities": [
+        {
+          "id": "r:c901c16f455b3d18:t1:e:person_1",
+          "name": "脚夫",
+          "kind": "person",
+          "status": "alive"
+        },
+        {
+          "id": "r:c901c16f455b3d18:t3:e:faction_1",
+          "name": "黑煞门",
+          "kind": "faction",
+          "status": "unknown"
+        }
+      ],
+      "memory": {
+        "facts": [
+          {
+            "id": "decision:3",
+            "runId": "842e4747-b574-4b65-849f-22d2089124ca",
+            "turnId": 3,
+            "source": "rules",
+            "kind": "fact",
+            "entityId": "r:c901c16f455b3d18:t1:e:person_1",
+            "text": "你在城西坊市选择了“询问脚夫：询问脚夫银针的来历”。"
+          },
+          {
+            "id": "decision:2",
+            "runId": "842e4747-b574-4b65-849f-22d2089124ca",
+            "turnId": 2,
+            "source": "rules",
+            "kind": "fact",
+            "entityId": "r:c901c16f455b3d18:t1:e:person_1",
+            "text": "你在城西坊市选择了“观察脚夫：仔细观察灵雀和脚夫的状态”。"
+          }
+        ],
+        "promises": [],
+        "clues": [
+          {
+            "id": "m:68fab1949d84032b3b9e66430e43e824",
+            "source": "narrative",
+            "kind": "clue",
+            "entityId": "r:c901c16f455b3d18:t1:e:person_1",
+            "text": "你盯着脚夫的手腕，冷声追问那银针的来历。脚夫见瞒不过去，神色慌张地松开手，从怀里摸出一块发黑的木牌塞进你手里，低声道：“这是‘黑煞门’的催魂针，专门用来控制灵兽。我本不想接这趟活，可为了那点碎银，只能硬着头皮干。小兄弟，这东西烫手，你快还给我，别惹麻烦。”",
+            "status": "open",
+            "runId": "842e4747-b574-4b65-849f-22d2089124ca",
+            "turnId": 3
+          },
+          {
+            "id": "m:6cd62087d25cc3c05adb006de4ea4617",
+            "source": "narrative",
+            "kind": "clue",
+            "entityId": "r:c901c16f455b3d18:t1:e:person_1",
+            "text": "你凑近竹筐，灵雀的羽毛有些凌乱，几只灵雀的翅膀下似乎藏着什么异物。你伸手拨开羽毛，发现几根细小的银针正扎在它们脚踝的皮肤下，针尾连着极细的丝线，正随着灵雀的挣扎微微颤动。那脚夫见状，脸色一变，连忙伸手想要遮掩，却被你抢先一步按住了手腕。",
+            "status": "open",
+            "runId": "842e4747-b574-4b65-849f-22d2089124ca",
+            "turnId": 2
+          },
+          {
+            "id": "m:84ec0d88b07ee0b923e35a26732d80f3",
+            "source": "narrative",
+            "kind": "clue",
+            "entityId": "r:c901c16f455b3d18:t1:e:person_1",
+            "text": "你站在城西坊市边缘，晨雾未散。街角那家名为“听风阁”的杂货铺前，一个穿着灰布长衫的中年人正对着你招手，神色有些焦急。他身旁的竹筐里，几只灵雀正不安地扑腾着翅膀，发出细微的鸣叫。你认得他，这是负责给坊市运送灵材的脚夫，平日里总是一副笑呵呵的模样，此刻却眉头紧锁，似乎遇到了什么难处。",
+            "status": "open",
+            "runId": "842e4747-b574-4b65-849f-22d2089124ca",
+            "turnId": 1
+          },
+          {
+            "id": "m:e3afc935f39247c78f2291ca91e4fae6",
+            "source": "narrative",
+            "kind": "clue",
+            "entityId": "r:c901c16f455b3d18:t3:e:faction_1",
+            "text": "你盯着脚夫的手腕，冷声追问那银针的来历。脚夫见瞒不过去，神色慌张地松开手，从怀里摸出一块发黑的木牌塞进你手里，低声道：“这是‘黑煞门’的催魂针，专门用来控制灵兽。我本不想接这趟活，可为了那点碎银，只能硬着头皮干。小兄弟，这东西烫手，你快还给我，别惹麻烦。”",
+            "status": "open",
+            "runId": "842e4747-b574-4b65-849f-22d2089124ca",
+            "turnId": 3
+          }
+        ],
+        "recent": [
+          {
+            "id": "turn:3",
+            "runId": "842e4747-b574-4b65-849f-22d2089124ca",
+            "turnId": 3,
+            "source": "narrative",
+            "kind": "turn",
+            "text": "地点：城西坊市；刚才选择：询问脚夫：询问脚夫银针的来历\n你盯着脚夫的手腕，冷声追问那银针的来历。脚夫见瞒不过去，神色慌张地松开手，从怀里摸出一块发黑的木牌塞进你手里，低声道：“这是‘黑煞门’的催魂针，专门用来控制灵兽。我本不想接这趟活，可为了那点碎银，只能硬着头皮干。小兄弟，这东西烫手，你快还给我，别惹麻烦。”",
+            "entityIds": []
+          },
+          {
+            "id": "turn:2",
+            "runId": "842e4747-b574-4b65-849f-22d2089124ca",
+            "turnId": 2,
+            "source": "narrative",
+            "kind": "turn",
+            "text": "地点：城西坊市；刚才选择：观察脚夫：仔细观察灵雀和脚夫的状态\n你凑近竹筐，灵雀的羽毛有些凌乱，几只灵雀的翅膀下似乎藏着什么异物。你伸手拨开羽毛，发现几根细小的银针正扎在它们脚踝的皮肤下，针尾连着极细的丝线，正随着灵雀的挣扎微微颤动。那脚夫见状，脸色一变，连忙伸手想要遮掩，却被你抢先一步按住了手腕。",
+            "entityIds": []
+          }
+        ],
+        "summaries": []
+      },
+      "references": [
+        "decision:3",
+        "decision:2",
+        "m:68fab1949d84032b3b9e66430e43e824",
+        "m:6cd62087d25cc3c05adb006de4ea4617",
+        "m:84ec0d88b07ee0b923e35a26732d80f3",
+        "m:e3afc935f39247c78f2291ca91e4fae6",
+        "turn:3",
+        "turn:2"
+      ],
+      "previousScene": {
+        "id": "r:c901c16f455b3d18:t3:s:scene",
+        "blocksHash": "d3366167a657c5f4e8b83cddc48fe658578545490617fbf5cc35f142887d5b7d"
+      },
+      "relationshipVersion": 1,
+      "relationships": {},
+      "coverage": {
+        "policy": "relevance-v1",
+        "openTotal": 4,
+        "openIncluded": 4,
+        "openOmitted": 0
+      }
+    },
+    "attempt": {
+      "id": "651f1b67-b156-4bf9-ac20-d14b832f96d6",
+      "sessionRef": "sess_66f901306f6300b330ff0254db08fd56",
+      "retryOf": null
+    }
+  },
+  "decision": {
+    "index": 2,
+    "reason": "归还当场展示的木牌并结束与脚夫的互动，真正离开这件事；保留已知催魂针/黑煞门线索，不获得正式物品，不自动违背承诺或受到伤害惩罚。",
+    "selected": {
+      "id": "r:c901c16f455b3d18:t3:c:c",
+      "label": "结束与脚夫的互动：归还木牌并离开，不想卷入此事",
+      "intent": "interact",
+      "targetId": "r:c901c16f455b3d18:t1:e:person_1",
+      "stake": "low",
+      "approach": "leave"
+    }
+  },
+  "choices": [
+    {
+      "id": "r:c901c16f455b3d18:t4:c:a",
+      "enabled": true,
+      "label": "询问光鲜青年：询问青年争执的原因",
+      "cost": "0日"
+    },
+    {
+      "id": "r:c901c16f455b3d18:t4:c:b",
+      "enabled": true,
+      "label": "观察地摊前：观察地摊上的册子和摊主的神态",
+      "cost": "0日"
+    },
+    {
+      "id": "r:c901c16f455b3d18:t4:c:c",
+      "enabled": true,
+      "label": "沿路前往城东：离开喧闹的街道，前往城东",
+      "cost": "30日 · 行粮 1"
+    }
+  ],
+  "traces": [
+    {
+      "model": "@cf/zai-org/glm-4.7-flash",
+      "inputHash": "3ecb4e2db0fda3a1c3a7f0bfb571e597dfd4c6fa1e205bb971b14e69b95dca8b",
+      "inputBytes": 18140,
+      "startedAt": 1793353931368,
+      "bindingReturnedAt": 1793353931687,
+      "liveRawBytes": 103983,
+      "captureComplete": true,
+      "response": {
+        "model": "@cf/zai-org/glm-4.7-flash",
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "message": {
+              "content": "{\"blocks\":[{\"kind\":\"narration\",\"text\":\"你将那块发黑的木牌塞回脚夫手中，转身欲走。脚夫如释重负，连连点头哈腰，竹筐里的灵雀似乎也跟着安静了几分。你走出坊市，晨雾渐散，街道上行人渐多，你混入人群，心中却将“黑煞门”三个字暗暗记下。\"},{\"kind\":\"narration\",\"text\":\"正走着，前方不远处传来一阵喧哗，似乎是有人在地摊前争执。一个衣着光鲜的青年正指着摊主大骂，周围围了一圈看热闹的人。你停下脚步，目光扫过那摊位，只见地上散落着几本泛黄的册子，其中一本封皮上隐约刻着“长春”二字。\"}],\"choices\":[{\"action\":\"interact:ask\",\"targetId\":\"p1\",\"stake\":\"low\",\"purpose\":\"询问青年争执的原因\",\"anchor\":1},{\"action\":\"interact:observe\",\"targetId\":\"l1\",\"stake\":\"low\",\"purpose\":\"观察地摊上的册子和摊主的神态\",\"anchor\":1},{\"action\":\"travel:road\",\"targetId\":\"l2\",\"stake\":\"low\",\"purpose\":\"离开喧闹的街道，前往城东\",\"anchor\":1}],\"title\":\"坊市喧哗\",\"location\":\"城西坊市\",\"otherPeople\":[{\"id\":\"p1\",\"name\":\"光鲜青年\",\"status\":\"alive\"}],\"places\":[{\"id\":\"l1\",\"name\":\"地摊前\"},{\"id\":\"l2\",\"name\":\"城东\"}],\"factions\":[],\"memoryDeltas\":[]}",
+              "reasoning_content": ""
+            }
+          }
+        ],
+        "usage": {
+          "prompt_tokens": 4222,
+          "completion_tokens": 342,
+          "total_tokens": 4564,
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          },
+          "neurons": 35.669800000000144
+        }
+      },
+      "rawSseBytes": 103983
+    }
+  ],
+  "revision": 4,
+  "pending": false,
+  "state": {
+    "relationshipVersion": 1,
+    "version": 5,
+    "mode": "cultivation",
+    "contentVersion": 4,
+    "rulesVersion": 1,
+    "promptVersion": 1,
+    "runId": "842e4747-b574-4b65-849f-22d2089124ca",
+    "revision": 4,
+    "turnId": 4,
+    "phase": "active",
+    "rng": 235178004,
+    "life": {
+      "name": "云归",
+      "ageDays": 5760,
+      "lifeLimit": 80,
+      "realm": "mortal",
+      "cultivation": 0,
+      "injury": 0,
+      "items": {
+        "supplies": 3,
+        "stones": 0
+      },
+      "relations": {},
+      "birth": {
+        "originId": "artisan",
+        "talentIds": [
+          "iron-bones",
+          "keen-memory"
+        ],
+        "attributes": {
+          "constitution": 3,
+          "insight": 3,
+          "fortune": 6
+        }
+      }
+    },
+    "birthReceipt": {
+      "kind": "opening",
+      "choiceId": null,
+      "action": null,
+      "elapsedDays": 0,
+      "itemChanges": {},
+      "relationChanges": {},
+      "random": {
+        "before": 798424255,
+        "after": 798424255,
+        "roll": null
+      },
+      "before": {
+        "ageDays": 5760,
+        "realm": "mortal",
+        "cultivation": 0,
+        "injury": 0
+      },
+      "after": {
+        "ageDays": 5760,
+        "realm": "mortal",
+        "cultivation": 0,
+        "injury": 0
+      },
+      "death": null,
+      "birth": {
+        "originId": "artisan",
+        "talentIds": [
+          "iron-bones",
+          "keen-memory"
+        ],
+        "attributes": {
+          "constitution": 3,
+          "insight": 3,
+          "fortune": 6
+        }
+      }
+    },
+    "currentScene": {
+      "id": "r:c901c16f455b3d18:t4:s:scene",
+      "title": "坊市喧哗",
+      "location": "城西坊市",
+      "entities": [
+        {
+          "id": "r:c901c16f455b3d18:t4:e:person_1",
+          "name": "光鲜青年",
+          "status": "alive",
+          "kind": "person"
+        },
+        {
+          "id": "r:c901c16f455b3d18:t4:e:place_1",
+          "name": "地摊前",
+          "kind": "place"
+        },
+        {
+          "id": "r:c901c16f455b3d18:t4:e:place_2",
+          "name": "城东",
+          "kind": "place"
+        }
+      ],
+      "blocks": [
+        {
+          "kind": "narration",
+          "text": "你将那块发黑的木牌塞回脚夫手中，转身欲走。脚夫如释重负，连连点头哈腰，竹筐里的灵雀似乎也跟着安静了几分。你走出坊市，晨雾渐散，街道上行人渐多，你混入人群，心中却将“黑煞门”三个字暗暗记下。"
+        },
+        {
+          "kind": "narration",
+          "text": "正走着，前方不远处传来一阵喧哗，似乎是有人在地摊前争执。一个衣着光鲜的青年正指着摊主大骂，周围围了一圈看热闹的人。你停下脚步，目光扫过那摊位，只见地上散落着几本泛黄的册子，其中一本封皮上隐约刻着“长春”二字。"
+        }
+      ],
+      "choices": [
+        {
+          "id": "r:c901c16f455b3d18:t4:c:a",
+          "label": "询问光鲜青年：询问青年争执的原因",
+          "intent": "interact",
+          "targetId": "r:c901c16f455b3d18:t4:e:person_1",
+          "stake": "low",
+          "approach": "ask"
+        },
+        {
+          "id": "r:c901c16f455b3d18:t4:c:b",
+          "label": "观察地摊前：观察地摊上的册子和摊主的神态",
+          "intent": "interact",
+          "targetId": "r:c901c16f455b3d18:t4:e:place_1",
+          "stake": "low",
+          "approach": "observe"
+        },
+        {
+          "id": "r:c901c16f455b3d18:t4:c:c",
+          "label": "沿路前往城东：离开喧闹的街道，前往城东",
+          "intent": "travel",
+          "targetId": "r:c901c16f455b3d18:t4:e:place_2",
+          "stake": "low",
+          "approach": "road"
+        }
+      ],
+      "memoryDeltas": []
+    },
+    "lastReceipt": {
+      "kind": "choice",
+      "choiceId": "r:c901c16f455b3d18:t3:c:c",
+      "action": {
+        "id": "r:c901c16f455b3d18:t3:c:c",
+        "label": "结束与脚夫的互动：归还木牌并离开，不想卷入此事",
+        "intent": "interact",
+        "targetId": "r:c901c16f455b3d18:t1:e:person_1",
+        "stake": "low",
+        "approach": "leave"
+      },
+      "elapsedDays": 0,
+      "itemChanges": {},
+      "relationChanges": {},
+      "random": {
+        "before": 1738123081,
+        "after": 235178004,
+        "roll": 4
+      },
+      "before": {
+        "ageDays": 5760,
+        "realm": "mortal",
+        "cultivation": 0,
+        "injury": 0
+      },
+      "after": {
+        "ageDays": 5760,
+        "realm": "mortal",
+        "cultivation": 0,
+        "injury": 0
+      },
+      "death": null,
+      "birth": null
+    },
+    "relatedEntities": [
+      {
+        "id": "r:c901c16f455b3d18:t4:e:person_1",
+        "name": "光鲜青年",
+        "status": "alive",
+        "kind": "person"
+      },
+      {
+        "id": "r:c901c16f455b3d18:t4:e:place_1",
+        "name": "地摊前",
+        "kind": "place"
+      },
+      {
+        "id": "r:c901c16f455b3d18:t4:e:place_2",
+        "name": "城东",
+        "kind": "place"
+      }
+    ],
+    "archiveCursor": 0
+  },
+  "posts": 4,
+  "latency": {
+    "usable": true,
+    "errorCode": null,
+    "firstAnyPreviewMs": 2984,
+    "firstReadableMs": 3372,
+    "completionMs": 9282,
+    "narrativeChars": 200,
+    "maxPreviewGapMs": 125,
+    "readingFinishEstimateMs": 36705,
+    "readingStallEstimateMs": 0,
+    "optionsWaitEstimateMs": 0,
+    "prefetchWorthEvaluating": true,
+    "assumptions": {
+      "readingCharsPerSecond": 6,
+      "readableChars": 20,
+      "targetWaitMs": 2000
+    }
+  }
+}

@@ -1,0 +1,530 @@
+{
+  "caseId": "choice-1",
+  "start": 26163.800000000745,
+  "timeline": [
+    {
+      "atMs": 3351,
+      "chars": 1
+    },
+    {
+      "atMs": 3414,
+      "chars": 4
+    },
+    {
+      "atMs": 3477,
+      "chars": 8
+    },
+    {
+      "atMs": 3556,
+      "chars": 12
+    },
+    {
+      "atMs": 3618,
+      "chars": 17
+    },
+    {
+      "atMs": 3681,
+      "chars": 21
+    },
+    {
+      "atMs": 3745,
+      "chars": 25
+    },
+    {
+      "atMs": 3808,
+      "chars": 30
+    },
+    {
+      "atMs": 3869,
+      "chars": 34
+    },
+    {
+      "atMs": 3947,
+      "chars": 42
+    },
+    {
+      "atMs": 4179,
+      "chars": 57
+    },
+    {
+      "atMs": 4319,
+      "chars": 58
+    },
+    {
+      "atMs": 4442,
+      "chars": 64
+    },
+    {
+      "atMs": 4504,
+      "chars": 65
+    },
+    {
+      "atMs": 4551,
+      "chars": 73
+    },
+    {
+      "atMs": 4614,
+      "chars": 78
+    },
+    {
+      "atMs": 4693,
+      "chars": 84
+    }
+  ],
+  "choicesEnabledDuringPreview": false,
+  "lastText": "你凑近那堆废铁，目光扫过那些杂乱的金属块。老赵见你盯着看，便把那块暗红色的碎片递到你面前，催促道：“快看看，这东西邪门得很，刚才砸砧子的时候，火星子都差点崩到我脸上。”",
+  "doneMs": 7740,
+  "result": {
+    "protocolVersion": 1,
+    "status": "ready",
+    "requestId": "b0b1cb7e-32d9-4f37-ad3b-22850b1c4ae5",
+    "attemptId": "577f9295-a69c-4e54-a2fc-b9fcc6d3213d",
+    "sessionRef": "sess_30d7eef0e692de7c74e7e06f15820932",
+    "errorCode": null,
+    "retry": null,
+    "scene": {
+      "id": "r:91a1176a570d7f8a:t2:s:scene",
+      "title": "玄铁疑云",
+      "location": "城坊匠徒",
+      "entities": [
+        {
+          "id": "r:91a1176a570d7f8a:t1:e:person_1",
+          "name": "老赵",
+          "kind": "person",
+          "status": "alive"
+        }
+      ],
+      "blocks": [
+        {
+          "kind": "narration",
+          "text": "你凑近那堆废铁，目光扫过那些杂乱的金属块。老赵见你盯着看，便把那块暗红色的碎片递到你面前，催促道：“快看看，这东西邪门得很，刚才砸砧子的时候，火星子都差点崩到我脸上。”"
+        }
+      ],
+      "choices": [
+        {
+          "id": "r:91a1176a570d7f8a:t2:c:a",
+          "label": "询问老赵：询问这块玄铁渣的具体来历和来源渠道",
+          "intent": "interact",
+          "targetId": "r:91a1176a570d7f8a:t1:e:person_1",
+          "stake": "low",
+          "approach": "ask"
+        },
+        {
+          "id": "r:91a1176a570d7f8a:t2:c:b",
+          "label": "仔细观察：仔细观察玄铁渣的纹理和杂质，判断其真伪",
+          "intent": "interact",
+          "targetId": "self",
+          "stake": "low",
+          "approach": "observe"
+        },
+        {
+          "id": "r:91a1176a570d7f8a:t2:c:c",
+          "label": "结束与老赵的互动：结束与老赵的交谈，离开打铁铺",
+          "intent": "interact",
+          "targetId": "r:91a1176a570d7f8a:t1:e:person_1",
+          "stake": "low",
+          "approach": "leave"
+        }
+      ],
+      "memoryDeltas": [
+        {
+          "entityId": "r:91a1176a570d7f8a:t1:e:person_1",
+          "kind": "clue",
+          "text": "你凑近那堆废铁，目光扫过那些杂乱的金属块。老赵见你盯着看，便把那块暗红色的碎片递到你面前，催促道：“快看看，这东西邪门得很，刚才砸砧子的时候，火星子都差点崩到我脸上。”",
+          "status": "open"
+        }
+      ]
+    }
+  },
+  "request": {
+    "context": {
+      "schemaVersion": 1,
+      "phase": "choice",
+      "identity": {
+        "runId": "3c9c0e68-9eb7-42c1-96d7-494080b0f15b",
+        "turnId": 2,
+        "baseRevision": 1,
+        "stateHash": "d84123f6a0152f25d7c098127bb2b03c5f4eb9413b938eb7dc976c6a347972d8",
+        "choiceId": "r:91a1176a570d7f8a:t1:c:a",
+        "rulesVersion": 1,
+        "promptVersion": 1,
+        "requestId": "b0b1cb7e-32d9-4f37-ad3b-22850b1c4ae5"
+      },
+      "namespace": "r:91a1176a570d7f8a",
+      "receipt": {
+        "kind": "choice",
+        "choiceId": "r:91a1176a570d7f8a:t1:c:a",
+        "action": {
+          "id": "r:91a1176a570d7f8a:t1:c:a",
+          "label": "询问老赵：询问老赵这批废铁的来源和最近是否有陌生人来过",
+          "intent": "interact",
+          "targetId": "r:91a1176a570d7f8a:t1:e:person_1",
+          "stake": "low",
+          "approach": "ask"
+        },
+        "elapsedDays": 0,
+        "itemChanges": {},
+        "relationChanges": {},
+        "random": {
+          "before": 32576648,
+          "after": 1696804423,
+          "roll": 23
+        },
+        "before": {
+          "ageDays": 5760,
+          "realm": "mortal",
+          "cultivation": 0,
+          "injury": 0
+        },
+        "after": {
+          "ageDays": 5760,
+          "realm": "mortal",
+          "cultivation": 0,
+          "injury": 0
+        },
+        "death": null,
+        "birth": null
+      },
+      "life": {
+        "name": "云归",
+        "ageDays": 5760,
+        "lifeLimit": 80,
+        "realm": "mortal",
+        "cultivation": 0,
+        "injury": 0,
+        "items": {
+          "supplies": 3,
+          "stones": 0
+        },
+        "relations": {},
+        "birth": {
+          "originId": "artisan",
+          "talentIds": [
+            "sensitive-breath",
+            "flash-wisdom"
+          ],
+          "attributes": {
+            "constitution": 3,
+            "insight": 5,
+            "fortune": 4
+          }
+        }
+      },
+      "entities": [
+        {
+          "id": "r:91a1176a570d7f8a:t1:e:person_1",
+          "name": "老赵",
+          "kind": "person",
+          "status": "alive"
+        }
+      ],
+      "memory": {
+        "facts": [],
+        "promises": [],
+        "clues": [
+          {
+            "id": "m:8506dd560a9de62f2a806aaaf399ac2c",
+            "source": "narrative",
+            "kind": "clue",
+            "entityId": "r:91a1176a570d7f8a:t1:e:person_1",
+            "text": "“这批废铁里头，怎么混进了一块硬得离谱的‘玄铁’渣子，把我的铁砧都砸裂了。”老赵嘟囔着，拿起一块暗红色的碎片在手里掂了掂，眼神里透着几分困惑和恼火，“小云，你命格里有刹那慧心，帮我看看这玩意儿到底是个什么路数，别是个什么妖邪作祟。”",
+            "status": "open",
+            "runId": "3c9c0e68-9eb7-42c1-96d7-494080b0f15b",
+            "turnId": 1
+          }
+        ],
+        "recent": [
+          {
+            "id": "turn:1",
+            "runId": "3c9c0e68-9eb7-42c1-96d7-494080b0f15b",
+            "turnId": 1,
+            "source": "narrative",
+            "kind": "turn",
+            "text": "地点：城坊匠徒\n你站在城坊的打铁铺前，铁匠老赵正满头大汗地挥锤，炉火映红了他满是油污的脸。他似乎察觉到了你的目光，停下动作，用挂在脖子上的粗布擦了擦额头的汗，指了指炉边一堆刚出炉的废铁，眉头紧锁。\n“这批废铁里头，怎么混进了一块硬得离谱的‘玄铁’渣子，把我的铁砧都砸裂了。”老赵嘟囔着，拿起一块暗红色的碎片在手里掂了掂，眼神里透着几分困惑和恼火，“小云，你命格里有刹那慧心，帮我看看这玩意儿到底是个什么路数，别是个什么妖邪作祟。”",
+            "entityIds": []
+          }
+        ],
+        "summaries": []
+      },
+      "references": [
+        "m:8506dd560a9de62f2a806aaaf399ac2c",
+        "turn:1"
+      ],
+      "previousScene": {
+        "id": "r:91a1176a570d7f8a:t1:s:scene",
+        "blocksHash": "15772e09feb8319dc227fc0657adf43ca4e72613b53e663b8456d0a8b3e3ed96"
+      },
+      "relationshipVersion": 1,
+      "relationships": {},
+      "coverage": {
+        "policy": "relevance-v1",
+        "openTotal": 1,
+        "openIncluded": 1,
+        "openOmitted": 0
+      }
+    },
+    "attempt": {
+      "id": "577f9295-a69c-4e54-a2fc-b9fcc6d3213d",
+      "sessionRef": "sess_30d7eef0e692de7c74e7e06f15820932",
+      "retryOf": null
+    }
+  },
+  "decision": {
+    "index": 0,
+    "reason": "The iron fragment is held by Lao Zhao; ask where the batch came from and whether strangers visited, then require a concrete answer without acquiring the fragment.",
+    "selected": {
+      "id": "r:91a1176a570d7f8a:t1:c:a",
+      "label": "询问老赵：询问老赵这批废铁的来源和最近是否有陌生人来过",
+      "intent": "interact",
+      "targetId": "r:91a1176a570d7f8a:t1:e:person_1",
+      "stake": "low",
+      "approach": "ask"
+    }
+  },
+  "choices": [
+    {
+      "id": "r:91a1176a570d7f8a:t2:c:a",
+      "enabled": true,
+      "label": "询问老赵：询问这块玄铁渣的具体来历和来源渠道",
+      "cost": "0日"
+    },
+    {
+      "id": "r:91a1176a570d7f8a:t2:c:b",
+      "enabled": true,
+      "label": "仔细观察：仔细观察玄铁渣的纹理和杂质，判断其真伪",
+      "cost": "0日"
+    },
+    {
+      "id": "r:91a1176a570d7f8a:t2:c:c",
+      "enabled": true,
+      "label": "结束与老赵的互动：结束与老赵的交谈，离开打铁铺",
+      "cost": "0日"
+    }
+  ],
+  "traces": [
+    {
+      "model": "@cf/zai-org/glm-4.7-flash",
+      "inputHash": "3853ad06745158aea3b7f82e7921c59f8ebdd27779a76c1f78ea7c5f97625aa2",
+      "inputBytes": 16225,
+      "startedAt": 1793356718649,
+      "bindingReturnedAt": 1793356719059,
+      "liveRawBytes": 70902,
+      "captureComplete": true,
+      "response": {
+        "model": "@cf/zai-org/glm-4.7-flash",
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "message": {
+              "content": "{\"blocks\":[{\"kind\":\"narration\",\"text\":\"你凑近那堆废铁，目光扫过那些杂乱的金属块。老赵见你盯着看，便把那块暗红色的碎片递到你面前，催促道：“快看看，这东西邪门得很，刚才砸砧子的时候，火星子都差点崩到我脸上。”\"}],\"choices\":[{\"action\":\"interact:ask\",\"targetId\":\"k1_person_老赵\",\"stake\":\"low\",\"purpose\":\"询问这块玄铁渣的具体来历和来源渠道\",\"anchor\":0},{\"action\":\"interact:observe\",\"targetId\":\"self\",\"stake\":\"low\",\"purpose\":\"仔细观察玄铁渣的纹理和杂质，判断其真伪\",\"anchor\":0},{\"action\":\"interact:leave\",\"targetId\":\"k1_person_老赵\",\"stake\":\"low\",\"purpose\":\"结束与老赵的交谈，离开打铁铺\",\"anchor\":0}],\"title\":\"玄铁疑云\",\"location\":\"城坊匠徒\",\"otherPeople\":[{\"id\":\"k1_person_老赵\",\"status\":\"alive\"}],\"places\":[],\"factions\":[],\"memoryDeltas\":[{\"entityId\":\"k1_person_老赵\",\"kind\":\"clue\",\"anchor\":0,\"status\":\"open\"}]}",
+              "reasoning_content": ""
+            }
+          }
+        ],
+        "usage": {
+          "prompt_tokens": 2938,
+          "completion_tokens": 263,
+          "total_tokens": 3201,
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          },
+          "neurons": 25.732200000000113
+        }
+      },
+      "rawSseBytes": 70902
+    }
+  ],
+  "revision": 2,
+  "pending": false,
+  "state": {
+    "relationshipVersion": 1,
+    "version": 5,
+    "mode": "cultivation",
+    "contentVersion": 4,
+    "rulesVersion": 1,
+    "promptVersion": 1,
+    "runId": "3c9c0e68-9eb7-42c1-96d7-494080b0f15b",
+    "revision": 2,
+    "turnId": 2,
+    "phase": "active",
+    "rng": 1696804423,
+    "life": {
+      "name": "云归",
+      "ageDays": 5760,
+      "lifeLimit": 80,
+      "realm": "mortal",
+      "cultivation": 0,
+      "injury": 0,
+      "items": {
+        "supplies": 3,
+        "stones": 0
+      },
+      "relations": {},
+      "birth": {
+        "originId": "artisan",
+        "talentIds": [
+          "sensitive-breath",
+          "flash-wisdom"
+        ],
+        "attributes": {
+          "constitution": 3,
+          "insight": 5,
+          "fortune": 4
+        }
+      }
+    },
+    "birthReceipt": {
+      "kind": "opening",
+      "choiceId": null,
+      "action": null,
+      "elapsedDays": 0,
+      "itemChanges": {},
+      "relationChanges": {},
+      "random": {
+        "before": 32576648,
+        "after": 32576648,
+        "roll": null
+      },
+      "before": {
+        "ageDays": 5760,
+        "realm": "mortal",
+        "cultivation": 0,
+        "injury": 0
+      },
+      "after": {
+        "ageDays": 5760,
+        "realm": "mortal",
+        "cultivation": 0,
+        "injury": 0
+      },
+      "death": null,
+      "birth": {
+        "originId": "artisan",
+        "talentIds": [
+          "sensitive-breath",
+          "flash-wisdom"
+        ],
+        "attributes": {
+          "constitution": 3,
+          "insight": 5,
+          "fortune": 4
+        }
+      }
+    },
+    "currentScene": {
+      "id": "r:91a1176a570d7f8a:t2:s:scene",
+      "title": "玄铁疑云",
+      "location": "城坊匠徒",
+      "entities": [
+        {
+          "id": "r:91a1176a570d7f8a:t1:e:person_1",
+          "name": "老赵",
+          "kind": "person",
+          "status": "alive"
+        }
+      ],
+      "blocks": [
+        {
+          "kind": "narration",
+          "text": "你凑近那堆废铁，目光扫过那些杂乱的金属块。老赵见你盯着看，便把那块暗红色的碎片递到你面前，催促道：“快看看，这东西邪门得很，刚才砸砧子的时候，火星子都差点崩到我脸上。”"
+        }
+      ],
+      "choices": [
+        {
+          "id": "r:91a1176a570d7f8a:t2:c:a",
+          "label": "询问老赵：询问这块玄铁渣的具体来历和来源渠道",
+          "intent": "interact",
+          "targetId": "r:91a1176a570d7f8a:t1:e:person_1",
+          "stake": "low",
+          "approach": "ask"
+        },
+        {
+          "id": "r:91a1176a570d7f8a:t2:c:b",
+          "label": "仔细观察：仔细观察玄铁渣的纹理和杂质，判断其真伪",
+          "intent": "interact",
+          "targetId": "self",
+          "stake": "low",
+          "approach": "observe"
+        },
+        {
+          "id": "r:91a1176a570d7f8a:t2:c:c",
+          "label": "结束与老赵的互动：结束与老赵的交谈，离开打铁铺",
+          "intent": "interact",
+          "targetId": "r:91a1176a570d7f8a:t1:e:person_1",
+          "stake": "low",
+          "approach": "leave"
+        }
+      ],
+      "memoryDeltas": [
+        {
+          "entityId": "r:91a1176a570d7f8a:t1:e:person_1",
+          "kind": "clue",
+          "text": "你凑近那堆废铁，目光扫过那些杂乱的金属块。老赵见你盯着看，便把那块暗红色的碎片递到你面前，催促道：“快看看，这东西邪门得很，刚才砸砧子的时候，火星子都差点崩到我脸上。”",
+          "status": "open"
+        }
+      ]
+    },
+    "lastReceipt": {
+      "kind": "choice",
+      "choiceId": "r:91a1176a570d7f8a:t1:c:a",
+      "action": {
+        "id": "r:91a1176a570d7f8a:t1:c:a",
+        "label": "询问老赵：询问老赵这批废铁的来源和最近是否有陌生人来过",
+        "intent": "interact",
+        "targetId": "r:91a1176a570d7f8a:t1:e:person_1",
+        "stake": "low",
+        "approach": "ask"
+      },
+      "elapsedDays": 0,
+      "itemChanges": {},
+      "relationChanges": {},
+      "random": {
+        "before": 32576648,
+        "after": 1696804423,
+        "roll": 23
+      },
+      "before": {
+        "ageDays": 5760,
+        "realm": "mortal",
+        "cultivation": 0,
+        "injury": 0
+      },
+      "after": {
+        "ageDays": 5760,
+        "realm": "mortal",
+        "cultivation": 0,
+        "injury": 0
+      },
+      "death": null,
+      "birth": null
+    },
+    "relatedEntities": [
+      {
+        "id": "r:91a1176a570d7f8a:t1:e:person_1",
+        "name": "老赵",
+        "kind": "person",
+        "status": "alive"
+      }
+    ],
+    "archiveCursor": 0
+  },
+  "posts": 2,
+  "latency": {
+    "usable": true,
+    "errorCode": null,
+    "firstAnyPreviewMs": 3351,
+    "firstReadableMs": 3681,
+    "completionMs": 7740,
+    "narrativeChars": 84,
+    "maxPreviewGapMs": 232,
+    "readingFinishEstimateMs": 17681,
+    "readingStallEstimateMs": 0,
+    "optionsWaitEstimateMs": 0,
+    "prefetchWorthEvaluating": true,
+    "assumptions": {
+      "readingCharsPerSecond": 6,
+      "readableChars": 20,
+      "targetWaitMs": 2000
+    }
+  }
+}

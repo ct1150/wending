@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "sourceCommit": "6a406e4de71bae33b7b57bac4ef55eac4322fb31",
+  "status": "ACCEPTANCE_STOPPED",
+  "reason": "Compact envelope opening and help pass; help advances1day, supplies3->2, relation+2, no invented loot. Selected ask about well contents instead replays the prior stranger-emergence paragraph and offers the same question again. Structural success was not accepted as semantic success.0274a10 adds final-task focus and loop guards.",
+  "actualTurns": 3,
+  "productionRestored": {
+    "version": "cad2a140-240f-4465-a837-e53f054c2589",
+    "percentage": 100,
+    "deployment": "cdc85278-452a-46ac-9e1c-b854cec03fa0"
+  },
+  "cleanup": {
+    "ownCredentialDeleted": true,
+    "newWorkerCreated": false,
+    "newNamespaceCreated": false,
+    "ledgerRetained": true
+  },
+  "recordedAt": "2026-10-30T08:25:03.259Z"
+}

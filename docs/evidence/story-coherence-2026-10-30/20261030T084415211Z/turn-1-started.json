@@ -1,0 +1,1 @@
+{"at":"2026-10-30T08:49:46.327Z","decision":{"index":0,"reason":"向现场老张询问问剑台的具体位置；需要实际路线答复，同日不提前旅行。开局promise记忆未含明确承诺，已记录为分类待核验项。","selected":{"id":"r:7a380a06b17b4c6e:t1:c:a","label":"向老张询问问剑台的具体位置","intent":"interact","targetId":"r:7a380a06b17b4c6e:t1:e:person_1","stake":"low","approach":"ask"}}}

@@ -1,0 +1,55 @@
+{
+  "status": "DEPLOYED_BY_EXPLICIT_USER_REQUEST",
+  "recordedAt": "2026-10-30 17:32:33 UTC",
+  "publicUrl": "https://baishi-wending.ct1150.workers.dev/",
+  "pr": "https://github.com/ct1150/wending/pull/17",
+  "mainCommit": "fa19e7d0f2d510c5efd14c5dc2284c5472e6b7ec",
+  "workerVersion": "e99c915a-67bd-4821-957d-1392d45503f1",
+  "deployment": "e021bcb5-fe72-457f-bc2c-152c5851526b",
+  "percentage": 100,
+  "frontend": {
+    "version": "4.4.0",
+    "htmlSha256": "fb60a06eaf7a2282ebfdd05c76f25e03d7547bf78cfc49882d3e02cf3397eed3"
+  },
+  "publicIdentity": {
+    "recordedAt": "2026-10-30T17:30:12.159Z",
+    "health": {
+      "status": "ok",
+      "version": "4.4.0",
+      "sourceCommit": "fa19e7d0f2d510c5efd14c5dc2284c5472e6b7ec",
+      "htmlSha256": "fb60a06eaf7a2282ebfdd05c76f25e03d7547bf78cfc49882d3e02cf3397eed3",
+      "htmlBytes": 1043026,
+      "releaseSource": "embedded",
+      "lastAttemptAt": null,
+      "lastSuccessAt": null,
+      "lastError": ""
+    },
+    "homeBytes": 1043026,
+    "homeSha256": "fb60a06eaf7a2282ebfdd05c76f25e03d7547bf78cfc49882d3e02cf3397eed3",
+    "noGameOrModelCalls": true
+  },
+  "releaseChannel": {
+    "schemaVersion": 1,
+    "version": "4.4.0",
+    "sourceCommit": "fa19e7d0f2d510c5efd14c5dc2284c5472e6b7ec",
+    "artifactCommit": "0fa9e157a62248c310bed390710f9758e155ffcd",
+    "htmlSha256": "fb60a06eaf7a2282ebfdd05c76f25e03d7547bf78cfc49882d3e02cf3397eed3",
+    "htmlBytes": 1043026,
+    "artifactPath": "releases/fb60a06eaf7a2282ebfdd05c76f25e03d7547bf78cfc49882d3e02cf3397eed3.html"
+  },
+  "modulesVerified": 22,
+  "allModuleSourcesExact": true,
+  "namespaceId": "1de1df3929534a8d8d495d6db6604e99",
+  "originalRollbackVersion": "cad2a140-240f-4465-a837-e53f054c2589",
+  "privateRoutesRemaining": 0,
+  "ownPrivateCredentialFilesRemaining": 0,
+  "additionalFunctionalOrModelTestsAfterStopInstruction": 0,
+  "acceptanceWaiver": "用户明确要求：别测了，直接提交并发布",
+  "sixAiSceneAcceptancePassed": false,
+  "knownLimitations": [
+    "普通野兽仍可能被生成问答选项",
+    "AI生成延迟不稳定",
+    "回滚需保留IndexedDB v3读取能力"
+  ],
+  "proofObservedAt": "2026-10-28T16:34:32.885Z"
+}

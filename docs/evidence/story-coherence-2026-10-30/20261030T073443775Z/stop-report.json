@@ -1,0 +1,57 @@
+{
+  "schemaVersion": 1,
+  "sourceCommit": "e5d75406c7dee96003d1a9aba7a2390d5614b3d0",
+  "status": "ACCEPTANCE_STOPPED",
+  "reason": "Opening prematurely stores an unselected question. Next ask adds an unsupported gift and leaks action/inventory instructions into prose. Semantic acceptance stopped; new inference-only guards and grounded memory were added.",
+  "actualTurns": 2,
+  "latencies": [
+    {
+      "usable": true,
+      "errorCode": null,
+      "firstAnyPreviewMs": 6713,
+      "firstReadableMs": 7180,
+      "completionMs": 16181,
+      "narrativeChars": 146,
+      "maxPreviewGapMs": 391,
+      "readingFinishEstimateMs": 31513,
+      "readingStallEstimateMs": 0,
+      "optionsWaitEstimateMs": 0,
+      "prefetchWorthEvaluating": true,
+      "assumptions": {
+        "readingCharsPerSecond": 6,
+        "readableChars": 20,
+        "targetWaitMs": 2000
+      }
+    },
+    {
+      "usable": true,
+      "errorCode": null,
+      "firstAnyPreviewMs": 5939,
+      "firstReadableMs": 6263,
+      "completionMs": 22775,
+      "narrativeChars": 798,
+      "maxPreviewGapMs": 300,
+      "readingFinishEstimateMs": 139263,
+      "readingStallEstimateMs": 0,
+      "optionsWaitEstimateMs": 0,
+      "prefetchWorthEvaluating": true,
+      "assumptions": {
+        "readingCharsPerSecond": 6,
+        "readableChars": 20,
+        "targetWaitMs": 2000
+      }
+    }
+  ],
+  "productionRestored": {
+    "version": "cad2a140-240f-4465-a837-e53f054c2589",
+    "percentage": 100,
+    "deployment": "b35834e5-02cc-4201-ad88-ee2113c5d1b5"
+  },
+  "cleanup": {
+    "ownCredentialDeleted": true,
+    "newWorkerCreated": false,
+    "newNamespaceCreated": false,
+    "ledgerRetained": true
+  },
+  "recordedAt": "2026-10-30T07:49:01.301Z"
+}

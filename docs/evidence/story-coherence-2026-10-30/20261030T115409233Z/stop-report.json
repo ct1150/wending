@@ -1,0 +1,13 @@
+{
+  "sourceCommit": "48057dcf765bd0a0b46aeea868526c32ba7a7376",
+  "accepted": false,
+  "reason": "Opening and source/blood question committed. Answer had concrete information, but menu only allowed further questions or travelling into the quest: no true option to decline/stop. The final provider now guarantees explicit decline/leave (travel/evade alone do not satisfy it), retains<=3 choices and actual travel while removing a second same-mode question if needed. Old handover evidence item was temporary inspection, not numeric inventory or reward. Do not count two rounds as six.",
+  "latencyNote": "Opening first preview16.080s,total27.344s; first question6.968s,total14.888s. This sample has a real startup tail and does not prove fluent timing.",
+  "cleanup": {
+    "productionVersion": "cad2a140-240f-4465-a837-e53f054c2589",
+    "percentage": 100,
+    "deployment": "0bcb9b37-ffb6-42ac-8fb3-bcd17936401a",
+    "ownBearerDeleted": true,
+    "ownBrowserSnapshotDeleted": true
+  }
+}

@@ -1,9 +1,9 @@
 {
   "name": "baishi-wending",
-  "version": "9.1.0",
+  "version": "9.2.0",
   "private": true,
   "type": "module",
-  "description": "百世问鼎 — 寿元劫数驱动的肉鸽修仙卡牌构筑游戏",
+  "description": "百世问鼎 — 灵印相生与轮回构筑的国风肉鸽修仙卡牌游戏",
   "engines": {
     "node": ">=22"
   },

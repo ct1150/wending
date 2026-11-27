@@ -1,0 +1,74 @@
+{
+  "heartbeat": "2026-10-29T08:18:24.311Z",
+  "sourceCommit": "212873c415005743a0b0ce10a979f3da5dff4899",
+  "decision": "Not promoted or published: minimal request recovery was transient; actual streaming opening failed.",
+  "ci": {
+    "runId": 40837447271,
+    "conclusion": "success",
+    "passed": 925,
+    "total": 925
+  },
+  "availabilityEvidence": "docs/evidence/zhipu-admission-release-2026-10-29/heartbeat-20261029T081824Z-availability.json",
+  "gateEvidence": "docs/evidence/zhipu-admission-release-2026-10-29/heartbeat-20261029T081824Z-gate.json",
+  "browserEvidence": "docs/evidence/zhipu-admission-release-2026-10-29/heartbeat-20261029T081824Z-browser.json",
+  "fullOpeningDiagnosis": "docs/evidence/zhipu-admission-release-2026-10-29/route-primary-opening-202610290827.json",
+  "summary": {
+    "minimalHttpStatus": 200,
+    "minimalElapsedMs": 21497,
+    "nativeGate": "acquired,waiting,released",
+    "browserOpeningStatus": "paused",
+    "browserLocalOpeningMs": 79,
+    "browserDoneMs": 3783,
+    "browserFirstPreviewMs": null,
+    "diagnosticPrimary": {
+      "httpStatus": 429,
+      "code": "1305"
+    },
+    "fallback": {
+      "code": "4006"
+    },
+    "choiceAndSaveRefresh": "not reached",
+    "preload": false,
+    "productionChanged": false
+  },
+  "cleanup": {
+    "deploymentId": "f0186344-d03f-47bf-9018-3f94526dc4ea",
+    "versions": [
+      {
+        "version_id": "f17816a1-da95-4095-b13d-406a2610a9c0",
+        "percentage": 100
+      }
+    ],
+    "bindings": [
+      {
+        "name": "AI",
+        "type": "ai"
+      },
+      {
+        "name": "STORY_BUDGET",
+        "type": "durable_object_namespace",
+        "namespace_id": "1de1df3929534a8d8d495d6db6604e99"
+      },
+      {
+        "name": "STORY_OPERATOR_TOKEN",
+        "type": "secret_text"
+      },
+      {
+        "name": "ZHIPU_API_KEY",
+        "type": "secret_text"
+      }
+    ],
+    "subdomain": {
+      "enabled": true,
+      "previews_enabled": false
+    },
+    "deleted": true,
+    "scriptAbsent": true,
+    "testNamespaceAbsent": true,
+    "productionNamespacePresent": true,
+    "checkedAt": "2026-10-29T08:27:49.234Z",
+    "localTestTokenDeleted": true,
+    "localGateBindingDeleted": true
+  },
+  "next": "Continue existing low-frequency heartbeat. Do not infer stable service or gameplay latency from tiny nonstreaming response."
+}

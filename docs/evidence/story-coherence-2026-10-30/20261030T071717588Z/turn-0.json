@@ -1,0 +1,677 @@
+{
+  "caseId": "opening",
+  "start": 1175.800000000745,
+  "timeline": [
+    {
+      "atMs": 6443,
+      "chars": 1
+    },
+    {
+      "atMs": 6520,
+      "chars": 4
+    },
+    {
+      "atMs": 6582,
+      "chars": 13
+    },
+    {
+      "atMs": 6663,
+      "chars": 17
+    },
+    {
+      "atMs": 6723,
+      "chars": 21
+    },
+    {
+      "atMs": 6786,
+      "chars": 24
+    },
+    {
+      "atMs": 6864,
+      "chars": 27
+    },
+    {
+      "atMs": 6911,
+      "chars": 29
+    },
+    {
+      "atMs": 6987,
+      "chars": 31
+    },
+    {
+      "atMs": 7019,
+      "chars": 33
+    },
+    {
+      "atMs": 7082,
+      "chars": 35
+    },
+    {
+      "atMs": 7134,
+      "chars": 38
+    },
+    {
+      "atMs": 7228,
+      "chars": 40
+    },
+    {
+      "atMs": 7241,
+      "chars": 43
+    },
+    {
+      "atMs": 7288,
+      "chars": 46
+    },
+    {
+      "atMs": 7351,
+      "chars": 49
+    },
+    {
+      "atMs": 7433,
+      "chars": 50
+    },
+    {
+      "atMs": 7796,
+      "chars": 52
+    },
+    {
+      "atMs": 8042,
+      "chars": 55
+    },
+    {
+      "atMs": 8105,
+      "chars": 59
+    },
+    {
+      "atMs": 8174,
+      "chars": 62
+    },
+    {
+      "atMs": 8237,
+      "chars": 66
+    },
+    {
+      "atMs": 8281,
+      "chars": 68
+    },
+    {
+      "atMs": 8324,
+      "chars": 73
+    },
+    {
+      "atMs": 8388,
+      "chars": 76
+    },
+    {
+      "atMs": 8435,
+      "chars": 78
+    },
+    {
+      "atMs": 8498,
+      "chars": 83
+    },
+    {
+      "atMs": 8562,
+      "chars": 87
+    },
+    {
+      "atMs": 8624,
+      "chars": 89
+    },
+    {
+      "atMs": 8687,
+      "chars": 93
+    },
+    {
+      "atMs": 8736,
+      "chars": 97
+    },
+    {
+      "atMs": 8783,
+      "chars": 99
+    },
+    {
+      "atMs": 8925,
+      "chars": 103
+    },
+    {
+      "atMs": 8988,
+      "chars": 110
+    },
+    {
+      "atMs": 9059,
+      "chars": 113
+    },
+    {
+      "atMs": 9383,
+      "chars": 118
+    },
+    {
+      "atMs": 9435,
+      "chars": 121
+    },
+    {
+      "atMs": 9508,
+      "chars": 128
+    },
+    {
+      "atMs": 9572,
+      "chars": 130
+    },
+    {
+      "atMs": 10175,
+      "chars": 135
+    },
+    {
+      "atMs": 10222,
+      "chars": 137
+    },
+    {
+      "atMs": 10285,
+      "chars": 144
+    },
+    {
+      "atMs": 10363,
+      "chars": 147
+    },
+    {
+      "atMs": 10411,
+      "chars": 150
+    },
+    {
+      "atMs": 10460,
+      "chars": 152
+    },
+    {
+      "atMs": 10521,
+      "chars": 155
+    },
+    {
+      "atMs": 10585,
+      "chars": 160
+    },
+    {
+      "atMs": 10648,
+      "chars": 163
+    },
+    {
+      "atMs": 10694,
+      "chars": 166
+    },
+    {
+      "atMs": 10788,
+      "chars": 168
+    },
+    {
+      "atMs": 10850,
+      "chars": 171
+    },
+    {
+      "atMs": 10912,
+      "chars": 174
+    },
+    {
+      "atMs": 10958,
+      "chars": 176
+    },
+    {
+      "atMs": 11019,
+      "chars": 181
+    },
+    {
+      "atMs": 11082,
+      "chars": 184
+    },
+    {
+      "atMs": 11145,
+      "chars": 190
+    },
+    {
+      "atMs": 11208,
+      "chars": 194
+    },
+    {
+      "atMs": 11271,
+      "chars": 197
+    },
+    {
+      "atMs": 11332,
+      "chars": 200
+    },
+    {
+      "atMs": 11398,
+      "chars": 206
+    },
+    {
+      "atMs": 11444,
+      "chars": 211
+    },
+    {
+      "atMs": 11810,
+      "chars": 213
+    },
+    {
+      "atMs": 12308,
+      "chars": 214
+    },
+    {
+      "atMs": 12479,
+      "chars": 217
+    },
+    {
+      "atMs": 12543,
+      "chars": 219
+    }
+  ],
+  "choicesEnabledDuringPreview": false,
+  "lastText": "你叫云归，今年十六岁，是个凡人。你出生在‘云溪村’，生来便有‘灵觉’与‘铁骨’的异禀。如今你站在村口的老槐树下，手里提着三个行粮，身无分文，也没有任何修为。村子里的人都在忙着秋收，只有你看着远处连绵的青山，心里想着外面的世界。\n\n“爹，娘，孩儿要去山里看看。”\n\n父母在田里忙碌，没有回头看你。你转身向村外的山道走去，脚下的路有些崎岖。走了约莫半个时辰，你来到了一处岔路口，左边是通往‘青石镇’的大道，右边是一条蜿蜒的小径，隐没在树林中。",
+  "doneMs": 18028,
+  "result": {
+    "protocolVersion": 1,
+    "status": "ready",
+    "requestId": "8e95ca15-ddb0-43c8-a35b-54826ec6c611",
+    "attemptId": "2ec6ba03-bbd0-46f0-a911-665676d0715f",
+    "sessionRef": "sess_5980c07a77d793263f1eba1c93422881",
+    "errorCode": null,
+    "retry": null,
+    "scene": {
+      "id": "r:f28528e6e121b03b:t1:s:scene",
+      "title": "云溪村口",
+      "location": "云溪村口",
+      "entities": [
+        {
+          "id": "r:f28528e6e121b03b:t1:e:place_1",
+          "name": "青石镇",
+          "kind": "place"
+        },
+        {
+          "id": "r:f28528e6e121b03b:t1:e:place_2",
+          "name": "迷雾林",
+          "kind": "place"
+        }
+      ],
+      "blocks": [
+        {
+          "kind": "narration",
+          "text": "你叫云归，今年十六岁，是个凡人。你出生在‘云溪村’，生来便有‘灵觉’与‘铁骨’的异禀。如今你站在村口的老槐树下，手里提着三个行粮，身无分文，也没有任何修为。村子里的人都在忙着秋收，只有你看着远处连绵的青山，心里想着外面的世界。"
+        },
+        {
+          "kind": "dialogue",
+          "text": "“爹，娘，孩儿要去山里看看。”",
+          "speaker": "self"
+        },
+        {
+          "kind": "narration",
+          "text": "父母在田里忙碌，没有回头看你。你转身向村外的山道走去，脚下的路有些崎岖。走了约莫半个时辰，你来到了一处岔路口，左边是通往‘青石镇’的大道，右边是一条蜿蜒的小径，隐没在树林中。"
+        }
+      ],
+      "choices": [
+        {
+          "id": "r:f28528e6e121b03b:t1:c:a",
+          "label": "沿着大路前往青石镇",
+          "intent": "travel",
+          "targetId": "r:f28528e6e121b03b:t1:e:place_1",
+          "stake": "low",
+          "approach": "road"
+        },
+        {
+          "id": "r:f28528e6e121b03b:t1:c:b",
+          "label": "走进迷雾林探查",
+          "intent": "travel",
+          "targetId": "r:f28528e6e121b03b:t1:e:place_2",
+          "stake": "low",
+          "approach": "road"
+        }
+      ],
+      "memoryDeltas": []
+    }
+  },
+  "request": {
+    "context": {
+      "schemaVersion": 1,
+      "phase": "opening",
+      "identity": {
+        "runId": "73df0954-bbf6-49db-82e4-ca1b6123147a",
+        "turnId": 1,
+        "baseRevision": 0,
+        "stateHash": "71274a84b9f7341a98ef2489cbb28d978037cd4101c590dbcd86edf6e1b0541c",
+        "choiceId": null,
+        "rulesVersion": 1,
+        "promptVersion": 1,
+        "requestId": "8e95ca15-ddb0-43c8-a35b-54826ec6c611"
+      },
+      "namespace": "r:f28528e6e121b03b",
+      "receipt": {
+        "kind": "opening",
+        "choiceId": null,
+        "action": null,
+        "elapsedDays": 0,
+        "itemChanges": {},
+        "relationChanges": {},
+        "random": {
+          "before": 1895065916,
+          "after": 1895065916,
+          "roll": null
+        },
+        "before": {
+          "ageDays": 5760,
+          "realm": "mortal",
+          "cultivation": 0,
+          "injury": 0
+        },
+        "after": {
+          "ageDays": 5760,
+          "realm": "mortal",
+          "cultivation": 0,
+          "injury": 0
+        },
+        "death": null,
+        "birth": {
+          "originId": "village",
+          "talentIds": [
+            "sensitive-breath",
+            "iron-bones"
+          ],
+          "attributes": {
+            "constitution": 5,
+            "insight": 3,
+            "fortune": 4
+          }
+        }
+      },
+      "life": {
+        "name": "云归",
+        "ageDays": 5760,
+        "lifeLimit": 80,
+        "realm": "mortal",
+        "cultivation": 0,
+        "injury": 0,
+        "items": {
+          "supplies": 3,
+          "stones": 0
+        },
+        "relations": {},
+        "birth": {
+          "originId": "village",
+          "talentIds": [
+            "sensitive-breath",
+            "iron-bones"
+          ],
+          "attributes": {
+            "constitution": 5,
+            "insight": 3,
+            "fortune": 4
+          }
+        }
+      },
+      "entities": [],
+      "memory": {
+        "facts": [],
+        "promises": [],
+        "clues": [],
+        "recent": [],
+        "summaries": []
+      },
+      "references": [],
+      "previousScene": null,
+      "relationshipVersion": 1,
+      "relationships": {},
+      "coverage": {
+        "policy": "relevance-v1",
+        "openTotal": 0,
+        "openIncluded": 0,
+        "openOmitted": 0
+      }
+    },
+    "attempt": {
+      "id": "2ec6ba03-bbd0-46f0-a911-665676d0715f",
+      "sessionRef": "sess_5980c07a77d793263f1eba1c93422881",
+      "retryOf": null
+    }
+  },
+  "decision": null,
+  "choices": [
+    {
+      "id": "r:f28528e6e121b03b:t1:c:a",
+      "enabled": true,
+      "label": "沿着大路前往青石镇",
+      "cost": "30日 · 行粮 1"
+    },
+    {
+      "id": "r:f28528e6e121b03b:t1:c:b",
+      "enabled": true,
+      "label": "走进迷雾林探查",
+      "cost": "30日 · 行粮 1"
+    }
+  ],
+  "traces": [
+    {
+      "model": "@cf/zai-org/glm-4.7-flash",
+      "inputHash": "fd262889bd70730dcac547f80d2fc9ea5e156dfc5d7375acf5aa5030e0917ee9",
+      "inputBytes": 15359,
+      "startedAt": 1793344693351,
+      "bindingReturnedAt": 1793344693735,
+      "response": {
+        "model": "@cf/zai-org/glm-4.7-flash",
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "message": {
+              "content": "{\n  \"blocks\": [\n    {\n      \"kind\": \"narration\",\n      \"text\": \"你叫云归，今年十六岁，是个凡人。你出生在‘云溪村’，生来便有‘灵觉’与‘铁骨’的异禀。如今你站在村口的老槐树下，手里提着三个行粮，身无分文，也没有任何修为。村子里的人都在忙着秋收，只有你看着远处连绵的青山，心里想着外面的世界。\"\n    },\n    {\n      \"kind\": \"dialogue\",\n      \"text\": \"“爹，娘，孩儿要去山里看看。”\",\n      \"speaker\": \"self\"\n    },\n    {\n      \"kind\": \"narration\",\n      \"text\": \"父母在田里忙碌，没有回头看你。你转身向村外的山道走去，脚下的路有些崎岖。走了约莫半个时辰，你来到了一处岔路口，左边是通往‘青石镇’的大道，右边是一条蜿蜒的小径，隐没在树林中。\"\n    }\n  ],\n  \"title\": \"云溪村口\",\n  \"location\": \"云溪村口\",\n  \"otherPeople\": [],\n  \"places\": [\n    {\n      \"id\": \"l1\",\n      \"name\": \"青石镇\"\n    },\n    {\n      \"id\": \"l2\",\n      \"name\": \"迷雾林\"\n    }\n  ],\n  \"factions\": [],\n  \"choices\": [\n    {\n      \"action\": \"travel:road\",\n      \"targetId\": \"l1\",\n      \"stake\": \"low\",\n      \"label\": \"沿着大路前往青石镇\",\n      \"anchor\": \"你转身向村外的山道走去，脚下的路有些崎岖。走了约莫半个时辰，你来到了一处岔路口，左边是通往‘青石镇’的大道，右边是一条蜿蜒的小径，隐没在树林中。\"\n    },\n    {\n      \"action\": \"travel:road\",\n      \"targetId\": \"l2\",\n      \"stake\": \"low\",\n      \"label\": \"走进迷雾林探查\",\n      \"anchor\": \"你转身向村外的山道走去，脚下的路有些崎岖。走了约莫半个时辰，你来到了一处岔路口，左边是通往‘青石镇’的大道，右边是一条蜿蜒的小径，隐没在树林中。\"\n    }\n  ],\n  \"memoryDeltas\": []\n}",
+              "reasoning_content": ""
+            }
+          }
+        ],
+        "usage": {
+          "prompt_tokens": 1749,
+          "completion_tokens": 532,
+          "total_tokens": 2281,
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          },
+          "neurons": 28.98430000000023
+        }
+      },
+      "rawSseBytes": 153209
+    }
+  ],
+  "revision": 1,
+  "pending": false,
+  "state": {
+    "relationshipVersion": 1,
+    "version": 5,
+    "mode": "cultivation",
+    "contentVersion": 4,
+    "rulesVersion": 1,
+    "promptVersion": 1,
+    "runId": "73df0954-bbf6-49db-82e4-ca1b6123147a",
+    "revision": 1,
+    "turnId": 1,
+    "phase": "active",
+    "rng": 1895065916,
+    "life": {
+      "name": "云归",
+      "ageDays": 5760,
+      "lifeLimit": 80,
+      "realm": "mortal",
+      "cultivation": 0,
+      "injury": 0,
+      "items": {
+        "supplies": 3,
+        "stones": 0
+      },
+      "relations": {},
+      "birth": {
+        "originId": "village",
+        "talentIds": [
+          "sensitive-breath",
+          "iron-bones"
+        ],
+        "attributes": {
+          "constitution": 5,
+          "insight": 3,
+          "fortune": 4
+        }
+      }
+    },
+    "birthReceipt": {
+      "kind": "opening",
+      "choiceId": null,
+      "action": null,
+      "elapsedDays": 0,
+      "itemChanges": {},
+      "relationChanges": {},
+      "random": {
+        "before": 1895065916,
+        "after": 1895065916,
+        "roll": null
+      },
+      "before": {
+        "ageDays": 5760,
+        "realm": "mortal",
+        "cultivation": 0,
+        "injury": 0
+      },
+      "after": {
+        "ageDays": 5760,
+        "realm": "mortal",
+        "cultivation": 0,
+        "injury": 0
+      },
+      "death": null,
+      "birth": {
+        "originId": "village",
+        "talentIds": [
+          "sensitive-breath",
+          "iron-bones"
+        ],
+        "attributes": {
+          "constitution": 5,
+          "insight": 3,
+          "fortune": 4
+        }
+      }
+    },
+    "currentScene": {
+      "id": "r:f28528e6e121b03b:t1:s:scene",
+      "title": "云溪村口",
+      "location": "云溪村口",
+      "entities": [
+        {
+          "id": "r:f28528e6e121b03b:t1:e:place_1",
+          "name": "青石镇",
+          "kind": "place"
+        },
+        {
+          "id": "r:f28528e6e121b03b:t1:e:place_2",
+          "name": "迷雾林",
+          "kind": "place"
+        }
+      ],
+      "blocks": [
+        {
+          "kind": "narration",
+          "text": "你叫云归，今年十六岁，是个凡人。你出生在‘云溪村’，生来便有‘灵觉’与‘铁骨’的异禀。如今你站在村口的老槐树下，手里提着三个行粮，身无分文，也没有任何修为。村子里的人都在忙着秋收，只有你看着远处连绵的青山，心里想着外面的世界。"
+        },
+        {
+          "kind": "dialogue",
+          "text": "“爹，娘，孩儿要去山里看看。”",
+          "speaker": "self"
+        },
+        {
+          "kind": "narration",
+          "text": "父母在田里忙碌，没有回头看你。你转身向村外的山道走去，脚下的路有些崎岖。走了约莫半个时辰，你来到了一处岔路口，左边是通往‘青石镇’的大道，右边是一条蜿蜒的小径，隐没在树林中。"
+        }
+      ],
+      "choices": [
+        {
+          "id": "r:f28528e6e121b03b:t1:c:a",
+          "label": "沿着大路前往青石镇",
+          "intent": "travel",
+          "targetId": "r:f28528e6e121b03b:t1:e:place_1",
+          "stake": "low",
+          "approach": "road"
+        },
+        {
+          "id": "r:f28528e6e121b03b:t1:c:b",
+          "label": "走进迷雾林探查",
+          "intent": "travel",
+          "targetId": "r:f28528e6e121b03b:t1:e:place_2",
+          "stake": "low",
+          "approach": "road"
+        }
+      ],
+      "memoryDeltas": []
+    },
+    "lastReceipt": {
+      "kind": "opening",
+      "choiceId": null,
+      "action": null,
+      "elapsedDays": 0,
+      "itemChanges": {},
+      "relationChanges": {},
+      "random": {
+        "before": 1895065916,
+        "after": 1895065916,
+        "roll": null
+      },
+      "before": {
+        "ageDays": 5760,
+        "realm": "mortal",
+        "cultivation": 0,
+        "injury": 0
+      },
+      "after": {
+        "ageDays": 5760,
+        "realm": "mortal",
+        "cultivation": 0,
+        "injury": 0
+      },
+      "death": null,
+      "birth": {
+        "originId": "village",
+        "talentIds": [
+          "sensitive-breath",
+          "iron-bones"
+        ],
+        "attributes": {
+          "constitution": 5,
+          "insight": 3,
+          "fortune": 4
+        }
+      }
+    },
+    "relatedEntities": [
+      {
+        "id": "r:f28528e6e121b03b:t1:e:place_1",
+        "name": "青石镇",
+        "kind": "place"
+      },
+      {
+        "id": "r:f28528e6e121b03b:t1:e:place_2",
+        "name": "迷雾林",
+        "kind": "place"
+      }
+    ],
+    "archiveCursor": 0
+  },
+  "posts": 1,
+  "latency": {
+    "usable": true,
+    "errorCode": null,
+    "firstAnyPreviewMs": 6443,
+    "firstReadableMs": 6723,
+    "completionMs": 18028,
+    "narrativeChars": 219,
+    "maxPreviewGapMs": 603,
+    "readingFinishEstimateMs": 43223,
+    "readingStallEstimateMs": 0,
+    "optionsWaitEstimateMs": 0,
+    "prefetchWorthEvaluating": true,
+    "assumptions": {
+      "readingCharsPerSecond": 6,
+      "readableChars": 20,
+      "targetWaitMs": 2000
+    }
+  }
+}

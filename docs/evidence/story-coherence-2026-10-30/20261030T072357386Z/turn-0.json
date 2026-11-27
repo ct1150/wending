@@ -1,0 +1,704 @@
+{
+  "caseId": "opening",
+  "start": 1125.4000000022352,
+  "timeline": [
+    {
+      "atMs": 6529,
+      "chars": 1
+    },
+    {
+      "atMs": 6606,
+      "chars": 6
+    },
+    {
+      "atMs": 6683,
+      "chars": 11
+    },
+    {
+      "atMs": 6745,
+      "chars": 14
+    },
+    {
+      "atMs": 6809,
+      "chars": 18
+    },
+    {
+      "atMs": 6888,
+      "chars": 20
+    },
+    {
+      "atMs": 6935,
+      "chars": 25
+    },
+    {
+      "atMs": 7013,
+      "chars": 29
+    },
+    {
+      "atMs": 7076,
+      "chars": 30
+    },
+    {
+      "atMs": 7247,
+      "chars": 31
+    },
+    {
+      "atMs": 7356,
+      "chars": 33
+    },
+    {
+      "atMs": 7417,
+      "chars": 35
+    },
+    {
+      "atMs": 7477,
+      "chars": 38
+    },
+    {
+      "atMs": 7554,
+      "chars": 42
+    },
+    {
+      "atMs": 7616,
+      "chars": 45
+    },
+    {
+      "atMs": 7693,
+      "chars": 51
+    },
+    {
+      "atMs": 7755,
+      "chars": 55
+    },
+    {
+      "atMs": 7804,
+      "chars": 59
+    },
+    {
+      "atMs": 7884,
+      "chars": 62
+    },
+    {
+      "atMs": 7930,
+      "chars": 66
+    },
+    {
+      "atMs": 7992,
+      "chars": 71
+    },
+    {
+      "atMs": 8052,
+      "chars": 76
+    },
+    {
+      "atMs": 8130,
+      "chars": 80
+    },
+    {
+      "atMs": 8585,
+      "chars": 86
+    },
+    {
+      "atMs": 8665,
+      "chars": 90
+    },
+    {
+      "atMs": 8727,
+      "chars": 95
+    },
+    {
+      "atMs": 8805,
+      "chars": 97
+    },
+    {
+      "atMs": 8852,
+      "chars": 102
+    },
+    {
+      "atMs": 8932,
+      "chars": 108
+    },
+    {
+      "atMs": 8994,
+      "chars": 111
+    },
+    {
+      "atMs": 9370,
+      "chars": 114
+    },
+    {
+      "atMs": 9712,
+      "chars": 116
+    },
+    {
+      "atMs": 9791,
+      "chars": 121
+    },
+    {
+      "atMs": 9839,
+      "chars": 123
+    },
+    {
+      "atMs": 10226,
+      "chars": 128
+    },
+    {
+      "atMs": 10289,
+      "chars": 136
+    },
+    {
+      "atMs": 10351,
+      "chars": 138
+    },
+    {
+      "atMs": 10475,
+      "chars": 140
+    },
+    {
+      "atMs": 10586,
+      "chars": 144
+    },
+    {
+      "atMs": 10663,
+      "chars": 150
+    },
+    {
+      "atMs": 10741,
+      "chars": 157
+    },
+    {
+      "atMs": 11287,
+      "chars": 163
+    },
+    {
+      "atMs": 11350,
+      "chars": 166
+    },
+    {
+      "atMs": 11409,
+      "chars": 171
+    },
+    {
+      "atMs": 11469,
+      "chars": 174
+    },
+    {
+      "atMs": 11531,
+      "chars": 178
+    },
+    {
+      "atMs": 11594,
+      "chars": 186
+    },
+    {
+      "atMs": 11670,
+      "chars": 191
+    },
+    {
+      "atMs": 11718,
+      "chars": 196
+    },
+    {
+      "atMs": 11807,
+      "chars": 200
+    },
+    {
+      "atMs": 11869,
+      "chars": 205
+    },
+    {
+      "atMs": 11932,
+      "chars": 208
+    },
+    {
+      "atMs": 12007,
+      "chars": 211
+    }
+  ],
+  "choicesEnabledDuringPreview": false,
+  "lastText": "云归，十六岁，生于青云村。你自幼体魄强健，骨骼如铁，甚至能徒手折断生锈的铁剑，这让你在村中显得有些格格不入。村口的老槐树下，几位村民正闲聊着，似乎在议论着什么。\n\n“听说了吗？山那边的‘断魂崖’最近不太平，常有野兽出没，连村里的猎户都不敢靠近。”\n\n“是啊，而且听说那地方以前是个修仙者的遗迹，有些不干净的东西。”\n\n村民们神色紧张，而你握紧了拳头，感受着体内涌动的力量。虽然你只是个凡人，但你的骨骼似乎在渴望着某种东西。",
+  "doneMs": 19112,
+  "result": {
+    "protocolVersion": 1,
+    "status": "ready",
+    "requestId": "1b965d5b-a2b7-4370-aa6d-ff574ab3025f",
+    "attemptId": "3cfb85f2-b075-4a3a-8e9e-7e5c3af18751",
+    "sessionRef": "sess_f7fa40edc2016ab224c1fea4f44fa444",
+    "errorCode": null,
+    "retry": null,
+    "scene": {
+      "id": "r:9b9b0ac92033642c:t1:s:scene",
+      "title": "青云村口",
+      "location": "青云村口",
+      "entities": [
+        {
+          "id": "r:9b9b0ac92033642c:t1:e:person_1",
+          "name": "村民甲",
+          "status": "alive",
+          "kind": "person"
+        },
+        {
+          "id": "r:9b9b0ac92033642c:t1:e:person_2",
+          "name": "村民乙",
+          "status": "alive",
+          "kind": "person"
+        },
+        {
+          "id": "r:9b9b0ac92033642c:t1:e:place_1",
+          "name": "断魂崖外围",
+          "kind": "place"
+        }
+      ],
+      "blocks": [
+        {
+          "kind": "narration",
+          "text": "云归，十六岁，生于青云村。你自幼体魄强健，骨骼如铁，甚至能徒手折断生锈的铁剑，这让你在村中显得有些格格不入。村口的老槐树下，几位村民正闲聊着，似乎在议论着什么。"
+        },
+        {
+          "kind": "dialogue",
+          "text": "“听说了吗？山那边的‘断魂崖’最近不太平，常有野兽出没，连村里的猎户都不敢靠近。”",
+          "speaker": "r:9b9b0ac92033642c:t1:e:person_1"
+        },
+        {
+          "kind": "dialogue",
+          "text": "“是啊，而且听说那地方以前是个修仙者的遗迹，有些不干净的东西。”",
+          "speaker": "r:9b9b0ac92033642c:t1:e:person_2"
+        },
+        {
+          "kind": "narration",
+          "text": "村民们神色紧张，而你握紧了拳头，感受着体内涌动的力量。虽然你只是个凡人，但你的骨骼似乎在渴望着某种东西。"
+        }
+      ],
+      "choices": [
+        {
+          "id": "r:9b9b0ac92033642c:t1:c:a",
+          "label": "前往断魂崖外围探查",
+          "intent": "travel",
+          "targetId": "r:9b9b0ac92033642c:t1:e:place_1",
+          "stake": "low",
+          "approach": "road"
+        },
+        {
+          "id": "r:9b9b0ac92033642c:t1:c:b",
+          "label": "向村民打听断魂崖的详情",
+          "intent": "interact",
+          "targetId": "r:9b9b0ac92033642c:t1:e:person_1",
+          "stake": "low",
+          "approach": "ask"
+        },
+        {
+          "id": "r:9b9b0ac92033642c:t1:c:c",
+          "label": "无视村民的闲言碎语",
+          "intent": "interact",
+          "targetId": "r:9b9b0ac92033642c:t1:e:person_1",
+          "stake": "low",
+          "approach": "decline"
+        }
+      ],
+      "memoryDeltas": [
+        {
+          "entityId": "r:9b9b0ac92033642c:t1:e:person_1",
+          "text": "村民甲提到断魂崖有野兽出没，且传闻是修仙者遗迹。",
+          "kind": "fact"
+        },
+        {
+          "entityId": "r:9b9b0ac92033642c:t1:e:person_2",
+          "text": "村民乙附和村民甲的说法，称那里有“不干净的东西”。",
+          "kind": "fact"
+        }
+      ]
+    }
+  },
+  "request": {
+    "context": {
+      "schemaVersion": 1,
+      "phase": "opening",
+      "identity": {
+        "runId": "463c5de9-86c4-4358-8d2b-27d7978b32be",
+        "turnId": 1,
+        "baseRevision": 0,
+        "stateHash": "9c1d01a3175031bd408ddf575927fe23c272629644a2536f38acd5e4cb4cdbfe",
+        "choiceId": null,
+        "rulesVersion": 1,
+        "promptVersion": 1,
+        "requestId": "1b965d5b-a2b7-4370-aa6d-ff574ab3025f"
+      },
+      "namespace": "r:9b9b0ac92033642c",
+      "receipt": {
+        "kind": "opening",
+        "choiceId": null,
+        "action": null,
+        "elapsedDays": 0,
+        "itemChanges": {},
+        "relationChanges": {},
+        "random": {
+          "before": 3247410042,
+          "after": 3247410042,
+          "roll": null
+        },
+        "before": {
+          "ageDays": 5760,
+          "realm": "mortal",
+          "cultivation": 0,
+          "injury": 0
+        },
+        "after": {
+          "ageDays": 5760,
+          "realm": "mortal",
+          "cultivation": 0,
+          "injury": 0
+        },
+        "death": null,
+        "birth": {
+          "originId": "village",
+          "talentIds": [
+            "sword-bone",
+            "iron-bones"
+          ],
+          "attributes": {
+            "constitution": 5,
+            "insight": 3,
+            "fortune": 4
+          }
+        }
+      },
+      "life": {
+        "name": "云归",
+        "ageDays": 5760,
+        "lifeLimit": 80,
+        "realm": "mortal",
+        "cultivation": 0,
+        "injury": 0,
+        "items": {
+          "supplies": 3,
+          "stones": 0
+        },
+        "relations": {},
+        "birth": {
+          "originId": "village",
+          "talentIds": [
+            "sword-bone",
+            "iron-bones"
+          ],
+          "attributes": {
+            "constitution": 5,
+            "insight": 3,
+            "fortune": 4
+          }
+        }
+      },
+      "entities": [],
+      "memory": {
+        "facts": [],
+        "promises": [],
+        "clues": [],
+        "recent": [],
+        "summaries": []
+      },
+      "references": [],
+      "previousScene": null,
+      "relationshipVersion": 1,
+      "relationships": {},
+      "coverage": {
+        "policy": "relevance-v1",
+        "openTotal": 0,
+        "openIncluded": 0,
+        "openOmitted": 0
+      }
+    },
+    "attempt": {
+      "id": "3cfb85f2-b075-4a3a-8e9e-7e5c3af18751",
+      "sessionRef": "sess_f7fa40edc2016ab224c1fea4f44fa444",
+      "retryOf": null
+    }
+  },
+  "decision": null,
+  "choices": [
+    {
+      "id": "r:9b9b0ac92033642c:t1:c:a",
+      "enabled": true,
+      "label": "前往断魂崖外围探查",
+      "cost": "30日 · 行粮 1"
+    },
+    {
+      "id": "r:9b9b0ac92033642c:t1:c:b",
+      "enabled": true,
+      "label": "向村民打听断魂崖的详情",
+      "cost": "0日"
+    },
+    {
+      "id": "r:9b9b0ac92033642c:t1:c:c",
+      "enabled": true,
+      "label": "无视村民的闲言碎语",
+      "cost": "0日"
+    }
+  ],
+  "traces": [
+    {
+      "model": "@cf/zai-org/glm-4.7-flash",
+      "inputHash": "dc13ccbc47d7b6f78b0c087fc2537baab9830aa17c03b5467a90f53bc5f0ee4c",
+      "inputBytes": 15908,
+      "startedAt": 1793345085074,
+      "bindingReturnedAt": 1793345085436,
+      "response": {
+        "model": "@cf/zai-org/glm-4.7-flash",
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "message": {
+              "content": "{\n  \"blocks\": [\n    {\n      \"kind\": \"narration\",\n      \"text\": \"云归，十六岁，生于青云村。你自幼体魄强健，骨骼如铁，甚至能徒手折断生锈的铁剑，这让你在村中显得有些格格不入。村口的老槐树下，几位村民正闲聊着，似乎在议论着什么。\"\n    },\n    {\n      \"kind\": \"dialogue\",\n      \"text\": \"“听说了吗？山那边的‘断魂崖’最近不太平，常有野兽出没，连村里的猎户都不敢靠近。”\",\n      \"speaker\": \"p1\"\n    },\n    {\n      \"kind\": \"dialogue\",\n      \"text\": \"“是啊，而且听说那地方以前是个修仙者的遗迹，有些不干净的东西。”\",\n      \"speaker\": \"p2\"\n    },\n    {\n      \"kind\": \"narration\",\n      \"text\": \"村民们神色紧张，而你握紧了拳头，感受着体内涌动的力量。虽然你只是个凡人，但你的骨骼似乎在渴望着某种东西。\"\n    }\n  ],\n  \"choices\": [\n    {\n      \"action\": \"travel:road\",\n      \"targetId\": \"l1\",\n      \"stake\": \"low\",\n      \"label\": \"前往断魂崖外围探查\",\n      \"anchor\": \"村民们神色紧张，而你握紧了拳头，感受着体内涌动的力量。虽然你只是个凡人，但你的骨骼似乎在渴望着某种东西。\"\n    },\n    {\n      \"action\": \"interact:ask\",\n      \"targetId\": \"p1\",\n      \"stake\": \"low\",\n      \"label\": \"向村民打听断魂崖的详情\",\n      \"anchor\": \"“听说了吗？山那边的‘断魂崖’最近不太平，常有野兽出没，连村里的猎户都不敢靠近。”\"\n    },\n    {\n      \"action\": \"interact:decline\",\n      \"targetId\": \"p1\",\n      \"stake\": \"low\",\n      \"label\": \"无视村民的闲言碎语\",\n      \"anchor\": \"村民们神色紧张，而你握紧了拳头，感受着体内涌动的力量。虽然你只是个凡人，但你的骨骼似乎在渴望着某种东西。\"\n    }\n  ],\n  \"title\": \"青云村口\",\n  \"location\": \"青云村口\",\n  \"otherPeople\": [\n    {\n      \"id\": \"p1\",\n      \"name\": \"村民甲\",\n      \"status\": \"alive\"\n    },\n    {\n      \"id\": \"p2\",\n      \"name\": \"村民乙\",\n      \"status\": \"alive\"\n    }\n  ],\n  \"places\": [\n    {\n      \"id\": \"l1\",\n      \"name\": \"断魂崖外围\"\n    }\n  ],\n  \"factions\": [],\n  \"memoryDeltas\": [\n    {\n      \"entityId\": \"p1\",\n      \"text\": \"村民甲提到断魂崖有野兽出没，且传闻是修仙者遗迹。\",\n      \"kind\": \"fact\"\n    },\n    {\n      \"entityId\": \"p2\",\n      \"text\": \"村民乙附和村民甲的说法，称那里有“不干净的东西”。\",\n      \"kind\": \"fact\"\n    }\n  ]\n}",
+              "reasoning_content": ""
+            }
+          }
+        ],
+        "usage": {
+          "prompt_tokens": 1898,
+          "completion_tokens": 712,
+          "total_tokens": 2610,
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          },
+          "neurons": 36.35580000000031
+        }
+      },
+      "rawSseBytes": 196627
+    }
+  ],
+  "revision": 1,
+  "pending": false,
+  "state": {
+    "relationshipVersion": 1,
+    "version": 5,
+    "mode": "cultivation",
+    "contentVersion": 4,
+    "rulesVersion": 1,
+    "promptVersion": 1,
+    "runId": "463c5de9-86c4-4358-8d2b-27d7978b32be",
+    "revision": 1,
+    "turnId": 1,
+    "phase": "active",
+    "rng": 3247410042,
+    "life": {
+      "name": "云归",
+      "ageDays": 5760,
+      "lifeLimit": 80,
+      "realm": "mortal",
+      "cultivation": 0,
+      "injury": 0,
+      "items": {
+        "supplies": 3,
+        "stones": 0
+      },
+      "relations": {},
+      "birth": {
+        "originId": "village",
+        "talentIds": [
+          "sword-bone",
+          "iron-bones"
+        ],
+        "attributes": {
+          "constitution": 5,
+          "insight": 3,
+          "fortune": 4
+        }
+      }
+    },
+    "birthReceipt": {
+      "kind": "opening",
+      "choiceId": null,
+      "action": null,
+      "elapsedDays": 0,
+      "itemChanges": {},
+      "relationChanges": {},
+      "random": {
+        "before": 3247410042,
+        "after": 3247410042,
+        "roll": null
+      },
+      "before": {
+        "ageDays": 5760,
+        "realm": "mortal",
+        "cultivation": 0,
+        "injury": 0
+      },
+      "after": {
+        "ageDays": 5760,
+        "realm": "mortal",
+        "cultivation": 0,
+        "injury": 0
+      },
+      "death": null,
+      "birth": {
+        "originId": "village",
+        "talentIds": [
+          "sword-bone",
+          "iron-bones"
+        ],
+        "attributes": {
+          "constitution": 5,
+          "insight": 3,
+          "fortune": 4
+        }
+      }
+    },
+    "currentScene": {
+      "id": "r:9b9b0ac92033642c:t1:s:scene",
+      "title": "青云村口",
+      "location": "青云村口",
+      "entities": [
+        {
+          "id": "r:9b9b0ac92033642c:t1:e:person_1",
+          "name": "村民甲",
+          "status": "alive",
+          "kind": "person"
+        },
+        {
+          "id": "r:9b9b0ac92033642c:t1:e:person_2",
+          "name": "村民乙",
+          "status": "alive",
+          "kind": "person"
+        },
+        {
+          "id": "r:9b9b0ac92033642c:t1:e:place_1",
+          "name": "断魂崖外围",
+          "kind": "place"
+        }
+      ],
+      "blocks": [
+        {
+          "kind": "narration",
+          "text": "云归，十六岁，生于青云村。你自幼体魄强健，骨骼如铁，甚至能徒手折断生锈的铁剑，这让你在村中显得有些格格不入。村口的老槐树下，几位村民正闲聊着，似乎在议论着什么。"
+        },
+        {
+          "kind": "dialogue",
+          "text": "“听说了吗？山那边的‘断魂崖’最近不太平，常有野兽出没，连村里的猎户都不敢靠近。”",
+          "speaker": "r:9b9b0ac92033642c:t1:e:person_1"
+        },
+        {
+          "kind": "dialogue",
+          "text": "“是啊，而且听说那地方以前是个修仙者的遗迹，有些不干净的东西。”",
+          "speaker": "r:9b9b0ac92033642c:t1:e:person_2"
+        },
+        {
+          "kind": "narration",
+          "text": "村民们神色紧张，而你握紧了拳头，感受着体内涌动的力量。虽然你只是个凡人，但你的骨骼似乎在渴望着某种东西。"
+        }
+      ],
+      "choices": [
+        {
+          "id": "r:9b9b0ac92033642c:t1:c:a",
+          "label": "前往断魂崖外围探查",
+          "intent": "travel",
+          "targetId": "r:9b9b0ac92033642c:t1:e:place_1",
+          "stake": "low",
+          "approach": "road"
+        },
+        {
+          "id": "r:9b9b0ac92033642c:t1:c:b",
+          "label": "向村民打听断魂崖的详情",
+          "intent": "interact",
+          "targetId": "r:9b9b0ac92033642c:t1:e:person_1",
+          "stake": "low",
+          "approach": "ask"
+        },
+        {
+          "id": "r:9b9b0ac92033642c:t1:c:c",
+          "label": "无视村民的闲言碎语",
+          "intent": "interact",
+          "targetId": "r:9b9b0ac92033642c:t1:e:person_1",
+          "stake": "low",
+          "approach": "decline"
+        }
+      ],
+      "memoryDeltas": [
+        {
+          "entityId": "r:9b9b0ac92033642c:t1:e:person_1",
+          "text": "村民甲提到断魂崖有野兽出没，且传闻是修仙者遗迹。",
+          "kind": "fact"
+        },
+        {
+          "entityId": "r:9b9b0ac92033642c:t1:e:person_2",
+          "text": "村民乙附和村民甲的说法，称那里有“不干净的东西”。",
+          "kind": "fact"
+        }
+      ]
+    },
+    "lastReceipt": {
+      "kind": "opening",
+      "choiceId": null,
+      "action": null,
+      "elapsedDays": 0,
+      "itemChanges": {},
+      "relationChanges": {},
+      "random": {
+        "before": 3247410042,
+        "after": 3247410042,
+        "roll": null
+      },
+      "before": {
+        "ageDays": 5760,
+        "realm": "mortal",
+        "cultivation": 0,
+        "injury": 0
+      },
+      "after": {
+        "ageDays": 5760,
+        "realm": "mortal",
+        "cultivation": 0,
+        "injury": 0
+      },
+      "death": null,
+      "birth": {
+        "originId": "village",
+        "talentIds": [
+          "sword-bone",
+          "iron-bones"
+        ],
+        "attributes": {
+          "constitution": 5,
+          "insight": 3,
+          "fortune": 4
+        }
+      }
+    },
+    "relatedEntities": [
+      {
+        "id": "r:9b9b0ac92033642c:t1:e:person_1",
+        "name": "村民甲",
+        "status": "alive",
+        "kind": "person"
+      },
+      {
+        "id": "r:9b9b0ac92033642c:t1:e:person_2",
+        "name": "村民乙",
+        "status": "alive",
+        "kind": "person"
+      },
+      {
+        "id": "r:9b9b0ac92033642c:t1:e:place_1",
+        "name": "断魂崖外围",
+        "kind": "place"
+      }
+    ],
+    "archiveCursor": 0
+  },
+  "posts": 1,
+  "latency": {
+    "usable": true,
+    "errorCode": null,
+    "firstAnyPreviewMs": 6529,
+    "firstReadableMs": 6888,
+    "completionMs": 19112,
+    "narrativeChars": 211,
+    "maxPreviewGapMs": 546,
+    "readingFinishEstimateMs": 42055,
+    "readingStallEstimateMs": 0,
+    "optionsWaitEstimateMs": 0,
+    "prefetchWorthEvaluating": true,
+    "assumptions": {
+      "readingCharsPerSecond": 6,
+      "readableChars": 20,
+      "targetWaitMs": 2000
+    }
+  }
+}

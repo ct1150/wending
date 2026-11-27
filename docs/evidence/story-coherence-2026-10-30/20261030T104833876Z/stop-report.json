@@ -1,0 +1,12 @@
+{
+  "sourceCommit": "d51f95e718553652378eb1ea6a0643c015511862",
+  "accepted": false,
+  "reason": "Second scene replaced selected origin/use question with unselected rune repair and gifting a copper fragment. Stopped despite valid receipt/protocol; narrative is not accepted.",
+  "cleanup": {
+    "productionVersion": "cad2a140-240f-4465-a837-e53f054c2589",
+    "percentage": 100,
+    "deployment": "2fe3abce-ac6a-418b-bd89-399fcde08e56",
+    "ownCredentialDeleted": true,
+    "noNewWorkerOrNamespace": true
+  }
+}

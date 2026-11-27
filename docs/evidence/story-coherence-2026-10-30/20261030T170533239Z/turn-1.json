@@ -1,0 +1,557 @@
+{
+  "caseId": "choice-1",
+  "origin": "ai",
+  "postDelta": 1,
+  "localEntry": null,
+  "start": 87732.19999999553,
+  "timeline": [
+    {
+      "atMs": 3870,
+      "chars": 3
+    },
+    {
+      "atMs": 3931,
+      "chars": 11
+    },
+    {
+      "atMs": 4007,
+      "chars": 13
+    },
+    {
+      "atMs": 4067,
+      "chars": 16
+    },
+    {
+      "atMs": 4115,
+      "chars": 19
+    },
+    {
+      "atMs": 4177,
+      "chars": 22
+    },
+    {
+      "atMs": 4239,
+      "chars": 26
+    },
+    {
+      "atMs": 4316,
+      "chars": 29
+    },
+    {
+      "atMs": 4392,
+      "chars": 36
+    },
+    {
+      "atMs": 4455,
+      "chars": 39
+    },
+    {
+      "atMs": 4517,
+      "chars": 44
+    },
+    {
+      "atMs": 4582,
+      "chars": 48
+    },
+    {
+      "atMs": 4642,
+      "chars": 51
+    },
+    {
+      "atMs": 4689,
+      "chars": 54
+    },
+    {
+      "atMs": 4773,
+      "chars": 61
+    },
+    {
+      "atMs": 4827,
+      "chars": 67
+    },
+    {
+      "atMs": 4874,
+      "chars": 71
+    },
+    {
+      "atMs": 4938,
+      "chars": 74
+    },
+    {
+      "atMs": 4980,
+      "chars": 80
+    },
+    {
+      "atMs": 5386,
+      "chars": 84
+    },
+    {
+      "atMs": 5775,
+      "chars": 87
+    },
+    {
+      "atMs": 5925,
+      "chars": 91
+    },
+    {
+      "atMs": 6040,
+      "chars": 95
+    }
+  ],
+  "choicesEnabledDuringPreview": false,
+  "lastText": "父亲叹了口气，目光落在那羊皮纸上：“这药方是村长托人从镇上带回来的，说是能治好你娘的病。但这上面画的符文，我看了半天也不懂，怕是有什么古怪。归儿，你识字，能不能帮我看看这上面到底写了什么？”",
+  "doneMs": 12330,
+  "result": {
+    "protocolVersion": 1,
+    "status": "ready",
+    "requestId": "3aa4f2fe-a021-46a4-8d78-6a2c74b59fa1",
+    "attemptId": "eb4188eb-3d54-4701-9d96-bade203f7972",
+    "sessionRef": "sess_3d966adc91b4dd1833d2701c17f3adae",
+    "errorCode": null,
+    "retry": null,
+    "scene": {
+      "id": "r:60efb6672ac907de:t2:s:scene",
+      "title": "猎户小屋",
+      "location": "猎户小屋",
+      "entities": [
+        {
+          "id": "r:60efb6672ac907de:t1:e:person_1",
+          "name": "父亲",
+          "kind": "person"
+        }
+      ],
+      "blocks": [
+        {
+          "kind": "dialogue",
+          "text": "父亲叹了口气，目光落在那羊皮纸上：“这药方是村长托人从镇上带回来的，说是能治好你娘的病。但这上面画的符文，我看了半天也不懂，怕是有什么古怪。归儿，你识字，能不能帮我看看这上面到底写了什么？”",
+          "speaker": "r:60efb6672ac907de:t1:e:person_1"
+        }
+      ],
+      "choices": [
+        {
+          "id": "r:60efb6672ac907de:t2:c:a",
+          "label": "询问父亲：询问父亲关于符文的具体含义和来源",
+          "intent": "interact",
+          "targetId": "r:60efb6672ac907de:t1:e:person_1",
+          "stake": "low",
+          "approach": "ask"
+        },
+        {
+          "id": "r:60efb6672ac907de:t2:c:b",
+          "label": "婉拒父亲：拒绝查看药方",
+          "intent": "interact",
+          "targetId": "r:60efb6672ac907de:t1:e:person_1",
+          "stake": "low",
+          "approach": "decline"
+        },
+        {
+          "id": "r:60efb6672ac907de:t2:c:c",
+          "label": "结束与父亲的互动：结束与父亲的对话",
+          "intent": "interact",
+          "targetId": "r:60efb6672ac907de:t1:e:person_1",
+          "stake": "low",
+          "approach": "leave"
+        }
+      ],
+      "memoryDeltas": [
+        {
+          "entityId": "r:60efb6672ac907de:t1:e:person_1",
+          "kind": "clue",
+          "text": "父亲叹了口气，目光落在那羊皮纸上：“这药方是村长托人从镇上带回来的，说是能治好你娘的病。但这上面画的符文，我看了半天也不懂，怕是有什么古怪。归儿，你识字，能不能帮我看看这上面到底写了什么？”",
+          "status": "open"
+        }
+      ]
+    }
+  },
+  "request": {
+    "context": {
+      "schemaVersion": 1,
+      "phase": "choice",
+      "identity": {
+        "runId": "3ef1a8f3-2600-458e-8193-f3c4f1d8149a",
+        "turnId": 2,
+        "baseRevision": 1,
+        "stateHash": "cfa2e2a1049ffcdf0026bd8cd81024a24d916eb10c2b9960ca9b68c1f15e402a",
+        "choiceId": "r:60efb6672ac907de:t1:c:a",
+        "rulesVersion": 1,
+        "promptVersion": 1,
+        "requestId": "3aa4f2fe-a021-46a4-8d78-6a2c74b59fa1"
+      },
+      "namespace": "r:60efb6672ac907de",
+      "receipt": {
+        "kind": "choice",
+        "choiceId": "r:60efb6672ac907de:t1:c:a",
+        "action": {
+          "id": "r:60efb6672ac907de:t1:c:a",
+          "label": "询问父亲：询问父亲关于药方和符文的来历",
+          "intent": "interact",
+          "targetId": "r:60efb6672ac907de:t1:e:person_1",
+          "stake": "low",
+          "approach": "ask"
+        },
+        "elapsedDays": 0,
+        "itemChanges": {},
+        "relationChanges": {},
+        "random": {
+          "before": 1879604368,
+          "after": 2022614703,
+          "roll": 3
+        },
+        "before": {
+          "ageDays": 5760,
+          "realm": "mortal",
+          "cultivation": 0,
+          "injury": 0
+        },
+        "after": {
+          "ageDays": 5760,
+          "realm": "mortal",
+          "cultivation": 0,
+          "injury": 0
+        },
+        "death": null,
+        "birth": null
+      },
+      "life": {
+        "name": "云归",
+        "ageDays": 5760,
+        "lifeLimit": 80,
+        "realm": "mortal",
+        "cultivation": 0,
+        "injury": 0,
+        "items": {
+          "supplies": 3,
+          "stones": 0
+        },
+        "relations": {},
+        "birth": {
+          "originId": "village",
+          "talentIds": [
+            "fortune-debt",
+            "sword-bone"
+          ],
+          "attributes": {
+            "constitution": 3,
+            "insight": 4,
+            "fortune": 5
+          }
+        }
+      },
+      "entities": [
+        {
+          "id": "r:60efb6672ac907de:t1:e:person_1",
+          "name": "父亲",
+          "kind": "person",
+          "status": "unknown"
+        }
+      ],
+      "memory": {
+        "facts": [],
+        "promises": [],
+        "clues": [
+          {
+            "id": "m:1318b772b699ddadf21115fead7d160d",
+            "source": "narrative",
+            "kind": "clue",
+            "entityId": "r:60efb6672ac907de:t1:e:person_1",
+            "text": "“归儿，你来了。”父亲放下羊皮纸，指了指桌上的东西，“这是村长托人从镇上带回来的‘断魂草’药方，说是能治好你娘的病。但这药方上画着奇怪的符文，我看了半天也不懂，怕是有什么古怪。你识字，能不能帮我看看这上面到底写了什么？”",
+            "status": "open",
+            "runId": "3ef1a8f3-2600-458e-8193-f3c4f1d8149a",
+            "turnId": 1
+          }
+        ],
+        "recent": [
+          {
+            "id": "turn:1",
+            "runId": "3ef1a8f3-2600-458e-8193-f3c4f1d8149a",
+            "turnId": 1,
+            "source": "narrative",
+            "kind": "turn",
+            "text": "地点：猎户小屋\n十六岁的你站在自家破旧的猎户小屋前，手中握着一把卷刃的猎刀。屋内传来一阵急促的咳嗽声，那是你父亲。他正对着一张泛黄的羊皮纸发愁，眉头紧锁，似乎遇到了什么难处。你刚想推门进去，父亲却突然停下了手中的动作，抬头看向你，眼神中带着一丝复杂的情绪。\n“归儿，你来了。”父亲放下羊皮纸，指了指桌上的东西，“这是村长托人从镇上带回来的‘断魂草’药方，说是能治好你娘的病。但这药方上画着奇怪的符文，我看了半天也不懂，怕是有什么古怪。你识字，能不能帮我看看这上面到底写了什么？”",
+            "entityIds": []
+          }
+        ],
+        "summaries": []
+      },
+      "references": [
+        "m:1318b772b699ddadf21115fead7d160d",
+        "turn:1"
+      ],
+      "previousScene": {
+        "id": "r:60efb6672ac907de:t1:s:scene",
+        "blocksHash": "b84e7219418da3a6301ce25940d8fb59e14742aaa9494101517ab3789de343ab"
+      },
+      "relationshipVersion": 1,
+      "relationships": {},
+      "coverage": {
+        "policy": "relevance-v1",
+        "openTotal": 1,
+        "openIncluded": 1,
+        "openOmitted": 0
+      }
+    },
+    "attempt": {
+      "id": "eb4188eb-3d54-4701-9d96-bade203f7972",
+      "sessionRef": "sess_3d966adc91b4dd1833d2701c17f3adae",
+      "retryOf": null
+    },
+    "storyActions": true
+  },
+  "decision": {
+    "index": 0,
+    "reason": "前文父亲持村长送来的药方并担心符文；询问药方及符文来历直接承接当前疑问，另有不介入的明确出口。先听具体来源，不能自动替玩家识读、用药或治疗。",
+    "selected": {
+      "id": "r:60efb6672ac907de:t1:c:a",
+      "label": "询问父亲：询问父亲关于药方和符文的来历",
+      "intent": "interact",
+      "targetId": "r:60efb6672ac907de:t1:e:person_1",
+      "stake": "low",
+      "approach": "ask"
+    }
+  },
+  "choices": [
+    {
+      "id": "r:60efb6672ac907de:t2:c:a",
+      "enabled": true,
+      "label": "询问父亲：询问父亲关于符文的具体含义和来源",
+      "cost": "0日"
+    },
+    {
+      "id": "r:60efb6672ac907de:t2:c:b",
+      "enabled": true,
+      "label": "婉拒父亲：拒绝查看药方",
+      "cost": "0日"
+    },
+    {
+      "id": "r:60efb6672ac907de:t2:c:c",
+      "enabled": true,
+      "label": "结束与父亲的互动：结束与父亲的对话",
+      "cost": "0日"
+    }
+  ],
+  "traces": [
+    {
+      "model": "@cf/zai-org/glm-4.7-flash",
+      "inputHash": "3c94d12d5eba8bac7783dd2506650c57257042981f13928124dc7d52549b69dd",
+      "inputBytes": 16562,
+      "startedAt": 1793380158296,
+      "bindingReturnedAt": 1793380158684,
+      "liveRawBytes": 113115,
+      "captureComplete": true,
+      "response": {
+        "model": "@cf/zai-org/glm-4.7-flash",
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "message": {
+              "content": "{\n  \"blocks\": [\n    {\n      \"kind\": \"dialogue\",\n      \"text\": \"父亲叹了口气，目光落在那羊皮纸上：“这药方是村长托人从镇上带回来的，说是能治好你娘的病。但这上面画的符文，我看了半天也不懂，怕是有什么古怪。归儿，你识字，能不能帮我看看这上面到底写了什么？”\",\n      \"speaker\": {\n        \"kind\": \"person\",\n        \"name\": \"父亲\",\n        \"ref\": \"k1_person_父亲\",\n        \"status\": null\n      }\n    }\n  ],\n  \"choices\": [\n    {\n      \"action\": \"interact:ask\",\n      \"target\": {\n        \"kind\": \"person\",\n        \"name\": \"父亲\",\n        \"ref\": \"\",\n        \"status\": null\n      },\n      \"stake\": \"low\",\n      \"purpose\": \"询问父亲关于符文的具体含义和来源\",\n      \"anchor\": 0\n    },\n    {\n      \"action\": \"interact:decline\",\n      \"target\": {\n        \"kind\": \"person\",\n        \"name\": \"父亲\",\n        \"ref\": \"\",\n        \"status\": null\n      },\n      \"stake\": \"low\",\n      \"purpose\": \"拒绝查看药方\",\n      \"anchor\": 0\n    },\n    {\n      \"action\": \"interact:leave\",\n      \"target\": {\n        \"kind\": \"person\",\n        \"name\": \"父亲\",\n        \"ref\": \"\",\n        \"status\": null\n      },\n      \"stake\": \"low\",\n      \"purpose\": \"结束与父亲的对话\",\n      \"anchor\": 0\n    }\n  ],\n  \"title\": \"猎户小屋\",\n  \"location\": \"猎户小屋\",\n  \"memoryDeltas\": [\n    {\n      \"target\": {\n        \"kind\": \"person\",\n        \"name\": \"父亲\",\n        \"ref\": \"\",\n        \"status\": null\n      },\n      \"kind\": \"clue\",\n      \"anchor\": 0,\n      \"status\": \"open\"\n    }\n  ]\n}",
+              "reasoning_content": ""
+            }
+          }
+        ],
+        "usage": {
+          "prompt_tokens": 2477,
+          "completion_tokens": 448,
+          "total_tokens": 2925,
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          },
+          "neurons": 29.930700000000193
+        }
+      },
+      "rawSseBytes": 113115
+    }
+  ],
+  "revision": 2,
+  "pending": false,
+  "state": {
+    "relationshipVersion": 1,
+    "version": 5,
+    "mode": "cultivation",
+    "contentVersion": 4,
+    "rulesVersion": 1,
+    "promptVersion": 1,
+    "runId": "3ef1a8f3-2600-458e-8193-f3c4f1d8149a",
+    "revision": 2,
+    "turnId": 2,
+    "phase": "active",
+    "rng": 2022614703,
+    "life": {
+      "name": "云归",
+      "ageDays": 5760,
+      "lifeLimit": 80,
+      "realm": "mortal",
+      "cultivation": 0,
+      "injury": 0,
+      "items": {
+        "supplies": 3,
+        "stones": 0
+      },
+      "relations": {},
+      "birth": {
+        "originId": "village",
+        "talentIds": [
+          "fortune-debt",
+          "sword-bone"
+        ],
+        "attributes": {
+          "constitution": 3,
+          "insight": 4,
+          "fortune": 5
+        }
+      }
+    },
+    "birthReceipt": {
+      "kind": "opening",
+      "choiceId": null,
+      "action": null,
+      "elapsedDays": 0,
+      "itemChanges": {},
+      "relationChanges": {},
+      "random": {
+        "before": 1879604368,
+        "after": 1879604368,
+        "roll": null
+      },
+      "before": {
+        "ageDays": 5760,
+        "realm": "mortal",
+        "cultivation": 0,
+        "injury": 0
+      },
+      "after": {
+        "ageDays": 5760,
+        "realm": "mortal",
+        "cultivation": 0,
+        "injury": 0
+      },
+      "death": null,
+      "birth": {
+        "originId": "village",
+        "talentIds": [
+          "fortune-debt",
+          "sword-bone"
+        ],
+        "attributes": {
+          "constitution": 3,
+          "insight": 4,
+          "fortune": 5
+        }
+      }
+    },
+    "currentScene": {
+      "id": "r:60efb6672ac907de:t2:s:scene",
+      "title": "猎户小屋",
+      "location": "猎户小屋",
+      "entities": [
+        {
+          "id": "r:60efb6672ac907de:t1:e:person_1",
+          "name": "父亲",
+          "kind": "person"
+        }
+      ],
+      "blocks": [
+        {
+          "kind": "dialogue",
+          "text": "父亲叹了口气，目光落在那羊皮纸上：“这药方是村长托人从镇上带回来的，说是能治好你娘的病。但这上面画的符文，我看了半天也不懂，怕是有什么古怪。归儿，你识字，能不能帮我看看这上面到底写了什么？”",
+          "speaker": "r:60efb6672ac907de:t1:e:person_1"
+        }
+      ],
+      "choices": [
+        {
+          "id": "r:60efb6672ac907de:t2:c:a",
+          "label": "询问父亲：询问父亲关于符文的具体含义和来源",
+          "intent": "interact",
+          "targetId": "r:60efb6672ac907de:t1:e:person_1",
+          "stake": "low",
+          "approach": "ask"
+        },
+        {
+          "id": "r:60efb6672ac907de:t2:c:b",
+          "label": "婉拒父亲：拒绝查看药方",
+          "intent": "interact",
+          "targetId": "r:60efb6672ac907de:t1:e:person_1",
+          "stake": "low",
+          "approach": "decline"
+        },
+        {
+          "id": "r:60efb6672ac907de:t2:c:c",
+          "label": "结束与父亲的互动：结束与父亲的对话",
+          "intent": "interact",
+          "targetId": "r:60efb6672ac907de:t1:e:person_1",
+          "stake": "low",
+          "approach": "leave"
+        }
+      ],
+      "memoryDeltas": [
+        {
+          "entityId": "r:60efb6672ac907de:t1:e:person_1",
+          "kind": "clue",
+          "text": "父亲叹了口气，目光落在那羊皮纸上：“这药方是村长托人从镇上带回来的，说是能治好你娘的病。但这上面画的符文，我看了半天也不懂，怕是有什么古怪。归儿，你识字，能不能帮我看看这上面到底写了什么？”",
+          "status": "open"
+        }
+      ]
+    },
+    "lastReceipt": {
+      "kind": "choice",
+      "choiceId": "r:60efb6672ac907de:t1:c:a",
+      "action": {
+        "id": "r:60efb6672ac907de:t1:c:a",
+        "label": "询问父亲：询问父亲关于药方和符文的来历",
+        "intent": "interact",
+        "targetId": "r:60efb6672ac907de:t1:e:person_1",
+        "stake": "low",
+        "approach": "ask"
+      },
+      "elapsedDays": 0,
+      "itemChanges": {},
+      "relationChanges": {},
+      "random": {
+        "before": 1879604368,
+        "after": 2022614703,
+        "roll": 3
+      },
+      "before": {
+        "ageDays": 5760,
+        "realm": "mortal",
+        "cultivation": 0,
+        "injury": 0
+      },
+      "after": {
+        "ageDays": 5760,
+        "realm": "mortal",
+        "cultivation": 0,
+        "injury": 0
+      },
+      "death": null,
+      "birth": null
+    },
+    "relatedEntities": [
+      {
+        "id": "r:60efb6672ac907de:t1:e:person_1",
+        "name": "父亲",
+        "kind": "person"
+      }
+    ],
+    "archiveCursor": 0
+  },
+  "posts": 2,
+  "latency": {
+    "usable": true,
+    "errorCode": null,
+    "firstAnyPreviewMs": 3870,
+    "firstReadableMs": 4177,
+    "completionMs": 12330,
+    "narrativeChars": 95,
+    "maxPreviewGapMs": 406,
+    "readingFinishEstimateMs": 20010,
+    "readingStallEstimateMs": 0,
+    "optionsWaitEstimateMs": 0,
+    "prefetchWorthEvaluating": true,
+    "assumptions": {
+      "readingCharsPerSecond": 6,
+      "readableChars": 20,
+      "targetWaitMs": 2000
+    }
+  }
+}

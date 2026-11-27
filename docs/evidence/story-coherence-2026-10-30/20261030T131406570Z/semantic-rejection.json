@@ -1,0 +1,7 @@
+{
+  "status": "NOT_ACCEPTED",
+  "turn": 5,
+  "reason": "API ready but manual semantic failure: travel reached the mountain, while questions and observation still targeted the person left in the village; not acceptance.",
+  "apiStatus": "ready",
+  "evidence": "docs/evidence/story-coherence-2026-10-30/20261030T131406570Z/turn-5.json"
+}

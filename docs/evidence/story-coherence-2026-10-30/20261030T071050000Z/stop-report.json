@@ -1,0 +1,39 @@
+{
+  "schemaVersion": 1,
+  "sourceCommit": "52a9bf8e4c0970c52f4f9cbf4d124680a417d10f",
+  "status": "ACCEPTANCE_STOPPED",
+  "reason": "Opening structurally ready but two ordinary questions used unaffordable negotiate:bargain; stop semantic acceptance.",
+  "actualTurns": 1,
+  "latencies": [
+    {
+      "usable": true,
+      "errorCode": null,
+      "firstAnyPreviewMs": 2234,
+      "firstReadableMs": 2714,
+      "completionMs": 19229,
+      "narrativeChars": 229,
+      "maxPreviewGapMs": 522,
+      "readingFinishEstimateMs": 40881,
+      "readingStallEstimateMs": 0,
+      "optionsWaitEstimateMs": 0,
+      "prefetchWorthEvaluating": true,
+      "assumptions": {
+        "readingCharsPerSecond": 6,
+        "readableChars": 20,
+        "targetWaitMs": 2000
+      }
+    }
+  ],
+  "productionRestored": {
+    "version": "cad2a140-240f-4465-a837-e53f054c2589",
+    "percentage": 100,
+    "deployment": "5293ef90-3c75-4202-b5bc-5f39ddaad8b0"
+  },
+  "cleanup": {
+    "ownCredentialDeleted": true,
+    "newWorkerCreated": false,
+    "newNamespaceCreated": false,
+    "ledgerRetained": true
+  },
+  "recordedAt": "2026-10-30T07:22:16.630Z"
+}

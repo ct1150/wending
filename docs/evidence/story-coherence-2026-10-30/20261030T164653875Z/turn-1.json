@@ -1,0 +1,565 @@
+{
+  "caseId": "choice-1",
+  "origin": "ai",
+  "postDelta": 1,
+  "localEntry": null,
+  "start": 119765,
+  "timeline": [
+    {
+      "atMs": 3862,
+      "chars": 2
+    },
+    {
+      "atMs": 3935,
+      "chars": 5
+    },
+    {
+      "atMs": 3996,
+      "chars": 9
+    },
+    {
+      "atMs": 4069,
+      "chars": 14
+    },
+    {
+      "atMs": 4132,
+      "chars": 20
+    },
+    {
+      "atMs": 4195,
+      "chars": 24
+    },
+    {
+      "atMs": 4257,
+      "chars": 32
+    },
+    {
+      "atMs": 4335,
+      "chars": 37
+    },
+    {
+      "atMs": 4383,
+      "chars": 40
+    },
+    {
+      "atMs": 4459,
+      "chars": 46
+    },
+    {
+      "atMs": 4521,
+      "chars": 49
+    },
+    {
+      "atMs": 4598,
+      "chars": 54
+    },
+    {
+      "atMs": 4659,
+      "chars": 58
+    },
+    {
+      "atMs": 4721,
+      "chars": 63
+    },
+    {
+      "atMs": 4782,
+      "chars": 67
+    },
+    {
+      "atMs": 4842,
+      "chars": 71
+    },
+    {
+      "atMs": 4888,
+      "chars": 76
+    },
+    {
+      "atMs": 4965,
+      "chars": 80
+    },
+    {
+      "atMs": 5028,
+      "chars": 82
+    },
+    {
+      "atMs": 5072,
+      "chars": 85
+    },
+    {
+      "atMs": 5133,
+      "chars": 89
+    },
+    {
+      "atMs": 5180,
+      "chars": 92
+    },
+    {
+      "atMs": 5253,
+      "chars": 97
+    },
+    {
+      "atMs": 5316,
+      "chars": 102
+    },
+    {
+      "atMs": 5390,
+      "chars": 106
+    }
+  ],
+  "choicesEnabledDuringPreview": false,
+  "lastText": "老赵直起腰，用袖子抹了一把额头的汗，指着那块黑铁矿石说道：“云归，这东西叫‘玄铁精’，是我在黑风岭深处挖到的。这铁太硬，寻常柴刀根本劈不动，我本来想把它劈成小块卖钱，可这硬度连刀都卷了，看来这批货是卖不出去了。”",
+  "doneMs": 10989,
+  "result": {
+    "protocolVersion": 1,
+    "status": "ready",
+    "requestId": "64f85154-608d-4b58-b708-50b6718d822d",
+    "attemptId": "7b3a55c3-4004-45a0-995f-71df7b974c00",
+    "sessionRef": "sess_8afdee86f4939c4b1019b7a71928a7e0",
+    "errorCode": null,
+    "retry": null,
+    "scene": {
+      "id": "r:d9da341062cbd87f:t2:s:scene",
+      "title": "玄铁精的难题",
+      "location": "village",
+      "entities": [
+        {
+          "id": "r:d9da341062cbd87f:t1:e:person_1",
+          "name": "老赵",
+          "kind": "person"
+        }
+      ],
+      "blocks": [
+        {
+          "kind": "dialogue",
+          "text": "老赵直起腰，用袖子抹了一把额头的汗，指着那块黑铁矿石说道：“云归，这东西叫‘玄铁精’，是我在黑风岭深处挖到的。这铁太硬，寻常柴刀根本劈不动，我本来想把它劈成小块卖钱，可这硬度连刀都卷了，看来这批货是卖不出去了。”",
+          "speaker": "r:d9da341062cbd87f:t1:e:person_1"
+        }
+      ],
+      "choices": [
+        {
+          "id": "r:d9da341062cbd87f:t2:c:a",
+          "label": "询问老赵：询问这矿石的成色和价值，看是否值得冒险尝试",
+          "intent": "interact",
+          "targetId": "r:d9da341062cbd87f:t1:e:person_1",
+          "stake": "low",
+          "approach": "ask"
+        },
+        {
+          "id": "r:d9da341062cbd87f:t2:c:b",
+          "label": "婉拒老赵：拒绝帮忙，表示自己还要去山上打猎",
+          "intent": "interact",
+          "targetId": "r:d9da341062cbd87f:t1:e:person_1",
+          "stake": "low",
+          "approach": "decline"
+        },
+        {
+          "id": "r:d9da341062cbd87f:t2:c:c",
+          "label": "结束与老赵的互动：结束对话，转身离开",
+          "intent": "interact",
+          "targetId": "r:d9da341062cbd87f:t1:e:person_1",
+          "stake": "low",
+          "approach": "leave"
+        }
+      ],
+      "memoryDeltas": [
+        {
+          "entityId": "r:d9da341062cbd87f:t1:e:person_1",
+          "kind": "clue",
+          "text": "老赵直起腰，用袖子抹了一把额头的汗，指着那块黑铁矿石说道：“云归，这东西叫‘玄铁精’，是我在黑风岭深处挖到的。这铁太硬，寻常柴刀根本劈不动，我本来想把它劈成小块卖钱，可这硬度连刀都卷了，看来这批货是卖不出去了。”",
+          "status": "open"
+        }
+      ]
+    }
+  },
+  "request": {
+    "context": {
+      "schemaVersion": 1,
+      "phase": "choice",
+      "identity": {
+        "runId": "0222535f-c4b7-40dd-98c6-cbe51e723b4c",
+        "turnId": 2,
+        "baseRevision": 1,
+        "stateHash": "1434ba3f861a0d80e2e2d991d63f37d5f6fd4ba78ff71ad651a898383c358082",
+        "choiceId": "r:d9da341062cbd87f:t1:c:a",
+        "rulesVersion": 1,
+        "promptVersion": 1,
+        "requestId": "64f85154-608d-4b58-b708-50b6718d822d"
+      },
+      "namespace": "r:d9da341062cbd87f",
+      "receipt": {
+        "kind": "choice",
+        "choiceId": "r:d9da341062cbd87f:t1:c:a",
+        "action": {
+          "id": "r:d9da341062cbd87f:t1:c:a",
+          "label": "询问老赵：询问老赵这矿石的来源和具体困难",
+          "intent": "interact",
+          "targetId": "r:d9da341062cbd87f:t1:e:person_1",
+          "stake": "low",
+          "approach": "ask"
+        },
+        "elapsedDays": 0,
+        "itemChanges": {},
+        "relationChanges": {},
+        "random": {
+          "before": 4221886671,
+          "after": 2845300706,
+          "roll": 6
+        },
+        "before": {
+          "ageDays": 5760,
+          "realm": "mortal",
+          "cultivation": 0,
+          "injury": 0
+        },
+        "after": {
+          "ageDays": 5760,
+          "realm": "mortal",
+          "cultivation": 0,
+          "injury": 0
+        },
+        "death": null,
+        "birth": null
+      },
+      "life": {
+        "name": "云归",
+        "ageDays": 5760,
+        "lifeLimit": 80,
+        "realm": "mortal",
+        "cultivation": 0,
+        "injury": 0,
+        "items": {
+          "supplies": 3,
+          "stones": 0
+        },
+        "relations": {},
+        "birth": {
+          "originId": "village",
+          "talentIds": [
+            "flash-wisdom",
+            "sensitive-breath"
+          ],
+          "attributes": {
+            "constitution": 2,
+            "insight": 5,
+            "fortune": 5
+          }
+        }
+      },
+      "entities": [
+        {
+          "id": "r:d9da341062cbd87f:t1:e:person_1",
+          "name": "老赵",
+          "kind": "person",
+          "status": "unknown"
+        }
+      ],
+      "memory": {
+        "facts": [],
+        "promises": [],
+        "clues": [
+          {
+            "id": "m:424b118d7883eb19cb442f702cd5cd9c",
+            "source": "narrative",
+            "kind": "clue",
+            "entityId": "r:d9da341062cbd87f:t1:e:person_1",
+            "text": "你站在自家破旧的木屋前，晨雾还未散尽。隔壁的猎户老赵正蹲在院角，手里拿着把生锈的柴刀，正费力地劈开一块从深山里带回来的黑铁矿石。他满头大汗，眉头紧锁，似乎遇到了什么棘手的难题。",
+            "status": "open",
+            "runId": "0222535f-c4b7-40dd-98c6-cbe51e723b4c",
+            "turnId": 1
+          }
+        ],
+        "recent": [
+          {
+            "id": "turn:1",
+            "runId": "0222535f-c4b7-40dd-98c6-cbe51e723b4c",
+            "turnId": 1,
+            "source": "narrative",
+            "kind": "turn",
+            "text": "地点：village\n你站在自家破旧的木屋前，晨雾还未散尽。隔壁的猎户老赵正蹲在院角，手里拿着把生锈的柴刀，正费力地劈开一块从深山里带回来的黑铁矿石。他满头大汗，眉头紧锁，似乎遇到了什么棘手的难题。\n老赵停下手里的活，抬头看了你一眼，叹了口气说道：“云归，这铁太硬了，我的刀都快卷刃了。你从小在山里长大，力气大，能不能帮我看看这东西到底是个什么路数？要是劈不开，这批货可就废了。”",
+            "entityIds": []
+          }
+        ],
+        "summaries": []
+      },
+      "references": [
+        "m:424b118d7883eb19cb442f702cd5cd9c",
+        "turn:1"
+      ],
+      "previousScene": {
+        "id": "r:d9da341062cbd87f:t1:s:scene",
+        "blocksHash": "7a0d97789453207185f9a5c855d150aa2e12feeb90727f4f341c7c5383ce61d5"
+      },
+      "relationshipVersion": 1,
+      "relationships": {},
+      "coverage": {
+        "policy": "relevance-v1",
+        "openTotal": 1,
+        "openIncluded": 1,
+        "openOmitted": 0
+      }
+    },
+    "attempt": {
+      "id": "7b3a55c3-4004-45a0-995f-71df7b974c00",
+      "sessionRef": "sess_8afdee86f4939c4b1019b7a71928a7e0",
+      "retryOf": null
+    },
+    "storyActions": true
+  },
+  "decision": {
+    "index": 0,
+    "reason": "正文老赵被黑铁矿石难住；先问矿石来源与具体困难，另外有明确拒绝出口。援助选项明示消耗行粮，仅按援助规则解释，不视为保证修好矿石。",
+    "selected": {
+      "id": "r:d9da341062cbd87f:t1:c:a",
+      "label": "询问老赵：询问老赵这矿石的来源和具体困难",
+      "intent": "interact",
+      "targetId": "r:d9da341062cbd87f:t1:e:person_1",
+      "stake": "low",
+      "approach": "ask"
+    }
+  },
+  "choices": [
+    {
+      "id": "r:d9da341062cbd87f:t2:c:a",
+      "enabled": true,
+      "label": "询问老赵：询问这矿石的成色和价值，看是否值得冒险尝试",
+      "cost": "0日"
+    },
+    {
+      "id": "r:d9da341062cbd87f:t2:c:b",
+      "enabled": true,
+      "label": "婉拒老赵：拒绝帮忙，表示自己还要去山上打猎",
+      "cost": "0日"
+    },
+    {
+      "id": "r:d9da341062cbd87f:t2:c:c",
+      "enabled": true,
+      "label": "结束与老赵的互动：结束对话，转身离开",
+      "cost": "0日"
+    }
+  ],
+  "traces": [
+    {
+      "model": "@cf/zai-org/glm-4.7-flash",
+      "inputHash": "e6547eaee3f0847ae7111957a38ede80e1f250cad0f8ab2f4f0cbfd934181392",
+      "inputBytes": 16337,
+      "startedAt": 1793379068205,
+      "bindingReturnedAt": 1793379068557,
+      "liveRawBytes": 128558,
+      "captureComplete": true,
+      "response": {
+        "model": "@cf/zai-org/glm-4.7-flash",
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "message": {
+              "content": "{\n  \"blocks\": [\n    {\n      \"kind\": \"dialogue\",\n      \"text\": \"老赵直起腰，用袖子抹了一把额头的汗，指着那块黑铁矿石说道：“云归，这东西叫‘玄铁精’，是我在黑风岭深处挖到的。这铁太硬，寻常柴刀根本劈不动，我本来想把它劈成小块卖钱，可这硬度连刀都卷了，看来这批货是卖不出去了。”\"\n   ,\n      \"speaker\": {\n        \"kind\": \"person\",\n        \"name\": \"老赵\",\n        \"ref\": \"k1_person_老赵\",\n        \"status\": null\n      }\n    }\n  ],\n  \"choices\": [\n    {\n      \"action\": \"interact:ask\",\n      \"target\": {\n        \"kind\": \"person\",\n        \"name\": \"老赵\",\n        \"ref\": \"\",\n        \"status\": null\n      },\n      \"stake\": \"low\",\n      \"purpose\": \"询问这矿石的成色和价值，看是否值得冒险尝试\",\n      \"anchor\": 0\n    },\n    {\n      \"action\": \"interact:decline\",\n      \"target\": {\n        \"kind\": \"person\",\n        \"name\": \"老赵\",\n        \"ref\": \"\",\n        \"status\": null\n      },\n      \"stake\": \"low\",\n      \"purpose\": \"拒绝帮忙，表示自己还要去山上打猎\",\n      \"anchor\": 0\n    },\n    {\n      \"action\": \"interact:leave\",\n      \"target\": {\n        \"kind\": \"person\",\n        \"name\": \"老赵\",\n        \"ref\": \"\",\n        \"status\": null\n      },\n      \"stake\": \"low\",\n      \"purpose\": \"结束对话，转身离开\",\n      \"anchor\": 0\n    }\n  ],\n  \"title\": \"玄铁精的难题\",\n  \"location\": \"village\",\n  \"memoryDeltas\": [\n    {\n      \"target\": {\n        \"kind\": \"person\",\n        \"name\": \"老赵\",\n        \"ref\": \"\",\n        \"status\": null\n      },\n      \"kind\": \"clue\",\n      \"anchor\": 0,\n      \"status\": \"open\"\n    }\n  ]\n}",
+              "reasoning_content": ""
+            }
+          }
+        ],
+        "usage": {
+          "prompt_tokens": 2437,
+          "completion_tokens": 482,
+          "total_tokens": 2919,
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          },
+          "neurons": 30.948300000000206
+        }
+      },
+      "rawSseBytes": 128558
+    }
+  ],
+  "revision": 2,
+  "pending": false,
+  "state": {
+    "relationshipVersion": 1,
+    "version": 5,
+    "mode": "cultivation",
+    "contentVersion": 4,
+    "rulesVersion": 1,
+    "promptVersion": 1,
+    "runId": "0222535f-c4b7-40dd-98c6-cbe51e723b4c",
+    "revision": 2,
+    "turnId": 2,
+    "phase": "active",
+    "rng": 2845300706,
+    "life": {
+      "name": "云归",
+      "ageDays": 5760,
+      "lifeLimit": 80,
+      "realm": "mortal",
+      "cultivation": 0,
+      "injury": 0,
+      "items": {
+        "supplies": 3,
+        "stones": 0
+      },
+      "relations": {},
+      "birth": {
+        "originId": "village",
+        "talentIds": [
+          "flash-wisdom",
+          "sensitive-breath"
+        ],
+        "attributes": {
+          "constitution": 2,
+          "insight": 5,
+          "fortune": 5
+        }
+      }
+    },
+    "birthReceipt": {
+      "kind": "opening",
+      "choiceId": null,
+      "action": null,
+      "elapsedDays": 0,
+      "itemChanges": {},
+      "relationChanges": {},
+      "random": {
+        "before": 4221886671,
+        "after": 4221886671,
+        "roll": null
+      },
+      "before": {
+        "ageDays": 5760,
+        "realm": "mortal",
+        "cultivation": 0,
+        "injury": 0
+      },
+      "after": {
+        "ageDays": 5760,
+        "realm": "mortal",
+        "cultivation": 0,
+        "injury": 0
+      },
+      "death": null,
+      "birth": {
+        "originId": "village",
+        "talentIds": [
+          "flash-wisdom",
+          "sensitive-breath"
+        ],
+        "attributes": {
+          "constitution": 2,
+          "insight": 5,
+          "fortune": 5
+        }
+      }
+    },
+    "currentScene": {
+      "id": "r:d9da341062cbd87f:t2:s:scene",
+      "title": "玄铁精的难题",
+      "location": "village",
+      "entities": [
+        {
+          "id": "r:d9da341062cbd87f:t1:e:person_1",
+          "name": "老赵",
+          "kind": "person"
+        }
+      ],
+      "blocks": [
+        {
+          "kind": "dialogue",
+          "text": "老赵直起腰，用袖子抹了一把额头的汗，指着那块黑铁矿石说道：“云归，这东西叫‘玄铁精’，是我在黑风岭深处挖到的。这铁太硬，寻常柴刀根本劈不动，我本来想把它劈成小块卖钱，可这硬度连刀都卷了，看来这批货是卖不出去了。”",
+          "speaker": "r:d9da341062cbd87f:t1:e:person_1"
+        }
+      ],
+      "choices": [
+        {
+          "id": "r:d9da341062cbd87f:t2:c:a",
+          "label": "询问老赵：询问这矿石的成色和价值，看是否值得冒险尝试",
+          "intent": "interact",
+          "targetId": "r:d9da341062cbd87f:t1:e:person_1",
+          "stake": "low",
+          "approach": "ask"
+        },
+        {
+          "id": "r:d9da341062cbd87f:t2:c:b",
+          "label": "婉拒老赵：拒绝帮忙，表示自己还要去山上打猎",
+          "intent": "interact",
+          "targetId": "r:d9da341062cbd87f:t1:e:person_1",
+          "stake": "low",
+          "approach": "decline"
+        },
+        {
+          "id": "r:d9da341062cbd87f:t2:c:c",
+          "label": "结束与老赵的互动：结束对话，转身离开",
+          "intent": "interact",
+          "targetId": "r:d9da341062cbd87f:t1:e:person_1",
+          "stake": "low",
+          "approach": "leave"
+        }
+      ],
+      "memoryDeltas": [
+        {
+          "entityId": "r:d9da341062cbd87f:t1:e:person_1",
+          "kind": "clue",
+          "text": "老赵直起腰，用袖子抹了一把额头的汗，指着那块黑铁矿石说道：“云归，这东西叫‘玄铁精’，是我在黑风岭深处挖到的。这铁太硬，寻常柴刀根本劈不动，我本来想把它劈成小块卖钱，可这硬度连刀都卷了，看来这批货是卖不出去了。”",
+          "status": "open"
+        }
+      ]
+    },
+    "lastReceipt": {
+      "kind": "choice",
+      "choiceId": "r:d9da341062cbd87f:t1:c:a",
+      "action": {
+        "id": "r:d9da341062cbd87f:t1:c:a",
+        "label": "询问老赵：询问老赵这矿石的来源和具体困难",
+        "intent": "interact",
+        "targetId": "r:d9da341062cbd87f:t1:e:person_1",
+        "stake": "low",
+        "approach": "ask"
+      },
+      "elapsedDays": 0,
+      "itemChanges": {},
+      "relationChanges": {},
+      "random": {
+        "before": 4221886671,
+        "after": 2845300706,
+        "roll": 6
+      },
+      "before": {
+        "ageDays": 5760,
+        "realm": "mortal",
+        "cultivation": 0,
+        "injury": 0
+      },
+      "after": {
+        "ageDays": 5760,
+        "realm": "mortal",
+        "cultivation": 0,
+        "injury": 0
+      },
+      "death": null,
+      "birth": null
+    },
+    "relatedEntities": [
+      {
+        "id": "r:d9da341062cbd87f:t1:e:person_1",
+        "name": "老赵",
+        "kind": "person"
+      }
+    ],
+    "archiveCursor": 0
+  },
+  "posts": 2,
+  "latency": {
+    "usable": true,
+    "errorCode": null,
+    "firstAnyPreviewMs": 3862,
+    "firstReadableMs": 4132,
+    "completionMs": 10989,
+    "narrativeChars": 106,
+    "maxPreviewGapMs": 78,
+    "readingFinishEstimateMs": 21799,
+    "readingStallEstimateMs": 0,
+    "optionsWaitEstimateMs": 0,
+    "prefetchWorthEvaluating": true,
+    "assumptions": {
+      "readingCharsPerSecond": 6,
+      "readableChars": 20,
+      "targetWaitMs": 2000
+    }
+  }
+}

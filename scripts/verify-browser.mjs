@@ -35,7 +35,7 @@ async function verifyViewport(browser, name, viewport) {
   await page.click('button:has-text("三界强敌志")');
   await page.click('button:has-text("返回首页")');
 
-  // 2. 建角 -> 破壳降生 -> 天命赐福四选一 -> SVG 星轨连线星宿地图
+  // 2. 建角 -> 破壳降生 -> 天命赐福四选一 -> SVG 星轨连线星宿地图（确保已无寿元/道基显示）
   await page.click('button:has-text("踏入新一世仙途")');
   await page.waitForSelector('.lineage-thumb');
   await page.click('button:has-text("破壳降生")');
@@ -46,36 +46,67 @@ async function verifyViewport(browser, name, viewport) {
   const lineCount = await page.locator('.map-stage svg.map-lines line').count();
   if (lineCount < 10) throw new Error(`${name}: star map lines missing (${lineCount})`);
 
-  // 3. 进战并校验高清立绘 + 乾坤丹符袋 + 严格一屏零滚动
+  // 打开顶部「? 词条」白话指南确认渲染正常并关闭
+  await page.click('button:has-text("? 词条")');
+  await page.waitForSelector('.glossary-grid');
+  await page.click('.modal-box button:has-text("关闭")');
+
+  // 3. 进战并校验高清立绘 + 首次轻提示 + 严格一屏零滚动
   await page.locator('.map-node-btn.reachable').first().click();
   await page.waitForSelector('.battle-one-screen .portrait-img');
 
-  const layoutCheck = await page.evaluate(() => {
-    const imgs = Array.from(document.querySelectorAll('.portrait-img'));
-    const allLoaded = imgs.length >= 2 && imgs.every((img) => img.complete && img.naturalWidth > 100);
-    return {
-      allLoaded,
-      scrollH: document.documentElement.scrollHeight,
-      innerH: window.innerHeight,
-      scrollW: document.documentElement.scrollWidth,
-      innerW: window.innerWidth,
-    };
-  });
+  const checkZeroScroll = async (stageLabel) => {
+    const res = await page.evaluate(() => {
+      const imgs = Array.from(document.querySelectorAll('.portrait-img'));
+      const allLoaded = imgs.length >= 2 && imgs.every((img) => img.complete && img.naturalWidth > 100);
+      return {
+        allLoaded,
+        scrollH: document.documentElement.scrollHeight,
+        innerH: window.innerHeight,
+        scrollW: document.documentElement.scrollWidth,
+        innerW: window.innerWidth,
+      };
+    });
+    if (!res.allLoaded) throw new Error(`${name} (${stageLabel}): portrait images failed to load`);
+    if (res.scrollW > res.innerW + 2) {
+      throw new Error(`${name} (${stageLabel}): horizontal overflow (${res.scrollW} > ${res.innerW})`);
+    }
+    if (res.scrollH > res.innerH + 2) {
+      throw new Error(`${name} (${stageLabel}): vertical scroll detected (${res.scrollH} > ${res.innerH})`);
+    }
+    return res;
+  };
 
-  if (!layoutCheck.allLoaded) throw new Error(`${name}: portrait images failed to load`);
-  if (layoutCheck.scrollW > layoutCheck.innerW + 2) {
-    throw new Error(`${name}: horizontal overflow (${layoutCheck.scrollW} > ${layoutCheck.innerW})`);
-  }
-  if (layoutCheck.scrollH > layoutCheck.innerH + 2) {
-    throw new Error(`${name}: vertical scroll detected in combat (${layoutCheck.scrollH} > ${layoutCheck.innerH})`);
+  const layoutCheck = await checkZeroScroll('initial');
+
+  // 关闭首次进战提示
+  const onboardBtn = page.locator('.onboard-banner button');
+  if ((await onboardBtn.count()) > 0) {
+    await onboardBtn.click();
   }
 
-  // 4. 瞬发 1 格乾坤丹符 + 打出实体 TCG 卡牌 + 结束回合
+  // 4. 轻触五行灵印槽弹出连招白话气泡，验证依然一屏零滚动
+  await page.click('.seal-bar-btn');
+  await page.waitForSelector('.tip-popover');
+  await checkZeroScroll('tip-popover-open');
+  await page.click('.tip-popover button:has-text("关闭")');
+
+  // 5. 轻触乾坤丹符袋 -> 弹出详情与防误触确认窗 -> 点击「立即使用」
   const activePouch = page.locator('.pouch-slot.active').first();
   if ((await activePouch.count()) > 0) {
     await activePouch.click();
+    await page.waitForSelector('.confirm-pouch-btn');
+    await page.click('.confirm-pouch-btn');
   }
-  await page.locator('.tcg-card:not([disabled])').first().click();
+
+  // 6. 单击手牌 -> 预览白话词条注释浮层（校验依然一屏零滚动！） -> 再点「立即打出」完成出牌
+  const playableCard = page.locator('.tcg-card:not(.is-unplayable)').first();
+  await playableCard.click();
+  await page.waitForSelector('.card-preview-overlay');
+  await checkZeroScroll('card-preview-open');
+  await page.click('.confirm-play-btn');
+
+  // 7. 结束回合
   await page.click('button:has-text("结束回合")');
   await page.waitForTimeout(420);
 

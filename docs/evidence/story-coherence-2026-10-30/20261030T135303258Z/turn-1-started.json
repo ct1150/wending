@@ -1,0 +1,1 @@
+{"at":"2026-10-30T13:57:11.375Z","decision":{"index":0,"reason":"陈叔正在处理猎夹伤猪，追问布夹时间和附近野兽，直接回应当前事件；询问应0日、无物品或关系变化。","selected":{"id":"r:17f8f2b8cadbac0b:t1:c:a","label":"询问陈叔：询问陈叔这猎夹是何时布下的，以及附近是否还有其他野兽出没","intent":"interact","targetId":"r:17f8f2b8cadbac0b:t1:e:person_1","stake":"low","approach":"ask"}}}

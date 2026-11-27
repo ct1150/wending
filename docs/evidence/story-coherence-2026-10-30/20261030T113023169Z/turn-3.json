@@ -1,0 +1,553 @@
+{
+  "caseId": "choice-3",
+  "start": 785286.400000006,
+  "timeline": [
+    {
+      "atMs": 4949,
+      "chars": 1
+    },
+    {
+      "atMs": 5043,
+      "chars": 5
+    },
+    {
+      "atMs": 5121,
+      "chars": 9
+    },
+    {
+      "atMs": 5185,
+      "chars": 16
+    },
+    {
+      "atMs": 5263,
+      "chars": 22
+    },
+    {
+      "atMs": 5323,
+      "chars": 27
+    },
+    {
+      "atMs": 5402,
+      "chars": 31
+    },
+    {
+      "atMs": 5476,
+      "chars": 36
+    },
+    {
+      "atMs": 5536,
+      "chars": 40
+    },
+    {
+      "atMs": 5614,
+      "chars": 45
+    },
+    {
+      "atMs": 5703,
+      "chars": 49
+    },
+    {
+      "atMs": 5764,
+      "chars": 53
+    },
+    {
+      "atMs": 5838,
+      "chars": 58
+    },
+    {
+      "atMs": 5901,
+      "chars": 61
+    },
+    {
+      "atMs": 5996,
+      "chars": 66
+    },
+    {
+      "atMs": 6073,
+      "chars": 70
+    },
+    {
+      "atMs": 6122,
+      "chars": 74
+    },
+    {
+      "atMs": 6218,
+      "chars": 79
+    },
+    {
+      "atMs": 6282,
+      "chars": 84
+    },
+    {
+      "atMs": 6344,
+      "chars": 89
+    },
+    {
+      "atMs": 6431,
+      "chars": 94
+    },
+    {
+      "atMs": 6499,
+      "chars": 102
+    },
+    {
+      "atMs": 6572,
+      "chars": 108
+    },
+    {
+      "atMs": 6636,
+      "chars": 109
+    }
+  ],
+  "choicesEnabledDuringPreview": false,
+  "lastText": "你摇了摇头，把腰牌在手里转了一圈，语气平淡地回绝道：“老张叔，这活儿我不接。我手头紧，也没那闲工夫去寻什么三年青竹，这木鸢坏了就坏了，反正交不了差，我也省得挨骂。”说完，你便不再看他，转身准备离开这个充满煤灰味的地方。",
+  "doneMs": 11153,
+  "result": {
+    "protocolVersion": 1,
+    "status": "rejected",
+    "requestId": "426068eb-58c1-44b1-a388-480a288aa234",
+    "attemptId": "475cb2d5-fba0-4c04-bad6-383e35c65422",
+    "sessionRef": "sess_065ba0425ba0b91dabb717a48b715b48",
+    "errorCode": "REPEATED_SCENE",
+    "retry": null
+  },
+  "request": {
+    "context": {
+      "schemaVersion": 1,
+      "phase": "choice",
+      "identity": {
+        "runId": "7a47cb2b-4295-42fa-af09-c7431bfe9f2c",
+        "turnId": 4,
+        "baseRevision": 3,
+        "stateHash": "1001bc27b0456196b730e31961dc083e656e6c9a9a74dc72f55a10527ea58313",
+        "choiceId": "r:fd4b7fba18127f5b:t3:c:c",
+        "rulesVersion": 1,
+        "promptVersion": 1,
+        "requestId": "426068eb-58c1-44b1-a388-480a288aa234"
+      },
+      "namespace": "r:fd4b7fba18127f5b",
+      "receipt": {
+        "kind": "choice",
+        "choiceId": "r:fd4b7fba18127f5b:t3:c:c",
+        "action": {
+          "id": "r:fd4b7fba18127f5b:t3:c:c",
+          "label": "结束与铁匠老张的互动：结束与铁匠老张的交谈，独自离开",
+          "intent": "interact",
+          "targetId": "r:fd4b7fba18127f5b:t1:e:person_1",
+          "stake": "low",
+          "approach": "leave"
+        },
+        "elapsedDays": 0,
+        "itemChanges": {},
+        "relationChanges": {},
+        "random": {
+          "before": 3839213103,
+          "after": 2544326082,
+          "roll": 82
+        },
+        "before": {
+          "ageDays": 5760,
+          "realm": "mortal",
+          "cultivation": 0,
+          "injury": 0
+        },
+        "after": {
+          "ageDays": 5760,
+          "realm": "mortal",
+          "cultivation": 0,
+          "injury": 0
+        },
+        "death": null,
+        "birth": null
+      },
+      "life": {
+        "name": "云归",
+        "ageDays": 5760,
+        "lifeLimit": 80,
+        "realm": "mortal",
+        "cultivation": 0,
+        "injury": 0,
+        "items": {
+          "supplies": 3,
+          "stones": 0
+        },
+        "relations": {},
+        "birth": {
+          "originId": "artisan",
+          "talentIds": [
+            "iron-bones",
+            "keen-memory"
+          ],
+          "attributes": {
+            "constitution": 6,
+            "insight": 3,
+            "fortune": 3
+          }
+        }
+      },
+      "entities": [
+        {
+          "id": "r:fd4b7fba18127f5b:t1:e:person_1",
+          "name": "铁匠老张",
+          "kind": "person",
+          "status": "alive"
+        },
+        {
+          "id": "r:fd4b7fba18127f5b:t3:e:place_1",
+          "name": "城坊街道",
+          "kind": "place",
+          "status": "unknown"
+        }
+      ],
+      "memory": {
+        "facts": [
+          {
+            "id": "decision:3",
+            "runId": "7a47cb2b-4295-42fa-af09-c7431bfe9f2c",
+            "turnId": 3,
+            "source": "rules",
+            "kind": "fact",
+            "entityId": "r:fd4b7fba18127f5b:t1:e:person_1",
+            "text": "你在城坊选择了“婉拒铁匠老张：拒绝帮忙，不想找材料”。"
+          },
+          {
+            "id": "m:ed248f38eed9acce1b585eb4d8c3e055",
+            "source": "narrative",
+            "kind": "fact",
+            "entityId": "r:fd4b7fba18127f5b:t1:e:person_1",
+            "text": "你摇了摇头，把腰牌在手里转了一圈，语气平淡地回绝道：“老张叔，这活儿我不接。我手头紧，也没那闲工夫去寻什么三年青竹，这木鸢坏了就坏了，反正交不了差，我也省得挨骂。”说完，你便不再看他，转身准备离开这个充满煤灰味的地方。",
+            "runId": "7a47cb2b-4295-42fa-af09-c7431bfe9f2c",
+            "turnId": 3
+          }
+        ],
+        "promises": [],
+        "clues": [
+          {
+            "id": "m:ecd408740ce4fac96015204a25a25349",
+            "source": "narrative",
+            "kind": "clue",
+            "entityId": "r:fd4b7fba18127f5b:t1:e:person_1",
+            "text": "铁匠老张抹了一把脸上的黑灰，指着木鸢的翅膀根部说道：“这机括里的‘灵枢’断了，原本是嵌在竹骨里的，现在碎成了渣。要想修好，得重新打磨竹骨，还得配个新的灵枢，材料费倒是小事，关键是这竹子得是三年以上的‘青竹’，市面上不好找，我这儿也没存货。”",
+            "status": "open",
+            "runId": "7a47cb2b-4295-42fa-af09-c7431bfe9f2c",
+            "turnId": 2
+          }
+        ],
+        "recent": [
+          {
+            "id": "turn:3",
+            "runId": "7a47cb2b-4295-42fa-af09-c7431bfe9f2c",
+            "turnId": 3,
+            "source": "narrative",
+            "kind": "turn",
+            "text": "地点：城坊；刚才选择：婉拒铁匠老张：拒绝帮忙，不想找材料\n你摇了摇头，把腰牌在手里转了一圈，语气平淡地回绝道：“老张叔，这活儿我不接。我手头紧，也没那闲工夫去寻什么三年青竹，这木鸢坏了就坏了，反正交不了差，我也省得挨骂。”说完，你便不再看他，转身准备离开这个充满煤灰味的地方。",
+            "entityIds": []
+          },
+          {
+            "id": "turn:2",
+            "runId": "7a47cb2b-4295-42fa-af09-c7431bfe9f2c",
+            "turnId": 2,
+            "source": "narrative",
+            "kind": "turn",
+            "text": "地点：城坊；刚才选择：询问铁匠老张：询问这只木鸢的具体损坏情况\n铁匠老张抹了一把脸上的黑灰，指着木鸢的翅膀根部说道：“这机括里的‘灵枢’断了，原本是嵌在竹骨里的，现在碎成了渣。要想修好，得重新打磨竹骨，还得配个新的灵枢，材料费倒是小事，关键是这竹子得是三年以上的‘青竹’，市面上不好找，我这儿也没存货。”",
+            "entityIds": []
+          }
+        ],
+        "summaries": []
+      },
+      "references": [
+        "decision:3",
+        "m:ed248f38eed9acce1b585eb4d8c3e055",
+        "m:ecd408740ce4fac96015204a25a25349",
+        "turn:3",
+        "turn:2"
+      ],
+      "previousScene": {
+        "id": "r:fd4b7fba18127f5b:t3:s:scene",
+        "blocksHash": "4cadba7051cc6123415d7a18583d73278bc526a267cdede384a59f47f469c45a"
+      },
+      "relationshipVersion": 1,
+      "relationships": {},
+      "coverage": {
+        "policy": "relevance-v1",
+        "openTotal": 1,
+        "openIncluded": 1,
+        "openOmitted": 0
+      }
+    },
+    "attempt": {
+      "id": "475cb2d5-fba0-4c04-bad6-383e35c65422",
+      "sessionRef": "sess_065ba0425ba0b91dabb717a48b715b48",
+      "retryOf": null
+    },
+    "storyActions": true
+  },
+  "decision": {
+    "index": 2,
+    "reason": "After refusing the material request, explicitly end the conversation while staying in the current place. Do not travel, return to the task, collect bamboo, accept rewards or make a promise.",
+    "selected": {
+      "id": "r:fd4b7fba18127f5b:t3:c:c",
+      "label": "结束与铁匠老张的互动：结束与铁匠老张的交谈，独自离开",
+      "intent": "interact",
+      "targetId": "r:fd4b7fba18127f5b:t1:e:person_1",
+      "stake": "low",
+      "approach": "leave"
+    }
+  },
+  "choices": [
+    {
+      "id": "r:fd4b7fba18127f5b:t3:c:a",
+      "enabled": false,
+      "label": "询问铁匠老张：询问附近是否有其他匠人接活",
+      "cost": "0日"
+    },
+    {
+      "id": "r:fd4b7fba18127f5b:t3:c:b",
+      "enabled": false,
+      "label": "沿路前往城坊街道：前往城坊街道寻找新的机会",
+      "cost": "30日 · 行粮 1"
+    },
+    {
+      "id": "r:fd4b7fba18127f5b:t3:c:c",
+      "enabled": false,
+      "label": "结束与铁匠老张的互动：结束与铁匠老张的交谈，独自离开",
+      "cost": "0日"
+    }
+  ],
+  "traces": [
+    {
+      "model": "@cf/zai-org/glm-4.7-flash",
+      "inputHash": "254ea650b268163e02e9666cc7a6c15a5aae6c85097e5f46b71aa2a2fdf25563",
+      "inputBytes": 17402,
+      "startedAt": 1793360682244,
+      "bindingReturnedAt": 1793360682748,
+      "liveRawBytes": 70618,
+      "captureComplete": true,
+      "response": {
+        "model": "@cf/zai-org/glm-4.7-flash",
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "message": {
+              "content": "{\"blocks\":[{\"kind\":\"dialogue\",\"text\":\"你摇了摇头，把腰牌在手里转了一圈，语气平淡地回绝道：“老张叔，这活儿我不接。我手头紧，也没那闲工夫去寻什么三年青竹，这木鸢坏了就坏了，反正交不了差，我也省得挨骂。”说完，你便不再看他，转身准备离开这个充满煤灰味的地方。\",\"speaker\":\"self\"}],\"choices\":[{\"action\":\"interact:ask\",\"targetId\":\"k1_person_铁匠老张\",\"stake\":\"low\",\"purpose\":\"询问老张叔是否知道哪里能买到三年青竹\",\"anchor\":0},{\"action\":\"travel:road\",\"targetId\":\"k2_place_城坊街道\",\"stake\":\"low\",\"purpose\":\"前往城坊街道寻找其他机会\",\"anchor\":0},{\"action\":\"interact:leave\",\"targetId\":\"k1_person_铁匠老张\",\"stake\":\"low\",\"purpose\":\"结束这次交谈，独自离开\",\"anchor\":0}],\"title\":\"城坊铁匠铺\",\"location\":\"城坊\",\"otherPeople\":[{\"id\":\"k1_person_铁匠老张\",\"status\":\"alive\"}],\"places\":[{\"id\":\"k2_place_城坊街道\"}],\"factions\":[],\"memoryDeltas\":[]}",
+              "reasoning_content": ""
+            }
+          }
+        ],
+        "usage": {
+          "prompt_tokens": 3285,
+          "completion_tokens": 272,
+          "total_tokens": 3557,
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          },
+          "neurons": 27.968300000000117
+        }
+      },
+      "rawSseBytes": 70618
+    }
+  ],
+  "revision": 3,
+  "pending": true,
+  "state": {
+    "relationshipVersion": 1,
+    "version": 5,
+    "mode": "cultivation",
+    "contentVersion": 4,
+    "rulesVersion": 1,
+    "promptVersion": 1,
+    "runId": "7a47cb2b-4295-42fa-af09-c7431bfe9f2c",
+    "revision": 3,
+    "turnId": 3,
+    "phase": "active",
+    "rng": 3839213103,
+    "life": {
+      "name": "云归",
+      "ageDays": 5760,
+      "lifeLimit": 80,
+      "realm": "mortal",
+      "cultivation": 0,
+      "injury": 0,
+      "items": {
+        "supplies": 3,
+        "stones": 0
+      },
+      "relations": {},
+      "birth": {
+        "originId": "artisan",
+        "talentIds": [
+          "iron-bones",
+          "keen-memory"
+        ],
+        "attributes": {
+          "constitution": 6,
+          "insight": 3,
+          "fortune": 3
+        }
+      }
+    },
+    "birthReceipt": {
+      "kind": "opening",
+      "choiceId": null,
+      "action": null,
+      "elapsedDays": 0,
+      "itemChanges": {},
+      "relationChanges": {},
+      "random": {
+        "before": 3377526325,
+        "after": 3377526325,
+        "roll": null
+      },
+      "before": {
+        "ageDays": 5760,
+        "realm": "mortal",
+        "cultivation": 0,
+        "injury": 0
+      },
+      "after": {
+        "ageDays": 5760,
+        "realm": "mortal",
+        "cultivation": 0,
+        "injury": 0
+      },
+      "death": null,
+      "birth": {
+        "originId": "artisan",
+        "talentIds": [
+          "iron-bones",
+          "keen-memory"
+        ],
+        "attributes": {
+          "constitution": 6,
+          "insight": 3,
+          "fortune": 3
+        }
+      }
+    },
+    "currentScene": {
+      "id": "r:fd4b7fba18127f5b:t3:s:scene",
+      "title": "城坊街角",
+      "location": "城坊",
+      "entities": [
+        {
+          "id": "r:fd4b7fba18127f5b:t1:e:person_1",
+          "name": "铁匠老张",
+          "kind": "person",
+          "status": "alive"
+        },
+        {
+          "id": "r:fd4b7fba18127f5b:t3:e:place_1",
+          "name": "城坊街道",
+          "kind": "place"
+        }
+      ],
+      "blocks": [
+        {
+          "kind": "dialogue",
+          "text": "你摇了摇头，把腰牌在手里转了一圈，语气平淡地回绝道：“老张叔，这活儿我不接。我手头紧，也没那闲工夫去寻什么三年青竹，这木鸢坏了就坏了，反正交不了差，我也省得挨骂。”说完，你便不再看他，转身准备离开这个充满煤灰味的地方。",
+          "speaker": "self"
+        }
+      ],
+      "choices": [
+        {
+          "id": "r:fd4b7fba18127f5b:t3:c:a",
+          "label": "询问铁匠老张：询问附近是否有其他匠人接活",
+          "intent": "interact",
+          "targetId": "r:fd4b7fba18127f5b:t1:e:person_1",
+          "stake": "low",
+          "approach": "ask"
+        },
+        {
+          "id": "r:fd4b7fba18127f5b:t3:c:b",
+          "label": "沿路前往城坊街道：前往城坊街道寻找新的机会",
+          "intent": "travel",
+          "targetId": "r:fd4b7fba18127f5b:t3:e:place_1",
+          "stake": "low",
+          "approach": "road"
+        },
+        {
+          "id": "r:fd4b7fba18127f5b:t3:c:c",
+          "label": "结束与铁匠老张的互动：结束与铁匠老张的交谈，独自离开",
+          "intent": "interact",
+          "targetId": "r:fd4b7fba18127f5b:t1:e:person_1",
+          "stake": "low",
+          "approach": "leave"
+        }
+      ],
+      "memoryDeltas": [
+        {
+          "entityId": "r:fd4b7fba18127f5b:t1:e:person_1",
+          "kind": "fact",
+          "text": "你摇了摇头，把腰牌在手里转了一圈，语气平淡地回绝道：“老张叔，这活儿我不接。我手头紧，也没那闲工夫去寻什么三年青竹，这木鸢坏了就坏了，反正交不了差，我也省得挨骂。”说完，你便不再看他，转身准备离开这个充满煤灰味的地方。"
+        }
+      ]
+    },
+    "lastReceipt": {
+      "kind": "choice",
+      "choiceId": "r:fd4b7fba18127f5b:t2:c:b",
+      "action": {
+        "id": "r:fd4b7fba18127f5b:t2:c:b",
+        "label": "婉拒铁匠老张：拒绝帮忙，不想找材料",
+        "intent": "interact",
+        "targetId": "r:fd4b7fba18127f5b:t1:e:person_1",
+        "stake": "low",
+        "approach": "decline"
+      },
+      "elapsedDays": 0,
+      "itemChanges": {},
+      "relationChanges": {},
+      "random": {
+        "before": 3268514320,
+        "after": 3839213103,
+        "roll": 3
+      },
+      "before": {
+        "ageDays": 5760,
+        "realm": "mortal",
+        "cultivation": 0,
+        "injury": 0
+      },
+      "after": {
+        "ageDays": 5760,
+        "realm": "mortal",
+        "cultivation": 0,
+        "injury": 0
+      },
+      "death": null,
+      "birth": null
+    },
+    "relatedEntities": [
+      {
+        "id": "r:fd4b7fba18127f5b:t1:e:person_1",
+        "name": "铁匠老张",
+        "kind": "person",
+        "status": "alive"
+      },
+      {
+        "id": "r:fd4b7fba18127f5b:t3:e:place_1",
+        "name": "城坊街道",
+        "kind": "place"
+      }
+    ],
+    "archiveCursor": 0
+  },
+  "posts": 4,
+  "latency": {
+    "usable": false,
+    "errorCode": "REPEATED_SCENE",
+    "firstAnyPreviewMs": 4949,
+    "firstReadableMs": 5263,
+    "completionMs": 11153,
+    "narrativeChars": 109,
+    "maxPreviewGapMs": 96,
+    "readingFinishEstimateMs": null,
+    "readingStallEstimateMs": null,
+    "optionsWaitEstimateMs": null,
+    "prefetchWorthEvaluating": null,
+    "assumptions": {
+      "readingCharsPerSecond": 6,
+      "readableChars": 20,
+      "targetWaitMs": 2000
+    }
+  }
+}

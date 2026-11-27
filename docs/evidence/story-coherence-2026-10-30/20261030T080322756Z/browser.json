@@ -1,0 +1,241 @@
+{
+  "sourceCommit": "90372d63c16cd019189bf4d94e91018e36dd04e3",
+  "version": "b349abda-ac3a-4703-89dc-45a32a8b8dca",
+  "recordedAt": "2026-10-30T08:05:25.345Z",
+  "records": [
+    {
+      "caseId": "opening",
+      "start": 1009.6000000014901,
+      "timeline": [],
+      "choicesEnabledDuringPreview": false,
+      "lastText": "",
+      "doneMs": 2493,
+      "result": {
+        "protocolVersion": 1,
+        "status": "paused",
+        "requestId": "b0a9042a-67d3-4cea-89ee-e1363fef492d",
+        "attemptId": "c1e40012-6e20-4533-b6f2-6f0855ab70ff",
+        "sessionRef": "sess_ff8214de592e7c7a98cc19d40a2ecefc",
+        "errorCode": "SESSION_UNAVAILABLE",
+        "retry": {
+          "explicit": true,
+          "afterMs": 0,
+          "previousAttemptId": "c1e40012-6e20-4533-b6f2-6f0855ab70ff",
+          "previousSessionRef": "sess_ff8214de592e7c7a98cc19d40a2ecefc"
+        }
+      },
+      "request": {
+        "context": {
+          "schemaVersion": 1,
+          "phase": "opening",
+          "identity": {
+            "runId": "407db724-2d0e-44b5-9bcc-80f6a4d07093",
+            "turnId": 1,
+            "baseRevision": 0,
+            "stateHash": "d4e750f72a0428c3550244ecedbd6a22ba91e31dfa5b49d375f96134e3040f7c",
+            "choiceId": null,
+            "rulesVersion": 1,
+            "promptVersion": 1,
+            "requestId": "b0a9042a-67d3-4cea-89ee-e1363fef492d"
+          },
+          "namespace": "r:5eb320257060bae3",
+          "receipt": {
+            "kind": "opening",
+            "choiceId": null,
+            "action": null,
+            "elapsedDays": 0,
+            "itemChanges": {},
+            "relationChanges": {},
+            "random": {
+              "before": 1334289198,
+              "after": 1334289198,
+              "roll": null
+            },
+            "before": {
+              "ageDays": 5760,
+              "realm": "mortal",
+              "cultivation": 0,
+              "injury": 0
+            },
+            "after": {
+              "ageDays": 5760,
+              "realm": "mortal",
+              "cultivation": 0,
+              "injury": 0
+            },
+            "death": null,
+            "birth": {
+              "originId": "village",
+              "talentIds": [
+                "sword-bone",
+                "flash-wisdom"
+              ],
+              "attributes": {
+                "constitution": 4,
+                "insight": 2,
+                "fortune": 6
+              }
+            }
+          },
+          "life": {
+            "name": "云归",
+            "ageDays": 5760,
+            "lifeLimit": 80,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0,
+            "items": {
+              "supplies": 3,
+              "stones": 0
+            },
+            "relations": {},
+            "birth": {
+              "originId": "village",
+              "talentIds": [
+                "sword-bone",
+                "flash-wisdom"
+              ],
+              "attributes": {
+                "constitution": 4,
+                "insight": 2,
+                "fortune": 6
+              }
+            }
+          },
+          "entities": [],
+          "memory": {
+            "facts": [],
+            "promises": [],
+            "clues": [],
+            "recent": [],
+            "summaries": []
+          },
+          "references": [],
+          "previousScene": null,
+          "relationshipVersion": 1,
+          "relationships": {},
+          "coverage": {
+            "policy": "relevance-v1",
+            "openTotal": 0,
+            "openIncluded": 0,
+            "openOmitted": 0
+          }
+        },
+        "attempt": {
+          "id": "c1e40012-6e20-4533-b6f2-6f0855ab70ff",
+          "sessionRef": "sess_ff8214de592e7c7a98cc19d40a2ecefc",
+          "retryOf": null
+        }
+      },
+      "decision": null,
+      "choices": [],
+      "traces": [],
+      "revision": 0,
+      "pending": true,
+      "state": {
+        "relationshipVersion": 1,
+        "version": 5,
+        "mode": "cultivation",
+        "contentVersion": 4,
+        "rulesVersion": 1,
+        "promptVersion": 1,
+        "runId": "407db724-2d0e-44b5-9bcc-80f6a4d07093",
+        "revision": 0,
+        "turnId": 0,
+        "phase": "awaitingOpening",
+        "rng": 1334289198,
+        "life": {
+          "name": "云归",
+          "ageDays": 5760,
+          "lifeLimit": 80,
+          "realm": "mortal",
+          "cultivation": 0,
+          "injury": 0,
+          "items": {
+            "supplies": 3,
+            "stones": 0
+          },
+          "relations": {},
+          "birth": {
+            "originId": "village",
+            "talentIds": [
+              "sword-bone",
+              "flash-wisdom"
+            ],
+            "attributes": {
+              "constitution": 4,
+              "insight": 2,
+              "fortune": 6
+            }
+          }
+        },
+        "birthReceipt": {
+          "kind": "opening",
+          "choiceId": null,
+          "action": null,
+          "elapsedDays": 0,
+          "itemChanges": {},
+          "relationChanges": {},
+          "random": {
+            "before": 1334289198,
+            "after": 1334289198,
+            "roll": null
+          },
+          "before": {
+            "ageDays": 5760,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "after": {
+            "ageDays": 5760,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "death": null,
+          "birth": {
+            "originId": "village",
+            "talentIds": [
+              "sword-bone",
+              "flash-wisdom"
+            ],
+            "attributes": {
+              "constitution": 4,
+              "insight": 2,
+              "fortune": 6
+            }
+          }
+        },
+        "currentScene": null,
+        "lastReceipt": null,
+        "relatedEntities": [],
+        "archiveCursor": 0
+      },
+      "posts": 1,
+      "latency": {
+        "usable": false,
+        "errorCode": "SESSION_UNAVAILABLE",
+        "firstAnyPreviewMs": null,
+        "firstReadableMs": null,
+        "completionMs": 2493,
+        "narrativeChars": 0,
+        "maxPreviewGapMs": 0,
+        "readingFinishEstimateMs": null,
+        "readingStallEstimateMs": null,
+        "optionsWaitEstimateMs": null,
+        "prefetchWorthEvaluating": null,
+        "assumptions": {
+          "readingCharsPerSecond": 6,
+          "readableChars": 20,
+          "targetWaitMs": 2000
+        }
+      }
+    }
+  ],
+  "errors": [
+    "Native turn did not pass"
+  ],
+  "posts": 1,
+  "refreshed": null
+}

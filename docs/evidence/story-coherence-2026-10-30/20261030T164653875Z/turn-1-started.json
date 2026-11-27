@@ -1,0 +1,1 @@
+{"at":"2026-10-30T16:51:07.675Z","decision":{"index":0,"reason":"正文老赵被黑铁矿石难住；先问矿石来源与具体困难，另外有明确拒绝出口。援助选项明示消耗行粮，仅按援助规则解释，不视为保证修好矿石。","selected":{"id":"r:d9da341062cbd87f:t1:c:a","label":"询问老赵：询问老赵这矿石的来源和具体困难","intent":"interact","targetId":"r:d9da341062cbd87f:t1:e:person_1","stake":"low","approach":"ask"}}}

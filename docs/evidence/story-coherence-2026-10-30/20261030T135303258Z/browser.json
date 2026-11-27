@@ -1,0 +1,1936 @@
+{
+  "sourceCommit": "ab14d4ef9948e24be590685e9d6c34a41c1e5872",
+  "version": "58eed43b-9c48-4e68-8962-7a076838a9a5",
+  "recordedAt": "2026-10-30T14:04:49.783Z",
+  "continuedFrom": null,
+  "records": [
+    {
+      "caseId": "opening",
+      "start": 917.5,
+      "timeline": [
+        {
+          "atMs": 4738,
+          "chars": 1
+        },
+        {
+          "atMs": 4814,
+          "chars": 6
+        },
+        {
+          "atMs": 4906,
+          "chars": 8
+        },
+        {
+          "atMs": 4954,
+          "chars": 13
+        },
+        {
+          "atMs": 5045,
+          "chars": 17
+        },
+        {
+          "atMs": 5246,
+          "chars": 21
+        },
+        {
+          "atMs": 5323,
+          "chars": 23
+        },
+        {
+          "atMs": 5385,
+          "chars": 28
+        },
+        {
+          "atMs": 5463,
+          "chars": 31
+        },
+        {
+          "atMs": 5525,
+          "chars": 34
+        },
+        {
+          "atMs": 5587,
+          "chars": 36
+        },
+        {
+          "atMs": 5635,
+          "chars": 41
+        },
+        {
+          "atMs": 5727,
+          "chars": 46
+        },
+        {
+          "atMs": 5788,
+          "chars": 48
+        },
+        {
+          "atMs": 5850,
+          "chars": 52
+        },
+        {
+          "atMs": 5895,
+          "chars": 55
+        },
+        {
+          "atMs": 5972,
+          "chars": 57
+        },
+        {
+          "atMs": 6047,
+          "chars": 61
+        },
+        {
+          "atMs": 6110,
+          "chars": 63
+        },
+        {
+          "atMs": 6170,
+          "chars": 67
+        },
+        {
+          "atMs": 6279,
+          "chars": 70
+        },
+        {
+          "atMs": 6354,
+          "chars": 74
+        },
+        {
+          "atMs": 6413,
+          "chars": 78
+        },
+        {
+          "atMs": 6488,
+          "chars": 81
+        },
+        {
+          "atMs": 6550,
+          "chars": 86
+        },
+        {
+          "atMs": 6624,
+          "chars": 90
+        },
+        {
+          "atMs": 6699,
+          "chars": 97
+        },
+        {
+          "atMs": 6902,
+          "chars": 101
+        },
+        {
+          "atMs": 7254,
+          "chars": 109
+        },
+        {
+          "atMs": 7331,
+          "chars": 114
+        },
+        {
+          "atMs": 7376,
+          "chars": 119
+        },
+        {
+          "atMs": 7439,
+          "chars": 125
+        },
+        {
+          "atMs": 7516,
+          "chars": 128
+        },
+        {
+          "atMs": 7562,
+          "chars": 131
+        },
+        {
+          "atMs": 7624,
+          "chars": 134
+        },
+        {
+          "atMs": 7684,
+          "chars": 136
+        },
+        {
+          "atMs": 7763,
+          "chars": 138
+        },
+        {
+          "atMs": 7813,
+          "chars": 142
+        },
+        {
+          "atMs": 7874,
+          "chars": 145
+        },
+        {
+          "atMs": 7935,
+          "chars": 149
+        },
+        {
+          "atMs": 8011,
+          "chars": 152
+        },
+        {
+          "atMs": 8088,
+          "chars": 155
+        },
+        {
+          "atMs": 8161,
+          "chars": 160
+        },
+        {
+          "atMs": 8227,
+          "chars": 163
+        },
+        {
+          "atMs": 8287,
+          "chars": 166
+        },
+        {
+          "atMs": 8333,
+          "chars": 169
+        },
+        {
+          "atMs": 8379,
+          "chars": 172
+        },
+        {
+          "atMs": 8454,
+          "chars": 174
+        },
+        {
+          "atMs": 8512,
+          "chars": 178
+        },
+        {
+          "atMs": 8558,
+          "chars": 181
+        },
+        {
+          "atMs": 8608,
+          "chars": 185
+        },
+        {
+          "atMs": 8684,
+          "chars": 189
+        },
+        {
+          "atMs": 8760,
+          "chars": 191
+        }
+      ],
+      "choicesEnabledDuringPreview": false,
+      "lastText": "你站在自家的土坯房前，手里攥着一把刚磨好的猎刀。村口的老猎户陈叔正蹲在泥地里，眉头紧锁，手里摆弄着一只被猎夹夹断腿的野猪崽。那小东西哼哼唧唧，血顺着断骨往外渗，陈叔叹了口气，似乎在犹豫要不要给它个痛快。\n\n陈叔抬起头，看见你站在门口，粗糙的手抖了一下，没敢看你，只是低声嘟囔道：“这畜生也是命苦，夹子太紧，骨头都碎了，怕是活不成了。云归，你懂点医理，给这小东西放个血，省得它受罪。”",
+      "doneMs": 14771,
+      "result": {
+        "protocolVersion": 1,
+        "status": "ready",
+        "requestId": "c4a31a3d-65dd-4c12-b138-2182e3806a20",
+        "attemptId": "613af07f-a241-45aa-a4d7-dff74e001721",
+        "sessionRef": "sess_629465788e477be899446f8f76e45433",
+        "errorCode": null,
+        "retry": null,
+        "scene": {
+          "id": "r:17f8f2b8cadbac0b:t1:s:scene",
+          "title": "断腿野猪",
+          "location": "village",
+          "entities": [
+            {
+              "id": "r:17f8f2b8cadbac0b:t1:e:person_1",
+              "name": "陈叔",
+              "status": "alive",
+              "kind": "person"
+            },
+            {
+              "id": "r:17f8f2b8cadbac0b:t1:e:place_1",
+              "name": "土坯房前",
+              "kind": "place"
+            }
+          ],
+          "blocks": [
+            {
+              "kind": "narration",
+              "text": "你站在自家的土坯房前，手里攥着一把刚磨好的猎刀。村口的老猎户陈叔正蹲在泥地里，眉头紧锁，手里摆弄着一只被猎夹夹断腿的野猪崽。那小东西哼哼唧唧，血顺着断骨往外渗，陈叔叹了口气，似乎在犹豫要不要给它个痛快。"
+            },
+            {
+              "kind": "narration",
+              "text": "陈叔抬起头，看见你站在门口，粗糙的手抖了一下，没敢看你，只是低声嘟囔道：“这畜生也是命苦，夹子太紧，骨头都碎了，怕是活不成了。云归，你懂点医理，给这小东西放个血，省得它受罪。”"
+            }
+          ],
+          "choices": [
+            {
+              "id": "r:17f8f2b8cadbac0b:t1:c:a",
+              "label": "询问陈叔：询问陈叔这猎夹是何时布下的，以及附近是否还有其他野兽出没",
+              "intent": "interact",
+              "targetId": "r:17f8f2b8cadbac0b:t1:e:person_1",
+              "stake": "low",
+              "approach": "ask"
+            },
+            {
+              "id": "r:17f8f2b8cadbac0b:t1:c:b",
+              "label": "援助陈叔：拿出1行粮喂食野猪崽，希望能缓解它的痛苦",
+              "intent": "interact",
+              "targetId": "r:17f8f2b8cadbac0b:t1:e:person_1",
+              "stake": "low",
+              "approach": "help"
+            },
+            {
+              "id": "r:17f8f2b8cadbac0b:t1:c:c",
+              "label": "婉拒陈叔：拒绝陈叔的请求，表示自己不想沾染血腥",
+              "intent": "interact",
+              "targetId": "r:17f8f2b8cadbac0b:t1:e:person_1",
+              "stake": "low",
+              "approach": "decline"
+            }
+          ],
+          "memoryDeltas": [
+            {
+              "entityId": "r:17f8f2b8cadbac0b:t1:e:person_1",
+              "kind": "clue",
+              "text": "你站在自家的土坯房前，手里攥着一把刚磨好的猎刀。村口的老猎户陈叔正蹲在泥地里，眉头紧锁，手里摆弄着一只被猎夹夹断腿的野猪崽。那小东西哼哼唧唧，血顺着断骨往外渗，陈叔叹了口气，似乎在犹豫要不要给它个痛快。",
+              "status": "open"
+            },
+            {
+              "entityId": "r:17f8f2b8cadbac0b:t1:e:person_1",
+              "kind": "clue",
+              "text": "陈叔抬起头，看见你站在门口，粗糙的手抖了一下，没敢看你，只是低声嘟囔道：“这畜生也是命苦，夹子太紧，骨头都碎了，怕是活不成了。云归，你懂点医理，给这小东西放个血，省得它受罪。”",
+              "status": "open"
+            }
+          ]
+        }
+      },
+      "request": {
+        "context": {
+          "schemaVersion": 1,
+          "phase": "opening",
+          "identity": {
+            "runId": "ca487f3c-d6be-457a-9d75-5e19650d534b",
+            "turnId": 1,
+            "baseRevision": 0,
+            "stateHash": "d87d7760cda0724f809e5d903c5844f82c7c5d0d5a88841930742f01356bb203",
+            "choiceId": null,
+            "rulesVersion": 1,
+            "promptVersion": 1,
+            "requestId": "c4a31a3d-65dd-4c12-b138-2182e3806a20"
+          },
+          "namespace": "r:17f8f2b8cadbac0b",
+          "receipt": {
+            "kind": "opening",
+            "choiceId": null,
+            "action": null,
+            "elapsedDays": 0,
+            "itemChanges": {},
+            "relationChanges": {},
+            "random": {
+              "before": 3894245040,
+              "after": 3894245040,
+              "roll": null
+            },
+            "before": {
+              "ageDays": 5760,
+              "realm": "mortal",
+              "cultivation": 0,
+              "injury": 0
+            },
+            "after": {
+              "ageDays": 5760,
+              "realm": "mortal",
+              "cultivation": 0,
+              "injury": 0
+            },
+            "death": null,
+            "birth": {
+              "originId": "village",
+              "talentIds": [
+                "sensitive-breath",
+                "keen-memory"
+              ],
+              "attributes": {
+                "constitution": 4,
+                "insight": 3,
+                "fortune": 5
+              }
+            }
+          },
+          "life": {
+            "name": "云归",
+            "ageDays": 5760,
+            "lifeLimit": 80,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0,
+            "items": {
+              "supplies": 3,
+              "stones": 0
+            },
+            "relations": {},
+            "birth": {
+              "originId": "village",
+              "talentIds": [
+                "sensitive-breath",
+                "keen-memory"
+              ],
+              "attributes": {
+                "constitution": 4,
+                "insight": 3,
+                "fortune": 5
+              }
+            }
+          },
+          "entities": [],
+          "memory": {
+            "facts": [],
+            "promises": [],
+            "clues": [],
+            "recent": [],
+            "summaries": []
+          },
+          "references": [],
+          "previousScene": null,
+          "relationshipVersion": 1,
+          "relationships": {},
+          "coverage": {
+            "policy": "relevance-v1",
+            "openTotal": 0,
+            "openIncluded": 0,
+            "openOmitted": 0
+          }
+        },
+        "attempt": {
+          "id": "613af07f-a241-45aa-a4d7-dff74e001721",
+          "sessionRef": "sess_629465788e477be899446f8f76e45433",
+          "retryOf": null
+        },
+        "storyActions": true
+      },
+      "decision": null,
+      "choices": [
+        {
+          "id": "r:17f8f2b8cadbac0b:t1:c:a",
+          "enabled": true,
+          "label": "询问陈叔：询问陈叔这猎夹是何时布下的，以及附近是否还有其他野兽出没",
+          "cost": "0日"
+        },
+        {
+          "id": "r:17f8f2b8cadbac0b:t1:c:b",
+          "enabled": true,
+          "label": "援助陈叔：拿出1行粮喂食野猪崽，希望能缓解它的痛苦",
+          "cost": "1日 · 行粮 1"
+        },
+        {
+          "id": "r:17f8f2b8cadbac0b:t1:c:c",
+          "enabled": true,
+          "label": "婉拒陈叔：拒绝陈叔的请求，表示自己不想沾染血腥",
+          "cost": "0日"
+        }
+      ],
+      "traces": [
+        {
+          "model": "@cf/zai-org/glm-4.7-flash",
+          "inputHash": "de1a16c7650b794f1b7fb7f061c264fae0a8d79c4f52695019873a5011569a99",
+          "inputBytes": 16103,
+          "startedAt": 1793368529438,
+          "bindingReturnedAt": 1793368529892,
+          "liveRawBytes": 156623,
+          "captureComplete": true,
+          "response": {
+            "model": "@cf/zai-org/glm-4.7-flash",
+            "choices": [
+              {
+                "finish_reason": "stop",
+                "message": {
+                  "content": "{\n  \"blocks\": [\n    {\n      \"kind\": \"narration\",\n      \"text\": \"你站在自家的土坯房前，手里攥着一把刚磨好的猎刀。村口的老猎户陈叔正蹲在泥地里，眉头紧锁，手里摆弄着一只被猎夹夹断腿的野猪崽。那小东西哼哼唧唧，血顺着断骨往外渗，陈叔叹了口气，似乎在犹豫要不要给它个痛快。\"\n    },\n    {\n      \"kind\": \"narration\",\n      \"text\": \"陈叔抬起头，看见你站在门口，粗糙的手抖了一下，没敢看你，只是低声嘟囔道：“这畜生也是命苦，夹子太紧，骨头都碎了，怕是活不成了。云归，你懂点医理，给这小东西放个血，省得它受罪。”\"\n    }\n  ],\n  \"choices\": [\n    {\n      \"action\": \"interact:ask\",\n      \"targetId\": \"p1\",\n      \"stake\": \"low\",\n      \"purpose\": \"询问陈叔这猎夹是何时布下的，以及附近是否还有其他野兽出没\",\n      \"anchor\": 0\n    },\n    {\n      \"action\": \"interact:help\",\n      \"targetId\": \"p1\",\n      \"stake\": \"low\",\n      \"purpose\": \"拿出1行粮喂食野猪崽，希望能缓解它的痛苦\",\n      \"anchor\": 0\n    },\n    {\n      \"action\": \"interact:decline\",\n      \"targetId\": \"p1\",\n      \"stake\": \"low\",\n      \"purpose\": \"拒绝陈叔的请求，表示自己不想沾染血腥\",\n      \"anchor\": 0\n    }\n  ],\n  \"title\": \"断腿野猪\",\n  \"location\": \"village\",\n  \"otherPeople\": [\n    {\n      \"id\": \"p1\",\n      \"name\": \"陈叔\",\n      \"status\": \"alive\"\n    }\n  ],\n  \"places\": [\n    {\n      \"id\": \"l1\",\n      \"name\": \"土坯房前\"\n    }\n  ],\n  \"factions\": [],\n  \"memoryDeltas\": [\n    {\n      \"entityId\": \"p1\",\n      \"kind\": \"clue\",\n      \"anchor\": 0,\n      \"status\": \"open\"\n    },\n    {\n      \"entityId\": \"p1\",\n      \"kind\": \"clue\",\n      \"anchor\": 1,\n      \"status\": \"open\"\n    }\n  ]\n}",
+                  "reasoning_content": ""
+                }
+              }
+            ],
+            "usage": {
+              "prompt_tokens": 1941,
+              "completion_tokens": 556,
+              "total_tokens": 2497,
+              "prompt_tokens_details": {
+                "cached_tokens": 0
+              },
+              "neurons": 30.91390000000024
+            }
+          },
+          "rawSseBytes": 156623
+        }
+      ],
+      "revision": 1,
+      "pending": false,
+      "state": {
+        "relationshipVersion": 1,
+        "version": 5,
+        "mode": "cultivation",
+        "contentVersion": 4,
+        "rulesVersion": 1,
+        "promptVersion": 1,
+        "runId": "ca487f3c-d6be-457a-9d75-5e19650d534b",
+        "revision": 1,
+        "turnId": 1,
+        "phase": "active",
+        "rng": 3894245040,
+        "life": {
+          "name": "云归",
+          "ageDays": 5760,
+          "lifeLimit": 80,
+          "realm": "mortal",
+          "cultivation": 0,
+          "injury": 0,
+          "items": {
+            "supplies": 3,
+            "stones": 0
+          },
+          "relations": {},
+          "birth": {
+            "originId": "village",
+            "talentIds": [
+              "sensitive-breath",
+              "keen-memory"
+            ],
+            "attributes": {
+              "constitution": 4,
+              "insight": 3,
+              "fortune": 5
+            }
+          }
+        },
+        "birthReceipt": {
+          "kind": "opening",
+          "choiceId": null,
+          "action": null,
+          "elapsedDays": 0,
+          "itemChanges": {},
+          "relationChanges": {},
+          "random": {
+            "before": 3894245040,
+            "after": 3894245040,
+            "roll": null
+          },
+          "before": {
+            "ageDays": 5760,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "after": {
+            "ageDays": 5760,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "death": null,
+          "birth": {
+            "originId": "village",
+            "talentIds": [
+              "sensitive-breath",
+              "keen-memory"
+            ],
+            "attributes": {
+              "constitution": 4,
+              "insight": 3,
+              "fortune": 5
+            }
+          }
+        },
+        "currentScene": {
+          "id": "r:17f8f2b8cadbac0b:t1:s:scene",
+          "title": "断腿野猪",
+          "location": "village",
+          "entities": [
+            {
+              "id": "r:17f8f2b8cadbac0b:t1:e:person_1",
+              "name": "陈叔",
+              "status": "alive",
+              "kind": "person"
+            },
+            {
+              "id": "r:17f8f2b8cadbac0b:t1:e:place_1",
+              "name": "土坯房前",
+              "kind": "place"
+            }
+          ],
+          "blocks": [
+            {
+              "kind": "narration",
+              "text": "你站在自家的土坯房前，手里攥着一把刚磨好的猎刀。村口的老猎户陈叔正蹲在泥地里，眉头紧锁，手里摆弄着一只被猎夹夹断腿的野猪崽。那小东西哼哼唧唧，血顺着断骨往外渗，陈叔叹了口气，似乎在犹豫要不要给它个痛快。"
+            },
+            {
+              "kind": "narration",
+              "text": "陈叔抬起头，看见你站在门口，粗糙的手抖了一下，没敢看你，只是低声嘟囔道：“这畜生也是命苦，夹子太紧，骨头都碎了，怕是活不成了。云归，你懂点医理，给这小东西放个血，省得它受罪。”"
+            }
+          ],
+          "choices": [
+            {
+              "id": "r:17f8f2b8cadbac0b:t1:c:a",
+              "label": "询问陈叔：询问陈叔这猎夹是何时布下的，以及附近是否还有其他野兽出没",
+              "intent": "interact",
+              "targetId": "r:17f8f2b8cadbac0b:t1:e:person_1",
+              "stake": "low",
+              "approach": "ask"
+            },
+            {
+              "id": "r:17f8f2b8cadbac0b:t1:c:b",
+              "label": "援助陈叔：拿出1行粮喂食野猪崽，希望能缓解它的痛苦",
+              "intent": "interact",
+              "targetId": "r:17f8f2b8cadbac0b:t1:e:person_1",
+              "stake": "low",
+              "approach": "help"
+            },
+            {
+              "id": "r:17f8f2b8cadbac0b:t1:c:c",
+              "label": "婉拒陈叔：拒绝陈叔的请求，表示自己不想沾染血腥",
+              "intent": "interact",
+              "targetId": "r:17f8f2b8cadbac0b:t1:e:person_1",
+              "stake": "low",
+              "approach": "decline"
+            }
+          ],
+          "memoryDeltas": [
+            {
+              "entityId": "r:17f8f2b8cadbac0b:t1:e:person_1",
+              "kind": "clue",
+              "text": "你站在自家的土坯房前，手里攥着一把刚磨好的猎刀。村口的老猎户陈叔正蹲在泥地里，眉头紧锁，手里摆弄着一只被猎夹夹断腿的野猪崽。那小东西哼哼唧唧，血顺着断骨往外渗，陈叔叹了口气，似乎在犹豫要不要给它个痛快。",
+              "status": "open"
+            },
+            {
+              "entityId": "r:17f8f2b8cadbac0b:t1:e:person_1",
+              "kind": "clue",
+              "text": "陈叔抬起头，看见你站在门口，粗糙的手抖了一下，没敢看你，只是低声嘟囔道：“这畜生也是命苦，夹子太紧，骨头都碎了，怕是活不成了。云归，你懂点医理，给这小东西放个血，省得它受罪。”",
+              "status": "open"
+            }
+          ]
+        },
+        "lastReceipt": {
+          "kind": "opening",
+          "choiceId": null,
+          "action": null,
+          "elapsedDays": 0,
+          "itemChanges": {},
+          "relationChanges": {},
+          "random": {
+            "before": 3894245040,
+            "after": 3894245040,
+            "roll": null
+          },
+          "before": {
+            "ageDays": 5760,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "after": {
+            "ageDays": 5760,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "death": null,
+          "birth": {
+            "originId": "village",
+            "talentIds": [
+              "sensitive-breath",
+              "keen-memory"
+            ],
+            "attributes": {
+              "constitution": 4,
+              "insight": 3,
+              "fortune": 5
+            }
+          }
+        },
+        "relatedEntities": [
+          {
+            "id": "r:17f8f2b8cadbac0b:t1:e:person_1",
+            "name": "陈叔",
+            "status": "alive",
+            "kind": "person"
+          },
+          {
+            "id": "r:17f8f2b8cadbac0b:t1:e:place_1",
+            "name": "土坯房前",
+            "kind": "place"
+          }
+        ],
+        "archiveCursor": 0
+      },
+      "posts": 1,
+      "latency": {
+        "usable": true,
+        "errorCode": null,
+        "firstAnyPreviewMs": 4738,
+        "firstReadableMs": 5246,
+        "completionMs": 14771,
+        "narrativeChars": 191,
+        "maxPreviewGapMs": 352,
+        "readingFinishEstimateMs": 37079,
+        "readingStallEstimateMs": 0,
+        "optionsWaitEstimateMs": 0,
+        "prefetchWorthEvaluating": true,
+        "assumptions": {
+          "readingCharsPerSecond": 6,
+          "readableChars": 20,
+          "targetWaitMs": 2000
+        }
+      }
+    },
+    {
+      "caseId": "choice-1",
+      "start": 103863.70000000298,
+      "timeline": [
+        {
+          "atMs": 4602,
+          "chars": 2
+        },
+        {
+          "atMs": 4679,
+          "chars": 6
+        },
+        {
+          "atMs": 4743,
+          "chars": 10
+        },
+        {
+          "atMs": 4806,
+          "chars": 15
+        },
+        {
+          "atMs": 4850,
+          "chars": 18
+        },
+        {
+          "atMs": 4914,
+          "chars": 20
+        },
+        {
+          "atMs": 4961,
+          "chars": 23
+        },
+        {
+          "atMs": 5026,
+          "chars": 29
+        },
+        {
+          "atMs": 5104,
+          "chars": 31
+        },
+        {
+          "atMs": 5153,
+          "chars": 34
+        },
+        {
+          "atMs": 5215,
+          "chars": 37
+        },
+        {
+          "atMs": 5263,
+          "chars": 41
+        },
+        {
+          "atMs": 5311,
+          "chars": 43
+        },
+        {
+          "atMs": 5371,
+          "chars": 48
+        },
+        {
+          "atMs": 5432,
+          "chars": 51
+        },
+        {
+          "atMs": 5510,
+          "chars": 54
+        },
+        {
+          "atMs": 5557,
+          "chars": 57
+        },
+        {
+          "atMs": 5615,
+          "chars": 60
+        },
+        {
+          "atMs": 5675,
+          "chars": 63
+        },
+        {
+          "atMs": 5716,
+          "chars": 66
+        },
+        {
+          "atMs": 5777,
+          "chars": 68
+        },
+        {
+          "atMs": 5826,
+          "chars": 74
+        },
+        {
+          "atMs": 5917,
+          "chars": 77
+        },
+        {
+          "atMs": 5966,
+          "chars": 80
+        },
+        {
+          "atMs": 6016,
+          "chars": 82
+        },
+        {
+          "atMs": 6082,
+          "chars": 87
+        },
+        {
+          "atMs": 6159,
+          "chars": 92
+        },
+        {
+          "atMs": 6203,
+          "chars": 93
+        },
+        {
+          "atMs": 6265,
+          "chars": 98
+        },
+        {
+          "atMs": 6343,
+          "chars": 102
+        },
+        {
+          "atMs": 6401,
+          "chars": 104
+        },
+        {
+          "atMs": 6449,
+          "chars": 108
+        },
+        {
+          "atMs": 6510,
+          "chars": 111
+        },
+        {
+          "atMs": 6554,
+          "chars": 114
+        },
+        {
+          "atMs": 6619,
+          "chars": 117
+        },
+        {
+          "atMs": 6663,
+          "chars": 119
+        },
+        {
+          "atMs": 6726,
+          "chars": 122
+        }
+      ],
+      "choicesEnabledDuringPreview": false,
+      "lastText": "陈叔直起身子，拍了拍手上的泥，指着那生锈的铁夹子说道：“今儿个一早刚布下的，这地方偏僻，平时也就几只野猪敢来。刚才动静大，我寻思着是只成年的，没想到夹到了这还没长开的小崽子。这附近除了野猪，林子里还有几只黄皮子，不过它们胆子小，一般不往这跑。”",
+      "doneMs": 12738,
+      "result": {
+        "protocolVersion": 1,
+        "status": "ready",
+        "requestId": "2cc06904-5811-4212-aa4b-a0901582a608",
+        "attemptId": "ca2c7488-62f2-4224-999c-058d2506ac03",
+        "sessionRef": "sess_629465788e477be899446f8f76e45433",
+        "errorCode": null,
+        "retry": null,
+        "scene": {
+          "id": "r:17f8f2b8cadbac0b:t2:s:scene",
+          "title": "土坯房前",
+          "location": "village",
+          "entities": [
+            {
+              "id": "r:17f8f2b8cadbac0b:t1:e:person_1",
+              "name": "陈叔",
+              "kind": "person",
+              "status": "alive"
+            },
+            {
+              "id": "r:17f8f2b8cadbac0b:t1:e:place_1",
+              "name": "土坯房前",
+              "kind": "place"
+            }
+          ],
+          "blocks": [
+            {
+              "kind": "dialogue",
+              "text": "陈叔直起身子，拍了拍手上的泥，指着那生锈的铁夹子说道：“今儿个一早刚布下的，这地方偏僻，平时也就几只野猪敢来。刚才动静大，我寻思着是只成年的，没想到夹到了这还没长开的小崽子。这附近除了野猪，林子里还有几只黄皮子，不过它们胆子小，一般不往这跑。”",
+              "speaker": "r:17f8f2b8cadbac0b:t1:e:person_1"
+            }
+          ],
+          "choices": [
+            {
+              "id": "r:17f8f2b8cadbac0b:t2:c:a",
+              "label": "询问陈叔：询问陈叔是否需要帮忙处理这只受伤的野猪崽",
+              "intent": "interact",
+              "targetId": "r:17f8f2b8cadbac0b:t1:e:person_1",
+              "stake": "low",
+              "approach": "ask"
+            },
+            {
+              "id": "r:17f8f2b8cadbac0b:t2:c:b",
+              "label": "婉拒陈叔：拒绝陈叔的请求，转身离开",
+              "intent": "interact",
+              "targetId": "r:17f8f2b8cadbac0b:t1:e:person_1",
+              "stake": "low",
+              "approach": "decline"
+            },
+            {
+              "id": "r:17f8f2b8cadbac0b:t2:c:c",
+              "label": "结束与陈叔的互动：结束与陈叔的对话",
+              "intent": "interact",
+              "targetId": "r:17f8f2b8cadbac0b:t1:e:person_1",
+              "stake": "low",
+              "approach": "leave"
+            }
+          ],
+          "memoryDeltas": [
+            {
+              "entityId": "r:17f8f2b8cadbac0b:t1:e:person_1",
+              "kind": "clue",
+              "text": "陈叔直起身子，拍了拍手上的泥，指着那生锈的铁夹子说道：“今儿个一早刚布下的，这地方偏僻，平时也就几只野猪敢来。刚才动静大，我寻思着是只成年的，没想到夹到了这还没长开的小崽子。这附近除了野猪，林子里还有几只黄皮子，不过它们胆子小，一般不往这跑。”",
+              "status": "open"
+            }
+          ]
+        }
+      },
+      "request": {
+        "context": {
+          "schemaVersion": 1,
+          "phase": "choice",
+          "identity": {
+            "runId": "ca487f3c-d6be-457a-9d75-5e19650d534b",
+            "turnId": 2,
+            "baseRevision": 1,
+            "stateHash": "52fde456efb398aca8e51fa302e3920648b65c8c4c1c8bfe5261f2dbe59ed24f",
+            "choiceId": "r:17f8f2b8cadbac0b:t1:c:a",
+            "rulesVersion": 1,
+            "promptVersion": 1,
+            "requestId": "2cc06904-5811-4212-aa4b-a0901582a608"
+          },
+          "namespace": "r:17f8f2b8cadbac0b",
+          "receipt": {
+            "kind": "choice",
+            "choiceId": "r:17f8f2b8cadbac0b:t1:c:a",
+            "action": {
+              "id": "r:17f8f2b8cadbac0b:t1:c:a",
+              "label": "询问陈叔：询问陈叔这猎夹是何时布下的，以及附近是否还有其他野兽出没",
+              "intent": "interact",
+              "targetId": "r:17f8f2b8cadbac0b:t1:e:person_1",
+              "stake": "low",
+              "approach": "ask"
+            },
+            "elapsedDays": 0,
+            "itemChanges": {},
+            "relationChanges": {},
+            "random": {
+              "before": 3894245040,
+              "after": 1516771919,
+              "roll": 19
+            },
+            "before": {
+              "ageDays": 5760,
+              "realm": "mortal",
+              "cultivation": 0,
+              "injury": 0
+            },
+            "after": {
+              "ageDays": 5760,
+              "realm": "mortal",
+              "cultivation": 0,
+              "injury": 0
+            },
+            "death": null,
+            "birth": null
+          },
+          "life": {
+            "name": "云归",
+            "ageDays": 5760,
+            "lifeLimit": 80,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0,
+            "items": {
+              "supplies": 3,
+              "stones": 0
+            },
+            "relations": {},
+            "birth": {
+              "originId": "village",
+              "talentIds": [
+                "sensitive-breath",
+                "keen-memory"
+              ],
+              "attributes": {
+                "constitution": 4,
+                "insight": 3,
+                "fortune": 5
+              }
+            }
+          },
+          "entities": [
+            {
+              "id": "r:17f8f2b8cadbac0b:t1:e:person_1",
+              "name": "陈叔",
+              "kind": "person",
+              "status": "alive"
+            },
+            {
+              "id": "r:17f8f2b8cadbac0b:t1:e:place_1",
+              "name": "土坯房前",
+              "kind": "place",
+              "status": "unknown"
+            }
+          ],
+          "memory": {
+            "facts": [],
+            "promises": [],
+            "clues": [
+              {
+                "id": "m:3bb228dab3d3777b4fd2fbe4fb380f0e",
+                "source": "narrative",
+                "kind": "clue",
+                "entityId": "r:17f8f2b8cadbac0b:t1:e:person_1",
+                "text": "陈叔抬起头，看见你站在门口，粗糙的手抖了一下，没敢看你，只是低声嘟囔道：“这畜生也是命苦，夹子太紧，骨头都碎了，怕是活不成了。云归，你懂点医理，给这小东西放个血，省得它受罪。”",
+                "status": "open",
+                "runId": "ca487f3c-d6be-457a-9d75-5e19650d534b",
+                "turnId": 1
+              },
+              {
+                "id": "m:e3ca44f8e86a428cd24ab5bec39ea5e4",
+                "source": "narrative",
+                "kind": "clue",
+                "entityId": "r:17f8f2b8cadbac0b:t1:e:person_1",
+                "text": "你站在自家的土坯房前，手里攥着一把刚磨好的猎刀。村口的老猎户陈叔正蹲在泥地里，眉头紧锁，手里摆弄着一只被猎夹夹断腿的野猪崽。那小东西哼哼唧唧，血顺着断骨往外渗，陈叔叹了口气，似乎在犹豫要不要给它个痛快。",
+                "status": "open",
+                "runId": "ca487f3c-d6be-457a-9d75-5e19650d534b",
+                "turnId": 1
+              }
+            ],
+            "recent": [
+              {
+                "id": "turn:1",
+                "runId": "ca487f3c-d6be-457a-9d75-5e19650d534b",
+                "turnId": 1,
+                "source": "narrative",
+                "kind": "turn",
+                "text": "地点：village\n你站在自家的土坯房前，手里攥着一把刚磨好的猎刀。村口的老猎户陈叔正蹲在泥地里，眉头紧锁，手里摆弄着一只被猎夹夹断腿的野猪崽。那小东西哼哼唧唧，血顺着断骨往外渗，陈叔叹了口气，似乎在犹豫要不要给它个痛快。\n陈叔抬起头，看见你站在门口，粗糙的手抖了一下，没敢看你，只是低声嘟囔道：“这畜生也是命苦，夹子太紧，骨头都碎了，怕是活不成了。云归，你懂点医理，给这小东西放个血，省得它受罪。”",
+                "entityIds": []
+              }
+            ],
+            "summaries": []
+          },
+          "references": [
+            "m:3bb228dab3d3777b4fd2fbe4fb380f0e",
+            "m:e3ca44f8e86a428cd24ab5bec39ea5e4",
+            "turn:1"
+          ],
+          "previousScene": {
+            "id": "r:17f8f2b8cadbac0b:t1:s:scene",
+            "blocksHash": "b77ecb15ef51d60387ffb39f1f823f6b726a6447edcdf8b56ae16b7b27cffcad"
+          },
+          "relationshipVersion": 1,
+          "relationships": {},
+          "coverage": {
+            "policy": "relevance-v1",
+            "openTotal": 2,
+            "openIncluded": 2,
+            "openOmitted": 0
+          }
+        },
+        "attempt": {
+          "id": "ca2c7488-62f2-4224-999c-058d2506ac03",
+          "sessionRef": "sess_629465788e477be899446f8f76e45433",
+          "retryOf": null
+        },
+        "storyActions": true
+      },
+      "decision": {
+        "index": 0,
+        "reason": "陈叔正在处理猎夹伤猪，追问布夹时间和附近野兽，直接回应当前事件；询问应0日、无物品或关系变化。",
+        "selected": {
+          "id": "r:17f8f2b8cadbac0b:t1:c:a",
+          "label": "询问陈叔：询问陈叔这猎夹是何时布下的，以及附近是否还有其他野兽出没",
+          "intent": "interact",
+          "targetId": "r:17f8f2b8cadbac0b:t1:e:person_1",
+          "stake": "low",
+          "approach": "ask"
+        }
+      },
+      "choices": [
+        {
+          "id": "r:17f8f2b8cadbac0b:t2:c:a",
+          "enabled": true,
+          "label": "询问陈叔：询问陈叔是否需要帮忙处理这只受伤的野猪崽",
+          "cost": "0日"
+        },
+        {
+          "id": "r:17f8f2b8cadbac0b:t2:c:b",
+          "enabled": true,
+          "label": "婉拒陈叔：拒绝陈叔的请求，转身离开",
+          "cost": "0日"
+        },
+        {
+          "id": "r:17f8f2b8cadbac0b:t2:c:c",
+          "enabled": true,
+          "label": "结束与陈叔的互动：结束与陈叔的对话",
+          "cost": "0日"
+        }
+      ],
+      "traces": [
+        {
+          "model": "@cf/zai-org/glm-4.7-flash",
+          "inputHash": "a88df431873eafe376eff75be766e2723408105ca590cfc88040b5586bda9925",
+          "inputBytes": 18368,
+          "startedAt": 1793368631926,
+          "bindingReturnedAt": 1793368632246,
+          "liveRawBytes": 122103,
+          "captureComplete": true,
+          "response": {
+            "model": "@cf/zai-org/glm-4.7-flash",
+            "choices": [
+              {
+                "finish_reason": "stop",
+                "message": {
+                  "content": "{\n  \"blocks\": [\n    {\n      \"kind\": \"dialogue\",\n      \"text\": \"陈叔直起身子，拍了拍手上的泥，指着那生锈的铁夹子说道：“今儿个一早刚布下的，这地方偏僻，平时也就几只野猪敢来。刚才动静大，我寻思着是只成年的，没想到夹到了这还没长开的小崽子。这附近除了野猪，林子里还有几只黄皮子，不过它们胆子小，一般不往这跑。”\",\n      \"speaker\": \"k1_person_陈叔\"\n    }\n  ],\n  \"choices\": [\n    {\n      \"action\": \"interact:ask\",\n      \"targetId\": \"k1_person_陈叔\",\n      \"stake\": \"low\",\n      \"purpose\": \"询问陈叔是否需要帮忙处理这只受伤的野猪崽\",\n      \"anchor\": 0\n    },\n    {\n      \"action\": \"interact:decline\",\n      \"targetId\": \"k1_person_陈叔\",\n      \"stake\": \"low\",\n      \"purpose\": \"拒绝陈叔的请求，转身离开\",\n      \"anchor\": 0\n    },\n    {\n      \"action\": \"interact:leave\",\n      \"targetId\": \"k1_person_陈叔\",\n      \"stake\": \"low\",\n      \"purpose\": \"结束与陈叔的对话\",\n      \"anchor\": 0\n    }\n  ],\n  \"title\": \"土坯房前\",\n  \"location\": \"village\",\n  \"otherPeople\": [\n    {\n      \"id\": \"k1_person_陈叔\",\n      \"status\": \"alive\"\n    }\n  ],\n  \"places\": [\n    {\n      \"id\": \"k2_place_土坯房前\"\n    }\n  ],\n  \"factions\": [],\n  \"memoryDeltas\": [\n    {\n      \"entityId\": \"k1_person_陈叔\",\n      \"kind\": \"clue\",\n      \"anchor\": 0,\n      \"status\": \"open\"\n    }\n  ]\n}",
+                  "reasoning_content": ""
+                }
+              }
+            ],
+            "usage": {
+              "prompt_tokens": 2654,
+              "completion_tokens": 442,
+              "total_tokens": 3096,
+              "prompt_tokens_details": {
+                "cached_tokens": 0
+              },
+              "neurons": 30.68580000000019
+            }
+          },
+          "rawSseBytes": 122103
+        }
+      ],
+      "revision": 2,
+      "pending": false,
+      "state": {
+        "relationshipVersion": 1,
+        "version": 5,
+        "mode": "cultivation",
+        "contentVersion": 4,
+        "rulesVersion": 1,
+        "promptVersion": 1,
+        "runId": "ca487f3c-d6be-457a-9d75-5e19650d534b",
+        "revision": 2,
+        "turnId": 2,
+        "phase": "active",
+        "rng": 1516771919,
+        "life": {
+          "name": "云归",
+          "ageDays": 5760,
+          "lifeLimit": 80,
+          "realm": "mortal",
+          "cultivation": 0,
+          "injury": 0,
+          "items": {
+            "supplies": 3,
+            "stones": 0
+          },
+          "relations": {},
+          "birth": {
+            "originId": "village",
+            "talentIds": [
+              "sensitive-breath",
+              "keen-memory"
+            ],
+            "attributes": {
+              "constitution": 4,
+              "insight": 3,
+              "fortune": 5
+            }
+          }
+        },
+        "birthReceipt": {
+          "kind": "opening",
+          "choiceId": null,
+          "action": null,
+          "elapsedDays": 0,
+          "itemChanges": {},
+          "relationChanges": {},
+          "random": {
+            "before": 3894245040,
+            "after": 3894245040,
+            "roll": null
+          },
+          "before": {
+            "ageDays": 5760,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "after": {
+            "ageDays": 5760,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "death": null,
+          "birth": {
+            "originId": "village",
+            "talentIds": [
+              "sensitive-breath",
+              "keen-memory"
+            ],
+            "attributes": {
+              "constitution": 4,
+              "insight": 3,
+              "fortune": 5
+            }
+          }
+        },
+        "currentScene": {
+          "id": "r:17f8f2b8cadbac0b:t2:s:scene",
+          "title": "土坯房前",
+          "location": "village",
+          "entities": [
+            {
+              "id": "r:17f8f2b8cadbac0b:t1:e:person_1",
+              "name": "陈叔",
+              "kind": "person",
+              "status": "alive"
+            },
+            {
+              "id": "r:17f8f2b8cadbac0b:t1:e:place_1",
+              "name": "土坯房前",
+              "kind": "place"
+            }
+          ],
+          "blocks": [
+            {
+              "kind": "dialogue",
+              "text": "陈叔直起身子，拍了拍手上的泥，指着那生锈的铁夹子说道：“今儿个一早刚布下的，这地方偏僻，平时也就几只野猪敢来。刚才动静大，我寻思着是只成年的，没想到夹到了这还没长开的小崽子。这附近除了野猪，林子里还有几只黄皮子，不过它们胆子小，一般不往这跑。”",
+              "speaker": "r:17f8f2b8cadbac0b:t1:e:person_1"
+            }
+          ],
+          "choices": [
+            {
+              "id": "r:17f8f2b8cadbac0b:t2:c:a",
+              "label": "询问陈叔：询问陈叔是否需要帮忙处理这只受伤的野猪崽",
+              "intent": "interact",
+              "targetId": "r:17f8f2b8cadbac0b:t1:e:person_1",
+              "stake": "low",
+              "approach": "ask"
+            },
+            {
+              "id": "r:17f8f2b8cadbac0b:t2:c:b",
+              "label": "婉拒陈叔：拒绝陈叔的请求，转身离开",
+              "intent": "interact",
+              "targetId": "r:17f8f2b8cadbac0b:t1:e:person_1",
+              "stake": "low",
+              "approach": "decline"
+            },
+            {
+              "id": "r:17f8f2b8cadbac0b:t2:c:c",
+              "label": "结束与陈叔的互动：结束与陈叔的对话",
+              "intent": "interact",
+              "targetId": "r:17f8f2b8cadbac0b:t1:e:person_1",
+              "stake": "low",
+              "approach": "leave"
+            }
+          ],
+          "memoryDeltas": [
+            {
+              "entityId": "r:17f8f2b8cadbac0b:t1:e:person_1",
+              "kind": "clue",
+              "text": "陈叔直起身子，拍了拍手上的泥，指着那生锈的铁夹子说道：“今儿个一早刚布下的，这地方偏僻，平时也就几只野猪敢来。刚才动静大，我寻思着是只成年的，没想到夹到了这还没长开的小崽子。这附近除了野猪，林子里还有几只黄皮子，不过它们胆子小，一般不往这跑。”",
+              "status": "open"
+            }
+          ]
+        },
+        "lastReceipt": {
+          "kind": "choice",
+          "choiceId": "r:17f8f2b8cadbac0b:t1:c:a",
+          "action": {
+            "id": "r:17f8f2b8cadbac0b:t1:c:a",
+            "label": "询问陈叔：询问陈叔这猎夹是何时布下的，以及附近是否还有其他野兽出没",
+            "intent": "interact",
+            "targetId": "r:17f8f2b8cadbac0b:t1:e:person_1",
+            "stake": "low",
+            "approach": "ask"
+          },
+          "elapsedDays": 0,
+          "itemChanges": {},
+          "relationChanges": {},
+          "random": {
+            "before": 3894245040,
+            "after": 1516771919,
+            "roll": 19
+          },
+          "before": {
+            "ageDays": 5760,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "after": {
+            "ageDays": 5760,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "death": null,
+          "birth": null
+        },
+        "relatedEntities": [
+          {
+            "id": "r:17f8f2b8cadbac0b:t1:e:person_1",
+            "name": "陈叔",
+            "kind": "person",
+            "status": "alive"
+          },
+          {
+            "id": "r:17f8f2b8cadbac0b:t1:e:place_1",
+            "name": "土坯房前",
+            "kind": "place"
+          }
+        ],
+        "archiveCursor": 0
+      },
+      "posts": 2,
+      "latency": {
+        "usable": true,
+        "errorCode": null,
+        "firstAnyPreviewMs": 4602,
+        "firstReadableMs": 4914,
+        "completionMs": 12738,
+        "narrativeChars": 122,
+        "maxPreviewGapMs": 91,
+        "readingFinishEstimateMs": 25247,
+        "readingStallEstimateMs": 0,
+        "optionsWaitEstimateMs": 0,
+        "prefetchWorthEvaluating": true,
+        "assumptions": {
+          "readingCharsPerSecond": 6,
+          "readableChars": 20,
+          "targetWaitMs": 2000
+        }
+      }
+    },
+    {
+      "caseId": "choice-2",
+      "start": 182761.30000000447,
+      "timeline": [
+        {
+          "atMs": 3613,
+          "chars": 2
+        },
+        {
+          "atMs": 3693,
+          "chars": 4
+        },
+        {
+          "atMs": 3741,
+          "chars": 8
+        },
+        {
+          "atMs": 3800,
+          "chars": 13
+        },
+        {
+          "atMs": 3846,
+          "chars": 16
+        },
+        {
+          "atMs": 3906,
+          "chars": 19
+        },
+        {
+          "atMs": 3952,
+          "chars": 24
+        },
+        {
+          "atMs": 4044,
+          "chars": 29
+        },
+        {
+          "atMs": 4106,
+          "chars": 31
+        },
+        {
+          "atMs": 4167,
+          "chars": 36
+        },
+        {
+          "atMs": 4211,
+          "chars": 38
+        },
+        {
+          "atMs": 4273,
+          "chars": 40
+        },
+        {
+          "atMs": 4319,
+          "chars": 43
+        },
+        {
+          "atMs": 4381,
+          "chars": 45
+        },
+        {
+          "atMs": 4428,
+          "chars": 49
+        },
+        {
+          "atMs": 4501,
+          "chars": 53
+        },
+        {
+          "atMs": 4580,
+          "chars": 56
+        },
+        {
+          "atMs": 4643,
+          "chars": 61
+        },
+        {
+          "atMs": 4701,
+          "chars": 64
+        }
+      ],
+      "choicesEnabledDuringPreview": false,
+      "lastText": "陈叔见你转身要走，急忙伸手想要拉住你的衣袖，声音里带着几分恳求：“云归，你手艺好，就当积个阴德，帮这小畜生放个血吧，它太疼了。”",
+      "doneMs": 10892,
+      "result": {
+        "protocolVersion": 1,
+        "status": "ready",
+        "requestId": "2614b1ba-5873-434e-85d8-49f5d65825b0",
+        "attemptId": "ffea9800-e375-4d3f-af61-26520e0c3722",
+        "sessionRef": "sess_629465788e477be899446f8f76e45433",
+        "errorCode": null,
+        "retry": null,
+        "scene": {
+          "id": "r:17f8f2b8cadbac0b:t3:s:scene",
+          "title": "土坯房前",
+          "location": "village",
+          "entities": [
+            {
+              "id": "r:17f8f2b8cadbac0b:t1:e:person_1",
+              "name": "陈叔",
+              "kind": "person",
+              "status": "alive"
+            },
+            {
+              "id": "r:17f8f2b8cadbac0b:t1:e:place_1",
+              "name": "土坯房前",
+              "kind": "place"
+            }
+          ],
+          "blocks": [
+            {
+              "kind": "dialogue",
+              "text": "陈叔见你转身要走，急忙伸手想要拉住你的衣袖，声音里带着几分恳求：“云归，你手艺好，就当积个阴德，帮这小畜生放个血吧，它太疼了。”",
+              "speaker": "self"
+            }
+          ],
+          "choices": [
+            {
+              "id": "r:17f8f2b8cadbac0b:t3:c:a",
+              "label": "询问陈叔：询问陈叔为何如此执着于放血，是否还有其他解决办法",
+              "intent": "interact",
+              "targetId": "r:17f8f2b8cadbac0b:t1:e:person_1",
+              "stake": "low",
+              "approach": "ask"
+            },
+            {
+              "id": "r:17f8f2b8cadbac0b:t3:c:b",
+              "label": "婉拒陈叔：婉拒陈叔的请求，转身离开",
+              "intent": "interact",
+              "targetId": "r:17f8f2b8cadbac0b:t1:e:person_1",
+              "stake": "low",
+              "approach": "decline"
+            },
+            {
+              "id": "r:17f8f2b8cadbac0b:t3:c:c",
+              "label": "结束与陈叔的互动：结束与陈叔的对话，不再理会野猪崽",
+              "intent": "interact",
+              "targetId": "r:17f8f2b8cadbac0b:t1:e:person_1",
+              "stake": "low",
+              "approach": "leave"
+            }
+          ],
+          "memoryDeltas": [
+            {
+              "entityId": "r:17f8f2b8cadbac0b:t1:e:person_1",
+              "kind": "clue",
+              "text": "陈叔见你转身要走，急忙伸手想要拉住你的衣袖，声音里带着几分恳求：“云归，你手艺好，就当积个阴德，帮这小畜生放个血吧，它太疼了。”",
+              "status": "open"
+            }
+          ]
+        }
+      },
+      "request": {
+        "context": {
+          "schemaVersion": 1,
+          "phase": "choice",
+          "identity": {
+            "runId": "ca487f3c-d6be-457a-9d75-5e19650d534b",
+            "turnId": 3,
+            "baseRevision": 2,
+            "stateHash": "e530850c392fbc3193bdce9450b61fc191024db1d103a09c7eeba1036a00bedd",
+            "choiceId": "r:17f8f2b8cadbac0b:t2:c:b",
+            "rulesVersion": 1,
+            "promptVersion": 1,
+            "requestId": "2614b1ba-5873-434e-85d8-49f5d65825b0"
+          },
+          "namespace": "r:17f8f2b8cadbac0b",
+          "receipt": {
+            "kind": "choice",
+            "choiceId": "r:17f8f2b8cadbac0b:t2:c:b",
+            "action": {
+              "id": "r:17f8f2b8cadbac0b:t2:c:b",
+              "label": "婉拒陈叔：拒绝陈叔的请求，转身离开",
+              "intent": "interact",
+              "targetId": "r:17f8f2b8cadbac0b:t1:e:person_1",
+              "stake": "low",
+              "approach": "decline"
+            },
+            "elapsedDays": 0,
+            "itemChanges": {},
+            "relationChanges": {},
+            "random": {
+              "before": 1516771919,
+              "after": 3756704610,
+              "roll": 10
+            },
+            "before": {
+              "ageDays": 5760,
+              "realm": "mortal",
+              "cultivation": 0,
+              "injury": 0
+            },
+            "after": {
+              "ageDays": 5760,
+              "realm": "mortal",
+              "cultivation": 0,
+              "injury": 0
+            },
+            "death": null,
+            "birth": null
+          },
+          "life": {
+            "name": "云归",
+            "ageDays": 5760,
+            "lifeLimit": 80,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0,
+            "items": {
+              "supplies": 3,
+              "stones": 0
+            },
+            "relations": {},
+            "birth": {
+              "originId": "village",
+              "talentIds": [
+                "sensitive-breath",
+                "keen-memory"
+              ],
+              "attributes": {
+                "constitution": 4,
+                "insight": 3,
+                "fortune": 5
+              }
+            }
+          },
+          "entities": [
+            {
+              "id": "r:17f8f2b8cadbac0b:t1:e:person_1",
+              "name": "陈叔",
+              "kind": "person",
+              "status": "alive"
+            },
+            {
+              "id": "r:17f8f2b8cadbac0b:t1:e:place_1",
+              "name": "土坯房前",
+              "kind": "place",
+              "status": "unknown"
+            }
+          ],
+          "memory": {
+            "facts": [
+              {
+                "id": "decision:2",
+                "runId": "ca487f3c-d6be-457a-9d75-5e19650d534b",
+                "turnId": 2,
+                "source": "rules",
+                "kind": "fact",
+                "entityId": "r:17f8f2b8cadbac0b:t1:e:person_1",
+                "text": "你在village选择了“询问陈叔：询问陈叔这猎夹是何时布下的，以及附近是否还有其他野兽出没”。"
+              }
+            ],
+            "promises": [],
+            "clues": [
+              {
+                "id": "m:372e13640e7eedc20fb00853eb01d713",
+                "source": "narrative",
+                "kind": "clue",
+                "entityId": "r:17f8f2b8cadbac0b:t1:e:person_1",
+                "text": "陈叔直起身子，拍了拍手上的泥，指着那生锈的铁夹子说道：“今儿个一早刚布下的，这地方偏僻，平时也就几只野猪敢来。刚才动静大，我寻思着是只成年的，没想到夹到了这还没长开的小崽子。这附近除了野猪，林子里还有几只黄皮子，不过它们胆子小，一般不往这跑。”",
+                "status": "open",
+                "runId": "ca487f3c-d6be-457a-9d75-5e19650d534b",
+                "turnId": 2
+              },
+              {
+                "id": "m:3bb228dab3d3777b4fd2fbe4fb380f0e",
+                "source": "narrative",
+                "kind": "clue",
+                "entityId": "r:17f8f2b8cadbac0b:t1:e:person_1",
+                "text": "陈叔抬起头，看见你站在门口，粗糙的手抖了一下，没敢看你，只是低声嘟囔道：“这畜生也是命苦，夹子太紧，骨头都碎了，怕是活不成了。云归，你懂点医理，给这小东西放个血，省得它受罪。”",
+                "status": "open",
+                "runId": "ca487f3c-d6be-457a-9d75-5e19650d534b",
+                "turnId": 1
+              },
+              {
+                "id": "m:e3ca44f8e86a428cd24ab5bec39ea5e4",
+                "source": "narrative",
+                "kind": "clue",
+                "entityId": "r:17f8f2b8cadbac0b:t1:e:person_1",
+                "text": "你站在自家的土坯房前，手里攥着一把刚磨好的猎刀。村口的老猎户陈叔正蹲在泥地里，眉头紧锁，手里摆弄着一只被猎夹夹断腿的野猪崽。那小东西哼哼唧唧，血顺着断骨往外渗，陈叔叹了口气，似乎在犹豫要不要给它个痛快。",
+                "status": "open",
+                "runId": "ca487f3c-d6be-457a-9d75-5e19650d534b",
+                "turnId": 1
+              }
+            ],
+            "recent": [
+              {
+                "id": "turn:2",
+                "runId": "ca487f3c-d6be-457a-9d75-5e19650d534b",
+                "turnId": 2,
+                "source": "narrative",
+                "kind": "turn",
+                "text": "地点：village；刚才选择：询问陈叔：询问陈叔这猎夹是何时布下的，以及附近是否还有其他野兽出没\n陈叔直起身子，拍了拍手上的泥，指着那生锈的铁夹子说道：“今儿个一早刚布下的，这地方偏僻，平时也就几只野猪敢来。刚才动静大，我寻思着是只成年的，没想到夹到了这还没长开的小崽子。这附近除了野猪，林子里还有几只黄皮子，不过它们胆子小，一般不往这跑。”",
+                "entityIds": []
+              },
+              {
+                "id": "turn:1",
+                "runId": "ca487f3c-d6be-457a-9d75-5e19650d534b",
+                "turnId": 1,
+                "source": "narrative",
+                "kind": "turn",
+                "text": "地点：village\n你站在自家的土坯房前，手里攥着一把刚磨好的猎刀。村口的老猎户陈叔正蹲在泥地里，眉头紧锁，手里摆弄着一只被猎夹夹断腿的野猪崽。那小东西哼哼唧唧，血顺着断骨往外渗，陈叔叹了口气，似乎在犹豫要不要给它个痛快。\n陈叔抬起头，看见你站在门口，粗糙的手抖了一下，没敢看你，只是低声嘟囔道：“这畜生也是命苦，夹子太紧，骨头都碎了，怕是活不成了。云归，你懂点医理，给这小东西放个血，省得它受罪。”",
+                "entityIds": []
+              }
+            ],
+            "summaries": []
+          },
+          "references": [
+            "decision:2",
+            "m:372e13640e7eedc20fb00853eb01d713",
+            "m:3bb228dab3d3777b4fd2fbe4fb380f0e",
+            "m:e3ca44f8e86a428cd24ab5bec39ea5e4",
+            "turn:2",
+            "turn:1"
+          ],
+          "previousScene": {
+            "id": "r:17f8f2b8cadbac0b:t2:s:scene",
+            "blocksHash": "30392e7ad91b8a4036527501ef80224b53efe995be64779f410437a1ed7eb945"
+          },
+          "relationshipVersion": 1,
+          "relationships": {},
+          "coverage": {
+            "policy": "relevance-v1",
+            "openTotal": 3,
+            "openIncluded": 3,
+            "openOmitted": 0
+          }
+        },
+        "attempt": {
+          "id": "ffea9800-e375-4d3f-af61-26520e0c3722",
+          "sessionRef": "sess_629465788e477be899446f8f76e45433",
+          "retryOf": null
+        },
+        "storyActions": true
+      },
+      "decision": {
+        "index": 1,
+        "reason": "陈叔具体答了今早布夹与黄皮子，时间资源未变；拒绝为伤猪放血的请求，不答应处理，也不擅自旅行。",
+        "selected": {
+          "id": "r:17f8f2b8cadbac0b:t2:c:b",
+          "label": "婉拒陈叔：拒绝陈叔的请求，转身离开",
+          "intent": "interact",
+          "targetId": "r:17f8f2b8cadbac0b:t1:e:person_1",
+          "stake": "low",
+          "approach": "decline"
+        }
+      },
+      "choices": [
+        {
+          "id": "r:17f8f2b8cadbac0b:t3:c:a",
+          "enabled": true,
+          "label": "询问陈叔：询问陈叔为何如此执着于放血，是否还有其他解决办法",
+          "cost": "0日"
+        },
+        {
+          "id": "r:17f8f2b8cadbac0b:t3:c:b",
+          "enabled": true,
+          "label": "婉拒陈叔：婉拒陈叔的请求，转身离开",
+          "cost": "0日"
+        },
+        {
+          "id": "r:17f8f2b8cadbac0b:t3:c:c",
+          "enabled": true,
+          "label": "结束与陈叔的互动：结束与陈叔的对话，不再理会野猪崽",
+          "cost": "0日"
+        }
+      ],
+      "traces": [
+        {
+          "model": "@cf/zai-org/glm-4.7-flash",
+          "inputHash": "2a9b48bfe3c4c554e64f84cb60d38a98369b5b6817399ec315fcc1ef792dd9b5",
+          "inputBytes": 19938,
+          "startedAt": 1793368710673,
+          "bindingReturnedAt": 1793368711124,
+          "liveRawBytes": 108496,
+          "captureComplete": true,
+          "response": {
+            "model": "@cf/zai-org/glm-4.7-flash",
+            "choices": [
+              {
+                "finish_reason": "stop",
+                "message": {
+                  "content": "{\n  \"blocks\": [\n    {\n      \"kind\": \"dialogue\",\n      \"text\": \"陈叔见你转身要走，急忙伸手想要拉住你的衣袖，声音里带着几分恳求：“云归，你手艺好，就当积个阴德，帮这小畜生放个血吧，它太疼了。”\",\n      \"speaker\": \"self\"\n    }\n  ],\n  \"choices\": [\n    {\n      \"action\": \"interact:ask\",\n      \"targetId\": \"k1_person_陈叔\",\n      \"stake\": \"low\",\n      \"purpose\": \"询问陈叔为何如此执着于放血，是否还有其他解决办法\",\n      \"anchor\": 0\n    },\n    {\n      \"action\": \"interact:decline\",\n      \"targetId\": \"k1_person_陈叔\",\n      \"stake\": \"low\",\n      \"purpose\": \"婉拒陈叔的请求，转身离开\",\n      \"anchor\": 0\n    },\n    {\n      \"action\": \"interact:leave\",\n      \"targetId\": \"k1_person_陈叔\",\n      \"stake\": \"low\",\n      \"purpose\": \"结束与陈叔的对话，不再理会野猪崽\",\n      \"anchor\": 0\n    }\n  ],\n  \"title\": \"土坯房前\",\n  \"location\": \"village\",\n  \"otherPeople\": [\n    {\n      \"id\": \"k1_person_陈叔\",\n      \"status\": \"alive\"\n    }\n  ],\n  \"places\": [\n    {\n      \"id\": \"k2_place_土坯房前\"\n    }\n  ],\n  \"factions\": [],\n  \"memoryDeltas\": [\n    {\n      \"entityId\": \"k1_person_陈叔\",\n      \"kind\": \"clue\",\n      \"anchor\": 0,\n      \"status\": \"open\"\n    }\n  ]\n}",
+                  "reasoning_content": ""
+                }
+              }
+            ],
+            "usage": {
+              "prompt_tokens": 3106,
+              "completion_tokens": 403,
+              "total_tokens": 3509,
+              "prompt_tokens_details": {
+                "cached_tokens": 0
+              },
+              "neurons": 31.752200000000173
+            }
+          },
+          "rawSseBytes": 108496
+        }
+      ],
+      "revision": 3,
+      "pending": false,
+      "state": {
+        "relationshipVersion": 1,
+        "version": 5,
+        "mode": "cultivation",
+        "contentVersion": 4,
+        "rulesVersion": 1,
+        "promptVersion": 1,
+        "runId": "ca487f3c-d6be-457a-9d75-5e19650d534b",
+        "revision": 3,
+        "turnId": 3,
+        "phase": "active",
+        "rng": 3756704610,
+        "life": {
+          "name": "云归",
+          "ageDays": 5760,
+          "lifeLimit": 80,
+          "realm": "mortal",
+          "cultivation": 0,
+          "injury": 0,
+          "items": {
+            "supplies": 3,
+            "stones": 0
+          },
+          "relations": {},
+          "birth": {
+            "originId": "village",
+            "talentIds": [
+              "sensitive-breath",
+              "keen-memory"
+            ],
+            "attributes": {
+              "constitution": 4,
+              "insight": 3,
+              "fortune": 5
+            }
+          }
+        },
+        "birthReceipt": {
+          "kind": "opening",
+          "choiceId": null,
+          "action": null,
+          "elapsedDays": 0,
+          "itemChanges": {},
+          "relationChanges": {},
+          "random": {
+            "before": 3894245040,
+            "after": 3894245040,
+            "roll": null
+          },
+          "before": {
+            "ageDays": 5760,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "after": {
+            "ageDays": 5760,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "death": null,
+          "birth": {
+            "originId": "village",
+            "talentIds": [
+              "sensitive-breath",
+              "keen-memory"
+            ],
+            "attributes": {
+              "constitution": 4,
+              "insight": 3,
+              "fortune": 5
+            }
+          }
+        },
+        "currentScene": {
+          "id": "r:17f8f2b8cadbac0b:t3:s:scene",
+          "title": "土坯房前",
+          "location": "village",
+          "entities": [
+            {
+              "id": "r:17f8f2b8cadbac0b:t1:e:person_1",
+              "name": "陈叔",
+              "kind": "person",
+              "status": "alive"
+            },
+            {
+              "id": "r:17f8f2b8cadbac0b:t1:e:place_1",
+              "name": "土坯房前",
+              "kind": "place"
+            }
+          ],
+          "blocks": [
+            {
+              "kind": "dialogue",
+              "text": "陈叔见你转身要走，急忙伸手想要拉住你的衣袖，声音里带着几分恳求：“云归，你手艺好，就当积个阴德，帮这小畜生放个血吧，它太疼了。”",
+              "speaker": "self"
+            }
+          ],
+          "choices": [
+            {
+              "id": "r:17f8f2b8cadbac0b:t3:c:a",
+              "label": "询问陈叔：询问陈叔为何如此执着于放血，是否还有其他解决办法",
+              "intent": "interact",
+              "targetId": "r:17f8f2b8cadbac0b:t1:e:person_1",
+              "stake": "low",
+              "approach": "ask"
+            },
+            {
+              "id": "r:17f8f2b8cadbac0b:t3:c:b",
+              "label": "婉拒陈叔：婉拒陈叔的请求，转身离开",
+              "intent": "interact",
+              "targetId": "r:17f8f2b8cadbac0b:t1:e:person_1",
+              "stake": "low",
+              "approach": "decline"
+            },
+            {
+              "id": "r:17f8f2b8cadbac0b:t3:c:c",
+              "label": "结束与陈叔的互动：结束与陈叔的对话，不再理会野猪崽",
+              "intent": "interact",
+              "targetId": "r:17f8f2b8cadbac0b:t1:e:person_1",
+              "stake": "low",
+              "approach": "leave"
+            }
+          ],
+          "memoryDeltas": [
+            {
+              "entityId": "r:17f8f2b8cadbac0b:t1:e:person_1",
+              "kind": "clue",
+              "text": "陈叔见你转身要走，急忙伸手想要拉住你的衣袖，声音里带着几分恳求：“云归，你手艺好，就当积个阴德，帮这小畜生放个血吧，它太疼了。”",
+              "status": "open"
+            }
+          ]
+        },
+        "lastReceipt": {
+          "kind": "choice",
+          "choiceId": "r:17f8f2b8cadbac0b:t2:c:b",
+          "action": {
+            "id": "r:17f8f2b8cadbac0b:t2:c:b",
+            "label": "婉拒陈叔：拒绝陈叔的请求，转身离开",
+            "intent": "interact",
+            "targetId": "r:17f8f2b8cadbac0b:t1:e:person_1",
+            "stake": "low",
+            "approach": "decline"
+          },
+          "elapsedDays": 0,
+          "itemChanges": {},
+          "relationChanges": {},
+          "random": {
+            "before": 1516771919,
+            "after": 3756704610,
+            "roll": 10
+          },
+          "before": {
+            "ageDays": 5760,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "after": {
+            "ageDays": 5760,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "death": null,
+          "birth": null
+        },
+        "relatedEntities": [
+          {
+            "id": "r:17f8f2b8cadbac0b:t1:e:person_1",
+            "name": "陈叔",
+            "kind": "person",
+            "status": "alive"
+          },
+          {
+            "id": "r:17f8f2b8cadbac0b:t1:e:place_1",
+            "name": "土坯房前",
+            "kind": "place"
+          }
+        ],
+        "archiveCursor": 0
+      },
+      "posts": 3,
+      "latency": {
+        "usable": true,
+        "errorCode": null,
+        "firstAnyPreviewMs": 3613,
+        "firstReadableMs": 3952,
+        "completionMs": 10892,
+        "narrativeChars": 64,
+        "maxPreviewGapMs": 92,
+        "readingFinishEstimateMs": 14619,
+        "readingStallEstimateMs": 0,
+        "optionsWaitEstimateMs": 0,
+        "prefetchWorthEvaluating": true,
+        "assumptions": {
+          "readingCharsPerSecond": 6,
+          "readableChars": 20,
+          "targetWaitMs": 2000
+        }
+      }
+    }
+  ],
+  "errors": [
+    "Invalid choice"
+  ],
+  "posts": 3,
+  "refreshed": null
+}

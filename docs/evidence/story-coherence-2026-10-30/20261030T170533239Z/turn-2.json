@@ -1,0 +1,338 @@
+{
+  "caseId": "choice-2",
+  "origin": "rules",
+  "postDelta": 0,
+  "localEntry": {
+    "identity": {
+      "runId": "3ef1a8f3-2600-458e-8193-f3c4f1d8149a",
+      "turnId": 3,
+      "baseRevision": 2,
+      "stateHash": "590dfbee88c277c1070b59f706d4b524c0ed4f2fa9cf520347e3d2892a0752ec",
+      "choiceId": "r:60efb6672ac907de:t2:c:b",
+      "rulesVersion": 1,
+      "promptVersion": 1,
+      "requestId": "0af21747-e049-4e55-a429-28ead2110dec"
+    },
+    "receipt": {
+      "kind": "choice",
+      "choiceId": "r:60efb6672ac907de:t2:c:b",
+      "action": {
+        "id": "r:60efb6672ac907de:t2:c:b",
+        "label": "婉拒父亲：拒绝查看药方",
+        "intent": "interact",
+        "targetId": "r:60efb6672ac907de:t1:e:person_1",
+        "stake": "low",
+        "approach": "decline"
+      },
+      "elapsedDays": 0,
+      "itemChanges": {},
+      "relationChanges": {},
+      "random": {
+        "before": 2022614703,
+        "after": 2033067074,
+        "roll": 74
+      },
+      "before": {
+        "ageDays": 5760,
+        "realm": "mortal",
+        "cultivation": 0,
+        "injury": 0
+      },
+      "after": {
+        "ageDays": 5760,
+        "realm": "mortal",
+        "cultivation": 0,
+        "injury": 0
+      },
+      "death": null,
+      "birth": null
+    },
+    "scene": {
+      "id": "r:60efb6672ac907de:t3:s:closed",
+      "title": "暂别此事",
+      "location": "猎户小屋",
+      "blocks": [
+        {
+          "kind": "narration",
+          "text": "你婉拒了父亲的请求，结束了这次交谈。你仍在原处，接下来可以自行观察或行动。"
+        }
+      ],
+      "entities": [
+        {
+          "id": "r:60efb6672ac907de:t1:e:person_1",
+          "name": "父亲",
+          "kind": "person"
+        }
+      ],
+      "choices": [
+        {
+          "id": "r:60efb6672ac907de:t3:c:observe",
+          "label": "观察周围：寻找新的线索",
+          "intent": "interact",
+          "targetId": "self",
+          "stake": "low",
+          "approach": "observe"
+        },
+        {
+          "id": "r:60efb6672ac907de:t3:c:rest",
+          "label": "留在原地休整",
+          "intent": "rest",
+          "targetId": "self",
+          "stake": "low",
+          "approach": "recover"
+        }
+      ],
+      "memoryDeltas": []
+    },
+    "stateHash": "c8bc72d52d15a55d64aabb8d766bddb432d18b3b1dbba9ccecb6d0af61668e00"
+  },
+  "start": 257523.3999999985,
+  "timeline": [],
+  "choicesEnabledDuringPreview": false,
+  "lastText": "",
+  "doneMs": 75,
+  "result": {
+    "status": "ready",
+    "scene": {
+      "id": "r:60efb6672ac907de:t3:s:closed",
+      "title": "暂别此事",
+      "location": "猎户小屋",
+      "blocks": [
+        {
+          "kind": "narration",
+          "text": "你婉拒了父亲的请求，结束了这次交谈。你仍在原处，接下来可以自行观察或行动。"
+        }
+      ],
+      "entities": [
+        {
+          "id": "r:60efb6672ac907de:t1:e:person_1",
+          "name": "父亲",
+          "kind": "person"
+        }
+      ],
+      "choices": [
+        {
+          "id": "r:60efb6672ac907de:t3:c:observe",
+          "label": "观察周围：寻找新的线索",
+          "intent": "interact",
+          "targetId": "self",
+          "stake": "low",
+          "approach": "observe"
+        },
+        {
+          "id": "r:60efb6672ac907de:t3:c:rest",
+          "label": "留在原地休整",
+          "intent": "rest",
+          "targetId": "self",
+          "stake": "low",
+          "approach": "recover"
+        }
+      ],
+      "memoryDeltas": []
+    }
+  },
+  "request": null,
+  "decision": {
+    "index": 1,
+    "reason": "父亲回答已知来源为村长托人自镇上带回，并承认不懂符文，尚未替玩家识读或治疗；信息增量有限但回答了所问。现在拒绝查看药方，结束互动且不跳日、不强迫处理母亲病情。",
+    "selected": {
+      "id": "r:60efb6672ac907de:t2:c:b",
+      "label": "婉拒父亲：拒绝查看药方",
+      "intent": "interact",
+      "targetId": "r:60efb6672ac907de:t1:e:person_1",
+      "stake": "low",
+      "approach": "decline"
+    }
+  },
+  "choices": [
+    {
+      "id": "r:60efb6672ac907de:t3:c:observe",
+      "enabled": true,
+      "label": "观察周围：寻找新的线索",
+      "cost": "0日"
+    },
+    {
+      "id": "r:60efb6672ac907de:t3:c:rest",
+      "enabled": true,
+      "label": "留在原地休整",
+      "cost": "30日"
+    }
+  ],
+  "traces": [],
+  "revision": 3,
+  "pending": false,
+  "state": {
+    "relationshipVersion": 1,
+    "version": 5,
+    "mode": "cultivation",
+    "contentVersion": 4,
+    "rulesVersion": 1,
+    "promptVersion": 1,
+    "runId": "3ef1a8f3-2600-458e-8193-f3c4f1d8149a",
+    "revision": 3,
+    "turnId": 3,
+    "phase": "active",
+    "rng": 2033067074,
+    "life": {
+      "name": "云归",
+      "ageDays": 5760,
+      "lifeLimit": 80,
+      "realm": "mortal",
+      "cultivation": 0,
+      "injury": 0,
+      "items": {
+        "supplies": 3,
+        "stones": 0
+      },
+      "relations": {},
+      "birth": {
+        "originId": "village",
+        "talentIds": [
+          "fortune-debt",
+          "sword-bone"
+        ],
+        "attributes": {
+          "constitution": 3,
+          "insight": 4,
+          "fortune": 5
+        }
+      }
+    },
+    "birthReceipt": {
+      "kind": "opening",
+      "choiceId": null,
+      "action": null,
+      "elapsedDays": 0,
+      "itemChanges": {},
+      "relationChanges": {},
+      "random": {
+        "before": 1879604368,
+        "after": 1879604368,
+        "roll": null
+      },
+      "before": {
+        "ageDays": 5760,
+        "realm": "mortal",
+        "cultivation": 0,
+        "injury": 0
+      },
+      "after": {
+        "ageDays": 5760,
+        "realm": "mortal",
+        "cultivation": 0,
+        "injury": 0
+      },
+      "death": null,
+      "birth": {
+        "originId": "village",
+        "talentIds": [
+          "fortune-debt",
+          "sword-bone"
+        ],
+        "attributes": {
+          "constitution": 3,
+          "insight": 4,
+          "fortune": 5
+        }
+      }
+    },
+    "currentScene": {
+      "id": "r:60efb6672ac907de:t3:s:closed",
+      "title": "暂别此事",
+      "location": "猎户小屋",
+      "blocks": [
+        {
+          "kind": "narration",
+          "text": "你婉拒了父亲的请求，结束了这次交谈。你仍在原处，接下来可以自行观察或行动。"
+        }
+      ],
+      "entities": [
+        {
+          "id": "r:60efb6672ac907de:t1:e:person_1",
+          "name": "父亲",
+          "kind": "person"
+        }
+      ],
+      "choices": [
+        {
+          "id": "r:60efb6672ac907de:t3:c:observe",
+          "label": "观察周围：寻找新的线索",
+          "intent": "interact",
+          "targetId": "self",
+          "stake": "low",
+          "approach": "observe"
+        },
+        {
+          "id": "r:60efb6672ac907de:t3:c:rest",
+          "label": "留在原地休整",
+          "intent": "rest",
+          "targetId": "self",
+          "stake": "low",
+          "approach": "recover"
+        }
+      ],
+      "memoryDeltas": []
+    },
+    "lastReceipt": {
+      "kind": "choice",
+      "choiceId": "r:60efb6672ac907de:t2:c:b",
+      "action": {
+        "id": "r:60efb6672ac907de:t2:c:b",
+        "label": "婉拒父亲：拒绝查看药方",
+        "intent": "interact",
+        "targetId": "r:60efb6672ac907de:t1:e:person_1",
+        "stake": "low",
+        "approach": "decline"
+      },
+      "elapsedDays": 0,
+      "itemChanges": {},
+      "relationChanges": {},
+      "random": {
+        "before": 2022614703,
+        "after": 2033067074,
+        "roll": 74
+      },
+      "before": {
+        "ageDays": 5760,
+        "realm": "mortal",
+        "cultivation": 0,
+        "injury": 0
+      },
+      "after": {
+        "ageDays": 5760,
+        "realm": "mortal",
+        "cultivation": 0,
+        "injury": 0
+      },
+      "death": null,
+      "birth": null
+    },
+    "relatedEntities": [
+      {
+        "id": "r:60efb6672ac907de:t1:e:person_1",
+        "name": "父亲",
+        "kind": "person"
+      }
+    ],
+    "archiveCursor": 0
+  },
+  "posts": 2,
+  "latency": {
+    "usable": true,
+    "errorCode": null,
+    "firstAnyPreviewMs": null,
+    "firstReadableMs": null,
+    "completionMs": 75,
+    "narrativeChars": 0,
+    "maxPreviewGapMs": 0,
+    "readingFinishEstimateMs": null,
+    "readingStallEstimateMs": null,
+    "optionsWaitEstimateMs": null,
+    "prefetchWorthEvaluating": null,
+    "assumptions": {
+      "readingCharsPerSecond": 6,
+      "readableChars": 20,
+      "targetWaitMs": 2000
+    }
+  }
+}

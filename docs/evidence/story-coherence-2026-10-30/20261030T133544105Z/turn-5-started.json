@@ -1,0 +1,1 @@
+{"at":"2026-10-30T13:44:49.186Z","decision":{"index":1,"reason":"告辞增加了起身欲走的动作，时间资源未变；台词重复上轮句子，记为文案限制。明确选择前往后山深处，核对60日/行粮-1及不会默认带走张屠户。","selected":{"id":"r:777f39e63f6e0dd9:t5:c:b","label":"穿行荒野前往后山深处：前往后山深处查看异状源头","intent":"travel","targetId":"r:777f39e63f6e0dd9:t4:e:place_1","stake":"low","approach":"wilderness"}}}

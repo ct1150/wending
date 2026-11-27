@@ -1,0 +1,1540 @@
+{
+  "sourceCommit": "14121cd78649dafa26c1ec5626e5152ec98058bb",
+  "version": "75982438-b318-43ba-9357-d568c1bbf6ba",
+  "recordedAt": "2026-10-30T07:20:01.034Z",
+  "records": [
+    {
+      "caseId": "opening",
+      "start": 1175.800000000745,
+      "timeline": [
+        {
+          "atMs": 6443,
+          "chars": 1
+        },
+        {
+          "atMs": 6520,
+          "chars": 4
+        },
+        {
+          "atMs": 6582,
+          "chars": 13
+        },
+        {
+          "atMs": 6663,
+          "chars": 17
+        },
+        {
+          "atMs": 6723,
+          "chars": 21
+        },
+        {
+          "atMs": 6786,
+          "chars": 24
+        },
+        {
+          "atMs": 6864,
+          "chars": 27
+        },
+        {
+          "atMs": 6911,
+          "chars": 29
+        },
+        {
+          "atMs": 6987,
+          "chars": 31
+        },
+        {
+          "atMs": 7019,
+          "chars": 33
+        },
+        {
+          "atMs": 7082,
+          "chars": 35
+        },
+        {
+          "atMs": 7134,
+          "chars": 38
+        },
+        {
+          "atMs": 7228,
+          "chars": 40
+        },
+        {
+          "atMs": 7241,
+          "chars": 43
+        },
+        {
+          "atMs": 7288,
+          "chars": 46
+        },
+        {
+          "atMs": 7351,
+          "chars": 49
+        },
+        {
+          "atMs": 7433,
+          "chars": 50
+        },
+        {
+          "atMs": 7796,
+          "chars": 52
+        },
+        {
+          "atMs": 8042,
+          "chars": 55
+        },
+        {
+          "atMs": 8105,
+          "chars": 59
+        },
+        {
+          "atMs": 8174,
+          "chars": 62
+        },
+        {
+          "atMs": 8237,
+          "chars": 66
+        },
+        {
+          "atMs": 8281,
+          "chars": 68
+        },
+        {
+          "atMs": 8324,
+          "chars": 73
+        },
+        {
+          "atMs": 8388,
+          "chars": 76
+        },
+        {
+          "atMs": 8435,
+          "chars": 78
+        },
+        {
+          "atMs": 8498,
+          "chars": 83
+        },
+        {
+          "atMs": 8562,
+          "chars": 87
+        },
+        {
+          "atMs": 8624,
+          "chars": 89
+        },
+        {
+          "atMs": 8687,
+          "chars": 93
+        },
+        {
+          "atMs": 8736,
+          "chars": 97
+        },
+        {
+          "atMs": 8783,
+          "chars": 99
+        },
+        {
+          "atMs": 8925,
+          "chars": 103
+        },
+        {
+          "atMs": 8988,
+          "chars": 110
+        },
+        {
+          "atMs": 9059,
+          "chars": 113
+        },
+        {
+          "atMs": 9383,
+          "chars": 118
+        },
+        {
+          "atMs": 9435,
+          "chars": 121
+        },
+        {
+          "atMs": 9508,
+          "chars": 128
+        },
+        {
+          "atMs": 9572,
+          "chars": 130
+        },
+        {
+          "atMs": 10175,
+          "chars": 135
+        },
+        {
+          "atMs": 10222,
+          "chars": 137
+        },
+        {
+          "atMs": 10285,
+          "chars": 144
+        },
+        {
+          "atMs": 10363,
+          "chars": 147
+        },
+        {
+          "atMs": 10411,
+          "chars": 150
+        },
+        {
+          "atMs": 10460,
+          "chars": 152
+        },
+        {
+          "atMs": 10521,
+          "chars": 155
+        },
+        {
+          "atMs": 10585,
+          "chars": 160
+        },
+        {
+          "atMs": 10648,
+          "chars": 163
+        },
+        {
+          "atMs": 10694,
+          "chars": 166
+        },
+        {
+          "atMs": 10788,
+          "chars": 168
+        },
+        {
+          "atMs": 10850,
+          "chars": 171
+        },
+        {
+          "atMs": 10912,
+          "chars": 174
+        },
+        {
+          "atMs": 10958,
+          "chars": 176
+        },
+        {
+          "atMs": 11019,
+          "chars": 181
+        },
+        {
+          "atMs": 11082,
+          "chars": 184
+        },
+        {
+          "atMs": 11145,
+          "chars": 190
+        },
+        {
+          "atMs": 11208,
+          "chars": 194
+        },
+        {
+          "atMs": 11271,
+          "chars": 197
+        },
+        {
+          "atMs": 11332,
+          "chars": 200
+        },
+        {
+          "atMs": 11398,
+          "chars": 206
+        },
+        {
+          "atMs": 11444,
+          "chars": 211
+        },
+        {
+          "atMs": 11810,
+          "chars": 213
+        },
+        {
+          "atMs": 12308,
+          "chars": 214
+        },
+        {
+          "atMs": 12479,
+          "chars": 217
+        },
+        {
+          "atMs": 12543,
+          "chars": 219
+        }
+      ],
+      "choicesEnabledDuringPreview": false,
+      "lastText": "你叫云归，今年十六岁，是个凡人。你出生在‘云溪村’，生来便有‘灵觉’与‘铁骨’的异禀。如今你站在村口的老槐树下，手里提着三个行粮，身无分文，也没有任何修为。村子里的人都在忙着秋收，只有你看着远处连绵的青山，心里想着外面的世界。\n\n“爹，娘，孩儿要去山里看看。”\n\n父母在田里忙碌，没有回头看你。你转身向村外的山道走去，脚下的路有些崎岖。走了约莫半个时辰，你来到了一处岔路口，左边是通往‘青石镇’的大道，右边是一条蜿蜒的小径，隐没在树林中。",
+      "doneMs": 18028,
+      "result": {
+        "protocolVersion": 1,
+        "status": "ready",
+        "requestId": "8e95ca15-ddb0-43c8-a35b-54826ec6c611",
+        "attemptId": "2ec6ba03-bbd0-46f0-a911-665676d0715f",
+        "sessionRef": "sess_5980c07a77d793263f1eba1c93422881",
+        "errorCode": null,
+        "retry": null,
+        "scene": {
+          "id": "r:f28528e6e121b03b:t1:s:scene",
+          "title": "云溪村口",
+          "location": "云溪村口",
+          "entities": [
+            {
+              "id": "r:f28528e6e121b03b:t1:e:place_1",
+              "name": "青石镇",
+              "kind": "place"
+            },
+            {
+              "id": "r:f28528e6e121b03b:t1:e:place_2",
+              "name": "迷雾林",
+              "kind": "place"
+            }
+          ],
+          "blocks": [
+            {
+              "kind": "narration",
+              "text": "你叫云归，今年十六岁，是个凡人。你出生在‘云溪村’，生来便有‘灵觉’与‘铁骨’的异禀。如今你站在村口的老槐树下，手里提着三个行粮，身无分文，也没有任何修为。村子里的人都在忙着秋收，只有你看着远处连绵的青山，心里想着外面的世界。"
+            },
+            {
+              "kind": "dialogue",
+              "text": "“爹，娘，孩儿要去山里看看。”",
+              "speaker": "self"
+            },
+            {
+              "kind": "narration",
+              "text": "父母在田里忙碌，没有回头看你。你转身向村外的山道走去，脚下的路有些崎岖。走了约莫半个时辰，你来到了一处岔路口，左边是通往‘青石镇’的大道，右边是一条蜿蜒的小径，隐没在树林中。"
+            }
+          ],
+          "choices": [
+            {
+              "id": "r:f28528e6e121b03b:t1:c:a",
+              "label": "沿着大路前往青石镇",
+              "intent": "travel",
+              "targetId": "r:f28528e6e121b03b:t1:e:place_1",
+              "stake": "low",
+              "approach": "road"
+            },
+            {
+              "id": "r:f28528e6e121b03b:t1:c:b",
+              "label": "走进迷雾林探查",
+              "intent": "travel",
+              "targetId": "r:f28528e6e121b03b:t1:e:place_2",
+              "stake": "low",
+              "approach": "road"
+            }
+          ],
+          "memoryDeltas": []
+        }
+      },
+      "request": {
+        "context": {
+          "schemaVersion": 1,
+          "phase": "opening",
+          "identity": {
+            "runId": "73df0954-bbf6-49db-82e4-ca1b6123147a",
+            "turnId": 1,
+            "baseRevision": 0,
+            "stateHash": "71274a84b9f7341a98ef2489cbb28d978037cd4101c590dbcd86edf6e1b0541c",
+            "choiceId": null,
+            "rulesVersion": 1,
+            "promptVersion": 1,
+            "requestId": "8e95ca15-ddb0-43c8-a35b-54826ec6c611"
+          },
+          "namespace": "r:f28528e6e121b03b",
+          "receipt": {
+            "kind": "opening",
+            "choiceId": null,
+            "action": null,
+            "elapsedDays": 0,
+            "itemChanges": {},
+            "relationChanges": {},
+            "random": {
+              "before": 1895065916,
+              "after": 1895065916,
+              "roll": null
+            },
+            "before": {
+              "ageDays": 5760,
+              "realm": "mortal",
+              "cultivation": 0,
+              "injury": 0
+            },
+            "after": {
+              "ageDays": 5760,
+              "realm": "mortal",
+              "cultivation": 0,
+              "injury": 0
+            },
+            "death": null,
+            "birth": {
+              "originId": "village",
+              "talentIds": [
+                "sensitive-breath",
+                "iron-bones"
+              ],
+              "attributes": {
+                "constitution": 5,
+                "insight": 3,
+                "fortune": 4
+              }
+            }
+          },
+          "life": {
+            "name": "云归",
+            "ageDays": 5760,
+            "lifeLimit": 80,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0,
+            "items": {
+              "supplies": 3,
+              "stones": 0
+            },
+            "relations": {},
+            "birth": {
+              "originId": "village",
+              "talentIds": [
+                "sensitive-breath",
+                "iron-bones"
+              ],
+              "attributes": {
+                "constitution": 5,
+                "insight": 3,
+                "fortune": 4
+              }
+            }
+          },
+          "entities": [],
+          "memory": {
+            "facts": [],
+            "promises": [],
+            "clues": [],
+            "recent": [],
+            "summaries": []
+          },
+          "references": [],
+          "previousScene": null,
+          "relationshipVersion": 1,
+          "relationships": {},
+          "coverage": {
+            "policy": "relevance-v1",
+            "openTotal": 0,
+            "openIncluded": 0,
+            "openOmitted": 0
+          }
+        },
+        "attempt": {
+          "id": "2ec6ba03-bbd0-46f0-a911-665676d0715f",
+          "sessionRef": "sess_5980c07a77d793263f1eba1c93422881",
+          "retryOf": null
+        }
+      },
+      "decision": null,
+      "choices": [
+        {
+          "id": "r:f28528e6e121b03b:t1:c:a",
+          "enabled": true,
+          "label": "沿着大路前往青石镇",
+          "cost": "30日 · 行粮 1"
+        },
+        {
+          "id": "r:f28528e6e121b03b:t1:c:b",
+          "enabled": true,
+          "label": "走进迷雾林探查",
+          "cost": "30日 · 行粮 1"
+        }
+      ],
+      "traces": [
+        {
+          "model": "@cf/zai-org/glm-4.7-flash",
+          "inputHash": "fd262889bd70730dcac547f80d2fc9ea5e156dfc5d7375acf5aa5030e0917ee9",
+          "inputBytes": 15359,
+          "startedAt": 1793344693351,
+          "bindingReturnedAt": 1793344693735,
+          "response": {
+            "model": "@cf/zai-org/glm-4.7-flash",
+            "choices": [
+              {
+                "finish_reason": "stop",
+                "message": {
+                  "content": "{\n  \"blocks\": [\n    {\n      \"kind\": \"narration\",\n      \"text\": \"你叫云归，今年十六岁，是个凡人。你出生在‘云溪村’，生来便有‘灵觉’与‘铁骨’的异禀。如今你站在村口的老槐树下，手里提着三个行粮，身无分文，也没有任何修为。村子里的人都在忙着秋收，只有你看着远处连绵的青山，心里想着外面的世界。\"\n    },\n    {\n      \"kind\": \"dialogue\",\n      \"text\": \"“爹，娘，孩儿要去山里看看。”\",\n      \"speaker\": \"self\"\n    },\n    {\n      \"kind\": \"narration\",\n      \"text\": \"父母在田里忙碌，没有回头看你。你转身向村外的山道走去，脚下的路有些崎岖。走了约莫半个时辰，你来到了一处岔路口，左边是通往‘青石镇’的大道，右边是一条蜿蜒的小径，隐没在树林中。\"\n    }\n  ],\n  \"title\": \"云溪村口\",\n  \"location\": \"云溪村口\",\n  \"otherPeople\": [],\n  \"places\": [\n    {\n      \"id\": \"l1\",\n      \"name\": \"青石镇\"\n    },\n    {\n      \"id\": \"l2\",\n      \"name\": \"迷雾林\"\n    }\n  ],\n  \"factions\": [],\n  \"choices\": [\n    {\n      \"action\": \"travel:road\",\n      \"targetId\": \"l1\",\n      \"stake\": \"low\",\n      \"label\": \"沿着大路前往青石镇\",\n      \"anchor\": \"你转身向村外的山道走去，脚下的路有些崎岖。走了约莫半个时辰，你来到了一处岔路口，左边是通往‘青石镇’的大道，右边是一条蜿蜒的小径，隐没在树林中。\"\n    },\n    {\n      \"action\": \"travel:road\",\n      \"targetId\": \"l2\",\n      \"stake\": \"low\",\n      \"label\": \"走进迷雾林探查\",\n      \"anchor\": \"你转身向村外的山道走去，脚下的路有些崎岖。走了约莫半个时辰，你来到了一处岔路口，左边是通往‘青石镇’的大道，右边是一条蜿蜒的小径，隐没在树林中。\"\n    }\n  ],\n  \"memoryDeltas\": []\n}",
+                  "reasoning_content": ""
+                }
+              }
+            ],
+            "usage": {
+              "prompt_tokens": 1749,
+              "completion_tokens": 532,
+              "total_tokens": 2281,
+              "prompt_tokens_details": {
+                "cached_tokens": 0
+              },
+              "neurons": 28.98430000000023
+            }
+          },
+          "rawSseBytes": 153209
+        }
+      ],
+      "revision": 1,
+      "pending": false,
+      "state": {
+        "relationshipVersion": 1,
+        "version": 5,
+        "mode": "cultivation",
+        "contentVersion": 4,
+        "rulesVersion": 1,
+        "promptVersion": 1,
+        "runId": "73df0954-bbf6-49db-82e4-ca1b6123147a",
+        "revision": 1,
+        "turnId": 1,
+        "phase": "active",
+        "rng": 1895065916,
+        "life": {
+          "name": "云归",
+          "ageDays": 5760,
+          "lifeLimit": 80,
+          "realm": "mortal",
+          "cultivation": 0,
+          "injury": 0,
+          "items": {
+            "supplies": 3,
+            "stones": 0
+          },
+          "relations": {},
+          "birth": {
+            "originId": "village",
+            "talentIds": [
+              "sensitive-breath",
+              "iron-bones"
+            ],
+            "attributes": {
+              "constitution": 5,
+              "insight": 3,
+              "fortune": 4
+            }
+          }
+        },
+        "birthReceipt": {
+          "kind": "opening",
+          "choiceId": null,
+          "action": null,
+          "elapsedDays": 0,
+          "itemChanges": {},
+          "relationChanges": {},
+          "random": {
+            "before": 1895065916,
+            "after": 1895065916,
+            "roll": null
+          },
+          "before": {
+            "ageDays": 5760,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "after": {
+            "ageDays": 5760,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "death": null,
+          "birth": {
+            "originId": "village",
+            "talentIds": [
+              "sensitive-breath",
+              "iron-bones"
+            ],
+            "attributes": {
+              "constitution": 5,
+              "insight": 3,
+              "fortune": 4
+            }
+          }
+        },
+        "currentScene": {
+          "id": "r:f28528e6e121b03b:t1:s:scene",
+          "title": "云溪村口",
+          "location": "云溪村口",
+          "entities": [
+            {
+              "id": "r:f28528e6e121b03b:t1:e:place_1",
+              "name": "青石镇",
+              "kind": "place"
+            },
+            {
+              "id": "r:f28528e6e121b03b:t1:e:place_2",
+              "name": "迷雾林",
+              "kind": "place"
+            }
+          ],
+          "blocks": [
+            {
+              "kind": "narration",
+              "text": "你叫云归，今年十六岁，是个凡人。你出生在‘云溪村’，生来便有‘灵觉’与‘铁骨’的异禀。如今你站在村口的老槐树下，手里提着三个行粮，身无分文，也没有任何修为。村子里的人都在忙着秋收，只有你看着远处连绵的青山，心里想着外面的世界。"
+            },
+            {
+              "kind": "dialogue",
+              "text": "“爹，娘，孩儿要去山里看看。”",
+              "speaker": "self"
+            },
+            {
+              "kind": "narration",
+              "text": "父母在田里忙碌，没有回头看你。你转身向村外的山道走去，脚下的路有些崎岖。走了约莫半个时辰，你来到了一处岔路口，左边是通往‘青石镇’的大道，右边是一条蜿蜒的小径，隐没在树林中。"
+            }
+          ],
+          "choices": [
+            {
+              "id": "r:f28528e6e121b03b:t1:c:a",
+              "label": "沿着大路前往青石镇",
+              "intent": "travel",
+              "targetId": "r:f28528e6e121b03b:t1:e:place_1",
+              "stake": "low",
+              "approach": "road"
+            },
+            {
+              "id": "r:f28528e6e121b03b:t1:c:b",
+              "label": "走进迷雾林探查",
+              "intent": "travel",
+              "targetId": "r:f28528e6e121b03b:t1:e:place_2",
+              "stake": "low",
+              "approach": "road"
+            }
+          ],
+          "memoryDeltas": []
+        },
+        "lastReceipt": {
+          "kind": "opening",
+          "choiceId": null,
+          "action": null,
+          "elapsedDays": 0,
+          "itemChanges": {},
+          "relationChanges": {},
+          "random": {
+            "before": 1895065916,
+            "after": 1895065916,
+            "roll": null
+          },
+          "before": {
+            "ageDays": 5760,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "after": {
+            "ageDays": 5760,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "death": null,
+          "birth": {
+            "originId": "village",
+            "talentIds": [
+              "sensitive-breath",
+              "iron-bones"
+            ],
+            "attributes": {
+              "constitution": 5,
+              "insight": 3,
+              "fortune": 4
+            }
+          }
+        },
+        "relatedEntities": [
+          {
+            "id": "r:f28528e6e121b03b:t1:e:place_1",
+            "name": "青石镇",
+            "kind": "place"
+          },
+          {
+            "id": "r:f28528e6e121b03b:t1:e:place_2",
+            "name": "迷雾林",
+            "kind": "place"
+          }
+        ],
+        "archiveCursor": 0
+      },
+      "posts": 1,
+      "latency": {
+        "usable": true,
+        "errorCode": null,
+        "firstAnyPreviewMs": 6443,
+        "firstReadableMs": 6723,
+        "completionMs": 18028,
+        "narrativeChars": 219,
+        "maxPreviewGapMs": 603,
+        "readingFinishEstimateMs": 43223,
+        "readingStallEstimateMs": 0,
+        "optionsWaitEstimateMs": 0,
+        "prefetchWorthEvaluating": true,
+        "assumptions": {
+          "readingCharsPerSecond": 6,
+          "readableChars": 20,
+          "targetWaitMs": 2000
+        }
+      }
+    },
+    {
+      "caseId": "choice-1",
+      "start": 42572.89999999851,
+      "timeline": [
+        {
+          "atMs": 5801,
+          "chars": 3
+        },
+        {
+          "atMs": 5862,
+          "chars": 7
+        },
+        {
+          "atMs": 5924,
+          "chars": 10
+        },
+        {
+          "atMs": 5987,
+          "chars": 16
+        },
+        {
+          "atMs": 6048,
+          "chars": 22
+        },
+        {
+          "atMs": 6095,
+          "chars": 27
+        },
+        {
+          "atMs": 6173,
+          "chars": 32
+        },
+        {
+          "atMs": 6236,
+          "chars": 36
+        },
+        {
+          "atMs": 6298,
+          "chars": 39
+        },
+        {
+          "atMs": 6421,
+          "chars": 42
+        },
+        {
+          "atMs": 6469,
+          "chars": 47
+        },
+        {
+          "atMs": 6530,
+          "chars": 49
+        },
+        {
+          "atMs": 6593,
+          "chars": 53
+        },
+        {
+          "atMs": 6655,
+          "chars": 57
+        },
+        {
+          "atMs": 6718,
+          "chars": 59
+        },
+        {
+          "atMs": 6765,
+          "chars": 61
+        },
+        {
+          "atMs": 6844,
+          "chars": 66
+        },
+        {
+          "atMs": 6890,
+          "chars": 71
+        },
+        {
+          "atMs": 6967,
+          "chars": 75
+        },
+        {
+          "atMs": 7029,
+          "chars": 77
+        },
+        {
+          "atMs": 7091,
+          "chars": 81
+        },
+        {
+          "atMs": 7154,
+          "chars": 84
+        },
+        {
+          "atMs": 7201,
+          "chars": 89
+        },
+        {
+          "atMs": 7249,
+          "chars": 92
+        },
+        {
+          "atMs": 7326,
+          "chars": 95
+        },
+        {
+          "atMs": 7388,
+          "chars": 97
+        },
+        {
+          "atMs": 7451,
+          "chars": 100
+        },
+        {
+          "atMs": 7498,
+          "chars": 102
+        },
+        {
+          "atMs": 7545,
+          "chars": 110
+        },
+        {
+          "atMs": 7639,
+          "chars": 116
+        },
+        {
+          "atMs": 7704,
+          "chars": 118
+        },
+        {
+          "atMs": 7779,
+          "chars": 123
+        },
+        {
+          "atMs": 7810,
+          "chars": 127
+        },
+        {
+          "atMs": 7873,
+          "chars": 131
+        },
+        {
+          "atMs": 7936,
+          "chars": 136
+        },
+        {
+          "atMs": 8043,
+          "chars": 140
+        },
+        {
+          "atMs": 8155,
+          "chars": 149
+        },
+        {
+          "atMs": 8232,
+          "chars": 155
+        },
+        {
+          "atMs": 8294,
+          "chars": 159
+        },
+        {
+          "atMs": 8341,
+          "chars": 161
+        },
+        {
+          "atMs": 8449,
+          "chars": 164
+        },
+        {
+          "atMs": 8528,
+          "chars": 168
+        },
+        {
+          "atMs": 8670,
+          "chars": 181
+        },
+        {
+          "atMs": 8701,
+          "chars": 187
+        },
+        {
+          "atMs": 8763,
+          "chars": 194
+        },
+        {
+          "atMs": 8920,
+          "chars": 204
+        },
+        {
+          "atMs": 9139,
+          "chars": 209
+        },
+        {
+          "atMs": 9202,
+          "chars": 213
+        },
+        {
+          "atMs": 9279,
+          "chars": 216
+        },
+        {
+          "atMs": 9327,
+          "chars": 219
+        },
+        {
+          "atMs": 9390,
+          "chars": 226
+        },
+        {
+          "atMs": 9684,
+          "chars": 233
+        },
+        {
+          "atMs": 9762,
+          "chars": 238
+        },
+        {
+          "atMs": 9810,
+          "chars": 241
+        },
+        {
+          "atMs": 9873,
+          "chars": 245
+        },
+        {
+          "atMs": 9935,
+          "chars": 250
+        },
+        {
+          "atMs": 9997,
+          "chars": 255
+        },
+        {
+          "atMs": 10187,
+          "chars": 264
+        },
+        {
+          "atMs": 10234,
+          "chars": 269
+        },
+        {
+          "atMs": 10281,
+          "chars": 270
+        },
+        {
+          "atMs": 10497,
+          "chars": 273
+        },
+        {
+          "atMs": 10607,
+          "chars": 277
+        },
+        {
+          "atMs": 10669,
+          "chars": 281
+        },
+        {
+          "atMs": 10733,
+          "chars": 285
+        },
+        {
+          "atMs": 10796,
+          "chars": 288
+        },
+        {
+          "atMs": 10875,
+          "chars": 291
+        },
+        {
+          "atMs": 10937,
+          "chars": 296
+        },
+        {
+          "atMs": 11251,
+          "chars": 303
+        },
+        {
+          "atMs": 11360,
+          "chars": 308
+        },
+        {
+          "atMs": 11375,
+          "chars": 314
+        },
+        {
+          "atMs": 11438,
+          "chars": 318
+        },
+        {
+          "atMs": 11610,
+          "chars": 327
+        },
+        {
+          "atMs": 11655,
+          "chars": 331
+        },
+        {
+          "atMs": 11687,
+          "chars": 333
+        },
+        {
+          "atMs": 11734,
+          "chars": 335
+        },
+        {
+          "atMs": 11797,
+          "chars": 339
+        },
+        {
+          "atMs": 11859,
+          "chars": 344
+        },
+        {
+          "atMs": 11969,
+          "chars": 346
+        },
+        {
+          "atMs": 12017,
+          "chars": 349
+        },
+        {
+          "atMs": 12064,
+          "chars": 353
+        },
+        {
+          "atMs": 12126,
+          "chars": 357
+        },
+        {
+          "atMs": 12221,
+          "chars": 359
+        },
+        {
+          "atMs": 12237,
+          "chars": 362
+        },
+        {
+          "atMs": 12299,
+          "chars": 364
+        },
+        {
+          "atMs": 12533,
+          "chars": 374
+        },
+        {
+          "atMs": 12549,
+          "chars": 382
+        }
+      ],
+      "choicesEnabledDuringPreview": false,
+      "lastText": "你沿着大路走了三十天，脚底磨出了水泡，身上的行粮也吃去了一半。青石镇终于出现在眼前，那是一座依山而建的城镇，城墙由青石砌成，显得古朴厚重。镇口立着一块石碑，上面刻着‘青石镇’三个大字。你站在镇口，看着熙熙攘攘的人群，心中既紧张又兴奋。镇子里人来人往，有挑着担子的商贩，也有背着剑的修士。你摸了摸口袋，里面只有两块灵石，那是你攒了许久才换来的，此刻却显得格外珍贵。你决定先找个地方落脚，顺便打听一下镇上的情况。\n\n“掌柜的，来碗热汤，再给个落脚的地方。”\n\n你走进一家名为‘聚宝阁’的客栈，掌柜的抬起头看了你一眼，见你衣着朴素，便淡淡地说道：\n\n“小二，带这位客官去后院的柴房住下，管饱就行。”\n\n你被带到了后院的柴房，这里虽然简陋，但胜在安静。你放下包袱，从里面翻出两块灵石放在桌上，心想这镇子上的规矩看来不比村里。你坐在柴房里，看着窗外，心里盘算着接下来的打算。",
+      "doneMs": 15686,
+      "result": {
+        "protocolVersion": 1,
+        "status": "ready",
+        "requestId": "3b91b763-fee5-440a-b1fe-6b6301831341",
+        "attemptId": "bbca3378-b4dd-42b9-8d31-d445f41415e2",
+        "sessionRef": "sess_5980c07a77d793263f1eba1c93422881",
+        "errorCode": null,
+        "retry": null,
+        "scene": {
+          "id": "r:f28528e6e121b03b:t2:s:scene",
+          "title": "青石镇客栈",
+          "location": "聚宝阁客栈柴房",
+          "entities": [
+            {
+              "id": "r:f28528e6e121b03b:t2:e:person_1",
+              "name": "掌柜",
+              "status": "alive",
+              "kind": "person"
+            },
+            {
+              "id": "r:f28528e6e121b03b:t1:e:place_1",
+              "name": "青石镇",
+              "kind": "place"
+            }
+          ],
+          "blocks": [
+            {
+              "kind": "narration",
+              "text": "你沿着大路走了三十天，脚底磨出了水泡，身上的行粮也吃去了一半。青石镇终于出现在眼前，那是一座依山而建的城镇，城墙由青石砌成，显得古朴厚重。镇口立着一块石碑，上面刻着‘青石镇’三个大字。你站在镇口，看着熙熙攘攘的人群，心中既紧张又兴奋。镇子里人来人往，有挑着担子的商贩，也有背着剑的修士。你摸了摸口袋，里面只有两块灵石，那是你攒了许久才换来的，此刻却显得格外珍贵。你决定先找个地方落脚，顺便打听一下镇上的情况。"
+            },
+            {
+              "kind": "dialogue",
+              "text": "“掌柜的，来碗热汤，再给个落脚的地方。”",
+              "speaker": "self"
+            },
+            {
+              "kind": "narration",
+              "text": "你走进一家名为‘聚宝阁’的客栈，掌柜的抬起头看了你一眼，见你衣着朴素，便淡淡地说道："
+            },
+            {
+              "kind": "dialogue",
+              "text": "“小二，带这位客官去后院的柴房住下，管饱就行。”",
+              "speaker": "r:f28528e6e121b03b:t2:e:person_1"
+            },
+            {
+              "kind": "narration",
+              "text": "你被带到了后院的柴房，这里虽然简陋，但胜在安静。你放下包袱，从里面翻出两块灵石放在桌上，心想这镇子上的规矩看来不比村里。你坐在柴房里，看着窗外，心里盘算着接下来的打算。"
+            }
+          ],
+          "choices": [
+            {
+              "id": "r:f28528e6e121b03b:t2:c:a",
+              "label": "向掌柜打听镇上哪里可以打零工",
+              "intent": "interact",
+              "targetId": "r:f28528e6e121b03b:t2:e:person_1",
+              "stake": "low",
+              "approach": "ask"
+            },
+            {
+              "id": "r:f28528e6e121b03b:t2:c:b",
+              "label": "询问掌柜这镇上有没有修仙者出没",
+              "intent": "interact",
+              "targetId": "r:f28528e6e121b03b:t2:e:person_1",
+              "stake": "low",
+              "approach": "ask"
+            },
+            {
+              "id": "r:f28528e6e121b03b:t2:c:c",
+              "label": "在柴房里寻找是否有遗漏的物资",
+              "intent": "explore",
+              "targetId": "supplies",
+              "stake": "low",
+              "approach": "cautious"
+            }
+          ],
+          "memoryDeltas": [
+            {
+              "entityId": "r:f28528e6e121b03b:t2:e:person_1",
+              "text": "掌柜把你安排在柴房住下，态度冷淡。",
+              "kind": "relationship"
+            }
+          ]
+        }
+      },
+      "request": {
+        "context": {
+          "schemaVersion": 1,
+          "phase": "choice",
+          "identity": {
+            "runId": "73df0954-bbf6-49db-82e4-ca1b6123147a",
+            "turnId": 2,
+            "baseRevision": 1,
+            "stateHash": "9e5f82c4921034833c4ce2288132286c0f285564fe705d154208bee5449e0a93",
+            "choiceId": "r:f28528e6e121b03b:t1:c:a",
+            "rulesVersion": 1,
+            "promptVersion": 1,
+            "requestId": "3b91b763-fee5-440a-b1fe-6b6301831341"
+          },
+          "namespace": "r:f28528e6e121b03b",
+          "receipt": {
+            "kind": "choice",
+            "choiceId": "r:f28528e6e121b03b:t1:c:a",
+            "action": {
+              "id": "r:f28528e6e121b03b:t1:c:a",
+              "label": "沿着大路前往青石镇",
+              "intent": "travel",
+              "targetId": "r:f28528e6e121b03b:t1:e:place_1",
+              "stake": "low",
+              "approach": "road"
+            },
+            "elapsedDays": 30,
+            "itemChanges": {
+              "supplies": -1
+            },
+            "relationChanges": {},
+            "random": {
+              "before": 1895065916,
+              "after": 2711761771,
+              "roll": 71
+            },
+            "before": {
+              "ageDays": 5760,
+              "realm": "mortal",
+              "cultivation": 0,
+              "injury": 0
+            },
+            "after": {
+              "ageDays": 5790,
+              "realm": "mortal",
+              "cultivation": 0,
+              "injury": 0
+            },
+            "death": null,
+            "birth": null
+          },
+          "life": {
+            "name": "云归",
+            "ageDays": 5790,
+            "lifeLimit": 80,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0,
+            "items": {
+              "supplies": 2,
+              "stones": 0
+            },
+            "relations": {},
+            "birth": {
+              "originId": "village",
+              "talentIds": [
+                "sensitive-breath",
+                "iron-bones"
+              ],
+              "attributes": {
+                "constitution": 5,
+                "insight": 3,
+                "fortune": 4
+              }
+            }
+          },
+          "entities": [
+            {
+              "id": "r:f28528e6e121b03b:t1:e:place_1",
+              "name": "青石镇",
+              "kind": "place",
+              "status": "unknown"
+            },
+            {
+              "id": "r:f28528e6e121b03b:t1:e:place_2",
+              "name": "迷雾林",
+              "kind": "place",
+              "status": "unknown"
+            }
+          ],
+          "memory": {
+            "facts": [],
+            "promises": [],
+            "clues": [],
+            "recent": [
+              {
+                "id": "turn:1",
+                "runId": "73df0954-bbf6-49db-82e4-ca1b6123147a",
+                "turnId": 1,
+                "source": "narrative",
+                "kind": "turn",
+                "text": "地点：云溪村口\n你叫云归，今年十六岁，是个凡人。你出生在‘云溪村’，生来便有‘灵觉’与‘铁骨’的异禀。如今你站在村口的老槐树下，手里提着三个行粮，身无分文，也没有任何修为。村子里的人都在忙着秋收，只有你看着远处连绵的青山，心里想着外面的世界。\n“爹，娘，孩儿要去山里看看。”\n父母在田里忙碌，没有回头看你。你转身向村外的山道走去，脚下的路有些崎岖。走了约莫半个时辰，你来到了一处岔路口，左边是通往‘青石镇’的大道，右边是一条蜿蜒的小径，隐没在树林中。",
+                "entityIds": []
+              }
+            ],
+            "summaries": []
+          },
+          "references": [
+            "turn:1"
+          ],
+          "previousScene": {
+            "id": "r:f28528e6e121b03b:t1:s:scene",
+            "blocksHash": "c6f787a82a508ae7fba6bc53759d63486d689420124fd1e5fd5ebcd6228977d5"
+          },
+          "relationshipVersion": 1,
+          "relationships": {},
+          "coverage": {
+            "policy": "relevance-v1",
+            "openTotal": 0,
+            "openIncluded": 0,
+            "openOmitted": 0
+          }
+        },
+        "attempt": {
+          "id": "bbca3378-b4dd-42b9-8d31-d445f41415e2",
+          "sessionRef": "sess_5980c07a77d793263f1eba1c93422881",
+          "retryOf": null
+        }
+      },
+      "decision": {
+        "index": 0,
+        "reason": "选择大道前往青石镇；下一段应实际到达该镇并围绕当地事件给选项，不擅自转去右侧迷雾林",
+        "selected": {
+          "id": "r:f28528e6e121b03b:t1:c:a",
+          "label": "沿着大路前往青石镇",
+          "intent": "travel",
+          "targetId": "r:f28528e6e121b03b:t1:e:place_1",
+          "stake": "low",
+          "approach": "road"
+        }
+      },
+      "choices": [
+        {
+          "id": "r:f28528e6e121b03b:t2:c:a",
+          "enabled": true,
+          "label": "向掌柜打听镇上哪里可以打零工",
+          "cost": "0日"
+        },
+        {
+          "id": "r:f28528e6e121b03b:t2:c:b",
+          "enabled": true,
+          "label": "询问掌柜这镇上有没有修仙者出没",
+          "cost": "0日"
+        },
+        {
+          "id": "r:f28528e6e121b03b:t2:c:c",
+          "enabled": true,
+          "label": "在柴房里寻找是否有遗漏的物资",
+          "cost": "90日 · 历练受伤基础风险5%，根骨与坚韧筋骨可降低风险。"
+        }
+      ],
+      "traces": [
+        {
+          "model": "@cf/zai-org/glm-4.7-flash",
+          "inputHash": "654bd594855b50ed39558fd8c3e45b1e0f2e3251c9cc24fc52cef449efb554c4",
+          "inputBytes": 16672,
+          "startedAt": 1793344733697,
+          "bindingReturnedAt": 1793344734095,
+          "response": {
+            "model": "@cf/zai-org/glm-4.7-flash",
+            "choices": [
+              {
+                "finish_reason": "stop",
+                "message": {
+                  "content": "{\n  \"blocks\": [\n    {\n      \"kind\": \"narration\",\n      \"text\": \"你沿着大路走了三十天，脚底磨出了水泡，身上的行粮也吃去了一半。青石镇终于出现在眼前，那是一座依山而建的城镇，城墙由青石砌成，显得古朴厚重。镇口立着一块石碑，上面刻着‘青石镇’三个大字。你站在镇口，看着熙熙攘攘的人群，心中既紧张又兴奋。镇子里人来人往，有挑着担子的商贩，也有背着剑的修士。你摸了摸口袋，里面只有两块灵石，那是你攒了许久才换来的，此刻却显得格外珍贵。你决定先找个地方落脚，顺便打听一下镇上的情况。\"\n    },\n    {\n      \"kind\": \"dialogue\",\n      \"text\": \"“掌柜的，来碗热汤，再给个落脚的地方。”\",\n      \"speaker\": \"self\"\n    },\n    {\n      \"kind\": \"narration\",\n      \"text\": \"你走进一家名为‘聚宝阁’的客栈，掌柜的抬起头看了你一眼，见你衣着朴素，便淡淡地说道：\"\n    },\n    {\n      \"kind\": \"dialogue\",\n      \"text\": \"“小二，带这位客官去后院的柴房住下，管饱就行。”\",\n      \"speaker\": \"p1\"\n    },\n    {\n      \"kind\": \"narration\",\n      \"text\": \"你被带到了后院的柴房，这里虽然简陋，但胜在安静。你放下包袱，从里面翻出两块灵石放在桌上，心想这镇子上的规矩看来不比村里。你坐在柴房里，看着窗外，心里盘算着接下来的打算。\"\n    }\n  ],\n  \"title\": \"青石镇客栈\",\n  \"location\": \"聚宝阁客栈柴房\",\n  \"otherPeople\": [\n    {\n      \"id\": \"p1\",\n      \"name\": \"掌柜\",\n      \"status\": \"alive\"\n    }\n  ],\n  \"places\": [\n    {\n      \"id\": \"k1\"\n    }\n  ],\n  \"factions\": [],\n  \"choices\": [\n    {\n      \"action\": \"interact:ask\",\n      \"targetId\": \"p1\",\n      \"stake\": \"low\",\n      \"label\": \"向掌柜打听镇上哪里可以打零工\",\n      \"anchor\": \"你坐在柴房里，看着窗外，心里盘算着接下来的打算。\"\n    },\n    {\n      \"action\": \"interact:ask\",\n      \"targetId\": \"p1\",\n      \"stake\": \"low\",\n      \"label\": \"询问掌柜这镇上有没有修仙者出没\",\n      \"anchor\": \"你坐在柴房里，看着窗外，心里盘算着接下来的打算。\"\n    },\n    {\n      \"action\": \"explore:cautious\",\n      \"targetId\": \"supplies\",\n      \"stake\": \"low\",\n      \"label\": \"在柴房里寻找是否有遗漏的物资\",\n      \"anchor\": \"你被带到了后院的柴房，这里虽然简陋，但胜在安静。你放下包袱，从里面翻出两块灵石放在桌上，心想这镇子上的规矩看来不比村里。\"\n    }\n  ],\n  \"memoryDeltas\": [\n    {\n      \"entityId\": \"p1\",\n      \"text\": \"掌柜把你安排在柴房住下，态度冷淡。\",\n      \"kind\": \"relationship\"\n    }\n  ]\n}",
+                  "reasoning_content": ""
+                }
+              }
+            ],
+            "usage": {
+              "prompt_tokens": 2113,
+              "completion_tokens": 770,
+              "total_tokens": 2883,
+              "prompt_tokens_details": {
+                "cached_tokens": 0
+              },
+              "neurons": 39.64950000000033
+            }
+          },
+          "rawSseBytes": 225907
+        }
+      ],
+      "revision": 2,
+      "pending": false,
+      "state": {
+        "relationshipVersion": 1,
+        "version": 5,
+        "mode": "cultivation",
+        "contentVersion": 4,
+        "rulesVersion": 1,
+        "promptVersion": 1,
+        "runId": "73df0954-bbf6-49db-82e4-ca1b6123147a",
+        "revision": 2,
+        "turnId": 2,
+        "phase": "active",
+        "rng": 2711761771,
+        "life": {
+          "name": "云归",
+          "ageDays": 5790,
+          "lifeLimit": 80,
+          "realm": "mortal",
+          "cultivation": 0,
+          "injury": 0,
+          "items": {
+            "supplies": 2,
+            "stones": 0
+          },
+          "relations": {},
+          "birth": {
+            "originId": "village",
+            "talentIds": [
+              "sensitive-breath",
+              "iron-bones"
+            ],
+            "attributes": {
+              "constitution": 5,
+              "insight": 3,
+              "fortune": 4
+            }
+          }
+        },
+        "birthReceipt": {
+          "kind": "opening",
+          "choiceId": null,
+          "action": null,
+          "elapsedDays": 0,
+          "itemChanges": {},
+          "relationChanges": {},
+          "random": {
+            "before": 1895065916,
+            "after": 1895065916,
+            "roll": null
+          },
+          "before": {
+            "ageDays": 5760,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "after": {
+            "ageDays": 5760,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "death": null,
+          "birth": {
+            "originId": "village",
+            "talentIds": [
+              "sensitive-breath",
+              "iron-bones"
+            ],
+            "attributes": {
+              "constitution": 5,
+              "insight": 3,
+              "fortune": 4
+            }
+          }
+        },
+        "currentScene": {
+          "id": "r:f28528e6e121b03b:t2:s:scene",
+          "title": "青石镇客栈",
+          "location": "聚宝阁客栈柴房",
+          "entities": [
+            {
+              "id": "r:f28528e6e121b03b:t2:e:person_1",
+              "name": "掌柜",
+              "status": "alive",
+              "kind": "person"
+            },
+            {
+              "id": "r:f28528e6e121b03b:t1:e:place_1",
+              "name": "青石镇",
+              "kind": "place"
+            }
+          ],
+          "blocks": [
+            {
+              "kind": "narration",
+              "text": "你沿着大路走了三十天，脚底磨出了水泡，身上的行粮也吃去了一半。青石镇终于出现在眼前，那是一座依山而建的城镇，城墙由青石砌成，显得古朴厚重。镇口立着一块石碑，上面刻着‘青石镇’三个大字。你站在镇口，看着熙熙攘攘的人群，心中既紧张又兴奋。镇子里人来人往，有挑着担子的商贩，也有背着剑的修士。你摸了摸口袋，里面只有两块灵石，那是你攒了许久才换来的，此刻却显得格外珍贵。你决定先找个地方落脚，顺便打听一下镇上的情况。"
+            },
+            {
+              "kind": "dialogue",
+              "text": "“掌柜的，来碗热汤，再给个落脚的地方。”",
+              "speaker": "self"
+            },
+            {
+              "kind": "narration",
+              "text": "你走进一家名为‘聚宝阁’的客栈，掌柜的抬起头看了你一眼，见你衣着朴素，便淡淡地说道："
+            },
+            {
+              "kind": "dialogue",
+              "text": "“小二，带这位客官去后院的柴房住下，管饱就行。”",
+              "speaker": "r:f28528e6e121b03b:t2:e:person_1"
+            },
+            {
+              "kind": "narration",
+              "text": "你被带到了后院的柴房，这里虽然简陋，但胜在安静。你放下包袱，从里面翻出两块灵石放在桌上，心想这镇子上的规矩看来不比村里。你坐在柴房里，看着窗外，心里盘算着接下来的打算。"
+            }
+          ],
+          "choices": [
+            {
+              "id": "r:f28528e6e121b03b:t2:c:a",
+              "label": "向掌柜打听镇上哪里可以打零工",
+              "intent": "interact",
+              "targetId": "r:f28528e6e121b03b:t2:e:person_1",
+              "stake": "low",
+              "approach": "ask"
+            },
+            {
+              "id": "r:f28528e6e121b03b:t2:c:b",
+              "label": "询问掌柜这镇上有没有修仙者出没",
+              "intent": "interact",
+              "targetId": "r:f28528e6e121b03b:t2:e:person_1",
+              "stake": "low",
+              "approach": "ask"
+            },
+            {
+              "id": "r:f28528e6e121b03b:t2:c:c",
+              "label": "在柴房里寻找是否有遗漏的物资",
+              "intent": "explore",
+              "targetId": "supplies",
+              "stake": "low",
+              "approach": "cautious"
+            }
+          ],
+          "memoryDeltas": [
+            {
+              "entityId": "r:f28528e6e121b03b:t2:e:person_1",
+              "text": "掌柜把你安排在柴房住下，态度冷淡。",
+              "kind": "relationship"
+            }
+          ]
+        },
+        "lastReceipt": {
+          "kind": "choice",
+          "choiceId": "r:f28528e6e121b03b:t1:c:a",
+          "action": {
+            "id": "r:f28528e6e121b03b:t1:c:a",
+            "label": "沿着大路前往青石镇",
+            "intent": "travel",
+            "targetId": "r:f28528e6e121b03b:t1:e:place_1",
+            "stake": "low",
+            "approach": "road"
+          },
+          "elapsedDays": 30,
+          "itemChanges": {
+            "supplies": -1
+          },
+          "relationChanges": {},
+          "random": {
+            "before": 1895065916,
+            "after": 2711761771,
+            "roll": 71
+          },
+          "before": {
+            "ageDays": 5760,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "after": {
+            "ageDays": 5790,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "death": null,
+          "birth": null
+        },
+        "relatedEntities": [
+          {
+            "id": "r:f28528e6e121b03b:t2:e:person_1",
+            "name": "掌柜",
+            "status": "alive",
+            "kind": "person"
+          },
+          {
+            "id": "r:f28528e6e121b03b:t1:e:place_1",
+            "name": "青石镇",
+            "kind": "place"
+          }
+        ],
+        "archiveCursor": 0
+      },
+      "posts": 2,
+      "latency": {
+        "usable": true,
+        "errorCode": null,
+        "firstAnyPreviewMs": 5801,
+        "firstReadableMs": 6048,
+        "completionMs": 15686,
+        "narrativeChars": 382,
+        "maxPreviewGapMs": 314,
+        "readingFinishEstimateMs": 69715,
+        "readingStallEstimateMs": 0,
+        "optionsWaitEstimateMs": 0,
+        "prefetchWorthEvaluating": true,
+        "assumptions": {
+          "readingCharsPerSecond": 6,
+          "readableChars": 20,
+          "targetWaitMs": 2000
+        }
+      }
+    }
+  ],
+  "errors": [
+    "Invalid choice"
+  ],
+  "posts": 2,
+  "refreshed": null
+}

@@ -1,0 +1,12 @@
+{
+  "sourceCommit": "43b8835b1fa68b27ea9e47fe08d4e0c84a45a758",
+  "accepted": false,
+  "reason": "Opening proposed unsupported help=repair (removed); valid ask+decline remained, but exit check did not yet accept decline. Rejected before any scene committed. Preserve the original pending/frozen input for explicit recovery after refusal-path fix.",
+  "cleanup": {
+    "productionVersion": "cad2a140-240f-4465-a837-e53f054c2589",
+    "percentage": 100,
+    "deployment": "13eb3bcb-db36-4d38-a5d0-cbbe18013c77",
+    "ownBearerDeleted": true,
+    "testBrowserStateRetainedTemporarilyForRecovery": true
+  }
+}

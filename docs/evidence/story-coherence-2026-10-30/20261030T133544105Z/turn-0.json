@@ -1,0 +1,730 @@
+{
+  "caseId": "opening",
+  "start": 839.5999999940395,
+  "timeline": [
+    {
+      "atMs": 4091,
+      "chars": 1
+    },
+    {
+      "atMs": 4168,
+      "chars": 6
+    },
+    {
+      "atMs": 4245,
+      "chars": 9
+    },
+    {
+      "atMs": 4293,
+      "chars": 13
+    },
+    {
+      "atMs": 4340,
+      "chars": 17
+    },
+    {
+      "atMs": 4413,
+      "chars": 23
+    },
+    {
+      "atMs": 4507,
+      "chars": 29
+    },
+    {
+      "atMs": 4557,
+      "chars": 33
+    },
+    {
+      "atMs": 4635,
+      "chars": 37
+    },
+    {
+      "atMs": 4698,
+      "chars": 40
+    },
+    {
+      "atMs": 4760,
+      "chars": 42
+    },
+    {
+      "atMs": 4836,
+      "chars": 45
+    },
+    {
+      "atMs": 4900,
+      "chars": 50
+    },
+    {
+      "atMs": 4962,
+      "chars": 55
+    },
+    {
+      "atMs": 5023,
+      "chars": 58
+    },
+    {
+      "atMs": 5099,
+      "chars": 64
+    },
+    {
+      "atMs": 5161,
+      "chars": 68
+    },
+    {
+      "atMs": 5223,
+      "chars": 74
+    },
+    {
+      "atMs": 5299,
+      "chars": 80
+    },
+    {
+      "atMs": 5362,
+      "chars": 84
+    },
+    {
+      "atMs": 5427,
+      "chars": 88
+    },
+    {
+      "atMs": 5503,
+      "chars": 93
+    },
+    {
+      "atMs": 5566,
+      "chars": 98
+    },
+    {
+      "atMs": 5629,
+      "chars": 102
+    },
+    {
+      "atMs": 5688,
+      "chars": 105
+    },
+    {
+      "atMs": 5765,
+      "chars": 109
+    },
+    {
+      "atMs": 5825,
+      "chars": 113
+    },
+    {
+      "atMs": 5898,
+      "chars": 118
+    },
+    {
+      "atMs": 5961,
+      "chars": 123
+    },
+    {
+      "atMs": 6023,
+      "chars": 124
+    },
+    {
+      "atMs": 6187,
+      "chars": 134
+    },
+    {
+      "atMs": 6249,
+      "chars": 138
+    },
+    {
+      "atMs": 6431,
+      "chars": 152
+    },
+    {
+      "atMs": 6494,
+      "chars": 158
+    },
+    {
+      "atMs": 6555,
+      "chars": 161
+    },
+    {
+      "atMs": 6615,
+      "chars": 167
+    },
+    {
+      "atMs": 6692,
+      "chars": 170
+    },
+    {
+      "atMs": 6750,
+      "chars": 177
+    },
+    {
+      "atMs": 6815,
+      "chars": 182
+    },
+    {
+      "atMs": 6877,
+      "chars": 185
+    },
+    {
+      "atMs": 6954,
+      "chars": 190
+    },
+    {
+      "atMs": 7297,
+      "chars": 195
+    },
+    {
+      "atMs": 7359,
+      "chars": 199
+    },
+    {
+      "atMs": 7420,
+      "chars": 202
+    },
+    {
+      "atMs": 7499,
+      "chars": 208
+    },
+    {
+      "atMs": 7560,
+      "chars": 213
+    },
+    {
+      "atMs": 7622,
+      "chars": 216
+    },
+    {
+      "atMs": 7669,
+      "chars": 221
+    },
+    {
+      "atMs": 7730,
+      "chars": 227
+    },
+    {
+      "atMs": 7790,
+      "chars": 231
+    },
+    {
+      "atMs": 7850,
+      "chars": 237
+    },
+    {
+      "atMs": 7912,
+      "chars": 244
+    },
+    {
+      "atMs": 7989,
+      "chars": 249
+    },
+    {
+      "atMs": 8049,
+      "chars": 254
+    },
+    {
+      "atMs": 8107,
+      "chars": 259
+    },
+    {
+      "atMs": 8168,
+      "chars": 266
+    },
+    {
+      "atMs": 8246,
+      "chars": 270
+    },
+    {
+      "atMs": 8320,
+      "chars": 275
+    },
+    {
+      "atMs": 8377,
+      "chars": 279
+    },
+    {
+      "atMs": 8435,
+      "chars": 283
+    },
+    {
+      "atMs": 8512,
+      "chars": 289
+    },
+    {
+      "atMs": 8572,
+      "chars": 294
+    },
+    {
+      "atMs": 8647,
+      "chars": 300
+    },
+    {
+      "atMs": 8712,
+      "chars": 306
+    },
+    {
+      "atMs": 8773,
+      "chars": 310
+    },
+    {
+      "atMs": 8836,
+      "chars": 314
+    },
+    {
+      "atMs": 8912,
+      "chars": 317
+    },
+    {
+      "atMs": 8973,
+      "chars": 321
+    },
+    {
+      "atMs": 9034,
+      "chars": 325
+    },
+    {
+      "atMs": 9112,
+      "chars": 334
+    },
+    {
+      "atMs": 9182,
+      "chars": 337
+    },
+    {
+      "atMs": 9242,
+      "chars": 340
+    },
+    {
+      "atMs": 9584,
+      "chars": 343
+    },
+    {
+      "atMs": 10082,
+      "chars": 344
+    }
+  ],
+  "choicesEnabledDuringPreview": false,
+  "lastText": "云归，十六岁，凡人。你站在村口的老槐树下，手里攥着一把磨得发亮的猎刀。村头张屠户正蹲在血泊边，手里提着一只被开膛破肚的野猪，嘴里骂骂咧咧。这野猪显然不是普通野兽，皮糙肉厚，刀口却深可见骨，显然是冲着张屠户那把祖传的杀猪刀来的。张屠户抬头看见你，把刀往地上一扔，抹了一把脸上的血水，指着那野猪的獠牙说：'云归，你来看看，这獠牙怎么有点发黑？我刚才杀它的时候，它好像还冲我笑了一下。'\n\n你凑近了些，那野猪的獠牙确实隐隐透着一股腥臭的黑气，周围的空气似乎都凝滞了几分。你下意识地握紧了手中的猎刀，指尖触碰到刀柄上粗糙的纹路，心中隐隐有种想要拔刀的冲动。张屠户见你发愣，又补了一句：'这猪是我刚从后山打来的，怎么就突然暴毙了？你小子命格好，刚才那股子煞气冲过来的时候，你好像连眼皮都没眨一下。'",
+  "doneMs": 14903,
+  "result": {
+    "protocolVersion": 1,
+    "status": "ready",
+    "requestId": "28fe0b6b-6cbb-4faa-8aec-eff26a5493ea",
+    "attemptId": "7b25aef0-7d4d-4cad-94c3-58579526c989",
+    "sessionRef": "sess_7b01f904799ddf1a65f91b21a06ad966",
+    "errorCode": null,
+    "retry": null,
+    "scene": {
+      "id": "r:777f39e63f6e0dd9:t1:s:scene",
+      "title": "村口怪猪",
+      "location": "village",
+      "entities": [
+        {
+          "id": "r:777f39e63f6e0dd9:t1:e:person_1",
+          "name": "张屠户",
+          "status": "alive",
+          "kind": "person"
+        }
+      ],
+      "blocks": [
+        {
+          "kind": "narration",
+          "text": "云归，十六岁，凡人。你站在村口的老槐树下，手里攥着一把磨得发亮的猎刀。村头张屠户正蹲在血泊边，手里提着一只被开膛破肚的野猪，嘴里骂骂咧咧。这野猪显然不是普通野兽，皮糙肉厚，刀口却深可见骨，显然是冲着张屠户那把祖传的杀猪刀来的。张屠户抬头看见你，把刀往地上一扔，抹了一把脸上的血水，指着那野猪的獠牙说：'云归，你来看看，这獠牙怎么有点发黑？我刚才杀它的时候，它好像还冲我笑了一下。'"
+        },
+        {
+          "kind": "narration",
+          "text": "你凑近了些，那野猪的獠牙确实隐隐透着一股腥臭的黑气，周围的空气似乎都凝滞了几分。你下意识地握紧了手中的猎刀，指尖触碰到刀柄上粗糙的纹路，心中隐隐有种想要拔刀的冲动。张屠户见你发愣，又补了一句：'这猪是我刚从后山打来的，怎么就突然暴毙了？你小子命格好，刚才那股子煞气冲过来的时候，你好像连眼皮都没眨一下。'"
+        }
+      ],
+      "choices": [
+        {
+          "id": "r:777f39e63f6e0dd9:t1:c:a",
+          "label": "询问张屠户：询问张屠户关于野猪獠牙发黑和冲他笑的具体细节。",
+          "intent": "interact",
+          "targetId": "r:777f39e63f6e0dd9:t1:e:person_1",
+          "stake": "low",
+          "approach": "ask"
+        },
+        {
+          "id": "r:777f39e63f6e0dd9:t1:c:b",
+          "label": "婉拒张屠户：拒绝回答张屠户的问题，表示自己只是路过。",
+          "intent": "interact",
+          "targetId": "r:777f39e63f6e0dd9:t1:e:person_1",
+          "stake": "low",
+          "approach": "decline"
+        },
+        {
+          "id": "r:777f39e63f6e0dd9:t1:c:c",
+          "label": "援助张屠户：拿出1行粮援助张屠户，表示他处理这头猪很辛苦。",
+          "intent": "interact",
+          "targetId": "r:777f39e63f6e0dd9:t1:e:person_1",
+          "stake": "low",
+          "approach": "help"
+        }
+      ],
+      "memoryDeltas": [
+        {
+          "entityId": "r:777f39e63f6e0dd9:t1:e:person_1",
+          "kind": "clue",
+          "text": "云归，十六岁，凡人。你站在村口的老槐树下，手里攥着一把磨得发亮的猎刀。村头张屠户正蹲在血泊边，手里提着一只被开膛破肚的野猪，嘴里骂骂咧咧。这野猪显然不是普通野兽，皮糙肉厚，刀口却深可见骨，显然是冲着张屠户那把祖传的杀猪刀来的。张屠户抬头看见你，把刀往地上一扔，抹了一把脸上的血水，指着那野猪的獠牙说：'云归，你来看看，这獠牙怎么有点发黑？我刚才杀它的时候，它好像还冲我笑了一下。'",
+          "status": "open"
+        }
+      ]
+    }
+  },
+  "request": {
+    "context": {
+      "schemaVersion": 1,
+      "phase": "opening",
+      "identity": {
+        "runId": "b7c829af-5d43-4b3c-98e4-44a473063d6e",
+        "turnId": 1,
+        "baseRevision": 0,
+        "stateHash": "f2b41438e8ce5e53f613b13e14767d6b69849b99d96905ddaca34ea10da3a104",
+        "choiceId": null,
+        "rulesVersion": 1,
+        "promptVersion": 1,
+        "requestId": "28fe0b6b-6cbb-4faa-8aec-eff26a5493ea"
+      },
+      "namespace": "r:777f39e63f6e0dd9",
+      "receipt": {
+        "kind": "opening",
+        "choiceId": null,
+        "action": null,
+        "elapsedDays": 0,
+        "itemChanges": {},
+        "relationChanges": {},
+        "random": {
+          "before": 134918293,
+          "after": 134918293,
+          "roll": null
+        },
+        "before": {
+          "ageDays": 5760,
+          "realm": "mortal",
+          "cultivation": 0,
+          "injury": 0
+        },
+        "after": {
+          "ageDays": 5760,
+          "realm": "mortal",
+          "cultivation": 0,
+          "injury": 0
+        },
+        "death": null,
+        "birth": {
+          "originId": "village",
+          "talentIds": [
+            "flash-wisdom",
+            "sword-bone"
+          ],
+          "attributes": {
+            "constitution": 2,
+            "insight": 6,
+            "fortune": 4
+          }
+        }
+      },
+      "life": {
+        "name": "云归",
+        "ageDays": 5760,
+        "lifeLimit": 80,
+        "realm": "mortal",
+        "cultivation": 0,
+        "injury": 0,
+        "items": {
+          "supplies": 3,
+          "stones": 0
+        },
+        "relations": {},
+        "birth": {
+          "originId": "village",
+          "talentIds": [
+            "flash-wisdom",
+            "sword-bone"
+          ],
+          "attributes": {
+            "constitution": 2,
+            "insight": 6,
+            "fortune": 4
+          }
+        }
+      },
+      "entities": [],
+      "memory": {
+        "facts": [],
+        "promises": [],
+        "clues": [],
+        "recent": [],
+        "summaries": []
+      },
+      "references": [],
+      "previousScene": null,
+      "relationshipVersion": 1,
+      "relationships": {},
+      "coverage": {
+        "policy": "relevance-v1",
+        "openTotal": 0,
+        "openIncluded": 0,
+        "openOmitted": 0
+      }
+    },
+    "attempt": {
+      "id": "7b25aef0-7d4d-4cad-94c3-58579526c989",
+      "sessionRef": "sess_7b01f904799ddf1a65f91b21a06ad966",
+      "retryOf": null
+    },
+    "storyActions": true
+  },
+  "decision": null,
+  "choices": [
+    {
+      "id": "r:777f39e63f6e0dd9:t1:c:a",
+      "enabled": true,
+      "label": "询问张屠户：询问张屠户关于野猪獠牙发黑和冲他笑的具体细节。",
+      "cost": "0日"
+    },
+    {
+      "id": "r:777f39e63f6e0dd9:t1:c:b",
+      "enabled": true,
+      "label": "婉拒张屠户：拒绝回答张屠户的问题，表示自己只是路过。",
+      "cost": "0日"
+    },
+    {
+      "id": "r:777f39e63f6e0dd9:t1:c:c",
+      "enabled": true,
+      "label": "援助张屠户：拿出1行粮援助张屠户，表示他处理这头猪很辛苦。",
+      "cost": "1日 · 行粮 1"
+    }
+  ],
+  "traces": [
+    {
+      "model": "@cf/zai-org/glm-4.7-flash",
+      "inputHash": "9032cf7aecf4ca2a06d0fddb9b301c68ea33495fd5a8d3996426ed6135b7a13d",
+      "inputBytes": 16130,
+      "startedAt": 1793367461481,
+      "bindingReturnedAt": 1793367461873,
+      "liveRawBytes": 180751,
+      "captureComplete": true,
+      "response": {
+        "model": "@cf/zai-org/glm-4.7-flash",
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "message": {
+              "content": "{\n  \"blocks\": [\n    {\n      \"kind\": \"narration\",\n      \"text\": \"云归，十六岁，凡人。你站在村口的老槐树下，手里攥着一把磨得发亮的猎刀。村头张屠户正蹲在血泊边，手里提着一只被开膛破肚的野猪，嘴里骂骂咧咧。这野猪显然不是普通野兽，皮糙肉厚，刀口却深可见骨，显然是冲着张屠户那把祖传的杀猪刀来的。张屠户抬头看见你，把刀往地上一扔，抹了一把脸上的血水，指着那野猪的獠牙说：'云归，你来看看，这獠牙怎么有点发黑？我刚才杀它的时候，它好像还冲我笑了一下。'\"\n    },\n    {\n      \"kind\": \"narration\",\n      \"text\": \"你凑近了些，那野猪的獠牙确实隐隐透着一股腥臭的黑气，周围的空气似乎都凝滞了几分。你下意识地握紧了手中的猎刀，指尖触碰到刀柄上粗糙的纹路，心中隐隐有种想要拔刀的冲动。张屠户见你发愣，又补了一句：'这猪是我刚从后山打来的，怎么就突然暴毙了？你小子命格好，刚才那股子煞气冲过来的时候，你好像连眼皮都没眨一下。'\"\n    }\n  ],\n  \"choices\": [\n    {\n      \"action\": \"interact:ask\",\n      \"targetId\": \"p1\",\n      \"stake\": \"low\",\n      \"purpose\": \"询问张屠户关于野猪獠牙发黑和冲他笑的具体细节。\",\n      \"anchor\": 0\n    },\n    {\n      \"action\": \"interact:decline\",\n      \"targetId\": \"p1\",\n      \"stake\": \"low\",\n      \"purpose\": \"拒绝回答张屠户的问题，表示自己只是路过。\",\n      \"anchor\": 0\n    },\n    {\n      \"action\": \"interact:help\",\n      \"targetId\": \"p1\",\n      \"stake\": \"low\",\n      \"purpose\": \"拿出1行粮援助张屠户，表示他处理这头猪很辛苦。\",\n      \"anchor\": 0\n    }\n  ],\n  \"title\": \"村口怪猪\",\n  \"location\": \"village\",\n  \"otherPeople\": [\n    {\n      \"id\": \"p1\",\n      \"name\": \"张屠户\",\n      \"status\": \"alive\"\n    }\n  ],\n  \"places\": [],\n  \"factions\": [],\n  \"memoryDeltas\": [\n    {\n      \"entityId\": \"p1\",\n      \"kind\": \"clue\",\n      \"anchor\": 0,\n      \"status\": \"open\"\n    }\n  ]\n}",
+              "reasoning_content": ""
+            }
+          }
+        ],
+        "usage": {
+          "prompt_tokens": 1944,
+          "completion_tokens": 617,
+          "total_tokens": 2561,
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          },
+          "neurons": 33.15080000000027
+        }
+      },
+      "rawSseBytes": 180751
+    }
+  ],
+  "revision": 1,
+  "pending": false,
+  "state": {
+    "relationshipVersion": 1,
+    "version": 5,
+    "mode": "cultivation",
+    "contentVersion": 4,
+    "rulesVersion": 1,
+    "promptVersion": 1,
+    "runId": "b7c829af-5d43-4b3c-98e4-44a473063d6e",
+    "revision": 1,
+    "turnId": 1,
+    "phase": "active",
+    "rng": 134918293,
+    "life": {
+      "name": "云归",
+      "ageDays": 5760,
+      "lifeLimit": 80,
+      "realm": "mortal",
+      "cultivation": 0,
+      "injury": 0,
+      "items": {
+        "supplies": 3,
+        "stones": 0
+      },
+      "relations": {},
+      "birth": {
+        "originId": "village",
+        "talentIds": [
+          "flash-wisdom",
+          "sword-bone"
+        ],
+        "attributes": {
+          "constitution": 2,
+          "insight": 6,
+          "fortune": 4
+        }
+      }
+    },
+    "birthReceipt": {
+      "kind": "opening",
+      "choiceId": null,
+      "action": null,
+      "elapsedDays": 0,
+      "itemChanges": {},
+      "relationChanges": {},
+      "random": {
+        "before": 134918293,
+        "after": 134918293,
+        "roll": null
+      },
+      "before": {
+        "ageDays": 5760,
+        "realm": "mortal",
+        "cultivation": 0,
+        "injury": 0
+      },
+      "after": {
+        "ageDays": 5760,
+        "realm": "mortal",
+        "cultivation": 0,
+        "injury": 0
+      },
+      "death": null,
+      "birth": {
+        "originId": "village",
+        "talentIds": [
+          "flash-wisdom",
+          "sword-bone"
+        ],
+        "attributes": {
+          "constitution": 2,
+          "insight": 6,
+          "fortune": 4
+        }
+      }
+    },
+    "currentScene": {
+      "id": "r:777f39e63f6e0dd9:t1:s:scene",
+      "title": "村口怪猪",
+      "location": "village",
+      "entities": [
+        {
+          "id": "r:777f39e63f6e0dd9:t1:e:person_1",
+          "name": "张屠户",
+          "status": "alive",
+          "kind": "person"
+        }
+      ],
+      "blocks": [
+        {
+          "kind": "narration",
+          "text": "云归，十六岁，凡人。你站在村口的老槐树下，手里攥着一把磨得发亮的猎刀。村头张屠户正蹲在血泊边，手里提着一只被开膛破肚的野猪，嘴里骂骂咧咧。这野猪显然不是普通野兽，皮糙肉厚，刀口却深可见骨，显然是冲着张屠户那把祖传的杀猪刀来的。张屠户抬头看见你，把刀往地上一扔，抹了一把脸上的血水，指着那野猪的獠牙说：'云归，你来看看，这獠牙怎么有点发黑？我刚才杀它的时候，它好像还冲我笑了一下。'"
+        },
+        {
+          "kind": "narration",
+          "text": "你凑近了些，那野猪的獠牙确实隐隐透着一股腥臭的黑气，周围的空气似乎都凝滞了几分。你下意识地握紧了手中的猎刀，指尖触碰到刀柄上粗糙的纹路，心中隐隐有种想要拔刀的冲动。张屠户见你发愣，又补了一句：'这猪是我刚从后山打来的，怎么就突然暴毙了？你小子命格好，刚才那股子煞气冲过来的时候，你好像连眼皮都没眨一下。'"
+        }
+      ],
+      "choices": [
+        {
+          "id": "r:777f39e63f6e0dd9:t1:c:a",
+          "label": "询问张屠户：询问张屠户关于野猪獠牙发黑和冲他笑的具体细节。",
+          "intent": "interact",
+          "targetId": "r:777f39e63f6e0dd9:t1:e:person_1",
+          "stake": "low",
+          "approach": "ask"
+        },
+        {
+          "id": "r:777f39e63f6e0dd9:t1:c:b",
+          "label": "婉拒张屠户：拒绝回答张屠户的问题，表示自己只是路过。",
+          "intent": "interact",
+          "targetId": "r:777f39e63f6e0dd9:t1:e:person_1",
+          "stake": "low",
+          "approach": "decline"
+        },
+        {
+          "id": "r:777f39e63f6e0dd9:t1:c:c",
+          "label": "援助张屠户：拿出1行粮援助张屠户，表示他处理这头猪很辛苦。",
+          "intent": "interact",
+          "targetId": "r:777f39e63f6e0dd9:t1:e:person_1",
+          "stake": "low",
+          "approach": "help"
+        }
+      ],
+      "memoryDeltas": [
+        {
+          "entityId": "r:777f39e63f6e0dd9:t1:e:person_1",
+          "kind": "clue",
+          "text": "云归，十六岁，凡人。你站在村口的老槐树下，手里攥着一把磨得发亮的猎刀。村头张屠户正蹲在血泊边，手里提着一只被开膛破肚的野猪，嘴里骂骂咧咧。这野猪显然不是普通野兽，皮糙肉厚，刀口却深可见骨，显然是冲着张屠户那把祖传的杀猪刀来的。张屠户抬头看见你，把刀往地上一扔，抹了一把脸上的血水，指着那野猪的獠牙说：'云归，你来看看，这獠牙怎么有点发黑？我刚才杀它的时候，它好像还冲我笑了一下。'",
+          "status": "open"
+        }
+      ]
+    },
+    "lastReceipt": {
+      "kind": "opening",
+      "choiceId": null,
+      "action": null,
+      "elapsedDays": 0,
+      "itemChanges": {},
+      "relationChanges": {},
+      "random": {
+        "before": 134918293,
+        "after": 134918293,
+        "roll": null
+      },
+      "before": {
+        "ageDays": 5760,
+        "realm": "mortal",
+        "cultivation": 0,
+        "injury": 0
+      },
+      "after": {
+        "ageDays": 5760,
+        "realm": "mortal",
+        "cultivation": 0,
+        "injury": 0
+      },
+      "death": null,
+      "birth": {
+        "originId": "village",
+        "talentIds": [
+          "flash-wisdom",
+          "sword-bone"
+        ],
+        "attributes": {
+          "constitution": 2,
+          "insight": 6,
+          "fortune": 4
+        }
+      }
+    },
+    "relatedEntities": [
+      {
+        "id": "r:777f39e63f6e0dd9:t1:e:person_1",
+        "name": "张屠户",
+        "status": "alive",
+        "kind": "person"
+      }
+    ],
+    "archiveCursor": 0
+  },
+  "posts": 1,
+  "latency": {
+    "usable": true,
+    "errorCode": null,
+    "firstAnyPreviewMs": 4091,
+    "firstReadableMs": 4413,
+    "completionMs": 14903,
+    "narrativeChars": 344,
+    "maxPreviewGapMs": 498,
+    "readingFinishEstimateMs": 61746,
+    "readingStallEstimateMs": 0,
+    "optionsWaitEstimateMs": 0,
+    "prefetchWorthEvaluating": true,
+    "assumptions": {
+      "readingCharsPerSecond": 6,
+      "readableChars": 20,
+      "targetWaitMs": 2000
+    }
+  }
+}

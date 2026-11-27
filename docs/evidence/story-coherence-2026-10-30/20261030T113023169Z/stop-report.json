@@ -1,0 +1,12 @@
+{
+  "sourceCommit": "efa633ae5e035a9db4afc78764a46bc6d6e43851",
+  "accepted": false,
+  "reason": "Three committed scenes (opening, concrete question, refusal); fourth leave repeated the entire refusal paragraph exactly and was rejected REPEATED_SCENE. Verified distinct actual selected approach and provider input hashes. No six-turn acceptance. Full source initially 976/980 because four browser setup imports failed; same exact LF source with test concurrency4 passed980/980,175JS and build.",
+  "cleanup": {
+    "productionVersion": "cad2a140-240f-4465-a837-e53f054c2589",
+    "percentage": 100,
+    "deployment": "deac117d-e562-4166-9aa2-e798fe92586d",
+    "ownBearerDeleted": true,
+    "ownBrowserSnapshotDeleted": true
+  }
+}

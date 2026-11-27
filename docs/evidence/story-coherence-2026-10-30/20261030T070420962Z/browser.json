@@ -1,0 +1,519 @@
+{
+  "sourceCommit": "52a9bf8e4c0970c52f4f9cbf4d124680a417d10f",
+  "version": "5f0fa6cc-915e-4ba3-9bb5-44a249c779dc",
+  "recordedAt": "2026-10-30T07:05:37.629Z",
+  "records": [
+    {
+      "caseId": "opening",
+      "start": 1081.6000000014901,
+      "timeline": [
+        {
+          "atMs": 8021,
+          "chars": 1
+        },
+        {
+          "atMs": 8098,
+          "chars": 5
+        },
+        {
+          "atMs": 8161,
+          "chars": 7
+        },
+        {
+          "atMs": 8223,
+          "chars": 9
+        },
+        {
+          "atMs": 8288,
+          "chars": 12
+        },
+        {
+          "atMs": 8336,
+          "chars": 14
+        },
+        {
+          "atMs": 8383,
+          "chars": 19
+        },
+        {
+          "atMs": 8454,
+          "chars": 21
+        },
+        {
+          "atMs": 8494,
+          "chars": 24
+        },
+        {
+          "atMs": 8558,
+          "chars": 27
+        },
+        {
+          "atMs": 8620,
+          "chars": 31
+        },
+        {
+          "atMs": 8680,
+          "chars": 34
+        },
+        {
+          "atMs": 8745,
+          "chars": 37
+        },
+        {
+          "atMs": 8806,
+          "chars": 41
+        },
+        {
+          "atMs": 8868,
+          "chars": 43
+        },
+        {
+          "atMs": 8915,
+          "chars": 44
+        },
+        {
+          "atMs": 9258,
+          "chars": 46
+        },
+        {
+          "atMs": 9584,
+          "chars": 48
+        },
+        {
+          "atMs": 9663,
+          "chars": 50
+        },
+        {
+          "atMs": 9712,
+          "chars": 52
+        },
+        {
+          "atMs": 9775,
+          "chars": 56
+        },
+        {
+          "atMs": 9838,
+          "chars": 60
+        },
+        {
+          "atMs": 9912,
+          "chars": 63
+        },
+        {
+          "atMs": 9975,
+          "chars": 66
+        },
+        {
+          "atMs": 10038,
+          "chars": 69
+        },
+        {
+          "atMs": 10097,
+          "chars": 72
+        },
+        {
+          "atMs": 10161,
+          "chars": 74
+        },
+        {
+          "atMs": 10504,
+          "chars": 76
+        },
+        {
+          "atMs": 10938,
+          "chars": 79
+        },
+        {
+          "atMs": 11047,
+          "chars": 84
+        },
+        {
+          "atMs": 11136,
+          "chars": 88
+        },
+        {
+          "atMs": 11215,
+          "chars": 91
+        },
+        {
+          "atMs": 11539,
+          "chars": 95
+        },
+        {
+          "atMs": 11603,
+          "chars": 99
+        },
+        {
+          "atMs": 11650,
+          "chars": 102
+        },
+        {
+          "atMs": 11697,
+          "chars": 104
+        },
+        {
+          "atMs": 11758,
+          "chars": 109
+        },
+        {
+          "atMs": 11818,
+          "chars": 116
+        },
+        {
+          "atMs": 12455,
+          "chars": 120
+        },
+        {
+          "atMs": 12517,
+          "chars": 125
+        },
+        {
+          "atMs": 12579,
+          "chars": 127
+        },
+        {
+          "atMs": 12641,
+          "chars": 132
+        },
+        {
+          "atMs": 12703,
+          "chars": 135
+        },
+        {
+          "atMs": 12749,
+          "chars": 137
+        },
+        {
+          "atMs": 12813,
+          "chars": 140
+        },
+        {
+          "atMs": 12875,
+          "chars": 144
+        },
+        {
+          "atMs": 12924,
+          "chars": 148
+        },
+        {
+          "atMs": 12985,
+          "chars": 151
+        },
+        {
+          "atMs": 13047,
+          "chars": 157
+        },
+        {
+          "atMs": 13095,
+          "chars": 159
+        },
+        {
+          "atMs": 13157,
+          "chars": 162
+        },
+        {
+          "atMs": 13204,
+          "chars": 164
+        },
+        {
+          "atMs": 13280,
+          "chars": 167
+        },
+        {
+          "atMs": 13358,
+          "chars": 170
+        },
+        {
+          "atMs": 13405,
+          "chars": 174
+        },
+        {
+          "atMs": 13452,
+          "chars": 176
+        },
+        {
+          "atMs": 13515,
+          "chars": 178
+        },
+        {
+          "atMs": 13577,
+          "chars": 182
+        },
+        {
+          "atMs": 13654,
+          "chars": 188
+        },
+        {
+          "atMs": 13733,
+          "chars": 190
+        },
+        {
+          "atMs": 13780,
+          "chars": 192
+        },
+        {
+          "atMs": 13842,
+          "chars": 196
+        },
+        {
+          "atMs": 13905,
+          "chars": 200
+        },
+        {
+          "atMs": 13969,
+          "chars": 204
+        },
+        {
+          "atMs": 14015,
+          "chars": 207
+        },
+        {
+          "atMs": 14076,
+          "chars": 210
+        },
+        {
+          "atMs": 14123,
+          "chars": 213
+        },
+        {
+          "atMs": 14185,
+          "chars": 218
+        }
+      ],
+      "choicesEnabledDuringPreview": false,
+      "lastText": "你站在青云村口，晨雾还未散尽。十六岁的云归，身形清瘦，眼神却透着一股子机灵劲儿。你手里攥着三块干硬的行粮，这是你全部的家当。村口的老槐树下，几个村民正聚在一起闲聊，似乎在议论着什么。\n\n“听说了吗？后山那片林子里，最近好像有动静。”\n\n你听出了那是村长张伯的声音。他平日里最是谨慎，如今却这般神色，想必不是小事。你摸了摸腰间那把磨得发亮的柴刀，心中暗自盘算。这凡人十六载，除了砍柴种地，你从未想过自己能走出这大山。但今日，似乎是个机会。",
+      "doneMs": 21117,
+      "result": {
+        "protocolVersion": 1,
+        "status": "rejected",
+        "requestId": "899178fe-b8f8-443d-bdb8-7797ebf2b336",
+        "attemptId": "81db3de8-f631-457b-b490-5dc2ea660444",
+        "sessionRef": "sess_6e3f1c458d367e3b324d27579ff59ecd",
+        "errorCode": "GENERATED_SCENE_INVALID",
+        "retry": null
+      },
+      "request": {
+        "context": {
+          "schemaVersion": 1,
+          "phase": "opening",
+          "identity": {
+            "runId": "98f2d08d-fd63-4c0a-92ec-b2a1079ae3f5",
+            "turnId": 1,
+            "baseRevision": 0,
+            "stateHash": "150aa915573765d341912b9e1ff7f36df77a75ac5b78b913bc410e3058f2ee30",
+            "choiceId": null,
+            "rulesVersion": 1,
+            "promptVersion": 1,
+            "requestId": "899178fe-b8f8-443d-bdb8-7797ebf2b336"
+          },
+          "namespace": "r:1c001184bce1c534",
+          "receipt": {
+            "kind": "opening",
+            "choiceId": null,
+            "action": null,
+            "elapsedDays": 0,
+            "itemChanges": {},
+            "relationChanges": {},
+            "random": {
+              "before": 745063594,
+              "after": 745063594,
+              "roll": null
+            },
+            "before": {
+              "ageDays": 5760,
+              "realm": "mortal",
+              "cultivation": 0,
+              "injury": 0
+            },
+            "after": {
+              "ageDays": 5760,
+              "realm": "mortal",
+              "cultivation": 0,
+              "injury": 0
+            },
+            "death": null,
+            "birth": {
+              "originId": "village",
+              "talentIds": [
+                "fortune-debt",
+                "flash-wisdom"
+              ],
+              "attributes": {
+                "constitution": 3,
+                "insight": 3,
+                "fortune": 6
+              }
+            }
+          },
+          "life": {
+            "name": "云归",
+            "ageDays": 5760,
+            "lifeLimit": 80,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0,
+            "items": {
+              "supplies": 3,
+              "stones": 0
+            },
+            "relations": {},
+            "birth": {
+              "originId": "village",
+              "talentIds": [
+                "fortune-debt",
+                "flash-wisdom"
+              ],
+              "attributes": {
+                "constitution": 3,
+                "insight": 3,
+                "fortune": 6
+              }
+            }
+          },
+          "entities": [],
+          "memory": {
+            "facts": [],
+            "promises": [],
+            "clues": [],
+            "recent": [],
+            "summaries": []
+          },
+          "references": [],
+          "previousScene": null,
+          "relationshipVersion": 1,
+          "relationships": {},
+          "coverage": {
+            "policy": "relevance-v1",
+            "openTotal": 0,
+            "openIncluded": 0,
+            "openOmitted": 0
+          }
+        },
+        "attempt": {
+          "id": "81db3de8-f631-457b-b490-5dc2ea660444",
+          "sessionRef": "sess_6e3f1c458d367e3b324d27579ff59ecd",
+          "retryOf": null
+        }
+      },
+      "decision": null,
+      "choices": [],
+      "traces": [
+        {
+          "model": "@cf/zai-org/glm-4.7-flash",
+          "inputHash": "4f2517e43e418972207d95ad26c791e83801bb1a6affbf5b76f76d6173a09788",
+          "inputBytes": 15086,
+          "startedAt": 1793343918998,
+          "bindingReturnedAt": 1793343919482,
+          "truncated": true,
+          "raw": "data: {\"id\":\"chatcmpl-8055d04103acabd7\",\"object\":\"chat.completion.chunk\",\"created\":1793343919,\"model\":\"@cf/zai-org/glm-4.7-flash\",\"choices\":[{\"index\":0,\"delta\":{\"role\":\"assistant\",\"content\":\"\",\"reasoning_content\":null},\"logprobs\":null,\"finish_reason\":null}],\"usage\":{\"prompt_tokens\":1693,\"completion_tokens\":0,\"total_tokens\":1693,\"prompt_tokens_details\":{\"cached_tokens\":0},\"neurons\":9.311499999999999},\"prompt_token_ids\":null,\"p\":\"abdefghijklmnoprstuvxyz1234567890abdefghi\"}\n\ndata: {\"id\":\"chatcmpl-8055d04103acabd7\",\"object\":\"chat.completion.chunk\",\"created\":1793343919,\"model\":\"@cf/zai-org/glm-4.7-flash\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"{\\n\",\"reasoning_content\":null},\"logprobs\":null,\"finish_reason\":null,\"token_ids\":null}],\"usage\":{\"prompt_tokens\":0,\"completion_tokens\":1,\"total_tokens\":1,\"prompt_tokens_details\":{\"cached_tokens\":0},\"neurons\":0.0364},\"p\":\"abdefghijklmnoprstuvxyz12\"}\n\ndata: {\"id\":\"chatcmpl-8055d04103acabd7\",\"object\":\"chat.completion.chunk\",\"created\":1793343919,\"model\":\"@cf/zai-org/glm-4.7-flash\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\" \",\"reasoning_content\":null},\"logprobs\":null,\"finish_reason\":null,\"token_ids\":null}],\"usage\":{\"prompt_tokens\":0,\"completion_tokens\":1,\"total_tokens\":1,\"prompt_tokens_details\":{\"cached_tokens\":0},\"neurons\":0.0364},\"p\":\"abdefghijklmnoprstuvxyz1234567890abdefghijklmnoprs\"}\n\ndata: {\"id\":\"chatcmpl-8055d04103acabd7\",\"object\":\"chat.completion.chunk\",\"created\":1793343919,\"model\":\"@cf/zai-org/glm-4.7-flash\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\" \\\"blocks\",\"reasoning_content\":null},\"logprobs\":null,\"finish_reason\":null,\"token_ids\":null}],\"usage\":{\"prompt_tokens\":0,\"completion_tokens\":2,\"total_tokens\":2,\"prompt_tokens_details\":{\"cached_tokens\":0},\"neurons\":0.0728},\"p\":\"abdefghijklmnoprstuvxyz1234567890abdefghijkl\"}\n\ndata: {\"id\":\"chatcmpl-8055d04103acabd7\",\"object\":\"chat.completion.chunk\",\"created\":1793343919,\"model\":\"@cf/zai-org/glm-4.7-flash\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"\\\": [\\n\",\"reasoning_content\":null},\"logprobs\":null,\"finish_reason\":null,\"token_ids\":null}],\"usage\":{\"prompt_tokens\":0,\"completion_tokens\":2,\"total_tokens\":2,\"prompt_tokens_details\":{\"cached_tokens\":0},\"neurons\":0.0728},\"p\":\"abdefghijklmnoprstuvxyz1234567890ab\"}\n\ndata: {\"id\":\"chatcmpl-8055d04103acabd7\",\"object\":\"chat.completion.chunk\",\"created\":1793343919,\"model\":\"@cf/zai-org/glm-4.7-flash\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"    {\\n\",\"reasoning_content\":null},\"logprobs\":null,\"finish_reason\":null,\"token_ids\":null}],\"usage\":{\"prompt_tokens\":0,\"completion_tokens\":2,\"total_tokens\":2,\"prompt_tokens_details\":{\"cached_tokens\":0},\"neurons\":0.0728},\"p\":\"abdefghijklmnoprstuvxyz1234567890abdefghijklmn\"}\n\ndata: {\"id\":\"chatcmpl-8055d04103acabd7\",\"object\":\"chat.completion.chunk\",\"created\":1793343919,\"model\":\"@cf/zai-org/glm-4.7-flash\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"     \",\"reasoning_content\":null},\"logprobs\":null,\"finish_reason\":null,\"token_ids\":null}],\"usage\":{\"prompt_tokens\":0,\"completion_tokens\":1,\"total_tokens\":1,\"prompt_tokens_details\":{\"cached_tokens\":0},\"neurons\":0.0364},\"p\":\"abdefghijklmnoprstuvxyz1234\"}\n\ndata: {\"id\":\"chatcmpl-8055d04103acabd7\",\"object\":\"chat.completion.chunk\",\"created\":1793343919,\"model\":\"@cf/zai-org/glm-4.7-flash\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\" \\\"kind\",\"reasoning_content\":null},\"logprobs\":null,\"finish_reason\":null,\"token_ids\":null}],\"usage\":{\"prompt_tokens\":0,\"completion_tokens\":2,\"total_tokens\":2,\"prompt_tokens_details\":{\"cached_tokens\":0},\"neurons\":0.0728},\"p\":\"abdefghijklmno\"}\n\ndata: {\"id\":\"chatcmpl-8055d04103acabd7\",\"object\":\"chat.completion.chunk\",\"created\":1793343919,\"model\":\"@cf/zai-org/glm-4.7-flash\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"\\\": \\\"\",\"reasoning_content\":null},\"logprobs\":null,\"finish_reason\":null,\"token_ids\":null}],\"usage\":{\"prompt_tokens\":0,\"completion_tokens\":2,\"total_tokens\":2,\"prompt_tokens_details\":{\"cached_tokens\":0},\"neurons\":0.0728},\"p\":\"abdefghijklmnoprstuvxyz1234567890\"}\n\ndata: {\"id\":\"chatcmpl-8055d04103acabd7\",\"object\":\"chat.completion.chunk\",\"created\":1793343919,\"model\":\"@cf/zai-org/glm-4.7-flash\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"narr\",\"reasoning_content\":null},\"logprobs\":null,\"finish_reason\":null,\"token_ids\":null}],\"usage\":{\"prompt_tokens\":0,\"completion_tokens\":2,\"total_tokens\":2,\"prompt_tokens_details\":{\"cached_tokens\":0},\"neurons\":0.0728},\"p\":\"abdefghijklmnoprstuvxyz1234567890abdefghijklmno\"}\n\ndata: {\"id\":\"chatcmpl-8055d04103acabd7\",\"object\":\"chat.completion.chunk\",\"created\":1793343919,\"model\":\"@cf/zai-org/glm-4.7-flash\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"ation\",\"reasoning_content\":null},\"logprobs\":null,\"finish_reason\":null,\"token_ids\":null}],\"usage\":{\"prompt_tokens\":0,\"completion_tokens\":1,\"total_tokens\":1,\"prompt_tokens_details\":{\"cached_tokens\":0},\"neurons\":0.0364},\"p\":\"abdefghijklmnoprstuvxyz1234567890abde\"}\n\ndata: {\"id\":\"chatcmpl-8055d04103acabd7\",\"object\":\"chat.completion.chunk\",\"created\":1793343919,\"model\":\"@cf/zai-org/glm-4.7-flash\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"\\\",\\n     \",\"reasoning_content\":null},\"logprobs\":null,\"finish_reason\":null,\"token_ids\":null}],\"usage\":{\"prompt_tokens\":0,\"completion_tokens\":2,\"total_tokens\":2,\"prompt_tokens_details\":{\"cached_tokens\":0},\"neurons\":0.0728},\"p\":\"abdefghijklmnoprstuvxyz1234567890abdef\"}\n\ndata: {\"id\":\"chatcmpl-8055d04103acabd7\",\"object\":\"chat.completion.chunk\",\"created\":1793343919,\"model\":\"@cf/zai-org/glm-4.7-flash\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\" \\\"text\",\"reasoning_content\":null},\"logprobs\":null,\"finish_reason\":null,\"token_ids\":null}],\"usage\":{\"prompt_tokens\":0,\"completion_tokens\":2,\"total_tokens\":2,\"prompt_tokens_details\":{\"cached_tokens\":0},\"neurons\":0.0728},\"p\":\"abdefghijklmnop\"}\n\ndata: {\"id\":\"chatcmpl-8055d04103acabd7\",\"object\":\"chat.completion.chunk\",\"created\":1793343919,\"model\":\"@cf/zai-org/glm-4.7-flash\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"\\\": \\\"\",\"reasoning_content\":null},\"logprobs\":null,\"finish_reason\":null,\"token_ids\":null}],\"usage\":{\"prompt_tokens\":0,\"completion_tokens\":2,\"total_tokens\":2,\"prompt_tokens_details\":{\"cached_tokens\":0},\"neurons\":0.0728},\"p\":\"abdefghijklmnoprstuvx\"}\n\ndata: {\"id\":\"chatcmpl-8055d04103acabd7\",\"object\":\"chat.completion.chunk\",\"created\":1793343919,\"model\":\"@cf/zai-org/glm-4.7-flash\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"你\",\"reasoning_content\":null},\"logprobs\":null,\"finish_reason\":null,\"token_ids\":null}],\"usage\":{\"prompt_tokens\":0,\"completion_tokens\":1,\"total_tokens\":1,\"prompt_tokens_details\":{\"cached_tokens\":0},\"neurons\":0.0364},\"p\":\"abdefghijklmnoprstuvxyz123456\"}\n\ndata: {\"id\":\"chatcmpl-8055d04103acabd7\",\"object\":\"chat.completion.chunk\",\"created\":1793343919,\"model\":\"@cf/zai-org/glm-4.7-flash\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"站在\",\"reasoning_content\":null},\"logprobs\":null,\"finish_reason\":null,\"token_ids\":null}],\"usage\":{\"prompt_tokens\":0,\"completion_tokens\":1,\"total_tokens\":1,\"prompt_tokens_details\":{\"cached_tokens\":0},\"neurons\":0.0364},\"p\":\"abdefghijklmnoprstuvx\"}\n\ndata: {\"id\":\"chatcmpl-8055d04103acabd7\",\"object\":\"chat.completion.chunk\",\"created\":1793343919,\"model\":\"@cf/zai-org/glm-4.7-flash\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"青云\",\"reasoning_content\":null},\"logprobs\":null,\"finish_reason\":null,\"token_ids\":null}],\"usage\":{\"prompt_tokens\":0,\"completion_tokens\":1,\"total_tokens\":1,\"prompt_tokens_details\":{\"cached_tokens\":0},\"neurons\":0.0364},\"p\":\"abdefghijklmnoprstuvxyz1234567890\"}\n\ndata: {\"id\":\"chatcmpl-8055d04103acabd7\",\"object\":\"chat.completion.chunk\",\"created\":1793343919,\"model\":\"@cf/zai-org/glm-4.7-flash\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"村\",\"reasoning_content\":null},\"logprobs\":null,\"finish_reason\":null,\"token_ids\":null}],\"usage\":{\"prompt_tokens\":0,\"completion_tokens\":1,\"total_tokens\":1,\"prompt_tokens_details\":{\"cached_tokens\":0},\"neurons\":0.0364},\"p\":\"abdefghijklmnoprstuvxyz\"}\n\ndata: {\"id\":\"chatcmpl-8055d04103acabd7\",\"object\":\"chat.completion.chunk\",\"created\":1793343919,\"model\":\"@cf/zai-org/glm-4.7-flash\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"口\",\"reasoning_content\":null},\"logprobs\":null,\"finish_reason\":null,\"token_ids\":null}],\"usage\":{\"prompt_tokens\":0,\"completion_tokens\":1,\"total_tokens\":1,\"prompt_tokens_details\":{\"cached_tokens\":0},\"neurons\":0.0364},\"p\":\"abdefghijklmnoprstuvxyz1234567890abdefghijkl\"}\n\ndata: {\"id\":\"chatcmpl-8055d04103acabd7\",\"object\":\"chat.completion.chunk\",\"created\":1793343919,\"model\":\"@cf/zai-org/glm-4.7-flash\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"，\",\"reasoning_content\":null},\"logprobs\":null,\"finish_reason\":null,\"token_ids\":null}],\"usage\":{\"prompt_tokens\":0,\"completion_tokens\":1,\"total_tokens\":1,\"prompt_tokens_details\":{\"cached_tokens\":0},\"neurons\":0.0364},\"p\":\"abdefghijklmnoprstuvxyz1234567890abdefghij\"}\n\ndata: {\"id\":\"chatcmpl-8055d04103acabd7\",\"object\":\"chat.completion.chunk\",\"created\":1793343919,\"model\":\"@cf/zai-org/glm-4.7-flash\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"晨\",\"reasoning_content\":null},\"logprobs\":null,\"finish_reason\":null,\"token_ids\":null}],\"usage\":{\"prompt_tokens\":0,\"completion_tokens\":1,\"total_tokens\":1,\"prompt_tokens_details\":{\"cached_tokens\":0},\"neurons\":0.0364},\"p\":\"abdefghijklmnoprstu\"}\n\ndata: {\"id\":\"chatcmpl-8055d04103acabd7\",\"object\":\"chat.completion.chunk\",\"created\":1793343919,\"model\":\"@cf/zai-org/glm-4.7-flash\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"雾\",\"reasoning_content\":null},\"logprobs\":null,\"finish_reason\":null,\"token_ids\":null}],\"usage\":{\"prompt_tokens\":0,\"completion_tokens\":1,\"total_tokens\":1,\"prompt_tokens_details\":{\"cached_tokens\":0},\"neurons\":0.0364},\"p\":\"abdefghijklmnoprstuvxyz123\"}\n\ndata: {\"id\":\"chatcmpl-8055d04103acabd7\",\"object\":\"chat.completion.chunk\",\"created\":1793343919,\"model\":\"@cf/zai-org/glm-4.7-flash\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"还未\",\"reasoning_content\":null},\"logprobs\":null,\"finish_reason\":null,\"token_ids\":null}],\"usage\":{\"prompt_tokens\":0,\"completion_tokens\":1,\"total_tokens\":1,\"prompt_tokens_details\":{\"cached_tokens\":0},\"neurons\":0.0364},\"p\":\"abdefghijklmnoprs\"}\n\ndata: {\"id\":\"chatcmpl-8055d04103acabd7\",\"object\":\"chat.completion.chunk\",\"created\":1793343919,\"model\":\"@cf/zai-org/glm-4.7-flash\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"散\",\"reasoning_content\":null},\"logprobs\":null,\"finish_reason\":null,\"token_ids\":null}],\"usage\":{\"prompt_tokens\":0,\"completion_tokens\":1,\"total_tokens\":1,\"prompt_tokens_details\":{\"cached_tokens\":0},\"neurons\":0.0364},\"p\":\"abdefghijklmnoprstuvx\"}\n\ndata: {\"id\":\"chatcmpl-8055d04103acabd7\",\"object\":\"chat.completion.chunk\",\"created\":1793343919,\"model\":\"@cf/zai-org/glm-4.7-flash\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"尽\",\"reasoning_content\":null},\"logprobs\":null,\"finish_reason\":null,\"token_ids\":null}],\"usage\":{\"prompt_tokens\":0,\"completion_tokens\":1,\"total_tokens\":1,\"prompt_tokens_details\":{\"cached_tokens\":0},\"neurons\":0.0364},\"p\":\"abdefghijklmnoprstuvxyz1234567890abdefg\"}\n\ndata: {\"id\":\"chatcmpl-8055d04103acabd7\",\"object\":\"chat.completion.chunk\",\"created\":1793343919,\"model\":\"@cf/zai-org/glm-4.7-flash\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"。十六\",\"reasoning_content\":null},\"logprobs\":null,\"finish_reason\":null,\"token_ids\":null}],\"usage\":{\"prompt_tokens\":0,\"completion_tokens\":2,\"total_tokens\":2,\"prompt_tokens_details\":{\"cached_tokens\":0},\"neurons\":0.0728},\"p\":\"abdefghijklmnoprstuvxyz1234567890abdefghijklmnopr\"}\n\ndata: {\"id\":\"chatcmpl-8055d04103acabd7\",\"object\":\"chat.completion.chunk\",\"created\":1793343919,\"model\":\"@cf/zai-org/glm-4.7-flash\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"岁的\",\"reasoning_content\":null},\"logprobs\":null,\"finish_reason\":null,\"token_ids\":null}],\"usage\":{\"prompt_tokens\":0,\"completion_tokens\":1,\"total_tokens\":1,\"prompt_tokens_details\":{\"cached_tokens\":0},\"neurons\":0.0364},\"p\":\"abdefghijklmnoprstuvxyz1234567890abdefghijk\"}\n\ndata: {\"id\":\"chatcmpl-8055d04103acabd7\",\"object\":\"chat.completion.chunk\",\"created\":1793343919,\"model\":\"@cf/zai-org/glm-4.7-flash\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"云\",\"reasoning_content\":null},\"logprobs\":null,\"finish_reason\":null,\"token_ids\":null}],\"usage\":{\"prompt_tokens\":0,\"completion_tokens\":1,\"total_tokens\":1,\"prompt_tokens_details\":{\"cached_tokens\":0},\"neurons\":0.0364},\"p\":\"abdefghijklmnop\"}\n\ndata: {\"id\":\"chatcmpl-8055d04103acabd7\",\"object\":\"chat.completion.chunk\",\"created\":1793343919,\"model\":\"@cf/zai-org/glm-4.7-flash\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"归\",\"reasoning_content\":null},\"logprobs\":null,\"finish_reason\":null,\"token_ids\":null}],\"usage\":{\"prompt_tokens\":0,\"completion_tokens\":1,\"total_tokens\":1,\"prompt_tokens_details\":{\"cached_tokens\":0},\"neurons\":0.0364},\"p\":\"abdefgh\"}\n\ndata: {\"id\":\"chatcmpl-8055d04103acabd7\",\"object\":\"chat.completion.chunk\",\"created\":1793343919,\"model\":\"@cf/zai-org/glm-4.7-flash\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"，身\",\"reasoning_content\":null},\"logprobs\":null,\"finish_reason\":null,\"token_ids\":null}],\"usage\":{\"prompt_tokens\":0,\"completion_tokens\":2,\"total_tokens\":2,\"prompt_tokens_details\":{\"cached_tokens\":0},\"neurons\":0.0728},\"p\":\"abdefghijklmnoprstuvxyz1234567890abdefghijklm\"}\n\ndata: {\"id\":\"chatcmpl-8055d04103acabd7\",\"object\":\"chat.completion.chunk\",\"created\":1793343919,\"model\":\"@cf/zai-org/glm-4.7-flash\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"形\",\"reasoning_content\":null},\"logprobs\":null,\"finish_reason\":null,\"token_ids\":null}],\"usage\":{\"prompt_tokens\":0,\"completion_tokens\":1,\"total_tokens\":1,\"prompt_tokens_details\":{\"cached_tokens\":0},\"neurons\":0.0364},\"p\":\"abdefghijklmnoprstuvxyz123456789\"}\n\ndata: {\"id\":\"chatcmpl-8055d04103acabd7\",\"object\":\"chat.completion.chunk\",\"created\":1793343919,\"model\":\"@cf/zai-org/glm-4.7-flash\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"清\",\"reasoning_content\":null},\"logprobs\":null,\"finish_reason\":null,\"token_ids\":null}],\"usage\":{\"prompt_tokens\":0,\"completion_tokens\":1,\"total_tokens\":1,\"prompt_tokens_details\":{\"cached_tokens\":0},\"neurons\":0.0364},\"p\":\"abdefghijklmnoprstuvxy\"}\n\ndata: {\"id\":\"chatcmpl-8055d04103acabd7\",\"object\":\"chat.completion.chunk\",\"created\":1793343919,\"model\":\"@cf/zai-org/glm-4.7-flash\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"瘦，\",\"reasoning_content\":null},\"logprobs\":null,\"finish_reason\":null,\"token_ids\":null}],\"usage\":{\"prompt_tokens\":0,\"completion_tokens\":2,\"total_tokens\":2,\"prompt_tokens_details\":{\"cached_tokens\":0},\"neurons\":0.0728},\"p\":\"abdefghijkl\"}\n\ndata: {\"id\":\"chatcmpl-8055d04103acabd7\",\"object\":\"chat.completion.chunk\",\"created\":1793343919,\"model\":\"@cf/zai-org/glm-4.7-flash\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"眼神\",\"reasoning_content\":null},\"logprobs\":null,\"finish_reason\":null,\"token_ids\":null}],\"usage\":{\"prompt_tokens\":0,\"completion_tokens\":1,\"total_tokens\":1,\"prompt_tokens_details\":{\"cached_tokens\":0},\"neurons\":0.0364},\"p\":\"abdefghijklmnoprstuvxyz12\"}\n\ndata: {\"id\":\"chatcmpl-8055d04103acabd7\",\"object\":\"chat.completion.chunk\",\"created\":1793343919,\"model\":\"@cf/zai-org/glm-4.7-flash\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"却透\",\"reasoning_content\":null},\"logprobs\":null,\"finish_reason\":null,\"token_ids\":null}],\"usage\":{\"prompt_tokens\":0,\"completion_tokens\":2,\"total_tokens\":2,\"prompt_tokens_details\":{\"cached_tokens\":0},\"neurons\":0.0728},\"p\":\"abdefghijklmnoprstuvxyz12\"}\n\ndata: {\"id\":\"chatcmpl-8055d04103acabd7\",\"object\":\"chat.completion.chunk\",\"created\":1793343919,\"model\":\"@cf/zai-org/glm-4.7-flash\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"着一\",\"reasoning_content\":null},\"logprobs\":null,\"finish_reason\":null,\"token_ids\":null}],\"usage\":{\"prompt_tokens\":0,\"completion_tokens\":1,\"total_tokens\":1,\"prompt_tokens_details\":{\"cached_tokens\":0},\"neurons\":0.0364},\"p\":\"abdefghijklmn\"}\n\ndata: {\"id\":\"chatcmpl-8055d04103acabd7\",\"object\":\"chat.completion.chunk\",\"created\":1793343919,\"model\":\"@cf/zai-org/glm-4.7-flash\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"股\",\"reasoning_content\":null},\"logprobs\":null,\"finish_reason\":null,\"token_ids\":null}],\"usage\":{\"prompt_tokens\":0,\"completion_tokens\":1,\"total_tokens\":1,\"prompt_tokens_details\":{\"cached_tokens\":0},\"neurons\":0.0364},\"p\":\"abdefghijklmnoprstuvxyz123\"}\n\ndata: {\"id\":\"chatcmpl-8055d04103acabd7\",\"object\":\"chat.completion.chunk\",\"created\":1793343919,\"model\":\"@cf/zai-org/glm-4.7-flash\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"子\",\"reasoning_content\":null},\"logprobs\":null,\"finish_reason\":null,\"token_ids\":null}],\"usage\":{\"prompt_tokens\":0,\"completion_tokens\":1,\"total_tokens\":1,\"prompt_tokens_details\":{\"cached_tokens\":0},\"neurons\":0.0364},\"p\":\"abdefghijklmnop\"}\n\ndata: {\"id\":\"chatcmpl-8055d04103acabd7\",\"object\":\"chat.completion.chunk\",\"created\":1793343919,\"model\":\"@cf/zai-org/glm-4.7-flash\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"机灵\",\"reasoning_content\":null},\"logprobs\":null,\"finish_reason\":null,\"token_ids\":null}],\"usage\":{\"prompt_tokens\":0,\"completion_tokens\":2,\"total_tokens\":2,\"prompt_tokens_details\":{\"cached_tokens\":0},\"neurons\":0.0728},\"p\":\"abdefghijklmnopr\"}\n\ndata: {\"id\":\"chatcmpl-8055d04103acabd7\",\"object\":\"chat.completion.chunk\",\"created\":1793343919,\"model\":\"@cf/zai-org/glm-4.7-flash\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"劲儿\",\"reasoning_content\":null},\"logprobs\":null,\"finish_reason\":null,\"token_ids\":null}],\"usage\":{\"prompt_tokens\":0,\"completion_tokens\":1,\"total_tokens\":1,\"prompt_tokens_details\":{\"cached_tokens\":0},\"neurons\":0.0364},\"p\":\"abdefghijklmnoprstuvxyz1234567890a\"}\n\ndata: {\"id\":\"chatcmpl-8055d04103acabd7\",\"object\":\"chat.completion.chunk\",\"created\":1793343919,\"model\":\"@cf/zai-org/glm-4.7-flash\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"。你\",\"reasoning_content\":null},\"logprobs\":null,\"finish_reason\":null,\"token_ids\":null}],\"usage\":{\"prompt_tokens\":0,\"completion_tokens\":2,\"total_tokens\":2,\"prompt_tokens_details\":{\"cached_tokens\":0},\"neurons\":0.0728},\"p\":\"abdefghijklmnopr\"}\n\ndata: {\"id\":\"chatcmpl-8055d04103acabd7\",\"object\":\"chat.completion.chunk\",\"created\":1793343919,\"model\":\"@cf/zai-org/glm-4.7-flash\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"手里\",\"reasoning_content\":null},\"logprobs\":null,\"finish_reason\":null,\"token_ids\":null}],\"usage\":{\"prompt_tokens\":0,\"completion_tokens\":1,\"total_tokens\":1,\"prompt_tokens_details\":{\"cached_tokens\":0},\"neurons\":0.0364},\"p\":\"abdefghijklmnoprstuvxyz1234567890abdefg\"}\n\ndata: {\"id\":\"chatcmpl-8055d04103acabd7\",\"object\":\"chat.completion.chunk\",\"created\":1793343919,\"model\":\"@cf/zai-org/glm-4.7-flash\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"攥\",\"reasoning_content\":null},\"logprobs\":null,\"finish_reason\":null,\"token_ids\":null}],\"usage\":{\"prompt_tokens\":0,\"completion_tokens\":2,\"total_tokens\":2,\"prompt_tokens_details\":{\"cached_tokens\":0},\"neurons\":0.0728},\"p\":\"abdefghijklmnoprstuvxyz1234567890abd\"}\n\ndata: {\"id\":\"chatcmpl-8055d04103acabd7\",\"object\":\"chat.completion.chunk\",\"created\":1793343919,\"model\":\"@cf/zai-org/glm-4.7-flash\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"着三\",\"reasoning_content\":null},\"logprobs\":null,\"finish_reason\":null,\"token_ids\":null}],\"usage\":{\"prompt_tokens\":0,\"completion_tokens\":2,\"total_tokens\":2,\"prompt_tokens_details\":{\"cached_tokens\":0},\"neurons\":0.0728},\"p\":\"abdefghijklm\"}\n\ndata: {\"id\":\"chatcmpl-8055d04103acabd7\",\"object\":\"chat.completion.chunk\",\"created\":1793343919,\"model\":\"@cf/zai-org/glm-4.7-flash\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"块\",\"reasoning_content\":null},\"logprobs\":null,\"finish_reason\":null,\"token_ids\":null}],\"usage\":{\"prompt_tokens\":0,\"completion_tokens\":1,\"total_tokens\":1,\"prompt_tokens_details\":{\"cached_tokens\":0},\"neurons\":0.0364},\"p\":\"abdefghijklmnoprstuvxyz1234567890abdefghi\"}\n\ndata: {\"id\":\"chatcmpl-8055d04103acabd7\",\"object\":\"chat.completion.chunk\",\"created\":1793343919,\"model\":\"@cf/zai-org/glm-4.7-flash\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"干\",\"reasoning_content\":null},\"logprobs\":null,\"finish_reason\":null,\"token_ids\":null}],\"usage\":{\"prompt_tokens\":0,\"completion_tokens\":1,\"total_tokens\":1,\"prompt_tokens_details\":{\"cached_tokens\":0},\"neurons\":0.0364},\"p\":\"abdefghijklmnoprstuvxyz1234567890ab\"}\n\ndata: {\"id\":\"chatcmpl-8055d04103acabd7\",\"object\":\"chat.completion.chunk\",\"created\":1793343919,\"model\":\"@cf/zai-org/glm-4.7-flash\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"硬\",\"reasoning_content\":null},\"logprobs\":null,\"finish_reason\":null,\"token_ids\":null}],\"usage\":{\"prompt_tokens\":0,\"completion_tokens\":1,\"total_tokens\":1,\"prompt_tokens_details\":{\"cached_tokens\":0},\"neurons\":0.0364},\"p\":\"abdefghijklmnoprstuvxyz1234567890abdefghij\"}\n\ndata: {\"id\":\"chatcmpl-8055d04103acabd7\",\"object\":\"chat.completion.chunk\",\"created\":1793343919,\"model\":\"@cf/zai-org/glm-4.7-flash\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"的\",\"reasoning_content\":null},\"logprobs\":null,\"finish_reason\":null,\"token_ids\":null}],\"usage\":{\"prompt_tokens\":0,\"completion_tokens\":1,\"total_tokens\":1,\"prompt_tokens_details\":{\"cached_tokens\":0},\"neurons\":0.0364},\"p\":\"abdefghijklmnoprstuvxyz1234567890abdefghijklmn\"}\n\ndata: {\"id\":\"chatcmpl-8055d04103acabd7\",\"object\":\"chat.completion.chunk\",\"created\":1793343919,\"model\":\"@cf/zai-org/glm-4.7-flash\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"行\",\"reasoning_content\":null},\"logprobs\":null,\"finish_reason\":null,\"token_ids\":null}],\"usage\":{\"prompt_tokens\":0,\"completion_tokens\":1,\"total_tokens\":1,\"prompt_tokens_details\":{\"cached_tokens\":0},\"neurons\":0.0364},\"p\":\"abdefghijklmnoprstuvxyz1234567890a\"}\n\ndata: {\"id\":\"chatcmpl-8055d04103acabd7\",\"object\":\"chat.completion.chunk\",\"created\":1793343919,\"model\":\"@cf/zai-org/glm-4.7-flash\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"粮\",\"reasoning_content\":null},\"logprobs\":null,\"finish_reason\":null,\"token_ids\":null}],\"usage\":{\"prompt_tokens\":0,\"completion_tokens\":1,\"total_tokens\":1,\"prompt_tokens_details\":{\"cached_tokens\":0},\"neurons\":0.0364},\"p\":\"abdefghijklmn\"}\n\ndata: {\"id\":\"chatcmpl-8055d04103acabd7\",\"object\":\"chat.completion.chunk\",\"created\":1793343919,\"model\":\"@cf/zai-org/glm-4.7-flash\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"，这是\",\"reasoning_content\":null},\"logprobs\":null,\"finish_reason\":null,\"token_ids\":null}],\"usage\":{\"prompt_tokens\":0,\"completion_tokens\":2,\"total_tokens\":2,\"prompt_tokens_details\":{\"cached_tokens\":0},\"neurons\":0.0728},\"p\":\"abdefghijklmnoprstuvxyz123456\"}\n\ndata: {\"id\":\"chatcmpl-8055d04103acabd7\",\"object\":\"chat.completion.chunk\",\"created\":1793343919,\"model\":\"@cf/zai-org/glm-4.7-flash\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"你\",\"reasoning_content\":null},\"logprobs\":null,\"finish_reason\":null,\"token_ids\":null}],\"usage\":{\"prompt_tokens\":0,\"completion_tokens\":1,\"total_tokens\":1,\"prompt_tokens_details\":{\"cached_tokens\":0},\"neurons\":0.0364},\"p\":\"abdefghijklmnoprstuvxyz1234\"}\n\ndata: {\"id\":\"chatcmpl-8055d04103acabd7\",\"object\":\"chat.completion.chunk\",\"created\":1793343919,\"model\":\"@cf/zai-org/glm-4.7-flash\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"全部\",\"reasoning_content\":null},\"logprobs\":null,\"finish_reason\":null,\"token_ids\":null}],\"usage\":{\"prompt_tokens\":0,\"completion_tokens\":1,\"total_tokens\":1,\"prompt_tokens_details\":{\"cached_tokens\":0},\"neurons\":0.0364},\"p\":\"abdefghijklmnoprstuvxyz1234567890abdefghijklmn\"}\n\ndata: {\"id\":\"chatcmpl-8055d04103acabd7\",\"object\":\"chat.completion.chunk\",\"created\":1793343919,\"model\":\"@cf/zai-org/glm-4.7-flash\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"的家\",\"reasoning_content\":null},\"logprobs\":null,\"finish_reason\":null,\"token_ids\":null}],\"usage\":{\"prompt_tokens\":0,\"completion_tokens\":1,\"total_tokens\":1,\"prompt_tokens_details\":{\"cached_tokens\":0},\"neurons\":0.0364},\"p\":\"abdefghijklmnoprstuvxyz1234567890\"}\n\ndata: {\"id\":\"chatcmpl-8055d04103acabd7\",\"object\":\"chat.completion.chunk\",\"created\":1793343919,\"model\":\"@cf/zai-org/glm-4.7-flash\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"当\",\"reasoning_content\":null},\"logprobs\":null,\"finish_reason\":null,\"token_ids\":null}],\"usage\":{\"prompt_tokens\":0,\"completion_tokens\":1,\"total_tokens\":1,\"prompt_tokens_details\":{\"cached_tokens\":0},\"neurons\":0.0364},\"p\":\"abdefghijklmnoprstuvxyz12\"}\n\ndata: {\"id\":\"chatcmpl-8055d04103acabd7\",\"object\":\"chat.completion.chunk\",\"created\":1793343919,\"model\":\"@cf/zai-org/glm-4.7-flash\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"。村\",\"reasoning_content\":null},\"logprobs\":null,\"finish_reason\":null,\"token_ids\":null}],\"usage\":{\"prompt_tokens\":0,\"completion_tokens\":2,\"total_tokens\":2,\"prompt_tokens_details\":{\"cached_tokens\":0},\"neurons\":0.0728},\"p\":\"abdefghijklmnoprstuvxy\"}\n\ndata: {\"id\":\"chatcmpl-8055d04103acabd7\",\"object\":\"chat.completion.chunk\",\"created\":1793343919,\"model\":\"@cf/zai-org/glm-4.7-flash\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"口\",\"reasoning_content\":null},\"logprobs\":null,\"finish_reason\":null,\"token_ids\":null}],\"usage\":{\"prompt_tokens\":0,\"completion_tokens\":1,\"total_tokens\":1,\"prompt_tokens_details\":{\"cached_tokens\":0},\"neurons\":0.0364},\"p\":\"abdefghijklmnoprstuvxyz1234567890abdefg\"}\n\ndata: {\"id\":\"chatcmpl-8055d04103acabd7\",\"object\":\"chat.completion.chunk\",\"created\":1793343919,\"model\":\"@cf/zai-org/glm-4.7-flash\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"的老\",\"reasoning_content\":null},\"logprobs\":null,\"finish_reason\":null,\"token_ids\":null}],\"usage\":{\"prompt_tokens\":0,\"completion_tokens\":1,\"total_tokens\":1,\"prompt_tokens_details\":{\"cached_tokens\":0},\"neurons\":0.0364},\"p\":\"abdefghijklmnoprstuvxyz1234567890abdefghijklm\"}\n\ndata: {\"id\":\"chatcmpl-8055d04103acabd7\",\"object\":\"chat.completion.chunk\",\"created\":1793343919,\"model\":\"@cf/zai-org/glm-4.7-flash\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"槐\",\"reasoning_content\":null},\"logprobs\":null,\"finish_reason\":null,\"token_ids\":null}],\"usage\":{\"prompt_tokens\":0,\"completion_tokens\":1,\"total_tokens\":1,\"prompt_tokens_details\":{\"cached_tokens\":0},\"neurons\":0.0364},\"p\":\"abdefghijklmnoprstuvxyz1234567890abdefg\"}\n\ndata: {\"id\":\"chatcmpl-8055d04103acabd7\",\"object\":\"chat.completion.chunk\",\"created\":1793343919,\"model\":\"@cf/zai-org/glm-4.7-flash\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"树下\",\"reasoning_content\":null},\"logprobs\":null,\"finish_reason\":null,\"token_ids\":null}],\"usage\":{\"prompt_tokens\":0,\"completion_tokens\":1,\"total_tokens\":1,\"prompt_tokens_details\":{\"cached_tokens\":0},\"neurons\":0.0364},\"p\":\"abdefghijklmnoprstuvx\"}\n\ndata: {\"id\":\"chatcmpl-8055d04103acabd7\",\"object\":\"chat.completion.chunk\",\"created\":1793343919,\"model\":\"@cf/zai-org/glm-4.7-flash\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"，\",\"reasoning_content\":null},\"logprobs\":null,\"finish_reason\":null,\"token_ids\":null}],\"usage\":{\"prompt_tokens\":0,\"completion_tokens\":1,\"total_tokens\":1,\"prompt_tokens_details\":{\"cached_tokens\":0},\"neurons\":0.0364},\"p\":\"abdefghijklmnoprstuvxyz123456789\"}\n\ndata: {\"id\":\"chatcmpl-8055d04103acabd7\",\"object\":\"chat.completion.chunk\",\"created\":1793343919,\"model\":\"@cf/zai-org/glm-4.7-flash\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"几个\",\"reasoning_content\":null},\"logprobs\":null,\"finish_reason\":null,\"token_ids\":null}],\"usage\":{\"prompt_tokens\":0,\"completion_tokens\":1,\"total_tokens\":1,\"prompt_tokens_details\":{\"cached_tokens\":0},\"neurons\":0.0364},\"p\":\"abdefghijklmnoprstuvxyz1234567890abdefghijklmnop\"}\n\ndata: {\"id\":\"chatcmpl-8055d04103acabd7\",\"object\":\"chat.completion.chunk\",\"created\":1793343919,\"model\":\"@cf/zai-org/glm-4.7-flash\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"村民\",\"reasoning_content\":null},\"logprobs\":null,\"finish_reason\":null,\"token_ids\":null}],\"usage\":{\"prompt_tokens\":0,\"completion_tokens\":1,\"total_tokens\":1,\"prompt_tokens_details\":{\"cached_tokens\":0},\"neurons\":0.0364},\"p\":\"abdefghijklmnoprstuvxyz1234567890\"}\n\ndata: {\"id\":\"chatcmpl-8055d04103acabd7\",\"object\":\"chat.completion.chunk\",\"created\":1793343919,\"model\":\"@cf/zai-org/glm-4.7-flash\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"正聚\",\"reasoning_content\":null},\"logprobs\":null,\"finish_reason\":null,\"token_ids\":null}],\"usage\":{\"prompt_tokens\":0,\"completion_tokens\":2,\"total_tokens\":2,\"prompt_tokens_details\":{\"cached_tokens\":0},\"neurons\":0.0728},\"p\":\"abdefghijkl\"}\n\ndata: {\"id\":\"chatcmpl-8055d04103acabd7\",\"object\":\"chat.completion.chunk\",\"created\":1793343919,\"model\":\"@cf/zai-org/glm-4.7-flash\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"在一起\",\"reasoning_content\":null},\"logprobs\":null,\"finish_reason\":null,\"token_ids\":null}],\"usage\":{\"prompt_tokens\":0,\"completion_tokens\":1,\"total_tokens\":1,\"prompt_tokens_details\":{\"cached_tokens\":0},\"neurons\":0.0364},\"p\":\"abdefghij\"}\n\ndata: {\"id\":\"chatcmpl-8055d04103acabd7\",\"object\":\"chat.completion.chunk\",\"created\":1793343919,\"model\":\"@cf/zai-org/glm-4.7-flash\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"闲\",\"reasoning_content\":null},\"logprobs\":null,\"finish_reason\":null,\"token_ids\":null}],\"usage\":{\"prompt_tokens\":0,\"completion_tokens\":1,\"total_tokens\":1,\"prompt_tokens_details\":{\"cached_tokens\":0},\"neurons\":0.0364},\"p\":\"abdefghijklmnoprstuvxyz1234567890\"}\n\ndata: {\"id\":\"chatcmpl-8055d04103acabd7\",\"object\":\"chat.completion.chunk\",\"created\":1793343919,\"model\":\"@cf/zai-org/glm-4.7-flash\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"聊\",\"reasoning_content\":null},\"logprobs\":null,\"finish_reason\":null,\"token_ids\":null}],\"usage\":{\"prompt_tokens\":0,\"completion_tokens\":1,\"total_tokens\":1,\"prompt_tokens_details\":{\"cached_tokens\":0},\"neurons\":0.0364},\"p\":\"abdefghijklmnoprstuvxyz123\"}\n\ndata: {\"id\":\"chatcmpl-8055d04103acabd7\",\"object\":\"chat.completion.chunk\",\"created\":1793343919,\"model\":\"@cf/zai-org/glm-4.7-flash\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"，似乎\",\"reasoning_content\":null},\"logprobs\":null,\"finish_reason\":null,\"token_ids\":null}],\"usage\":{\"prompt_tokens\":0,\"completion_tokens\":2,\"total_tokens\":2,\"prompt_tokens_details\":{\"cached_tokens\":0},\"neurons\":0.0728},\"p\":\"abdefghijk\"}\n\ndata: {\"id\":\"chatcmpl-8055d04103acabd7\",\"object\":\"chat.completion.chunk\",\"created\":1793343919,\"model\":\"@cf/zai-org/glm-4.7-flash\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"在\",\"reasoning_content\":null},\"logprobs\":null,\"finish_reason\":null,\"token_ids\":null}],\"usage\":{\"prompt_tokens\":0,\"completion_tokens\":1,\"total_tokens\":1,\"prompt_tokens_details\":{\"cached_tokens\":0},\"neurons\":0.0364},\"p\":\"abdefghij\"}\n\ndata: {\"id\":\"chatcmpl-8055d04103acabd7\",\"object\":\"chat.completion.chunk\",\"created\":1793343919,\"model\":\"@cf/zai-org/glm-4.7-flash\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"议论\",\"reasoning_content\":null},\"logprobs\":null,\"finish_reason\":null,\"token_ids\":null}],\"usage\":{\"prompt_tokens\":0,\"completion_tokens\":1,\"total_tokens\":1,\"prompt_tokens_details\":{\"cached_tokens\":0},\"neurons\":0.0364},\"p\":\"abdefghijklmnoprstuvxyz1234567890abd\"}\n\ndata: {\"id\":\"chatcmpl-8055d04103acabd7\",\"object\":\"chat.completion.chunk\",\"created\":1793343919,\"model\":\"@cf/zai-org/glm-4.7-flash\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"着\",\"reasoning_content\":null},\"logprobs\":null,\"finish_reason\":null,\"token_ids\":null}],\"usage\":{\"prompt_tokens\":0,\"completion_tokens\":1,\"total_tokens\":1,\"prompt_tokens_details\":{\"cached_tokens\":0},\"neurons\":0.0364},\"p\":\"abdefghijklmnoprstuvxyz1234567890abd\"}\n\ndata: {\"id\":\"chatcmpl-8055d04103acabd7\",\"object\":\"chat.completion.chunk\",\"created\":1793343919,\"model\":\"@cf/zai-org/glm-4.7-flash\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"什么。\",\"reasoning_content\":null},\"logprobs\":null,\"finish_reason\":null,\"token_ids\":null}],\"usage\":{\"prompt_tokens\":0,\"completion_tokens\":2,\"total_tokens\":2,\"prompt_tokens_details\":{\"cached_tokens\":0},\"neurons\":0.0728},\"p\":\"abdefghijklmnoprstuvxyz1234567890abdefghijkl\"}\n\ndata: {\"id\":\"chatcmpl-8055d04103acabd7\",\"object\":\"chat.completion.chunk\",\"created\":1793343919,\"model\":\"@cf/zai-org/glm-4.7-flash\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"\\\"\\n\",\"reasoning_content\":null},\"logprobs\":null,\"finish_reason\":null,\"token_ids\":null}],\"usage\":{\"prompt_tokens\":0,\"completion_tokens\":1,\"total_tokens\":1,\"prompt_tokens_details\":{\"cached_tokens\":0},\"neurons\":0.0364},\"p\":\"abdefghijklmnoprstuvxyz12345678\"}\n\ndata: {\"id\":\"chatcmpl-8055d04103acabd7\",\"object\":\"chat.completion.chunk\",\"created\":1793343919,\"model\":\"@cf/zai-org/glm-4.7-flash\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"   \",\"reasoning_content\":null},\"logprobs\":null,\"finish_reason\":null,\"token_ids\":null}],\"usage\":{\"prompt_tokens\":0,\"completion_tokens\":1,\"total_tokens\":1,\"prompt_tokens_details\":{\"cached_tokens\":0},\"neurons\":0.0364},\"p\":\"abdefg\"}\n\ndata: {\"id\":\"chatcmpl-8055d04103acabd7\",\"object\":\"chat.completion.chunk\",\"created\":1793343919,\"model\":\"@cf/zai-org/glm-4.7-flash\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\" },\\n   \",\"reasoning_content\":null},\"logprobs\":null,\"finish_reason\":null,\"token_ids\":null}],\"usage\":{\"prompt_tokens\":0,\"completion_tokens\":2,\"total_tokens\":2,\"prompt_tokens_details\":{\"cached_tokens\":0},\"neurons\":0.0728},\"p\":\"abdefghijklmnoprstuvxyz1234567890abdefghijklmn\"}\n\ndata: {\"id\":\"chatcmpl-8055d04103acabd7\",\"object\":\"chat.completion.chunk\",\"created\":1793343919,\"model\":\"@cf/zai-org/glm-4.7-flash\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\" {\\n     \",\"reasoning_content\":null},\"logprobs\":null,\"finish_reason\":null,\"token_ids\":null}],\"usage\":{\"prompt_tokens\":0,\"completion_tokens\":2,\"total_tokens\":2,\"prompt_tokens_details\":{\"cached_tokens\":0},\"neurons\":0.0728},\"p\":\"abdefghijklmnoprstuvxyz1234567890\"}\n\ndata: {\"id\":\"chatcmpl-8055d04103acabd7\",\"object\":\"chat.completion.chunk\",\"created\":1793343919,\"model\":\"@cf/zai-org/glm-4.7-flash\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\" \\\"kind\",\"reasoning_content\":null},\"logprobs\":null,\"finish_reason\":null,\"token_ids\":null}],\"usage\":{\"prompt_tokens\":0,\"completion_tokens\":2,\"total_tokens\":2,\"prompt_tokens_details\":{\"cached_tokens\":0},\"neurons\":0.0728},\"p\":\"abdefghijklmnoprstuvx\"}\n\ndata: {\"id\":\"chatcmpl-8055d04103acabd7\",\"object\":\"chat.completion.chunk\",\"created\":1793343919,\"model\":\"@cf/zai-org/glm-4.7-flash\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"\\\": \\\"\",\"reasoning_content\":null},\"logprobs\":null,\"finish_reason\":null,\"token_ids\":null}],\"usage\":{\"prompt_tokens\":0,\"completion_tokens\":2,\"total_tokens\":2,\"prompt_tokens_details\":{\"cached_tokens\":0},\"neurons\":0.0728},\"p\":\"abdefghijklmnoprstuvxyz1234567890abdef\"}\n\ndata: {\"id\":\"chatcmpl-8055d04103acabd7\",\"object\":\"chat.completion.chunk\",\"created\":1793343919,\"model\":\"@cf/zai-org/glm-4.7-flash\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"dialog\",\"reasoning_content\":null},\"logprobs\":null,\"finish_reason\":null,\"token_ids\":null}],\"usage\":{\"prompt_tokens\":0,\"completion_tokens\":1,\"total_tokens\":1,\"prompt_tokens_details\":{\"cached_tokens\":0},\"neurons\":0.0364},\"p\":\"abdefghijklmnoprstuvxyz1234567890\"}\n\ndata: {\"id\":\"chatcmpl-8055d04103acabd7\",\"object\":\"chat.completion.chunk\",\"created\":1793343919,\"model\":\"@cf/zai-org/glm-4.7-flash\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"ue\\\",\\n\",\"reasoning_content\":null},\"logprobs\":null,\"finish_reason\":null,\"token_ids\":null}],\"usage\":{\"prompt_tokens\":0,\"completion_tokens\":2,\"total_tokens\":2,\"prompt_tokens_details\":{\"cached_tokens\":0},\"neurons\":0.0728},\"p\":\"abdefghijklmnoprstuv\"}\n\ndata: {\"id\":\"chatcmpl-8055d04103acabd7\",\"object\":\"chat.completion.chunk\",\"created\":1793343919,\"model\":\"@cf/zai-org/glm-4.7-flash\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"     \",\"reasoning_content\":null},\"logprobs\":null,\"finish_reason\":null,\"token_ids\":null}],\"usage\":{\"prompt_tokens\":0,\"completion_tokens\":1,\"total_tokens\":1,\"prompt_tokens_details\":{\"cached_tokens\":0},\"neurons\":0.0364},\"p\":\"abdefghijklmnoprs\"}\n\ndata: {\"id\":\"chatcmpl-8055d04103acabd7\",\"object\":\"chat.completion.chunk\",\"created\":1793343919,\"model\":\"@cf/zai-org/glm-4.7-flash\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\" \\\"text\",\"reasoning_content\":null},\"logprobs\":null,\"finish_reason\":null,\"token_ids\":null}],\"usage\":{\"prompt_tokens\":0,\"completion_tokens\":2,\"total_tokens\":2,\"prompt_tokens_details\":{\"cached_tokens\":0},\"neurons\":0.0728},\"p\":\"abdefgh\"}\n\ndata: {\"id\":\"chatcmpl-8055d04103acabd7\",\"object\":\"chat.completion.chunk\",\"created\":1793343919,\"model\":\"@cf/zai-org/glm-4.7-flash\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"\\\": \\\"\",\"reasoning_content\":null},\"logprobs\":null,\"finish_reason\":null,\"token_ids\":null}],\"usage\":{\"prompt_tokens\":0,\"completion_tokens\":2,\"total_tokens\":2,\"prompt_tokens_details\":{\"cached_tokens\":0},\"neurons\":0.0728},\"p\":\"abdefghijk\"}\n\ndata: {\"id\":\"chatcmpl-8055d04103acabd7\",\"object\":\"chat.completion.chunk\",\"created\":1793343919,\"model\":\"@cf/zai-org/glm-4.7-flash\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"“\",\"reasoning_content\":null},\"logprobs\":null,\"finish_reason\":null,\"token_ids\":null}],\"usage\":{\"prompt_tokens\":0,\"completion_tokens\":1,\"total_tokens\":1,\"prompt_tokens_details\":{\"cached_tokens\":0},\"neurons\":0.0364},\"p\":\"abdefghijklmnoprstuvxyz1234567890abde\"}\n\ndata: {\"id\":\"chatcmpl-8055d04103acabd7\",\"object\":\"chat.completion.chunk\",\"created\":1793343919,\"model\":\"@cf/zai-org/glm-4.7-flash\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"听\",\"reasoning_content\":null},\"logprobs\":null,\"finish_reason\":null,\"token_ids\":null}],\"usage\":{\"prompt_tokens\":0,\"completion_tokens\":1,\"total_tokens\":1,\"prompt_tokens_details\":{\"cached_tokens\":0},\"neurons\":0.0364},\"p\":\"abdefghijklmnoprstuvxyz1234567890abdefg\"}\n\ndata: {\"id\":\"chatcmpl-8055d04103acabd7\",\"object\":\"chat.completion.chunk\",\"created\":1793343919,\"model\":\"@cf/zai-org/glm-4.7-flash\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"说了\",\"reasoning_content\":null},\"logprobs\":null,\"finish_reason\":null,\"token_ids\":null}],\"usage\":{\"prompt_tokens\":0,\"completion_tokens\":1,\"total_tokens\":1,\"prompt_tokens_details\":{\"cached_tokens\":0},\"neurons\":0.0364},\"p\":\"abdefghijklmnoprstu\"}\n\ndata: {\"id\":\"chatcmpl-8055d04103acabd7\",\"object\":\"chat.completion.chunk\",\"created\":1793343919,\"model\":\"@cf/zai-org/glm-4.7-flash\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"吗？\",\"reasoning_content\":null},\"logprobs\":null,\"finish_reason\":null,\"token_ids\":null}],\"usage\":{\"prompt_tokens\":0,\"completion_tokens\":2,\"total_tokens\":2,\"prompt_tokens_details\":{\"cached_tokens\":0},\"neurons\":0.0728},\"p\":\"abdefg\"}\n\ndata: {\"id\":\"chatcmpl-8055d04103acabd7\",\"object\":\"chat.completion.chunk\",\"created\":1793343919,\"model\":\"@cf/zai-org/glm-4.7-flash\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"后\",\"reasoning_content\":null},\"logprobs\":null,\"finish_reason\":null,\"token_ids\":null}],\"usage\":{\"prompt_tokens\":0,\"completion_tokens\":1,\"total_tokens\":1,\"prompt_tokens_details\":{\"cached_tokens\":0},\"neurons\":0.0364},\"p\":\"abdefghi\"}\n\ndata: {\"id\":\"chatcmpl-8055d04103acabd7\",\"object\":\"chat.completion.chunk\",\"created\":1793343919,\"model\":\"@cf/zai-org/glm-4.7-flash\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"山那\",\"reasoning_content\":null},\"logprobs\":null,\"finish_reason\":null,\"token_ids\":null}],\"usage\":{\"prompt_tokens\":0,\"completion_tokens\":2,\"total_tokens\":2,\"prompt_tokens_details\":{\"cached_tokens\":0},\"neurons\":0.0728},\"p\":\"abdef\"}\n\ndata: {\"id\":\"chatcmpl-8055d04103acabd7\",\"object\":\"chat.completion.chunk\",\"created\":1793343919,\"model\":\"@cf/zai-org/glm-4.7-flash\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"片\",\"reasoning_content\":null},\"logprobs\":null,\"finish_reason\":null,\"token_ids\":null}],\"usage\":{\"prompt_tokens\":0,\"completion_tokens\":1,\"total_tokens\":1,\"prompt_tokens_details\":{\"cached_tokens\":0},\"neurons\":0.0364},\"p\":\"abdefghijklmnoprstuvxyz1234567890abdefghijklmnop\"}\n\ndata: {\"id\":\"chatcmpl-8055d04103acabd7\",\"object\":\"chat.completion.chunk\",\"created\":1793343919,\"model\":\"@cf/zai-org/glm-4.7-flash\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"林\",\"reasoning_content\":null},\"logprobs\":null,\"finish_reason\":null,\"token_ids\":null}],\"usage\":{\"prompt_tokens\":0,\"completion_tokens\":1,\"total_tokens\":1,\"prompt_tokens_details\":{\"cached_tokens\":0},\"neurons\":0.0364},\"p\":\"abdefghijklm\"}\n\ndata: {\"id\":\"chatcmpl-8055d04103acabd7\",\"object\":\"chat.completion.chunk\",\"created\":1793343919,\"model\":\"@cf/zai-org/glm-4.7-flash\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"子里，\",\"reasoning_content\":null},\"logprobs\":null,\"finish_reason\":null,\"token_ids\":null}],\"usage\":{\"prompt_tokens\":0,\"completion_tokens\":2,\"total_tokens\":2,\"prompt_tokens_details\":{\"cached_tokens\":0},\"neurons\":0.0728},\"p\":\"abdefghijklmnoprstuvxyz1234567890abdefghijklm\"}\n\ndata: {\"id\":\"chatcmpl-8055d04103acabd7\",\"object\":\"chat.completion.chunk\",\"created\":1793343919,\"model\":\"@cf/zai-org/glm-4.7-flash\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"最近\",\"reasoning_content\":null},\"logprobs\":null,\"finish_reason\":null,\"token_ids\":null}],\"usage\":{\"prompt_tokens\":0,\"completion_tokens\":1,\"total_tokens\":1,\"prompt_tokens_details\":{\"cached_tokens\":0},\"neurons\":0.0364},\"p\":\"abdefghijklmnoprstuvxyz1234567890\"}\n\ndata: {\"id\":\"chatcmpl-8055d04103acabd7\",\"object\":\"chat.completion.chunk\",\"created\":1793343919,\"model\":\"@cf/zai-org/glm-4.7-flash\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"好像有\",\"reasoning_content\":null},\"logprobs\":null,\"finish_reason\":null,\"token_ids\":null}],\"usage\":{\"prompt_tokens\":0,\"completion_tokens\":2,\"total_tokens\":2,\"prompt_tokens_details\":{\"cached_tokens\":0},\"neurons\":0.0728},\"p\":\"abdefghijklmnoprstuvxyz1234567\"}\n\ndata: {\"id\":\"chatcmpl-8055d04103acabd7\",\"object\":\"chat.completion.chunk\",\"created\":1793343919,\"model\":\"@cf/zai-org/glm-4.7-flash\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"动静\",\"reasoning_content\":null},\"logprobs\":null,\"finish_reason\":null,\"token_ids\":null}],\"usage\":{\"prompt_tokens\":0,\"completion_tokens\":1,\"total_tokens\":1,\"prompt_tokens_details\":{\"cached_tokens\":0},\"neurons\":0.0364},\"p\":\"abdefghijklmnoprstuvxy\"}\n\ndata: {\"id\":\"chatcmpl-8055d04103acabd7\",\"object\":\"chat.completion.chunk\",\"created\":1793343919,\"model\":\"@cf/zai-org/glm-4.7-flash\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"。”\",\"reasoning_content\":null},\"logprobs\":null,\"finish_reason\":null,\"token_ids\":null}],\"usage\":{\"prompt_tokens\":0,\"completion_tokens\":1,\"total_tokens\":1,\"prompt_tokens_details\":{\"cached_tokens\":0},\"neurons\":0.0364},\"p\":\"abdefghijklmnoprstuvxyz1234567890abdefghijk\"}\n\ndata: {\"id\":\"chatcmpl-8055d04103acabd7\",\"object\":\"chat.completion.chunk\",\"created\":1793343919,\"model\":\"@cf/zai-org/glm-4.7-flash\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"\\\",\\n\",\"reasoning_content\":null},\"logprobs\":null,\"finish_reason\":null,\"token_ids\":null}],\"usage\":{\"prompt_tokens\":0,\"completion_tokens\":1,\"total_tokens\":1,\"prompt_tokens_details\":{\"cached_tokens\":0},\"neurons\":0.0364},\"p\":\"abdefghijklmnoprstuvxyz1234567890ab\"}\n\ndata: {\"id\":\"chatcmpl-8055d04103acabd7\",\"object\":\"chat.completion.chunk\",\"created\":1793343919,\"model\":\"@cf/zai-org/glm-4.7-flash\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"      \\\"\",\"reasoning_content\":null},\"logprobs\":null,\"finish_reason\":null,\"token_ids\":null}],\"usage\":{\"prompt_tokens\":0,\"completion_tokens\":2,\"total_tokens\":2,\"prompt_tokens_details\":{\"cached_tokens\":0},\"neurons\":0.0728},\"p\":\"abdefghijklmnoprstuvxyz12\"}\n\ndata: {\"id\":\"chatcmpl-8055d04103acabd7\",\"object\":\"chat.completion.chunk\",\"created\":1793343919,\"model\":\"@cf/zai-org/glm-4.7-flash\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"speaker\",\"reasoning_content\":null},\"logprobs\":null,\"finish_reason\":null,\"token_ids\":null}],\"usage\":{\"prompt_tokens\":0,\"completion_tokens\":1,\"total_tokens\":1,\"prompt_tokens_details\":{\"cached_tokens\":0},\"neurons\":0.0364},\"p\":\"abdefghijklmnoprst\"}\n\ndata: {\"id\":\"chatcmpl-8055d04103acabd7\",\"object\":\"chat.completion.chunk\",\"created\":1793343919,\"model\":\"@cf/zai-org/glm-4.7-flash\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"\\\": \\\"\",\"reasoning_content\":null},\"logprobs\":null,\"finish_reason\":null,\"token_ids\":null}],\"usage\":{\"prompt_tokens\":0,\"completion_tokens\":2,\"total_tokens\":2,\"prompt_tokens_details\":{\"cached_tokens\":0},\"neurons\":0.0728},\"p\":\"abdefghijklmnoprstuvxyz1234567890abdefghijklmnoprs\"}\n\ndata: {\"id\":\"chatcmpl-8055d04103acabd7\",\"object\":\"chat.completion.chunk\",\"created\":1793343919,\"model\":\"@cf/zai-org/glm-4.7-flash\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"p\",\"reasoning_content\":null},\"logprobs\":null,\"finish_reason\":null,\"token_ids\":null}],\"usage\":{\"prompt_tokens\":0,\"completion_tokens\":1,\"total_tokens\":1,\"prompt_tokens_details\":{\"cached_tokens\":0},\"neurons\":0.0364},\"p\":\"abdefghijklmnoprstuvxyz123\"}\n\ndata: {\"id\":\"chatcmpl-8055d04103acabd7\",\"object\":\"chat.completion.chunk\",\"created\":1793343919,\"model\":\"@cf/zai-org/glm-4.7-flash\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"1\\\"\\n\",\"reasoning_content\":null},\"logprobs\":null,\"finish_reason\":null,\"token_ids\":null}],\"usage\":{\"prompt_tokens\":0,\"completion_tokens\":2,\"total_tokens\":2,\"prompt_tokens_details\":{\"cached_tokens\":0},\"neurons\":0.0728},\"p\":\"abdefghijklmnoprstuvxyz1234567890\"}\n\ndata: {\"id\":\"chatcmpl-8055d04103acabd7\",\"object\":\"chat.completion.chunk\",\"created\":1793343919,\"model\":\"@cf/zai-org/glm-4.7-flash\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"   \",\"reasoning_content\":null},\"logprobs\":null,\"finish_reason\":null,\"token_ids\":null}],\"usage\":{\"prompt_tokens\":0,\"completion_tokens\":1,\"total_tokens\":1,\"prompt_tokens_details\":{\"cached_tokens\":0},\"neurons\":0.0364},\"p\":\"abdefghijklmnoprstuvxyz1234567890ab\"}\n\ndata: {\"id\":\"chatcmpl-8055d04103acabd7\",\"object\":\"chat.completion.chunk\",\"created\":1793343919,\"model\":\"@cf/zai-org/glm-4.7-flash\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\" },\\n   \",\"reasoning_content\":null},\"logprobs\":null,\"finish_reason\":null,\"token_ids\":null}],\"usage\":{\"prompt_tokens\":0,\"completion_tokens\":2,\"total_tokens\":2,\"prompt_tokens_details\":{\"cached_tokens\":0},\"neurons\":0.0728},\"p\":\"abdefghijk\"}\n\ndata: {\"id\":\"chatcmpl-8055d04103acabd7\",\"object\":\"chat.completion.chunk\",\"created\":1793343919,\"model\":\"@cf/zai-org/glm-4.7-flash\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\" {\\n     \",\"reasoning_content\":null},\"logprobs\":null,\"finish_reason\":null,\"token_ids\":null}],\"usage\":{\"prompt_tokens\":0,\"completion_tokens\":2,\"total_tokens\":2,\"prompt_tokens_details\":{\"cached_tokens\":0},\"neurons\":0.0728},\"p\":\"abdefghijklmnoprstuvxyz123\"}\n\ndata: {\"id\":\"chatcmpl-8055d04103acabd7\",\"object\":\"chat.completion.chunk\",\"created\":1793343919,\"model\":\"@cf/zai-org/glm-4.7-flash\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\" \\\"kind\",\"reasoning_content\":null},\"logprobs\":null,\"finish_reason\":null,\"token_ids\":null}],\"usage\":{\"prompt_tokens\":0,\"completion_tokens\":2,\"total_tokens\":2,\"prompt_tokens_details\":{\"cached_tokens\":0},\"neurons\":0.0728},\"p\":\"abdefghijklmnoprstuvxyz1234567890abdefghijklmnop\"}\n\ndata: {\"id\":\"chatcmpl-8055d04103acabd7\",\"object\":\"chat.completion.chunk\",\"created\":1793343919,\"model\":\"@cf/zai-org/glm-4.7-flash\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"\\\": \\\"\",\"reasoning_content\":null},\"logprobs\":null,\"finish_reason\":null,\"token_ids\":null}],\"usage\":{\"prompt_tokens\":0,\"completion_tokens\":2,\"total_tokens\":2,\"prompt_tokens_details\":{\"cached_tokens\":0},\"neurons\":0.0728},\"p\":\"abdefghijklmnoprstuvxyz1234567890abdefghijkl\"}\n\ndata: {\"id\":\"chatcmpl-8055d04103acabd7\",\"object\":\"chat.completion.chunk\",\"created\":1793343919,\"model\":\"@cf/zai-org/glm-4.7-flash\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"n\",\"reasoning_content\":null},\"logprobs\":null,\"finish_reason\":null,\"token_ids\":null}],\"usage\":{\"prompt_tokens\":0,\"completion_tokens\":1,\"total_tokens\":1,\"prompt_tokens_details\":{\"cached_tokens\":0},\"neurons\":0.0364},\"p\":\"abdefghijklmnoprstuv\"}\n\ndata: {\"id\":\"chatcmpl-8055d04103acabd7\",\"object\":\"chat.completion.chunk\",\"created\":1793343919,\"model\":\"@cf/zai-org/glm-4.7-flash\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"arration\",\"reasoning_content\":null},\"logprobs\":null,\"finish_reason\":null,\"token_ids\":null}],\"usage\":{\"prompt_tokens\":0,\"completion_tokens\":2,\"total_tokens\":2,\"prompt_tokens_details\":{\"cached_tokens\":0},\"neurons\":0.0728},\"p\":\"abdefghi\"}\n\ndata: {\"id\":\"chatcmpl-8055d04103acabd7\",\"object\":\"chat.completion.chunk\",\"created\":1793343919,\"model\":\"@cf/zai-org/glm-4.7-flash\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"\\\",\\n     \",\"reasoning_content\":null},\"logprobs\":null,\"finish_reason\":null,\"token_ids\":null}],\"usage\":{\"prompt_tokens\":0,\"completion_tokens\":2,\"total_tokens\":2,\"prompt_tokens_details\":{\"cached_tokens\":0},\"neurons\":0.0728},\"p\":\"abdefghijklmnoprstuvxyz1234567890abdefghijkl\"}\n\ndata: {\"id\":\"chatcmpl-8055d04103acabd7\",\"object\":\"chat.completion.chunk\",\"created\":1793343919,\"model\":\"@cf/zai-org/glm-4.7-flash\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\" \\\"text\",\"reasoning_content\":null},\"logprobs\":null,\"finish_reason\":null,\"token_ids\":null}],\"usage\":{\"prompt_tokens\":0,\"completion_tokens\":2,\"total_tokens\":2,\"prompt_tokens_details\":{\"cached_tokens\":0},\"neurons\":0.0728},\"p\":\"abdefgh\"}\n\ndata: {\"id\":\"chatcmpl-8055d04103acabd7\",\"object\":\"chat.completion.chunk\",\"created\":1793343919,\"model\":\"@cf/zai-org/glm-4.7-flash\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"\\\": \\\"\",\"reasoning_content\":null},\"logprobs\":null,\"finish_reason\":null,\"token_ids\":null}],\"usage\":{\"prompt_tokens\":0,\"completion_tokens\":2,\"total_tokens\":2,\"prompt_tokens_details\":{\"cached_tokens\":0},\"neurons\":0.0728},\"p\":\"abdefghijklmnoprstuvxyz1234567890abde\"}\n\ndata: {\"id\":\"chatcmpl-8055d04103acabd7\",\"object\":\"chat.completion.chunk\",\"created\":1793343919,\"model\":\"@cf/zai-org/glm-4.7-flash\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"你\",\"reasoning_content\":null},\"logprobs\":null,\"finish_reason\":null,\"token_ids\":null}],\"usage\":{\"prompt_tokens\":0,\"completion_tokens\":1,\"total_tokens\":1,\"prompt_tokens_details\":{\"cached_tokens\":0},\"neurons\":0.0364},\"p\":\"abdefghijklmnoprstuvxy\"}\n\ndata: {\"id\":\"chatcmpl-8055d04103acabd7\",\"object\":\"chat.completion.chunk\",\"created\":1793343919,\"model\":\"@cf/zai-org/glm-4.7-flash\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"听\",\"reasoning_content\":null},\"logprobs\":null,\"finish_reason\":null,\"token_ids\":null}],\"usage\":{\"prompt_tokens\":0,\"completion_tokens\":1,\"total_tokens\":1,\"prompt_tokens_details\":{\"cached_tokens\":0},\"neurons\":0.0364},\"p\":\"abdefghijkl\"}\n\ndata: {\"id\":\"chatcmpl-8055d04103acabd7\",\"object\":\"chat.completion.chunk\",\"created\":1793343919,\"model\":\"@cf/zai-org/glm-4.7-flash\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"出了\",\"reasoning_content\":null},\"logprobs\":null,\"finish_reason\":null,\"token_ids\":null}],\"usage\":{\"prompt_tokens\":0,\"completion_tokens\":1,\"total_tokens\":1,\"prompt_tokens_details\":{\"cached_tokens\":0},\"neurons\":0.0364},\"p\":\"abdefgh\"}\n\ndata: {\"id\":\"chatcmpl-8055d04103acabd7\",\"object\":\"chat.completion.chunk\",\"created\":1793343919,\"model\":\"@cf/zai-org/glm-4.7-flash\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"那是\",\"reasoning_content\":null},\"logprobs\":null,\"finish_reason\":null,\"token_ids\":null}],\"usage\":{\"prompt_tokens\":0,\"completion_tokens\":1,\"total_tokens\":1,\"prompt_tokens_details\":{\"cached_tokens\":0},\"neurons\":0.0364},\"p\":\"abdefghijklmnoprstuvxyz\"}\n\ndata: {\"id\":\"chatcmpl-8055d04103acabd7\",\"object\":\"chat.completion.chunk\",\"created\":1793343919,\"model\":\"@cf/zai-org/glm-4.7-flash\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"村\",\"reasoning_content\":null},\"logprobs\":null,\"finish_reason\":null,\"token_ids\":null}],\"usage\":{\"prompt_tokens\":0,\"completion_tokens\":1,\"total_tokens\":1,\"prompt_tokens_details\":{\"cached_tokens\":0},\"neurons\":0.0364},\"p\":\"abdefg\"}\n\ndata: {\"id\":\"chatcmpl-8055d04103acabd7\",\"object\":\"chat.completion.chunk\",\"created\":1793343919,\"model\":\"@cf/zai-org/glm-4.7-flash\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"长\",\"reasoning_content\":null},\"logprobs\":null,\"finish_reason\":null,\"token_ids\":null}],\"usage\":{\"prompt_tokens\":0,\"completion_tokens\":1,\"total_tokens\":1,\"prompt_tokens_details\":{\"cached_tokens\":0},\"neurons\":0.0364},\"p\":\"abdefghijklmnoprstuvxyz1234567890\"}\n\ndata: {\"id\":\"chatcmpl-8055d04103acabd7\",\"object\":\"chat.completion.chunk\",\"created\":1793343919,\"model\":\"@cf/zai-org/glm-4.7-flash\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"张\",\"reasoning_content\":null},\"logprobs\":null,\"finish_reason\":null,\"token_ids\":null}],\"usage\":{\"prompt_tokens\":0,\"completion_tokens\":1,\"total_tokens\":1,\"prompt_tokens_details\":{\"cached_tokens\":0},\"neurons\":0.0364},\"p\":\"abdefghijklmnoprstuvxyz123456\"}\n\ndata: {\"id\":\"chatcmpl-8055d04103acabd7\",\"object\":\"chat.completion.chunk\",\"created\":1793343919,\"model\":\"@cf/zai-org/glm-4.7-flash\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"伯\",\"reasoning_content\":null},\"logprobs\":null,\"finish_reason\":null,\"token_ids\":null}],\"usage\":{\"prompt_tokens\":0,\"completion_tokens\":1,\"total_tokens\":1,\"prompt_tokens_details\":{\"cached_tokens\":0},\"neurons\":0.0364},\"p\":\"abdefghijklmnoprstuvxyz1234567890abdefghi\"}\n\ndata: {\"id\":\"chatcmpl-8055d04103acabd7\",\"object\":\"chat.completion.chunk\",\"created\":1793343919,\"model\":\"@cf/zai-org/glm-4.7-flash\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"的声音。\",\"reasoning_content\":null},\"logprobs\":null,\"finish_reason\":null,\"token_ids\":null}],\"usage\":{\"prompt_tokens\":0,\"completion_tokens\":2,\"total_tokens\":2,\"prompt_tokens_details\":{\"cached_tokens\":0},\"neurons\":0.0728},\"p\":\"abdefghijk\"}\n\ndata: {\"id\":\"chatcmpl-8055d04103acabd7\",\"object\":\"chat.completion.chunk\",\"created\":1793343919,\"model\":\"@cf/zai-org/glm-4.7-flash\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"他\",\"reasoning_content\":null},\"logprobs\":null,\"finish_reason\":null,\"token_ids\":null}],\"usage\":{\"prompt_tokens\":0,\"completion_tokens\":1,\"total_tokens\":1,\"prompt_tokens_details\":{\"cached_tokens\":0},\"neurons\":0.0364},\"p\":\"abdefghijklm\"}\n\ndata: {\"id\":\"chatcmpl-8055d04103acabd7\",\"object\":\"chat.completion.chunk\",\"created\":1793343919,\"model\":\"@cf/zai-org/glm-4.7-flash\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"平日\",\"reasoning_content\":null},\"logprobs\":null,\"finish_reason\":null,\"token_ids\":null}],\"usage\":{\"prompt_tokens\":0,\"completion_tokens\":1,\"total_tokens\":1,\"prompt_tokens_details\":{\"cached_tokens\":0},\"neurons\":0.0364},\"p\":\"abdefghijklmnoprstuvxyz1234567890abdefghijklmnop\"}\n\ndata: {\"id\":\"chatcmpl-8055d04103acabd7\",\"object\":\"chat.completion.chunk\",\"created\":1793343919,\"model\":\"@cf/zai-org/glm-4.7-flash\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"里\",\"reasoning_content\":null},\"logprobs\":null,\"finish_reason\":null,\"token_ids\":null}],\"usage\":{\"prompt_tokens\":0,\"completion_tokens\":1,\"total_tokens\":1,\"prompt_tokens_details\":{\"cached_tokens\":0},\"neurons\":0.0364},\"p\":\"abdefghijklmnoprstuvxyz1234567890abdefg\"}\n\ndata: {\"id\":\"chatcmpl-8055d04103acabd7\",\"object\":\"chat.completion.chunk\",\"created\":1793343919,\"model\":\"@cf/zai-org/glm-4.7-flash\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"最\",\"reasoning_content\":null},\"logprobs\":null,\"finish_reason\":null,\"token_ids\":null}],\"usage\":{\"prompt_tokens\":0,\"completion_tokens\":1,\"total_tokens\":1,\"prompt_tokens_details\":{\"cached_tokens\":0},\"neurons\":0.0364},\"p\":\"abdefghi\"}\n\ndata: {\"id\":\"chatcmpl-8055d04103acabd7\",\"object\":\"chat.completion.chunk\",\"created\":1793343919,\"model\":\"@cf/zai-org/glm-4.7-flash\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"是\",\"reasoning_content\":null},\"logprobs\":null,\"finish_reason\":null,\"token_ids\":null}],\"usage\":{\"prompt_tokens\":0,\"completion_tokens\":1,\"total_tokens\":1,\"prompt_tokens_details\":{\"cached_tokens\":0},\"neurons\":0.0364},\"p\":\"abdefghijklmno\"}\n\ndata: {\"id\":\"chatcmpl-8055d04103acabd7\",\"object\":\"chat.completion.chunk\",\"created\":1793343919,\"model\":\"@cf/zai-org/glm-4.7-flash\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"谨慎\",\"reasoning_content\":null},\"logprobs\":null,\"finish_reason\":null,\"token_ids\":null}],\"usage\":{\"prompt_tokens\":0,\"completion_tokens\":1,\"total_tokens\":1,\"prompt_tokens_details\":{\"cached_tokens\":0},\"neurons\":0.0364},\"p\":\"abdefghijklmnop\"}\n\ndata: {\"id\":\"chatcmpl-8055d04103acabd7\",\"object\":\"chat.completion.chunk\",\"created\":1793343919,\"model\":\"@cf/zai-org/glm-4.7-flash\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"，如今\",\"reasoning_content\":null},\"logprobs\":null,\"finish_reason\":null,\"token_ids\":null}],\"usage\":{\"prompt_tokens\":0,\"completion_tokens\":2,\"total_tokens\":2,\"prompt_tokens_details\":{\"cached_tokens\":0},\"neurons\":0.0728},\"p\":\"abdefghijklmnoprstuvxyz12345678\"}\n\ndata: {\"id\":\"chatcmpl-8055d04103acabd7\",\"object\":\"chat.completion.chunk\",\"created\":1793343919,\"model\":\"@cf/zai-org/glm-4.7-flash\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"却\",\"reasoning_content\":null},\"logprobs\":null,\"finish_reason\":null,\"token_ids\":null}],\"usage\":{\"prompt_tokens\":0,\"completion_tokens\":1,\"total_tokens\":1,\"prompt_tokens_details\":{\"cached_tokens\":0},\"neurons\":0.0364},\"p\":\"abdefghijklmnoprstuvxyz1234\"}\n\ndata: {\"id\":\"chatcmpl-8055d04103acabd7\",\"object\":\"chat.completion.chunk\",\"created\":1793343919,\"model\":\"@cf/zai-org/glm-4.7-flash\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"这般神\",\"reasoning_content\":null},\"logprobs\":null,\"finish_reason\":null,\"token_ids\":null}],\"usage\":{\"prompt_tokens\":0,\"completion_tokens\":2,\"total_tokens\":2,\"prompt_tokens_details\":{\"cached_tokens\":0},\"neurons\":0.0728},\"p\":\"abdefghijklmnoprstuvxyz123456\"}\n\ndata: {\"id\":\"chatcmpl-8055d04103acabd7\",\"object\":\"chat.completion.chunk\",\"created\":1793343919,\"model\":\"@cf/zai-org/glm-4.7-flash\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"色\",\"reasoning_content\":null},\"logprobs\":null,\"finish_reason\":null,\"token_ids\":null}],\"usage\":{\"prompt_tokens\":0,\"completion_tokens\":1,\"total_tokens\":1,\"prompt_tokens_details\":{\"cached_tokens\":0},\"neurons\":0.0364},\"p\":\"abdefghijklmnoprstuvxyz1234567890abdefghijklmnop\"}\n\ndata: {\"id\":\"chatcmpl-8055d04103acabd7\",\"object\":\"chat.completion.chunk\",\"created\":1793343919,\"model\":\"@cf/zai-org/glm-4.7-flash\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"，\",\"reasoning_content\":null},\"logprobs\":null,\"finish_reason\":null,\"token_ids\":null}],\"usage\":{\"prompt_tokens\":0,\"completion_tokens\":1,\"total_tokens\":1,\"prompt_tokens_details\":{\"cached_tokens\":0},\"neurons\":0.0364},\"p\":\"abdefghijklmnoprstuvxyz\"}\n\ndata: {\"id\":\"chatcmpl-8055d04103acabd7\",\"object\":\"chat.completion.chunk\",\"created\":1793343919,\"model\":\"@cf/zai-org/glm-4.7-flash\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"想必\",\"reasoning_content\":null},\"logprobs\":null,\"finish_reason\":null,\"token_ids\":null}],\"usage\":{\"prompt_tokens\":0,\"completion_tokens\":1,\"total_tokens\":1,\"prompt_tokens_details\":{\"cached_tokens\":0},\"neurons\":0.0364},\"p\":\"abdefghij\"}\n\ndata: {\"id\":\"chatcmpl-8055d04103acabd7\",\"object\":\"chat.completion.chunk\",\"created\":1793343919,\"model\":\"@cf/zai-org/glm-4.7-flash\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"不是小事\",\"reasoning_content\":null},\"logprobs\":null,\"finish_reason\":null,\"token_ids\":null}],\"usage\":{\"prompt_tokens\":0,\"completion_tokens\":2,\"total_tokens\":2,\"prompt_tokens_details\":{\"cached_tokens\":0},\"neurons\":0.0728},\"p\":\"abdefghijklmnoprstuvxyz12345678\"}\n\ndata: {\"id\":\"chatcmpl-8055d04103acabd7\",\"object\":\"chat.completion.chunk\",\"created\":1793343919,\"model\":\"@cf/zai-org/glm-4.7-flash\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"。你\",\"reasoning_content\":null},\"logprobs\":null,\"finish_reason\":null,\"token_ids\":null}],\"usage\":{\"prompt_tokens\":0,\"completion_tokens\":2,\"total_tokens\":2,\"prompt_tokens_details\":{\"cached_tokens\":0},\"neurons\":0.0728},\"p\":\"abdefghijklmnoprstu\"}\n\ndata: {\"id\":\"chatcmpl-8055d04103acabd7\",\"object\":\"chat.completion.chunk\",\"created\":1793343919,\"model\":\"@cf/zai-org/glm-4.7-flash\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"摸\",\"reasoning_content\":null},\"logprobs\":null,\"finish_reason\":null,\"token_ids\":null}],\"usage\":{\"prompt_tokens\":0,\"completion_tokens\":1,\"total_tokens\":1,\"prompt_tokens_details\":{\"cached_tokens\":0},\"neurons\":0.0364},\"p\":\"abdefghijklmnoprstuvxyz1234567890abdef\"}\n\ndata: {\"id\":\"chatcmpl-8055d04103acabd7\",\"object\":\"chat.completion.chunk\",\"created\":1793343919,\"model\":\"@cf/zai-org/glm-4.7-flash\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"了\",\"reasoning_content\":null},\"logprobs\":null,\"finish_reason\":null,\"token_ids\":null}],\"usage\":{\"prompt_tokens\":0,\"completion_tokens\":1,\"total_tokens\":1,\"prompt_tokens_details\":{\"cached_tokens\":0},\"neurons\":0.0364},\"p\":\"abdefghijklmnoprstuvxyz12345\"}\n\ndata: {\"id\":\"chatcmpl-8055d04103acabd7\",\"object\":\"chat.completion.chunk\",\"created\":1793343919,\"model\":\"@cf/zai-org/glm-4.7-flash\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"摸腰\",\"reasoning_content\":null},\"logprobs\":null,\"finish_reason\":null,\"token_ids\":null}],\"usage\":{\"prompt_tokens\":0,\"completion_tokens\":2,\"total_tokens\":2,\"prompt_tokens_details\":{\"cached_tokens\":0},\"neurons\":0.0728},\"p\":\"abdefghijklmnoprstuvxyz123\"}\n\ndata: {\"id\":\"chatcmpl-8055d04103acabd7\",\"object\":\"chat.completion.chunk\",\"created\":1793343919,\"model\":\"@cf/zai-org/glm-4.7-flash\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"间\",\"reasoning_content\":null},\"logprobs\":null,\"finish_reason\":null,\"token_ids\":null}],\"usage\":{\"prompt_tokens\":0,\"completion_tokens\":1,\"total_tokens\":1,\"prompt_tokens_details\":{\"cached_tokens\":0},\"neurons\":0.0364},\"p\":\"abdefghijklmnoprstuvxyz1234\"}\n\ndata: {\"id\":\"chatcmpl-8055d04103acabd7\",\"object\":\"chat.completion.chunk\",\"created\":1793343919,\"model\":\"@cf/zai-org/glm-4.7-flash\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"那\",\"reasoning_content\":null},\"logprobs\":null,\"finish_reason\":null,\"token_ids\":null}],\"usage\":{\"prompt_tokens\":0,\"completion_tokens\":1,\"total_tokens\":1,\"prompt_tokens_details\":{\"cached_tokens\":0},\"neurons\":0.0364},\"p\":\"abdefghijklmnoprstuvxyz1234567890abdefghijklmnop\"}\n\ndata: {\"id\":\"chatcmpl-8055d04103acabd7\",\"object\":\"chat.completion.chunk\",\"created\":1793343919,\"model\":\"@cf/zai-org/glm-4.7-flash\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"把\",\"reasoning_content\":null},\"logprobs\":null,\"finish_reason\":null,\"token_ids\":null}],\"usage\":{\"prompt_tokens\":0,\"completion_tokens\":1,\"total_tokens\":1,\"prompt_tokens_details\":{\"cached_tokens\":0},\"neurons\":0.0364},\"p\":\"abdefghijklmnoprstuvxyz1\"}\n\ndata: {\"id\":\"chatcmpl-8055d04103acabd7\",\"object\":\"chat.completion.chunk\",\"created\":1793343919,\"model\":\"@cf/zai-org/glm-4.7-flash\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"磨\",\"reasoning_content\":null},\"logprobs\":null,\"finish_reason\":null,\"token_ids\":null}],\"usage\":{\"prompt_tokens\":0,\"completion_tokens\":1,\"total_tokens\":1,\"prompt_tokens_details\":{\"cached_tokens\":0},\"neurons\":0.0364},\"p\":\"abdefghijklmnoprstuvx\"}\n\ndata: {\"id\":\"chatcmpl-8055d04103acabd7\",\"object\":\"chat.completion.chunk\",\"created\":1793343919,\"model\":\"@cf/zai-org/glm-4.7-flash\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"得\",\"reasoning_content\":null},\"logprobs\":null,\"finish_reason\":null,\"token_ids\":null}],\"usage\":{\"prompt_tokens\":0,\"completion_tokens\":1,\"total_tokens\":1,\"prompt_tokens_details\":{\"cached_tokens\":0},\"neurons\":0.0364},\"p\":\"abdefghijk\"}\n\ndata: {\"id\":\"chatcmpl-8055d04103acabd7\",\"object\":\"chat.completion.chunk\",\"created\":1793343919,\"model\":\"@cf/zai-org/glm-4.7-flash\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"发\",\"reasoning_content\":null},\"logprobs\":null,\"finish_reason\":null,\"token_ids\":null}],\"usage\":{\"prompt_tokens\":0,\"completion_tokens\":1,\"total_tokens\":1,\"prompt_tokens_details\":{\"cached_tokens\":0},\"neurons\":0.0364},\"p\":\"abdefghijklmnoprstuvxyz1234567890abdefghijkl\"}\n\ndata: {\"id\":\"chatcmpl-8055d04103acabd7\",\"object\":\"chat.completion.chunk\",\"created\":1793343919,\"model\":\"@cf/zai-org/glm-4.7-flash\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"亮的\",\"reasoning_content\":null},\"logprobs\":null,\"finish_reason\":null,\"token_ids\":null}],\"usage\":{\"prompt_tokens\":0,\"completion_tokens\":1,\"total_tokens\":1,\"prompt_tokens_details\":{\"cached_tokens\":0},\"neurons\":0.0364},\"p\":\"abdefghijklmnoprstuvx\"}\n\ndata: {\"id\":\"chatcmpl-8055d04103acabd7\",\"object\":\"chat.completion.chunk\",\"created\":1793343919,\"model\":\"@cf/zai-org/glm-4.7-flash\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"柴\",\"reasoning_content\":null},\"logprobs\":null,\"finish_reason\":null,\"token_ids\":null}],\"usage\":{\"prompt_tokens\":0,\"completion_tokens\":1,\"total_tokens\":1,\"prompt_tokens_details\":{\"cached_tokens\":0},\"neurons\":0.0364},\"p\":\"abdefghijklmnoprstuvxyz12345\"}\n\ndata: {\"id\":\"chatcmpl-8055d04103acabd7\",\"object\":\"chat.completion.chunk\",\"created\":1793343919,\"model\":\"@cf/zai-org/glm-4.7-flash\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"刀\",\"reasoning_content\":null},\"logprobs\":null,\"finish_reason\":null,\"token_ids\":null}],\"usage\":{\"prompt_tokens\":0,\"completion_tokens\":1,\"total_tokens\":1,\"prompt_tokens_details\":{\"cached_tokens\":0},\"neurons\":0.0364},\"p\":\"abdefghijkl\"}\n\ndata: {\"id\":\"chatcmpl-8055d04103acabd7\",\"object\":\"chat.completion.chunk\",\"created\":1793343919,\"model\":\"@cf/zai-org/glm-4.7-flash\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"，心中\",\"reasoning_content\":null},\"logprobs\":null,\"finish_reason\":null,\"token_ids\":null}],\"usage\":{\"prompt_tokens\":0,\"completion_tokens\":2,\"total_tokens\":2,\"prompt_tokens_details\":{\"cached_tokens\":0},\"neurons\":0.0728},\"p\":\"abdefghijklmnoprstuvxyz12\"}\n\ndata: {\"id\":\"chatcmpl-8055d04103acabd7\",\"object\":\"chat.completion.chunk\",\"created\":1793343919,\"model\":\"@cf/zai-org/glm-4.7-flash\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"暗\",\"reasoning_content\":null},\"logprobs\":null,\"finish_reason\":null,\"token_ids\":null}],\"usage\":{\"prompt_tokens\":0,\"completion_tokens\":1,\"total_tokens\":1,\"prompt_tokens_details\":{\"cached_tokens\":0},\"neurons\":0.0364},\"p\":\"abdefghijklmnoprstuvx\"}\n\ndata: {\"id\":\"chatcmpl-8055d04103acabd7\",\"object\":\"chat.completion.chunk\",\"created\":1793343919,\"model\":\"@cf/zai-org/glm-4.7-flash\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"自\",\"reasoning_content\":null},\"logprobs\":null,\"finish_reason\":null,\"token_ids\":null}],\"usage\":{\"prompt_tokens\":0,\"completion_tokens\":1,\"total_tokens\":1,\"prompt_tokens_details\":{\"cached_tokens\":0},\"neurons\":0.0364},\"p\":\"abdefghijklmnoprstuvxyz1234567890abdef\"}\n\ndata: {\"id\":\"chatcmpl-8055d04103acabd7\",\"object\":\"chat.completion.chunk\",\"created\":1793343919,\"model\":\"@cf/zai-org/glm-4.7-flash\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"盘\",\"reasoning_content\":null},\"logprobs\":null,\"finish_reason\":null,\"token_ids\":null}],\"usage\":{\"prompt_tokens\":0,\"completion_tokens\":1,\"total_tokens\":1,\"prompt_tokens_details\":{\"cached_tokens\":0},\"neurons\":0.0364},\"p\":\"abdefghijklmnoprstu\"}\n\ndata: {\"id\":\"chatcmpl-8055d04103acabd7\",\"object\":\"chat.completion.chunk\",\"created\":1793343919,\"model\":\"@cf/zai-org/glm-4.7-flash\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"算\",\"reasoning_content\":null},\"logprobs\":null,\"finish_reason\":null,\"token_ids\":null}],\"usage\":{\"prompt_tokens\":0,\"completion_tokens\":1,\"total_tokens\":1,\"prompt_tokens_details\":{\"cached_tokens\":0},\"neurons\":0.0364},\"p\":\"abdefghijklmnoprstuvxyz1234567890abdefghi\"}\n\ndata: {\"id\":\"chatcmpl-8055d04103acabd7\",\"object\":\"chat.completion.chunk\",\"created\":1793343919,\"model\":\"@cf/zai-org/glm-4.7-flash\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"。\",\"reasoning_content\":null},\"logprobs\":null,\"finish_reason\":null,\"token_ids\":null}],\"usage\":{\"prompt_tokens\":0,\"completion_tokens\":1,\"total_tokens\":1,\"prompt_tokens_details\":{\"cached_tokens\":0},\"neurons\":0.0364},\"p\":\"abdefghijklmnoprstuvxyz1234567890abdefghi\"}\n\n"
+        }
+      ],
+      "revision": 0,
+      "pending": true,
+      "state": {
+        "relationshipVersion": 1,
+        "version": 5,
+        "mode": "cultivation",
+        "contentVersion": 4,
+        "rulesVersion": 1,
+        "promptVersion": 1,
+        "runId": "98f2d08d-fd63-4c0a-92ec-b2a1079ae3f5",
+        "revision": 0,
+        "turnId": 0,
+        "phase": "awaitingOpening",
+        "rng": 745063594,
+        "life": {
+          "name": "云归",
+          "ageDays": 5760,
+          "lifeLimit": 80,
+          "realm": "mortal",
+          "cultivation": 0,
+          "injury": 0,
+          "items": {
+            "supplies": 3,
+            "stones": 0
+          },
+          "relations": {},
+          "birth": {
+            "originId": "village",
+            "talentIds": [
+              "fortune-debt",
+              "flash-wisdom"
+            ],
+            "attributes": {
+              "constitution": 3,
+              "insight": 3,
+              "fortune": 6
+            }
+          }
+        },
+        "birthReceipt": {
+          "kind": "opening",
+          "choiceId": null,
+          "action": null,
+          "elapsedDays": 0,
+          "itemChanges": {},
+          "relationChanges": {},
+          "random": {
+            "before": 745063594,
+            "after": 745063594,
+            "roll": null
+          },
+          "before": {
+            "ageDays": 5760,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "after": {
+            "ageDays": 5760,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "death": null,
+          "birth": {
+            "originId": "village",
+            "talentIds": [
+              "fortune-debt",
+              "flash-wisdom"
+            ],
+            "attributes": {
+              "constitution": 3,
+              "insight": 3,
+              "fortune": 6
+            }
+          }
+        },
+        "currentScene": null,
+        "lastReceipt": null,
+        "relatedEntities": [],
+        "archiveCursor": 0
+      },
+      "posts": 1,
+      "latency": {
+        "usable": false,
+        "errorCode": "GENERATED_SCENE_INVALID",
+        "firstAnyPreviewMs": 8021,
+        "firstReadableMs": 8454,
+        "completionMs": 21117,
+        "narrativeChars": 218,
+        "maxPreviewGapMs": 637,
+        "readingFinishEstimateMs": null,
+        "readingStallEstimateMs": null,
+        "optionsWaitEstimateMs": null,
+        "prefetchWorthEvaluating": null,
+        "assumptions": {
+          "readingCharsPerSecond": 6,
+          "readableChars": 20,
+          "targetWaitMs": 2000
+        }
+      }
+    }
+  ],
+  "errors": [
+    "Native turn did not pass"
+  ],
+  "posts": 1,
+  "refreshed": null
+}

@@ -1,0 +1,19 @@
+{
+  "status": "NOT_ACCEPTED",
+  "sourceCommit": "ccc00153431b574772ca7e0b4c00abd437e0f147",
+  "readyScenes": 4,
+  "failures": [
+    {
+      "evidence": "fresh-six/turn-4.json",
+      "reason": "Same destination travel and speaker-only filtering rejected arrival"
+    },
+    {
+      "evidence": "arrival-retry/turn-4.json",
+      "reason": "Newly declared NPCs missing from prose"
+    }
+  ],
+  "cachedPriorJourney": "Prior root resume correctly refused ATTEMPT_ALREADY_READY, no inference",
+  "cleanupDeployment": "a737d990-7088-44b8-a03d-8c3924015601",
+  "normalVersion": "cad2a140-240f-4465-a837-e53f054c2589",
+  "at": "2026-10-30T16:03:03.939Z"
+}

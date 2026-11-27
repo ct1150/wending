@@ -1,0 +1,47 @@
+{
+  "heartbeat": "2026-10-29T08:18:24.311Z",
+  "checkedAt": "2026-10-29T08:23:10.078Z",
+  "sourceCommit": "212873c415005743a0b0ce10a979f3da5dff4899",
+  "ci": {
+    "runId": 40837447271,
+    "conclusion": "success",
+    "tests": 925,
+    "passed": 925
+  },
+  "probeVersion": "621c752c-b642-4418-b8b4-81d17faff857",
+  "task": "minimal",
+  "requests": 1,
+  "outerStatus": 200,
+  "result": {
+    "caseId": "minimal",
+    "status": 200,
+    "text": "{\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"message\":{\"content\":\"好\",\"role\":\"assistant\"}}],\"created\":1793262211,\"id\":\"2026102916231061cce28d8ce14cb0\",\"model\":\"glm-4.7-flash\",\"object\":\"chat.completion\",\"request_id\":\"2026102916231061cce28d8ce14cb0\",\"usage\":{\"completion_tokens\":2,\"completion_tokens_details\":{\"reasoning_tokens\":0},\"prompt_tokens\":12,\"prompt_tokens_details\":{\"cached_tokens\":2},\"total_tokens\":14}}",
+    "headers": {
+      "cf-cache-status": "DYNAMIC",
+      "cf-ray": "a520c6d1de0584e8-HKG",
+      "date": "Thu, 29 Oct 2026 08:23:31 GMT",
+      "server": "cloudflare",
+      "x-log-id": "2026102916231061cce28d8ce14cb0",
+      "x-request-id": "d488bfa6-6518-4fb7-a457-052cc245e4e3"
+    },
+    "headersMs": 21497,
+    "elapsedMs": 21497,
+    "checkedAt": "2026-10-29T08:23:31.866Z",
+    "ingressColo": "HKG",
+    "requestShape": {
+      "model": "glm-4.7-flash",
+      "messages": [
+        {
+          "role": "user",
+          "content": "你好，只回复“好”。"
+        }
+      ],
+      "stream": false,
+      "max_tokens": 32,
+      "thinking": {
+        "type": "disabled"
+      }
+    },
+    "keyPresent": true
+  }
+}

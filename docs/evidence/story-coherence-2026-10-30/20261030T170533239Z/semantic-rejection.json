@@ -1,0 +1,20 @@
+{
+  "status": "SEMANTIC_REJECTED",
+  "sourceCommit": "21582ddad30b3b9d73d6366ea042d24e94198f03",
+  "successfulImmediateRefusal": {
+    "turn": 2,
+    "milliseconds": 75,
+    "aiPostCount": 0,
+    "days": 0
+  },
+  "successfulPostClosureObservation": {
+    "turn": 3,
+    "independentTravel": true,
+    "oldNpcQuestionRemoved": true
+  },
+  "reason": "Travel reached correct location and settled60days/1supplies, but a non-speaking growling wolf was offered conversational ask. Needs actor capability, not merely prompt advice. This is not six-AI acceptance.",
+  "rejectedTurn": 4,
+  "cleanupDeployment": "050f0802-8b7b-47f9-8713-636a2c869584",
+  "normalVersion": "cad2a140-240f-4465-a837-e53f054c2589",
+  "at": "2026-10-30T17:21:24.660Z"
+}

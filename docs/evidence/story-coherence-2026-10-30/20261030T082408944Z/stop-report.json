@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "sourceCommit": "0274a109fc358a3280aa1d273f749ece97e55b52",
+  "status": "ACCEPTANCE_STOPPED",
+  "reason": "Opening omitted required memory anchor and was rejected. Prose also preaccepted a request and gifted food, so semantic acceptance did not pass. Native memory source fields now required in502614a.",
+  "actualTurns": 1,
+  "productionRestored": {
+    "version": "cad2a140-240f-4465-a837-e53f054c2589",
+    "percentage": 100,
+    "deployment": "aff417a6-531b-4d61-ba62-171c1f5a2fc5"
+  },
+  "cleanup": {
+    "ownCredentialDeleted": true,
+    "newWorkerCreated": false,
+    "newNamespaceCreated": false,
+    "ledgerRetained": true
+  },
+  "recordedAt": "2026-10-30T08:47:45.017Z"
+}

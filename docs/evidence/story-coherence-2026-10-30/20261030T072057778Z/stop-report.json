@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "sourceCommit": "407b0f263f5e1c3f5eaeafa1f290eb0adafff046",
+  "status": "ACCEPTANCE_STOPPED",
+  "reason": "Full native output contains choices targeting undeclared p1/p2 with otherPeople empty. Local replay reproduces GENERATED_SCENE_INVALID. No identity recovery from labels or validation bypass.",
+  "actualTurns": 1,
+  "decoderReplay": "GENERATED_SCENE_INVALID",
+  "productionRestored": {
+    "version": "cad2a140-240f-4465-a837-e53f054c2589",
+    "percentage": 100,
+    "deployment": "983d5254-f3ac-4868-95c6-44be3039d232"
+  },
+  "cleanup": {
+    "ownCredentialDeleted": true,
+    "newWorkerCreated": false,
+    "newNamespaceCreated": false,
+    "ledgerRetained": true
+  },
+  "recordedAt": "2026-10-30T07:25:11.627Z"
+}

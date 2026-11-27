@@ -1,0 +1,62 @@
+{
+  "sourceCommit": "7d0d238a10ba8832664b0f6f423512ab6ad5982a",
+  "accepted": false,
+  "reason": "Five real rounds committed. Sixth was rejected because known k2 place 地摊前 was redeclared as person 摊主. Do not weaken the identity guard; improve typed model references.",
+  "rounds": [
+    {
+      "caseId": "opening",
+      "status": "ready",
+      "errorCode": null,
+      "revision": 1,
+      "firstPreviewMs": 3357,
+      "doneMs": 22495
+    },
+    {
+      "caseId": "choice-1",
+      "status": "ready",
+      "errorCode": null,
+      "revision": 2,
+      "firstPreviewMs": 8365,
+      "doneMs": 19199
+    },
+    {
+      "caseId": "choice-2",
+      "status": "ready",
+      "errorCode": null,
+      "revision": 3,
+      "firstPreviewMs": 3264,
+      "doneMs": 12736
+    },
+    {
+      "caseId": "choice-3",
+      "status": "ready",
+      "errorCode": null,
+      "revision": 4,
+      "firstPreviewMs": 2984,
+      "doneMs": 9282
+    },
+    {
+      "caseId": "choice-4",
+      "status": "ready",
+      "errorCode": null,
+      "revision": 5,
+      "firstPreviewMs": 2737,
+      "doneMs": 14572
+    },
+    {
+      "caseId": "choice-5",
+      "status": "rejected",
+      "errorCode": "GENERATED_SCENE_INVALID",
+      "revision": 5,
+      "firstPreviewMs": 3284,
+      "doneMs": 14790
+    }
+  ],
+  "cleanup": {
+    "productionVersion": "cad2a140-240f-4465-a837-e53f054c2589",
+    "percentage": 100,
+    "deployment": "436423db-c59c-49db-b125-f70a5a723501",
+    "ownCredentialDeleted": true,
+    "noNewWorkerOrNamespace": true
+  }
+}

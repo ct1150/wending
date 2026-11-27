@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "sourceCommit": "dca5be94076119aa426b6c13562ce50034d17fb1",
+  "status": "ACCEPTANCE_STOPPED",
+  "reason": "Opening ready. Native structured first ask repeats identical clipped narration and three duplicate ask choices; decoder ready, structureDiagnostic CHOICE_ACTION_DUPLICATE, strict scene validator rejected. Next controlled candidate tests JSON object mode; no automatic retry or production release.",
+  "actualTurns": 2,
+  "productionRestored": {
+    "version": "cad2a140-240f-4465-a837-e53f054c2589",
+    "percentage": 100,
+    "deployment": "f204372d-3bcd-4777-a33b-dbe0294b26ed"
+  },
+  "cleanup": {
+    "ownCredentialDeleted": true,
+    "newWorkerCreated": false,
+    "newNamespaceCreated": false,
+    "ledgerRetained": true
+  },
+  "recordedAt": "2026-10-30T07:55:05.730Z"
+}

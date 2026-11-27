@@ -1,0 +1,780 @@
+{
+  "caseId": "choice-4",
+  "origin": "ai",
+  "postDelta": 1,
+  "localEntry": null,
+  "start": 365157.09999999404,
+  "timeline": [
+    {
+      "atMs": 3141,
+      "chars": 1
+    },
+    {
+      "atMs": 3219,
+      "chars": 8
+    },
+    {
+      "atMs": 3283,
+      "chars": 13
+    },
+    {
+      "atMs": 3329,
+      "chars": 18
+    },
+    {
+      "atMs": 3391,
+      "chars": 22
+    },
+    {
+      "atMs": 3450,
+      "chars": 27
+    },
+    {
+      "atMs": 3513,
+      "chars": 33
+    },
+    {
+      "atMs": 3575,
+      "chars": 39
+    },
+    {
+      "atMs": 3637,
+      "chars": 45
+    },
+    {
+      "atMs": 3711,
+      "chars": 49
+    },
+    {
+      "atMs": 3759,
+      "chars": 51
+    },
+    {
+      "atMs": 3803,
+      "chars": 54
+    },
+    {
+      "atMs": 3864,
+      "chars": 60
+    },
+    {
+      "atMs": 3909,
+      "chars": 64
+    },
+    {
+      "atMs": 3974,
+      "chars": 69
+    },
+    {
+      "atMs": 4033,
+      "chars": 72
+    },
+    {
+      "atMs": 4079,
+      "chars": 75
+    },
+    {
+      "atMs": 4126,
+      "chars": 78
+    },
+    {
+      "atMs": 4186,
+      "chars": 82
+    },
+    {
+      "atMs": 4232,
+      "chars": 85
+    },
+    {
+      "atMs": 4296,
+      "chars": 91
+    },
+    {
+      "atMs": 4342,
+      "chars": 97
+    },
+    {
+      "atMs": 4406,
+      "chars": 103
+    },
+    {
+      "atMs": 4467,
+      "chars": 107
+    },
+    {
+      "atMs": 4529,
+      "chars": 113
+    },
+    {
+      "atMs": 4592,
+      "chars": 116
+    },
+    {
+      "atMs": 4649,
+      "chars": 120
+    },
+    {
+      "atMs": 4697,
+      "chars": 125
+    },
+    {
+      "atMs": 4913,
+      "chars": 130
+    },
+    {
+      "atMs": 4975,
+      "chars": 134
+    },
+    {
+      "atMs": 5118,
+      "chars": 141
+    },
+    {
+      "atMs": 5179,
+      "chars": 147
+    },
+    {
+      "atMs": 5240,
+      "chars": 151
+    },
+    {
+      "atMs": 5297,
+      "chars": 154
+    },
+    {
+      "atMs": 5359,
+      "chars": 160
+    },
+    {
+      "atMs": 5403,
+      "chars": 166
+    },
+    {
+      "atMs": 5463,
+      "chars": 171
+    },
+    {
+      "atMs": 5511,
+      "chars": 174
+    },
+    {
+      "atMs": 5570,
+      "chars": 178
+    },
+    {
+      "atMs": 5616,
+      "chars": 183
+    },
+    {
+      "atMs": 5663,
+      "chars": 191
+    },
+    {
+      "atMs": 5741,
+      "chars": 196
+    },
+    {
+      "atMs": 5790,
+      "chars": 203
+    },
+    {
+      "atMs": 5836,
+      "chars": 204
+    },
+    {
+      "atMs": 5947,
+      "chars": 209
+    },
+    {
+      "atMs": 5994,
+      "chars": 214
+    },
+    {
+      "atMs": 6045,
+      "chars": 220
+    },
+    {
+      "atMs": 6106,
+      "chars": 225
+    },
+    {
+      "atMs": 6165,
+      "chars": 228
+    },
+    {
+      "atMs": 6211,
+      "chars": 233
+    },
+    {
+      "atMs": 6271,
+      "chars": 238
+    },
+    {
+      "atMs": 6331,
+      "chars": 242
+    },
+    {
+      "atMs": 6378,
+      "chars": 248
+    },
+    {
+      "atMs": 6440,
+      "chars": 256
+    },
+    {
+      "atMs": 6518,
+      "chars": 263
+    },
+    {
+      "atMs": 6565,
+      "chars": 269
+    },
+    {
+      "atMs": 6611,
+      "chars": 274
+    },
+    {
+      "atMs": 6671,
+      "chars": 275
+    }
+  ],
+  "choicesEnabledDuringPreview": false,
+  "lastText": "你沿着蜿蜒的山路深入后山，六十日的跋涉让原本青翠的山林染上了几分肃杀。四周雾气渐浓，脚下的落叶腐殖层厚实湿滑，偶尔传来几声不知名野兽的低吼，惊起几只寒鸦扑棱着翅膀飞向灰蒙蒙的天际。山势陡峭，前方隐约可见一座坍塌了一半的石亭，断壁残垣间杂草丛生，透着一股被遗忘的荒凉感。\n\n你走到那座石亭前，发现亭柱上刻着几道模糊不清的划痕，似乎有人曾在此停留。亭内积满了枯叶，角落里似乎还残留着些许未燃尽的灰烬，空气中弥漫着淡淡的焦糊味。就在你准备仔细查看时，一只通体漆黑、双眼泛着红光的野狼突然从草丛中窜出，死死盯着你，喉咙里发出威胁的低吼，显然把你当成了入侵者。",
+  "doneMs": 9226,
+  "result": {
+    "protocolVersion": 1,
+    "status": "ready",
+    "requestId": "194752c6-24cd-4301-9b75-2602f9b6ead4",
+    "attemptId": "3cfda8cc-314b-40ad-bc2a-cafa1ac07b3d",
+    "sessionRef": "sess_3d966adc91b4dd1833d2701c17f3adae",
+    "errorCode": null,
+    "retry": null,
+    "scene": {
+      "id": "r:60efb6672ac907de:t5:s:scene",
+      "title": "后山石亭",
+      "location": "后山",
+      "entities": [
+        {
+          "id": "r:60efb6672ac907de:t5:e:person_1",
+          "name": "野狼",
+          "kind": "person"
+        }
+      ],
+      "blocks": [
+        {
+          "kind": "narration",
+          "text": "你沿着蜿蜒的山路深入后山，六十日的跋涉让原本青翠的山林染上了几分肃杀。四周雾气渐浓，脚下的落叶腐殖层厚实湿滑，偶尔传来几声不知名野兽的低吼，惊起几只寒鸦扑棱着翅膀飞向灰蒙蒙的天际。山势陡峭，前方隐约可见一座坍塌了一半的石亭，断壁残垣间杂草丛生，透着一股被遗忘的荒凉感。"
+        },
+        {
+          "kind": "narration",
+          "text": "你走到那座石亭前，发现亭柱上刻着几道模糊不清的划痕，似乎有人曾在此停留。亭内积满了枯叶，角落里似乎还残留着些许未燃尽的灰烬，空气中弥漫着淡淡的焦糊味。就在你准备仔细查看时，一只通体漆黑、双眼泛着红光的野狼突然从草丛中窜出，死死盯着你，喉咙里发出威胁的低吼，显然把你当成了入侵者。"
+        }
+      ],
+      "choices": [
+        {
+          "id": "r:60efb6672ac907de:t5:c:a",
+          "label": "询问野狼：询问野狼为何在此徘徊",
+          "intent": "interact",
+          "targetId": "r:60efb6672ac907de:t5:e:person_1",
+          "stake": "low",
+          "approach": "ask"
+        },
+        {
+          "id": "r:60efb6672ac907de:t5:c:b",
+          "label": "迎战野狼，强攻：攻击野狼以驱赶它",
+          "intent": "fight",
+          "targetId": "r:60efb6672ac907de:t5:e:person_1",
+          "stake": "low",
+          "approach": "assault"
+        },
+        {
+          "id": "r:60efb6672ac907de:t5:c:c",
+          "label": "避开野狼，后撤：悄悄退后避开野狼",
+          "intent": "evade",
+          "targetId": "r:60efb6672ac907de:t5:e:person_1",
+          "stake": "low",
+          "approach": "withdraw"
+        }
+      ],
+      "memoryDeltas": [
+        {
+          "entityId": "r:60efb6672ac907de:t5:e:person_1",
+          "kind": "clue",
+          "text": "你沿着蜿蜒的山路深入后山，六十日的跋涉让原本青翠的山林染上了几分肃杀。四周雾气渐浓，脚下的落叶腐殖层厚实湿滑，偶尔传来几声不知名野兽的低吼，惊起几只寒鸦扑棱着翅膀飞向灰蒙蒙的天际。山势陡峭，前方隐约可见一座坍塌了一半的石亭，断壁残垣间杂草丛生，透着一股被遗忘的荒凉感。",
+          "status": "open"
+        },
+        {
+          "entityId": "r:60efb6672ac907de:t5:e:person_1",
+          "kind": "clue",
+          "text": "你走到那座石亭前，发现亭柱上刻着几道模糊不清的划痕，似乎有人曾在此停留。亭内积满了枯叶，角落里似乎还残留着些许未燃尽的灰烬，空气中弥漫着淡淡的焦糊味。就在你准备仔细查看时，一只通体漆黑、双眼泛着红光的野狼突然从草丛中窜出，死死盯着你，喉咙里发出威胁的低吼，显然把你当成了入侵者。",
+          "status": "open"
+        }
+      ]
+    }
+  },
+  "request": {
+    "context": {
+      "schemaVersion": 1,
+      "phase": "choice",
+      "identity": {
+        "runId": "3ef1a8f3-2600-458e-8193-f3c4f1d8149a",
+        "turnId": 5,
+        "baseRevision": 4,
+        "stateHash": "acdeca35edb9fca34fe1d27d4129d8ea5df77f35455b01726dda1a8ad2d0d4a9",
+        "choiceId": "r:60efb6672ac907de:t4:c:c",
+        "rulesVersion": 1,
+        "promptVersion": 1,
+        "requestId": "194752c6-24cd-4301-9b75-2602f9b6ead4"
+      },
+      "namespace": "r:60efb6672ac907de",
+      "receipt": {
+        "kind": "choice",
+        "choiceId": "r:60efb6672ac907de:t4:c:c",
+        "action": {
+          "id": "r:60efb6672ac907de:t4:c:c",
+          "label": "穿行荒野前往后山：前往后山：去后山寻找猎物或散心。",
+          "intent": "travel",
+          "targetId": "r:60efb6672ac907de:t4:e:place_1",
+          "stake": "low",
+          "approach": "wilderness"
+        },
+        "elapsedDays": 60,
+        "itemChanges": {
+          "supplies": -1
+        },
+        "relationChanges": {},
+        "random": {
+          "before": 1353389753,
+          "after": 3091058884,
+          "roll": 84
+        },
+        "before": {
+          "ageDays": 5760,
+          "realm": "mortal",
+          "cultivation": 0,
+          "injury": 0
+        },
+        "after": {
+          "ageDays": 5820,
+          "realm": "mortal",
+          "cultivation": 0,
+          "injury": 0
+        },
+        "death": null,
+        "birth": null
+      },
+      "life": {
+        "name": "云归",
+        "ageDays": 5820,
+        "lifeLimit": 80,
+        "realm": "mortal",
+        "cultivation": 0,
+        "injury": 0,
+        "items": {
+          "supplies": 2,
+          "stones": 0
+        },
+        "relations": {},
+        "birth": {
+          "originId": "village",
+          "talentIds": [
+            "fortune-debt",
+            "sword-bone"
+          ],
+          "attributes": {
+            "constitution": 3,
+            "insight": 4,
+            "fortune": 5
+          }
+        }
+      },
+      "entities": [
+        {
+          "id": "r:60efb6672ac907de:t1:e:person_1",
+          "name": "父亲",
+          "kind": "person",
+          "status": "unknown"
+        },
+        {
+          "id": "r:60efb6672ac907de:t4:e:place_1",
+          "name": "后山",
+          "kind": "place",
+          "status": "unknown"
+        }
+      ],
+      "memory": {
+        "facts": [
+          {
+            "id": "decision:3",
+            "runId": "3ef1a8f3-2600-458e-8193-f3c4f1d8149a",
+            "turnId": 3,
+            "source": "rules",
+            "kind": "fact",
+            "entityId": "r:60efb6672ac907de:t1:e:person_1",
+            "text": "你在猎户小屋选择了“婉拒父亲：拒绝查看药方”。"
+          },
+          {
+            "id": "decision:2",
+            "runId": "3ef1a8f3-2600-458e-8193-f3c4f1d8149a",
+            "turnId": 2,
+            "source": "rules",
+            "kind": "fact",
+            "entityId": "r:60efb6672ac907de:t1:e:person_1",
+            "text": "你在猎户小屋选择了“询问父亲：询问父亲关于药方和符文的来历”。"
+          }
+        ],
+        "promises": [],
+        "clues": [
+          {
+            "id": "m:5dcb0b94b9ab07b47be0bfcf86ede631",
+            "source": "narrative",
+            "kind": "clue",
+            "entityId": "r:60efb6672ac907de:t1:e:person_1",
+            "text": "你站在猎户小屋的木桌前，目光扫过屋内陈设。桌上那卷羊皮纸已被父亲收起，只留下一摊墨迹未干的痕迹。屋角堆着几捆干柴，墙角挂着一把缺了口的猎刀，窗外的风声偶尔透过缝隙吹进来，带着山林特有的清冽寒意。",
+            "status": "open",
+            "runId": "3ef1a8f3-2600-458e-8193-f3c4f1d8149a",
+            "turnId": 4
+          },
+          {
+            "id": "m:a9b17733fc52407bccee7b4189652182",
+            "source": "narrative",
+            "kind": "clue",
+            "entityId": "r:60efb6672ac907de:t1:e:person_1",
+            "text": "父亲叹了口气，目光落在那羊皮纸上：“这药方是村长托人从镇上带回来的，说是能治好你娘的病。但这上面画的符文，我看了半天也不懂，怕是有什么古怪。归儿，你识字，能不能帮我看看这上面到底写了什么？”",
+            "status": "open",
+            "runId": "3ef1a8f3-2600-458e-8193-f3c4f1d8149a",
+            "turnId": 2
+          },
+          {
+            "id": "m:1318b772b699ddadf21115fead7d160d",
+            "source": "narrative",
+            "kind": "clue",
+            "entityId": "r:60efb6672ac907de:t1:e:person_1",
+            "text": "“归儿，你来了。”父亲放下羊皮纸，指了指桌上的东西，“这是村长托人从镇上带回来的‘断魂草’药方，说是能治好你娘的病。但这药方上画着奇怪的符文，我看了半天也不懂，怕是有什么古怪。你识字，能不能帮我看看这上面到底写了什么？”",
+            "status": "open",
+            "runId": "3ef1a8f3-2600-458e-8193-f3c4f1d8149a",
+            "turnId": 1
+          }
+        ],
+        "recent": [
+          {
+            "id": "turn:4",
+            "runId": "3ef1a8f3-2600-458e-8193-f3c4f1d8149a",
+            "turnId": 4,
+            "source": "narrative",
+            "kind": "turn",
+            "text": "地点：猎户小屋；刚才选择：观察周围：寻找新的线索\n你站在猎户小屋的木桌前，目光扫过屋内陈设。桌上那卷羊皮纸已被父亲收起，只留下一摊墨迹未干的痕迹。屋角堆着几捆干柴，墙角挂着一把缺了口的猎刀，窗外的风声偶尔透过缝隙吹进来，带着山林特有的清冽寒意。",
+            "entityIds": []
+          },
+          {
+            "id": "turn:3",
+            "runId": "3ef1a8f3-2600-458e-8193-f3c4f1d8149a",
+            "turnId": 3,
+            "source": "narrative",
+            "kind": "turn",
+            "text": "地点：猎户小屋；刚才选择：婉拒父亲：拒绝查看药方\n你婉拒了父亲的请求，结束了这次交谈。你仍在原处，接下来可以自行观察或行动。",
+            "entityIds": [
+              "r:60efb6672ac907de:t1:e:person_1"
+            ]
+          }
+        ],
+        "summaries": []
+      },
+      "references": [
+        "decision:3",
+        "decision:2",
+        "m:5dcb0b94b9ab07b47be0bfcf86ede631",
+        "m:a9b17733fc52407bccee7b4189652182",
+        "m:1318b772b699ddadf21115fead7d160d",
+        "turn:4",
+        "turn:3"
+      ],
+      "previousScene": {
+        "id": "r:60efb6672ac907de:t4:s:scene",
+        "blocksHash": "0604c40e4f34bc6d0fbecdc468ce81309991eaae11354f1bb36f80ef0f1e8f05"
+      },
+      "relationshipVersion": 1,
+      "relationships": {},
+      "coverage": {
+        "policy": "relevance-v1",
+        "openTotal": 3,
+        "openIncluded": 3,
+        "openOmitted": 0
+      }
+    },
+    "attempt": {
+      "id": "3cfda8cc-314b-40ad-bc2a-cafa1ac07b3d",
+      "sessionRef": "sess_3d966adc91b4dd1833d2701c17f3adae",
+      "retryOf": null
+    },
+    "storyActions": true
+  },
+  "decision": {
+    "index": 1,
+    "reason": "拒绝后的观察描写小屋环境，药方已收起，父亲的请求菜单没有重开；当前给出独立观察、后山旅行、结束互动。明确选择后山旅行，核对60日、行粮消耗及旧人物不自动随行。",
+    "selected": {
+      "id": "r:60efb6672ac907de:t4:c:c",
+      "label": "穿行荒野前往后山：前往后山：去后山寻找猎物或散心。",
+      "intent": "travel",
+      "targetId": "r:60efb6672ac907de:t4:e:place_1",
+      "stake": "low",
+      "approach": "wilderness"
+    }
+  },
+  "choices": [
+    {
+      "id": "r:60efb6672ac907de:t5:c:a",
+      "enabled": true,
+      "label": "询问野狼：询问野狼为何在此徘徊",
+      "cost": "0日"
+    },
+    {
+      "id": "r:60efb6672ac907de:t5:c:b",
+      "enabled": true,
+      "label": "迎战野狼，强攻：攻击野狼以驱赶它",
+      "cost": "7日 · 历练受伤基础风险30%，根骨与坚韧筋骨可降低风险。；将增加2点伤势；伤势达到10即死亡。"
+    },
+    {
+      "id": "r:60efb6672ac907de:t5:c:c",
+      "enabled": true,
+      "label": "避开野狼，后撤：悄悄退后避开野狼",
+      "cost": "14日 · 历练受伤基础风险15%，根骨与坚韧筋骨可降低风险。"
+    }
+  ],
+  "traces": [
+    {
+      "model": "@cf/zai-org/glm-4.7-flash",
+      "inputHash": "ea44df7641c82630693189fcdd75d4bb84c883f3bf61a0c206b4d744ecde1171",
+      "inputBytes": 18443,
+      "startedAt": 1793380435705,
+      "bindingReturnedAt": 1793380436055,
+      "liveRawBytes": 139660,
+      "captureComplete": true,
+      "response": {
+        "model": "@cf/zai-org/glm-4.7-flash",
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "message": {
+              "content": "{\"blocks\":[{\"kind\":\"narration\",\"text\":\"你沿着蜿蜒的山路深入后山，六十日的跋涉让原本青翠的山林染上了几分肃杀。四周雾气渐浓，脚下的落叶腐殖层厚实湿滑，偶尔传来几声不知名野兽的低吼，惊起几只寒鸦扑棱着翅膀飞向灰蒙蒙的天际。山势陡峭，前方隐约可见一座坍塌了一半的石亭，断壁残垣间杂草丛生，透着一股被遗忘的荒凉感。\"},{\"kind\":\"narration\",\"text\":\"你走到那座石亭前，发现亭柱上刻着几道模糊不清的划痕，似乎有人曾在此停留。亭内积满了枯叶，角落里似乎还残留着些许未燃尽的灰烬，空气中弥漫着淡淡的焦糊味。就在你准备仔细查看时，一只通体漆黑、双眼泛着红光的野狼突然从草丛中窜出，死死盯着你，喉咙里发出威胁的低吼，显然把你当成了入侵者。\"}],\"choices\":[{\"action\":\"interact:ask\",\"target\":{\"kind\":\"person\",\"name\":\"野狼\",\"ref\":\"\",\"status\":null},\"stake\":\"low\",\"purpose\":\"询问野狼为何在此徘徊\",\"anchor\":0},{\"action\":\"fight:assault\",\"target\":{\"kind\":\"person\",\"name\":\"野狼\",\"ref\":\"\",\"status\":null},\"stake\":\"low\",\"purpose\":\"攻击野狼以驱赶它\",\"anchor\":1},{\"action\":\"evade:withdraw\",\"target\":{\"kind\":\"person\",\"name\":\"野狼\",\"ref\":\"\",\"status\":null},\"stake\":\"low\",\"purpose\":\"悄悄退后避开野狼\",\"anchor\":1}],\"title\":\"后山石亭\",\"location\":\"后山\",\"memoryDeltas\":[{\"target\":{\"kind\":\"person\",\"name\":\"野狼\",\"ref\":\"\",\"status\":null},\"kind\":\"clue\",\"anchor\":0,\"status\":\"open\"},{\"target\":{\"kind\":\"person\",\"name\":\"野狼\",\"ref\":\"\",\"status\":null},\"kind\":\"clue\",\"anchor\":1,\"status\":\"open\"}]}",
+              "reasoning_content": ""
+            }
+          }
+        ],
+        "usage": {
+          "prompt_tokens": 3053,
+          "completion_tokens": 440,
+          "total_tokens": 3493,
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          },
+          "neurons": 32.80750000000019
+        }
+      },
+      "rawSseBytes": 139660
+    }
+  ],
+  "revision": 5,
+  "pending": false,
+  "state": {
+    "relationshipVersion": 1,
+    "version": 5,
+    "mode": "cultivation",
+    "contentVersion": 4,
+    "rulesVersion": 1,
+    "promptVersion": 1,
+    "runId": "3ef1a8f3-2600-458e-8193-f3c4f1d8149a",
+    "revision": 5,
+    "turnId": 5,
+    "phase": "active",
+    "rng": 3091058884,
+    "life": {
+      "name": "云归",
+      "ageDays": 5820,
+      "lifeLimit": 80,
+      "realm": "mortal",
+      "cultivation": 0,
+      "injury": 0,
+      "items": {
+        "supplies": 2,
+        "stones": 0
+      },
+      "relations": {},
+      "birth": {
+        "originId": "village",
+        "talentIds": [
+          "fortune-debt",
+          "sword-bone"
+        ],
+        "attributes": {
+          "constitution": 3,
+          "insight": 4,
+          "fortune": 5
+        }
+      }
+    },
+    "birthReceipt": {
+      "kind": "opening",
+      "choiceId": null,
+      "action": null,
+      "elapsedDays": 0,
+      "itemChanges": {},
+      "relationChanges": {},
+      "random": {
+        "before": 1879604368,
+        "after": 1879604368,
+        "roll": null
+      },
+      "before": {
+        "ageDays": 5760,
+        "realm": "mortal",
+        "cultivation": 0,
+        "injury": 0
+      },
+      "after": {
+        "ageDays": 5760,
+        "realm": "mortal",
+        "cultivation": 0,
+        "injury": 0
+      },
+      "death": null,
+      "birth": {
+        "originId": "village",
+        "talentIds": [
+          "fortune-debt",
+          "sword-bone"
+        ],
+        "attributes": {
+          "constitution": 3,
+          "insight": 4,
+          "fortune": 5
+        }
+      }
+    },
+    "currentScene": {
+      "id": "r:60efb6672ac907de:t5:s:scene",
+      "title": "后山石亭",
+      "location": "后山",
+      "entities": [
+        {
+          "id": "r:60efb6672ac907de:t5:e:person_1",
+          "name": "野狼",
+          "kind": "person"
+        }
+      ],
+      "blocks": [
+        {
+          "kind": "narration",
+          "text": "你沿着蜿蜒的山路深入后山，六十日的跋涉让原本青翠的山林染上了几分肃杀。四周雾气渐浓，脚下的落叶腐殖层厚实湿滑，偶尔传来几声不知名野兽的低吼，惊起几只寒鸦扑棱着翅膀飞向灰蒙蒙的天际。山势陡峭，前方隐约可见一座坍塌了一半的石亭，断壁残垣间杂草丛生，透着一股被遗忘的荒凉感。"
+        },
+        {
+          "kind": "narration",
+          "text": "你走到那座石亭前，发现亭柱上刻着几道模糊不清的划痕，似乎有人曾在此停留。亭内积满了枯叶，角落里似乎还残留着些许未燃尽的灰烬，空气中弥漫着淡淡的焦糊味。就在你准备仔细查看时，一只通体漆黑、双眼泛着红光的野狼突然从草丛中窜出，死死盯着你，喉咙里发出威胁的低吼，显然把你当成了入侵者。"
+        }
+      ],
+      "choices": [
+        {
+          "id": "r:60efb6672ac907de:t5:c:a",
+          "label": "询问野狼：询问野狼为何在此徘徊",
+          "intent": "interact",
+          "targetId": "r:60efb6672ac907de:t5:e:person_1",
+          "stake": "low",
+          "approach": "ask"
+        },
+        {
+          "id": "r:60efb6672ac907de:t5:c:b",
+          "label": "迎战野狼，强攻：攻击野狼以驱赶它",
+          "intent": "fight",
+          "targetId": "r:60efb6672ac907de:t5:e:person_1",
+          "stake": "low",
+          "approach": "assault"
+        },
+        {
+          "id": "r:60efb6672ac907de:t5:c:c",
+          "label": "避开野狼，后撤：悄悄退后避开野狼",
+          "intent": "evade",
+          "targetId": "r:60efb6672ac907de:t5:e:person_1",
+          "stake": "low",
+          "approach": "withdraw"
+        }
+      ],
+      "memoryDeltas": [
+        {
+          "entityId": "r:60efb6672ac907de:t5:e:person_1",
+          "kind": "clue",
+          "text": "你沿着蜿蜒的山路深入后山，六十日的跋涉让原本青翠的山林染上了几分肃杀。四周雾气渐浓，脚下的落叶腐殖层厚实湿滑，偶尔传来几声不知名野兽的低吼，惊起几只寒鸦扑棱着翅膀飞向灰蒙蒙的天际。山势陡峭，前方隐约可见一座坍塌了一半的石亭，断壁残垣间杂草丛生，透着一股被遗忘的荒凉感。",
+          "status": "open"
+        },
+        {
+          "entityId": "r:60efb6672ac907de:t5:e:person_1",
+          "kind": "clue",
+          "text": "你走到那座石亭前，发现亭柱上刻着几道模糊不清的划痕，似乎有人曾在此停留。亭内积满了枯叶，角落里似乎还残留着些许未燃尽的灰烬，空气中弥漫着淡淡的焦糊味。就在你准备仔细查看时，一只通体漆黑、双眼泛着红光的野狼突然从草丛中窜出，死死盯着你，喉咙里发出威胁的低吼，显然把你当成了入侵者。",
+          "status": "open"
+        }
+      ]
+    },
+    "lastReceipt": {
+      "kind": "choice",
+      "choiceId": "r:60efb6672ac907de:t4:c:c",
+      "action": {
+        "id": "r:60efb6672ac907de:t4:c:c",
+        "label": "穿行荒野前往后山：前往后山：去后山寻找猎物或散心。",
+        "intent": "travel",
+        "targetId": "r:60efb6672ac907de:t4:e:place_1",
+        "stake": "low",
+        "approach": "wilderness"
+      },
+      "elapsedDays": 60,
+      "itemChanges": {
+        "supplies": -1
+      },
+      "relationChanges": {},
+      "random": {
+        "before": 1353389753,
+        "after": 3091058884,
+        "roll": 84
+      },
+      "before": {
+        "ageDays": 5760,
+        "realm": "mortal",
+        "cultivation": 0,
+        "injury": 0
+      },
+      "after": {
+        "ageDays": 5820,
+        "realm": "mortal",
+        "cultivation": 0,
+        "injury": 0
+      },
+      "death": null,
+      "birth": null
+    },
+    "relatedEntities": [
+      {
+        "id": "r:60efb6672ac907de:t5:e:person_1",
+        "name": "野狼",
+        "kind": "person"
+      }
+    ],
+    "archiveCursor": 0
+  },
+  "posts": 4,
+  "latency": {
+    "usable": true,
+    "errorCode": null,
+    "firstAnyPreviewMs": 3141,
+    "firstReadableMs": 3391,
+    "completionMs": 9226,
+    "narrativeChars": 275,
+    "maxPreviewGapMs": 216,
+    "readingFinishEstimateMs": 49224,
+    "readingStallEstimateMs": 0,
+    "optionsWaitEstimateMs": 0,
+    "prefetchWorthEvaluating": true,
+    "assumptions": {
+      "readingCharsPerSecond": 6,
+      "readableChars": 20,
+      "targetWaitMs": 2000
+    }
+  }
+}

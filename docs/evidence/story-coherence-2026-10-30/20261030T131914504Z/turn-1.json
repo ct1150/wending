@@ -1,0 +1,652 @@
+{
+  "caseId": "choice-1",
+  "start": 87975.60000000149,
+  "timeline": [
+    {
+      "atMs": 3407,
+      "chars": 1
+    },
+    {
+      "atMs": 3465,
+      "chars": 4
+    },
+    {
+      "atMs": 3541,
+      "chars": 6
+    },
+    {
+      "atMs": 3664,
+      "chars": 9
+    },
+    {
+      "atMs": 3723,
+      "chars": 12
+    },
+    {
+      "atMs": 4108,
+      "chars": 14
+    },
+    {
+      "atMs": 4432,
+      "chars": 15
+    },
+    {
+      "atMs": 4662,
+      "chars": 20
+    },
+    {
+      "atMs": 4724,
+      "chars": 26
+    },
+    {
+      "atMs": 4801,
+      "chars": 31
+    },
+    {
+      "atMs": 4860,
+      "chars": 35
+    },
+    {
+      "atMs": 4922,
+      "chars": 42
+    },
+    {
+      "atMs": 4996,
+      "chars": 46
+    },
+    {
+      "atMs": 5057,
+      "chars": 48
+    },
+    {
+      "atMs": 5120,
+      "chars": 53
+    },
+    {
+      "atMs": 5179,
+      "chars": 58
+    },
+    {
+      "atMs": 5241,
+      "chars": 64
+    },
+    {
+      "atMs": 5319,
+      "chars": 72
+    },
+    {
+      "atMs": 5395,
+      "chars": 80
+    },
+    {
+      "atMs": 5469,
+      "chars": 85
+    },
+    {
+      "atMs": 5529,
+      "chars": 87
+    },
+    {
+      "atMs": 5589,
+      "chars": 94
+    },
+    {
+      "atMs": 5651,
+      "chars": 98
+    },
+    {
+      "atMs": 5725,
+      "chars": 102
+    },
+    {
+      "atMs": 5786,
+      "chars": 105
+    },
+    {
+      "atMs": 5847,
+      "chars": 110
+    },
+    {
+      "atMs": 5908,
+      "chars": 115
+    },
+    {
+      "atMs": 5983,
+      "chars": 122
+    },
+    {
+      "atMs": 6057,
+      "chars": 125
+    },
+    {
+      "atMs": 6133,
+      "chars": 130
+    },
+    {
+      "atMs": 6194,
+      "chars": 135
+    },
+    {
+      "atMs": 6271,
+      "chars": 141
+    },
+    {
+      "atMs": 6347,
+      "chars": 143
+    },
+    {
+      "atMs": 6392,
+      "chars": 146
+    },
+    {
+      "atMs": 6455,
+      "chars": 150
+    },
+    {
+      "atMs": 6516,
+      "chars": 156
+    },
+    {
+      "atMs": 6578,
+      "chars": 161
+    },
+    {
+      "atMs": 6656,
+      "chars": 171
+    },
+    {
+      "atMs": 6732,
+      "chars": 178
+    }
+  ],
+  "choicesEnabledDuringPreview": false,
+  "lastText": "你从腰间解下那块硬得像石头的干粮，掰下一半递过去。刘二叔接过干粮，像是抓住了救命稻草，狼吞虎咽地咽了下去。随着食物下肚，他原本惨白的脸色稍微缓和了一些，颤抖的手也稳住了。他长舒一口气，眼神中多了一丝感激，但随即又变得警惕起来，压低声音说道：“多谢云归，这东西救了我的命。但我还是不敢去后山，那地方邪门得很，昨晚风大，我听见里面有动静，像是骨头摩擦的声音。”",
+  "doneMs": 11877,
+  "result": {
+    "protocolVersion": 1,
+    "status": "ready",
+    "requestId": "b4812544-9e49-40cd-afbe-64bfb2b92c64",
+    "attemptId": "bbf997c4-0aa1-4ff2-8b8d-b4923359ad17",
+    "sessionRef": "sess_39f9cd43253377bfdc7caa20cdcbf7b3",
+    "errorCode": null,
+    "retry": null,
+    "scene": {
+      "id": "r:135ea8f52168f34c:t2:s:scene",
+      "title": "后山老槐",
+      "location": "village",
+      "entities": [
+        {
+          "id": "r:135ea8f52168f34c:t1:e:person_1",
+          "name": "刘二叔",
+          "kind": "person",
+          "status": "alive"
+        },
+        {
+          "id": "r:135ea8f52168f34c:t1:e:place_1",
+          "name": "后山老槐树",
+          "kind": "place"
+        }
+      ],
+      "blocks": [
+        {
+          "kind": "narration",
+          "text": "你从腰间解下那块硬得像石头的干粮，掰下一半递过去。刘二叔接过干粮，像是抓住了救命稻草，狼吞虎咽地咽了下去。随着食物下肚，他原本惨白的脸色稍微缓和了一些，颤抖的手也稳住了。他长舒一口气，眼神中多了一丝感激，但随即又变得警惕起来，压低声音说道：“多谢云归，这东西救了我的命。但我还是不敢去后山，那地方邪门得很，昨晚风大，我听见里面有动静，像是骨头摩擦的声音。”"
+        }
+      ],
+      "choices": [
+        {
+          "id": "r:135ea8f52168f34c:t2:c:a",
+          "label": "询问刘二叔：询问刘二叔昨晚具体听到了什么动静，除了骨头摩擦声还有没有其他细节。",
+          "intent": "interact",
+          "targetId": "r:135ea8f52168f34c:t1:e:person_1",
+          "stake": "low",
+          "approach": "ask"
+        },
+        {
+          "id": "r:135ea8f52168f34c:t2:c:b",
+          "label": "穿行荒野前往后山老槐树：前往后山老槐树查看刘二叔所说的埋藏物。",
+          "intent": "travel",
+          "targetId": "r:135ea8f52168f34c:t1:e:place_1",
+          "stake": "low",
+          "approach": "wilderness"
+        },
+        {
+          "id": "r:135ea8f52168f34c:t2:c:c",
+          "label": "婉拒刘二叔：拒绝刘二叔的请求，表示自己要回家休息。",
+          "intent": "interact",
+          "targetId": "r:135ea8f52168f34c:t1:e:person_1",
+          "stake": "low",
+          "approach": "decline"
+        }
+      ],
+      "memoryDeltas": [
+        {
+          "entityId": "r:135ea8f52168f34c:t1:e:person_1",
+          "kind": "fact",
+          "text": "你从腰间解下那块硬得像石头的干粮，掰下一半递过去。刘二叔接过干粮，像是抓住了救命稻草，狼吞虎咽地咽了下去。随着食物下肚，他原本惨白的脸色稍微缓和了一些，颤抖的手也稳住了。他长舒一口气，眼神中多了一丝感激，但随即又变得警惕起来，压低声音说道：“多谢云归，这东西救了我的命。但我还是不敢去后山，那地方邪门得很，昨晚风大，我听见里面有动静，像是骨头摩擦的声音。”"
+        }
+      ]
+    }
+  },
+  "request": {
+    "context": {
+      "schemaVersion": 1,
+      "phase": "choice",
+      "identity": {
+        "runId": "130d579f-9851-45b9-a8f2-79e8b961fc2d",
+        "turnId": 2,
+        "baseRevision": 1,
+        "stateHash": "74f3dddab8c98b9563974c3a343144fb35c7cd44d579d680716be694c86216db",
+        "choiceId": "r:135ea8f52168f34c:t1:c:b",
+        "rulesVersion": 1,
+        "promptVersion": 1,
+        "requestId": "b4812544-9e49-40cd-afbe-64bfb2b92c64"
+      },
+      "namespace": "r:135ea8f52168f34c",
+      "receipt": {
+        "kind": "choice",
+        "choiceId": "r:135ea8f52168f34c:t1:c:b",
+        "action": {
+          "id": "r:135ea8f52168f34c:t1:c:b",
+          "label": "援助刘二叔：拿出1行粮给刘二叔充饥，缓解他的痛苦。",
+          "intent": "interact",
+          "targetId": "r:135ea8f52168f34c:t1:e:person_1",
+          "stake": "low",
+          "approach": "help"
+        },
+        "elapsedDays": 1,
+        "itemChanges": {
+          "supplies": -1
+        },
+        "relationChanges": {
+          "r:135ea8f52168f34c:t1:e:person_1": 2
+        },
+        "random": {
+          "before": 4012252307,
+          "after": 1528559830,
+          "roll": 30
+        },
+        "before": {
+          "ageDays": 5760,
+          "realm": "mortal",
+          "cultivation": 0,
+          "injury": 0
+        },
+        "after": {
+          "ageDays": 5761,
+          "realm": "mortal",
+          "cultivation": 0,
+          "injury": 0
+        },
+        "death": null,
+        "birth": null
+      },
+      "life": {
+        "name": "云归",
+        "ageDays": 5761,
+        "lifeLimit": 80,
+        "realm": "mortal",
+        "cultivation": 0,
+        "injury": 0,
+        "items": {
+          "supplies": 2,
+          "stones": 0
+        },
+        "relations": {
+          "r:135ea8f52168f34c:t1:e:person_1": 2
+        },
+        "birth": {
+          "originId": "village",
+          "talentIds": [
+            "flash-wisdom",
+            "iron-bones"
+          ],
+          "attributes": {
+            "constitution": 3,
+            "insight": 3,
+            "fortune": 6
+          }
+        }
+      },
+      "entities": [
+        {
+          "id": "r:135ea8f52168f34c:t1:e:person_1",
+          "name": "刘二叔",
+          "kind": "person",
+          "status": "alive"
+        },
+        {
+          "id": "r:135ea8f52168f34c:t1:e:place_1",
+          "name": "后山老槐树",
+          "kind": "place",
+          "status": "unknown"
+        }
+      ],
+      "memory": {
+        "facts": [],
+        "promises": [],
+        "clues": [
+          {
+            "id": "m:aaeed553069f1f3cad5f0b8f9f1cef86",
+            "source": "narrative",
+            "kind": "clue",
+            "entityId": "r:135ea8f52168f34c:t1:e:person_1",
+            "text": "“咳咳……云归，你听说了吗？后山那棵老槐树底下，昨晚好像有人埋了东西。”刘二叔的声音颤抖着，眼神却死死盯着你，“我……我实在不敢去，那地方邪性得很，昨晚风大，我听见里面有动静，像是骨头摩擦的声音。”",
+            "status": "open",
+            "runId": "130d579f-9851-45b9-a8f2-79e8b961fc2d",
+            "turnId": 1
+          }
+        ],
+        "recent": [
+          {
+            "id": "turn:1",
+            "runId": "130d579f-9851-45b9-a8f2-79e8b961fc2d",
+            "turnId": 1,
+            "source": "narrative",
+            "kind": "turn",
+            "text": "地点：village\n云归，十六岁，正蹲在自家院门口磨刀。刀刃映着日头，你是个猎户，这把刀跟了你三年，早已磨得雪亮。院里传来一阵急促的咳嗽声，是隔壁的刘二叔。他正抱着膝盖缩在墙角，脸色惨白，手里紧紧攥着半块发霉的干饼，似乎在忍受极大的痛苦。\n“咳咳……云归，你听说了吗？后山那棵老槐树底下，昨晚好像有人埋了东西。”刘二叔的声音颤抖着，眼神却死死盯着你，“我……我实在不敢去，那地方邪性得很，昨晚风大，我听见里面有动静，像是骨头摩擦的声音。”",
+            "entityIds": []
+          }
+        ],
+        "summaries": []
+      },
+      "references": [
+        "m:aaeed553069f1f3cad5f0b8f9f1cef86",
+        "turn:1"
+      ],
+      "previousScene": {
+        "id": "r:135ea8f52168f34c:t1:s:scene",
+        "blocksHash": "7cd9a72114161a022bfa4638f9eda4667bc9a7aa97a98cb9ff8ded3fc70e6f46"
+      },
+      "relationshipVersion": 1,
+      "relationships": {
+        "r:135ea8f52168f34c:t1:e:person_1": 2
+      },
+      "coverage": {
+        "policy": "relevance-v1",
+        "openTotal": 1,
+        "openIncluded": 1,
+        "openOmitted": 0
+      }
+    },
+    "attempt": {
+      "id": "bbf997c4-0aa1-4ff2-8b8d-b4923359ad17",
+      "sessionRef": "sess_39f9cd43253377bfdc7caa20cdcbf7b3",
+      "retryOf": null
+    },
+    "storyActions": true
+  },
+  "decision": {
+    "index": 1,
+    "reason": "前文刘二叔拿着霉饼且痛苦，选择分出行粮充饥；核对1日、行粮-1和关系+2，不替玩家答应调查。",
+    "selected": {
+      "id": "r:135ea8f52168f34c:t1:c:b",
+      "label": "援助刘二叔：拿出1行粮给刘二叔充饥，缓解他的痛苦。",
+      "intent": "interact",
+      "targetId": "r:135ea8f52168f34c:t1:e:person_1",
+      "stake": "low",
+      "approach": "help"
+    }
+  },
+  "choices": [
+    {
+      "id": "r:135ea8f52168f34c:t2:c:a",
+      "enabled": true,
+      "label": "询问刘二叔：询问刘二叔昨晚具体听到了什么动静，除了骨头摩擦声还有没有其他细节。",
+      "cost": "0日"
+    },
+    {
+      "id": "r:135ea8f52168f34c:t2:c:b",
+      "enabled": true,
+      "label": "穿行荒野前往后山老槐树：前往后山老槐树查看刘二叔所说的埋藏物。",
+      "cost": "60日 · 行粮 1 · 历练受伤基础风险25%，根骨与坚韧筋骨可降低风险。"
+    },
+    {
+      "id": "r:135ea8f52168f34c:t2:c:c",
+      "enabled": true,
+      "label": "婉拒刘二叔：拒绝刘二叔的请求，表示自己要回家休息。",
+      "cost": "0日"
+    }
+  ],
+  "traces": [
+    {
+      "model": "@cf/zai-org/glm-4.7-flash",
+      "inputHash": "d4ef31c06dcc378baaf740544cfbea3c0eabd2f6602b144de974c9e7cd58564f",
+      "inputBytes": 18169,
+      "startedAt": 1793366509901,
+      "bindingReturnedAt": 1793366510392,
+      "liveRawBytes": 133180,
+      "captureComplete": true,
+      "response": {
+        "model": "@cf/zai-org/glm-4.7-flash",
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "message": {
+              "content": "{\n  \"blocks\": [\n    {\n      \"kind\": \"narration\",\n      \"text\": \"你从腰间解下那块硬得像石头的干粮，掰下一半递过去。刘二叔接过干粮，像是抓住了救命稻草，狼吞虎咽地咽了下去。随着食物下肚，他原本惨白的脸色稍微缓和了一些，颤抖的手也稳住了。他长舒一口气，眼神中多了一丝感激，但随即又变得警惕起来，压低声音说道：“多谢云归，这东西救了我的命。但我还是不敢去后山，那地方邪门得很，昨晚风大，我听见里面有动静，像是骨头摩擦的声音。”\"\n    }\n  ],\n  \"choices\": [\n    {\n      \"action\": \"interact:ask\",\n      \"targetId\": \"k1_person_刘二叔\",\n      \"stake\": \"low\",\n      \"purpose\": \"询问刘二叔昨晚具体听到了什么动静，除了骨头摩擦声还有没有其他细节。\",\n      \"anchor\": 0\n    },\n    {\n      \"action\": \"travel:wilderness\",\n      \"targetId\": \"k2_place_后山老槐\",\n      \"stake\": \"low\",\n      \"purpose\": \"前往后山老槐树查看刘二叔所说的埋藏物。\",\n      \"anchor\": 0\n    },\n    {\n      \"action\": \"interact:decline\",\n      \"targetId\": \"k1_person_刘二叔\",\n      \"stake\": \"low\",\n      \"purpose\": \"拒绝刘二叔的请求，表示自己要回家休息。\",\n      \"anchor\": 0\n    }\n  ],\n  \"title\": \"后山老槐\",\n  \"location\": \"village\",\n  \"otherPeople\": [\n    {\n      \"id\": \"k1_person_刘二叔\",\n      \"status\": \"alive\"\n    }\n  ],\n  \"places\": [\n    {\n      \"id\": \"k2_place_后山老槐\"\n    }\n  ],\n  \"factions\": [],\n  \"memoryDeltas\": [\n    {\n      \"entityId\": \"k1_person_刘二叔\",\n      \"kind\": \"promise\",\n      \"anchor\": 0,\n      \"status\": \"open\"\n    }\n  ]\n}",
+              "reasoning_content": ""
+            }
+          }
+        ],
+        "usage": {
+          "prompt_tokens": 2482,
+          "completion_tokens": 483,
+          "total_tokens": 2965,
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          },
+          "neurons": 31.23220000000021
+        }
+      },
+      "rawSseBytes": 133180
+    }
+  ],
+  "revision": 2,
+  "pending": false,
+  "state": {
+    "relationshipVersion": 1,
+    "version": 5,
+    "mode": "cultivation",
+    "contentVersion": 4,
+    "rulesVersion": 1,
+    "promptVersion": 1,
+    "runId": "130d579f-9851-45b9-a8f2-79e8b961fc2d",
+    "revision": 2,
+    "turnId": 2,
+    "phase": "active",
+    "rng": 1528559830,
+    "life": {
+      "name": "云归",
+      "ageDays": 5761,
+      "lifeLimit": 80,
+      "realm": "mortal",
+      "cultivation": 0,
+      "injury": 0,
+      "items": {
+        "supplies": 2,
+        "stones": 0
+      },
+      "relations": {
+        "r:135ea8f52168f34c:t1:e:person_1": 2
+      },
+      "birth": {
+        "originId": "village",
+        "talentIds": [
+          "flash-wisdom",
+          "iron-bones"
+        ],
+        "attributes": {
+          "constitution": 3,
+          "insight": 3,
+          "fortune": 6
+        }
+      }
+    },
+    "birthReceipt": {
+      "kind": "opening",
+      "choiceId": null,
+      "action": null,
+      "elapsedDays": 0,
+      "itemChanges": {},
+      "relationChanges": {},
+      "random": {
+        "before": 4012252307,
+        "after": 4012252307,
+        "roll": null
+      },
+      "before": {
+        "ageDays": 5760,
+        "realm": "mortal",
+        "cultivation": 0,
+        "injury": 0
+      },
+      "after": {
+        "ageDays": 5760,
+        "realm": "mortal",
+        "cultivation": 0,
+        "injury": 0
+      },
+      "death": null,
+      "birth": {
+        "originId": "village",
+        "talentIds": [
+          "flash-wisdom",
+          "iron-bones"
+        ],
+        "attributes": {
+          "constitution": 3,
+          "insight": 3,
+          "fortune": 6
+        }
+      }
+    },
+    "currentScene": {
+      "id": "r:135ea8f52168f34c:t2:s:scene",
+      "title": "后山老槐",
+      "location": "village",
+      "entities": [
+        {
+          "id": "r:135ea8f52168f34c:t1:e:person_1",
+          "name": "刘二叔",
+          "kind": "person",
+          "status": "alive"
+        },
+        {
+          "id": "r:135ea8f52168f34c:t1:e:place_1",
+          "name": "后山老槐树",
+          "kind": "place"
+        }
+      ],
+      "blocks": [
+        {
+          "kind": "narration",
+          "text": "你从腰间解下那块硬得像石头的干粮，掰下一半递过去。刘二叔接过干粮，像是抓住了救命稻草，狼吞虎咽地咽了下去。随着食物下肚，他原本惨白的脸色稍微缓和了一些，颤抖的手也稳住了。他长舒一口气，眼神中多了一丝感激，但随即又变得警惕起来，压低声音说道：“多谢云归，这东西救了我的命。但我还是不敢去后山，那地方邪门得很，昨晚风大，我听见里面有动静，像是骨头摩擦的声音。”"
+        }
+      ],
+      "choices": [
+        {
+          "id": "r:135ea8f52168f34c:t2:c:a",
+          "label": "询问刘二叔：询问刘二叔昨晚具体听到了什么动静，除了骨头摩擦声还有没有其他细节。",
+          "intent": "interact",
+          "targetId": "r:135ea8f52168f34c:t1:e:person_1",
+          "stake": "low",
+          "approach": "ask"
+        },
+        {
+          "id": "r:135ea8f52168f34c:t2:c:b",
+          "label": "穿行荒野前往后山老槐树：前往后山老槐树查看刘二叔所说的埋藏物。",
+          "intent": "travel",
+          "targetId": "r:135ea8f52168f34c:t1:e:place_1",
+          "stake": "low",
+          "approach": "wilderness"
+        },
+        {
+          "id": "r:135ea8f52168f34c:t2:c:c",
+          "label": "婉拒刘二叔：拒绝刘二叔的请求，表示自己要回家休息。",
+          "intent": "interact",
+          "targetId": "r:135ea8f52168f34c:t1:e:person_1",
+          "stake": "low",
+          "approach": "decline"
+        }
+      ],
+      "memoryDeltas": [
+        {
+          "entityId": "r:135ea8f52168f34c:t1:e:person_1",
+          "kind": "fact",
+          "text": "你从腰间解下那块硬得像石头的干粮，掰下一半递过去。刘二叔接过干粮，像是抓住了救命稻草，狼吞虎咽地咽了下去。随着食物下肚，他原本惨白的脸色稍微缓和了一些，颤抖的手也稳住了。他长舒一口气，眼神中多了一丝感激，但随即又变得警惕起来，压低声音说道：“多谢云归，这东西救了我的命。但我还是不敢去后山，那地方邪门得很，昨晚风大，我听见里面有动静，像是骨头摩擦的声音。”"
+        }
+      ]
+    },
+    "lastReceipt": {
+      "kind": "choice",
+      "choiceId": "r:135ea8f52168f34c:t1:c:b",
+      "action": {
+        "id": "r:135ea8f52168f34c:t1:c:b",
+        "label": "援助刘二叔：拿出1行粮给刘二叔充饥，缓解他的痛苦。",
+        "intent": "interact",
+        "targetId": "r:135ea8f52168f34c:t1:e:person_1",
+        "stake": "low",
+        "approach": "help"
+      },
+      "elapsedDays": 1,
+      "itemChanges": {
+        "supplies": -1
+      },
+      "relationChanges": {
+        "r:135ea8f52168f34c:t1:e:person_1": 2
+      },
+      "random": {
+        "before": 4012252307,
+        "after": 1528559830,
+        "roll": 30
+      },
+      "before": {
+        "ageDays": 5760,
+        "realm": "mortal",
+        "cultivation": 0,
+        "injury": 0
+      },
+      "after": {
+        "ageDays": 5761,
+        "realm": "mortal",
+        "cultivation": 0,
+        "injury": 0
+      },
+      "death": null,
+      "birth": null
+    },
+    "relatedEntities": [
+      {
+        "id": "r:135ea8f52168f34c:t1:e:person_1",
+        "name": "刘二叔",
+        "kind": "person",
+        "status": "alive"
+      },
+      {
+        "id": "r:135ea8f52168f34c:t1:e:place_1",
+        "name": "后山老槐树",
+        "kind": "place"
+      }
+    ],
+    "archiveCursor": 0
+  },
+  "posts": 2,
+  "latency": {
+    "usable": true,
+    "errorCode": null,
+    "firstAnyPreviewMs": 3407,
+    "firstReadableMs": 4662,
+    "completionMs": 11877,
+    "narrativeChars": 178,
+    "maxPreviewGapMs": 385,
+    "readingFinishEstimateMs": 34329,
+    "readingStallEstimateMs": 0,
+    "optionsWaitEstimateMs": 0,
+    "prefetchWorthEvaluating": true,
+    "assumptions": {
+      "readingCharsPerSecond": 6,
+      "readableChars": 20,
+      "targetWaitMs": 2000
+    }
+  }
+}

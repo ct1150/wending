@@ -1,0 +1,7 @@
+{
+  "status": "NOT_ACCEPTED",
+  "turn": 0,
+  "reason": "Legacy action mode was negotiated; not a modern feature sample. Later read-only checks showed the candidate HTML and capability, but the original cause is not proven.",
+  "apiStatus": "ready",
+  "evidence": "docs/evidence/story-coherence-2026-10-30/20261030T132719781Z/turn-0.json"
+}

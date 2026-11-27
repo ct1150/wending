@@ -1,0 +1,12 @@
+{
+  "sourceCommit": "c0c4ea05379f08a8f8fc3db1bd8685120a23dd4a",
+  "accepted": false,
+  "reason": "Four committed rounds on c0; selected question/observation path coherent. Unselected evade mis-targeted NPC and a help proposal described a question; later fixed by new-purpose filtering. Fifth leave output auto-travelled to the quest destination and returned an invalid self-evade; rejected and kept as a pending turn. Do not count this as current-candidate six-turn acceptance.",
+  "cleanup": {
+    "productionVersion": "cad2a140-240f-4465-a837-e53f054c2589",
+    "percentage": 100,
+    "deployment": "e5a58097-e263-4d18-9c50-852f0d4d25b5",
+    "ownBearerDeleted": true
+  },
+  "subsequentRecovery": "docs/evidence/story-coherence-2026-10-30/20261030T110758631Z/browser.json"
+}

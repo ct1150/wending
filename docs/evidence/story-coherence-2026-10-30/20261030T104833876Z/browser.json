@@ -1,0 +1,1394 @@
+{
+  "sourceCommit": "d51f95e718553652378eb1ea6a0643c015511862",
+  "version": "2d401949-f1ab-464d-b17f-74f772382a83",
+  "recordedAt": "2026-10-30T10:51:21.746Z",
+  "records": [
+    {
+      "caseId": "opening",
+      "start": 1313.300000000745,
+      "timeline": [
+        {
+          "atMs": 4473,
+          "chars": 1
+        },
+        {
+          "atMs": 4551,
+          "chars": 3
+        },
+        {
+          "atMs": 4615,
+          "chars": 6
+        },
+        {
+          "atMs": 4677,
+          "chars": 9
+        },
+        {
+          "atMs": 4739,
+          "chars": 11
+        },
+        {
+          "atMs": 4787,
+          "chars": 13
+        },
+        {
+          "atMs": 4850,
+          "chars": 16
+        },
+        {
+          "atMs": 4928,
+          "chars": 19
+        },
+        {
+          "atMs": 5007,
+          "chars": 22
+        },
+        {
+          "atMs": 5084,
+          "chars": 24
+        },
+        {
+          "atMs": 5163,
+          "chars": 26
+        },
+        {
+          "atMs": 5227,
+          "chars": 29
+        },
+        {
+          "atMs": 5296,
+          "chars": 33
+        },
+        {
+          "atMs": 5353,
+          "chars": 37
+        },
+        {
+          "atMs": 5415,
+          "chars": 40
+        },
+        {
+          "atMs": 5458,
+          "chars": 43
+        },
+        {
+          "atMs": 5521,
+          "chars": 45
+        },
+        {
+          "atMs": 5568,
+          "chars": 50
+        },
+        {
+          "atMs": 5662,
+          "chars": 52
+        },
+        {
+          "atMs": 5728,
+          "chars": 54
+        },
+        {
+          "atMs": 5773,
+          "chars": 57
+        },
+        {
+          "atMs": 5837,
+          "chars": 60
+        },
+        {
+          "atMs": 5883,
+          "chars": 64
+        },
+        {
+          "atMs": 5947,
+          "chars": 67
+        },
+        {
+          "atMs": 5992,
+          "chars": 70
+        },
+        {
+          "atMs": 6057,
+          "chars": 73
+        },
+        {
+          "atMs": 6104,
+          "chars": 76
+        },
+        {
+          "atMs": 6165,
+          "chars": 78
+        },
+        {
+          "atMs": 6245,
+          "chars": 83
+        },
+        {
+          "atMs": 6308,
+          "chars": 86
+        },
+        {
+          "atMs": 6372,
+          "chars": 89
+        },
+        {
+          "atMs": 6433,
+          "chars": 93
+        },
+        {
+          "atMs": 6480,
+          "chars": 95
+        },
+        {
+          "atMs": 6543,
+          "chars": 98
+        },
+        {
+          "atMs": 6747,
+          "chars": 103
+        },
+        {
+          "atMs": 6809,
+          "chars": 105
+        },
+        {
+          "atMs": 6856,
+          "chars": 109
+        },
+        {
+          "atMs": 6903,
+          "chars": 113
+        },
+        {
+          "atMs": 6951,
+          "chars": 117
+        },
+        {
+          "atMs": 7014,
+          "chars": 119
+        },
+        {
+          "atMs": 7059,
+          "chars": 122
+        },
+        {
+          "atMs": 7122,
+          "chars": 126
+        },
+        {
+          "atMs": 7167,
+          "chars": 130
+        },
+        {
+          "atMs": 7214,
+          "chars": 132
+        },
+        {
+          "atMs": 7276,
+          "chars": 135
+        },
+        {
+          "atMs": 7323,
+          "chars": 137
+        },
+        {
+          "atMs": 7386,
+          "chars": 139
+        },
+        {
+          "atMs": 7434,
+          "chars": 142
+        },
+        {
+          "atMs": 7496,
+          "chars": 145
+        },
+        {
+          "atMs": 7543,
+          "chars": 149
+        },
+        {
+          "atMs": 7590,
+          "chars": 152
+        },
+        {
+          "atMs": 7636,
+          "chars": 155
+        },
+        {
+          "atMs": 7700,
+          "chars": 158
+        },
+        {
+          "atMs": 7853,
+          "chars": 164
+        },
+        {
+          "atMs": 7916,
+          "chars": 166
+        },
+        {
+          "atMs": 7963,
+          "chars": 168
+        },
+        {
+          "atMs": 8026,
+          "chars": 173
+        },
+        {
+          "atMs": 8112,
+          "chars": 176
+        },
+        {
+          "atMs": 8168,
+          "chars": 179
+        },
+        {
+          "atMs": 8214,
+          "chars": 182
+        },
+        {
+          "atMs": 8302,
+          "chars": 185
+        },
+        {
+          "atMs": 8323,
+          "chars": 187
+        },
+        {
+          "atMs": 8368,
+          "chars": 193
+        },
+        {
+          "atMs": 8416,
+          "chars": 197
+        },
+        {
+          "atMs": 8479,
+          "chars": 199
+        },
+        {
+          "atMs": 8526,
+          "chars": 202
+        }
+      ],
+      "choicesEnabledDuringPreview": false,
+      "lastText": "你正蹲在城坊角落的打铁铺前，手里攥着刚出炉的半截铁条。铺子里的老匠人正对着一块残缺的铜片发愁，铜片上刻着些晦涩的符文，他叹了口气，转头看向你：“小云，你过目成诵，这符文若是能补全，定能换些灵石。”\n\n老匠人将铜片递到你面前，铜片上的符文断断续续，似乎缺了关键的起手式。他指了指铜片背面的一处凹陷：“这凹陷处得填个‘火’字，但我这炉火温控不稳，怕烧坏了这东西，你若是能认出这符文原本的走向，便帮我补全它。”",
+      "doneMs": 12274,
+      "result": {
+        "protocolVersion": 1,
+        "status": "ready",
+        "requestId": "979bac92-b97f-4883-8158-1a3bf92dd645",
+        "attemptId": "29766879-ef10-4122-9322-40d0c7536339",
+        "sessionRef": "sess_346a21c4b87f2037c9ef7b895df185c3",
+        "errorCode": null,
+        "retry": null,
+        "scene": {
+          "id": "r:91f7c81ee9d066df:t1:s:scene",
+          "title": "残缺符文",
+          "location": "城坊匠徒居",
+          "entities": [
+            {
+              "id": "r:91f7c81ee9d066df:t1:e:person_1",
+              "name": "老匠人",
+              "status": "alive",
+              "kind": "person"
+            }
+          ],
+          "blocks": [
+            {
+              "kind": "narration",
+              "text": "你正蹲在城坊角落的打铁铺前，手里攥着刚出炉的半截铁条。铺子里的老匠人正对着一块残缺的铜片发愁，铜片上刻着些晦涩的符文，他叹了口气，转头看向你：“小云，你过目成诵，这符文若是能补全，定能换些灵石。”"
+            },
+            {
+              "kind": "narration",
+              "text": "老匠人将铜片递到你面前，铜片上的符文断断续续，似乎缺了关键的起手式。他指了指铜片背面的一处凹陷：“这凹陷处得填个‘火’字，但我这炉火温控不稳，怕烧坏了这东西，你若是能认出这符文原本的走向，便帮我补全它。”"
+            }
+          ],
+          "choices": [
+            {
+              "id": "r:91f7c81ee9d066df:t1:c:a",
+              "label": "询问老匠人：询问这块铜片的具体来历和用途",
+              "intent": "interact",
+              "targetId": "r:91f7c81ee9d066df:t1:e:person_1",
+              "stake": "low",
+              "approach": "ask"
+            },
+            {
+              "id": "r:91f7c81ee9d066df:t1:c:b",
+              "label": "仔细观察：仔细观察铜片符文的走向和凹陷处的特征",
+              "intent": "interact",
+              "targetId": "self",
+              "stake": "low",
+              "approach": "observe"
+            },
+            {
+              "id": "r:91f7c81ee9d066df:t1:c:c",
+              "label": "结束与老匠人的互动：拒绝帮忙，转身离开打铁铺",
+              "intent": "interact",
+              "targetId": "r:91f7c81ee9d066df:t1:e:person_1",
+              "stake": "low",
+              "approach": "leave"
+            }
+          ],
+          "memoryDeltas": [
+            {
+              "entityId": "r:91f7c81ee9d066df:t1:e:person_1",
+              "kind": "clue",
+              "text": "老匠人将铜片递到你面前，铜片上的符文断断续续，似乎缺了关键的起手式。他指了指铜片背面的一处凹陷：“这凹陷处得填个‘火’字，但我这炉火温控不稳，怕烧坏了这东西，你若是能认出这符文原本的走向，便帮我补全它。”",
+              "status": "open"
+            },
+            {
+              "entityId": "r:91f7c81ee9d066df:t1:e:person_1",
+              "kind": "clue",
+              "text": "老匠人将铜片递到你面前，铜片上的符文断断续续，似乎缺了关键的起手式。他指了指铜片背面的一处凹陷：“这凹陷处得填个‘火’字，但我这炉火温控不稳，怕烧坏了这东西，你若是能认出这符文原本的走向，便帮我补全它。”",
+              "status": "open"
+            }
+          ]
+        }
+      },
+      "request": {
+        "context": {
+          "schemaVersion": 1,
+          "phase": "opening",
+          "identity": {
+            "runId": "1efa80f5-c33f-4344-be74-fbd52aeabf36",
+            "turnId": 1,
+            "baseRevision": 0,
+            "stateHash": "d68c74c483ae11ea475d8bf4801743eada3d373f79a22e58218214445098b813",
+            "choiceId": null,
+            "rulesVersion": 1,
+            "promptVersion": 1,
+            "requestId": "979bac92-b97f-4883-8158-1a3bf92dd645"
+          },
+          "namespace": "r:91f7c81ee9d066df",
+          "receipt": {
+            "kind": "opening",
+            "choiceId": null,
+            "action": null,
+            "elapsedDays": 0,
+            "itemChanges": {},
+            "relationChanges": {},
+            "random": {
+              "before": 2325314143,
+              "after": 2325314143,
+              "roll": null
+            },
+            "before": {
+              "ageDays": 5760,
+              "realm": "mortal",
+              "cultivation": 0,
+              "injury": 0
+            },
+            "after": {
+              "ageDays": 5760,
+              "realm": "mortal",
+              "cultivation": 0,
+              "injury": 0
+            },
+            "death": null,
+            "birth": {
+              "originId": "artisan",
+              "talentIds": [
+                "keen-memory",
+                "flash-wisdom"
+              ],
+              "attributes": {
+                "constitution": 1,
+                "insight": 6,
+                "fortune": 5
+              }
+            }
+          },
+          "life": {
+            "name": "云归",
+            "ageDays": 5760,
+            "lifeLimit": 80,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0,
+            "items": {
+              "supplies": 3,
+              "stones": 0
+            },
+            "relations": {},
+            "birth": {
+              "originId": "artisan",
+              "talentIds": [
+                "keen-memory",
+                "flash-wisdom"
+              ],
+              "attributes": {
+                "constitution": 1,
+                "insight": 6,
+                "fortune": 5
+              }
+            }
+          },
+          "entities": [],
+          "memory": {
+            "facts": [],
+            "promises": [],
+            "clues": [],
+            "recent": [],
+            "summaries": []
+          },
+          "references": [],
+          "previousScene": null,
+          "relationshipVersion": 1,
+          "relationships": {},
+          "coverage": {
+            "policy": "relevance-v1",
+            "openTotal": 0,
+            "openIncluded": 0,
+            "openOmitted": 0
+          }
+        },
+        "attempt": {
+          "id": "29766879-ef10-4122-9322-40d0c7536339",
+          "sessionRef": "sess_346a21c4b87f2037c9ef7b895df185c3",
+          "retryOf": null
+        }
+      },
+      "decision": null,
+      "choices": [
+        {
+          "id": "r:91f7c81ee9d066df:t1:c:a",
+          "enabled": true,
+          "label": "询问老匠人：询问这块铜片的具体来历和用途",
+          "cost": "0日"
+        },
+        {
+          "id": "r:91f7c81ee9d066df:t1:c:b",
+          "enabled": true,
+          "label": "仔细观察：仔细观察铜片符文的走向和凹陷处的特征",
+          "cost": "0日"
+        },
+        {
+          "id": "r:91f7c81ee9d066df:t1:c:c",
+          "enabled": true,
+          "label": "结束与老匠人的互动：拒绝帮忙，转身离开打铁铺",
+          "cost": "0日"
+        }
+      ],
+      "traces": [
+        {
+          "model": "@cf/zai-org/glm-4.7-flash",
+          "inputHash": "491cffde582410f0e40df05683e33d3953167c427b90ff16b20326544b338231",
+          "inputBytes": 13959,
+          "startedAt": 1793357362714,
+          "bindingReturnedAt": 1793357363112,
+          "liveRawBytes": 114561,
+          "captureComplete": true,
+          "response": {
+            "model": "@cf/zai-org/glm-4.7-flash",
+            "choices": [
+              {
+                "finish_reason": "stop",
+                "message": {
+                  "content": "{\"blocks\":[{\"kind\":\"narration\",\"text\":\"你正蹲在城坊角落的打铁铺前，手里攥着刚出炉的半截铁条。铺子里的老匠人正对着一块残缺的铜片发愁，铜片上刻着些晦涩的符文，他叹了口气，转头看向你：“小云，你过目成诵，这符文若是能补全，定能换些灵石。”\"},{\"kind\":\"narration\",\"text\":\"老匠人将铜片递到你面前，铜片上的符文断断续续，似乎缺了关键的起手式。他指了指铜片背面的一处凹陷：“这凹陷处得填个‘火’字，但我这炉火温控不稳，怕烧坏了这东西，你若是能认出这符文原本的走向，便帮我补全它。”\"}],\"choices\":[{\"action\":\"interact:ask\",\"targetId\":\"p1\",\"stake\":\"low\",\"purpose\":\"询问这块铜片的具体来历和用途\",\"anchor\":1},{\"action\":\"interact:observe\",\"targetId\":\"self\",\"stake\":\"low\",\"purpose\":\"仔细观察铜片符文的走向和凹陷处的特征\",\"anchor\":1},{\"action\":\"interact:leave\",\"targetId\":\"p1\",\"stake\":\"low\",\"purpose\":\"拒绝帮忙，转身离开打铁铺\",\"anchor\":1}],\"title\":\"残缺符文\",\"location\":\"城坊匠徒居\",\"otherPeople\":[{\"id\":\"p1\",\"name\":\"老匠人\",\"status\":\"alive\"}],\"places\":[],\"factions\":[],\"memoryDeltas\":[{\"entityId\":\"p1\",\"kind\":\"clue\",\"anchor\":1,\"status\":\"open\"},{\"entityId\":\"p1\",\"kind\":\"clue\",\"anchor\":1,\"status\":\"open\"}]}",
+                  "reasoning_content": ""
+                }
+              }
+            ],
+            "usage": {
+              "prompt_tokens": 2266,
+              "completion_tokens": 379,
+              "total_tokens": 2645,
+              "prompt_tokens_details": {
+                "cached_tokens": 0
+              },
+              "neurons": 26.25860000000016
+            }
+          },
+          "rawSseBytes": 114561
+        }
+      ],
+      "revision": 1,
+      "pending": false,
+      "state": {
+        "relationshipVersion": 1,
+        "version": 5,
+        "mode": "cultivation",
+        "contentVersion": 4,
+        "rulesVersion": 1,
+        "promptVersion": 1,
+        "runId": "1efa80f5-c33f-4344-be74-fbd52aeabf36",
+        "revision": 1,
+        "turnId": 1,
+        "phase": "active",
+        "rng": 2325314143,
+        "life": {
+          "name": "云归",
+          "ageDays": 5760,
+          "lifeLimit": 80,
+          "realm": "mortal",
+          "cultivation": 0,
+          "injury": 0,
+          "items": {
+            "supplies": 3,
+            "stones": 0
+          },
+          "relations": {},
+          "birth": {
+            "originId": "artisan",
+            "talentIds": [
+              "keen-memory",
+              "flash-wisdom"
+            ],
+            "attributes": {
+              "constitution": 1,
+              "insight": 6,
+              "fortune": 5
+            }
+          }
+        },
+        "birthReceipt": {
+          "kind": "opening",
+          "choiceId": null,
+          "action": null,
+          "elapsedDays": 0,
+          "itemChanges": {},
+          "relationChanges": {},
+          "random": {
+            "before": 2325314143,
+            "after": 2325314143,
+            "roll": null
+          },
+          "before": {
+            "ageDays": 5760,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "after": {
+            "ageDays": 5760,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "death": null,
+          "birth": {
+            "originId": "artisan",
+            "talentIds": [
+              "keen-memory",
+              "flash-wisdom"
+            ],
+            "attributes": {
+              "constitution": 1,
+              "insight": 6,
+              "fortune": 5
+            }
+          }
+        },
+        "currentScene": {
+          "id": "r:91f7c81ee9d066df:t1:s:scene",
+          "title": "残缺符文",
+          "location": "城坊匠徒居",
+          "entities": [
+            {
+              "id": "r:91f7c81ee9d066df:t1:e:person_1",
+              "name": "老匠人",
+              "status": "alive",
+              "kind": "person"
+            }
+          ],
+          "blocks": [
+            {
+              "kind": "narration",
+              "text": "你正蹲在城坊角落的打铁铺前，手里攥着刚出炉的半截铁条。铺子里的老匠人正对着一块残缺的铜片发愁，铜片上刻着些晦涩的符文，他叹了口气，转头看向你：“小云，你过目成诵，这符文若是能补全，定能换些灵石。”"
+            },
+            {
+              "kind": "narration",
+              "text": "老匠人将铜片递到你面前，铜片上的符文断断续续，似乎缺了关键的起手式。他指了指铜片背面的一处凹陷：“这凹陷处得填个‘火’字，但我这炉火温控不稳，怕烧坏了这东西，你若是能认出这符文原本的走向，便帮我补全它。”"
+            }
+          ],
+          "choices": [
+            {
+              "id": "r:91f7c81ee9d066df:t1:c:a",
+              "label": "询问老匠人：询问这块铜片的具体来历和用途",
+              "intent": "interact",
+              "targetId": "r:91f7c81ee9d066df:t1:e:person_1",
+              "stake": "low",
+              "approach": "ask"
+            },
+            {
+              "id": "r:91f7c81ee9d066df:t1:c:b",
+              "label": "仔细观察：仔细观察铜片符文的走向和凹陷处的特征",
+              "intent": "interact",
+              "targetId": "self",
+              "stake": "low",
+              "approach": "observe"
+            },
+            {
+              "id": "r:91f7c81ee9d066df:t1:c:c",
+              "label": "结束与老匠人的互动：拒绝帮忙，转身离开打铁铺",
+              "intent": "interact",
+              "targetId": "r:91f7c81ee9d066df:t1:e:person_1",
+              "stake": "low",
+              "approach": "leave"
+            }
+          ],
+          "memoryDeltas": [
+            {
+              "entityId": "r:91f7c81ee9d066df:t1:e:person_1",
+              "kind": "clue",
+              "text": "老匠人将铜片递到你面前，铜片上的符文断断续续，似乎缺了关键的起手式。他指了指铜片背面的一处凹陷：“这凹陷处得填个‘火’字，但我这炉火温控不稳，怕烧坏了这东西，你若是能认出这符文原本的走向，便帮我补全它。”",
+              "status": "open"
+            },
+            {
+              "entityId": "r:91f7c81ee9d066df:t1:e:person_1",
+              "kind": "clue",
+              "text": "老匠人将铜片递到你面前，铜片上的符文断断续续，似乎缺了关键的起手式。他指了指铜片背面的一处凹陷：“这凹陷处得填个‘火’字，但我这炉火温控不稳，怕烧坏了这东西，你若是能认出这符文原本的走向，便帮我补全它。”",
+              "status": "open"
+            }
+          ]
+        },
+        "lastReceipt": {
+          "kind": "opening",
+          "choiceId": null,
+          "action": null,
+          "elapsedDays": 0,
+          "itemChanges": {},
+          "relationChanges": {},
+          "random": {
+            "before": 2325314143,
+            "after": 2325314143,
+            "roll": null
+          },
+          "before": {
+            "ageDays": 5760,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "after": {
+            "ageDays": 5760,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "death": null,
+          "birth": {
+            "originId": "artisan",
+            "talentIds": [
+              "keen-memory",
+              "flash-wisdom"
+            ],
+            "attributes": {
+              "constitution": 1,
+              "insight": 6,
+              "fortune": 5
+            }
+          }
+        },
+        "relatedEntities": [
+          {
+            "id": "r:91f7c81ee9d066df:t1:e:person_1",
+            "name": "老匠人",
+            "status": "alive",
+            "kind": "person"
+          }
+        ],
+        "archiveCursor": 0
+      },
+      "posts": 1,
+      "latency": {
+        "usable": true,
+        "errorCode": null,
+        "firstAnyPreviewMs": 4473,
+        "firstReadableMs": 5007,
+        "completionMs": 12274,
+        "narrativeChars": 202,
+        "maxPreviewGapMs": 204,
+        "readingFinishEstimateMs": 38674,
+        "readingStallEstimateMs": 0,
+        "optionsWaitEstimateMs": 0,
+        "prefetchWorthEvaluating": true,
+        "assumptions": {
+          "readingCharsPerSecond": 6,
+          "readableChars": 20,
+          "targetWaitMs": 2000
+        }
+      }
+    },
+    {
+      "caseId": "choice-1",
+      "start": 33364.10000000149,
+      "timeline": [
+        {
+          "atMs": 3060,
+          "chars": 1
+        },
+        {
+          "atMs": 3137,
+          "chars": 6
+        },
+        {
+          "atMs": 3200,
+          "chars": 10
+        },
+        {
+          "atMs": 3261,
+          "chars": 16
+        },
+        {
+          "atMs": 3338,
+          "chars": 20
+        },
+        {
+          "atMs": 3622,
+          "chars": 26
+        },
+        {
+          "atMs": 3684,
+          "chars": 29
+        },
+        {
+          "atMs": 3749,
+          "chars": 32
+        },
+        {
+          "atMs": 3792,
+          "chars": 35
+        },
+        {
+          "atMs": 3854,
+          "chars": 39
+        },
+        {
+          "atMs": 3901,
+          "chars": 49
+        },
+        {
+          "atMs": 3964,
+          "chars": 54
+        },
+        {
+          "atMs": 4041,
+          "chars": 60
+        },
+        {
+          "atMs": 4103,
+          "chars": 66
+        },
+        {
+          "atMs": 4166,
+          "chars": 72
+        },
+        {
+          "atMs": 4244,
+          "chars": 77
+        },
+        {
+          "atMs": 4292,
+          "chars": 82
+        },
+        {
+          "atMs": 4370,
+          "chars": 87
+        },
+        {
+          "atMs": 4434,
+          "chars": 91
+        },
+        {
+          "atMs": 4517,
+          "chars": 96
+        },
+        {
+          "atMs": 4559,
+          "chars": 100
+        },
+        {
+          "atMs": 4622,
+          "chars": 102
+        },
+        {
+          "atMs": 4683,
+          "chars": 106
+        },
+        {
+          "atMs": 4746,
+          "chars": 108
+        },
+        {
+          "atMs": 4810,
+          "chars": 113
+        },
+        {
+          "atMs": 4875,
+          "chars": 120
+        },
+        {
+          "atMs": 4937,
+          "chars": 126
+        },
+        {
+          "atMs": 5006,
+          "chars": 130
+        },
+        {
+          "atMs": 5083,
+          "chars": 137
+        },
+        {
+          "atMs": 5156,
+          "chars": 140
+        },
+        {
+          "atMs": 5193,
+          "chars": 143
+        },
+        {
+          "atMs": 5361,
+          "chars": 150
+        },
+        {
+          "atMs": 5422,
+          "chars": 156
+        },
+        {
+          "atMs": 5486,
+          "chars": 160
+        },
+        {
+          "atMs": 5672,
+          "chars": 165
+        },
+        {
+          "atMs": 5735,
+          "chars": 171
+        },
+        {
+          "atMs": 5814,
+          "chars": 178
+        },
+        {
+          "atMs": 5876,
+          "chars": 182
+        },
+        {
+          "atMs": 5939,
+          "chars": 186
+        },
+        {
+          "atMs": 6002,
+          "chars": 189
+        },
+        {
+          "atMs": 6065,
+          "chars": 194
+        },
+        {
+          "atMs": 6143,
+          "chars": 199
+        },
+        {
+          "atMs": 6221,
+          "chars": 203
+        },
+        {
+          "atMs": 6285,
+          "chars": 205
+        },
+        {
+          "atMs": 6348,
+          "chars": 207
+        },
+        {
+          "atMs": 6645,
+          "chars": 209
+        },
+        {
+          "atMs": 6736,
+          "chars": 213
+        },
+        {
+          "atMs": 6797,
+          "chars": 218
+        },
+        {
+          "atMs": 6861,
+          "chars": 223
+        },
+        {
+          "atMs": 6938,
+          "chars": 227
+        },
+        {
+          "atMs": 7018,
+          "chars": 231
+        },
+        {
+          "atMs": 7081,
+          "chars": 238
+        },
+        {
+          "atMs": 7141,
+          "chars": 244
+        },
+        {
+          "atMs": 7220,
+          "chars": 250
+        }
+      ],
+      "choicesEnabledDuringPreview": false,
+      "lastText": "你接过铜片，指尖划过那些残缺的纹路。凭借过目成诵的本事，你瞬间记住了符文的走向，脑海中浮现出完整的起手式。你指着铜片背面凹陷处，告诉老匠人只需填入一个“火”字，并按特定轨迹描画，便能激活符文。老匠人听后大喜，连忙将铜片放入炉中，随着火焰跳动，符文发出微弱的蓝光，铜片表面浮现出一行小字。\n\n老匠人拿起铜片，仔细端详上面的字迹，随后转头对你说道：“这上面写着‘火灵引’，是引动地脉灵气的阵法残片。看来你确实有慧根，这东西能帮我引出地下的灵气，修补我那台老旧的炼器炉。既然你帮了大忙，这铜片就送给你了。”",
+      "doneMs": 9554,
+      "result": {
+        "protocolVersion": 1,
+        "status": "ready",
+        "requestId": "2c584d7a-340c-40a1-9ede-1001d890288b",
+        "attemptId": "a9f7e002-7b52-438b-8799-084544a909db",
+        "sessionRef": "sess_346a21c4b87f2037c9ef7b895df185c3",
+        "errorCode": null,
+        "retry": null,
+        "scene": {
+          "id": "r:91f7c81ee9d066df:t2:s:scene",
+          "title": "火灵引",
+          "location": "城坊匠徒居",
+          "entities": [
+            {
+              "id": "r:91f7c81ee9d066df:t1:e:person_1",
+              "name": "老匠人",
+              "kind": "person",
+              "status": "alive"
+            }
+          ],
+          "blocks": [
+            {
+              "kind": "narration",
+              "text": "你接过铜片，指尖划过那些残缺的纹路。凭借过目成诵的本事，你瞬间记住了符文的走向，脑海中浮现出完整的起手式。你指着铜片背面凹陷处，告诉老匠人只需填入一个“火”字，并按特定轨迹描画，便能激活符文。老匠人听后大喜，连忙将铜片放入炉中，随着火焰跳动，符文发出微弱的蓝光，铜片表面浮现出一行小字。"
+            },
+            {
+              "kind": "narration",
+              "text": "老匠人拿起铜片，仔细端详上面的字迹，随后转头对你说道：“这上面写着‘火灵引’，是引动地脉灵气的阵法残片。看来你确实有慧根，这东西能帮我引出地下的灵气，修补我那台老旧的炼器炉。既然你帮了大忙，这铜片就送给你了。”"
+            }
+          ],
+          "choices": [
+            {
+              "id": "r:91f7c81ee9d066df:t2:c:a",
+              "label": "询问老匠人：询问这火灵引还能用来做什么",
+              "intent": "interact",
+              "targetId": "r:91f7c81ee9d066df:t1:e:person_1",
+              "stake": "low",
+              "approach": "ask"
+            },
+            {
+              "id": "r:91f7c81ee9d066df:t2:c:b",
+              "label": "结束与老匠人的互动：收下铜片，结束与老匠人的交谈",
+              "intent": "interact",
+              "targetId": "r:91f7c81ee9d066df:t1:e:person_1",
+              "stake": "low",
+              "approach": "leave"
+            }
+          ],
+          "memoryDeltas": [
+            {
+              "entityId": "r:91f7c81ee9d066df:t1:e:person_1",
+              "kind": "fact",
+              "text": "老匠人拿起铜片，仔细端详上面的字迹，随后转头对你说道：“这上面写着‘火灵引’，是引动地脉灵气的阵法残片。看来你确实有慧根，这东西能帮我引出地下的灵气，修补我那台老旧的炼器炉。既然你帮了大忙，这铜片就送给你了。”"
+            }
+          ]
+        }
+      },
+      "request": {
+        "context": {
+          "schemaVersion": 1,
+          "phase": "choice",
+          "identity": {
+            "runId": "1efa80f5-c33f-4344-be74-fbd52aeabf36",
+            "turnId": 2,
+            "baseRevision": 1,
+            "stateHash": "85dcc66c67563f82420f2d75cf5839a7c2d7f35cf98f3ce1ba456e8f0af61c4c",
+            "choiceId": "r:91f7c81ee9d066df:t1:c:a",
+            "rulesVersion": 1,
+            "promptVersion": 1,
+            "requestId": "2c584d7a-340c-40a1-9ede-1001d890288b"
+          },
+          "namespace": "r:91f7c81ee9d066df",
+          "receipt": {
+            "kind": "choice",
+            "choiceId": "r:91f7c81ee9d066df:t1:c:a",
+            "action": {
+              "id": "r:91f7c81ee9d066df:t1:c:a",
+              "label": "询问老匠人：询问这块铜片的具体来历和用途",
+              "intent": "interact",
+              "targetId": "r:91f7c81ee9d066df:t1:e:person_1",
+              "stake": "low",
+              "approach": "ask"
+            },
+            "elapsedDays": 0,
+            "itemChanges": {},
+            "relationChanges": {},
+            "random": {
+              "before": 2325314143,
+              "after": 1615004722,
+              "roll": 22
+            },
+            "before": {
+              "ageDays": 5760,
+              "realm": "mortal",
+              "cultivation": 0,
+              "injury": 0
+            },
+            "after": {
+              "ageDays": 5760,
+              "realm": "mortal",
+              "cultivation": 0,
+              "injury": 0
+            },
+            "death": null,
+            "birth": null
+          },
+          "life": {
+            "name": "云归",
+            "ageDays": 5760,
+            "lifeLimit": 80,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0,
+            "items": {
+              "supplies": 3,
+              "stones": 0
+            },
+            "relations": {},
+            "birth": {
+              "originId": "artisan",
+              "talentIds": [
+                "keen-memory",
+                "flash-wisdom"
+              ],
+              "attributes": {
+                "constitution": 1,
+                "insight": 6,
+                "fortune": 5
+              }
+            }
+          },
+          "entities": [
+            {
+              "id": "r:91f7c81ee9d066df:t1:e:person_1",
+              "name": "老匠人",
+              "kind": "person",
+              "status": "alive"
+            }
+          ],
+          "memory": {
+            "facts": [],
+            "promises": [],
+            "clues": [
+              {
+                "id": "m:69c8a0114d4024fb20f488256c23d01f",
+                "source": "narrative",
+                "kind": "clue",
+                "entityId": "r:91f7c81ee9d066df:t1:e:person_1",
+                "text": "老匠人将铜片递到你面前，铜片上的符文断断续续，似乎缺了关键的起手式。他指了指铜片背面的一处凹陷：“这凹陷处得填个‘火’字，但我这炉火温控不稳，怕烧坏了这东西，你若是能认出这符文原本的走向，便帮我补全它。”",
+                "status": "open",
+                "runId": "1efa80f5-c33f-4344-be74-fbd52aeabf36",
+                "turnId": 1
+              },
+              {
+                "id": "m:fbeb743704062f913b2987195edb79ca",
+                "source": "narrative",
+                "kind": "clue",
+                "entityId": "r:91f7c81ee9d066df:t1:e:person_1",
+                "text": "老匠人将铜片递到你面前，铜片上的符文断断续续，似乎缺了关键的起手式。他指了指铜片背面的一处凹陷：“这凹陷处得填个‘火’字，但我这炉火温控不稳，怕烧坏了这东西，你若是能认出这符文原本的走向，便帮我补全它。”",
+                "status": "open",
+                "runId": "1efa80f5-c33f-4344-be74-fbd52aeabf36",
+                "turnId": 1
+              }
+            ],
+            "recent": [
+              {
+                "id": "turn:1",
+                "runId": "1efa80f5-c33f-4344-be74-fbd52aeabf36",
+                "turnId": 1,
+                "source": "narrative",
+                "kind": "turn",
+                "text": "地点：城坊匠徒居\n你正蹲在城坊角落的打铁铺前，手里攥着刚出炉的半截铁条。铺子里的老匠人正对着一块残缺的铜片发愁，铜片上刻着些晦涩的符文，他叹了口气，转头看向你：“小云，你过目成诵，这符文若是能补全，定能换些灵石。”\n老匠人将铜片递到你面前，铜片上的符文断断续续，似乎缺了关键的起手式。他指了指铜片背面的一处凹陷：“这凹陷处得填个‘火’字，但我这炉火温控不稳，怕烧坏了这东西，你若是能认出这符文原本的走向，便帮我补全它。”",
+                "entityIds": []
+              }
+            ],
+            "summaries": []
+          },
+          "references": [
+            "m:69c8a0114d4024fb20f488256c23d01f",
+            "m:fbeb743704062f913b2987195edb79ca",
+            "turn:1"
+          ],
+          "previousScene": {
+            "id": "r:91f7c81ee9d066df:t1:s:scene",
+            "blocksHash": "16e9e7b0d5b6479c0ccc63560a84e34cd27ac46aab58a073b2b1797ba290a19a"
+          },
+          "relationshipVersion": 1,
+          "relationships": {},
+          "coverage": {
+            "policy": "relevance-v1",
+            "openTotal": 2,
+            "openIncluded": 2,
+            "openOmitted": 0
+          }
+        },
+        "attempt": {
+          "id": "a9f7e002-7b52-438b-8799-084544a909db",
+          "sessionRef": "sess_346a21c4b87f2037c9ef7b895df185c3",
+          "retryOf": null
+        }
+      },
+      "decision": {
+        "index": 0,
+        "reason": "Ask the present craftsman the copper fragment origin and intended use; no repair, purchase or ownership transfer selected.",
+        "selected": {
+          "id": "r:91f7c81ee9d066df:t1:c:a",
+          "label": "询问老匠人：询问这块铜片的具体来历和用途",
+          "intent": "interact",
+          "targetId": "r:91f7c81ee9d066df:t1:e:person_1",
+          "stake": "low",
+          "approach": "ask"
+        }
+      },
+      "choices": [
+        {
+          "id": "r:91f7c81ee9d066df:t2:c:a",
+          "enabled": true,
+          "label": "询问老匠人：询问这火灵引还能用来做什么",
+          "cost": "0日"
+        },
+        {
+          "id": "r:91f7c81ee9d066df:t2:c:b",
+          "enabled": true,
+          "label": "结束与老匠人的互动：收下铜片，结束与老匠人的交谈",
+          "cost": "0日"
+        }
+      ],
+      "traces": [
+        {
+          "model": "@cf/zai-org/glm-4.7-flash",
+          "inputHash": "272f72f5ff618191a0fcb1be3bcc5ade25daf1c6586c5cc97301c86d5aba0066",
+          "inputBytes": 16133,
+          "startedAt": 1793357393442,
+          "bindingReturnedAt": 1793357393711,
+          "liveRawBytes": 104481,
+          "captureComplete": true,
+          "response": {
+            "model": "@cf/zai-org/glm-4.7-flash",
+            "choices": [
+              {
+                "finish_reason": "stop",
+                "message": {
+                  "content": "{\"blocks\":[{\"kind\":\"narration\",\"text\":\"你接过铜片，指尖划过那些残缺的纹路。凭借过目成诵的本事，你瞬间记住了符文的走向，脑海中浮现出完整的起手式。你指着铜片背面凹陷处，告诉老匠人只需填入一个“火”字，并按特定轨迹描画，便能激活符文。老匠人听后大喜，连忙将铜片放入炉中，随着火焰跳动，符文发出微弱的蓝光，铜片表面浮现出一行小字。\"},{\"kind\":\"narration\",\"text\":\"老匠人拿起铜片，仔细端详上面的字迹，随后转头对你说道：“这上面写着‘火灵引’，是引动地脉灵气的阵法残片。看来你确实有慧根，这东西能帮我引出地下的灵气，修补我那台老旧的炼器炉。既然你帮了大忙，这铜片就送给你了。”\"}],\"choices\":[{\"action\":\"interact:ask\",\"targetId\":\"k1_person_老匠人\",\"stake\":\"low\",\"purpose\":\"询问这火灵引还能用来做什么\",\"anchor\":1},{\"action\":\"interact:leave\",\"targetId\":\"k1_person_老匠人\",\"stake\":\"low\",\"purpose\":\"收下铜片，结束与老匠人的交谈\",\"anchor\":1}],\"title\":\"火灵引\",\"location\":\"城坊匠徒居\",\"otherPeople\":[{\"id\":\"k1_person_老匠人\",\"status\":\"alive\"}],\"places\":[],\"factions\":[],\"memoryDeltas\":[{\"entityId\":\"k1_person_老匠人\",\"kind\":\"fact\",\"anchor\":1}]}",
+                  "reasoning_content": ""
+                }
+              }
+            ],
+            "usage": {
+              "prompt_tokens": 2898,
+              "completion_tokens": 358,
+              "total_tokens": 3256,
+              "prompt_tokens_details": {
+                "cached_tokens": 0
+              },
+              "neurons": 28.97020000000015
+            }
+          },
+          "rawSseBytes": 104481
+        }
+      ],
+      "revision": 2,
+      "pending": false,
+      "state": {
+        "relationshipVersion": 1,
+        "version": 5,
+        "mode": "cultivation",
+        "contentVersion": 4,
+        "rulesVersion": 1,
+        "promptVersion": 1,
+        "runId": "1efa80f5-c33f-4344-be74-fbd52aeabf36",
+        "revision": 2,
+        "turnId": 2,
+        "phase": "active",
+        "rng": 1615004722,
+        "life": {
+          "name": "云归",
+          "ageDays": 5760,
+          "lifeLimit": 80,
+          "realm": "mortal",
+          "cultivation": 0,
+          "injury": 0,
+          "items": {
+            "supplies": 3,
+            "stones": 0
+          },
+          "relations": {},
+          "birth": {
+            "originId": "artisan",
+            "talentIds": [
+              "keen-memory",
+              "flash-wisdom"
+            ],
+            "attributes": {
+              "constitution": 1,
+              "insight": 6,
+              "fortune": 5
+            }
+          }
+        },
+        "birthReceipt": {
+          "kind": "opening",
+          "choiceId": null,
+          "action": null,
+          "elapsedDays": 0,
+          "itemChanges": {},
+          "relationChanges": {},
+          "random": {
+            "before": 2325314143,
+            "after": 2325314143,
+            "roll": null
+          },
+          "before": {
+            "ageDays": 5760,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "after": {
+            "ageDays": 5760,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "death": null,
+          "birth": {
+            "originId": "artisan",
+            "talentIds": [
+              "keen-memory",
+              "flash-wisdom"
+            ],
+            "attributes": {
+              "constitution": 1,
+              "insight": 6,
+              "fortune": 5
+            }
+          }
+        },
+        "currentScene": {
+          "id": "r:91f7c81ee9d066df:t2:s:scene",
+          "title": "火灵引",
+          "location": "城坊匠徒居",
+          "entities": [
+            {
+              "id": "r:91f7c81ee9d066df:t1:e:person_1",
+              "name": "老匠人",
+              "kind": "person",
+              "status": "alive"
+            }
+          ],
+          "blocks": [
+            {
+              "kind": "narration",
+              "text": "你接过铜片，指尖划过那些残缺的纹路。凭借过目成诵的本事，你瞬间记住了符文的走向，脑海中浮现出完整的起手式。你指着铜片背面凹陷处，告诉老匠人只需填入一个“火”字，并按特定轨迹描画，便能激活符文。老匠人听后大喜，连忙将铜片放入炉中，随着火焰跳动，符文发出微弱的蓝光，铜片表面浮现出一行小字。"
+            },
+            {
+              "kind": "narration",
+              "text": "老匠人拿起铜片，仔细端详上面的字迹，随后转头对你说道：“这上面写着‘火灵引’，是引动地脉灵气的阵法残片。看来你确实有慧根，这东西能帮我引出地下的灵气，修补我那台老旧的炼器炉。既然你帮了大忙，这铜片就送给你了。”"
+            }
+          ],
+          "choices": [
+            {
+              "id": "r:91f7c81ee9d066df:t2:c:a",
+              "label": "询问老匠人：询问这火灵引还能用来做什么",
+              "intent": "interact",
+              "targetId": "r:91f7c81ee9d066df:t1:e:person_1",
+              "stake": "low",
+              "approach": "ask"
+            },
+            {
+              "id": "r:91f7c81ee9d066df:t2:c:b",
+              "label": "结束与老匠人的互动：收下铜片，结束与老匠人的交谈",
+              "intent": "interact",
+              "targetId": "r:91f7c81ee9d066df:t1:e:person_1",
+              "stake": "low",
+              "approach": "leave"
+            }
+          ],
+          "memoryDeltas": [
+            {
+              "entityId": "r:91f7c81ee9d066df:t1:e:person_1",
+              "kind": "fact",
+              "text": "老匠人拿起铜片，仔细端详上面的字迹，随后转头对你说道：“这上面写着‘火灵引’，是引动地脉灵气的阵法残片。看来你确实有慧根，这东西能帮我引出地下的灵气，修补我那台老旧的炼器炉。既然你帮了大忙，这铜片就送给你了。”"
+            }
+          ]
+        },
+        "lastReceipt": {
+          "kind": "choice",
+          "choiceId": "r:91f7c81ee9d066df:t1:c:a",
+          "action": {
+            "id": "r:91f7c81ee9d066df:t1:c:a",
+            "label": "询问老匠人：询问这块铜片的具体来历和用途",
+            "intent": "interact",
+            "targetId": "r:91f7c81ee9d066df:t1:e:person_1",
+            "stake": "low",
+            "approach": "ask"
+          },
+          "elapsedDays": 0,
+          "itemChanges": {},
+          "relationChanges": {},
+          "random": {
+            "before": 2325314143,
+            "after": 1615004722,
+            "roll": 22
+          },
+          "before": {
+            "ageDays": 5760,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "after": {
+            "ageDays": 5760,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "death": null,
+          "birth": null
+        },
+        "relatedEntities": [
+          {
+            "id": "r:91f7c81ee9d066df:t1:e:person_1",
+            "name": "老匠人",
+            "kind": "person",
+            "status": "alive"
+          }
+        ],
+        "archiveCursor": 0
+      },
+      "posts": 2,
+      "latency": {
+        "usable": true,
+        "errorCode": null,
+        "firstAnyPreviewMs": 3060,
+        "firstReadableMs": 3338,
+        "completionMs": 9554,
+        "narrativeChars": 250,
+        "maxPreviewGapMs": 297,
+        "readingFinishEstimateMs": 45005,
+        "readingStallEstimateMs": 0,
+        "optionsWaitEstimateMs": 0,
+        "prefetchWorthEvaluating": true,
+        "assumptions": {
+          "readingCharsPerSecond": 6,
+          "readableChars": 20,
+          "targetWaitMs": 2000
+        }
+      }
+    }
+  ],
+  "errors": [
+    "Invalid choice"
+  ],
+  "posts": 2,
+  "refreshed": null
+}

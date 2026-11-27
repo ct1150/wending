@@ -43,6 +43,16 @@ function hasRelicHook(run: RunState, hook: string): number {
   return total;
 }
 
+function grantRelicWithPickupEffect(run: RunState, relicId: string): void {
+  if (run.relics.includes(relicId)) return;
+  run.relics.push(relicId);
+  const def = RELICS[relicId];
+  if (def?.hook === 'maxhp-pickup') {
+    run.maxHp += def.value;
+    run.hp += def.value;
+  }
+}
+
 export function rollRandomRoot(seed: number): string {
   const rng = new SeededRng(seed);
   return rng.pick(ROOTS).id;
@@ -67,12 +77,12 @@ export const STARTING_BLESSINGS: BlessingOption[] = [
     id: 'purge-two',
     title: '涤尘净心 · 剑心纯粹',
     costText: '无代价',
-    rewardText: '立即精简删去牌库中 2 张基础入门牌，道基纯度 +12',
+    rewardText: '立即精简删去牌库中 2 张基础牌，永久提升 8 点最大气血',
   },
   {
     id: 'gamble-relic',
-    title: '逆天豪赌 · 燃寿夺宝',
-    costText: '代价：扣除 14 年寿元上限',
+    title: '逆天豪赌 · 献祭本源',
+    costText: '代价：扣除 14 点最大气血上限',
     rewardText: '立即获得 1 件随机【古宝遗物】+ 1 份【附魔灵材】',
   },
   {
@@ -107,20 +117,13 @@ export function createNewRun(params: {
     upgraded: false,
   }));
 
-  const maxHp = lin.baseHp + (root.bonusMaxHp ?? 0);
-  const shortCandleLoss = muts.includes('mut-short-candle') ? 20 : 0;
-  const maxLifespan = lin.baseLifespan + (root.bonusLifespan ?? 0) - params.ascension * 2 - shortCandleLoss;
+  const shortCandleLoss = muts.includes('mut-short-candle') ? 18 : 0;
+  const maxHp = Math.max(35, lin.baseHp + (root.bonusMaxHp ?? 0) - params.ascension * 2 - shortCandleLoss);
   const map = generateActMap(1, rng, params.meta.pastLifeRemnant);
 
-  const relics: string[] = [];
   const consumables: string[] = [];
   let gold = 60;
 
-  if (muts.includes('mut-short-candle')) {
-    gold += 100;
-    const pool = getUnlockedRelicList(params.meta.achievements);
-    for (const r of rng.shuffle(pool).slice(0, 2)) relics.push(r.id);
-  }
   if (muts.includes('mut-alchemy-boom')) {
     for (let i = 0; i < 3; i++) consumables.push(rng.pick(CONSUMABLE_LIST).id);
   } else {
@@ -128,7 +131,7 @@ export function createNewRun(params: {
   }
 
   const run: RunState = {
-    version: 1,
+    version: 2,
     seed: params.seed,
     rngState: rng.state,
     generation: params.meta.totalLives + 1,
@@ -139,17 +142,14 @@ export function createNewRun(params: {
     rootId: root.id,
     act: 1,
     realm: 'qi',
-    age: 16,
-    maxLifespan: Math.max(45, maxLifespan),
     hp: maxHp,
     maxHp,
     baseQi: 3,
     gold,
-    foundation: 10,
     daoTokens: 0,
     deck,
     treasures: [lin.starterTreasureId],
-    relics,
+    relics: [],
     materials: [],
     consumables: consumables.slice(0, 3),
     blessingOptions: params.skipBlessing ? undefined : STARTING_BLESSINGS,
@@ -175,11 +175,17 @@ export function createNewRun(params: {
       maxSingleHit: 0,
       maxPoisonApplied: 0,
       resonancesTriggered: 0,
-      lifeBurned: 0,
+      hpSacrificed: 0,
       tribulationsSlain: 0,
     },
     uidCounter: uid,
   };
+
+  if (muts.includes('mut-short-candle')) {
+    run.gold += 100;
+    const pool = getUnlockedRelicList(params.meta.achievements);
+    for (const r of rng.shuffle(pool).slice(0, 2)) grantRelicWithPickupEffect(run, r.id);
+  }
 
   saveActiveRun(run);
   return run;
@@ -202,11 +208,13 @@ export function chooseStartingBlessing(run: RunState, optionId: BlessingOption['
       }
       return true;
     });
-    nextRun.foundation = Math.min(100, nextRun.foundation + 12);
+    nextRun.maxHp += 8;
+    nextRun.hp += 8;
   } else if (optionId === 'gamble-relic') {
-    nextRun.maxLifespan = Math.max(40, nextRun.maxLifespan - 14);
+    nextRun.maxHp = Math.max(30, nextRun.maxHp - 14);
+    nextRun.hp = Math.min(nextRun.hp, nextRun.maxHp);
     const rel = pickNewRelic(nextRun, rng, meta?.achievements);
-    if (rel) nextRun.relics.push(rel.id);
+    if (rel) grantRelicWithPickupEffect(nextRun, rel.id);
     nextRun.materials.push(rng.pick(ENCHANT_LIST).id);
   } else if (optionId === 'mythic-treasure') {
     const mythics = getMythicTreasures();
@@ -318,12 +326,12 @@ function buildAuctionLots(run: RunState, rng: SeededRng, achievements: string[] 
       claimed: false,
     },
     {
-      id: 'lot-life',
-      name: '压轴宝药 · 千年紫芝寿元果',
-      description: '寿元上限 +24 年，道基纯度 +20，并回满气血！',
+      id: 'lot-maxhp',
+      name: '压轴宝药 · 千年紫金龙血果',
+      description: '永久提升 18 点最大气血上限，并瞬间回满全部气血！',
       price: 90,
-      kind: 'lifespan',
-      refId: 'lifespan',
+      kind: 'maxhp',
+      refId: 'maxhp',
       claimed: false,
     },
   ];
@@ -350,18 +358,8 @@ export function enterMapNode(run: RunState, nodeId: string, achievements: string
   const node = nextRun.map.find((n) => n.id === nodeId);
   if (!node) return run;
 
-  const abodeDiscount = node.type === 'abode' ? hasRelicHook(nextRun, 'abode-discount') : 0;
-  const ageCost = Math.max(0, node.ageCost - abodeDiscount);
-  nextRun.age += ageCost;
   node.visited = true;
   nextRun.currentNodeId = node.id;
-
-  if (nextRun.age >= nextRun.maxLifespan) {
-    nextRun.phase = 'gameover';
-    nextRun.deathCause = `行至【${node.label}】途中寿尽坐化`;
-    saveActiveRun(nextRun);
-    return nextRun;
-  }
 
   const rng = new SeededRng(nextRun.rngState);
 
@@ -380,7 +378,8 @@ export function enterMapNode(run: RunState, nodeId: string, achievements: string
     nextRun.phase = 'event';
   } else if (node.type === 'abode') {
     nextRun.abodeUsed = false;
-    if (abodeDiscount > 0) nextRun.foundation = Math.min(100, nextRun.foundation + 5);
+    const abodeHeal = hasRelicHook(nextRun, 'abode-heal');
+    if (abodeHeal > 0) nextRun.hp = Math.min(nextRun.maxHp, nextRun.hp + abodeHeal);
     nextRun.phase = 'abode';
   } else if (node.type === 'shop') {
     nextRun.shop = buildShopStock(nextRun, rng, achievements);
@@ -417,13 +416,7 @@ export function resolveCombatVictory(run: RunState, achievements: string[] = [])
   const baseGold =
     combat.nodeType === 'boss' ? 78 : combat.nodeType === 'fury-elite' ? 65 : isEliteLike ? 46 : 24;
   const gold = Math.round((baseGold + rng.int(0, 12)) * goldMult);
-  const baseFoundation =
-    (combat.nodeType === 'boss' ? 20 : isEliteLike ? 18 : 10) +
-    hasRelicHook(nextRun, 'foundation-boost') +
-    (combat.enemy.tier === 'tribulation' && combat.outcome === 'victory' ? 15 : 0);
-
   nextRun.gold += gold;
-  nextRun.foundation = Math.min(100, nextRun.foundation + baseFoundation);
 
   if (combat.nodeType === 'boss' && nextRun.act === 4) {
     nextRun.combat = null;
@@ -445,7 +438,6 @@ export function resolveCombatVictory(run: RunState, achievements: string[] = [])
 
   const reward: RewardState = {
     gold,
-    foundation: baseFoundation,
     cardChoices: rollCardChoices(nextRun, rng, 3, undefined, achievements),
     pickedCard: false,
     pickedRelic: false,
@@ -454,7 +446,6 @@ export function resolveCombatVictory(run: RunState, achievements: string[] = [])
     pickedConsumable: false,
   };
 
-  // 普通战 45% 掉丹符，精英必掉丹符
   if (isEliteLike || rng.next() < 0.45) {
     reward.consumableReward = rng.pick(CONSUMABLE_LIST);
   }
@@ -474,14 +465,16 @@ export function resolveCombatVictory(run: RunState, achievements: string[] = [])
 
   if (combat.nodeType === 'boss') {
     reward.isBossReward = true;
-    const grade: BreakthroughGrade =
-      nextRun.foundation >= 85 ? 'heaven' : nextRun.foundation >= 50 ? 'earth' : 'mortal';
+    // 直观的天道破境条件：渡劫结束时气血 ≥ 50%，或直接劈碎雷劫劫眼！
+    const isHeaven =
+      nextRun.hp >= nextRun.maxHp * 0.5 ||
+      (combat.enemy.tier === 'tribulation' && combat.outcome === 'victory');
+    const grade: BreakthroughGrade = isHeaven ? 'heaven' : 'earth';
     reward.breakthroughGrade = grade;
 
-    const lifeGain = grade === 'heaven' ? 120 : grade === 'earth' ? 85 : 55;
-    reward.lifespanGained = lifeGain;
-    nextRun.maxLifespan += lifeGain;
-    nextRun.maxHp += grade === 'heaven' ? 20 : grade === 'earth' ? 12 : 6;
+    const maxHpGain = grade === 'heaven' ? 18 : 10;
+    reward.maxHpGained = maxHpGain;
+    nextRun.maxHp += maxHpGain;
     nextRun.hp = nextRun.maxHp;
 
     if (grade === 'heaven') {
@@ -489,12 +482,8 @@ export function resolveCombatVictory(run: RunState, achievements: string[] = [])
       const availLaws = LAW_RELIC_LIST.filter((r) => !nextRun.relics.includes(r.id));
       reward.lawChoices = rng.shuffle(availLaws).slice(0, 3);
       reward.pickedLaw = false;
-    } else if (grade === 'mortal') {
-      nextRun.uidCounter += 1;
-      nextRun.deck.push({ uid: `c-${nextRun.uidCounter}`, defId: 'curse-flaw', upgraded: false });
     }
 
-    // 第一卷破境且尚未兼修时，提供【辅修心法】三选一开启跨系邪道 BD！
     if (!nextRun.secondaryMethod) {
       reward.methodChoices = rollSecondaryMethodChoices(nextRun, rng);
       reward.pickedMethod = false;
@@ -530,7 +519,7 @@ export function claimRewardCard(run: RunState, cardDefId: string): RunState {
 export function claimRewardRelic(run: RunState): RunState {
   if (!run.reward?.relicReward || run.reward.pickedRelic) return run;
   const nextRun: RunState = structuredClone(run);
-  nextRun.relics.push(nextRun.reward!.relicReward!.id);
+  grantRelicWithPickupEffect(nextRun, nextRun.reward!.relicReward!.id);
   nextRun.reward!.pickedRelic = true;
   saveActiveRun(nextRun);
   return nextRun;
@@ -579,7 +568,7 @@ export function claimSecondaryMethod(run: RunState, methodId: SecondaryMethodId)
 export function claimBreakthroughLaw(run: RunState, lawId: string): RunState {
   if (!run.reward?.lawChoices || run.reward.pickedLaw) return run;
   const nextRun: RunState = structuredClone(run);
-  nextRun.relics.push(lawId);
+  grantRelicWithPickupEffect(nextRun, lawId);
   nextRun.reward!.pickedLaw = true;
   saveActiveRun(nextRun);
   return nextRun;
@@ -595,7 +584,6 @@ export function finishRewardAndAdvance(run: RunState, meta: MetaSave): RunState 
     const realmMap: Record<2 | 3 | 4, RealmId> = { 2: 'foundation', 3: 'core', 4: 'nascent' };
     nextRun.act = nextAct;
     nextRun.realm = realmMap[nextAct];
-    nextRun.foundation = 15;
     const rng = new SeededRng(nextRun.rngState);
     nextRun.map = generateActMap(nextAct, rng, meta.pastLifeRemnant);
     nextRun.currentNodeId = null;
@@ -607,7 +595,6 @@ export function finishRewardAndAdvance(run: RunState, meta: MetaSave): RunState 
   return nextRun;
 }
 
-// ==================== 百年拍卖会 ====================
 export function auctionBuyLot(run: RunState, lotId: string): RunState {
   if (run.phase !== 'auction' || !run.auction) return run;
   const lot = run.auction.lots.find((l) => l.id === lotId);
@@ -622,10 +609,9 @@ export function auctionBuyLot(run: RunState, lotId: string): RunState {
     nextRun.uidCounter += 1;
     nextRun.deck.push({ uid: `c-${nextRun.uidCounter}`, defId: target.refId, upgraded: true });
   } else if (target.kind === 'relic') {
-    nextRun.relics.push(target.refId);
-  } else if (target.kind === 'lifespan') {
-    nextRun.maxLifespan += 24;
-    nextRun.foundation = Math.min(100, nextRun.foundation + 20);
+    grantRelicWithPickupEffect(nextRun, target.refId);
+  } else if (target.kind === 'maxhp') {
+    nextRun.maxHp += 18;
     nextRun.hp = nextRun.maxHp;
   }
 
@@ -638,7 +624,6 @@ export function auctionAmbushBuyer(run: RunState): RunState {
   const nextRun: RunState = structuredClone(run);
   const rng = new SeededRng(nextRun.rngState);
 
-  // 先把场上 1 件未拍走的压轴宝物抢到手，并进入高难狂暴精英截杀战！
   const unclaimed = nextRun.auction!.lots.find((l) => !l.claimed);
   if (unclaimed) {
     unclaimed.claimed = true;
@@ -646,10 +631,10 @@ export function auctionAmbushBuyer(run: RunState): RunState {
       nextRun.uidCounter += 1;
       nextRun.deck.push({ uid: `c-${nextRun.uidCounter}`, defId: unclaimed.refId, upgraded: true });
     } else if (unclaimed.kind === 'relic') {
-      nextRun.relics.push(unclaimed.refId);
-    } else if (unclaimed.kind === 'lifespan') {
-      nextRun.maxLifespan += 24;
-      nextRun.foundation = Math.min(100, nextRun.foundation + 20);
+      grantRelicWithPickupEffect(nextRun, unclaimed.refId);
+    } else if (unclaimed.kind === 'maxhp') {
+      nextRun.maxHp += 18;
+      nextRun.hp = nextRun.maxHp;
     }
   }
   nextRun.auction = null;
@@ -660,7 +645,6 @@ export function auctionAmbushBuyer(run: RunState): RunState {
   return inCombat;
 }
 
-// ==================== 洞府三合一 ====================
 export function abodeUpgradeOrEnchant(run: RunState, cardUid: string, enchantId?: EnchantId): RunState {
   if (run.phase !== 'abode' || run.abodeUsed) return run;
   const nextRun: RunState = structuredClone(run);
@@ -687,29 +671,26 @@ export function abodeBrewElixir(run: RunState, mode: 'steady' | 'bold'): { nextR
   let message = '';
 
   if (mode === 'steady') {
-    const heal = Math.round(nextRun.maxHp * 0.35);
+    const heal = Math.round(nextRun.maxHp * 0.4);
     nextRun.hp = Math.min(nextRun.maxHp, nextRun.hp + heal);
-    nextRun.foundation = Math.min(100, nextRun.foundation + 14);
     if (nextRun.consumables.length < 3) {
       const bonusPill = rng.pick(CONSUMABLE_LIST.filter((c) => c.kind === 'pill'));
       nextRun.consumables.push(bonusPill.id);
-      message = `文火成丹！回 ${heal} 气血，道基 +14，并随炉凝出 1 枚【${bonusPill.name}】入袋！`;
+      message = `文火成丹！恢复 ${heal} 点气血，并随炉凝出 1 枚【${bonusPill.name}】入袋！`;
     } else {
-      message = `文火成丹！恢复 ${heal} 点气血，本卷道基纯度 +14。`;
+      message = `文火成丹！恢复 ${heal} 点气血。`;
     }
   } else {
     const roll = rng.next();
     if (roll < 0.68) {
-      nextRun.maxLifespan += 14;
-      nextRun.foundation = Math.min(100, nextRun.foundation + 24);
-      nextRun.hp = Math.min(nextRun.maxHp, nextRun.hp + 18);
-      message = '丹云蔽日，九转金丹成！寿元上限 +14 年，道基纯度 +24，恢复 18 气血！';
+      nextRun.maxHp += 12;
+      nextRun.hp = Math.min(nextRun.maxHp, nextRun.hp + 22);
+      message = '丹云蔽日，九转金丹成！最大气血永久 +12，并恢复 22 点气血！';
     } else {
       nextRun.hp = Math.max(1, nextRun.hp - 10);
-      nextRun.foundation = Math.min(100, nextRun.foundation + 8);
       nextRun.uidCounter += 1;
       nextRun.deck.push({ uid: `c-${nextRun.uidCounter}`, defId: 'curse-whisper', upgraded: false });
-      message = '猛火炸炉！灼伤 10 点气血并引来 1 张【心魔低语】，仅得残丹道基 +8。';
+      message = '猛火炸炉！灼伤 10 点气血，并引来 1 张【心魔低语】。';
     }
   }
 
@@ -723,7 +704,7 @@ export function abodePurgeCard(run: RunState, cardUid: string): RunState {
   if (run.phase !== 'abode' || run.abodeUsed || run.deck.length <= 5) return run;
   const nextRun: RunState = structuredClone(run);
   nextRun.deck = nextRun.deck.filter((c) => c.uid !== cardUid);
-  nextRun.foundation = Math.min(100, nextRun.foundation + 6);
+  nextRun.hp = Math.min(nextRun.maxHp, nextRun.hp + 6);
   nextRun.abodeUsed = true;
   saveActiveRun(nextRun);
   return nextRun;
@@ -740,7 +721,6 @@ export function leaveSubSceneToMap(run: RunState): RunState {
   return nextRun;
 }
 
-// ==================== 奇遇结算 ====================
 export function chooseEncounterOption(run: RunState, choiceId: string, achievements: string[] = []): RunState {
   if (run.phase !== 'event' || !run.activeEvent) return run;
   const choice = run.activeEvent.choices.find((c) => c.id === choiceId);
@@ -752,13 +732,9 @@ export function chooseEncounterOption(run: RunState, choiceId: string, achieveme
 
   if (choice.goldCost) nextRun.gold -= choice.goldCost;
   if (choice.hpCost) nextRun.hp = Math.max(1, nextRun.hp - choice.hpCost);
-  if (choice.ageCost) nextRun.age += choice.ageCost;
-
-  if (nextRun.age >= nextRun.maxLifespan) {
-    nextRun.phase = 'gameover';
-    nextRun.deathCause = `于【${nextRun.activeEvent!.title}】奇遇中寿尽坐化`;
-    saveActiveRun(nextRun);
-    return nextRun;
+  if (choice.maxHpCost) {
+    nextRun.maxHp = Math.max(20, nextRun.maxHp - choice.maxHpCost);
+    nextRun.hp = Math.min(nextRun.hp, nextRun.maxHp);
   }
 
   const e = choice.effect;
@@ -768,10 +744,6 @@ export function chooseEncounterOption(run: RunState, choiceId: string, achieveme
     nextRun.hp += e.maxHp;
   }
   if (e.hp) nextRun.hp = Math.min(nextRun.maxHp, nextRun.hp + e.hp);
-  if (e.lifespan) nextRun.maxLifespan += e.lifespan;
-  if (e.foundation) {
-    nextRun.foundation = Math.min(100, nextRun.foundation + e.foundation + hasRelicHook(nextRun, 'foundation-boost'));
-  }
   if (e.addRandomCard) {
     const picked = rollCardChoices(nextRun, rng, 1, e.addRandomCard, achievements)[0];
     if (picked) {
@@ -789,7 +761,7 @@ export function chooseEncounterOption(run: RunState, choiceId: string, achieveme
   }
   if (e.addRelic) {
     const rel = pickNewRelic(nextRun, rng, achievements);
-    if (rel) nextRun.relics.push(rel.id);
+    if (rel) grantRelicWithPickupEffect(nextRun, rel.id);
   }
   if (e.addMaterial) {
     nextRun.materials.push(e.addMaterial);
@@ -807,12 +779,10 @@ export function chooseEncounterOption(run: RunState, choiceId: string, achieveme
     nextRun.daoTokens += 1;
   }
 
-  // 古修藏经阁直接打开辅修心法三选一奖励界面
   if (e.offerSecondaryMethod && !nextRun.secondaryMethod) {
     nextRun.activeEvent = null;
     nextRun.reward = {
       gold: 0,
-      foundation: e.foundation ?? 0,
       cardChoices: rollCardChoices(nextRun, rng, 3, undefined, achievements),
       methodChoices: rollSecondaryMethodChoices(nextRun, rng),
       pickedMethod: false,
@@ -833,7 +803,6 @@ export function chooseEncounterOption(run: RunState, choiceId: string, achieveme
   return nextRun;
 }
 
-// ==================== 坊市交易 ====================
 export function shopBuyCard(run: RunState, index: number): RunState {
   if (!run.shop || !run.shop.cards[index] || run.shop.cards[index].sold) return run;
   const item = run.shop.cards[index];
@@ -854,7 +823,7 @@ export function shopBuyRelic(run: RunState, index: number): RunState {
   const nextRun: RunState = structuredClone(run);
   nextRun.gold -= item.price;
   nextRun.shop!.relics[index].sold = true;
-  nextRun.relics.push(item.def.id);
+  grantRelicWithPickupEffect(nextRun, item.def.id);
   saveActiveRun(nextRun);
   return nextRun;
 }
@@ -888,8 +857,8 @@ export function shopBuyElixir(run: RunState): RunState {
   const nextRun: RunState = structuredClone(run);
   nextRun.gold -= nextRun.shop!.elixirPrice;
   nextRun.shop!.elixirBought = true;
-  nextRun.maxLifespan += 12;
-  nextRun.hp = Math.min(nextRun.maxHp, nextRun.hp + 20);
+  nextRun.maxHp += 10;
+  nextRun.hp = Math.min(nextRun.maxHp, nextRun.hp + 25);
   saveActiveRun(nextRun);
   return nextRun;
 }
@@ -918,8 +887,8 @@ export function claimPastLifeRemnant(run: RunState, meta: MetaSave, mode: 'card'
       else nextRun.treasures[1] = rem.leftTreasureId;
     }
   } else {
-    nextRun.foundation = Math.min(100, nextRun.foundation + 30);
-    nextRun.maxLifespan += 15;
+    nextRun.maxHp += 15;
+    nextRun.hp = Math.min(nextRun.maxHp, nextRun.hp + 30);
   }
 
   nextRun.phase = 'map';

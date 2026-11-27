@@ -1,0 +1,642 @@
+{
+  "caseId": "choice-3",
+  "origin": "ai",
+  "postDelta": 1,
+  "localEntry": null,
+  "start": 270654.69999999553,
+  "timeline": [
+    {
+      "atMs": 3774,
+      "chars": 3
+    },
+    {
+      "atMs": 3852,
+      "chars": 8
+    },
+    {
+      "atMs": 3915,
+      "chars": 10
+    },
+    {
+      "atMs": 3960,
+      "chars": 15
+    },
+    {
+      "atMs": 4040,
+      "chars": 17
+    },
+    {
+      "atMs": 4087,
+      "chars": 19
+    },
+    {
+      "atMs": 4151,
+      "chars": 24
+    },
+    {
+      "atMs": 4226,
+      "chars": 26
+    },
+    {
+      "atMs": 4273,
+      "chars": 30
+    },
+    {
+      "atMs": 4333,
+      "chars": 33
+    },
+    {
+      "atMs": 4394,
+      "chars": 36
+    },
+    {
+      "atMs": 4455,
+      "chars": 39
+    },
+    {
+      "atMs": 4521,
+      "chars": 41
+    },
+    {
+      "atMs": 4567,
+      "chars": 42
+    },
+    {
+      "atMs": 4617,
+      "chars": 45
+    },
+    {
+      "atMs": 4679,
+      "chars": 47
+    },
+    {
+      "atMs": 4757,
+      "chars": 50
+    },
+    {
+      "atMs": 4848,
+      "chars": 53
+    },
+    {
+      "atMs": 4912,
+      "chars": 55
+    },
+    {
+      "atMs": 4976,
+      "chars": 58
+    },
+    {
+      "atMs": 5037,
+      "chars": 63
+    },
+    {
+      "atMs": 5098,
+      "chars": 65
+    },
+    {
+      "atMs": 5203,
+      "chars": 68
+    },
+    {
+      "atMs": 5286,
+      "chars": 73
+    },
+    {
+      "atMs": 5361,
+      "chars": 77
+    },
+    {
+      "atMs": 5610,
+      "chars": 79
+    },
+    {
+      "atMs": 5672,
+      "chars": 84
+    },
+    {
+      "atMs": 5734,
+      "chars": 89
+    },
+    {
+      "atMs": 5781,
+      "chars": 93
+    },
+    {
+      "atMs": 5874,
+      "chars": 97
+    }
+  ],
+  "choicesEnabledDuringPreview": false,
+  "lastText": "你站在猎户小屋的木桌前，目光扫过屋内陈设。桌上那卷羊皮纸已被父亲收起，只留下一摊墨迹未干的痕迹。屋角堆着几捆干柴，墙角挂着一把缺了口的猎刀，窗外的风声偶尔透过缝隙吹进来，带着山林特有的清冽寒意。",
+  "doneMs": 10760,
+  "result": {
+    "protocolVersion": 1,
+    "status": "ready",
+    "requestId": "c47b3e85-38ef-4f61-b42b-0991fb8e965c",
+    "attemptId": "c10b38a3-27da-4b02-a2b1-749be51d8a4d",
+    "sessionRef": "sess_3d966adc91b4dd1833d2701c17f3adae",
+    "errorCode": null,
+    "retry": null,
+    "scene": {
+      "id": "r:60efb6672ac907de:t4:s:scene",
+      "title": "猎户小屋",
+      "location": "猎户小屋",
+      "entities": [
+        {
+          "id": "r:60efb6672ac907de:t1:e:person_1",
+          "name": "父亲",
+          "kind": "person"
+        },
+        {
+          "id": "r:60efb6672ac907de:t4:e:place_1",
+          "name": "后山",
+          "kind": "place"
+        }
+      ],
+      "blocks": [
+        {
+          "kind": "narration",
+          "text": "你站在猎户小屋的木桌前，目光扫过屋内陈设。桌上那卷羊皮纸已被父亲收起，只留下一摊墨迹未干的痕迹。屋角堆着几捆干柴，墙角挂着一把缺了口的猎刀，窗外的风声偶尔透过缝隙吹进来，带着山林特有的清冽寒意。"
+        }
+      ],
+      "choices": [
+        {
+          "id": "r:60efb6672ac907de:t4:c:observe",
+          "label": "仔细观察：留意周围的动静",
+          "intent": "interact",
+          "targetId": "self",
+          "approach": "observe",
+          "stake": "low"
+        },
+        {
+          "id": "r:60efb6672ac907de:t4:c:c",
+          "label": "穿行荒野前往后山：前往后山：去后山寻找猎物或散心。",
+          "intent": "travel",
+          "targetId": "r:60efb6672ac907de:t4:e:place_1",
+          "stake": "low",
+          "approach": "wilderness"
+        },
+        {
+          "id": "r:60efb6672ac907de:t4:c:leave",
+          "label": "结束当前互动：暂不介入此事",
+          "intent": "interact",
+          "targetId": "self",
+          "approach": "leave",
+          "stake": "low"
+        }
+      ],
+      "memoryDeltas": [
+        {
+          "entityId": "r:60efb6672ac907de:t1:e:person_1",
+          "kind": "clue",
+          "text": "你站在猎户小屋的木桌前，目光扫过屋内陈设。桌上那卷羊皮纸已被父亲收起，只留下一摊墨迹未干的痕迹。屋角堆着几捆干柴，墙角挂着一把缺了口的猎刀，窗外的风声偶尔透过缝隙吹进来，带着山林特有的清冽寒意。",
+          "status": "open"
+        }
+      ]
+    }
+  },
+  "request": {
+    "context": {
+      "schemaVersion": 1,
+      "phase": "choice",
+      "identity": {
+        "runId": "3ef1a8f3-2600-458e-8193-f3c4f1d8149a",
+        "turnId": 4,
+        "baseRevision": 3,
+        "stateHash": "c8bc72d52d15a55d64aabb8d766bddb432d18b3b1dbba9ccecb6d0af61668e00",
+        "choiceId": "r:60efb6672ac907de:t3:c:observe",
+        "rulesVersion": 1,
+        "promptVersion": 1,
+        "requestId": "c47b3e85-38ef-4f61-b42b-0991fb8e965c"
+      },
+      "namespace": "r:60efb6672ac907de",
+      "receipt": {
+        "kind": "choice",
+        "choiceId": "r:60efb6672ac907de:t3:c:observe",
+        "action": {
+          "id": "r:60efb6672ac907de:t3:c:observe",
+          "label": "观察周围：寻找新的线索",
+          "intent": "interact",
+          "targetId": "self",
+          "stake": "low",
+          "approach": "observe"
+        },
+        "elapsedDays": 0,
+        "itemChanges": {},
+        "relationChanges": {},
+        "random": {
+          "before": 2033067074,
+          "after": 1353389753,
+          "roll": 53
+        },
+        "before": {
+          "ageDays": 5760,
+          "realm": "mortal",
+          "cultivation": 0,
+          "injury": 0
+        },
+        "after": {
+          "ageDays": 5760,
+          "realm": "mortal",
+          "cultivation": 0,
+          "injury": 0
+        },
+        "death": null,
+        "birth": null
+      },
+      "life": {
+        "name": "云归",
+        "ageDays": 5760,
+        "lifeLimit": 80,
+        "realm": "mortal",
+        "cultivation": 0,
+        "injury": 0,
+        "items": {
+          "supplies": 3,
+          "stones": 0
+        },
+        "relations": {},
+        "birth": {
+          "originId": "village",
+          "talentIds": [
+            "fortune-debt",
+            "sword-bone"
+          ],
+          "attributes": {
+            "constitution": 3,
+            "insight": 4,
+            "fortune": 5
+          }
+        }
+      },
+      "entities": [
+        {
+          "id": "r:60efb6672ac907de:t1:e:person_1",
+          "name": "父亲",
+          "kind": "person",
+          "status": "unknown"
+        }
+      ],
+      "memory": {
+        "facts": [
+          {
+            "id": "decision:3",
+            "runId": "3ef1a8f3-2600-458e-8193-f3c4f1d8149a",
+            "turnId": 3,
+            "source": "rules",
+            "kind": "fact",
+            "entityId": "r:60efb6672ac907de:t1:e:person_1",
+            "text": "你在猎户小屋选择了“婉拒父亲：拒绝查看药方”。"
+          },
+          {
+            "id": "decision:2",
+            "runId": "3ef1a8f3-2600-458e-8193-f3c4f1d8149a",
+            "turnId": 2,
+            "source": "rules",
+            "kind": "fact",
+            "entityId": "r:60efb6672ac907de:t1:e:person_1",
+            "text": "你在猎户小屋选择了“询问父亲：询问父亲关于药方和符文的来历”。"
+          }
+        ],
+        "promises": [],
+        "clues": [
+          {
+            "id": "m:a9b17733fc52407bccee7b4189652182",
+            "source": "narrative",
+            "kind": "clue",
+            "entityId": "r:60efb6672ac907de:t1:e:person_1",
+            "text": "父亲叹了口气，目光落在那羊皮纸上：“这药方是村长托人从镇上带回来的，说是能治好你娘的病。但这上面画的符文，我看了半天也不懂，怕是有什么古怪。归儿，你识字，能不能帮我看看这上面到底写了什么？”",
+            "status": "open",
+            "runId": "3ef1a8f3-2600-458e-8193-f3c4f1d8149a",
+            "turnId": 2
+          },
+          {
+            "id": "m:1318b772b699ddadf21115fead7d160d",
+            "source": "narrative",
+            "kind": "clue",
+            "entityId": "r:60efb6672ac907de:t1:e:person_1",
+            "text": "“归儿，你来了。”父亲放下羊皮纸，指了指桌上的东西，“这是村长托人从镇上带回来的‘断魂草’药方，说是能治好你娘的病。但这药方上画着奇怪的符文，我看了半天也不懂，怕是有什么古怪。你识字，能不能帮我看看这上面到底写了什么？”",
+            "status": "open",
+            "runId": "3ef1a8f3-2600-458e-8193-f3c4f1d8149a",
+            "turnId": 1
+          }
+        ],
+        "recent": [
+          {
+            "id": "turn:3",
+            "runId": "3ef1a8f3-2600-458e-8193-f3c4f1d8149a",
+            "turnId": 3,
+            "source": "narrative",
+            "kind": "turn",
+            "text": "地点：猎户小屋；刚才选择：婉拒父亲：拒绝查看药方\n你婉拒了父亲的请求，结束了这次交谈。你仍在原处，接下来可以自行观察或行动。",
+            "entityIds": [
+              "r:60efb6672ac907de:t1:e:person_1"
+            ]
+          },
+          {
+            "id": "turn:2",
+            "runId": "3ef1a8f3-2600-458e-8193-f3c4f1d8149a",
+            "turnId": 2,
+            "source": "narrative",
+            "kind": "turn",
+            "text": "地点：猎户小屋；刚才选择：询问父亲：询问父亲关于药方和符文的来历\n父亲叹了口气，目光落在那羊皮纸上：“这药方是村长托人从镇上带回来的，说是能治好你娘的病。但这上面画的符文，我看了半天也不懂，怕是有什么古怪。归儿，你识字，能不能帮我看看这上面到底写了什么？”",
+            "entityIds": []
+          }
+        ],
+        "summaries": []
+      },
+      "references": [
+        "decision:3",
+        "decision:2",
+        "m:a9b17733fc52407bccee7b4189652182",
+        "m:1318b772b699ddadf21115fead7d160d",
+        "turn:3",
+        "turn:2"
+      ],
+      "previousScene": {
+        "id": "r:60efb6672ac907de:t3:s:closed",
+        "blocksHash": "2a3be1d87aed17d42e99d5c5acaf128739133e2685c5050a180c107e9962cb5a"
+      },
+      "relationshipVersion": 1,
+      "relationships": {},
+      "coverage": {
+        "policy": "relevance-v1",
+        "openTotal": 2,
+        "openIncluded": 2,
+        "openOmitted": 0
+      }
+    },
+    "attempt": {
+      "id": "c10b38a3-27da-4b02-a2b1-749be51d8a4d",
+      "sessionRef": "sess_3d966adc91b4dd1833d2701c17f3adae",
+      "retryOf": null
+    },
+    "storyActions": true
+  },
+  "decision": {
+    "index": 0,
+    "reason": "拒绝75毫秒完成，零POST、原地零日、行粮灵石不变，父亲菜单已关闭。现在观察周围，必须转向独立环境或去向，不能重新要求查看药方。",
+    "selected": {
+      "id": "r:60efb6672ac907de:t3:c:observe",
+      "label": "观察周围：寻找新的线索",
+      "intent": "interact",
+      "targetId": "self",
+      "stake": "low",
+      "approach": "observe"
+    }
+  },
+  "choices": [
+    {
+      "id": "r:60efb6672ac907de:t4:c:observe",
+      "enabled": true,
+      "label": "仔细观察：留意周围的动静",
+      "cost": "0日"
+    },
+    {
+      "id": "r:60efb6672ac907de:t4:c:c",
+      "enabled": true,
+      "label": "穿行荒野前往后山：前往后山：去后山寻找猎物或散心。",
+      "cost": "60日 · 行粮 1 · 历练受伤基础风险25%，根骨与坚韧筋骨可降低风险。"
+    },
+    {
+      "id": "r:60efb6672ac907de:t4:c:leave",
+      "enabled": true,
+      "label": "结束当前互动：暂不介入此事",
+      "cost": "0日"
+    }
+  ],
+  "traces": [
+    {
+      "model": "@cf/zai-org/glm-4.7-flash",
+      "inputHash": "96fcc364d34ef8495aff0f0bebd4831e71d7db054685c80d2d4803402ebe318d",
+      "inputBytes": 17540,
+      "startedAt": 1793380341171,
+      "bindingReturnedAt": 1793380341532,
+      "liveRawBytes": 118000,
+      "captureComplete": true,
+      "response": {
+        "model": "@cf/zai-org/glm-4.7-flash",
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "message": {
+              "content": "{\n  \"blocks\": [\n    {\n      \"kind\": \"narration\",\n      \"text\": \"你站在猎户小屋的木桌前，目光扫过屋内陈设。桌上那卷羊皮纸已被父亲收起，只留下一摊墨迹未干的痕迹。屋角堆着几捆干柴，墙角挂着一把缺了口的猎刀，窗外的风声偶尔透过缝隙吹进来，带着山林特有的清冽寒意。\"\n    }\n  ],\n  \"choices\": [\n    {\n      \"action\": \"interact:ask\",\n      \"target\": { \"kind\": \"person\", \"name\": \"父亲\", \"ref\": \"\", \"status\": null },\n      \"stake\": \"low\",\n      \"purpose\": \"询问父亲：关于这屋内陈设和父亲最近在屋外做了什么。\",\n      \"anchor\": 0\n    },\n    {\n      \"action\": \"interact:decline\",\n      \"target\": { \"kind\": \"person\", \"name\": \"父亲\", \"ref\": \"\", \"status\": null },\n      \"stake\": \"low\",\n      \"purpose\": \"拒绝父亲：不再谈论药方，独自离开小屋。\",\n      \"anchor\": 0\n    },\n    {\n      \"action\": \"travel:wilderness\",\n      \"target\": { \"kind\": \"place\", \"name\": \"后山\", \"ref\": \"\", \"status\": null },\n      \"stake\": \"low\",\n      \"purpose\": \"前往后山：去后山寻找猎物或散心。\",\n      \"anchor\": 0\n    }\n  ],\n  \"title\": \"猎户小屋\",\n  \"location\": \"猎户小屋\",\n  \"memoryDeltas\": [\n    {\n      \"target\": { \"kind\": \"person\", \"name\": \"父亲\", \"ref\": \"\", \"status\": null },\n      \"kind\": \"clue\",\n      \"anchor\": 0\n   ,\n      \"status\": \"open\"\n    }\n  ]\n}",
+              "reasoning_content": ""
+            }
+          }
+        ],
+        "usage": {
+          "prompt_tokens": 2842,
+          "completion_tokens": 425,
+          "total_tokens": 3267,
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          },
+          "neurons": 31.10100000000018
+        }
+      },
+      "rawSseBytes": 118000
+    }
+  ],
+  "revision": 4,
+  "pending": false,
+  "state": {
+    "relationshipVersion": 1,
+    "version": 5,
+    "mode": "cultivation",
+    "contentVersion": 4,
+    "rulesVersion": 1,
+    "promptVersion": 1,
+    "runId": "3ef1a8f3-2600-458e-8193-f3c4f1d8149a",
+    "revision": 4,
+    "turnId": 4,
+    "phase": "active",
+    "rng": 1353389753,
+    "life": {
+      "name": "云归",
+      "ageDays": 5760,
+      "lifeLimit": 80,
+      "realm": "mortal",
+      "cultivation": 0,
+      "injury": 0,
+      "items": {
+        "supplies": 3,
+        "stones": 0
+      },
+      "relations": {},
+      "birth": {
+        "originId": "village",
+        "talentIds": [
+          "fortune-debt",
+          "sword-bone"
+        ],
+        "attributes": {
+          "constitution": 3,
+          "insight": 4,
+          "fortune": 5
+        }
+      }
+    },
+    "birthReceipt": {
+      "kind": "opening",
+      "choiceId": null,
+      "action": null,
+      "elapsedDays": 0,
+      "itemChanges": {},
+      "relationChanges": {},
+      "random": {
+        "before": 1879604368,
+        "after": 1879604368,
+        "roll": null
+      },
+      "before": {
+        "ageDays": 5760,
+        "realm": "mortal",
+        "cultivation": 0,
+        "injury": 0
+      },
+      "after": {
+        "ageDays": 5760,
+        "realm": "mortal",
+        "cultivation": 0,
+        "injury": 0
+      },
+      "death": null,
+      "birth": {
+        "originId": "village",
+        "talentIds": [
+          "fortune-debt",
+          "sword-bone"
+        ],
+        "attributes": {
+          "constitution": 3,
+          "insight": 4,
+          "fortune": 5
+        }
+      }
+    },
+    "currentScene": {
+      "id": "r:60efb6672ac907de:t4:s:scene",
+      "title": "猎户小屋",
+      "location": "猎户小屋",
+      "entities": [
+        {
+          "id": "r:60efb6672ac907de:t1:e:person_1",
+          "name": "父亲",
+          "kind": "person"
+        },
+        {
+          "id": "r:60efb6672ac907de:t4:e:place_1",
+          "name": "后山",
+          "kind": "place"
+        }
+      ],
+      "blocks": [
+        {
+          "kind": "narration",
+          "text": "你站在猎户小屋的木桌前，目光扫过屋内陈设。桌上那卷羊皮纸已被父亲收起，只留下一摊墨迹未干的痕迹。屋角堆着几捆干柴，墙角挂着一把缺了口的猎刀，窗外的风声偶尔透过缝隙吹进来，带着山林特有的清冽寒意。"
+        }
+      ],
+      "choices": [
+        {
+          "id": "r:60efb6672ac907de:t4:c:observe",
+          "label": "仔细观察：留意周围的动静",
+          "intent": "interact",
+          "targetId": "self",
+          "approach": "observe",
+          "stake": "low"
+        },
+        {
+          "id": "r:60efb6672ac907de:t4:c:c",
+          "label": "穿行荒野前往后山：前往后山：去后山寻找猎物或散心。",
+          "intent": "travel",
+          "targetId": "r:60efb6672ac907de:t4:e:place_1",
+          "stake": "low",
+          "approach": "wilderness"
+        },
+        {
+          "id": "r:60efb6672ac907de:t4:c:leave",
+          "label": "结束当前互动：暂不介入此事",
+          "intent": "interact",
+          "targetId": "self",
+          "approach": "leave",
+          "stake": "low"
+        }
+      ],
+      "memoryDeltas": [
+        {
+          "entityId": "r:60efb6672ac907de:t1:e:person_1",
+          "kind": "clue",
+          "text": "你站在猎户小屋的木桌前，目光扫过屋内陈设。桌上那卷羊皮纸已被父亲收起，只留下一摊墨迹未干的痕迹。屋角堆着几捆干柴，墙角挂着一把缺了口的猎刀，窗外的风声偶尔透过缝隙吹进来，带着山林特有的清冽寒意。",
+          "status": "open"
+        }
+      ]
+    },
+    "lastReceipt": {
+      "kind": "choice",
+      "choiceId": "r:60efb6672ac907de:t3:c:observe",
+      "action": {
+        "id": "r:60efb6672ac907de:t3:c:observe",
+        "label": "观察周围：寻找新的线索",
+        "intent": "interact",
+        "targetId": "self",
+        "stake": "low",
+        "approach": "observe"
+      },
+      "elapsedDays": 0,
+      "itemChanges": {},
+      "relationChanges": {},
+      "random": {
+        "before": 2033067074,
+        "after": 1353389753,
+        "roll": 53
+      },
+      "before": {
+        "ageDays": 5760,
+        "realm": "mortal",
+        "cultivation": 0,
+        "injury": 0
+      },
+      "after": {
+        "ageDays": 5760,
+        "realm": "mortal",
+        "cultivation": 0,
+        "injury": 0
+      },
+      "death": null,
+      "birth": null
+    },
+    "relatedEntities": [
+      {
+        "id": "r:60efb6672ac907de:t1:e:person_1",
+        "name": "父亲",
+        "kind": "person"
+      },
+      {
+        "id": "r:60efb6672ac907de:t4:e:place_1",
+        "name": "后山",
+        "kind": "place"
+      }
+    ],
+    "archiveCursor": 0
+  },
+  "posts": 3,
+  "latency": {
+    "usable": true,
+    "errorCode": null,
+    "firstAnyPreviewMs": 3774,
+    "firstReadableMs": 4151,
+    "completionMs": 10760,
+    "narrativeChars": 97,
+    "maxPreviewGapMs": 249,
+    "readingFinishEstimateMs": 20318,
+    "readingStallEstimateMs": 0,
+    "optionsWaitEstimateMs": 0,
+    "prefetchWorthEvaluating": true,
+    "assumptions": {
+      "readingCharsPerSecond": 6,
+      "readableChars": 20,
+      "targetWaitMs": 2000
+    }
+  }
+}

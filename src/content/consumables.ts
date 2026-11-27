@@ -9,7 +9,7 @@ export const CONSUMABLES: Record<string, ConsumableDef> = {
     icon: '🪵',
     price: 75,
     passiveRevive: true,
-    description: '【自动触发】受到致命伤害时自动代死破碎，恢复 30% 最大气血。',
+    description: '【被动保命】受到致命伤害时自动代死破碎，脱出连击并恢复 30% 最大气血。',
   },
   'con-wind-redraw': {
     id: 'con-wind-redraw',
@@ -27,7 +27,7 @@ export const CONSUMABLES: Record<string, ConsumableDef> = {
     rarity: 'rare',
     icon: '🔮',
     price: 55,
-    description: '注入木印与金印，且下一次触发【灵印相生】额外造成 14 点真伤（丹修翻倍）。',
+    description: '注入木印与金印，且下一次触发【灵印相生】额外轰出 14 点穿甲真伤（丹修翻倍）。',
   },
   'con-berserk-pill': {
     id: 'con-berserk-pill',
@@ -36,7 +36,7 @@ export const CONSUMABLES: Record<string, ConsumableDef> = {
     rarity: 'rare',
     icon: '🔥',
     price: 58,
-    description: '燃 2 年寿元：本回合获得 +2 真元，且所有攻伐伤害提高 50%！',
+    description: '燃血 6 点：本回合获得 +2 真元，且所有攻击伤害提高 50%！',
   },
   'con-frost-talisman': {
     id: 'con-frost-talisman',
@@ -63,7 +63,7 @@ export const CONSUMABLES: Record<string, ConsumableDef> = {
     rarity: 'common',
     icon: '🧪',
     price: 40,
-    description: '对敌方施加 10 层【丹毒】（丹修施加 15 层）并立即引爆 1 次。',
+    description: '对敌方施加 10 层【丹毒】（丹修 15 层）并立即引爆结算 1 次毒伤。',
   },
   'con-sword-pellet': {
     id: 'con-sword-pellet',
@@ -81,7 +81,7 @@ export const CONSUMABLES: Record<string, ConsumableDef> = {
     rarity: 'common',
     icon: '🛡️',
     price: 42,
-    description: '立即获得 20 点【护体罡气】，且本回合罡气保留至下回合不清空。',
+    description: '立即获得 20 点【护体罡气】，且本回合护盾保留至下回合不清空。',
   },
   'con-shatter-spike': {
     id: 'con-shatter-spike',

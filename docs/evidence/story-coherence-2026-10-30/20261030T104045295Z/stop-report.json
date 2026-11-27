@@ -1,0 +1,12 @@
+{
+  "sourceCommit": "634bdf6c7afb318b4e3230fd592829d624d36edc",
+  "accepted": false,
+  "reason": "Opening and first question committed coherently. Third scene answered the formation excerpt concretely but repeated the exact selected question, rejected by CHOICE_NOT_COMPILABLE. Keep raw failure; no six-turn pass.",
+  "cleanup": {
+    "productionVersion": "cad2a140-240f-4465-a837-e53f054c2589",
+    "percentage": 100,
+    "deployment": "198df0bf-e3e8-4258-9201-26f81f689c6c",
+    "ownCredentialDeleted": true,
+    "noNewWorkerOrNamespace": true
+  }
+}

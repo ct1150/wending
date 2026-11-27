@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "sourceCommit": "1d741faf2fca64da8e7327d9c01ce645789646b9",
+  "status": "ACCEPTANCE_STOPPED",
+  "reason": "Opening passed; ask continued the same event/day, but known living speakers declared dead without death facts. Compact grammar had optional status constrained only to dead. Strict validator rejected; status grammar restored to alive/dead in25181a3. Travel-like question label was also not acceptable.",
+  "actualTurns": 2,
+  "productionRestored": {
+    "version": "cad2a140-240f-4465-a837-e53f054c2589",
+    "percentage": 100,
+    "deployment": "4b263eeb-74a9-4eca-a089-6f73f0afe5d6"
+  },
+  "cleanup": {
+    "ownCredentialDeleted": true,
+    "newWorkerCreated": false,
+    "newNamespaceCreated": false,
+    "ledgerRetained": true
+  },
+  "recordedAt": "2026-10-30T07:29:38.527Z"
+}

@@ -1,0 +1,554 @@
+{
+  "sourceCommit": "43b8835b1fa68b27ea9e47fe08d4e0c84a45a758",
+  "version": "c5079598-82bd-4316-baef-d21d8c1e263f",
+  "recordedAt": "2026-10-30T11:11:40.009Z",
+  "continuedFrom": null,
+  "records": [
+    {
+      "caseId": "opening",
+      "start": 624.1000000014901,
+      "timeline": [
+        {
+          "atMs": 9407,
+          "chars": 1
+        },
+        {
+          "atMs": 9991,
+          "chars": 3
+        },
+        {
+          "atMs": 10334,
+          "chars": 4
+        },
+        {
+          "atMs": 10569,
+          "chars": 8
+        },
+        {
+          "atMs": 10648,
+          "chars": 11
+        },
+        {
+          "atMs": 10710,
+          "chars": 15
+        },
+        {
+          "atMs": 10772,
+          "chars": 17
+        },
+        {
+          "atMs": 10833,
+          "chars": 19
+        },
+        {
+          "atMs": 10881,
+          "chars": 22
+        },
+        {
+          "atMs": 10958,
+          "chars": 26
+        },
+        {
+          "atMs": 11018,
+          "chars": 30
+        },
+        {
+          "atMs": 11096,
+          "chars": 32
+        },
+        {
+          "atMs": 11160,
+          "chars": 35
+        },
+        {
+          "atMs": 11206,
+          "chars": 38
+        },
+        {
+          "atMs": 11284,
+          "chars": 41
+        },
+        {
+          "atMs": 11331,
+          "chars": 44
+        },
+        {
+          "atMs": 11408,
+          "chars": 46
+        },
+        {
+          "atMs": 11456,
+          "chars": 51
+        },
+        {
+          "atMs": 11532,
+          "chars": 53
+        },
+        {
+          "atMs": 11579,
+          "chars": 57
+        },
+        {
+          "atMs": 11643,
+          "chars": 61
+        },
+        {
+          "atMs": 11704,
+          "chars": 63
+        },
+        {
+          "atMs": 11765,
+          "chars": 65
+        },
+        {
+          "atMs": 11841,
+          "chars": 68
+        },
+        {
+          "atMs": 11886,
+          "chars": 70
+        },
+        {
+          "atMs": 11948,
+          "chars": 74
+        },
+        {
+          "atMs": 12011,
+          "chars": 79
+        },
+        {
+          "atMs": 12057,
+          "chars": 84
+        },
+        {
+          "atMs": 12122,
+          "chars": 86
+        },
+        {
+          "atMs": 12183,
+          "chars": 91
+        },
+        {
+          "atMs": 12230,
+          "chars": 93
+        },
+        {
+          "atMs": 12289,
+          "chars": 96
+        },
+        {
+          "atMs": 12350,
+          "chars": 98
+        },
+        {
+          "atMs": 12397,
+          "chars": 101
+        },
+        {
+          "atMs": 12554,
+          "chars": 105
+        },
+        {
+          "atMs": 12617,
+          "chars": 108
+        },
+        {
+          "atMs": 12695,
+          "chars": 110
+        },
+        {
+          "atMs": 12740,
+          "chars": 113
+        },
+        {
+          "atMs": 12803,
+          "chars": 115
+        },
+        {
+          "atMs": 12990,
+          "chars": 119
+        },
+        {
+          "atMs": 13066,
+          "chars": 123
+        },
+        {
+          "atMs": 13143,
+          "chars": 125
+        },
+        {
+          "atMs": 13189,
+          "chars": 127
+        },
+        {
+          "atMs": 13250,
+          "chars": 132
+        },
+        {
+          "atMs": 13313,
+          "chars": 134
+        },
+        {
+          "atMs": 13375,
+          "chars": 136
+        },
+        {
+          "atMs": 13439,
+          "chars": 142
+        },
+        {
+          "atMs": 13595,
+          "chars": 146
+        },
+        {
+          "atMs": 13658,
+          "chars": 150
+        },
+        {
+          "atMs": 13720,
+          "chars": 152
+        },
+        {
+          "atMs": 13779,
+          "chars": 155
+        },
+        {
+          "atMs": 13830,
+          "chars": 160
+        },
+        {
+          "atMs": 13892,
+          "chars": 162
+        },
+        {
+          "atMs": 13941,
+          "chars": 166
+        },
+        {
+          "atMs": 14016,
+          "chars": 170
+        },
+        {
+          "atMs": 14080,
+          "chars": 173
+        },
+        {
+          "atMs": 14125,
+          "chars": 177
+        },
+        {
+          "atMs": 14186,
+          "chars": 180
+        },
+        {
+          "atMs": 14233,
+          "chars": 182
+        },
+        {
+          "atMs": 14311,
+          "chars": 186
+        },
+        {
+          "atMs": 14368,
+          "chars": 190
+        },
+        {
+          "atMs": 14415,
+          "chars": 195
+        },
+        {
+          "atMs": 14491,
+          "chars": 197
+        },
+        {
+          "atMs": 14538,
+          "chars": 200
+        },
+        {
+          "atMs": 14600,
+          "chars": 205
+        },
+        {
+          "atMs": 14664,
+          "chars": 207
+        },
+        {
+          "atMs": 14726,
+          "chars": 210
+        },
+        {
+          "atMs": 14771,
+          "chars": 212
+        },
+        {
+          "atMs": 14853,
+          "chars": 216
+        },
+        {
+          "atMs": 14995,
+          "chars": 225
+        },
+        {
+          "atMs": 15019,
+          "chars": 230
+        }
+      ],
+      "choicesEnabledDuringPreview": false,
+      "lastText": "你站在城坊的角落，面前是个满脸油污的匠徒，正蹲在地上摆弄一块碎裂的青砖。他见你盯着看，便咧嘴一笑，露出缺了半边的门牙，指着那砖缝里渗出的暗红液体说道：“小兄弟，看你骨骼清奇，是不是想学手艺？这砖头可是城主府要的，但我这手艺差点火候，你若能帮我把这砖缝填平，我就教你认认这城里的规矩。”\n\n那匠徒把一块灰浆递到你面前，眼神里透着几分狡黠，似乎在试探你的本事。他搓了搓满是老茧的手，催促道：“别愣着，这灰浆要是干了就白费了，你且试试看，能不能用这东西把砖缝补好。”",
+      "doneMs": 18315,
+      "result": {
+        "protocolVersion": 1,
+        "status": "rejected",
+        "requestId": "bac89dc5-ac77-49d7-b9b1-6cede1106475",
+        "attemptId": "bbd79ac6-2c3e-46fa-814b-73f00c8f4c63",
+        "sessionRef": "sess_588035e85956b56d6fe7b21ffa6f55e9",
+        "errorCode": "CHOICE_NOT_COMPILABLE",
+        "retry": null
+      },
+      "request": {
+        "context": {
+          "schemaVersion": 1,
+          "phase": "opening",
+          "identity": {
+            "runId": "ee8518e7-e7ce-43bd-85d9-ec668f552688",
+            "turnId": 1,
+            "baseRevision": 0,
+            "stateHash": "0b381e23f5f02615ad9d5b804b83052f3ce547b1ad854eca974c9dae9b93fece",
+            "choiceId": null,
+            "rulesVersion": 1,
+            "promptVersion": 1,
+            "requestId": "bac89dc5-ac77-49d7-b9b1-6cede1106475"
+          },
+          "namespace": "r:06b27f47c2986061",
+          "receipt": {
+            "kind": "opening",
+            "choiceId": null,
+            "action": null,
+            "elapsedDays": 0,
+            "itemChanges": {},
+            "relationChanges": {},
+            "random": {
+              "before": 2756372443,
+              "after": 2756372443,
+              "roll": null
+            },
+            "before": {
+              "ageDays": 5760,
+              "realm": "mortal",
+              "cultivation": 0,
+              "injury": 0
+            },
+            "after": {
+              "ageDays": 5760,
+              "realm": "mortal",
+              "cultivation": 0,
+              "injury": 0
+            },
+            "death": null,
+            "birth": {
+              "originId": "artisan",
+              "talentIds": [
+                "iron-bones",
+                "flash-wisdom"
+              ],
+              "attributes": {
+                "constitution": 1,
+                "insight": 5,
+                "fortune": 6
+              }
+            }
+          },
+          "life": {
+            "name": "云归",
+            "ageDays": 5760,
+            "lifeLimit": 80,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0,
+            "items": {
+              "supplies": 3,
+              "stones": 0
+            },
+            "relations": {},
+            "birth": {
+              "originId": "artisan",
+              "talentIds": [
+                "iron-bones",
+                "flash-wisdom"
+              ],
+              "attributes": {
+                "constitution": 1,
+                "insight": 5,
+                "fortune": 6
+              }
+            }
+          },
+          "entities": [],
+          "memory": {
+            "facts": [],
+            "promises": [],
+            "clues": [],
+            "recent": [],
+            "summaries": []
+          },
+          "references": [],
+          "previousScene": null,
+          "relationshipVersion": 1,
+          "relationships": {},
+          "coverage": {
+            "policy": "relevance-v1",
+            "openTotal": 0,
+            "openIncluded": 0,
+            "openOmitted": 0
+          }
+        },
+        "attempt": {
+          "id": "bbd79ac6-2c3e-46fa-814b-73f00c8f4c63",
+          "sessionRef": "sess_588035e85956b56d6fe7b21ffa6f55e9",
+          "retryOf": null
+        }
+      },
+      "decision": null,
+      "choices": [],
+      "traces": [
+        {
+          "model": "@cf/zai-org/glm-4.7-flash",
+          "inputHash": "ec2750d3ff5ff8649467aefef90aa86c8455a2dbcdb0af9ea5917d89adfad7fe",
+          "inputBytes": 14148,
+          "startedAt": 1793358681867,
+          "bindingReturnedAt": 1793358682244,
+          "liveRawBytes": 119983,
+          "captureComplete": true,
+          "response": {
+            "model": "@cf/zai-org/glm-4.7-flash",
+            "choices": [
+              {
+                "finish_reason": "stop",
+                "message": {
+                  "content": "{\"blocks\":[{\"kind\":\"narration\",\"text\":\"你站在城坊的角落，面前是个满脸油污的匠徒，正蹲在地上摆弄一块碎裂的青砖。他见你盯着看，便咧嘴一笑，露出缺了半边的门牙，指着那砖缝里渗出的暗红液体说道：“小兄弟，看你骨骼清奇，是不是想学手艺？这砖头可是城主府要的，但我这手艺差点火候，你若能帮我把这砖缝填平，我就教你认认这城里的规矩。”\"},{\"kind\":\"narration\",\"text\":\"那匠徒把一块灰浆递到你面前，眼神里透着几分狡黠，似乎在试探你的本事。他搓了搓满是老茧的手，催促道：“别愣着，这灰浆要是干了就白费了，你且试试看，能不能用这东西把砖缝补好。”\"}],\"choices\":[{\"action\":\"interact:ask\",\"targetId\":\"p1\",\"stake\":\"low\",\"purpose\":\"询问这暗红液体是什么，为何城主府要这种砖\",\"anchor\":0},{\"action\":\"interact:help\",\"targetId\":\"p1\",\"stake\":\"low\",\"purpose\":\"接过灰浆尝试修补砖缝\",\"anchor\":0},{\"action\":\"interact:decline\",\"targetId\":\"p1\",\"stake\":\"low\",\"purpose\":\"拒绝他的请求，转身离开\",\"anchor\":0}],\"title\":\"匠徒的砖块\",\"location\":\"城坊角落\",\"otherPeople\":[{\"id\":\"p1\",\"name\":\"老张\",\"status\":\"alive\"}],\"places\":[{\"id\":\"l1\",\"name\":\"城坊角落\"}],\"factions\":[],\"memoryDeltas\":[{\"entityId\":\"p1\",\"kind\":\"fact\",\"anchor\":0},{\"entityId\":\"p1\",\"kind\":\"fact\",\"anchor\":1}]}",
+                  "reasoning_content": ""
+                }
+              }
+            ],
+            "usage": {
+              "prompt_tokens": 2308,
+              "completion_tokens": 391,
+              "total_tokens": 2699,
+              "prompt_tokens_details": {
+                "cached_tokens": 0
+              },
+              "neurons": 26.926400000000168
+            }
+          },
+          "rawSseBytes": 119983
+        }
+      ],
+      "revision": 0,
+      "pending": true,
+      "state": {
+        "relationshipVersion": 1,
+        "version": 5,
+        "mode": "cultivation",
+        "contentVersion": 4,
+        "rulesVersion": 1,
+        "promptVersion": 1,
+        "runId": "ee8518e7-e7ce-43bd-85d9-ec668f552688",
+        "revision": 0,
+        "turnId": 0,
+        "phase": "awaitingOpening",
+        "rng": 2756372443,
+        "life": {
+          "name": "云归",
+          "ageDays": 5760,
+          "lifeLimit": 80,
+          "realm": "mortal",
+          "cultivation": 0,
+          "injury": 0,
+          "items": {
+            "supplies": 3,
+            "stones": 0
+          },
+          "relations": {},
+          "birth": {
+            "originId": "artisan",
+            "talentIds": [
+              "iron-bones",
+              "flash-wisdom"
+            ],
+            "attributes": {
+              "constitution": 1,
+              "insight": 5,
+              "fortune": 6
+            }
+          }
+        },
+        "birthReceipt": {
+          "kind": "opening",
+          "choiceId": null,
+          "action": null,
+          "elapsedDays": 0,
+          "itemChanges": {},
+          "relationChanges": {},
+          "random": {
+            "before": 2756372443,
+            "after": 2756372443,
+            "roll": null
+          },
+          "before": {
+            "ageDays": 5760,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "after": {
+            "ageDays": 5760,
+            "realm": "mortal",
+            "cultivation": 0,
+            "injury": 0
+          },
+          "death": null,
+          "birth": {
+            "originId": "artisan",
+            "talentIds": [
+              "iron-bones",
+              "flash-wisdom"
+            ],
+            "attributes": {
+              "constitution": 1,
+              "insight": 5,
+              "fortune": 6
+            }
+          }
+        },
+        "currentScene": null,
+        "lastReceipt": null,
+        "relatedEntities": [],
+        "archiveCursor": 0
+      },
+      "posts": 1,
+      "latency": {
+        "usable": false,
+        "errorCode": "CHOICE_NOT_COMPILABLE",
+        "firstAnyPreviewMs": 9407,
+        "firstReadableMs": 10881,
+        "completionMs": 18315,
+        "narrativeChars": 230,
+        "maxPreviewGapMs": 584,
+        "readingFinishEstimateMs": null,
+        "readingStallEstimateMs": null,
+        "optionsWaitEstimateMs": null,
+        "prefetchWorthEvaluating": null,
+        "assumptions": {
+          "readingCharsPerSecond": 6,
+          "readableChars": 20,
+          "targetWaitMs": 2000
+        }
+      }
+    }
+  ],
+  "errors": [
+    "Native turn did not pass"
+  ],
+  "posts": 1,
+  "refreshed": null
+}

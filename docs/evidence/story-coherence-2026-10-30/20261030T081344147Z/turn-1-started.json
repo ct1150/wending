@@ -1,0 +1,1 @@
+{"at":"2026-10-30T08:16:19.574Z","decision":{"index":1,"reason":"递一份行粮援助井边求救陌生人；规则应经过1日、行粮3减到2、关系加2；后文回应援助，不自动治愈或获得玉佩","selected":{"id":"r:6049e35f97c78102:t1:c:b","label":"递给陌生人一块干粮","intent":"interact","targetId":"r:6049e35f97c78102:t1:e:person_1","stake":"low","approach":"help"}}}

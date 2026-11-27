@@ -31,13 +31,9 @@ export function getCardDef(defId: string): CardDef {
   return CARDS[defId] ?? CARDS['sw-slash'];
 }
 
-export function isXCostCard(inst: CardInstance): boolean {
-  return Boolean(getCardDef(inst.defId).effect.xCost);
-}
-
 export function getCardCost(inst: CardInstance): number {
   const def = getCardDef(inst.defId);
-  if (def.effect.xCost) return 0; // X 费牌在真元>=0时均可打出（消耗当前全部真元）
+  if (def.effect.xCost) return 0;
   let cost = inst.upgraded && def.upgradeCost !== undefined ? def.upgradeCost : def.cost;
   if (inst.enchant === 'swift') cost = Math.max(0, cost - 1);
   return cost;
@@ -100,7 +96,7 @@ export function previewResonance(
     return { name: '寒泉滋荣 · 生息', detail: '恢复 6 点气血并获 1 点真元', consumes: ['water'] };
   }
   if (incoming === 'water' && has('earth')) {
-    return { name: '山泽通气 · 固本', detail: '获 7 点护体罡气，本回合罡气不清空', consumes: ['earth'] };
+    return { name: '山泽通气 · 固本', detail: '获 7 点护体罡气，本回合护盾不清空', consumes: ['earth'] };
   }
   if (incoming === 'sha' && has('sha')) {
     return { name: '魔威滔天 · 噬魂', detail: '返还 1 点真元并额外造成 10 点穿甲煞伤', consumes: ['sha'] };
@@ -219,7 +215,7 @@ export function initCombat(run: RunState, enemyDef: EnemyDef, nodeType: MapNodeT
     treasureCharges,
     cardsPlayedThisTurn: 0,
     swordCardsPlayedThisTurn: 0,
-    lifeSpentInCombat: 0,
+    hpSacrificedInCombat: 0,
     lastResonance: null,
     phase2Banner: null,
     combatLog: [
@@ -250,7 +246,6 @@ function checkEnemySurvivalAndPhase2(combat: CombatState): void {
   const foe = combat.enemy;
   const def = ENEMIES[foe.defId];
 
-  // 涅槃真火复活检查
   if (foe.hp <= 0 && foe.trait?.id === 'phoenix-rebirth' && !foe.rebirthUsed) {
     foe.rebirthUsed = true;
     foe.hp = Math.max(1, Math.round((foe.maxHp * foe.trait.value) / 100));
@@ -260,7 +255,6 @@ function checkEnemySurvivalAndPhase2(combat: CombatState): void {
     return;
   }
 
-  // Boss 半血二阶段化相检查
   if (foe.hp > 0 && def?.phase2 && !foe.phase2Triggered && foe.hp <= foe.maxHp * 0.5) {
     foe.phase2Triggered = true;
     foe.title = def.phase2.title;
@@ -281,9 +275,8 @@ function dealDamageToEnemy(
   isDirectHit = false,
 ): number {
   let dmg = rawDamage;
-  // 逆命天珠加成
   const dyingFury = hasRelicHook(run, 'dying-fury');
-  if (dyingFury > 0 && run.maxLifespan - run.age <= 20) {
+  if (dyingFury > 0 && run.hp <= run.maxHp * 0.45) {
     dmg = Math.round(dmg * (1 + dyingFury / 100));
   }
   if (combat.damageBoostPct > 0) {
@@ -292,7 +285,6 @@ function dealDamageToEnemy(
   if (combat.weak > 0) dmg = Math.floor(dmg * 0.75);
   if (combat.enemy.vulnerable > 0) dmg = Math.floor(dmg * 1.5);
 
-  // 戊土玄甲：每回合首段直接攻击减伤 50%
   if (isDirectHit && combat.enemy.trait?.id === 'stone-shell' && !combat.enemy.firstHitTakenThisTurn) {
     combat.enemy.firstHitTakenThisTurn = true;
     dmg = Math.max(1, Math.floor(dmg * 0.5));
@@ -308,7 +300,6 @@ function dealDamageToEnemy(
   }
   combat.enemy.hp = Math.max(0, combat.enemy.hp - dmg);
 
-  // 骨刺反震
   if (isDirectHit && combat.enemy.trait?.id === 'thorns') {
     const thorn = combat.enemy.trait.value;
     const blocked = Math.min(combat.block, thorn);
@@ -359,8 +350,9 @@ function applyEffectBundle(
   let damageMultiplier = 1;
   const xVal = opts.xValue ?? 0;
 
-  // 1. 自身气血 / 燃寿代价 + 辅修《血神经》联动
-  const triggerSelfSacrificeHooks = () => {
+  const triggerSelfSacrificeHooks = (amount: number) => {
+    combat.hpSacrificedInCombat += amount;
+    run.stats.hpSacrificed += amount;
     if (run.lineage === 'demon') addBlockToPlayer(run, combat, 4);
     if (run.secondaryMethod === 'method-blood-blade') {
       combat.swordIntent += 2;
@@ -374,16 +366,14 @@ function applyEffectBundle(
 
   if (effect.selfHpCost && effect.selfHpCost > 0) {
     run.hp = Math.max(1, run.hp - effect.selfHpCost);
-    triggerSelfSacrificeHooks();
+    triggerSelfSacrificeHooks(effect.selfHpCost);
   }
-  if (effect.lifeCost && effect.lifeCost > 0) {
-    run.age += effect.lifeCost;
-    combat.lifeSpentInCombat += effect.lifeCost;
-    run.stats.lifeBurned += effect.lifeCost;
-    triggerSelfSacrificeHooks();
+  if (effect.maxHpCost && effect.maxHpCost > 0) {
+    run.maxHp = Math.max(15, run.maxHp - effect.maxHpCost);
+    run.hp = Math.min(run.hp, run.maxHp);
+    triggerSelfSacrificeHooks(effect.maxHpCost);
   }
 
-  // 2. 随机献祭手牌消耗
   if (effect.exhaustRandomHand && effect.exhaustRandomHand > 0 && combat.hand.length > 0) {
     let exhausted = 0;
     for (let i = 0; i < effect.exhaustRandomHand && combat.hand.length > 0; i++) {
@@ -395,7 +385,6 @@ function applyEffectBundle(
     onCardsExhausted(run, combat, exhausted);
   }
 
-  // 3. 灵印相生判定
   const sealToInject: ElementTag = sourceElement !== 'none' ? sourceElement : (effect.extraSeal ?? 'none');
   if (sealToInject !== 'none') {
     const res = previewResonance(combat.seals, sealToInject, Boolean(root.mixedFiveBonus));
@@ -459,7 +448,6 @@ function applyEffectBundle(
     pushSeal(combat, effect.extraSeal);
   }
 
-  // 4. 心魔吞噬 + 消耗堆增伤 + 引爆全场阵盘
   let extraDmg = 0;
   if (effect.exhaustCursesInHand) {
     const curses = combat.hand.filter((c) => getCardDef(c.defId).type === 'curse');
@@ -479,7 +467,6 @@ function applyEffectBundle(
     combat.combatLog.unshift(`💥 引爆 ${count} 座阵盘，返还 ${count} 点真元！`);
   }
 
-  // 5. 伤害结算
   let baseDmg = (effect.damage ?? 0) + extraDmg;
   if (effect.damagePerBlock) {
     baseDmg += Math.floor(combat.block * effect.damagePerBlock);
@@ -512,7 +499,6 @@ function applyEffectBundle(
     combat.combatLog.unshift(`【${opts.sourceName}】造成 ${totalDealt} 点伤害。`);
   }
 
-  // 6. 护盾、回血、剑罡、丹毒与 X 费焚炉
   if (effect.block) {
     const blockAmt = effect.xCost && !baseDmg ? (xVal + 1) * effect.block : effect.block;
     addBlockToPlayer(run, combat, blockAmt);
@@ -546,9 +532,7 @@ function applyEffectBundle(
 
   if (effect.vulnerable) combat.enemy.vulnerable += effect.vulnerable;
   if (effect.weak) combat.enemy.weak += effect.weak;
-  if (effect.gainFoundation) run.foundation = Math.min(100, run.foundation + effect.gainFoundation);
 
-  // 7. 阵盘永续
   if (effect.arrayPower) {
     const existing = combat.arrays.find((a) => a.id === effect.arrayPower!.id);
     if (existing) {
@@ -567,7 +551,6 @@ function applyEffectBundle(
     combat.combatLog.unshift(`阵成！【${effect.arrayPower.name}】开始运转。`);
   }
 
-  // 8. 衍生牌 / 塞入心魔
   if (effect.addCardsToHand) {
     for (const defId of effect.addCardsToHand) {
       if (combat.hand.length >= 9) break;
@@ -580,7 +563,6 @@ function applyEffectBundle(
     combat.discardPile.push({ uid: `cur-${run.uidCounter}`, defId: effect.addCurseToDiscard, upgraded: false });
   }
 
-  // 9. 附魔附加效果
   if (opts.enchant === 'leech-life') run.hp = Math.min(run.maxHp, run.hp + 4);
   if (opts.enchant === 'toxic-edge') addPoisonToEnemy(run, combat, 4);
   if (opts.enchant === 'innate') drawCards(combat, 1, rng);
@@ -591,19 +573,29 @@ function applyEffectBundle(
     pushSeal(combat, 'thunder');
   }
 
-  // 10. 夺寿与斩杀结算
-  if (effect.gainLifespan && combat.enemy.hp <= 0) {
-    run.maxLifespan += effect.gainLifespan;
-    combat.combatLog.unshift(`夺元斩杀！寿元上限 +${effect.gainLifespan} 年。`);
-  } else if (effect.gainLifespan && !baseDmg) {
-    run.maxLifespan += effect.gainLifespan;
+  if (effect.gainMaxHp && combat.enemy.hp <= 0) {
+    run.maxHp += effect.gainMaxHp;
+    run.hp = Math.min(run.maxHp, run.hp + effect.gainMaxHp);
+    combat.combatLog.unshift(`夺元斩杀！最大气血永久 +${effect.gainMaxHp}。`);
+  } else if (effect.gainMaxHp && !baseDmg) {
+    run.maxHp += effect.gainMaxHp;
+    run.hp = Math.min(run.maxHp, run.hp + effect.gainMaxHp);
   }
 
   if (combat.enemy.hp <= 0) {
-    if (opts.enchant === 'leech-life') run.maxLifespan += 4;
-    if (run.lineage === 'demon') run.maxLifespan += 4;
-    const beads = hasRelicHook(run, 'life-leech-kill');
-    if (beads > 0) run.maxLifespan += beads;
+    if (opts.enchant === 'leech-life') {
+      run.maxHp += 2;
+      run.hp = Math.min(run.maxHp, run.hp + 2);
+    }
+    if (run.lineage === 'demon') {
+      run.maxHp += 1;
+      run.hp = Math.min(run.maxHp, run.hp + 5);
+    }
+    const beads = hasRelicHook(run, 'maxhp-leech-kill');
+    if (beads > 0) {
+      run.maxHp += beads;
+      run.hp = Math.min(run.maxHp, run.hp + beads);
+    }
   }
 }
 
@@ -634,7 +626,6 @@ export function playCard(run: RunState, cardUid: string): RunState {
     combat.cardsPlayedThisTurn,
   );
 
-  // 敌方法则触发：禁法妖瞳 / 剑心识破
   if (combat.enemy.trait?.id === 'anti-skill' && def.type === 'skill') {
     combat.enemy.strength += combat.enemy.trait.value;
     combat.combatLog.unshift(`【${combat.enemy.trait.name}】感应运转术式，杀意 +${combat.enemy.trait.value}！`);
@@ -683,10 +674,6 @@ export function playCard(run: RunState, cardUid: string): RunState {
       nextRun.stats.tribulationsSlain = (nextRun.stats.tribulationsSlain ?? 0) + 1;
     }
     combat.combatLog.unshift(`斩落【${combat.enemy.name}】！`);
-  } else if (nextRun.age >= nextRun.maxLifespan) {
-    combat.outcome = 'defeat';
-    combat.defeatCause = 'lifespan';
-    nextRun.deathCause = `与${combat.enemy.name}死斗时燃尽寿元坐化`;
   }
 
   combat.combatLog = combat.combatLog.slice(0, 14);
@@ -727,11 +714,11 @@ export function useConsumable(run: RunState, slotIdx: number): RunState {
       break;
     }
     case 'con-berserk-pill': {
-      nextRun.age += 2;
-      nextRun.stats.lifeBurned += 2;
+      nextRun.hp = Math.max(1, nextRun.hp - 6);
+      nextRun.stats.hpSacrificed += 6;
       combat.qi += 2;
       combat.damageBoostPct += Math.round(50 * pillAmp);
-      combat.combatLog.unshift('🔥 服下【暴血燃魂丹】：真元 +2，本回合伤害暴涨！');
+      combat.combatLog.unshift('🔥 服下【暴血燃魂丹】：燃血 6 点，真元 +2，本回合伤害暴涨！');
       break;
     }
     case 'con-frost-talisman': {
@@ -783,10 +770,6 @@ export function useConsumable(run: RunState, slotIdx: number): RunState {
     if (combat.enemy.tier === 'tribulation') {
       nextRun.stats.tribulationsSlain = (nextRun.stats.tribulationsSlain ?? 0) + 1;
     }
-  } else if (nextRun.age >= nextRun.maxLifespan) {
-    combat.outcome = 'defeat';
-    combat.defeatCause = 'lifespan';
-    nextRun.deathCause = '服暴血狂丹燃尽寿元坐化';
   }
 
   nextRun.rngState = rng.state;
@@ -827,7 +810,6 @@ export function endPlayerTurn(run: RunState): RunState {
   combat.phase2Banner = null;
   const rng = new SeededRng(nextRun.rngState);
 
-  // 1. 场上阵盘回合末触发（含辅修《九宫引雷诀》）
   const arrayAmp = 1 + hasRelicHook(nextRun, 'array-echo') / 100;
   for (const arr of combat.arrays) {
     if (arr.blockPerTurn > 0) addBlockToPlayer(nextRun, combat, Math.round(arr.blockPerTurn * arrayAmp));
@@ -843,7 +825,6 @@ export function endPlayerTurn(run: RunState): RunState {
     }
   }
 
-  // 2. 敌方丹毒结算
   if (combat.enemy.hp > 0 && combat.enemy.poison > 0) {
     const pDmg = dealDamageToEnemy(nextRun, combat, combat.enemy.poison, true);
     combat.enemy.poison = Math.max(0, combat.enemy.poison - 1);
@@ -856,7 +837,6 @@ export function endPlayerTurn(run: RunState): RunState {
     return nextRun;
   }
 
-  // 3. 敌方行动（含二阶段招式表 + 剑罡反击 + 玄冥反毒甲 + 替死木偶符）
   combat.enemy.block = 0;
   combat.enemy.firstHitTakenThisTurn = false;
 
@@ -886,7 +866,6 @@ export function endPlayerTurn(run: RunState): RunState {
         nextRun.hp = Math.max(0, nextRun.hp - hpLoss);
         totalTaken += hpLoss;
 
-        // 剑罡反击回敬穿甲剑伤
         if (combat.counterAura > 0 && combat.enemy.hp > 0) {
           dealDamageToEnemy(nextRun, combat, combat.counterAura, true);
         }
@@ -919,13 +898,11 @@ export function endPlayerTurn(run: RunState): RunState {
 
   if (nextRun.hp <= 0 && !tryAutoRevivePlayer(nextRun, combat)) {
     combat.outcome = 'defeat';
-    combat.defeatCause = 'hp';
     nextRun.deathCause = `陨落于【${combat.enemy.name}】手下`;
     nextRun.rngState = rng.state;
     return nextRun;
   }
 
-  // 4. 渡劫波次推进
   if (combat.enemy.tier === 'tribulation' && combat.enemy.tribulationWave && combat.enemy.tribulationMaxWaves) {
     if (combat.enemy.tribulationWave >= combat.enemy.tribulationMaxWaves) {
       combat.outcome = 'tribulation-survived';

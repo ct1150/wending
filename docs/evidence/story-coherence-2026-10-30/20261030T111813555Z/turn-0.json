@@ -1,0 +1,608 @@
+{
+  "caseId": "opening",
+  "start": 1521.2999999970198,
+  "timeline": [
+    {
+      "atMs": 3040,
+      "chars": 1
+    },
+    {
+      "atMs": 3117,
+      "chars": 5
+    },
+    {
+      "atMs": 3179,
+      "chars": 7
+    },
+    {
+      "atMs": 3226,
+      "chars": 11
+    },
+    {
+      "atMs": 3334,
+      "chars": 14
+    },
+    {
+      "atMs": 3380,
+      "chars": 18
+    },
+    {
+      "atMs": 3443,
+      "chars": 21
+    },
+    {
+      "atMs": 3524,
+      "chars": 23
+    },
+    {
+      "atMs": 3570,
+      "chars": 28
+    },
+    {
+      "atMs": 3648,
+      "chars": 32
+    },
+    {
+      "atMs": 3709,
+      "chars": 35
+    },
+    {
+      "atMs": 3770,
+      "chars": 40
+    },
+    {
+      "atMs": 3849,
+      "chars": 45
+    },
+    {
+      "atMs": 3911,
+      "chars": 50
+    },
+    {
+      "atMs": 3989,
+      "chars": 53
+    },
+    {
+      "atMs": 4052,
+      "chars": 58
+    },
+    {
+      "atMs": 4131,
+      "chars": 67
+    },
+    {
+      "atMs": 4194,
+      "chars": 72
+    },
+    {
+      "atMs": 4272,
+      "chars": 76
+    },
+    {
+      "atMs": 4337,
+      "chars": 81
+    },
+    {
+      "atMs": 4398,
+      "chars": 86
+    },
+    {
+      "atMs": 4476,
+      "chars": 89
+    },
+    {
+      "atMs": 4523,
+      "chars": 93
+    },
+    {
+      "atMs": 4600,
+      "chars": 97
+    },
+    {
+      "atMs": 4678,
+      "chars": 99
+    },
+    {
+      "atMs": 4743,
+      "chars": 104
+    },
+    {
+      "atMs": 4803,
+      "chars": 110
+    },
+    {
+      "atMs": 5019,
+      "chars": 119
+    },
+    {
+      "atMs": 5081,
+      "chars": 124
+    },
+    {
+      "atMs": 5144,
+      "chars": 129
+    },
+    {
+      "atMs": 5219,
+      "chars": 134
+    },
+    {
+      "atMs": 5283,
+      "chars": 139
+    },
+    {
+      "atMs": 5360,
+      "chars": 146
+    },
+    {
+      "atMs": 5421,
+      "chars": 148
+    },
+    {
+      "atMs": 5484,
+      "chars": 153
+    },
+    {
+      "atMs": 5543,
+      "chars": 157
+    },
+    {
+      "atMs": 5623,
+      "chars": 162
+    },
+    {
+      "atMs": 5686,
+      "chars": 166
+    },
+    {
+      "atMs": 5763,
+      "chars": 169
+    },
+    {
+      "atMs": 5810,
+      "chars": 172
+    },
+    {
+      "atMs": 5883,
+      "chars": 181
+    },
+    {
+      "atMs": 5946,
+      "chars": 186
+    },
+    {
+      "atMs": 6024,
+      "chars": 189
+    },
+    {
+      "atMs": 6084,
+      "chars": 193
+    },
+    {
+      "atMs": 6160,
+      "chars": 197
+    },
+    {
+      "atMs": 6240,
+      "chars": 201
+    }
+  ],
+  "choicesEnabledDuringPreview": false,
+  "lastText": "你站在城坊的街角，手里攥着刚领到的匠徒腰牌。不远处，一个满脸油污的汉子正蹲在地上，对着一块断裂的青铜残片发愁。他似乎察觉到了你的目光，抬起头，用满是老茧的手指了指那残片，又指了指自己腰间空荡荡的布袋，发出一声无奈的叹息。\n\n“这玩意儿看着像是个机关零件，可我实在琢磨不透它怎么装回去。”汉子搓了搓手，眼神里透着焦急，“兄弟，你是个匠徒，眼力活儿应该比我强，能不能帮我看看？要是能修好，我请你喝碗热汤。”",
+  "doneMs": 9078,
+  "result": {
+    "protocolVersion": 1,
+    "status": "ready",
+    "requestId": "bac89dc5-ac77-49d7-b9b1-6cede1106475",
+    "attemptId": "b72e1ce1-0341-4b0e-bb73-2920c83fa0c1",
+    "sessionRef": "sess_588035e85956b56d6fe7b21ffa6f55e9",
+    "errorCode": null,
+    "retry": null,
+    "scene": {
+      "id": "r:06b27f47c2986061:t1:s:scene",
+      "title": "街角修残",
+      "location": "城坊",
+      "entities": [
+        {
+          "id": "r:06b27f47c2986061:t1:e:person_1",
+          "name": "老张",
+          "status": "alive",
+          "kind": "person"
+        }
+      ],
+      "blocks": [
+        {
+          "kind": "narration",
+          "text": "你站在城坊的街角，手里攥着刚领到的匠徒腰牌。不远处，一个满脸油污的汉子正蹲在地上，对着一块断裂的青铜残片发愁。他似乎察觉到了你的目光，抬起头，用满是老茧的手指了指那残片，又指了指自己腰间空荡荡的布袋，发出一声无奈的叹息。"
+        },
+        {
+          "kind": "narration",
+          "text": "“这玩意儿看着像是个机关零件，可我实在琢磨不透它怎么装回去。”汉子搓了搓手，眼神里透着焦急，“兄弟，你是个匠徒，眼力活儿应该比我强，能不能帮我看看？要是能修好，我请你喝碗热汤。”"
+        }
+      ],
+      "choices": [
+        {
+          "id": "r:06b27f47c2986061:t1:c:a",
+          "label": "询问老张：询问这残片的具体来历和用途",
+          "intent": "interact",
+          "targetId": "r:06b27f47c2986061:t1:e:person_1",
+          "stake": "low",
+          "approach": "ask"
+        },
+        {
+          "id": "r:06b27f47c2986061:t1:c:b",
+          "label": "询问老张：询问他为何需要匠徒帮忙",
+          "intent": "interact",
+          "targetId": "r:06b27f47c2986061:t1:e:person_1",
+          "stake": "low",
+          "approach": "ask"
+        },
+        {
+          "id": "r:06b27f47c2986061:t1:c:c",
+          "label": "婉拒老张：表示自己还要去干活，拒绝帮忙",
+          "intent": "interact",
+          "targetId": "r:06b27f47c2986061:t1:e:person_1",
+          "stake": "low",
+          "approach": "decline"
+        }
+      ],
+      "memoryDeltas": []
+    }
+  },
+  "request": {
+    "context": {
+      "schemaVersion": 1,
+      "phase": "opening",
+      "identity": {
+        "runId": "ee8518e7-e7ce-43bd-85d9-ec668f552688",
+        "turnId": 1,
+        "baseRevision": 0,
+        "stateHash": "0b381e23f5f02615ad9d5b804b83052f3ce547b1ad854eca974c9dae9b93fece",
+        "choiceId": null,
+        "rulesVersion": 1,
+        "promptVersion": 1,
+        "requestId": "bac89dc5-ac77-49d7-b9b1-6cede1106475"
+      },
+      "namespace": "r:06b27f47c2986061",
+      "receipt": {
+        "kind": "opening",
+        "choiceId": null,
+        "action": null,
+        "elapsedDays": 0,
+        "itemChanges": {},
+        "relationChanges": {},
+        "random": {
+          "before": 2756372443,
+          "after": 2756372443,
+          "roll": null
+        },
+        "before": {
+          "ageDays": 5760,
+          "realm": "mortal",
+          "cultivation": 0,
+          "injury": 0
+        },
+        "after": {
+          "ageDays": 5760,
+          "realm": "mortal",
+          "cultivation": 0,
+          "injury": 0
+        },
+        "death": null,
+        "birth": {
+          "originId": "artisan",
+          "talentIds": [
+            "iron-bones",
+            "flash-wisdom"
+          ],
+          "attributes": {
+            "constitution": 1,
+            "insight": 5,
+            "fortune": 6
+          }
+        }
+      },
+      "life": {
+        "name": "云归",
+        "ageDays": 5760,
+        "lifeLimit": 80,
+        "realm": "mortal",
+        "cultivation": 0,
+        "injury": 0,
+        "items": {
+          "supplies": 3,
+          "stones": 0
+        },
+        "relations": {},
+        "birth": {
+          "originId": "artisan",
+          "talentIds": [
+            "iron-bones",
+            "flash-wisdom"
+          ],
+          "attributes": {
+            "constitution": 1,
+            "insight": 5,
+            "fortune": 6
+          }
+        }
+      },
+      "entities": [],
+      "memory": {
+        "facts": [],
+        "promises": [],
+        "clues": [],
+        "recent": [],
+        "summaries": []
+      },
+      "references": [],
+      "previousScene": null,
+      "relationshipVersion": 1,
+      "relationships": {},
+      "coverage": {
+        "policy": "relevance-v1",
+        "openTotal": 0,
+        "openIncluded": 0,
+        "openOmitted": 0
+      }
+    },
+    "attempt": {
+      "id": "b72e1ce1-0341-4b0e-bb73-2920c83fa0c1",
+      "sessionRef": "sess_588035e85956b56d6fe7b21ffa6f55e9",
+      "retryOf": {
+        "attemptId": "bbd79ac6-2c3e-46fa-814b-73f00c8f4c63",
+        "sessionRef": "sess_588035e85956b56d6fe7b21ffa6f55e9"
+      }
+    }
+  },
+  "decision": {
+    "explicitRetry": true
+  },
+  "choices": [
+    {
+      "id": "r:06b27f47c2986061:t1:c:a",
+      "enabled": true,
+      "label": "询问老张：询问这残片的具体来历和用途",
+      "cost": "0日"
+    },
+    {
+      "id": "r:06b27f47c2986061:t1:c:b",
+      "enabled": true,
+      "label": "询问老张：询问他为何需要匠徒帮忙",
+      "cost": "0日"
+    },
+    {
+      "id": "r:06b27f47c2986061:t1:c:c",
+      "enabled": true,
+      "label": "婉拒老张：表示自己还要去干活，拒绝帮忙",
+      "cost": "0日"
+    }
+  ],
+  "traces": [
+    {
+      "model": "@cf/zai-org/glm-4.7-flash",
+      "inputHash": "82b9f6bb5f3654c2c66dfda40501cd9c8900311b15599d7f90ee504f5c364490",
+      "inputBytes": 14201,
+      "startedAt": 1793359248022,
+      "bindingReturnedAt": 1793359248394,
+      "liveRawBytes": 99586,
+      "captureComplete": true,
+      "response": {
+        "model": "@cf/zai-org/glm-4.7-flash",
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "message": {
+              "content": "{\"blocks\":[{\"kind\":\"narration\",\"text\":\"你站在城坊的街角，手里攥着刚领到的匠徒腰牌。不远处，一个满脸油污的汉子正蹲在地上，对着一块断裂的青铜残片发愁。他似乎察觉到了你的目光，抬起头，用满是老茧的手指了指那残片，又指了指自己腰间空荡荡的布袋，发出一声无奈的叹息。\"},{\"kind\":\"narration\",\"text\":\"“这玩意儿看着像是个机关零件，可我实在琢磨不透它怎么装回去。”汉子搓了搓手，眼神里透着焦急，“兄弟，你是个匠徒，眼力活儿应该比我强，能不能帮我看看？要是能修好，我请你喝碗热汤。”\"}],\"choices\":[{\"action\":\"interact:ask\",\"targetId\":\"p1\",\"stake\":\"low\",\"purpose\":\"询问这残片的具体来历和用途\",\"anchor\":0},{\"action\":\"interact:ask\",\"targetId\":\"p1\",\"stake\":\"low\",\"purpose\":\"询问他为何需要匠徒帮忙\",\"anchor\":0},{\"action\":\"interact:decline\",\"targetId\":\"p1\",\"stake\":\"low\",\"purpose\":\"表示自己还要去干活，拒绝帮忙\",\"anchor\":0}],\"title\":\"街角修残\",\"location\":\"城坊\",\"otherPeople\":[{\"id\":\"p1\",\"name\":\"老张\",\"status\":\"alive\"}],\"places\":[],\"factions\":[],\"memoryDeltas\":[]}",
+              "reasoning_content": ""
+            }
+          }
+        ],
+        "usage": {
+          "prompt_tokens": 2320,
+          "completion_tokens": 316,
+          "total_tokens": 2636,
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          },
+          "neurons": 24.262400000000135
+        }
+      },
+      "rawSseBytes": 99586
+    }
+  ],
+  "revision": 1,
+  "pending": false,
+  "state": {
+    "relationshipVersion": 1,
+    "version": 5,
+    "mode": "cultivation",
+    "contentVersion": 4,
+    "rulesVersion": 1,
+    "promptVersion": 1,
+    "runId": "ee8518e7-e7ce-43bd-85d9-ec668f552688",
+    "revision": 1,
+    "turnId": 1,
+    "phase": "active",
+    "rng": 2756372443,
+    "life": {
+      "name": "云归",
+      "ageDays": 5760,
+      "lifeLimit": 80,
+      "realm": "mortal",
+      "cultivation": 0,
+      "injury": 0,
+      "items": {
+        "supplies": 3,
+        "stones": 0
+      },
+      "relations": {},
+      "birth": {
+        "originId": "artisan",
+        "talentIds": [
+          "iron-bones",
+          "flash-wisdom"
+        ],
+        "attributes": {
+          "constitution": 1,
+          "insight": 5,
+          "fortune": 6
+        }
+      }
+    },
+    "birthReceipt": {
+      "kind": "opening",
+      "choiceId": null,
+      "action": null,
+      "elapsedDays": 0,
+      "itemChanges": {},
+      "relationChanges": {},
+      "random": {
+        "before": 2756372443,
+        "after": 2756372443,
+        "roll": null
+      },
+      "before": {
+        "ageDays": 5760,
+        "realm": "mortal",
+        "cultivation": 0,
+        "injury": 0
+      },
+      "after": {
+        "ageDays": 5760,
+        "realm": "mortal",
+        "cultivation": 0,
+        "injury": 0
+      },
+      "death": null,
+      "birth": {
+        "originId": "artisan",
+        "talentIds": [
+          "iron-bones",
+          "flash-wisdom"
+        ],
+        "attributes": {
+          "constitution": 1,
+          "insight": 5,
+          "fortune": 6
+        }
+      }
+    },
+    "currentScene": {
+      "id": "r:06b27f47c2986061:t1:s:scene",
+      "title": "街角修残",
+      "location": "城坊",
+      "entities": [
+        {
+          "id": "r:06b27f47c2986061:t1:e:person_1",
+          "name": "老张",
+          "status": "alive",
+          "kind": "person"
+        }
+      ],
+      "blocks": [
+        {
+          "kind": "narration",
+          "text": "你站在城坊的街角，手里攥着刚领到的匠徒腰牌。不远处，一个满脸油污的汉子正蹲在地上，对着一块断裂的青铜残片发愁。他似乎察觉到了你的目光，抬起头，用满是老茧的手指了指那残片，又指了指自己腰间空荡荡的布袋，发出一声无奈的叹息。"
+        },
+        {
+          "kind": "narration",
+          "text": "“这玩意儿看着像是个机关零件，可我实在琢磨不透它怎么装回去。”汉子搓了搓手，眼神里透着焦急，“兄弟，你是个匠徒，眼力活儿应该比我强，能不能帮我看看？要是能修好，我请你喝碗热汤。”"
+        }
+      ],
+      "choices": [
+        {
+          "id": "r:06b27f47c2986061:t1:c:a",
+          "label": "询问老张：询问这残片的具体来历和用途",
+          "intent": "interact",
+          "targetId": "r:06b27f47c2986061:t1:e:person_1",
+          "stake": "low",
+          "approach": "ask"
+        },
+        {
+          "id": "r:06b27f47c2986061:t1:c:b",
+          "label": "询问老张：询问他为何需要匠徒帮忙",
+          "intent": "interact",
+          "targetId": "r:06b27f47c2986061:t1:e:person_1",
+          "stake": "low",
+          "approach": "ask"
+        },
+        {
+          "id": "r:06b27f47c2986061:t1:c:c",
+          "label": "婉拒老张：表示自己还要去干活，拒绝帮忙",
+          "intent": "interact",
+          "targetId": "r:06b27f47c2986061:t1:e:person_1",
+          "stake": "low",
+          "approach": "decline"
+        }
+      ],
+      "memoryDeltas": []
+    },
+    "lastReceipt": {
+      "kind": "opening",
+      "choiceId": null,
+      "action": null,
+      "elapsedDays": 0,
+      "itemChanges": {},
+      "relationChanges": {},
+      "random": {
+        "before": 2756372443,
+        "after": 2756372443,
+        "roll": null
+      },
+      "before": {
+        "ageDays": 5760,
+        "realm": "mortal",
+        "cultivation": 0,
+        "injury": 0
+      },
+      "after": {
+        "ageDays": 5760,
+        "realm": "mortal",
+        "cultivation": 0,
+        "injury": 0
+      },
+      "death": null,
+      "birth": {
+        "originId": "artisan",
+        "talentIds": [
+          "iron-bones",
+          "flash-wisdom"
+        ],
+        "attributes": {
+          "constitution": 1,
+          "insight": 5,
+          "fortune": 6
+        }
+      }
+    },
+    "relatedEntities": [
+      {
+        "id": "r:06b27f47c2986061:t1:e:person_1",
+        "name": "老张",
+        "status": "alive",
+        "kind": "person"
+      }
+    ],
+    "archiveCursor": 0
+  },
+  "posts": 1,
+  "latency": {
+    "usable": true,
+    "errorCode": null,
+    "firstAnyPreviewMs": 3040,
+    "firstReadableMs": 3443,
+    "completionMs": 9078,
+    "narrativeChars": 201,
+    "maxPreviewGapMs": 216,
+    "readingFinishEstimateMs": 36943,
+    "readingStallEstimateMs": 0,
+    "optionsWaitEstimateMs": 0,
+    "prefetchWorthEvaluating": true,
+    "assumptions": {
+      "readingCharsPerSecond": 6,
+      "readableChars": 20,
+      "targetWaitMs": 2000
+    }
+  }
+}

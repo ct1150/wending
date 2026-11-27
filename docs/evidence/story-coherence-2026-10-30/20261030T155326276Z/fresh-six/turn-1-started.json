@@ -1,0 +1,1 @@
+{"at":"2026-10-30T15:56:49.156Z","decision":{"index":0,"reason":"正文铁匠正愁废铁，先问用途与成色；选项分别询问、观察、拒绝，具体且无提前结算。","selected":{"id":"r:eb23fe6aca0e5570:t1:c:a","label":"询问王大锤：询问这块铁的具体用途和成色","intent":"interact","targetId":"r:eb23fe6aca0e5570:t1:e:person_1","stake":"low","approach":"ask"}}}

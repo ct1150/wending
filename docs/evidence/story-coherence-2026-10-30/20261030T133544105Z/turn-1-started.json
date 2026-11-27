@@ -1,0 +1,1 @@
+{"at":"2026-10-30T13:39:28.766Z","decision":{"index":2,"reason":"张屠户刚处理异常野猪，选择分粮慰劳，不承诺处理煞气；核对仅1日、行粮-1、关系+2。","selected":{"id":"r:777f39e63f6e0dd9:t1:c:c","label":"援助张屠户：拿出1行粮援助张屠户，表示他处理这头猪很辛苦。","intent":"interact","targetId":"r:777f39e63f6e0dd9:t1:e:person_1","stake":"low","approach":"help"}}}

@@ -1,0 +1,39 @@
+{
+  "schemaVersion": 1,
+  "sourceCommit": "52a9bf8e4c0970c52f4f9cbf4d124680a417d10f",
+  "status": "ACCEPTANCE_STOPPED",
+  "reason": "GENERATED_SCENE_INVALID; diagnostic raw SSE was truncated, so the decoder cause is unclassified.",
+  "actualTurns": 1,
+  "latencies": [
+    {
+      "usable": false,
+      "errorCode": "GENERATED_SCENE_INVALID",
+      "firstAnyPreviewMs": 8021,
+      "firstReadableMs": 8454,
+      "completionMs": 21117,
+      "narrativeChars": 218,
+      "maxPreviewGapMs": 637,
+      "readingFinishEstimateMs": null,
+      "readingStallEstimateMs": null,
+      "optionsWaitEstimateMs": null,
+      "prefetchWorthEvaluating": null,
+      "assumptions": {
+        "readingCharsPerSecond": 6,
+        "readableChars": 20,
+        "targetWaitMs": 2000
+      }
+    }
+  ],
+  "productionRestored": {
+    "version": "cad2a140-240f-4465-a837-e53f054c2589",
+    "percentage": 100,
+    "deployment": "c078966f-adc1-426d-9500-a1452aed21cd"
+  },
+  "cleanup": {
+    "ownCredentialDeleted": true,
+    "newWorkerCreated": false,
+    "newNamespaceCreated": false,
+    "ledgerRetained": true
+  },
+  "recordedAt": "2026-10-30T07:22:16.627Z"
+}
