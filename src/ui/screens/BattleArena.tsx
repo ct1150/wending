@@ -370,6 +370,8 @@ export function BattleArena({
 
           <div class="portrait-wrap">
             <EnemyPortrait
+              enemyDefId={enemy.defId}
+              enemyName={enemy.name}
               artStyle={enemy.artStyle}
               hasBlock={enemy.block > 0}
               isPoisoned={enemy.poison > 0}
