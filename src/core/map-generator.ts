@@ -1,16 +1,43 @@
 import { SeededRng } from './rng';
 import type { MapNode, MapNodeType, PastLifeRemnant } from './types';
 
-const NODE_LABELS: Record<MapNodeType, string> = {
-  battle: '荒野遇敌',
-  elite: '秘境夺宝',
-  'fury-elite': '灵脉狂暴主',
-  event: '红尘奇遇',
-  abode: '洞府丹庐',
-  shop: '仙城坊市',
-  auction: '百年拍卖会',
-  remnant: '前世遗蜕',
-  boss: '破境大劫',
+const SCENIC_NAMES_BY_ACT: Record<1 | 2 | 3 | 4, Record<Exclude<MapNodeType, 'remnant' | 'boss'>, string[]>> = {
+  1: {
+    battle: ['迷雾竹海', '断剑古道', '落霞寒涧', '野狐荒岭', '青石古渡', '松风剑坪', '碎玉山坳'],
+    elite: ['黑风古刹', '寒潭蛟窟', '古修残塚'],
+    'fury-elite': ['赤煞灵脉眼', '血煞荒坛'],
+    event: ['青牛古镇', '云游茶肆', '残碑问心', '山神古祠', '桃源石室'],
+    abode: ['紫竹丹庐', '清泉静室', '灵眼石窟'],
+    shop: ['青云仙集', '散修夜市'],
+    auction: ['百宝阁雅集'],
+  },
+  2: {
+    battle: ['坠星荒原', '赤炎峡谷', '阴风古涧', '白骨剑林', '流沙魔径', '寒鸦渡口', '断魂崖'],
+    elite: ['万剑残冢', '紫极魔殿', '玄阴尸窟'],
+    'fury-elite': ['天魔煞脉眼', '焚天血池'],
+    event: ['血月古墟', '诡市盲盒', '古钟仙台', '荒漠残阵', '弈剑石亭'],
+    abode: ['紫极丹崖', '地火灵庐', '悟道古洞'],
+    shop: ['千机仙坊', '万宝楼船'],
+    auction: ['百年仙盟拍场'],
+  },
+  3: {
+    battle: ['雷鸣天堑', '太虚云海', '罡风绝壁', '碎星浮岛', '玄冰古径', '金乌残墟', '登天石阶'],
+    elite: ['鲲鹏遗巢', '真凰梧桐岭', '镇狱仙台'],
+    'fury-elite': ['太古狂雷眼', '混沌煞渊'],
+    event: ['摘星古台', '昆仑仙泉', '天机棋局', '古仙残魂', '浮空道碑'],
+    abode: ['混沌灵池', '九天丹阙', '瑶光洞天'],
+    shop: ['瑶池仙集', '弥罗奇珍阁'],
+    auction: ['九霄压轴盛会'],
+  },
+  4: {
+    battle: ['南天云阶'],
+    elite: ['南天门 · 巡界仙卫'],
+    'fury-elite': ['太初劫兽 · 狂暴仙灵'],
+    event: ['凌霄问道台'],
+    abode: ['凌霄洞府 · 最后整备'],
+    shop: ['帝乡仙市'],
+    auction: ['仙界万宝拍卖'],
+  },
 };
 
 const ACT_BOSS_LABELS: Record<1 | 2 | 3 | 4, string> = {
@@ -36,6 +63,15 @@ export function generateActMap(
 
   const totalRows = 10;
   const rows: MapNode[][] = [];
+  const usedNames = new Set<string>();
+
+  const pickScenicLabel = (type: Exclude<MapNodeType, 'remnant' | 'boss'>, row: number, col: number): string => {
+    const list = SCENIC_NAMES_BY_ACT[act][type];
+    const unused = list.filter((n) => !usedNames.has(n));
+    const chosen = unused.length > 0 ? unused[(row * 3 + col) % unused.length] : list[(row + col) % list.length];
+    usedNames.add(chosen);
+    return chosen;
+  };
 
   for (let row = 0; row < totalRows; row++) {
     const colCount = row === 0 ? 3 : row === totalRows - 1 ? 2 : rng.int(2, 3);
@@ -43,7 +79,7 @@ export function generateActMap(
     const rowNodes: MapNode[] = [];
 
     for (const col of cols) {
-      let type: MapNodeType;
+      let type: Exclude<MapNodeType, 'remnant' | 'boss'>;
       if (row === 0) {
         type = 'battle';
       } else if (row === totalRows - 1) {
@@ -57,7 +93,7 @@ export function generateActMap(
       } else if (row === 7) {
         type = col === cols[cols.length - 1] ? 'shop' : 'elite';
       } else {
-        type = rng.weightedPick<MapNodeType>(
+        type = rng.weightedPick<Exclude<MapNodeType, 'remnant' | 'boss'>>(
           ['battle', 'event', 'elite', 'abode', 'shop'],
           (t) => {
             if (t === 'battle') return 42;
@@ -75,7 +111,7 @@ export function generateActMap(
         row,
         col,
         type,
-        label: NODE_LABELS[type],
+        label: pickScenicLabel(type, row, col),
         nextIds: [],
         visited: false,
       });

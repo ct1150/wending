@@ -43,8 +43,11 @@ async function verifyViewport(browser, name, viewport) {
   await page.locator('.blessing-card').first().click();
 
   await page.waitForSelector('.map-stage svg.map-lines');
-  const lineCount = await page.locator('.map-stage svg.map-lines line').count();
-  if (lineCount < 10) throw new Error(`${name}: star map lines missing (${lineCount})`);
+  const pathCount = await page.locator('.map-stage svg.map-lines path.map-edge-path').count();
+  const nextPathCount = await page.locator('.map-stage svg.map-lines path.map-edge-path.is-next').count();
+  if (pathCount < 12 || nextPathCount < 1) {
+    throw new Error(`${name}: xianxia map paths missing (total=${pathCount}, next=${nextPathCount})`);
+  }
 
   // 打开顶部「? 词条」白话指南确认渲染正常并关闭
   await page.click('button:has-text("? 词条")');
