@@ -9,9 +9,10 @@ import { ENCHANTS, TREASURES } from '../../content/treasures';
 import {
   getCardCost,
   getCardDef,
-  getCardDescription,
   getCardDisplayName,
+  getDynamicCardDescription,
   getEnemyCurrentIntent,
+  getTreasureEffectiveMaxCharge,
   previewResonance,
   SEAL_LABELS,
 } from '../../core/combat-engine';
@@ -42,6 +43,7 @@ interface ActiveTip {
 
 interface BattleArenaProps {
   run: RunState;
+  fastPlay?: boolean;
   onPlayCard: (cardUid: string) => void;
   onActivateTreasure: (treasureId: string) => void;
   onEndTurn: () => void;
@@ -51,6 +53,7 @@ interface BattleArenaProps {
 
 export function BattleArena({
   run,
+  fastPlay,
   onPlayCard,
   onActivateTreasure,
   onEndTurn,
@@ -236,6 +239,10 @@ export function BattleArena({
   const handleCardTap = (uid: string) => {
     if (enemyTurnBusy || combat.outcome !== 'ongoing') return;
     setActiveTip(null);
+    if (fastPlay && canPlayInstance(uid)) {
+      executePlayCard(uid);
+      return;
+    }
     if (selectedCardUid === uid) {
       if (canPlayInstance(uid)) {
         executePlayCard(uid);
@@ -246,14 +253,14 @@ export function BattleArena({
     setSelectedCardUid(uid);
   };
 
-  const handleTreasureClick = (tid: string, ready: boolean, charge: number) => {
+  const handleTreasureClick = (tid: string, ready: boolean, charge: number, maxChg: number) => {
     if (enemyTurnBusy) return;
     const tDef = TREASURES[tid];
     if (!tDef) return;
     if (!ready) {
       openTip({
-        title: `🏺 本命法宝 · ${tDef.name}（充能 ${charge}/${tDef.maxCharge}）`,
-        body: `${tDef.description} —— 每打出 1 张神通牌自动充能 +1，充满后点击即可 0 真元释放！`,
+        title: `🏺 本命法宝 · ${tDef.name}${(run.treasureTier ?? 0) > 0 ? `+${run.treasureTier}` : ''}（充能 ${charge}/${maxChg}）`,
+        body: `${tDef.description} —— 每打出 1 张神通牌自动充能 +1${(run.treasureTier ?? 0) > 0 ? `（百造山淬炼 +${(run.treasureTier ?? 0) * 35}% 威能）` : ''}，充满后点击即可 0 真元释放！`,
       });
       return;
     }
@@ -378,7 +385,7 @@ export function BattleArena({
             </div>
 
             <div class="preview-desc-line">
-              {getCardDescription(selectedInst)}
+              {getDynamicCardDescription(selectedInst, undefined, run).text}
               {selectedEnchant ? ` ｜ ❖ ${selectedEnchant.name}：${selectedEnchant.description}` : ''}
             </div>
 
@@ -584,6 +591,36 @@ export function BattleArena({
               </button>
             )}
             {enemy.phase2Triggered && <span class="trib-pill">👹 二阶段真身</span>}
+            {enemy.phase2WardThisTurn && (
+              <button
+                type="button"
+                class="trib-pill"
+                style={{ cursor: 'pointer', fontFamily: 'inherit', borderColor: '#ffd875', color: '#ffe599' }}
+                onClick={() =>
+                  openTip({
+                    title: '🛡 二阶段破境护道金身',
+                    body: '大境界首领刚突破至二阶段真身，本回合剩余时间内受到的伤害减半，下回合恢复正常！',
+                  })
+                }
+              >
+                🛡 破境护道
+              </button>
+            )}
+            {run.act >= 4 && run.act <= 6 && combat.turn % 2 === 0 && (
+              <button
+                type="button"
+                class="trib-pill"
+                style={{ cursor: 'pointer', fontFamily: 'inherit' }}
+                onClick={() =>
+                  openTip({
+                    title: '🌌 灵界元气潮汐（双数回合）',
+                    body: '灵界每逢双数回合灵潮涌动：我方额外回复 1 点元气、法宝充能 +1，敌方同步凝结灵障护盾！',
+                  })
+                }
+              >
+                🌌 灵潮回合
+              </button>
+            )}
           </div>
 
           <div class="qi-and-seals">
@@ -783,6 +820,7 @@ export function BattleArena({
                 <CardView
                   key={inst.uid}
                   instance={inst}
+                  run={run}
                   unplayable={!playable}
                   selected={selectedCardUid === inst.uid}
                   resonanceHint={res ? res.name : null}
@@ -803,17 +841,21 @@ export function BattleArena({
           {run.treasures.map((tid) => {
             const tDef = TREASURES[tid];
             if (!tDef) return null;
+            const maxChg = getTreasureEffectiveMaxCharge(run, tDef);
             const charge = combat.treasureCharges[tid] ?? 0;
-            const ready = charge >= tDef.maxCharge && combat.outcome === 'ongoing' && !enemyTurnBusy;
+            const ready = charge >= maxChg && combat.outcome === 'ongoing' && !enemyTurnBusy;
             return (
               <button
                 key={tid}
                 type="button"
                 class={`treasure-btn compact-treasure${ready ? ' ready' : ' is-charging'}`}
-                onClick={() => handleTreasureClick(tid, ready, charge)}
+                onClick={() => handleTreasureClick(tid, ready, charge, maxChg)}
               >
-                <div>🏺 {tDef.name.slice(0, 5)}</div>
-                <small>{ready ? '✦ 祭出' : `${charge}/${tDef.maxCharge}`}</small>
+                <div>
+                  🏺 {tDef.name.slice(0, 4)}
+                  {(run.treasureTier ?? 0) > 0 ? `+${run.treasureTier}` : ''}
+                </div>
+                <small>{ready ? '✦ 祭出' : `${charge}/${maxChg}`}</small>
               </button>
             );
           })}

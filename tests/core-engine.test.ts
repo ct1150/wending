@@ -4,6 +4,7 @@ import { ENEMIES, pickEnemyForNode } from '../src/content/enemies';
 import { describeStatusTag, extractCardGlossary } from '../src/content/glossary';
 import {
   endPlayerTurn,
+  getDynamicCardDescription,
   initCombat,
   playCard,
   previewResonance,
@@ -250,10 +251,23 @@ describe('破界飞升灵界/仙界、跨界起点解锁与第九卷斩时间道
     expect(run.act).toBe(4);
     expect(run.realm).toBe('void');
 
-    // 模拟推进至第 9 卷斩杀时间道祖【古或今】并持有 3 枚掌天道果！
+    // 模拟推进至第 9 卷斩杀时间道祖【古或今】并持有 5 枚掌天道果唤醒混沌终极态！
     run.act = 9;
-    run.daoTokens = 3;
+    run.daoTokens = 5;
     run = initCombat(run, ENEMIES['e9-boss-guhuojin'], 'boss');
+    expect(run.combat!.enemy.name).toContain('混沌终极');
+    // 验证实时动态卡面数值在仙界（1.68x + 雷鹏1.25x）下自动放大并标记 boosted
+    const dyn = getDynamicCardDescription({ uid: 'd1', defId: 'sw-slash', upgraded: true }, undefined, run);
+    expect(dyn.boosted).toBe(true);
+    expect(dyn.text).not.toContain('造成 9 点');
+
+    // 验证 Boss 二阶段破境锁血护道（单次超高伤害不会跳过 50% 二阶段）
+    run.combat!.hand.push({ uid: 'nuke', defId: 'dm-xuantian-slash', upgraded: true });
+    run.combat!.damageBoostPct = 5000;
+    run = playCard(run, 'nuke');
+    expect(run.combat!.enemy.phase2Triggered).toBe(true);
+    expect(run.combat!.enemy.hp).toBeGreaterThan(0);
+
     run.combat!.enemy.hp = 0;
     run.combat!.outcome = 'victory';
     run = resolveCombatVictory(run, meta.achievements);

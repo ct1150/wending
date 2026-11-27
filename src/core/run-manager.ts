@@ -160,9 +160,13 @@ export function createNewRun(params: {
     name: params.name.trim() || '韩立',
     lineage: params.lineage,
     secondaryMethod: null,
+    secondSecondaryMethod: null,
     trueSpirit: null,
     supremeLaw: null,
     startWorld,
+    treasureTier: 0,
+    maxConsumables: 3,
+    shaCorruption: 0,
     rootId: root.id,
     act: startAct,
     realm: ACT_REALM_MAP[startAct],
@@ -213,7 +217,7 @@ export function createNewRun(params: {
       run.uidCounter += 1;
       run.deck.push({ uid: `c-${run.uidCounter}`, defId: c.id, upgraded: true });
     }
-    const relicPool = rng.shuffle(getUnlockedRelicList(params.meta.achievements));
+    const relicPool = rng.shuffle(getUnlockedRelicList(params.meta.achievements, startAct));
     for (const r of relicPool.slice(0, startWorld === 'immortal' ? 3 : 2)) {
       grantRelicWithPickupEffect(run, r.id);
     }
@@ -233,7 +237,7 @@ export function createNewRun(params: {
 
   if (muts.includes('mut-short-candle')) {
     run.gold += 100;
-    const pool = getUnlockedRelicList(params.meta.achievements).filter((r) => !run.relics.includes(r.id));
+    const pool = getUnlockedRelicList(params.meta.achievements, startAct).filter((r) => !run.relics.includes(r.id));
     for (const r of rng.shuffle(pool).slice(0, 2)) grantRelicWithPickupEffect(run, r.id);
   }
 
@@ -326,13 +330,19 @@ export function rollCardChoices(
 ): CardDef[] {
   const root = getRootById(run.rootId);
   const allSchools = run.mutators?.includes('mut-all-schools');
-  const unlockedOffLineage = run.secondaryMethod ? SECONDARY_METHODS[run.secondaryMethod]?.unlockLineage : null;
+  const unlockedOff1 = run.secondaryMethod ? SECONDARY_METHODS[run.secondaryMethod]?.unlockLineage : null;
+  const unlockedOff2 = run.secondSecondaryMethod ? SECONDARY_METHODS[run.secondSecondaryMethod]?.unlockLineage : null;
 
   const basePool = getUnlockedRewardCardPool(achievements);
   const eligible = basePool.filter((c) => {
     if (forcedRarity && c.rarity !== forcedRarity) return false;
     if (allSchools) return true;
-    return c.lineage === run.lineage || c.lineage === 'neutral' || (unlockedOffLineage && c.lineage === unlockedOffLineage);
+    return (
+      c.lineage === run.lineage ||
+      c.lineage === 'neutral' ||
+      (unlockedOff1 && c.lineage === unlockedOff1) ||
+      (unlockedOff2 && c.lineage === unlockedOff2)
+    );
   });
   const pool = eligible.length >= count ? eligible : basePool;
   const picked: CardDef[] = [];
@@ -341,7 +351,12 @@ export function rollCardChoices(
   for (let i = 0; i < count && used.size < pool.length; i++) {
     const candidates = pool.filter((c) => !used.has(c.id));
     const card = rng.weightedPick(candidates, (c) => {
-      let w = c.lineage === run.lineage ? 30 : c.lineage === unlockedOffLineage ? 24 : 12;
+      let w =
+        c.lineage === run.lineage
+          ? 30
+          : c.lineage === unlockedOff1 || c.lineage === unlockedOff2
+            ? 24
+            : 12;
       if (c.element !== 'none' && root.elements.includes(c.element)) w += 12;
       if (c.rarity === 'mythic') w *= run.act >= 7 ? 0.95 : run.act >= 4 ? 0.65 : run.act >= 2 ? 0.45 : 0.22;
       if (c.rarity === 'rare') w *= run.act >= 4 ? 1.0 : run.act >= 2 ? 0.85 : 0.55;
@@ -354,35 +369,38 @@ export function rollCardChoices(
 }
 
 function pickNewRelic(run: RunState, rng: SeededRng, achievements: string[] = []): RelicDef | undefined {
-  const avail = getUnlockedRelicList(achievements).filter((r) => !run.relics.includes(r.id));
+  const avail = getUnlockedRelicList(achievements, run.act).filter((r) => !run.relics.includes(r.id));
   if (avail.length === 0) return undefined;
-  return rng.pick(avail);
+  // 优先掉落当前大界新解锁的高阶灵宝/仙宝！
+  return rng.weightedPick(avail, (r) => ((r.minAct ?? 1) >= 7 ? 5 : (r.minAct ?? 1) >= 4 ? 3 : 1));
 }
 
 function rollSecondaryMethodChoices(run: RunState, rng: SeededRng): typeof SECONDARY_METHOD_LIST {
-  const candidates = SECONDARY_METHOD_LIST.filter((m) => m.unlockLineage !== run.lineage);
+  const candidates = SECONDARY_METHOD_LIST.filter(
+    (m) => m.unlockLineage !== run.lineage && m.id !== run.secondaryMethod && m.id !== run.secondSecondaryMethod,
+  );
   return rng.shuffle(candidates).slice(0, 3);
 }
 
-function buildShopStock(run: RunState, rng: SeededRng, achievements: string[] = []): ShopStock {
+function buildShopStock(run: RunState, rng: SeededRng, achievements: string[] = [], restockCount = 0): ShopStock {
   const discount = run.mutators?.includes('mut-alchemy-boom') ? 0.7 : 1;
   const worldTier = getWorldByAct(run.act) === 'immortal' ? 1.25 : getWorldByAct(run.act) === 'spirit' ? 1.12 : 1;
   const priceOf = (p: number) => Math.round(p * discount * worldTier);
 
   const cards = rollCardChoices(run, rng, 4, undefined, achievements).map((def) => ({
     def,
-    price: priceOf(def.rarity === 'mythic' ? 110 : def.rarity === 'rare' ? 75 : 45),
+    price: priceOf(def.rarity === 'mythic' ? 115 : def.rarity === 'rare' ? 75 : 45),
     sold: false,
   }));
-  const availRelics = getUnlockedRelicList(achievements).filter((r) => !run.relics.includes(r.id));
+  const availRelics = getUnlockedRelicList(achievements, run.act).filter((r) => !run.relics.includes(r.id));
   const relics = rng.shuffle(availRelics).slice(0, 2).map((def) => ({
     def,
-    price: priceOf(def.rarity === 'mythic' ? 145 : def.rarity === 'rare' ? 115 : 80),
+    price: priceOf(def.rarity === 'mythic' ? 160 : def.rarity === 'rare' ? 115 : 80),
     sold: false,
   }));
   const materials = rng.shuffle(ENCHANT_LIST).slice(0, 2).map((def) => ({
     def,
-    price: priceOf(62),
+    price: priceOf(65),
     sold: false,
   }));
   const consumables = rng.shuffle(CONSUMABLE_LIST).slice(0, 2).map((def) => ({
@@ -396,9 +414,15 @@ function buildShopStock(run: RunState, rng: SeededRng, achievements: string[] = 
     materials,
     consumables,
     purgePrice: priceOf(55),
+    purgeCount: 0,
     purged: false,
-    elixirPrice: priceOf(60),
+    elixirPrice: priceOf(62),
     elixirBought: false,
+    restockPrice: priceOf(50 + restockCount * 45),
+    restockCount,
+    treasureForgePrice: priceOf(210 + (run.treasureTier ?? 0) * 80),
+    treasureForged: false,
+    pouchExpandPrice: priceOf(250),
   };
 }
 
@@ -511,13 +535,18 @@ export function resolveCombatVictory(run: RunState, achievements: string[] = [])
   const gold = Math.round((baseGold + rng.int(0, 12)) * goldMult);
   nextRun.gold += gold;
 
-  // 第九卷终极决战胜利：击败时间道祖【古或今】完成凡人三部曲大结局！
+  // 仙界篇专属环境机制（第 7~9 卷）：斗法沾染天地煞气
+  if (nextRun.act >= 7) {
+    nextRun.shaCorruption = Math.min(100, (nextRun.shaCorruption ?? 0) + 18);
+  }
+
+  // 第九卷终极决战胜利：击败时间道祖【古或今】完成凡人三部曲大结局！（集齐 ≥5 枚道果达成完美真结局）
   if (combat.nodeType === 'boss' && nextRun.act === 9) {
     nextRun.combat = null;
     nextRun.realm = 'dao-ancestor';
     nextRun.phase = 'victory';
     nextRun.endingTitle =
-      nextRun.daoTokens >= 3
+      nextRun.daoTokens >= 5
         ? '凡人问鼎 · 掌天超脱混沌道祖（完美真结局）'
         : '斩破天庭 · 证道混元大罗道祖';
     saveActiveRun(nextRun);
@@ -666,8 +695,9 @@ export function claimRewardConsumable(run: RunState): RunState {
   if (!run.reward?.consumableReward || run.reward.pickedConsumable) return run;
   const nextRun: RunState = structuredClone(run);
   const cid = nextRun.reward!.consumableReward!.id;
-  if (nextRun.consumables.length < 3) nextRun.consumables.push(cid);
-  else nextRun.consumables[2] = cid;
+  const maxPouch = nextRun.maxConsumables ?? 3;
+  if (nextRun.consumables.length < maxPouch) nextRun.consumables.push(cid);
+  else nextRun.consumables[maxPouch - 1] = cid;
   nextRun.reward!.pickedConsumable = true;
   saveActiveRun(nextRun);
   return nextRun;
@@ -821,7 +851,8 @@ export function abodeBrewElixir(run: RunState, mode: 'steady' | 'bold'): { nextR
   if (mode === 'steady') {
     const heal = Math.round(nextRun.maxHp * 0.42);
     nextRun.hp = Math.min(nextRun.maxHp, nextRun.hp + heal);
-    if (nextRun.consumables.length < 3) {
+    const maxPouch = nextRun.maxConsumables ?? 3;
+    if (nextRun.consumables.length < maxPouch) {
       const bonusPill = rng.pick(CONSUMABLE_LIST.filter((c) => c.kind === 'pill'));
       nextRun.consumables.push(bonusPill.id);
       message = `文火成丹！恢复 ${heal} 点气血，并随炉凝出 1 枚【${bonusPill.name}】入袋！`;
@@ -857,6 +888,75 @@ export function abodePurgeCard(run: RunState, cardUid: string): RunState {
   nextRun.abodeUsed = true;
   saveActiveRun(nextRun);
   return nextRun;
+}
+
+/** 仙界洞府专属：洗煞池淬炼仙窍（清零煞气并转化为永久最大气血与仙材） */
+export function abodeCleanseSha(run: RunState): { nextRun: RunState; message: string } {
+  if (run.phase !== 'abode' || run.abodeUsed) return { nextRun: run, message: '' };
+  const nextRun: RunState = structuredClone(run);
+  const rng = new SeededRng(nextRun.rngState);
+  const sha = nextRun.shaCorruption ?? 0;
+  const hpGain = 18 + Math.floor(sha * 0.2);
+  nextRun.shaCorruption = 0;
+  nextRun.maxHp += hpGain;
+  nextRun.hp = Math.min(nextRun.maxHp, nextRun.hp + Math.round(nextRun.maxHp * 0.45));
+  const mat = rng.pick(ENCHANT_LIST);
+  nextRun.materials.push(mat.id);
+  nextRun.abodeUsed = true;
+  nextRun.rngState = rng.state;
+  saveActiveRun(nextRun);
+  return {
+    nextRun,
+    message: `🌊 洗煞淬窍功成！体内煞气涤荡一空，点亮仙窍永久 +${hpGain} 最大气血，并凝出【${mat.materialName}】！`,
+  };
+}
+
+/** 洞府额外天机（不占常规闭关次数）：消耗溢出掌天道果信物催熟神通或兼修第二辅修心法！ */
+export function abodeSpendDaoToken(
+  run: RunState,
+  mode: 'empower-three' | 'second-method',
+): { nextRun: RunState; message: string } {
+  if (run.phase !== 'abode') return { nextRun: run, message: '' };
+  if (mode === 'empower-three' && run.daoTokens < 1) return { nextRun: run, message: '' };
+  if (mode === 'second-method' && run.daoTokens < 2) return { nextRun: run, message: '' };
+
+  const nextRun: RunState = structuredClone(run);
+  const rng = new SeededRng(nextRun.rngState);
+  let message = '';
+
+  if (mode === 'empower-three') {
+    nextRun.daoTokens -= 1;
+    const candidates = rng.shuffle(nextRun.deck.filter((c) => !c.upgraded && CARDS[c.defId]?.type !== 'curse')).slice(0, 3);
+    for (const target of candidates) {
+      const inDeck = nextRun.deck.find((d) => d.uid === target.uid);
+      if (inDeck) inDeck.upgraded = true;
+    }
+    nextRun.hp = Math.min(nextRun.maxHp, nextRun.hp + Math.round(nextRun.maxHp * 0.5));
+    message = `✦ 掌天绿液灌顶！瞬间催熟升级了 ${candidates.length} 张神通牌，并恢复大量气血！`;
+  } else {
+    nextRun.daoTokens -= 2;
+    const availMethods = SECONDARY_METHOD_LIST.filter(
+      (m) =>
+        m.unlockLineage !== nextRun.lineage &&
+        m.id !== nextRun.secondaryMethod &&
+        m.id !== nextRun.secondSecondaryMethod,
+    );
+    if (!nextRun.secondSecondaryMethod && availMethods.length > 0) {
+      const picked = rng.pick(availMethods);
+      if (!nextRun.secondaryMethod) nextRun.secondaryMethod = picked.id;
+      else nextRun.secondSecondaryMethod = picked.id;
+      message = `✦ 掌天悟道！逆天兼修【${picked.name}】，双辅修化学反应同时生效！`;
+    } else {
+      nextRun.baseQi = Math.min(8, nextRun.baseQi + 1);
+      nextRun.maxHp += 25;
+      nextRun.hp += 25;
+      message = '✦ 掌天造化圆满！每回合行动上限永久 +1，最大气血永久 +25！';
+    }
+  }
+
+  nextRun.rngState = rng.state;
+  saveActiveRun(nextRun);
+  return { nextRun, message };
 }
 
 export function leaveSubSceneToMap(run: RunState): RunState {
@@ -992,7 +1092,8 @@ export function shopBuyMaterial(run: RunState, index: number): RunState {
 export function shopBuyConsumable(run: RunState, index: number): RunState {
   if (!run.shop || !run.shop.consumables[index] || run.shop.consumables[index].sold) return run;
   const item = run.shop.consumables[index];
-  if (run.gold < item.price || run.consumables.length >= 3) return run;
+  const maxPouch = run.maxConsumables ?? 3;
+  if (run.gold < item.price || run.consumables.length >= maxPouch) return run;
   const nextRun: RunState = structuredClone(run);
   nextRun.gold -= item.price;
   nextRun.shop!.consumables[index].sold = true;
@@ -1008,7 +1109,7 @@ export function shopBuyElixir(run: RunState): RunState {
   nextRun.shop!.elixirBought = true;
   const gain = nextRun.act >= 7 ? 18 : nextRun.act >= 4 ? 14 : 10;
   nextRun.maxHp += gain;
-  nextRun.hp = Math.min(nextRun.maxHp, nextRun.hp + gain * 2.5);
+  nextRun.hp = Math.min(nextRun.maxHp, nextRun.hp + Math.round(gain * 2.5));
   saveActiveRun(nextRun);
   return nextRun;
 }
@@ -1017,8 +1118,54 @@ export function shopPurgeCard(run: RunState, cardUid: string): RunState {
   if (!run.shop || run.shop.purged || run.gold < run.shop.purgePrice || run.deck.length <= 5) return run;
   const nextRun: RunState = structuredClone(run);
   nextRun.gold -= nextRun.shop!.purgePrice;
-  nextRun.shop!.purged = true;
+  nextRun.shop!.purgeCount = (nextRun.shop!.purgeCount ?? 0) + 1;
+  nextRun.shop!.purgePrice += 45;
+  nextRun.shop!.purged = nextRun.shop!.purgeCount >= 3;
   nextRun.deck = nextRun.deck.filter((c) => c.uid !== cardUid);
+  saveActiveRun(nextRun);
+  return nextRun;
+}
+
+export function shopRestock(run: RunState, achievements: string[] = []): RunState {
+  if (!run.shop || run.gold < run.shop.restockPrice) return run;
+  const nextRun: RunState = structuredClone(run);
+  const rng = new SeededRng(nextRun.rngState);
+  nextRun.gold -= nextRun.shop!.restockPrice;
+  const nextCount = (nextRun.shop!.restockCount ?? 0) + 1;
+  const prevPurgePrice = nextRun.shop!.purgePrice;
+  const prevPurgeCount = nextRun.shop!.purgeCount;
+  const prevPurged = nextRun.shop!.purged;
+  const prevForged = nextRun.shop!.treasureForged;
+
+  nextRun.shop = buildShopStock(nextRun, rng, achievements, nextCount);
+  nextRun.shop.purgePrice = prevPurgePrice;
+  nextRun.shop.purgeCount = prevPurgeCount;
+  nextRun.shop.purged = prevPurged;
+  nextRun.shop.treasureForged = prevForged;
+  nextRun.rngState = rng.state;
+  saveActiveRun(nextRun);
+  return nextRun;
+}
+
+export function shopForgeTreasure(run: RunState): RunState {
+  if (!run.shop || run.shop.treasureForged || (run.treasureTier ?? 0) >= 3 || run.gold < run.shop.treasureForgePrice) {
+    return run;
+  }
+  const nextRun: RunState = structuredClone(run);
+  nextRun.gold -= nextRun.shop!.treasureForgePrice;
+  nextRun.treasureTier = (nextRun.treasureTier ?? 0) + 1;
+  nextRun.shop!.treasureForged = true;
+  saveActiveRun(nextRun);
+  return nextRun;
+}
+
+export function shopExpandPouch(run: RunState): RunState {
+  if (!run.shop || (run.maxConsumables ?? 3) >= 4 || run.gold < run.shop.pouchExpandPrice) {
+    return run;
+  }
+  const nextRun: RunState = structuredClone(run);
+  nextRun.gold -= nextRun.shop!.pouchExpandPrice;
+  nextRun.maxConsumables = 4;
   saveActiveRun(nextRun);
   return nextRun;
 }

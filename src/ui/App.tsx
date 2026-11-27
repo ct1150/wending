@@ -11,7 +11,9 @@ import {
 } from '../core/meta-save';
 import {
   abodeBrewElixir,
+  abodeCleanseSha,
   abodePurgeCard,
+  abodeSpendDaoToken,
   abodeUpgradeOrEnchant,
   auctionAmbushBuyer,
   auctionBuyLot,
@@ -39,7 +41,10 @@ import {
   shopBuyElixir,
   shopBuyMaterial,
   shopBuyRelic,
+  shopExpandPouch,
+  shopForgeTreasure,
   shopPurgeCard,
+  shopRestock,
 } from '../core/run-manager';
 import type { LineageId, MetaSave, RunState, WorldId } from '../core/types';
 import { CardView } from './components/CardView';
@@ -68,6 +73,13 @@ export function App() {
   const [screen, setScreen] = useState<Screen>('title');
   const [muted, setMuted] = useState<boolean>(() => isSfxMuted());
   const [bgmOn, setBgmOn] = useState<boolean>(() => isBgmEnabled());
+  const [fastPlay, setFastPlay] = useState<boolean>(() => {
+    try {
+      return localStorage.getItem('baishi-wending-fastplay') === '1';
+    } catch {
+      return false;
+    }
+  });
   const [deckOpen, setDeckOpen] = useState(false);
 
   const [charName, setCharName] = useState('韩立');
@@ -158,10 +170,20 @@ export function App() {
     setScreen('run');
   };
 
+  const toggleFastPlay = () => {
+    setFastPlay((prev) => {
+      const next = !prev;
+      try {
+        localStorage.setItem('baishi-wending-fastplay', next ? '1' : '0');
+      } catch {}
+      return next;
+    });
+  };
+
   const finalizeRun = (finishedRun: RunState) => {
     const outcome =
       finishedRun.phase === 'victory'
-        ? finishedRun.daoTokens >= 3
+        ? finishedRun.daoTokens >= 5
           ? 'true-victory'
           : 'victory'
         : 'death';
@@ -417,6 +439,7 @@ export function App() {
               run={run}
               muted={muted}
               bgmOn={bgmOn}
+              fastPlay={fastPlay}
               compact={run.phase === 'combat'}
               onUseConsumable={(idx) =>
                 setRun((prev) => {
@@ -424,6 +447,7 @@ export function App() {
                   return useConsumable(prev, idx);
                 })
               }
+              onToggleFastPlay={toggleFastPlay}
               onToggleMute={toggleMute}
               onToggleBgm={toggleBgm}
               onOpenDeck={() => setDeckOpen(true)}
@@ -452,6 +476,7 @@ export function App() {
             {run.phase === 'combat' && run.combat && (
               <BattleArena
                 run={run}
+                fastPlay={fastPlay}
                 onPlayCard={(uid) => setRun((prev) => (prev ? playCard(prev, uid) : prev))}
                 onActivateTreasure={(tid) => setRun((prev) => (prev ? activateTreasure(prev, tid) : prev))}
                 onEndTurn={() => setRun((prev) => (prev ? endPlayerTurn(prev) : prev))}
@@ -497,6 +522,16 @@ export function App() {
                   return res.message;
                 }}
                 onPurge={(uid) => setRun((prev) => (prev ? abodePurgeCard(prev, uid) : prev))}
+                onCleanseSha={() => {
+                  const res = abodeCleanseSha(run);
+                  setRun(res.nextRun);
+                  return res.message;
+                }}
+                onSpendDaoToken={(mode) => {
+                  const res = abodeSpendDaoToken(run, mode);
+                  setRun(res.nextRun);
+                  return res.message;
+                }}
                 onLeave={() => setRun((prev) => (prev ? leaveSubSceneToMap(prev) : prev))}
               />
             )}
@@ -522,6 +557,9 @@ export function App() {
                 onBuyConsumable={(i) => setRun((prev) => (prev ? shopBuyConsumable(prev, i) : prev))}
                 onBuyElixir={() => setRun((prev) => (prev ? shopBuyElixir(prev) : prev))}
                 onPurgeCard={(uid) => setRun((prev) => (prev ? shopPurgeCard(prev, uid) : prev))}
+                onRestock={() => setRun((prev) => (prev ? shopRestock(prev, meta.achievements) : prev))}
+                onForgeTreasure={() => setRun((prev) => (prev ? shopForgeTreasure(prev) : prev))}
+                onExpandPouch={() => setRun((prev) => (prev ? shopExpandPouch(prev) : prev))}
                 onLeave={() => setRun((prev) => (prev ? leaveSubSceneToMap(prev) : prev))}
               />
             )}

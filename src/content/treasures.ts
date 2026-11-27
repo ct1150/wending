@@ -244,6 +244,153 @@ export const RELICS: Record<string, RelicDef> = {
     hook: 'exhaust-qi',
     value: 1,
   },
+  // ==================== v10.1 新增三界分阶古宝 / 通天灵宝 / 玄天仙器 ====================
+  'rel-golden-beetle': {
+    id: 'rel-golden-beetle',
+    name: '奇虫灵兽袋',
+    rarity: 'common',
+    minAct: 1,
+    description: '每回合你打出的第 1 张攻击牌，额外附带 6 点穿甲噬咬真伤。',
+    hook: 'first-atk-bonus',
+    value: 6,
+  },
+  'rel-heavens-cloak': {
+    id: 'rel-heavens-cloak',
+    name: '天蚕隐灵纱',
+    rarity: 'common',
+    minAct: 1,
+    description: '每回合开始时，自动凝结 5 点护体罡气。',
+    hook: 'turn-start-block',
+    value: 5,
+  },
+  'rel-dayan-puppet': {
+    id: 'rel-dayan-puppet',
+    name: '大衍机关侍',
+    rarity: 'rare',
+    minAct: 2,
+    description: '每逢双数回合，机关核心自动为你恢复 1 点真元。',
+    hook: 'even-turn-qi',
+    value: 1,
+  },
+  'rel-xutian-map': {
+    id: 'rel-xutian-map',
+    name: '虚天星盘残图',
+    rarity: 'rare',
+    minAct: 2,
+    description: '每场战斗开始时获得 14 点护体罡气，战后恢复 5 点气血。',
+    hook: 'start-block',
+    value: 14,
+  },
+  // 灵界篇 · 通天灵宝（第 4 卷起解锁）
+  'rel-fenglei-wings': {
+    id: 'rel-fenglei-wings',
+    name: '通天灵宝 · 风雷翅',
+    rarity: 'rare',
+    minAct: 4,
+    description: '【灵界灵宝】遁速无双：每场战斗首回合多抽 2 张牌。',
+    hook: 'start-draw',
+    value: 2,
+  },
+  'rel-yuanmagnet-mountain': {
+    id: 'rel-yuanmagnet-mountain',
+    name: '通天灵宝 · 元磁神山',
+    rarity: 'rare',
+    minAct: 4,
+    description: '【灵界灵宝】元磁力场：每回合开始时自动获得 9 点护体罡气。',
+    hook: 'turn-start-block',
+    value: 9,
+  },
+  'rel-heiluo-flag': {
+    id: 'rel-heiluo-flag',
+    name: '通天灵宝 · 黑风旗',
+    rarity: 'rare',
+    minAct: 4,
+    description: '【灵界灵宝】空间风刃：每回合首张攻击牌额外造成 12 点穿甲风刃真伤。',
+    hook: 'first-atk-bonus',
+    value: 12,
+  },
+  'rel-haotian-mirror': {
+    id: 'rel-haotian-mirror',
+    name: '通天灵宝 · 昊天鉴',
+    rarity: 'mythic',
+    minAct: 4,
+    description: '【灵界灵宝】每次触发灵印相生共鸣，额外轰出 14 点昊天白光真伤并获 5 盾。',
+    hook: 'resonance-amp',
+    value: 14,
+  },
+  'rel-qingyuan-lotus': {
+    id: 'rel-qingyuan-lotus',
+    name: '通天灵宝 · 青竹剑莲',
+    rarity: 'rare',
+    minAct: 5,
+    description: '【灵界灵宝】开战自带 10 层【剑罡反击】。',
+    hook: 'counter-start',
+    value: 10,
+  },
+  'rel-spirit-spring': {
+    id: 'rel-spirit-spring',
+    name: '通天灵宝 · 天元净瓶',
+    rarity: 'rare',
+    minAct: 5,
+    description: '【灵界灵宝】拾取时最大气血永久 +22，且每次进洞府额外恢复 18 血。',
+    hook: 'maxhp-pickup',
+    value: 22,
+  },
+  // 仙界篇 · 玄天仙器（第 7 卷起解锁）
+  'rel-zhangtian-pendant': {
+    id: 'rel-zhangtian-pendant',
+    name: '玄天仙器 · 掌天星佩',
+    rarity: 'mythic',
+    minAct: 7,
+    description: '【仙界仙宝】每逢双数回合自动回复 2 点仙灵力！',
+    hook: 'even-turn-qi',
+    value: 2,
+  },
+  'rel-huazhi-domain': {
+    id: 'rel-huazhi-domain',
+    name: '玄天仙器 · 花枝洞天印',
+    rarity: 'mythic',
+    minAct: 7,
+    description: '【仙界仙宝】洞天护主：每回合开始时自动凝结 16 点仙罡护盾。',
+    hook: 'turn-start-block',
+    value: 16,
+  },
+  'rel-zhenyan-wheel': {
+    id: 'rel-zhenyan-wheel',
+    name: '玄天仙器 · 真言宝轮',
+    rarity: 'mythic',
+    minAct: 7,
+    description: '【仙界仙宝】光阴斩魄：每回合首张攻击牌额外造成 22 点岁月穿甲真伤！',
+    hook: 'first-atk-bonus',
+    value: 22,
+  },
+  'rel-jilin-armor': {
+    id: 'rel-jilin-armor',
+    name: '玄天仙器 · 积鳞空境甲',
+    rarity: 'mythic',
+    minAct: 7,
+    description: '【仙界仙宝】面对大劫或 Boss 时，每回合自动获得 15 点仙罡护盾。',
+    hook: 'tribulation-ward',
+    value: 15,
+  },
+  'rel-time-hourglass': {
+    id: 'rel-time-hourglass',
+    name: '玄天仙器 · 光阴流沙壶',
+    rarity: 'mythic',
+    minAct: 8,
+    description: '【仙界仙宝】你施加的所有【丹毒】层数额外 +6。',
+    hook: 'poison-boost',
+    value: 6,
+  },
+  'rel-chaos-lotus': {
+    id: 'rel-chaos-lotus',
+    name: '玄天仙器 · 混沌青莲台',
+    rarity: 'mythic',
+    minAct: 8,
+    description: '【仙界仙宝】拾取时最大气血永久 +36，并等量恢复气血。',
+    hook: 'maxhp-pickup',
+    value: 36,
+  },
   // 成就解锁暗金古宝
   'rel-defy-fate-pearl': {
     id: 'rel-defy-fate-pearl',
@@ -358,9 +505,12 @@ export const RELICS: Record<string, RelicDef> = {
 
 export const LAW_RELIC_LIST = Object.values(RELICS).filter((r) => r.rarity === 'law');
 
-export function getUnlockedRelicList(unlockedAchievements: string[] = []): RelicDef[] {
+export function getUnlockedRelicList(unlockedAchievements: string[] = [], currentAct = 9): RelicDef[] {
   return Object.values(RELICS).filter(
-    (r) => r.rarity !== 'law' && (!r.unlockAchievement || unlockedAchievements.includes(r.unlockAchievement)),
+    (r) =>
+      r.rarity !== 'law' &&
+      (r.minAct ?? 1) <= currentAct &&
+      (!r.unlockAchievement || unlockedAchievements.includes(r.unlockAchievement)),
   );
 }
 

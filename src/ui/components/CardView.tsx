@@ -2,11 +2,11 @@ import { ENCHANTS } from '../../content/treasures';
 import {
   getCardCost,
   getCardDef,
-  getCardDescription,
   getCardDisplayName,
+  getDynamicCardDescription,
   SEAL_LABELS,
 } from '../../core/combat-engine';
-import type { CardDef, CardInstance, ElementTag } from '../../core/types';
+import type { CardDef, CardInstance, ElementTag, RunState } from '../../core/types';
 import { CardArt } from './CardArt';
 
 export const ELEMENT_COLORS: Record<ElementTag, string> = {
@@ -32,6 +32,7 @@ const TYPE_LABELS: Record<CardDef['type'], string> = {
 interface CardViewProps {
   instance?: CardInstance;
   def?: CardDef;
+  run?: RunState | null;
   disabled?: boolean;
   unplayable?: boolean;
   resonanceHint?: string | null;
@@ -44,6 +45,7 @@ interface CardViewProps {
 export function CardView({
   instance,
   def: rawDef,
+  run,
   disabled,
   unplayable,
   resonanceHint,
@@ -56,7 +58,7 @@ export function CardView({
   const isX = Boolean(def.effect.xCost);
   const cost = instance ? getCardCost(instance) : def.cost;
   const name = instance ? getCardDisplayName(instance) : def.name;
-  const desc = instance ? getCardDescription(instance) : def.description;
+  const dyn = getDynamicCardDescription(instance, rawDef, run);
   const enchant = instance?.enchant ? ENCHANTS[instance.enchant] : null;
   const elColor = ELEMENT_COLORS[def.element];
 
@@ -95,7 +97,7 @@ export function CardView({
       </div>
 
       <div class="tcg-body">
-        <p class="tcg-desc">{desc}</p>
+        <p class={`tcg-desc${dyn.boosted ? ' is-boosted' : ''}`}>{dyn.text}</p>
         {enchant && (
           <div class="tcg-enchant-line">
             ❖ {enchant.name}：{enchant.description}

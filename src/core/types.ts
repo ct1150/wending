@@ -179,6 +179,7 @@ export interface RelicDef {
   id: string;
   name: string;
   rarity: 'common' | 'rare' | 'mythic' | 'law';
+  minAct?: number;
   unlockAchievement?: string;
   description: string;
   hook:
@@ -200,7 +201,10 @@ export interface RelicDef {
     | 'counter-start'
     | 'exhaust-qi'
     | 'pill-master'
-    | 'dying-fury';
+    | 'dying-fury'
+    | 'turn-start-block'
+    | 'first-atk-bonus'
+    | 'even-turn-qi';
   value: number;
 }
 
@@ -273,6 +277,7 @@ export interface EnemyInstance {
   intentIdx: number;
   trait?: EnemyTrait;
   phase2Triggered?: boolean;
+  phase2WardThisTurn?: boolean;
   rebirthUsed?: boolean;
   firstHitTakenThisTurn?: boolean;
   tribulationWave?: number;
@@ -339,6 +344,7 @@ export interface CombatState {
   exhaustPile: CardInstance[];
   treasureCharges: Record<string, number>;
   cardsPlayedThisTurn: number;
+  attacksPlayedThisTurn?: number;
   swordCardsPlayedThisTurn: number;
   hpSacrificedInCombat: number;
   phoenixTriggeredThisTurn?: boolean;
@@ -434,9 +440,15 @@ export interface ShopStock {
   materials: { def: EnchantDef; price: number; sold: boolean }[];
   consumables: { def: ConsumableDef; price: number; sold: boolean }[];
   purgePrice: number;
+  purgeCount: number;
   purged: boolean;
   elixirPrice: number;
   elixirBought: boolean;
+  restockPrice: number;
+  restockCount: number;
+  treasureForgePrice: number;
+  treasureForged: boolean;
+  pouchExpandPrice: number;
 }
 
 export interface AuctionLot {
@@ -488,9 +500,13 @@ export interface RunState {
   name: string;
   lineage: LineageId;
   secondaryMethod: SecondaryMethodId | null;
+  secondSecondaryMethod?: SecondaryMethodId | null;
   trueSpirit?: TrueSpiritId | null;
   supremeLaw?: SupremeLawId | null;
   startWorld?: WorldId;
+  treasureTier?: number;
+  maxConsumables?: number;
+  shaCorruption?: number;
   rootId: string;
   act: ActNumber;
   realm: RealmId;

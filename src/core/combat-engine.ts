@@ -15,7 +15,11 @@ import type {
   MapNodeType,
   RunState,
   SealType,
+  SecondaryMethodId,
+  TreasureDef,
 } from './types';
+
+export const HAND_LIMIT = 10;
 
 export const SEAL_LABELS: Record<SealType, string> = {
   metal: '金',
@@ -26,6 +30,15 @@ export const SEAL_LABELS: Record<SealType, string> = {
   thunder: '雷',
   sha: '煞',
 };
+
+export function hasSecondaryMethod(run: RunState, methodId: SecondaryMethodId): boolean {
+  return run.secondaryMethod === methodId || run.secondSecondaryMethod === methodId;
+}
+
+export function getTreasureEffectiveMaxCharge(run: RunState, tDef: TreasureDef): number {
+  const reduction = (run.treasureTier ?? 0) >= 2 ? 1 : 0;
+  return Math.max(3, tDef.maxCharge - reduction);
+}
 
 export function getCardDef(defId: string): CardDef {
   return CARDS[defId] ?? CARDS['sw-slash'];
@@ -63,6 +76,85 @@ function hasRelicHook(run: RunState, hook: string): number {
     if (def && def.hook === hook) total += def.value;
   }
   return total;
+}
+
+/**
+ * 战斗内实时动态卡面数值预览：根据界域升维倍率、剑意、真灵血脉、仙窍清明、破绽/虚弱等实时计算真实伤害与护盾！
+ */
+export function getDynamicCardDescription(
+  inst?: CardInstance,
+  rawDef?: CardDef,
+  run?: RunState | null,
+): { text: string; boosted: boolean } {
+  const def = rawDef ?? getCardDef(inst!.defId);
+  const baseText = inst ? getCardDescription(inst) : def.description;
+  if (!run || !run.combat) return { text: baseText, boosted: false };
+
+  const combat = run.combat;
+  const effect = inst ? getCardEffect(inst) : def.effect;
+  const worldMult = getWorldPowerMultiplier(run.act);
+  let text = baseText;
+  let boosted = false;
+
+  let estBlock = 0;
+  if (effect.block) {
+    const arrayBonus = run.lineage === 'array' ? combat.arrays.length * 2 : 0;
+    estBlock = Math.round(effect.block * worldMult) + arrayBonus;
+    if (estBlock !== effect.block) {
+      const next = text.replace(new RegExp(`(获得\\s*|获\\s*)${effect.block}(\\s*点)`), `$1${estBlock}$2`);
+      if (next !== text) {
+        text = next;
+        if (estBlock > effect.block) boosted = true;
+      }
+    }
+  }
+
+  if (effect.damage || effect.damagePerBlock) {
+    let dmg = Math.round((effect.damage ?? 0) * worldMult);
+    if (effect.damagePerBlock) {
+      dmg += Math.floor((combat.block + estBlock) * effect.damagePerBlock);
+    }
+    if (dmg > 0 && (def.element === 'metal' || def.element === 'thunder') && !effect.consumeSwordIntent) {
+      dmg += Math.round(combat.swordIntent * worldMult);
+    }
+    if (run.trueSpirit === 'spirit-roc') dmg = Math.round(dmg * 1.25);
+    if (run.act >= 7 && (run.shaCorruption ?? 0) < 50) dmg = Math.round(dmg * 1.1);
+    const dyingFury = hasRelicHook(run, 'dying-fury');
+    if (dyingFury > 0 && run.hp <= run.maxHp * 0.45) dmg = Math.round(dmg * (1 + dyingFury / 100));
+    if (combat.damageBoostPct > 0) dmg = Math.round(dmg * (1 + combat.damageBoostPct / 100));
+    if (combat.weak > 0) dmg = Math.floor(dmg * 0.75);
+    if (combat.enemy.vulnerable > 0) dmg = Math.floor(dmg * 1.5);
+    if (run.supremeLaw === 'supreme-space') dmg += Math.max(2, Math.round(dmg * 0.35));
+    if (combat.enemy.phase2WardThisTurn) dmg = Math.max(1, Math.floor(dmg * 0.5));
+
+    if (effect.damage && dmg !== effect.damage) {
+      const next = text.replace(
+        new RegExp(`(造成\\s*|各\\s*|轰出\\s*|连斩[^\\d]*?)${effect.damage}(\\s*点)`),
+        `$1${dmg}$2`,
+      );
+      if (next !== text) {
+        text = next;
+        if (dmg > effect.damage) boosted = true;
+      }
+    } else if (effect.damagePerBlock && dmg > 0) {
+      text = `${text}（当前预计 ${dmg} 点！）`;
+      boosted = true;
+    }
+  }
+
+  if (effect.poison) {
+    const boost = hasRelicHook(run, 'poison-boost') + (run.relics.includes('rel-shennong-whip') ? 2 : 0);
+    const estPoison = Math.round((effect.poison + boost) * worldMult);
+    if (estPoison !== effect.poison) {
+      const next = text.replace(new RegExp(`(施加\\s*)${effect.poison}(\\s*层)`), `$1${estPoison}$2`);
+      if (next !== text) {
+        text = next;
+        if (estPoison > effect.poison) boosted = true;
+      }
+    }
+  }
+
+  return { text, boosted };
 }
 
 const FIVE_ELEMENTS: SealType[] = ['metal', 'wood', 'water', 'fire', 'earth'];
@@ -104,16 +196,24 @@ export function previewResonance(
   return null;
 }
 
-function drawCards(combat: CombatState, count: number, rng: SeededRng): void {
+function drawCards(run: RunState, combat: CombatState, count: number, rng: SeededRng): void {
+  let overflowCount = 0;
   for (let i = 0; i < count; i++) {
-    if (combat.hand.length >= 9) break;
     if (combat.drawPile.length === 0) {
       if (combat.discardPile.length === 0) break;
       combat.drawPile = rng.shuffle(combat.discardPile);
       combat.discardPile = [];
     }
+    if (combat.hand.length >= HAND_LIMIT) {
+      overflowCount += 1;
+      continue;
+    }
     const top = combat.drawPile.pop();
     if (top) combat.hand.push(top);
+  }
+  if (overflowCount > 0) {
+    addBlockToPlayer(run, combat, overflowCount * 4);
+    combat.combatLog.unshift(`✨ 满手灵气灌体：${overflowCount} 张溢出抽牌自动转化为护体罡气！`);
   }
 }
 
@@ -137,7 +237,7 @@ function triggerPhoenixBloodlineIfReady(run: RunState, combat: CombatState): voi
 function onCardsExhausted(run: RunState, combat: CombatState, count: number): void {
   if (count <= 0) return;
   const worldMult = getWorldPowerMultiplier(run.act);
-  if (run.secondaryMethod === 'method-demon-furnace') {
+  if (hasSecondaryMethod(run, 'method-demon-furnace')) {
     const blk = Math.round(7 * count * worldMult);
     combat.block += blk;
     for (const arr of combat.arrays) arr.damagePerTurn += 2 * count;
@@ -162,7 +262,10 @@ export function initCombat(run: RunState, enemyDef: EnemyDef, nodeType: MapNodeT
   const worldMult = getWorldPowerMultiplier(run.act);
   const furyScale = nodeType === 'fury-elite' ? 1.24 : 1;
   const mutHpScale = muts.includes('mut-spirit-tide') ? 1.25 : 1;
-  const ascScale = (1 + run.ascension * 0.09) * furyScale * mutHpScale;
+  // 若集齐 ≥5 枚掌天道果挑战第九卷古或今，唤醒【混沌吞天终极态】！
+  const chaosTrueBoss = enemyDef.id === 'e9-boss-guhuojin' && run.daoTokens >= 5;
+  const chaosHpScale = chaosTrueBoss ? 1.2 : 1;
+  const ascScale = (1 + run.ascension * 0.09) * furyScale * mutHpScale * chaosHpScale;
   const maxHp = Math.round(enemyDef.maxHp * ascScale);
 
   const shuffled = rng.shuffle(run.deck.map((c) => ({ ...c })));
@@ -177,13 +280,17 @@ export function initCombat(run: RunState, enemyDef: EnemyDef, nodeType: MapNodeT
 
   const mutQi = muts.includes('mut-spirit-tide') ? 1 : 0;
   const maxQi = run.baseQi + mutQi;
-  const startQi = maxQi + (root.bonusQi ?? 0) + hasRelicHook(run, 'start-qi');
+  // 首回合额外资源软上限（防止后期叠满古宝首回合直接 12 费秒天秒地）
+  const bonusStartQi = Math.min(3, (root.bonusQi ?? 0) + hasRelicHook(run, 'start-qi'));
+  const startQi = maxQi + bonusStartQi;
   const rocBlock = run.trueSpirit === 'spirit-roc' ? Math.round(14 * worldMult) : 0;
   const nirvanaRelicBlock = run.relics.includes('law-nirvana-body') ? 16 : 0;
+  const turnStartBlock = Math.round(hasRelicHook(run, 'turn-start-block') * worldMult);
   const startBlock =
     hasRelicHook(run, 'start-block') +
     rocBlock +
     nirvanaRelicBlock +
+    turnStartBlock +
     (enemyDef.tier === 'tribulation' || enemyDef.tier === 'boss' ? hasRelicHook(run, 'tribulation-ward') : 0);
 
   const treasureCharges: Record<string, number> = {};
@@ -194,12 +301,30 @@ export function initCombat(run: RunState, enemyDef: EnemyDef, nodeType: MapNodeT
   const glassSword = muts.includes('mut-glass-sword');
   const rocSword = run.trueSpirit === 'spirit-roc' ? 4 : 0;
 
+  const combatLog: string[] = [
+    chaosTrueBoss
+      ? '🌌 掌天道果共鸣！古或今感应绿液本源，觉醒【混沌吞天终极态】！'
+      : `遭遇【${enemyDef.name}】${enemyDef.trait ? `（法则：${enemyDef.trait.name}）` : ''}！`,
+  ];
+
+  const discardPile: CardInstance[] = [];
+  let nextUid = run.uidCounter + 1;
+  if (run.act >= 7 && (run.shaCorruption ?? 0) >= 50) {
+    nextUid += 1;
+    discardPile.push({ uid: `sha-${nextUid}`, defId: 'curse-whisper', upgraded: false });
+    combatLog.unshift('☯【仙界煞气反噬】体内煞气 ≥50%，开战滋生 1 张心魔低语！可赴洞府洗煞池淬窍。');
+  }
+
   const combat: CombatState = {
     enemy: {
-      uid: `foe-${run.uidCounter + 1}`,
+      uid: `foe-${nextUid}`,
       defId: enemyDef.id,
-      name: nodeType === 'fury-elite' ? `🔥狂暴·${enemyDef.name}` : enemyDef.name,
-      title: enemyDef.title,
+      name: chaosTrueBoss
+        ? '🌌混沌终极·时间道祖古或今'
+        : nodeType === 'fury-elite'
+          ? `🔥狂暴·${enemyDef.name}`
+          : enemyDef.name,
+      title: chaosTrueBoss ? '掌天宿敌 · 万古天道吞噬态' : enemyDef.title,
       tier: enemyDef.tier,
       artStyle: enemyDef.artStyle,
       hp: maxHp,
@@ -208,10 +333,15 @@ export function initCombat(run: RunState, enemyDef: EnemyDef, nodeType: MapNodeT
       poison: 0,
       vulnerable: 0,
       weak: 0,
-      strength: Math.floor(run.ascension / 3) + (nodeType === 'fury-elite' ? 2 : 0) + (glassSword ? 2 : 0),
+      strength:
+        Math.floor(run.ascension / 3) +
+        (nodeType === 'fury-elite' ? 2 : 0) +
+        (glassSword ? 2 : 0) +
+        (chaosTrueBoss ? 3 : 0),
       intentIdx: 0,
       trait: enemyDef.trait ? { ...enemyDef.trait } : undefined,
       phase2Triggered: false,
+      phase2WardThisTurn: false,
       rebirthUsed: false,
       firstHitTakenThisTurn: false,
       tribulationWave: enemyDef.tribulationWaves ? 1 : undefined,
@@ -235,10 +365,11 @@ export function initCombat(run: RunState, enemyDef: EnemyDef, nodeType: MapNodeT
     arrays: [],
     drawPile,
     hand: [],
-    discardPile: [],
+    discardPile,
     exhaustPile: [],
     treasureCharges,
     cardsPlayedThisTurn: 0,
+    attacksPlayedThisTurn: 0,
     swordCardsPlayedThisTurn: 0,
     hpSacrificedInCombat: 0,
     phoenixTriggeredThisTurn: false,
@@ -246,34 +377,34 @@ export function initCombat(run: RunState, enemyDef: EnemyDef, nodeType: MapNodeT
     samsaraReviveUsed: false,
     lastResonance: null,
     phase2Banner: null,
-    combatLog: [
-      `遭遇【${enemyDef.name}】${enemyDef.trait ? `（法则：${enemyDef.trait.name}）` : ''}！`,
-    ],
+    combatLog,
     outcome: 'ongoing',
   };
 
   const spaceDraw = run.supremeLaw === 'supreme-space' ? 2 : 0;
   const celestialLawDraw = run.relics.includes('law-celestial-qi') ? 2 : 0;
-  const extraDraw =
+  const rawExtraDraw =
     hasRelicHook(run, 'start-draw') +
     (run.relics.includes('rel-shadowless-tassel') ? 1 : 0) +
     spaceDraw +
     celestialLawDraw;
-  drawCards(combat, 5 + extraDraw, rng);
+  const nextRun: RunState = {
+    ...run,
+    rngState: rng.state,
+    uidCounter: nextUid,
+    phase: 'combat',
+    combat,
+  };
+  drawCards(nextRun, combat, 5 + Math.min(4, rawExtraDraw), rng);
 
-  const curseBonus = hasRelicHook(run, 'curse-power');
-  if (curseBonus > 0 && run.deck.some((c) => getCardDef(c.defId).type === 'curse')) {
+  const curseBonus = hasRelicHook(nextRun, 'curse-power');
+  if (curseBonus > 0 && nextRun.deck.some((c) => getCardDef(c.defId).type === 'curse')) {
     combat.qi += curseBonus;
     combat.block += 6;
   }
 
-  return {
-    ...run,
-    rngState: rng.state,
-    uidCounter: run.uidCounter + 1,
-    phase: 'combat',
-    combat,
-  };
+  nextRun.rngState = rng.state;
+  return nextRun;
 }
 
 function checkEnemySurvivalAndPhase2(combat: CombatState): void {
@@ -289,9 +420,12 @@ function checkEnemySurvivalAndPhase2(combat: CombatState): void {
     return;
   }
 
-  if (foe.hp > 0 && def?.phase2 && !foe.phase2Triggered && foe.hp <= foe.maxHp * 0.5) {
+  const gateHp = Math.ceil(foe.maxHp * 0.5);
+  if (foe.hp > 0 && def?.phase2 && !foe.phase2Triggered && foe.hp <= gateHp) {
     foe.phase2Triggered = true;
+    foe.phase2WardThisTurn = true;
     foe.title = def.phase2.title;
+    foe.vulnerable = 0;
     foe.weak = 0;
     foe.block += def.phase2.shieldGain;
     foe.strength += def.phase2.strengthGain;
@@ -311,6 +445,9 @@ function dealDamageToEnemy(
   let dmg = rawDamage;
   if (isDirectHit && run.trueSpirit === 'spirit-roc') {
     dmg = Math.round(dmg * 1.25);
+  }
+  if (isDirectHit && run.act >= 7 && (run.shaCorruption ?? 0) < 50) {
+    dmg = Math.round(dmg * 1.1);
   }
   const dyingFury = hasRelicHook(run, 'dying-fury');
   if (dyingFury > 0 && run.hp <= run.maxHp * 0.45) {
@@ -333,9 +470,13 @@ function dealDamageToEnemy(
     combat.combatLog.unshift(`【${combat.enemy.trait.name}】抵消了首击一半威力！`);
   }
 
+  // Boss 二阶段破境护道金身：跨阶段当回合后续伤害减半，杜绝一回合无交互灌死二阶段
+  if (combat.enemy.phase2WardThisTurn) {
+    dmg = Math.max(1, Math.floor(dmg * 0.5));
+  }
+
   dmg = Math.max(1, dmg);
 
-  // 空间法则：每次直接攻击额外撕裂 35% 穿甲空间真伤
   const spaceBonusPierce =
     isDirectHit && run.supremeLaw === 'supreme-space' ? Math.max(2, Math.round(dmg * 0.35)) : 0;
 
@@ -344,11 +485,22 @@ function dealDamageToEnemy(
     combat.enemy.block -= absorbed;
     dmg -= absorbed;
   }
-  const totalHpDealt = dmg + spaceBonusPierce;
-  combat.enemy.hp = Math.max(0, combat.enemy.hp - totalHpDealt);
 
-  if (isDirectHit && combat.enemy.trait?.id === 'thorns') {
-    const thorn = combat.enemy.trait.value;
+  let totalHpDealt = dmg + spaceBonusPierce;
+  const foe = combat.enemy;
+  const def = ENEMIES[foe.defId];
+  const gateHp = Math.ceil(foe.maxHp * 0.5);
+
+  // 二阶段破境锁血（Phase Gate）：首次打穿 50% 血线时强制锁在 50% 并唤醒二阶段真身！
+  if (def?.phase2 && !foe.phase2Triggered && foe.hp > gateHp && foe.hp - totalHpDealt <= gateHp) {
+    totalHpDealt = foe.hp - gateHp;
+    foe.hp = gateHp;
+  } else {
+    foe.hp = Math.max(0, foe.hp - totalHpDealt);
+  }
+
+  if (isDirectHit && foe.trait?.id === 'thorns') {
+    const thorn = foe.trait.value;
     const blocked = Math.min(combat.block, thorn);
     combat.block -= blocked;
     const left = thorn - blocked;
@@ -420,11 +572,11 @@ function applyEffectBundle(
       addBlockToPlayer(run, combat, 8);
       run.hp = Math.min(run.maxHp, run.hp + Math.round(6 * worldMult));
     }
-    if (run.secondaryMethod === 'method-blood-blade') {
+    if (hasSecondaryMethod(run, 'method-blood-blade')) {
       combat.swordIntent += 2;
-      if (combat.hand.length < 9) {
+      if (combat.hand.length < HAND_LIMIT) {
         run.uidCounter += 1;
-        combat.hand.push({ uid: `gen-${run.uidCounter}`, defId: 'sw-flying', upgraded: false });
+        combat.hand.push({ uid: `gen-${run.uidCounter}`, defId: 'sw-flying', upgraded: run.act >= 4 });
       }
       combat.combatLog.unshift('《血神经·拔剑篇》触发：剑意 +2，拔出 1 道御剑术！');
     }
@@ -473,7 +625,7 @@ function applyEffectBundle(
       if (res.name.startsWith('五行混元')) {
         combat.seals = [];
         combat.qi += 2;
-        drawCards(combat, 2, rng);
+        drawCards(run, combat, 2, rng);
         dealDamageToEnemy(run, combat, Math.round(14 * worldMult), true);
       } else if (res.name.startsWith('木火相生')) {
         damageMultiplier = 1.5;
@@ -489,7 +641,7 @@ function applyEffectBundle(
         combat.swordIntent += 1;
       } else if (res.name.startsWith('厚土孕剑')) {
         addBlockToPlayer(run, combat, 8);
-        drawCards(combat, 1, rng);
+        drawCards(run, combat, 1, rng);
       } else if (res.name.startsWith('寒泉滋荣')) {
         run.hp = Math.min(run.maxHp, run.hp + Math.round(6 * worldMult));
         combat.qi += 1;
@@ -507,7 +659,7 @@ function applyEffectBundle(
         combat.combatLog.unshift('🦚【五色孔雀法相】响应共鸣：元气 +1，轰出五色神光！');
       }
 
-      if (root.mixedFiveBonus) drawCards(combat, 1, rng);
+      if (root.mixedFiveBonus) drawCards(run, combat, 1, rng);
       const resAmp = hasRelicHook(run, 'resonance-amp');
       if (resAmp > 0 && combat.enemy.hp > 0) {
         dealDamageToEnemy(run, combat, Math.round(resAmp * worldMult), true);
@@ -522,7 +674,6 @@ function applyEffectBundle(
     pushSeal(combat, effect.extraSeal);
   }
 
-  // 先加护盾（以便「五色灭绝神光」等先叠盾再按当前盾量打伤害的卡牌立即吃到本次护盾！）
   if (effect.block) {
     const blockAmt = effect.xCost && !effect.damage ? (xVal + 1) * effect.block : effect.block;
     addBlockToPlayer(run, combat, blockAmt);
@@ -572,7 +723,7 @@ function applyEffectBundle(
     for (let h = 0; h < hits; h++) {
       if (combat.enemy.hp <= 0) break;
       totalDealt += dealDamageToEnemy(run, combat, scaled, Boolean(effect.pierce), true);
-      if (run.secondaryMethod === 'method-venom-sword' && (sourceElement === 'metal' || sourceElement === 'thunder')) {
+      if (hasSecondaryMethod(run, 'method-venom-sword') && (sourceElement === 'metal' || sourceElement === 'thunder')) {
         addPoisonToEnemy(run, combat, 2);
       }
     }
@@ -588,7 +739,7 @@ function applyEffectBundle(
     run.hp = Math.min(run.maxHp, run.hp + Math.round(effect.heal * worldMult));
   }
   if (effect.gainQi) combat.qi += effect.gainQi;
-  if (effect.draw) drawCards(combat, effect.draw, rng);
+  if (effect.draw) drawCards(run, combat, effect.draw, rng);
   if (effect.swordIntent) combat.swordIntent += effect.swordIntent;
 
   if (effect.poison) addPoisonToEnemy(run, combat, effect.poison);
@@ -634,7 +785,7 @@ function applyEffectBundle(
 
   if (effect.addCardsToHand) {
     for (const defId of effect.addCardsToHand) {
-      if (combat.hand.length >= 9) break;
+      if (combat.hand.length >= HAND_LIMIT) break;
       run.uidCounter += 1;
       combat.hand.push({ uid: `gen-${run.uidCounter}`, defId, upgraded: run.act >= 4 });
     }
@@ -646,7 +797,7 @@ function applyEffectBundle(
 
   if (opts.enchant === 'leech-life') run.hp = Math.min(run.maxHp, run.hp + Math.round(4 * worldMult));
   if (opts.enchant === 'toxic-edge') addPoisonToEnemy(run, combat, 4);
-  if (opts.enchant === 'innate') drawCards(combat, 1, rng);
+  if (opts.enchant === 'innate') drawCards(run, combat, 1, rng);
   if (opts.enchant === 'spirit-surge') combat.qi += 1;
   if (opts.enchant === 'shield-echo') addBlockToPlayer(run, combat, 8);
   if (opts.enchant === 'thunder-mark') {
@@ -696,6 +847,7 @@ export function playCard(run: RunState, cardUid: string): RunState {
   if (!isX && combat.qi < cost) return run;
 
   const rng = new SeededRng(nextRun.rngState);
+  const worldMult = getWorldPowerMultiplier(nextRun.act);
   const xSpent = isX ? combat.qi : 0;
   combat.qi = isX ? 0 : combat.qi - cost;
 
@@ -717,7 +869,10 @@ export function playCard(run: RunState, cardUid: string): RunState {
 
   for (const tid of nextRun.treasures) {
     const tDef = TREASURES[tid];
-    if (tDef) combat.treasureCharges[tid] = Math.min(tDef.maxCharge, (combat.treasureCharges[tid] ?? 0) + 1);
+    if (tDef) {
+      const cap = getTreasureEffectiveMaxCharge(nextRun, tDef);
+      combat.treasureCharges[tid] = Math.min(cap, (combat.treasureCharges[tid] ?? 0) + 1);
+    }
   }
 
   applyEffectBundle(nextRun, combat, effect, rng, def.element, {
@@ -727,7 +882,16 @@ export function playCard(run: RunState, cardUid: string): RunState {
     sourceName: getCardDisplayName(inst),
   });
 
-  // 仙界至尊【时间法则】：每回合首张非消耗/非阵盘牌自动凝聚光阴重影免费再结算 1 次！
+  if (def.type === 'attack') {
+    combat.attacksPlayedThisTurn = (combat.attacksPlayedThisTurn ?? 0) + 1;
+    const firstAtkBonus = hasRelicHook(nextRun, 'first-atk-bonus');
+    if (combat.attacksPlayedThisTurn === 1 && firstAtkBonus > 0 && combat.enemy.hp > 0) {
+      const bonusDmg = Math.round(firstAtkBonus * worldMult);
+      dealDamageToEnemy(nextRun, combat, bonusDmg, true);
+      combat.combatLog.unshift(`⚡ 灵宝锋芒触发：首击追加 ${bonusDmg} 点穿甲真伤！`);
+    }
+  }
+
   if (
     nextRun.supremeLaw === 'supreme-time' &&
     !combat.firstNonExhaustEchoDone &&
@@ -751,14 +915,13 @@ export function playCard(run: RunState, cardUid: string): RunState {
     combat.swordCardsPlayedThisTurn += 1;
     if (combat.swordCardsPlayedThisTurn % 3 === 0) {
       combat.swordIntent += 1;
-      drawCards(combat, 1, rng);
+      drawCards(nextRun, combat, 1, rng);
       combat.combatLog.unshift('《青元剑诀》感应：剑意 +1，抽 1 牌！');
     }
   }
 
   const cascade = hasRelicHook(nextRun, 'sword-cascade');
   if (cascade > 0 && def.type === 'attack' && combat.cardsPlayedThisTurn % 3 === 0 && combat.enemy.hp > 0) {
-    const worldMult = getWorldPowerMultiplier(nextRun.act);
     const casDmg = Math.round(cascade * worldMult);
     dealDamageToEnemy(nextRun, combat, casDmg, true);
     combat.combatLog.unshift(`天道法则【一剑生万法】降下 ${casDmg} 点穿甲飞剑！`);
@@ -806,7 +969,7 @@ export function useConsumable(run: RunState, slotIdx: number): RunState {
       combat.discardPile.push(...combat.hand);
       combat.hand = [];
       combat.qi += 1;
-      drawCards(combat, 5, rng);
+      drawCards(nextRun, combat, 5, rng);
       combat.combatLog.unshift('🍃 祭出【神行换影符】：换取 5 张新手牌并回 1 真元！');
       break;
     }
@@ -843,12 +1006,12 @@ export function useConsumable(run: RunState, slotIdx: number): RunState {
       const tox = Math.round(10 * pillAmp);
       addPoisonToEnemy(nextRun, combat, tox);
       if (combat.enemy.poison > 0) dealDamageToEnemy(nextRun, combat, combat.enemy.poison, true);
-      combat.combatLog.unshift(`🧪 撒出【九幽腐骨散】：叠毒并引爆毒伤！`);
+      combat.combatLog.unshift('🧪 撒出【九幽腐骨散】：叠毒并引爆毒伤！');
       break;
     }
     case 'con-sword-pellet': {
       combat.swordIntent += Math.round(3 * pillAmp);
-      for (let i = 0; i < 2 && combat.hand.length < 9; i++) {
+      for (let i = 0; i < 2 && combat.hand.length < HAND_LIMIT; i++) {
         nextRun.uidCounter += 1;
         combat.hand.push({ uid: `gen-${nextRun.uidCounter}`, defId: 'sw-flying', upgraded: true });
       }
@@ -885,15 +1048,24 @@ export function activateTreasure(run: RunState, treasureId: string): RunState {
   if (!run.combat || run.combat.outcome !== 'ongoing') return run;
   const tDef = TREASURES[treasureId];
   if (!tDef) return run;
-  if ((run.combat.treasureCharges[treasureId] ?? 0) < tDef.maxCharge) return run;
+  const maxChg = getTreasureEffectiveMaxCharge(run, tDef);
+  if ((run.combat.treasureCharges[treasureId] ?? 0) < maxChg) return run;
 
   const nextRun: RunState = structuredClone(run);
   const combat = nextRun.combat!;
   const rng = new SeededRng(nextRun.rngState);
 
   combat.treasureCharges[treasureId] = 0;
-  applyEffectBundle(nextRun, combat, tDef.effect, rng, tDef.effect.extraSeal ?? 'none', {
-    sourceName: `法宝·${tDef.name}`,
+  const tierMult = 1 + (nextRun.treasureTier ?? 0) * 0.35;
+  const scaledEffect: CardEffect = {
+    ...tDef.effect,
+    damage: tDef.effect.damage ? Math.round(tDef.effect.damage * tierMult) : undefined,
+    block: tDef.effect.block ? Math.round(tDef.effect.block * tierMult) : undefined,
+    poison: tDef.effect.poison ? Math.round(tDef.effect.poison * tierMult) : undefined,
+    heal: tDef.effect.heal ? Math.round(tDef.effect.heal * tierMult) : undefined,
+  };
+  applyEffectBundle(nextRun, combat, scaledEffect, rng, scaledEffect.extraSeal ?? 'none', {
+    sourceName: `法宝·${tDef.name}${(nextRun.treasureTier ?? 0) > 0 ? `+${nextRun.treasureTier}` : ''}`,
   });
 
   if (combat.enemy.hp <= 0) {
@@ -926,7 +1098,7 @@ export function endPlayerTurn(run: RunState): RunState {
     if (arr.poisonPerTurn > 0 && combat.enemy.hp > 0) {
       addPoisonToEnemy(nextRun, combat, Math.round(arr.poisonPerTurn * arrayAmp));
     }
-    if (nextRun.secondaryMethod === 'method-thunder-array' && combat.enemy.hp > 0) {
+    if (hasSecondaryMethod(nextRun, 'method-thunder-array') && combat.enemy.hp > 0) {
       dealDamageToEnemy(nextRun, combat, Math.round(6 * worldMult), true);
       pushSeal(combat, 'thunder');
     }
@@ -946,6 +1118,7 @@ export function endPlayerTurn(run: RunState): RunState {
 
   combat.enemy.block = 0;
   combat.enemy.firstHitTakenThisTurn = false;
+  combat.enemy.phase2WardThisTurn = false;
 
   const intent = getEnemyCurrentIntent(combat.enemy.defId, combat.enemy.intentIdx, combat.enemy.phase2Triggered);
   if (intent) {
@@ -965,7 +1138,7 @@ export function endPlayerTurn(run: RunState): RunState {
 
         const blocked = Math.min(combat.block, incoming);
         combat.block -= blocked;
-        if (blocked > 0 && nextRun.secondaryMethod === 'method-thorns-poison') {
+        if (blocked > 0 && hasSecondaryMethod(nextRun, 'method-thorns-poison')) {
           addPoisonToEnemy(nextRun, combat, 4);
         }
 
@@ -1037,6 +1210,7 @@ export function endPlayerTurn(run: RunState): RunState {
 
   combat.turn += 1;
   combat.cardsPlayedThisTurn = 0;
+  combat.attacksPlayedThisTurn = 0;
   combat.swordCardsPlayedThisTurn = 0;
   combat.phoenixTriggeredThisTurn = false;
   combat.firstNonExhaustEchoDone = false;
@@ -1049,13 +1223,6 @@ export function endPlayerTurn(run: RunState): RunState {
   combat.enemy.vulnerable = Math.max(0, combat.enemy.vulnerable - 1);
   combat.enemy.weak = Math.max(0, combat.enemy.weak - 1);
 
-  // 时间法则：每逢第 3 回合剥夺敌方岁月，附加 2 层破绽与虚弱
-  if (nextRun.supremeLaw === 'supreme-time' && combat.turn % 3 === 0) {
-    combat.enemy.vulnerable += 2;
-    combat.enemy.weak += 2;
-    combat.combatLog.unshift('⏳【时间法则】光阴迟滞降临：敌方陷入 2 层破绽与虚弱！');
-  }
-
   if (!combat.retainBlockThisTurn) {
     const retainHalf = hasRelicHook(nextRun, 'block-retain-half');
     if (retainHalf > 0) {
@@ -1067,6 +1234,34 @@ export function endPlayerTurn(run: RunState): RunState {
     }
   }
   combat.retainBlockThisTurn = false;
+
+  const perTurnBlk = hasRelicHook(nextRun, 'turn-start-block');
+  if (perTurnBlk > 0) addBlockToPlayer(nextRun, combat, perTurnBlk);
+
+  if (combat.turn % 2 === 0) {
+    const evenQi = hasRelicHook(nextRun, 'even-turn-qi');
+    if (evenQi > 0) combat.qi += evenQi;
+
+    // 灵界篇专属环境机制（第 4~6 卷）：双数回合【灵界元气潮汐】！
+    if (nextRun.act >= 4 && nextRun.act <= 6) {
+      combat.qi += 1;
+      for (const tid of nextRun.treasures) {
+        const tDef = TREASURES[tid];
+        if (tDef) {
+          const cap = getTreasureEffectiveMaxCharge(nextRun, tDef);
+          combat.treasureCharges[tid] = Math.min(cap, (combat.treasureCharges[tid] ?? 0) + 1);
+        }
+      }
+      combat.enemy.block += Math.round(14 * worldMult);
+      combat.combatLog.unshift('🌌【灵界元气潮汐】涌动：我方元气 +1、法宝充能 +1，敌方凝结灵障！');
+    }
+  }
+
+  if (nextRun.supremeLaw === 'supreme-time' && combat.turn % 3 === 0) {
+    combat.enemy.vulnerable += 2;
+    combat.enemy.weak += 2;
+    combat.combatLog.unshift('⏳【时间法则】光阴迟滞降临：敌方陷入 2 层破绽与虚弱！');
+  }
 
   if (combat.enemy.tier === 'tribulation' || combat.enemy.tier === 'boss') {
     const ward = hasRelicHook(nextRun, 'tribulation-ward');
@@ -1083,7 +1278,7 @@ export function endPlayerTurn(run: RunState): RunState {
   }
 
   const turnDraw = 5 + (nextRun.supremeLaw === 'supreme-space' ? 2 : 0);
-  drawCards(combat, turnDraw, rng);
+  drawCards(nextRun, combat, turnDraw, rng);
   combat.combatLog = combat.combatLog.slice(0, 14);
   nextRun.rngState = rng.state;
   return nextRun;

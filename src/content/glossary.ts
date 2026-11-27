@@ -78,6 +78,16 @@ export const KEYWORD_GLOSSARY: Record<string, GlossaryEntry> = {
     plainTitle: '⏳ 三大至尊法则（仙界篇升维）',
     desc: '飞升仙界（第7卷）时参悟的时间、空间或轮回至尊法则，带来首牌双发、空间穿甲或轮回不死神通！',
   },
+  spiritTide: {
+    term: '灵潮涌动',
+    plainTitle: '🌌 灵界元气潮汐（第4~6卷环境）',
+    desc: '灵界每逢双数回合灵潮涌动：你自动获得 +1 元气、法宝充能 +1，同时敌方也会凝结灵障护盾。',
+  },
+  shaDecay: {
+    term: '煞气衰劫',
+    plainTitle: '☀️ 仙界煞气衰劫（第7~9卷环境）',
+    desc: '仙界斗法会累积煞气：煞气 <50% 时仙窍清明（伤害+10%）；≥50% 时开战遭受煞气反噬塞入心魔！去【洞府洗煞池】可将煞气化为永久气血上限！',
+  },
 };
 
 export const ELEMENT_COMBO_GUIDE: Record<Exclude<ElementTag, 'none'>, string> = {

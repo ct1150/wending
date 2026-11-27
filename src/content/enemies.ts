@@ -121,7 +121,7 @@ export const ENEMIES: Record<string, EnemyDef> = {
 
   // ==================== 第三卷：人界篇 · 坠魔化神（化神 ➔ 飞升灵界） ====================
   'e3-dragon': {
-    id: 'e3-dragon', name: '坠魔谷双首古魔', title: '跨界上古魔族残躯', act: 3, tier: 'normal', maxHp: 135, artStyle: 'beast',
+    id: 'e3-dragon', name: '坠魔谷双首古魔', title: '跨界上古魔族残躯', act: 3, tier: 'normal', maxHp: 158, artStyle: 'beast',
     intents: [
       { kind: 'attack', label: '古魔裂空爪', damage: 22 },
       { kind: 'defend', label: '魔鳞重障', block: 24, strengthGain: 2 },
@@ -129,7 +129,7 @@ export const ENEMIES: Record<string, EnemyDef> = {
     ],
   },
   'e3-immortal-envoy': {
-    id: 'e3-immortal-envoy', name: '昆吾山呼老魔', title: '大晋化神初期修士', act: 3, tier: 'normal', maxHp: 128, artStyle: 'celestial',
+    id: 'e3-immortal-envoy', name: '昆吾山呼老魔', title: '大晋化神初期修士', act: 3, tier: 'normal', maxHp: 150, artStyle: 'celestial',
     trait: { id: 'anti-skill', name: '化神神识压制', description: '你每打出 1 张【运转】牌，敌方获得 +2 杀意。', value: 2 },
     intents: [
       { kind: 'attack', label: '天地元气斩', damage: 20, vulnerable: 2 },
@@ -138,7 +138,7 @@ export const ENEMIES: Record<string, EnemyDef> = {
     ],
   },
   'e3-elite-phoenix': {
-    id: 'e3-elite-phoenix', name: '昆吾真灵 · 冰凤之魂', title: '十级顶阶真灵血裔', act: 3, tier: 'elite', maxHp: 195, artStyle: 'celestial',
+    id: 'e3-elite-phoenix', name: '昆吾真灵 · 冰凤之魂', title: '十级顶阶真灵血裔', act: 3, tier: 'elite', maxHp: 235, artStyle: 'celestial',
     trait: { id: 'phoenix-rebirth', name: '涅槃冰焰', description: '首次气血归零时浴火涅槃，恢复 35% 气血并杀意 +3！', value: 35 },
     intents: [
       { kind: 'attack', label: '太阴冰焰焚', damage: 24, poison: 4 },
@@ -148,11 +148,11 @@ export const ENEMIES: Record<string, EnemyDef> = {
   },
   'e3-boss-ascension': {
     id: 'e3-boss-ascension', name: '空间节点 · 破界九重罡雷', title: '偷渡飞升灵界大劫（撑过 7 劫或斩开界壁）',
-    act: 3, tier: 'tribulation', maxHp: 295, tribulationWaves: 7, artStyle: 'thunder',
+    act: 3, tier: 'tribulation', maxHp: 380, tribulationWaves: 7, artStyle: 'thunder',
     phase2: {
       title: '空间风暴 · 界面壁障崩裂',
-      announcement: '⛈️ 空间节点轰然崩裂，界面银色罡雷倾泻而下，灵界气息已隐约可见！',
-      shieldGain: 35,
+      announcement: '⛈️ 空间节点轰然崩裂，触发破境锁血护道！银色罡雷倾泻而下！',
+      shieldGain: 45,
       strengthGain: 3,
       intents: [
         { kind: 'tribulation-bolt', label: '破界 · 阴阳空间刃', damage: 15, hits: 2 },
@@ -173,98 +173,98 @@ export const ENEMIES: Record<string, EnemyDef> = {
 
   // ==================== 第四卷：灵界篇 · 风元天渊（炼虚 ➔ 合体） ====================
   'e4-horn-warrior': {
-    id: 'e4-horn-warrior', name: '角蚩族炼虚战将', title: '天渊城外异族先锋', act: 4, tier: 'normal', maxHp: 190, artStyle: 'cultivator',
+    id: 'e4-horn-warrior', name: '角蚩族炼虚战将', title: '天渊城外异族先锋', act: 4, tier: 'normal', maxHp: 265, artStyle: 'cultivator',
     trait: { id: 'stone-shell', name: '灵纹战甲', description: '每回合受到的第 1 次攻击伤害减半。', value: 50 },
     intents: [
       { kind: 'attack', label: '破天巨矛', damage: 26 },
-      { kind: 'defend', label: '百族灵阵盾', block: 28, strengthGain: 3 },
+      { kind: 'defend', label: '百族灵阵盾', block: 32, strengthGain: 3 },
       { kind: 'multi-attack', label: '战纹三连刺', damage: 12, hits: 3 },
     ],
   },
   'e4-thunder-beast': {
-    id: 'e4-thunder-beast', name: '蛮荒夔牛雷兽', title: '风元荒原炼虚凶兽', act: 4, tier: 'normal', maxHp: 198, artStyle: 'beast',
+    id: 'e4-thunder-beast', name: '蛮荒夔牛雷兽', title: '风元荒原炼虚凶兽', act: 4, tier: 'normal', maxHp: 280, artStyle: 'beast',
     intents: [
-      { kind: 'attack', label: '独足震天雷', damage: 24, vulnerable: 2 },
+      { kind: 'attack', label: '独足震天雷', damage: 25, vulnerable: 2 },
       { kind: 'multi-attack', label: '狂雷双角撞', damage: 15, hits: 2 },
-      { kind: 'buff', label: '吞吐天地元气', block: 26, strengthGain: 3 },
+      { kind: 'buff', label: '吞吐天地元气', block: 30, strengthGain: 3 },
     ],
   },
   'e4-elite-guard': {
-    id: 'e4-elite-guard', name: '广寒界镇殿金傀', title: '上古真仙遗迹守卫', act: 4, tier: 'elite', maxHp: 275, artStyle: 'celestial',
+    id: 'e4-elite-guard', name: '广寒界镇殿金傀', title: '上古真仙遗迹守卫', act: 4, tier: 'elite', maxHp: 390, artStyle: 'celestial',
     trait: { id: 'stone-shell', name: '广寒仙金甲', description: '每回合受到的第 1 次攻击伤害减半。', value: 50 },
     intents: [
-      { kind: 'defend', label: '仙傀圣光', block: 32, strengthGain: 3 },
+      { kind: 'defend', label: '仙傀圣光', block: 38, strengthGain: 3 },
       { kind: 'multi-attack', label: '金戈三连斩', damage: 14, hits: 3 },
       { kind: 'attack', label: '镇界重戟', damage: 30, vulnerable: 2 },
     ],
   },
   'e4-boss-dao': {
-    id: 'e4-boss-dao', name: '地渊血祭 · 血光圣祖化身', title: '跨界魔族合体霸主', act: 4, tier: 'boss', maxHp: 390, artStyle: 'demon',
+    id: 'e4-boss-dao', name: '地渊血祭 · 血光圣祖化身', title: '跨界魔族合体霸主', act: 4, tier: 'boss', maxHp: 580, artStyle: 'demon',
     trait: { id: 'anti-skill', name: '血光魔瞳', description: '你每打出 1 张【运转】牌，血光化身获得 +2 杀意。', value: 2 },
     phase2: {
       title: '血光圣祖 · 血海魔龙真身',
-      announcement: '🩸 血光圣祖献祭十万妖魂，化出百丈血海魔龙！护盾 +42，杀意 +4！',
-      shieldGain: 42,
+      announcement: '🩸 血光圣祖锁血护道，化出百丈血海魔龙！护盾 +60，本回合受击减半！',
+      shieldGain: 60,
       strengthGain: 4,
       intents: [
         { kind: 'multi-attack', label: '血海狂龙噬', damage: 15, hits: 3 },
         { kind: 'debuff', label: '化血魔刀咒', damage: 30, weak: 2, vulnerable: 2, addCurse: 'curse-whisper' },
-        { kind: 'attack', label: '圣祖血河崩', damage: 46 },
+        { kind: 'attack', label: '圣祖血河崩', damage: 44 },
       ],
     },
     intents: [
-      { kind: 'buff', label: '地渊血祭大阵', block: 30, strengthGain: 3, addCurse: 'curse-whisper' },
+      { kind: 'buff', label: '地渊血祭大阵', block: 35, strengthGain: 3, addCurse: 'curse-whisper' },
       { kind: 'multi-attack', label: '血影三绝斩', damage: 13, hits: 3 },
       { kind: 'debuff', label: '污血蚀灵光', damage: 25, weak: 2 },
-      { kind: 'attack', label: '破界魔印', damage: 38 },
+      { kind: 'attack', label: '破界魔印', damage: 36 },
     ],
   },
 
   // ==================== 第五卷：灵界篇 · 魔劫纵横（合体 ➔ 大乘） ====================
   'e5-demon-lord': {
-    id: 'e5-demon-lord', name: '魔界圣阶双首统领', title: '浩劫入侵合体后期', act: 5, tier: 'normal', maxHp: 245, artStyle: 'demon',
+    id: 'e5-demon-lord', name: '魔界圣阶双首统领', title: '浩劫入侵合体后期', act: 5, tier: 'normal', maxHp: 350, artStyle: 'demon',
     trait: { id: 'thorns', name: '魔鳞反震', description: '每次受到直接攻击时，反震你 4 点伤害。', value: 4 },
     intents: [
       { kind: 'multi-attack', label: '紫魔双刃狂斩', damage: 16, hits: 2 },
-      { kind: 'buff', label: '吞噬魔核', block: 34, strengthGain: 3 },
+      { kind: 'buff', label: '吞噬魔核', block: 40, strengthGain: 3 },
       { kind: 'attack', label: '焚天黑炎炮', damage: 32, poison: 5 },
     ],
   },
   'e5-beetle-king': {
-    id: 'e5-beetle-king', name: '变异金甲噬金虫王', title: '失控奇虫榜凶物', act: 5, tier: 'normal', maxHp: 255, artStyle: 'beast',
-    trait: { id: 'sword-guard', name: '金甲吞灵', description: '你每回合打出的第 4 张牌起，虫王自动获得 10 点护盾。', value: 10 },
+    id: 'e5-beetle-king', name: '变异金甲噬金虫王', title: '失控奇虫榜凶物', act: 5, tier: 'normal', maxHp: 370, artStyle: 'beast',
+    trait: { id: 'sword-guard', name: '金甲吞灵', description: '你每回合打出的第 4 张牌起，虫王自动获得 12 点护盾。', value: 12 },
     intents: [
       { kind: 'multi-attack', label: '万虫噬灵潮', damage: 12, hits: 3 },
-      { kind: 'defend', label: '不灭金甲阵', block: 36 },
+      { kind: 'defend', label: '不灭金甲阵', block: 42 },
       { kind: 'attack', label: '破法毒鳌击', damage: 30, vulnerable: 2 },
     ],
   },
   'e5-elite-baohua': {
-    id: 'e5-elite-baohua', name: '魔界始祖 · 宝花魅影', title: '三大始祖之一投影', act: 5, tier: 'elite', maxHp: 355, artStyle: 'celestial',
+    id: 'e5-elite-baohua', name: '魔界始祖 · 宝花魅影', title: '三大始祖之一投影', act: 5, tier: 'elite', maxHp: 520, artStyle: 'celestial',
     trait: { id: 'seal-lock', name: '玄天幻花域', description: '粉色花瓣迷乱阴阳，你的灵印槽上限减少 1 格。', value: 2 },
     intents: [
       { kind: 'debuff', label: '忘忧花海惑心', damage: 24, weak: 2, addCurse: 'curse-whisper' },
       { kind: 'multi-attack', label: '落英神剑雨', damage: 14, hits: 3 },
-      { kind: 'buff', label: '始祖魔威', block: 38, strengthGain: 4 },
+      { kind: 'buff', label: '始祖魔威', block: 45, strengthGain: 4 },
     ],
   },
   'e5-boss-nirvana': {
-    id: 'e5-boss-nirvana', name: '圣岛魔灾 · 涅槃圣祖真身', title: '魔界三大始祖真身跨界', act: 5, tier: 'boss', maxHp: 495, artStyle: 'demon',
+    id: 'e5-boss-nirvana', name: '圣岛魔灾 · 涅槃圣祖真身', title: '魔界三大始祖真身跨界', act: 5, tier: 'boss', maxHp: 760, artStyle: 'demon',
     trait: { id: 'phoenix-rebirth', name: '寂灭涅槃体', description: '首次气血归零时施展涅槃三变，恢复 30% 气血并杀意 +4！', value: 30 },
     phase2: {
       title: '涅槃圣祖 · 三头六臂圣魔体',
-      announcement: '🔥 涅槃圣祖催动寂灭真血，显化三头六臂黄金圣魔体！护盾 +50，杀意 +4！',
-      shieldGain: 50,
+      announcement: '🔥 涅槃圣祖催动寂灭真血锁血护道，显化三头六臂黄金圣魔体！护盾 +75！',
+      shieldGain: 75,
       strengthGain: 4,
       intents: [
         { kind: 'multi-attack', label: '六臂寂灭神拳', damage: 17, hits: 3 },
         { kind: 'debuff', label: '真魔碎界吼', damage: 34, vulnerable: 2, weak: 2 },
-        { kind: 'attack', label: '灭仙寂灭一击', damage: 52 },
+        { kind: 'attack', label: '灭仙寂灭一击', damage: 50 },
       ],
     },
     intents: [
       { kind: 'attack', label: '黄金圣魔拳', damage: 34 },
-      { kind: 'buff', label: '寂灭金身护体', block: 38, strengthGain: 3 },
+      { kind: 'buff', label: '寂灭金身护体', block: 45, strengthGain: 3 },
       { kind: 'multi-attack', label: '极道拳风连轰', damage: 15, hits: 3 },
       { kind: 'debuff', label: '血海威压', damage: 28, vulnerable: 2, addCurse: 'curse-whisper' },
     ],
@@ -272,43 +272,43 @@ export const ENEMIES: Record<string, EnemyDef> = {
 
   // ==================== 第六卷：灵界篇 · 万族问鼎（大乘 ➔ 飞升仙界） ====================
   'e6-thunder-dragon': {
-    id: 'e6-thunder-dragon', name: '摩诃雷海太古孽龙', title: '大乘级真灵遗种', act: 6, tier: 'normal', maxHp: 295, artStyle: 'beast',
+    id: 'e6-thunder-dragon', name: '摩诃雷海太古孽龙', title: '大乘级真灵遗种', act: 6, tier: 'normal', maxHp: 440, artStyle: 'beast',
     intents: [
       { kind: 'attack', label: '九天狂雷摆尾', damage: 35 },
-      { kind: 'defend', label: '雷池龙鳞障', block: 40, strengthGain: 3 },
+      { kind: 'defend', label: '雷池龙鳞障', block: 48, strengthGain: 3 },
       { kind: 'multi-attack', label: '万雷轰顶', damage: 15, hits: 3 },
     ],
   },
   'e6-corpse-emperor': {
-    id: 'e6-corpse-emperor', name: '冥河之地天尸皇', title: '大乘期阴司霸主', act: 6, tier: 'normal', maxHp: 305, artStyle: 'demon',
+    id: 'e6-corpse-emperor', name: '冥河之地天尸皇', title: '大乘期阴司霸主', act: 6, tier: 'normal', maxHp: 460, artStyle: 'demon',
     trait: { id: 'thorns', name: '冥河毒瘴', description: '每次受到直接攻击时，反震你 5 点伤害。', value: 5 },
     intents: [
       { kind: 'debuff', label: '黄泉死气侵蚀', damage: 26, poison: 6, weak: 2 },
       { kind: 'attack', label: '尸皇印镇杀', damage: 38 },
-      { kind: 'defend', label: '冥河重水幕', block: 42 },
+      { kind: 'defend', label: '冥河重水幕', block: 50 },
     ],
   },
   'e6-elite-locust': {
-    id: 'e6-elite-locust', name: '螟虫之母 · 吞界王眷', title: '灵界第一凶劫大乘虫尊', act: 6, tier: 'elite', maxHp: 430, artStyle: 'beast',
+    id: 'e6-elite-locust', name: '螟虫之母 · 吞界王眷', title: '灵界第一凶劫大乘虫尊', act: 6, tier: 'elite', maxHp: 660, artStyle: 'beast',
     trait: { id: 'anti-skill', name: '吞噬法则', description: '你每打出 1 张【运转】牌，王眷吞吸元气获得 +3 杀意。', value: 3 },
     intents: [
       { kind: 'multi-attack', label: '亿万螟虫噬天', damage: 16, hits: 3 },
-      { kind: 'buff', label: '吞界甲壳再生', block: 45, strengthGain: 4 },
+      { kind: 'buff', label: '吞界甲壳再生', block: 55, strengthGain: 4 },
       { kind: 'debuff', label: '虫母神识冲击', damage: 32, vulnerable: 2, addCurse: 'curse-whisper' },
     ],
   },
   'e6-boss-immortal-tribulation': {
     id: 'e6-boss-immortal-tribulation', name: '飞升仙界 · 九九紫霄灭仙雷劫', title: '灵界飞升大劫（撑过 7 劫或一剑劈开仙门）',
-    act: 6, tier: 'tribulation', maxHp: 620, tribulationWaves: 7, artStyle: 'thunder',
+    act: 6, tier: 'tribulation', maxHp: 980, tribulationWaves: 7, artStyle: 'thunder',
     phase2: {
       title: '仙界之门洞开 · 混沌仙罡神雷',
-      announcement: '☀️ 飞升台仙门洞开，北寒仙域法则投影降下混沌仙罡雷！',
-      shieldGain: 60,
+      announcement: '☀️ 飞升台仙门洞开，北寒仙域法则锁血护道，降下混沌仙罡雷！',
+      shieldGain: 90,
       strengthGain: 4,
       intents: [
         { kind: 'tribulation-bolt', label: '仙劫 · 阴阳混沌雷', damage: 22, hits: 2 },
-        { kind: 'tribulation-bolt', label: '仙劫 · 诛仙法则雷', damage: 46, vulnerable: 2 },
-        { kind: 'tribulation-bolt', label: '终劫 · 接引开天仙光', damage: 58 },
+        { kind: 'tribulation-bolt', label: '仙劫 · 诛仙法则雷', damage: 44, vulnerable: 2 },
+        { kind: 'tribulation-bolt', label: '终劫 · 接引开天仙光', damage: 56 },
       ],
     },
     intents: [
@@ -318,129 +318,129 @@ export const ENEMIES: Record<string, EnemyDef> = {
       { kind: 'tribulation-bolt', label: '四重 · 九天罡煞雷', damage: 36, vulnerable: 2 },
       { kind: 'tribulation-bolt', label: '五重 · 太乙真雷雨', damage: 16, hits: 3 },
       { kind: 'tribulation-bolt', label: '六重 · 万古寂灭雷', damage: 44, weak: 2 },
-      { kind: 'tribulation-bolt', label: '终劫 · 飞升北寒仙劫', damage: 54 },
+      { kind: 'tribulation-bolt', label: '终劫 · 飞升北寒仙劫', damage: 52 },
     ],
   },
 
   // ==================== 第七卷：仙界篇 · 北寒初仙（真仙 ➔ 金仙） ====================
   'e7-court-envoy': {
-    id: 'e7-court-envoy', name: '北寒仙宫巡察仙使', title: '天庭真仙后期战将', act: 7, tier: 'normal', maxHp: 370, artStyle: 'celestial',
-    trait: { id: 'sword-guard', name: '仙窍罡衣', description: '你每回合打出的第 4 张牌起，自动凝结 12 点仙罡护盾。', value: 12 },
+    id: 'e7-court-envoy', name: '北寒仙宫巡察仙使', title: '天庭真仙后期战将', act: 7, tier: 'normal', maxHp: 620, artStyle: 'celestial',
+    trait: { id: 'sword-guard', name: '仙窍罡衣', description: '你每回合打出的第 4 张牌起，自动凝结 16 点仙罡护盾。', value: 16 },
     intents: [
       { kind: 'attack', label: '金阙仙剑斩', damage: 40 },
-      { kind: 'defend', label: '仙窍护体金光', block: 48, strengthGain: 4 },
+      { kind: 'defend', label: '仙窍护体金光', block: 60, strengthGain: 4 },
       { kind: 'multi-attack', label: '天庭诛逆三击', damage: 17, hits: 3 },
     ],
   },
   'e7-corpse-immortal': {
-    id: 'e7-corpse-immortal', name: '冥寒仙府不灭尸仙', title: '古仙遗蜕通灵', act: 7, tier: 'normal', maxHp: 385, artStyle: 'demon',
+    id: 'e7-corpse-immortal', name: '冥寒仙府不灭尸仙', title: '古仙遗蜕通灵', act: 7, tier: 'normal', maxHp: 650, artStyle: 'demon',
     intents: [
       { kind: 'debuff', label: '太阴仙煞侵体', damage: 32, poison: 8, vulnerable: 2 },
       { kind: 'attack', label: '碎窍仙拳', damage: 44 },
-      { kind: 'defend', label: '万载寒玉甲', block: 50 },
+      { kind: 'defend', label: '万载寒玉甲', block: 65 },
     ],
   },
   'e7-elite-zhulong': {
-    id: 'e7-elite-zhulong', name: '烛龙道叛宗金仙 · 奇摩子', title: '金仙中期灵目大修', act: 7, tier: 'elite', maxHp: 530, artStyle: 'cultivator',
+    id: 'e7-elite-zhulong', name: '烛龙道叛宗金仙 · 奇摩子', title: '金仙中期灵目大修', act: 7, tier: 'elite', maxHp: 920, artStyle: 'cultivator',
     trait: { id: 'anti-skill', name: '灵目洞察', description: '你每打出 1 张【运转】牌，奇摩子获得 +3 杀意。', value: 3 },
     intents: [
       { kind: 'multi-attack', label: '岁月毒火双斩', damage: 24, hits: 2, poison: 6 },
-      { kind: 'buff', label: '点亮百枚仙窍', block: 52, strengthGain: 5 },
+      { kind: 'buff', label: '点亮百枚仙窍', block: 70, strengthGain: 5 },
       { kind: 'attack', label: '金仙法则灭魂击', damage: 48, addCurse: 'curse-whisper' },
     ],
   },
   'e7-boss-xiaojinhan': {
-    id: 'e7-boss-xiaojinhan', name: '冥寒夺道 · 北寒宫主萧晋寒', title: '金仙巅峰 · 空间晶丝法则主', act: 7, tier: 'boss', maxHp: 740, artStyle: 'celestial',
+    id: 'e7-boss-xiaojinhan', name: '冥寒夺道 · 北寒宫主萧晋寒', title: '金仙巅峰 · 空间晶丝法则主', act: 7, tier: 'boss', maxHp: 1380, artStyle: 'celestial',
     trait: { id: 'stone-shell', name: '北寒空间玄冰障', description: '每回合首击伤害减半（若你参悟【空间法则】可直接撕裂无视！）。', value: 50 },
     phase2: {
       title: '萧晋寒 · 玄冰法则仙域全开',
-      announcement: '❄️ 萧晋寒引爆冥寒仙宫本源，展开百里玄冰法则仙域！护盾 +75，杀意 +5！',
-      shieldGain: 75,
+      announcement: '❄️ 萧晋寒锁血引爆冥寒本源，展开百里玄冰仙域！护盾 +120，本回合受击减半！',
+      shieldGain: 120,
       strengthGain: 5,
       intents: [
         { kind: 'multi-attack', label: '空间冰晶千刃斩', damage: 22, hits: 3 },
         { kind: 'debuff', label: '仙域冰封万物', damage: 44, weak: 2, vulnerable: 2, addCurse: 'curse-whisper' },
-        { kind: 'attack', label: '北寒绝仙一击', damage: 64 },
+        { kind: 'attack', label: '北寒绝仙一击', damage: 62 },
       ],
     },
     intents: [
-      { kind: 'buff', label: '凝结玄冰仙域', block: 55, strengthGain: 4 },
+      { kind: 'buff', label: '凝结玄冰仙域', block: 75, strengthGain: 4 },
       { kind: 'multi-attack', label: '空间晶丝三绝', damage: 19, hits: 3 },
       { kind: 'debuff', label: '冥寒封脉光', damage: 38, weak: 2 },
-      { kind: 'attack', label: '金仙镇世印', damage: 54 },
+      { kind: 'attack', label: '金仙镇世印', damage: 52 },
     ],
   },
 
   // ==================== 第八卷：仙界篇 · 灰界太乙（太乙 ➔ 大罗） ====================
   'e8-grey-lord': {
-    id: 'e8-grey-lord', name: '灰界三目太乙煞主', title: '阴括城煞气霸主', act: 8, tier: 'normal', maxHp: 450, artStyle: 'demon',
+    id: 'e8-grey-lord', name: '灰界三目太乙煞主', title: '阴括城煞气霸主', act: 8, tier: 'normal', maxHp: 780, artStyle: 'demon',
     trait: { id: 'thorns', name: '死气煞罡', description: '每次受到直接攻击时，反震你 6 点伤害。', value: 6 },
     intents: [
       { kind: 'attack', label: '灰界灭仙光', damage: 48, addCurse: 'curse-whisper' },
       { kind: 'multi-attack', label: '三目煞雷连轰', damage: 20, hits: 3 },
-      { kind: 'defend', label: '九幽洗煞盾', block: 58, strengthGain: 4 },
+      { kind: 'defend', label: '九幽洗煞盾', block: 75, strengthGain: 4 },
     ],
   },
   'e8-time-soldier': {
-    id: 'e8-time-soldier', name: '真言门护宗岁月道兵', title: '太乙巅峰时间傀儡', act: 8, tier: 'elite', maxHp: 640, artStyle: 'celestial',
-    trait: { id: 'sword-guard', name: '光阴流速凝滞', description: '你每回合打出的第 4 张牌起，道兵自动获得 16 点护盾。', value: 16 },
+    id: 'e8-time-soldier', name: '真言门护宗岁月道兵', title: '太乙巅峰时间傀儡', act: 8, tier: 'elite', maxHp: 1180, artStyle: 'celestial',
+    trait: { id: 'sword-guard', name: '光阴流速凝滞', description: '你每回合打出的第 4 张牌起，道兵自动获得 20 点护盾。', value: 20 },
     intents: [
       { kind: 'debuff', label: '真实之眼迟滞', damage: 42, weak: 2, vulnerable: 2 },
       { kind: 'multi-attack', label: '光阴飞梭三连', damage: 22, hits: 3 },
-      { kind: 'buff', label: '倒流岁月金身', block: 65, strengthGain: 5 },
+      { kind: 'buff', label: '倒流岁月金身', block: 85, strengthGain: 5 },
     ],
   },
   'e8-boss-corpse-self': {
-    id: 'e8-boss-corpse-self', name: '斩三尸劫 · 大罗恶尸斩道魔君', title: '晋升大罗必渡三尸心魔劫', act: 8, tier: 'boss', maxHp: 880, artStyle: 'demon',
+    id: 'e8-boss-corpse-self', name: '斩三尸劫 · 大罗恶尸斩道魔君', title: '晋升大罗必渡三尸心魔劫', act: 8, tier: 'boss', maxHp: 1720, artStyle: 'demon',
     trait: { id: 'seal-lock', name: '恶尸乱道', description: '恶尸侵扰本源，你的灵印槽减少 1 格。', value: 2 },
     phase2: {
       title: '恶尸暴走 · 大罗无量真魔仙域',
-      announcement: '👹 大罗恶尸吞噬执念暴走，展开无量血海仙域！护盾 +90，杀意 +6！',
-      shieldGain: 90,
+      announcement: '👹 大罗恶尸锁血展开无量血海仙域！护盾 +150，本回合受击减半！',
+      shieldGain: 150,
       strengthGain: 6,
       intents: [
-        { kind: 'multi-attack', label: '斩尸灭道三连击', damage: 25, hits: 3 },
-        { kind: 'debuff', label: '大罗道果剥夺', damage: 50, weak: 2, vulnerable: 2, addCurse: 'curse-flaw' },
-        { kind: 'attack', label: '毁天灭地斩仙剑', damage: 72 },
+        { kind: 'multi-attack', label: '斩尸灭道三连击', damage: 24, hits: 3 },
+        { kind: 'debuff', label: '大罗道果剥夺', damage: 48, weak: 2, vulnerable: 2, addCurse: 'curse-flaw' },
+        { kind: 'attack', label: '毁天灭地斩仙剑', damage: 68 },
       ],
     },
     intents: [
-      { kind: 'buff', label: '复刻本尊神通', block: 65, strengthGain: 5 },
+      { kind: 'buff', label: '复刻本尊神通', block: 85, strengthGain: 5 },
       { kind: 'multi-attack', label: '三尸魔剑狂袭', damage: 21, hits: 3 },
-      { kind: 'debuff', label: '心魔蚀仙窍', damage: 45, vulnerable: 2, addCurse: 'curse-whisper' },
-      { kind: 'attack', label: '大罗碎虚掌', damage: 62 },
+      { kind: 'debuff', label: '心魔蚀仙窍', damage: 44, vulnerable: 2, addCurse: 'curse-whisper' },
+      { kind: 'attack', label: '大罗碎虚掌', damage: 60 },
     ],
   },
 
   // ==================== 第九卷：仙界篇终章 · 混沌道祖（决战古或今） ====================
   'e9-elite-jiuyuan': {
-    id: 'e9-elite-jiuyuan', name: '中土天庭 · 镇狱大罗天尊', title: '天庭七君之一', act: 9, tier: 'elite', maxHp: 740, artStyle: 'celestial',
+    id: 'e9-elite-jiuyuan', name: '中土天庭 · 镇狱大罗天尊', title: '天庭七君之一', act: 9, tier: 'elite', maxHp: 1450, artStyle: 'celestial',
     trait: { id: 'stone-shell', name: '混沌天庭仙甲', description: '每回合首击伤害减半（【空间法则】可无视）。', value: 50 },
     intents: [
-      { kind: 'defend', label: '诸天星斗护界', block: 75, strengthGain: 5 },
+      { kind: 'defend', label: '诸天星斗护界', block: 95, strengthGain: 5 },
       { kind: 'multi-attack', label: '镇狱神戟三连', damage: 24, hits: 3 },
-      { kind: 'attack', label: '大罗敕令抹杀', damage: 60, vulnerable: 2 },
+      { kind: 'attack', label: '大罗敕令抹杀', damage: 58, vulnerable: 2 },
     ],
   },
   'e9-boss-guhuojin': {
-    id: 'e9-boss-guhuojin', name: '天庭之主 · 时间道祖古或今', title: '三千大道至尊 · 混沌时间之主', act: 9, tier: 'boss', maxHp: 1080, artStyle: 'celestial',
+    id: 'e9-boss-guhuojin', name: '天庭之主 · 时间道祖古或今', title: '三千大道至尊 · 混沌时间之主', act: 9, tier: 'boss', maxHp: 2350, artStyle: 'celestial',
     trait: { id: 'anti-skill', name: '时间天道威压', description: '你每打出 1 张【运转】牌，时间道祖获得 +4 杀意。', value: 4 },
     phase2: {
       title: '古或今 · 混沌万古时间长河真身',
-      announcement: '⏳ 古或今融身混沌时间长河，万古纪元崩塌重演！护盾 +110，杀意 +7！',
-      shieldGain: 110,
-      strengthGain: 7,
+      announcement: '⏳ 古或今锁血融身混沌时间长河，万古纪元重演！护盾 +200，本回合受击减半！',
+      shieldGain: 200,
+      strengthGain: 6,
       intents: [
-        { kind: 'multi-attack', label: '万古光阴湮灭三斩', damage: 28, hits: 3 },
-        { kind: 'debuff', label: '诸天纪元归零敕令', damage: 56, weak: 2, vulnerable: 2, addCurse: 'curse-flaw' },
-        { kind: 'attack', label: '混沌道祖 · 终极抹杀', damage: 82 },
+        { kind: 'multi-attack', label: '万古光阴湮灭三斩', damage: 26, hits: 3 },
+        { kind: 'debuff', label: '诸天纪元归零敕令', damage: 54, weak: 2, vulnerable: 2, addCurse: 'curse-flaw' },
+        { kind: 'attack', label: '混沌道祖 · 终极抹杀', damage: 78 },
       ],
     },
     intents: [
-      { kind: 'buff', label: '召唤光阴长河护体', block: 80, strengthGain: 5, addCurse: 'curse-whisper' },
-      { kind: 'multi-attack', label: '时间金色法则神链', damage: 24, hits: 3 },
-      { kind: 'debuff', label: '剥夺万载岁月', damage: 50, weak: 2, vulnerable: 2 },
-      { kind: 'attack', label: '大罗混沌归墟印', damage: 70 },
+      { kind: 'buff', label: '召唤光阴长河护体', block: 110, strengthGain: 5, addCurse: 'curse-whisper' },
+      { kind: 'multi-attack', label: '时间金色法则神链', damage: 23, hits: 3 },
+      { kind: 'debuff', label: '剥夺万载岁月', damage: 48, weak: 2, vulnerable: 2 },
+      { kind: 'attack', label: '大罗混沌归墟印', damage: 68 },
     ],
   },
 };

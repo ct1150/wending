@@ -17,8 +17,10 @@ interface TopHudProps {
   run: RunState;
   muted: boolean;
   bgmOn: boolean;
+  fastPlay?: boolean;
   compact?: boolean;
   onUseConsumable?: (slotIdx: number) => void;
+  onToggleFastPlay?: () => void;
   onToggleMute: () => void;
   onToggleBgm: () => void;
   onOpenDeck: () => void;
@@ -29,8 +31,10 @@ export function TopHud({
   run,
   muted,
   bgmOn,
+  fastPlay,
   compact,
   onUseConsumable,
+  onToggleFastPlay,
   onToggleMute,
   onToggleBgm,
   onOpenDeck,
@@ -44,9 +48,12 @@ export function TopHud({
   const lowHp = run.hp <= run.maxHp * 0.3;
   const world = WORLD_INFO[getWorldByAct(run.act)];
   const secMethod = run.secondaryMethod ? SECONDARY_METHODS[run.secondaryMethod] : null;
+  const secMethod2 = run.secondSecondaryMethod ? SECONDARY_METHODS[run.secondSecondaryMethod] : null;
   const trueSpirit = run.trueSpirit ? TRUE_SPIRITS[run.trueSpirit] : null;
   const supremeLaw = run.supremeLaw ? SUPREME_LAWS[run.supremeLaw] : null;
   const canUsePouch = run.phase === 'combat' && run.combat?.outcome === 'ongoing';
+  const maxPouch = run.maxConsumables ?? 3;
+  const shaVal = run.shaCorruption ?? 0;
 
   const toggleLandscapeFullscreen = async () => {
     try {
@@ -118,6 +125,18 @@ export function TopHud({
               ☯ {secMethod.badge}
             </button>
           )}
+          {secMethod2 && (
+            <button
+              type="button"
+              class="hud-pill gold hud-pill-btn"
+              onClick={() => {
+                sfx.click();
+                setHudTip({ title: `☯ 第二辅修 · ${secMethod2.name}`, body: secMethod2.description });
+              }}
+            >
+              ☯ {secMethod2.badge}
+            </button>
+          )}
           <button
             type="button"
             class={`hud-pill hud-pill-btn${lowHp ? ' danger' : ''}`}
@@ -132,6 +151,24 @@ export function TopHud({
             ❤ {run.hp}/{run.maxHp}
           </button>
           <span class="hud-pill">💎 {run.gold}</span>
+          {run.act >= 7 && (
+            <button
+              type="button"
+              class={`hud-pill hud-pill-btn${shaVal >= 50 ? ' danger' : ' gold'}`}
+              onClick={() => {
+                sfx.click();
+                setHudTip({
+                  title: `☀️ 仙界天地煞气（当前 ${shaVal}%）`,
+                  body:
+                    shaVal < 50
+                      ? '当前【仙窍清明】（煞气 <50%）：你的所有直接攻伐神通伤害额外 +10%！每次战斗胜利会积累 18% 煞气，可在洞府【洗煞池】化煞为气血上限。'
+                      : '当前【煞气反噬】（煞气 ≥50%）：开战时会被煞气侵体往弃牌堆塞入 1 张心魔！请尽快前往【洞府洗煞池】涤清煞气并转化为永久气血上限！',
+                });
+              }}
+            >
+              ☯ 煞{shaVal}%
+            </button>
+          )}
           {run.daoTokens > 0 && (
             <button
               type="button"
@@ -139,18 +176,18 @@ export function TopHud({
               onClick={() => {
                 sfx.click();
                 setHudTip({
-                  title: `✦ 掌天道果信物（${run.daoTokens} / 3）`,
-                  body: '集齐 ≥ 3 枚掌天道果信物并在第九卷斩破时间道祖【古或今】，即可达成超脱混沌完美真结局！',
+                  title: `✦ 掌天道果信物（${run.daoTokens} / 5）`,
+                  body: '集齐 ≥ 5 枚掌天道果信物并在第九卷击败终极态时间道祖【古或今】，可达成完美超脱真结局！多余的道果可在任意【洞府丹庐】中用于催熟神通或兼修第二辅修心法！',
                 });
               }}
             >
-              ✦ {run.daoTokens}/3
+              ✦ {run.daoTokens}/5
             </button>
           )}
 
-          {/* 3 格随身乾坤丹符袋（轻触查看说明，战中可确认瞬发，防手机误触） */}
+          {/* 随身乾坤丹符袋（默认 3 格，可在坊市扩至 4 格） */}
           <div class="pouch-inline">
-            {[0, 1, 2].map((idx) => {
+            {Array.from({ length: maxPouch }, (_, idx) => {
               const cid = run.consumables[idx];
               const def = cid ? CONSUMABLES[cid] : null;
               if (!def) {
@@ -179,6 +216,19 @@ export function TopHud({
         </div>
 
         <div class="hud-group">
+          {compact && onToggleFastPlay && (
+            <button
+              type="button"
+              class={`btn btn-sm${fastPlay ? ' btn-primary' : ''}`}
+              title="切换新手两步预览出牌 / 老手单击极速出牌"
+              onClick={() => {
+                sfx.click();
+                onToggleFastPlay();
+              }}
+            >
+              {fastPlay ? '⚡ 快出' : '👁 预览'}
+            </button>
+          )}
           <button
             type="button"
             class="btn btn-sm"

@@ -74,8 +74,12 @@ export function loadActiveRun(): RunState | null {
     if (!parsed || parsed.version !== 3 || !Array.isArray(parsed.deck)) return null;
     parsed.consumables = parsed.consumables ?? [];
     parsed.secondaryMethod = parsed.secondaryMethod ?? null;
+    parsed.secondSecondaryMethod = parsed.secondSecondaryMethod ?? null;
     parsed.trueSpirit = parsed.trueSpirit ?? null;
     parsed.supremeLaw = parsed.supremeLaw ?? null;
+    parsed.treasureTier = parsed.treasureTier ?? 0;
+    parsed.maxConsumables = parsed.maxConsumables ?? 3;
+    parsed.shaCorruption = parsed.shaCorruption ?? 0;
     return parsed;
   } catch {
     return null;

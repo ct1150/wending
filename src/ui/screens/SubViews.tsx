@@ -357,30 +357,69 @@ export function RewardView({
   );
 }
 
-// ==================== 洞府三合一 ====================
+// ==================== 洞府丹庐（含洗煞池 & 掌天道果额外参悟） ====================
 export function AbodeView({
   run,
   onUpgradeEnchant,
   onBrew,
   onPurge,
+  onCleanseSha,
+  onSpendDaoToken,
   onLeave,
 }: {
   run: RunState;
   onUpgradeEnchant: (cardUid: string, enchantId?: EnchantId) => void;
   onBrew: (mode: 'steady' | 'bold') => string;
   onPurge: (cardUid: string) => void;
+  onCleanseSha: () => string;
+  onSpendDaoToken: (mode: 'empower-three' | 'second-method') => string;
   onLeave: () => void;
 }) {
-  const [tab, setTab] = useState<'enchant' | 'brew' | 'purge'>('enchant');
+  const [tab, setTab] = useState<'enchant' | 'brew' | 'purge' | 'sha'>('enchant');
   const [selectedMat, setSelectedMat] = useState<EnchantId | undefined>(run.materials[0]);
   const [brewMsg, setBrewMsg] = useState('');
+  const [tokenMsg, setTokenMsg] = useState('');
 
   return (
     <main class="panel sub-stage">
-      <h2>🔥 洞府丹庐 · 闭关三择</h2>
+      <h2>🔥 洞府丹庐 · 闭关潜修</h2>
       <p style={{ margin: 0, color: 'var(--muted)' }}>
-        灵脉静室已开，每次入洞府可在【参悟附魔】【开炉炼丹】【斩念删牌】中择一施行。
+        灵脉静室已开，每次入洞府可在常规闭关项中择一施行；若持有富余【掌天道果信物】还可额外免费催熟参悟！
       </p>
+
+      {/* 掌天绿液参悟（不占常规闭关次数！需权衡消耗道果 vs 留满 5 枚挑战完美真结局） */}
+      {run.daoTokens > 0 && (
+        <div class="panel" style={{ padding: '12px 14px', borderColor: '#ffd875', background: 'rgba(48, 38, 16, 0.5)' }}>
+          <div style={{ fontSize: '13px', fontWeight: 700, color: '#ffe599', marginBottom: '6px' }}>
+            ✦ 掌天绿液参悟（额外免费行动 · 当前持有 {run.daoTokens} 枚道果，留满 5 枚可开启终极真结局）
+          </div>
+          {tokenMsg && <div style={{ fontSize: '12.5px', color: 'var(--green)', marginBottom: '6px' }}>{tokenMsg}</div>}
+          <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+            <button
+              type="button"
+              class="btn btn-sm"
+              disabled={run.daoTokens < 1}
+              onClick={() => {
+                sfx.resonance();
+                setTokenMsg(onSpendDaoToken('empower-three'));
+              }}
+            >
+              🌿 耗 1 道果：催熟 3 张神通至满级+ 并回 50% 血
+            </button>
+            <button
+              type="button"
+              class="btn btn-sm"
+              disabled={run.daoTokens < 2}
+              onClick={() => {
+                sfx.breakthrough();
+                setTokenMsg(onSpendDaoToken('second-method'));
+              }}
+            >
+              ☯ 耗 2 道果：{!run.secondSecondaryMethod ? '逆天兼修第 2 门辅修心法' : '造化灌顶（费用上限+1 & 气血上限+25）'}
+            </button>
+          </div>
+        </div>
+      )}
 
       {run.abodeUsed ? (
         <div class="panel" style={{ padding: '16px', borderColor: 'var(--gold-bright)' }}>
@@ -403,7 +442,31 @@ export function AbodeView({
             <button type="button" class={`btn${tab === 'purge' ? ' btn-primary' : ''}`} onClick={() => setTab('purge')}>
               ✂️ 斩三尸（删废牌/心魔）
             </button>
+            {run.act >= 7 && (
+              <button type="button" class={`btn${tab === 'sha' ? ' btn-primary' : ''}`} onClick={() => setTab('sha')}>
+                🌊 洗煞池淬窍（当前煞气 {run.shaCorruption ?? 0}%）
+              </button>
+            )}
           </div>
+
+          {tab === 'sha' && run.act >= 7 && (
+            <div class="choice-list">
+              <button
+                type="button"
+                class="btn choice-btn"
+                onClick={() => {
+                  sfx.breakthrough();
+                  setBrewMsg(onCleanseSha());
+                }}
+              >
+                <strong>🌊 跃入洗煞仙池 · 化煞点亮仙窍</strong>
+                <span class="choice-reward">
+                  立即将体内 {run.shaCorruption ?? 0}% 煞气清零（恢复仙窍清明 +10% 伤害），永久提升{' '}
+                  {18 + Math.floor((run.shaCorruption ?? 0) * 0.2)} 点最大气血、回血 45% 并获 1 份附魔仙材！
+                </span>
+              </button>
+            </div>
+          )}
 
           {tab === 'enchant' && (
             <div>
@@ -554,7 +617,7 @@ export function EventView({
   );
 }
 
-// ==================== 仙城坊市 ====================
+// ==================== 仙城坊市（含百造山炼宝、乾坤袋扩容、递增删牌与货架刷新） ====================
 export function ShopView({
   run,
   onBuyCard,
@@ -563,6 +626,9 @@ export function ShopView({
   onBuyConsumable,
   onBuyElixir,
   onPurgeCard,
+  onRestock,
+  onForgeTreasure,
+  onExpandPouch,
   onLeave,
 }: {
   run: RunState;
@@ -572,28 +638,33 @@ export function ShopView({
   onBuyConsumable: (idx: number) => void;
   onBuyElixir: () => void;
   onPurgeCard: (uid: string) => void;
+  onRestock: () => void;
+  onForgeTreasure: () => void;
+  onExpandPouch: () => void;
   onLeave: () => void;
 }) {
   const [purging, setPurging] = useState(false);
   const shop = run.shop!;
+  const maxPouch = run.maxConsumables ?? 3;
+  const tTier = run.treasureTier ?? 0;
 
   return (
     <main class="panel sub-stage">
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '8px' }}>
-        <h2>💰 仙城坊市 · 奇珍阁</h2>
+        <h2>💰 仙城坊市 · 百造奇珍阁（持有 💎{run.gold}）</h2>
         <button type="button" class="btn btn-primary" onClick={onLeave}>
           离开坊市 ➔
         </button>
       </div>
 
-      <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
+      <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
         <button
           type="button"
           class="btn"
           disabled={shop.elixirBought || run.gold < shop.elixirPrice}
           onClick={() => { sfx.coin(); onBuyElixir(); }}
         >
-          🍶 购壮魄青灵丹（{shop.elixirPrice} 灵石：最大气血+10、回25血）{shop.elixirBought ? ' [已售罄]' : ''}
+          🍶 壮魄青灵丹（{shop.elixirPrice} 灵石：涨气血上限并大回血）{shop.elixirBought ? ' [已售罄]' : ''}
         </button>
         <button
           type="button"
@@ -601,8 +672,35 @@ export function ShopView({
           disabled={shop.purged || run.gold < shop.purgePrice || run.deck.length <= 5}
           onClick={() => setPurging(!purging)}
         >
-          ✂️ 坊市洗髓删牌（{shop.purgePrice} 灵石）{shop.purged ? ' [已用]' : ''}
+          ✂️ 洗髓删牌（{shop.purgePrice} 灵石 · 余 {3 - (shop.purgeCount ?? 0)} 次）{shop.purged ? ' [已满]' : ''}
         </button>
+        <button
+          type="button"
+          class="btn"
+          disabled={run.gold < shop.restockPrice}
+          onClick={() => { sfx.coin(); onRestock(); }}
+        >
+          🔄 刷新全阁货架（{shop.restockPrice} 灵石）
+        </button>
+        <button
+          type="button"
+          class="btn"
+          disabled={shop.treasureForged || tTier >= 3 || run.gold < shop.treasureForgePrice}
+          onClick={() => { sfx.treasure(); onForgeTreasure(); }}
+        >
+          🔨 百造山淬炼法宝（{shop.treasureForgePrice} 灵石：威能+35%{tTier === 1 ? '且充能-1' : ''} · 当前+{tTier}/3）
+          {tTier >= 3 ? ' [满阶]' : shop.treasureForged ? ' [本坊已炼]' : ''}
+        </button>
+        {maxPouch < 4 && (
+          <button
+            type="button"
+            class="btn"
+            disabled={run.gold < shop.pouchExpandPrice}
+            onClick={() => { sfx.coin(); onExpandPouch(); }}
+          >
+            👜 乾坤丹符袋扩至 4 格（{shop.pouchExpandPrice} 灵石）
+          </button>
+        )}
       </div>
 
       {purging && !shop.purged && (
@@ -632,11 +730,11 @@ export function ShopView({
               key={`${item.def.id}-${idx}`}
               type="button"
               class="btn"
-              disabled={item.sold || run.gold < item.price || run.consumables.length >= 3}
+              disabled={item.sold || run.gold < item.price || run.consumables.length >= maxPouch}
               onClick={() => { sfx.coin(); onBuyConsumable(idx); }}
             >
               {item.def.icon} {item.def.name} ({item.price}灵石) — {item.def.description}
-              {item.sold ? ' [已购]' : run.consumables.length >= 3 ? ' [袋满]' : ''}
+              {item.sold ? ' [已购]' : run.consumables.length >= maxPouch ? ' [袋满]' : ''}
             </button>
           ))}
           {shop.relics.map((item, idx) => (
