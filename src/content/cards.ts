@@ -443,6 +443,65 @@ export const CARDS: Record<string, CardDef> = {
     },
   },
 
+  // ==================== 凡人灵界/仙界名场面绝世神通 ====================
+  'sw-dageng-sword-array': {
+    id: 'sw-dageng-sword-array', name: '青元 · 大庚剑阵', lineage: 'sword', type: 'array', rarity: 'mythic', element: 'metal', cost: 2,
+    description: '获 3 层【剑意】，连斩 3 道 9 点庚金剑芒，并布下永续【大庚剑阵】（每回合 12 伤 + 6 盾）。',
+    effect: {
+      swordIntent: 3, damage: 9, hits: 3,
+      arrayPower: { id: 'arr-dageng-sword', name: '大庚剑阵', damagePerTurn: 12, blockPerTurn: 6 },
+    },
+    upgradeName: '青元 · 大庚剑阵+',
+    upgradeDescription: '获 4 层【剑意】，连斩 3 道 12 点庚金剑芒，并布下【大庚剑阵+】（每回合 16 伤 + 8 盾）。',
+    upgradeEffect: {
+      swordIntent: 4, damage: 12, hits: 3,
+      arrayPower: { id: 'arr-dageng-sword', name: '大庚剑阵+', damagePerTurn: 16, blockPerTurn: 8 },
+    },
+  },
+  'al-gold-devour-swarm': {
+    id: 'al-gold-devour-swarm', name: '噬金虫海催熟', lineage: 'alchemy', type: 'skill', rarity: 'mythic', element: 'wood', cost: 2,
+    exhaust: true,
+    description: '放出成熟体噬金虫群：造成 2 次 11 点穿甲噬咬，施加 10 层【丹毒】并获 14 点护体罡气。消耗。',
+    effect: { damage: 11, hits: 2, pierce: true, poison: 10, block: 14 },
+    upgradeName: '噬金虫王催熟+',
+    upgradeDescription: '造成 2 次 14 点穿甲噬咬，施加 14 层【丹毒】并获 18 点护体罡气。消耗。',
+    upgradeEffect: { damage: 14, hits: 2, pierce: true, poison: 14, block: 18 },
+  },
+  'ar-five-color-light': {
+    id: 'ar-five-color-light', name: '五色灭绝神光', lineage: 'array', type: 'attack', rarity: 'mythic', element: 'water', cost: 2,
+    description: '获得 18 点【护体罡气】（本回合不清空），并轰出等同当前护体罡气 100% 的穿甲五色神光！',
+    effect: { block: 18, retainBlock: true, damagePerBlock: 1, pierce: true },
+    upgradeName: '大五行灭绝神光+',
+    upgradeDescription: '获得 24 点【护体罡气】（本回合不清空），并轰出等同当前罡气 120% 的穿甲神光！',
+    upgradeEffect: { block: 24, retainBlock: true, damagePerBlock: 1.2, pierce: true },
+  },
+  'dm-xuantian-slash': {
+    id: 'dm-xuantian-slash', name: '玄天斩灵血剑', lineage: 'demon', type: 'forbidden', rarity: 'mythic', element: 'sha', cost: 1,
+    exhaust: true,
+    description: '混沌万灵榜第一：燃血 8 点，造成 38 点穿甲斩击；若斩杀强敌，永久 +4 最大气血上限！消耗。',
+    effect: { selfHpCost: 8, damage: 38, pierce: true, gainMaxHp: 4 },
+    upgradeName: '玄天斩灵仙剑+',
+    upgradeDescription: '燃血 6 点，造成 48 点穿甲斩击；若斩杀强敌，永久 +6 最大气血上限！消耗。',
+    upgradeEffect: { selfHpCost: 6, damage: 48, pierce: true, gainMaxHp: 6 },
+  },
+  'nu-time-lantern': {
+    id: 'nu-time-lantern', name: '岁月神灯 · 光阴斩', lineage: 'neutral', type: 'skill', rarity: 'mythic', element: 'fire', cost: 1,
+    exhaust: true,
+    description: '燃起岁月法则之火：造成 22 点穿甲火伤，施加 2 层【破绽】与 2 层【虚弱】，抽 2 牌并回 1 真元！消耗。',
+    effect: { damage: 22, pierce: true, vulnerable: 2, weak: 2, draw: 2, gainQi: 1 },
+    upgradeName: '岁月神灯 · 光阴斩+',
+    upgradeDescription: '造成 30 点穿甲火伤，施加 3 层【破绽】与 3 层【虚弱】，抽 2 牌并回 1 真元！消耗。',
+    upgradeEffect: { damage: 30, pierce: true, vulnerable: 3, weak: 3, draw: 2, gainQi: 1 },
+  },
+  'nu-samsara-fist': {
+    id: 'nu-samsara-fist', name: '六道轮回拳', lineage: 'neutral', type: 'attack', rarity: 'rare', element: 'earth', cost: 2,
+    description: '获得 12 点护体罡气，轰出 2 拳各 11 点伤害，恢复 5 点气血。',
+    effect: { block: 12, damage: 11, hits: 2, heal: 5 },
+    upgradeName: '六道轮回真拳+',
+    upgradeDescription: '获得 16 点护体罡气，轰出 2 拳各 14 点伤害，恢复 8 点气血。',
+    upgradeEffect: { block: 16, damage: 14, hits: 2, heal: 8 },
+  },
+
   // ==================== 心魔与道伤 ====================
   'curse-whisper': {
     id: 'curse-whisper', name: '心魔低语', lineage: 'curse', type: 'curse', rarity: 'curse', element: 'none', cost: 1,

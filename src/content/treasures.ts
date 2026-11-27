@@ -322,6 +322,38 @@ export const RELICS: Record<string, RelicDef> = {
     hook: 'curse-power',
     value: 1,
   },
+  'law-celestial-qi': {
+    id: 'law-celestial-qi',
+    name: '天道法则 · 先天紫气',
+    rarity: 'law',
+    description: '每场战斗第 1 回合额外获得 2 点真元并多抽 2 张牌。',
+    hook: 'start-qi',
+    value: 2,
+  },
+  'law-nirvana-body': {
+    id: 'law-nirvana-body',
+    name: '天道法则 · 梵圣金身',
+    rarity: 'law',
+    description: '拾取时立即永久提升 28 点最大气血上限，且每场开战获 16 点护体罡气。',
+    hook: 'maxhp-pickup',
+    value: 28,
+  },
+  'law-myriad-venom': {
+    id: 'law-myriad-venom',
+    name: '天道法则 · 厄难毒体',
+    rarity: 'law',
+    description: '你施加的所有【丹毒】层数额外 +4。',
+    hook: 'poison-boost',
+    value: 4,
+  },
+  'law-karma-blade': {
+    id: 'law-karma-blade',
+    name: '天道法则 · 因果反噬',
+    rarity: 'law',
+    description: '每场战斗初始自带 12 层【剑罡反击】。',
+    hook: 'counter-start',
+    value: 12,
+  },
 };
 
 export const LAW_RELIC_LIST = Object.values(RELICS).filter((r) => r.rarity === 'law');

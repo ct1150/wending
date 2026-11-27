@@ -1,14 +1,15 @@
-import type { LineageId, MetaSave, PastLifeRemnant, RunState } from './types';
+import type { ActNumber, LineageId, MetaSave, PastLifeRemnant, RunState, WorldId } from './types';
 
 const META_KEY = 'baishi-wending-roguelike-meta-v1';
-const RUN_KEY = 'baishi-wending-roguelike-run-v2';
+const RUN_KEY = 'baishi-wending-roguelike-run-v3';
 
 export function defaultMetaSave(): MetaSave {
   return {
-    version: 1,
+    version: 2,
     totalLives: 0,
     karmaPoints: 0,
     unlockedLineages: ['sword', 'demon'],
+    unlockedStartWorlds: ['mortal'],
     unlockedRelics: [],
     achievements: [],
     discoveredCards: [],
@@ -25,12 +26,35 @@ export function defaultMetaSave(): MetaSave {
   };
 }
 
+export function getUnlockedStartWorlds(meta: MetaSave): WorldId[] {
+  const set = new Set<WorldId>(['mortal', ...(meta.unlockedStartWorlds ?? [])]);
+  if (meta.bestActReached >= 4) set.add('spirit');
+  if (meta.bestActReached >= 7) set.add('immortal');
+  return Array.from(set);
+}
+
+export function recordActMilestoneInMeta(meta: MetaSave, act: ActNumber): MetaSave {
+  const nextBest = Math.max(meta.bestActReached, act);
+  const worlds = new Set<WorldId>(getUnlockedStartWorlds(meta));
+  if (nextBest >= 4) worlds.add('spirit');
+  if (nextBest >= 7) worlds.add('immortal');
+  const next: MetaSave = {
+    ...meta,
+    bestActReached: nextBest,
+    unlockedStartWorlds: Array.from(worlds),
+  };
+  saveMetaSave(next);
+  return next;
+}
+
 export function loadMetaSave(): MetaSave {
   try {
     const raw = globalThis.localStorage?.getItem(META_KEY);
     if (!raw) return defaultMetaSave();
     const parsed = JSON.parse(raw) as Partial<MetaSave>;
-    return { ...defaultMetaSave(), ...parsed };
+    const merged: MetaSave = { ...defaultMetaSave(), ...parsed };
+    merged.unlockedStartWorlds = getUnlockedStartWorlds(merged);
+    return merged;
   } catch {
     return defaultMetaSave();
   }
@@ -47,9 +71,11 @@ export function loadActiveRun(): RunState | null {
     const raw = globalThis.localStorage?.getItem(RUN_KEY);
     if (!raw) return null;
     const parsed = JSON.parse(raw) as RunState;
-    if (!parsed || parsed.version !== 2 || !Array.isArray(parsed.deck)) return null;
+    if (!parsed || parsed.version !== 3 || !Array.isArray(parsed.deck)) return null;
     parsed.consumables = parsed.consumables ?? [];
     parsed.secondaryMethod = parsed.secondaryMethod ?? null;
+    parsed.trueSpirit = parsed.trueSpirit ?? null;
+    parsed.supremeLaw = parsed.supremeLaw ?? null;
     return parsed;
   } catch {
     return null;
@@ -74,8 +100,13 @@ export function syncDiscoveriesToMeta(meta: MetaSave, run: RunState): MetaSave {
   const enemySet = new Set(meta.discoveredEnemies);
   if (run.combat) enemySet.add(run.combat.enemy.defId);
 
+  const nextBest = Math.max(meta.bestActReached, run.act);
+  const worlds = new Set<WorldId>(getUnlockedStartWorlds({ ...meta, bestActReached: nextBest }));
+
   const next: MetaSave = {
     ...meta,
+    bestActReached: nextBest,
+    unlockedStartWorlds: Array.from(worlds),
     discoveredCards: [...cardSet],
     discoveredRelics: [...relicSet],
     discoveredEnemies: [...enemySet],
@@ -110,8 +141,8 @@ export function checkNewAchievements(
 }
 
 export function calculateKarmaEarned(run: RunState, outcome: 'victory' | 'true-victory' | 'death'): number {
-  const base = run.act * 18 + run.stats.battlesWon * 3 + run.stats.elitesWon * 10 + run.stats.bossesWon * 20;
-  const bonus = outcome === 'true-victory' ? 120 : outcome === 'victory' ? 65 : 0;
+  const base = run.act * 14 + run.stats.battlesWon * 3 + run.stats.elitesWon * 10 + run.stats.bossesWon * 18;
+  const bonus = outcome === 'true-victory' ? 160 : outcome === 'victory' ? 90 : 0;
   const ascBonus = Math.round((base + bonus) * (run.ascension * 0.12));
   return base + bonus + ascBonus;
 }
@@ -123,7 +154,7 @@ export function settleRunIntoMeta(
 ): { nextMeta: MetaSave; karmaEarned: number; remnant: PastLifeRemnant; newAchievements: string[] } {
   const synced = syncDiscoveriesToMeta(meta, run);
   const newAchievements = checkNewAchievements(synced, run, outcome);
-  const achBonus = newAchievements.includes('ach-true-ending') ? 100 : newAchievements.length * 15;
+  const achBonus = newAchievements.includes('ach-true-ending') ? 150 : newAchievements.length * 15;
   const karmaEarned = calculateKarmaEarned(run, outcome) + achBonus;
 
   const enchantedOrUpgraded =
@@ -135,7 +166,7 @@ export function settleRunIntoMeta(
     generation: run.generation,
     name: run.name,
     lineage: run.lineage,
-    act: Math.min(3, run.act) as 1 | 2 | 3,
+    act: Math.min(8, run.act) as ActNumber,
     deathCause: run.deathCause ?? (outcome === 'death' ? '力战道消' : '飞升留蜕'),
     leftCard: enchantedOrUpgraded ? { ...enchantedOrUpgraded } : undefined,
     leftTreasureId: run.treasures[0],
@@ -147,13 +178,17 @@ export function settleRunIntoMeta(
     dailyBestScores[run.dailyDate] = Math.max(dailyBestScores[run.dailyDate] ?? 0, score);
   }
 
+  const nextBestAct = Math.max(synced.bestActReached, run.act);
+  const worlds = getUnlockedStartWorlds({ ...synced, bestActReached: nextBestAct });
+
   const nextMeta: MetaSave = {
     ...synced,
     totalLives: synced.totalLives + 1,
     karmaPoints: synced.karmaPoints + karmaEarned,
     achievements: [...new Set([...synced.achievements, ...newAchievements])],
     dailyBestScores,
-    bestActReached: Math.max(synced.bestActReached, run.act),
+    bestActReached: nextBestAct,
+    unlockedStartWorlds: worlds,
     victories: synced.victories + (outcome === 'victory' || outcome === 'true-victory' ? 1 : 0),
     trueVictories: synced.trueVictories + (outcome === 'true-victory' ? 1 : 0),
     maxAscensionUnlocked:

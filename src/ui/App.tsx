@@ -1,8 +1,9 @@
 import { useState } from 'preact/hooks';
-import { getRootById, LINEAGE_LIST, REALM_NAMES } from '../content/lineages';
+import { getRootById, LINEAGE_LIST, REALM_NAMES, WORLD_INFO } from '../content/lineages';
 import { activateTreasure, endPlayerTurn, playCard, useConsumable } from '../core/combat-engine';
 import {
   buyRerollUpgradeInMeta,
+  getUnlockedStartWorlds,
   loadActiveRun,
   loadMetaSave,
   settleRunIntoMeta,
@@ -24,6 +25,8 @@ import {
   claimRewardRelic,
   claimRewardTreasure,
   claimSecondaryMethod,
+  claimSupremeLaw,
+  claimTrueSpirit,
   createNewRun,
   enterMapNode,
   finishRewardAndAdvance,
@@ -38,7 +41,7 @@ import {
   shopBuyRelic,
   shopPurgeCard,
 } from '../core/run-manager';
-import type { LineageId, MetaSave, RunState } from '../core/types';
+import type { LineageId, MetaSave, RunState, WorldId } from '../core/types';
 import { CardView } from './components/CardView';
 import { PLAYER_PORTRAITS } from './components/Portraits';
 import { TopHud } from './components/TopHud';
@@ -67,8 +70,9 @@ export function App() {
   const [bgmOn, setBgmOn] = useState<boolean>(() => isBgmEnabled());
   const [deckOpen, setDeckOpen] = useState(false);
 
-  const [charName, setCharName] = useState('云归');
+  const [charName, setCharName] = useState('韩立');
   const [selectedLineage, setSelectedLineage] = useState<LineageId>('sword');
+  const [selectedWorld, setSelectedWorld] = useState<WorldId>('mortal');
   const [seed, setSeed] = useState(() => Date.now() & 0xfffffff);
   const [rootId, setRootId] = useState(() => rollRandomRoot(Date.now() & 0xfffffff));
   const [rerollsLeft, setRerollsLeft] = useState(meta.rerollCharges);
@@ -79,6 +83,7 @@ export function App() {
   const root = getRootById(rootId);
   const daily = getDailyChallengeConfig();
   const todayBest = meta.dailyBestScores[daily.dateKey] ?? 0;
+  const unlockedWorlds = getUnlockedStartWorlds(meta);
 
   const toggleMute = () => {
     const next = !muted;
@@ -126,6 +131,7 @@ export function App() {
       seed,
       ascension,
       meta,
+      startWorld: selectedWorld,
     });
     setRun(fresh);
     setSettledKarma(null);
@@ -155,7 +161,7 @@ export function App() {
   const finalizeRun = (finishedRun: RunState) => {
     const outcome =
       finishedRun.phase === 'victory'
-        ? finishedRun.act === 4
+        ? finishedRun.daoTokens >= 3
           ? 'true-victory'
           : 'victory'
         : 'death';
@@ -183,11 +189,11 @@ export function App() {
         {/* ==================== 标题首页 ==================== */}
         {screen === 'title' && (
           <main class="title-screen">
-            <div class="title-emblem">BAISHI WENDING · ROGUELIKE XIANXIA</div>
+            <div class="title-emblem">BAISHI WENDING · MORTAL TO IMMORTAL NINE ACTS</div>
             <h1 class="title-main">百世问鼎</h1>
             <p class="title-sub">
-              气血为筹，灵印相生，乾坤丹符瞬发破局。<br />
-              兼修异派邪道心法、竞拍截胡稀世仙珍、迎战二阶段真魔与九重天劫。
+              凡人三部曲长歌：自天南炼气争渡 ➔ 破界入灵界醒真灵血脉 ➔ 飞升北寒参悟时间·空间·轮回至尊法则。<br />
+              跨越三界九卷，杀上中土天庭决战时间道祖！
             </p>
             <div class="title-actions">
               {run && run.phase !== 'gameover' && run.phase !== 'victory' && (
@@ -199,7 +205,7 @@ export function App() {
                     setScreen('run');
                   }}
                 >
-                  续写第 {run.generation} 世（{run.name} · {REALM_NAMES[run.realm]}）
+                  续写第 {run.generation} 世（第{run.act}卷 · {run.name} · {REALM_NAMES[run.realm]}）
                 </button>
               )}
               <button type="button" class="btn btn-primary" onClick={openSetup}>
@@ -221,7 +227,8 @@ export function App() {
             </div>
             <div class="title-stats">
               <span>历世：{meta.totalLives} 世</span>
-              <span>飞升：{meta.victories} 次（真结局 {meta.trueVictories}）</span>
+              <span>最高抵达：第 {meta.bestActReached}/9 卷</span>
+              <span>证道通关：{meta.victories} 次（超脱真结局 {meta.trueVictories}）</span>
               <span>名场面成就：{meta.achievements.length}/6</span>
               {todayBest > 0 && <span style={{ color: 'var(--gold-bright)' }}>今日道榜最高：{todayBest} 分</span>}
               {meta.pastLifeRemnant && (
@@ -233,7 +240,7 @@ export function App() {
           </main>
         )}
 
-        {/* ==================== 建角与选道统 ==================== */}
+        {/* ==================== 建角、择界与选道统 ==================== */}
         {screen === 'setup' && (
           <main class="setup-screen">
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '8px' }}>
@@ -241,6 +248,45 @@ export function App() {
               <button type="button" class="btn btn-sm" onClick={() => setScreen('title')}>
                 返回首页
               </button>
+            </div>
+
+            {/* 起始界域选择（飞升存档记忆：打通人界/灵界后可直接跨界成型开局！） */}
+            <div class="panel" style={{ padding: '14px' }}>
+              <div style={{ fontSize: '14px', fontWeight: 700, color: 'var(--gold-bright)', marginBottom: '8px' }}>
+                🌌 择定降生界域（三界九卷飞升节点记忆）
+              </div>
+              <div class="world-select-grid">
+                {(['mortal', 'spirit', 'immortal'] as WorldId[]).map((wid) => {
+                  const info = WORLD_INFO[wid];
+                  const isUnlocked = unlockedWorlds.includes(wid);
+                  const isSelected = selectedWorld === wid;
+                  return (
+                    <button
+                      key={wid}
+                      type="button"
+                      class={`panel world-select-card${isSelected ? ' selected' : ''}${!isUnlocked ? ' locked' : ''}`}
+                      disabled={!isUnlocked}
+                      onClick={() => {
+                        if (!isUnlocked) return;
+                        sfx.click();
+                        setSelectedWorld(wid);
+                      }}
+                    >
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '6px' }}>
+                        <strong style={{ color: isSelected ? '#ffe89c' : 'var(--text)', fontSize: '14px' }}>
+                          {info.name}
+                        </strong>
+                        <span style={{ fontSize: '11px', color: isUnlocked ? 'var(--green)' : 'var(--red)' }}>
+                          {isUnlocked ? `第 ${info.startAct} 卷起` : '🔒 未飞升'}
+                        </span>
+                      </div>
+                      <p style={{ margin: '6px 0 0', fontSize: '12px', color: 'var(--muted)', lineHeight: 1.45 }}>
+                        {info.unlockDesc}
+                      </p>
+                    </button>
+                  );
+                })}
+              </div>
             </div>
 
             <div class="panel" style={{ padding: '14px', display: 'flex', flexWrap: 'wrap', gap: '16px', alignItems: 'center' }}>
@@ -305,7 +351,7 @@ export function App() {
                     </div>
                     <h3>{lin.name}</h3>
                     <div style={{ fontSize: '12px', color: 'var(--gold)' }}>
-                      {lin.title} · 初始气血 {lin.baseHp}
+                      {lin.title} · 基础气血 {lin.baseHp}
                     </div>
                     <p>{lin.description}</p>
                     <p style={{ color: '#c8d9d7', fontSize: '12px' }}>
@@ -336,7 +382,7 @@ export function App() {
 
             <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
               <button type="button" class="btn btn-primary" onClick={startNewRun}>
-                破壳降生 · 开启仙途 ➔
+                破壳降生 · 开启{WORLD_INFO[selectedWorld].shortName} ➔
               </button>
             </div>
           </main>
@@ -375,8 +421,7 @@ export function App() {
               onUseConsumable={(idx) =>
                 setRun((prev) => {
                   if (!prev) return prev;
-                  const next = useConsumable(prev, idx);
-                  return next;
+                  return useConsumable(prev, idx);
                 })
               }
               onToggleMute={toggleMute}
@@ -428,8 +473,17 @@ export function App() {
                 onPickConsumable={() => setRun((prev) => (prev ? claimRewardConsumable(prev) : prev))}
                 onPickTreasure={() => setRun((prev) => (prev ? claimRewardTreasure(prev) : prev))}
                 onPickMethod={(mid) => setRun((prev) => (prev ? claimSecondaryMethod(prev, mid) : prev))}
+                onPickTrueSpirit={(sid) => setRun((prev) => (prev ? claimTrueSpirit(prev, sid) : prev))}
+                onPickSupremeLaw={(lid) => setRun((prev) => (prev ? claimSupremeLaw(prev, lid) : prev))}
                 onPickLaw={(lawId) => setRun((prev) => (prev ? claimBreakthroughLaw(prev, lawId) : prev))}
-                onContinue={() => setRun((prev) => (prev ? finishRewardAndAdvance(prev, meta) : prev))}
+                onContinue={() => {
+                  setRun((prev) => {
+                    if (!prev) return prev;
+                    const advanced = finishRewardAndAdvance(prev, meta);
+                    setMeta(loadMetaSave());
+                    return advanced;
+                  });
+                }}
               />
             )}
 

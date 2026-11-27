@@ -182,6 +182,36 @@ export function StarMapView({ run, onSelectNode }: StarMapViewProps) {
   return (
     <main class="map-stage">
       <div class="map-header">
+        {/* 凡人三部曲 · 三界九卷总览横卷 */}
+        <div class="world-progress-bar">
+          {[
+            { label: '🌏 人界篇', acts: [1, 2, 3] },
+            { label: '🌌 灵界篇', acts: [4, 5, 6] },
+            { label: '☀️ 仙界篇', acts: [7, 8, 9] },
+          ].map((grp) => {
+            const inWorld = grp.acts.includes(run.act);
+            const passedWorld = run.act > grp.acts[grp.acts.length - 1];
+            return (
+              <div
+                key={grp.label}
+                class={`world-stage-pill${inWorld ? ' active' : passedWorld ? ' passed' : ''}`}
+              >
+                <strong>{grp.label}</strong>
+                <span class="world-act-dots">
+                  {grp.acts.map((a) => (
+                    <i
+                      key={a}
+                      class={`act-dot${a === run.act ? ' current' : a < run.act ? ' done' : ''}`}
+                    >
+                      {a}
+                    </i>
+                  ))}
+                </span>
+              </div>
+            );
+          })}
+        </div>
+
         <h2>{actInfo.name}</h2>
         <p>{actInfo.subtitle}</p>
 
@@ -345,7 +375,16 @@ export function StarMapView({ run, onSelectNode }: StarMapViewProps) {
           style={{ left: `${originX}%`, top: `${originY}px` }}
         >
           <span class="origin-pill">
-            ⛩ {run.act === 4 ? '南天门外 · 登天起点' : `第 ${run.act} 卷山门 · 寻仙起点`}
+            ⛩{' '}
+            {run.act === 1
+              ? '七玄山门 · 踏入人界仙途'
+              : run.act === 4
+                ? '飞仙台 · 初临浩瀚灵界'
+                : run.act === 7
+                  ? '北寒仙域 · 飞升真仙界'
+                  : run.act === 9
+                    ? '中土南天门 · 决战凌霄天庭'
+                    : `${actInfo.partName} · 寻仙起点`}
             {currentNode === null ? '（当前所在）' : ''}
           </span>
         </div>

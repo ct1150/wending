@@ -33,6 +33,7 @@ export const PLAYER_PORTRAITS: Record<LineageId, string> = {
 };
 
 export const ENEMY_PORTRAITS_BY_ID: Record<string, string> = {
+  // 人界篇 (Acts 1~3)
   'e1-wolf': e1WolfImg,
   'e1-bandit': e1BanditImg,
   'e1-centipede': e1CentipedeImg,
@@ -47,8 +48,29 @@ export const ENEMY_PORTRAITS_BY_ID: Record<string, string> = {
   'e3-immortal-envoy': e3EnvoyImg,
   'e3-elite-phoenix': e3PhoenixImg,
   'e3-boss-ascension': e3AscensionImg,
+  // 灵界篇 (Acts 4~6)
+  'e4-horn-warrior': e2SwordDiscipleImg,
+  'e4-thunder-beast': e1WolfImg,
   'e4-elite-guard': e4GuardImg,
-  'e4-boss-dao': e4DaoBossImg,
+  'e4-boss-dao': e2DemonBossImg,
+  'e5-demon-lord': e1StewardImg,
+  'e5-beetle-king': e1CentipedeImg,
+  'e5-elite-baohua': e3PhoenixImg,
+  'e5-boss-nirvana': e2DemonBossImg,
+  'e6-thunder-dragon': e3DragonImg,
+  'e6-corpse-emperor': e2CorpseImg,
+  'e6-elite-locust': e1GolemImg,
+  'e6-boss-immortal-tribulation': e3AscensionImg,
+  // 仙界篇 (Acts 7~9)
+  'e7-court-envoy': e3EnvoyImg,
+  'e7-corpse-immortal': e2ElderImg,
+  'e7-elite-zhulong': e1BanditImg,
+  'e7-boss-xiaojinhan': e3EnvoyImg,
+  'e8-grey-lord': e1StewardImg,
+  'e8-time-soldier': e4GuardImg,
+  'e8-boss-corpse-self': e2DemonBossImg,
+  'e9-elite-jiuyuan': e4GuardImg,
+  'e9-boss-guhuojin': e4DaoBossImg,
 };
 
 export const ENEMY_FALLBACK_PORTRAITS: Record<EnemyDef['artStyle'], string> = {

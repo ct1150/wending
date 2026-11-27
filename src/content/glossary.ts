@@ -68,6 +68,16 @@ export const KEYWORD_GLOSSARY: Record<string, GlossaryEntry> = {
     plainTitle: '🩸 燃血上限（魔道禁术）',
     desc: '扣减或永久提升你的最大气血上限；高风险换取毁天灭地威力。',
   },
+  trueSpirit: {
+    term: '真灵血脉',
+    plainTitle: '🦅 真灵血脉（灵界篇升维）',
+    desc: '飞升灵界（第4卷）时觉醒的永久真灵法相（天凤/五色孔雀/惊蛰雷鹏），大幅强化攻防或突破4格灵印槽！',
+  },
+  supremeLaw: {
+    term: '至尊法则',
+    plainTitle: '⏳ 三大至尊法则（仙界篇升维）',
+    desc: '飞升仙界（第7卷）时参悟的时间、空间或轮回至尊法则，带来首牌双发、空间穿甲或轮回不死神通！',
+  },
 };
 
 export const ELEMENT_COMBO_GUIDE: Record<Exclude<ElementTag, 'none'>, string> = {

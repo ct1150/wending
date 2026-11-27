@@ -4,7 +4,7 @@ import {
   describeStatusTag,
   extractCardGlossary,
 } from '../../content/glossary';
-import { getRootById, LINEAGES } from '../../content/lineages';
+import { getRootById, getWorldByAct, LINEAGES, WORLD_INFO } from '../../content/lineages';
 import { ENCHANTS, TREASURES } from '../../content/treasures';
 import {
   getCardCost,
@@ -80,6 +80,7 @@ export function BattleArena({
   const enemy = combat.enemy;
   const root = getRootById(run.rootId);
   const lineage = LINEAGES[run.lineage];
+  const worldEnergyName = WORLD_INFO[getWorldByAct(run.act)].energyName;
   const intent = getEnemyCurrentIntent(enemy.defId, enemy.intentIdx, enemy.phase2Triggered);
 
   useEffect(() => {
@@ -593,20 +594,20 @@ export function BattleArena({
               onClick={() => openTip(describeStatusTag('qi'))}
             >
               <span>{combat.qi}/{combat.maxQi}</span>
-              <small>真元</small>
+              <small>{worldEnergyName}</small>
             </button>
             <button
               type="button"
               class="seal-bar seal-bar-btn"
               onClick={() =>
                 openTip({
-                  title: '☯ 五行灵印槽（轻触卡牌看对应连招）',
+                  title: `☯ 五行灵印槽（上限 ${combat.maxSealSlots} 格）`,
                   body: '打出带属性的神通牌会留下灵印，凑对前后两枚灵印即可免费爆发强力连招：',
                   recipes: ALL_SEAL_RECIPES,
                 })
               }
             >
-              {[0, 1, 2].map((idx) => {
+              {Array.from({ length: Math.max(3, combat.maxSealSlots) }, (_, idx) => {
                 const locked = idx >= combat.maxSealSlots;
                 const seal = combat.seals[idx];
                 return (

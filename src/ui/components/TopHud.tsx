@@ -1,7 +1,13 @@
 import { useState } from 'preact/hooks';
 import { CONSUMABLES } from '../../content/consumables';
 import { ALL_SEAL_RECIPES, KEYWORD_GLOSSARY } from '../../content/glossary';
-import { REALM_NAMES } from '../../content/lineages';
+import {
+  getWorldByAct,
+  REALM_NAMES,
+  SUPREME_LAWS,
+  TRUE_SPIRITS,
+  WORLD_INFO,
+} from '../../content/lineages';
 import { SECONDARY_METHODS } from '../../content/methods';
 import { ENCHANTS, RELICS } from '../../content/treasures';
 import type { RunState } from '../../core/types';
@@ -36,7 +42,10 @@ export function TopHud({
   const [hudTip, setHudTip] = useState<{ title: string; body: string } | null>(null);
 
   const lowHp = run.hp <= run.maxHp * 0.3;
+  const world = WORLD_INFO[getWorldByAct(run.act)];
   const secMethod = run.secondaryMethod ? SECONDARY_METHODS[run.secondaryMethod] : null;
+  const trueSpirit = run.trueSpirit ? TRUE_SPIRITS[run.trueSpirit] : null;
+  const supremeLaw = run.supremeLaw ? SUPREME_LAWS[run.supremeLaw] : null;
   const canUsePouch = run.phase === 'combat' && run.combat?.outcome === 'ongoing';
 
   const toggleLandscapeFullscreen = async () => {
@@ -60,9 +69,43 @@ export function TopHud({
     <header class={`hud-wrapper${compact ? ' is-compact' : ''}`}>
       <div class="top-hud">
         <div class="hud-group">
-          <span class="hud-pill gold">
-            {run.name}·{REALM_NAMES[run.realm]}
-          </span>
+          <button
+            type="button"
+            class="hud-pill gold hud-pill-btn"
+            onClick={() => {
+              sfx.click();
+              setHudTip({
+                title: `${world.badge} · 第 ${run.act}/9 卷（${REALM_NAMES[run.realm]}）`,
+                body: `当前所处界域能量为【${world.energyName}】，全场神通攻防与丹毒基础威力倍率为 ${world.powerMult}×。`,
+              });
+            }}
+          >
+            {world.badge}·{run.name}·{REALM_NAMES[run.realm]}
+          </button>
+          {trueSpirit && (
+            <button
+              type="button"
+              class="hud-pill gold hud-pill-btn"
+              onClick={() => {
+                sfx.click();
+                setHudTip({ title: `🦅 ${trueSpirit.name}`, body: trueSpirit.description });
+              }}
+            >
+              🦅 {trueSpirit.badge}
+            </button>
+          )}
+          {supremeLaw && (
+            <button
+              type="button"
+              class="hud-pill gold hud-pill-btn"
+              onClick={() => {
+                sfx.click();
+                setHudTip({ title: `⏳ ${supremeLaw.name}`, body: supremeLaw.description });
+              }}
+            >
+              ⏳ {supremeLaw.badge}
+            </button>
+          )}
           {secMethod && (
             <button
               type="button"
@@ -82,7 +125,7 @@ export function TopHud({
               sfx.click();
               setHudTip({
                 title: `❤ 气血（${run.hp} / ${run.maxHp}）`,
-                body: '你的唯一生存数值，归零则道消身陨（除非持有替死木偶符）。击败卷末大劫时若剩余气血 ≥ 50%，可直接触发【天道破境】获得真元上限 +1 与金色法则！',
+                body: '你的唯一生存数值，归零则道消身陨（除非持有替死木偶符或轮回法则）。击败卷末大劫时若剩余气血 ≥ 50%，可触发【天道破境】金色法则三选一！',
               });
             }}
           >
@@ -96,12 +139,12 @@ export function TopHud({
               onClick={() => {
                 sfx.click();
                 setHudTip({
-                  title: `✦ 三界道果信物（${run.daoTokens} / 2）`,
-                  body: '集齐 2 枚道果信物后击败第 3 卷大劫，即可开启第 4 卷隐藏真结局【斩破太初天道】！',
+                  title: `✦ 掌天道果信物（${run.daoTokens} / 3）`,
+                  body: '集齐 ≥ 3 枚掌天道果信物并在第九卷斩破时间道祖【古或今】，即可达成超脱混沌完美真结局！',
                 });
               }}
             >
-              ✦ {run.daoTokens}/2
+              ✦ {run.daoTokens}/3
             </button>
           )}
 

@@ -1,6 +1,25 @@
 export type ElementTag = 'metal' | 'wood' | 'water' | 'fire' | 'earth' | 'thunder' | 'sha' | 'none';
 export type SealType = Exclude<ElementTag, 'none'>;
 
+export type ActNumber = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
+export type WorldId = 'mortal' | 'spirit' | 'immortal';
+export type TrueSpiritId = 'spirit-phoenix' | 'spirit-peacock' | 'spirit-roc';
+export type SupremeLawId = 'supreme-time' | 'supreme-space' | 'supreme-samsara';
+
+export interface TrueSpiritDef {
+  id: TrueSpiritId;
+  name: string;
+  badge: string;
+  description: string;
+}
+
+export interface SupremeLawDef {
+  id: SupremeLawId;
+  name: string;
+  badge: string;
+  description: string;
+}
+
 export type LineageId = 'sword' | 'demon' | 'alchemy' | 'array';
 export type CardType = 'attack' | 'defense' | 'skill' | 'array' | 'forbidden' | 'curse';
 export type CardRarity = 'starter' | 'common' | 'rare' | 'mythic' | 'curse';
@@ -227,7 +246,7 @@ export interface EnemyDef {
   id: string;
   name: string;
   title: string;
-  act: 1 | 2 | 3 | 4;
+  act: ActNumber;
   tier: 'normal' | 'elite' | 'boss' | 'tribulation';
   maxHp: number;
   tribulationWaves?: number;
@@ -273,7 +292,7 @@ export type MapNodeType =
 
 export interface MapNode {
   id: string;
-  act: 1 | 2 | 3 | 4;
+  act: ActNumber;
   row: number;
   col: number;
   type: MapNodeType;
@@ -322,6 +341,9 @@ export interface CombatState {
   cardsPlayedThisTurn: number;
   swordCardsPlayedThisTurn: number;
   hpSacrificedInCombat: number;
+  phoenixTriggeredThisTurn?: boolean;
+  firstNonExhaustEchoDone?: boolean;
+  samsaraReviveUsed?: boolean;
   lastResonance: ResonanceEvent | null;
   phase2Banner: string | null;
   combatLog: string[];
@@ -360,7 +382,22 @@ export interface EncounterDef {
   choices: EncounterChoice[];
 }
 
-export type RealmId = 'qi' | 'foundation' | 'core' | 'nascent' | 'ascended';
+export type RealmId =
+  | 'qi'
+  | 'foundation'
+  | 'core'
+  | 'nascent'
+  | 'deity'
+  | 'void'
+  | 'integration'
+  | 'mahayana'
+  | 'true-immortal'
+  | 'golden-immortal'
+  | 'taiyi'
+  | 'daluo'
+  | 'dao-ancestor'
+  | 'ascended';
+
 export type BreakthroughGrade = 'earth' | 'heaven';
 
 export interface RewardState {
@@ -371,12 +408,18 @@ export interface RewardState {
   materialReward?: EnchantDef;
   consumableReward?: ConsumableDef;
   methodChoices?: SecondaryMethodDef[];
+  trueSpiritChoices?: TrueSpiritDef[];
+  supremeLawChoices?: SupremeLawDef[];
+  worldAscensionTitle?: string;
+  worldAscensionDesc?: string;
   pickedCard: boolean;
   pickedRelic: boolean;
   pickedTreasure: boolean;
   pickedMaterial: boolean;
   pickedConsumable?: boolean;
   pickedMethod?: boolean;
+  pickedTrueSpirit?: boolean;
+  pickedSupremeLaw?: boolean;
   isBossReward?: boolean;
   breakthroughGrade?: BreakthroughGrade;
   lawChoices?: RelicDef[];
@@ -430,7 +473,7 @@ export interface PastLifeRemnant {
   generation: number;
   name: string;
   lineage: LineageId;
-  act: 1 | 2 | 3 | 4;
+  act: ActNumber;
   deathCause: string;
   leftCard?: CardInstance;
   leftTreasureId?: string;
@@ -445,8 +488,11 @@ export interface RunState {
   name: string;
   lineage: LineageId;
   secondaryMethod: SecondaryMethodId | null;
+  trueSpirit?: TrueSpiritId | null;
+  supremeLaw?: SupremeLawId | null;
+  startWorld?: WorldId;
   rootId: string;
-  act: 1 | 2 | 3 | 4;
+  act: ActNumber;
   realm: RealmId;
   hp: number;
   maxHp: number;
@@ -506,6 +552,7 @@ export interface MetaSave {
   totalLives: number;
   karmaPoints: number;
   unlockedLineages: LineageId[];
+  unlockedStartWorlds?: WorldId[];
   unlockedRelics: string[];
   achievements: string[];
   discoveredCards: string[];

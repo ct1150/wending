@@ -2,7 +2,16 @@ import { CARDS, getUnlockedRewardCardPool } from '../content/cards';
 import { CONSUMABLE_LIST, CONSUMABLES } from '../content/consumables';
 import { pickEncounter } from '../content/encounters';
 import { pickEnemyForNode } from '../content/enemies';
-import { getRootById, LINEAGES, ROOTS } from '../content/lineages';
+import {
+  ACT_REALM_MAP,
+  getRootById,
+  getWorldByAct,
+  LINEAGES,
+  ROOTS,
+  SUPREME_LAW_LIST,
+  TRUE_SPIRIT_LIST,
+  WORLD_INFO,
+} from '../content/lineages';
 import { DAILY_MUTATORS, getTodayDateKey, SECONDARY_METHOD_LIST, SECONDARY_METHODS } from '../content/methods';
 import {
   ENCHANT_LIST,
@@ -15,9 +24,10 @@ import {
 } from '../content/treasures';
 import { initCombat } from './combat-engine';
 import { generateActMap, getReachableNodeIds } from './map-generator';
-import { saveActiveRun } from './meta-save';
+import { recordActMilestoneInMeta, saveActiveRun } from './meta-save';
 import { hashSeed, SeededRng } from './rng';
 import type {
+  ActNumber,
   AuctionLot,
   BlessingOption,
   BreakthroughGrade,
@@ -26,12 +36,14 @@ import type {
   EnchantId,
   LineageId,
   MetaSave,
-  RealmId,
   RelicDef,
   RewardState,
   RunState,
   SecondaryMethodId,
   ShopStock,
+  SupremeLawId,
+  TrueSpiritId,
+  WorldId,
 } from './types';
 
 function hasRelicHook(run: RunState, hook: string): number {
@@ -69,15 +81,15 @@ export function getDailyChallengeConfig(dateKey = getTodayDateKey()) {
 export const STARTING_BLESSINGS: BlessingOption[] = [
   {
     id: 'gold',
-    title: '豪门遗泽 · 灵石充盈',
+    title: '掌天遗泽 · 灵石充盈',
     costText: '无代价',
-    rewardText: '立即获得 +85 灵石与 1 枚随机【乾坤丹符】',
+    rewardText: '立即获得 +90 灵石与 1 枚随机【乾坤丹符】',
   },
   {
     id: 'purge-two',
-    title: '涤尘净心 · 剑心纯粹',
+    title: '大衍涤心 · 剑心纯粹',
     costText: '无代价',
-    rewardText: '立即精简删去牌库中 2 张基础牌，永久提升 8 点最大气血',
+    rewardText: '立即精简删去牌库中 2 张基础牌，永久提升 10 点最大气血',
   },
   {
     id: 'gamble-relic',
@@ -87,9 +99,9 @@ export const STARTING_BLESSINGS: BlessingOption[] = [
   },
   {
     id: 'mythic-treasure',
-    title: '重铸本命 · 绝世仙器',
+    title: '重铸本命 · 先天玄天仙器',
     costText: '代价：交出初始本命法宝',
-    rewardText: '直接换取 1 件【绝世神话本命法宝】（定义整局邪道流派！）',
+    rewardText: '直接换取 1 件【绝世神话本命法宝】（定义整局流派！）',
   },
 ];
 
@@ -100,6 +112,7 @@ export function createNewRun(params: {
   seed: number;
   ascension: number;
   meta: MetaSave;
+  startWorld?: WorldId;
   skipBlessing?: boolean;
   isDailyChallenge?: boolean;
   dailyDate?: string;
@@ -109,44 +122,55 @@ export function createNewRun(params: {
   const lin = LINEAGES[params.lineage];
   const root = getRootById(params.rootId);
   const muts = params.mutators ?? [];
+  const startWorld: WorldId = params.startWorld ?? 'mortal';
+  const startAct: ActNumber = WORLD_INFO[startWorld].startAct;
 
   let uid = 1;
+  const upgradeStarter = startWorld !== 'mortal';
   const deck: CardInstance[] = lin.starterDeck.map((defId) => ({
     uid: `c-${uid++}`,
     defId,
-    upgraded: false,
+    upgraded: upgradeStarter,
   }));
 
   const shortCandleLoss = muts.includes('mut-short-candle') ? 18 : 0;
-  const maxHp = Math.max(35, lin.baseHp + (root.bonusMaxHp ?? 0) - params.ascension * 2 - shortCandleLoss);
-  const map = generateActMap(1, rng, params.meta.pastLifeRemnant);
+  const worldBonusHp = startWorld === 'immortal' ? 145 : startWorld === 'spirit' ? 65 : 0;
+  const maxHp = Math.max(
+    35,
+    lin.baseHp + (root.bonusMaxHp ?? 0) + worldBonusHp - params.ascension * 2 - shortCandleLoss,
+  );
+  const baseQi = startWorld === 'immortal' ? 5 : startWorld === 'spirit' ? 4 : 3;
+  const gold = startWorld === 'immortal' ? 280 : startWorld === 'spirit' ? 160 : 60;
+  const map = generateActMap(startAct, rng, params.meta.pastLifeRemnant);
 
   const consumables: string[] = [];
-  let gold = 60;
-
   if (muts.includes('mut-alchemy-boom')) {
     for (let i = 0; i < 3; i++) consumables.push(rng.pick(CONSUMABLE_LIST).id);
   } else {
     consumables.push(rng.pick(['con-heal-pill', 'con-wind-redraw', 'con-frost-talisman']));
+    if (startWorld !== 'mortal') consumables.push('con-revive-doll');
   }
 
   const run: RunState = {
-    version: 2,
+    version: 3,
     seed: params.seed,
     rngState: rng.state,
     generation: params.meta.totalLives + 1,
     ascension: params.ascension,
-    name: params.name.trim() || '云归',
+    name: params.name.trim() || '韩立',
     lineage: params.lineage,
     secondaryMethod: null,
+    trueSpirit: null,
+    supremeLaw: null,
+    startWorld,
     rootId: root.id,
-    act: 1,
-    realm: 'qi',
+    act: startAct,
+    realm: ACT_REALM_MAP[startAct],
     hp: maxHp,
     maxHp,
-    baseQi: 3,
+    baseQi,
     gold,
-    daoTokens: 0,
+    daoTokens: startWorld === 'immortal' ? 2 : startWorld === 'spirit' ? 1 : 0,
     deck,
     treasures: [lin.starterTreasureId],
     relics: [],
@@ -181,12 +205,39 @@ export function createNewRun(params: {
     uidCounter: uid,
   };
 
+  // 若直接从【灵界篇】或【仙界篇】开局，自动配齐前界成型的精锐牌组、法宝与古宝！
+  if (startWorld === 'spirit' || startWorld === 'immortal') {
+    const bonusCardCount = startWorld === 'immortal' ? 5 : 3;
+    const bonusCards = rollCardChoices(run, rng, bonusCardCount, undefined, params.meta.achievements);
+    for (const c of bonusCards) {
+      run.uidCounter += 1;
+      run.deck.push({ uid: `c-${run.uidCounter}`, defId: c.id, upgraded: true });
+    }
+    const relicPool = rng.shuffle(getUnlockedRelicList(params.meta.achievements));
+    for (const r of relicPool.slice(0, startWorld === 'immortal' ? 3 : 2)) {
+      grantRelicWithPickupEffect(run, r.id);
+    }
+    run.materials.push(rng.pick(ENCHANT_LIST).id);
+
+    if (startWorld === 'immortal') {
+      run.treasures = [rng.pick(getMythicTreasures()).id];
+      grantRelicWithPickupEffect(run, rng.pick(LAW_RELIC_LIST).id);
+      run.trueSpirit = rng.pick(TRUE_SPIRIT_LIST).id;
+    }
+
+    if (params.skipBlessing) {
+      if (!run.trueSpirit) run.trueSpirit = rng.pick(TRUE_SPIRIT_LIST).id;
+      if (startWorld === 'immortal') run.supremeLaw = rng.pick(SUPREME_LAW_LIST).id;
+    }
+  }
+
   if (muts.includes('mut-short-candle')) {
     run.gold += 100;
-    const pool = getUnlockedRelicList(params.meta.achievements);
+    const pool = getUnlockedRelicList(params.meta.achievements).filter((r) => !run.relics.includes(r.id));
     for (const r of rng.shuffle(pool).slice(0, 2)) grantRelicWithPickupEffect(run, r.id);
   }
 
+  run.rngState = rng.state;
   saveActiveRun(run);
   return run;
 }
@@ -197,7 +248,7 @@ export function chooseStartingBlessing(run: RunState, optionId: BlessingOption['
   const rng = new SeededRng(nextRun.rngState);
 
   if (optionId === 'gold') {
-    nextRun.gold += 85;
+    nextRun.gold += 90;
     if (nextRun.consumables.length < 3) nextRun.consumables.push(rng.pick(CONSUMABLE_LIST).id);
   } else if (optionId === 'purge-two') {
     let removed = 0;
@@ -208,8 +259,8 @@ export function chooseStartingBlessing(run: RunState, optionId: BlessingOption['
       }
       return true;
     });
-    nextRun.maxHp += 8;
-    nextRun.hp += 8;
+    nextRun.maxHp += 10;
+    nextRun.hp += 10;
   } else if (optionId === 'gamble-relic') {
     nextRun.maxHp = Math.max(30, nextRun.maxHp - 14);
     nextRun.hp = Math.min(nextRun.hp, nextRun.maxHp);
@@ -222,8 +273,46 @@ export function chooseStartingBlessing(run: RunState, optionId: BlessingOption['
   }
 
   nextRun.blessingOptions = undefined;
-  nextRun.phase = 'map';
   nextRun.rngState = rng.state;
+
+  // 若选择从灵界篇/仙界篇直接开局，赐福后立即进入真灵血脉或三大至尊法则择一界面！
+  if (nextRun.act === 4 && !nextRun.trueSpirit) {
+    nextRun.reward = {
+      gold: 0,
+      cardChoices: [],
+      pickedCard: true,
+      pickedRelic: true,
+      pickedTreasure: true,
+      pickedMaterial: true,
+      worldAscensionTitle: '🌌 灵界降临 · 觉醒真灵血脉',
+      worldAscensionDesc: '你已携人界大成修为踏入风元大陆，择一真灵法相开启灵界篇征途：',
+      trueSpiritChoices: TRUE_SPIRIT_LIST,
+      pickedTrueSpirit: false,
+    };
+    nextRun.phase = 'breakthrough';
+    saveActiveRun(nextRun);
+    return nextRun;
+  }
+
+  if (nextRun.act === 7 && !nextRun.supremeLaw) {
+    nextRun.reward = {
+      gold: 0,
+      cardChoices: [],
+      pickedCard: true,
+      pickedRelic: true,
+      pickedTreasure: true,
+      pickedMaterial: true,
+      worldAscensionTitle: '☀️ 飞升北寒 · 参悟三大至尊法则',
+      worldAscensionDesc: '仙窍已开，真仙降世！请择一仙界至尊法则统御仙界篇：',
+      supremeLawChoices: SUPREME_LAW_LIST,
+      pickedSupremeLaw: false,
+    };
+    nextRun.phase = 'breakthrough';
+    saveActiveRun(nextRun);
+    return nextRun;
+  }
+
+  nextRun.phase = 'map';
   saveActiveRun(nextRun);
   return nextRun;
 }
@@ -254,8 +343,8 @@ export function rollCardChoices(
     const card = rng.weightedPick(candidates, (c) => {
       let w = c.lineage === run.lineage ? 30 : c.lineage === unlockedOffLineage ? 24 : 12;
       if (c.element !== 'none' && root.elements.includes(c.element)) w += 12;
-      if (c.rarity === 'mythic') w *= run.act >= 2 ? 0.52 : 0.22;
-      if (c.rarity === 'rare') w *= run.act >= 2 ? 0.85 : 0.55;
+      if (c.rarity === 'mythic') w *= run.act >= 7 ? 0.95 : run.act >= 4 ? 0.65 : run.act >= 2 ? 0.45 : 0.22;
+      if (c.rarity === 'rare') w *= run.act >= 4 ? 1.0 : run.act >= 2 ? 0.85 : 0.55;
       return w;
     });
     picked.push(card);
@@ -277,7 +366,8 @@ function rollSecondaryMethodChoices(run: RunState, rng: SeededRng): typeof SECON
 
 function buildShopStock(run: RunState, rng: SeededRng, achievements: string[] = []): ShopStock {
   const discount = run.mutators?.includes('mut-alchemy-boom') ? 0.7 : 1;
-  const priceOf = (p: number) => Math.round(p * discount);
+  const worldTier = getWorldByAct(run.act) === 'immortal' ? 1.25 : getWorldByAct(run.act) === 'spirit' ? 1.12 : 1;
+  const priceOf = (p: number) => Math.round(p * discount * worldTier);
 
   const cards = rollCardChoices(run, rng, 4, undefined, achievements).map((def) => ({
     def,
@@ -315,32 +405,33 @@ function buildShopStock(run: RunState, rng: SeededRng, achievements: string[] = 
 function buildAuctionLots(run: RunState, rng: SeededRng, achievements: string[] = []): AuctionLot[] {
   const mythicCard = rollCardChoices(run, rng, 1, 'mythic', achievements)[0] ?? rollCardChoices(run, rng, 1)[0];
   const rareRelic = pickNewRelic(run, rng, achievements);
+  const hpGain = run.act >= 7 ? 32 : run.act >= 4 ? 24 : 18;
   const lots: AuctionLot[] = [
     {
       id: 'lot-card',
-      name: `孤本绝学 · ${mythicCard.name}`,
+      name: `孤本真传 · ${mythicCard.name}`,
       description: mythicCard.description,
-      price: 85,
+      price: 88,
       kind: 'card',
       refId: mythicCard.id,
       claimed: false,
     },
     {
       id: 'lot-maxhp',
-      name: '压轴宝药 · 千年紫金龙血果',
-      description: '永久提升 18 点最大气血上限，并瞬间回满全部气血！',
-      price: 90,
+      name: '压轴宝药 · 万载紫金龙血果',
+      description: `永久提升 ${hpGain} 点最大气血上限，并瞬间回满全部气血！`,
+      price: 92,
       kind: 'maxhp',
-      refId: 'maxhp',
+      refId: String(hpGain),
       claimed: false,
     },
   ];
   if (rareRelic) {
     lots.push({
       id: 'lot-relic',
-      name: `古修遗珍 · ${rareRelic.name}`,
+      name: `古仙遗珍 · ${rareRelic.name}`,
       description: rareRelic.description,
-      price: 95,
+      price: 96,
       kind: 'relic',
       refId: rareRelic.id,
       claimed: false,
@@ -409,29 +500,26 @@ export function resolveCombatVictory(run: RunState, achievements: string[] = [])
   if (isEliteLike) nextRun.stats.elitesWon += 1;
   if (combat.nodeType === 'boss') nextRun.stats.bossesWon += 1;
 
-  const postHeal = hasRelicHook(nextRun, 'heal-after-battle');
+  const worldBonusHeal = nextRun.act >= 7 ? 10 : nextRun.act >= 4 ? 5 : 0;
+  const phoenixHeal = nextRun.trueSpirit === 'spirit-phoenix' ? 6 : 0;
+  const postHeal = hasRelicHook(nextRun, 'heal-after-battle') + worldBonusHeal + phoenixHeal;
   if (postHeal > 0) nextRun.hp = Math.min(nextRun.maxHp, nextRun.hp + postHeal);
 
-  const goldMult = 1 + hasRelicHook(nextRun, 'gold-magnet') / 100;
+  const goldMult = (1 + hasRelicHook(nextRun, 'gold-magnet') / 100) * (nextRun.act >= 7 ? 1.25 : nextRun.act >= 4 ? 1.12 : 1);
   const baseGold =
-    combat.nodeType === 'boss' ? 78 : combat.nodeType === 'fury-elite' ? 65 : isEliteLike ? 46 : 24;
+    combat.nodeType === 'boss' ? 82 : combat.nodeType === 'fury-elite' ? 66 : isEliteLike ? 48 : 26;
   const gold = Math.round((baseGold + rng.int(0, 12)) * goldMult);
   nextRun.gold += gold;
 
-  if (combat.nodeType === 'boss' && nextRun.act === 4) {
+  // 第九卷终极决战胜利：击败时间道祖【古或今】完成凡人三部曲大结局！
+  if (combat.nodeType === 'boss' && nextRun.act === 9) {
     nextRun.combat = null;
-    nextRun.realm = 'ascended';
+    nextRun.realm = 'dao-ancestor';
     nextRun.phase = 'victory';
-    nextRun.endingTitle = '百世问鼎 · 斩破太初天道（真结局）';
-    saveActiveRun(nextRun);
-    return nextRun;
-  }
-
-  if (combat.nodeType === 'boss' && nextRun.act === 3 && nextRun.daoTokens < 2) {
-    nextRun.combat = null;
-    nextRun.realm = 'ascended';
-    nextRun.phase = 'victory';
-    nextRun.endingTitle = '飞升登仙 · 凌霄证道';
+    nextRun.endingTitle =
+      nextRun.daoTokens >= 3
+        ? '凡人问鼎 · 掌天超脱混沌道祖（完美真结局）'
+        : '斩破天庭 · 证道混元大罗道祖';
     saveActiveRun(nextRun);
     return nextRun;
   }
@@ -465,23 +553,63 @@ export function resolveCombatVictory(run: RunState, achievements: string[] = [])
 
   if (combat.nodeType === 'boss') {
     reward.isBossReward = true;
-    // 直观的天道破境条件：渡劫结束时气血 ≥ 50%，或直接劈碎雷劫劫眼！
     const isHeaven =
       nextRun.hp >= nextRun.maxHp * 0.5 ||
       (combat.enemy.tier === 'tribulation' && combat.outcome === 'victory');
     const grade: BreakthroughGrade = isHeaven ? 'heaven' : 'earth';
     reward.breakthroughGrade = grade;
 
-    const maxHpGain = grade === 'heaven' ? 18 : 10;
+    // 跨界飞升节点检测：第 3 卷破界飞升灵界，第 6 卷渡仙劫飞升北寒仙域！
+    const ascendingToSpirit = nextRun.act === 3;
+    const ascendingToImmortal = nextRun.act === 6;
+
+    let maxHpGain = grade === 'heaven' ? 20 : 12;
+    if (ascendingToSpirit) maxHpGain += 25;
+    if (ascendingToImmortal) maxHpGain += 40;
+
     reward.maxHpGained = maxHpGain;
     nextRun.maxHp += maxHpGain;
     nextRun.hp = nextRun.maxHp;
 
-    if (grade === 'heaven') {
+    // 真元/仙灵力上限稳步成长（第1卷天道破境、第3卷飞升灵界、第5卷天道破境、第6卷飞升仙界）
+    if (
+      ascendingToSpirit ||
+      ascendingToImmortal ||
+      (grade === 'heaven' && (nextRun.act === 1 || nextRun.act === 5) && nextRun.baseQi < 7)
+    ) {
       nextRun.baseQi += 1;
+    }
+
+    if (grade === 'heaven') {
       const availLaws = LAW_RELIC_LIST.filter((r) => !nextRun.relics.includes(r.id));
-      reward.lawChoices = rng.shuffle(availLaws).slice(0, 3);
-      reward.pickedLaw = false;
+      if (availLaws.length > 0) {
+        reward.lawChoices = rng.shuffle(availLaws).slice(0, 3);
+        reward.pickedLaw = false;
+      }
+    }
+
+    if (ascendingToSpirit) {
+      // 飞升灵界洗礼：全套未升级初始基础牌自动褪凡化灵！并觉醒真灵血脉！
+      for (const c of nextRun.deck) {
+        if (CARDS[c.defId]?.rarity === 'starter') c.upgraded = true;
+      }
+      reward.worldAscensionTitle = '🌌 破开空间节点 · 飞升浩瀚【灵界】！';
+      reward.worldAscensionDesc =
+        '体内真元蜕变为【灵界天地元气】（全场攻防丹毒倍率升维至 1.32×，初始基础牌全部褪凡升级，元气上限 +1），且下世已永久解锁直接从【灵界篇】开局！请觉醒你的灵界真灵血脉：';
+      if (!nextRun.trueSpirit) {
+        reward.trueSpiritChoices = TRUE_SPIRIT_LIST;
+        reward.pickedTrueSpirit = false;
+      }
+    }
+
+    if (ascendingToImmortal) {
+      reward.worldAscensionTitle = '☀️ 九九仙劫散尽 · 飞升北寒【真仙界】！';
+      reward.worldAscensionDesc =
+        '元气彻底蜕变为【大罗仙灵力】（全场攻防丹毒倍率升维至 1.68×，仙灵力上限 +1，气血暴涨），且下世已永久解锁直接从【仙界篇】开局！请参悟统御仙界的三大至尊法则：';
+      if (!nextRun.supremeLaw) {
+        reward.supremeLawChoices = SUPREME_LAW_LIST;
+        reward.pickedSupremeLaw = false;
+      }
     }
 
     if (!nextRun.secondaryMethod) {
@@ -510,7 +638,7 @@ export function claimRewardCard(run: RunState, cardDefId: string): RunState {
   if (!run.reward || run.reward.pickedCard) return run;
   const nextRun: RunState = structuredClone(run);
   nextRun.uidCounter += 1;
-  nextRun.deck.push({ uid: `c-${nextRun.uidCounter}`, defId: cardDefId, upgraded: false });
+  nextRun.deck.push({ uid: `c-${nextRun.uidCounter}`, defId: cardDefId, upgraded: nextRun.act >= 7 });
   nextRun.reward!.pickedCard = true;
   saveActiveRun(nextRun);
   return nextRun;
@@ -565,6 +693,24 @@ export function claimSecondaryMethod(run: RunState, methodId: SecondaryMethodId)
   return nextRun;
 }
 
+export function claimTrueSpirit(run: RunState, spiritId: TrueSpiritId): RunState {
+  if (!run.reward?.trueSpiritChoices || run.reward.pickedTrueSpirit) return run;
+  const nextRun: RunState = structuredClone(run);
+  nextRun.trueSpirit = spiritId;
+  nextRun.reward!.pickedTrueSpirit = true;
+  saveActiveRun(nextRun);
+  return nextRun;
+}
+
+export function claimSupremeLaw(run: RunState, lawId: SupremeLawId): RunState {
+  if (!run.reward?.supremeLawChoices || run.reward.pickedSupremeLaw) return run;
+  const nextRun: RunState = structuredClone(run);
+  nextRun.supremeLaw = lawId;
+  nextRun.reward!.pickedSupremeLaw = true;
+  saveActiveRun(nextRun);
+  return nextRun;
+}
+
 export function claimBreakthroughLaw(run: RunState, lawId: string): RunState {
   if (!run.reward?.lawChoices || run.reward.pickedLaw) return run;
   const nextRun: RunState = structuredClone(run);
@@ -579,11 +725,11 @@ export function finishRewardAndAdvance(run: RunState, meta: MetaSave): RunState 
   const wasBoss = Boolean(nextRun.reward?.isBossReward);
   nextRun.reward = null;
 
-  if (wasBoss && nextRun.act < 4) {
-    const nextAct = (nextRun.act + 1) as 2 | 3 | 4;
-    const realmMap: Record<2 | 3 | 4, RealmId> = { 2: 'foundation', 3: 'core', 4: 'nascent' };
+  if (wasBoss && nextRun.act < 9) {
+    const nextAct = (nextRun.act + 1) as ActNumber;
     nextRun.act = nextAct;
-    nextRun.realm = realmMap[nextAct];
+    nextRun.realm = ACT_REALM_MAP[nextAct];
+    recordActMilestoneInMeta(meta, nextAct);
     const rng = new SeededRng(nextRun.rngState);
     nextRun.map = generateActMap(nextAct, rng, meta.pastLifeRemnant);
     nextRun.currentNodeId = null;
@@ -611,7 +757,8 @@ export function auctionBuyLot(run: RunState, lotId: string): RunState {
   } else if (target.kind === 'relic') {
     grantRelicWithPickupEffect(nextRun, target.refId);
   } else if (target.kind === 'maxhp') {
-    nextRun.maxHp += 18;
+    const gain = Number(target.refId) || 18;
+    nextRun.maxHp += gain;
     nextRun.hp = nextRun.maxHp;
   }
 
@@ -633,7 +780,8 @@ export function auctionAmbushBuyer(run: RunState): RunState {
     } else if (unclaimed.kind === 'relic') {
       grantRelicWithPickupEffect(nextRun, unclaimed.refId);
     } else if (unclaimed.kind === 'maxhp') {
-      nextRun.maxHp += 18;
+      const gain = Number(unclaimed.refId) || 18;
+      nextRun.maxHp += gain;
       nextRun.hp = nextRun.maxHp;
     }
   }
@@ -671,7 +819,7 @@ export function abodeBrewElixir(run: RunState, mode: 'steady' | 'bold'): { nextR
   let message = '';
 
   if (mode === 'steady') {
-    const heal = Math.round(nextRun.maxHp * 0.4);
+    const heal = Math.round(nextRun.maxHp * 0.42);
     nextRun.hp = Math.min(nextRun.maxHp, nextRun.hp + heal);
     if (nextRun.consumables.length < 3) {
       const bonusPill = rng.pick(CONSUMABLE_LIST.filter((c) => c.kind === 'pill'));
@@ -682,10 +830,11 @@ export function abodeBrewElixir(run: RunState, mode: 'steady' | 'bold'): { nextR
     }
   } else {
     const roll = rng.next();
+    const maxGain = nextRun.act >= 7 ? 20 : nextRun.act >= 4 ? 16 : 12;
     if (roll < 0.68) {
-      nextRun.maxHp += 12;
-      nextRun.hp = Math.min(nextRun.maxHp, nextRun.hp + 22);
-      message = '丹云蔽日，九转金丹成！最大气血永久 +12，并恢复 22 点气血！';
+      nextRun.maxHp += maxGain;
+      nextRun.hp = Math.min(nextRun.maxHp, nextRun.hp + maxGain * 2);
+      message = `丹云蔽日，九转金丹成！最大气血永久 +${maxGain}，并恢复 ${maxGain * 2} 点气血！`;
     } else {
       nextRun.hp = Math.max(1, nextRun.hp - 10);
       nextRun.uidCounter += 1;
@@ -704,7 +853,7 @@ export function abodePurgeCard(run: RunState, cardUid: string): RunState {
   if (run.phase !== 'abode' || run.abodeUsed || run.deck.length <= 5) return run;
   const nextRun: RunState = structuredClone(run);
   nextRun.deck = nextRun.deck.filter((c) => c.uid !== cardUid);
-  nextRun.hp = Math.min(nextRun.maxHp, nextRun.hp + 6);
+  nextRun.hp = Math.min(nextRun.maxHp, nextRun.hp + 8);
   nextRun.abodeUsed = true;
   saveActiveRun(nextRun);
   return nextRun;
@@ -748,12 +897,12 @@ export function chooseEncounterOption(run: RunState, choiceId: string, achieveme
     const picked = rollCardChoices(nextRun, rng, 1, e.addRandomCard, achievements)[0];
     if (picked) {
       nextRun.uidCounter += 1;
-      nextRun.deck.push({ uid: `c-${nextRun.uidCounter}`, defId: picked.id, upgraded: false });
+      nextRun.deck.push({ uid: `c-${nextRun.uidCounter}`, defId: picked.id, upgraded: nextRun.act >= 7 });
     }
   }
   if (e.addSpecificCard && CARDS[e.addSpecificCard]) {
     nextRun.uidCounter += 1;
-    nextRun.deck.push({ uid: `c-${nextRun.uidCounter}`, defId: e.addSpecificCard, upgraded: false });
+    nextRun.deck.push({ uid: `c-${nextRun.uidCounter}`, defId: e.addSpecificCard, upgraded: nextRun.act >= 7 });
   }
   if (e.addCurse) {
     nextRun.uidCounter += 1;
@@ -811,7 +960,7 @@ export function shopBuyCard(run: RunState, index: number): RunState {
   nextRun.gold -= item.price;
   nextRun.shop!.cards[index].sold = true;
   nextRun.uidCounter += 1;
-  nextRun.deck.push({ uid: `c-${nextRun.uidCounter}`, defId: item.def.id, upgraded: false });
+  nextRun.deck.push({ uid: `c-${nextRun.uidCounter}`, defId: item.def.id, upgraded: nextRun.act >= 7 });
   saveActiveRun(nextRun);
   return nextRun;
 }
@@ -857,8 +1006,9 @@ export function shopBuyElixir(run: RunState): RunState {
   const nextRun: RunState = structuredClone(run);
   nextRun.gold -= nextRun.shop!.elixirPrice;
   nextRun.shop!.elixirBought = true;
-  nextRun.maxHp += 10;
-  nextRun.hp = Math.min(nextRun.maxHp, nextRun.hp + 25);
+  const gain = nextRun.act >= 7 ? 18 : nextRun.act >= 4 ? 14 : 10;
+  nextRun.maxHp += gain;
+  nextRun.hp = Math.min(nextRun.maxHp, nextRun.hp + gain * 2.5);
   saveActiveRun(nextRun);
   return nextRun;
 }
@@ -887,8 +1037,8 @@ export function claimPastLifeRemnant(run: RunState, meta: MetaSave, mode: 'card'
       else nextRun.treasures[1] = rem.leftTreasureId;
     }
   } else {
-    nextRun.maxHp += 15;
-    nextRun.hp = Math.min(nextRun.maxHp, nextRun.hp + 30);
+    nextRun.maxHp += 18;
+    nextRun.hp = Math.min(nextRun.maxHp, nextRun.hp + 36);
   }
 
   nextRun.phase = 'map';

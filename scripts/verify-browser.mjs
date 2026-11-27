@@ -35,13 +35,15 @@ async function verifyViewport(browser, name, viewport) {
   await page.click('button:has-text("三界强敌志")');
   await page.click('button:has-text("返回首页")');
 
-  // 2. 建角 -> 破壳降生 -> 天命赐福四选一 -> SVG 星轨连线星宿地图（确保已无寿元/道基显示）
+  // 2. 建角（含三界起点记忆面板） -> 破壳降生 -> 天命赐福四选一 -> 三界九卷山海灵脉图
   await page.click('button:has-text("踏入新一世仙途")');
+  await page.waitForSelector('.world-select-grid');
   await page.waitForSelector('.lineage-thumb');
   await page.click('button:has-text("破壳降生")');
   await page.waitForSelector('.blessing-card');
   await page.locator('.blessing-card').first().click();
 
+  await page.waitForSelector('.world-progress-bar');
   await page.waitForSelector('.map-stage svg.map-lines');
   const pathCount = await page.locator('.map-stage svg.map-lines path.map-edge-path').count();
   const nextPathCount = await page.locator('.map-stage svg.map-lines path.map-edge-path.is-next').count();

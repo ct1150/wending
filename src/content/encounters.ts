@@ -1,154 +1,164 @@
 import type { EncounterDef } from '../core/types';
 
 export const ENCOUNTERS: EncounterDef[] = [
+  // ==================== 人界篇奇遇 (Acts 1~3) ====================
   {
     id: 'enc-old-cauldron',
-    title: '残碑古鼎 · 问剑石溪',
+    title: '神手谷残瓶 · 神秘绿液',
     acts: [1, 2],
-    prose: '荒崖下立着半截残缺青铜鼎，鼎腹隐隐透出上古剑修留下的灵犀剑意，四周煞气却在悄然侵蚀肉身。',
+    prose: '七玄门后山草丛中半掩着一只毫无灵气波动的墨绿小瓶，瓶中已凝出一滴夺天地造化的参天绿液。',
     choices: [
       {
-        id: 'absorb', label: '以精血强行参悟鼎铭', detail: '损耗 10 点气血', hpCost: 10,
-        rewardText: '随机获得 1 张稀有神通 + 气血上限 +6',
-        effect: { maxHp: 6, addRandomCard: 'rare' },
+        id: 'absorb', label: '滴液催熟灵药炼体', detail: '损耗 8 点气血承受药力', hpCost: 8,
+        rewardText: '随机获得 1 张稀有神通 + 气血上限 +10',
+        effect: { maxHp: 10, addRandomCard: 'rare' },
       },
       {
-        id: 'pry', label: '撬取鼎耳灵材', detail: '损耗 6 点气血', hpCost: 6,
-        rewardText: '获得附魔材料【太白剑魄】与 40 灵石',
-        effect: { addMaterial: 'double-cast', gold: 40 },
+        id: 'pry', label: '催熟年份灵草换取灵材', detail: '无代价',
+        rewardText: '获得附魔材料【千年血灵芝】与 45 灵石',
+        effect: { addMaterial: 'leech-life', gold: 45 },
       },
       {
-        id: 'leave', label: '吐纳静心后离去', detail: '无代价',
-        rewardText: '恢复 12 点气血',
-        effect: { hp: 12 },
+        id: 'leave', label: '服下百年黄精调息', detail: '无代价',
+        rewardText: '恢复 16 点气血',
+        effect: { hp: 16 },
       },
     ],
   },
   {
-    id: 'enc-wounded-elder',
-    title: '重伤老怪 · 夺宝还是结缘',
-    acts: [1, 2, 3],
-    prose: '山坳雾气里跌坐着一名气息涣散的元婴残修，怀中死死护着一枚泛着金光的储物古宝，见你靠近厉声呵斥。',
-    choices: [
-      {
-        id: 'kill', label: '趁他病要他命（杀人夺宝）', detail: '损耗 12 点气血，招惹心魔', hpCost: 12,
-        rewardText: '获得 1 件【古宝遗物】+ 65 灵石，牌库塞入【心魔低语】',
-        effect: { addRelic: true, gold: 65, addCurse: 'curse-whisper' },
-      },
-      {
-        id: 'help', label: '赠予灵石助其疗伤', detail: '花费 45 灵石', goldCost: 45,
-        rewardText: '获赠 1 枚【三界道果信物】并恢复 12 点气血',
-        effect: { gainDaoToken: true, hp: 12 },
-      },
-      {
-        id: 'pass', label: '绕道而行，顺手采摘灵草', detail: '无代价',
-        rewardText: '恢复 8 点气血',
-        effect: { hp: 8 },
-      },
-    ],
-  },
-  {
-    id: 'enc-auction-shadow',
-    title: '黑市暗拍 · 千年血芝现世',
-    acts: [1, 2, 3],
-    prose: '沉钟湾夜雾中的地下黑市正压轴竞拍一株罕见的「千年紫金血芝」，台下数道阴冷神识已锁定了出价者。',
-    choices: [
-      {
-        id: 'buy', label: '重金拍下紫金血芝', detail: '花费 70 灵石', goldCost: 70,
-        rewardText: '永久提升 14 点最大气血上限，并恢复 20 点气血',
-        effect: { maxHp: 14, hp: 20 },
-      },
-      {
-        id: 'steal', label: '以命搏杀暗中截胡', detail: '损耗 14 点气血', hpCost: 14,
-        rewardText: '获得附魔材【千年血灵芝】+ 最大气血 +8',
-        effect: { addMaterial: 'leech-life', maxHp: 8 },
-      },
-      {
-        id: 'watch', label: '冷眼旁观，顺手捡漏碎银', detail: '无代价',
-        rewardText: '获得 35 灵石',
-        effect: { gold: 35 },
-      },
-    ],
-  },
-  {
-    id: 'enc-chess-immortal',
-    title: '云巅残局 · 烂柯一梦',
-    acts: [1, 2, 3],
-    prose: '白脊风隙石亭中摆着一盘未终的黑白星棋，落子之间竟以自身本源精血牵动周天灵气。',
-    choices: [
-      {
-        id: 'play', label: '燃精血落子破局', detail: '扣除 8 点最大气血上限', maxHpCost: 8,
-        rewardText: '直接领悟 1 张【绝世神话神通】！',
-        effect: { addRandomCard: 'mythic' },
-      },
-      {
-        id: 'swipe', label: '收取棋盘星辰聚灵砂', detail: '无代价',
-        rewardText: '获得附魔材料【星辰聚灵砂】（卡牌打出回1真元）',
-        effect: { addMaterial: 'spirit-surge' },
-      },
-    ],
-  },
-  {
-    id: 'enc-blood-altar',
-    title: '魔渊血泉 · 逆天洗髓',
-    acts: [1, 2, 3],
-    prose: '幽谷深处翻涌着滚烫暗红灵泉——跳入其中可洗去凡俗废招、重塑强横肉身，却要忍受烈火噬骨之痛。',
-    choices: [
-      {
-        id: 'bathe', label: '入泉洗髓（精简牌库+锻体）', detail: '损耗 10 点气血', hpCost: 10,
-        rewardText: '随机删去 1 张基础牌，永久提升 10 点最大气血',
-        effect: { removeRandomCard: true, maxHp: 10 },
-      },
-      {
-        id: 'drink', label: '献祭本源换取古宝', detail: '扣除 10 点最大气血上限', maxHpCost: 10,
-        rewardText: '随机获得 1 件【古宝遗物】+ 1 枚战中丹符',
-        effect: { addRelic: true, addConsumable: true },
-      },
-      {
-        id: 'refuse', label: '汲取泉边温润灵雾', detail: '无代价',
-        rewardText: '恢复 14 点气血',
-        effect: { hp: 14 },
-      },
-    ],
-  },
-  {
-    id: 'enc-celestial-gate',
-    title: '古阵残碑 · 三界道果',
+    id: 'enc-xutian-cauldron',
+    title: '虚天内殿 · 乾蓝冰焰',
     acts: [2, 3],
-    prose: '荒废的跨界古传送阵中央悬浮着刻有上界星图的玉简，若以精血激活，便可取得登临隐藏第四卷的信物。',
+    prose: '乱星海虚天殿高台之上，一缕极寒幽蓝冰焰环绕着古宝残片跳动，元婴老怪们正在远处混战无暇他顾。',
     choices: [
       {
-        id: 'activate', label: '以精血祭阵，收取道果信物', detail: '损耗 12 点气血', hpCost: 12,
-        rewardText: '获得 1 枚【三界道果信物】+ 附魔材【天劫雷精】',
-        effect: { gainDaoToken: true, addMaterial: 'thunder-mark' },
+        id: 'kill', label: '强行收取虚天古宝（富贵险中求）', detail: '损耗 14 点气血，沾染冰煞心魔', hpCost: 14,
+        rewardText: '获得 1 件【古宝遗物】+ 75 灵石，牌库塞入【心魔低语】',
+        effect: { addRelic: true, gold: 75, addCurse: 'curse-whisper' },
       },
       {
-        id: 'salvage', label: '拆解古阵换取灵石', detail: '无代价',
-        rewardText: '获得 80 灵石',
-        effect: { gold: 80 },
+        id: 'help', label: '以灵石布置隔绝阵收取道果', detail: '花费 45 灵石', goldCost: 45,
+        rewardText: '获赠 1 枚【掌天道果信物】并恢复 14 点气血',
+        effect: { gainDaoToken: true, hp: 14 },
+      },
+      {
+        id: 'pass', label: '趁乱捡取殿角灵丹遁走', detail: '无代价',
+        rewardText: '获得 1 枚战中【乾坤丹符】+ 恢复 10 点气血',
+        effect: { addConsumable: true, hp: 10 },
       },
     ],
   },
   {
     id: 'enc-sutra-pavilion',
-    title: '古修藏经阁 · 兼修旁门',
-    acts: [1, 2, 3],
-    prose: '断崖云海间显出一座残破古阁，书架上仅存数卷异派孤本秘籍，若肯分心兼修，便能走出双修邪道仙途。',
+    title: '大衍神君坐化洞 · 兼修旁门',
+    acts: [1, 2, 3, 4],
+    prose: '竹海秘洞中端坐着一具面带笑意的古修遗骸，石案上留有《大衍决》与数卷跨流派邪道合修秘术。',
     choices: [
       {
         id: 'study-method',
-        label: '兼修异派心法（解锁双修化学反应）',
+        label: '分神兼修异派心法（解锁双修化学反应）',
         detail: '损耗 8 点气血',
         hpCost: 8,
         rewardText: '立即进入【辅修心法】三选一并开放跨系神通掉落！',
         effect: { offerSecondaryMethod: true },
       },
       {
-        id: 'pouch-loot',
-        label: '搜刮阁中遗留灵丹符箓',
+        id: 'bathe',
+        label: '以大衍神识斩却凡俗芜杂',
         detail: '无代价',
-        rewardText: '随机获得 1 件战中瞬发【乾坤丹符】+ 35 灵石',
-        effect: { addConsumable: true, gold: 35 },
+        rewardText: '随机精简删去 1 张基础牌，最大气血 +8',
+        effect: { removeRandomCard: true, maxHp: 8 },
+      },
+    ],
+  },
+
+  // ==================== 灵界篇奇遇 (Acts 4~6) ====================
+  {
+    id: 'enc-guanghan-pool',
+    title: '广寒界遗迹 · 仙灵洗髓池',
+    acts: [4, 5, 6],
+    prose: '云海古殿中央残留着半池乳白色「化仙池水」，浸泡其中可脱胎换骨、涤尽废招，亦可以本源精血祭炼真仙绝学。',
+    choices: [
+      {
+        id: 'play', label: '献祭精血参悟广寒仙碑', detail: '扣除 10 点最大气血上限', maxHpCost: 10,
+        rewardText: '直接领悟 1 张【绝世神话神通】！',
+        effect: { addRandomCard: 'mythic' },
+      },
+      {
+        id: 'bathe-pool', label: '入化仙池洗髓伐毛', detail: '无代价',
+        rewardText: '随机删去 1 张基础牌，最大气血 +16 并恢复 25 点气血',
+        effect: { removeRandomCard: true, maxHp: 16, hp: 25 },
+      },
+      {
+        id: 'swipe', label: '刮取池畔星辰聚灵砂', detail: '无代价',
+        rewardText: '获得附魔材料【星辰聚灵砂】与 85 灵石',
+        effect: { addMaterial: 'spirit-surge', gold: 85 },
+      },
+    ],
+  },
+  {
+    id: 'enc-qingyuan-master',
+    title: '冥河青元宫 · 青元子托孤',
+    acts: [4, 5, 6],
+    prose: '一代大乘剑尊青元子正在闭死关对抗天人五衰，愿以毕生收藏换取灵石与气血护法，助他渡过此劫。',
+    choices: [
+      {
+        id: 'guard', label: '分出精血全力为青元子护法', detail: '损耗 22 点气血', hpCost: 22,
+        rewardText: '获赠绝世神通《青元·大庚剑阵》或随机古宝 + 道果信物×1！',
+        effect: { addRelic: true, gainDaoToken: true, maxHp: 12 },
+      },
+      {
+        id: 'trade', label: '以灵石交换灵界奇珍', detail: '花费 80 灵石', goldCost: 80,
+        rewardText: '获得附魔材【太白剑魄】+ 1 枚战中丹符 + 恢复 25 气血',
+        effect: { addMaterial: 'double-cast', addConsumable: true, hp: 25 },
+      },
+      {
+        id: 'salute', label: '执晚辈礼拜别论道', detail: '无代价',
+        rewardText: '恢复 24 点气血，获得 55 灵石',
+        effect: { hp: 24, gold: 55 },
+      },
+    ],
+  },
+
+  // ==================== 仙界篇奇遇 (Acts 7~9) ====================
+  {
+    id: 'enc-zhenyan-pagoda',
+    title: '真言门废墟 · 弥罗仙尊残影',
+    acts: [7, 8, 9],
+    prose: '破碎的岁月宝塔中浮现出时间道祖昔日大敌「弥罗老祖」的一缕讲道残影，光阴晶砂在四周缓缓倒流。',
+    choices: [
+      {
+        id: 'comprehend-time', label: '燃仙躯硬承岁月讲道真言', detail: '损耗 28 点气血', hpCost: 28,
+        rewardText: '直接领悟《岁月神灯·光阴斩》+【掌天道果信物】×1！',
+        effect: { addSpecificCard: 'nu-time-lantern', gainDaoToken: true },
+      },
+      {
+        id: 'gather-sand', label: '收取风灵玉髓与仙石', detail: '无代价',
+        rewardText: '获得减费附魔材【风灵玉髓】+ 120 灵石',
+        effect: { addMaterial: 'swift', gold: 120 },
+      },
+      {
+        id: 'heal-time', label: '沐浴倒流光阴抚平道伤', detail: '无代价',
+        rewardText: '最大气血永久 +20，并恢复 45 点气血',
+        effect: { maxHp: 20, hp: 45 },
+      },
+    ],
+  },
+  {
+    id: 'enc-jilin-void',
+    title: '积鳞空境 · 蟹道人重逢',
+    acts: [7, 8, 9],
+    prose: '大罗仙器玄天魔器深处，伪装成石牧故友的「蟹道人」认出了你身上的掌天瓶气息，愿以雷源晶石助你淬体。',
+    choices: [
+      {
+        id: 'temper', label: '引太古伪仙雷源入体淬炼', detail: '损耗 24 点气血', hpCost: 24,
+        rewardText: '获得 1 件【古宝遗物】+ 附魔材【天劫雷精】+ 最大气血 +18',
+        effect: { addRelic: true, addMaterial: 'thunder-mark', maxHp: 18 },
+      },
+      {
+        id: 'refine', label: '请蟹道人斩灭牌库杂质', detail: '无代价',
+        rewardText: '精简删去 1 张基础牌，恢复 36 点气血并获 1 枚丹符',
+        effect: { removeRandomCard: true, hp: 36, addConsumable: true },
       },
     ],
   },

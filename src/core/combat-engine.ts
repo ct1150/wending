@@ -1,7 +1,7 @@
 import { CARDS } from '../content/cards';
 import { CONSUMABLES } from '../content/consumables';
 import { ENEMIES } from '../content/enemies';
-import { getRootById } from '../content/lineages';
+import { getRootById, getWorldPowerMultiplier } from '../content/lineages';
 import { RELICS, TREASURES } from '../content/treasures';
 import { SeededRng } from './rng';
 import type {
@@ -79,7 +79,7 @@ export function previewResonance(
   if (mixedFiveBonus && nextFive.size >= 3) {
     return {
       name: '五行混元 · 逆乱阴阳',
-      detail: '清空灵印，回 2 真元、抽 2 牌并造成 14 点混元真伤',
+      detail: '清空灵印，回 2 真元、抽 2 牌并造成混元真伤',
       consumes: [...currentSeals],
     };
   }
@@ -87,19 +87,19 @@ export function previewResonance(
     return { name: '木火相生 · 焚心', detail: '火伤 +50%，并引爆 1 次丹毒', consumes: ['wood'] };
   }
   if (incoming === 'thunder' && has('metal')) {
-    return { name: '金雷引煞 · 惊蛰', detail: '降下 10 点穿甲落雷，获 1 层剑意', consumes: ['metal'] };
+    return { name: '金雷引煞 · 惊蛰', detail: '降下穿甲落雷，获 1 层剑意', consumes: ['metal'] };
   }
   if (incoming === 'metal' && has('earth')) {
-    return { name: '厚土孕剑 · 锋鸣', detail: '获 8 点护体罡气并抽 1 张牌', consumes: ['earth'] };
+    return { name: '厚土孕剑 · 锋鸣', detail: '获护体罡气并抽 1 张牌', consumes: ['earth'] };
   }
   if (incoming === 'wood' && has('water')) {
-    return { name: '寒泉滋荣 · 生息', detail: '恢复 6 点气血并获 1 点真元', consumes: ['water'] };
+    return { name: '寒泉滋荣 · 生息', detail: '恢复气血并获 1 点真元', consumes: ['water'] };
   }
   if (incoming === 'water' && has('earth')) {
-    return { name: '山泽通气 · 固本', detail: '获 7 点护体罡气，本回合护盾不清空', consumes: ['earth'] };
+    return { name: '山泽通气 · 固本', detail: '获护体罡气，本回合护盾不清空', consumes: ['earth'] };
   }
   if (incoming === 'sha' && has('sha')) {
-    return { name: '魔威滔天 · 噬魂', detail: '返还 1 点真元并额外造成 10 点穿甲煞伤', consumes: ['sha'] };
+    return { name: '魔威滔天 · 噬魂', detail: '返还 1 点真元并轰出穿甲煞伤', consumes: ['sha'] };
   }
   return null;
 }
@@ -124,16 +124,34 @@ function pushSeal(combat: CombatState, seal: SealType): void {
   }
 }
 
+function triggerPhoenixBloodlineIfReady(run: RunState, combat: CombatState): void {
+  if (run.trueSpirit !== 'spirit-phoenix' || combat.phoenixTriggeredThisTurn) return;
+  combat.phoenixTriggeredThisTurn = true;
+  const worldMult = getWorldPowerMultiplier(run.act);
+  const heal = Math.round(10 * worldMult);
+  run.hp = Math.min(run.maxHp, run.hp + heal);
+  addPoisonToEnemy(run, combat, 5);
+  combat.combatLog.unshift(`🔥【天凤真血】浴血激发：恢复 ${heal} 点气血并染上天凤毒焰！`);
+}
+
 function onCardsExhausted(run: RunState, combat: CombatState, count: number): void {
   if (count <= 0) return;
+  const worldMult = getWorldPowerMultiplier(run.act);
   if (run.secondaryMethod === 'method-demon-furnace') {
-    combat.block += 7 * count;
+    const blk = Math.round(7 * count * worldMult);
+    combat.block += blk;
     for (const arr of combat.arrays) arr.damagePerTurn += 2 * count;
-    combat.combatLog.unshift(`《焚心炼阵功》响应消耗：罡气 +${7 * count}，全场阵盘伤害提升！`);
+    combat.combatLog.unshift(`《焚心炼阵功》响应消耗：罡气 +${blk}，全场阵盘伤害提升！`);
   }
   const exQi = hasRelicHook(run, 'exhaust-qi');
   if (exQi > 0) {
     combat.qi += exQi;
+  }
+  if (run.supremeLaw === 'supreme-samsara') {
+    combat.qi += 1;
+    combat.block += Math.round(8 * worldMult);
+    run.hp = Math.min(run.maxHp, run.hp + Math.round(6 * worldMult));
+    combat.combatLog.unshift('☯【轮回法则】化灭为生：仙灵力 +1，并回复气血与护体罡气！');
   }
 }
 
@@ -141,7 +159,8 @@ export function initCombat(run: RunState, enemyDef: EnemyDef, nodeType: MapNodeT
   const rng = new SeededRng(run.rngState);
   const root = getRootById(run.rootId);
   const muts = run.mutators ?? [];
-  const furyScale = nodeType === 'fury-elite' ? 1.25 : 1;
+  const worldMult = getWorldPowerMultiplier(run.act);
+  const furyScale = nodeType === 'fury-elite' ? 1.24 : 1;
   const mutHpScale = muts.includes('mut-spirit-tide') ? 1.25 : 1;
   const ascScale = (1 + run.ascension * 0.09) * furyScale * mutHpScale;
   const maxHp = Math.round(enemyDef.maxHp * ascScale);
@@ -159,15 +178,21 @@ export function initCombat(run: RunState, enemyDef: EnemyDef, nodeType: MapNodeT
   const mutQi = muts.includes('mut-spirit-tide') ? 1 : 0;
   const maxQi = run.baseQi + mutQi;
   const startQi = maxQi + (root.bonusQi ?? 0) + hasRelicHook(run, 'start-qi');
+  const rocBlock = run.trueSpirit === 'spirit-roc' ? Math.round(14 * worldMult) : 0;
+  const nirvanaRelicBlock = run.relics.includes('law-nirvana-body') ? 16 : 0;
   const startBlock =
     hasRelicHook(run, 'start-block') +
+    rocBlock +
+    nirvanaRelicBlock +
     (enemyDef.tier === 'tribulation' || enemyDef.tier === 'boss' ? hasRelicHook(run, 'tribulation-ward') : 0);
 
   const treasureCharges: Record<string, number> = {};
   for (const tid of run.treasures) treasureCharges[tid] = 0;
 
-  const maxSealSlots = enemyDef.trait?.id === 'seal-lock' ? enemyDef.trait.value : 3;
+  const baseSealSlots = run.trueSpirit === 'spirit-peacock' ? 4 : 3;
+  const maxSealSlots = enemyDef.trait?.id === 'seal-lock' ? Math.max(2, baseSealSlots - 1) : baseSealSlots;
   const glassSword = muts.includes('mut-glass-sword');
+  const rocSword = run.trueSpirit === 'spirit-roc' ? 4 : 0;
 
   const combat: CombatState = {
     enemy: {
@@ -179,7 +204,7 @@ export function initCombat(run: RunState, enemyDef: EnemyDef, nodeType: MapNodeT
       artStyle: enemyDef.artStyle,
       hp: maxHp,
       maxHp,
-      block: nodeType === 'fury-elite' ? 14 : 0,
+      block: nodeType === 'fury-elite' ? Math.round(14 * worldMult) : 0,
       poison: 0,
       vulnerable: 0,
       weak: 0,
@@ -198,7 +223,7 @@ export function initCombat(run: RunState, enemyDef: EnemyDef, nodeType: MapNodeT
     maxQi,
     block: startBlock,
     retainBlockThisTurn: false,
-    swordIntent: glassSword ? 3 : 0,
+    swordIntent: (glassSword ? 3 : 0) + rocSword,
     counterAura: hasRelicHook(run, 'counter-start'),
     damageBoostPct: 0,
     nextResonanceDouble: false,
@@ -216,6 +241,9 @@ export function initCombat(run: RunState, enemyDef: EnemyDef, nodeType: MapNodeT
     cardsPlayedThisTurn: 0,
     swordCardsPlayedThisTurn: 0,
     hpSacrificedInCombat: 0,
+    phoenixTriggeredThisTurn: false,
+    firstNonExhaustEchoDone: false,
+    samsaraReviveUsed: false,
     lastResonance: null,
     phase2Banner: null,
     combatLog: [
@@ -224,7 +252,13 @@ export function initCombat(run: RunState, enemyDef: EnemyDef, nodeType: MapNodeT
     outcome: 'ongoing',
   };
 
-  const extraDraw = hasRelicHook(run, 'start-draw') + (run.relics.includes('rel-shadowless-tassel') ? 1 : 0);
+  const spaceDraw = run.supremeLaw === 'supreme-space' ? 2 : 0;
+  const celestialLawDraw = run.relics.includes('law-celestial-qi') ? 2 : 0;
+  const extraDraw =
+    hasRelicHook(run, 'start-draw') +
+    (run.relics.includes('rel-shadowless-tassel') ? 1 : 0) +
+    spaceDraw +
+    celestialLawDraw;
   drawCards(combat, 5 + extraDraw, rng);
 
   const curseBonus = hasRelicHook(run, 'curse-power');
@@ -275,6 +309,9 @@ function dealDamageToEnemy(
   isDirectHit = false,
 ): number {
   let dmg = rawDamage;
+  if (isDirectHit && run.trueSpirit === 'spirit-roc') {
+    dmg = Math.round(dmg * 1.25);
+  }
   const dyingFury = hasRelicHook(run, 'dying-fury');
   if (dyingFury > 0 && run.hp <= run.maxHp * 0.45) {
     dmg = Math.round(dmg * (1 + dyingFury / 100));
@@ -285,7 +322,12 @@ function dealDamageToEnemy(
   if (combat.weak > 0) dmg = Math.floor(dmg * 0.75);
   if (combat.enemy.vulnerable > 0) dmg = Math.floor(dmg * 1.5);
 
-  if (isDirectHit && combat.enemy.trait?.id === 'stone-shell' && !combat.enemy.firstHitTakenThisTurn) {
+  if (
+    isDirectHit &&
+    combat.enemy.trait?.id === 'stone-shell' &&
+    !combat.enemy.firstHitTakenThisTurn &&
+    run.supremeLaw !== 'supreme-space'
+  ) {
     combat.enemy.firstHitTakenThisTurn = true;
     dmg = Math.max(1, Math.floor(dmg * 0.5));
     combat.combatLog.unshift(`【${combat.enemy.trait.name}】抵消了首击一半威力！`);
@@ -293,41 +335,58 @@ function dealDamageToEnemy(
 
   dmg = Math.max(1, dmg);
 
+  // 空间法则：每次直接攻击额外撕裂 35% 穿甲空间真伤
+  const spaceBonusPierce =
+    isDirectHit && run.supremeLaw === 'supreme-space' ? Math.max(2, Math.round(dmg * 0.35)) : 0;
+
   if (!pierce && combat.enemy.block > 0) {
     const absorbed = Math.min(combat.enemy.block, dmg);
     combat.enemy.block -= absorbed;
     dmg -= absorbed;
   }
-  combat.enemy.hp = Math.max(0, combat.enemy.hp - dmg);
+  const totalHpDealt = dmg + spaceBonusPierce;
+  combat.enemy.hp = Math.max(0, combat.enemy.hp - totalHpDealt);
 
   if (isDirectHit && combat.enemy.trait?.id === 'thorns') {
     const thorn = combat.enemy.trait.value;
     const blocked = Math.min(combat.block, thorn);
     combat.block -= blocked;
     const left = thorn - blocked;
-    if (left > 0) run.hp = Math.max(1, run.hp - left);
+    if (left > 0) {
+      run.hp = Math.max(1, run.hp - left);
+      triggerPhoenixBloodlineIfReady(run, combat);
+    }
   }
 
   checkEnemySurvivalAndPhase2(combat);
-  return dmg;
+  return totalHpDealt;
 }
 
-function addBlockToPlayer(run: RunState, combat: CombatState, amount: number): void {
+function addBlockToPlayer(run: RunState, combat: CombatState, amount: number, applyWorldScale = true): void {
   if (amount <= 0) return;
+  const worldMult = applyWorldScale ? getWorldPowerMultiplier(run.act) : 1;
   const arrayBonus = run.lineage === 'array' ? combat.arrays.length * 2 : 0;
-  combat.block += amount + arrayBonus;
+  combat.block += Math.round(amount * worldMult) + arrayBonus;
 }
 
 function addPoisonToEnemy(run: RunState, combat: CombatState, amount: number): void {
   if (amount <= 0) return;
+  const worldMult = getWorldPowerMultiplier(run.act);
   const boost =
     hasRelicHook(run, 'poison-boost') + (run.relics.includes('rel-shennong-whip') ? 2 : 0);
-  combat.enemy.poison += amount + boost;
+  combat.enemy.poison += Math.round((amount + boost) * worldMult);
   run.stats.maxPoisonApplied = Math.max(run.stats.maxPoisonApplied ?? 0, combat.enemy.poison);
 }
 
 function tryAutoRevivePlayer(run: RunState, combat: CombatState): boolean {
   if (run.hp > 0) return false;
+  if (run.supremeLaw === 'supreme-samsara' && !combat.samsaraReviveUsed) {
+    combat.samsaraReviveUsed = true;
+    run.hp = Math.max(1, Math.round(run.maxHp * 0.5));
+    combat.block += 28;
+    combat.combatLog.unshift('☯ 【轮回法则 · 六道逆转】勘破生死，恢复 50% 气血并凝结 28 点仙罡！');
+    return true;
+  }
   const dollIdx = run.consumables.indexOf('con-revive-doll');
   if (dollIdx >= 0) {
     run.consumables.splice(dollIdx, 1);
@@ -344,9 +403,10 @@ function applyEffectBundle(
   effect: CardEffect,
   rng: SeededRng,
   sourceElement: ElementTag,
-  opts: { isCard?: boolean; xValue?: number; enchant?: CardInstance['enchant']; sourceName: string },
+  opts: { isCard?: boolean; xValue?: number; enchant?: CardInstance['enchant']; sourceName: string; isEcho?: boolean },
 ): void {
   const root = getRootById(run.rootId);
+  const worldMult = getWorldPowerMultiplier(run.act);
   let damageMultiplier = 1;
   const xVal = opts.xValue ?? 0;
 
@@ -354,6 +414,12 @@ function applyEffectBundle(
     combat.hpSacrificedInCombat += amount;
     run.stats.hpSacrificed += amount;
     if (run.lineage === 'demon') addBlockToPlayer(run, combat, 4);
+    triggerPhoenixBloodlineIfReady(run, combat);
+    if (run.supremeLaw === 'supreme-samsara') {
+      combat.qi += 1;
+      addBlockToPlayer(run, combat, 8);
+      run.hp = Math.min(run.maxHp, run.hp + Math.round(6 * worldMult));
+    }
     if (run.secondaryMethod === 'method-blood-blade') {
       combat.swordIntent += 2;
       if (combat.hand.length < 9) {
@@ -364,14 +430,16 @@ function applyEffectBundle(
     }
   };
 
-  if (effect.selfHpCost && effect.selfHpCost > 0) {
-    run.hp = Math.max(1, run.hp - effect.selfHpCost);
-    triggerSelfSacrificeHooks(effect.selfHpCost);
-  }
-  if (effect.maxHpCost && effect.maxHpCost > 0) {
-    run.maxHp = Math.max(15, run.maxHp - effect.maxHpCost);
-    run.hp = Math.min(run.hp, run.maxHp);
-    triggerSelfSacrificeHooks(effect.maxHpCost);
+  if (!opts.isEcho) {
+    if (effect.selfHpCost && effect.selfHpCost > 0) {
+      run.hp = Math.max(1, run.hp - effect.selfHpCost);
+      triggerSelfSacrificeHooks(effect.selfHpCost);
+    }
+    if (effect.maxHpCost && effect.maxHpCost > 0) {
+      run.maxHp = Math.max(15, run.maxHp - effect.maxHpCost);
+      run.hp = Math.min(run.hp, run.maxHp);
+      triggerSelfSacrificeHooks(effect.maxHpCost);
+    }
   }
 
   if (effect.exhaustRandomHand && effect.exhaustRandomHand > 0 && combat.hand.length > 0) {
@@ -399,14 +467,14 @@ function applyEffectBundle(
 
       if (combat.nextResonanceDouble) {
         combat.nextResonanceDouble = false;
-        dealDamageToEnemy(run, combat, run.lineage === 'alchemy' ? 28 : 14, true);
+        dealDamageToEnemy(run, combat, Math.round((run.lineage === 'alchemy' ? 28 : 14) * worldMult), true);
       }
 
       if (res.name.startsWith('五行混元')) {
         combat.seals = [];
         combat.qi += 2;
         drawCards(combat, 2, rng);
-        dealDamageToEnemy(run, combat, 14, true);
+        dealDamageToEnemy(run, combat, Math.round(14 * worldMult), true);
       } else if (res.name.startsWith('木火相生')) {
         damageMultiplier = 1.5;
         if (combat.enemy.poison > 0) {
@@ -414,29 +482,35 @@ function applyEffectBundle(
         }
         if (run.lineage === 'alchemy') {
           addPoisonToEnemy(run, combat, 3);
-          run.hp = Math.min(run.maxHp, run.hp + 3);
+          run.hp = Math.min(run.maxHp, run.hp + Math.round(3 * worldMult));
         }
       } else if (res.name.startsWith('金雷引煞')) {
-        dealDamageToEnemy(run, combat, 10, true);
+        dealDamageToEnemy(run, combat, Math.round(10 * worldMult), true);
         combat.swordIntent += 1;
       } else if (res.name.startsWith('厚土孕剑')) {
         addBlockToPlayer(run, combat, 8);
         drawCards(combat, 1, rng);
       } else if (res.name.startsWith('寒泉滋荣')) {
-        run.hp = Math.min(run.maxHp, run.hp + 6);
+        run.hp = Math.min(run.maxHp, run.hp + Math.round(6 * worldMult));
         combat.qi += 1;
       } else if (res.name.startsWith('山泽通气')) {
         addBlockToPlayer(run, combat, 7);
         combat.retainBlockThisTurn = true;
       } else if (res.name.startsWith('魔威滔天')) {
         combat.qi += 1;
-        dealDamageToEnemy(run, combat, 10, true);
+        dealDamageToEnemy(run, combat, Math.round(10 * worldMult), true);
+      }
+
+      if (run.trueSpirit === 'spirit-peacock' && combat.enemy.hp > 0) {
+        combat.qi += 1;
+        dealDamageToEnemy(run, combat, Math.round(16 * worldMult), true);
+        combat.combatLog.unshift('🦚【五色孔雀法相】响应共鸣：元气 +1，轰出五色神光！');
       }
 
       if (root.mixedFiveBonus) drawCards(combat, 1, rng);
       const resAmp = hasRelicHook(run, 'resonance-amp');
-      if (resAmp > 0) {
-        dealDamageToEnemy(run, combat, resAmp, true);
+      if (resAmp > 0 && combat.enemy.hp > 0) {
+        dealDamageToEnemy(run, combat, Math.round(resAmp * worldMult), true);
         addBlockToPlayer(run, combat, 5);
       }
     } else {
@@ -447,6 +521,16 @@ function applyEffectBundle(
   if (effect.extraSeal && effect.extraSeal !== sealToInject) {
     pushSeal(combat, effect.extraSeal);
   }
+
+  // 先加护盾（以便「五色灭绝神光」等先叠盾再按当前盾量打伤害的卡牌立即吃到本次护盾！）
+  if (effect.block) {
+    const blockAmt = effect.xCost && !effect.damage ? (xVal + 1) * effect.block : effect.block;
+    addBlockToPlayer(run, combat, blockAmt);
+    if (opts.enchant === 'double-cast' && !effect.damage && !effect.damagePerBlock) {
+      addBlockToPlayer(run, combat, Math.round(blockAmt * 0.6));
+    }
+  }
+  if (effect.retainBlock) combat.retainBlockThisTurn = true;
 
   let extraDmg = 0;
   if (effect.exhaustCursesInHand) {
@@ -467,15 +551,15 @@ function applyEffectBundle(
     combat.combatLog.unshift(`💥 引爆 ${count} 座阵盘，返还 ${count} 点真元！`);
   }
 
-  let baseDmg = (effect.damage ?? 0) + extraDmg;
+  let baseDmg = Math.round(((effect.damage ?? 0) + extraDmg) * worldMult);
   if (effect.damagePerBlock) {
     baseDmg += Math.floor(combat.block * effect.damagePerBlock);
   }
   if (effect.consumeSwordIntent && combat.swordIntent > 0) {
-    baseDmg += combat.swordIntent * (effect.damagePerSwordIntent ?? 6);
+    baseDmg += Math.round(combat.swordIntent * (effect.damagePerSwordIntent ?? 6) * worldMult);
     combat.swordIntent = 0;
   } else if (baseDmg > 0 && (sourceElement === 'metal' || sourceElement === 'thunder')) {
-    baseDmg += combat.swordIntent;
+    baseDmg += Math.round(combat.swordIntent * worldMult);
   }
 
   const hits = effect.xCost && effect.xHitsBase !== undefined
@@ -499,16 +583,10 @@ function applyEffectBundle(
     combat.combatLog.unshift(`【${opts.sourceName}】造成 ${totalDealt} 点伤害。`);
   }
 
-  if (effect.block) {
-    const blockAmt = effect.xCost && !baseDmg ? (xVal + 1) * effect.block : effect.block;
-    addBlockToPlayer(run, combat, blockAmt);
-    if (opts.enchant === 'double-cast' && !baseDmg) {
-      addBlockToPlayer(run, combat, Math.round(blockAmt * 0.6));
-    }
+  if (effect.counterAura) combat.counterAura += Math.round(effect.counterAura * worldMult);
+  if (effect.heal && !effect.xPoisonDetonate) {
+    run.hp = Math.min(run.maxHp, run.hp + Math.round(effect.heal * worldMult));
   }
-  if (effect.counterAura) combat.counterAura += effect.counterAura;
-  if (effect.retainBlock) combat.retainBlockThisTurn = true;
-  if (effect.heal && !effect.xPoisonDetonate) run.hp = Math.min(run.maxHp, run.hp + effect.heal);
   if (effect.gainQi) combat.qi += effect.gainQi;
   if (effect.draw) drawCards(combat, effect.draw, rng);
   if (effect.swordIntent) combat.swordIntent += effect.swordIntent;
@@ -520,7 +598,7 @@ function applyEffectBundle(
       if (combat.enemy.poison > 0) {
         dealDamageToEnemy(run, combat, combat.enemy.poison, true);
       }
-      if (effect.heal) run.hp = Math.min(run.maxHp, run.hp + effect.heal);
+      if (effect.heal) run.hp = Math.min(run.maxHp, run.hp + Math.round(effect.heal * worldMult));
     }
     combat.combatLog.unshift(`🔥 焚天丹炉连爆 ${times} 转！`);
   } else if (effect.detonatePoison && combat.enemy.poison > 0) {
@@ -534,18 +612,21 @@ function applyEffectBundle(
   if (effect.weak) combat.enemy.weak += effect.weak;
 
   if (effect.arrayPower) {
+    const dpt = Math.round((effect.arrayPower.damagePerTurn ?? 0) * worldMult);
+    const bpt = Math.round((effect.arrayPower.blockPerTurn ?? 0) * worldMult);
+    const ppt = effect.arrayPower.poisonPerTurn ?? 0;
     const existing = combat.arrays.find((a) => a.id === effect.arrayPower!.id);
     if (existing) {
-      existing.damagePerTurn += effect.arrayPower.damagePerTurn ?? 0;
-      existing.blockPerTurn += effect.arrayPower.blockPerTurn ?? 0;
-      existing.poisonPerTurn += effect.arrayPower.poisonPerTurn ?? 0;
+      existing.damagePerTurn += dpt;
+      existing.blockPerTurn += bpt;
+      existing.poisonPerTurn += ppt;
     } else {
       combat.arrays.push({
         id: effect.arrayPower.id,
         name: effect.arrayPower.name,
-        damagePerTurn: effect.arrayPower.damagePerTurn ?? 0,
-        blockPerTurn: effect.arrayPower.blockPerTurn ?? 0,
-        poisonPerTurn: effect.arrayPower.poisonPerTurn ?? 0,
+        damagePerTurn: dpt,
+        blockPerTurn: bpt,
+        poisonPerTurn: ppt,
       });
     }
     combat.combatLog.unshift(`阵成！【${effect.arrayPower.name}】开始运转。`);
@@ -555,21 +636,21 @@ function applyEffectBundle(
     for (const defId of effect.addCardsToHand) {
       if (combat.hand.length >= 9) break;
       run.uidCounter += 1;
-      combat.hand.push({ uid: `gen-${run.uidCounter}`, defId, upgraded: false });
+      combat.hand.push({ uid: `gen-${run.uidCounter}`, defId, upgraded: run.act >= 4 });
     }
   }
-  if (effect.addCurseToDiscard) {
+  if (effect.addCurseToDiscard && !opts.isEcho) {
     run.uidCounter += 1;
     combat.discardPile.push({ uid: `cur-${run.uidCounter}`, defId: effect.addCurseToDiscard, upgraded: false });
   }
 
-  if (opts.enchant === 'leech-life') run.hp = Math.min(run.maxHp, run.hp + 4);
+  if (opts.enchant === 'leech-life') run.hp = Math.min(run.maxHp, run.hp + Math.round(4 * worldMult));
   if (opts.enchant === 'toxic-edge') addPoisonToEnemy(run, combat, 4);
   if (opts.enchant === 'innate') drawCards(combat, 1, rng);
   if (opts.enchant === 'spirit-surge') combat.qi += 1;
   if (opts.enchant === 'shield-echo') addBlockToPlayer(run, combat, 8);
   if (opts.enchant === 'thunder-mark') {
-    if (combat.enemy.hp > 0) dealDamageToEnemy(run, combat, 6, true);
+    if (combat.enemy.hp > 0) dealDamageToEnemy(run, combat, Math.round(6 * worldMult), true);
     pushSeal(combat, 'thunder');
   }
 
@@ -582,7 +663,7 @@ function applyEffectBundle(
     run.hp = Math.min(run.maxHp, run.hp + effect.gainMaxHp);
   }
 
-  if (combat.enemy.hp <= 0) {
+  if (combat.enemy.hp <= 0 && !opts.isEcho) {
     if (opts.enchant === 'leech-life') {
       run.maxHp += 2;
       run.hp = Math.min(run.maxHp, run.hp + 2);
@@ -646,19 +727,41 @@ export function playCard(run: RunState, cardUid: string): RunState {
     sourceName: getCardDisplayName(inst),
   });
 
+  // 仙界至尊【时间法则】：每回合首张非消耗/非阵盘牌自动凝聚光阴重影免费再结算 1 次！
+  if (
+    nextRun.supremeLaw === 'supreme-time' &&
+    !combat.firstNonExhaustEchoDone &&
+    !def.exhaust &&
+    def.type !== 'array' &&
+    def.type !== 'curse' &&
+    combat.enemy.hp > 0
+  ) {
+    combat.firstNonExhaustEchoDone = true;
+    combat.combatLog.unshift(`⏳【时间法则 · 光阴重影】重演「${getCardDisplayName(inst)}」！`);
+    applyEffectBundle(nextRun, combat, effect, rng, def.element, {
+      isCard: true,
+      xValue: xSpent,
+      enchant: inst.enchant,
+      sourceName: `光阴幻影·${getCardDisplayName(inst)}`,
+      isEcho: true,
+    });
+  }
+
   if (nextRun.lineage === 'sword' && (def.element === 'metal' || def.element === 'thunder')) {
     combat.swordCardsPlayedThisTurn += 1;
     if (combat.swordCardsPlayedThisTurn % 3 === 0) {
       combat.swordIntent += 1;
       drawCards(combat, 1, rng);
-      combat.combatLog.unshift('《太白青莲剑典》感应：剑意 +1，抽 1 牌！');
+      combat.combatLog.unshift('《青元剑诀》感应：剑意 +1，抽 1 牌！');
     }
   }
 
   const cascade = hasRelicHook(nextRun, 'sword-cascade');
   if (cascade > 0 && def.type === 'attack' && combat.cardsPlayedThisTurn % 3 === 0 && combat.enemy.hp > 0) {
-    dealDamageToEnemy(nextRun, combat, cascade, true);
-    combat.combatLog.unshift(`天道法则【一剑生万法】降下 ${cascade} 点穿甲飞剑！`);
+    const worldMult = getWorldPowerMultiplier(nextRun.act);
+    const casDmg = Math.round(cascade * worldMult);
+    dealDamageToEnemy(nextRun, combat, casDmg, true);
+    combat.combatLog.unshift(`天道法则【一剑生万法】降下 ${casDmg} 点穿甲飞剑！`);
   }
 
   if (def.exhaust || def.type === 'array') {
@@ -690,6 +793,7 @@ export function useConsumable(run: RunState, slotIdx: number): RunState {
   const nextRun: RunState = structuredClone(run);
   const combat = nextRun.combat!;
   const rng = new SeededRng(nextRun.rngState);
+  const worldMult = getWorldPowerMultiplier(nextRun.act);
   nextRun.consumables.splice(slotIdx, 1);
 
   const pillAmp =
@@ -716,6 +820,7 @@ export function useConsumable(run: RunState, slotIdx: number): RunState {
     case 'con-berserk-pill': {
       nextRun.hp = Math.max(1, nextRun.hp - 6);
       nextRun.stats.hpSacrificed += 6;
+      triggerPhoenixBloodlineIfReady(nextRun, combat);
       combat.qi += 2;
       combat.damageBoostPct += Math.round(50 * pillAmp);
       combat.combatLog.unshift('🔥 服下【暴血燃魂丹】：燃血 6 点，真元 +2，本回合伤害暴涨！');
@@ -728,7 +833,7 @@ export function useConsumable(run: RunState, slotIdx: number): RunState {
       break;
     }
     case 'con-heal-pill': {
-      const heal = Math.round(22 * pillAmp);
+      const heal = Math.round(22 * pillAmp * worldMult);
       nextRun.hp = Math.min(nextRun.maxHp, nextRun.hp + heal);
       combat.hand = combat.hand.filter((c) => getCardDef(c.defId).type !== 'curse');
       combat.combatLog.unshift(`💊 服下【百草回春丹】：恢复 ${heal} 点气血并涤净手牌心魔！`);
@@ -738,7 +843,7 @@ export function useConsumable(run: RunState, slotIdx: number): RunState {
       const tox = Math.round(10 * pillAmp);
       addPoisonToEnemy(nextRun, combat, tox);
       if (combat.enemy.poison > 0) dealDamageToEnemy(nextRun, combat, combat.enemy.poison, true);
-      combat.combatLog.unshift(`🧪 撒出【九幽腐骨散】：叠毒 ${tox} 层并引爆毒伤！`);
+      combat.combatLog.unshift(`🧪 撒出【九幽腐骨散】：叠毒并引爆毒伤！`);
       break;
     }
     case 'con-sword-pellet': {
@@ -753,12 +858,12 @@ export function useConsumable(run: RunState, slotIdx: number): RunState {
     case 'con-earth-aegis': {
       addBlockToPlayer(nextRun, combat, 20);
       combat.retainBlockThisTurn = true;
-      combat.combatLog.unshift('🛡️ 祭出【戊土金刚符】：获得 20 点不灭罡气！');
+      combat.combatLog.unshift('🛡️ 祭出【戊土金刚符】：获得不灭护体罡气！');
       break;
     }
     case 'con-shatter-spike': {
       combat.enemy.block = 0;
-      dealDamageToEnemy(nextRun, combat, 12, true);
+      dealDamageToEnemy(nextRun, combat, Math.round(12 * worldMult), true);
       combat.enemy.vulnerable += 2;
       combat.combatLog.unshift('⚡ 射出【破障碎盾锥】：震碎敌方护盾并造成穿甲重创！');
       break;
@@ -798,6 +903,7 @@ export function activateTreasure(run: RunState, treasureId: string): RunState {
     }
     combat.combatLog.unshift(`法宝镇杀【${combat.enemy.name}】！`);
   }
+
   combat.combatLog = combat.combatLog.slice(0, 14);
   nextRun.rngState = rng.state;
   return nextRun;
@@ -809,10 +915,11 @@ export function endPlayerTurn(run: RunState): RunState {
   const combat = nextRun.combat!;
   combat.phase2Banner = null;
   const rng = new SeededRng(nextRun.rngState);
+  const worldMult = getWorldPowerMultiplier(nextRun.act);
 
   const arrayAmp = 1 + hasRelicHook(nextRun, 'array-echo') / 100;
   for (const arr of combat.arrays) {
-    if (arr.blockPerTurn > 0) addBlockToPlayer(nextRun, combat, Math.round(arr.blockPerTurn * arrayAmp));
+    if (arr.blockPerTurn > 0) addBlockToPlayer(nextRun, combat, Math.round(arr.blockPerTurn * arrayAmp), false);
     if (arr.damagePerTurn > 0 && combat.enemy.hp > 0) {
       dealDamageToEnemy(nextRun, combat, Math.round(arr.damagePerTurn * arrayAmp), false);
     }
@@ -820,7 +927,7 @@ export function endPlayerTurn(run: RunState): RunState {
       addPoisonToEnemy(nextRun, combat, Math.round(arr.poisonPerTurn * arrayAmp));
     }
     if (nextRun.secondaryMethod === 'method-thunder-array' && combat.enemy.hp > 0) {
-      dealDamageToEnemy(nextRun, combat, 6, true);
+      dealDamageToEnemy(nextRun, combat, Math.round(6 * worldMult), true);
       pushSeal(combat, 'thunder');
     }
   }
@@ -863,8 +970,11 @@ export function endPlayerTurn(run: RunState): RunState {
         }
 
         const hpLoss = incoming - blocked;
-        nextRun.hp = Math.max(0, nextRun.hp - hpLoss);
-        totalTaken += hpLoss;
+        if (hpLoss > 0) {
+          nextRun.hp = Math.max(0, nextRun.hp - hpLoss);
+          totalTaken += hpLoss;
+          if (nextRun.hp > 0) triggerPhoenixBloodlineIfReady(nextRun, combat);
+        }
 
         if (combat.counterAura > 0 && combat.enemy.hp > 0) {
           dealDamageToEnemy(nextRun, combat, combat.counterAura, true);
@@ -906,7 +1016,7 @@ export function endPlayerTurn(run: RunState): RunState {
   if (combat.enemy.tier === 'tribulation' && combat.enemy.tribulationWave && combat.enemy.tribulationMaxWaves) {
     if (combat.enemy.tribulationWave >= combat.enemy.tribulationMaxWaves) {
       combat.outcome = 'tribulation-survived';
-      combat.combatLog.unshift('九霄雷散，金光贯顶！你硬生生扛过了全部破境劫雷！');
+      combat.combatLog.unshift('九霄雷散，仙霞贯顶！你硬生生扛过了全部破境劫雷！');
       nextRun.rngState = rng.state;
       return nextRun;
     }
@@ -928,6 +1038,8 @@ export function endPlayerTurn(run: RunState): RunState {
   combat.turn += 1;
   combat.cardsPlayedThisTurn = 0;
   combat.swordCardsPlayedThisTurn = 0;
+  combat.phoenixTriggeredThisTurn = false;
+  combat.firstNonExhaustEchoDone = false;
   combat.damageBoostPct = 0;
   combat.enemyDmgWeakenPct = 0;
   combat.counterAura = Math.floor(combat.counterAura * 0.5);
@@ -937,12 +1049,19 @@ export function endPlayerTurn(run: RunState): RunState {
   combat.enemy.vulnerable = Math.max(0, combat.enemy.vulnerable - 1);
   combat.enemy.weak = Math.max(0, combat.enemy.weak - 1);
 
+  // 时间法则：每逢第 3 回合剥夺敌方岁月，附加 2 层破绽与虚弱
+  if (nextRun.supremeLaw === 'supreme-time' && combat.turn % 3 === 0) {
+    combat.enemy.vulnerable += 2;
+    combat.enemy.weak += 2;
+    combat.combatLog.unshift('⏳【时间法则】光阴迟滞降临：敌方陷入 2 层破绽与虚弱！');
+  }
+
   if (!combat.retainBlockThisTurn) {
     const retainHalf = hasRelicHook(nextRun, 'block-retain-half');
     if (retainHalf > 0) {
       combat.block = Math.floor(combat.block * 0.5);
     } else if (nextRun.lineage === 'array') {
-      combat.block = Math.min(12, combat.block);
+      combat.block = Math.min(Math.round(12 * worldMult), combat.block);
     } else {
       combat.block = 0;
     }
@@ -951,7 +1070,7 @@ export function endPlayerTurn(run: RunState): RunState {
 
   if (combat.enemy.tier === 'tribulation' || combat.enemy.tier === 'boss') {
     const ward = hasRelicHook(nextRun, 'tribulation-ward');
-    if (ward > 0) combat.block += ward;
+    if (ward > 0) combat.block += Math.round(ward * worldMult);
   }
 
   const curseBonus = hasRelicHook(nextRun, 'curse-power');
@@ -963,7 +1082,8 @@ export function endPlayerTurn(run: RunState): RunState {
     combat.block += 6;
   }
 
-  drawCards(combat, 5, rng);
+  const turnDraw = 5 + (nextRun.supremeLaw === 'supreme-space' ? 2 : 0);
+  drawCards(combat, turnDraw, rng);
   combat.combatLog = combat.combatLog.slice(0, 14);
   nextRun.rngState = rng.state;
   return nextRun;

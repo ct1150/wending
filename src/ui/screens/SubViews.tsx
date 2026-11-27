@@ -2,7 +2,7 @@ import { useState } from 'preact/hooks';
 import { CARDS } from '../../content/cards';
 import { CONSUMABLES } from '../../content/consumables';
 import { ENEMIES } from '../../content/enemies';
-import { LINEAGE_LIST, LINEAGES, REALM_NAMES } from '../../content/lineages';
+import { getWorldByAct, LINEAGE_LIST, LINEAGES, REALM_NAMES, WORLD_INFO } from '../../content/lineages';
 import { ACHIEVEMENTS } from '../../content/methods';
 import { ENCHANTS, RELICS, TREASURES } from '../../content/treasures';
 import { getCardDef } from '../../core/combat-engine';
@@ -13,9 +13,11 @@ import type {
   MetaSave,
   RunState,
   SecondaryMethodId,
+  SupremeLawId,
+  TrueSpiritId,
 } from '../../core/types';
 import { CardView } from '../components/CardView';
-import { ENEMY_PORTRAITS_BY_ID } from '../components/Portraits';
+import { ENEMY_FALLBACK_PORTRAITS, ENEMY_PORTRAITS_BY_ID } from '../components/Portraits';
 import { sfx } from '../sfx';
 
 // ==================== 开局：轮回天命赐福四选一 ====================
@@ -125,7 +127,7 @@ export function AuctionView({
   );
 }
 
-// ==================== 战利品 & 破境结算 ====================
+// ==================== 战利品 & 破境 / 飞升法则升维结算 ====================
 export function RewardView({
   run,
   onPickCard,
@@ -134,6 +136,8 @@ export function RewardView({
   onPickConsumable,
   onPickTreasure,
   onPickMethod,
+  onPickTrueSpirit,
+  onPickSupremeLaw,
   onPickLaw,
   onContinue,
 }: {
@@ -144,23 +148,102 @@ export function RewardView({
   onPickConsumable: () => void;
   onPickTreasure: () => void;
   onPickMethod: (methodId: SecondaryMethodId) => void;
+  onPickTrueSpirit: (spiritId: TrueSpiritId) => void;
+  onPickSupremeLaw: (lawId: SupremeLawId) => void;
   onPickLaw: (lawId: string) => void;
   onContinue: () => void;
 }) {
   const rew = run.reward!;
   const gradeTitle =
     rew.breakthroughGrade === 'heaven'
-      ? '【天道破境】金光贯顶，真元上限 +1！'
+      ? '【天道破境】仙霞贯顶，金色法则降临！'
       : '【地道破境】根基稳固，气血上限大涨！';
+
+  const mustPickLaw = Boolean(rew.lawChoices?.length && !rew.pickedLaw);
+  const mustPickSpirit = Boolean(rew.trueSpiritChoices?.length && !rew.pickedTrueSpirit);
+  const mustPickSupreme = Boolean(rew.supremeLawChoices?.length && !rew.pickedSupremeLaw);
 
   return (
     <main class="panel sub-stage">
-      <h2>{rew.isBossReward ? `破境功成 · ${gradeTitle}` : '战利品与机缘收取'}</h2>
-      <p style={{ margin: 0, color: 'var(--muted)' }}>
-        获得 <strong>{rew.gold} 灵石</strong>
-        {rew.maxHpGained ? `、气血上限 +${rew.maxHpGained}（已回满全部气血）` : ''}
-        {rew.daoTokenGained ? '、✦ 斩获【三界道果信物】×1！' : ''}
-      </p>
+      <h2>
+        {rew.worldAscensionTitle
+          ? rew.worldAscensionTitle
+          : rew.isBossReward
+            ? `破境功成 · ${gradeTitle}`
+            : '战利品与机缘收取'}
+      </h2>
+
+      {rew.worldAscensionDesc && (
+        <div
+          class="panel"
+          style={{
+            padding: '12px 14px',
+            borderColor: '#ffd875',
+            background: 'rgba(56, 42, 16, 0.55)',
+            color: '#fff3cc',
+            fontSize: '13.5px',
+            lineHeight: 1.6,
+          }}
+        >
+          {rew.worldAscensionDesc}
+        </div>
+      )}
+
+      {(rew.gold > 0 || rew.maxHpGained || rew.daoTokenGained) && (
+        <p style={{ margin: 0, color: 'var(--muted)' }}>
+          {rew.gold > 0 ? <>获得 <strong>{rew.gold} 灵石</strong></> : null}
+          {rew.maxHpGained ? ` · 气血上限 +${rew.maxHpGained}（已回满全部气血）` : ''}
+          {rew.daoTokenGained ? ' · ✦ 斩获【掌天道果信物】×1！' : ''}
+        </p>
+      )}
+
+      {/* 灵界飞升：真灵血脉三选一 */}
+      {rew.trueSpiritChoices && rew.trueSpiritChoices.length > 0 && !rew.pickedTrueSpirit && (
+        <div>
+          <h3 style={{ color: '#8ff5e2', margin: '0 0 8px' }}>🦅 灵界法则升维：择一觉醒【真灵血脉】（必选）</h3>
+          <div class="choice-list">
+            {rew.trueSpiritChoices.map((sp) => (
+              <button
+                key={sp.id}
+                type="button"
+                class="btn choice-btn"
+                style={{ borderColor: '#8ff5e2' }}
+                onClick={() => {
+                  sfx.breakthrough();
+                  onPickTrueSpirit(sp.id);
+                }}
+              >
+                <strong>[{sp.badge}] {sp.name}</strong>
+                <span class="choice-reward">{sp.description}</span>
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* 仙界飞升：三大至尊法则三选一 */}
+      {rew.supremeLawChoices && rew.supremeLawChoices.length > 0 && !rew.pickedSupremeLaw && (
+        <div>
+          <h3 style={{ color: '#ffe599', margin: '0 0 8px' }}>⏳ 仙界法则升维：参悟【三大至尊法则】（必选）</h3>
+          <div class="choice-list">
+            {rew.supremeLawChoices.map((sl) => (
+              <button
+                key={sl.id}
+                type="button"
+                class="btn choice-btn"
+                style={{ borderColor: '#ffd875' }}
+                onClick={() => {
+                  sfx.breakthrough();
+                  onPickSupremeLaw(sl.id);
+                }}
+              >
+                <strong>[{sl.badge}] {sl.name}</strong>
+                <span class="choice-reward">{sl.description}</span>
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* 天道法则三选一 */}
       {rew.lawChoices && rew.lawChoices.length > 0 && !rew.pickedLaw && (
@@ -235,37 +318,39 @@ export function RewardView({
       </div>
 
       {/* 神通三选一 */}
-      {!rew.pickedCard ? (
-        <div>
-          <h3 style={{ margin: '0 0 8px', color: 'var(--gold-bright)' }}>择一神通收入牌库（可跳过保持精简）</h3>
-          <div class="hand-grid">
-            {rew.cardChoices.map((def) => (
-              <CardView
-                key={def.id}
-                def={def}
-                onClick={() => {
-                  sfx.click();
-                  onPickCard(def.id);
-                }}
-              />
-            ))}
+      {rew.cardChoices.length > 0 && (
+        !rew.pickedCard ? (
+          <div>
+            <h3 style={{ margin: '0 0 8px', color: 'var(--gold-bright)' }}>择一神通收入牌库（可跳过保持精简）</h3>
+            <div class="hand-grid">
+              {rew.cardChoices.map((def) => (
+                <CardView
+                  key={def.id}
+                  def={def}
+                  onClick={() => {
+                    sfx.click();
+                    onPickCard(def.id);
+                  }}
+                />
+              ))}
+            </div>
           </div>
-        </div>
-      ) : (
-        <div style={{ color: 'var(--green)', fontSize: '13px' }}>✓ 已收入新神通。</div>
+        ) : (
+          <div style={{ color: 'var(--green)', fontSize: '13px' }}>✓ 已收入新神通。</div>
+        )
       )}
 
       <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
         <button
           type="button"
           class="btn btn-primary"
-          disabled={Boolean(rew.lawChoices?.length && !rew.pickedLaw)}
+          disabled={mustPickLaw || mustPickSpirit || mustPickSupreme}
           onClick={() => {
             sfx.click();
             onContinue();
           }}
         >
-          {rew.isBossReward ? '踏入下一大境篇章 ➔' : '重返星宿路线图 ➔'}
+          {rew.isBossReward ? '踏入下一卷仙途 ➔' : '进入山海灵脉图 ➔'}
         </button>
       </div>
     </main>
@@ -828,11 +913,15 @@ export function CodexScreen({
           {allEnemies.map((foe) => (
             <div key={foe.id} class="panel" style={{ padding: '12px' }}>
               <div class="lineage-thumb-wrap" style={{ height: '165px' }}>
-                <img src={ENEMY_PORTRAITS_BY_ID[foe.id]} alt={foe.name} class="lineage-thumb" />
+                <img
+                  src={ENEMY_PORTRAITS_BY_ID[foe.id] ?? ENEMY_FALLBACK_PORTRAITS[foe.artStyle]}
+                  alt={foe.name}
+                  class="lineage-thumb"
+                />
               </div>
               <strong style={{ color: 'var(--gold-bright)', fontSize: '15px' }}>{foe.name}</strong>
               <div style={{ fontSize: '12px', color: 'var(--muted)' }}>
-                第 {foe.act} 卷 · {foe.title} · 气血 {foe.maxHp}
+                {WORLD_INFO[getWorldByAct(foe.act)].badge} · 第 {foe.act} 卷 · {foe.title} · 气血 {foe.maxHp}
               </div>
               {foe.trait && (
                 <div style={{ fontSize: '12px', color: '#ffb88c', marginTop: '4px' }}>

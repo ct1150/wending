@@ -73,9 +73,9 @@ export const ACHIEVEMENTS: AchievementDef[] = [
   },
   {
     id: 'ach-true-ending',
-    name: '百世问鼎',
-    conditionText: '集齐三界道果开启第四卷并斩破【太初天道】达成真结局',
-    unlockText: '永久铭刻生平碑 + 额外赐予 100 轮回道果',
+    name: '凡人问鼎',
+    conditionText: '集齐 ≥3 枚掌天道果信物，在第九卷斩破时间道祖【古或今】达成超脱真结局',
+    unlockText: '永久铭刻生平碑 + 额外赐予 150 轮回道果',
   },
 ];
 
