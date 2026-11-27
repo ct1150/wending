@@ -95,18 +95,13 @@ export function BattleArena({
     resName: string | null,
     lifeCost?: number,
   ) => {
+    sfx.playElemental(element, isAttack, isDefense, isPoison);
     if (resName) {
       sfx.resonance();
       setResonanceBanner(resName);
       setStageShake(true);
       setTimeout(() => setStageShake(false), 300);
       setTimeout(() => setResonanceBanner(null), 1100);
-    } else if (isDefense && !isAttack) {
-      sfx.shield();
-    } else if (element === 'thunder') {
-      sfx.thunder();
-    } else {
-      sfx.slash();
     }
 
     if (lifeCost) pushFloat('player', `🔥 -${lifeCost}年`, 'life');
@@ -164,7 +159,7 @@ export function BattleArena({
     if (enemyTurnBusy) return;
     const tDef = TREASURES[tid];
     if (!tDef) return;
-    sfx.thunder();
+    sfx.treasure();
     triggerEffectVisuals(
       tDef.effect.extraSeal ?? 'thunder',
       Boolean(tDef.effect.damage),
@@ -185,14 +180,17 @@ export function BattleArena({
       setPlayerAnim('hurt');
       setStageShake(true);
       const totalIn = intentDamage * (intent.hits ?? 1);
+      const fullyBlocked = combat.block >= totalIn;
       pushFloat(
         'player',
-        combat.block >= totalIn ? `🛡 格挡 ${totalIn}` : `💥 -${totalIn - combat.block}`,
-        combat.block >= totalIn ? 'shield' : 'dmg',
+        fullyBlocked ? `🛡 格挡 ${totalIn}` : `💥 -${totalIn - combat.block}`,
+        fullyBlocked ? 'shield' : 'dmg',
       );
       if (enemy.artStyle === 'thunder') sfx.thunder();
-      else sfx.slash();
+      if (fullyBlocked) sfx.blockHit();
+      else sfx.hurt();
     } else {
+      sfx.shield();
       pushFloat('enemy', `✦ ${intent?.label ?? '蓄势'}`, 'shield');
     }
 

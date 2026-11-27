@@ -45,7 +45,7 @@ import {
   SettlementView,
   ShopView,
 } from './screens/SubViews';
-import { isSfxMuted, setSfxMuted, sfx } from './sfx';
+import { isBgmEnabled, isSfxMuted, setBgmEnabled, setSfxMuted, sfx } from './sfx';
 
 type Screen = 'title' | 'setup' | 'run' | 'codex';
 
@@ -54,6 +54,7 @@ export function App() {
   const [run, setRun] = useState<RunState | null>(() => loadActiveRun());
   const [screen, setScreen] = useState<Screen>('title');
   const [muted, setMuted] = useState<boolean>(() => isSfxMuted());
+  const [bgmOn, setBgmOn] = useState<boolean>(() => isBgmEnabled());
   const [deckOpen, setDeckOpen] = useState(false);
 
   // 建角状态
@@ -71,6 +72,17 @@ export function App() {
     const next = !muted;
     setMuted(next);
     setSfxMuted(next);
+    if (next) setBgmOn(false);
+  };
+
+  const toggleBgm = () => {
+    const next = !bgmOn;
+    if (next && muted) {
+      setMuted(false);
+      setSfxMuted(false);
+    }
+    setBgmOn(next);
+    setBgmEnabled(next);
   };
 
   const openSetup = () => {
@@ -114,6 +126,8 @@ export function App() {
           ? 'true-victory'
           : 'victory'
         : 'death';
+    if (outcome === 'death') sfx.defeat();
+    else sfx.breakthrough();
     const { nextMeta, karmaEarned } = settleRunIntoMeta(meta, finishedRun, outcome);
     setMeta(nextMeta);
     setSettledKarma(karmaEarned);
@@ -367,8 +381,10 @@ export function App() {
             <TopHud
               run={run}
               muted={muted}
+              bgmOn={bgmOn}
               compact={run.phase === 'combat'}
               onToggleMute={toggleMute}
+              onToggleBgm={toggleBgm}
               onOpenDeck={() => setDeckOpen(true)}
               onAbandon={handleAbandon}
             />
@@ -377,7 +393,7 @@ export function App() {
               <StarMapView
                 run={run}
                 onSelectNode={(nodeId) => {
-                  sfx.click();
+                  sfx.mapStep();
                   const next = enterMapNode(run, nodeId);
                   if (next.phase === 'gameover') finalizeRun(next);
                   else setRun(next);

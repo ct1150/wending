@@ -53,7 +53,7 @@ export function RewardView({
                 class="btn choice-btn"
                 style={{ borderColor: '#ffd875' }}
                 onClick={() => {
-                  sfx.resonance();
+                  sfx.breakthrough();
                   onPickLaw(law.id);
                 }}
               >
@@ -354,7 +354,7 @@ export function ShopView({
           type="button"
           class="btn"
           disabled={shop.elixirBought || run.gold < shop.elixirPrice}
-          onClick={() => { sfx.shield(); onBuyElixir(); }}
+          onClick={() => { sfx.coin(); onBuyElixir(); }}
         >
           🍶 购延寿青灵丹（{shop.elixirPrice} 灵石：寿元+12年、回20血）{shop.elixirBought ? ' [已售罄]' : ''}
         </button>
@@ -396,7 +396,7 @@ export function ShopView({
               type="button"
               class="btn"
               disabled={item.sold || run.gold < item.price}
-              onClick={() => { sfx.click(); onBuyRelic(idx); }}
+              onClick={() => { sfx.coin(); onBuyRelic(idx); }}
             >
               ◈ {item.def.name} ({item.price}灵石) — {item.def.description}{item.sold ? ' [已购]' : ''}
             </button>
@@ -407,7 +407,7 @@ export function ShopView({
               type="button"
               class="btn"
               disabled={item.sold || run.gold < item.price}
-              onClick={() => { sfx.click(); onBuyMaterial(idx); }}
+              onClick={() => { sfx.coin(); onBuyMaterial(idx); }}
             >
               ❖ {item.def.materialName} ({item.price}灵石) — {item.def.description}{item.sold ? ' [已购]' : ''}
             </button>
@@ -424,7 +424,7 @@ export function ShopView({
               def={item.def}
               price={item.price}
               disabled={item.sold || run.gold < item.price}
-              onClick={() => { sfx.click(); onBuyCard(idx); }}
+              onClick={() => { sfx.coin(); onBuyCard(idx); }}
             />
           ))}
         </div>

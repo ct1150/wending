@@ -6,13 +6,15 @@ import type { RunState } from '../../core/types';
 interface TopHudProps {
   run: RunState;
   muted: boolean;
+  bgmOn: boolean;
   compact?: boolean;
   onToggleMute: () => void;
+  onToggleBgm: () => void;
   onOpenDeck: () => void;
   onAbandon: () => void;
 }
 
-export function TopHud({ run, muted, compact, onToggleMute, onOpenDeck, onAbandon }: TopHudProps) {
+export function TopHud({ run, muted, bgmOn, compact, onToggleMute, onToggleBgm, onOpenDeck, onAbandon }: TopHudProps) {
   const [isFullscreen, setIsFullscreen] = useState(false);
   const lifeLeft = Math.max(0, run.maxLifespan - run.age);
   const lowLife = lifeLeft <= 15;
@@ -68,6 +70,9 @@ export function TopHud({ run, muted, compact, onToggleMute, onOpenDeck, onAbando
           </button>
           <button type="button" class="btn btn-sm" onClick={onOpenDeck}>
             牌库({run.deck.length})
+          </button>
+          <button type="button" class="btn btn-sm" onClick={onToggleBgm} title="开关山海云风与五声古琴氛围仙乐">
+            {bgmOn ? '🎵 仙乐' : '🎵 静'}
           </button>
           <button type="button" class="btn btn-sm" onClick={onToggleMute} aria-label="切换音效">
             {muted ? '🔇' : '🔊'}
