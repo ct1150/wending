@@ -1,4 +1,4 @@
-import { useRef, useState } from 'preact/hooks';
+import { useEffect, useRef, useState } from 'preact/hooks';
 import { getRootById, LINEAGES } from '../../content/lineages';
 import { TREASURES } from '../../content/treasures';
 import {
@@ -56,7 +56,21 @@ export function BattleArena({
   const enemy = combat.enemy;
   const root = getRootById(run.rootId);
   const lineage = LINEAGES[run.lineage];
-  const intent = getEnemyCurrentIntent(enemy.defId, enemy.intentIdx);
+  const intent = getEnemyCurrentIntent(enemy.defId, enemy.intentIdx, enemy.phase2Triggered);
+
+  useEffect(() => {
+    if (combat.phase2Banner) {
+      sfx.breakthrough();
+      setResonanceBanner(combat.phase2Banner);
+      setStageShake(true);
+      const t1 = setTimeout(() => setStageShake(false), 360);
+      const t2 = setTimeout(() => setResonanceBanner(null), 1500);
+      return () => {
+        clearTimeout(t1);
+        clearTimeout(t2);
+      };
+    }
+  }, [combat.phase2Banner]);
 
   const playerHpPct = Math.max(0, Math.min(100, Math.round((run.hp / run.maxHp) * 100)));
   const enemyHpPct = Math.max(0, Math.min(100, Math.round((enemy.hp / enemy.maxHp) * 100)));
@@ -66,6 +80,7 @@ export function BattleArena({
         Math.floor(
           (intent.damage + enemy.strength + Math.floor(run.ascension / 2)) *
             (enemy.weak > 0 ? 0.75 : 1) *
+            (combat.enemyDmgWeakenPct > 0 ? 1 - combat.enemyDmgWeakenPct / 100 : 1) *
             (combat.vulnerable > 0 ? 1.5 : 1),
         ),
       )
@@ -146,9 +161,9 @@ export function BattleArena({
     const res = previewResonance(combat.seals, def.element, Boolean(root.mixedFiveBonus));
     triggerEffectVisuals(
       def.element,
-      def.type === 'attack' || def.type === 'forbidden' || Boolean(def.effect.damage),
+      def.type === 'attack' || def.type === 'forbidden' || Boolean(def.effect.damage || def.effect.detonateAllArrays),
       def.type === 'defense' || Boolean(def.effect.block),
-      Boolean(def.effect.poison || def.effect.detonatePoison),
+      Boolean(def.effect.poison || def.effect.detonatePoison || def.effect.xPoisonDetonate),
       res ? res.name : null,
       def.effect.lifeCost,
     );
@@ -207,9 +222,7 @@ export function BattleArena({
 
   return (
     <main class={`battle-one-screen${stageShake ? ' stage-shake' : ''}`}>
-      {/* ==================== 上半屏：高清立绘对峙舞台 + 中枢真元灵印 ==================== */}
       <section class="panel duel-arena one-screen-arena">
-        {/* 特效层 */}
         {vfx && (
           <div key={vfx.id} class={`vfx-layer vfx-${vfx.kind}`} aria-hidden="true">
             {vfx.kind === 'slash' && (
@@ -236,7 +249,6 @@ export function BattleArena({
           <div class="resonance-flash-banner">✦ {resonanceBanner} ✦</div>
         )}
 
-        {/* 胜负覆层（不挤占布局高度，直接浮于舞台中央） */}
         {combat.outcome !== 'ongoing' && (
           <div class="outcome-overlay">
             <div class="panel outcome-card">
@@ -269,7 +281,7 @@ export function BattleArena({
           </div>
         )}
 
-        {/* 左侧：我方高清立绘 */}
+        {/* 左侧：我方修士 */}
         <div class={`combatant player-side anim-${playerAnim}`}>
           <div class="float-layer">
             {floats.filter((f) => f.side === 'player').map((f) => (
@@ -300,6 +312,8 @@ export function BattleArena({
             </div>
             <div class="status-row">
               {combat.swordIntent > 0 && <span class="status-tag intent">⚔剑{combat.swordIntent}</span>}
+              {combat.counterAura > 0 && <span class="status-tag block" title="受击时回敬穿甲剑伤">🪞反{combat.counterAura}</span>}
+              {combat.damageBoostPct > 0 && <span class="status-tag vuln">🔥+{combat.damageBoostPct}%</span>}
               {combat.vulnerable > 0 && <span class="status-tag vuln">💔破{combat.vulnerable}</span>}
               {combat.weak > 0 && <span class="status-tag">🌀虚{combat.weak}</span>}
               {combat.arrays.map((a) => (
@@ -309,13 +323,14 @@ export function BattleArena({
           </div>
         </div>
 
-        {/* 中枢：真元灵珠 + 五行灵印 + 回合 + 精简战报 */}
+        {/* 中枢：真元灵珠 + 五行灵印 + 战报 */}
         <div class="center-console">
           <div class="center-top-row">
             <span class="turn-badge">第 {combat.turn} 回合</span>
             {enemy.tribulationWave && enemy.tribulationMaxWaves && (
               <span class="trib-pill">⚡ {enemy.tribulationWave}/{enemy.tribulationMaxWaves} 劫</span>
             )}
+            {enemy.phase2Triggered && <span class="trib-pill">👹 二阶段真身</span>}
           </div>
 
           <div class="qi-and-seals">
@@ -325,15 +340,22 @@ export function BattleArena({
             </div>
             <div class="seal-bar">
               {[0, 1, 2].map((idx) => {
+                const locked = idx >= combat.maxSealSlots;
                 const seal = combat.seals[idx];
                 return (
                   <span
                     key={idx}
                     class={`seal-slot compact-seal${seal ? ' filled' : ''}`}
-                    style={seal ? { color: ELEMENT_COLORS[seal], borderColor: ELEMENT_COLORS[seal] } : undefined}
-                    title={seal ? `${SEAL_LABELS[seal]}印` : '空灵印槽'}
+                    style={
+                      locked
+                        ? { opacity: 0.35, borderColor: 'var(--red)', color: 'var(--red)' }
+                        : seal
+                          ? { color: ELEMENT_COLORS[seal], borderColor: ELEMENT_COLORS[seal] }
+                          : undefined
+                    }
+                    title={locked ? '被敌方法则封锁的灵印槽' : seal ? `${SEAL_LABELS[seal]}印` : '空灵印槽'}
                   >
-                    {seal ? SEAL_LABELS[seal] : '·'}
+                    {locked ? '封' : seal ? SEAL_LABELS[seal] : '·'}
                   </span>
                 );
               })}
@@ -345,7 +367,7 @@ export function BattleArena({
           </button>
         </div>
 
-        {/* 右侧：敌方高清立绘 */}
+        {/* 右侧：敌方强敌 */}
         <div class={`combatant enemy-side anim-${enemyAnim}`}>
           <div class="float-layer">
             {floats.filter((f) => f.side === 'enemy').map((f) => (
@@ -379,7 +401,13 @@ export function BattleArena({
           <div class="fighter-plate">
             <div class="fighter-name">
               <strong>{enemy.name}</strong>
-              <small>{enemy.title.slice(0, 8)}</small>
+              {enemy.trait ? (
+                <small style={{ color: '#ffb88c', cursor: 'help' }} title={enemy.trait.description}>
+                  ⚖{enemy.trait.name}
+                </small>
+              ) : (
+                <small>{enemy.title.slice(0, 8)}</small>
+              )}
             </div>
             <div class="bar-track">
               <div class="bar-fill hp" style={{ width: `${enemyHpPct}%` }} />
@@ -398,7 +426,7 @@ export function BattleArena({
         </div>
       </section>
 
-      {/* ==================== 下半屏：单排横滑实体卡牌 + 右侧法宝/结束回合操作台 ==================== */}
+      {/* 下半屏：单排横滑实体卡牌 + 右侧法宝与结束回合操作坞 */}
       <section class="hand-dock">
         <div class="hand-scroll-zone">
           <div class="tcg-hand-fan one-row-hand">
@@ -427,8 +455,9 @@ export function BattleArena({
 
         <aside class="action-dock panel">
           <div class="pile-mini">
-            <span>抽 {combat.drawPile.length}</span>
-            <span>弃 {combat.discardPile.length}</span>
+            <span>抽{combat.drawPile.length}</span>
+            <span>弃{combat.discardPile.length}</span>
+            <span>耗{combat.exhaustPile.length}</span>
           </div>
           {run.treasures.map((tid) => {
             const tDef = TREASURES[tid];
@@ -460,7 +489,6 @@ export function BattleArena({
         </aside>
       </section>
 
-      {/* 完整战报弹窗 */}
       {logOpen && (
         <div class="modal-backdrop" onClick={() => setLogOpen(false)}>
           <div class="panel modal-box" style={{ maxWidth: '520px' }} onClick={(e) => e.stopPropagation()}>

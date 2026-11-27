@@ -1,6 +1,6 @@
 import { useState } from 'preact/hooks';
-import { getRootById, LINEAGE_LIST, LINEAGES, REALM_NAMES } from '../content/lineages';
-import { activateTreasure, endPlayerTurn, playCard } from '../core/combat-engine';
+import { getRootById, LINEAGE_LIST, REALM_NAMES } from '../content/lineages';
+import { activateTreasure, endPlayerTurn, playCard, useConsumable } from '../core/combat-engine';
 import {
   buyRerollUpgradeInMeta,
   loadActiveRun,
@@ -12,20 +12,27 @@ import {
   abodeBrewElixir,
   abodePurgeCard,
   abodeUpgradeOrEnchant,
+  auctionAmbushBuyer,
+  auctionBuyLot,
   chooseEncounterOption,
+  chooseStartingBlessing,
   claimBreakthroughLaw,
   claimPastLifeRemnant,
   claimRewardCard,
+  claimRewardConsumable,
   claimRewardMaterial,
   claimRewardRelic,
   claimRewardTreasure,
+  claimSecondaryMethod,
   createNewRun,
   enterMapNode,
   finishRewardAndAdvance,
+  getDailyChallengeConfig,
   leaveSubSceneToMap,
   resolveCombatVictory,
   rollRandomRoot,
   shopBuyCard,
+  shopBuyConsumable,
   shopBuyElixir,
   shopBuyMaterial,
   shopBuyRelic,
@@ -39,6 +46,9 @@ import { BattleArena } from './screens/BattleArena';
 import { StarMapView } from './screens/StarMapView';
 import {
   AbodeView,
+  AuctionView,
+  BlessingView,
+  CodexScreen,
   EventView,
   RemnantView,
   RewardView,
@@ -57,7 +67,6 @@ export function App() {
   const [bgmOn, setBgmOn] = useState<boolean>(() => isBgmEnabled());
   const [deckOpen, setDeckOpen] = useState(false);
 
-  // 建角状态
   const [charName, setCharName] = useState('云归');
   const [selectedLineage, setSelectedLineage] = useState<LineageId>('sword');
   const [seed, setSeed] = useState(() => Date.now() & 0xfffffff);
@@ -65,8 +74,11 @@ export function App() {
   const [rerollsLeft, setRerollsLeft] = useState(meta.rerollCharges);
   const [ascension, setAscension] = useState(0);
   const [settledKarma, setSettledKarma] = useState<number | null>(null);
+  const [newAchievements, setNewAchievements] = useState<string[]>([]);
 
   const root = getRootById(rootId);
+  const daily = getDailyChallengeConfig();
+  const todayBest = meta.dailyBestScores[daily.dateKey] ?? 0;
 
   const toggleMute = () => {
     const next = !muted;
@@ -92,6 +104,7 @@ export function App() {
     setRootId(rollRandomRoot(s));
     setRerollsLeft(meta.rerollCharges);
     setSettledKarma(null);
+    setNewAchievements([]);
     setScreen('setup');
   };
 
@@ -116,6 +129,26 @@ export function App() {
     });
     setRun(fresh);
     setSettledKarma(null);
+    setNewAchievements([]);
+    setScreen('run');
+  };
+
+  const startDailyChallenge = () => {
+    sfx.breakthrough();
+    const fresh = createNewRun({
+      name: `${charName}·天机`,
+      lineage: selectedLineage,
+      rootId: daily.rootId,
+      seed: daily.seed,
+      ascension: Math.min(2, meta.maxAscensionUnlocked),
+      meta,
+      isDailyChallenge: true,
+      dailyDate: daily.dateKey,
+      mutators: daily.mutators.map((m) => m.id),
+    });
+    setRun(fresh);
+    setSettledKarma(null);
+    setNewAchievements([]);
     setScreen('run');
   };
 
@@ -128,9 +161,10 @@ export function App() {
         : 'death';
     if (outcome === 'death') sfx.defeat();
     else sfx.breakthrough();
-    const { nextMeta, karmaEarned } = settleRunIntoMeta(meta, finishedRun, outcome);
-    setMeta(nextMeta);
-    setSettledKarma(karmaEarned);
+    const res = settleRunIntoMeta(meta, finishedRun, outcome);
+    setMeta(res.nextMeta);
+    setSettledKarma(res.karmaEarned);
+    setNewAchievements(res.newAchievements);
     setRun({ ...finishedRun, combat: null });
   };
 
@@ -152,8 +186,8 @@ export function App() {
             <div class="title-emblem">BAISHI WENDING · ROGUELIKE XIANXIA</div>
             <h1 class="title-main">百世问鼎</h1>
             <p class="title-sub">
-              寿元为筹，灵印相生，以神通法宝逆天破境。<br />
-              斩妖夺宝、洞府附魔、硬扛九霄雷劫，前世遗蜕留待来世重逢。
+              寿元为筹，灵印相生，乾坤丹符瞬发破局。<br />
+              兼修异派邪道心法、竞拍截胡稀世仙珍、迎战二阶段真魔与九重天劫。
             </p>
             <div class="title-actions">
               {run && run.phase !== 'gameover' && run.phase !== 'victory' && (
@@ -171,6 +205,9 @@ export function App() {
               <button type="button" class="btn btn-primary" onClick={openSetup}>
                 踏入新一世仙途
               </button>
+              <button type="button" class="btn" onClick={startDailyChallenge} title={daily.mutators.map((m) => `${m.name}：${m.description}`).join(' | ')}>
+                ☯ 每日天机试炼（{daily.mutators.map((m) => m.name).join('+')}）
+              </button>
               <button
                 type="button"
                 class="btn"
@@ -179,13 +216,14 @@ export function App() {
                   setScreen('codex');
                 }}
               >
-                轮回天书（道果 {meta.karmaPoints}）
+                📖 轮回天书 & 万法图鉴（道果 {meta.karmaPoints}）
               </button>
             </div>
             <div class="title-stats">
               <span>历世：{meta.totalLives} 世</span>
               <span>飞升：{meta.victories} 次（真结局 {meta.trueVictories}）</span>
-              <span>最高劫数：第 {meta.maxAscensionUnlocked} 重</span>
+              <span>名场面成就：{meta.achievements.length}/6</span>
+              {todayBest > 0 && <span style={{ color: 'var(--gold-bright)' }}>今日道榜最高：{todayBest} 分</span>}
               {meta.pastLifeRemnant && (
                 <span style={{ color: '#d2b8ff' }}>
                   🪦 前世遗蜕：{meta.pastLifeRemnant.name}（第 {meta.pastLifeRemnant.act} 卷待寻）
@@ -304,75 +342,26 @@ export function App() {
           </main>
         )}
 
-        {/* ==================== 轮回天书（局外成长） ==================== */}
+        {/* ==================== 轮回天书 & 万法图鉴 ==================== */}
         {screen === 'codex' && (
-          <main class="panel sub-stage">
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <h2>📖 轮回天书 · 百世道统</h2>
-              <button type="button" class="btn btn-sm" onClick={() => setScreen('title')}>
-                返回首页
-              </button>
-            </div>
-            <div class="hud-pill gold" style={{ alignSelf: 'flex-start' }}>
-              当前可用轮回道果：{meta.karmaPoints}
-            </div>
-
-            <div class="choice-list">
-              {LINEAGE_LIST.filter((l) => l.unlockCost > 0).map((lin) => {
-                const owned = meta.unlockedLineages.includes(lin.id);
-                return (
-                  <button
-                    key={lin.id}
-                    type="button"
-                    class="btn choice-btn"
-                    disabled={owned || meta.karmaPoints < lin.unlockCost}
-                    onClick={() => {
-                      const next = unlockLineageInMeta(meta, lin.id, lin.unlockCost);
-                      if (next) {
-                        sfx.resonance();
-                        setMeta(next);
-                      }
-                    }}
-                  >
-                    <strong>解锁新道统：{lin.name}</strong>
-                    <span class="choice-reward">{lin.description}</span>
-                    <span class="choice-cost">{owned ? '✓ 已解锁' : `消耗 ${lin.unlockCost} 道果`}</span>
-                  </button>
-                );
-              })}
-
-              <button
-                type="button"
-                class="btn choice-btn"
-                disabled={meta.rerollCharges >= 6 || meta.karmaPoints < 35 + meta.rerollCharges * 20}
-                onClick={() => {
-                  const next = buyRerollUpgradeInMeta(meta);
-                  if (next) {
-                    sfx.resonance();
-                    setMeta(next);
-                  }
-                }}
-              >
-                <strong>天机改命 · 开局灵根重掷次数 +1（当前 {meta.rerollCharges}/6）</strong>
-                <span class="choice-cost">
-                  {meta.rerollCharges >= 6 ? '已满级' : `消耗 ${35 + meta.rerollCharges * 20} 道果`}
-                </span>
-              </button>
-            </div>
-
-            {meta.hallOfFame.length > 0 && (
-              <div>
-                <h3 style={{ color: 'var(--gold)', margin: '8px 0' }}>百世生平碑</h3>
-                <div class="choice-list">
-                  {meta.hallOfFame.slice(0, 8).map((row) => (
-                    <div key={`${row.generation}-${row.name}`} class="panel" style={{ padding: '10px 14px', fontSize: '13px' }}>
-                      <strong>第 {row.generation} 世 · {row.name}</strong>（{LINEAGES[row.lineage].name} · {REALM_NAMES[row.realm]} · {row.age} 岁）— {row.cause} · 道果 +{row.karmaEarned}
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-          </main>
+          <CodexScreen
+            meta={meta}
+            onUnlockLineage={(id, cost) => {
+              const next = unlockLineageInMeta(meta, id, cost);
+              if (next) {
+                sfx.resonance();
+                setMeta(next);
+              }
+            }}
+            onBuyReroll={() => {
+              const next = buyRerollUpgradeInMeta(meta);
+              if (next) {
+                sfx.resonance();
+                setMeta(next);
+              }
+            }}
+            onBack={() => setScreen('title')}
+          />
         )}
 
         {/* ==================== 单局游戏主舞台 ==================== */}
@@ -383,18 +372,32 @@ export function App() {
               muted={muted}
               bgmOn={bgmOn}
               compact={run.phase === 'combat'}
+              onUseConsumable={(idx) =>
+                setRun((prev) => {
+                  if (!prev) return prev;
+                  const next = useConsumable(prev, idx);
+                  return next;
+                })
+              }
               onToggleMute={toggleMute}
               onToggleBgm={toggleBgm}
               onOpenDeck={() => setDeckOpen(true)}
               onAbandon={handleAbandon}
             />
 
+            {run.phase === 'blessing' && (
+              <BlessingView
+                run={run}
+                onSelectBlessing={(id) => setRun((prev) => (prev ? chooseStartingBlessing(prev, id, meta) : prev))}
+              />
+            )}
+
             {run.phase === 'map' && (
               <StarMapView
                 run={run}
                 onSelectNode={(nodeId) => {
                   sfx.mapStep();
-                  const next = enterMapNode(run, nodeId);
+                  const next = enterMapNode(run, nodeId, meta.achievements);
                   if (next.phase === 'gameover') finalizeRun(next);
                   else setRun(next);
                 }}
@@ -408,7 +411,7 @@ export function App() {
                 onActivateTreasure={(tid) => setRun((prev) => (prev ? activateTreasure(prev, tid) : prev))}
                 onEndTurn={() => setRun((prev) => (prev ? endPlayerTurn(prev) : prev))}
                 onClaimVictory={() => {
-                  const next = resolveCombatVictory(run);
+                  const next = resolveCombatVictory(run, meta.achievements);
                   if (next.phase === 'victory') finalizeRun(next);
                   else setRun(next);
                 }}
@@ -422,7 +425,9 @@ export function App() {
                 onPickCard={(defId) => setRun((prev) => (prev ? claimRewardCard(prev, defId) : prev))}
                 onPickRelic={() => setRun((prev) => (prev ? claimRewardRelic(prev) : prev))}
                 onPickMaterial={() => setRun((prev) => (prev ? claimRewardMaterial(prev) : prev))}
+                onPickConsumable={() => setRun((prev) => (prev ? claimRewardConsumable(prev) : prev))}
                 onPickTreasure={() => setRun((prev) => (prev ? claimRewardTreasure(prev) : prev))}
+                onPickMethod={(mid) => setRun((prev) => (prev ? claimSecondaryMethod(prev, mid) : prev))}
                 onPickLaw={(lawId) => setRun((prev) => (prev ? claimBreakthroughLaw(prev, lawId) : prev))}
                 onContinue={() => setRun((prev) => (prev ? finishRewardAndAdvance(prev, meta) : prev))}
               />
@@ -446,7 +451,7 @@ export function App() {
               <EventView
                 run={run}
                 onChoose={(cid) => {
-                  const next = chooseEncounterOption(run, cid);
+                  const next = chooseEncounterOption(run, cid, meta.achievements);
                   if (next.phase === 'gameover') finalizeRun(next);
                   else setRun(next);
                 }}
@@ -460,8 +465,18 @@ export function App() {
                 onBuyCard={(i) => setRun((prev) => (prev ? shopBuyCard(prev, i) : prev))}
                 onBuyRelic={(i) => setRun((prev) => (prev ? shopBuyRelic(prev, i) : prev))}
                 onBuyMaterial={(i) => setRun((prev) => (prev ? shopBuyMaterial(prev, i) : prev))}
+                onBuyConsumable={(i) => setRun((prev) => (prev ? shopBuyConsumable(prev, i) : prev))}
                 onBuyElixir={() => setRun((prev) => (prev ? shopBuyElixir(prev) : prev))}
                 onPurgeCard={(uid) => setRun((prev) => (prev ? shopPurgeCard(prev, uid) : prev))}
+                onLeave={() => setRun((prev) => (prev ? leaveSubSceneToMap(prev) : prev))}
+              />
+            )}
+
+            {run.phase === 'auction' && run.auction && (
+              <AuctionView
+                run={run}
+                onBuyLot={(lid) => setRun((prev) => (prev ? auctionBuyLot(prev, lid) : prev))}
+                onAmbush={() => setRun((prev) => (prev ? auctionAmbushBuyer(prev) : prev))}
                 onLeave={() => setRun((prev) => (prev ? leaveSubSceneToMap(prev) : prev))}
               />
             )}
@@ -477,6 +492,7 @@ export function App() {
               <SettlementView
                 run={run}
                 karmaEarned={settledKarma ?? 0}
+                newAchievements={newAchievements}
                 onReturnTitle={() => {
                   setRun(null);
                   setScreen('title');

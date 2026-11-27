@@ -326,3 +326,161 @@ export const CARDS: Record<string, CardDef> = {
 export const REWARD_CARD_POOL = Object.values(CARDS).filter(
   (c) => c.rarity !== 'starter' && c.rarity !== 'curse',
 );
+
+// ==================== v9.0 进阶流派与邪道化学反应新卡池 ====================
+Object.assign(CARDS, {
+  // --- 剑修进阶：剑罡反击流 & X费诛仙流 ---
+  'sw-mirror-counter': {
+    id: 'sw-mirror-counter', name: '止水剑罡', lineage: 'sword', type: 'defense', rarity: 'common', element: 'water', cost: 1,
+    description: '获得 8 点护体罡气与 5 层【剑罡反击】（受击时回敬穿甲剑伤）。',
+    effect: { block: 8, counterAura: 5 },
+    upgradeName: '止水剑罡+', upgradeDescription: '获得 11 点罡气与 8 层【剑罡反击】。', upgradeEffect: { block: 11, counterAura: 8 },
+  },
+  'sw-counter-storm': {
+    id: 'sw-counter-storm', name: '逆鳞反剑诀', lineage: 'sword', type: 'skill', rarity: 'rare', element: 'thunder', cost: 1,
+    description: '获得 9 层【剑罡反击】、2 层【剑意】，抽 1 张牌。',
+    effect: { counterAura: 9, swordIntent: 2, draw: 1 },
+    upgradeName: '逆鳞反剑诀+', upgradeDescription: '获得 13 层【剑罡反击】、3 层【剑意】，抽 1 张牌。', upgradeEffect: { counterAura: 13, swordIntent: 3, draw: 1 },
+  },
+  'sw-x-zhuxian': {
+    id: 'sw-x-zhuxian', name: '太白诛仙剑', lineage: 'sword', type: 'attack', rarity: 'mythic', element: 'thunder', cost: 0,
+    exhaust: true,
+    description: '消耗全部 X 点真元：连续斩出 X+1 剑，每剑造成 9 点穿甲雷伤并获 1 层剑意。消耗。',
+    effect: { xCost: true, xHitsBase: 1, damage: 9, pierce: true, swordIntent: 2 },
+    upgradeName: '太白诛仙剑+', upgradeDescription: '消耗全部 X 点真元：连续斩出 X+2 剑，每剑 11 点穿甲雷伤。消耗。', upgradeEffect: { xCost: true, xHitsBase: 2, damage: 11, pierce: true, swordIntent: 3 },
+  },
+  'sw-flash-draw': {
+    id: 'sw-flash-draw', name: '一线天拔剑', lineage: 'sword', type: 'attack', rarity: 'common', element: 'metal', cost: 0,
+    description: '造成 5 点穿甲伤，抽 1 张牌。消耗。',
+    exhaust: true,
+    effect: { damage: 5, pierce: true, draw: 1 },
+    upgradeName: '一线天拔剑+', upgradeDescription: '造成 8 点穿甲伤，抽 2 张牌。消耗。', upgradeEffect: { damage: 8, pierce: true, draw: 2 },
+  },
+
+  // --- 魔修进阶：献祭消耗（Exhaust）魔神流 ---
+  'dm-blood-sacrifice': {
+    id: 'dm-blood-sacrifice', name: '血祭化灵', lineage: 'demon', type: 'skill', rarity: 'common', element: 'sha', cost: 0,
+    description: '随机献祭消耗手牌中 1 张牌：获得 2 点真元与 8 点护体罡气。',
+    effect: { exhaustRandomHand: 1, gainQi: 2, block: 8 },
+    upgradeName: '血祭化灵+', upgradeDescription: '随机献祭消耗 1 张手牌：获得 2 点真元、11 点罡气并抽 1 牌。', upgradeEffect: { exhaustRandomHand: 1, gainQi: 2, block: 11, draw: 1 },
+  },
+  'dm-ash-strike': {
+    id: 'dm-ash-strike', name: '焚骨魔刃', lineage: 'demon', type: 'attack', rarity: 'common', element: 'fire', cost: 1,
+    description: '随机消耗 1 张手牌，造成 15 点伤害并恢复 4 点气血。',
+    effect: { exhaustRandomHand: 1, damage: 15, heal: 4 },
+    upgradeName: '焚骨魔刃+', upgradeDescription: '随机消耗 1 张手牌，造成 21 点伤害并恢复 6 点气血。', upgradeEffect: { exhaustRandomHand: 1, damage: 21, heal: 6 },
+  },
+  'dm-myriad-demons': {
+    id: 'dm-myriad-demons', name: '万魔朝宗', lineage: 'demon', type: 'attack', rarity: 'mythic', element: 'sha', cost: 2,
+    description: '造成 14 点伤害；本场战斗消耗堆中每有 1 张牌，伤害额外 +8！',
+    effect: { damage: 14, damagePerExhausted: 8, pierce: true },
+    upgradeName: '万魔朝宗+', upgradeDescription: '造成 18 点穿甲伤；每有 1 张已消耗牌伤害额外 +11！', upgradeEffect: { damage: 18, damagePerExhausted: 11, pierce: true },
+  },
+  'dm-life-pact': {
+    id: 'dm-life-pact', name: '逆天借命咒', lineage: 'demon', type: 'forbidden', rarity: 'rare', element: 'sha', cost: 0,
+    exhaust: true,
+    description: '燃 3 年寿元：获得 18 点护体罡气、8 层【剑罡反击】与 1 点真元。消耗。',
+    effect: { lifeCost: 3, block: 18, counterAura: 8, gainQi: 1 },
+    upgradeName: '逆天借命咒+', upgradeDescription: '燃 2 年寿元：获 24 点罡气、12 层反击与 2 真元。消耗。', upgradeEffect: { lifeCost: 2, block: 24, counterAura: 12, gainQi: 2 },
+  },
+
+  // --- 丹修进阶：战中手搓 0 费灵丸 & X费焚炉流 ---
+  'al-fire-pellet': {
+    id: 'al-fire-pellet', name: '赤炎爆丸', lineage: 'alchemy', type: 'attack', rarity: 'common', element: 'fire', cost: 0,
+    exhaust: true, tokenOnly: true,
+    description: '衍生灵丸：造成 6 点火伤，引爆 1 次丹毒。消耗。',
+    effect: { damage: 6, detonatePoison: 1 },
+    upgradeName: '赤炎爆丸+', upgradeDescription: '造成 9 点火伤，引爆 1 次丹毒。消耗。', upgradeEffect: { damage: 9, detonatePoison: 1 },
+  },
+  'al-wood-pellet': {
+    id: 'al-wood-pellet', name: '青木毒丸', lineage: 'alchemy', type: 'skill', rarity: 'common', element: 'wood', cost: 0,
+    exhaust: true, tokenOnly: true,
+    description: '衍生灵丸：施加 4 层【丹毒】并恢复 3 点气血。消耗。',
+    effect: { poison: 4, heal: 3 },
+    upgradeName: '青木毒丸+', upgradeDescription: '施加 6 层【丹毒】并恢复 5 点气血。消耗。', upgradeEffect: { poison: 6, heal: 5 },
+  },
+  'al-pill-rain': {
+    id: 'al-pill-rain', name: '乾坤搓丸手', lineage: 'alchemy', type: 'skill', rarity: 'common', element: 'wood', cost: 1,
+    description: '现场炼制 1 枚 0 费【青木毒丸】与 1 枚 0 费【赤炎爆丸】置入手牌（天然凑齐木火相生！）。',
+    effect: { addCardsToHand: ['al-wood-pellet', 'al-fire-pellet'] },
+    upgradeName: '乾坤搓丸手+', upgradeCost: 0, upgradeDescription: '0 费炼制【青木毒丸】与【赤炎爆丸】各 1 枚入手牌！', upgradeEffect: { addCardsToHand: ['al-wood-pellet', 'al-fire-pellet'] },
+  },
+  'al-plague-wind': {
+    id: 'al-plague-wind', name: '腐骨春风化雨', lineage: 'alchemy', type: 'defense', rarity: 'rare', element: 'wood', cost: 1,
+    description: '获得 11 点护体罡气，施加 6 层【丹毒】与 1 层【虚弱】。',
+    effect: { block: 11, poison: 6, weak: 1 },
+    upgradeName: '腐骨春风化雨+', upgradeDescription: '获得 15 点护体罡气，施加 9 层【丹毒】与 2 层【虚弱】。', upgradeEffect: { block: 15, poison: 9, weak: 2 },
+  },
+  'al-x-furnace': {
+    id: 'al-x-furnace', name: '神农焚天炉', lineage: 'alchemy', type: 'skill', rarity: 'mythic', element: 'fire', cost: 0,
+    exhaust: true,
+    description: '消耗全部 X 点真元：先施加 6 层丹毒，随后连续引爆丹毒 X+1 次，每次恢复 4 点气血！消耗。',
+    effect: { xCost: true, poison: 6, xPoisonDetonate: true, heal: 4 },
+    upgradeName: '神农焚天炉+', upgradeDescription: '消耗全部 X 真元：先施加 10 层丹毒，随后连续引爆 X+1 次并回血！消耗。', upgradeEffect: { xCost: true, poison: 10, xPoisonDetonate: true, heal: 6 },
+  },
+
+  // --- 阵修进阶：万阵归一爆破流 & X费金城汤池 ---
+  'ar-thunder-tower': {
+    id: 'ar-thunder-tower', name: '紫电锁妖阵', lineage: 'array', type: 'array', rarity: 'common', element: 'thunder', cost: 1,
+    description: '布下雷阵：每回合末造成 7 点伤害并获 3 点罡气。',
+    effect: { arrayPower: { id: 'arr-thunder-tower', name: '紫电锁妖阵', damagePerTurn: 7, blockPerTurn: 3 } },
+    upgradeName: '紫电锁妖阵+', upgradeDescription: '布下雷阵：每回合末造成 10 点伤害并获 5 点罡气。', upgradeEffect: { arrayPower: { id: 'arr-thunder-tower', name: '紫电锁妖阵+', damagePerTurn: 10, blockPerTurn: 5 } },
+  },
+  'ar-venom-swamp': {
+    id: 'ar-venom-swamp', name: '玄冥覆水阵', lineage: 'array', type: 'array', rarity: 'rare', element: 'water', cost: 1,
+    description: '布下水阵：每回合末获得 8 点罡气并施加 4 层丹毒。',
+    effect: { arrayPower: { id: 'arr-venom-swamp', name: '玄冥覆水阵', blockPerTurn: 8, poisonPerTurn: 4 } },
+    upgradeName: '玄冥覆水阵+', upgradeDescription: '每回合末获得 11 点罡气并施加 6 层丹毒。', upgradeEffect: { arrayPower: { id: 'arr-venom-swamp', name: '玄冥覆水阵+', blockPerTurn: 11, poisonPerTurn: 6 } },
+  },
+  'ar-detonate-arrays': {
+    id: 'ar-detonate-arrays', name: '乾坤万阵爆', lineage: 'array', type: 'attack', rarity: 'mythic', element: 'fire', cost: 1,
+    description: '引爆场上所有【阵盘】：基础造成 10 伤，每引爆 1 座阵盘额外轰出 26 点穿甲巨伤并返还 1 真元！',
+    effect: { damage: 10, pierce: true, detonateAllArrays: 26 },
+    upgradeName: '乾坤万阵爆+', upgradeDescription: '基础 14 伤，每引爆 1 座阵盘额外轰出 34 点穿甲巨伤并回 1 真元！', upgradeEffect: { damage: 14, pierce: true, detonateAllArrays: 34 },
+  },
+  'ar-x-fortress': {
+    id: 'ar-x-fortress', name: '太岳金城汤池', lineage: 'array', type: 'defense', rarity: 'rare', element: 'earth', cost: 0,
+    description: '消耗全部 X 点真元：获得 (X+1)×10 点护体罡气，且本回合罡气保留不清空。',
+    effect: { xCost: true, block: 10, retainBlock: true },
+    upgradeName: '太岳金城汤池+', upgradeDescription: '消耗全部 X 真元：获得 (X+1)×14 点罡气并保留。', upgradeEffect: { xCost: true, block: 14, retainBlock: true },
+  },
+
+  // --- 通用奇术与成就解锁暗金禁术 ---
+  'nu-spirit-overflow': {
+    id: 'nu-spirit-overflow', name: '周天聚元功', lineage: 'neutral', type: 'skill', rarity: 'rare', element: 'metal', cost: 0,
+    exhaust: true,
+    description: '获得 2 点真元，置入 1 枚【水印】。消耗。',
+    effect: { gainQi: 2, extraSeal: 'water' },
+    upgradeName: '周天聚元功+', upgradeDescription: '获得 3 点真元，置入【水印】。消耗。', upgradeEffect: { gainQi: 3, extraSeal: 'water' },
+  },
+  'nu-thorn-cloak': {
+    id: 'nu-thorn-cloak', name: '玄金反震罡', lineage: 'neutral', type: 'defense', rarity: 'common', element: 'metal', cost: 1,
+    description: '获得 9 点罡气与 4 层【剑罡反击】。',
+    effect: { block: 9, counterAura: 4 },
+    upgradeName: '玄金反震罡+', upgradeDescription: '获得 12 点罡气与 7 层【剑罡反击】。', upgradeEffect: { block: 12, counterAura: 7 },
+  },
+  'nu-four-swords-formation': {
+    id: 'nu-four-swords-formation', name: '太古诛仙四剑阵', lineage: 'neutral', type: 'forbidden', rarity: 'mythic', element: 'thunder', cost: 2,
+    exhaust: true, unlockAchievement: 'ach-one-strike-80',
+    description: '【成就解锁暗金卡】燃 3 年寿元：连斩 4 剑各 14 点穿甲伤，并布下每回合 14 伤的诛仙剑阵！消耗。',
+    effect: {
+      lifeCost: 3, damage: 14, hits: 4, pierce: true,
+      arrayPower: { id: 'arr-zhuxian-four', name: '诛仙四剑阵', damagePerTurn: 14, blockPerTurn: 8 },
+    },
+    upgradeName: '太古诛仙四剑阵+', upgradeDescription: '燃 2 年寿元：连斩 4 剑各 18 点穿甲伤并布诛仙剑阵！消耗。',
+    upgradeEffect: {
+      lifeCost: 2, damage: 18, hits: 4, pierce: true,
+      arrayPower: { id: 'arr-zhuxian-four', name: '诛仙四剑阵+', damagePerTurn: 18, blockPerTurn: 10 },
+    },
+  },
+});
+
+export function getUnlockedRewardCardPool(unlockedAchievements: string[] = []): CardDef[] {
+  return Object.values(CARDS).filter(
+    (c) =>
+      c.rarity !== 'starter' &&
+      c.rarity !== 'curse' &&
+      !c.tokenOnly &&
+      (!c.unlockAchievement || unlockedAchievements.includes(c.unlockAchievement)),
+  );
+}

@@ -51,6 +51,7 @@ export function CardView({
   onClick,
 }: CardViewProps) {
   const def = rawDef ?? getCardDef(instance!.defId);
+  const isX = Boolean(def.effect.xCost);
   const cost = instance ? getCardCost(instance) : def.cost;
   const name = instance ? getCardDisplayName(instance) : def.name;
   const desc = instance ? getCardDescription(instance) : def.description;
@@ -65,12 +66,10 @@ export function CardView({
       disabled={disabled}
       onClick={onClick}
     >
-      {/* 左上角悬浮真元灵珠 */}
-      <span class="tcg-cost-orb" title={`消耗 ${cost} 点真元`}>
-        {cost}
+      <span class="tcg-cost-orb" title={isX ? '倾泻当前全部真元 X' : `消耗 ${cost} 点真元`}>
+        {isX ? 'X' : cost}
       </span>
 
-      {/* 顶栏卷轴牌名与五行印章 */}
       <div class="tcg-header">
         <span class="tcg-name">{name}</span>
         {def.element !== 'none' && (
@@ -80,7 +79,6 @@ export function CardView({
         )}
       </div>
 
-      {/* 中央水墨插画框 */}
       <div class="tcg-art-frame">
         <CardArt type={def.type} element={def.element} />
         {enchant && (
@@ -90,12 +88,10 @@ export function CardView({
         )}
       </div>
 
-      {/* 类别绶带 */}
       <div class="tcg-ribbon">
         <span>— {TYPE_LABELS[def.type]}{def.element !== 'none' ? ` · ${SEAL_LABELS[def.element]}` : ''} —</span>
       </div>
 
-      {/* 下半古卷效果区 */}
       <div class="tcg-body">
         <p class="tcg-desc">{desc}</p>
         {enchant && (

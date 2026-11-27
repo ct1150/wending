@@ -28,15 +28,25 @@ async function verifyViewport(browser, name, viewport) {
   await page.goto(htmlUrl, { waitUntil: 'domcontentloaded' });
   await page.waitForSelector('.title-main');
 
-  // 1. 进入建角选道统，确认立绘图片加载成功
+  // 1. 验证万法图鉴四分页可正常打开并返回
+  await page.click('button:has-text("万法图鉴")');
+  await page.waitForSelector('h2:has-text("万法图鉴")');
+  await page.click('button:has-text("名场面成就")');
+  await page.click('button:has-text("三界强敌志")');
+  await page.click('button:has-text("返回首页")');
+
+  // 2. 建角 -> 破壳降生 -> 天命赐福四选一 -> SVG 星轨连线星宿地图
   await page.click('button:has-text("踏入新一世仙途")');
   await page.waitForSelector('.lineage-thumb');
-
-  // 2. 开启仙途 -> 星宿图
   await page.click('button:has-text("破壳降生")');
-  await page.waitForSelector('.map-stage');
+  await page.waitForSelector('.blessing-card');
+  await page.locator('.blessing-card').first().click();
 
-  // 3. 进战并校验高清立绘图片加载 + 零页面垂直滚动 + 零横向溢出
+  await page.waitForSelector('.map-stage svg.map-lines');
+  const lineCount = await page.locator('.map-stage svg.map-lines line').count();
+  if (lineCount < 10) throw new Error(`${name}: star map lines missing (${lineCount})`);
+
+  // 3. 进战并校验高清立绘 + 乾坤丹符袋 + 严格一屏零滚动
   await page.locator('.map-node-btn.reachable').first().click();
   await page.waitForSelector('.battle-one-screen .portrait-img');
 
@@ -60,7 +70,11 @@ async function verifyViewport(browser, name, viewport) {
     throw new Error(`${name}: vertical scroll detected in combat (${layoutCheck.scrollH} > ${layoutCheck.innerH})`);
   }
 
-  // 4. 打出第一张可用TCG卡并结束回合
+  // 4. 瞬发 1 格乾坤丹符 + 打出实体 TCG 卡牌 + 结束回合
+  const activePouch = page.locator('.pouch-slot.active').first();
+  if ((await activePouch.count()) > 0) {
+    await activePouch.click();
+  }
   await page.locator('.tcg-card:not([disabled])').first().click();
   await page.click('button:has-text("结束回合")');
   await page.waitForTimeout(420);

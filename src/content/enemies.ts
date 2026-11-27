@@ -156,3 +156,85 @@ export function pickEnemyForNode(act: 1 | 2 | 3 | 4, tier: 'normal' | 'elite' | 
   if (pool.length === 0) return ENEMIES['e1-wolf'];
   return pool[Math.floor(rngNext() * pool.length)];
 }
+
+// ==================== v9.0 敌方专属法则词条与 Boss 半血二阶段化相注入 ====================
+ENEMIES['e1-centipede'].trait = {
+  id: 'thorns', name: '毒甲反刺', description: '每次受到直接攻击时，反震你 2 点气血。', value: 2,
+};
+ENEMIES['e1-elite-steward'].trait = {
+  id: 'anti-skill', name: '禁法妖瞳', description: '你每打出 1 张【运转】牌，执事获得 +2 杀意。', value: 2,
+};
+ENEMIES['e1-elite-golem'].trait = {
+  id: 'stone-shell', name: '戊土玄甲', description: '每回合受到的第 1 次攻击伤害减半。', value: 50,
+};
+ENEMIES['e1-boss-tribulation'].phase2 = {
+  title: '筑基天劫 · 紫霄劫眼怒睁',
+  announcement: '⚡ 劫云翻涌，紫霄劫眼怒睁！护体雷障凝结，天威暴涨！',
+  shieldGain: 18,
+  strengthGain: 2,
+  intents: [
+    { kind: 'tribulation-bolt', label: '怒劫 · 双生紫雷', damage: 10, hits: 2 },
+    { kind: 'tribulation-bolt', label: '怒劫 · 诛心雷狱', damage: 18, vulnerable: 1, addCurse: 'curse-whisper' },
+    { kind: 'tribulation-bolt', label: '终劫 · 九霄灭世雷', damage: 26 },
+  ],
+};
+
+ENEMIES['e2-corpse'].trait = {
+  id: 'thorns', name: '铜甲尸刺', description: '每次受到直接攻击时，反震你 3 点伤害。', value: 3,
+};
+ENEMIES['e2-sword-disciple'].trait = {
+  id: 'sword-guard', name: '剑心识破', description: '你每回合打出的第 4 张牌起，真传自动获得 6 点护盾。', value: 6,
+};
+ENEMIES['e2-elite-elder'].trait = {
+  id: 'seal-lock', name: '封灵魔瘴', description: '阴煞封锁天机，你的灵印槽上限降至 2 格。', value: 2,
+};
+ENEMIES['e2-boss-demon'].trait = {
+  id: 'seal-lock', name: '心魔蚀印', description: '你的灵印槽上限降至 2 格。', value: 2,
+};
+ENEMIES['e2-boss-demon'].phase2 = {
+  title: '紫府心魔尊 · 法相真魔体',
+  announcement: '👹 心魔尊碎丹化相，展开六臂真魔体！获得 28 点魔盾与 +3 杀意！',
+  shieldGain: 28,
+  strengthGain: 3,
+  intents: [
+    { kind: 'multi-attack', label: '六臂狂魔斩', damage: 10, hits: 3 },
+    { kind: 'debuff', label: '万劫噬心咒', damage: 22, weak: 2, addCurse: 'curse-whisper' },
+    { kind: 'attack', label: '灭世碎丹印', damage: 34 },
+  ],
+};
+
+ENEMIES['e3-immortal-envoy'].trait = {
+  id: 'anti-skill', name: '天律禁法', description: '你每打出 1 张【运转】牌，执法使获得 +2 杀意。', value: 2,
+};
+ENEMIES['e3-elite-phoenix'].trait = {
+  id: 'phoenix-rebirth', name: '涅槃真火', description: '首次气血归零时浴火涅槃，恢复 35% 气血并杀意 +3！', value: 35,
+};
+ENEMIES['e3-boss-ascension'].phase2 = {
+  title: '九重混沌雷劫 · 天门开裂',
+  announcement: '⛈️ 混沌天门轰然开裂，太古神雷倾泻而下！',
+  shieldGain: 35,
+  strengthGain: 3,
+  intents: [
+    { kind: 'tribulation-bolt', label: '混沌 · 阴阳神雷', damage: 15, hits: 2 },
+    { kind: 'tribulation-bolt', label: '混沌 · 万古灭仙雷', damage: 34, vulnerable: 2 },
+    { kind: 'tribulation-bolt', label: '终劫 · 鸿蒙开天辟地', damage: 42 },
+  ],
+};
+
+ENEMIES['e4-elite-guard'].trait = {
+  id: 'stone-shell', name: '仙界金甲', description: '每回合受到的第 1 次攻击伤害减半。', value: 50,
+};
+ENEMIES['e4-boss-dao'].trait = {
+  id: 'anti-skill', name: '天道威压', description: '你每打出 1 张【运转】牌，太初天道获得 +2 杀意。', value: 2,
+};
+ENEMIES['e4-boss-dao'].phase2 = {
+  title: '太初天道 · 鸿蒙无极真身',
+  announcement: '☀️ 太初天道显化鸿蒙无极真身！万古威压降临，护盾 +45，杀意 +4！',
+  shieldGain: 45,
+  strengthGain: 4,
+  intents: [
+    { kind: 'multi-attack', label: '诸天星陨灭世', damage: 16, hits: 3 },
+    { kind: 'debuff', label: '纪元归墟敕令', damage: 32, weak: 2, vulnerable: 2, addCurse: 'curse-whisper' },
+    { kind: 'attack', label: '鸿蒙终极一击', damage: 50 },
+  ],
+};

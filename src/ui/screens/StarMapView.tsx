@@ -5,9 +5,11 @@ import type { MapNode, MapNodeType, RunState } from '../../core/types';
 const NODE_ICONS: Record<MapNodeType, string> = {
   battle: '⚔️',
   elite: '👹',
+  'fury-elite': '🔥',
   event: '☯',
-  abode: '🔥',
+  abode: '⚗️',
   shop: '💰',
+  auction: '🏮',
   remnant: '🪦',
   boss: '⛈️',
 };
@@ -25,6 +27,30 @@ export function StarMapView({ run, onSelectNode }: StarMapViewProps) {
     rows.push(run.map.filter((n) => n.row === r).sort((a, b) => a.col - b.col));
   }
 
+  // 计算 SVG 星轨连线归一化坐标（col 0..2 -> x 16.6%, 50%, 83.3%；row 从底向上排布）
+  const nodeById = new Map(run.map.map((n) => [n.id, n]));
+  const xPct = (n: MapNode) => (n.type === 'boss' ? 50 : 16.66 + n.col * 33.33);
+  const yPct = (n: MapNode) => ((maxRow - n.row + 0.5) / (maxRow + 1)) * 100;
+
+  const edges: { key: string; x1: number; y1: number; x2: number; y2: number; active: boolean }[] = [];
+  for (const node of run.map) {
+    for (const targetId of node.nextIds) {
+      const target = nodeById.get(targetId);
+      if (!target) continue;
+      const active =
+        (run.currentNodeId === node.id && reachable.has(target.id)) ||
+        (node.visited && target.visited);
+      edges.push({
+        key: `${node.id}->${target.id}`,
+        x1: xPct(node),
+        y1: yPct(node),
+        x2: xPct(target),
+        y2: yPct(target),
+        active,
+      });
+    }
+  }
+
   const actInfo = ACT_TITLES[run.act];
   const gradeLabel =
     run.foundation >= 85 ? '天道破境（金色法则）' : run.foundation >= 50 ? '地道破境' : '凡品破境';
@@ -35,12 +61,29 @@ export function StarMapView({ run, onSelectNode }: StarMapViewProps) {
         <h2>{actInfo.name}</h2>
         <p>{actInfo.subtitle}</p>
         <div style={{ marginTop: '8px', fontSize: '12px', color: 'var(--gold)' }}>
-          当前预估破境品阶：<strong>{gradeLabel}</strong>（道基 {run.foundation}/100）
+          预估破境品阶：<strong>{gradeLabel}</strong>（道基 {run.foundation}/100）
           {run.ascension > 0 ? ` · 天道劫数 第 ${run.ascension} 重` : ''}
+          {run.isDailyChallenge ? ` · ☯ 每日天机 (${run.dailyDate})` : ''}
         </div>
       </div>
 
       <section class="panel map-canvas">
+        {/* 鎏金星轨连线层 */}
+        <svg class="map-lines" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+          {edges.map((e) => (
+            <line
+              key={e.key}
+              x1={e.x1}
+              y1={e.y1}
+              x2={e.x2}
+              y2={e.y2}
+              stroke={e.active ? 'rgba(250, 224, 174, 0.85)' : 'rgba(207, 183, 131, 0.24)'}
+              stroke-width={e.active ? '0.65' : '0.32'}
+              stroke-dasharray={e.active ? undefined : '1.2 1.2'}
+            />
+          ))}
+        </svg>
+
         <div class="map-rows">
           {rows.map((rowNodes, rowIdx) => {
             const isBossRow = rowNodes.length === 1 && rowNodes[0].type === 'boss';
@@ -79,7 +122,10 @@ export function StarMapView({ run, onSelectNode }: StarMapViewProps) {
                     >
                       <span class="node-icon">{NODE_ICONS[node.type]}</span>
                       <span class="node-title">{node.label}</span>
-                      <span class="node-cost">耗寿 {node.ageCost} 年</span>
+                      <span class="node-cost">
+                        耗寿 {node.ageCost} 年
+                        {node.type === 'fury-elite' ? ' · 必掉道果' : node.type === 'auction' ? ' · 竞拍/截胡' : ''}
+                      </span>
                     </button>
                   );
                 })}

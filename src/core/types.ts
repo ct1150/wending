@@ -6,14 +6,14 @@ export type CardType = 'attack' | 'defense' | 'skill' | 'array' | 'forbidden' | 
 export type CardRarity = 'starter' | 'common' | 'rare' | 'mythic' | 'curse';
 
 export type EnchantId =
-  | 'swift'        // 耗灵-1 (最低0)
-  | 'double-cast'  // 连击：效果额外触发一次(数值60%)
-  | 'leech-life'   // 斩杀回4年寿元，命中回4血
-  | 'toxic-edge'   // 附带4层丹毒
-  | 'innate'       // 固有：首回合必上手，抽1牌
-  | 'spirit-surge' // 打出返还1点真元
-  | 'shield-echo'  // 额外获得8点护体罡气
-  | 'thunder-mark';// 附加1枚雷印与6点穿甲雷伤
+  | 'swift'
+  | 'double-cast'
+  | 'leech-life'
+  | 'toxic-edge'
+  | 'innate'
+  | 'spirit-surge'
+  | 'shield-echo'
+  | 'thunder-mark';
 
 export interface EnchantDef {
   id: EnchantId;
@@ -26,22 +26,22 @@ export interface EnchantDef {
 export interface CardEffect {
   damage?: number;
   hits?: number;
-  pierce?: boolean;           // 无视护盾
+  pierce?: boolean;
   block?: number;
   draw?: number;
   gainQi?: number;
   heal?: number;
-  selfHpCost?: number;        // 魔修卖血
-  lifeCost?: number;          // 燃寿禁术
-  gainLifespan?: number;      // 噬魂/延寿
-  poison?: number;            // 丹毒层数
-  detonatePoison?: number;    // 引爆丹毒倍率 (如 1 = 立即结算1次, 2 = 2次)
-  vulnerable?: number;        // 破绽(易伤)
-  weak?: number;              // 虚弱
-  swordIntent?: number;       // 剑意层数
-  consumeSwordIntent?: boolean; // 消耗全部剑意每层增伤
+  selfHpCost?: number;
+  lifeCost?: number;
+  gainLifespan?: number;
+  poison?: number;
+  detonatePoison?: number;
+  vulnerable?: number;
+  weak?: number;
+  swordIntent?: number;
+  consumeSwordIntent?: boolean;
   damagePerSwordIntent?: number;
-  damagePerBlock?: number;    // 以盾代攻倍率
+  damagePerBlock?: number;
   arrayPower?: {
     id: string;
     name: string;
@@ -49,13 +49,21 @@ export interface CardEffect {
     blockPerTurn?: number;
     poisonPerTurn?: number;
   };
-  retainBlock?: boolean;      // 本回合护体罡气不清空
-  addCardsToHand?: string[];  // 衍生牌入手法(如 0费御剑术)
-  addCurseToDiscard?: string; // 塞入心魔牌
-  exhaustCursesInHand?: boolean; // 吞噬手牌心魔转化为伤害
+  retainBlock?: boolean;
+  addCardsToHand?: string[];
+  addCurseToDiscard?: string;
+  exhaustCursesInHand?: boolean;
   damagePerExhaustedCurse?: number;
-  gainFoundation?: number;    // 战后/即时道基纯度
-  extraSeal?: SealType;       // 额外附加一枚灵印
+  gainFoundation?: number;
+  extraSeal?: SealType;
+  // v9.0 进阶算子
+  xCost?: boolean;               // 倾泻当前全部真元 X，按 X 放大连击/引爆/护盾
+  xHitsBase?: number;            // X 费攻击连段 = X + xHitsBase
+  xPoisonDetonate?: boolean;     // X 费连续引爆 X 次丹毒并回血
+  counterAura?: number;          // 剑罡反击：受击时回敬穿甲伤
+  exhaustRandomHand?: number;    // 献祭：随机消耗手牌中 N 张牌
+  damagePerExhausted?: number;   // 本场每有一张已消耗牌额外增伤
+  detonateAllArrays?: number;    // 引爆场上全部阵盘，每座造成 N 伤害并回 1 真元
 }
 
 export interface CardDef {
@@ -65,10 +73,12 @@ export interface CardDef {
   type: CardType;
   rarity: CardRarity;
   element: ElementTag;
-  cost: number;
-  exhaust?: boolean;          // 消耗：打出后本场移除
-  ethereal?: boolean;         // 虚无：回合末未打出移除
+  cost: number; // xCost 卡牌 cost 设为 0 (UI 显示为 X)
+  exhaust?: boolean;
+  ethereal?: boolean;
   innate?: boolean;
+  tokenOnly?: boolean; // 衍生专用牌（不进常规掉落池）
+  unlockAchievement?: string;
   description: string;
   effect: CardEffect;
   upgradeName?: string;
@@ -111,7 +121,33 @@ export interface LineageDef {
   starterMethodDesc: string;
   starterTreasureId: string;
   starterDeck: string[];
-  unlockCost: number; // 0 = 初始解锁
+  unlockCost: number;
+}
+
+export type SecondaryMethodId =
+  | 'method-venom-sword'
+  | 'method-blood-blade'
+  | 'method-thunder-array'
+  | 'method-thorns-poison'
+  | 'method-demon-furnace';
+
+export interface SecondaryMethodDef {
+  id: SecondaryMethodId;
+  name: string;
+  unlockLineage: LineageId;
+  badge: string;
+  description: string;
+}
+
+export interface ConsumableDef {
+  id: string;
+  name: string;
+  kind: 'pill' | 'talisman';
+  rarity: 'common' | 'rare';
+  icon: string;
+  price: number;
+  passiveRevive?: boolean; // 替死木偶符：致死自动触发
+  description: string;
 }
 
 export interface TreasureDef {
@@ -119,7 +155,7 @@ export interface TreasureDef {
   name: string;
   rarity: 'common' | 'rare' | 'mythic';
   lineage?: LineageId | 'neutral';
-  maxCharge: number; // 打出几张牌充满
+  maxCharge: number;
   description: string;
   effect: CardEffect;
 }
@@ -127,7 +163,8 @@ export interface TreasureDef {
 export interface RelicDef {
   id: string;
   name: string;
-  rarity: 'common' | 'rare' | 'mythic' | 'law'; // law = 天道破境法则
+  rarity: 'common' | 'rare' | 'mythic' | 'law';
+  unlockAchievement?: string;
   description: string;
   hook:
     | 'start-qi'
@@ -144,7 +181,11 @@ export interface RelicDef {
     | 'tribulation-ward'
     | 'heal-after-battle'
     | 'foundation-boost'
-    | 'array-echo';
+    | 'array-echo'
+    | 'counter-start'
+    | 'exhaust-qi'
+    | 'pill-master'
+    | 'dying-fury';
   value: number;
 }
 
@@ -163,6 +204,29 @@ export interface EnemyIntent {
   addCurse?: string;
 }
 
+export type EnemyTraitId =
+  | 'anti-skill'
+  | 'stone-shell'
+  | 'thorns'
+  | 'sword-guard'
+  | 'seal-lock'
+  | 'phoenix-rebirth';
+
+export interface EnemyTrait {
+  id: EnemyTraitId;
+  name: string;
+  description: string;
+  value: number;
+}
+
+export interface EnemyPhase2 {
+  title: string;
+  announcement: string;
+  shieldGain: number;
+  strengthGain: number;
+  intents: EnemyIntent[];
+}
+
 export interface EnemyDef {
   id: string;
   name: string;
@@ -170,7 +234,9 @@ export interface EnemyDef {
   act: 1 | 2 | 3 | 4;
   tier: 'normal' | 'elite' | 'boss' | 'tribulation';
   maxHp: number;
-  tribulationWaves?: number; // 若为渡劫战，撑过 N 回合雷劫亦可破境
+  tribulationWaves?: number;
+  trait?: EnemyTrait;
+  phase2?: EnemyPhase2;
   intents: EnemyIntent[];
   artStyle: 'beast' | 'cultivator' | 'demon' | 'thunder' | 'celestial';
 }
@@ -190,11 +256,24 @@ export interface EnemyInstance {
   weak: number;
   strength: number;
   intentIdx: number;
+  trait?: EnemyTrait;
+  phase2Triggered?: boolean;
+  rebirthUsed?: boolean;
+  firstHitTakenThisTurn?: boolean;
   tribulationWave?: number;
   tribulationMaxWaves?: number;
 }
 
-export type MapNodeType = 'battle' | 'elite' | 'event' | 'abode' | 'shop' | 'remnant' | 'boss';
+export type MapNodeType =
+  | 'battle'
+  | 'elite'
+  | 'fury-elite'
+  | 'event'
+  | 'abode'
+  | 'shop'
+  | 'auction'
+  | 'remnant'
+  | 'boss';
 
 export interface MapNode {
   id: string;
@@ -231,6 +310,11 @@ export interface CombatState {
   block: number;
   retainBlockThisTurn: boolean;
   swordIntent: number;
+  counterAura: number;
+  damageBoostPct: number;      // 暴血燃魂丹等本回合增伤百分比
+  nextResonanceDouble: boolean;// 五行聚印丹下次共鸣翻倍
+  enemyDmgWeakenPct: number;   // 玄冰敛息符本回合减伤百分比
+  maxSealSlots: number;        // 默认 3，受封灵魔瘴词条降为 2
   vulnerable: number;
   weak: number;
   seals: SealType[];
@@ -244,6 +328,7 @@ export interface CombatState {
   swordCardsPlayedThisTurn: number;
   lifeSpentInCombat: number;
   lastResonance: ResonanceEvent | null;
+  phase2Banner: string | null;
   combatLog: string[];
   outcome: 'ongoing' | 'victory' | 'tribulation-survived' | 'defeat';
   defeatCause?: 'hp' | 'lifespan';
@@ -268,8 +353,10 @@ export interface EncounterChoice {
     addCurse?: string;
     addRelic?: boolean;
     addMaterial?: EnchantId;
+    addConsumable?: boolean;
+    offerSecondaryMethod?: boolean;
     removeRandomCard?: boolean;
-    gainDaoToken?: boolean; // 集齐三界道果信物开启隐藏第四卷
+    gainDaoToken?: boolean;
   };
 }
 
@@ -291,10 +378,14 @@ export interface RewardState {
   relicReward?: RelicDef;
   treasureReward?: TreasureDef;
   materialReward?: EnchantDef;
+  consumableReward?: ConsumableDef;
+  methodChoices?: SecondaryMethodDef[];
   pickedCard: boolean;
   pickedRelic: boolean;
   pickedTreasure: boolean;
   pickedMaterial: boolean;
+  pickedConsumable?: boolean;
+  pickedMethod?: boolean;
   isBossReward?: boolean;
   breakthroughGrade?: BreakthroughGrade;
   lawChoices?: RelicDef[];
@@ -307,10 +398,41 @@ export interface ShopStock {
   cards: { def: CardDef; price: number; sold: boolean }[];
   relics: { def: RelicDef; price: number; sold: boolean }[];
   materials: { def: EnchantDef; price: number; sold: boolean }[];
+  consumables: { def: ConsumableDef; price: number; sold: boolean }[];
   purgePrice: number;
   purged: boolean;
   elixirPrice: number;
   elixirBought: boolean;
+}
+
+export interface AuctionLot {
+  id: string;
+  name: string;
+  description: string;
+  price: number;
+  kind: 'card' | 'relic' | 'consumable' | 'lifespan';
+  refId: string;
+  claimed: boolean;
+}
+
+export interface BlessingOption {
+  id: 'gold' | 'lifespan-foundation' | 'purge-two' | 'gamble-relic' | 'mythic-treasure';
+  title: string;
+  costText: string;
+  rewardText: string;
+}
+
+export interface DailyMutatorDef {
+  id: string;
+  name: string;
+  description: string;
+}
+
+export interface AchievementDef {
+  id: string;
+  name: string;
+  conditionText: string;
+  unlockText: string;
 }
 
 export interface PastLifeRemnant {
@@ -331,6 +453,7 @@ export interface RunState {
   ascension: number;
   name: string;
   lineage: LineageId;
+  secondaryMethod: SecondaryMethodId | null;
   rootId: string;
   act: 1 | 2 | 3 | 4;
   realm: RealmId;
@@ -340,21 +463,28 @@ export interface RunState {
   maxHp: number;
   baseQi: number;
   gold: number;
-  foundation: number;       // 本卷道基纯度 0~100
-  daoTokens: number;        // 集齐 2 枚开启隐藏第四卷【上界问鼎】
+  foundation: number;
+  daoTokens: number;
   deck: CardInstance[];
-  treasures: string[];      // 至多 2 件本命法宝
+  treasures: string[];
   relics: string[];
-  materials: EnchantId[];   // 天材地宝（附魔材料）
+  materials: EnchantId[];
+  consumables: string[]; // 至多 3 格乾坤丹符袋
+  blessingOptions?: BlessingOption[];
+  isDailyChallenge?: boolean;
+  dailyDate?: string;
+  mutators?: string[];
   map: MapNode[];
   currentNodeId: string | null;
   phase:
+    | 'blessing'
     | 'map'
     | 'combat'
     | 'reward'
     | 'event'
     | 'abode'
     | 'shop'
+    | 'auction'
     | 'remnant'
     | 'breakthrough'
     | 'gameover'
@@ -364,15 +494,21 @@ export interface RunState {
   activeEvent: EncounterDef | null;
   eventResultText: string | null;
   shop: ShopStock | null;
+  auction: { lots: AuctionLot[]; settled: boolean } | null;
   abodeUsed: boolean;
   stats: {
     battlesWon: number;
     elitesWon: number;
     bossesWon: number;
     cardsPlayed: number;
+    maxCardsInSingleTurn: number;
+    maxSingleHit: number;
+    maxPoisonApplied: number;
     resonancesTriggered: number;
     lifeBurned: number;
+    tribulationsSlain: number;
   };
+  newlyUnlockedAchievements?: string[];
   deathCause?: string;
   endingTitle?: string;
   uidCounter: number;
@@ -384,11 +520,16 @@ export interface MetaSave {
   karmaPoints: number;
   unlockedLineages: LineageId[];
   unlockedRelics: string[];
+  achievements: string[];
+  discoveredCards: string[];
+  discoveredRelics: string[];
+  discoveredEnemies: string[];
+  dailyBestScores: Record<string, number>;
   maxAscensionUnlocked: number;
   bestActReached: number;
   victories: number;
   trueVictories: number;
-  rerollCharges: number; // 开局可额外重掷灵根次数
+  rerollCharges: number;
   pastLifeRemnant: PastLifeRemnant | null;
   hallOfFame: {
     generation: number;

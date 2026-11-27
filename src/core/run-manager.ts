@@ -1,13 +1,25 @@
-import { CARDS, REWARD_CARD_POOL } from '../content/cards';
+import { CARDS, getUnlockedRewardCardPool } from '../content/cards';
+import { CONSUMABLE_LIST, CONSUMABLES } from '../content/consumables';
 import { pickEncounter } from '../content/encounters';
 import { pickEnemyForNode } from '../content/enemies';
 import { getRootById, LINEAGES, ROOTS } from '../content/lineages';
-import { ENCHANT_LIST, ENCHANTS, LAW_RELIC_LIST, RELIC_LIST, RELICS, TREASURE_LIST } from '../content/treasures';
+import { DAILY_MUTATORS, getTodayDateKey, SECONDARY_METHOD_LIST, SECONDARY_METHODS } from '../content/methods';
+import {
+  ENCHANT_LIST,
+  ENCHANTS,
+  getMythicTreasures,
+  getUnlockedRelicList,
+  LAW_RELIC_LIST,
+  RELICS,
+  TREASURE_LIST,
+} from '../content/treasures';
 import { initCombat } from './combat-engine';
 import { generateActMap, getReachableNodeIds } from './map-generator';
 import { saveActiveRun } from './meta-save';
-import { SeededRng } from './rng';
+import { hashSeed, SeededRng } from './rng';
 import type {
+  AuctionLot,
+  BlessingOption,
   BreakthroughGrade,
   CardDef,
   CardInstance,
@@ -18,6 +30,7 @@ import type {
   RelicDef,
   RewardState,
   RunState,
+  SecondaryMethodId,
   ShopStock,
 } from './types';
 
@@ -35,6 +48,41 @@ export function rollRandomRoot(seed: number): string {
   return rng.pick(ROOTS).id;
 }
 
+export function getDailyChallengeConfig(dateKey = getTodayDateKey()) {
+  const seed = hashSeed(`daily-${dateKey}`);
+  const rng = new SeededRng(seed);
+  const muts = rng.shuffle(DAILY_MUTATORS).slice(0, 2);
+  const root = rng.pick(ROOTS);
+  return { dateKey, seed, mutators: muts, rootId: root.id };
+}
+
+export const STARTING_BLESSINGS: BlessingOption[] = [
+  {
+    id: 'gold',
+    title: '豪门遗泽 · 灵石充盈',
+    costText: '无代价',
+    rewardText: '立即获得 +85 灵石与 1 枚随机【乾坤丹符】',
+  },
+  {
+    id: 'purge-two',
+    title: '涤尘净心 · 剑心纯粹',
+    costText: '无代价',
+    rewardText: '立即精简删去牌库中 2 张基础入门牌，道基纯度 +12',
+  },
+  {
+    id: 'gamble-relic',
+    title: '逆天豪赌 · 燃寿夺宝',
+    costText: '代价：扣除 14 年寿元上限',
+    rewardText: '立即获得 1 件随机【古宝遗物】+ 1 份【附魔灵材】',
+  },
+  {
+    id: 'mythic-treasure',
+    title: '重铸本命 · 绝世仙器',
+    costText: '代价：交出初始本命法宝',
+    rewardText: '直接换取 1 件【绝世神话本命法宝】（定义整局邪道流派！）',
+  },
+];
+
 export function createNewRun(params: {
   name: string;
   lineage: LineageId;
@@ -42,10 +90,15 @@ export function createNewRun(params: {
   seed: number;
   ascension: number;
   meta: MetaSave;
+  skipBlessing?: boolean;
+  isDailyChallenge?: boolean;
+  dailyDate?: string;
+  mutators?: string[];
 }): RunState {
   const rng = new SeededRng(params.seed);
   const lin = LINEAGES[params.lineage];
   const root = getRootById(params.rootId);
+  const muts = params.mutators ?? [];
 
   let uid = 1;
   const deck: CardInstance[] = lin.starterDeck.map((defId) => ({
@@ -55,8 +108,24 @@ export function createNewRun(params: {
   }));
 
   const maxHp = lin.baseHp + (root.bonusMaxHp ?? 0);
-  const maxLifespan = lin.baseLifespan + (root.bonusLifespan ?? 0) - params.ascension * 2;
+  const shortCandleLoss = muts.includes('mut-short-candle') ? 20 : 0;
+  const maxLifespan = lin.baseLifespan + (root.bonusLifespan ?? 0) - params.ascension * 2 - shortCandleLoss;
   const map = generateActMap(1, rng, params.meta.pastLifeRemnant);
+
+  const relics: string[] = [];
+  const consumables: string[] = [];
+  let gold = 60;
+
+  if (muts.includes('mut-short-candle')) {
+    gold += 100;
+    const pool = getUnlockedRelicList(params.meta.achievements);
+    for (const r of rng.shuffle(pool).slice(0, 2)) relics.push(r.id);
+  }
+  if (muts.includes('mut-alchemy-boom')) {
+    for (let i = 0; i < 3; i++) consumables.push(rng.pick(CONSUMABLE_LIST).id);
+  } else {
+    consumables.push(rng.pick(['con-heal-pill', 'con-wind-redraw', 'con-frost-talisman']));
+  }
 
   const run: RunState = {
     version: 1,
@@ -66,37 +135,48 @@ export function createNewRun(params: {
     ascension: params.ascension,
     name: params.name.trim() || '云归',
     lineage: params.lineage,
+    secondaryMethod: null,
     rootId: root.id,
     act: 1,
     realm: 'qi',
     age: 16,
-    maxLifespan: Math.max(55, maxLifespan),
+    maxLifespan: Math.max(45, maxLifespan),
     hp: maxHp,
     maxHp,
     baseQi: 3,
-    gold: 60,
+    gold,
     foundation: 10,
     daoTokens: 0,
     deck,
     treasures: [lin.starterTreasureId],
-    relics: [],
+    relics,
     materials: [],
+    consumables: consumables.slice(0, 3),
+    blessingOptions: params.skipBlessing ? undefined : STARTING_BLESSINGS,
+    isDailyChallenge: params.isDailyChallenge,
+    dailyDate: params.dailyDate,
+    mutators: muts,
     map,
     currentNodeId: null,
-    phase: 'map',
+    phase: params.skipBlessing ? 'map' : 'blessing',
     combat: null,
     reward: null,
     activeEvent: null,
     eventResultText: null,
     shop: null,
+    auction: null,
     abodeUsed: false,
     stats: {
       battlesWon: 0,
       elitesWon: 0,
       bossesWon: 0,
       cardsPlayed: 0,
+      maxCardsInSingleTurn: 0,
+      maxSingleHit: 0,
+      maxPoisonApplied: 0,
       resonancesTriggered: 0,
       lifeBurned: 0,
+      tribulationsSlain: 0,
     },
     uidCounter: uid,
   };
@@ -105,22 +185,68 @@ export function createNewRun(params: {
   return run;
 }
 
-export function rollCardChoices(run: RunState, rng: SeededRng, count = 3, forcedRarity?: CardDef['rarity']): CardDef[] {
+export function chooseStartingBlessing(run: RunState, optionId: BlessingOption['id'], meta?: MetaSave): RunState {
+  if (run.phase !== 'blessing') return run;
+  const nextRun: RunState = structuredClone(run);
+  const rng = new SeededRng(nextRun.rngState);
+
+  if (optionId === 'gold') {
+    nextRun.gold += 85;
+    if (nextRun.consumables.length < 3) nextRun.consumables.push(rng.pick(CONSUMABLE_LIST).id);
+  } else if (optionId === 'purge-two') {
+    let removed = 0;
+    nextRun.deck = nextRun.deck.filter((c) => {
+      if (removed < 2 && CARDS[c.defId]?.rarity === 'starter') {
+        removed += 1;
+        return false;
+      }
+      return true;
+    });
+    nextRun.foundation = Math.min(100, nextRun.foundation + 12);
+  } else if (optionId === 'gamble-relic') {
+    nextRun.maxLifespan = Math.max(40, nextRun.maxLifespan - 14);
+    const rel = pickNewRelic(nextRun, rng, meta?.achievements);
+    if (rel) nextRun.relics.push(rel.id);
+    nextRun.materials.push(rng.pick(ENCHANT_LIST).id);
+  } else if (optionId === 'mythic-treasure') {
+    const mythics = getMythicTreasures();
+    nextRun.treasures = [rng.pick(mythics).id];
+  }
+
+  nextRun.blessingOptions = undefined;
+  nextRun.phase = 'map';
+  nextRun.rngState = rng.state;
+  saveActiveRun(nextRun);
+  return nextRun;
+}
+
+export function rollCardChoices(
+  run: RunState,
+  rng: SeededRng,
+  count = 3,
+  forcedRarity?: CardDef['rarity'],
+  achievements: string[] = [],
+): CardDef[] {
   const root = getRootById(run.rootId);
-  const eligible = REWARD_CARD_POOL.filter((c) => {
+  const allSchools = run.mutators?.includes('mut-all-schools');
+  const unlockedOffLineage = run.secondaryMethod ? SECONDARY_METHODS[run.secondaryMethod]?.unlockLineage : null;
+
+  const basePool = getUnlockedRewardCardPool(achievements);
+  const eligible = basePool.filter((c) => {
     if (forcedRarity && c.rarity !== forcedRarity) return false;
-    return c.lineage === run.lineage || c.lineage === 'neutral';
+    if (allSchools) return true;
+    return c.lineage === run.lineage || c.lineage === 'neutral' || (unlockedOffLineage && c.lineage === unlockedOffLineage);
   });
-  const pool = eligible.length >= count ? eligible : REWARD_CARD_POOL;
+  const pool = eligible.length >= count ? eligible : basePool;
   const picked: CardDef[] = [];
   const used = new Set<string>();
 
   for (let i = 0; i < count && used.size < pool.length; i++) {
     const candidates = pool.filter((c) => !used.has(c.id));
     const card = rng.weightedPick(candidates, (c) => {
-      let w = c.lineage === run.lineage ? 30 : 12;
+      let w = c.lineage === run.lineage ? 30 : c.lineage === unlockedOffLineage ? 24 : 12;
       if (c.element !== 'none' && root.elements.includes(c.element)) w += 12;
-      if (c.rarity === 'mythic') w *= run.act >= 2 ? 0.5 : 0.2;
+      if (c.rarity === 'mythic') w *= run.act >= 2 ? 0.52 : 0.22;
       if (c.rarity === 'rare') w *= run.act >= 2 ? 0.85 : 0.55;
       return w;
     });
@@ -130,41 +256,92 @@ export function rollCardChoices(run: RunState, rng: SeededRng, count = 3, forced
   return picked;
 }
 
-function pickNewRelic(run: RunState, rng: SeededRng): RelicDef | undefined {
-  const avail = RELIC_LIST.filter((r) => !run.relics.includes(r.id));
+function pickNewRelic(run: RunState, rng: SeededRng, achievements: string[] = []): RelicDef | undefined {
+  const avail = getUnlockedRelicList(achievements).filter((r) => !run.relics.includes(r.id));
   if (avail.length === 0) return undefined;
   return rng.pick(avail);
 }
 
-function buildShopStock(run: RunState, rng: SeededRng): ShopStock {
-  const cards = rollCardChoices(run, rng, 4).map((def) => ({
+function rollSecondaryMethodChoices(run: RunState, rng: SeededRng): typeof SECONDARY_METHOD_LIST {
+  const candidates = SECONDARY_METHOD_LIST.filter((m) => m.unlockLineage !== run.lineage);
+  return rng.shuffle(candidates).slice(0, 3);
+}
+
+function buildShopStock(run: RunState, rng: SeededRng, achievements: string[] = []): ShopStock {
+  const discount = run.mutators?.includes('mut-alchemy-boom') ? 0.7 : 1;
+  const priceOf = (p: number) => Math.round(p * discount);
+
+  const cards = rollCardChoices(run, rng, 4, undefined, achievements).map((def) => ({
     def,
-    price: def.rarity === 'mythic' ? 110 : def.rarity === 'rare' ? 75 : 45,
+    price: priceOf(def.rarity === 'mythic' ? 110 : def.rarity === 'rare' ? 75 : 45),
     sold: false,
   }));
-  const availRelics = RELIC_LIST.filter((r) => !run.relics.includes(r.id));
+  const availRelics = getUnlockedRelicList(achievements).filter((r) => !run.relics.includes(r.id));
   const relics = rng.shuffle(availRelics).slice(0, 2).map((def) => ({
     def,
-    price: def.rarity === 'rare' ? 120 : 85,
+    price: priceOf(def.rarity === 'mythic' ? 145 : def.rarity === 'rare' ? 115 : 80),
     sold: false,
   }));
   const materials = rng.shuffle(ENCHANT_LIST).slice(0, 2).map((def) => ({
     def,
-    price: 65,
+    price: priceOf(62),
+    sold: false,
+  }));
+  const consumables = rng.shuffle(CONSUMABLE_LIST).slice(0, 2).map((def) => ({
+    def,
+    price: priceOf(def.price),
     sold: false,
   }));
   return {
     cards,
     relics,
     materials,
-    purgePrice: 55,
+    consumables,
+    purgePrice: priceOf(55),
     purged: false,
-    elixirPrice: 60,
+    elixirPrice: priceOf(60),
     elixirBought: false,
   };
 }
 
-export function enterMapNode(run: RunState, nodeId: string): RunState {
+function buildAuctionLots(run: RunState, rng: SeededRng, achievements: string[] = []): AuctionLot[] {
+  const mythicCard = rollCardChoices(run, rng, 1, 'mythic', achievements)[0] ?? rollCardChoices(run, rng, 1)[0];
+  const rareRelic = pickNewRelic(run, rng, achievements);
+  const lots: AuctionLot[] = [
+    {
+      id: 'lot-card',
+      name: `孤本绝学 · ${mythicCard.name}`,
+      description: mythicCard.description,
+      price: 85,
+      kind: 'card',
+      refId: mythicCard.id,
+      claimed: false,
+    },
+    {
+      id: 'lot-life',
+      name: '压轴宝药 · 千年紫芝寿元果',
+      description: '寿元上限 +24 年，道基纯度 +20，并回满气血！',
+      price: 90,
+      kind: 'lifespan',
+      refId: 'lifespan',
+      claimed: false,
+    },
+  ];
+  if (rareRelic) {
+    lots.push({
+      id: 'lot-relic',
+      name: `古修遗珍 · ${rareRelic.name}`,
+      description: rareRelic.description,
+      price: 95,
+      kind: 'relic',
+      refId: rareRelic.id,
+      claimed: false,
+    });
+  }
+  return lots;
+}
+
+export function enterMapNode(run: RunState, nodeId: string, achievements: string[] = []): RunState {
   if (run.phase !== 'map') return run;
   const reachable = getReachableNodeIds(run.map, run.currentNodeId);
   if (!reachable.includes(nodeId)) return run;
@@ -188,8 +365,8 @@ export function enterMapNode(run: RunState, nodeId: string): RunState {
 
   const rng = new SeededRng(nextRun.rngState);
 
-  if (node.type === 'battle' || node.type === 'elite' || node.type === 'boss') {
-    const tier = node.type === 'battle' ? 'normal' : node.type;
+  if (node.type === 'battle' || node.type === 'elite' || node.type === 'fury-elite' || node.type === 'boss') {
+    const tier = node.type === 'battle' ? 'normal' : node.type === 'fury-elite' ? 'elite' : node.type;
     const enemy = pickEnemyForNode(nextRun.act, tier, () => rng.next());
     nextRun.rngState = rng.state;
     const inCombat = initCombat(nextRun, enemy, node.type);
@@ -206,8 +383,11 @@ export function enterMapNode(run: RunState, nodeId: string): RunState {
     if (abodeDiscount > 0) nextRun.foundation = Math.min(100, nextRun.foundation + 5);
     nextRun.phase = 'abode';
   } else if (node.type === 'shop') {
-    nextRun.shop = buildShopStock(nextRun, rng);
+    nextRun.shop = buildShopStock(nextRun, rng, achievements);
     nextRun.phase = 'shop';
+  } else if (node.type === 'auction') {
+    nextRun.auction = { lots: buildAuctionLots(nextRun, rng, achievements), settled: false };
+    nextRun.phase = 'auction';
   } else if (node.type === 'remnant') {
     nextRun.phase = 'remnant';
   }
@@ -217,7 +397,7 @@ export function enterMapNode(run: RunState, nodeId: string): RunState {
   return nextRun;
 }
 
-export function resolveCombatVictory(run: RunState): RunState {
+export function resolveCombatVictory(run: RunState, achievements: string[] = []): RunState {
   if (!run.combat || (run.combat.outcome !== 'victory' && run.combat.outcome !== 'tribulation-survived')) {
     return run;
   }
@@ -225,26 +405,26 @@ export function resolveCombatVictory(run: RunState): RunState {
   const combat = nextRun.combat!;
   const rng = new SeededRng(nextRun.rngState);
 
+  const isEliteLike = combat.nodeType === 'elite' || combat.nodeType === 'fury-elite';
   nextRun.stats.battlesWon += 1;
-  if (combat.nodeType === 'elite') nextRun.stats.elitesWon += 1;
+  if (isEliteLike) nextRun.stats.elitesWon += 1;
   if (combat.nodeType === 'boss') nextRun.stats.bossesWon += 1;
 
-  // 战后回血遗物
   const postHeal = hasRelicHook(nextRun, 'heal-after-battle');
   if (postHeal > 0) nextRun.hp = Math.min(nextRun.maxHp, nextRun.hp + postHeal);
 
   const goldMult = 1 + hasRelicHook(nextRun, 'gold-magnet') / 100;
-  const baseGold = combat.nodeType === 'boss' ? 75 : combat.nodeType === 'elite' ? 45 : 22;
+  const baseGold =
+    combat.nodeType === 'boss' ? 78 : combat.nodeType === 'fury-elite' ? 65 : isEliteLike ? 46 : 24;
   const gold = Math.round((baseGold + rng.int(0, 12)) * goldMult);
   const baseFoundation =
-    (combat.nodeType === 'boss' ? 20 : combat.nodeType === 'elite' ? 18 : 10) +
+    (combat.nodeType === 'boss' ? 20 : isEliteLike ? 18 : 10) +
     hasRelicHook(nextRun, 'foundation-boost') +
     (combat.enemy.tier === 'tribulation' && combat.outcome === 'victory' ? 15 : 0);
 
   nextRun.gold += gold;
   nextRun.foundation = Math.min(100, nextRun.foundation + baseFoundation);
 
-  // 第四卷 Boss 击败直接真结局通关！
   if (combat.nodeType === 'boss' && nextRun.act === 4) {
     nextRun.combat = null;
     nextRun.realm = 'ascended';
@@ -254,7 +434,6 @@ export function resolveCombatVictory(run: RunState): RunState {
     return nextRun;
   }
 
-  // 第三卷 Boss 击败且未集齐 2 枚道果信物 -> 普通飞升通关！
   if (combat.nodeType === 'boss' && nextRun.act === 3 && nextRun.daoTokens < 2) {
     nextRun.combat = null;
     nextRun.realm = 'ascended';
@@ -267,17 +446,27 @@ export function resolveCombatVictory(run: RunState): RunState {
   const reward: RewardState = {
     gold,
     foundation: baseFoundation,
-    cardChoices: rollCardChoices(nextRun, rng, 3),
+    cardChoices: rollCardChoices(nextRun, rng, 3, undefined, achievements),
     pickedCard: false,
     pickedRelic: false,
     pickedTreasure: false,
     pickedMaterial: false,
+    pickedConsumable: false,
   };
 
-  if (combat.nodeType === 'elite') {
-    reward.relicReward = pickNewRelic(nextRun, rng);
+  // 普通战 45% 掉丹符，精英必掉丹符
+  if (isEliteLike || rng.next() < 0.45) {
+    reward.consumableReward = rng.pick(CONSUMABLE_LIST);
+  }
+
+  if (isEliteLike) {
+    reward.relicReward = pickNewRelic(nextRun, rng, achievements);
     reward.materialReward = rng.pick(ENCHANT_LIST);
-    const unownedTreasures = TREASURE_LIST.filter((t) => !nextRun.treasures.includes(t.id));
+    if (combat.nodeType === 'fury-elite') {
+      nextRun.daoTokens += 1;
+      reward.daoTokenGained = true;
+    }
+    const unownedTreasures = Object.values(TREASURE_LIST).filter((t) => !nextRun.treasures.includes(t.id));
     if (nextRun.treasures.length < 2 && unownedTreasures.length > 0 && rng.next() < 0.55) {
       reward.treasureReward = rng.pick(unownedTreasures);
     }
@@ -304,9 +493,16 @@ export function resolveCombatVictory(run: RunState): RunState {
       nextRun.uidCounter += 1;
       nextRun.deck.push({ uid: `c-${nextRun.uidCounter}`, defId: 'curse-flaw', upgraded: false });
     }
-    reward.relicReward = pickNewRelic(nextRun, rng);
+
+    // 第一卷破境且尚未兼修时，提供【辅修心法】三选一开启跨系邪道 BD！
+    if (!nextRun.secondaryMethod) {
+      reward.methodChoices = rollSecondaryMethodChoices(nextRun, rng);
+      reward.pickedMethod = false;
+    }
+
+    reward.relicReward = pickNewRelic(nextRun, rng, achievements);
     reward.materialReward = rng.pick(ENCHANT_LIST);
-    // 劈碎雷劫劫眼额外赐予 1 枚三界道果信物！
+    reward.consumableReward = rng.pick(CONSUMABLE_LIST);
     if (combat.enemy.tier === 'tribulation' && combat.outcome === 'victory') {
       nextRun.daoTokens += 1;
       reward.daoTokenGained = true;
@@ -349,6 +545,17 @@ export function claimRewardMaterial(run: RunState): RunState {
   return nextRun;
 }
 
+export function claimRewardConsumable(run: RunState): RunState {
+  if (!run.reward?.consumableReward || run.reward.pickedConsumable) return run;
+  const nextRun: RunState = structuredClone(run);
+  const cid = nextRun.reward!.consumableReward!.id;
+  if (nextRun.consumables.length < 3) nextRun.consumables.push(cid);
+  else nextRun.consumables[2] = cid;
+  nextRun.reward!.pickedConsumable = true;
+  saveActiveRun(nextRun);
+  return nextRun;
+}
+
 export function claimRewardTreasure(run: RunState): RunState {
   if (!run.reward?.treasureReward || run.reward.pickedTreasure) return run;
   const nextRun: RunState = structuredClone(run);
@@ -356,6 +563,15 @@ export function claimRewardTreasure(run: RunState): RunState {
   if (nextRun.treasures.length < 2) nextRun.treasures.push(tid);
   else nextRun.treasures[1] = tid;
   nextRun.reward!.pickedTreasure = true;
+  saveActiveRun(nextRun);
+  return nextRun;
+}
+
+export function claimSecondaryMethod(run: RunState, methodId: SecondaryMethodId): RunState {
+  if (!run.reward?.methodChoices || run.reward.pickedMethod) return run;
+  const nextRun: RunState = structuredClone(run);
+  nextRun.secondaryMethod = methodId;
+  nextRun.reward!.pickedMethod = true;
   saveActiveRun(nextRun);
   return nextRun;
 }
@@ -391,6 +607,59 @@ export function finishRewardAndAdvance(run: RunState, meta: MetaSave): RunState 
   return nextRun;
 }
 
+// ==================== 百年拍卖会 ====================
+export function auctionBuyLot(run: RunState, lotId: string): RunState {
+  if (run.phase !== 'auction' || !run.auction) return run;
+  const lot = run.auction.lots.find((l) => l.id === lotId);
+  if (!lot || lot.claimed || run.gold < lot.price) return run;
+
+  const nextRun: RunState = structuredClone(run);
+  nextRun.gold -= lot.price;
+  const target = nextRun.auction!.lots.find((l) => l.id === lotId)!;
+  target.claimed = true;
+
+  if (target.kind === 'card') {
+    nextRun.uidCounter += 1;
+    nextRun.deck.push({ uid: `c-${nextRun.uidCounter}`, defId: target.refId, upgraded: true });
+  } else if (target.kind === 'relic') {
+    nextRun.relics.push(target.refId);
+  } else if (target.kind === 'lifespan') {
+    nextRun.maxLifespan += 24;
+    nextRun.foundation = Math.min(100, nextRun.foundation + 20);
+    nextRun.hp = nextRun.maxHp;
+  }
+
+  saveActiveRun(nextRun);
+  return nextRun;
+}
+
+export function auctionAmbushBuyer(run: RunState): RunState {
+  if (run.phase !== 'auction' || !run.auction) return run;
+  const nextRun: RunState = structuredClone(run);
+  const rng = new SeededRng(nextRun.rngState);
+
+  // 先把场上 1 件未拍走的压轴宝物抢到手，并进入高难狂暴精英截杀战！
+  const unclaimed = nextRun.auction!.lots.find((l) => !l.claimed);
+  if (unclaimed) {
+    unclaimed.claimed = true;
+    if (unclaimed.kind === 'card') {
+      nextRun.uidCounter += 1;
+      nextRun.deck.push({ uid: `c-${nextRun.uidCounter}`, defId: unclaimed.refId, upgraded: true });
+    } else if (unclaimed.kind === 'relic') {
+      nextRun.relics.push(unclaimed.refId);
+    } else if (unclaimed.kind === 'lifespan') {
+      nextRun.maxLifespan += 24;
+      nextRun.foundation = Math.min(100, nextRun.foundation + 20);
+    }
+  }
+  nextRun.auction = null;
+  const enemy = pickEnemyForNode(nextRun.act, 'elite', () => rng.next());
+  nextRun.rngState = rng.state;
+  const inCombat = initCombat(nextRun, enemy, 'fury-elite');
+  saveActiveRun(inCombat);
+  return inCombat;
+}
+
 // ==================== 洞府三合一 ====================
 export function abodeUpgradeOrEnchant(run: RunState, cardUid: string, enchantId?: EnchantId): RunState {
   if (run.phase !== 'abode' || run.abodeUsed) return run;
@@ -421,7 +690,13 @@ export function abodeBrewElixir(run: RunState, mode: 'steady' | 'bold'): { nextR
     const heal = Math.round(nextRun.maxHp * 0.35);
     nextRun.hp = Math.min(nextRun.maxHp, nextRun.hp + heal);
     nextRun.foundation = Math.min(100, nextRun.foundation + 14);
-    message = `文火成丹！恢复 ${heal} 点气血，本卷道基纯度 +14。`;
+    if (nextRun.consumables.length < 3) {
+      const bonusPill = rng.pick(CONSUMABLE_LIST.filter((c) => c.kind === 'pill'));
+      nextRun.consumables.push(bonusPill.id);
+      message = `文火成丹！回 ${heal} 气血，道基 +14，并随炉凝出 1 枚【${bonusPill.name}】入袋！`;
+    } else {
+      message = `文火成丹！恢复 ${heal} 点气血，本卷道基纯度 +14。`;
+    }
   } else {
     const roll = rng.next();
     if (roll < 0.68) {
@@ -460,12 +735,13 @@ export function leaveSubSceneToMap(run: RunState): RunState {
   nextRun.activeEvent = null;
   nextRun.eventResultText = null;
   nextRun.shop = null;
+  nextRun.auction = null;
   saveActiveRun(nextRun);
   return nextRun;
 }
 
 // ==================== 奇遇结算 ====================
-export function chooseEncounterOption(run: RunState, choiceId: string): RunState {
+export function chooseEncounterOption(run: RunState, choiceId: string, achievements: string[] = []): RunState {
   if (run.phase !== 'event' || !run.activeEvent) return run;
   const choice = run.activeEvent.choices.find((c) => c.id === choiceId);
   if (!choice) return run;
@@ -497,7 +773,7 @@ export function chooseEncounterOption(run: RunState, choiceId: string): RunState
     nextRun.foundation = Math.min(100, nextRun.foundation + e.foundation + hasRelicHook(nextRun, 'foundation-boost'));
   }
   if (e.addRandomCard) {
-    const picked = rollCardChoices(nextRun, rng, 1, e.addRandomCard)[0];
+    const picked = rollCardChoices(nextRun, rng, 1, e.addRandomCard, achievements)[0];
     if (picked) {
       nextRun.uidCounter += 1;
       nextRun.deck.push({ uid: `c-${nextRun.uidCounter}`, defId: picked.id, upgraded: false });
@@ -512,11 +788,16 @@ export function chooseEncounterOption(run: RunState, choiceId: string): RunState
     nextRun.deck.push({ uid: `c-${nextRun.uidCounter}`, defId: e.addCurse, upgraded: false });
   }
   if (e.addRelic) {
-    const rel = pickNewRelic(nextRun, rng);
+    const rel = pickNewRelic(nextRun, rng, achievements);
     if (rel) nextRun.relics.push(rel.id);
   }
   if (e.addMaterial) {
     nextRun.materials.push(e.addMaterial);
+  }
+  if (e.addConsumable) {
+    const con = rng.pick(CONSUMABLE_LIST);
+    if (nextRun.consumables.length < 3) nextRun.consumables.push(con.id);
+    else nextRun.consumables[2] = con.id;
   }
   if (e.removeRandomCard && nextRun.deck.length > 5) {
     const starterIdx = nextRun.deck.findIndex((c) => CARDS[c.defId]?.rarity === 'starter');
@@ -524,6 +805,26 @@ export function chooseEncounterOption(run: RunState, choiceId: string): RunState
   }
   if (e.gainDaoToken) {
     nextRun.daoTokens += 1;
+  }
+
+  // 古修藏经阁直接打开辅修心法三选一奖励界面
+  if (e.offerSecondaryMethod && !nextRun.secondaryMethod) {
+    nextRun.activeEvent = null;
+    nextRun.reward = {
+      gold: 0,
+      foundation: e.foundation ?? 0,
+      cardChoices: rollCardChoices(nextRun, rng, 3, undefined, achievements),
+      methodChoices: rollSecondaryMethodChoices(nextRun, rng),
+      pickedMethod: false,
+      pickedCard: false,
+      pickedRelic: false,
+      pickedTreasure: false,
+      pickedMaterial: false,
+    };
+    nextRun.phase = 'reward';
+    nextRun.rngState = rng.state;
+    saveActiveRun(nextRun);
+    return nextRun;
   }
 
   nextRun.eventResultText = `已择「${choice.label}」：${choice.rewardText}`;
@@ -570,6 +871,18 @@ export function shopBuyMaterial(run: RunState, index: number): RunState {
   return nextRun;
 }
 
+export function shopBuyConsumable(run: RunState, index: number): RunState {
+  if (!run.shop || !run.shop.consumables[index] || run.shop.consumables[index].sold) return run;
+  const item = run.shop.consumables[index];
+  if (run.gold < item.price || run.consumables.length >= 3) return run;
+  const nextRun: RunState = structuredClone(run);
+  nextRun.gold -= item.price;
+  nextRun.shop!.consumables[index].sold = true;
+  nextRun.consumables.push(item.def.id);
+  saveActiveRun(nextRun);
+  return nextRun;
+}
+
 export function shopBuyElixir(run: RunState): RunState {
   if (!run.shop || run.shop.elixirBought || run.gold < run.shop.elixirPrice) return run;
   const nextRun: RunState = structuredClone(run);
@@ -591,7 +904,6 @@ export function shopPurgeCard(run: RunState, cardUid: string): RunState {
   return nextRun;
 }
 
-// ==================== 前世遗蜕继承 ====================
 export function claimPastLifeRemnant(run: RunState, meta: MetaSave, mode: 'card' | 'treasure' | 'enlighten'): RunState {
   if (run.phase !== 'remnant' || !meta.pastLifeRemnant) return run;
   const nextRun: RunState = structuredClone(run);
@@ -615,4 +927,4 @@ export function claimPastLifeRemnant(run: RunState, meta: MetaSave, mode: 'card'
   return nextRun;
 }
 
-export { ENCHANTS };
+export { ENCHANTS, CONSUMABLES };

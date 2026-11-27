@@ -255,3 +255,91 @@ export const RELICS: Record<string, RelicDef> = {
 
 export const RELIC_LIST = Object.values(RELICS).filter((r) => r.rarity !== 'law');
 export const LAW_RELIC_LIST = Object.values(RELICS).filter((r) => r.rarity === 'law');
+
+// ==================== v9.0 新增神话法宝与名场面成就专属暗金古宝 ====================
+Object.assign(TREASURES, {
+  'tr-nine-dragon-caluldron': {
+    id: 'tr-nine-dragon-caluldron',
+    name: '九龙神火罩',
+    rarity: 'mythic',
+    lineage: 'neutral',
+    maxCharge: 5,
+    description: '充能 5：轰出 3 道 10 点火伤，施加 8 层【丹毒】并立即引爆 1 次，注入【火印】。',
+    effect: { damage: 10, hits: 3, poison: 8, detonatePoison: 1, extraSeal: 'fire' },
+  },
+  'tr-zhuxian-blade': {
+    id: 'tr-zhuxian-blade',
+    name: '戮仙古剑胎',
+    rarity: 'mythic',
+    lineage: 'neutral',
+    maxCharge: 5,
+    description: '充能 5：造成 32 点穿甲剑伤，获 4 层【剑意】与 6 层【剑罡反击】，注入【雷印】。',
+    effect: { damage: 32, pierce: true, swordIntent: 4, counterAura: 6, extraSeal: 'thunder' },
+  },
+});
+
+Object.assign(RELICS, {
+  'rel-counter-jade': {
+    id: 'rel-counter-jade',
+    name: '太白逆鳞佩',
+    rarity: 'common',
+    description: '每场战斗开始时获得 5 层【剑罡反击】。',
+    hook: 'counter-start',
+    value: 5,
+  },
+  'rel-ash-urn': {
+    id: 'rel-ash-urn',
+    name: '炼魂骨瓮',
+    rarity: 'rare',
+    description: '每当你消耗（Exhaust）卡牌时，有真元流转（每回合首次消耗恢复 1 点真元）。',
+    hook: 'exhaust-qi',
+    value: 1,
+  },
+  // 成就解锁暗金古宝
+  'rel-defy-fate-pearl': {
+    id: 'rel-defy-fate-pearl',
+    name: '暗金古宝 · 逆命天珠',
+    rarity: 'mythic',
+    unlockAchievement: 'ach-dying-boss',
+    description: '【成就解锁】当剩余可用寿元 ≤ 20 年时，你的所有攻伐伤害提高 40%！',
+    hook: 'dying-fury',
+    value: 40,
+  },
+  'rel-shennong-whip': {
+    id: 'rel-shennong-whip',
+    name: '暗金古宝 · 神农百草鞭',
+    rarity: 'mythic',
+    unlockAchievement: 'ach-poison-50',
+    description: '【成就解锁】乾坤丹符袋中所有丹药效果提升 50%，且施加丹毒额外 +2。',
+    hook: 'pill-master',
+    value: 50,
+  },
+  'rel-shadowless-tassel': {
+    id: 'rel-shadowless-tassel',
+    name: '暗金古宝 · 无影剑穗',
+    rarity: 'mythic',
+    unlockAchievement: 'ach-eight-cards',
+    description: '【成就解锁】每回合首次消耗卡牌额外恢复 1 点真元，开战额外抽 1 牌。',
+    hook: 'exhaust-qi',
+    value: 1,
+  },
+  'rel-thunder-emperor-seal': {
+    id: 'rel-thunder-emperor-seal',
+    name: '暗金古宝 · 雷帝镇劫印',
+    rarity: 'mythic',
+    unlockAchievement: 'ach-tribulation-slayer',
+    description: '【成就解锁】每场战斗初始自带 8 层【剑罡反击】。',
+    hook: 'counter-start',
+    value: 8,
+  },
+});
+
+export function getUnlockedRelicList(unlockedAchievements: string[] = []): RelicDef[] {
+  return Object.values(RELICS).filter(
+    (r) => r.rarity !== 'law' && (!r.unlockAchievement || unlockedAchievements.includes(r.unlockAchievement)),
+  );
+}
+
+export function getMythicTreasures(): TreasureDef[] {
+  return Object.values(TREASURES).filter((t) => t.rarity === 'mythic');
+}

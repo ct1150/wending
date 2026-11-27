@@ -1,10 +1,129 @@
 import { useState } from 'preact/hooks';
-import { LINEAGES, REALM_NAMES } from '../../content/lineages';
-import { ENCHANTS, TREASURES } from '../../content/treasures';
+import { CARDS } from '../../content/cards';
+import { CONSUMABLES } from '../../content/consumables';
+import { ENEMIES } from '../../content/enemies';
+import { LINEAGE_LIST, LINEAGES, REALM_NAMES } from '../../content/lineages';
+import { ACHIEVEMENTS } from '../../content/methods';
+import { ENCHANTS, RELICS, TREASURES } from '../../content/treasures';
 import { getCardDef } from '../../core/combat-engine';
-import type { EnchantId, MetaSave, RunState } from '../../core/types';
+import type {
+  BlessingOption,
+  EnchantId,
+  LineageId,
+  MetaSave,
+  RunState,
+  SecondaryMethodId,
+} from '../../core/types';
 import { CardView } from '../components/CardView';
+import { ENEMY_PORTRAITS_BY_ID } from '../components/Portraits';
 import { sfx } from '../sfx';
+
+// ==================== 开局：轮回天命赐福四选一 ====================
+export function BlessingView({
+  run,
+  onSelectBlessing,
+}: {
+  run: RunState;
+  onSelectBlessing: (id: BlessingOption['id']) => void;
+}) {
+  const options = run.blessingOptions ?? [];
+  return (
+    <main class="panel sub-stage">
+      <h2>☯ 天道法旨 · 破壳赐福四选一</h2>
+      <p style={{ margin: 0, color: 'var(--muted)' }}>
+        第 {run.generation} 世初入凡尘，冥冥之中降下四道天命机缘，择一开启此世仙途：
+      </p>
+      <div class="choice-list">
+        {options.map((opt) => (
+          <button
+            key={opt.id}
+            type="button"
+            class="btn choice-btn blessing-card"
+            onClick={() => {
+              sfx.breakthrough();
+              onSelectBlessing(opt.id);
+            }}
+          >
+            <strong>✦ {opt.title}</strong>
+            <span class="choice-cost">{opt.costText}</span>
+            <span class="choice-reward">赐福：{opt.rewardText}</span>
+          </button>
+        ))}
+      </div>
+    </main>
+  );
+}
+
+// ==================== 百年拍卖会：出价竞拍 或 蒙面截胡 ====================
+export function AuctionView({
+  run,
+  onBuyLot,
+  onAmbush,
+  onLeave,
+}: {
+  run: RunState;
+  onBuyLot: (lotId: string) => void;
+  onAmbush: () => void;
+  onLeave: () => void;
+}) {
+  const auction = run.auction!;
+  const hasUnclaimed = auction.lots.some((l) => !l.claimed);
+
+  return (
+    <main class="panel sub-stage">
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '8px' }}>
+        <h2>🏮 百年仙盟拍卖会 · 压轴珍品</h2>
+        <button type="button" class="btn btn-primary" onClick={onLeave}>
+          离场赶路 ➔
+        </button>
+      </div>
+      <p style={{ margin: 0, color: 'var(--muted)', fontSize: '14px' }}>
+        高台之上数件稀世压轴拍品引得满座元婴老怪侧目。你可凭灵石堂堂正正拍下，亦可暗记买主气息，散场后<strong>黑衣蒙面杀人夺宝</strong>！
+      </p>
+
+      <div class="choice-list">
+        {auction.lots.map((lot) => (
+          <button
+            key={lot.id}
+            type="button"
+            class="btn choice-btn"
+            disabled={lot.claimed || run.gold < lot.price}
+            onClick={() => {
+              sfx.coin();
+              onBuyLot(lot.id);
+            }}
+          >
+            <strong>
+              {lot.name} {lot.claimed ? '【已拍得】' : `— 竞拍价 ${lot.price} 灵石`}
+            </strong>
+            <span class="choice-reward">{lot.description}</span>
+          </button>
+        ))}
+      </div>
+
+      {hasUnclaimed && (
+        <div class="panel" style={{ padding: '14px', borderColor: 'var(--red)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '10px' }}>
+          <div>
+            <strong style={{ color: '#ffada4' }}>🗡️ 灵石不够？散场后蒙面截杀得主！</strong>
+            <div style={{ fontSize: '12px', color: 'var(--muted)' }}>
+              立即免费强夺 1 件未售出的压轴拍品，随后直接迎战【狂暴护宝大修】（击败额外掉三界道果！）
+            </div>
+          </div>
+          <button
+            type="button"
+            class="btn btn-danger"
+            onClick={() => {
+              sfx.sha();
+              onAmbush();
+            }}
+          >
+            杀人夺宝 ⚔️
+          </button>
+        </div>
+      )}
+    </main>
+  );
+}
 
 // ==================== 战利品 & 破境结算 ====================
 export function RewardView({
@@ -12,7 +131,9 @@ export function RewardView({
   onPickCard,
   onPickRelic,
   onPickMaterial,
+  onPickConsumable,
   onPickTreasure,
+  onPickMethod,
   onPickLaw,
   onContinue,
 }: {
@@ -20,7 +141,9 @@ export function RewardView({
   onPickCard: (defId: string) => void;
   onPickRelic: () => void;
   onPickMaterial: () => void;
+  onPickConsumable: () => void;
   onPickTreasure: () => void;
+  onPickMethod: (methodId: SecondaryMethodId) => void;
   onPickLaw: (lawId: string) => void;
   onContinue: () => void;
 }) {
@@ -38,7 +161,7 @@ export function RewardView({
       <p style={{ margin: 0, color: 'var(--muted)' }}>
         获得 <strong>{rew.gold} 灵石</strong>、道基纯度 <strong>+{rew.foundation}</strong>
         {rew.lifespanGained ? `、寿元上限 +${rew.lifespanGained} 年` : ''}
-        {rew.daoTokenGained ? '、✦ 劈碎劫眼额外获【三界道果信物】×1！' : ''}
+        {rew.daoTokenGained ? '、✦ 斩获【三界道果信物】×1！' : ''}
       </p>
 
       {/* 天道法则三选一 */}
@@ -65,11 +188,40 @@ export function RewardView({
         </div>
       )}
 
-      {/* 额外掉落：古宝、附魔材料、法宝 */}
+      {/* 辅修心法三选一（开启跨流派邪道 BD！） */}
+      {rew.methodChoices && rew.methodChoices.length > 0 && !rew.pickedMethod && (
+        <div>
+          <h3 style={{ color: '#9cf5be', margin: '0 0 8px' }}>☯ 兼修异派：择一【辅修心法】开启双修化学反应（可不选保持纯修）</h3>
+          <div class="choice-list">
+            {rew.methodChoices.map((m) => (
+              <button
+                key={m.id}
+                type="button"
+                class="btn choice-btn"
+                style={{ borderColor: '#68c98e' }}
+                onClick={() => {
+                  sfx.resonance();
+                  onPickMethod(m.id);
+                }}
+              >
+                <strong>[{m.badge}] {m.name}</strong>
+                <span class="choice-reward">{m.description}</span>
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* 额外掉落：古宝、附魔材料、乾坤丹符、法宝 */}
       <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px' }}>
         {rew.relicReward && !rew.pickedRelic && (
-          <button type="button" class="btn btn-primary" onClick={() => { sfx.click(); onPickRelic(); }}>
+          <button type="button" class="btn btn-primary" onClick={() => { sfx.coin(); onPickRelic(); }}>
             ◈ 收取古宝：{rew.relicReward.name}（{rew.relicReward.description}）
+          </button>
+        )}
+        {rew.consumableReward && !rew.pickedConsumable && (
+          <button type="button" class="btn" onClick={() => { sfx.heal(); onPickConsumable(); }}>
+            {rew.consumableReward.icon} 收入丹符袋：{rew.consumableReward.name}（{rew.consumableReward.description}）
           </button>
         )}
         {rew.materialReward && !rew.pickedMaterial && (
@@ -78,7 +230,7 @@ export function RewardView({
           </button>
         )}
         {rew.treasureReward && !rew.pickedTreasure && (
-          <button type="button" class="btn" onClick={() => { sfx.click(); onPickTreasure(); }}>
+          <button type="button" class="btn" onClick={() => { sfx.treasure(); onPickTreasure(); }}>
             🏺 收取本命法宝：{rew.treasureReward.name}（{rew.treasureReward.description}）
           </button>
         )}
@@ -163,7 +315,7 @@ export function AbodeView({
               ✨ 参悟升级 / 熔材附魔
             </button>
             <button type="button" class={`btn${tab === 'brew' ? ' btn-primary' : ''}`} onClick={() => setTab('brew')}>
-              ⚗️ 开炉炼丹（涨道基/寿元）
+              ⚗️ 开炉炼丹（涨道基/凝奇丹）
             </button>
             <button type="button" class={`btn${tab === 'purge' ? ' btn-primary' : ''}`} onClick={() => setTab('purge')}>
               ✂️ 斩三尸（删废牌/心魔）
@@ -221,12 +373,12 @@ export function AbodeView({
                 type="button"
                 class="btn choice-btn"
                 onClick={() => {
-                  sfx.shield();
+                  sfx.heal();
                   setBrewMsg(onBrew('steady'));
                 }}
               >
-                <strong>文火稳炼 · 固本培元丹</strong>
-                <span class="choice-reward">100% 成功：恢复 35% 气血，本卷道基纯度 +14</span>
+                <strong>文火稳炼 · 固本培元丹（附赠战中奇丹！）</strong>
+                <span class="choice-reward">100% 成功：恢复 35% 气血，道基 +14，且若丹符袋未满额外凝出 1 枚战中奇丹</span>
               </button>
               <button
                 type="button"
@@ -325,6 +477,7 @@ export function ShopView({
   onBuyCard,
   onBuyRelic,
   onBuyMaterial,
+  onBuyConsumable,
   onBuyElixir,
   onPurgeCard,
   onLeave,
@@ -333,6 +486,7 @@ export function ShopView({
   onBuyCard: (idx: number) => void;
   onBuyRelic: (idx: number) => void;
   onBuyMaterial: (idx: number) => void;
+  onBuyConsumable: (idx: number) => void;
   onBuyElixir: () => void;
   onPurgeCard: (uid: string) => void;
   onLeave: () => void;
@@ -388,8 +542,20 @@ export function ShopView({
       )}
 
       <div>
-        <h3 style={{ margin: '0 0 8px', color: 'var(--gold)' }}>古宝与天材地宝</h3>
+        <h3 style={{ margin: '0 0 8px', color: 'var(--gold)' }}>乾坤丹符、古宝与天材地宝</h3>
         <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+          {shop.consumables.map((item, idx) => (
+            <button
+              key={`${item.def.id}-${idx}`}
+              type="button"
+              class="btn"
+              disabled={item.sold || run.gold < item.price || run.consumables.length >= 3}
+              onClick={() => { sfx.coin(); onBuyConsumable(idx); }}
+            >
+              {item.def.icon} {item.def.name} ({item.price}灵石) — {item.def.description}
+              {item.sold ? ' [已购]' : run.consumables.length >= 3 ? ' [袋满]' : ''}
+            </button>
+          ))}
           {shop.relics.map((item, idx) => (
             <button
               key={item.def.id}
@@ -477,10 +643,12 @@ export function RemnantView({
 export function SettlementView({
   run,
   karmaEarned,
+  newAchievements,
   onReturnTitle,
 }: {
   run: RunState;
   karmaEarned: number;
+  newAchievements: string[];
   onReturnTitle: () => void;
 }) {
   const isWin = run.phase === 'victory';
@@ -491,20 +659,197 @@ export function SettlementView({
         第 {run.generation} 世 · {run.name} · {LINEAGES[run.lineage].name} · 止步 {REALM_NAMES[run.realm]}（{run.age} 岁）
       </p>
       <p style={{ margin: 0 }}>{isWin ? '你的道名已刻入三界碑，并解锁更高重【天道劫数】！' : run.deathCause}</p>
-      <div style={{ display: 'flex', justifyContent: 'center', gap: '16px', flexWrap: 'wrap', fontSize: '14px' }}>
-        <span class="hud-pill gold">☯ 结算轮回道果 +{karmaEarned}</span>
+
+      {newAchievements.length > 0 && (
+        <div class="panel" style={{ padding: '12px', borderColor: '#ffd875' }}>
+          <div style={{ color: '#ffe599', fontWeight: 700, marginBottom: '6px' }}>🏆 此世达成修仙名场面成就！</div>
+          {newAchievements.map((aid) => {
+            const def = ACHIEVEMENTS.find((a) => a.id === aid);
+            return def ? (
+              <div key={aid} style={{ fontSize: '13px', color: 'var(--green)' }}>
+                ★ 【{def.name}】— {def.unlockText}
+              </div>
+            ) : null;
+          })}
+        </div>
+      )}
+
+      <div style={{ display: 'flex', justifyContent: 'center', gap: '12px', flexWrap: 'wrap', fontSize: '13px' }}>
+        <span class="hud-pill gold">☯ 轮回道果 +{karmaEarned}</span>
         <span class="hud-pill">⚔️ 胜场 {run.stats.battlesWon}</span>
-        <span class="hud-pill">✦ 灵印共鸣 {run.stats.resonancesTriggered} 次</span>
-        <span class="hud-pill">🔥 燃寿 {run.stats.lifeBurned} 年</span>
+        <span class="hud-pill">💥 最高一击 {run.stats.maxSingleHit ?? 0}</span>
+        <span class="hud-pill">✦ 共鸣 {run.stats.resonancesTriggered} 次</span>
       </div>
       <p style={{ fontSize: '13px', color: '#d2b8ff', margin: 0 }}>
-        🪦 你此世最强的神通与法宝已化作【前世遗蜕】，将在下一世对应卷的星宿地图中静候有缘重逢。
+        🪦 此世最强神通与法宝已化作【前世遗蜕】，将在下一世对应卷的星宿地图中静候重逢。
       </p>
       <div>
         <button type="button" class="btn btn-primary" onClick={onReturnTitle}>
           重回轮回盘 · 开启下一世
         </button>
       </div>
+    </main>
+  );
+}
+
+// ==================== 轮回天书 · 名场面成就 · 万法图鉴总览 ====================
+export function CodexScreen({
+  meta,
+  onUnlockLineage,
+  onBuyReroll,
+  onBack,
+}: {
+  meta: MetaSave;
+  onUnlockLineage: (id: LineageId, cost: number) => void;
+  onBuyReroll: () => void;
+  onBack: () => void;
+}) {
+  const [tab, setTab] = useState<'unlock' | 'achievements' | 'cards' | 'foes'>('unlock');
+  const allCards = Object.values(CARDS).filter((c) => !c.tokenOnly && c.type !== 'curse');
+  const allEnemies = Object.values(ENEMIES);
+
+  return (
+    <main class="panel sub-stage" style={{ maxWidth: '960px' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '8px' }}>
+        <h2>📖 轮回天书 · 万法图鉴</h2>
+        <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+          <span class="hud-pill gold">可用道果：{meta.karmaPoints}</span>
+          <button type="button" class="btn btn-sm" onClick={onBack}>返回首页</button>
+        </div>
+      </div>
+
+      <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+        <button type="button" class={`btn btn-sm${tab === 'unlock' ? ' btn-primary' : ''}`} onClick={() => setTab('unlock')}>
+          ☯ 道统与生平碑
+        </button>
+        <button type="button" class={`btn btn-sm${tab === 'achievements' ? ' btn-primary' : ''}`} onClick={() => setTab('achievements')}>
+          🏆 名场面成就 ({meta.achievements.length}/{ACHIEVEMENTS.length})
+        </button>
+        <button type="button" class={`btn btn-sm${tab === 'cards' ? ' btn-primary' : ''}`} onClick={() => setTab('cards')}>
+          🃏 万法神通录 ({allCards.length})
+        </button>
+        <button type="button" class={`btn btn-sm${tab === 'foes' ? ' btn-primary' : ''}`} onClick={() => setTab('foes')}>
+          👹 三界强敌志 ({allEnemies.length})
+        </button>
+      </div>
+
+      {tab === 'unlock' && (
+        <>
+          <div class="choice-list">
+            {LINEAGE_LIST.filter((l) => l.unlockCost > 0).map((lin) => {
+              const owned = meta.unlockedLineages.includes(lin.id);
+              return (
+                <button
+                  key={lin.id}
+                  type="button"
+                  class="btn choice-btn"
+                  disabled={owned || meta.karmaPoints < lin.unlockCost}
+                  onClick={() => onUnlockLineage(lin.id, lin.unlockCost)}
+                >
+                  <strong>解锁新道统：{lin.name}</strong>
+                  <span class="choice-reward">{lin.description}</span>
+                  <span class="choice-cost">{owned ? '✓ 已解锁' : `消耗 ${lin.unlockCost} 道果`}</span>
+                </button>
+              );
+            })}
+
+            <button
+              type="button"
+              class="btn choice-btn"
+              disabled={meta.rerollCharges >= 6 || meta.karmaPoints < 35 + meta.rerollCharges * 20}
+              onClick={onBuyReroll}
+            >
+              <strong>天机改命 · 开局灵根重掷次数 +1（当前 {meta.rerollCharges}/6）</strong>
+              <span class="choice-cost">
+                {meta.rerollCharges >= 6 ? '已满级' : `消耗 ${35 + meta.rerollCharges * 20} 道果`}
+              </span>
+            </button>
+          </div>
+
+          {meta.hallOfFame.length > 0 && (
+            <div>
+              <h3 style={{ color: 'var(--gold)', margin: '8px 0' }}>百世生平碑</h3>
+              <div class="choice-list">
+                {meta.hallOfFame.slice(0, 8).map((row) => (
+                  <div key={`${row.generation}-${row.name}`} class="panel" style={{ padding: '10px 14px', fontSize: '13px' }}>
+                    <strong>第 {row.generation} 世 · {row.name}</strong>（{LINEAGES[row.lineage].name} · {REALM_NAMES[row.realm]} · {row.age} 岁）— {row.cause} · 道果 +{row.karmaEarned}
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+        </>
+      )}
+
+      {tab === 'achievements' && (
+        <div class="choice-list">
+          {ACHIEVEMENTS.map((ach) => {
+            const done = meta.achievements.includes(ach.id);
+            return (
+              <div
+                key={ach.id}
+                class="panel"
+                style={{
+                  padding: '12px 16px',
+                  borderColor: done ? '#ffd875' : 'var(--line)',
+                  opacity: done ? 1 : 0.78,
+                }}
+              >
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <strong style={{ color: done ? '#ffe599' : 'var(--text)' }}>
+                    {done ? '★ ' : '☆ '}
+                    {ach.name}
+                  </strong>
+                  <span style={{ fontSize: '12px', color: done ? 'var(--green)' : 'var(--muted)' }}>
+                    {done ? '✓ 已达成并解锁入池' : '未达成'}
+                  </span>
+                </div>
+                <div style={{ fontSize: '13px', color: 'var(--muted)', marginTop: '4px' }}>条件：{ach.conditionText}</div>
+                <div style={{ fontSize: '12px', color: 'var(--gold)', marginTop: '3px' }}>奖励：{ach.unlockText}</div>
+              </div>
+            );
+          })}
+        </div>
+      )}
+
+      {tab === 'cards' && (
+        <>
+          <div style={{ fontSize: '13px', color: 'var(--muted)' }}>
+            包含四大道统、五行通池及暗金禁术；另有 {Object.keys(RELICS).length} 件古宝法则与 {Object.keys(CONSUMABLES).length} 种乾坤丹符。
+          </div>
+          <div class="hand-grid">
+            {allCards.map((def) => (
+              <CardView key={def.id} def={def} />
+            ))}
+          </div>
+        </>
+      )}
+
+      {tab === 'foes' && (
+        <div class="lineage-grid">
+          {allEnemies.map((foe) => (
+            <div key={foe.id} class="panel" style={{ padding: '12px' }}>
+              <div class="lineage-thumb-wrap" style={{ height: '165px' }}>
+                <img src={ENEMY_PORTRAITS_BY_ID[foe.id]} alt={foe.name} class="lineage-thumb" />
+              </div>
+              <strong style={{ color: 'var(--gold-bright)', fontSize: '15px' }}>{foe.name}</strong>
+              <div style={{ fontSize: '12px', color: 'var(--muted)' }}>
+                第 {foe.act} 卷 · {foe.title} · 气血 {foe.maxHp}
+              </div>
+              {foe.trait && (
+                <div style={{ fontSize: '12px', color: '#ffb88c', marginTop: '4px' }}>
+                  ⚖ 法则【{foe.trait.name}】：{foe.trait.description}
+                </div>
+              )}
+              {foe.phase2 && (
+                <div style={{ fontSize: '12px', color: '#e2c6ff', marginTop: '4px' }}>
+                  👹 二阶段：{foe.phase2.title}
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+      )}
     </main>
   );
 }

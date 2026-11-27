@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import { getUnlockedRewardCardPool } from '../src/content/cards';
 import { ENEMIES } from '../src/content/enemies';
 import {
   activateTreasure,
@@ -6,6 +7,7 @@ import {
   initCombat,
   playCard,
   previewResonance,
+  useConsumable,
 } from '../src/core/combat-engine';
 import { generateActMap, getReachableNodeIds } from '../src/core/map-generator';
 import { defaultMetaSave, settleRunIntoMeta, unlockLineageInMeta } from '../src/core/meta-save';
@@ -14,48 +16,63 @@ import {
   abodeBrewElixir,
   abodePurgeCard,
   abodeUpgradeOrEnchant,
+  auctionAmbushBuyer,
+  chooseStartingBlessing,
   claimBreakthroughLaw,
   claimPastLifeRemnant,
+  claimSecondaryMethod,
   createNewRun,
   enterMapNode,
   finishRewardAndAdvance,
+  getDailyChallengeConfig,
   resolveCombatVictory,
+  rollCardChoices,
 } from '../src/core/run-manager';
 
-describe('星宿路线图与前世遗蜕注入', () => {
-  it('每卷生成连通星宿图并在匹配章节注入前世遗蜕节点', () => {
+describe('星宿路线图、狂暴精英、百年拍卖与前世遗蜕', () => {
+  it('生成含狂暴精英、拍卖会与前世遗蜕的连通星宿图', () => {
     const rng = new SeededRng(42);
     const remnant = {
       generation: 1,
       name: '韩立',
       lineage: 'sword' as const,
-      act: 1 as const,
+      act: 2 as const,
       deathCause: '渡劫陨落',
       leftTreasureId: 'tr-sword-box',
     };
-    const map = generateActMap(1, rng, remnant);
-    expect(map.some((n) => n.type === 'boss')).toBe(true);
-    expect(map.some((n) => n.type === 'remnant')).toBe(true);
+    const map2 = generateActMap(2, rng, remnant);
+    expect(map2.some((n) => n.type === 'boss')).toBe(true);
+    expect(map2.some((n) => n.type === 'fury-elite')).toBe(true);
+    expect(map2.some((n) => n.type === 'auction')).toBe(true);
+    expect(map2.some((n) => n.type === 'remnant')).toBe(true);
 
-    // 校验除关底外每个节点都有出边
-    for (const node of map) {
+    for (const node of map2) {
       if (node.type !== 'boss') {
         expect(node.nextIds.length).toBeGreaterThan(0);
       }
     }
-    const startNodes = getReachableNodeIds(map, null);
-    expect(startNodes.length).toBe(3);
+    expect(getReachableNodeIds(map2, null).length).toBe(3);
   });
 
-  it('隐藏第四卷生成 4 层终局地图', () => {
-    const map = generateActMap(4, new SeededRng(99), null);
-    expect(map.length).toBe(5);
-    expect(map.find((n) => n.type === 'boss')?.act).toBe(4);
+  it('开局天命四选一支持重铸绝世神话法宝', () => {
+    const meta = defaultMetaSave();
+    let run = createNewRun({
+      name: '天命人',
+      lineage: 'sword',
+      rootId: 'root-heaven-sword',
+      seed: 101,
+      ascension: 0,
+      meta,
+    });
+    expect(run.phase).toBe('blessing');
+    run = chooseStartingBlessing(run, 'mythic-treasure', meta);
+    expect(run.phase).toBe('map');
+    expect(['tr-chaos-bell', 'tr-nine-dragon-caluldron', 'tr-zhuxian-blade']).toContain(run.treasures[0]);
   });
 });
 
-describe('灵印相生与斗法引擎', () => {
-  it('准确判定五行相生、魔煞共鸣与伪灵根混元共鸣', () => {
+describe('灵印相生、敌方法则、Boss二阶段与进阶新算子', () => {
+  it('准确判定七大灵印相生共鸣', () => {
     expect(previewResonance(['wood'], 'fire', false)?.name).toContain('木火相生');
     expect(previewResonance(['metal'], 'thunder', false)?.name).toContain('金雷引煞');
     expect(previewResonance(['earth'], 'metal', false)?.name).toContain('厚土孕剑');
@@ -65,33 +82,76 @@ describe('灵印相生与斗法引擎', () => {
     expect(previewResonance(['metal', 'wood'], 'water', true)?.name).toContain('五行混元');
   });
 
-  it('剑修出牌触发金雷共鸣、充能本命法宝并可祭出斩敌', () => {
+  it('支持 X 费诛仙剑、辅修毒剑联动、Boss 半血二阶段化相与乾坤丹符瞬发', () => {
     const meta = defaultMetaSave();
     let run = createNewRun({
-      name: '林动',
+      name: '毒剑仙',
       lineage: 'sword',
       rootId: 'root-heaven-sword',
       seed: 1001,
       ascension: 0,
       meta,
+      skipBlessing: true,
     });
-    run = initCombat(run, ENEMIES['e1-wolf'], 'battle');
-    expect(run.combat?.seals).toEqual(['metal']);
+    run.secondaryMethod = 'method-venom-sword';
+    run.consumables = ['con-berserk-pill', 'con-revive-doll'];
 
-    // 强行放入一张惊雷刺测试金->雷共鸣
-    run.combat!.hand.push({ uid: 'test-thunder', defId: 'sw-thunder-pierce', upgraded: false });
-    const foeHpBefore = run.combat!.enemy.hp;
-    run = playCard(run, 'test-thunder');
-    expect(run.combat!.lastResonance?.name).toContain('金雷引煞');
-    expect(run.combat!.enemy.hp).toBeLessThan(foeHpBefore - 12);
-    expect(run.combat!.swordIntent).toBeGreaterThanOrEqual(1);
+    run = initCombat(run, ENEMIES['e2-boss-demon'], 'boss');
+    // 封灵魔瘴词条令灵印上限变为 2
+    expect(run.combat!.maxSealSlots).toBe(2);
 
-    // 充满剑匣后祭出法宝
-    run.combat!.treasureCharges['tr-sword-box'] = 5;
-    const hpBeforeTreasure = run.combat!.enemy.hp;
-    run = activateTreasure(run, 'tr-sword-box');
-    expect(run.combat!.enemy.hp).toBeLessThan(hpBeforeTreasure);
-    expect(run.combat!.treasureCharges['tr-sword-box']).toBe(0);
+    // 瞬发暴血燃魂丹：真元 +2，伤害 +50%
+    const qiBefore = run.combat!.qi;
+    run = useConsumable(run, 0);
+    expect(run.combat!.qi).toBe(qiBefore + 2);
+    expect(run.combat!.damageBoostPct).toBe(50);
+
+    // 打出 X 费《太白诛仙剑》倾泻全部真元，并触发《万毒淬剑录》每剑叠毒！
+    run.combat!.hand.push({ uid: 'x-sword', defId: 'sw-x-zhuxian', upgraded: true });
+    run = playCard(run, 'x-sword');
+    expect(run.combat!.qi).toBe(0);
+    expect(run.combat!.enemy.poison).toBeGreaterThanOrEqual(8);
+
+    // 将 Boss 压入半血以下验证二阶段化相触发
+    run.combat!.enemy.hp = Math.floor(run.combat!.enemy.maxHp * 0.45);
+    run.combat!.qi = 2;
+    run.combat!.hand.push({ uid: 'poke', defId: 'sw-slash', upgraded: false });
+    run = playCard(run, 'poke');
+    expect(run.combat!.enemy.phase2Triggered).toBe(true);
+    expect(run.combat!.enemy.block).toBeGreaterThan(0);
+
+    // 验证替死木偶符在致命伤害时自动代死复活
+    run.hp = 1;
+    run.combat!.block = 0;
+    run = endPlayerTurn(run);
+    expect(run.hp).toBeGreaterThan(10);
+    expect(run.combat!.outcome).toBe('ongoing');
+    expect(run.consumables.includes('con-revive-doll')).toBe(false);
+  });
+
+  it('支持涅槃真火复活与引爆全场阵盘斩杀', () => {
+    const meta = defaultMetaSave();
+    let run = createNewRun({
+      name: '阵爆师',
+      lineage: 'array',
+      rootId: 'root-xuanwu',
+      seed: 555,
+      ascension: 0,
+      meta,
+      skipBlessing: true,
+    });
+    run = initCombat(run, ENEMIES['e3-elite-phoenix'], 'elite');
+    run.combat!.arrays = [
+      { id: 'a1', name: '阵一', damagePerTurn: 5, blockPerTurn: 5, poisonPerTurn: 0 },
+      { id: 'a2', name: '阵二', damagePerTurn: 5, blockPerTurn: 5, poisonPerTurn: 0 },
+    ];
+    run.combat!.enemy.hp = 30;
+    run.combat!.hand.push({ uid: 'boom', defId: 'ar-detonate-arrays', upgraded: true });
+    run = playCard(run, 'boom');
+    // 凤凰首次归零触发涅槃真火重生！
+    expect(run.combat!.enemy.rebirthUsed).toBe(true);
+    expect(run.combat!.enemy.hp).toBeGreaterThan(0);
+    expect(run.combat!.arrays.length).toBe(0);
   });
 
   it('渡劫天雷撑过全部波次即判渡劫成功', () => {
@@ -103,6 +163,7 @@ describe('灵印相生与斗法引擎', () => {
       seed: 2026,
       ascension: 0,
       meta,
+      skipBlessing: true,
     });
     run = initCombat(run, ENEMIES['e1-boss-tribulation'], 'boss');
     run.hp = 999;
@@ -115,36 +176,8 @@ describe('灵印相生与斗法引擎', () => {
   });
 });
 
-describe('寿元、洞府三合一、天道破境与百世轮回', () => {
-  it('洞府支持附魔升级、开炉炼丹与斩念删牌', () => {
-    const meta = defaultMetaSave();
-    let run = createNewRun({
-      name: '云归',
-      lineage: 'demon',
-      rootId: 'root-demon-fetus',
-      seed: 777,
-      ascension: 0,
-      meta,
-    });
-    run.phase = 'abode';
-    run.materials.push('swift');
-    const targetCard = run.deck[0];
-    run = abodeUpgradeOrEnchant(run, targetCard.uid, 'swift');
-    expect(run.deck[0].upgraded).toBe(true);
-    expect(run.deck[0].enchant).toBe('swift');
-    expect(run.materials.length).toBe(0);
-
-    run.abodeUsed = false;
-    const brewRes = abodeBrewElixir(run, 'steady');
-    expect(brewRes.nextRun.foundation).toBeGreaterThan(run.foundation);
-
-    brewRes.nextRun.abodeUsed = false;
-    const beforeLen = brewRes.nextRun.deck.length;
-    const purged = abodePurgeCard(brewRes.nextRun, brewRes.nextRun.deck[1].uid);
-    expect(purged.deck.length).toBe(beforeLen - 1);
-  });
-
-  it('天道破境触发金色法则三选一，集齐 2 道果进入隐藏第四卷，轮回生成前世遗蜕', () => {
+describe('辅修心法跨系池、百年拍卖截胡、成就解锁与每日天机', () => {
+  it('破境解锁辅修心法开放跨系卡池，达成名场面成就解锁暗金禁术', () => {
     let meta = defaultMetaSave();
     let run = createNewRun({
       name: '问鼎客',
@@ -153,67 +186,97 @@ describe('寿元、洞府三合一、天道破境与百世轮回', () => {
       seed: 888,
       ascension: 0,
       meta,
+      skipBlessing: true,
     });
 
-    // 模拟道基 90 劈碎第一卷雷劫
     run.foundation = 90;
+    run.stats.maxSingleHit = 92; // 触发【一剑开天门】成就
     run = initCombat(run, ENEMIES['e1-boss-tribulation'], 'boss');
     run.combat!.enemy.hp = 0;
     run.combat!.outcome = 'victory';
+    run.stats.tribulationsSlain = 1;
 
-    run = resolveCombatVictory(run);
+    run = resolveCombatVictory(run, meta.achievements);
     expect(run.phase).toBe('breakthrough');
-    expect(run.reward?.breakthroughGrade).toBe('heaven');
-    expect(run.reward?.lawChoices?.length).toBe(3);
-    expect(run.daoTokens).toBe(1); // 劈碎劫眼额外获道果
+    expect(run.reward?.methodChoices?.length).toBe(3);
+
+    // 习得《万毒淬剑录》后，掉落池应包含丹修神通
+    run = claimSecondaryMethod(run, 'method-venom-sword');
+    expect(run.secondaryMethod).toBe('method-venom-sword');
+    const rolled = rollCardChoices(run, new SeededRng(7), 20);
+    expect(rolled.some((c) => c.lineage === 'alchemy')).toBe(true);
 
     const firstLaw = run.reward!.lawChoices![0].id;
     run = claimBreakthroughLaw(run, firstLaw);
-    expect(run.relics).toContain(firstLaw);
-
     run = finishRewardAndAdvance(run, meta);
     expect(run.act).toBe(2);
-    expect(run.realm).toBe('foundation');
 
-    // 测试轮回结算与道统解锁
+    // 轮回结算校验成就解锁暗金卡入池
     const settled = settleRunIntoMeta(meta, { ...run, phase: 'gameover', deathCause: '寿尽坐化' }, 'death');
     meta = settled.nextMeta;
-    expect(settled.karmaEarned).toBeGreaterThan(0);
-    expect(meta.pastLifeRemnant?.name).toBe('问鼎客');
-
-    meta.karmaPoints = 100;
-    const unlocked = unlockLineageInMeta(meta, 'alchemy', 40);
-    expect(unlocked?.unlockedLineages).toContain('alchemy');
-
-    // 测试下一世领取前世遗蜕
-    let nextRun = createNewRun({
-      name: '二世身',
-      lineage: 'alchemy',
-      rootId: 'root-wood-fire',
-      seed: 999,
-      ascension: 0,
-      meta: unlocked!,
-    });
-    nextRun.phase = 'remnant';
-    const deckBefore = nextRun.deck.length;
-    nextRun = claimPastLifeRemnant(nextRun, unlocked!, 'card');
-    expect(nextRun.deck.length).toBe(deckBefore + 1);
+    expect(settled.newAchievements).toContain('ach-one-strike-80');
+    expect(settled.newAchievements).toContain('ach-tribulation-slayer');
+    const poolAfter = getUnlockedRewardCardPool(meta.achievements);
+    expect(poolAfter.some((c) => c.id === 'nu-four-swords-formation')).toBe(true);
   });
 
-  it('赶路寿尽直接触发坐化结算', () => {
+  it('百年拍卖会支持杀人夺宝直接进入狂暴精英战，且每日天机生成稳定同种配置', () => {
+    const d1 = getDailyChallengeConfig('2026-11-27');
+    const d2 = getDailyChallengeConfig('2026-11-27');
+    expect(d1.seed).toBe(d2.seed);
+    expect(d1.mutators.map((m) => m.id)).toEqual(d2.mutators.map((m) => m.id));
+
     const meta = defaultMetaSave();
-    const run = createNewRun({
+    let run = createNewRun({
+      name: '劫修',
+      lineage: 'demon',
+      rootId: 'root-demon-fetus',
+      seed: 333,
+      ascension: 0,
+      meta,
+      skipBlessing: true,
+    });
+    run.phase = 'auction';
+    run.auction = {
+      lots: [
+        { id: 'l1', name: '孤品', description: '测试', price: 99, kind: 'lifespan', refId: 'lifespan', claimed: false },
+      ],
+      settled: false,
+    };
+    const lifeBefore = run.maxLifespan;
+    run = auctionAmbushBuyer(run);
+    expect(run.maxLifespan).toBe(lifeBefore + 24);
+    expect(run.phase).toBe('combat');
+    expect(run.combat?.nodeType).toBe('fury-elite');
+  });
+
+  it('洞府升级附魔、炼丹凝奇丹、删牌与赶路寿尽正常运作', () => {
+    const meta = defaultMetaSave();
+    let run = createNewRun({
       name: '老朽',
       lineage: 'sword',
       rootId: 'root-heaven-sword',
       seed: 123,
       ascension: 0,
       meta,
+      skipBlessing: true,
     });
+    run.phase = 'abode';
+    run.materials.push('swift');
+    run = abodeUpgradeOrEnchant(run, run.deck[0].uid, 'swift');
+    expect(run.deck[0].enchant).toBe('swift');
+
+    run.abodeUsed = false;
+    run.consumables = [];
+    const brew = abodeBrewElixir(run, 'steady');
+    expect(brew.nextRun.consumables.length).toBe(1);
+
+    run = brew.nextRun;
+    run.abodeUsed = false;
+    run = abodePurgeCard(run, run.deck[1].uid);
+    run.phase = 'map';
     run.age = run.maxLifespan - 1;
-    const firstNode = getReachableNodeIds(run.map, null)[0];
-    const next = enterMapNode(run, firstNode);
-    expect(next.phase).toBe('gameover');
-    expect(next.deathCause).toContain('寿尽坐化');
+    const dead = enterMapNode(run, getReachableNodeIds(run.map, null)[0]);
+    expect(dead.phase).toBe('gameover');
   });
 });

@@ -4,9 +4,11 @@ import type { MapNode, MapNodeType, PastLifeRemnant } from './types';
 const NODE_META: Record<MapNodeType, { label: string; ageMin: number; ageMax: number }> = {
   battle: { label: '荒野遇敌', ageMin: 1, ageMax: 2 },
   elite: { label: '秘境夺宝', ageMin: 3, ageMax: 3 },
+  'fury-elite': { label: '灵脉狂暴主', ageMin: 3, ageMax: 4 },
   event: { label: '红尘奇遇', ageMin: 1, ageMax: 2 },
   abode: { label: '洞府丹庐', ageMin: 2, ageMax: 2 },
   shop: { label: '仙城坊市', ageMin: 1, ageMax: 1 },
+  auction: { label: '百年拍卖会', ageMin: 2, ageMax: 2 },
   remnant: { label: '前世遗蜕', ageMin: 2, ageMax: 2 },
   boss: { label: '破境大劫', ageMin: 3, ageMax: 3 },
 };
@@ -24,16 +26,15 @@ export function generateActMap(
   remnant: PastLifeRemnant | null,
 ): MapNode[] {
   if (act === 4) {
-    // 隐藏第四卷：4 层高密度终局连战
     const n1: MapNode = { id: 'a4-r0-c1', act: 4, row: 0, col: 1, type: 'elite', label: '南天门 · 巡界仙卫', ageCost: 2, nextIds: ['a4-r1-c1'], visited: false };
     const n2: MapNode = { id: 'a4-r1-c1', act: 4, row: 1, col: 1, type: 'abode', label: '凌霄洞府 · 最后整备', ageCost: 2, nextIds: ['a4-r2-c0', 'a4-r2-c2'], visited: false };
-    const n3a: MapNode = { id: 'a4-r2-c0', act: 4, row: 2, col: 0, type: 'shop', label: '太虚珍宝阁', ageCost: 1, nextIds: ['a4-r3-c1'], visited: false };
-    const n3b: MapNode = { id: 'a4-r2-c2', act: 4, row: 2, col: 2, type: 'elite', label: '太初劫兽 · 镇鼎古灵', ageCost: 3, nextIds: ['a4-r3-c1'], visited: false };
+    const n3a: MapNode = { id: 'a4-r2-c0', act: 4, row: 2, col: 0, type: 'auction', label: '仙界万宝拍卖', ageCost: 1, nextIds: ['a4-r3-c1'], visited: false };
+    const n3b: MapNode = { id: 'a4-r2-c2', act: 4, row: 2, col: 2, type: 'fury-elite', label: '太初劫兽 · 狂暴仙灵', ageCost: 3, nextIds: ['a4-r3-c1'], visited: false };
     const boss: MapNode = { id: 'a4-r3-c1', act: 4, row: 3, col: 1, type: 'boss', label: ACT_BOSS_LABELS[4], ageCost: 3, nextIds: [], visited: false };
     return [n1, n2, n3a, n3b, boss];
   }
 
-  const totalRows = 10; // rows 0..9 + row 10 boss = 11 layers
+  const totalRows = 10;
   const rows: MapNode[][] = [];
 
   for (let row = 0; row < totalRows; row++) {
@@ -46,9 +47,13 @@ export function generateActMap(
       if (row === 0) {
         type = 'battle';
       } else if (row === totalRows - 1) {
-        type = 'abode'; // 渡劫前必定提供整备洞府
+        type = 'abode';
       } else if (row === 4) {
         type = col === cols[0] ? 'elite' : rng.next() < 0.5 ? 'abode' : 'event';
+      } else if (row === 5 && act >= 2 && col === cols[cols.length - 1]) {
+        type = 'auction'; // 第2~3卷固定刷出百年拍卖会分支
+      } else if (row === 6 && col === cols[0]) {
+        type = 'fury-elite'; // 每卷1个高风险高回报【灵脉狂暴精英】（必掉道果信物）
       } else if (row === 7) {
         type = col === cols[cols.length - 1] ? 'shop' : 'elite';
       } else {
@@ -57,7 +62,7 @@ export function generateActMap(
           (t) => {
             if (t === 'battle') return 42;
             if (t === 'event') return 26;
-            if (t === 'elite') return row >= 2 ? 14 : 0;
+            if (t === 'elite') return row >= 2 ? 13 : 0;
             if (t === 'abode') return row >= 2 ? 12 : 4;
             if (t === 'shop') return row >= 2 ? 9 : 0;
             return 0;
@@ -80,10 +85,9 @@ export function generateActMap(
     rows.push(rowNodes);
   }
 
-  // 若存在对应本卷的前世遗蜕，在第 3~6 层随机注入一个【前世遗蜕】节点
   if (remnant && remnant.act === act) {
-    const targetRow = rng.int(3, 6);
-    const candidate = rng.pick(rows[targetRow]);
+    const targetRow = rng.int(3, 5);
+    const candidate = rows[targetRow].find((n) => n.type !== 'auction' && n.type !== 'fury-elite') ?? rows[targetRow][0];
     candidate.type = 'remnant';
     candidate.label = `前世遗蜕 · ${remnant.name}`;
     candidate.ageCost = 2;
@@ -102,7 +106,6 @@ export function generateActMap(
   };
   rows.push([bossNode]);
 
-  // 建立星宿连线：保证每个节点至少有 1 条出边且下层每个节点至少有 1 条入边
   for (let r = 0; r < rows.length - 1; r++) {
     const curr = rows[r];
     const next = rows[r + 1];
@@ -113,7 +116,7 @@ export function generateActMap(
       const primary = sorted[0];
       node.nextIds.push(primary.id);
       incoming.add(primary.id);
-      if (sorted.length > 1 && Math.abs(sorted[1].col - node.col) <= 1 && rng.next() < 0.55) {
+      if (sorted.length > 1 && Math.abs(sorted[1].col - node.col) <= 1 && rng.next() < 0.58) {
         node.nextIds.push(sorted[1].id);
         incoming.add(sorted[1].id);
       }

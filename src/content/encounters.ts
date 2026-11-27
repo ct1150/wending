@@ -177,3 +177,29 @@ export function pickEncounter(act: number, rngNext: () => number): EncounterDef 
   const list = pool.length ? pool : ENCOUNTERS;
   return list[Math.floor(rngNext() * list.length)];
 }
+
+ENCOUNTERS.push(
+  {
+    id: 'enc-sutra-pavilion',
+    title: '古修藏经阁 · 兼修旁门',
+    acts: [1, 2, 3],
+    prose: '断崖云海间显出一座残破古阁，书架上仅存数卷异派孤本秘籍，若肯分心兼修，或能走出前人未见之邪道仙途。',
+    choices: [
+      {
+        id: 'study-method',
+        label: '闭关兼修异派心法（解锁双修化学反应）',
+        detail: '消耗 3 年寿元',
+        ageCost: 3,
+        rewardText: '立即进入【辅修心法】三选一并开放跨系神通掉落！',
+        effect: { offerSecondaryMethod: true, foundation: 10 },
+      },
+      {
+        id: 'pouch-loot',
+        label: '搜刮阁中遗留灵丹符箓',
+        detail: '无代价',
+        rewardText: '随机获得 1 件战中瞬发【乾坤丹符】+ 35 灵石',
+        effect: { addConsumable: true, gold: 35 },
+      },
+    ],
+  },
+);

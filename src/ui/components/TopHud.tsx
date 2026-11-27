@@ -1,24 +1,40 @@
 import { useState } from 'preact/hooks';
+import { CONSUMABLES } from '../../content/consumables';
 import { REALM_NAMES } from '../../content/lineages';
+import { SECONDARY_METHODS } from '../../content/methods';
 import { ENCHANTS, RELICS } from '../../content/treasures';
 import type { RunState } from '../../core/types';
+import { sfx } from '../sfx';
 
 interface TopHudProps {
   run: RunState;
   muted: boolean;
   bgmOn: boolean;
   compact?: boolean;
+  onUseConsumable?: (slotIdx: number) => void;
   onToggleMute: () => void;
   onToggleBgm: () => void;
   onOpenDeck: () => void;
   onAbandon: () => void;
 }
 
-export function TopHud({ run, muted, bgmOn, compact, onToggleMute, onToggleBgm, onOpenDeck, onAbandon }: TopHudProps) {
+export function TopHud({
+  run,
+  muted,
+  bgmOn,
+  compact,
+  onUseConsumable,
+  onToggleMute,
+  onToggleBgm,
+  onOpenDeck,
+  onAbandon,
+}: TopHudProps) {
   const [isFullscreen, setIsFullscreen] = useState(false);
   const lifeLeft = Math.max(0, run.maxLifespan - run.age);
   const lowLife = lifeLeft <= 15;
   const lowHp = run.hp <= run.maxHp * 0.3;
+  const secMethod = run.secondaryMethod ? SECONDARY_METHODS[run.secondaryMethod] : null;
+  const canUsePouch = run.phase === 'combat' && run.combat?.outcome === 'ongoing';
 
   const toggleLandscapeFullscreen = async () => {
     try {
@@ -31,9 +47,7 @@ export function TopHud({ run, muted, bgmOn, compact, onToggleMute, onToggleBgm, 
         await document.exitFullscreen?.();
         setIsFullscreen(false);
       }
-    } catch {
-      // Fallback gracefully on iOS Safari where Fullscreen API is restricted
-    }
+    } catch {}
   };
 
   return (
@@ -43,6 +57,11 @@ export function TopHud({ run, muted, bgmOn, compact, onToggleMute, onToggleBgm, 
           <span class="hud-pill gold">
             {run.name}·{REALM_NAMES[run.realm]}
           </span>
+          {secMethod && (
+            <span class="hud-pill gold" title={`${secMethod.name}：${secMethod.description}`}>
+              ☯ {secMethod.badge}
+            </span>
+          )}
           <span class={`hud-pill${lowHp ? ' danger' : ''}`}>
             ❤ {run.hp}/{run.maxHp}
           </span>
@@ -58,7 +77,40 @@ export function TopHud({ run, muted, bgmOn, compact, onToggleMute, onToggleBgm, 
               ✦ {run.daoTokens}/2
             </span>
           )}
+
+          {/* 3 格随身乾坤丹符袋 */}
+          <div class="pouch-inline" title="乾坤丹符袋（战中点击 0 真元瞬发）">
+            {[0, 1, 2].map((idx) => {
+              const cid = run.consumables[idx];
+              const def = cid ? CONSUMABLES[cid] : null;
+              if (!def) {
+                return (
+                  <span key={idx} class="pouch-slot empty" title="空丹符格">
+                    ·
+                  </span>
+                );
+              }
+              const clickable = canUsePouch && !def.passiveRevive;
+              return (
+                <button
+                  key={`${cid}-${idx}`}
+                  type="button"
+                  class={`pouch-slot filled${clickable ? ' active' : ''}`}
+                  disabled={!clickable}
+                  title={`${def.name}：${def.description}${clickable ? '（点击瞬发！）' : ''}`}
+                  onClick={() => {
+                    if (!clickable || !onUseConsumable) return;
+                    sfx.heal();
+                    onUseConsumable(idx);
+                  }}
+                >
+                  {def.icon}
+                </button>
+              );
+            })}
+          </div>
         </div>
+
         <div class="hud-group">
           <button
             type="button"
